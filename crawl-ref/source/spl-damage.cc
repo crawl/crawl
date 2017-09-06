@@ -1517,7 +1517,9 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
     actor* act = actor_at(where);
     if (act)
     {
-        const int dam = resist_adjust_damage(act, BEAM_FIRE, 40);
+        const int dam = actor_cloud_immune(*act, CLOUD_FIRE)
+                        ? 0
+                        : resist_adjust_damage(act, BEAM_FIRE, 40);
         return mons_aligned(act, agent) ? -dam : dam;
     }
     // We've done something, but its value is indeterminate
@@ -1552,10 +1554,9 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
 
     if (tracer)
     {
-        // players just care if igniteable clouds exist
-        if (agent && agent->is_player())
-            return 1;
-        return _ignite_tracer_cloud_value(where, agent);
+        const int value = _ignite_tracer_cloud_value(where, agent);
+        // Player doesn't care about magnitude.
+        return agent && agent->is_player() ? sgn(value) : value;
     }
 
     cloud->type = CLOUD_FIRE;
@@ -1616,7 +1617,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     {
         // players don't care about magnitude, just care if enemies exist
         if (agent && agent->is_player())
-            return mons_aligned(mon, agent) ? 0 : 1;
+            return mons_aligned(mon, agent) ? -1 : 1;
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
     simple_monster_message(*mon, " seems to burn from within!");
@@ -1720,17 +1721,13 @@ static int _ignite_ally_harm(const coord_def &where)
  */
 static bool maybe_abort_ignite()
 {
-    // Fire cloud immunity.
-    if (you.duration[DUR_FIRE_SHIELD] || you.has_mutation(MUT_IGNITE_BLOOD))
-        return false;
-
     string prompt = "You are standing ";
 
     // XXX XXX XXX major code duplication (ChrisOelmueller)
-
     if (const cloud_struct* cloud = cloud_at(you.pos()))
     {
-        if (cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
+        if ((cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
+            && !actor_cloud_immune(you, CLOUD_FIRE))
         {
             prompt += "in a cloud of ";
             prompt += cloud->cloud_name(true);

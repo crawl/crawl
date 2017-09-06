@@ -63,6 +63,11 @@ Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
 {
 }
 
+Popup::~Popup()
+{
+    deleteAll(m_entries);
+}
+
 void Popup::set_prompt(string prompt)
 {
     m_prompt = prompt;
@@ -3742,6 +3747,10 @@ MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
 
 MenuScroller::~MenuScroller()
 {
+#ifdef USE_TILE_LOCAL
+    delete m_arrow_up;
+    delete m_arrow_down;
+#endif
     deleteAll(m_entries);
 }
 

@@ -953,8 +953,10 @@ static string _get_save_path(string subdir)
 
 void game_options::reset_options()
 {
-    for (GameOption* option : option_behaviour)
-        delete option;
+    // XXX: do we really need to rebuild the list and map every time?
+    // Will they ever change within a single execution of Crawl?
+    // GameOption::value's value will change of course, but not the reference.
+    deleteAll(option_behaviour);
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
@@ -1743,6 +1745,11 @@ game_options::game_options()
     : seed(0), no_save(false), language(lang_t::EN), lang_name(nullptr)
 {
     reset_options();
+}
+
+game_options::~game_options()
+{
+    deleteAll(option_behaviour);
 }
 
 void game_options::read_options(LineInput &il, bool runscript,

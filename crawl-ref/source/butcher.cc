@@ -297,7 +297,9 @@ void butchery(item_def* specific_corpse)
     //XXX: this assumes that we're not being called from a delay ourselves.
     // It's not a problem in the case of macros, though, because
     // delay.cc:_push_delay should handle them OK.
+#ifndef TOUCH_UI
 done:
+#endif
     if (butchered_any)
         handle_delay();
 

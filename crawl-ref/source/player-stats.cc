@@ -169,7 +169,7 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
         else
         {
 #ifdef TOUCH_UI
-            keyin = pop->pop();
+            keyin = pop.pop();
 #else
             keyin = getchm();
 #endif

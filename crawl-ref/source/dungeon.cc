@@ -1322,28 +1322,29 @@ static int _num_items_wanted(int absdepth0)
         return 3 + roll_dice(3, 11);
 }
 
+// Return how many level monster are wanted for level generation.
 static int _num_mons_wanted()
 {
-    if (player_in_branch(BRANCH_ABYSS))
+    const bool in_pan = player_in_branch(BRANCH_PANDEMONIUM);
+
+    // No disconnected branches aside from Pan have level monsters.
+    if ((!player_in_connected_branch() && !in_pan)
+        // Temple is connected but has no monsters.
+        || !branch_has_monsters(you.where_are_you))
+    {
         return 0;
+    }
 
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-        return random2avg(28, 3);
+    int size = 12;
 
-    // Except for Abyss and Pan, no other portal gets random monsters.
-    if (!player_in_connected_branch())
-        return 0;
+    if (in_pan)
+        size = 8;
+    else if (player_in_branch(BRANCH_CRYPT))
+        size = 10;
+    else if (player_in_hell())
+        size = 23;
 
-    if (!branch_has_monsters(you.where_are_you))
-        return 0;
-
-    if (player_in_branch(BRANCH_CRYPT))
-        return roll_dice(3, 8);
-
-    int mon_wanted = roll_dice(3, 10);
-
-    if (player_in_hell())
-        mon_wanted += roll_dice(3, 8);
+    int mon_wanted = roll_dice(3, size);
 
     if (mon_wanted > 60)
         mon_wanted = 60;
@@ -3763,7 +3764,6 @@ static void _builder_monsters()
     int mon_wanted = _num_mons_wanted();
 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
-    const bool in_pan    = player_in_branch(BRANCH_PANDEMONIUM);
     if (in_shoals)
         dgn_shoals_generate_flora();
 
@@ -3777,12 +3777,23 @@ static void _builder_monsters()
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
-        if (!in_pan)
+
+        // Chance to generate the monster awake, but away from level stairs.
+        // D:1 is excluded from this chance since the player can't escape
+        // upwards and is especially vulnerable.
+        if (player_in_connected_branch()
+            && env.absdepth0 > 0
+            && one_chance_in(8))
+        {
+            mg.proximity = PROX_AWAY_FROM_STAIRS;
+        }
+        // Pan monsters always generate awake.
+        else if (!player_in_branch(BRANCH_PANDEMONIUM))
             mg.behaviour = BEH_SLEEP;
+
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
-
         place_monster(mg);
     }
 
