@@ -269,7 +269,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
 }
 
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
-                    coord_def pos)
+                    mon_attitude_type mon_att, coord_def pos)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
@@ -299,6 +299,9 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->move_to_pos(pos);
+    mons->attitude = mon_att == ATT_SAME ?
+            orig->attitude : mon_att;
+
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
