@@ -86,25 +86,12 @@ static void _mons_summon_monster_illusion(monster* caster,
         return;
 
     bool cloning_visible = false;
-    monster *clone = nullptr;
 
-    // [ds] Bind the original target's attitude before calling
-    // clone_mons, since clone_mons also updates arena bookkeeping.
-    //
     // If an enslaved caster creates a clone from a regular hostile,
     // the clone should still be friendly.
-    //
-    // This is all inside its own block so the unwind_var will be unwound
-    // before we use foe->name below.
-    {
-        const mon_attitude_type clone_att =
-            caster->friendly() ? ATT_FRIENDLY : caster->attitude;
-
-        unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
-        clone = clone_mons(foe, true, &cloning_visible);
-    }
-
-    if (clone)
+    if (monster *clone = clone_mons(foe, true, &cloning_visible,
+                                    caster->friendly() ?
+                                    ATT_FRIENDLY : caster->attitude))
     {
         const string clone_id = _monster_clone_id_for(foe);
         clone->props[CLONE_SLAVE_KEY] = clone_id;

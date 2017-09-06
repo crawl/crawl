@@ -1551,7 +1551,7 @@ static spret_type _phantom_mirror()
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
 
-    monster* mon = clone_mons(victim, true);
+    monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);
     if (!mon)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1565,7 +1565,6 @@ static spret_type _phantom_mirror()
                              surge)
                          * (100 - victim->check_res_magic(power)) / 100));
 
-    mon->attitude = ATT_FRIENDLY;
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 
     mon->summoner = MID_PLAYER;
