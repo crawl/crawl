@@ -110,24 +110,24 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
     {
         learned_something_new(HINT_CHOOSE_STAT);
     }
-    Popup *pop = new Popup(title);
-    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(message + prompt, MEL_TITLE));
-    pop->push_entry(status);
-    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
-    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
-    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
-    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
-    pop->push_entry(me);
+    Popup pop{title};
+    MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
+    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 0, 'S');
+    s_me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I');
+    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D');
+    d_me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+    pop.push_entry(new MenuEntry(message + prompt, MEL_TITLE));
+    pop.push_entry(status);
+    pop.push_entry(s_me);
+    pop.push_entry(i_me);
+    pop.push_entry(d_me);
     if (!increase_attribute)
     {
-        me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
-        me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-        pop->push_entry(me);
+        MenuEntry * const x_me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X');
+        x_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+        pop.push_entry(x_me);
     }
 #else
     if (increase_attribute)
@@ -218,13 +218,7 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
             break;
         }
     } while (chosen_stat == NUM_STATS);
-// Manually delete Popup and MenuEntrys (unsure if it is already being deleted
-// elsewhere?)
-#ifdef TOUCH_UI
-    delete pop;
-    delete status;
-    delete me;
-#endif
+
     return chosen_stat;
 }
 
