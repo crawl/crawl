@@ -4745,11 +4745,25 @@ void dec_channel_player(int delay)
 bool invis_allowed(bool quiet, string *fail_reason)
 {
     string msg;
+    string reason = "";
     bool success = true;
 
     if (you.haloed() && you.halo_radius() != -1)
     {
-        msg = "Your halo prevents invisibility.";
+        bool divine = you.attribute[ATTR_HEAVENLY_STORM] > 0 ||
+                you.religion == GOD_SHINING_ONE;
+        bool weapon = player_equip_unrand(UNRAND_EOS);
+
+        if (divine && weapon)
+            reason = "Your weapon and divine halo glow too brightly";
+        else if (divine)
+            reason = "Your divine halo glows too radiantly";
+        else if (weapon)
+            reason = "Your weapon shines too brightly";
+        else
+            die("haloed by an unknown source");
+
+        msg = reason + " to become invisible.";
         success = false;
     }
     else if (you.backlit())
