@@ -4355,7 +4355,7 @@ SUBST: = = +, DE = F
 : elseif you.in_branch("Lair") then
 SUBST: c = x
 : elseif you.in_branch("Swamp") then
-SUBST: 1 = 2, 2 = 3, E = F, D = E, c = x
+SUBST: 2 = 3, 1 = 2, E = F, D = E, c = x
 : end
 SUBST: D = 1., E = 2., F = F.
 {{
