@@ -4745,7 +4745,6 @@ void dec_channel_player(int delay)
 bool invis_allowed(bool quiet, string *fail_reason)
 {
     string msg;
-    string reason = "";
     bool success = true;
 
     if (you.haloed() && you.halo_radius() != -1)
@@ -4753,6 +4752,7 @@ bool invis_allowed(bool quiet, string *fail_reason)
         bool divine = you.attribute[ATTR_HEAVENLY_STORM] > 0 ||
                 you.religion == GOD_SHINING_ONE;
         bool weapon = player_equip_unrand(UNRAND_EOS);
+        string reason;
 
         if (divine && weapon)
             reason = "Your weapon and divine halo glow too brightly";
