@@ -255,6 +255,13 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     return true;
 }
 
+/*
+ * @param orig          The original monster to clone.
+ * @param quiet         If true, suppress messages
+ * @param obvious       If true, player can see the orig & cloned monster
+ * @param mon_att       The attitude to set for the cloned monster
+ * @return              Returns the cloned monster
+ */
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                     mon_attitude_type mon_att)
 {
