@@ -1113,14 +1113,17 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     }
 
     const int severity = fail_severity(spell);
+    const string failure_rate = spell_failure_rate_string(spell);
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
         && !fake_spell)
     {
-        string prompt = make_stringf("The spell is %s to cast%s "
+        string prompt = make_stringf("The spell is %s to cast "
+                                     "(%s risk of failure)%s "
                                      "Continue anyway?",
                                      fail_severity_adjs[severity],
+                                     failure_rate.c_str(),
                                      severity > 1 ? "!" : ".");
 
         if (!yesno(prompt.c_str(), false, 'n'))
