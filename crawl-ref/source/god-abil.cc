@@ -5467,6 +5467,12 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
                 piety_gain += 15;
+            // Ds are highly likely to miss at least one mutation. This isn't
+            // absolutely certain, but it's very likely and they should still
+            // get a bonus for the risk. Could check the exact mutation
+            // schedule, but this seems too leaky.
+            if (you.species == SP_DEMONSPAWN)
+                piety_gain += 28;
         case ABIL_RU_SACRIFICE_COURAGE:
             if (you.get_mutation_level(MUT_INEXPERIENCED))
                 piety_gain += 15;
