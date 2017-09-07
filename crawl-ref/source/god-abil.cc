@@ -5473,6 +5473,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             // schedule, but this seems too leaky.
             if (you.species == SP_DEMONSPAWN)
                 piety_gain += 28;
+            break;
         case ABIL_RU_SACRIFICE_COURAGE:
             if (you.get_mutation_level(MUT_INEXPERIENCED))
                 piety_gain += 15;
