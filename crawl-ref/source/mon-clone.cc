@@ -259,6 +259,18 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
  * @param orig          The original monster to clone.
  * @param quiet         If true, suppress messages
  * @param obvious       If true, player can see the orig & cloned monster
+ * @return              Returns the cloned monster
+ */
+monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
+{
+    // Pass temp_attitude to handle enslaved monsters cloning monsters
+    return clone_mons(orig, quiet, obvious, orig->temp_attitude());
+}
+
+/**
+ * @param orig          The original monster to clone.
+ * @param quiet         If true, suppress messages
+ * @param obvious       If true, player can see the orig & cloned monster
  * @param mon_att       The attitude to set for the cloned monster
  * @return              Returns the cloned monster
  */
@@ -290,8 +302,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->move_to_pos(pos);
-    mons->attitude = mon_att == ATT_SAME ?
-            orig->attitude : mon_att;
+    mons->attitude = mon_att;
 
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.

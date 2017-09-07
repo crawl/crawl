@@ -8,8 +8,10 @@
 // Formerly in mon-stuff:
 bool mons_clonable(const monster* orig, bool needs_adjacent = true);
 monster *clone_mons(const monster* orig, bool quiet = false,
-                    bool* obvious = nullptr,
-                    mon_attitude_type mon_att = ATT_SAME);
+                    bool* obvious = nullptr);
+
+monster *clone_mons(const monster* orig, bool quiet,
+                    bool* obvious, mon_attitude_type mon_att);
 
 void mons_summon_illusion_from(monster* mons, actor *foe,
                                spell_type spell_cast = SPELL_NO_SPELL,
