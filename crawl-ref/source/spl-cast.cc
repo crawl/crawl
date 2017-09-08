@@ -729,9 +729,13 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
-                         spell_title(you.last_cast_spell));
-                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press ? or * to list all spells.");
+                    string fail_chance = spell_failure_rate_string(you.last_cast_spell);
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s "
+                                       "(%s risk of failure)</w>",
+                                       spell_title(you.last_cast_spell),
+                                       fail_chance.c_str());
+                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
+                                       "? or * to list all spells.");
                 }
 
                 keyin = get_ch();
@@ -1370,9 +1374,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
                                    eff_pow, evoked_item, hitfunc.get());
         }
 
-        string title = "Aiming: <white>";
-        title += spell_title(spell);
-        title += "</white>";
+        string fail_chance = spell_failure_rate_string(spell);
+        string title = make_stringf("Aiming: <w>%s (%s risk of failure)</w>",
+                            spell_title(spell), fail_chance.c_str());
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
