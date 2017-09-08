@@ -728,9 +728,18 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
-                         spell_title(you.last_cast_spell));
-                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press ? or * to list all spells.");
+                    ostringstream desc;
+                    const string failure = failure_rate_to_string(raw_spell_fail(you.last_cast_spell));
+                    int colour = failure_rate_colour(you.last_cast_spell);
+                    desc << "<" << colour_to_str(colour) << ">";
+                    desc << chop_string(failure, failure.length());
+                    desc << "</" << colour_to_str(colour) << ">";
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s "
+                                       "(%s risk of failure)</w>",
+                                       spell_title(you.last_cast_spell),
+                                       desc.str().c_str());
+                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
+                                       "? or * to list all spells.");
                 }
 
                 keyin = get_ch();
