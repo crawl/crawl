@@ -558,12 +558,19 @@ void validate_mutations(bool debug_msg)
         {
             bool is_trait = false;
             int trait_level = 0;
+            // If the player has sacrificed xp, use the pre-sac xl; sac xp
+            // doesn't remove Ds mutations.
+            // You can still trick wizmode into crashing here.
+            const int check_xl = (you.get_mutation_level(MUT_INEXPERIENCED)
+                            && you.max_level <= you.get_experience_level() + 2)
+                                ? you.max_level
+                                : you.get_experience_level();
             for (player::demon_trait trait : you.demonic_traits)
             {
                 if (trait.mutation == mut)
                 {
                     is_trait = true;
-                    if (you.get_experience_level() >= trait.level_gained)
+                    if (check_xl >= trait.level_gained)
                         trait_level += 1;
                 }
             }
