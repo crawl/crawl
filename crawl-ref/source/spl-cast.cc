@@ -1117,12 +1117,19 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         && !fake_spell)
     {
         string prompt = make_stringf("The spell is %s to cast "
-                                     "(%s risk of failure)%s "
-                                     "Continue anyway?",
+                                     "(%s risk of failure)%s",
                                      fail_severity_adjs[severity],
                                      failure_rate.c_str(),
                                      severity > 1 ? "!" : ".");
 
+        if (failure_rate_to_int(raw_spell_fail(spell)) == 100)
+        {
+            mprf(MSGCH_WARN, "%s", prompt.c_str());
+            mprf(MSGCH_WARN, "It is impossible to cast this spell!");
+            return true;
+        }
+
+        prompt = make_stringf("%s Continue anyway?", prompt.c_str());
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
