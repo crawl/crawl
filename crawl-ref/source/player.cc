@@ -1077,7 +1077,8 @@ bool regeneration_is_inhibited()
         {
             if (mons_is_threatening(**mi)
                 && !mi->wont_attack()
-                && !mi->neutral())
+                && !mi->neutral()
+                && !mi->submerged())
             {
                 return true;
             }
