@@ -394,7 +394,10 @@ monster_type pick_random_monster(level_id place,
 
     if (crawl_state.game_is_arena())
         return pick_monster(place, arena_veto_random_monster);
-    else if (kind == RANDOM_MOBILE_MONSTER)
+
+    ASSERT(_is_random_monster(kind) || kind == MONS_NO_MONSTER);
+
+    if (kind == RANDOM_MOBILE_MONSTER)
         return pick_monster(place, mons_class_is_stationary);
     else if (kind == RANDOM_COMPATIBLE_MONSTER)
         return pick_monster(place, _is_incompatible_monster);
