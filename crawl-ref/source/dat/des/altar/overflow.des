@@ -4018,7 +4018,7 @@ ENDMAP
 
 NAME: gammafunk_temple_overflow_arena
 TAGS: temple_overflow_generic_3 temple_overflow_generic_2
-TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen
+TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen no_tele_into
 WEIGHT: 1
 {{
   local altarcount = 3
