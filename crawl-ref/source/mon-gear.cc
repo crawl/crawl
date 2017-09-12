@@ -404,7 +404,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { SPWPN_PAIN,           2 },
         { NUM_SPECIAL_WEAPONS,  20 }, // 5/9 chance of brand
     };
-    static const weapon_list URUG_WEAPONS =
+    static const weapon_list MID_TIER_HUMANOID_WEAPONS =
     {   { WPN_HALBERD,          5 },
         { WPN_GLAIVE,           5 },
         { WPN_WAR_AXE,          6 },
@@ -592,8 +592,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_BLORK_THE_ORC,           { NAGA_WEAPONS } },
         { MONS_DANCING_WEAPON,          { NAGA_WEAPONS, {}, {}, 1 } },
         { MONS_SPECTRAL_WEAPON,         { NAGA_WEAPONS } }, // for mspec placement
-        { MONS_FRANCES,                 { NAGA_WEAPONS } },
-        { MONS_HAROLD,                  { NAGA_WEAPONS } },
         { MONS_SKELETAL_WARRIOR,        { NAGA_WEAPONS } },
         { MONS_PALE_DRACONIAN,          { NAGA_WEAPONS } },
         { MONS_RED_DRACONIAN,           { NAGA_WEAPONS } },
@@ -773,8 +771,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { 1, 0, 5 },
               HELL_KNIGHT_BRANDS
         } },
-        { MONS_URUG,                    { URUG_WEAPONS } },
-        { MONS_FREDERICK,               { URUG_WEAPONS } },
+        { MONS_URUG,                    { MID_TIER_HUMANOID_WEAPONS } },
+        { MONS_FREDERICK,               { MID_TIER_HUMANOID_WEAPONS } },
+        { MONS_FRANCES,                 { MID_TIER_HUMANOID_WEAPONS } },
+        { MONS_HAROLD,                  { MID_TIER_HUMANOID_WEAPONS } },
         { MONS_FIRE_GIANT, {
             { { WPN_GREAT_SWORD,        1 } }, {},
             { { SPWPN_FLAMING, 1 } },
