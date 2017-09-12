@@ -4001,7 +4001,7 @@ DEPTH: Crypt, D:12-, Depths, Elf, Snake, Zot
 ORIENT: float
 ITEM: any book, any manual, any jewellery good_item
 ITEM: robe good_item / cloak good_item / scarf good_item \
-      pair of boots good_item / hat good_item
+      / pair of boots good_item / hat good_item
 # Do this nsubst now so some branches can adjust monster placement.
 NSUBST: 4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
 NSUBST: ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
