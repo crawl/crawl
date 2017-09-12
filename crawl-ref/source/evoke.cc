@@ -1336,7 +1336,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     // Now move clouds
     vector<coord_def> cloud_list;
-    for (distance_iterator di(agent->pos(), true, true, radius + 2); di; ++di)
+    for (distance_iterator di(agent->pos(), true, false, radius + 2); di; ++di)
     {
         if (cloud_at(*di)
             && cell_see_cell(agent->pos(), *di, LOS_SOLID)
@@ -1354,6 +1354,12 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
         int dist = cloud_list[i].distance_from(agent->pos());
         int push = (dist > 5 ? 2 : dist > 2 ? 3 : 4);
+
+        if (dist == 0 && agent->is_player())
+        {
+            delete_cloud(agent->pos());
+            break;
+        }
 
         for (unsigned int j = 0;
              j < wind_beam.path_taken.size() - 1 && push;
