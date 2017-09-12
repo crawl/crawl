@@ -400,8 +400,6 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place, _is_incompatible_monster);
     else if (kind == RANDOM_BANDLESS_MONSTER)
         return pick_monster(place, _is_banded_monster);
-    else if (mons_class_is_zombified(kind))
-        return pick_local_zombifiable_monster(place, kind, coord_def());
     else if (crawl_state.game_is_sprint())
         return pick_monster(place, _has_big_aura);
     else
@@ -549,16 +547,8 @@ monster_type resolve_monster_type(monster_type mon_type,
             }
         }
 
-        int tries = 0;
-        while (tries++ < 300)
-        {
-            level_id orig_place = *place;
-
-            // Now pick a monster of the given branch and level.
-            mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
-
-            *place = orig_place;
-        }
+        // Now pick a monster of the given branch and level.
+        mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
     }
     return mon_type;
 }
