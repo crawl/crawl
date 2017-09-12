@@ -4230,7 +4230,7 @@ ccccccccScccccccc
 ENDMAP
 
 NAME:   gammafunk_steamed_eel
-TAGS:   no_monster_gen no_trap_gen no_pool_fixup
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup
 DEPTH:  D:3-9
 ORIENT: float
 KMONS:  p = plant
@@ -4256,10 +4256,9 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_wand_slinger
-TAGS:   no_monster_gen no_trap_gen no_pool_fixup
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup
 DEPTH:  D:3-13
 ORIENT: float
-KPROP:  LM = no_tele_into
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
 ITEM:   wand of lightning / wand of iceblast / wand of acid
