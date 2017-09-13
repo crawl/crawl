@@ -4108,8 +4108,12 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         }
         else
         {
-            friend_info.power
-                += 2 * final * mon->get_experience_level() / preac;
+            // Discourage summoned monsters firing on their summoner.
+            if (monster_by_mid(source_id)->summoner == mon->mid)
+                friend_info.power = 100;
+            else
+                friend_info.power
+                    += 2 * final * mon->get_experience_level() / preac;
             friend_info.count++;
         }
     }
