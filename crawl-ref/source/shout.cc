@@ -36,6 +36,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "view.h"
+#include "viewchar.h"
 
 static noise_grid _noise_grid;
 static void _actor_apply_noise(actor *act,
@@ -1084,7 +1085,7 @@ void noise_grid::propagate_noise()
     if (affected_actor_count)
     {
         mprf(MSGCH_WARN, "Writing noise grid with %d noise sources",
-             noises.size());
+             (int) noises.size());
         dump_noise_grid("noise-grid.html");
     }
 #endif
@@ -1319,7 +1320,7 @@ void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
 void noise_grid::write_noise_grid(FILE *outf) const
 {
     // Duplicate the screenshot() trick.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
+    FixedVector<char32_t, NUM_DCHAR_TYPES> char_table_bk;
     char_table_bk = Options.char_table;
 
     init_char_table(CSET_ASCII);
@@ -1382,11 +1383,23 @@ static void _actor_apply_noise(actor *act,
     else
     {
         monster *mons = act->as_monster();
-        // If the noise came from the character, any nearby monster
-        // will be jumping on top of them.
-        if (grid_distance(apparent_source, you.pos()) <= 3)
-            behaviour_event(mons, ME_ALERT, &you, apparent_source);
+        // If the perceived noise came from within the player's LOS, any
+        // monster that hears it will have a chance to guess that the
+        // noise was triggered by the player, depending on how close it was to
+        // the player. This happens independently of actual noise source.
+        //
+        // The probability is calculated as p(x) = (-90/R)x + 100, which is
+        // linear from p(0) = 100 to p(R) = 10. This replaces a version that
+        // was 100% from 0 to 3, and 0% outward.
+        //
+        // behavior around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
+
+        const int player_distance = grid_distance(apparent_source, you.pos());
+        const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);
+
+        if (x_chance_in_y(alert_prob, 100))
+            behaviour_event(mons, ME_ALERT, &you, apparent_source); // shout + set you as foe
         else
-            behaviour_event(mons, ME_DISTURB, 0, apparent_source);
+            behaviour_event(mons, ME_DISTURB, 0, apparent_source); // wake
     }
 }
