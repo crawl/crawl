@@ -1047,6 +1047,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     switch (event)
     {
     case ME_DISTURB:
+#ifdef DEBUG_NOISE_PROPAGATION
+        dprf("Disturbing %s", mon->name(DESC_A, true).c_str());
+#endif
         // Assumes disturbed by noise...
         if (mon->asleep())
         {
@@ -1149,6 +1152,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_ALERT:
+#ifdef DEBUG_NOISE_PROPAGATION
+        dprf("Alerting %s", mon->name(DESC_A, true).c_str());
+#endif
         // Allow monsters falling asleep while patrolling (can happen if
         // they're left alone for a long time) to be woken by this event.
         if (mon->friendly() && mon->is_patrolling()
@@ -1320,6 +1326,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it was unaware of you and you're its new foe, it might shout.
+#ifdef DEBUG_NOISE_PROPAGATION
+    dprf("%s could shout in behavioural event, allow_shout: %d, foe: %d", mon->name(DESC_A, true).c_str(), allow_shout, mon->foe);
+#endif
     if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
