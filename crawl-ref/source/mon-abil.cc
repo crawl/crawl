@@ -134,7 +134,9 @@ bool ugly_thing_mutate(monster& ugly, bool force)
 static void _split_ench_durations(monster* initial_slime, monster* split_off)
 {
     for (const auto &entry : initial_slime->enchantments)
-        split_off->add_ench(entry.second);
+        // Don't let new slimes inherit being held by a web or net
+        if (entry.second.ench != ENCH_HELD)
+            split_off->add_ench(entry.second);
 }
 
 // What to do about any enchantments these two creatures may have?
