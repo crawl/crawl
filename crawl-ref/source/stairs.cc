@@ -422,6 +422,22 @@ static void _new_level_amuses_xom(dungeon_feature_type feat,
     }
 }
 
+/**
+ * Determine destination level.
+ *
+ * @param how         How the player is trying to travel.
+ *                    (e.g. stairs, traps, portals, etc)
+ * @param whence      Not currently used
+ * @param forced      True if the player is forcing the traveling attempt.
+ *                    (e.g. forcibly exiting the abyss, etc)
+ * @param going_up    True if the player is going upstairs.
+ * @param known_shaft True if the player is intentionally shafting themself.
+ * @return            The destination level, if valid. Note the default value
+ *                    of dest is not valid (since depth = -1) and this is
+ *                    generally what is returned for invalid destinations.
+ *                    But note the special case when failing to climb stairs
+ *                    when attempting to leave the dungeon, depth = 1.
+ */
 static level_id _travel_destination(const dungeon_feature_type how,
                                     const dungeon_feature_type whence,
                                     bool forced, bool going_up,
@@ -469,6 +485,9 @@ static level_id _travel_destination(const dungeon_feature_type how,
         // going 'down' into the vestibule are twice as likely to fall, because
         // they have to pass a check here, and later in floor_transition
         // Right solution is probably to use the canonicalized direction everywhere
+
+        // If player falls down the stairs trying to leave the dungeon, we set
+        // the destination depth to 1 (i.e. D:1)
         if (how == DNGN_EXIT_DUNGEON)
             dest.depth = 1;
         return dest;
@@ -814,10 +833,12 @@ void floor_transition(dungeon_feature_type how,
 /**
  * Try to go up or down stairs.
  *
- * @param force_stair The type of stair/portal to take. By default, use whatever
- *      tile is under the player. But this can be overridden (e.g. passing
- *      DNGN_EXIT_ABYSS forces the player out of the abyss)
- * @param force_known_shaft true if the player is shafting themselves via ability
+ * @param force_stair         The type of stair/portal to take. By default,
+ *      use whatever tile is under the player. But this can be overridden
+ *      (e.g. passing DNGN_EXIT_ABYSS forces the player out of the abyss)
+ * @param going_up            True if the player is going upstairs
+ * @param force_known_shaft   True if player is shafting themselves via ability.
+ * @param update_travel_cache True if travel cache should be updated.
  */
 void take_stairs(dungeon_feature_type force_stair, bool going_up,
                  bool force_known_shaft, bool update_travel_cache)
