@@ -434,6 +434,22 @@ static void _new_level_amuses_xom(dungeon_feature_type feat,
     }
 }
 
+/**
+ * Determine destination level.
+ *
+ * @param how         How the player is trying to travel.
+ *                    (e.g. stairs, traps, portals, etc)
+ * @param whence      Not currently used
+ * @param forced      True if the player is forcing the traveling attempt.
+ *                    (e.g. forcibly exiting the abyss, etc)
+ * @param going_up    True if the player is going upstairs.
+ * @param known_shaft True if the player is intentionally shafting themself.
+ * @return            The destination level, if valid. Note the default value
+ *                    of dest is not valid (since depth = -1) and this is
+ *                    generally what is returned for invalid destinations.
+ *                    But note the special case when failing to climb stairs
+ *                    when attempting to leave the dungeon, depth = 1.
+ */
 static level_id _travel_destination(const dungeon_feature_type how,
                                     const dungeon_feature_type whence,
                                     bool forced, bool going_up,
@@ -476,11 +492,18 @@ static level_id _travel_destination(const dungeon_feature_type how,
     // Falling down is checked before the transition if going upstairs, since
     // it might prevent the transition itself.
     if (going_up && _check_fall_down_stairs(how, true))
+    {
         // TODO: This probably causes an obscure bug where confused players
         // going 'down' into the vestibule are twice as likely to fall, because
         // they have to pass a check here, and later in floor_transition
         // Right solution is probably to use the canonicalized direction everywhere
+
+        // If player falls down the stairs trying to leave the dungeon, we set
+        // the destination depth to 1 (i.e. D:1)
+        if (how == DNGN_EXIT_DUNGEON)
+            dest.depth = 1;
         return dest;
+    }
 
     if (shaft)
     {
@@ -538,6 +561,26 @@ static level_id _travel_destination(const dungeon_feature_type how,
         return shaft_dest;
     else
         return stair_destination(how, dst, true);
+}
+
+/**
+ * Check to see if transition will actually move the player.
+ *
+ * @param dest      The destination level (branch and depth).
+ * @param feat      The dungeon feature the player is standing on.
+ * @param going_up  True if the player is trying to go up stairs.
+ * @return          True if the level transition should happen.
+ */
+static bool _level_transition_moves_player(level_id dest,
+                                           dungeon_feature_type feat,
+                                           bool going_up)
+{
+    bool trying_to_exit = feat == DNGN_EXIT_DUNGEON && going_up;
+
+    // When exiting the dungeon, dest is not valid (depth = -1)
+    // So the player can transition with an invalid dest ONLY when exiting.
+    // Otherwise (i.e. not exiting) dest must be valid.
+    return dest.is_valid() != trying_to_exit;
 }
 
 /**
@@ -811,10 +854,12 @@ void floor_transition(dungeon_feature_type how,
 /**
  * Try to go up or down stairs.
  *
- * @param force_stair The type of stair/portal to take. By default, use whatever
- *      tile is under the player. But this can be overridden (e.g. passing
- *      DNGN_EXIT_ABYSS forces the player out of the abyss)
- * @param force_known_shaft true if the player is shafting themselves via ability
+ * @param force_stair         The type of stair/portal to take. By default,
+ *      use whatever tile is under the player. But this can be overridden
+ *      (e.g. passing DNGN_EXIT_ABYSS forces the player out of the abyss)
+ * @param going_up            True if the player is going upstairs
+ * @param force_known_shaft   True if player is shafting themselves via ability.
+ * @param update_travel_cache True if travel cache should be updated.
  */
 void take_stairs(dungeon_feature_type force_stair, bool going_up,
                  bool force_known_shaft, bool update_travel_cache)
@@ -833,7 +878,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     level_id whither = _travel_destination(how, old_feat,
                            bool(force_stair), going_up, known_shaft);
 
-    if (!whither.is_valid() && !(old_feat == DNGN_EXIT_DUNGEON && going_up))
+    if (!_level_transition_moves_player(whither, old_feat, going_up))
         return;
 
     floor_transition(how, old_feat, whither,
