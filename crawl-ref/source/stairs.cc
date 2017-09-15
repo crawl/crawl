@@ -464,11 +464,15 @@ static level_id _travel_destination(const dungeon_feature_type how,
     // Falling down is checked before the transition if going upstairs, since
     // it might prevent the transition itself.
     if (going_up && _check_fall_down_stairs(how, true))
+    {
         // TODO: This probably causes an obscure bug where confused players
         // going 'down' into the vestibule are twice as likely to fall, because
         // they have to pass a check here, and later in floor_transition
         // Right solution is probably to use the canonicalized direction everywhere
+        if (how == DNGN_EXIT_DUNGEON)
+            dest.depth = 1;
         return dest;
+    }
 
     if (shaft)
     {
@@ -813,7 +817,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     level_id whither = _travel_destination(how, old_feat,
                            bool(force_stair), going_up, known_shaft);
 
-    if (!whither.is_valid() && !(old_feat == DNGN_EXIT_DUNGEON && going_up))
+    if ((!whither.is_valid() && !(old_feat == DNGN_EXIT_DUNGEON && going_up)) ||
+         (whither.is_valid() &&  (old_feat == DNGN_EXIT_DUNGEON && going_up)))
         return;
 
     floor_transition(how, old_feat, whither,
