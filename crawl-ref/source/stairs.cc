@@ -550,23 +550,23 @@ static level_id _travel_destination(const dungeon_feature_type how,
 }
 
 /**
- * Check to see if the level transition should be stopped
+ * Check to see if transition will actually move the player.
  *
  * @param dest      The destination level (branch and depth).
  * @param feat      The dungeon feature the player is standing on.
  * @param going_up  True if the player is trying to go up stairs.
- * @return          True if the level transition should be stopped.
+ * @return          True if the level transition should happen.
  */
-static bool _stop_transition(level_id dest, dungeon_feature_type feat,
-                             bool going_up)
+static bool _level_transition_moves_player(level_id dest,
+                                           dungeon_feature_type feat,
+                                           bool going_up)
 {
-    bool trying_to_win = feat == DNGN_EXIT_DUNGEON && going_up;
+    bool trying_to_exit = feat == DNGN_EXIT_DUNGEON && going_up;
 
-    // When actually leaving the dungeon, dest is invalid, so if the player is
-    // trying to win, but the destination is valid, something caused the player
-    // to remain in the dungeon (i.e. slipped back downstairs while confused).
-    return (!dest.is_valid() && !trying_to_win) ||
-            (dest.is_valid() &&  trying_to_win);
+    // When exiting the dungeon, dest is not valid (depth = -1)
+    // So the player can transition with an invalid dest ONLY when exiting.
+    // Otherwise (i.e. not exiting) dest must be valid.
+    return dest.is_valid() != trying_to_exit;
 }
 
 /**
@@ -856,7 +856,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     level_id whither = _travel_destination(how, bool(force_stair), going_up,
                                            known_shaft);
 
-    if (_stop_transition(whither, old_feat, going_up))
+    if (!_level_transition_moves_player(whither, old_feat, going_up))
         return;
 
     floor_transition(how, old_feat, whither,
