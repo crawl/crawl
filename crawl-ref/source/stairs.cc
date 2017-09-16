@@ -427,7 +427,6 @@ static void _new_level_amuses_xom(dungeon_feature_type feat,
  *
  * @param how         How the player is trying to travel.
  *                    (e.g. stairs, traps, portals, etc)
- * @param whence      Not currently used
  * @param forced      True if the player is forcing the traveling attempt.
  *                    (e.g. forcibly exiting the abyss, etc)
  * @param going_up    True if the player is going upstairs.
@@ -439,7 +438,6 @@ static void _new_level_amuses_xom(dungeon_feature_type feat,
  *                    when attempting to leave the dungeon, depth = 1.
  */
 static level_id _travel_destination(const dungeon_feature_type how,
-                                    const dungeon_feature_type whence,
                                     bool forced, bool going_up,
                                     bool known_shaft)
 {
@@ -855,8 +853,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     // Latter case is falling down a shaft.
     const bool shaft = known_shaft || force_stair == DNGN_TRAP_SHAFT;
 
-    level_id whither = _travel_destination(how, old_feat,
-                           bool(force_stair), going_up, known_shaft);
+    level_id whither = _travel_destination(how, bool(force_stair), going_up,
+                                           known_shaft);
 
     if (_stop_transition(whither, old_feat, going_up))
         return;
