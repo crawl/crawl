@@ -1371,6 +1371,9 @@ aff_type targeter_shotgun::is_affected(coord_def loc)
 targeter_monster_sequence::targeter_monster_sequence(const actor *act, int pow, int r) :
                           targeter_beam(act, r, ZAP_DEBUGGING_RAY, pow, 0, 0)
 {
+    // for `path_taken` to be set properly, the beam needs to be piercing, and
+    // ZAP_DEBUGGING_RAY is not.
+    beam.pierce = true;
 }
 
 bool targeter_monster_sequence::set_aim(coord_def a)
