@@ -26,7 +26,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     {
         // Brutal Hack to fix Visible Monsters/Features/Items Menu
         if (menu.tag == 'pickup' && !item_selectable(item) && item.level != 1) {
-            elem.remove()
+            elem.remove();
             return;
         }
             
