@@ -1117,7 +1117,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     const player_save_info &player = *static_cast<player_save_info*>(data);
     dolls_data equip_doll = player.doll;
 
-    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
     int p_order[TILEP_PART_MAX] =
     {
         TILEP_PART_SHADOW,  //  0
@@ -1130,11 +1130,11 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
         TILEP_PART_HELM,
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
         TILEP_PART_DRCHEAD  // 15
     };
 
@@ -3069,7 +3069,7 @@ void SaveMenuItem::set_doll(dolls_data doll)
 void SaveMenuItem::_pack_doll()
 {
     m_tiles.clear();
-    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
     int p_order[TILEP_PART_MAX] =
     {
         TILEP_PART_SHADOW,  //  0
@@ -3082,11 +3082,11 @@ void SaveMenuItem::_pack_doll()
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
         TILEP_PART_HELM,
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
         TILEP_PART_DRCHEAD  // 15
     };
 

@@ -935,6 +935,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
     // Ordered from back to front.
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
     int p_order[TILEP_PART_MAX] =
     {
         // background
