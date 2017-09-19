@@ -567,12 +567,6 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    // Special case for draconians missing their headgear
-    const bool is_drac = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_DRACONIAN);
-    if (doll.parts[TILEP_PART_HELM] >= TILEP_PART_DRCHEAD)
-      flags[TILEP_PART_HELM] = is_drac ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-
     // Set up mcache data based on equipment. We don't need this lookup if both
     // pairs of offsets are defined in Options.
     int draw_info_count = 0, dind = 0;
