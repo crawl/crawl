@@ -952,10 +952,10 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
+        TILEP_PART_DRCHEAD,
         TILEP_PART_HELM,
         TILEP_PART_HAND1,
         TILEP_PART_HAND2,
-        TILEP_PART_DRCHEAD
     };
 
     int flags[TILEP_PART_MAX];
