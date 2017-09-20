@@ -674,7 +674,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, &mi, hotkey++);
+                    me = new MonsterMenuEntry(prefix + fss[j].tostring(), &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
