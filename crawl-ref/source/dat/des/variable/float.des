@@ -4340,43 +4340,55 @@ x1..xxExx..Yx
 xxxxxE@Exxxxx
 ENDMAP
 
-NAME: gammafunk_mikee_crab_dinner
-TAGS: no_monster_gen no_trap_gen
+NAME:  gammafunk_mikee_crab_dinner
+TAGS:  no_monster_gen no_trap_gen patrolling
 DEPTH: D:13-, Depths, Lair:3-, Swamp, Zot
 ORIENT: float
-MONS:  fire crab, ghost crab
-KMONS: 3F = apocalypse crab
-KITEM: 3 = *
-: if you.in_branch("Zot") then
-SUBST: = = +, D = F, E = 3
+KMONS: F = apocalypse crab
+KITEM: F = |
+: if you.in_branch("D") then
+MONS:  fire crab, ghost crab, entropy weaver
 : elseif you.in_branch("Depths") then
-SUBST: = = +, DE = F
+MONS:  apocalypse crab
+KMONS: 2 = apocalypse crab
+KMONS: 3 = titan
+KITEM: 2 = *
+SUBST: = = +, E = D
 : elseif you.in_branch("Lair") then
+MONS:  fire crab, ghost crab, entropy weaver
 SUBST: c = x
 : elseif you.in_branch("Swamp") then
-SUBST: 2 = 3, 1 = 2, E = F, D = E, c = x
+MONS:  ghost crab, apocalypse crab, spriggan druid
+SUBST: c = xxxt
+: elseif you.in_branch("Zot") then
+MONS:  apocalypse crab
+KMONS: 2 = apocalypse crab
+KMONS: 3 = killer klown / draconian stormcaller / draconian scorcher
+KITEM: 2 = *
+SUBST: = = +, E = D
 : end
-SUBST: D = 1., E = 2., F = F.
+SUBST: D = 1., E = 2.
+NSUBST: 3 = 2:3 / 3.
 {{
 dgn.delayed_decay(_G, '-', 'troll skeleton / minotaur skeleton ' ..
                            '/ deep dwarf skeleton / centaur skeleton')
 }}
 MAP
 ccccccccccc
-=.-..1..-.c
+=.-...1.-.c
 ccccccccc.c
-c....2..c.c
-c-ccccc.c.c
-c.c-.-c.c.c
-c.c.c+c.c.c
-c1cEc3cEc1c
+c.3...E.c1c
+c.ccccc.c.c
+c-c-*3c.c-c
 c.c.c*c.c.c
-c.c.c|c.c.c
+c1c.c*c2c3c
+c.c2c|c.c.c
+c.c.cFc-c.c
 c-c.c|c.c.c
-cDc.ccc.cDc
-c.c..2..c-c
+cDc.ccc3cDc
+c.cE....c-c
 c.ccccccc.c
-c..-.1....c
+c.-3...1..c
 ccccccccccc
 ENDMAP
 
