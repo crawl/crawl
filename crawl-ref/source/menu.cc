@@ -57,6 +57,7 @@
  #include "travel.h"
 #endif
 #include "unicode.h"
+#include "unwind.h"
 
 #ifdef USE_TILE_LOCAL
 Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
@@ -2790,10 +2791,9 @@ int MenuItem::get_vertical_offset() const
 }
 #endif
 
-#ifdef USE_TILE_LOCAL
-TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
-#else
 TextItem::TextItem()
+#ifdef USE_TILE_LOCAL
+                        : m_font_buf(tiles.get_crt_font())
 #endif
 {
 }
@@ -2920,6 +2920,135 @@ void TextItem::_wrap_text()
         m_render_text = m_render_text.substr(pos);
     }
     // m_render_text now holds the fitting part of the text, ready for render!
+}
+
+
+EditableTextItem::EditableTextItem() : TextItem(),
+                        editable(true), in_edit_mode(false), edit_width(-1),
+                        tag("generic_text_box")
+{
+}
+
+void EditableTextItem::set_editable(bool e, int width)
+{
+    editable = e;
+    edit_width = width;
+}
+
+/**
+ * A rudimentary textbox editing mode.
+ *
+ * This uses a line_reader to read some text at the location of the TextItem.
+ * It does not do anything with the edit results! You will need to call this
+ * function at the right point in the gui, and do something appropriate with
+ * the results elsewhere.
+ *
+ * @param custom_prefill a string to populate the box; if null, this will use
+ *                          the current text.
+ * @param keyproc_fun an optional keyproc for the line_reader
+  *                     (see lin_reader::set_keyproc).
+ *
+ * @return the result of the editing, including the string and the int
+ *          returned by the line_reader.
+ */
+edit_result EditableTextItem::edit(const string *custom_prefill,
+                                   const line_reader::keyproc keyproc_fun)
+{
+    char buf[80];
+
+    if (!editable)
+        return edit_result(string(m_text), 0);
+
+    // this is needed because render will get called during the input loop.
+    unwind_bool e_mode(in_edit_mode, true);
+
+    int e_width;
+    int box_width = m_max_coord.x - m_min_coord.x;
+    if (edit_width <= 0)
+        e_width = box_width;
+    else
+        e_width = edit_width;
+
+    e_width = min(e_width, (int) sizeof buf - 1);
+
+    string prefill = make_stringf("%-*s", e_width,
+        custom_prefill ? custom_prefill->c_str() : m_text.c_str());
+
+    strncpy(buf, prefill.c_str(), e_width);
+    buf[e_width] = 0;
+
+    mouse_control mc(MOUSE_MODE_PROMPT);
+
+#ifdef USE_TILE_LOCAL
+    m_line_buf.clear();
+    m_line_buf.add_square(m_min_coord.x, m_min_coord.y,
+                          m_max_coord.x, m_max_coord.y, term_colours[RED]);
+    m_line_buf.draw();
+
+    unwind_bool dirty(m_dirty, false);
+
+    fontbuf_line_reader reader(buf, e_width+1, m_font_buf, 80);
+    reader.set_location(coord_def(m_min_coord.x,
+                                  m_min_coord.y + get_vertical_offset()));
+#else
+    line_reader reader(buf, e_width+1, 80);
+    reader.set_location(m_min_coord);
+#endif
+
+    reader.set_edit_mode(EDIT_MODE_OVERWRITE);
+    if (keyproc_fun)
+        reader.set_keyproc(keyproc_fun);
+#ifdef USE_TILE_WEB
+    reader.set_tag(tag);
+#endif
+
+    reader.set_colour(COLOUR_INHERIT, m_highlight_colour);
+    int result = reader.read_line(false, true);
+
+#ifdef USE_TILE_LOCAL
+    m_line_buf.clear();
+    m_line_buf.draw();
+#endif
+
+    return edit_result(string(buf), result);
+}
+
+void EditableTextItem::set_tag(string t)
+{
+    tag = t;
+}
+
+bool EditableTextItem::selected() const
+{
+    return false;
+}
+
+bool EditableTextItem::can_be_highlighted() const
+{
+    return false;
+}
+
+void EditableTextItem::render()
+{
+#ifdef USE_TILE_LOCAL
+    if (in_edit_mode)
+    {
+        m_line_buf.add_square(m_min_coord.x, m_min_coord.y,
+                              m_max_coord.x, m_max_coord.y,
+                              term_colours[m_highlight_colour]);
+        m_line_buf.draw();
+        // this relies on m_font_buf being modified by the reader
+        m_font_buf.draw();
+    }
+    else
+    {
+        m_line_buf.clear();
+        m_line_buf.draw();
+        TextItem::render();
+    }
+#else
+    TextItem::render();
+#endif //USE_TILE_LOCAL
 }
 
 NoSelectTextItem::NoSelectTextItem()

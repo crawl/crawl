@@ -47,6 +47,8 @@ public:
                        const formatted_string &fs) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
                        const VColour &col) = 0;
+    virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
+                       const VColour &fg_col, const VColour &bg_col) = 0;
 
     virtual unsigned int char_width() const = 0;
     virtual unsigned int char_height() const = 0;
