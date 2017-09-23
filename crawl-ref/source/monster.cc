@@ -6335,13 +6335,17 @@ void monster::steal_item_from_player()
             inv[MSLOT_GOLD] = idx;
             new_item.set_holding_monster(*this);
         }
-        mprf("%s steals %s your gold!",
+        mprf("%s steals %d gold piece%s!",
              name(DESC_THE).c_str(),
-             stolen_amount == you.gold ? "all" : "some of");
+             stolen_amount,
+             stolen_amount != 1 ? "s" : "");
 
         you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
 
         you.del_gold(stolen_amount);
+        mprf("You now have %d gold piece%s.",
+             you.gold, you.gold != 1 ? "s" : "");
+
         return;
     }
 
