@@ -1087,9 +1087,9 @@ static void _shoals_change_tide_granularity(int newval)
     TIDE_MULTIPLIER = newval;
 }
 
-static int _tidemod_keyfilter(int &c)
+static keyfun_action _tidemod_keyfilter(int &c)
 {
-    return c == '+' || c == '-'? -1 : 1;
+    return c == '+' || c == '-'? KEYFUN_BREAK : KEYFUN_PROCESS;
 }
 
 static void _shoals_force_tide(CrawlHashTable &props, int increment)

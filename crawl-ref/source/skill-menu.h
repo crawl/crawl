@@ -29,16 +29,26 @@ enum skill_menu_flags
     SKMF_APTITUDE          = 1<<7,
     SKMF_SIMPLE            = 1<<8, // Simple mode for tutorial and hint mode.
     SKMF_HELP              = 1<<9,
+    SKMF_SET_TARGET        = 1<<10,
 };
 
-#define SKM_HELP -1
+// these need to both be negative, because positive ids are used by the
+// skill selection buttons.
+enum skill_menu_button
+{
+    SKM_HELP = -1,
+    SKM_CLEAR_TARGETS = -2,
+    SKM_SET_TARGET = -3,
+};
+
 enum skill_menu_switch
 {
-    SKM_MODE  = -2,
-    SKM_DO    = -3,
-    SKM_SHOW  = -4,
-    SKM_LEVEL = -5,
-    SKM_VIEW  = -6,
+    SKM_SWITCH_FIRST = -4,
+    SKM_MODE  = SKM_SWITCH_FIRST,
+    SKM_DO    = -5,
+    SKM_SHOW  = -6,
+    SKM_LEVEL = -7,
+    SKM_VIEW  = -8,
 };
 
 class SkillMenu;
@@ -71,6 +81,9 @@ public:
     void set_name(bool keep_hotkey);
     void set_skill(skill_type sk = SK_NONE);
     void set_cost();
+    coord_def get_progress_loc();
+    EditableTextItem *get_progress();
+
 private:
     skill_type m_sk;
 
@@ -80,7 +93,7 @@ private:
     TextItem* m_name;
 #endif
     NoSelectTextItem* m_level;
-    NoSelectTextItem* m_progress;
+    EditableTextItem* m_progress;
     FormattedTextItem* m_aptitude;
 
     void _clear();
@@ -141,8 +154,13 @@ public:
     int get_saved_skill_level(skill_type sk, bool real);
     skill_menu_state get_state(skill_menu_switch sw);
     void help();
+    void clear_targets();
+    void set_target_mode();
+    void cancel_set_target();
+    int read_skill_target(skill_type sk, int keyn);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
+    coord_def get_progress_loc(SkillMenuEntry &entry);
 
 private:
     MenuFreeform*        m_ff;
@@ -163,16 +181,18 @@ private:
 
     map<skill_menu_switch, SkillMenuSwitch*> m_switches;
     FormattedTextItem* m_help_button;
+    FormattedTextItem* m_middle_button;
+    FormattedTextItem* m_clear_targets_button;
 
     skill_state m_skill_backup;
 
     SkillMenuEntry* find_entry(skill_type sk);
     void init_flags();
-    void init_help();
+    void init_button_row();
     void init_title();
     void init_switches();
     void refresh_display();
-    void refresh_help_button();
+    void refresh_button_row();
     void refresh_names();
     void set_default_help();
     void set_help(string msg);

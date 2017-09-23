@@ -2264,18 +2264,18 @@ static level_id _find_down_level()
     return find_down_level(level_id::current());
 }
 
-static int _travel_depth_keyfilter(int &c)
+static keyfun_action _travel_depth_keyfilter(int &c)
 {
     switch (c)
     {
     case '<': case '>': case '?': case '$': case '^':
-        return -1;
+        return KEYFUN_BREAK;
     case '-':
     case CONTROL('P'): case 'p':
         c = '-';  // Make uniform.
-        return -1;
+        return KEYFUN_BREAK;
     default:
-        return 1;
+        return KEYFUN_PROCESS;
     }
 }
 
