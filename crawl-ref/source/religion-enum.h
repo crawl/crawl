@@ -6,6 +6,14 @@ enum piety_gain_t
     NUM_PIETY_GAIN
 };
 
+enum tithe_state
+{
+    TS_DEFAULT,    // No state set
+    TS_NO_PIETY,   // Don't give any piety
+    TS_FULL_TITHE, // Tithe normally
+    TS_NO_TITHE,   // Don't tithe at all
+};
+
 #if TAG_MAJOR_VERSION == 34
 enum nemelex_gift_types
 {
