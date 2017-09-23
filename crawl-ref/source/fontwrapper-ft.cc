@@ -742,12 +742,31 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     free(colours);
 }
 
+/**
+ * Store a string in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param str the string to store
+ * @param col a foreground color
+ */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const string &str, const VColour &col)
 {
     store(buf, x, y, str, col, x);
 }
 
+/**
+ * Store a string in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param str the string to store
+ * @param col a foreground color
+ * @param orig_x an x offset to use as an origin
+ */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const string &str, const VColour &col, float orig_x)
 {
@@ -766,12 +785,29 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     }
 }
 
+/**
+ * Store a formatted_string in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param fs the formatted string to store
+ */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs)
 {
     store(buf, x, y, fs, x);
 }
 
+/**
+ * Store a formatted_string in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param fs the formatted string to store
+ * @param orig_x an x offset to use as an origin
+ */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs, float orig_x)
 {
@@ -793,6 +829,15 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     }
 }
 
+/**
+ * Store a single glyph in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param ch a (unicode) character
+ * @param fg_col the foreground color to print
+ */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &col)
 {
@@ -824,6 +869,33 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 
     x += m_glyphs[c].advance * (float)scale_den / (float)scale_num;
 }
+
+/**
+ * Store a single glyph, with both a background and a foreground color.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param ch a (unicode) character
+ * @param fg_col the foreground color to print
+ * @param bg_col the background color to print
+ */
+void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
+                          char32_t ch, const VColour &fg_col, const VColour &bg_col)
+{
+    unsigned int c = map_unicode(ch);
+    int this_width = m_glyphs[c].width;
+    int normal_width = m_glyphs[map_unicode('9')].width;
+
+    float bg_width = max(this_width, normal_width) * (float)scale_den / (float)scale_num;
+    float bg_height = m_max_height * (float)scale_den / (float)scale_num;
+    GLWPrim bg_rect(x, y, x + bg_width, y + bg_height);
+    bg_rect.set_col(bg_col);
+    buf.add_primitive(bg_rect);
+
+    store(buf, x, y, ch, fg_col);
+}
+
 
 unsigned int FTFontWrapper::char_width() const
 {

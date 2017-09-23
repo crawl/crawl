@@ -51,6 +51,8 @@ public:
                        const formatted_string &fs) override;
     virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
                        const VColour &col) override;
+    virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
+                       const VColour &fg_col, const VColour &bg_col) override;
 
     virtual unsigned int char_width() const override;
     virtual unsigned int char_height() const override;

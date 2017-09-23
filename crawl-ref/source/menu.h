@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "tiles-build-specific.h"
+#include "cio.h"
 #include "format.h"
 #ifdef USE_TILE
  #include "tiledoll.h"
@@ -680,6 +681,13 @@ protected:
     int m_item_id;
 };
 
+struct edit_result
+{
+    edit_result(string txt, int result) : text(txt), reader_result(result) { };
+    string text; // the text in the box
+    int reader_result; // the result from calling read_line, typically ascii
+};
+
 /**
  * Basic Item with string unformatted text that can be selected
  */
@@ -697,6 +705,7 @@ public:
 
     void set_text(const string& text);
     const string& get_text() const;
+
 protected:
     void _wrap_text();
 
@@ -705,6 +714,32 @@ protected:
 
 #ifdef USE_TILE_LOCAL
     FontBuffer m_font_buf;
+#endif
+};
+
+class EditableTextItem : public TextItem
+{
+public:
+    EditableTextItem();
+    edit_result edit(const string *custom_prefill=nullptr,
+                     const line_reader::keyproc keyproc_fun=nullptr);
+    void set_editable(bool e, int width=-1);
+
+    virtual bool selected() const override;
+    virtual bool can_be_highlighted() const override;
+    virtual void render() override;
+
+    void set_tag(string t);
+
+protected:
+    bool editable;
+    bool in_edit_mode;
+    int edit_width;
+
+    string tag;
+
+#ifdef USE_TILE_LOCAL
+    LineBuffer m_line_buf;
 #endif
 };
 

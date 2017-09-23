@@ -1398,7 +1398,6 @@ void player::clear_training_targets()
  */
 void player::set_training_target(const skill_type sk, const int target)
 {
-    dprf("Setting target for %s to %d", skill_name(sk), target);
     training_targets[sk] = min(max((int) target, 0), 270);
 }
 

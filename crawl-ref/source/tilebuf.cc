@@ -104,6 +104,13 @@ void FontBuffer::add(const string &s, const VColour &col, float x, float y)
     m_font->store(*this, x, y, s, col);
 }
 
+FontWrapper &FontBuffer::get_font_wrapper()
+{
+    ASSERT(m_font);
+    return *m_font;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // TileBuffer
 

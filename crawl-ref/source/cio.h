@@ -12,6 +12,18 @@
 #include "enum.h"
 #include "KeymapContext.h"
 
+#ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+#endif
+
+enum keyfun_action
+{
+    KEYFUN_PROCESS,
+    KEYFUN_IGNORE,
+    KEYFUN_CLEAR,
+    KEYFUN_BREAK,
+};
+
 class input_history
 {
 public:
@@ -56,7 +68,7 @@ void nowrap_eol_cprintf(PRINTF(0, ));
 int cancellable_get_line(char *buf,
                          int len,
                          input_history *mh = nullptr,
-                         int (*keyproc)(int &c) = nullptr,
+                         keyfun_action (*keyproc)(int &c) = nullptr,
                          const string &fill = "",
                          const string &tag = "");
 
@@ -224,6 +236,24 @@ private:
     bool smartcstate;
 };
 
+enum edit_mode
+{
+    EDIT_MODE_INSERT,
+    EDIT_MODE_OVERWRITE,
+};
+
+class draw_colour
+{
+public:
+    draw_colour(COLOURS fg, COLOURS bg);
+    ~draw_colour();
+    void set();
+    void reset();
+private:
+    COLOURS foreground;
+    COLOURS background;
+};
+
 // Reads lines of text; used internally by cancellable_get_line.
 class line_reader
 {
@@ -232,21 +262,33 @@ public:
                 int wrap_col = get_number_of_cols());
     virtual ~line_reader();
 
-    typedef int (*keyproc)(int &key);
+    typedef keyfun_action (*keyproc)(int &key);
 
-    int read_line(bool clear_previous = true);
+    virtual int read_line(bool clear_previous = true, bool reset_cursor = false);
     int read_line(const string &prefill);
 
     string get_text() const;
 
     void set_input_history(input_history *ih);
     void set_keyproc(keyproc fn);
+
+    void set_edit_mode(edit_mode m);
+    edit_mode get_edit_mode();
+
+    void set_colour(COLOURS fg, COLOURS bg);
+    void set_location(coord_def loc);
+
+    void insert_char_at_cursor(int ch);
+    void overwrite_char_at_cursor(int ch);
 #ifdef USE_TILE_WEB
     void set_tag(const string &tag);
 #endif
 
 protected:
-    void cursorto(int newcpos);
+    int read_line_core(bool reset_cursor);
+    virtual void print_segment(int start_point=0, int overprint=0);
+    virtual void cursorto(int newcpos);
+
     virtual int process_key(int ch);
     void backspace();
     void killword();
@@ -263,6 +305,9 @@ protected:
     coord_def       start;
     keyproc         keyfn;
     int             wrapcol;
+    edit_mode       mode;
+    COLOURS         fg_colour;
+    COLOURS         bg_colour;
 
 #ifdef USE_TILE_WEB
     string          tag; // For identification on the Webtiles client side
@@ -274,4 +319,23 @@ protected:
     int             pos;
 };
 
+#ifdef USE_TILE_LOCAL
+class fontbuf_line_reader : public line_reader
+{
+public:
+    fontbuf_line_reader(char *buffer, size_t bufsz,
+            FontBuffer &font_buf,
+            int wrap_col = get_number_of_cols());
+    int read_line(bool clear_previous = true, bool reset_cursor = false);
+
+protected:
+    void print_segment(int start_point=0, int overprint=0);
+    void cursorto(int newcpos);
+
+    FontBuffer& m_font_buf;
+};
+#endif
+
 typedef int keycode_type;
+
+keyfun_action keyfun_num_and_char(int &ch);
