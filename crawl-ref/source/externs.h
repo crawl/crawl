@@ -542,6 +542,7 @@ struct item_def
         short charges;              ///< # of charges held by a wand, etc
         short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
+        short tithe_state;          ///< tithe state of a stack of gold
     };
     union
     {

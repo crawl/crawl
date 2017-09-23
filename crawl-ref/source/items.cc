@@ -1713,7 +1713,7 @@ void get_gold(const item_def& item, int quant, bool quiet)
 {
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
-    if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
+    if (you_worship(GOD_ZIN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
         return;

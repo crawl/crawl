@@ -3039,8 +3039,11 @@ void seen_item(const item_def &item)
     malleable_item.flags |= ISFLAG_SEEN;
     if (have_passive(passive_t::identify_items))
         malleable_item.flags |= ISFLAG_KNOW_CURSE;
-    if (item.base_type == OBJ_GOLD && !item.plus)
-        malleable_item.plus = (you_worship(GOD_ZIN)) ? 2 : 1;
+    if (item.base_type == OBJ_GOLD && !item.tithe_state)
+    {
+        malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE
+                                                     : TS_NO_PIETY;
+    }
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

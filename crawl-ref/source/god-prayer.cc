@@ -150,6 +150,9 @@ void try_god_conversion(god_type god)
 
 int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
 {
+    if (item.tithe_state == TS_NO_TITHE)
+        return 0;
+
     int taken = 0;
     int due = quant += you.attribute[ATTR_TITHE_BASE];
     if (due > 0)
@@ -171,7 +174,7 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
         you.attribute[ATTR_DONATIONS] += tithe;
         mprf("You pay a tithe of %d gold.", tithe);
 
-        if (item.plus == 1) // seen before worshipping Zin
+        if (item.tithe_state == TS_NO_PIETY) // seen before worshipping Zin
         {
             tithe = 0;
             simple_god_message(" ignores your late donation.");

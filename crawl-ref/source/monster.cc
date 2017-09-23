@@ -6305,6 +6305,9 @@ void monster::steal_item_from_player()
         {
             // If Maurice already's got some gold, simply increase the amount.
             mitm[inv[MSLOT_GOLD]].quantity += stolen_amount;
+            // Don't re-tithe stolen gold under Zin.
+            mitm[inv[MSLOT_GOLD]].tithe_state = (you_worship(GOD_ZIN))
+                                                ? TS_NO_TITHE : TS_NO_PIETY;
         }
         else
         {
@@ -6316,7 +6319,9 @@ void monster::steal_item_from_player()
             item_def &new_item = mitm[idx];
             new_item.base_type = OBJ_GOLD;
             new_item.sub_type  = 0;
-            new_item.plus      = 0;
+            // Don't re-tithe stolen gold under Zin.
+            new_item.tithe_state = (you_worship(GOD_ZIN)) ? TS_NO_TITHE
+                                                          : TS_NO_PIETY;
             new_item.plus2     = 0;
             new_item.special   = 0;
             new_item.flags     = 0;
@@ -6330,7 +6335,6 @@ void monster::steal_item_from_player()
             inv[MSLOT_GOLD] = idx;
             new_item.set_holding_monster(*this);
         }
-        mitm[inv[MSLOT_GOLD]].flags |= ISFLAG_THROWN;
         mprf("%s steals %s your gold!",
              name(DESC_THE).c_str(),
              stolen_amount == you.gold ? "all" : "some of");
