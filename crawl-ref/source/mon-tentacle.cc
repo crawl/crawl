@@ -46,7 +46,6 @@ static mgen_data _segment_data(const monster& head, coord_def pos,
 {
     mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE);
     mg.set_summoned(&head, 0, 0, head.god)
-      .set_prox(PROX_CLOSE_TO_PLAYER)
       .set_col(head.colour);
     return mg;
 }
