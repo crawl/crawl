@@ -1154,7 +1154,7 @@ void no_ability_msg()
             mpr("You're already flying!");
     }
     else
-        mpr("Sorry, you're not good enough to have a special ability.");
+        mpr("Sorry, you don't currently have any special abilities.");
 }
 
 bool activate_ability()
