@@ -104,10 +104,6 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
-    // Gnolls don't get stat gains
-    if (you.species == SP_GNOLL)
-        return true;
-
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
                                                   you.species == SP_DEMIGOD ?
@@ -344,10 +340,6 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     if (amount == 0)
         return;
 
-    // Gnolls don't change stats, so don't notify
-    if (you.species == SP_GNOLL)
-        return;
-
     // Stop delays if a stat drops.
     if (amount < 0)
         interrupt_activity(AI_STAT_CHANGE);
@@ -378,10 +370,6 @@ static int _mut_level(mutation_type mut, bool innate_only)
 
 static int _strength_modifier(bool innate_only)
 {
-    // Gnolls can't modify their stats
-    if (you.species == SP_GNOLL)
-        return 0;
-
     int result = 0;
 
     if (!innate_only)
@@ -420,9 +408,6 @@ static int _strength_modifier(bool innate_only)
 
 static int _int_modifier(bool innate_only)
 {
-    if (you.species == SP_GNOLL)
-        return 0;
-
     int result = 0;
 
     if (!innate_only)
@@ -454,10 +439,6 @@ static int _int_modifier(bool innate_only)
 
 static int _dex_modifier(bool innate_only)
 {
-    // Gnolls can't modify their stats
-    if (you.species == SP_GNOLL)
-        return 0;
-
     int result = 0;
 
     if (!innate_only)
@@ -534,10 +515,6 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
-    // Gnolls cannot be stat drained
-    if (you.species == SP_GNOLL)
-        return false;
-
     if (stat_loss <= 0)
         return false;
 

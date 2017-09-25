@@ -1456,10 +1456,6 @@ static bool _transformation_is_safe(transformation which_trans,
  */
 bool check_form_stat_safety(transformation new_form)
 {
-    // Gnolls don't have to worry about forms changing stats
-    if (you.species == SP_GNOLL)
-        return true;
-
     const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
     const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
 

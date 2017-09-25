@@ -3279,8 +3279,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return !you.stasis();
 #endif
         case POT_DEGENERATION:
-            // Only useless if your stats can't be drained.
-            return you.species != SP_GNOLL;
+            return true;
 #if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
@@ -3587,8 +3586,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
-        case POT_DEGENERATION:
-            return you.species == SP_GNOLL;
         }
 
         return false;
@@ -3664,12 +3661,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);
-
-        // Gnolls can't boost stats
-        case RING_STRENGTH:
-        case RING_INTELLIGENCE:
-        case RING_DEXTERITY:
-            return you.species == SP_GNOLL;
 
         default:
             return false;
