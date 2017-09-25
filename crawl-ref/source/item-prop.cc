@@ -1333,8 +1333,11 @@ armour_type hide_for_monster(monster_type mc)
 /**
  * Return whether a piece of armour is enchantable.
  *
+ * This function ignores the current enchantment level, so is still
+ * true for maximally-enchanted items.
+ *
  * @param item      The item being considered.
- * @return          The maximum enchantment the item can hold.
+ * @return          True if the armour can have a +X enchantment.
  */
 bool armour_is_enchantable(const item_def &item)
 {
