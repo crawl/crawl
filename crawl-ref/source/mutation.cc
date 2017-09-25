@@ -1259,23 +1259,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
         return true;
 
-    // Gnolls can't get any stat-affecting mutations
-    if (you.species == SP_GNOLL)
-    {
-        if (mutat == MUT_STRONG
-            || mutat == MUT_CLEVER
-            || mutat == MUT_AGILE
-            || mutat == MUT_WEAK
-            || mutat == MUT_DOPEY
-            || mutat == MUT_CLUMSY
-            || mutat == MUT_THIN_SKELETAL_STRUCTURE
-            || mutat == MUT_ROUGH_BLACK_SCALES
-            || mutat == MUT_DETERIORATION)
-        {
-            return true;
-        }
-    }
-
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
     if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL

@@ -2397,8 +2397,7 @@ static void _gain_piety_point()
         update_player_symbol();
 
     if (have_passive(passive_t::stat_boost)
-        && chei_stat_boost(old_piety) < chei_stat_boost()
-        && you.species != SP_GNOLL)
+        && chei_stat_boost(old_piety) < chei_stat_boost())
     {
         string msg = " raises the support of your attributes";
         if (have_passive(passive_t::slowed))
@@ -2544,8 +2543,7 @@ void lose_piety(int pgn)
         _grant_temporary_waterwalk();
     }
     if (will_have_passive(passive_t::stat_boost)
-        && chei_stat_boost(old_piety) > chei_stat_boost()
-        && you.species != SP_GNOLL)
+        && chei_stat_boost(old_piety) > chei_stat_boost())
     {
         string msg = " lowers the support of your attributes";
         if (will_have_passive(passive_t::slowed))
@@ -3533,13 +3531,9 @@ static void _join_pakellas()
 // Setup for joining the easygoing followers of Cheibriados.
 static void _join_cheibriados()
 {
-    // Gnolls don't gain attribute bonuses under Chei
-    if (you.species != SP_GNOLL)
-    {
-        simple_god_message(" begins to support your attributes as your "
-                           "movement slows.");
-        notify_stat_change();
-    }
+    simple_god_message(" begins to support your attributes as your "
+                       "movement slows.");
+    notify_stat_change();
 }
 
 /// What special things happen when you join a god?
