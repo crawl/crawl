@@ -216,6 +216,7 @@ enum tag_minor_version
     TAG_MINOR_LEVEL_XP_INFO       , // Track XP gain by level.
     TAG_MINOR_LEVEL_XP_INFO_FIX   , // Fix orb spawn XP tracking.
     TAG_MINOR_FOLLOWER_TRANSIT_TIME, // Handle updating lost_ones after placing.
+    TAG_MINOR_GNOLL_BUFFS,         // Change Gnoll stats to 10/10/10 and give Adaptation mutation.
 
 #endif
     NUM_TAG_MINORS,

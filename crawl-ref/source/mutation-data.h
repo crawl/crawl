@@ -1922,6 +1922,14 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
 },
+
+{ MUT_ADAPTATION, 0, 1, mutflag::good, false,
+  "adaptation",
+
+    {"You can shift your attributes around at will.", "", ""},
+    {"You feel like you can adapt to any situation.", "", ""},
+    {"You feel less adaptable.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

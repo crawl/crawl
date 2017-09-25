@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duration-type.h"
+#include "spl-cast.h"
 #include "stat-type.h"
 
 enum stat_desc_type
@@ -14,6 +15,7 @@ enum stat_desc_type
 
 const char* stat_desc(stat_type stat, stat_desc_type desc);
 
+stat_type choose_stat(string title, string message, string prompt, bool increase_attribute);
 bool attribute_increase();
 
 void modify_stat(stat_type which_stat, int amount, bool suppress_msg);
@@ -33,5 +35,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 duration_type stat_zero_duration(stat_type stat);
 bool have_stat_zero();
 void update_stat_zero(int time);
+
+spret_type gnoll_shift_attributes();
 
 int innate_stat(stat_type s);
