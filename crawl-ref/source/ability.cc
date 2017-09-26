@@ -987,6 +987,12 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
 
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+        if (you.species == SP_GNOLL)
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+
     default:
         return ability;
     }

@@ -2488,6 +2488,7 @@ static void _transfer_knowledge(int exp)
 {
     if (!(you.transfer_skill_points > 0))
         return;
+
     // Can happen if the game got interrupted during target skill choice.
     if (is_invalid_skill(you.transfer_to_skill))
     {

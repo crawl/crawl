@@ -1664,6 +1664,7 @@ int skill_transfer_amount(skill_type sk)
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu, bool boost)
 {
+    ASSERT(you.species != SP_GNOLL);
     ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
 
     const int penalty = 90; // 10% XP penalty
