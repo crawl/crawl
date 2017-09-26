@@ -1547,6 +1547,10 @@ float species_apt_factor(skill_type sk, species_type sp)
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
+    // Gnolls do not have crosstraining.
+    if (you.species == SP_GNOLL)
+        return {};
+
     switch (sk)
     {
     case SK_SHORT_BLADES:
