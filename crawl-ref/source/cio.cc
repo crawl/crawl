@@ -582,7 +582,7 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
     if (start.x < 0)
         start = cgetpos(region); // inherit location from cursor
     else
-        cgotoxy(start.x, start.y);
+        cgotoxy(start.x, start.y, region);
 
     int ret = read_line_core(reset_cursor);
 
