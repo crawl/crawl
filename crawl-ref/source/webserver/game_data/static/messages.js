@@ -1,12 +1,9 @@
-define(["jquery", "comm", "client", "./util", "./options"],
-function ($, comm, client, util, options) {
+define(["jquery", "comm", "client", "./textinput", "./util", "./options"],
+function ($, comm, client, textinput, util, options) {
     "use strict";
-
-    var HISTORY_SIZE = 10;
 
     var more = false;
     var old_scroll_top;
-    var histories = {};
 
     function hide()
     {
@@ -96,136 +93,9 @@ function ($, comm, client, util, options) {
             cursor.appendTo($("#messages .game_message").last());
     }
 
-    function get_line(msg)
-    {
-        if (client.is_watching != null && client.is_watching())
-            return;
-
-        assert(msg.tag !== "repeat" || !msg.prefill);
-
-        $("#text_cursor").remove();
-
-        var prompt = $("#messages .game_message").last();
-        var input = $("<input class='text' type='text'>");
-        var history;
-        var historyPosition;
-
-        if ("maxlen" in msg)
-            input.attr("maxlength", msg.maxlen);
-        if ("size" in msg)
-            input.attr("size", msg.size);
-        if ("prefill" in msg)
-            input.val(msg.prefill);
-        if ("historyId" in msg)
-        {
-            if (!histories[msg.historyId])
-                histories[msg.historyId] = [];
-            history = histories[msg.historyId];
-            historyPosition = history.length;
-        }
-
-        prompt.append(input);
-        if (input[0].setSelectionRange)
-            input[0].setSelectionRange(input.val().length, input.val().length);
-        input.focus();
-
-        function send_input_line(finalChar) {
-            var input = $("#messages .game_message input");
-            if (history && input.val().length > 0)
-            {
-                if (history.indexOf(input.val()) != -1)
-                    history.splice(history.indexOf(input.val()), 1);
-                history.push(input.val());
-                if (history.length > HISTORY_SIZE)
-                    history.shift();
-            }
-
-            var text = input.val() + String.fromCharCode(finalChar);
-            // ctrl-u to wipe any pre-fill
-            if (msg.tag !== "repeat")
-                comm.send_message("key", { keycode: 21 });
-            comm.send_message("input", { text: text });
-            abort_get_line();
-        }
-
-        input.keydown(function (ev) {
-            var input = $("#messages .game_message input");
-            if (ev.which == 27)
-            {
-                ev.preventDefault();
-                comm.send_message("key", { keycode: 27 }); // Send ESC
-                return false;
-            }
-            else if (ev.which == 13) // enter
-            {
-                send_input_line(13);
-                ev.preventDefault();
-                return false;
-            }
-            else if (history && history.length > 0 && (ev.which == 38 || ev.which == 40))
-            {
-                historyPosition += ev.which == 38 ? -1 : 1;
-                if (historyPosition < 0)
-                    historyPosition = history.length - 1;
-                if (historyPosition >= history.length)
-                    historyPosition = 0;
-                input.val(history[historyPosition]);
-                if (input[0].setSelectionRange)
-                    input[0].setSelectionRange(input.val().length, input.val().length);
-                ev.preventDefault();
-                return false;
-            }
-        });
-        input.keypress(function (ev) {
-            var input = $("#messages .game_message input");
-            if (msg.tag == "stash_search")
-            {
-                if (String.fromCharCode(ev.which) == "?" && input.val().length === 0)
-                {
-                    ev.preventDefault();
-                    comm.send_message("key", { keycode: ev.which });
-                    return false;
-                }
-            }
-            else if (msg.tag == "repeat")
-            {
-                var ch = String.fromCharCode(ev.which);
-                if (ch != "" && !/^\d$/.test(ch))
-                {
-                    send_input_line(ev.which);
-                    ev.preventDefault();
-                    return false;
-                }
-            }
-            else if (msg.tag == "travel_depth")
-            {
-                var ch = String.fromCharCode(ev.which);
-                if ("<>?$^-p".indexOf(ch) != -1)
-                {
-                    send_input_line(ev.which);
-                    ev.preventDefault();
-                    return false;
-                }
-            }
-        });
-    }
-
     function messages_key_handler()
     {
-        var input = $("#messages .game_message input");
-
-        if (!input.is(":visible"))
-            return true;
-
-        input.focus();
-        return false;
-    }
-
-    function abort_get_line()
-    {
-        var input = $("#messages .game_message input");
-        input.blur();
-        input.remove();
+        return !textinput.input_active();
     }
 
     function text_cursor(data)
@@ -234,8 +104,12 @@ function ($, comm, client, util, options) {
         {
             if ($("#text_cursor").length > 0)
                 return;
-            if ($("#messages .game_message input").length > 0)
+            if (textinput.input_active() &&
+                textinput.input_type() == "messages" &&
+                textinput.find_input().length > 0)
+            {
                 return;
+            }
             var cursor = $("<span id='text_cursor'>_</span>");
             $("#messages .game_message").last().append(cursor);
         }
@@ -265,9 +139,7 @@ function ($, comm, client, util, options) {
 
     comm.register_handlers({
         "msgs": handle_messages,
-        "text_cursor": text_cursor,
-        "get_line": get_line,
-        "abort_get_line": abort_get_line
+        "text_cursor": text_cursor
     });
 
     $(document).off("game_init.messages")

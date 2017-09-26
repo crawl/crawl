@@ -278,6 +278,8 @@ public:
     void set_colour(COLOURS fg, COLOURS bg);
     void set_location(coord_def loc);
 
+    void set_prompt(string p);
+
     void insert_char_at_cursor(int ch);
     void overwrite_char_at_cursor(int ch);
 #ifdef USE_TILE_WEB
@@ -308,6 +310,7 @@ protected:
     edit_mode       mode;
     COLOURS         fg_colour;
     COLOURS         bg_colour;
+    string          prompt; // currently only used for webtiles input dialogs
 
 #ifdef USE_TILE_WEB
     string          tag; // For identification on the Webtiles client side

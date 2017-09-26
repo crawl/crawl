@@ -450,7 +450,6 @@ void SkillMenuEntry::set_progress()
     }
     m_progress->set_fg_colour(CYAN);
     m_progress->set_editable(false);
-    m_progress->set_tag("skill_target");
 }
 
 EditableTextItem *SkillMenuEntry::get_progress()
@@ -912,11 +911,16 @@ int SkillMenu::read_skill_target(skill_type sk, int keyn)
     ASSERT(progress);
 
     const int old_target = you.get_training_target(sk);
-    const string prefill = old_target <= 0 ? "    "
+    const string prefill = old_target <= 0 ? "0"
                     : make_stringf("%d.%d", old_target / 10, old_target % 10);
 
-    progress->set_editable(true, 4);
+    progress->set_editable(true, 5);
     progress->set_highlight_colour(RED);
+
+    // for webtiles dialog input
+    progress->set_prompt(make_stringf("Enter a skill target for %s: ",
+                                            skill_name(sk)));
+    progress->set_tag("skill_target");
 
     edit_result r = progress->edit(&prefill, _keyfun_target_input);
 

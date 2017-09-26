@@ -730,6 +730,7 @@ public:
     virtual void render() override;
 
     void set_tag(string t);
+    void set_prompt(string p);
 
 protected:
     bool editable;
@@ -737,6 +738,7 @@ protected:
     int edit_width;
 
     string tag;
+    string prompt;
 
 #ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
