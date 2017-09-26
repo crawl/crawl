@@ -81,7 +81,6 @@ public:
     void set_name(bool keep_hotkey);
     void set_skill(skill_type sk = SK_NONE);
     void set_cost();
-    coord_def get_progress_loc();
     EditableTextItem *get_progress();
 
 private:
@@ -160,7 +159,6 @@ public:
     int read_skill_target(skill_type sk, int keyn);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
-    coord_def get_progress_loc(SkillMenuEntry &entry);
 
 private:
     MenuFreeform*        m_ff;

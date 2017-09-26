@@ -376,6 +376,11 @@ void line_reader::set_colour(COLOURS fg, COLOURS bg)
     bg_colour = bg;
 }
 
+void line_reader::set_prompt(string p)
+{
+    prompt = p;
+}
+
 void line_reader::set_location(coord_def loc)
 {
     start = loc;
@@ -439,7 +444,7 @@ void line_reader::cursorto(int ncx)
 static void _webtiles_abort_get_line()
 {
     tiles.json_open_object();
-    tiles.json_write_string("msg", "abort_get_line");
+    tiles.json_write_string("msg", "close_input");
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -555,24 +560,27 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
 #endif
 
 #ifdef USE_TILE_WEB
-    if (!tiles.is_in_crt_menu())
+    tiles.redraw();
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "init_input");
+    if (tiles.is_in_crt_menu())
+        tiles.json_write_string("type", "generic");
+    else
+        tiles.json_write_string("type", "messages");
+    if (!tag.empty())
+        tiles.json_write_string("tag", tag);
+    if (history)
     {
-        tiles.redraw();
-        tiles.json_open_object();
-        tiles.json_write_string("msg", "get_line");
-        if (!tag.empty())
-            tiles.json_write_string("tag", tag);
-        if (history)
-        {
-            tiles.json_write_string("historyId",
-                                    make_stringf("%p", (void *)history));
-        }
-        tiles.json_write_string("prefill", buffer);
-        tiles.json_write_int("maxlen", (int) bufsz - 1);
-        tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
-        tiles.json_close_object();
-        tiles.finish_message();
+        tiles.json_write_string("historyId",
+                                make_stringf("%p", (void *)history));
     }
+    tiles.json_write_string("prefill", buffer);
+    if (prompt.length())
+        tiles.json_write_string("prompt", prompt);
+    tiles.json_write_int("maxlen", (int) bufsz - 1);
+    tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
+    tiles.json_close_object();
+    tiles.finish_message();
 #endif
 
     cursor_control con(true);

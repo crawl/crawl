@@ -352,6 +352,29 @@ body {
     font-size: 16px;
 }
 
+#input_dialog {
+    line-height: 1.2em;
+    min-width: 20em; /* can override this with a tag-specific class */
+    white-space: pre;
+}
+
+#input_dialog span {
+    display: table-cell;
+}
+
+.input_dialog_box {
+    display: table-cell;
+    width: 90%;
+}
+
+#input_dialog input {
+    width: 90%;
+}
+
+.input_skill_target input {
+    max-width: 5em;
+}
+
 #game .fg0 { color: #000000; } /* black */
 #game .fg1 { color: #204a87; } /* blue */
 #game .fg2 { color: #4e9a06; } /* green */
