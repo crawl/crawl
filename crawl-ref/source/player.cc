@@ -2522,15 +2522,6 @@ static void _handle_temp_mutation(int exp)
 /// update stat loss
 static void _handle_stat_loss(int exp)
 {
-#if TAG_MAJOR_VERSION == 34
-    // Gnolls that transfered from before their stats became locked may have
-    // ATTR_STAT_LOSS_XP, but we ignore it.
-    if (you.species == SP_GNOLL && you.attribute[ATTR_STAT_LOSS_XP] > 0)
-    {
-        you.attribute[ATTR_STAT_LOSS_XP] = 0;
-        return;
-    }
-#endif
     if (!(you.attribute[ATTR_STAT_LOSS_XP] > 0))
         return;
 

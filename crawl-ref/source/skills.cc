@@ -540,6 +540,9 @@ void update_can_train()
 
 bool training_restricted(skill_type sk)
 {
+    if (you.species == SP_GNOLL)
+        return false;
+
     switch (sk)
     {
     case SK_FIGHTING:
@@ -584,14 +587,17 @@ void init_can_train()
 
 void init_train()
 {
+    const bool is_gnoll = you.species == SP_GNOLL;
+
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
             // Skills are on by default in auto mode and off in manual.
-            you.train[i] = (training_status)you.auto_training;
-            you.train_alt[i] = (training_status)!you.auto_training;
+            you.train[i] = (training_status) (is_gnoll || you.auto_training);
+            you.train_alt[i] =
+                (training_status) (is_gnoll || !you.auto_training);
         }
 }
 
@@ -734,11 +740,19 @@ bool check_selected_skills()
  */
 void reset_training()
 {
+    // Disable this here since we don't want any autotraining related skilling
+    // changes for Gnolls.
+    if (you.species == SP_GNOLL)
+        you.auto_training = false;
+
     // We clear the values in the training array. In auto mode they are set
     // to 0 (and filled later with the content of the queue), in manual mode,
     // the trainable ones are set to 1 (or 2 for focus).
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.auto_training || !skill_trained(i))
+        // Gnolls always train all skills
+        if (you.species == SP_GNOLL)
+            you.training[i] = 1;
+        else if (you.auto_training || !skill_trained(i))
             you.training[i] = 0;
         else
             you.training[i] = you.train[i];
@@ -1815,4 +1829,14 @@ void fixup_skills()
 
     if (you.exp_available >= calc_skill_cost(you.skill_cost_level))
         skill_menu(SKMF_EXPERIENCE);
+}
+
+/** Can the player enable training for this skill?
+ *
+ * @param sk The skill to check.
+ * @returns True if the skill can be enabled for training, false otherwise.
+ */
+bool can_enable_skill(skill_type sk)
+{
+    return you.species != SP_GNOLL && you.can_train[sk];
 }
