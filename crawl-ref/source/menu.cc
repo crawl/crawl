@@ -2971,6 +2971,7 @@ edit_result EditableTextItem::edit(const string *custom_prefill,
 
     e_width = min(e_width, (int) sizeof buf - 1);
 
+    // TODO: make width not dependent on prefill string
     string prefill = make_stringf("%-*s", e_width,
         custom_prefill ? custom_prefill->c_str() : m_text.c_str());
 
@@ -2998,7 +2999,9 @@ edit_result EditableTextItem::edit(const string *custom_prefill,
     reader.set_edit_mode(EDIT_MODE_OVERWRITE);
     if (keyproc_fun)
         reader.set_keyproc(keyproc_fun);
+
 #ifdef USE_TILE_WEB
+    reader.set_prompt(prompt);
     reader.set_tag(tag);
 #endif
 
@@ -3016,6 +3019,11 @@ edit_result EditableTextItem::edit(const string *custom_prefill,
 void EditableTextItem::set_tag(string t)
 {
     tag = t;
+}
+
+void EditableTextItem::set_prompt(string p)
+{
+    prompt = p;
 }
 
 bool EditableTextItem::selected() const
