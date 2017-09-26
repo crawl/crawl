@@ -587,8 +587,16 @@ public:
         }
         else
             mpr("A flood of memories washes over you.");
+
         // these are included in default force_more_message
-        skill_menu(SKMF_EXPERIENCE, 750 * you.experience_level);
+        const int exp = 750 * you.experience_level;
+        if (you.species == SP_GNOLL)
+        {
+            you.exp_available += exp;
+            train_skills();
+        }
+        else
+            skill_menu(SKMF_EXPERIENCE, exp);
         return true;
     }
 };
