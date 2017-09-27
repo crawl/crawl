@@ -534,6 +534,9 @@
     <ClInclude Include="..\skills.h" />
     <ClInclude Include="..\skill-menu.h" />
     <ClInclude Include="..\species.h" />
+    <ClInclude Include="..\species-data.h" />
+    <ClInclude Include="..\species-def.h" />
+    <ClInclude Include="..\species-type.h" />
     <ClInclude Include="..\spl-book.h" />
     <ClInclude Include="..\spl-cast.h" />
     <ClInclude Include="..\spl-clouds.h" />

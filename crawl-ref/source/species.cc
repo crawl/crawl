@@ -4,7 +4,6 @@
 #include "species.h"
 
 #include "item-prop.h"
-#include "mon-enum.h"
 #include "mutation.h"
 #include "output.h"
 #include "player.h"

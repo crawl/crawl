@@ -6,8 +6,8 @@
 #include "job-type.h"
 #include "size-part-type.h"
 #include "size-type.h"
+#include "species-def.h"
 #include "species-type.h"
-#include "undead-state-type.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
