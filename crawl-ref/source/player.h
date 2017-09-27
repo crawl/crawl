@@ -620,8 +620,8 @@ public:
     int       get_temp_mutation_level(mutation_type mut) const;
 
     int       get_training_target(const skill_type sk) const;
-    void      set_training_target(const skill_type sk, const double target);
-    void      set_training_target(const skill_type sk, const int target);
+    void      set_training_target(const skill_type sk, const double target, bool announce=false);
+    void      set_training_target(const skill_type sk, const int target, bool announce=false);
     void      clear_training_targets();
 
     bool      has_temporary_mutation(mutation_type mut) const;
