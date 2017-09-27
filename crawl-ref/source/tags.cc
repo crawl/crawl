@@ -69,6 +69,7 @@
 #include "prompt.h" // index_to_letter
 #include "religion.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -2357,26 +2358,31 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < NUM_STATS; ++i)
         you.base_stats[i] = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
-    // Gnolls have stats fixed at 7/7/7.
-    if (th.getMinorVersion() < TAG_MINOR_STATLOCKED_GNOLLS
+    // Gnolls previously had stats fixed at 7/7/7, so randomly award them stats
+    // based on the points they'd have gotten from XL/3 selection and XL/4
+    // random SID.
+    if (th.getMinorVersion() >= TAG_MINOR_STATLOCKED_GNOLLS
+        && th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX
         && you.species == SP_GNOLL)
     {
-        for (int i = 0; i < NUM_STATS; ++i)
-            you.base_stats[i] = 7;
+        const species_def& sd = get_species_def(you.species);
+
+        // Give base stat points.
+        species_stat_init(you.species);
+
+        const set<stat_type> all_stats = {STAT_STR, STAT_INT, STAT_DEX};
+        int num_points = you.experience_level / 3;
+        for (int i = 0; i < num_points; ++i)
+            modify_stat(*random_iterator(all_stats), 1, false);
+
+        num_points = you.experience_level / sd.how_often;
+        for (int i = 0; i < num_points; ++i)
+            modify_stat(*random_iterator(sd.level_stats), 1, false);
     }
 #endif
 
     for (int i = 0; i < NUM_STATS; ++i)
         you.stat_loss[i] = unmarshallByte(th);
-#if TAG_MAJOR_VERSION == 34
-    // Gnolls can't have stat drain.
-    if (th.getMinorVersion() < TAG_MINOR_STATLOCKED_GNOLLS
-        && you.species == SP_GNOLL)
-    {
-        for (int i = 0; i < NUM_STATS; ++i)
-            you.stat_loss[i] = 0;
-    }
-#endif
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO_DURATION)
@@ -2584,6 +2590,11 @@ static void tag_read_you(reader &th)
 
         you.train[j]    = (training_status)unmarshallByte(th);
         you.train_alt[j]    = (training_status)unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+        // Gnolls always train all skills.
+        if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX)
+            you.train[j] = you.train_alt[j] = TRAINING_ENABLED;
+#endif
         you.training[j] = unmarshallInt(th);
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
@@ -3857,6 +3868,10 @@ static void tag_read_you_items(reader &th)
     {
         nemelex_reclaim_decks();
     }
+
+    // Reset training arrays for transfered gnolls that didn't train all skills.
+    if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX)
+        reset_training();
 #endif
 }
 
