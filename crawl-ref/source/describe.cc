@@ -817,6 +817,62 @@ static string _describe_mutant_beast(const monster_info &mi)
            + " " + _describe_mutant_beast_tier(tier);
 }
 
+/**
+ * Is the item associated with some specific training goal?  (E.g. mindelay)
+ *
+ * @return the goal, or 0 if there is none, scaled by 10.
+ */
+static int _item_training_target(const item_def &item)
+{
+    const int throw_dam = property(item, PWPN_DAMAGE);
+    if (item.base_type == OBJ_WEAPONS)
+        return weapon_min_delay_skill(item) * 10;
+    else if (is_shield(item))
+        return round(you.get_shield_skill_to_offset_penalty(item) * 10);
+    else if (item.base_type == OBJ_MISSILES && throw_dam)
+        return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
+    else
+        return 0;
+}
+
+/**
+ * Does an item improve with training some skill?
+ *
+ * @return the skill, or SK_NONE if there is none. Note: SK_NONE is *not* 0.
+ */
+static skill_type _item_training_skill(const item_def &item)
+{
+    const int throw_dam = property(item, PWPN_DAMAGE);
+    if (item.base_type == OBJ_WEAPONS)
+        return item_attack_skill(item);
+    else if (is_shield(item))
+        return SK_SHIELDS; // shields are armour, so do shields before armour
+    else if (item.base_type == OBJ_ARMOUR)
+        return SK_ARMOUR;
+    else if (item.base_type == OBJ_MISSILES && throw_dam)
+        return SK_THROWING;
+    else if (item_is_evokable(item)) // not very accurate
+        return SK_EVOCATIONS;
+    else
+        return SK_NONE;
+}
+
+static bool _could_set_training_target(const item_def &item, bool ignore_current)
+{
+    if (!crawl_state.need_save || is_useless_item(item))
+        return false;
+
+    const skill_type skill = _item_training_skill(item);
+    if (skill == SK_NONE)
+        return false;
+
+    const int target = _item_training_target(item);
+
+    return target && you.can_train[skill]
+       && you.skill(skill, 10) < target
+       && (ignore_current || you.get_training_target(skill) < target);
+}
+
 static string _skill_target_desc(skill_type skill, double target, int training)
 {
     string description = "";
@@ -828,7 +884,7 @@ static string _skill_target_desc(skill_type skill, double target, int training)
     const int level_diff = xp_to_level_diff(diffs.experience, 10);
 
     if (max_training)
-        description += "At 100%% training ";
+        description += "At 100% training ";
     else if (!hypothetical)
     {
         description += make_stringf("At current training (%d%%) ",
@@ -854,14 +910,11 @@ static string _skill_target_desc(skill_type skill, double target, int training)
 
 static void _append_skill_target_desc(string &description, skill_type skill, double target)
 {
-    if (crawl_state.need_save && you.skill(skill, 1) < target)
+    description += "\n    " + _skill_target_desc(skill, target, 100);
+    if (you.training[skill] > 0 && you.training[skill] < 100)
     {
-        description += "\n" + _skill_target_desc(skill, target, 100);
-        if (you.training[skill] > 0 && you.training[skill] < 100)
-        {
-            description += "\n" + _skill_target_desc(skill, target,
-                                                        you.training[skill]);
-        }
+        description += "\n    " + _skill_target_desc(skill, target,
+                                                    you.training[skill]);
     }
 }
 
@@ -871,8 +924,10 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const int ammo_type = fires_ammo_type(item);
     const int ammo_dam = ammo_type == MI_NONE ? 0 :
                                                 ammo_type_damage(ammo_type);
-    const skill_type skill = item_attack_skill(item);
-    const int mindelay_skill = weapon_min_delay_skill(item);
+    const skill_type skill = _item_training_skill(item);
+    const int mindelay_skill = _item_training_target(item);
+
+    const bool could_set_target = _could_set_training_target(item, true);
 
     if (skill == SK_SLINGS)
     {
@@ -881,21 +936,33 @@ static void _append_weapon_stats(string &description, const item_def &item)
                                     ammo_type_damage(MI_SLING_BULLET));
     }
 
-    const string your_skill = crawl_state.need_save ?
-      make_stringf("\n    (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
-      : "";
     description += make_stringf(
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d."
-    "%s",
-     property(item, PWPN_HIT),
-     base_dam + ammo_dam,
-     (float) property(item, PWPN_SPEED) / 10,
-     (float) weapon_min_delay(item, item_brand_known(item)) / 10,
-     weapon_min_delay_skill(item),
-     your_skill.c_str());
+    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
+        property(item, PWPN_HIT),
+        base_dam + ammo_dam,
+        (float) property(item, PWPN_SPEED) / 10,
+        (float) weapon_min_delay(item, item_brand_known(item)) / 10,
+        mindelay_skill / 10);
 
-    _append_skill_target_desc(description, skill, mindelay_skill);
+    string target_command_desc = "";
+    if (could_set_target &&
+                you.get_training_target(skill) < mindelay_skill)
+    {
+        target_command_desc = make_stringf(
+            "; press <white>(s)</white> to set %d.%d as a training target.",
+                                    mindelay_skill / 10, mindelay_skill % 10);
+    }
+
+    if (crawl_state.need_save && !is_useless_item(item))
+    {
+        description += make_stringf(
+            "\n    Your skill: %.1f%s", (float) you.skill(skill, 10) / 10,
+                                            target_command_desc.c_str());
+    }
+
+    if (could_set_target)
+        _append_skill_target_desc(description, skill, mindelay_skill / 10);
 }
 
 static string _handedness_string(const item_def &item)
@@ -1306,10 +1373,22 @@ static string _describe_ammo(const item_def &item)
     if (dam)
     {
         const int throw_delay = (10 + dam / 2);
-        const int target_skill = (throw_delay - FASTEST_PLAYER_THROWING_SPEED) * 2;
-        const string your_skill = crawl_state.need_save ?
-                make_stringf("\n    (Your skill: %.1f)",
-                    (float) you.skill(SK_THROWING, 10) / 10)
+        const int target_skill = _item_training_target(item);
+        const bool could_set_target = _could_set_training_target(item, true);
+
+        string target_command_desc = "";
+        if (could_set_target &&
+                    you.get_training_target(SK_THROWING) < target_skill)
+        {
+            target_command_desc = make_stringf(
+                "; press <white>(s)</white> to set %d.0 as a training target.",
+                                        target_skill / 10);
+        }
+
+        const string your_skill = crawl_state.need_save && !is_useless_item(item) ?
+                make_stringf("\n    Your skill: %.1f%s",
+                    (float) you.skill(SK_THROWING, 10) / 10,
+                    target_command_desc.c_str())
                     : "";
 
         description += make_stringf(
@@ -1320,11 +1399,12 @@ static string _describe_ammo(const item_def &item)
             dam,
             (float) throw_delay / 10,
             (float) FASTEST_PLAYER_THROWING_SPEED / 10,
-            target_skill,
+            target_skill / 10,
             your_skill.c_str()
         );
 
-        _append_skill_target_desc(description, SK_THROWING, target_skill);
+        if (could_set_target)
+            _append_skill_target_desc(description, SK_THROWING, target_skill / 10);
     }
 
     if (ammo_always_destroyed(item))
@@ -1354,23 +1434,36 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         if (is_shield(item))
         {
-            const float skill = you.get_shield_skill_to_offset_penalty(item);
+            const int skill = _item_training_target(item);
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
+            const bool could_set_target = _could_set_training_target(item, true);
+
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
-                            + make_stringf("%.1f", skill);
+                            + make_stringf("%d.%d", skill / 10, skill % 10);
+                string target_command_desc = "";
+                if (could_set_target &&
+                        you.get_training_target(SK_SHIELDS) < skill)
+                {
+                    target_command_desc = make_stringf(
+                        "; press <white>(s)</white> to set %d.%d as a training target.",
+                                                skill / 10, skill % 10);
+                }
+
                 if (crawl_state.need_save)
                 {
-                    description += "\n                             "
-                                + make_stringf("(Your skill: %.1f)",
-                                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                    description += "\n                            "
+                                + make_stringf("Your skill: %.1f%s",
+                                        (float) you.skill(SK_SHIELDS, 10) / 10,
+                                        target_command_desc.c_str());
                 }
                 else
                     description += "\n";
-                _append_skill_target_desc(description, SK_SHIELDS, skill);
+                if (could_set_target)
+                    _append_skill_target_desc(description, SK_SHIELDS, skill / 10);
             }
 
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
@@ -2214,6 +2307,9 @@ static vector<command_type> _allowed_actions(const item_def& item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
+        // intentional fallthrough
     case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
@@ -2224,10 +2320,14 @@ static vector<command_type> _allowed_actions(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
         if (you.species != SP_FELID)
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
@@ -2288,9 +2388,9 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
         { CMD_DROP, "(d)rop" },
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
+        { CMD_SET_SKILL_TARGET, "(s)kill" },
     };
-    return "You can "
-           + comma_separated_fn(begin(actions), end(actions),
+    return comma_separated_fn(begin(actions), end(actions),
                                 [] (command_type cmd)
                                 {
                                     return act_str.at(cmd);
@@ -2320,6 +2420,7 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_DROP,             'd' },
         { CMD_INSCRIBE_ITEM,    'i' },
         { CMD_ADJUST_INVENTORY, '=' },
+        { CMD_SET_SKILL_TARGET, 's' },
     };
 
     key = tolower(key);
@@ -2365,10 +2466,27 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     case CMD_DROP:             drop_item(slot, item.quantity);      break;
     case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
+    case CMD_SET_SKILL_TARGET: target_item(item);                   break;
     default:
         die("illegal inventory cmd %d", action);
     }
     return false;
+}
+
+void target_item(item_def &item)
+{
+    const skill_type skill = _item_training_skill(item);
+    if (skill == SK_NONE)
+        return;
+
+    const int target = _item_training_target(item);
+    if (target == 0)
+        return;
+
+    you.set_training_target(skill, target, true);
+    you.train[skill] = TRAINING_ENABLED;
+    you.train_alt[skill] = TRAINING_ENABLED;
+    reset_training();
 }
 
 /**

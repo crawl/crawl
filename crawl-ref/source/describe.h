@@ -52,6 +52,7 @@ void get_feature_desc(const coord_def &gc, describe_info &inf);
 bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
+void target_item(item_def &item);
 
 int describe_monsters(const monster_info &mi, bool force_seen = false,
                       const string &footer = "");

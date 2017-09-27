@@ -161,6 +161,9 @@ enum command_type
 
     CMD_MAX_NORMAL = CMD_LUA_CONSOLE,
 
+    // inventory only
+    CMD_SET_SKILL_TARGET,
+
     // overmap commands
     CMD_MAP_CLEAR_MAP,
     CMD_MIN_OVERMAP = CMD_MAP_CLEAR_MAP,
