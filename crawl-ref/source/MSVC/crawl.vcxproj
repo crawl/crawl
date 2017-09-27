@@ -933,8 +933,10 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\skills.h" />
     <ClInclude Include="..\slot-select-mode.h" />
     <ClInclude Include="..\sound.h" />
-    <ClInclude Include="..\species-type.h" />
     <ClInclude Include="..\species.h" />
+    <ClInclude Include="..\species-data.h" />
+    <ClInclude Include="..\species-def.h" />
+    <ClInclude Include="..\species-type.h" />
     <ClInclude Include="..\spell-type.h" />
     <ClInclude Include="..\spl-book.h" />
     <ClInclude Include="..\spl-cast.h" />
