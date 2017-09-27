@@ -5242,7 +5242,12 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
         const char* key = sacrifice.sacrifice_vector;
         // XXX: changing state in this function seems sketchy
         if (sacrifice.sacrifice == ABIL_RU_SACRIFICE_ARCANA)
+        {
+            if (you.species == SP_GNOLL)
+                return false;
+
             _choose_arcana_mutations();
+        }
         else
             _choose_sacrifice_mutation(sacrifice.sacrifice_vector);
 
