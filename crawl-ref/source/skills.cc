@@ -1378,9 +1378,9 @@ int player::get_training_target(const skill_type sk) const
  * @param sk the skill to set
  * @param target the new target, between 0.0 and 27.0.  0.0 means no target.
  */
-void player::set_training_target(const skill_type sk, const double target)
+void player::set_training_target(const skill_type sk, const double target, bool announce)
 {
-    set_training_target(sk, (int) round(target * 10));
+    set_training_target(sk, (int) round(target * 10), announce);
 }
 
 void player::clear_training_targets()
@@ -1396,9 +1396,20 @@ void player::clear_training_targets()
  * @param target the new target, scaled by ten, so between 0 and 270.  0 means
  *               no target.
  */
-void player::set_training_target(const skill_type sk, const int target)
+void player::set_training_target(const skill_type sk, const int target, bool announce)
 {
-    training_targets[sk] = min(max((int) target, 0), 270);
+    const int ranged_target = min(max((int) target, 0), 270);
+    if (announce && ranged_target != training_targets[sk])
+    {
+        if (ranged_target == 0)
+            mprf("Clearing the skill training target for %s.", skill_name(sk));
+        else
+        {
+            mprf("Setting a skill training target for %s at %d.%d.", skill_name(sk),
+                                    ranged_target / 10, ranged_target % 10);
+        }
+    }
+    training_targets[sk] = ranged_target;
 }
 
 const char *skill_name(skill_type which_skill)
