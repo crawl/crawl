@@ -18,19 +18,42 @@
 
 static bool _banned_combination(job_type job, species_type species)
 {
-    return species == SP_FELID
-            && (job == JOB_GLADIATOR
-                || job == JOB_ASSASSIN
-                || job == JOB_HUNTER
-                || job == JOB_ARCANE_MARKSMAN)
-           || species == SP_DEMIGOD
-               && (job == JOB_BERSERKER
-                   || job == JOB_CHAOS_KNIGHT
-                   || job == JOB_ABYSSAL_KNIGHT
-                   || job == JOB_MONK)
-           || job == JOB_TRANSMUTER
-              && (species_undead_type(species) == US_UNDEAD
-                  || species_undead_type(species) == US_HUNGRY_DEAD);
+    switch (species)
+    {
+    case SP_FELID:
+        if (job == JOB_GLADIATOR
+            || job == JOB_ASSASSIN
+            || job == JOB_HUNTER
+            || job == JOB_ARCANE_MARKSMAN)
+        {
+            return true;
+        }
+        break;
+    case SP_DEMIGOD:
+        if (job == JOB_BERSERKER
+            || job == JOB_CHAOS_KNIGHT
+            || job == JOB_ABYSSAL_KNIGHT
+            || job == JOB_MONK)
+        {
+            return true;
+        }
+        break;
+    case SP_GNOLL:
+        if (job == JOB_BERSERKER)
+            return true;
+        break;
+    default:
+        break;
+    }
+
+    if (job == JOB_TRANSMUTER
+        && (species_undead_type(species) == US_UNDEAD
+           || species_undead_type(species) == US_HUNGRY_DEAD))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 char_choice_restriction species_allowed(job_type job, species_type speci)
