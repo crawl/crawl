@@ -1370,7 +1370,8 @@ void SkillMenu::init_switches()
             sw->set_state(SKM_VIEW_COST);
     }
 
-    sw->add(SKM_VIEW_TARGETS);
+    if (you.species != SP_GNOLL)
+        sw->add(SKM_VIEW_TARGETS);
 
     if (you.wizard)
     {
