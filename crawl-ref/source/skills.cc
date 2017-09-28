@@ -1085,7 +1085,7 @@ bool check_training_targets()
     return change;
 }
 
-int _calc_skill_cost_level(int xp, int start)
+static int _calc_skill_cost_level(int xp, int start)
 {
     while (start < MAX_SKILL_COST_LEVEL
            && xp >= (int) skill_cost_needed(start + 1))
