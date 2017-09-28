@@ -538,8 +538,8 @@ LUAFN(you_set_training_target)
         string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
         return luaL_argerror(ls, 1, err.c_str());
     }
-    else
-        you.set_training_target(sk, luaL_checknumber(ls, 2));
+    else if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
+        return 0; // not a full-on error
     return 1;
 }
 
