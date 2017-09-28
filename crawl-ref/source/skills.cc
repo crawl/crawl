@@ -1378,9 +1378,9 @@ int player::get_training_target(const skill_type sk) const
  * @param sk the skill to set
  * @param target the new target, between 0.0 and 27.0.  0.0 means no target.
  */
-void player::set_training_target(const skill_type sk, const double target, bool announce)
+bool player::set_training_target(const skill_type sk, const double target, bool announce)
 {
-    set_training_target(sk, (int) round(target * 10), announce);
+    return set_training_target(sk, (int) round(target * 10), announce);
 }
 
 void player::clear_training_targets()
@@ -1395,13 +1395,19 @@ void player::clear_training_targets()
  * @param sk the skill to set
  * @param target the new target, scaled by ten, so between 0 and 270.  0 means
  *               no target.
+ *
+ * @return whether setting the target succeeded.
  */
-void player::set_training_target(const skill_type sk, const int target, bool announce)
+bool player::set_training_target(const skill_type sk, const int target, bool announce)
 {
     const int ranged_target = min(max((int) target, 0), 270);
     if (announce && ranged_target != training_targets[sk])
     {
-        if (ranged_target == 0)
+        if (you.species == SP_GNOLL)
+        {
+            mprf("Gnolls can't set training targets!");
+        }
+        else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else
         {
@@ -1409,7 +1415,13 @@ void player::set_training_target(const skill_type sk, const int target, bool ann
                                     ranged_target / 10, ranged_target % 10);
         }
     }
+    if (!can_enable_skill(sk)) // checks for gnolls
+    {
+        training_targets[sk] = 0;
+        return false;
+    }
     training_targets[sk] = ranged_target;
+    return true;
 }
 
 const char *skill_name(skill_type which_skill)
