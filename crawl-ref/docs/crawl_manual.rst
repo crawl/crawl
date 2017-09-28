@@ -1713,17 +1713,21 @@ Vine Stalkers
 Gnolls
   Gnolls are a race of caniform humanoids originally hailing from the arid
   deserts and grasslands of the east. In recent history they have become
-  unusually attracted to the Dungeon, establishing tribes around and even inside
-  of it. With a variety of lurid tales told of them, others avoid the Gnolls.
+  unusually attracted to the Dungeon, establishing tribes around and even
+  inside of it. Unfortunately their long stay in the Dungeon has exposed their
+  somewhat fragile minds to excessive amounts of its magic.
 
-  Gnolls excel at learning quickly, allowing them to master any skill in a short
-  period of time. Unfortunately, the Dungeon has had an especially adverse
-  effect on their bodies over the generations compared to other species. Their
-  physical attributes have become severly impaired and are unable to be altered
-  in any way, even through magic or the power of the gods.
+  On the one hand, their bizarrely altered brains now have incredible
+  proficiency at learning every skill. On the other, these same alterations
+  have rendered Gnolls incapable of selective learning. They learn all skills
+  equally at the same time, so it's hard for them to learn more about any one
+  thing.
 
-  On the bright side, their powerful noses have adapted to the Dungeon's scents,
-  allowing them to easily locate where treasures lay hidden.
+  In order to survive with this limitation, Gnolls use their universal
+  knowledge and excellent physical attributes of strength, intelligence, and
+  dexterity to take advantage of every resource they find in the Dungeon. They
+  also have powerful noses have adapted to the Dungeon's scents, allowing them
+  to easily locate where treasures lay hidden.
 
 The Undead
 ========================================
