@@ -55,8 +55,8 @@ They have low health, but their stone bodies are incredibly tough.
 %%%%
 Gnoll
 
-Gnolls are canine-like humanoids. They are quick to learn any skill, but are
-unable to alter their poor physical attributes.
+Gnolls are canine-like humanoids. They have incredible proficiency and
+excellent physical attributes, but must learn all skills at once.
 %%%%
 Halfling
 
