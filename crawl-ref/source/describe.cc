@@ -910,7 +910,8 @@ static string _skill_target_desc(skill_type skill, double target, int training)
 
 static void _append_skill_target_desc(string &description, skill_type skill, double target)
 {
-    description += "\n    " + _skill_target_desc(skill, target, 100);
+    if (you.species != SP_GNOLL)
+        description += "\n    " + _skill_target_desc(skill, target, 100);
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
         description += "\n    " + _skill_target_desc(skill, target,
