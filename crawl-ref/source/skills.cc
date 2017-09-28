@@ -369,11 +369,11 @@ int calc_skill_level_change(skill_type sk, int starting_level, int sk_points)
     while (1)
     {
         if (new_level < MAX_SKILL_LEVEL
-            && sk_points >= skill_exp_needed(new_level + 1, sk))
+            && sk_points >= (int) skill_exp_needed(new_level + 1, sk))
         {
             ++new_level;
         }
-        else if (sk_points < skill_exp_needed(new_level, sk))
+        else if (sk_points < (int) skill_exp_needed(new_level, sk))
         {
             new_level--;
             ASSERT(new_level >= 0);
@@ -1037,7 +1037,7 @@ bool skill_trained(int i)
  */
 bool target_met(skill_type sk, bool real)
 {
-    return you.skill(sk, 10, real) >= you.training_targets[sk];
+    return you.skill(sk, 10, real) >= (int) you.training_targets[sk];
 }
 
 /**
@@ -1088,12 +1088,12 @@ bool check_training_targets()
 int _calc_skill_cost_level(int xp, int start)
 {
     while (start < MAX_SKILL_COST_LEVEL
-           && xp >= skill_cost_needed(start + 1))
+           && xp >= (int) skill_cost_needed(start + 1))
     {
         ++start;
     }
     while (start > 0
-           && xp < skill_cost_needed(start))
+           && xp < (int) skill_cost_needed(start))
     {
         --start;
     }
@@ -1222,7 +1222,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
     // We're calculating you.skill_points[skill] and calculating the new
     // you.total_experience to update skill cost.
 
-    int you_skill = you.skill_points[skill];
+    unsigned int you_skill = you.skill_points[skill];
 
     if (!base_only)
     {
@@ -1401,7 +1401,7 @@ void player::clear_training_targets()
 bool player::set_training_target(const skill_type sk, const int target, bool announce)
 {
     const int ranged_target = min(max((int) target, 0), 270);
-    if (announce && ranged_target != training_targets[sk])
+    if (announce && ranged_target != (int) training_targets[sk])
     {
         if (you.species == SP_GNOLL)
         {

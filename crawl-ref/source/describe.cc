@@ -873,7 +873,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
        && (ignore_current || you.get_training_target(skill) < target);
 }
 
-static string _skill_target_desc(skill_type skill, double target, int training)
+static string _skill_target_desc(skill_type skill, double target, unsigned int training)
 {
     string description = "";
 

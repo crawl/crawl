@@ -2702,12 +2702,12 @@ int xp_to_level_diff(int xp, int scale)
     ASSERT(xp >= 0);
     int adjusted_xp = you.experience + xp;
     int level = you.experience_level;
-    while (adjusted_xp >= exp_needed(level + 1))
+    while (adjusted_xp >= (int) exp_needed(level + 1))
         level++;
     if (scale > 1)
     {
-        int remainder = adjusted_xp - exp_needed(level);
-        int denom = exp_needed(level + 1) - exp_needed(level);
+        unsigned int remainder = adjusted_xp - (int) exp_needed(level);
+        unsigned int denom = exp_needed(level + 1) - (int) exp_needed(level);
         return (level - you.experience_level) * scale +
                     (remainder * scale / denom);
     } else
