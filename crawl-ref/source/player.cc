@@ -5714,7 +5714,15 @@ int player::shield_tohit_penalty(bool random_factor, int scale) const
     return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
 }
 
-int player::skill(skill_type sk, int scale, bool real, bool drained) const
+/**
+ * Get the player's skill level for sk.
+ *
+ * @param scale a scale factor to multiply by.
+ * @param real whether to return the real value, or modified value.
+ * @param drained whether to include modification by draining.
+ * @param temp whether to include modification by other temporary factors (e.g. heroism)
+ */
+int player::skill(skill_type sk, int scale, bool real, bool drained, bool temp) const
 {
     // If you add another enhancement/reduction, be sure to change
     // SkillMenuSwitch::get_help() to reflect that
@@ -5746,7 +5754,10 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     }
 
     if (penance[GOD_ASHENZARI])
-        level = max(level - 4 * scale, level / 2);
+    {
+        if (temp)
+            level = max(level - 4 * scale, level / 2);
+    }
     else if (have_passive(passive_t::bondage_skill_boost))
     {
         if (skill_boost.count(sk)
@@ -5755,7 +5766,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
+    if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
     return level;
 }

@@ -243,7 +243,8 @@ public:
                              string source = "") = 0;
 
     virtual int  skill(skill_type sk, int scale = 1,
-                       bool real = false, bool drained = true) const = 0;
+                       bool real = false, bool drained = true,
+                       bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
 #define TORPOR_SLOWED_KEY "torpor_slowed"

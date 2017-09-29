@@ -1031,17 +1031,15 @@ bool skill_trained(int i)
 /**
  * Is the training target, if any, met or exceeded for skill sk?
  *
- * @param sk the skill to check.
- * @param real if true, check the base skill level, otherwise incorporate other
- *             factors (crosstraining, etc). Does not factor in draining.
+ * @param sk the skill to check. This checks crosstraining and ash bonuses,
+ * but not other skill modifiers.
  *
  * @return whether the skill target has been met.
- *
- * @see player::skill for the effect of `real`.
  */
-bool target_met(skill_type sk, bool real)
+bool target_met(skill_type sk)
 {
-    return you.skill(sk, 10, real) >= (int) you.training_targets[sk];
+    return you.skill(sk, 10, false, false, false) >=
+                                        (int) you.training_targets[sk];
 }
 
 /**
@@ -1056,7 +1054,7 @@ bool target_met(skill_type sk, bool real)
  */
 bool check_training_target(skill_type sk)
 {
-    if (you.training_targets[sk] && target_met(sk, false))
+    if (you.training_targets[sk] && target_met(sk))
     {
         mprf("%sraining target %d.%d for %s reached!",
             you.attribute[ATTR_XP_DRAIN] ? "Base t" : "T",
