@@ -859,7 +859,7 @@ static skill_type _item_training_skill(const item_def &item)
 
 static bool _could_set_training_target(const item_def &item, bool ignore_current)
 {
-    if (!crawl_state.need_save || is_useless_item(item))
+    if (!crawl_state.need_save || is_useless_item(item) || you.species == SP_GNOLL)
         return false;
 
     const skill_type skill = _item_training_skill(item);
