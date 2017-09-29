@@ -1239,7 +1239,8 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         // This isn't perfectly accurate, because the boost changes as
         // skill increases. TODO: exact solution.
         // It also assumes that piety won't change.
-        you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
+        if (you_worship(GOD_ASHENZARI))
+            you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
 
         if (skill_has_manual(skill))
             target = you_skill + (target - you_skill) / 2;
