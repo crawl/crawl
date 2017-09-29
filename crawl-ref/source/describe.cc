@@ -914,20 +914,21 @@ static string _your_skill_desc(skill_type skill, bool show_target_button, int sc
  * relevant.
  *
  * @param skill the skill to look at.
- * @param target a skill level target.
+ * @param scaled_target a skill level target, scaled by 10.
  * @param training a training value, from 0 to 100. Need not be the actual training
  * value.
  */
-static string _skill_target_desc(skill_type skill, double target, unsigned int training)
+static string _skill_target_desc(skill_type skill, int scaled_target,
+                                        unsigned int training)
 {
-    // note: `target` is double because the skill level calculations use
-    // doubles. TODO: can this be converted to fixed point?
     string description = "";
 
     const bool max_training = (training == 100);
-    const bool hypothetical = !crawl_state.need_save || (training != you.training[skill]);
+    const bool hypothetical = !crawl_state.need_save || 
+                                    (training != you.training[skill]);
 
-    const skill_diff diffs = skill_level_to_diffs(skill, target, training, false);
+    const skill_diff diffs = skill_level_to_diffs(skill, 
+                                (double) scaled_target / 10, training, false);
     const int level_diff = xp_to_level_diff(diffs.experience, 10);
 
     if (max_training)
@@ -941,9 +942,9 @@ static string _skill_target_desc(skill_type skill, double target, unsigned int t
         description += make_stringf("At a training level of %d%% ", training);
 
     description += make_stringf(
-        "you %s reach %.1f in %s %d.%d XLs.",
+        "you %s reach %d.%d in %s %d.%d XLs.",
             hypothetical ? "would" : "will",
-            target,
+            scaled_target / 10, scaled_target % 10,
             (you.experience_level + (level_diff + 9) / 10) > 27
                                 ? "the equivalent of" : "about",
             level_diff / 10, level_diff % 10);
@@ -959,13 +960,14 @@ static string _skill_target_desc(skill_type skill, double target, unsigned int t
  * Append two skill target descriptions: one for 100%, and one for the
  * current training rate.
  */
-static void _append_skill_target_desc(string &description, skill_type skill, double target)
+static void _append_skill_target_desc(string &description, skill_type skill,
+                                        int scaled_target)
 {
     if (you.species != SP_GNOLL)
-        description += "\n    " + _skill_target_desc(skill, target, 100);
+        description += "\n    " + _skill_target_desc(skill, scaled_target, 100);
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
-        description += "\n    " + _skill_target_desc(skill, target,
+        description += "\n    " + _skill_target_desc(skill, scaled_target,
                                                     you.training[skill]);
     }
 }
@@ -1004,7 +1006,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     }
 
     if (could_set_target)
-        _append_skill_target_desc(description, skill, mindelay_skill / 10);
+        _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
 static string _handedness_string(const item_def &item)
@@ -1434,7 +1436,7 @@ static string _describe_ammo(const item_def &item)
                     _your_skill_desc(SK_THROWING, could_set_target, target_skill);
         }
         if (could_set_target)
-            _append_skill_target_desc(description, SK_THROWING, target_skill / 10);
+            _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
     if (ammo_always_destroyed(item))
@@ -1464,7 +1466,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         if (is_shield(item))
         {
-            const int skill = _item_training_target(item);
+            const int target_skill = _item_training_target(item);
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
@@ -1473,17 +1475,22 @@ static string _describe_armour(const item_def &item, bool verbose)
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
-                            + make_stringf("%d.%d", skill / 10, skill % 10);
+                            + make_stringf("%d.%d", target_skill / 10,
+                                                target_skill % 10);
 
                 if (crawl_state.need_save)
                 {
                     description += "\n                            "
-                        + _your_skill_desc(SK_SHIELDS, could_set_target, skill);
+                        + _your_skill_desc(SK_SHIELDS, could_set_target,
+                                            target_skill);
                 }
                 else
                     description += "\n";
                 if (could_set_target)
-                    _append_skill_target_desc(description, SK_SHIELDS, skill / 10);
+                {
+                    _append_skill_target_desc(description, SK_SHIELDS,
+                                                                target_skill);
+                }
             }
 
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
