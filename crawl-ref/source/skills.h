@@ -123,7 +123,7 @@ int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
 bool can_enable_skill(skill_type sk);
 
-bool target_met(skill_type sk, bool real=false);
+bool target_met(skill_type sk);
 bool check_training_target(skill_type sk);
 bool check_training_targets();
 

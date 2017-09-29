@@ -829,7 +829,8 @@ public:
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale =1,
-               bool real = false, bool drained = true) const override;
+               bool real = false, bool drained = true,
+               bool temp=true) const override;
 
     bool do_shaft() override;
 

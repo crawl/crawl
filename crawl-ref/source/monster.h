@@ -335,7 +335,8 @@ public:
     bool fumbles_attack() override;
 
     int  skill(skill_type skill, int scale = 1,
-               bool real = false, bool drained = true) const override;
+               bool real = false, bool drained = true,
+               bool temp = true) const override;
 
     void attacking(actor *other, bool ranged) override;
     bool can_go_frenzy() const;
