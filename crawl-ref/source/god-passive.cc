@@ -1027,6 +1027,15 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 }
 
 /**
+ * Does the player have an ash skill boost for a particular skill?
+ */
+bool ash_has_skill_boost(skill_type sk)
+{
+    return have_passive(passive_t::bondage_skill_boost)
+           && you.skill_boost.count(sk) && you.skill_boost.find(sk)->second;
+}
+
+/**
  * Calculate the ash skill point boost for skill sk.
  *
  * @param scaled_skill the skill level to calculate it for, scaled by 10.

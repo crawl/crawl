@@ -5758,14 +5758,9 @@ int player::skill(skill_type sk, int scale, bool real, bool drained, bool temp) 
         if (temp)
             level = max(level - 4 * scale, level / 2);
     }
-    else if (have_passive(passive_t::bondage_skill_boost))
-    {
-        if (skill_boost.count(sk)
-            && skill_boost.find(sk)->second)
-        {
+    else if (ash_has_skill_boost(sk))
             level = ash_skill_boost(sk, scale);
-        }
-    }
+
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
     return level;

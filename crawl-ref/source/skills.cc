@@ -1056,8 +1056,10 @@ bool check_training_target(skill_type sk)
 {
     if (you.training_targets[sk] && target_met(sk))
     {
+        bool base = (you.skill(sk, 10, false, false, false) !=
+                        you.skill(sk, 10, false, true, true));
         mprf("%sraining target %d.%d for %s reached!",
-            you.attribute[ATTR_XP_DRAIN] ? "Base t" : "T",
+            base ? "Base t" : "T",
             you.training_targets[sk] / 10,
             you.training_targets[sk] % 10, skill_name(sk));
 
@@ -1237,7 +1239,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         // This isn't perfectly accurate, because the boost changes as
         // skill increases. TODO: exact solution.
         // It also assumes that piety won't change.
-        if (you_worship(GOD_ASHENZARI))
+        if (ash_has_skill_boost(skill))
             you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
 
         if (skill_has_manual(skill))

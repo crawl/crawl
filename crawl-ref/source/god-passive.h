@@ -276,6 +276,7 @@ int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
+bool ash_has_skill_boost(skill_type sk);
 map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 int gozag_gold_in_los(actor* whom);
 int qazlal_sh_boost(int piety = you.piety);

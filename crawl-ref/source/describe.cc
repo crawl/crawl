@@ -857,6 +857,12 @@ static skill_type _item_training_skill(const item_def &item)
         return SK_NONE;
 }
 
+/**
+ * Whether it would make sense to set a training target for an item.
+ *
+ * @param item the item to check.
+ * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
+ */
 static bool _could_set_training_target(const item_def &item, bool ignore_current)
 {
     if (!crawl_state.need_save || is_useless_item(item) || you.species == SP_GNOLL)
@@ -869,12 +875,53 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
     const int target = _item_training_target(item);
 
     return target && you.can_train[skill]
-       && you.skill(skill, 10) < target
+       && you.skill(skill, 10, false, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
 
+/**
+ * Produce the "Your skill:" line for item descriptions where specific skill targets
+ * are releveant (weapons, missiles, shields)
+ *
+ * @param skill the skill to look at.
+ * @param show_target_button whether to show the button for setting a skill target.
+ * @param scaled_target a target, scaled by 10, to use when describing the button.
+ */
+static string _your_skill_desc(skill_type skill, bool show_target_button, int scaled_target)
+{
+    if (!crawl_state.need_save || skill == SK_NONE)
+        return "";
+    string target_button_desc = "";
+    if (show_target_button &&
+            you.get_training_target(skill) < scaled_target)
+    {
+        target_button_desc = make_stringf(
+            "; use <white>(s)</white> to set %d.%d as a target for %s.",
+                                    scaled_target / 10, scaled_target % 10,
+                                    skill_name(skill));
+    }
+    int you_skill_temp = you.skill(skill, 10, false, true, true);
+    int you_skill = you.skill(skill, 10, false, false, false);
+
+    return make_stringf("Your %sskill: %d.%d%s",
+                            (you_skill_temp != you_skill ? "(base) " : ""),
+                            you_skill / 10, you_skill % 10,
+                            target_button_desc.c_str());
+}
+
+/**
+ * Produce a description of a skill target for items where specific targets are
+ * relevant.
+ *
+ * @param skill the skill to look at.
+ * @param target a skill level target.
+ * @param training a training value, from 0 to 100. Need not be the actual training
+ * value.
+ */
 static string _skill_target_desc(skill_type skill, double target, unsigned int training)
 {
+    // note: `target` is double because the skill level calculations use
+    // doubles. TODO: can this be converted to fixed point?
     string description = "";
 
     const bool max_training = (training == 100);
@@ -908,6 +955,10 @@ static string _skill_target_desc(skill_type skill, double target, unsigned int t
     return description;
 }
 
+/**
+ * Append two skill target descriptions: one for 100%, and one for the
+ * current training rate.
+ */
 static void _append_skill_target_desc(string &description, skill_type skill, double target)
 {
     if (you.species != SP_GNOLL)
@@ -946,20 +997,10 @@ static void _append_weapon_stats(string &description, const item_def &item)
         (float) weapon_min_delay(item, item_brand_known(item)) / 10,
         mindelay_skill / 10);
 
-    string target_command_desc = "";
-    if (could_set_target &&
-                you.get_training_target(skill) < mindelay_skill)
+    if (!is_useless_item(item))
     {
-        target_command_desc = make_stringf(
-            "; press <white>(s)</white> to set %d.%d as a training target.",
-                                    mindelay_skill / 10, mindelay_skill % 10);
-    }
-
-    if (crawl_state.need_save && skill != SK_NONE && !is_useless_item(item))
-    {
-        description += make_stringf(
-            "\n    Your skill: %.1f%s", (float) you.skill(skill, 10) / 10,
-                                            target_command_desc.c_str());
+        description += "\n    " +
+            _your_skill_desc(skill, could_set_target, mindelay_skill);
     }
 
     if (could_set_target)
@@ -1377,33 +1418,21 @@ static string _describe_ammo(const item_def &item)
         const int target_skill = _item_training_target(item);
         const bool could_set_target = _could_set_training_target(item, true);
 
-        string target_command_desc = "";
-        if (could_set_target &&
-                    you.get_training_target(SK_THROWING) < target_skill)
-        {
-            target_command_desc = make_stringf(
-                "; press <white>(s)</white> to set %d.0 as a training target.",
-                                        target_skill / 10);
-        }
-
-        const string your_skill = crawl_state.need_save && !is_useless_item(item) ?
-                make_stringf("\n    Your skill: %.1f%s",
-                    (float) you.skill(SK_THROWING, 10) / 10,
-                    target_command_desc.c_str())
-                    : "";
-
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
-                "is reached at skill level %d."
-            "%s",
+                "is reached at skill level %d.",
             dam,
             (float) throw_delay / 10,
             (float) FASTEST_PLAYER_THROWING_SPEED / 10,
-            target_skill / 10,
-            your_skill.c_str()
+            target_skill / 10
         );
 
+        if (!is_useless_item(item))
+        {
+            description += "\n    " +
+                    _your_skill_desc(SK_THROWING, could_set_target, target_skill);
+        }
         if (could_set_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill / 10);
     }
@@ -1445,21 +1474,11 @@ static string _describe_armour(const item_def &item, bool verbose)
             {
                 description += "       Skill to remove penalty: "
                             + make_stringf("%d.%d", skill / 10, skill % 10);
-                string target_command_desc = "";
-                if (could_set_target &&
-                        you.get_training_target(SK_SHIELDS) < skill)
-                {
-                    target_command_desc = make_stringf(
-                        "; press <white>(s)</white> to set %d.%d as a training target.",
-                                                skill / 10, skill % 10);
-                }
 
                 if (crawl_state.need_save)
                 {
                     description += "\n                            "
-                                + make_stringf("Your skill: %.1f%s",
-                                        (float) you.skill(SK_SHIELDS, 10) / 10,
-                                        target_command_desc.c_str());
+                        + _your_skill_desc(SK_SHIELDS, could_set_target, skill);
                 }
                 else
                     description += "\n";
