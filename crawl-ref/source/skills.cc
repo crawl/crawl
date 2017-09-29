@@ -506,6 +506,10 @@ static void _check_start_train()
 
 static void _check_stop_train()
 {
+    // Gnolls can't stop training skills.
+    if (you.species == SP_GNOLL)
+        return;
+
     _check_inventory_skills();
     _check_spell_skills();
     _check_abil_skills();
