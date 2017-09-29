@@ -118,17 +118,14 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (is_invalid_skill(m_sk))
         return false;
 
+    if (is_set(SKMF_HELP))
+        return true;
+
     if (you.species == SP_GNOLL)
         return false;
 
     if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
         return false;
-
-    if (is_set(SKMF_HELP))
-        return true;
-
-    if (is_set(SKMF_SET_TARGET) && !mastered())
-        return true;
 
     if (is_set(SKMF_RESKILL_TO) && you.transfer_from_skill == m_sk)
     {
@@ -1088,8 +1085,12 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 
 void SkillMenu::set_target_mode()
 {
-    if (get_state(SKM_VIEW) != SKM_VIEW_TARGETS)
-        return;
+    if (get_state(SKM_VIEW) != SKM_VIEW_TARGETS && m_switches[SKM_VIEW])
+    {
+        m_switches[SKM_VIEW]->set_state(SKM_VIEW_TARGETS);
+        m_switches[SKM_VIEW]->update();
+        refresh_display();
+    }
     set_flag(SKMF_SET_TARGET);
     refresh_names();
 }
@@ -1434,6 +1435,10 @@ void SkillMenu::refresh_button_row()
             midlegend = "[<yellow>=</yellow>] set a skill target";
             clearlegend = "[<yellow>-</yellow>] clear all targets";
         }
+    }
+    else
+    {
+        midlegend = "[<yellow>=</yellow>] set a skill target";
     }
 
     m_help_button->set_text(helpstring + legend);

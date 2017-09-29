@@ -924,10 +924,10 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
     string description = "";
 
     const bool max_training = (training == 100);
-    const bool hypothetical = !crawl_state.need_save || 
+    const bool hypothetical = !crawl_state.need_save ||
                                     (training != you.training[skill]);
 
-    const skill_diff diffs = skill_level_to_diffs(skill, 
+    const skill_diff diffs = skill_level_to_diffs(skill,
                                 (double) scaled_target / 10, training, false);
     const int level_diff = xp_to_level_diff(diffs.experience, 10);
 
