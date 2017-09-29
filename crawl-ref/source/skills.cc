@@ -1208,6 +1208,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
                             bool base_only)
 {
     // TODO: should this use skill_state?
+    // TODO: can `amount` be converted to fixed point?
     double level;
     double fractional = modf(amount, &level);
     if (level >= MAX_SKILL_LEVEL)
