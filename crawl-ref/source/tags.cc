@@ -2593,8 +2593,11 @@ static void tag_read_you(reader &th)
         you.train_alt[j]    = (training_status)unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
         // Gnolls always train all skills.
-        if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX)
+        if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX
+            && you.species == SP_GNOLL)
+        {
             you.train[j] = you.train_alt[j] = TRAINING_ENABLED;
+        }
 #endif
         you.training[j] = unmarshallInt(th);
         you.skill_points[j]    = unmarshallInt(th);
