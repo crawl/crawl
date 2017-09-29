@@ -810,7 +810,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_SAINT_ROKA:
     case TILEP_MONS_MINOTAUR:
-        *ofs_x = 3;
+        *ofs_x = 2;
         *ofs_y = 0;
         break;
 
