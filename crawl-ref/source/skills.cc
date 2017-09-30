@@ -760,8 +760,11 @@ void reset_training()
     // to 0 (and filled later with the content of the queue), in manual mode,
     // the trainable ones are set to 1 (or 2 for focus).
     for (int i = 0; i < NUM_SKILLS; ++i)
-        // Gnolls always train all skills
-        if (you.species == SP_GNOLL)
+        // Gnolls always train all non-useless skills, even if they wouldn't
+        // normally be trainable.
+        if (is_useless_skill((skill_type) i))
+            you.training[i] = 0;
+        else if (you.species == SP_GNOLL)
             you.training[i] = 1;
         else if (you.auto_training || !skill_trained(i))
             you.training[i] = 0;
