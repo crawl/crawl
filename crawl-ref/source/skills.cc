@@ -1143,18 +1143,56 @@ void check_skill_cost_change()
 #endif
 }
 
-// The current cost of raising all skills by one skill point. Used to ensure
-// that gnoll skills rise evenly.
+static int _useless_skill_count()
+{
+    int count = 0;
+    for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (skill == SK_STABBING || skill == SK_TRAPS)
+            continue;
+#endif
+        if (is_useless_skill(skill))
+            count++;
+    }
+    return count;
+}
+
+static int _total_skill_count()
+{
+    int count = 0;
+    for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (skill == SK_STABBING || skill == SK_TRAPS)
+            continue;
+#endif
+        count++;
+    }
+    return count;
+}
+
+// The current cost of raising each skill by one skill point, taking the
+// gnoll penalty for useless skills into account and rounding up for all
+// computations. Used to ensure that gnoll skills rise evenly - we don't
+// train anything unless we have this much xp to spend.
 int _gnoll_total_skill_cost()
 {
+    int this_cost;
     int total_cost = 0;
     int cur_cost_level = you.skill_cost_level;
+    const int useless_count = _useless_skill_count();
+    const int total_count = _total_skill_count();
+    const int num = total_count;
+    const int denom = 10 * (total_count - useless_count);
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         if (!you.training[i])
             continue;
         cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
-        total_cost += calc_skill_cost(cur_cost_level);
+        this_cost = calc_skill_cost(cur_cost_level);
+        this_cost = (num * this_cost + denom - 1) / denom;
+        total_cost += this_cost;
     }
     return total_cost;
 }
@@ -1177,16 +1215,28 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
 
-    // Scale cost and skill_inc to available experience.
-    const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
-    if (cost > spending_limit)
+    if (you.species == SP_GNOLL)
     {
-        int frac = spending_limit * 10 / cost;
-        cost = spending_limit;
-        skill_inc = skill_inc * frac / 10;
+        skill_inc = 1;
+        int useless_count = _useless_skill_count();
+        int total_count = _total_skill_count();
+        int num = total_count;
+        int denom = 10 * (total_count - useless_count);
+        cost = div_rand_round(num * cost, denom);
+    }
+    else
+    {
+        // Scale cost and skill_inc to available experience.
+        const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
+        if (cost > spending_limit)
+        {
+            int frac = spending_limit * 10 / cost;
+            cost = spending_limit;
+            skill_inc = skill_inc * frac / 10;
+        }
     }
 
-    if (skill_inc <= 0)
+    if (skill_inc <= 0 || cost > max_exp)
         return 0;
 
     // Bonus from manual
