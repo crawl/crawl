@@ -857,25 +857,41 @@ bool is_magic_skill(skill_type sk)
     return sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC;
 }
 
+int _gnoll_total_skill_cost();
+
 void train_skills(bool simu)
 {
     int cost, exp;
-    do
+    if (you.species == SP_GNOLL)
     {
-        cost = calc_skill_cost(you.skill_cost_level);
-        exp = you.exp_available;
-        if (you.skill_cost_level == MAX_SKILL_COST_LEVEL)
-            _train_skills(exp, cost, simu);
-        else
+        do
         {
-            // Amount of experience points needed to reach the next skill cost level
-            const int next_level = skill_cost_needed(you.skill_cost_level + 1)
-                                   - you.total_experience;
-            ASSERT(next_level > 0);
-            _train_skills(min(exp, next_level + cost - 1), cost, simu);
+            exp = you.exp_available;
+            cost = _gnoll_total_skill_cost();
+            if (exp >= cost)
+                _train_skills(exp, calc_skill_cost(you.skill_cost_level), simu);
         }
+        while (exp != you.exp_available);
     }
-    while (you.exp_available >= cost && exp != you.exp_available);
+    else
+    {
+        do
+        {
+            cost = calc_skill_cost(you.skill_cost_level);
+            exp = you.exp_available;
+            if (you.skill_cost_level == MAX_SKILL_COST_LEVEL)
+                _train_skills(exp, cost, simu);
+            else
+            {
+                // Amount of experience points needed to reach the next skill cost level
+                const int next_level = skill_cost_needed(you.skill_cost_level + 1)
+                                       - you.total_experience;
+                ASSERT(next_level > 0);
+                _train_skills(min(exp, next_level + cost - 1), cost, simu);
+            }
+        }
+        while (you.exp_available >= cost && exp != you.exp_available);
+    }
 
     for (int i = 0; i < NUM_SKILLS; ++i)
         check_skill_level_change(static_cast<skill_type>(i), !simu);
@@ -914,7 +930,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         if (you.training[i] > 0)
         {
             sk_exp[i] = you.training[i] * exp / 100;
-            if (sk_exp[i] < cost)
+            if (sk_exp[i] < cost && you.species != SP_GNOLL)
             {
                 // One skill has a too low training to be trained at all.
                 // We skip the first phase and go directly to the random
@@ -935,6 +951,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
         {
             int gain = 0;
 
+            if (you.species == SP_GNOLL)
+                sk_exp[sk] = exp;
             while (sk_exp[sk] >= cost && you.training[sk])
             {
                 exp -= sk_exp[sk];
@@ -943,6 +961,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
                 ASSERT(exp >= 0);
                 if (_level_up_check(sk, simu))
                     sk_exp[sk] = 0;
+                if (you.species == SP_GNOLL)
+                    break;
             }
 
             if (gain && is_magic_skill(sk))
@@ -957,6 +977,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
     // with random_choose_weighted.
     while (exp >= cost)
     {
+        if (you.species == SP_GNOLL)
+            break;
         int gain;
         skill_type sk = SK_NONE;
         if (!skip_first_phase)
@@ -1116,6 +1138,22 @@ void check_skill_cost_change()
     if (initial_cost != you.skill_cost_level)
         dprf("Adjusting skill cost level to %d", you.skill_cost_level);
 #endif
+}
+
+// The current cost of raising all skills by one skill point. Used to ensure
+// that gnoll skills rise evenly.
+int _gnoll_total_skill_cost()
+{
+    int total_cost = 0;
+    int cur_cost_level = you.skill_cost_level;
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        if (!you.training[i])
+            continue;
+        cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
+        total_cost += calc_skill_cost(cur_cost_level);
+    }
+    return total_cost;
 }
 
 void change_skill_points(skill_type sk, int points, bool do_level_up)
