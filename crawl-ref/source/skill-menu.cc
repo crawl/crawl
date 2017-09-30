@@ -1436,7 +1436,7 @@ void SkillMenu::refresh_button_row()
             clearlegend = "[<yellow>-</yellow>] clear all targets";
         }
     }
-    else
+    else if (you.species != SP_GNOLL) // SKM_VIEW_TARGETS unavailable for Gn
     {
         midlegend = "[<yellow>=</yellow>] set a skill target";
     }
