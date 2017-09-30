@@ -910,9 +910,9 @@ int line_reader::process_key(int ch)
 }
 
 #ifdef USE_TILE_LOCAL
-fontbuf_line_reader::fontbuf_line_reader(char *buffer, size_t bufsz,
+fontbuf_line_reader::fontbuf_line_reader(char *buf, size_t buf_size,
             FontBuffer& font_buf, int wrap_col) :
-    line_reader(buffer, bufsz, wrap_col), m_font_buf(font_buf)
+    line_reader(buf, buf_size, wrap_col), m_font_buf(font_buf)
 {
 }
 
