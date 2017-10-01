@@ -484,6 +484,15 @@ string get_god_dislikes(god_type which_god)
 
     for (const auto& entry : divine_peeves[which_god])
     {
+        // Trog forgives Gnolls practising spellcasting since they do it
+        // without choice. XXX: Rework the peeve_map to allow checking this.
+        if (which_god == GOD_TROG
+            && you.species == SP_GNOLL
+            && entry.first == DID_SPELL_PRACTISE)
+        {
+            continue;
+        }
+
         if (entry.second.desc)
         {
             if (entry.second.really_dislike)
@@ -1004,13 +1013,22 @@ static bool _god_likes_killing(const monster& victim)
 static void _handle_your_gods_response(conduct_type thing_done, int level,
                                        bool known, const monster* victim)
 {
+    COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
+    COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
+
     // Lucy gives no piety in Abyss. :(
     // XXX: make this not a hack...? (or remove it?)
     if (you_worship(GOD_LUGONU) && player_in_branch(BRANCH_ABYSS))
         return;
 
-    COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
-    COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
+    // Trog forgives Gnolls practising spellcasting since they do it without
+    // choice. XXX: Rework the peeve_map to allow checking this.
+    if (you_worship(GOD_TROG)
+        && you.species == SP_GNOLL
+        && thing_done == DID_SPELL_PRACTISE)
+    {
+        return;
+    }
 
     // If your god disliked the action, evaluate its response.
     if (auto peeve = map_find(divine_peeves[you.religion], thing_done))
