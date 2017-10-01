@@ -5242,12 +5242,7 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
         const char* key = sacrifice.sacrifice_vector;
         // XXX: changing state in this function seems sketchy
         if (sacrifice.sacrifice == ABIL_RU_SACRIFICE_ARCANA)
-        {
-            if (you.species == SP_GNOLL)
-                return false;
-
             _choose_arcana_mutations();
-        }
         else
             _choose_sacrifice_mutation(sacrifice.sacrifice_vector);
 
@@ -5309,6 +5304,10 @@ static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 
 static int _piety_for_skill(skill_type skill)
 {
+    // Gnolls didn't have a choice about training the skill, so don't give
+    // them more piety for waiting longer before taking the sacrifice.
+    if (you.species == SP_GNOLL)
+        return 0;
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
