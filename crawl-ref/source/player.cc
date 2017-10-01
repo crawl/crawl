@@ -2617,7 +2617,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     else
         you.experience += exp_gained;
 
-    you.exp_available += skill_xp;
+    you.exp_available += 10 * skill_xp;
 
     train_skills();
     while (check_selected_skills()
