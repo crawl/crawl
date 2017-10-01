@@ -2204,7 +2204,7 @@ void fixup_skills()
     }
     init_can_train();
 
-    if (you.exp_available >= calc_skill_cost(you.skill_cost_level) && you.species != SP_GNOLL)
+    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && you.species != SP_GNOLL)
         skill_menu(SKMF_EXPERIENCE);
 
     check_training_targets();
