@@ -872,7 +872,11 @@ void train_skills(bool simu)
             exp = you.exp_available;
             cost = _gnoll_total_skill_cost();
             if (exp >= cost)
+            {
                 _train_skills(exp, calc_skill_cost(you.skill_cost_level), simu);
+                dprf(DIAG_SKILLS,
+                    "Trained all gnoll skills by 1 at total cost %d.", cost);
+            }
         }
         while (exp != you.exp_available);
     }
@@ -1023,7 +1027,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (total_gain[sk] && !simu)
+            if (total_gain[sk] && !simu && you.species != SP_GNOLL)
             {
                 dprf(DIAG_SKILLS, "Trained %s by %d.",
                      skill_name(sk), total_gain[sk]);
