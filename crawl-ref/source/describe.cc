@@ -929,7 +929,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
 
     const skill_diff diffs = skill_level_to_diffs(skill,
                                 (double) scaled_target / 10, training, false);
-    const int level_diff = xp_to_level_diff(diffs.experience, 10);
+    const int level_diff = xp_to_level_diff(diffs.experience / 10, 10);
 
     if (max_training)
         description += "At 100% training ";

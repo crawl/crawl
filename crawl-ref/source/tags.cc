@@ -2420,6 +2420,11 @@ static void tag_read_you(reader &th)
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_SCALING)
+    {
+        you.total_experience *= 10;
+        you.exp_available *= 10;
+    }
     if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
         unmarshallInt(th);
 #endif

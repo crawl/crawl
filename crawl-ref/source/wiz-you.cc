@@ -769,7 +769,7 @@ static void debug_uptick_xl(int newxl, bool train)
 {
     if (train)
     {
-        you.exp_available += exp_needed(newxl) - you.experience;
+        you.exp_available += 10 * (exp_needed(newxl) - you.experience);
         train_skills();
     }
     you.experience = exp_needed(newxl);

@@ -154,7 +154,8 @@ public:
     int hit_points_regeneration;
     int magic_points_regeneration;
     unsigned int experience;
-    unsigned int total_experience; // Unaffected by draining. Used for skill cost.
+    unsigned int total_experience; // 10 * amount of xp put into skills, used
+                                   // only for skill_cost_level
     int experience_level;
     int gold;
     int zigs_completed, zig_max;
@@ -229,7 +230,7 @@ public:
     unsigned int  transfer_total_skill_points;
 
     int  skill_cost_level;
-    int  exp_available;
+    int  exp_available; // xp pool, scaled by 10 from you.experience
 
     FixedVector<int, NUM_GODS> exp_docked;
     FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath

@@ -146,7 +146,7 @@ static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 // 130 exp apt is midway between +0 and -1 now. -- elliptic
 unsigned int skill_cost_needed(int level)
 {
-    return (exp_needed(level, 1) * 13) / 10;
+    return exp_needed(level, 1) * 13;
 }
 
 static const int MAX_SKILL_COST_LEVEL = 27;
@@ -918,7 +918,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
 #ifdef DEBUG_TRAINING_COST
     int exp_pool = you.exp_available;
     dprf(DIAG_SKILLS,
-         "skill cost level: %d, cost: %dxp/10skp, max XP usable: %d.",
+         "skill cost level: %d, cost: %dxp/skp, max XP usable: %d.",
          you.skill_cost_level, cost, exp);
 #endif
 
@@ -1184,14 +1184,15 @@ int _gnoll_total_skill_cost()
     const int useless_count = _useless_skill_count();
     const int total_count = _total_skill_count();
     const int num = total_count;
-    const int denom = 10 * (total_count - useless_count);
+    const int denom = total_count - useless_count;
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         if (!you.training[i])
             continue;
         cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
         this_cost = calc_skill_cost(cur_cost_level);
-        this_cost = (num * this_cost + denom - 1) / denom;
+        if (num != denom)
+            this_cost = (num * this_cost + denom - 1) / denom;
         total_cost += this_cost;
     }
     return total_cost;
@@ -1210,30 +1211,26 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
 static int _train(skill_type exsk, int &max_exp, bool simu)
 {
     // This will be added to you.skill_points[exsk];
-    int skill_inc = 10;
+    int skill_inc = 1;
 
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
 
     if (you.species == SP_GNOLL)
     {
-        skill_inc = 1;
         int useless_count = _useless_skill_count();
         int total_count = _total_skill_count();
         int num = total_count;
-        int denom = 10 * (total_count - useless_count);
-        cost = div_rand_round(num * cost, denom);
+        int denom = total_count - useless_count;
+        if (num != denom)
+            cost = div_rand_round(num * cost, denom);
     }
     else
     {
         // Scale cost and skill_inc to available experience.
-        const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
-        if (cost > spending_limit)
-        {
-            int frac = spending_limit * 10 / cost;
-            cost = spending_limit;
-            skill_inc = skill_inc * frac / 10;
-        }
+        const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
+        skill_inc = spending_limit / cost;
+        cost = skill_inc * cost;
     }
 
     if (skill_inc <= 0 || cost > max_exp)
@@ -1371,13 +1368,13 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 
         const int cost = calc_skill_cost(you_skill_cost_level);
         // Maximum number of skill points to transfer in one go.
-        // It's max_xp*10/cost rounded up.
-        const int max_skp = max((max_xp * 10 + cost - 1) / cost, 1);
+        // It's max_xp/cost rounded up.
+        const int max_skp = max((max_xp + cost - 1) / cost, 1);
 
         skill_diff delta;
         delta.skill_points = min<int>(abs((int)(target - you_skill)),
                                  max_skp);
-        delta.experience = (delta.skill_points * cost + 9) / 10;
+        delta.experience = delta.skill_points * cost;
 
         if (decrease_skill)
         {
