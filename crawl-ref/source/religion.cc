@@ -3089,9 +3089,6 @@ bool player_can_join_god(god_type which_god)
       return false;
     }
 
-    if (which_god == GOD_TROG && you.species == SP_GNOLL)
-        return false;
-
     return _transformed_player_can_join_god(which_god);
 }
 

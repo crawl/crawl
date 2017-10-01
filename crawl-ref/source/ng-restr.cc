@@ -38,10 +38,6 @@ static bool _banned_combination(job_type job, species_type species)
             return true;
         }
         break;
-    case SP_GNOLL:
-        if (job == JOB_BERSERKER)
-            return true;
-        break;
     default:
         break;
     }
