@@ -2016,7 +2016,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
         else if(item->sub_type == ARM_SCARF)
         {
-            messages.emplace_back("Your scarf is twisted by an unfelt wind.");
+            messages.emplace_back("Your scarf briefly wraps itself around your head!");
         }
     }
 
