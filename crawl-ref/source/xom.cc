@@ -2018,7 +2018,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         {
             messages.emplace_back("Your scarf is twisted by an unfelt wind.");
         }
-	}
+    }
 
     if (item_def* item = you.slot_item(EQ_HELMET))
     {
