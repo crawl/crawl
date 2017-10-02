@@ -2010,14 +2010,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         item_def* item = you.slot_item(EQ_CLOAK);
 
-        if(item->sub_type == ARM_CLOAK)
-        {
+        if (item->sub_type == ARM_CLOAK)
             messages.emplace_back("Your cloak billows in an unfelt wind.");
-        }
-        else if(item->sub_type == ARM_SCARF)
-        {
+        else if (item->sub_type == ARM_SCARF)
             messages.emplace_back("Your scarf briefly wraps itself around your head!");
-        }
     }
 
     if (item_def* item = you.slot_item(EQ_HELMET))
