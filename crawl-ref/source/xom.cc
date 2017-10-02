@@ -2007,7 +2007,18 @@ static void _xom_pseudo_miscast(int /*sever*/)
     }
 
     if (you.slot_item(EQ_CLOAK))
-        messages.emplace_back("Your cloak billows in an unfelt wind.");
+	{
+    	item_def* item = you.slot_item(EQ_CLOAK);
+    	
+    	if(item->sub_type == ARM_CLOAK)
+		{
+			messages.emplace_back("Your cloak billows in an unfelt wind.");
+		}
+		else if(item->sub_type == ARM_SCARF)
+		{
+			messages.emplace_back("Your scarf is twisted by an unfelt wind.");
+		}
+	}
 
     if (item_def* item = you.slot_item(EQ_HELMET))
     {
