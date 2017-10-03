@@ -603,7 +603,7 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
 
 /**
  * (Re-)print the buffer from start onwards, potentially overprinting
- * with spaces.
+ * with spaces.  Does *not* set cursor position.
  *
  * @param start the position in the buffer to print from.
  * @param how many spaces to overprint.
@@ -654,14 +654,18 @@ void line_reader::kill_to_begin()
     if (!pos || cur == buffer)
         return;
 
-    int rest = length - (cur - buffer);
-    buffer[length] = 0;
-    cursorto(0);
+    const int rest = length - (cur - buffer);
+    const int overwrite_len = pos;
+
     memmove(buffer, cur, rest);
-    buffer[length = rest] = 0;;
+    length = rest;
+    buffer[length] = 0;
     pos = 0;
     cur = buffer;
-    print_segment(0, rest + 1);
+    // TODO: calculate strwidth of deleted text for more accurate
+    // overwriting.
+    cursorto(pos);
+    print_segment(0, overwrite_len);
     cursorto(pos);
 }
 
