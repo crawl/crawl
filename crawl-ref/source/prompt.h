@@ -18,7 +18,7 @@ int yesnoquit(const char* str, bool safe = true, int default_answer = 0,
               char alt_yes = 'Y', char alt_yes2 = 'Y');
 
 int prompt_for_quantity(const char *prompt);
-int prompt_for_int(const char *prompt, bool nonneg);
+int prompt_for_int(const char *prompt, bool nonneg, const string &prefill = "");
 double prompt_for_float(const char* prompt);
 
 char index_to_letter(int the_index);

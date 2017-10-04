@@ -544,6 +544,8 @@ int line_reader::read_line(const string &prefill)
  *                      edge or previous position (if any).
  *                      If the buffer is empty or `clear_previous` is true,
  *                      has no impact.
+ *                      For webtiles, this corresponds with whether the
+ *                      prefill starts selected or not.
  * @return 0 on success, otherwise, the last character read.
  */
 int line_reader::read_line(bool clear_previous, bool reset_cursor)
@@ -575,6 +577,7 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
                                 make_stringf("%p", (void *)history));
     }
     tiles.json_write_string("prefill", buffer);
+    tiles.json_write_bool("select_prefill", reset_cursor);
     if (prompt.length())
         tiles.json_write_string("prompt", prompt);
     tiles.json_write_int("maxlen", (int) bufsz - 1);

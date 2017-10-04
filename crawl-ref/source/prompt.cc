@@ -287,8 +287,8 @@ int prompt_for_quantity(const char *prompt)
     else if (ch == CK_ESCAPE || ch == CK_REDRAW)
         return 0;
 
-    macro_buf_add(ch);
-    return prompt_for_int("", false);
+    const string prefill = string(1, ch);
+    return prompt_for_int("", false, prefill);
 }
 
 /**
@@ -297,15 +297,17 @@ int prompt_for_quantity(const char *prompt)
  * @param prompt the message to be used before the prompt.
  * @param nonneg if true, the failure sentinel is -1;
  *               if false, the sentinel is 0.
+ & @param prefill a prefill to use for the message box, if any.
  * @return the chosen number, or the chosen sentinel value.
  */
-int prompt_for_int(const char *prompt, bool nonneg)
+int prompt_for_int(const char *prompt, bool nonneg, const string &prefill)
 {
     char specs[80];
 
-    msgwin_get_line(prompt, specs, sizeof(specs));
+    int getline_ret = msgwin_get_line(prompt, specs, sizeof(specs), nullptr,
+                                            prefill);
 
-    if (specs[0] == '\0')
+    if (specs[0] == '\0' || getline_ret == CK_ESCAPE)
         return nonneg ? -1 : 0;
 
     char *end;
@@ -321,9 +323,9 @@ double prompt_for_float(const char* prompt)
 {
     char specs[80];
 
-    msgwin_get_line(prompt, specs, sizeof(specs));
+    int getline_ret = msgwin_get_line(prompt, specs, sizeof(specs));
 
-    if (specs[0] == '\0')
+    if (specs[0] == '\0' || getline_ret == CK_ESCAPE)
         return -1;
 
     char *end;
