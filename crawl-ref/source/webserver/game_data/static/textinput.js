@@ -69,7 +69,8 @@ function ($, comm, client, enums, util, options) {
         }
 
         input.focus();
-        input.select();
+        if (input_data.select_prefill)
+            input.select();
 
         function send_input_line(finalChar) {
             var input = find_input();
