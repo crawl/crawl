@@ -601,15 +601,20 @@ void init_train()
     const bool is_gnoll = you.species == SP_GNOLL;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
+    {
         if (you.can_train[i] && you.skill_points[i])
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
+            const bool gnoll_enable = is_gnoll &&
+                                !is_useless_skill((skill_type) i);
             // Skills are on by default in auto mode and off in manual.
-            you.train[i] = (training_status) (is_gnoll || you.auto_training);
+            you.train[i] = (training_status) (gnoll_enable
+                                                || you.auto_training);
             you.train_alt[i] =
-                (training_status) (is_gnoll || !you.auto_training);
+                (training_status) (gnoll_enable || !you.auto_training);
         }
+    }
 }
 
 static bool _cmp_rest(const pair<skill_type, int64_t>& a,
@@ -2201,7 +2206,10 @@ void fixup_skills()
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
         if (is_useless_skill(sk))
+        {
             you.skill_points[sk] = 0;
+            you.train[sk] = TRAINING_DISABLED;
+        }
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
