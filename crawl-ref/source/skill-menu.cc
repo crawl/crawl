@@ -1437,9 +1437,7 @@ void SkillMenu::refresh_button_row()
         }
     }
     else if (you.species != SP_GNOLL) // SKM_VIEW_TARGETS unavailable for Gn
-    {
         midlegend = "[<yellow>=</yellow>] set a skill target";
-    }
 
     m_help_button->set_text(helpstring + legend);
     m_middle_button->set_text(midlegend);
