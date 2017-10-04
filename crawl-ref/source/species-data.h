@@ -1,3 +1,22 @@
+/*
+ * Entry format:
+ *   row  0: species enum
+ *   row  1: two-letter abbreviation
+ *   row  2: name noun, name adjective, genus (null to use name)
+ *   row  3: flags (SPF_*)
+ *   row  4: XP "aptitude", HP mod (in tenths), MP mod, MR per XL
+ *   row  5: corresponding monster
+ *   row  6: habitat, undead state, size
+ *   row  7: starting strength, intelligence, dexterity  // sum
+ *   row  8: { level-up stats }, level for stat increase
+ *   row  9: { { mutation, mutation level, XP level }, ... }
+ *   row 10: { fake mutation messages for A screen }
+ *   row 11: { fake mutation names for % screen }
+ *   row 12: recommended jobs for character selection
+ *   row 13: recommended weapons for character selection
+ *
+ * Rows 9-13 may span multiple lines if necessary.
+ */
 static const map<species_type, species_def> species_data =
 {
 
