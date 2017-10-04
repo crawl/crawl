@@ -607,7 +607,7 @@ void init_train()
         else
         {
             const bool gnoll_enable = is_gnoll &&
-                                !is_useless_skill((skill_type) i);
+                                !is_removed_skill((skill_type) i);
             // Skills are on by default in auto mode and off in manual.
             you.train[i] = (training_status) (gnoll_enable
                                                 || you.auto_training);
@@ -756,46 +756,49 @@ bool check_selected_skills()
  */
 void reset_training()
 {
+    const bool is_gnoll = you.species == SP_GNOLL;
     // Disable this here since we don't want any autotraining related skilling
     // changes for Gnolls.
-    if (you.species == SP_GNOLL)
+    if (is_gnoll)
         you.auto_training = false;
 
     // We clear the values in the training array. In auto mode they are set
     // to 0 (and filled later with the content of the queue), in manual mode,
     // the trainable ones are set to 1 (or 2 for focus).
     for (int i = 0; i < NUM_SKILLS; ++i)
-        // Gnolls always train all non-useless skills, even if they wouldn't
-        // normally be trainable.
-        if (is_useless_skill((skill_type) i))
-            you.training[i] = 0;
-        else if (you.species == SP_GNOLL)
-            you.training[i] = 1;
-        else if (you.auto_training || !skill_trained(i))
+    {
+        // skill_trained doesn't work for gnolls, but all existent skills
+        // will be set as enabled here.
+        if (!is_gnoll && (you.auto_training || !skill_trained(i)))
             you.training[i] = 0;
         else
             you.training[i] = you.train[i];
+    }
 
     bool empty = true;
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
         for (auto sk : you.exercises)
+        {
             if (skill_trained(sk))
             {
                 you.training[sk] += you.train[sk];
                 empty = false;
             }
+        }
 
         // We count the practise events in the other queue.
         FixedVector<unsigned int, NUM_SKILLS> exer_all;
         exer_all.init(0);
         for (auto sk : you.exercises_all)
+        {
             if (skill_trained(sk))
             {
                 exer_all[sk] += you.train[sk];
                 empty = false;
             }
+        }
 
         // We keep the highest of the 2 numbers.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
@@ -817,6 +820,14 @@ void reset_training()
     }
 
     _scale_array(you.training, 100, you.auto_training);
+    if (is_gnoll)
+    {
+        // we use the full set of skills to calculate gnoll percentages,
+        // but they don't actually get to train sacrificed skills.
+        for (int i = 0; i < NUM_SKILLS; ++i)
+            if (is_useless_skill((skill_type) i))
+                you.training[i] = 0;
+    }
 }
 
 void exercise(skill_type exsk, int deg)
@@ -1157,10 +1168,8 @@ static int _useless_skill_count()
     int count = 0;
     for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
     {
-#if TAG_MAJOR_VERSION == 34
-        if (skill == SK_STABBING || skill == SK_TRAPS)
+        if (is_removed_skill(skill))
             continue;
-#endif
         if (is_useless_skill(skill))
             count++;
     }
@@ -1172,10 +1181,8 @@ static int _total_skill_count()
     int count = 0;
     for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
     {
-#if TAG_MAJOR_VERSION == 34
-        if (skill == SK_STABBING || skill == SK_TRAPS)
+        if (is_removed_skill(skill))
             continue;
-#endif
         count++;
     }
     return count;
@@ -1791,14 +1798,19 @@ void init_skill_order()
     }
 }
 
-bool is_useless_skill(skill_type skill)
+bool is_removed_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
     if (skill == SK_STABBING || skill == SK_TRAPS)
         return true;
 #endif
+    return false;
+}
 
-    if ((skill == SK_AIR_MAGIC && you.get_mutation_level(MUT_NO_AIR_MAGIC))
+bool is_useless_skill(skill_type skill)
+{
+    if (is_removed_skill(skill)
+        || (skill == SK_AIR_MAGIC && you.get_mutation_level(MUT_NO_AIR_MAGIC))
         || (skill == SK_CHARMS && you.get_mutation_level(MUT_NO_CHARM_MAGIC))
         || (skill == SK_CONJURATIONS
             && you.get_mutation_level(MUT_NO_CONJURATION_MAGIC))
@@ -2203,20 +2215,31 @@ void skill_state::restore_training()
 // Sanitize skills after an upgrade, racechange, etc.
 void fixup_skills()
 {
+    const bool is_gnoll = you.species == SP_GNOLL;
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
         if (is_useless_skill(sk))
         {
             you.skill_points[sk] = 0;
-            you.train[sk] = TRAINING_DISABLED;
+            // gnolls have everything existent enabled, so that the
+            // training percentage is calculated correctly. (Useless
+            // skills still won't be trained for them.)
+            if (is_gnoll && !is_removed_skill(sk))
+            {
+                you.train[sk] = TRAINING_ENABLED;
+                dprf("Enabling training for %s", skill_name(sk));
+            }
+            else
+                you.train[sk] = TRAINING_DISABLED;
         }
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
     }
     init_can_train();
+    reset_training();
 
-    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && you.species != SP_GNOLL)
+    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && !is_gnoll)
         skill_menu(SKMF_EXPERIENCE);
 
     check_training_targets();
