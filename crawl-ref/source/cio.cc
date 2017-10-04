@@ -606,7 +606,7 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
 
 /**
  * (Re-)print the buffer from start onwards, potentially overprinting
- * with spaces.  Does *not* set cursor position.
+ * with spaces. Does *not* set cursor position.
  *
  * @param start the position in the buffer to print from.
  * @param how many spaces to overprint.
