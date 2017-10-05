@@ -3481,8 +3481,9 @@ static void _join_ru()
 /// Setup for joining the furious barbarians of Trog.
 static void _join_trog()
 {
-    for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        you.train[sk] = you.train_alt[sk] = TRAINING_DISABLED;
+    if (you.species != SP_GNOLL)
+        for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            you.train[sk] = you.train_alt[sk] = TRAINING_DISABLED;
 
     // When you start worshipping Trog, you make all non-hostile magic
     // users hostile.

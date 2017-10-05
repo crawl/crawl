@@ -2225,13 +2225,12 @@ void fixup_skills()
             // training percentage is calculated correctly. (Useless
             // skills still won't be trained for them.)
             if (is_gnoll && !is_removed_skill(sk))
-            {
                 you.train[sk] = TRAINING_ENABLED;
-                dprf("Enabling training for %s", skill_name(sk));
-            }
             else
                 you.train[sk] = TRAINING_DISABLED;
         }
+        else if (is_gnoll)
+            you.train[sk] = TRAINING_ENABLED;
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
