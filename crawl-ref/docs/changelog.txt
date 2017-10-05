@@ -1,3 +1,66 @@
+Stone Soup 0.21 (up to 0.21-a0-346-g330ab2c)
+--------------------------------------------
+
+Highlights
+----------
+* New species: Gnolls
+* New god: Wu Jian Council
+
+Branches, Environment
+---------------------
+* The last levels of Cocytus and Gehenna never require flight to reach the
+  rune.
+* The landing sites of transporters are now displayed.
+
+Character
+---------
+* New species: Gnolls, with extremely high aptitudes for all skills, but
+  an inability to focus: Gnolls always train all skills equally, regardless
+  of whether they have the requisite items or spells.
+
+Gods
+----
+* New (temple) god: Wu Jian Council
+  - Grants free 'martial' attacks from certain movement actions:
+    * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind',
+      which attacks all adjacent foes.
+    * 2*: Moving against solid obstacles triggers a Wall Jump attack to a
+      nearby monster. Moves two tiles in the opposite direction, and attacks
+      and distracts all adjacent enemies.
+    * 3*: Moving toward an enemy triggers 'Lunge'. Attacks the enemy, and does
+      extra damage to slowed or distracted enemies.
+  - 4*: Active 'Serpent's Lash' ability, granting two free movement actions.
+  - 5*: Active 'Heavenly Storm' ability, creating opaque clouds and increasing
+    your martial prowess while you continue to use 'martial' attacks.
+  - Piety is gained through defeating foes.
+  - (No changes from 0.20-a0, but didn't make the 0.20 release.)
+
+Interface
+---------
+* Players can now set training targets for skills.
+  - Press = on the skill screen, select a skill, and enter a skill level.
+  - Training of that skill is disabled when it reaches the specified level.
+
+Items
+-----
+* Potions of mutations remove fewer mutations on average.
+* Fan of Gales now disperses clouds at the user's location.
+
+Monsters
+--------
+* Monsters no longer spawn after level-generation in most places.
+  - This also eliminates the "super OOD" timer that could generate
+    exceptionally hard monsters after a long time on the level.
+  - The number of monsters created during level generation is increased 
+    to compensate.
+  - Pandemonium and Abyss are unaffected by this change.
+* A fraction of the monsters generated with a level are created awake,
+  but never near stairs.
+
+Spells
+------
+
+
 Stone Soup 0.20 (20170525)
 --------------------------
 
@@ -155,6 +218,7 @@ Modding/contribution support
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
+
 
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------
