@@ -289,7 +289,7 @@ static int _god_status_colour(int default_colour);
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
 
 // Colour for values, which come after captions.
-static const short HUD_VALUE_COLOUR = LIGHTGREY;
+static const auto HUD_VALUE_COLOUR = LIGHTGREY;
 
 // ----------------------------------------------------------------------
 // colour_bar
@@ -839,29 +839,31 @@ static void _print_stat(stat_type stat, int x, int y)
 static void _print_stats_ac(int x, int y)
 {
     // AC:
-    CGOTOXY(x+4, y, GOTO_STAT);
+    auto text_col = HUD_VALUE_COLOUR;
     if (_boosted_ac())
-        textcolour(LIGHTBLUE);
+        text_col = LIGHTBLUE;
     else if (you.duration[DUR_CORROSION])
-        textcolour(RED);
-    else
-        textcolour(HUD_VALUE_COLOUR);
+        text_col = RED;
+
     string ac = make_stringf("%2d ", you.armour_class());
 #ifdef WIZARD
     if (you.wizard)
         ac += make_stringf("(%d%%) ", you.gdr_perc());
 #endif
+    textcolour(text_col);
+    CGOTOXY(x+4, y, GOTO_STAT);
     CPRINTF("%-12s", ac.c_str());
 
     // SH: (two lines lower)
-    CGOTOXY(x+4, y+2, GOTO_STAT);
+    text_col = HUD_VALUE_COLOUR;
     if (you.incapacitated() && you.shielded())
-        textcolour(RED);
+        text_col = RED;
     else if (_boosted_sh())
-        textcolour(LIGHTBLUE);
-    else
-        textcolour(HUD_VALUE_COLOUR);
+        text_col = LIGHTBLUE;
+
     string sh = make_stringf("%2d ", player_displayed_shield_class());
+    textcolour(text_col);
+    CGOTOXY(x+4, y+2, GOTO_STAT);
     CPRINTF("%-12s", sh.c_str());
 }
 
