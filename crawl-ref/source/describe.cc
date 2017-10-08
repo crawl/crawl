@@ -872,7 +872,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
     if (skill == SK_NONE)
         return false;
 
-    const int target = _item_training_target(item);
+    const int target = min(_item_training_target(item), 270);
 
     return target && you.can_train[skill]
        && you.skill(skill, 10, false, false, false) < target
@@ -892,13 +892,14 @@ static string _your_skill_desc(skill_type skill, bool show_target_button, int sc
     if (!crawl_state.need_save || skill == SK_NONE)
         return "";
     string target_button_desc = "";
+    int min_scaled_target = min(scaled_target, 270);
     if (show_target_button &&
-            you.get_training_target(skill) < scaled_target)
+            you.get_training_target(skill) < min_scaled_target)
     {
         target_button_desc = make_stringf(
             "; use <white>(s)</white> to set %d.%d as a target for %s.",
-                                    scaled_target / 10, scaled_target % 10,
-                                    skill_name(skill));
+                                min_scaled_target / 10, min_scaled_target % 10,
+                                skill_name(skill));
     }
     int you_skill_temp = you.skill(skill, 10, false, true, true);
     int you_skill = you.skill(skill, 10, false, false, false);
@@ -922,6 +923,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
                                         unsigned int training)
 {
     string description = "";
+    scaled_target = min(scaled_target, 270);
 
     const bool max_training = (training == 100);
     const bool hypothetical = !crawl_state.need_save ||
