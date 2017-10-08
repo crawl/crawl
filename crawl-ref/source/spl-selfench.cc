@@ -180,6 +180,9 @@ spret_type corpse_armour(int pow, bool fail)
     else
         mpr("Your shell of carrion and bone grows thicker.");
 
+    if (you.duration[DUR_ICY_ARMOUR])
+        remove_ice_armour();
+
     // value of ATTR_BONE_ARMOUR will be sqrt(9*harvested), rounded randomly
     int squared = sqr(you.attribute[ATTR_BONE_ARMOUR]) + 9 * harvested;
     you.attribute[ATTR_BONE_ARMOUR] = sqrt(squared) + random_real();
