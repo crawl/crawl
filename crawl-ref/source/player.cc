@@ -5862,7 +5862,7 @@ int player::racial_ac(bool temp) const
         else if (species == SP_GARGOYLE)
         {
             return 200 + 100 * experience_level * 2 / 5     // max 20
-                       + 100 * (max(0, experience_level - 7) * 2 / 5);
+                       + 100 * max(0, experience_level - 7) * 2 / 5;
         }
     }
 
