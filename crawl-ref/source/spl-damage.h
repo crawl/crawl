@@ -41,7 +41,7 @@ spret_type cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
 spret_type cast_sandblast(int powc, bolt &beam, bool fail);
 spret_type cast_tornado(int powc, bool fail);
-void tornado_damage(actor *caster, int dur);
+void tornado_damage(actor *caster, int dur, bool is_vortex = false);
 void cancel_tornado(bool tloc = false);
 void tornado_move(const coord_def &pos);
 spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim,
