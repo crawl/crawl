@@ -1829,6 +1829,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
+    case SPELL_VORTEX:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
 #if TAG_MAJOR_VERSION == 34
@@ -5740,6 +5741,39 @@ static void _mons_upheaval(monster& mons, actor& foe)
     }
 }
 
+static void _mons_tornado(monster *mons, bool is_vortex = false)
+{
+    const int dur = is_vortex ? 30 : 60;
+    const string desc = is_vortex ? "vortex" : "great vortex";
+    const string prop = is_vortex ? "vortex_since" : "tornado_since";
+    const enchant_type ench = is_vortex ? ENCH_VORTEX : ENCH_TORNADO;
+
+    if (you.can_see(*mons))
+    {
+        bool flying = mons->airborne();
+        mprf("A %s of raging winds appears %s%s%s!",
+             desc.c_str(),
+             flying ? "around " : "and lifts ",
+             mons->name(DESC_THE).c_str(),
+             flying ? "" : " up!");
+    }
+    else if (you.see_cell(mons->pos()))
+        mprf("A %s of raging winds appears out of thin air!", desc.c_str());
+
+    mons->props[prop.c_str()].get_int() = you.elapsed_time;
+    mon_enchant me(ench, 0, mons, dur);
+    mons->add_ench(me);
+
+    if (mons->has_ench(ENCH_FLIGHT))
+    {
+        mon_enchant me2 = mons->get_ench(ENCH_FLIGHT);
+        me2.duration = me.duration;
+        mons->update_ench(me2);
+    }
+    else
+        mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, dur));
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -6345,28 +6379,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_TORNADO:
     {
-        int dur = 60;
-        if (you.can_see(*mons))
-        {
-            bool flying = mons->airborne();
-            mprf("A great vortex of raging winds appears %s%s%s!",
-                 flying ? "around " : "and lifts ",
-                 mons->name(DESC_THE).c_str(),
-                 flying ? "" : " up!");
-        }
-        else if (you.see_cell(mons->pos()))
-            mpr("A great vortex of raging winds appears out of thin air!");
-        mons->props["tornado_since"].get_int() = you.elapsed_time;
-        mon_enchant me(ENCH_TORNADO, 0, mons, dur);
-        mons->add_ench(me);
-        if (mons->has_ench(ENCH_FLIGHT))
-        {
-            mon_enchant me2 = mons->get_ench(ENCH_FLIGHT);
-            me2.duration = me.duration;
-            mons->update_ench(me2);
-        }
-        else
-            mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, dur));
+        _mons_tornado(mons);
+        return;
+    }
+
+    case SPELL_VORTEX:
+    {
+        _mons_tornado(mons, true);
         return;
     }
 
@@ -7920,7 +7939,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         // Prefer to keep a tornado going rather than blink.
-        return mon->no_tele(true, false) || mon->has_ench(ENCH_TORNADO);
+        return mon->no_tele(true, false)
+               || mon->has_ench(ENCH_TORNADO)
+               || mon->has_ench(ENCH_VORTEX);
 
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
@@ -8174,6 +8195,13 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || !_trace_los(mon, _tornado_vulnerable)
                || you.visible_to(mon) && friendly // don't cast near the player
                   && !(mon->holiness() & MH_DEMONIC); // demons are rude
+
+    case SPELL_VORTEX:
+        return mon->has_ench(ENCH_VORTEX)
+               || mon->has_ench(ENCH_VORTEX_COOLDOWN)
+               || !_trace_los(mon, _tornado_vulnerable)
+               || you.visible_to(mon) && friendly
+                  && !(mon->holiness() & MH_DEMONIC);
 
     case SPELL_ENGLACIATION:
         return !foe
