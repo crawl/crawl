@@ -1819,6 +1819,19 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_VORTEX:
+        tornado_damage(this, speed_to_duration(speed), true);
+        if (decay_enchantment(en))
+        {
+            add_ench(ENCH_VORTEX_COOLDOWN);
+            if (you.can_see(*this))
+            {
+                mprf("The winds around %s start to calm down.",
+                     name(DESC_THE).c_str());
+            }
+        }
+        break;
+
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
@@ -1924,6 +1937,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TORNADO_COOLDOWN:
+    case ENCH_VORTEX_COOLDOWN:
         if (decay_enchantment(en))
         {
             remove_tornado_clouds(mid);
@@ -2162,6 +2176,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed", "distracted by acrobatics",
+    "vortex", "vortex_cooldown",
     "buggy",
 };
 
@@ -2418,6 +2433,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
+        break;
+    case ENCH_VORTEX_COOLDOWN:
+        cturn = random_range(7, 17) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;

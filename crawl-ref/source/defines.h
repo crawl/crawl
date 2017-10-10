@@ -182,6 +182,7 @@ const int WU_JIAN_HEAVEN_TICK_TIME = 10;
 const int AGILITY_BONUS = 5;
 
 #define TORNADO_RADIUS 5
+#define VORTEX_RADIUS 3
 
 #define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3

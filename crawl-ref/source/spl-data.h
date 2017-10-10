@@ -3920,6 +3920,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_VORTEX, "Vortex",
+    SPTYP_AIR,
+    SPFLAG_AREA,
+    5,
+    200,
+    VORTEX_RADIUS, VORTEX_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
