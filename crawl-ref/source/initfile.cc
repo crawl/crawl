@@ -688,7 +688,7 @@ static species_type _str_to_species(const string &str)
 
     // if we don't have a match, scan the full names
     if (ret == SP_UNKNOWN)
-        ret = str_to_species(str);
+        ret = find_species_from_string(str);
 
     if (!is_starting_species(ret))
         ret = SP_UNKNOWN;
