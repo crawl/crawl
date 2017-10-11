@@ -5849,7 +5849,7 @@ int player::racial_ac(bool temp) const
         && (!player_is_shapechanged() || form == transformation::dragon
             || !temp))
     {
-        int AC = 400 + 100 * (experience_level / 3);  // max 13
+        int AC = 400 + 100 * experience_level / 3;  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath
             AC += 500;
         return AC;

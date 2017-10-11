@@ -397,8 +397,8 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
     {
         // Either an invalid combination was passed in through options,
         // or we messed up.
-        end(1, false,
-            "Incompatible species and background specified in options file.");
+        end(1, false, "Incompatible species and background (%s) selected.",
+                                _char_description(ng).c_str());
     }
 }
 
