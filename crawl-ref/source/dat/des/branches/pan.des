@@ -504,7 +504,6 @@ local floor_chance = 100 - exit_chance
 kfeat("O = exit_through_abyss w:" .. exit_chance ..
       " / floor w:" .. floor_chance)
 }}
-KFEAT:  O = exit_through_abyss
 MAP
 O
 ENDMAP
