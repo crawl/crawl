@@ -849,6 +849,12 @@ static const int max_mon_height  = 3;
 // Width of status area in characters.
 static const int stat_width      = 42;
 
+static int round_up_to_multiple(int a, int b)
+{
+    int m = a % b;
+    return m == 0 ? a : a + b-m;
+}
+
 /**
  * Calculates and sets the layout of the main game screen, based on the
  * available screen estate (window or screensize) and options.
@@ -932,7 +938,9 @@ void TilesFramework::do_layout()
             available_width_in_tiles = ENV_SHOW_DIAMETER;
         }
 
-        m_stat_x_divider = available_width_in_tiles * m_region_tile->dx;
+        // XXX: this ignores above calculations for available width
+        static const int sidebar_pw = m_region_tab->dx*13 - 10;
+        m_stat_x_divider = m_windowsz.x - sidebar_pw - map_stat_margin;
 
         // Calculate message_y_divider. First off, if we have already decided to
         // use the overlay, we can place the divider to the bottom of the screen.
@@ -979,9 +987,20 @@ void TilesFramework::do_layout()
         }
     }
 
-    // Resize and place the dungeon region.
-    m_region_tile->resize_to_fit(m_stat_x_divider, message_y_divider);
-    m_region_tile->place(0, 0, 0);
+    // stick message display to the bottom of the window
+    int msg_height = m_windowsz.y-message_y_divider;
+    msg_height = msg_height / m_region_msg->dy * m_region_msg->dy;
+    message_y_divider = m_windowsz.y - msg_height;
+
+    // Expand dungeon region to cover partial tiles, then offset to keep player centred
+    int tile_iw = m_stat_x_divider;
+    int tile_ih = message_y_divider;
+    int tile_ow = round_up_to_multiple(tile_iw, m_region_tile->dx*2);
+    int tile_oh = round_up_to_multiple(tile_ih, m_region_tile->dy*2);
+    m_region_tile->resize_to_fit(tile_ow, tile_oh);
+    m_region_tile->place(-(tile_ow - tile_iw)/2, -(tile_oh - tile_ih)/2, 0);
+    m_region_tile->tile_iw = tile_iw;
+    m_region_tile->tile_ih = tile_ih;
 
     crawl_view.viewsz.x = m_region_tile->mx;
     crawl_view.viewsz.y = m_region_tile->my;
@@ -999,7 +1018,7 @@ void TilesFramework::do_layout()
     {
         m_region_msg->resize_to_fit(m_stat_x_divider, m_windowsz.y
                                     - message_y_divider);
-        m_region_msg->place(0, m_region_tile->ey, 0);
+        m_region_msg->place(0, tile_ih, 0);
     }
 
     crawl_view.msgsz.x = m_region_msg->mx;
@@ -1271,6 +1290,7 @@ void TilesFramework::layout_statcol()
     }
     else
     {
+        crawl_view.hudsz.x = m_region_stat->mx-1;
         crawl_view.hudsz.y = min_stat_height;
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
 
@@ -1281,7 +1301,8 @@ void TilesFramework::layout_statcol()
         m_region_tab->place(m_stat_col, m_statcol_top);
         m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                     m_windowsz.y - m_region_tab->sy);
-        m_region_tab->resize(m_region_tab->mx, min_inv_height);
+        // region extends ~1/2-tile beyond window (rendered area touches right edge)
+        m_region_tab->resize(m_region_tab->mx+1, min_inv_height);
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
