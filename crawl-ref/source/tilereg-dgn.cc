@@ -188,7 +188,9 @@ void DungeonRegion::render()
     }
 
     set_transform();
+    glmanager->set_scissor(0, 0, tile_iw, tile_ih);
     m_buf_dngn.draw();
+    glmanager->reset_scissor();
     draw_minibars();
     m_buf_flash.draw();
 
@@ -353,6 +355,11 @@ void DungeonRegion::clear()
 void DungeonRegion::on_resize()
 {
     // TODO enne
+}
+
+bool DungeonRegion::inside(int x, int y)
+{
+    return x >= 0 && y >= 0 && x <= tile_iw && y <= tile_ih;
 }
 
 // FIXME: If the player is targeted, the game asks the player to target

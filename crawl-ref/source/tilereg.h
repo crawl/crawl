@@ -20,7 +20,7 @@ public:
     // If true, then cx and cy are set in the range [0..mx-1], [0..my-1]
     virtual bool mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy);
 
-    bool inside(int px, int py);
+    virtual bool inside(int px, int py);
     virtual bool update_tip_text(string &tip) { return false; }
     virtual bool update_alt_text(string &alt) { return false; }
     virtual int handle_mouse(MouseEvent &event) = 0;

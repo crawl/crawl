@@ -32,6 +32,7 @@ public:
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_alt_text(string &alt) override;
     virtual void on_resize() override;
+    virtual bool inside(int px, int py) override;
 
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -46,6 +47,8 @@ public:
     void add_overlay(const coord_def &gc, int idx);
     void clear_overlays();
     void zoom(bool in);
+
+    int tile_iw, tile_ih;
 
 protected:
     void pack_buffers();
