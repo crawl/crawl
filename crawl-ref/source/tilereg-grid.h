@@ -29,7 +29,6 @@ class GridRegion : public TileRegion
 {
 public:
     GridRegion(const TileRegionInit &init);
-    virtual ~GridRegion();
 
     virtual void clear() override;
     virtual void render() override;
@@ -54,7 +53,6 @@ protected:
     void draw_number(int x, int y, int number);
     void draw_desc(const char *desc);
 
-    unsigned char *m_flavour;
     coord_def m_cursor;
     int m_last_clicked_item;
     int m_grid_page;
