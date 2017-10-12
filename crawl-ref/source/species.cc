@@ -383,7 +383,7 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
-species_type find_species_from_string(const string &species)
+species_type find_species_from_string(const string &species, bool initial_only)
 {
     string spec = lowercase_string(species);
 
@@ -403,7 +403,7 @@ species_type find_species_from_string(const string &species)
                 sp = si;
                 break;
             }
-            else
+            else if (!initial_only)
                 sp = si;
         }
     }
