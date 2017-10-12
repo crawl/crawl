@@ -687,8 +687,8 @@ static species_type _str_to_species(const string &str)
         ret = get_species_by_abbrev(str.c_str());
 
     // if we don't have a match, scan the full names
-    if (ret == SP_UNKNOWN)
-        ret = find_species_from_string(str);
+    if (ret == SP_UNKNOWN && str.length() >= 2)
+        ret = find_species_from_string(str, true);
 
     if (!is_starting_species(ret))
         ret = SP_UNKNOWN;

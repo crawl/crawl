@@ -29,7 +29,8 @@ bool species_recommends_weapon(species_type species, weapon_type wpn);
 species_type get_species_by_abbrev(const char *abbrev);
 const char *get_species_abbrev(species_type which_species);
 
-species_type find_species_from_string(const string &species_str);
+species_type find_species_from_string(const string &species_str,
+                                                    bool initial_only = false);
 
 // from player.cc
 enum species_name_type
