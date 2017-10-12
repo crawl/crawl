@@ -191,7 +191,7 @@ void MonsterRegion::pack_buffers()
             }
 
             // Fill the rest of the space with out of sight floor tiles.
-            int tileidx = env.tile_default.floor + m_flavour[i-1] % num_floor;
+            int tileidx = env.tile_default.floor + i % num_floor;
             m_buf.add_dngn_tile(tileidx, x, y);
             m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
