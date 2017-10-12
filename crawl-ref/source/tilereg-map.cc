@@ -115,8 +115,10 @@ void MapRegion::render()
     }
 
     set_transform();
+    glmanager->set_scissor(sx, sy, wx, wy);
     m_buf_map.draw();
     m_buf_lines.draw();
+    glmanager->reset_scissor();
 }
 
 void MapRegion::recenter()
