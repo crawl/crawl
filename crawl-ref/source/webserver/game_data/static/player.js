@@ -6,10 +6,10 @@ function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
     var stat_boosters = {
-        "str": "vitalised|mighty|berserk",
+        "str": "vitalised|mighty|berserking",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile",
-        "hp": "divinely vigorous|berserk",
+        "hp": "divinely vigorous|berserking",
         "mp": "divinely vigorous"
     };
 
