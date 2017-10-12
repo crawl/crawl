@@ -20,6 +20,8 @@ public:
                                        const coord_def &m_drawablesz) override;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) override;
     virtual void reset_transform() override;
+    virtual void set_scissor(int x, int y, unsigned int w, unsigned int h) override;
+    virtual void reset_scissor() override;
 #ifdef __ANDROID__
     virtual void fixup_gl_state() override;
 #endif
@@ -36,6 +38,7 @@ protected:
 #ifdef __ANDROID__
     GLint m_last_tex;
 #endif
+    int m_window_height;
 
 private:
     void glDebug(const char* msg);

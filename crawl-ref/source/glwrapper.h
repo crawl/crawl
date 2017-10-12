@@ -142,6 +142,8 @@ public:
                                        const coord_def &m_drawablesz) = 0;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;
     virtual void reset_transform() = 0;
+    virtual void set_scissor(int x, int y, unsigned int w, unsigned int h) = 0;
+    virtual void reset_scissor() = 0;
 #ifdef __ANDROID__
     virtual void fixup_gl_state() = 0;
 #endif
