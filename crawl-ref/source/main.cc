@@ -2772,7 +2772,7 @@ static void _do_berserk_no_combat_penalty()
             mprf(MSGCH_DURATION, "You feel a strong urge to attack something.");
             break;
         case 4:
-            mprf(MSGCH_DURATION, "You feel your anger subside.");
+            mprf(MSGCH_DURATION, "You feel your anger nearly subside.");
             break;
         case 6:
             mprf(MSGCH_DURATION, "Your blood rage is quickly leaving you.");
