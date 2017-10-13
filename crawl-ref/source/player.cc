@@ -33,6 +33,7 @@
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"
+#include "fixedp.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -5821,16 +5822,16 @@ int player_icemail_armour_class()
  * How many points of AC does the player get from their sanguine armour, if
  * they have any?
  *
- * @return      The AC bonus * 100. (For scaling.)
+ * @return      The AC bonus.
  */
-int sanguine_armour_bonus()
+fixedp<> sanguine_armour_bonus()
 {
     if (!you.duration[DUR_SANGUINE_ARMOUR])
         return 0;
 
     const int mut_lev = you.get_mutation_level(MUT_SANGUINE_ARMOUR);
     // like iridescent, but somewhat moreso (when active)
-    return 300 + mut_lev * 300;
+    return fixedp<>(mut_lev) * 3 + 3;
 }
 
 /**
@@ -5838,17 +5839,16 @@ int sanguine_armour_bonus()
  * armour?
  *
  * @param armour    The armour in question.
- * @param scale     A value to multiply the result by. (Used to avoid integer
- *                  rounding.)
  * @return          The AC from that armour, including armour skill, mutations
  *                  & divine blessings, but not enchantments or egos.
  */
-int player::base_ac_from(const item_def &armour, int scale) const
+fixedp<> player::base_ac_from(const item_def &armour) const
 {
-    const int base = property(armour, PARM_AC) * scale;
+    const fixedp<> base(property(armour, PARM_AC));
 
     // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
-    const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
+    const fixedp<> AC = base * 
+                    (22 + fixedp<>::from_scaled(skill(SK_ARMOUR, 100))) / 22;
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
@@ -5868,29 +5868,29 @@ int player::base_ac_from(const item_def &armour, int scale) const
  * Does not account for any real mutations, such as scales or thick skin, that
  * you may have as a result of your species.
  * @param temp Whether to account for transformations.
- * @returns how much AC you are getting from your species "fake mutations" * 100
+ * @returns how much AC you are getting from your species "fake mutations".
  */
-int player::racial_ac(bool temp) const
+fixedp<> player::racial_ac(bool temp) const
 {
     // drac scales suppressed in all serious forms, except dragon
     if (species_is_draconian(species)
         && (!player_is_shapechanged() || form == transformation::dragon
             || !temp))
     {
-        int AC = 400 + 100 * (experience_level / 3);  // max 13
+        auto AC = 4 + fixedp<>(experience_level) / 3;  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath
-            AC += 500;
+            AC += 5;
         return AC;
     }
 
     if (!(player_is_shapechanged() && temp))
     {
         if (species == SP_NAGA)
-            return 100 * experience_level / 3;              // max 9
+            return fixedp<>(experience_level) / 3;            // max 9
         else if (species == SP_GARGOYLE)
         {
-            return 200 + 100 * experience_level * 2 / 5     // max 20
-                       + 100 * max(0, experience_level - 7) * 2 / 5;
+            return 2 + fixedp<>(experience_level) * 2 / 5     // max 20
+                     + (max(0, fixedp<>(experience_level) - 7) * 2 / 5);
         }
     }
 
@@ -5903,12 +5903,11 @@ int player::racial_ac(bool temp) const
  * (This is somewhat arbitrarily defined - forms, for example, are considered
  * to be long-lived for these purposes.)
  *
- * @param   A scale by which the player's base AC is multiplied.
- * @return  The player's AC, multiplied by the given scale.
+ * @return  The player's AC in fixed-point form.
  */
-int player::base_ac(int scale) const
+fixedp<> player::base_ac() const
 {
-    int AC = 0;
+    fixedp<> AC(0);
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
@@ -5919,16 +5918,16 @@ int player::base_ac(int scale) const
             continue;
 
         const item_def& item = inv[equip[eq]];
-        AC += base_ac_from(item, 100);
-        AC += item.plus * 100;
+        AC += base_ac_from(item);
+        AC += item.plus;
     }
 
-    AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
+    AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION);
 
     if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
-        AC += 300;
+        AC += 3;
 
-    AC += scan_artefacts(ARTP_AC) * 100;
+    AC += scan_artefacts(ARTP_AC);
 
     AC += get_form()->get_ac_bonus();
 
@@ -5937,68 +5936,68 @@ int player::base_ac(int scale) const
     // Scale mutations, etc. Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
     AC += get_mutation_level(MUT_TOUGH_SKIN)
-          ? get_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;
+          ? get_mutation_level(MUT_TOUGH_SKIN) : 0;
               // +1, +2, +3
     AC += get_mutation_level(MUT_SHAGGY_FUR)
-          ? get_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;
+          ? get_mutation_level(MUT_SHAGGY_FUR) : 0;
               // +1, +2, +3
     AC += get_mutation_level(MUT_GELATINOUS_BODY)
-          ? get_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
+          ? get_mutation_level(MUT_GELATINOUS_BODY) : 0;
               // +1, +2, +3
-    AC += get_mutation_level(MUT_IRIDESCENT_SCALES, mutation_activity_type::FULL) * 200;
+    AC += get_mutation_level(MUT_IRIDESCENT_SCALES, mutation_activity_type::FULL) * 2;
               // +2, +4, +6
 #if TAG_MAJOR_VERSION == 34
     AC += get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL)
-          ? -100 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
+          ? -1 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 3 : 0;
               // +2, +5, +8
 #endif
-    AC += get_mutation_level(MUT_RUGGED_BROWN_SCALES, mutation_activity_type::FULL) * 100;
+    AC += get_mutation_level(MUT_RUGGED_BROWN_SCALES, mutation_activity_type::FULL);
               // +1, +2, +3
     AC += get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL) * 100 : 0;
+          ? 1 + get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL) : 0;
               // +2, +3, +4
     AC += get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
+          ? 1 + get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL) : 0;
               // +2, +3, +4
     AC += get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
+          ? 1 + get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL) : 0;
               // +2, +3, +4
     AC += get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL) * 100 : 0;
+          ? 1 + get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL) : 0;
               // +2, +3, +4
     AC += get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL) * 100 : 0;
+          ? 1 + get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL) : 0;
               // +2, +3, +4
     AC -= get_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? get_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
-              // +3, +6, +9
+          ? get_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 5 : 0;
+              // -5, -10, -15
 
-    return AC * scale / 100;
+    return AC;
 }
 
 int player::armour_class(bool /*calc_unid*/) const
 {
-    const int scale = 100;
-    int AC = base_ac(scale);
+    fixedp<> AC = base_ac();
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
+        AC += 5 + (fixedp<>(you.props[ICY_ARMOUR_KEY].get_int()) * 8) / 100;
 
     if (has_mutation(MUT_ICEMAIL))
-        AC += 100 * player_icemail_armour_class();
+        AC += player_icemail_armour_class();
 
     if (duration[DUR_QAZLAL_AC])
-        AC += 300;
+        AC += 3;
 
     if (duration[DUR_SPWPN_PROTECTION])
-        AC += 700;
+        AC += 7;
 
     if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
+        AC -= 4 * you.props["corrosion_amount"].get_int();
 
     AC += sanguine_armour_bonus();
+    dprf("AC is %g, %d", (float) AC, (int) AC);
 
-    return AC / scale;
+    return (int) AC;
 }
  /**
   * Guaranteed damage reduction.

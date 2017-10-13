@@ -250,11 +250,11 @@ string Form::get_untransform_message() const
  *          allow for pseudo-decimal flexibility (& to match
  *          player::armour_class())
  */
-int Form::get_ac_bonus() const
+fixedp<> Form::get_ac_bonus() const
 {
-    return flat_ac * 100
-           + power_ac * you.props[TRANSFORM_POW_KEY].get_int()
-           + xl_ac * you.experience_level;
+    return fixedp<>(flat_ac)
+           + fixedp<>(power_ac) * you.props[TRANSFORM_POW_KEY].get_int() / 100
+           + fixedp<>(xl_ac) * you.experience_level / 100;
 }
 
 /**
@@ -649,10 +649,10 @@ public:
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
      */
-    int get_ac_bonus() const override
+    fixedp<> get_ac_bonus() const override
     {
         if (species_is_draconian(you.species))
-            return 1000;
+            return fixedp<>(10);
         return Form::get_ac_bonus();
     }
 

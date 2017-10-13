@@ -639,7 +639,7 @@ string describe_mutations(bool center_title)
                        you.species == SP_NAGA ? "serpentine skin is tough" :
                        you.species == SP_GARGOYLE ? "stone body is resilient" :
                                                     scale_clause.c_str(),
-                       you.racial_ac(false) / 100),
+                       (int) you.racial_ac(false)),
                     player_is_shapechanged()
                     && !(species_is_draconian(you.species)
                          && you.form == transformation::dragon));

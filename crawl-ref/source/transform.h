@@ -8,6 +8,7 @@
 #include <set>
 
 #include "enum.h"
+#include "fixedp.h"
 #include "player.h"
 
 #define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
@@ -137,7 +138,7 @@ public:
 
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
-    virtual int get_ac_bonus() const;
+    virtual fixedp<> get_ac_bonus() const;
 
     bool enables_flight() const;
     bool forbids_flight() const;
