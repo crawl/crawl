@@ -487,12 +487,28 @@ public:
 
     static void test_cases()
     {
-        // exercise every assignment operator / constructor
+        // exercise constructors
         fixedp<int, 100> test_dbl((double) 10.629);
         int int_test;
         int_test = 292;
         fixedp<> test_int(int_test);
         fixedp<> test_long((long) 2e10);
+
+        // test some cv qualified fixedps
+        const fixedp<> cv_test(500, 20);
+        // no idea why you'd want a volatile fixedp in crawl, but let's at
+        // least make sure it compiles.
+        volatile fixedp<> cv_test2(500, 20);
+        const volatile fixedp<> cv_test3(500, 20);
+        const fixedp<> cv_test4 = cv_test * 2;
+        assert(cv_test == 500.2);
+        assert(cv_test * 2 == cv_test4);
+        assert(cv_test.round() == 500);
+        assert(abs(cv_test * -1) == 500.2);
+        // shouldn't compile
+        // cv_test *= 2;
+
+        // test assignment operators
         fixedp<int, 100> test((float) 10.629);
         assert(test == 10.63);
         assert(test == 10.629);
@@ -524,7 +540,6 @@ public:
         assert(test < 97);
         assert(test <= 97);
         test = -96.236;
-        printf("assignment 2: %g\n", (float) test);
         assert(test == -96.24);
         assert(test >= -96.24);
         assert(test <= -96.24);
