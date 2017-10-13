@@ -398,7 +398,7 @@ accepting these sacrifices, followers will gradually gain an aura of immense
 power. This aura will initially cause foes that attempt to harm them to falter
 and become stricken with maladies. After making further sacrifices, followers
 will be able to draw on this power to restore their health and magic, or to
-make a lightning-fast explosive leap. Exceptional sacrificiants can unleash
+make a lightning-fast explosive leap. Exceptional sacrificants can unleash
 their power in a massive strike against all their foes. Each of the powers of
 Ru's sacrificants increases in strength with more piety from more sacrifices.
 %%%%
