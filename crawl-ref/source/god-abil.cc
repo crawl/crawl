@@ -6370,8 +6370,8 @@ static int _apply_apocalypse(coord_def where)
         case 0:
             if (mons->antimagic_susceptible())
             {
-                message = " loses " + mons->pronoun(PRONOUN_POSSESSIVE)
-                          + " magic into the devouring truth!";
+                message = " doubts " + mons->pronoun(PRONOUN_POSSESSIVE)
+                          + " magic when faced with ultimate truth!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
                 num_dice = 4;
