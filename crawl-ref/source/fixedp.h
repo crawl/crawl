@@ -95,7 +95,7 @@ template <typename BaseType=int, int Scale=100> class fixedp
         return static_cast<T>(abs(n));
     }
 
-    template<typename T=BaseType> T _safe_abs(T n,
+    template<typename T=BaseType> T constexpr _safe_abs(T n,
             typename std::enable_if<!std::is_signed<T>::value, T>::type=0) const
     {
         return n;
@@ -104,27 +104,33 @@ template <typename BaseType=int, int Scale=100> class fixedp
     BaseType content;
     static bool rounding;
 public:
-    fixedp(int n) : content(static_cast<BaseType>(n) * Scale)
+    constexpr fixedp(int n) : content(static_cast<BaseType>(n) *
+                                                static_cast<BaseType>(Scale))
     {
     }
-    fixedp(long n) : content(static_cast<BaseType>(n) * Scale)
+    constexpr fixedp(long n) : content(static_cast<BaseType>(n) *
+                                                static_cast<BaseType>(Scale))
     {
     }
-    fixedp(unsigned int n) : content(static_cast<BaseType>(n) * Scale)
+    constexpr fixedp(unsigned int n) : content(static_cast<BaseType>(n) *
+                                                static_cast<BaseType>(Scale))
     {
     }
-    fixedp(unsigned long n) : content(static_cast<BaseType>(n) * Scale)
+    constexpr fixedp(unsigned long n) : content(static_cast<BaseType>(n) *
+                                                static_cast<BaseType>(Scale))
     {
     }
 
     // is rounding here really a good idea?
     // TODO: per amalloy, should these really be implicit? It's awfully
     // convenient.
-    fixedp(float n) : content(std::round(n * (float) Scale))
+    constexpr fixedp(float n) : content(std::round(n *
+                                                static_cast<float>(Scale)))
     {
     }
 
-    fixedp(double n) : content(std::round(n * (double) Scale))
+    constexpr fixedp(double n) : content(std::round(n *
+                                                static_cast<double>(Scale)))
     {
     }
 
@@ -134,9 +140,9 @@ public:
      * int_part and frac should have the same sign, and frac should be < 
      * int_part.
      */
-    fixedp(int int_part, int frac) 
-        : content(static_cast<BaseType>(int_part) * Scale + 
-                    static_cast<BaseType>(frac))
+    constexpr fixedp(int int_part, int frac) 
+        : content(static_cast<BaseType>(int_part) * 
+                    static_cast<BaseType>(Scale) + static_cast<BaseType>(frac))
     {
     }
 
@@ -149,6 +155,7 @@ public:
      */
     static fixedp from_scaled(const BaseType n)
     {
+        // TODO: this could be constexpr on c++14
         fixedp ret(0);
         ret.content = n;
         return ret;
@@ -187,7 +194,7 @@ public:
         rounding = r;
     }
 
-    BaseType to_scaled() const
+    BaseType constexpr to_scaled() const
     {
         return content;
     }
@@ -210,7 +217,7 @@ public:
     /**
      * Give the integral part (de-scaled) of the fixedp. Preserves sign.
      */
-    BaseType integral_part() const
+    BaseType constexpr integral_part() const
     {
         return content / static_cast<BaseType>(Scale);
     }
@@ -286,16 +293,16 @@ public:
     }
 
     // conversion, explicit only
-    explicit operator int() const
+    explicit constexpr operator int() const
     {
         // truncates, following standard behavior of cast to integral types
         return static_cast<int>(integral_part());
     }
-    explicit operator bool() const
+    explicit constexpr operator bool() const
     {
         return static_cast<bool>(content);
     }
-    explicit operator long() const
+    explicit constexpr operator long() const
     {
         // truncates, following standard behavior of cast to integral types
         return static_cast<long>(integral_part());
@@ -476,8 +483,13 @@ public:
 
     static void test_cases()
     {
-        // exercise every assignment operator
-        fixedp<int, 100> test(10.629);
+        // exercise every assignment operator / constructor
+        fixedp<int, 100> test_dbl((double) 10.629);
+        int int_test;
+        int_test = 292;
+        fixedp<> test_int(int_test);
+        fixedp<> test_long((long) 2e10);
+        fixedp<int, 100> test((float) 10.629);
         assert(test == 10.63);
         assert(test == 10.629);
         test += 10;
@@ -653,5 +665,6 @@ public:
     }
 };
 
+// round by default
 template <typename BaseType, int Scale> bool fixedp<BaseType, Scale>::rounding = true;
 
