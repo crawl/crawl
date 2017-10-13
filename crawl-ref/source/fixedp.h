@@ -78,6 +78,9 @@ template <typename BaseType=int, int Scale=100> class fixedp
     static_assert(std::is_integral<BaseType>(),
                                     "fixedp requires an integral base type.");
     static_assert(Scale > 0, "fixedp requires a positive scale.");
+    static_assert(Scale <= std::numeric_limits<BaseType>::max(),
+                "fixedp requires that Scale not exceed the limit of BaseType!");
+    // TOOD: could instead require at least 1 bits of integral space?
 
     // the next two functions use type traits to implement a version of abs that
     // is safe for unsigned types; it will return the unsigned as-is and not
@@ -104,6 +107,7 @@ template <typename BaseType=int, int Scale=100> class fixedp
     BaseType content;
     static bool rounding;
 public:
+    // TODO: overflow check in constructors? (|amethyst)
     constexpr fixedp(int n) : content(static_cast<BaseType>(n) *
                                                 static_cast<BaseType>(Scale))
     {
@@ -662,6 +666,18 @@ public:
         assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1111) / 1000) == 1.11));
         // test truncation behavior
         assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1116) / 1000) == 1.12));
+
+        // test a few max scales; these have only a fractional part
+        fixedp<char, 127>(10);
+        fixedp<unsigned char, 255>(10);
+
+        // these should cause a static_assert failure if uncommented:
+        // fixedp<char, 16000>(10);
+        // fixedp<char, 128>(10);
+        // fixedp<unsigned char, 256>(10);
+        // float test_badneg = (float) -fixedp<unsigned int>(10,20);
+        // float test_badabs = (float) abs(fixedp<unsigned int>(10,20));
+        // fixedp<int, -100> test_badscale(100);
     }
 };
 
