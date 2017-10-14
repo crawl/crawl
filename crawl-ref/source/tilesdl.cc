@@ -626,6 +626,7 @@ int TilesFramework::getch_ck()
 
     m_tooltip.clear();
     m_region_msg->alt_text().clear();
+    string prev_msg_alt_text = "";
 
     if (need_redraw())
         redraw();
@@ -721,20 +722,39 @@ int TilesFramework::getch_ck()
 
                     event.mouse_event.held = m_buttons_held;
                     event.mouse_event.mod  = m_key_mod;
-                    key = handle_mouse(event.mouse_event);
 
-                    m_region_msg->alt_text().clear();
                     // Find the new mouse location
+                    m_cur_loc.reg = nullptr;
                     for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
-                        if (reg->mouse_pos(m_mouse.x, m_mouse.y,
-                                           m_cur_loc.cx, m_cur_loc.cy))
-                        {
+                        // inside() can return false here for DungeonRegion
+                        // order is important: either way, cx and cy need to be set
+                        if (reg->mouse_pos(m_mouse.x, m_mouse.y, m_cur_loc.cx, m_cur_loc.cy)
+                            && reg->inside(m_mouse.x, m_mouse.y)) {
                             m_cur_loc.reg = reg;
                             m_cur_loc.mode = mouse_control::current_mode();
-                            reg->update_alt_text(m_region_msg->alt_text());
                             break;
                         }
+                    }
+
+                    // If the mouse has left a region, clear any cursors left behind
+                    // handle_mouse() is called after this, since it might place cursors
+                    if (m_cur_loc.reg != last_redraw_loc.reg)
+                    {
+                        for (int i = 0; i < CURSOR_MAX; i++)
+                            tiles.place_cursor((cursor_type)i, NO_CURSOR);
+                    }
+
+                    key = handle_mouse(event.mouse_event);
+
+                    // update_alt_text() handlers may depend on data set in handle_mouse() handler
+                    m_region_msg->alt_text().clear();
+                    if (m_cur_loc.reg)
+                        m_cur_loc.reg->update_alt_text(m_region_msg->alt_text());
+                    if (prev_msg_alt_text != m_region_msg->alt_text())
+                    {
+                        prev_msg_alt_text = m_region_msg->alt_text();
+                        set_need_redraw();
                     }
 
                     // Don't break back to Crawl and redraw for every mouse
