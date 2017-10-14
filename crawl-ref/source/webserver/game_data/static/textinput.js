@@ -84,9 +84,12 @@ function ($, comm, client, enums, util, options) {
             }
 
             var text = input.val() + String.fromCharCode(finalChar);
-            // ctrl-u to wipe any pre-fill
+            // ctrl-u + ctr-k to wipe any pre-fill
             if (input_data.tag !== "repeat")
+            {
                 comm.send_message("key", { keycode: 21 });
+                comm.send_message("key", { keycode: 11 });
+            }
             comm.send_message("input", { text: text });
             close_input();
         }
