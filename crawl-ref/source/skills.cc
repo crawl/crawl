@@ -323,7 +323,7 @@ static void _change_skill_level(skill_type exsk, int n)
 }
 
 // Called whenever a skill is trained.
-void redraw_skill(skill_type exsk, skill_type old_best_skill)
+void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_order)
 {
     if (exsk == SK_FIGHTING)
         recalc_and_scale_hp();
@@ -340,22 +340,25 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
         you.redraw_armour_class = true;
     }
 
-    // Recalculate this skill's order for tie breaking skills
-    // at its new level.   See skills.cc::init_skill_order()
-    // for more details.  -- bwr
-    you.skill_order[exsk] = 0;
-    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    if (recalculate_order)
     {
-        if (sk != exsk && you.skill(sk, 10, true) >= you.skill(exsk, 10, true))
-            you.skill_order[exsk]++;
-    }
+        // Recalculate this skill's order for tie breaking skills
+        // at its new level.   See skills.cc::init_skill_order()
+        // for more details.  -- bwr
+        you.skill_order[exsk] = 0;
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        {
+            if (sk != exsk && you.skill(sk, 10, true) >= you.skill(exsk, 10, true))
+                you.skill_order[exsk]++;
+        }
 
-    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    if (best != old_best_skill || old_best_skill == exsk)
-    {
-        you.redraw_title = true;
-        // The player symbol depends on best skill title.
-        update_player_symbol();
+        const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+        if (best != old_best_skill || old_best_skill == exsk)
+        {
+            you.redraw_title = true;
+            // The player symbol depends on best skill title.
+            update_player_symbol();
+        }
     }
 
     // Identify weapon pluses.
@@ -1267,6 +1270,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     }
 
     const skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+    const int old_level = you.skill(exsk, 10, true);
     you.skill_points[exsk] += skill_inc;
     you.exp_available -= cost;
     you.total_experience += cost;
@@ -1277,7 +1281,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         // TODO should check_training_targets be called here, to halt training
         // and clean up cross-training immediately?
         check_training_target(exsk);
-        redraw_skill(exsk, old_best_skill);
+        redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
     }
 
     check_skill_cost_change();

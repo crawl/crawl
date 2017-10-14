@@ -71,7 +71,7 @@ void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
 bool skill_trained(int i);
 static inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
-void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE);
+void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE, bool recalculate_order = true);
 void set_skill_level(skill_type skill, double amount);
 
 int get_skill_progress(skill_type sk, int level, int points, int scale);
