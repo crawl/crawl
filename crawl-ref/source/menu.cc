@@ -3033,6 +3033,7 @@ bool EditableTextItem::selected() const
 
 bool EditableTextItem::can_be_highlighted() const
 {
+    // TODO: make this work better
     return false;
 }
 
