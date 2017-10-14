@@ -972,7 +972,10 @@ static void _train_skills(int exp, const int cost, const bool simu)
     {
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
-        shuffle_array(training_order);
+        if (you.species == SP_GNOLL)
+            reverse(training_order.begin(), training_order.end());
+        else
+            shuffle_array(training_order);
         for (auto sk : training_order)
         {
             int gain = 0;
