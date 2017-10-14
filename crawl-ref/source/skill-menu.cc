@@ -66,6 +66,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord)
     m_progress = new EditableTextItem();
     m_progress->set_editable(false);
     m_aptitude = new FormattedTextItem();
+    m_aptitude->allow_highlight(false);
 
 #ifdef USE_TILE_LOCAL
     const int height = skm.get_line_height();
