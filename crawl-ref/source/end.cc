@@ -23,6 +23,7 @@
 #include "los.h"
 #include "macro.h"
 #include "message.h"
+#include "misc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
@@ -33,6 +34,20 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
+
+/**
+ * Should crawl restart on game end, depending on restart options and options
+ * (command-line or RC) that bypass the startup menu?
+ *
+ * @param saved whether the game ended by saving
+ */
+bool crawl_should_restart(bool saved)
+{
+    bool answer_ignoring_saved =
+        tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
+
+    return answer_ignoring_saved && (!saved || Options.restart_after_save);
+}
 
 void cio_cleanup()
 {
@@ -403,7 +418,7 @@ NORETURN void game_ended_with_error(const string &message)
     tiles.send_exit_reason("error", message);
 #endif
 
-    if (Options.restart_after_game)
+    if (crawl_should_restart(false))
     {
         if (crawl_state.io_inited)
         {

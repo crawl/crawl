@@ -72,6 +72,7 @@ struct game_state
     vector<string> script_args;    // Arguments to scripts.
 
     bool throttle;
+    bool bypassed_startup_menu;
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 

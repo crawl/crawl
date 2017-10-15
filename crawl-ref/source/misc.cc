@@ -222,3 +222,17 @@ maybe_bool frombool(bool b)
 {
     return b ? MB_TRUE : MB_FALSE;
 }
+
+const string maybe_to_string(const maybe_bool mb)
+{
+    switch (mb)
+    {
+    case MB_TRUE:
+        return "true";
+    case MB_FALSE:
+        return "false";
+    case MB_MAYBE:
+    default:
+        return "maybe";
+    }
+}

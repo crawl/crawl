@@ -406,7 +406,10 @@ public:
     int         assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
-    bool        restart_after_game; // If true, Crawl will not close on game-end
+    maybe_bool  restart_after_game; // If true, Crawl will not close on game-end
+                                    // If maybe, Crawl will restart only if the
+                                    // CL options would bring up the startup
+                                    // menu.
     bool        restart_after_save; // .. or on save
 
     bool        read_persist_options; // If true, Crawl will try to load

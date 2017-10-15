@@ -25,6 +25,7 @@
 #include "jobs.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mutation.h"
 #include "religion.h"
 #include "skills.h"
@@ -578,7 +579,7 @@ static void _dump_options(FILE *file)
 {
     fprintf(file, "RC options:\n");
     fprintf(file, "restart_after_game = %s\n",
-            Options.restart_after_game? "true" : "false");
+            maybe_to_string(Options.restart_after_game).c_str());
     fprintf(file, "\n\n");
 }
 
