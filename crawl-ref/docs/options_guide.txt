@@ -16,7 +16,7 @@ The contents of this text are:
 0-e     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, species, background, combo,
-                restart_after_game, restart_after_save,
+                restart_after_game, restart_after_save, name_bypasses_menu,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
@@ -365,6 +365,11 @@ restart_after_save = false
         When the game is saved, return to the main menu. This option
         only has an effect if restart_after_game is set to maybe or true.
         This option is ignored for online games.
+
+name_bypasses_menu = true
+        When set to true, having a valid name set via options will skip the main
+        menu and jump right to a game or character selection (if there is no
+        save).
 
 default_manual_training = false
         When set to true, new characters will start with skill training
