@@ -662,9 +662,6 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
         for (i = 0; i < blines.size(); ++i)
             cmd_help.add_item_formatted_string(blines[i]);
 
-        while (static_cast<int>(++i) < get_number_of_lines())
-            cmd_help.add_item_string("");
-
         // unscrollable
         cmd_help.add_entry(new MenuEntry(string(), MEL_TITLE));
     }

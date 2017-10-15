@@ -1309,7 +1309,11 @@ void Menu::draw_menu()
     if (end > (int) items.size()) end = items.size();
 
     for (int i = first_entry; i < end; ++i)
+    {
+        if (items[i]->level == MEL_TITLE)
+            break;
         draw_item(i);
+    }
 
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
         mdisplay->draw_more();
@@ -2020,10 +2024,16 @@ bool formatted_scroller::page_down()
     if ((int) items.size() <= first_entry + pagesize)
         return false;
 
+    int target;
+    // First, search for a MEL_TITLE in the current page
+    for (target = first_entry; target < first_entry + pagesize; ++target)
+    {
+        if (items[target]->level == MEL_TITLE)
+            return false;
+    }
     // If, when scrolling forward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
-    int target;
     for (target = first_entry; target < first_entry + pagesize; ++target)
     {
         const int offset = target + pagesize;
@@ -2061,12 +2071,16 @@ bool formatted_scroller::page_up()
 
 bool formatted_scroller::line_down()
 {
-    if (first_entry + pagesize < static_cast<int>(items.size())
-        && items[first_entry + pagesize]->level != MEL_TITLE)
+    if ((int) items.size() <= first_entry + pagesize)
+        return false;
+
+    // Search [first, first+pagesize] inclusive for a MEL_TITLE
+    for (int target = first_entry; target <= first_entry + pagesize; ++target)
     {
-        ++first_entry;
-        return true;
+        if (items[target]->level == MEL_TITLE)
+            return false;
     }
+    ++first_entry;
     return false;
 }
 
