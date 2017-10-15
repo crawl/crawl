@@ -412,6 +412,8 @@ public:
                                     // menu.
     bool        restart_after_save; // .. or on save
 
+    bool        name_bypasses_menu; // should the menu be skipped if there is
+                                    // a name set on game start
     bool        read_persist_options; // If true, Crawl will try to load
                                       // options from c_persist.options
 

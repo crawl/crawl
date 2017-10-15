@@ -1006,8 +1006,9 @@ bool startup_step()
     // if the last game start bypassed the startup menu, and we get here (which
     // can happen if a restart option is set), we need to open the startup menu
     // so that the player has a chance to quit.
-    else if ((crawl_state.bypassed_startup_menu ||
-              !is_good_name(choice.name, false, false))
+    else if ((crawl_state.bypassed_startup_menu
+              || !Options.name_bypasses_menu
+              || !is_good_name(choice.name, false, false))
         && choice.type != GAME_TYPE_ARENA)
     {
         crawl_state.bypassed_startup_menu = false;
