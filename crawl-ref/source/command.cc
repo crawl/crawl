@@ -677,20 +677,13 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
             string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
-            if (!fp)
-                continue;
+            if (fp)
+            {
+                _add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
+                                    help_files[i].auto_hotkey);
+                fclose(fp);
+            }
 
-            // Put in a separator...
-            cmd_help.add_item_string("");
-            cmd_help.add_item_string(string(get_number_of_cols()-1,'='));
-            cmd_help.add_item_string("");
-
-            // ...and the file itself.
-            _add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
-                                  help_files[i].auto_hotkey);
-
-            // Done with this file.
-            fclose(fp);
         }
     }
 
