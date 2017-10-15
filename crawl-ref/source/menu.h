@@ -275,11 +275,12 @@ enum MenuFlag
 class MenuDisplay
 {
 public:
-    MenuDisplay(Menu *menu);
+    MenuDisplay(Menu *menu) : m_menu(menu) {};
     virtual ~MenuDisplay() {}
     virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
     virtual void set_offset(int lines) = 0;
     virtual void draw_more() = 0;
+    virtual int get_maxpagesize() = 0;
     virtual void set_num_columns(int columns) = 0;
 protected:
     Menu *m_menu;
@@ -288,9 +289,10 @@ protected:
 class MenuDisplayText : public MenuDisplay
 {
 public:
-    MenuDisplayText(Menu *menu);
+    MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1) {};
     virtual void draw_stock_item(int index, const MenuEntry *me) override;
     virtual void draw_more() override;
+    virtual int get_maxpagesize() override;
     virtual void set_offset(int lines) override { m_starty = lines; }
     virtual void set_num_columns(int columns) override {}
 protected:
@@ -300,9 +302,10 @@ protected:
 class MenuDisplayTile : public MenuDisplay
 {
 public:
-    MenuDisplayTile(Menu *menu);
+    MenuDisplayTile(Menu *menu) : MenuDisplay(menu) {};
     virtual void draw_stock_item(int index, const MenuEntry *me) override;
     virtual void set_offset(int lines) override;
+    virtual int get_maxpagesize() override;
     virtual void draw_more() override;
     virtual void set_num_columns(int columns) override;
 };
@@ -428,6 +431,7 @@ protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
+    void recalculate_page_sizes();
     virtual string get_select_count_string(int count) const;
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
