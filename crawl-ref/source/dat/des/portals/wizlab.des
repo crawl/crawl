@@ -21,7 +21,7 @@
 #Golubria  |tloc-themed monsters,   |tloc items, cloaks,     |20000
 #          |Abyss monsters          |abyss-escape aides      |
 #--------------------------------------------------------------------
-#Cloud Mage|air elementals,         |potions, robe of clouds,|16000
+#Cloud Mage|air elementals,         |potions, robe of clouds,|24000
 #          |wind drakes, Cloud Mage |speed/air-related misc  |
 #--------------------------------------------------------------------
 #Hellbinder|demons, summoners,      |fire/summoning/         |17000
@@ -1502,44 +1502,57 @@ ENDMAP
 # TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
 NAME:       wizlab_cloud
 TAGS:       no_rotate
-MONS:       wind drake, air elemental, insubstantial wisp, spriggan air mage
-KMONS:      5 = twister
+MONS:       air elemental w:20 / shock serpent w:5 / spark wasp w:5 \
+            / wind drake w:5
+MONS:       fire crab / ghost crab / death drake / apocalypse crab
+MONS:       spriggan air mage / blizzard demon
 {{
 wizname = crawl.make_name()
-
-kmons ("    6 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
-         .. " ; robe_of_clouds . quick blade ego:electrocution |"
-         .. " quick blade ego:freezing | dagger ego:electrocution | dagger ego:freezing")
+kmons ("    5 = patrolling Cloud Mage dbname:Cloud_Mage name:"
+              .. string.gsub(wizname, " ", "_")
+              .. " ; robe_of_clouds . quick blade ego:electrocution \
+                     | quick blade ego:freezing | dagger ego:electrocution \
+                     | dagger ego:freezing")
 }}
+KMONS:      D = twister
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 4, \
                 size_buildup_time = 25, cloud_type = "white fluffiness" \
             }
-ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
-            potion of resistance / gold / potion of agility / potion of brilliance
-ITEM:       wand of lightning / staff of air / ring of flight / \
-            gold / scroll of silence / quick blade / ring of evasion / \
-            ring of see invisible / book of clouds / any book w:15 / \
-            any good_item / any w:20
+# Consumable loot that's both universally good and nice to go for if you can't
+# complete the whole map. These along with the 'e' equipment item also help the
+# player complete the rest of the map.
+ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
+            / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
+ITEM:       scarf ego:cloud_resistance / book of clouds / fan of gales \
+            / staff of air
+# Main loot, including some thematic items that are good even if you don't care
+# about flight.
+ITEM:       any w:20 / star_item / superb_item / any book w:5
+ITEM:       randart ring of flight / good_item boots ego:flying \
+            / good_item boots ego:running / good_item quick blade \
+            / good_item ring of evasion
 ITEM:       randbook disc:air
-KFEAT:      #5 = deep_water
-KPROP:      #5 = no_tele_into
-NSUBST:     . = 3:1 / 2:4 / 1:43 / * = .:120 1:1 2:8 3:2
-NSUBST:     ' = 2:1 / 4:2 / 4:3 / 120:. / * = . 1:1 2:9 3:2
-NSUBST:     e = 2:f / * = de, # = 5:5 / 4 = 5## / *:#
-COLOUR:     +<b = white
+KFEAT:      #6 = deep_water
+KPROP:      #6 = no_tele_into
+SUBST:      . = .:220 1:8 2:4 3:2
+NSUBST:     ' = 2:1 / 1:2 / 1:3 / 15 = 123......
+NSUBST:     d = e / d, f = 2:g / h / f, # = 5:D / 4 = D## / *:#
+COLOUR:     b = silver
+COLOUR:     n = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
-TILE:       o = dngn_transparent_stone_white
-TILE:       b = dngn_crystal_white
-COLOUR:     wWv#4 = silver
-:           set_border_fill_type('open_sea')
-:           set_random_mon_list("insubstantial wisp / air elemental / wind drake")
-:           wizlab_setup(_G)
-:           set_feature_name("floor", "damp floor")
-:           set_feature_name("crystal_wall", "wall of white crystal")
-
+{{
+            set_border_fill_type('open_sea')
+            set_random_mon_list("air elemental w:40 / shock serpent \
+                / spark wasp / wind drake / fire crab / ghost crab \
+                / apocalypse crab / spirggan air mage \
+                / blizzard demon")
+            wizlab_setup(_G)
+            set_feature_name("floor", "damp floor")
+            set_feature_name("crystal_wall", "wall of white crystal")
+}}
 epilogue{{
             wizlab_milestone(_G, "The Chambers of the Cloud Mage")
 }}
@@ -1556,48 +1569,48 @@ MAP
 #####################################################################
 #####################################################################
 #####################################################################
-#####################oooooooooooooooooooooooooooooo##################
-###################ooo............................ooo################
-#################ooo...wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
-################oo...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...oo#############
-################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
-###############oo.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.oo############
-###############o..wwwwwbb.....b'!''''''''''''!'bwwwwww..o############
-##############oo.wwwwwwbb.eee.b''''''''''''''''bwwwwwww.oo###########
-##############o..wwwwwbbb.eee.b''''''''''''''''bWWWWWWW..o###########
-##############o..wwwwwbbb.eee.+'''6''''''''''''+.........o###########
-##############o..wwwwwbbb.eee.b''''''''''''''''bWWWWWWW..o###########
-##############oo.wwwwwwbb.eee.b''''''''''''''''bwwwwwww.oo###########
-###############o..wwwwwbb.....b'!''''''''''''!'bwwwwww..o############
-###############oo.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.oo############
-################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
-################oo...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...oo#############
-#################oo....wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
-##################oooo............................ooo################
+#####################nnnnnnnnnnnnnnnnnnnnnnnnnnnnnn##################
+###################nnn............................nnn################
+#################nnn...wwwwwwwwwwwwwwwwwwwwwwwwww...nnn##############
+################nn...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...nn#############
+################n..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..n#############
+###############nn.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.nn############
+###############n..wwwwwbb.....b'!''''''''''''!'bwwwwww..n############
+##############nn.wwwwwwbb.fff.b''''''''''''''''bwwwwwww.nn###########
+##############n..wwwwwbbb.fff.b''''''''''''''''bWWWWWWW..n###########
+##############n..wwwwwbbb.fff.+'''5''''''''''''+.........n###########
+##############n..wwwwwbbb.fff.b''''''''''''''''bWWWWWWW..n###########
+##############nn.wwwwwwbb.fff.b''''''''''''''''bwwwwwww.nn###########
+###############n..wwwwwbb.....b'!''''''''''''!'bwwwwww..n############
+###############nn.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.nn############
+################n..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..n#############
+################nn...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...nn#############
+#################nn....wwwwwwwwwwwwwwwwwwwwwwwwww...nnn##############
+##################nnnn............................nnn################
 #####################bbb.......bbbbbbbbbbbbbbbbbbbb##################
-#####################oo.......oo#####ooo#############################
-####################oo.......oo#####oo.oo############################
-###################oo.......oo#####oo.!.oo###########################
-###################o!......ooo####oo.....ooo#########################
-###################ooo.......ooo#oo........oo########################
-####################oooo.......ooo..........oo#######################
-#######################ooo!.....ooo..........o#######################
-########################o.....!ooobb+bb......oo######################
-#######################ooo......obb...bb!.....o######################
-########################o......obb.....bb.....oo#####################
-#######################ooo......b.......b......o#####################
-#######################o.!.....ob.<.A.<.b......o#####################
-#######################o.b......b.......bo...!oo#####################
-#######################o.bo.....bb.....bb......o#####################
-#######################b+bbbb....bb...bb!.....oo#####################
-#######################o....bo...!bbbbb......oo######################
-#######################o.dd.bo.............oob#######################
-#######################o.dd.boo...........bbbbbbbbb##################
-#######################o....b#o..........!...+....o##################
-#######################ooooob#oo........ooooob.dd.o##################
-###############################oo......oo####b.dd.o##################
-################################oo.!..oo#####b....o##################
-#################################oooooo######booooo##################
+#####################nn.......nn#####nnn#############################
+####################nn.......nn#####nn.nn############################
+###################nn.......nn#####nn.!.nn###########################
+###################n!......nnn####nn.....nnn#########################
+###################nnn.......nnn#nn........nn########################
+####################nnnn.......nnn..........nn#######################
+#######################nnn!.....nnn..........n#######################
+########################n.....!nnnbb+bb......nn######################
+#######################nnn......nbb---bb!.....n######################
+########################n......nbb-----bb.....nn#####################
+#######################nnn......b-------b......n#####################
+#######################n.!.....nb-<-A-<-b......n#####################
+#######################n.b......b-------bn...!nn#####################
+#######################n.bn.....bb-----bb......n#####################
+#######################b+bbbb....bb---bb!.....nn#####################
+#######################n....bn...!bbbbb......nn######################
+#######################n.dd.bn.............nnb#######################
+#######################n.dd.bnn...........bbbbbbbbb##################
+#######################n....b#n..........!...+....n##################
+#######################nnnnnb#nn........nnnnnb.dd.n##################
+###############################nn......nn####b.dd.n##################
+################################nn.!..nn#####b....n##################
+#################################nnnnnn######bnnnnn##################
 #####################################################################
 #####################################################################
 #####################################################################
