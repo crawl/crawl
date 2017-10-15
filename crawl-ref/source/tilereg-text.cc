@@ -52,11 +52,6 @@ TextRegion::~TextRegion()
     delete[] abuf;
 }
 
-void TextRegion::adjust_region(int *x1, int *x2, int y)
-{
-    *x2 = *x2 + 1;
-}
-
 void TextRegion::addstr(const char *buffer)
 {
     char32_t buf2[1024], c;
@@ -108,11 +103,8 @@ void TextRegion::addstr_aux(const char32_t *buffer, int len)
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
     int adrs = y * mx;
-    int head = x;
-    int tail = x + len - 1;
 
-    // XXX: What does this even do?
-    adjust_region(&head, &tail, y);
+    ASSERT(y < my);
 
     for (int i = 0; i < len && x + i < mx; i++)
     {
