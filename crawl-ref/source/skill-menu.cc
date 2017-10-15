@@ -346,9 +346,6 @@ void SkillMenuEntry::set_aptitude()
     const bool manual = skill_has_manual(m_sk);
     const int apt = species_apt(m_sk, you.species);
 
-    // Manuals aptitude bonus.
-    int manual_bonus = manual ? 4 : 0;
-
     if (apt != 0)
         text += make_stringf("%+d", apt);
     else
@@ -356,18 +353,10 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white> ";
 
-    if (manual_bonus)
+    if (manual)
     {
         skm.set_flag(SKMF_MANUAL);
-        text += "<lightgreen>";
-
-        // Only room for two characters.
-        if (manual_bonus < 10)
-            text += make_stringf("+%d", manual_bonus);
-        else
-            text += to_string(manual_bonus);
-
-        text += "</lightgreen>";
+        text += "<lightred>+4</lightred>";
     }
 
     m_aptitude->set_text(text);
