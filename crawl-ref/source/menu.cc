@@ -97,13 +97,9 @@ int Popup::pop()
 }
 #endif
 
-MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
+int MenuDisplayText::get_maxpagesize()
 {
-    m_menu->set_maxpagesize(get_number_of_lines());
-}
-
-MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
-{
+    return get_number_of_lines();
 }
 
 void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
@@ -139,9 +135,9 @@ void MenuDisplayText::draw_more()
 }
 
 #ifdef USE_TILE_LOCAL
-MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
+int MenuDisplayTile::get_maxpagesize()
 {
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
+    return tiles.get_menu()->maxpagesize();
 }
 
 void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
@@ -156,19 +152,16 @@ void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
 void MenuDisplayTile::set_offset(int lines)
 {
     tiles.get_menu()->set_offset(lines);
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 
 void MenuDisplayTile::draw_more()
 {
     tiles.get_menu()->set_more(m_menu->get_more());
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 
 void MenuDisplayTile::set_num_columns(int columns)
 {
     tiles.get_menu()->set_num_columns(columns);
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 #endif
 
@@ -335,14 +328,7 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     // Reset offset to default.
     mdisplay->set_offset(1 + title_height());
 
-    // Lose lines for the title + room for -more- line.
-#ifdef USE_TILE_LOCAL
-    pagesize = max_pagesize - title_height() - 1;
-#else
-    pagesize = get_number_of_lines() - title_height() - 1;
-    if (max_pagesize > 0 && pagesize > max_pagesize)
-        pagesize = max_pagesize;
-#endif
+    recalculate_page_sizes();
 
     if (is_set(MF_START_AT_END))
         first_entry = max((int)items.size() - pagesize, 0);
@@ -1290,6 +1276,21 @@ int Menu::get_entry_index(const MenuEntry *e) const
     return -1;
 }
 
+void Menu::recalculate_page_sizes()
+{
+    int mps = max_pagesize > 0 ? max_pagesize : INT_MAX;
+    mps = min(mps, mdisplay->get_maxpagesize());
+
+    // Lose lines for the title + room for -more- line.
+#ifdef USE_TILE_LOCAL
+    pagesize = mps - title_height() - 1;
+#else
+    pagesize = get_number_of_lines() - title_height() - 1;
+    if (mps > 0 && pagesize > mps)
+        pagesize = mps;
+#endif
+}
+
 void Menu::draw_menu()
 {
     if (crawl_state.doing_prev_cmd_again)
@@ -1297,6 +1298,7 @@ void Menu::draw_menu()
 
     clrscr();
 
+    recalculate_page_sizes();
     draw_title();
     draw_select_count(sel.size());
     y_offset = 1 + title_height();
