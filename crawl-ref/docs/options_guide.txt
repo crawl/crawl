@@ -353,14 +353,18 @@ combo += (HuFi . short sword | Human Monk | ...), <combo>, ...
         from the specified combos. The weapon, species, and background
         options are overriden by (and override) this option.
 
-restart_after_game = true/false
-        When a game ends, Crawl will return to the main menu if
-        restart_after_game is set. This option is enabled by default
-        for tiles builds and disabled by default for other builds.
+restart_after_game = maybe/true
+        When set to true, at the game end, crawl will return to the main menu.
+        If set to maybe, crawl will return to the main menu only if the startup
+        options don't bypass the main menu, otherwise it will exit. If set to
+        false, it will exit unconditionally. This option is set to true for
+        local tiles builds by default, and maybe by default for other builds.
+        This option is ignored for online games.
 
 restart_after_save = false
         When the game is saved, return to the main menu. This option
-        has no effect unless restart_after_game is also enabled.
+        only has an effect if restart_after_game is set to maybe or true.
+        This option is ignored for online games.
 
 default_manual_training = false
         When set to true, new characters will start with skill training

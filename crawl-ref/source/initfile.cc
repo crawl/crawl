@@ -122,15 +122,6 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         false;
 #endif
-    const bool USING_LOCAL_TILES =
-#if defined(USE_TILE_LOCAL)
-        true;
-#else
-        false;
-#endif
-#ifdef DGAMELAUNCH
-    UNUSED(USING_LOCAL_TILES);
-#endif
 
 #ifdef USE_TILE
     const bool USING_WEB_TILES =
@@ -296,7 +287,6 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(restart_after_save), false),
-        new BoolGameOption(SIMPLE_NAME(restart_after_game), USING_LOCAL_TILES),
         new StringGameOption(SIMPLE_NAME(map_file_name), ""),
         new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
@@ -1073,6 +1063,17 @@ void game_options::reset_options()
     // XXX: These need a better place.
     sc_entries             = 0;
     sc_format              = -1;
+
+#ifdef DGAMELAUNCH
+    restart_after_game = MB_FALSE;
+    restart_after_save = false;
+#else
+#ifdef USE_TILE_LOCAL
+    restart_after_game = MB_TRUE;
+#else
+    restart_after_game = MB_MAYBE;
+#endif
+#endif
 
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
@@ -2807,6 +2808,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "backward")
             assign_item_slot = SS_BACKWARD;
     }
+#ifndef DGAMELAUNCH
+    else if (key == "restart_after_game")
+        restart_after_game = read_maybe_bool(field);
+#endif
     else if (key == "show_god_gift")
     {
         if (field == "yes")
@@ -4417,7 +4422,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!rc_only)
             {
                 Options.game.type = GAME_TYPE_ARENA;
-                Options.restart_after_game = false;
+                Options.restart_after_game = MB_FALSE;
             }
             if (next_is_param)
             {

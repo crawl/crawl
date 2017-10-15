@@ -368,11 +368,13 @@ static void _reset_game()
 static void _launch_game_loop()
 {
     bool game_ended = false;
+    bool game_saved = false;
     do
     {
         try
         {
             game_ended = false;
+            game_saved = false;
             _launch_game();
         }
         catch (game_ended_condition &ge)
@@ -383,7 +385,10 @@ static void _launch_game_loop()
             // Don't re-enter the Sprint menu with restart_after_save, as
             // that would reload the just-saved game immediately.
             if (ge.was_saved)
+            {
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
+                game_saved = true;
+            }
         }
         catch (ext_fail_exception &fe)
         {
@@ -393,7 +398,7 @@ static void _launch_game_loop()
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
-    } while (Options.restart_after_game
+    } while (crawl_should_restart(game_saved)
              && game_ended
              && !crawl_state.seen_hups);
 }
@@ -1989,7 +1994,7 @@ void process_command(command_type cmd)
     case CMD_SAVE_GAME:
     {
         const char * const prompt
-            = (Options.restart_after_game && Options.restart_after_save)
+            = (crawl_should_restart(true))
               ? "Save game and return to main menu?"
               : "Save game and exit?";
         explicit_keymap map;
@@ -2007,14 +2012,21 @@ void process_command(command_type cmd)
         break;
 
     case CMD_QUIT:
+    {
+        const char * const quit_prompt = (crawl_should_restart(false)
+            ? "Are you sure you want to abandon this character and "
+                                                    "return to the main menu?"
+            : "Are you sure you want to abandon this character and "
+                                                    "quit the game?");
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character and quit the game?"))
+            || yes_or_no(quit_prompt))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }
         else
             canned_msg(MSG_OK);
         break;
+    }
 
     case CMD_LUA_CONSOLE:
         debug_terp_dlua(clua);

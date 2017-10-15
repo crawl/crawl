@@ -37,8 +37,10 @@ game_state::game_state()
       build_db(false), tests_selected(),
 #ifdef DGAMELAUNCH
       throttle(true),
+      bypassed_startup_menu(true),
 #else
       throttle(false),
+      bypassed_startup_menu(false),
 #endif
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),

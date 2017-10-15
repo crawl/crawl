@@ -984,10 +984,14 @@ bool startup_step()
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
 
+
 #ifndef DGAMELAUNCH
     if (crawl_state.last_type == GAME_TYPE_TUTORIAL
         || crawl_state.last_type == GAME_TYPE_SPRINT)
     {
+        // these count as not bypassing the startup menu because they trigger a
+        // submenu.
+        crawl_state.bypassed_startup_menu = false;
         choice.type = crawl_state.last_type;
         crawl_state.type = crawl_state.last_type;
         crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
@@ -998,14 +1002,22 @@ bool startup_step()
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    else if (!is_good_name(choice.name, false, false)
+
+    // if the last game start bypassed the startup menu, and we get here (which
+    // can happen if a restart option is set), we need to open the startup menu
+    // so that the player has a chance to quit.
+    else if ((crawl_state.bypassed_startup_menu ||
+              !is_good_name(choice.name, false, false))
         && choice.type != GAME_TYPE_ARENA)
     {
+        crawl_state.bypassed_startup_menu = false;
         _show_startup_menu(choice, defaults);
         // [ds] Must set game type here, or we won't be able to load
         // Sprint saves.
         crawl_state.type = choice.type;
     }
+    else
+        crawl_state.bypassed_startup_menu = true;
 #endif
 
     // TODO: integrate arena better with
