@@ -41,12 +41,25 @@
  *
  * @param saved whether the game ended by saving
  */
-bool crawl_should_restart(bool saved)
+bool crawl_should_restart(game_exit_type exit)
 {
-    bool answer_ignoring_saved =
+#ifdef DGAMELAUNCH
+    return false;
+#else
+#ifdef USE_TILE_WEB
+    if (is_tiles() && Options.name_bypasses_menu)
+        return false;
+#endif
+    if (exit == GAME_EXIT_CRASH)
+        return false;
+    if (exit == GAME_EXIT_ABORT || exit == GAME_EXIT_UNKNOWN)
+        return true; // always restart on aborting out of a menu
+    bool ret =
         tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
-
-    return answer_ignoring_saved && (!saved || Options.restart_after_save);
+    if (exit == GAME_EXIT_SAVE)
+        return ret = ret && Options.restart_after_save;
+    return ret;
+#endif
 }
 
 void cio_cleanup()
@@ -231,7 +244,33 @@ NORETURN void screen_end_game(string text)
             get_ch();
     }
 
-    game_ended();
+    game_ended(GAME_EXIT_ABORT); // TODO: is this the right exit condition?
+}
+
+game_exit_type kill_method_to_exit(kill_method_type kill)
+{
+    switch (kill)
+    {
+        case KILLED_BY_QUITTING: return GAME_EXIT_QUIT;
+        case KILLED_BY_WINNING:  return GAME_EXIT_WON;
+        case KILLED_BY_LEAVING:  return GAME_EXIT_LEFT;
+        default:                 return GAME_EXIT_DIED;
+    }
+}
+
+string exit_type_to_string(game_exit_type e)
+{
+    switch (e)
+    {
+        case GAME_EXIT_UNKNOWN: return "unknown";
+        case GAME_EXIT_WON:    return "won";
+        case GAME_EXIT_LEFT:   return "bailed out";
+        case GAME_EXIT_QUIT:   return "quit";
+        case GAME_EXIT_DIED:   return "dead";
+        case GAME_EXIT_SAVE:   return "saved";
+        case GAME_EXIT_ABORT:  return "abort";
+        case GAME_EXIT_CRASH:  return "crashed";
+    }
 }
 
 NORETURN void end_game(scorefile_entry &se, int hiscore_index)
@@ -244,13 +283,14 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
     _delete_files();
 
+    kill_method_type death_type = (kill_method_type) se.get_death_type();
+
     // death message
-    if (se.get_death_type() != KILLED_BY_LEAVING
-        && se.get_death_type() != KILLED_BY_QUITTING
-        && se.get_death_type() != KILLED_BY_WINNING)
+    if (death_type != KILLED_BY_LEAVING && death_type != KILLED_BY_QUITTING
+        && death_type != KILLED_BY_WINNING)
     {
         canned_msg(MSG_YOU_DIE);
-        xom_death_message((kill_method_type) se.get_death_type());
+        xom_death_message(death_type);
 
         switch (you.religion)
         {
@@ -283,8 +323,8 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         case GOD_YREDELEMNUL:
             if (you.undead_state() != US_ALIVE)
                 simple_god_message(" claims you as an undead slave.");
-            else if (se.get_death_type() != KILLED_BY_DISINT
-                     && se.get_death_type() != KILLED_BY_LAVA)
+            else if (death_type != KILLED_BY_DISINT
+                  && death_type != KILLED_BY_LAVA)
             {
                 mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
                      "zombie.");
@@ -314,8 +354,8 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
         default:
             if (will_have_passive(passive_t::goldify_corpses)
-                && se.get_death_type() != KILLED_BY_DISINT
-                && se.get_death_type() != KILLED_BY_LAVA)
+                && death_type != KILLED_BY_DISINT
+                && death_type != KILLED_BY_LAVA)
             {
                 mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
             }
@@ -343,10 +383,8 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 #endif
 
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
-    string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out" :
-                                                               "dead";
+    string reason = exit_type_to_string(kill_method_to_exit(death_type));
+
 #ifdef DGL_WHEREIS
     whereis_record(reason.c_str());
 #endif
@@ -391,20 +429,23 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         get_ch();
 
-    if (se.get_death_type() == KILLED_BY_WINNING)
-        crawl_state.last_game_won = true;
-
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);
 #endif
 
-    game_ended();
+    game_ended(kill_method_to_exit(death_type));
 }
 
-NORETURN void game_ended()
+NORETURN void game_ended(game_exit_type exit)
 {
+    if (crawl_state.marked_as_won &&
+        (exit == GAME_EXIT_DIED || exit == GAME_EXIT_LEFT))
+    {
+        // used in tutorials
+        exit = GAME_EXIT_WON;
+    }
     if (!crawl_state.seen_hups)
-        throw game_ended_condition();
+        throw game_ended_condition(exit);
     else
         end(0);
 }
@@ -418,7 +459,7 @@ NORETURN void game_ended_with_error(const string &message)
     tiles.send_exit_reason("error", message);
 #endif
 
-    if (crawl_should_restart(false))
+    if (crawl_should_restart(GAME_EXIT_CRASH))
     {
         if (crawl_state.io_inited)
         {
@@ -430,7 +471,7 @@ NORETURN void game_ended_with_error(const string &message)
             fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
             getchar();
         }
-        game_ended();
+        game_ended(GAME_EXIT_CRASH);
     }
     else
         end(1, false, "%s", message.c_str());

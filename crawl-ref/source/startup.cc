@@ -249,7 +249,7 @@ static void _post_init(bool newc)
 
     crawl_state.need_save = true;
     crawl_state.last_type = crawl_state.type;
-    crawl_state.last_game_won = false;
+    crawl_state.marked_as_won = false;
 
     destroy_abyss();
 
@@ -954,7 +954,7 @@ static void _choose_arena_teams(newgame_def& choice,
 
     char buf[80];
     if (cancellable_get_line(buf, sizeof(buf)))
-        game_ended();
+        game_ended(GAME_EXIT_ABORT);
     choice.arena_teams = buf;
     if (choice.arena_teams.empty())
         choice.arena_teams = defaults.arena_teams;
@@ -986,11 +986,29 @@ bool startup_step()
 
 
 #ifndef DGAMELAUNCH
+
+    // startup
+
+    // restart with last game saved, quit, crashed, or left: never bypass menu
+    // restart with last game died or won: bypass menu if other settings allow
+    // it. GAME_EXIT_UNKKNOWN corresponds to no previous game in this crawl
+    // session (or arena mode).
+    // These conditions are ignored for tutorial or sprint, which always trigger
+    // the relevant submenu. Arena never triggers a menu.
+
+    const bool can_bypass_menu =
+            (crawl_state.last_game_exit == GAME_EXIT_DIED
+             || crawl_state.last_game_exit == GAME_EXIT_WON
+             || crawl_state.last_game_exit == GAME_EXIT_UNKNOWN)
+         && crawl_state.last_game_exit != GAME_EXIT_ABORT
+         && crawl_state.last_type != GAME_TYPE_ARENA
+         && (Options.name_bypasses_menu
+             && is_good_name(choice.name, false, false));
+
     if (crawl_state.last_type == GAME_TYPE_TUTORIAL
         || crawl_state.last_type == GAME_TYPE_SPRINT)
     {
-        // these count as not bypassing the startup menu because they trigger a
-        // submenu.
+        // this counts as showing the startup menu
         crawl_state.bypassed_startup_menu = false;
         choice.type = crawl_state.last_type;
         crawl_state.type = crawl_state.last_type;
@@ -1003,13 +1021,7 @@ bool startup_step()
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
 
-    // if the last game start bypassed the startup menu, and we get here (which
-    // can happen if a restart option is set), we need to open the startup menu
-    // so that the player has a chance to quit.
-    else if ((crawl_state.bypassed_startup_menu
-              || !Options.name_bypasses_menu
-              || !is_good_name(choice.name, false, false))
-        && choice.type != GAME_TYPE_ARENA)
+    else if (!can_bypass_menu && choice.type != GAME_TYPE_ARENA)
     {
         crawl_state.bypassed_startup_menu = false;
         _show_startup_menu(choice, defaults);
@@ -1027,8 +1039,8 @@ bool startup_step()
     {
         _choose_arena_teams(choice, defaults);
         write_newgame_options_file(choice);
-        run_arena(choice.arena_teams);
-        end(0, false);
+        crawl_state.last_type = GAME_TYPE_ARENA;
+        run_arena(choice.arena_teams); // this is NORETURN
     }
 
     bool newchar = false;

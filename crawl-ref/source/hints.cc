@@ -212,7 +212,7 @@ again:
 #ifdef USE_TILE_WEB
             tiles.send_exit_reason("cancel");
 #endif
-            game_ended();
+            game_ended(GAME_EXIT_ABORT);
         case 'X':
             cprintf("\nGoodbye!");
 #ifdef USE_TILE_WEB

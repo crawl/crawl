@@ -1694,8 +1694,9 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    if (crawl_should_restart(true) && !crawl_state.seen_hups)
-        throw game_ended_condition(true);
+    // TODO: just call game_ended?
+    if (crawl_should_restart(GAME_EXIT_SAVE) && !crawl_state.seen_hups)
+        throw game_ended_condition(GAME_EXIT_SAVE);
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
