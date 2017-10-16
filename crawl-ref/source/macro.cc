@@ -715,7 +715,7 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
 
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
-    while (kbhit() || a == 0)
+    while ((kbhit() || a == 0) && a != CK_REDRAW)
         keys.push_back(a = rgetch());
 
     return keys;

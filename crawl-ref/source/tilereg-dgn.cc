@@ -108,6 +108,10 @@ void DungeonRegion::pack_buffers()
     if (m_vbuf.empty())
         return;
 
+    coord_def m_vbuf_sz = m_vbuf.size();
+    ASSERT(m_vbuf_sz.x == crawl_view.viewsz.x);
+    ASSERT(m_vbuf_sz.y == crawl_view.viewsz.y);
+
     screen_cell_t *vbuf_cell = m_vbuf;
     for (int y = 0; y < crawl_view.viewsz.y; ++y)
         for (int x = 0; x < crawl_view.viewsz.x; ++x)
