@@ -342,10 +342,10 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
 #ifdef TOUCH_UI
-            split_string(",", "minimap, command, gold_turn, inventory, "
+            split_string(",", "minimap, command, inventory, "
                               "command2, spell, ability, monster")),
 #else
-            split_string(",", "minimap, inventory, gold_turn, command, "
+            split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
 #endif
 #endif
