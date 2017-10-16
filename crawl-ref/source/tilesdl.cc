@@ -1239,12 +1239,13 @@ void TilesFramework::resize_inventory()
 {
     int lines = min(max_inv_height - min_inv_height,
                     (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
-    if (lines == 0)
-        return;
 
     int prev_size = m_region_tab->wy;
 
-    m_region_tab->resize(m_region_tab->mx, min_inv_height + lines);
+    int tabs_height = m_region_tab->min_height_for_items();
+    tabs_height = round_up_to_multiple(tabs_height, m_region_tab->dx)/m_region_tab->dx;
+
+    m_region_tab->resize(m_region_tab->mx, max(min_inv_height + lines, tabs_height));
     m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
     int delta_y = m_region_tab->wy - prev_size;

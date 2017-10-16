@@ -28,6 +28,7 @@ public:
     void deactivate_tab();
     int active_tab() const;
     int num_tabs() const;
+    int min_height_for_items() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
     int find_tab(string tab_name) const;
