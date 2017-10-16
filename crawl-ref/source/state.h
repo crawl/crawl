@@ -57,6 +57,8 @@ struct game_state
                                    // under mapstat.
     bool obj_stat_gen;      // Set if we're generating object stats.
 
+    string force_map;       // Set if we're forcing a specific map to generate.
+
     game_type type;
     game_type last_type;
     game_exit last_game_exit;

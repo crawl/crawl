@@ -553,6 +553,8 @@ static void _show_commandline_options_help()
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
     puts("  -iters <num>        For -mapstat and -objstat, set the number of "
          "iterations");
+    puts("  -force-map <map>    For -mapstat and -objstat, alway choose the "
+         "      given map on every level.");
 #endif
     puts("");
     puts("Miscellaneous options:");
