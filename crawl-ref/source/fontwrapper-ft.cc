@@ -32,6 +32,26 @@
 # define dprintf(...) (void)0
 #endif
 
+class FontLibrary {
+public:
+    static FT_Library &get() {
+        static FontLibrary instance;
+        return instance.library;
+    }
+private:
+    FT_Library library;
+    FontLibrary ()
+    {
+        if (FT_Init_FreeType(&library))
+            die_noline("Failed to initialise freetype library.\n");
+    };
+    ~FontLibrary ()
+    {
+        if (FT_Done_FreeType(library))
+            die_noline("Failed to unload freetype library.\n");
+    };
+};
+
 FontWrapper* FontWrapper::create()
 {
     return new FTFontWrapper();
@@ -46,7 +66,9 @@ FTFontWrapper::FTFontWrapper() :
     m_min_offset(0),
     charsz(1,1),
     m_max_width(0),
-    m_max_height(0)
+    m_max_height(0),
+    ttf(nullptr),
+    face(nullptr)
 {
     m_buf = GLShapeBuffer::create(true, true);
 }
@@ -56,22 +78,21 @@ FTFontWrapper::~FTFontWrapper()
     delete[] m_glyphs;
     delete[] pixels;
     delete m_buf;
+    if (face)
+        FT_Done_Face(face);
+    delete[] ttf;
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
                               bool outline, int sc_num, int sc_den)
 {
-    FT_Library library;
     FT_Error error;
+    FT_Library library = FontLibrary::get();
 
     this->scale_num = sc_num;
     this->scale_den = sc_den;
 
     outl = outline;
-
-    error = FT_Init_FreeType(&library);
-    if (error)
-        die_noline("Failed to initialise freetype library.\n");
 
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
@@ -86,12 +107,11 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     if (!f)
         die_noline("Could not read font '%s'\n", font_name);
     unsigned long size = file_size(f);
-    FT_Byte *ttf = (FT_Byte*)malloc(size);
+    ttf = new FT_Byte[size];
     ASSERT(ttf);
     if (fread(ttf, 1, size, f) != size)
         die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
     fclose(f);
-    // FreeType needs the font until FT_Done_Face(), and we never call it.
 
     error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
