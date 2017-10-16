@@ -16,4 +16,5 @@ void mapstat_report_map_build_start();
 void mapstat_report_map_veto(const string &message);
 void mapstat_generate_stats();
 bool mapstat_build_levels();
+bool mapstat_find_forced_map();
 #endif

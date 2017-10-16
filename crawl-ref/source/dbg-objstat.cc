@@ -1180,6 +1180,9 @@ void objstat_generate_stats()
     // Let "acquire foo" have skill aptitudes to work with.
     you.species = SP_HUMAN;
 
+    if (!crawl_state.force_map.empty() && !mapstat_find_forced_map())
+        return;
+
     initialise_item_descriptions();
     initialise_branch_depths();
     // We have to run map preludes ourselves.

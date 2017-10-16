@@ -3756,6 +3756,7 @@ enum commandline_option_type
     CLO_MAPSTAT_DUMP_DISCONNECT,
     CLO_OBJSTAT,
     CLO_ITERATIONS,
+    CLO_FORCE_MAP,
     CLO_ARENA,
     CLO_DUMP_MAPS,
     CLO_TEST,
@@ -3791,14 +3792,13 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scores", "name", "species", "background", "dir", "rc",
-    "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "dump-disconnect", "objstat", "iters", "arena", "dump-maps",
-    "test", "script", "builddb", "help", "version", "seed", "save-version",
-    "sprint", "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "tutorial", "wizard", "explore", "no-save",
-    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
-    "playable-json",
+    "scores", "name", "species", "background", "dir", "rc", "rcdir", "tscores",
+    "vscores", "scorefile", "morgue", "macro", "mapstat", "dump-disconnect",
+    "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
+    "builddb", "help", "version", "seed", "save-version", "sprint",
+    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
+    "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4412,6 +4412,24 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     SysEnv.map_gen_iters = 1;
                 else if (SysEnv.map_gen_iters > 10000)
                     SysEnv.map_gen_iters = 10000;
+                nextUsed = true;
+            }
+#else
+            fprintf(stderr, "%s", dbg_stat_err);
+            end(1);
+#endif
+            break;
+
+        case CLO_FORCE_MAP:
+#ifdef DEBUG_STATISTICS
+            if (!next_is_param)
+            {
+                fprintf(stderr, "String argument required for -%s\n", arg);
+                end(1);
+            }
+            else
+            {
+                crawl_state.force_map = next_arg;
                 nextUsed = true;
             }
 #else

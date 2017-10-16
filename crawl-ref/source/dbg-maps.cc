@@ -479,30 +479,54 @@ static void _write_map_stats()
     printf("\n");
 }
 
+bool mapstat_find_forced_map()
+{
+    const map_def *map = find_map_by_name(crawl_state.force_map);
+
+    if (!map)
+    {
+        printf("Can't find map named '%s'.\n", crawl_state.force_map.c_str());
+        return false;
+    }
+
+    if (map->is_minivault())
+        you.props["force_minivault"] = map->name;
+    else
+        you.props["force_map"] = map->name;
+
+    return true;
+}
+
 void mapstat_generate_stats()
 {
     // Warn assertions about possible oddities like the artefact list being
     // cleared.
     you.wizard = true;
+
     // Let "acquire foo" have skill aptitudes to work with.
     you.species = SP_HUMAN;
 
+    if (!crawl_state.force_map.empty() && !mapstat_find_forced_map())
+        return;
+
     initialise_item_descriptions();
     initialise_branch_depths();
+
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();
 
     _dungeon_places();
+
     clear_messages();
     mpr("Generating dungeon map stats");
     printf("Generating map stats for %d iteration(s) of %d level(s) over "
            "%d branch(es).\n", SysEnv.map_gen_iters,
            (int) generated_levels.size(), branch_count);
     fflush(stdout);
-    // We write mapstats even if the iterations were aborted due to a bad level
-    // build.
+
     mapstat_build_levels();
+
     _write_map_stats();
     printf("Map stats complete.\n");
 }
