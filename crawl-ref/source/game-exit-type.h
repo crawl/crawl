@@ -5,8 +5,6 @@
 enum game_exit_type
 {
     GAME_EXIT_UNKNOWN, // for ordinary games, no previous game this session.
-                       // for arena, always set unless there was a crash or an
-                       // abort on text entry.
     GAME_EXIT_WON,
     GAME_EXIT_LEFT,
     GAME_EXIT_QUIT,
