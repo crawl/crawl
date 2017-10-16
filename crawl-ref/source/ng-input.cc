@@ -148,7 +148,7 @@ void enter_player_name(newgame_def& ng)
 
         // If the player wants out, we bail out.
         if (!_read_player_name(ng.name))
-            game_ended();
+            game_ended(GAME_EXIT_ABORT);
         trim_string(ng.name);
 
         if (ng.name.empty())

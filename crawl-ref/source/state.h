@@ -9,6 +9,7 @@
 
 #include "command-type.h"
 #include "disable-type.h"
+#include "game-exit-type.h"
 #include "player.h"
 
 class monster;
@@ -58,7 +59,8 @@ struct game_state
 
     game_type type;
     game_type last_type;
-    bool last_game_won;
+    game_exit_type last_game_exit;
+    bool marked_as_won;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
     bool generating_level;
@@ -198,7 +200,7 @@ public:
 
     inline void mark_last_game_won()
     {
-        last_game_won = true;
+        marked_as_won = true;
     }
 
     friend class mon_acting;
