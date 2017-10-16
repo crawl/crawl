@@ -140,6 +140,7 @@ protected:
     GenericTexture m_tex;
     GLShapeBuffer *m_buf;
 
+    FT_Byte *ttf;
     FT_Face face;
     bool    outl;
     unsigned char *pixels;
