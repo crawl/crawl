@@ -2013,13 +2013,13 @@ void process_command(command_type cmd)
 
     case CMD_QUIT:
     {
-        const char * const quit_prompt = (crawl_should_restart(false)
-            ? "Are you sure you want to abandon this character and "
-                                                    "return to the main menu?"
-            : "Are you sure you want to abandon this character and "
-                                                    "quit the game?");
+        const char * const quit_prompt
+            = "Are you sure you want to abandon this character and %s?";
+
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no(quit_prompt))
+            || yes_or_no(quit_prompt,
+                crawl_should_restart(false) ? "return to the main menu"
+                                            : "quit the game"))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }
