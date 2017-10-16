@@ -1255,19 +1255,6 @@ void TilesFramework::resize_inventory()
     m_statcol_bottom -= delta_y;
 }
 
-void TilesFramework::place_gold_turns()
-{
-    if (m_statcol_bottom - m_statcol_top < m_region_stat->dy)
-        return;
-
-    ++crawl_view.hudsz.y;
-    m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
-    if (m_region_map)
-        m_region_map->place(m_region_stat->sx, m_region_stat->ey);
-
-    m_statcol_top += m_region_stat->dy;
-}
-
 void TilesFramework::layout_statcol()
 {
     bool use_small_layout = is_using_small_layout();
@@ -1337,9 +1324,7 @@ void TilesFramework::layout_statcol()
                 resize_inventory();
             else if (str == "minimap" || str == "map")
                 place_minimap();
-            else if (str == "gold_turn" || str == "gold_turns")
-                place_gold_turns();
-            else
+            else if (!(str == "gold_turn" || str == "gold_turns")) // gold_turns no longer does anything
                 place_tab(m_region_tab->find_tab(str));
         }
         // We stretch the minimap so it is centered in the space left.

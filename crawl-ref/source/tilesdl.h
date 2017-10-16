@@ -262,7 +262,6 @@ protected:
     void autosize_minimap();
     void place_minimap();
     void resize_inventory();
-    void place_gold_turns();
 
     ImageManager *m_image;
 
