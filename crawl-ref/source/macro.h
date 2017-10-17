@@ -96,7 +96,7 @@ int           command_to_key(command_type cmd);
 void bind_command_to_key(command_type cmd, int key);
 
 string command_to_string(command_type cmd, bool tutorial = false);
-void insert_commands(string &desc, vector<command_type> cmds,
+void insert_commands(string &desc, const vector<command_type> &cmds,
                      bool formatted = true);
 
 // Let rc files declare macros:
