@@ -421,7 +421,7 @@ static bool _reroll_random(newgame_def& ng)
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
 #endif
-        game_ended(GAME_EXIT_ABORT);
+        game_ended(game_exit::abort);
     }
     return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
@@ -456,7 +456,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 #ifdef USE_TILE_WEB
             tiles.send_exit_reason("cancel");
 #endif
-            game_ended(GAME_EXIT_ABORT);
+            game_ended(game_exit::abort);
         }
     }
 #endif
@@ -1221,7 +1221,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
-                game_ended(GAME_EXIT_ABORT);
+                game_ended(game_exit::abort);
             case CK_BKSP:
                 if (choice_type == C_JOB)
                     ng_choice.job = JOB_UNKNOWN;
@@ -1839,7 +1839,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         // Is this item our default map?
         else if (defaults.map == maps[i]->name)
         {
-            if (crawl_state.last_game_exit == GAME_EXIT_WON)
+            if (crawl_state.last_game_exit == game_exit::win)
                 activate_next = true;
             else
                 menu->set_active_item(tmp);
@@ -2007,7 +2007,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
-                game_ended(GAME_EXIT_ABORT);
+                game_ended(game_exit::abort);
                 break;
             case ' ':
                 return;

@@ -32,7 +32,7 @@ game_state::game_state()
       need_save(false), saving_game(false), updating_scores(false),
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
-      last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(GAME_EXIT_UNKNOWN),
+      last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
       marked_as_won(false), arena_suspended(false),
       generating_level(false), dump_maps(false), test(false), script(false),
       build_db(false), tests_selected(),
