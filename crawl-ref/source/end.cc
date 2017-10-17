@@ -272,6 +272,7 @@ string exit_type_to_string(game_exit e)
         case game_exit::abort:   return "abort";
         case game_exit::crash:   return "crash";
     }
+    return "BUGGY EXIT TYPE";
 }
 
 NORETURN void end_game(scorefile_entry &se, int hiscore_index)
