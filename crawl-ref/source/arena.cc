@@ -1400,5 +1400,5 @@ NORETURN void run_arena(const string& teams)
     arena::global_setup(teams);
     arena::simulate();
     arena::global_shutdown();
-    game_ended(GAME_EXIT_DIED); // there is only death in the arena
+    game_ended(game_exit::death); // there is only death in the arena
 }

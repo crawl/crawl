@@ -1695,8 +1695,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     _save_game_exit();
 
     // TODO: just call game_ended?
-    if (crawl_should_restart(GAME_EXIT_SAVE) && !crawl_state.seen_hups)
-        throw game_ended_condition(GAME_EXIT_SAVE);
+    if (crawl_should_restart(game_exit::save) && !crawl_state.seen_hups)
+        throw game_ended_condition(game_exit::save);
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());

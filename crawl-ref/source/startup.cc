@@ -954,11 +954,25 @@ static void _choose_arena_teams(newgame_def& choice,
 
     char buf[80];
     if (cancellable_get_line(buf, sizeof(buf)))
-        game_ended(GAME_EXIT_ABORT);
+        game_ended(game_exit::abort);
     choice.arena_teams = buf;
     if (choice.arena_teams.empty())
         choice.arena_teams = defaults.arena_teams;
 }
+
+#ifndef DGAMELAUNCH
+static bool _exit_type_allows_menu_bypass(game_exit exit)
+{
+    // restart with last game saved, quit, crashed, or aborted: don't bypass
+    // restart with last game died, won, or left: bypass if other settings allow
+    // it. unknown corresponds to no previous game in this crawl
+    // session.
+    return (exit == game_exit::death
+         || exit == game_exit::win
+         || exit == game_exit::unknown
+         || exit == game_exit::leave);
+}
+#endif
 
 bool startup_step()
 {
@@ -989,21 +1003,13 @@ bool startup_step()
 
     // startup
 
-    // restart with last game saved, quit, crashed, or left: never bypass menu
-    // restart with last game died or won: bypass menu if other settings allow
-    // it. GAME_EXIT_UNKKNOWN corresponds to no previous game in this crawl
-    // session (or arena mode).
     // These conditions are ignored for tutorial or sprint, which always trigger
     // the relevant submenu. Arena never triggers a menu.
-
     const bool can_bypass_menu =
-            (crawl_state.last_game_exit == GAME_EXIT_DIED
-             || crawl_state.last_game_exit == GAME_EXIT_WON
-             || crawl_state.last_game_exit == GAME_EXIT_UNKNOWN)
-         && crawl_state.last_game_exit != GAME_EXIT_ABORT
+            _exit_type_allows_menu_bypass(crawl_state.last_game_exit)
          && crawl_state.last_type != GAME_TYPE_ARENA
-         && (Options.name_bypasses_menu
-             && is_good_name(choice.name, false, false));
+         && Options.name_bypasses_menu
+         && is_good_name(choice.name, false, false);
 
     if (crawl_state.last_type == GAME_TYPE_TUTORIAL
         || crawl_state.last_type == GAME_TYPE_SPRINT)
@@ -1017,10 +1023,6 @@ bool startup_step()
         if (choice.type == GAME_TYPE_TUTORIAL)
             choose_tutorial_character(choice);
     }
-    // We could also check whether game type has been set here,
-    // but it's probably not necessary to choose non-default game
-    // types while specifying a name externally.
-
     else if (!can_bypass_menu && choice.type != GAME_TYPE_ARENA)
     {
         crawl_state.bypassed_startup_menu = false;

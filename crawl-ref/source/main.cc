@@ -383,7 +383,7 @@ static void _launch_game_loop()
 
             // Don't re-enter the Sprint menu with restart_after_save, as
             // that would reload the just-saved game immediately.
-            if (ge.game_exit == GAME_EXIT_SAVE)
+            if (ge.game_exit == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
         catch (ext_fail_exception &fe)
@@ -1990,7 +1990,7 @@ void process_command(command_type cmd)
     case CMD_SAVE_GAME:
     {
         const char * const prompt
-            = (crawl_should_restart(GAME_EXIT_SAVE))
+            = (crawl_should_restart(game_exit::save))
               ? "Save game and return to main menu?"
               : "Save game and exit?";
         explicit_keymap map;
@@ -2011,8 +2011,8 @@ void process_command(command_type cmd)
     {
         if (crawl_state.disables[DIS_CONFIRMATIONS]
             || yes_or_no("Are you sure you want to abandon this character and %s?",
-                crawl_should_restart(GAME_EXIT_QUIT) ? "return to the main menu"
-                                                     : "quit the game"))
+                crawl_should_restart(game_exit::quit) ? "return to the main menu"
+                                                      : "quit the game"))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }

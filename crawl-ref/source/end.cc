@@ -41,7 +41,7 @@
  *
  * @param saved whether the game ended by saving
  */
-bool crawl_should_restart(game_exit_type exit)
+bool crawl_should_restart(game_exit exit)
 {
 #ifdef DGAMELAUNCH
     return false;
@@ -50,14 +50,14 @@ bool crawl_should_restart(game_exit_type exit)
     if (is_tiles() && Options.name_bypasses_menu)
         return false;
 #endif
-    if (exit == GAME_EXIT_CRASH)
+    if (exit == game_exit::crash)
         return false;
-    if (exit == GAME_EXIT_ABORT || exit == GAME_EXIT_UNKNOWN)
+    if (exit == game_exit::abort || exit == game_exit::unknown)
         return true; // always restart on aborting out of a menu
     bool ret =
         tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
-    if (exit == GAME_EXIT_SAVE)
-        return ret = ret && Options.restart_after_save;
+    if (exit == game_exit::save)
+        ret = ret && Options.restart_after_save;
     return ret;
 #endif
 }
@@ -244,32 +244,33 @@ NORETURN void screen_end_game(string text)
             get_ch();
     }
 
-    game_ended(GAME_EXIT_ABORT); // TODO: is this the right exit condition?
+    game_ended(game_exit::abort); // TODO: is this the right exit condition?
 }
 
-game_exit_type kill_method_to_exit(kill_method_type kill)
+game_exit kill_method_to_exit(kill_method_type kill)
 {
     switch (kill)
     {
-        case KILLED_BY_QUITTING: return GAME_EXIT_QUIT;
-        case KILLED_BY_WINNING:  return GAME_EXIT_WON;
-        case KILLED_BY_LEAVING:  return GAME_EXIT_LEFT;
-        default:                 return GAME_EXIT_DIED;
+        case KILLED_BY_QUITTING: return game_exit::quit;
+        case KILLED_BY_WINNING:  return game_exit::win;
+        case KILLED_BY_LEAVING:  return game_exit::leave;
+        default:                 return game_exit::death;
     }
 }
 
-string exit_type_to_string(game_exit_type e)
+string exit_type_to_string(game_exit e)
 {
+    // some of these may be used by webtiles, check before editing
     switch (e)
     {
-        case GAME_EXIT_UNKNOWN: return "unknown";
-        case GAME_EXIT_WON:    return "won";
-        case GAME_EXIT_LEFT:   return "bailed out";
-        case GAME_EXIT_QUIT:   return "quit";
-        case GAME_EXIT_DIED:   return "dead";
-        case GAME_EXIT_SAVE:   return "saved";
-        case GAME_EXIT_ABORT:  return "abort";
-        case GAME_EXIT_CRASH:  return "crashed";
+        case game_exit::unknown: return "unknown";
+        case game_exit::win:     return "won";
+        case game_exit::leave:   return "bailed out";
+        case game_exit::quit:    return "quit";
+        case game_exit::death:   return "dead";
+        case game_exit::save:    return "save";
+        case game_exit::abort:   return "abort";
+        case game_exit::crash:   return "crash";
     }
 }
 
@@ -436,13 +437,13 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     game_ended(kill_method_to_exit(death_type));
 }
 
-NORETURN void game_ended(game_exit_type exit)
+NORETURN void game_ended(game_exit exit)
 {
     if (crawl_state.marked_as_won &&
-        (exit == GAME_EXIT_DIED || exit == GAME_EXIT_LEFT))
+        (exit == game_exit::death || exit == game_exit::leave))
     {
         // used in tutorials
-        exit = GAME_EXIT_WON;
+        exit = game_exit::win;
     }
     if (!crawl_state.seen_hups)
         throw game_ended_condition(exit);
@@ -459,7 +460,7 @@ NORETURN void game_ended_with_error(const string &message)
     tiles.send_exit_reason("error", message);
 #endif
 
-    if (crawl_should_restart(GAME_EXIT_CRASH))
+    if (crawl_should_restart(game_exit::crash))
     {
         if (crawl_state.io_inited)
         {
@@ -471,7 +472,7 @@ NORETURN void game_ended_with_error(const string &message)
             fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
             getchar();
         }
-        game_ended(GAME_EXIT_CRASH);
+        game_ended(game_exit::crash);
     }
     else
         end(1, false, "%s", message.c_str());
