@@ -33,12 +33,15 @@ public:
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt,
                               int xoffset=-1, int yoffset=-1) override;
+    int logical_to_device(int n);
 protected:
     GLState m_current_state;
 #ifdef __ANDROID__
     GLint m_last_tex;
 #endif
     int m_window_height;
+    int m_density_num;
+    int m_density_den;
 
 private:
     void glDebug(const char* msg);
