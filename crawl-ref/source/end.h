@@ -22,6 +22,6 @@ void cio_cleanup();
 
 struct game_ended_condition : public exception
 {
-    game_ended_condition(game_exit exit) : game_exit(exit) {}
-    game_exit game_exit;
+    game_ended_condition(game_exit exit) : exit_reason(exit) {}
+    game_exit exit_reason;
 };
