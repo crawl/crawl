@@ -69,7 +69,7 @@ GLShapeBuffer *GLShapeBuffer::create(bool texture, bool colour,
 /////////////////////////////////////////////////////////////////////////////
 // OGLStateManager
 
-OGLStateManager::OGLStateManager()
+OGLStateManager::OGLStateManager() : m_density_num(1), m_density_den(1)
 {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0, 0.0, 0.0, 1.0f);
@@ -206,10 +206,25 @@ void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
     glScalef(scale.x, scale.y, scale.z);
 }
 
+/**
+ * Calculate the device pixels given the logical pixels; the two may be
+ * different on high-DPI devices (such as retina displays). This is not well-
+ * defined if reset_view_for_resize has not been called.
+ *
+ * @param n a value in logical pixels
+ * @return the result in device pixels. May be the same, if the device isn't
+ *          high-DPI.
+ */
+int OGLStateManager::logical_to_device(int n)
+{
+    return n * m_density_num / m_density_den;
+}
+
 void OGLStateManager::set_scissor(int x, int y, unsigned int w, unsigned int h)
 {
     glEnable(GL_SCISSOR_TEST);
-    glScissor(x, m_window_height-y-h, w, h);
+    glScissor(logical_to_device(x), logical_to_device(m_window_height-y-h),
+                logical_to_device(w), logical_to_device(h));
 }
 
 void OGLStateManager::reset_scissor()
@@ -222,6 +237,8 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
 {
     glViewport(0, 0, m_drawablesz.x, m_drawablesz.y);
     m_window_height = m_windowsz.y;
+    m_density_den = m_windowsz.x;
+    m_density_num = m_drawablesz.x;
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
