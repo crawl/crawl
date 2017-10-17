@@ -247,7 +247,7 @@ NORETURN void screen_end_game(string text)
     game_ended(game_exit::abort); // TODO: is this the right exit condition?
 }
 
-game_exit kill_method_to_exit(kill_method_type kill)
+static game_exit _kill_method_to_exit(kill_method_type kill)
 {
     switch (kill)
     {
@@ -258,7 +258,7 @@ game_exit kill_method_to_exit(kill_method_type kill)
     }
 }
 
-string exit_type_to_string(game_exit e)
+static string _exit_type_to_string(game_exit e)
 {
     // some of these may be used by webtiles, check before editing
     switch (e)
@@ -384,12 +384,15 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         tiles.send_dump_info("morgue", fname);
 #endif
 
+    const game_exit exit_reason = _kill_method_to_exit(death_type);
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
-    string reason = exit_type_to_string(kill_method_to_exit(death_type));
+    const string reason = _exit_type_to_string(exit_reason);
 
-#ifdef DGL_WHEREIS
+# ifdef DGL_WHEREIS
     whereis_record(reason.c_str());
-#endif
+# endif
+#else
+    UNUSED(_exit_type_to_string);
 #endif
 
     if (!crawl_state.seen_hups)
@@ -435,7 +438,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     tiles.send_exit_reason(reason, hiscore);
 #endif
 
-    game_ended(kill_method_to_exit(death_type));
+    game_ended(exit_reason);
 }
 
 NORETURN void game_ended(game_exit exit)
