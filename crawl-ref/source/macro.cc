@@ -1462,7 +1462,7 @@ string command_to_string(command_type cmd, bool tutorial)
     return result;
 }
 
-void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
+void insert_commands(string &desc, const vector<command_type> &cmds, bool formatted)
 {
     desc = untag_tiles_console(desc);
     for (command_type cmd : cmds)
