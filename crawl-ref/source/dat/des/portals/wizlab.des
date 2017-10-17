@@ -1547,8 +1547,7 @@ LFLOORTILE: floor_rough_lightblue
             set_border_fill_type('open_sea')
             set_random_mon_list("air elemental w:40 / shock serpent \
                 / spark wasp / wind drake / fire crab / ghost crab \
-                / apocalypse crab / spirggan air mage \
-                / blizzard demon")
+                / apocalypse crab / spriggan air mage / blizzard demon")
             wizlab_setup(_G)
             set_feature_name("floor", "damp floor")
             set_feature_name("crystal_wall", "wall of white crystal")
