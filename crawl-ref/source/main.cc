@@ -378,12 +378,12 @@ static void _launch_game_loop()
         catch (game_ended_condition &ge)
         {
             game_ended = true;
-            crawl_state.last_game_exit = ge.game_exit;
+            crawl_state.last_game_exit = ge.exit_reason;
             _reset_game();
 
             // Don't re-enter the Sprint menu with restart_after_save, as
             // that would reload the just-saved game immediately.
-            if (ge.game_exit == game_exit::save)
+            if (ge.exit_reason == game_exit::save)
                 crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
         catch (ext_fail_exception &fe)
