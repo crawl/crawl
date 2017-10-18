@@ -679,7 +679,7 @@ public:
  *
  * @param reason Pointer to a string where the reason will be stored if unable
  *               to mutate
- * @returns true if the player is able to mutate right now.
+ * @returns true if the player is able to mutate right now, otherwise false.
  */
 static bool _can_mutate(string *reason)
 {
