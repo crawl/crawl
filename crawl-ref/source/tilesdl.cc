@@ -803,6 +803,11 @@ int TilesFramework::getch_ck()
                 set_need_redraw();
                 return CK_REDRAW;
 
+            case WME_EXPOSE:
+                set_need_redraw();
+                // AFAIK no need to return CK_REDRAW, as resize() hasn't been called
+                break;
+
             case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
