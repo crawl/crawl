@@ -679,7 +679,7 @@ public:
  *
  * @param reason Pointer to a string where the reason will be stored if unable
  *               to mutate
- * @returns true iff the player is able to mutate right now.
+ * @returns true if the player is able to mutate right now, otherwise false.
  */
 static bool _can_mutate(string *reason)
 {
@@ -689,7 +689,7 @@ static bool _can_mutate(string *reason)
     if (reason)
     {
         *reason = make_stringf("You cannot mutate%s.",
-                               you.can_safely_mutate(false) ? "" : " at present");
+                               you.can_safely_mutate(false) ? " at present" : "");
     }
     return false;
 }
