@@ -370,11 +370,11 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
     bool is_first = true;
     char buf[200];
 
-    // Bracket with MEL_TITLES, so that you won't scroll into it or above it.
-    m.add_entry(new MenuEntry(string(), MEL_TITLE));
+    // Bracket with MEL_END_OF_SECTION, so that you won't scroll into it or above it.
+    m.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
     for (int i = 0; i < get_number_of_lines(); ++i)
         m.add_entry(new MenuEntry(string()));
-    m.add_entry(new MenuEntry(string(), MEL_TITLE));
+    m.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
 
     while (fgets(buf, sizeof buf, fp))
     {
@@ -663,7 +663,7 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
             cmd_help.add_item_formatted_string(blines[i]);
 
         // unscrollable
-        cmd_help.add_entry(new MenuEntry(string(), MEL_TITLE));
+        cmd_help.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
     }
 
     for (unsigned i = 0; i < lines.size(); ++i)
