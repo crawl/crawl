@@ -1310,7 +1310,7 @@ void Menu::draw_menu()
 
     for (int i = first_entry; i < end; ++i)
     {
-        if (items[i]->level == MEL_TITLE)
+        if (items[i]->level == MEL_END_OF_SECTION)
             break;
         draw_item(i);
     }
@@ -2016,7 +2016,7 @@ bool formatted_scroller::jump_to(int i)
     return true;
 }
 
-// Don't scroll past MEL_TITLE entries
+// Don't scroll past MEL_END_OF_SECTION entries
 bool formatted_scroller::page_down()
 {
     const int old_first = first_entry;
@@ -2025,19 +2025,19 @@ bool formatted_scroller::page_down()
         return false;
 
     int target;
-    // First, search for a MEL_TITLE in the current page
+    // First, search for a MEL_END_OF_SECTION in the current page
     for (target = first_entry; target < first_entry + pagesize; ++target)
     {
-        if (items[target]->level == MEL_TITLE)
+        if (items[target]->level == MEL_END_OF_SECTION)
             return false;
     }
-    // If, when scrolling forward, we encounter a MEL_TITLE
+    // If, when scrolling forward, we encounter a MEL_END_OF_SECTION
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
     for (target = first_entry; target < first_entry + pagesize; ++target)
     {
         const int offset = target + pagesize;
-        if (offset < (int)items.size() && items[offset]->level == MEL_TITLE)
+        if (offset < (int)items.size() && items[offset]->level == MEL_END_OF_SECTION)
             break;
     }
     first_entry = target;
@@ -2051,16 +2051,16 @@ bool formatted_scroller::page_up()
 
     const int old_first = first_entry;
 
-    // If, when scrolling backward, we encounter a MEL_TITLE
+    // If, when scrolling backward, we encounter a MEL_END_OF_SECTION
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
 
-    if (items[first_entry]->level == MEL_TITLE)
+    if (items[first_entry]->level == MEL_END_OF_SECTION)
         return false;
 
     for (int i = 0; i < pagesize; ++i)
     {
-        if (first_entry == 0 || items[first_entry-1]->level == MEL_TITLE)
+        if (first_entry == 0 || items[first_entry-1]->level == MEL_END_OF_SECTION)
             break;
 
         --first_entry;
@@ -2074,10 +2074,10 @@ bool formatted_scroller::line_down()
     if ((int) items.size() <= first_entry + pagesize)
         return false;
 
-    // Search [first, first+pagesize] inclusive for a MEL_TITLE
+    // Search [first, first+pagesize] inclusive for a MEL_END_OF_SECTION
     for (int target = first_entry; target <= first_entry + pagesize; ++target)
     {
-        if (items[target]->level == MEL_TITLE)
+        if (items[target]->level == MEL_END_OF_SECTION)
             return false;
     }
     ++first_entry;
@@ -2086,8 +2086,8 @@ bool formatted_scroller::line_down()
 
 bool formatted_scroller::line_up()
 {
-    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE
-        && items[first_entry]->level != MEL_TITLE)
+    if (first_entry > 0 && items[first_entry-1]->level != MEL_END_OF_SECTION
+        && items[first_entry]->level != MEL_END_OF_SECTION)
     {
         --first_entry;
         return true;

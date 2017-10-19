@@ -30,6 +30,7 @@ enum MenuEntryLevel
     MEL_TITLE,
     MEL_SUBTITLE,
     MEL_ITEM,
+    MEL_END_OF_SECTION,
 };
 
 struct menu_letter
