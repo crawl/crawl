@@ -491,7 +491,6 @@ bool wizard_add_mutation()
 
     if (you.has_mutation(MUT_MUTATION_RESISTANCE))
         mpr("Ignoring mut resistance to apply mutation.");
-    unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
                     "'xom', 'slime', 'qazlal')? ",
@@ -562,11 +561,6 @@ bool wizard_add_mutation()
             for (int i = 0; i < -levels; ++i)
                 if (delete_mutation(mutat, "wizard power", true, true))
                     success = true;
-        }
-
-        // prevent mutation resistance from being reset if it was modified here
-        if (mutat == MUT_MUTATION_RESISTANCE) {
-        	mut_res.deactivate();
         }
     }
 

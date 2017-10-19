@@ -32,9 +32,7 @@ public:
 
     ~unwind_var()
     {
-        if (active) {
-            val = oldval;
-        }
+        val = oldval;
     }
 
     /** Get the current (temporary) value of the wrapped lvalue. */
@@ -49,16 +47,9 @@ public:
         return oldval;
     }
 
-    /** Prevent the wrapped value from being reset. */
-    void deactivate()
-    {
-        active = false;
-    }
-
 private:
     T &val;
     T oldval;
-    bool active = true;
 };
 
 typedef unwind_var<bool> unwind_bool;
