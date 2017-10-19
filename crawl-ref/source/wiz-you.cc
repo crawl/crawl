@@ -491,7 +491,6 @@ bool wizard_add_mutation()
 
     if (you.has_mutation(MUT_MUTATION_RESISTANCE))
         mpr("Ignoring mut resistance to apply mutation.");
-    unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
                     "'xom', 'slime', 'qazlal')? ",
