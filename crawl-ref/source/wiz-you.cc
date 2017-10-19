@@ -563,6 +563,11 @@ bool wizard_add_mutation()
                 if (delete_mutation(mutat, "wizard power", true, true))
                     success = true;
         }
+
+        // prevent mutation resistance from being reset if it was modified here
+        if (mutat == MUT_MUTATION_RESISTANCE) {
+        	mut_res.deactivate();
+        }
     }
 
     return success;
