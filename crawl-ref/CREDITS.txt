@@ -145,6 +145,7 @@
     Anders Heggestøyl
     Alex Henry
     R. Dan Henry
+    Aidan Holm
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
