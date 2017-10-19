@@ -2692,6 +2692,8 @@ static int _find_transtravel_stair(const level_id &cur,
 
     for (stair_info &si : stairs)
     {
+        if (stairs_destination_is_excluded(si))
+            continue;
 
         // Skip placeholders and excluded stairs.
         if (!si.can_travel() || is_excluded(si.position, li.get_excludes()))
@@ -4776,4 +4778,31 @@ int travel_trail_index(const coord_def& gc)
         return idx;
     else
         return -1;
+}
+
+bool stairs_destination_is_excluded(const stair_info &si)
+{
+    level_pos dest = si.destination;
+    if (LevelInfo *dest_li = travel_cache.find_level_info(dest.id))
+    {
+        if (is_unknown_stair(si.position)
+            || !is_excluded(dest.pos, dest_li->get_excludes()))
+        {
+            return false;
+        }
+
+        // Check for exclusions that cover the stair destination, but ignore
+        // those that have radius 1: those exclude travel in the _other_
+        // direction only (from the destination to here, not from here to the
+        // destination)
+        const exclude_set &excludes = dest_li->get_excludes();
+        for (auto entry : excludes)
+        {
+            const travel_exclude &ex = entry.second;
+            if (ex.in_bounds(dest.pos) && ex.radius > 1)
+                return true;
+        }
+    }
+
+    return false;
 }
