@@ -166,7 +166,7 @@ void MenuDisplayTile::set_num_columns(int columns)
 #endif
 
 Menu::Menu(int _flags, const string& tagname, bool text_only)
-  : f_selitem(nullptr), f_drawitem(nullptr), f_keyfilter(nullptr),
+  : f_selitem(nullptr), f_keyfilter(nullptr),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
     title2(nullptr), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
     pagesize(0), max_pagesize(0), more("-more-", true), items(), sel(),
@@ -1415,10 +1415,7 @@ void Menu::draw_index_item(int index, const MenuEntry *me) const
     if (crawl_state.doing_prev_cmd_again)
         return;
 
-    if (f_drawitem)
-        (*f_drawitem)(index, me);
-    else
-        draw_stock_item(index, me);
+    draw_stock_item(index, me);
 }
 
 void Menu::draw_stock_item(int index, const MenuEntry *me) const
