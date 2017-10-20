@@ -2279,13 +2279,6 @@ void ShoppingList::display()
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     shopmenu.set_title(mtitle);
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list->size() > 52
-        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
-    {
-        shopmenu.set_maxpagesize(52);
-    }
-
     string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
 

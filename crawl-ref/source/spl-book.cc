@@ -671,13 +671,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (spells.size() > 52
-        && (spell_menu.maxpagesize() > 52 || spell_menu.maxpagesize() == 0))
-    {
-        spell_menu.set_maxpagesize(52);
-    }
-
     for (unsigned int i = 0; i < spells.size(); i++)
     {
         const spell_type spell = spells[i];

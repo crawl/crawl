@@ -243,16 +243,14 @@ void Menu::clear()
     last_selected = -1;
 }
 
-void Menu::set_maxpagesize(int max)
-{
-    max_pagesize = max;
-}
-
 void Menu::set_flags(int new_flags, bool use_options)
 {
     flags = new_flags;
     if (use_options && Options.easy_exit_menu)
         flags |= MF_EASY_EXIT;
+
+    if (flags & MF_NOSELECT)
+        max_pagesize = 52;
 }
 
 void Menu::set_more(const formatted_string &fs)

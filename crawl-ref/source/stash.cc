@@ -1688,13 +1688,6 @@ bool StashTracker::display_search_results(
     mtitle->quantity = results->size();
     stashmenu.set_title(mtitle);
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (results->size() > 52
-        && (stashmenu.maxpagesize() > 52 || stashmenu.maxpagesize() == 0))
-    {
-        stashmenu.set_maxpagesize(52);
-    }
-
     menu_letter hotkey;
     for (stash_search_result &res : *results)
     {
