@@ -360,7 +360,6 @@ public:
     void get_selected(vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
-    void set_maxpagesize(int max);
     int maxpagesize() const { return max_pagesize; }
 
     void set_select_filter(vector<text_pattern> filter)
