@@ -249,6 +249,11 @@ void Menu::set_flags(int new_flags, bool use_options)
     if (use_options && Options.easy_exit_menu)
         flags |= MF_EASY_EXIT;
 
+#ifdef DEBUG
+    int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
+    ASSERT(sel_flag == MF_NOSELECT || sel_flag == MF_SINGLESELECT || sel_flag == MF_MULTISELECT);
+#endif
+
     if (flags & MF_NOSELECT)
         max_pagesize = 52;
 }
@@ -1859,16 +1864,25 @@ void column_composer::compose_formatted_column(
     }
 }
 
-formatted_scroller::formatted_scroller() : Menu()
+formatted_scroller::formatted_scroller() : Menu(MF_NOSELECT)
 {
     set_highlighter(nullptr);
 }
 
-formatted_scroller::formatted_scroller(int _flags, const string& s) :
-    Menu(_flags)
+formatted_scroller::formatted_scroller(int _flags, const string& s) : Menu()
 {
+    set_flags(_flags);
     set_highlighter(nullptr);
     add_text(s);
+}
+
+void formatted_scroller::set_flags(int new_flags, bool use_options)
+{
+    ASSERT(!(new_flags & MF_MULTISELECT));
+    if (!(new_flags & MF_SINGLESELECT))
+        new_flags |= MF_NOSELECT;
+    Menu::set_flags(new_flags);
+    max_pagesize = 0;
 }
 
 void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
