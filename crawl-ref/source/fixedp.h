@@ -150,6 +150,12 @@ public:
     {
     }
 
+    template <int OtherScale> explicit fixedp (fixedp<BaseType, OtherScale> n)
+        : content(from_fixedp<OtherScale>(n).to_scaled())
+    {
+    }
+
+
     /**
      * Factory function, not a constructor. We don't want this to participate
      * in arithmetic.
@@ -315,6 +321,11 @@ public:
     {
         return static_cast<float>(integral_part()) + 
             static_cast<float>(frac_part(true) / static_cast<float>(Scale));
+    }
+    explicit operator double() const
+    {
+        return static_cast<double>(integral_part()) +
+            static_cast<double>(frac_part(true) / static_cast<double>(Scale));
     }
 
     // string and stream output
@@ -681,6 +692,14 @@ public:
         assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1111) / 1000) == 1.11));
         // test truncation behavior
         assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1116) / 1000) == 1.12));
+
+        assert((fixedp<int, 100>(fixedp<int, 10>(10)) == 10));
+        assert((fixedp<int, 100>(fixedp<int, 1000>(10)) == 10));
+        assert((fixedp<int, 100>(fixedp<int, 10>(11) / 10) == 1.1));
+        assert((fixedp<int, 100>(fixedp<int, 10>(-11) / 10) == -1.1));
+        assert((fixedp<int, 100>(fixedp<int, 1000>(1111) / 1000) == 1.11));
+        assert((fixedp<int, 100>(fixedp<int, 1000>(1116) / 1000) == 1.12));
+
 
         // test a few max scales; these have only a fractional part
         fixedp<char, 127>(10);
