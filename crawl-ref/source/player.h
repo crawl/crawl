@@ -824,9 +824,10 @@ public:
     void ablate_deflection() override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const override;
-    int adjusted_body_armour_penalty(int scale = 1) const override;
-    int adjusted_shield_penalty(int scale = 1) const override;
+    int unadjusted_body_armour_penalty() const;
+    fixedp<> adjusted_body_armour_penalty() const;
+
+    fixedp<> adjusted_shield_penalty() const;
     float get_shield_skill_to_offset_penalty(const item_def &item);
     int armour_tohit_penalty(bool random_factor, int scale = 1) const override;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const override;
@@ -835,6 +836,13 @@ public:
     int  skill(skill_type skill, int scale =1,
                bool real = false, bool drained = true,
                bool temp=true) const override;
+
+    // TODO: convert skill calculation to real fixed point
+    template <int S> fixedp<int, S> skill(skill_type sk,
+                bool real = false, bool drained = true, bool temp=true) const
+    {
+        return fixedp<int, S>::from_scaled(skill(sk, S, real, drained, temp));
+    }
 
     bool do_shaft() override;
 

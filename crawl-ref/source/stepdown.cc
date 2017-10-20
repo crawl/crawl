@@ -9,6 +9,7 @@
 
 #include <cmath>
 
+#include "fixedp.h"
 #include "random.h"
 
 #ifdef __ANDROID__

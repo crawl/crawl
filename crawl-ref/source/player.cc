@@ -2096,9 +2096,9 @@ int player_shield_racial_factor()
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
-static int _player_adjusted_evasion_penalty(const int scale)
+static fixedp<> _player_adjusted_evasion_penalty()
 {
-    int piece_armour_evasion_penalty = 0;
+    fixedp<> piece_armour_evasion_penalty = 0;
 
     // Some lesser armours have small penalties now (barding).
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
@@ -2108,13 +2108,13 @@ static int _player_adjusted_evasion_penalty(const int scale)
 
         // [ds] Evasion modifiers for armour are negatives, change
         // those to positive for penalty calc.
-        const int penalty = (-property(you.inv[you.equip[i]], PARM_EVASION))/3;
+        const fixedp<> penalty =
+                (fixedp<>(-property(you.inv[you.equip[i]], PARM_EVASION))) / 3;
         if (penalty > 0)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return piece_armour_evasion_penalty * scale / 10 +
-           you.adjusted_body_armour_penalty(scale);
+    return piece_armour_evasion_penalty / 10 + you.adjusted_body_armour_penalty();
 }
 
 // Player EV bonuses for various effects and transformations. This
@@ -2149,7 +2149,7 @@ static int _player_evasion_bonuses()
 }
 
 // Player EV scaling for being flying tengu or swimming merfolk.
-static int _player_scale_evasion(int prescaled_ev, const int scale)
+static fixedp<> _player_scale_evasion(fixedp<> prescaled_ev)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
@@ -2159,14 +2159,14 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     // Merfolk get a 25% evasion bonus in water.
     if (you.fishtail)
     {
-        const int ev_bonus = max(2 * scale, prescaled_ev / 4);
+        const fixedp<> ev_bonus = max(2, prescaled_ev / 4);
         return prescaled_ev + ev_bonus;
     }
 
     // Flying Tengu get a 20% evasion bonus.
     if (you.tengu_flight())
     {
-        const int ev_bonus = max(1 * scale, prescaled_ev / 5);
+        const fixedp<> ev_bonus = max(1, prescaled_ev / 5);
         return prescaled_ev + ev_bonus;
     }
 
@@ -2197,12 +2197,13 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  * @param scale     A scale to multiply the result by, to avoid precision loss.
  * @return          A bonus to EV, multiplied by the scale.
  */
-static int _player_armour_adjusted_dodge_bonus(int scale)
+static fixedp<> _player_armour_adjusted_dodge_bonus()
 {
+    // TODO: fixedp stepdown for this step?
     const int ev_dex = stepdown(you.dex(), 18, ROUND_CLOSE, MAX_STAT_VALUE);
 
-    const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+    const fixedp<> dodge_bonus =
+        (70 + you.skill<100>(SK_DODGING) * 10 * ev_dex)
         / (20 - _player_evasion_size_factor()) / 10;
 
     const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
@@ -2216,9 +2217,9 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
 }
 
 // Total EV for player using the revised 0.6 evasion model.
-static int _player_evasion(ev_ignore_type evit)
+static fixedp<> _player_evasion(ev_ignore_type evit)
 {
-    const int size_factor = _player_evasion_size_factor();
+    const fixedp<> size_factor = fixedp<>(_player_evasion_size_factor());
     // Size is all that matters when paralysed or at 0 dex.
     if ((you.cannot_move() || you.duration[DUR_CLUMSY]
             || you.form == transformation::tree)
@@ -2227,30 +2228,28 @@ static int _player_evasion(ev_ignore_type evit)
         return max(1, 2 + size_factor / 2);
     }
 
-    const int scale = 100;
-    const int size_base_ev = (10 + size_factor) * scale;
+    const fixedp<> size_base_ev = (10 + size_factor);
 
-    const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
+    const fixedp<> vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 : 0;
 
-    const int prestepdown_evasion =
+    const fixedp<> prestepdown_evasion =
         size_base_ev
-        + _player_armour_adjusted_dodge_bonus(scale)
-        - _player_adjusted_evasion_penalty(scale)
-        - you.adjusted_shield_penalty(scale)
+        + _player_armour_adjusted_dodge_bonus()
+        - _player_adjusted_evasion_penalty()
+        - you.adjusted_shield_penalty()
         - vertigo_penalty;
 
-    const int poststepdown_evasion =
-        stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
+    const fixedp<> poststepdown_evasion =
+        prestepdown_evasion < 30 ? prestepdown_evasion :
+                        10 + stepdown<fixedp<>>(prestepdown_evasion - 10, 20);
 
-    const int evasion_bonuses = _player_evasion_bonuses() * scale;
+    const fixedp<> evasion_bonuses = _player_evasion_bonuses();
 
-    const int prescaled_evasion =
-        poststepdown_evasion + evasion_bonuses;
+    const fixedp<> prescaled_evasion = poststepdown_evasion + evasion_bonuses;
 
-    const int final_evasion =
-        _player_scale_evasion(prescaled_evasion, scale);
+    const fixedp<> final_evasion = _player_scale_evasion(prescaled_evasion);
 
-    return unscale_round_up(final_evasion, scale);
+    return final_evasion;
 }
 
 // Returns the spellcasting penalty (increase in spell failure) for the
@@ -2260,10 +2259,10 @@ int player_armour_shield_spell_penalty()
     const int scale = 100;
 
     const int body_armour_penalty =
-        max(19 * you.adjusted_body_armour_penalty(scale), 0);
+        max(19 * (int) (you.adjusted_body_armour_penalty() * scale), 0);
 
     const int total_penalty = body_armour_penalty
-                 + 19 * you.adjusted_shield_penalty(scale);
+                 + 19 * (int) (you.adjusted_shield_penalty() * scale);
 
     return max(total_penalty, 0) / scale;
 }
@@ -3405,7 +3404,7 @@ static void _display_attack_delay()
                          _attack_delay_desc(avg),
                          at_min_delay ?
                             " (and cannot be improved with additional weapon skill)" : "",
-                         you.adjusted_shield_penalty() ?
+                         you.adjusted_shield_penalty() > 0 ?
                             " (and is slowed by your insufficient shield skill)" : "");
 }
 
@@ -5714,15 +5713,27 @@ int player::unadjusted_body_armour_penalty() const
  * @return          A penalty to EV based quadratically on body armour
  *                  encumbrance.
  */
-int player::adjusted_body_armour_penalty(int scale) const
+fixedp<> player::adjusted_body_armour_penalty() const
 {
-    const int base_ev_penalty =
+    // we use a higher internal precision because of all the division; in
+    // testing this actually makes a small difference for very heavy armour if
+    // the division isn't carefully ordered. With a scale of 1000, it doesn't
+    // much matter how you order it.
+
+    const fixedp<int, 1000> base_ev_penalty =
         max(0, unadjusted_body_armour_penalty()
                    - get_mutation_level(MUT_STURDY_FRAME) * 2);
 
-    // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
-           * scale / (5 * (strength() + 3)) / 450;
+    // max 40% penalty reduction from armour skill
+    const auto armour_mult = ((45 - skill<1000>(SK_ARMOUR)) / 45);
+
+    const int strength_div = strength() + 3;
+
+    // This formula is: (2/5) * ((45 - armour_skill) / 45) * evp^2 / (str+3)
+    const auto ret = (fixedp<int, 1000>(2) / 5) *
+                base_ev_penalty * base_ev_penalty * armour_mult / strength_div;
+
+    return fixedp<>(ret);
 }
 
 /**
@@ -5731,15 +5742,15 @@ int player::adjusted_body_armour_penalty(int scale) const
  * @param scale     A scale to multiply the result by, to avoid precision loss.
  * @return          A penalty to EV based on shield weight.
  */
-int player::adjusted_shield_penalty(int scale) const
+fixedp<> player::adjusted_shield_penalty() const
 {
     const item_def *shield_l = slot_item(EQ_SHIELD, false);
     if (!shield_l)
         return 0;
 
-    const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
-                  / player_shield_racial_factor() * 10) / 10);
+    const fixedp<> base_shield_penalty(-property(*shield_l, PARM_EVASION));
+    return max(0, ((base_shield_penalty) - skill<100>(SK_SHIELDS)
+                  / fixedp<>(player_shield_racial_factor()) * 10) / 10);
 }
 
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
@@ -5750,12 +5761,12 @@ float player::get_shield_skill_to_offset_penalty(const item_def &item)
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const
 {
-    return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
+    return maybe_roll_dice(1, (int) (adjusted_body_armour_penalty() * scale), random_factor);
 }
 
 int player::shield_tohit_penalty(bool random_factor, int scale) const
 {
-    return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
+    return maybe_roll_dice(1, (int) (adjusted_shield_penalty() * scale), random_factor);
 }
 
 /**
@@ -5847,8 +5858,8 @@ fixedp<> player::base_ac_from(const item_def &armour) const
     const fixedp<> base(property(armour, PARM_AC));
 
     // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
-    const fixedp<> AC = base * 
-                    (22 + fixedp<>::from_scaled(skill(SK_ARMOUR, 100))) / 22;
+    const fixedp<> AC = base *
+                    (22 + skill<100>(SK_ARMOUR)) / 22;
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
@@ -6050,7 +6061,7 @@ int player::gdr_perc() const
  */
 int player::evasion(ev_ignore_type evit, const actor* act) const
 {
-    const int base_evasion = _player_evasion(evit);
+    const fixedp<> base_evasion = _player_evasion(evit);
 
     const int constrict_penalty = is_constricted() ? 3 : 0;
 
@@ -6058,7 +6069,8 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
                               10 : 0;
 
-    return base_evasion - constrict_penalty - invis_penalty;
+    // TODO: does ceiling really make sense here?
+    return ((int) ceil(base_evasion)) - constrict_penalty - invis_penalty;
 }
 
 bool player::heal(int amount)

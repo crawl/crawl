@@ -509,9 +509,6 @@ public:
     void    ablate_deflection() override;
 
     // Combat-related class methods
-    int     unadjusted_body_armour_penalty() const override { return 0; }
-    int     adjusted_body_armour_penalty(int) const override { return 0; }
-    int     adjusted_shield_penalty(int) const override { return 0; }
     int     armour_tohit_penalty(bool, int) const override { return 0; }
     int     shield_tohit_penalty(bool, int) const override { return 0; }
 

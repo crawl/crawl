@@ -240,7 +240,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
-    const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
+    const int base_shield_penalty = (int) (adjusted_shield_penalty() * DELAY_SCALE);
 
     if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
     {

@@ -273,9 +273,6 @@ public:
     virtual void ablate_deflection() = 0;
 
     // Combat-related virtual class methods
-    virtual int unadjusted_body_armour_penalty() const = 0;
-    virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
-    virtual int adjusted_shield_penalty(int scale) const = 0;
     virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
     virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
