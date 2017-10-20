@@ -406,9 +406,6 @@ int list_wizard_commands(bool do_redraw_screen)
 {
     // 2 columns
     column_composer cols(2, 44);
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines());
-
     cols.add_formatted(0,
                        "<yellow>Player stats</yellow>\n"
                        "<w>A</w>      set all skills to level\n"
