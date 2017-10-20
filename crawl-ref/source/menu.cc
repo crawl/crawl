@@ -1760,7 +1760,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    : pagesize(0), columns()
+    : columns()
 {
     ASSERT(cols > 0);
 
@@ -1781,11 +1781,6 @@ column_composer::column_composer(int cols, ...)
     va_end(args);
 }
 
-void column_composer::set_pagesize(int ps)
-{
-    pagesize = ps;
-}
-
 void column_composer::clear()
 {
     flines.clear();
@@ -1804,8 +1799,7 @@ void column_composer::add_formatted(int ncol,
     vector<formatted_string> newlines;
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
-    if (add_separator && col.lines && !segs.empty()
-        && (!pagesize || col.lines % pagesize))
+    if (add_separator && col.lines && !segs.empty())
     {
         newlines.emplace_back();
     }
