@@ -626,13 +626,6 @@ void full_describe_view()
     desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
     desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list_mons.size() + list_items.size() + list_features.size() > 52
-        && (desc_menu.maxpagesize() > 52 || desc_menu.maxpagesize() == 0))
-    {
-        desc_menu.set_maxpagesize(52);
-    }
-
     // Start with hotkey 'a' and count from there.
     menu_letter hotkey;
     // Build menu entries for monsters.

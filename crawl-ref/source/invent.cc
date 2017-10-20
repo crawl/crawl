@@ -847,10 +847,6 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         }
     }
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (mitems.size() > 52 && (max_pagesize > 52 || max_pagesize == 0))
-        set_maxpagesize(52);
-
     return ckey;
 }
 
