@@ -527,8 +527,6 @@ public:
 
     vector<formatted_string> formatted_lines() const;
 
-    void set_pagesize(int pagesize);
-
 private:
     struct column;
     void compose_formatted_column(
@@ -546,7 +544,6 @@ private:
         column(int marg = 1) : margin(marg), lines(0) { }
     };
 
-    int pagesize;
     vector<column> columns;
     vector<formatted_string> flines;
 };
