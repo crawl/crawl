@@ -12,9 +12,9 @@
  *
  * This class is a minimalist wrapper around the way that DCSS already
  * approaches fixed point calculations, namely by using an integer value
- * multiplied by some scale parameter.  It's not a "real" general-purpose
+ * multiplied by some scale parameter. It's not a "real" general-purpose
  * fixed-point library; see e.g. https://github.com/johnmcfarlane/fixed_point
- * and https://github.com/johnmcfarlane/cnl.  Unfortunately the fixed point
+ * and https://github.com/johnmcfarlane/cnl. Unfortunately the fixed point
  * ecosystem is in something of a state of flux, and I decided that none of
  * the existing heavier libraries were ready to use (let alone easy to use),
  * hence this one. This differs from the code it is replacing in one qualitative
@@ -29,7 +29,7 @@
  * a C++ standard and this can be replaced.
  *
  * This implements most operators you would want, as well as many cmath-style
- * functions.  Casts out of fixedp are all explicit, but this allows implicit
+ * functions. Casts out of fixedp are all explicit, but this allows implicit
  * casts from int, long, and float.
  *
  * operators: +=, -=, *=, /=, +, -, *, /, <, <=, >, >=, ==, !=, <<, unary -,
@@ -38,7 +38,7 @@
  * casts: explicit casts to int, long, bool, float. int and long use trancating
  * behavior.
  *
- * constructors: int, long, unsigned int, unsigned long, float, double.  See
+ * constructors: int, long, unsigned int, unsigned long, float, double. See
  * also the static factory functions from_scaled, from_basetype, and
  * from_fixedp (which allows converting between precisions).
  *
@@ -141,11 +141,11 @@ public:
     /**
      * Construct a fixedp from an integer plus a fraction of Scale. This does
      * no sanity checking on frac, so use it carefully. In particular,
-     * int_part and frac should have the same sign, and frac should be < 
+     * int_part and frac should have the same sign, and frac should be <
      * int_part.
      */
-    constexpr fixedp(int int_part, int frac) 
-        : content(static_cast<BaseType>(int_part) * 
+    constexpr fixedp(int int_part, int frac)
+        : content(static_cast<BaseType>(int_part) *
                     static_cast<BaseType>(Scale) + static_cast<BaseType>(frac))
     {
     }
@@ -190,7 +190,7 @@ public:
         static fixedp from_fixedp(fixedp<BaseType, OtherScale> n)
     {
         // TODO: conversion across BaseTypes?
-        return (fixedp<BaseType, Scale>::from_basetype(n.frac_part(true), 0) 
+        return (fixedp<BaseType, Scale>::from_basetype(n.frac_part(true), 0)
                             / OtherScale)
                 + fixedp<BaseType, Scale>::from_basetype(n.integral_part(), 0);
     }
@@ -319,7 +319,7 @@ public:
     }
     explicit operator float() const
     {
-        return static_cast<float>(integral_part()) + 
+        return static_cast<float>(integral_part()) +
             static_cast<float>(frac_part(true) / static_cast<float>(Scale));
     }
     explicit operator double() const
@@ -339,7 +339,7 @@ public:
     {
         // TODO: chop trailing zeros / adjust precision?
         // would prefer %g behavior here. stream works better...
-        return std::to_string((float) *this);        
+        return std::to_string((float) *this);
     }
     explicit operator std::string() const
     {
@@ -399,7 +399,7 @@ public:
     {
         static_assert(std::is_signed<BaseType>(),
             "Using unary - with fixedp requires a signed BaseType.");
-        
+
         // Even without the static_assert above, this will produce an error on
         // unsigned types, because the cast to a signed type implied by - (by
         // way of abs) is ambiguous.  see abs()
@@ -674,7 +674,7 @@ public:
         assert((test / -100) * 100 == -117);
         assert((-test / 100) * 100 == -117);
         assert((-test / -100) * 100 == 117);
-        
+
         // comparison with explicit casts to fixedp
         // didn't bother to do this thoroughly
         assert(15.0 + 12.2 == fixedp<>(27.2));
@@ -717,4 +717,3 @@ public:
 
 // round by default
 template <typename BaseType, int Scale> bool fixedp<BaseType, Scale>::rounding = true;
-
