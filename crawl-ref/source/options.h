@@ -236,6 +236,8 @@ public:
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     confirm_butcher_type confirm_butcher; // When to prompt for butchery
     hunger_state_t auto_butcher; // auto-butcher corpses while travelling
+    int         auto_butcher_max_chunks; // if nonzero, only auto-butcher if player
+                                         // has fewer than this many chunks
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
