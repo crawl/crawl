@@ -383,11 +383,9 @@ public:
     int get_pagesize() const { return pagesize; }
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
-    typedef void (*drawitem_tfn)(int index, const MenuEntry *me);
     typedef int (*keyfilter_tfn)(int keyin);
 
     selitem_tfn      f_selitem;
-    drawitem_tfn     f_drawitem;
     keyfilter_tfn    f_keyfilter;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
