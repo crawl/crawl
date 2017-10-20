@@ -335,7 +335,7 @@ public:
 
     // Sets menu flags to new_flags. If use_options is true, game options may
     // override options.
-    void set_flags(int new_flags, bool use_options = true);
+    virtual void set_flags(int new_flags, bool use_options = true);
     int  get_flags() const        { return flags; }
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
@@ -564,6 +564,7 @@ class formatted_scroller : public Menu
 public:
     formatted_scroller();
     formatted_scroller(int flags, const string& s);
+    virtual void set_flags(int new_flags, bool use_options = true) override;
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
     virtual void wrap_formatted_string(const formatted_string& s,
