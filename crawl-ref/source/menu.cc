@@ -2081,7 +2081,7 @@ bool formatted_scroller::line_down()
             return false;
     }
     ++first_entry;
-    return false;
+    return true;
 }
 
 bool formatted_scroller::line_up()
