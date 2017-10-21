@@ -721,6 +721,21 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 }
 
 /**
+ * Generate a ?/B menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+#ifdef USE_TILE
+    const branch_type branch = branch_by_shortname(str);
+    me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
+#endif
+
+    return me;
+}
+
+/**
  * Generate a ?/L menu entry. (ref. _simple_menu_gen()).
  */
 static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
@@ -1265,9 +1280,9 @@ static const vector<LookupType> lookup_types = {
                _describe_god,
                lookup_type::support_tiles),
     LookupType('B', "branch", nullptr, nullptr,
-               nullptr, _get_branch_keys, _simple_menu_gen,
+               nullptr, _get_branch_keys, _branch_menu_gen,
                _describe_branch,
-               lookup_type::disable_sort),
+               lookup_type::disable_sort | lookup_type::support_tiles),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
