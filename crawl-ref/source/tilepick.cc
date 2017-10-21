@@ -3525,6 +3525,82 @@ tileidx_t tileidx_ability(const ability_type ability)
     }
 }
 
+tileidx_t tileidx_branch(const branch_type br)
+{
+    switch (br)
+    {
+    case BRANCH_DUNGEON:
+        return TILE_DNGN_EXIT_DUNGEON;
+    case BRANCH_TEMPLE:
+        return TILE_DNGN_ENTER_TEMPLE;
+    case BRANCH_ORC:
+        return TILE_DNGN_ENTER_ORC;
+    case BRANCH_ELF:
+        return TILE_DNGN_ENTER_ELF;
+    case BRANCH_LAIR:
+        return TILE_DNGN_ENTER_LAIR;
+    case BRANCH_SWAMP:
+        return TILE_DNGN_ENTER_SWAMP;
+    case BRANCH_SHOALS:
+        return TILE_DNGN_ENTER_SHOALS;
+    case BRANCH_SNAKE:
+        return TILE_DNGN_ENTER_SNAKE;
+    case BRANCH_SPIDER:
+        return TILE_DNGN_ENTER_SPIDER;
+    case BRANCH_SLIME:
+        return TILE_DNGN_ENTER_SLIME;
+    case BRANCH_VAULTS:
+        return TILE_DNGN_ENTER_VAULTS_OPEN;
+    case BRANCH_CRYPT:
+        return TILE_DNGN_ENTER_CRYPT;
+    case BRANCH_TOMB:
+        return TILE_DNGN_ENTER_TOMB;
+    case BRANCH_DEPTHS:
+        return TILE_DNGN_ENTER_DEPTHS;
+    case BRANCH_VESTIBULE:
+        return TILE_DNGN_ENTER_HELL;
+    case BRANCH_DIS:
+        return TILE_DNGN_ENTER_DIS;
+    case BRANCH_GEHENNA:
+        return TILE_DNGN_ENTER_GEHENNA;
+    case BRANCH_COCYTUS:
+        return TILE_DNGN_ENTER_COCYTUS;
+    case BRANCH_TARTARUS:
+        return TILE_DNGN_ENTER_TARTARUS;
+    case BRANCH_ZOT:
+        return TILE_DNGN_ENTER_ZOT_OPEN;
+    case BRANCH_ABYSS:
+        return TILE_DNGN_ENTER_ABYSS;
+    case BRANCH_PANDEMONIUM:
+        return TILE_DNGN_ENTER_PANDEMONIUM;
+    case BRANCH_ZIGGURAT:
+        return TILE_DNGN_PORTAL_ZIGGURAT;
+    case BRANCH_LABYRINTH:
+        return TILE_DNGN_PORTAL_LABYRINTH;
+    case BRANCH_BAZAAR:
+        return TILE_DNGN_PORTAL_BAZAAR;
+    case BRANCH_TROVE:
+        return TILE_DNGN_PORTAL_TROVE;
+    case BRANCH_SEWER:
+        return TILE_DNGN_PORTAL_SEWER;
+    case BRANCH_OSSUARY:
+        return TILE_DNGN_PORTAL_OSSUARY;
+    case BRANCH_BAILEY:
+        return TILE_DNGN_PORTAL_BAILEY;
+    case BRANCH_ICE_CAVE:
+        return TILE_DNGN_PORTAL_ICE_CAVE;
+    case BRANCH_VOLCANO:
+        return TILE_DNGN_PORTAL_VOLCANO;
+    case BRANCH_WIZLAB:
+        return TILE_DNGN_PORTAL_WIZARD_LAB_7; /* I like this colour */
+    case BRANCH_DESOLATION:
+        return TILE_DNGN_PORTAL_DESOLATION;
+
+    default:
+        return TILEG_ERROR;
+    }
+}
+
 tileidx_t tileidx_known_brand(const item_def &item)
 {
     if (!item_type_known(item))
