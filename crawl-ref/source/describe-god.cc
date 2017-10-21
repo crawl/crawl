@@ -814,7 +814,7 @@ static void _describe_god_powers(god_type which_god)
     {
         have_any = true;
         const char *how =
-            (piety >= piety_breakpoint(5)) ? "carefully" :
+            (piety >= piety_breakpoint(5)) ? "always" :
             (piety >= piety_breakpoint(3)) ? "often" :
             (piety >= piety_breakpoint(1)) ? "sometimes" :
                                              "occasionally";
