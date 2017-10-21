@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "food.h"
+#include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -233,7 +234,8 @@ bool is_chaotic_item(const item_def& item)
         retval = (item.sub_type == WAND_POLYMORPH);
         break;
     case OBJ_POTIONS:
-        retval = item.sub_type == POT_MUTATION
+        retval = (item.sub_type == POT_MUTATION
+                            && !have_passive(passive_t::cleanse_mut_potions))
                  || item.sub_type == POT_LIGNIFY;
         break;
     case OBJ_BOOKS:
