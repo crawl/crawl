@@ -3341,6 +3341,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_MUTATION:
+            if (have_passive(passive_t::cleanse_mut_potions))
+                return false;
+            // intentional fallthrough
         case POT_LIGNIFY:
             return true;
         default:
