@@ -1716,13 +1716,13 @@ void Menu::webtiles_update_section_boundaries()
     {
         _webtiles_section_start = first_entry;
         while (_webtiles_section_start > 0
-               && items[_webtiles_section_start - 1]->level != MEL_TITLE)
+               && items[_webtiles_section_start - 1]->level != MEL_END_OF_SECTION)
         {
             _webtiles_section_start--;
         }
         _webtiles_section_end = min(first_entry + 1, (int) items.size());
         while (_webtiles_section_end < (int) items.size()
-               && items[_webtiles_section_end]->level != MEL_TITLE)
+               && items[_webtiles_section_end]->level != MEL_END_OF_SECTION)
         {
             _webtiles_section_end++;
         }
