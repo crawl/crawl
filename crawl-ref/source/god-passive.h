@@ -141,6 +141,9 @@ enum class passive_t
     /// Warning about shapeshifters when they come to view.
     warn_shapeshifter,
 
+    /// Cleanse mutation potions (they only delete mutations).
+    cleanse_mut_potions,
+
     /// Torment resistance, piety dependent.
     resist_torment,
 

@@ -92,7 +92,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     { },
 
     // Zin
-    { { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
+    { { 5, "Zin will cleanse your potions of mutation."},
+      { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
       { 2, ABIL_ZIN_VITALISATION, "call upon Zin for vitalisation" },
       { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
       { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
