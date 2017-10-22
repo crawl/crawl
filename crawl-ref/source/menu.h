@@ -271,45 +271,11 @@ enum MenuFlag
     MF_START_AT_END     = 0x2000,   ///< Scroll to end of list
     MF_PRESELECTED      = 0x4000,   ///< Has a preselected entry.
     MF_QUIET_SELECT     = 0x8000,   ///< No selection box and no count.
+
+    MF_USE_TWO_COLUMNS  = 0x10000,  ///< Only valid for tiles menus
 };
 
-class MenuDisplay
-{
-public:
-    MenuDisplay(Menu *menu) : m_menu(menu) {};
-    virtual ~MenuDisplay() {}
-    virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
-    virtual void set_offset(int lines) = 0;
-    virtual void draw_more() = 0;
-    virtual int get_maxpagesize() = 0;
-    virtual void set_num_columns(int columns) = 0;
-protected:
-    Menu *m_menu;
-};
-
-class MenuDisplayText : public MenuDisplay
-{
-public:
-    MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1) {};
-    virtual void draw_stock_item(int index, const MenuEntry *me) override;
-    virtual void draw_more() override;
-    virtual int get_maxpagesize() override;
-    virtual void set_offset(int lines) override { m_starty = lines; }
-    virtual void set_num_columns(int columns) override {}
-protected:
-    int m_starty;
-};
-
-class MenuDisplayTile : public MenuDisplay
-{
-public:
-    MenuDisplayTile(Menu *menu) : MenuDisplay(menu) {};
-    virtual void draw_stock_item(int index, const MenuEntry *me) override;
-    virtual void set_offset(int lines) override;
-    virtual int get_maxpagesize() override;
-    virtual void draw_more() override;
-    virtual void set_num_columns(int columns) override;
-};
+class MenuDisplay;
 
 ///////////////////////////////////////////////////////////////////////
 // NOTE
@@ -324,6 +290,8 @@ public:
 
 class Menu
 {
+    friend class MenuDisplayText;
+    friend class MenuDisplayTile;
 public:
     Menu(int flags = MF_MULTISELECT, const string& tagname = "",
          bool text_only = true);
@@ -360,8 +328,6 @@ public:
     void get_selected(vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
-    int maxpagesize() const { return max_pagesize; }
-
     void set_select_filter(vector<text_pattern> filter)
     {
         select_filter = filter;
@@ -378,9 +344,9 @@ public:
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
     int get_entry_index(const MenuEntry *e) const;
 
+    int get_first_visible() const;
+
     virtual int item_colour(int index, const MenuEntry *me) const;
-    int get_y_offset() const { return y_offset; }
-    int get_pagesize() const { return pagesize; }
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
     typedef int (*keyfilter_tfn)(int keyin);
@@ -403,8 +369,8 @@ protected:
     int flags;
     string tag;
 
-    int first_entry, y_offset;
-    int pagesize, max_pagesize;
+    int cur_page;
+    int num_pages;
 
     formatted_string more;
 
@@ -429,12 +395,10 @@ protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
-    void recalculate_page_sizes();
     virtual string get_select_count_string(int count) const;
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
-    virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);
@@ -574,14 +538,10 @@ public:
     int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:
-    virtual bool page_down() override;
-    virtual bool line_down() override;
-    virtual bool page_up() override;
-    virtual bool line_up() override;
 
     virtual void draw_index_item(int index, const MenuEntry* me) const override;
     virtual bool process_key(int keyin) override;
-    bool jump_to(int linenum);
+    bool jump_to(int linenum, bool no_scroll = false);
 
 #ifdef USE_TILE_WEB
     virtual void webtiles_write_item(int index,
