@@ -517,6 +517,10 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
+    case CK_HOME:
+        list_commands(0, true);
+        return -1;
+
     case '#':
         // If the game has begun, show dump.
         if (crawl_state.need_save)

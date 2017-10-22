@@ -13,6 +13,7 @@
 #include "tilefont.h"
 
 MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
+    cur_page(1), num_pages(0),
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
     m_max_columns(1), m_dirty(false), m_font_buf(entry)
 {
@@ -43,7 +44,8 @@ int MenuRegion::mouse_entry(int x, int y)
         const auto &entry = m_entries[i];
         if (!entry.valid)
             continue;
-
+        if (entry.page != cur_page)
+            continue;
         if (x >= entry.sx && x <= entry.ex && y >= entry.sy && y <= entry.ey)
             return i;
     }
@@ -121,6 +123,15 @@ void MenuRegion::place_entries()
     _place_entries(0, 0, mx);
 }
 
+static bool _has_hotkey_prefix(const string &s)
+{
+    // [enne] - Ugh, hack. Maybe MenuEntry could specify the
+    // presence and length of this substring?
+    bool let = (s[1] >= 'a' && s[1] <= 'z' || s[1] >= 'A' && s[1] <= 'Z');
+    bool plus = (s[3] == '-' || s[3] == '+');
+    return let && plus && s[0] == ' ' && s[2] == ' ' && s[4] == ' ';
+}
+
 void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                                 const int menu_width)
 {
@@ -139,6 +150,8 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
     const int max_columns  = min(2, m_max_columns);
     const int column_width = menu_width / max_columns;
 
+    int page = 1;
+
     int lines = count_linebreaks(m_more);
     int more_height = (lines + 1) * m_font_entry->char_height();
     m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
@@ -152,9 +165,11 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
 
     const int max_entry_height = max((int)m_font_entry->char_height() * 2,
                                      max_tile_height);
+    bool used_hotkeys[52] = {0};
 
-    for (MenuRegionEntry &entry : m_entries)
+    for (int index = 0; index < (int)m_entries.size(); ++index)
     {
+        MenuRegionEntry &entry = m_entries[index];
         if (!entry.valid)
         {
             entry.sx = 0;
@@ -164,11 +179,40 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             continue;
         }
 
+        // XXX: is this sufficient?
+        if (!entry.heading && _has_hotkey_prefix(entry.text.tostring()))
+        {
+            int i = entry.text[1] - (entry.text[1] >= 'a' ? ('a'-26) : 'A');
+            ASSERT_RANGE(i, 0, 52);
+            if (used_hotkeys[i])
+            {
+                height = top_offset;
+                column = 0;
+                page++;
+                memset(used_hotkeys, 0, sizeof(used_hotkeys));
+            }
+            used_hotkeys[i] = true;
+        }
+
         if (height + max_entry_height > end_height && column <= max_columns)
         {
             height = top_offset;
             column++;
+            if (column == max_columns)
+            {
+                column = 0;
+                page++;
+                memset(used_hotkeys, 0, sizeof(used_hotkeys));
+            }
         }
+
+        // Track the indices of the first and last visible items
+        if (height == top_offset && column == 0 && page == cur_page)
+            vis_item_first = index;
+        if (page == cur_page)
+            vis_item_last = index;
+
+        entry.page = page;
 
         int text_width  = m_font_entry->string_width(entry.text);
         int text_height = m_font_entry->char_height();
@@ -192,12 +236,14 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                 entry.ex = w;
                 entry.ey = entry.sy + string_height;
 
-                m_font_buf.add(split, entry.sx, entry.sy);
+                if (entry.page == cur_page)
+                    m_font_buf.add(split, entry.sx, entry.sy);
                 height += string_height;
             }
             else
             {
-                m_font_buf.add(entry.text, entry.sx, entry.sy);
+                if (entry.page == cur_page)
+                    m_font_buf.add(entry.text, entry.sx, entry.sy);
                 height += text_height;
             }
         }
@@ -214,14 +260,15 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                 entry.sx = entry_start + tile_indent;
                 entry_height = max(max_tile_height, text_height);
 
-                for (const tile_def &tile : entry.tiles)
-                {
-                    // NOTE: This is not perfect. Tiles will be drawn
-                    // sorted by texture first, e.g. you can never draw
-                    // a dungeon tile over a monster tile.
-                    TextureID tex  = tile.tex;
-                    m_tile_buf[tex].add(tile.tile, entry.sx, entry.sy, 0, 0, false, tile.ymax, 1, 1);
-                }
+                if (entry.page == cur_page)
+                    for (const tile_def &tile : entry.tiles)
+                    {
+                        // NOTE: This is not perfect. Tiles will be drawn
+                        // sorted by texture first, e.g. you can never draw
+                        // a dungeon tile over a monster tile.
+                        TextureID tex  = tile.tex;
+                        m_tile_buf[tex].add(tile.tile, entry.sx, entry.sy, 0, 0, false, tile.ymax, 1, 1);
+                    }
             }
             else
             {
@@ -236,19 +283,12 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             if (Options.tile_menu_icons
                 && text_sx + text_width > entry_start + column_width)
             {
-                // [enne] - Ugh, hack. Maybe MenuEntry could specify the
-                // presence and length of this substring?
-                string unfm = entry.text.tostring();
-                bool let = (unfm[1] >= 'a' && unfm[1] <= 'z'
-                            || unfm[1] >= 'A' && unfm[1] <= 'Z');
-                bool plus = (unfm[3] == '-' || unfm[3] == '+');
-
                 formatted_string text;
-                if (let && plus && unfm[0] == ' ' && unfm[2] == ' '
-                    && unfm[4] == ' ')
+                if (_has_hotkey_prefix(entry.text.tostring()))
                 {
                     formatted_string header = entry.text.chop(5);
-                    m_font_buf.add(header, text_sx, text_sy);
+                    if (entry.page == cur_page)
+                        m_font_buf.add(header, text_sx, text_sy);
                     text_sx += m_font_entry->string_width(header);
                     text = entry.text;
                     // remove hotkeys. As Enne said above, this is a monstrosity.
@@ -266,7 +306,8 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                 if (string_height > entry_height)
                     text_sy = entry.sy;
 
-                m_font_buf.add(split, text_sx, text_sy);
+                if (entry.page == cur_page)
+                    m_font_buf.add(split, text_sx, text_sy);
 
                 entry_height = max(entry_height, string_height);
                 entry.ex = entry_start + column_width - tile_indent;
@@ -274,13 +315,14 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             else
             {
                 entry.ex = entry_start + column_width - tile_indent;
-                m_font_buf.add(entry.text, text_sx, text_sy);
+                if (entry.page == cur_page)
+                    m_font_buf.add(entry.text, text_sx, text_sy);
             }
 
             entry.ey = entry.sy + entry_height;
             height = entry.ey;
         }
-        if (entry.selected)
+        if (entry.selected && entry.page == cur_page)
         {
             m_shape_buf.add(entry.sx-1, entry.sy-1,
                             entry.ex+1, entry.ey+1,
@@ -289,6 +331,22 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
 
         height += entry_buffer;
     }
+
+    num_pages = page;
+    // XXX: layout and buffer packing are currently intertwined above
+    // if we finish layout and then discover that the current page no
+    // longer exists (e.g. we were on the last page and the window was
+    // enlarged), the buffers will be empty, and we need to relayout
+    if (cur_page > num_pages && num_pages > 0) {
+        cur_page = num_pages;
+        place_entries();
+    }
+}
+
+void MenuRegion::get_visible_items_range(int &first, int &last)
+{
+    first = vis_item_first;
+    last = vis_item_last;
 }
 
 void MenuRegion::render()
@@ -355,6 +413,7 @@ void MenuRegion::set_entry(int idx, const string &str, int colour,
     e.sx = e.sy = e.ex = e.ey = 0;
     e.tiles.clear();
     me->get_tiles(e.tiles);
+    e.page = 0;
 
     m_dirty = true;
 }
@@ -364,31 +423,6 @@ void MenuRegion::on_resize()
     // Probably needed, even though for me nothing went wrong when
     // I commented it out. (jpeg)
     m_dirty = true;
-}
-
-int MenuRegion::maxpagesize() const
-{
-    // TODO enne - this is a conservative guess.
-    // It would be better to make menus use a dynamic number of items per page,
-    // but it'd require a lot more refactoring of menu.cc to handle that.
-
-    const int lines = count_linebreaks(m_more);
-    const int more_height = (lines + 1) * m_font_entry->char_height();
-
-    // Similar to the definition of max_entry_height in place_entries().
-    // HACK: Increasing height by 1 to make sure all items actually fit
-    //       on the page, though this introduces a few too many empty lines.
-    const int div = (Options.tile_menu_icons ? 32
-                                             : m_font_entry->char_height() + 1);
-
-    const int pagesize = ((my - more_height) / div) * m_max_columns;
-
-    // Upper limit for inventory menus. (jpeg)
-    // Non-inventory menus only have one column and need
-    // *really* big screens to cover more than 52 lines.
-    if (pagesize > 52)
-        return 52;
-    return pagesize;
 }
 
 void MenuRegion::set_offset(int lines)

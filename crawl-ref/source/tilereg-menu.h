@@ -5,10 +5,9 @@
 
 #include "fixedvector.h"
 #include "format.h"
+#include "menu.h"
 #include "tilebuf.h"
 #include "tilereg.h"
-
-class MenuEntry;
 
 class MenuRegion : public ControlRegion
 {
@@ -19,22 +18,29 @@ public:
     virtual void render() override;
     virtual void clear() override;
 
-    int maxpagesize() const;
     void set_entry(int index, const string &s, int colour, const MenuEntry *me,
                    bool mark_selected = true);
     void set_offset(int lines);
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);
+
+    void get_visible_items_range(int &first, int &last);
+
+    int cur_page;
+    int num_pages;
+
+    virtual void place_entries();
 protected:
     virtual void on_resize() override;
-    virtual void place_entries();
     int mouse_entry(int x, int y);
+    int vis_item_first, vis_item_last;
 
     struct MenuRegionEntry
     {
         formatted_string text;
         int colour; // keep it separate from text
         int sx, ex, sy, ey;
+        int page;
         bool selected;
         bool heading;
         char key;
