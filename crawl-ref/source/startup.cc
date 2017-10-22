@@ -147,7 +147,6 @@ static void _initialize()
 
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled
-        && !Options.tile_skip_title
         && crawl_state.title_screen)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
