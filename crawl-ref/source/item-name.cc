@@ -2607,7 +2607,7 @@ void check_item_knowledge(bool unknown_items)
                              ' ') + prompt;
 
     menu.set_preselect(&selected_items);
-    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING
+    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
                     | ((unknown_items) ? MF_NOSELECT
                                        : MF_MULTISELECT | MF_ALLOW_FILTER));
     menu.set_type(MT_KNOW);

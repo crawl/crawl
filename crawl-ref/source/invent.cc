@@ -309,8 +309,8 @@ InvMenu::InvMenu(int mflags)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
+        set_flags(mflags | MF_USE_TWO_COLUMNS);
 #endif
-        mdisplay->set_num_columns(2);
 
     InvEntry::set_show_cursor(false);
 }
@@ -979,6 +979,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
         }
 
         new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
+        new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
