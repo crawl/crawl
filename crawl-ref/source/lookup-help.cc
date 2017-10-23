@@ -643,6 +643,26 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 }
 
 /**
+ * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+#ifdef USE_TILE
+    item_def item;
+    item_kind kind = item_kind_by_name(key);
+    get_item_by_name(&item, key.c_str(), kind.base_type);
+    item_colour(item);
+    tileidx_t idx = tileidx_item(get_item_info(item));
+    tileidx_t base_item = tileidx_known_base_item(idx);
+    if (base_item)
+        me->add_tile(tile_def(base_item, TEX_DEFAULT));
+    me->add_tile(tile_def(idx, TEX_DEFAULT));
+#endif
+    return me;
+}
+
+/**
  * Generate a ?/F menu entry. (ref. _simple_menu_gen()).
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
@@ -1268,9 +1288,9 @@ static const vector<LookupType> lookup_types = {
                _describe_card,
                lookup_type::db_suffix),
     LookupType('I', "item", nullptr, _item_filter,
-               item_name_list_for_glyph, nullptr, _simple_menu_gen,
+               item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item,
-               lookup_type::none),
+               lookup_type::none | lookup_type::support_tiles),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_generic,
