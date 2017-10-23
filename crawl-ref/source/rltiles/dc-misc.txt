@@ -232,3 +232,5 @@ error ERROR
 %rim 1
 todo TODO
 %rim 0
+
+item/misc/misc_card MISC_CARD
