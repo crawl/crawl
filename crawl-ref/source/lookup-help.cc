@@ -45,6 +45,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tile-flags.h"
+#include "tiledef-main.h"
 #include "tilepick.h"
 #include "tileview.h"
 #endif
@@ -708,6 +709,18 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 }
 
 /**
+ * Generate a ?/C menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+#ifdef USE_TILE
+    me->add_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+#endif
+    return me;
+}
+
+/**
  * Generate a ?/S menu entry. (ref. _simple_menu_gen()).
  */
 static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
@@ -1284,9 +1297,9 @@ static const vector<LookupType> lookup_types = {
                _describe_generic,
                lookup_type::db_suffix | lookup_type::support_tiles),
     LookupType('C', "card", _recap_card_keys, _card_filter,
-               nullptr, nullptr, _simple_menu_gen,
+               nullptr, nullptr, _card_menu_gen,
                _describe_card,
-               lookup_type::db_suffix),
+               lookup_type::db_suffix | lookup_type::support_tiles),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item,
