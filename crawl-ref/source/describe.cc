@@ -2551,6 +2551,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
                                      || crawl_state.updating_scores);
         vector<command_type> actions;
         formatted_scroller menu;
+        menu.set_flags(MF_SINGLESELECT);
         menu.add_text(desc, false, get_number_of_cols());
         if (do_actions)
         {
