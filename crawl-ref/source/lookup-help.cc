@@ -279,7 +279,7 @@ public:
 
         for (unsigned int i = 0, size = items.size(); i < size; i++)
         {
-            const char letter = index_to_letter(i);
+            const char letter = index_to_letter(i % 52);
 
             items[i]->hotkeys.clear();
             items[i]->add_hotkey(letter);
@@ -891,16 +891,19 @@ void LookupType::display_keys(vector<string> &key_list) const
     true;
 #endif
 
-    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
-                       toggleable_sort(), text_only);
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+#ifdef USE_TILE_LOCAL
+            | (flags & lookup_type::support_tiles ? MF_USE_TWO_COLUMNS : 0)
+#endif
+            , toggleable_sort(), text_only);
     desc_menu.set_tag("description");
 
     // XXX: ugh
     const bool doing_mons = type == "monster";
-    monster_info monster_list[52];
+    vector<monster_info> monster_list(key_list.size());
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char letter = index_to_letter(i);
+        const char letter = index_to_letter(i % 52);
         string &key = key_list[i];
         // XXX: double ugh
         if (doing_mons)
@@ -1433,18 +1436,6 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
         if (by_symbol)
             return "No " + plur_type + " with symbol '" + regex + "'.";
         return "No matching " + plur_type + ".";
-    }
-
-    if (key_list.size() > 52)
-    {
-        if (by_symbol)
-        {
-            return "Too many " + plur_type + " with symbol '" + regex +
-                    "' to display.";
-        }
-
-        return make_stringf("Too many matching %s (%d) to display.",
-                            plur_type.c_str(), (int) key_list.size());
     }
 
     // we're good!
