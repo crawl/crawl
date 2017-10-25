@@ -346,7 +346,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_SLOW:
         case MUT_IRIDESCENT_SCALES:
             return mutation_activity_type::INACTIVE;
-        case MUT_LARGE_BONE_PLATES:
 #if TAG_MAJOR_VERSION == 34
         case MUT_ROUGH_BLACK_SCALES:
 #endif
