@@ -114,41 +114,51 @@ Prerequisites (Debian):
 
 On Debian-based systems (Ubuntu, Mint, ...), you can get all dependencies by
 typing the following as root/sudo:
-apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
-  libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
-  libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
+
+    apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
+      libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
+      libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
+
 (the last six are needed only for tiles builds). This is the complete set,
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
 recommended that you also install and configure ccache and binutils-gold:
-apt-get install ccache binutils-gold less /usr/share/doc/ccache/README.Debian
+
+    apt-get install ccache binutils-gold
+    less /usr/share/doc/ccache/README.Debian
 
 
 Prerequisites (Fedora):
 
 On Fedora, and possibly other RPM-based systems, you can get the dependencies
 by running the following as root:
-dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
-  sqlite-devel zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel \
-  freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
+
+    dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
+      sqlite-devel zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel \
+      freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
+
 (the last six are needed only for tile builds). As with Debian, this package
 list avoids the need for the bundled "contribs".
 
 ccache can be installed with:
-dnf install ccache
+
+    dnf install ccache
 
 
 Prerequisites (Void):
 
 On Void Linux you can get all dependencies by running the following as root:
-xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
-  sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
-  SDL2_mixer-devel SDL2_image-devel freetype-devel
+
+    xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
+      sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
+      SDL2_mixer-devel SDL2_image-devel freetype-devel
+
 (the last six are needed only for tile builds).
 
 ccache can be installed with:
-xbps-install ccache
+
+    xbps-install ccache
 
 
 Prerequisites (other systems):
