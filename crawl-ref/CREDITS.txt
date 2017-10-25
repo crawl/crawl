@@ -272,6 +272,7 @@
     Jeremey Wilson
     Yelve Yakut
     Edward Z. Yang
+    Yermak
     Rob Young
     Zannick
     Zooko
