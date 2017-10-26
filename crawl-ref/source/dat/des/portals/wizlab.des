@@ -1625,16 +1625,19 @@ ENDMAP
 # Halls of the Hellbinder (by Mu.)
 NAME:       wizlab_demon
 TAGS:       no_rotate no_hmirror no_vmirror
+KFEAT:      _ = altar_makhleb
+KFEAT:      p = granite_statue
+KPROP:      ! = bloody / nothing
+KPROP:      _ = bloody
+LFLOORTILE: floor_pebble_lightred
 LFLOORCOL:  red
 LROCKCOL:   red
-LFLOORTILE: floor_pebble_lightred
 COLOUR:     c = darkgrey
 COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 KFEAT:      -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = floor
-KFEAT:      _ = altar_makhleb
-KPROP:      ' = bloody / nothing
-KPROP:      _ = bloody
 TILE:       c = wall_stone_dark
+TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp \
+                / dngn_statue_cerebov / dngn_statue_ancient_evil
 # symbols roughly corresponding to sigil shape
 FTILE:      - = sigil_straight_E_W
 FTILE:      | = sigil_straight_N_S
@@ -1674,97 +1677,93 @@ MARKER:     h = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame", \
                 excl_rad = 0 }
-KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
-            green death / soul eater w:20 / tormentor w:5
-KMONS:      3u = ice devil / red devil / orange demon / \
-            rust devil w:5 / ynoxinul / sun demon
-KMONS:      4 = kobold demonologist
-KMONS:      5 = deep elf demonologist
-KMONS:      6 = balrug / cacodemon / blizzard demon / hellion
+KMONS:      1u = ice devil / red devil / orange demon / rust devil / ynoxinul \
+                 / sun demon / soul eater / sixfirhy
+KMONS:      2 = lorocyproca / hell beast / reaper / green death
+KMONS:      3 = balrug / cacodemon / blizzard demon / hellion / tormentor
+KMONS:      4 = blood saint / black sun
 {{
 wizname = crawl.make_name()
-
-kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
+kmons     ("5 = patrolling Hellbinder dbname:Hellbinder name:" ..
+                    string.gsub(wizname, " ", "_") .. " ; majin-bo")
 }}
-KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      i = ring of fire / ring of protection from fire /\
-            scroll of torment / scroll of summoning / demon blade w:1 /\
-            demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
-            wand of acid / staff of summoning / any book w:30 / any good_item w:15
-KITEM:      j = majin-bo
-KITEM:      B = randbook disc:summoning
-NSUBST:     i = 2:B / 1:j / *:i
-SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
-SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
-:           set_random_mon_list([[lesser demon w:50 / red devil / ice devil / ]]
-:                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
-:           wizlab_setup(_G)
-:           set_feature_name("stone_wall", "black wall")
-:           set_feature_name("rock_wall", "carved rock wall")
+KITEM:      d = scroll of summoning / scroll of holy word \
+                / w:5 scroll of torment / any scroll w:20 / potion of haste \
+                / potion of heal wounds / any potion w:20
+KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
+                / randbook disc:summoning spells:aura_of_abjuration
+KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
+                / staff of summoning w:1 / manual of summonings w:1 \
+                / any randart jewellery w:5 / cloak good_item w:5 \
+                / star_item w:25 / superb_item
+KITEM:      g = randbook disc:summoning
+NSUBST:     d = e / d, ' = 3:1 / 1:2 / 3=12...., " = 3:1 / 1:2 / 3=12....
+NSUBST:     ` = 3:1 / 2:2 / 3=12...., ; = 3:1 / 2:2 / 3=12....
+NSUBST:     4 = 1:4 / *=23, ~ = 2:1 / 2:2 / 3=12..../ ., f = 1:g / f
+{{
+            set_random_mon_list("common demon w:200 / reaper / green death \
+                / balrug / cacodemon / lorocyproca / hell beast \
+                / blizzard demon / hellion / tormentor / blood saint w:5 \
+                / black sun w:5")
+            wizlab_setup(_G)
+            set_feature_name("stone_wall", "black wall")
+            set_feature_name("rock_wall", "carved rock wall")
+}}
 epilogue{{
             wizlab_milestone(_G, "The Hall of the Hellbinder")
 }}
 MAP
-cccccccccccccccccccccccccccccccccccccccccccccc
-ccccccc.cccccc...................cccccc.cccccc
-ccccc.....cccc.cc+ccccc+ccccc+cc.cccc.....cccc
-cccc..G-H..ccc.c...cccc.cccc...c.ccc...o...ccc
-ccc../...\..cc.+.A.ccc...ccc.<.+.cc..|...../cc
-ccc.I...3.J.cc.c...cc.....cc...c.cc.-O-.3./.cc
-cc..|..u..|....ccccc..c.c..ccccc.....|.3./...c
-cc..|.3Y..|....cccc..cc.cc..cccc......3./....c
-ccc.L.....M.cc.ccc.....4.....ccc.cc....K----cc
-ccc..\.../..cc.cc..cccc.cccc..cc.cc.../.....cc
-cccc..N-P..ccc.+.......d.......+.ccc./.....ccc
-ccccc.....cccc.ccccccccccccccccc.cccc.....cccc
-ccccccc.cccccc...................cccccc.cccccc
-ccccccc.cccccc.cccccccx.xccccccc.cccccc.cccccc
-ccccccc.ccccccx.cccccc.c.cccccc.xcccccc.cccccc
-ccccccc.cccccccx.cccc.ccc.cccc.xccccccc.cccccc
-ccccccc.ccccccccx.cc.ccccc.cc.xcccccccc.cccccc
-ccccccc.cccccccccc..ccccccc..cccccccccc.cccccc
-ccccccc.cccc.6...................6.cccc.cccccc
-ccccccc.cccc..ccccccccc.ccccccccc..cccc.cccccc
-ccccccc.ccccc..cccc$$$c.c$$$cccc..ccccc.cccccc
-ccccccc.cccccc..ccc$$$+.+$$$ccc..cccccc.cccccc
-ccccccc.cc.cccc..cc$$$c.c$$$cc..cccc.cc.cccccc
-ccccccc......c.x..ccccc.ccccc..x.c..Z...cccccc
-ccccccc...o...x.c..cccc.cccc..c.x../..O.cccccc
-cccccc..\.../..ccc..ccc.ccc..ccc../..OTO.ccccc
-cccccc...\3/...cccc..cc.cc..cccc./2.2.U..ccccc
-ccccc..\2CXD2/..cccc.......cccc./..2.3....cccc
-cccccc..\|2|/...ccccc.\7/.cccccS--------Zccccc
-cccccc...Q.R....ccccc..Y..ccccc......../.ccccc
-ccccccc..ETF....ccccc..|..ccccc......./.cccccc
-cccccccc........ccccc..f..ccccc......S.ccccccc
-cccccccccc......cccc..ccc..cccc......ccccccccc
-ccccccccccc.....ccc..ccccc..ccc.....cccccccccc
-cccccccccccc.....c...ccccc...c.....ccccccccccc
-cccccccccccc..\./..cc.ccc.cc..\./..ccccccccccc
-ccccccccccccc..V..cccc.c.cccc..W..cccccccccccc
-ccccccccccccc./...ccccchccccc...\.cccccccccccc
-cccccccccccccc.....ccc.c.ccc.....ccccccccccccc
-ccccccccccccccc.....c.ccc.c.....cccccccccccccc
-ccccccccccccccccc.....ccc.....cccccccccccccccc
-ccccccccccccccccccc....0....cccccccccccccccccc
-ccccccccccccccccccccc.....cccccccccccccccccccc
-cccccccccccccccccccccxc+cxcccccccccccccccccccc
-ccccccccccccccccccccc.....cccccccccccccccccccc
-ccccccccccccccccccc...G"H...cccccccccccccccccc
-ccccccccccccccccc...GP...NH...cccccccccccccccc
-cccccccccccccccc..G[.......]H..ccccccccccccccc
-ccccccccccccccc../..N.....P..\..cccccccccccccc
-ccccccccccccccc.I.............J.cccccccccccccc
-cccccccccccccc..U.....G.H.....U..ccccccccccccc
-cccccccccccccc.I.J.../...\...I.J.ccccccccccccc
-ccccccccccccc..|..../..1..\....|..cccccccccccc
-ccccccccccccc..|.../\.'''./\...|..cccccccccccc
-ccccccccccccc..|../xx\'_'/xx\..|..cccccccccccc
-cccccccccccc...L./..xxN'Pxx..\.M...ccccccccccc
-cccccccccccci...W..G.xxxxx.H..V...iccccccccccc
-ccccccccccccii...NP.........NP...iiccccccccccc
-cccccccccccciii.................iiiccccccccccc
-cccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccc
+ccccccc'ccccccp.......pcccccc'cccccc
+ccccc'''''cccc.........cccc"""""cccc
+cccc''G'H''ccc..c.A.c..ccc"""o"""ccc
+ccc''/'''\''cc..ccccc..cc""|"""""/cc
+ccc'I'''''J'cc....x....cc"-O-"""/"cc
+ccd'|''u''|'....x...x....""|"""/""dc
+ccd'|''Y''|'......<......"""""/"""dc
+ccc'L'''''M'cc..x...x..cc""""K----cc
+ccc''\'''/''cc....x....cc"""/"""""cc
+cccc''N'P''ccc..ccccc..ccc"/"""""ccc
+ccccc'''''cccc.........cccc"""""cccc
+cccccc..cccccc....p....cccccc..ccccc
+cccccc..cccccc..ccccc..cccccc..ccccc
+cccccc..cc`cccc..ccc..cccc,cc..ccccc
+ccccccc``````c.x..c..x.c;;Z;;;cccccc
+ccccccc```o```x.cd.dc.x;;/;;O;cccccc
+cccccc``\```/``cccpccc;;/;;OTO;ccccc
+cccccc```\`/```ccccccc;/;;;;U;;ccccc
+ccccc``\`CXD`/``ccccc;/;;;;;;;;;cccc
+cccccc``\|`|/```ccpccS--------Zccccc
+cccccc```Q4R```ccd4dcc;;;;4;;/;ccccc
+ccccccc``ETF```+.\./.+;;;;;;/;cccccc
+cccccccc```````c..Y..c;;;;;S;ccccccc
+cccccccccc.....cc.|.cc.....ccccccccc
+ccccccccccc.....cc.cc.....cccccccccc
+cccccccccccc.....c+c.....ccccccccccc
+cccccccccccc..\./...\./..ccccccccccc
+ccccccccccccc..V..c..W..cccccccccccc
+ccccccccccccc./...c...\.cccccccccccc
+cccccccccccccc.........ccccccccccccc
+ccccccccccccccc.......cccccccccccccc
+ccccccccccccccc.......cccccccccccccc
+cccccccccccccccc.....ccccccccccccccc
+ccccccccccccccccx+++xccccccccccccccc
+cccccccccccccccc.....ccccccccccccccc
+cccccccccccccc...G.H...ccccccccccccc
+cccccccccccc...GP...NH...ccccccccccc
+ccccccccccc..G[.......]H..cccccccccc
+cccccccccc../..N.....P..\..ccccccccc
+cccccccccc.I.............J.ccccccccc
+ccccccccc~~U~~~~~G~H~~~~~U~~cccccccc
+ccccccccc~I~J~~~/~~~\~~~I~J~cccccccc
+cccccccc~~|~~~~/~~5~~\~~~~|~~ccccccc
+cccccccc~~|~~~/\~!!!~/\~~~|~~ccccccc
+cccccccc~~|~~/xx\!_!/xx\~~|~~ccccccc
+ccccccc~~~L~/~~xxN!Pxx~~\~M~~~cccccc
+cccccccf~~~W~~G~xxxxx~H~~V~~~fcccccc
+cccccccff~~~NP~~~~~~~~~NP~~~ffcccccc
+ccccccpfff~~~~~~~~~~~~~~~~~fffpccccc
+cccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
