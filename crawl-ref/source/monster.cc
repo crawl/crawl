@@ -6353,13 +6353,7 @@ void monster::steal_item_from_player()
     ASSERT(mslot != NUM_MONSTER_SLOTS);
     ASSERT(inv[mslot] == NON_ITEM);
 
-    const int orig_qty = you.inv[steal_what].quantity;
-
-    mprf("%s steals %s!",
-         name(DESC_THE).c_str(),
-         you.inv[steal_what].name(DESC_YOUR).c_str());
-
-    item_def* tmp = take_item(steal_what, mslot);
+    item_def* tmp = take_item(steal_what, mslot, true);
     if (!tmp)
         return;
     item_def& new_item = *tmp;
@@ -6368,6 +6362,7 @@ void monster::steal_item_from_player()
     new_item.flags |= ISFLAG_THROWN;
 
     // Fix up blood/chunk timers.
+    const int orig_qty = you.inv[steal_what].quantity;
     if (is_perishable_stack(new_item))
     {
         // Somehow they always steal the freshest blood.
@@ -6388,7 +6383,8 @@ void monster::steal_item_from_player()
  *
  * @returns new_item the new item, now in the monster's inventory.
  */
-item_def* monster::take_item(int steal_what, mon_inv_type mslot)
+item_def* monster::take_item(int steal_what, mon_inv_type mslot,
+                             bool is_stolen)
 {
     // Create new item.
     int index = get_mitm_slot(10);
@@ -6399,6 +6395,26 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 
     // Copy item.
     new_item = you.inv[steal_what];
+
+    // If the item was stolen, randomize quantity
+    if (is_stolen)
+    {
+        const int stolen_amount = 1 + random2(new_item.quantity);
+        if (stolen_amount < new_item.quantity)
+        {
+            mprf("%s steals %d of %s!",
+                 name(DESC_THE).c_str(),
+                 stolen_amount,
+                 new_item.name(DESC_YOUR).c_str());
+        }
+        else
+        {
+            mprf("%s steals %s!",
+                 name(DESC_THE).c_str(),
+                 new_item.name(DESC_YOUR).c_str());
+        }
+        new_item.quantity = stolen_amount;
+    }
 
     // Drop the item already in the slot (including the shield
     // if it's a two-hander).
@@ -6411,11 +6427,9 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
     if (inv[mslot] != NON_ITEM)
         drop_item(mslot, observable());
 
-    // Set quantity, and set the item as unlinked.
-    new_item.quantity -= random2(new_item.quantity);
+    // Set the item as unlinked.
     new_item.pos.reset();
     new_item.link = NON_ITEM;
-
     unlink_item(index);
     inv[mslot] = index;
     new_item.set_holding_monster(*this);
