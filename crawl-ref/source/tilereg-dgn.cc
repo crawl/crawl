@@ -194,9 +194,9 @@ void DungeonRegion::render()
     set_transform();
     glmanager->set_scissor(0, 0, tile_iw, tile_ih);
     m_buf_dngn.draw();
-    glmanager->reset_scissor();
     draw_minibars();
     m_buf_flash.draw();
+    glmanager->reset_scissor();
 
     FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
 
