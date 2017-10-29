@@ -214,6 +214,7 @@ enum KEYS
     CK_MOUSE_CLICK,
     CK_TOUCH_DUMMY, // so a non-event can be passed from handle_mouse to the controlling code
     CK_REDRAW, // no-op to force redraws of things
+    CK_RESIZE,
 
     CK_NO_KEY // so that the handle_mouse loop can be broken from early (for
               // popups), and otherwise for keys to ignore

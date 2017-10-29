@@ -769,6 +769,14 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     return 0;
 }
 
+
+static bool getch_returns_resizes;
+
+void set_getch_returns_resizes(bool rr)
+{
+    getch_returns_resizes = rr;
+}
+
 int getch_ck()
 {
     INPUT_RECORD ir;
@@ -823,6 +831,11 @@ int getch_ck()
 
             case WINDOW_BUFFER_SIZE_EVENT:
                 w32_handle_resize_event();
+                if (getch_returns_resizes)
+                {
+                    key = CK_RESIZE;
+                    waiting_for_event = false;
+                }
                 break;
 
             case MOUSE_EVENT:

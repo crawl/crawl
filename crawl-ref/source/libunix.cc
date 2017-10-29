@@ -511,6 +511,23 @@ int getchk()
     return -c;
 }
 
+#if defined(KEY_RESIZE) || defined(USE_UNIX_SIGNALS)
+static void unix_handle_resize_event()
+{
+    crawl_state.last_winch = time(0);
+    if (crawl_state.waiting_for_command)
+        handle_terminal_resize();
+    else
+        crawl_state.terminal_resized = true;
+}
+#endif
+
+static bool getch_returns_resizes;
+void set_getch_returns_resizes(bool rr)
+{
+    getch_returns_resizes = rr;
+}
+
 int m_getch()
 {
     int c;
@@ -526,9 +543,25 @@ int m_getch()
             c = proc_mouse_event(c, &me);
         }
 #endif
+#ifdef KEY_RESIZE
+        if (c == -KEY_RESIZE)
+        {
+            unix_handle_resize_event();
+
+            // XXX: Before ncurses get_wch() returns KEY_RESIZE, it
+            // updates LINES and COLS to the new window size. The resize
+            // handler will only redraw the whole screen if the main view
+            // is being shown, for slightly insane reasons, which results
+            // in crawl_view.termsz being out of sync.
+            //
+            // This causes crashiness: e.g. in a menu, make the window taller,
+            // then scroll down one line. To fix this, we always sync termsz:
+            crawl_view.init_geometry();
+        }
+#endif
     } while (
 #ifdef KEY_RESIZE
-             c == -KEY_RESIZE ||
+             (c == -KEY_RESIZE && !getch_returns_resizes) ||
 #endif
              ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
                  && !crawl_state.mouse_enabled));
@@ -553,22 +586,12 @@ int getch_ck()
     case -KEY_DOWN:  return CK_DOWN;
     case -KEY_LEFT:  return CK_LEFT;
     case -KEY_RIGHT: return CK_RIGHT;
+#ifdef KEY_RESIZE
+    case -KEY_RESIZE: return CK_RESIZE;
+#endif
     default:         return c;
     }
 }
-
-#if defined(USE_UNIX_SIGNALS)
-
-static void handle_sigwinch(int)
-{
-    crawl_state.last_winch = time(0);
-    if (crawl_state.waiting_for_command)
-        handle_terminal_resize();
-    else
-        crawl_state.terminal_resized = true;
-}
-
-#endif // USE_UNIX_SIGNALS
 
 static void unix_handle_terminal_resize()
 {
@@ -674,7 +697,9 @@ void console_startup()
 #endif
 
 #ifdef USE_UNIX_SIGNALS
-    signal(SIGWINCH, handle_sigwinch);
+# ifndef KEY_RESIZE
+    signal(SIGWINCH, unix_handle_resize_event);
+# endif
 #endif
 
     initscr();
@@ -728,7 +753,9 @@ void console_shutdown()
 #endif
 
 #ifdef USE_UNIX_SIGNALS
+# ifndef KEY_RESIZE
     signal(SIGWINCH, SIG_DFL);
+# endif
 #endif
 }
 
