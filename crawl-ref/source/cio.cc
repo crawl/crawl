@@ -25,6 +25,7 @@
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 #endif
+#include "ui.h"
 
 static keycode_type _numpad2vi(keycode_type key)
 {
@@ -450,6 +451,11 @@ static void _webtiles_abort_get_line()
 }
 #endif
 
+int line_reader::getkey()
+{
+    return getchm(getch_ck);
+}
+
 int line_reader::read_line_core(bool reset_cursor)
 {
     length = strlen(buffer);
@@ -481,48 +487,46 @@ int line_reader::read_line_core(bool reset_cursor)
         history->go_end();
 
     int ret;
-
-    while (true)
+    do
     {
-        int ch = getchm(getch_ck);
-
-        // Don't return a partial string if a HUP signal interrupted things
-        if (crawl_state.seen_hups)
-        {
-            buffer[0] = '\0';
-            ret = 0;
-            break;
-        }
-
-        if (keyfn)
-        {
-            // if you intercept esc, don't forget to provide another way to
-            // exit. Processing esc will safely cancel.
-            keyfun_action whattodo = (*keyfn)(ch);
-            if (whattodo == KEYFUN_CLEAR)
-            {
-                buffer[length] = 0;
-                if (history && length)
-                    history->new_input(buffer);
-                ret = 0;
-                break;
-            }
-            else if (whattodo == KEYFUN_BREAK)
-            {
-                buffer[length] = 0;
-                ret = ch;
-                break;
-            }
-            else if (whattodo == KEYFUN_IGNORE)
-                continue;
-            // else case: KEYFUN_PROCESS
-        }
-
-        ret = process_key(ch);
-        if (ret != -1)
-            break;
+        ret = process_key_core(getkey());
     }
+    while (ret == -1);
     return ret;
+}
+
+int line_reader::process_key_core(int ch)
+{
+    // Don't return a partial string if a HUP signal interrupted things
+    if (crawl_state.seen_hups)
+    {
+        buffer[0] = '\0';
+        return 0;
+    }
+
+    if (keyfn)
+    {
+        // if you intercept esc, don't forget to provide another way to
+        // exit. Processing esc will safely cancel.
+        keyfun_action whattodo = (*keyfn)(ch);
+        if (whattodo == KEYFUN_CLEAR)
+        {
+            buffer[length] = 0;
+            if (history && length)
+                history->new_input(buffer);
+            return 0;
+        }
+        else if (whattodo == KEYFUN_BREAK)
+        {
+            buffer[length] = 0;
+            return ch;
+        }
+        else if (whattodo == KEYFUN_IGNORE)
+            return -1;
+        // else case: KEYFUN_PROCESS
+    }
+
+    return process_key(ch);
 }
 
 
@@ -912,6 +916,11 @@ fontbuf_line_reader::fontbuf_line_reader(char *buf, size_t buf_size,
             FontBuffer& font_buf, int wrap_col) :
     line_reader(buf, buf_size, wrap_col), m_font_buf(font_buf)
 {
+}
+
+int fontbuf_line_reader::getkey()
+{
+    return ui::getch();
 }
 
 int fontbuf_line_reader::read_line(bool clear_previous, bool reset_cursor)

@@ -45,6 +45,9 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
+#include "ui.h"
+
+using namespace ui;
 
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
@@ -134,7 +137,7 @@ void init_hints()
     Hints.hints_seen_invisible = 0;
 }
 
-static void _print_hints_menu(hints_types type)
+static string _print_hints_menu(hints_types type)
 {
     char letter = 'a' + type;
     char desc[100];
@@ -155,7 +158,7 @@ static void _print_hints_menu(hints_types type)
         break;
     }
 
-    cprintf("%c - %s %s %s\n",
+    return make_stringf("%c - %s %s %s\n",
             letter, species_name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
@@ -163,31 +166,23 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def& choice)
 {
-again:
-    clrscr();
-
-    cgotoxy(1,1);
-    formatted_string::parse_string(
-        "<white>You must be new here indeed!</white>"
+    string prompt = "<white>You must be new here indeed!</white>"
         "\n\n"
         "<cyan>You can be:</cyan>"
-        "\n").display();
-
-    textcolour(LIGHTGREY);
-
+        "\n";
     for (int i = 0; i < HINT_TYPES_NUM; i++)
-        _print_hints_menu((hints_types)i);
-
-    formatted_string::parse_string(
-        "<brown>\nEsc - Quit"
+        prompt += _print_hints_menu((hints_types)i);
+    prompt += "<brown>\nEsc - Quit"
         "\n* - Random hints mode character"
-        "</brown>\n").display();
+        "</brown>";
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
 
-    while (true)
-    {
-        int keyn = getch_ck();
-        if (keyn == CK_REDRAW)
-            goto again;
+    bool done = false;
+    int keyn;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        keyn = ev.key.keysym.sym;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -203,24 +198,35 @@ again:
             choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
                                                      : WPN_HAND_AXE;
 
-            return;
+            return done = true;
         }
 
         switch (keyn)
         {
-        CASE_ESCAPE
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            game_ended(game_exit::abort);
-        case 'X':
-            cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            end(0);
-            return;
+            case 'X': CASE_ESCAPE
+                return done = true;
+            default:
+                return true;
         }
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
+
+    switch (keyn)
+    {
+    CASE_ESCAPE
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        game_ended(game_exit::abort);
+    case 'X':
+        cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        end(0);
+        return;
     }
 }
 
@@ -339,29 +345,26 @@ static void _replace_static_tags(string &text)
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
-    cgotoxy(1, 1);
-    clrscr();
-
-    int width = _get_hints_cols();
-#ifdef USE_TILE_LOCAL
-    // Use a more sensible screen width.
-    if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
-        width = crawl_view.msgsz.x + crawl_view.hudsz.x;
-    if (width > 80)
-        width = 80;
-#endif
-
     string text = getHintString("welcome");
     _replace_static_tags(text);
+    trim_string(text);
 
-    linebreak_string(text, width);
-    display_tagged_block(text);
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(text));
+    prompt_ui->wrap_text = true;
+#ifdef USE_TILE_LOCAL
+    prompt_ui->max_size()[0] = 800;
+#else
+    prompt_ui->max_size()[0] = 80;
+#endif
 
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        getchm();
-    }
-    redraw_screen();
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
 }
 
 // Called each turn from _input. Better name welcome.
@@ -3489,12 +3492,15 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
 
 string hints_describe_pos(int x, int y)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
     _hints_describe_disturbance(x, y, ostr);
     _hints_describe_cloud(x, y, ostr);
     _hints_describe_feature(x, y, ostr);
-    return ostr.str();
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 static void _hints_describe_feature(int x, int y, ostringstream& ostr)
@@ -3502,7 +3508,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     const dungeon_feature_type feat = grd[x][y];
     const coord_def            where(x, y);
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     bool boring = false;
 
@@ -3712,8 +3719,6 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                 "or vampires, can smell blood from a distance and may come "
                 "looking.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
@@ -3725,7 +3730,8 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
     const string cname = cloud->cloud_name(true);
     const cloud_type ctype = cloud->type;
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     ostr << "The " << cname << " ";
 
@@ -3756,24 +3762,19 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
                 "you and a square, you won't be able to see anything in that "
                 "square.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_disturbance(int x, int y, ostringstream& ostr)
 {
     if (!_water_is_disturbed(x, y))
         return;
-
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
+    if (!ostr.str().empty())
+        ostr << "\n\n";
     ostr << "The strange disturbance means that there's a monster hiding "
             "under the surface of the shallow water. Submerged monsters will "
             "not be autotargeted when doing a ranged attack while there are "
             "other, visible targets in sight. Of course you can still target "
             "it manually if you wish to.";
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static bool _water_is_disturbed(int x, int y)
@@ -3802,10 +3803,7 @@ bool hints_monster_interesting(const monster* mons)
 
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
     bool dangerous = false;
     if (mons_is_unique(mi.type))
     {
@@ -3918,11 +3916,11 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                 "important clues as to how to deal with them.";
     }
 
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    return broken;
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 void hints_observe_cell(const coord_def& gc)

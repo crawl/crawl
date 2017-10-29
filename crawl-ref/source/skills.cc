@@ -1272,7 +1272,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         skill_inc += bonus;
         bonus_left -= bonus;
         manual.skill_points -= bonus;
-        if (!manual.skill_points && !simu)
+        if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
             finish_manual(slot);
     }
 
@@ -2175,6 +2175,12 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     return new_level;
 }
 
+skill_state::skill_state() :
+        skill_cost_level(0), total_experience(0), auto_training(true),
+        exp_available(0), saved(false)
+{
+}
+
 void skill_state::save()
 {
     can_train          = you.can_train;
@@ -2195,6 +2201,12 @@ void skill_state::save()
         real_skills[i] = you.skill((skill_type)i, 10, true);
         changed_skills[i] = you.skill((skill_type)i, 10);
     }
+    saved = true;
+}
+
+bool skill_state::state_saved() const
+{
+    return saved;
 }
 
 void skill_state::restore_levels()

@@ -125,6 +125,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
     desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
+    desc << "  ";
 
     return desc.str();
 }
@@ -165,28 +166,17 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
-#ifdef USE_TILE_LOCAL
     {
-        // [enne] - Hack. Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " " + titlestring + "         Type          "
-                "                Failure  Level",
-                " " + titlestring + "         Power        "
-                "Range    " + "Hunger  " + "Noise          ",
-                MEL_ITEM);
+                titlestring + "         Type                          Failure  Level ",
+                titlestring + "         Power        Range    Hunger  Noise          ",
+                MEL_TITLE);
+#ifdef USE_TILE_LOCAL
         me->colour = BLUE;
-        spell_menu.add_entry(me);
-    }
-#else
-    spell_menu.set_title(
-        new ToggleableMenuEntry(
-            " " + titlestring + "         Type          "
-            "                Failure  Level",
-            " " + titlestring + "         Power        "
-            "Range    " + "Hunger  " + "Noise          ",
-            MEL_TITLE));
 #endif
+        spell_menu.set_title(me, true, true);
+    }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');

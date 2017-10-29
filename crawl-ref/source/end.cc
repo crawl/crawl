@@ -30,10 +30,13 @@
 #include "stringutil.h"
 #include "view.h"
 #include "xom.h"
+#include "ui.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
+
+using namespace ui;
 
 /**
  * Should crawl restart on game end, depending on restart options and options
@@ -106,22 +109,18 @@ static bool _print_error_screen(const char *message, ...)
     // NOTE: This assumes that the error message doesn't contain
     //       any formatting!
     error_msg = replace_all(error_msg, "<", "<<");
+    error_msg += "\n\nHit any key to exit...";
 
-    error_msg += "\n\n\nHit any key to exit...\n";
+    auto prompt_ui = make_shared<Text>(error_msg);
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
 
-    // Break message into correctly sized lines.
-    int width = 80;
-#ifdef USE_TILE_LOCAL
-    width = crawl_view.msgsz.x;
-#else
-    width = min(80, get_number_of_cols());
-#endif
-    linebreak_string(error_msg, width);
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
 
-    // And finally output the message.
-    clrscr();
-    formatted_string::parse_string(error_msg).display();
-    getchm();
     return true;
 }
 #endif
@@ -236,12 +235,15 @@ NORETURN void screen_end_game(string text)
 
     if (!text.empty())
     {
-        clrscr();
-        linebreak_string(text, get_number_of_cols());
-        display_tagged_block(text);
+        auto prompt_ui = make_shared<Text>(text);
+        bool done = false;
+        prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+            return done = ev.type == WME_KEYDOWN;
+        });
 
-        if (!crawl_state.seen_hups)
-            get_ch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
     }
 
     game_ended(game_exit::abort); // TODO: is this the right exit condition?
@@ -373,12 +375,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
-    {
         mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
 #ifdef USE_TILE_WEB
     else
         tiles.send_dump_info("morgue", fname);
@@ -408,31 +405,43 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
-    clrscr();
-    cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf("\n\n    "); // Space padding where # would go in list format
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
+    string goodbye_msg;
+    goodbye_msg += make_stringf("Goodbye, %s.", you.your_name.c_str());
+    goodbye_msg += "\n\n    "; // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, "\n") + 1;
 
-    cprintf("%s", hiscore.c_str());
+    goodbye_msg += hiscore;
 
-    cprintf("\nBest Crawlers - %s\n",
+    goodbye_msg += make_stringf("\nBest Crawlers - %s\n",
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+    goodbye_msg += hiscores_print_list(24 - lines - 5, SCORE_TERSE,
                         hiscore_index);
 
 #ifndef DGAMELAUNCH
-    cprintf("\nYou can find your morgue file in the '%s' directory.",
+    goodbye_msg += make_stringf("\nYou can find your morgue file in the '%s' directory.",
             morgue_directory().c_str());
 #endif
 
-    // just to pause, actual value returned does not matter {dlb}
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
-        get_ch();
+        ui::run_layout(move(popup), done);
 
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);

@@ -10,6 +10,8 @@
 const int MAX_SKILL_ORDER = 100;
 struct skill_state
 {
+    skill_state();
+
     FixedBitVector<NUM_SKILLS>            can_train;
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
@@ -27,8 +29,12 @@ struct skill_state
     vector<int> manual_charges;
 
     void save();
+    bool state_saved() const;
     void restore_levels();
     void restore_training();
+
+private:
+    bool saved;
 };
 
 struct skill_diff

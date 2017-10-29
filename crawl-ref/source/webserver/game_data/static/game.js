@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
         "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
-        "./player", "./mouse_control"],
+        "./player", "./mouse_control", "./ui", "./ui-layouts"],
 function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
           options) {
     "use strict";
@@ -162,6 +162,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
             toggle_full_window_dungeon_view(true);
             break;
         }
+        document.querySelector("#ui-stack").classList.toggle("hidden",
+            ui_state == enums.ui.VIEW_MAP);
     }
 
     function handle_set_layout(data)

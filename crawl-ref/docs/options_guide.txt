@@ -53,8 +53,8 @@ The contents of this text are:
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
                 allow_self_target, auto_butcher, confirm_butcher,
-                easy_eat_chunks, easy_quit_item_prompts, easy_exit_menu,
-                ability_menu, sort_menus, spell_slot, item_slot, ability_slot,
+                easy_eat_chunks, easy_quit_item_prompts, ability_menu,
+                sort_menus, spell_slot, item_slot, ability_slot,
                 autofight_stop, autofight_warning, autofight_hunger_stop,
                 autofight_hunger_stop_undead, autofight_throw,
                 autofight_throw_nomove, autofight_fire_stop, autofight_caught,
@@ -1037,10 +1037,6 @@ easy_quit_item_prompts = true
         are essentially all of those that are requesting an inventory
         item and accept '?' and '*'. The identify list will never easy
         quit.
-
-easy_exit_menu = false
-        In multidrop (and pickup) menus, paging past the end will drop
-        out of the menu if easy_exit_menu is true.
 
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts

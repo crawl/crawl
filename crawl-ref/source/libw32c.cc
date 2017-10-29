@@ -769,6 +769,13 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     return 0;
 }
 
+
+void set_getch_returns_resizes(bool rr)
+{
+    UNUSED(rr);
+    // no-op on windows console: see mantis issue #11532
+}
+
 int getch_ck()
 {
     INPUT_RECORD ir;

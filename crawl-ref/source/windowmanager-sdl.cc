@@ -284,6 +284,8 @@ static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
     tile_event.button = MouseEvent::NONE;
     tile_event.px     = sdl_event.x;
     tile_event.py     = sdl_event.y;
+    tile_event.held   = wm->get_mouse_state(nullptr, nullptr);
+    tile_event.mod    = wm->get_mod_state();
 
     // TODO: enne - do we want the relative motion?
 }
@@ -312,6 +314,8 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     }
     tile_event.px = sdl_event.x;
     tile_event.py = sdl_event.y;
+    tile_event.held = wm->get_mouse_state(nullptr, nullptr);
+    tile_event.mod = wm->get_mod_state();
 }
 
 static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
@@ -328,10 +332,14 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 SDLWrapper::SDLWrapper():
     m_window(nullptr), m_context(nullptr), prev_keycode(0)
 {
+    m_cursors.fill(nullptr);
 }
 
 SDLWrapper::~SDLWrapper()
 {
+    for (const auto& cursor : m_cursors)
+        if (cursor)
+            SDL_FreeCursor(cursor);
     if (m_context)
         SDL_GL_DeleteContext(m_context);
     if (m_window)
@@ -647,6 +655,48 @@ void SDLWrapper::set_mod_state(tiles_key_mod mod)
     SDL_SetModState(set_to);
 }
 
+void SDLWrapper::set_mouse_cursor(mouse_cursor_type type)
+{
+    SDL_Cursor *cursor = m_cursors[type];
+
+    if (!cursor)
+    {
+        SDL_SystemCursor sdl_cursor_id;
+        switch (type)
+        {
+            case MOUSE_CURSOR_ARROW:
+                sdl_cursor_id = SDL_SYSTEM_CURSOR_ARROW;
+                break;
+            case MOUSE_CURSOR_POINTER:
+                sdl_cursor_id = SDL_SYSTEM_CURSOR_HAND;
+                break;
+            default:
+                die("bad mouse cursor type");
+        }
+        cursor = m_cursors[type] = SDL_CreateSystemCursor(sdl_cursor_id);
+        if (!cursor)
+        {
+            printf("Failed to create cursor: %s\n", SDL_GetError());
+            return;
+        }
+    }
+
+    SDL_SetCursor(cursor);
+}
+
+unsigned short SDLWrapper::get_mouse_state(int *x, int *y) const
+{
+    Uint32 state = SDL_GetMouseState(x, y);
+    unsigned short ret = 0;
+    if (state & SDL_BUTTON(SDL_BUTTON_LEFT))
+        ret |= MouseEvent::LEFT;
+    if (state & SDL_BUTTON(SDL_BUTTON_RIGHT))
+        ret |= MouseEvent::RIGHT;
+    if (state & SDL_BUTTON(SDL_BUTTON_MIDDLE))
+        ret |= MouseEvent::MIDDLE;
+    return ret;
+}
+
 static char32_t _key_suppresses_textinput(int keycode)
 {
     char result_char = 0;
@@ -726,14 +776,14 @@ int SDLWrapper::send_textinput(wm_event *event)
     return 1;
 }
 
-int SDLWrapper::wait_event(wm_event *event)
+int SDLWrapper::wait_event(wm_event *event, int timeout)
 {
     SDL_Event sdlevent;
 
     if (!m_textinput_queue.empty())
         return send_textinput(event);
 
-    if (!SDL_WaitEvent(&sdlevent))
+    if (!SDL_WaitEventTimeout(&sdlevent, timeout))
         return 0;
 
     if (sdlevent.type != SDL_TEXTINPUT)

@@ -99,6 +99,7 @@ void MapRegion::pack_buffers()
     float pos_ex = (m_win_end.x - m_min_gx) - 1 / (float)dx;
     float pos_ey = (m_win_end.y - m_min_gy) - 1 / (float)dy;
 
+    set_transform();
     m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey,
                            Options.tile_window_col);
 }

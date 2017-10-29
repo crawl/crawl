@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "unwind.h"
 
@@ -47,7 +48,8 @@ game_state::game_state()
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
-      stat_gain_prompt(false), level_annotation_shown(false),
+      stat_gain_prompt(false), simulating_xp_gain(false),
+      level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
       tiles_disabled(false),
       title_screen(true),
@@ -89,17 +91,12 @@ void game_state::add_startup_error(const string &err)
 void game_state::show_startup_errors()
 {
     formatted_scroller error_menu;
-    error_menu.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP
-                         | MF_EASY_EXIT);
-    error_menu.set_more(
-        formatted_string::parse_string(
-                           "<cyan>[ + : Page down.   - : Page up."
-                           "                    Esc or Enter to continue.]"));
-    error_menu.set_title(
-        new MenuEntry("Warning: Crawl encountered errors during startup:",
-                      MEL_TITLE));
+    error_menu.set_more( formatted_string::parse_string(
+        "<cyan>Press Esc or Enter to continue."));
+    error_menu.set_title(formatted_string::parse_string(
+        "<yellow>Warning: Crawl encountered errors during startup:"));
     for (const string &err : startup_errors)
-        error_menu.add_entry(new MenuEntry(err));
+        error_menu.add_raw_text(err + "\n");
     error_menu.show();
 }
 

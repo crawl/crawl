@@ -1273,7 +1273,7 @@ static int _prompt_ring_to_remove(int new_ring)
         slot_chars.push_back(index_to_letter(rings.back()->link));
     }
 
-    if (slot_chars.size() + 2 > msgwin_lines())
+    if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
     {
         // force a menu rather than a more().
         return EQ_NONE;

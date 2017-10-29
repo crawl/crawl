@@ -22,6 +22,7 @@
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
+#include "ui.h"
 
 class formatted_string;
 
@@ -31,7 +32,6 @@ enum MenuEntryLevel
     MEL_TITLE,
     MEL_SUBTITLE,
     MEL_ITEM,
-    MEL_END_OF_SECTION,
 };
 
 struct menu_letter
@@ -266,17 +266,17 @@ enum MenuFlag
     MF_ALLOW_FILTER     = 0x0100,   ///< Control-F will ask for regex and
                                     ///< select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
-    MF_SHOW_PAGENUMBERS = 0x0400,   ///< Show "(page X of Y)" when appropriate
-    MF_TOGGLE_ACTION    = 0x0800,   ///< ToggleableMenu toggles action as well
-    MF_EASY_EXIT        = 0x1000,   ///< Exit when scrolling off the end
-    MF_START_AT_END     = 0x2000,   ///< Scroll to end of list
-    MF_PRESELECTED      = 0x4000,   ///< Has a preselected entry.
-    MF_QUIET_SELECT     = 0x8000,   ///< No selection box and no count.
+    MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
+    //                    0x0800,
+    MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
+    MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
+    MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.
 
-    MF_USE_TWO_COLUMNS  = 0x10000,  ///< Only valid for tiles menus
+    MF_USE_TWO_COLUMNS  = 0x8000,  ///< Only valid for tiles menus
 };
 
-class MenuDisplay;
+class UIMenu;
+class UIShowHide;
 
 ///////////////////////////////////////////////////////////////////////
 // NOTE
@@ -291,13 +291,12 @@ class MenuDisplay;
 
 class Menu
 {
-    friend class MenuDisplayText;
-    friend class MenuDisplayTile;
+    friend class UIMenu;
 #ifdef USE_TILE_LOCAL
     friend class menu_filter_line_reader;
 #endif
 public:
-    Menu(int flags = MF_MULTISELECT, const string& tagname = "");
+    Menu(int flags = MF_MULTISELECT, const string& tagname = "", KeymapContext kmc = KMC_MENU);
 
     virtual ~Menu();
 
@@ -318,7 +317,7 @@ public:
     const formatted_string &get_more() const { return more; }
 
     void set_highlighter(MenuHighlighter *h);
-    void set_title(MenuEntry *e, bool first = true);
+    void set_title(MenuEntry *e, bool first = true, bool indent = false);
     void add_entry(MenuEntry *entry);
     void add_entry(unique_ptr<MenuEntry> entry)
     {
@@ -331,6 +330,8 @@ public:
     {
         select_filter = filter;
     }
+
+    void update_menu(bool update_entries = false);
 
     virtual int getkey() const { return lastch; }
 
@@ -345,7 +346,7 @@ public:
 
     int get_first_visible() const;
 
-    virtual int item_colour(int index, const MenuEntry *me) const;
+    virtual int item_colour(const MenuEntry *me) const;
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
     typedef int (*keyfilter_tfn)(int keyin);
@@ -365,6 +366,7 @@ public:
 protected:
     MenuEntry *title;
     MenuEntry *title2;
+    bool m_indent_title;
 
     int flags;
     string tag;
@@ -388,20 +390,25 @@ protected:
     bool alive;
 
     int last_selected;
+    KeymapContext m_kmc;
 
-#ifdef USE_TILE_LOCAL
-    char* m_filter_text; // nullptr == not in filter mode
-#endif
+    resumable_line_reader *m_filter;
 
-    MenuDisplay *mdisplay;
+    struct {
+        shared_ptr<ui::Popup> popup;
+        shared_ptr<UIMenu> menu;
+        shared_ptr<ui::Scroller> scroller;
+        shared_ptr<ui::Text> title;
+        shared_ptr<ui::Text> more;
+        shared_ptr<UIShowHide> more_bin;
+        shared_ptr<ui::Box> vbox;
+    } m_ui;
 
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
     virtual string get_select_count_string(int count) const;
-    virtual void draw_item(int index) const;
-    virtual void draw_index_item(int index, const MenuEntry *me) const;
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);
@@ -415,29 +422,12 @@ protected:
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(int index, const MenuEntry *me) const;
 
-    void webtiles_update_section_boundaries();
-
-    int _webtiles_section_start;
-    int _webtiles_section_end;
-
     bool _webtiles_title_changed;
     formatted_string _webtiles_title;
-
-    inline int webtiles_section_start() const
-    {
-        return _webtiles_section_start == -1 ? 0 : _webtiles_section_start;
-    }
-    inline int webtiles_section_end() const
-    {
-        return _webtiles_section_end == -1 ? items.size() : _webtiles_section_end;
-    }
 #endif
 
-    virtual void draw_title();
     virtual formatted_string calc_title();
-    virtual int title_height() const;
-    void draw_menu(bool update_entries = false);
-    void draw_more();
+    void update_more();
     virtual bool page_down();
     virtual bool line_down();
     virtual bool page_up();
@@ -460,9 +450,11 @@ protected:
 
     virtual bool process_key(int keyin);
 
-    virtual bool allow_easy_exit() const;
-
     virtual string help_key() const { return ""; }
+
+    virtual void update_title();
+protected:
+    bool filter_with_regex(const char *re);
 };
 
 /// Allows toggling by specific keys.
@@ -513,43 +505,6 @@ private:
 
     vector<column> columns;
     vector<formatted_string> flines;
-};
-
-// This class is for when (some of) your items are formatted, and
-// you want mostly a browser.
-//
-// If MF_NOSELECT, hotkeys jump to menu items.
-// If MF_SINGLESELECT, hotkeys end the menu immediately.
-// MF_MULTISELECT is not supported.
-class formatted_scroller : public Menu
-{
-public:
-    formatted_scroller();
-    formatted_scroller(int flags, const string& s);
-    virtual void set_flags(int new_flags, bool use_options = true) override;
-    virtual void add_item_formatted_string(const formatted_string& s,
-                                           int hotkey = 0);
-    virtual void wrap_formatted_string(const formatted_string& s,
-                                       int width = get_number_of_cols()-1);
-    virtual void add_item_string(const string& s, int hotkey = 0);
-    virtual void add_text(const string& s, bool new_line = false,
-                          int wrap_col = 0);
-    virtual void add_raw_text(const string& s, bool new_line = false,
-                              int wrap_col = 0);
-    virtual bool jump_to_hotkey(int keyin);
-    virtual vector<MenuEntry *> show(bool reuse_selections = false) override;
-    int get_lastch() { return lastch; }
-    virtual ~formatted_scroller();
-protected:
-
-    virtual void draw_index_item(int index, const MenuEntry* me) const override;
-    virtual bool process_key(int keyin) override;
-    bool jump_to(int linenum, bool no_scroll = false);
-
-#ifdef USE_TILE_WEB
-    virtual void webtiles_write_item(int index,
-                                     const MenuEntry* me) const override;
-#endif
 };
 
 /**
@@ -1098,6 +1053,7 @@ protected:
 
 #ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
+    ShapeBuffer m_shape_buf;
 #else
     COLOURS m_old_bg_colour;
 #endif
@@ -1176,34 +1132,3 @@ protected:
 
 int linebreak_string(string& s, int maxcol, bool indent = false);
 string get_linebreak_string(const string& s, int maxcol);
-
-#ifdef USE_TILE_LOCAL
-class Popup
-{
-public:
-    // constructors/destructor
-    Popup(string prompt);
-    ~Popup();
-
-    // accessors
-    //  get/set prompt text
-    void set_prompt(string prompt);
-    string get_prompt() { return m_prompt; }
-
-    // methods
-    //  add a menu entry to the popup
-    void push_entry(MenuEntry *me);
-    //  remove a menu entry from the popup
-    MenuEntry* next_entry();
-
-    //  draw the popup and return key pressed
-    int pop();
-
-protected:
-    vector<MenuEntry*> m_entries;
-    string m_prompt;
-
-private:
-    unsigned int m_curr;
-};
-#endif

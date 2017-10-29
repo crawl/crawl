@@ -305,6 +305,10 @@ a:hover {
     z-index: 2000;
 }
 
+.hidden, .templates {
+    display: none !important;
+}
+
 /* These are just here for compatibility with older versions */
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }

@@ -27,19 +27,16 @@
 #include "menu.h"
 #include "message.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "terrain.h"
+#include "tilepick.h"
 #include "unicode.h"
 #include "xom.h"
 
-enum god_desc_type
-{
-    GDESC_OVERVIEW,
-    GDESC_DETAILED,
-    GDESC_WRATH,
-    NUM_GDESCS
-};
+using namespace ui;
 
 static int _piety_level(int piety)
 {
@@ -528,23 +525,6 @@ static string _describe_god_wrath_causes(god_type which_god)
 }
 
 /**
- * Print the standard top line of the god description screens.
- *
- * @param god       The god in question.
- * @param width     The width of the screen.
- */
-static formatted_string _print_top_line(god_type which_god, int width)
-{
-    formatted_string line;
-    const string godname = uppercase_first(god_name(which_god, true));
-    line.textcolour(god_colour(which_god));
-    const int len = width - strwidth(godname);
-    line.cprintf("%s%s\n\n", string(len / 2, ' ').c_str(), godname.c_str());
-    line.textcolour(LIGHTGREY);
-    return line;
-}
-
-/**
  * Print a description of the given god's dislikes & wrath effects.
  *
  * @param which_god     The god in question.
@@ -705,7 +685,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
     desc.cprintf("\n\n%s%*s%s\n", header,
-            min(80, get_number_of_cols()) - 1 - strwidth(header) - strwidth(cost),
+            80 - strwidth(header) - strwidth(cost),
             "", cost);
 
     bool have_any = false;
@@ -921,7 +901,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    const int numcols = min(80, get_number_of_cols()) - 1;
     for (const auto& power : get_god_powers(which_god))
     {
         // hack: don't mention the necronomicon alone unless it
@@ -954,9 +933,8 @@ static formatted_string _describe_god_powers(god_type which_god)
         if (abil_cost == "(None)")
             abil_cost = "";
 
-        desc.cprintf("%s%*s%s\n", buf.c_str(), numcols - desc_len - (int)abil_cost.size(),
+        desc.cprintf("%s%*s%s\n", buf.c_str(), 80 - desc_len - (int)abil_cost.size(),
                 "", abil_cost.c_str());
-        desc.textcolour(god_colour(which_god));
     }
 
     if (!have_any)
@@ -1006,79 +984,154 @@ static formatted_string _god_overview_description(god_type which_god)
     return desc;
 }
 
-static int _describe_god_by_type(god_type which_god, bool give_title, god_desc_type gdesc, string more)
+static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popup, shared_ptr<Switcher>& desc_sw, shared_ptr<Switcher>& more_sw)
 {
-#ifdef USE_TILE_LOCAL
-    // Ensure we get the full screen size when calling get_number_of_cols()
-    cgotoxy(1, 1);
+    formatted_string topline;
+    topline.textcolour(god_colour(which_god));
+    topline += formatted_string(uppercase_first(god_name(which_god, true)));
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+
+#ifdef USE_TILE
+    auto icon = make_shared<Image>();
+    const tileidx_t idx = tileidx_feature_base(altar_for_god(which_god));
+    icon->set_tile(tile_def(idx, get_dngn_tex(idx)));
+    title_hbox->add_child(move(icon));
 #endif
 
-    formatted_string desc;
+    auto title = make_shared<Text>(topline.trim());
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 16});
+    title_hbox->add_child(move(title));
 
-    // Title: has extra left-aligned text on first pane
-    const int numcols = min(80, get_number_of_cols()) - 1;
-    if (give_title)
-    {
-        desc.textcolour(WHITE);
-        desc.cprintf("Religion");
-        desc.textcolour(LIGHTGREY);
-    }
-    // Center top line even if it already contains "Religion" (len = 8)
-    desc += _print_top_line(which_god, numcols - (give_title ? 2*8 : 0));
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->align_self = Widget::CENTER;
+    vbox->add_child(move(title_hbox));
 
-    // Contents of each pane
-    switch (gdesc)
-    {
-    case GDESC_OVERVIEW:
-        desc += _god_overview_description(which_god);
-        break;
-    case GDESC_DETAILED:
-        desc += _detailed_god_description(which_god);
-        break;
-    case GDESC_WRATH:
-        desc += _god_wrath_description(which_god);
-        break;
-    default:
-        die("Unknown god description type!");
-    }
+    desc_sw = make_shared<Switcher>();
+    more_sw = make_shared<Switcher>();
+    desc_sw->current() = 0;
+    more_sw->current() = 0;
 
-    formatted_scroller fs;
-    const char* place = nullptr;
-    switch (gdesc)
-    {
-        case GDESC_OVERVIEW: place = "<w>Overview</w>|Powers|Wrath"; break;
-        case GDESC_DETAILED: place = "Overview|<w>Powers</w>|Wrath"; break;
-        case GDESC_WRATH:    place = "Overview|Powers|<w>Wrath</w>"; break;
-        default: die("Unknown god description type!");
-    }
-    more = !more.empty() ? more : make_stringf("[<w>!</w>/<w>^</w>"
+    const formatted_string descs[3] = {
+        _god_overview_description(which_god),
+        _detailed_god_description(which_god),
+        _god_wrath_description(which_god),
+    };
+
 #ifdef USE_TILE_LOCAL
-            "|<w>Right-click</w>"
+# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "]: "
 #endif
-            "]: %s", place);
-    fs.set_more(formatted_string::parse_string(more));
 
-    fs.set_flags(MF_EASY_EXIT | MF_ALWAYS_SHOW_MORE | MF_NOSELECT | MF_NOWRAP, false);
-    fs.wrap_formatted_string(desc, numcols);
-    fs.show();
-    return fs.getkey();
+    const char* mores[3] = {
+        MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
+        MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
+        MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
+    };
+
+    for (int i = 0; i < 3; i++)
+    {
+        const auto &desc = descs[i];
+        auto scroller = make_shared<Scroller>();
+        auto text = make_shared<Text>(desc.trim());
+        text->wrap_text = true;
+        scroller->set_child(text);
+        desc_sw->add_child(move(scroller));
+
+        more_sw->add_child(make_shared<Text>(
+                formatted_string::parse_string(mores[i])));
+    }
+
+    desc_sw->set_margin_for_sdl({20, 0, 20, 0});
+    desc_sw->set_margin_for_crt({1, 0, 1, 0});
+    desc_sw->expand_h = false;
+#ifdef USE_TILE_LOCAL
+    desc_sw->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+    vbox->add_child(desc_sw);
+
+    vbox->add_child(more_sw);
+
+    popup = make_shared<ui::Popup>(vbox);
 }
 
-void describe_god(god_type which_god, bool give_title)
+#ifdef USE_TILE_WEB
+static void _send_god_ui(god_type god, bool is_altar)
+{
+    tiles.json_open_object();
+
+    const tileidx_t idx = tileidx_feature_base(altar_for_god(god));
+    tiles.json_open_object("tile");
+    tiles.json_write_int("t", idx);
+    tiles.json_write_int("tex", get_dngn_tex(idx));
+    tiles.json_close_object();
+
+    tiles.json_write_int("colour", god_colour(god));
+    tiles.json_write_string("name", god_name(god, true));
+    tiles.json_write_bool("is_altar", is_altar);
+
+    tiles.json_write_string("description", getLongDescription(god_name(god)));
+    if (you_worship(god))
+        tiles.json_write_string("title", god_title(god, you.species, you.piety));
+    tiles.json_write_string("favour", you_worship(god) ?
+            _describe_favour(god) : _god_penance_message(god));
+    tiles.json_write_string("powers_list", _describe_god_powers(god));
+
+    tiles.json_write_string("overview",
+            _god_overview_description(god).to_colour_string());
+    tiles.json_write_string("powers",
+            _detailed_god_description(god).to_colour_string());
+    tiles.json_write_string("wrath",
+            _god_wrath_description(god).to_colour_string());
+    tiles.push_ui_layout("describe-god", 1);
+}
+#endif
+
+void describe_god(god_type which_god)
 {
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
         mpr("You are not religious.");
         return;
     }
-    god_desc_type gdesc = GDESC_OVERVIEW;
-    while (true)
-    {
-        int keyin = _describe_god_by_type(which_god, give_title && gdesc == GDESC_OVERVIEW, gdesc, string(""));
-        if (!(keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^'))
-            break;
-        gdesc = static_cast<god_desc_type>((gdesc + 1) % NUM_GDESCS);
-    }
+
+    shared_ptr<ui::Popup> popup;
+    shared_ptr<Switcher> desc_sw;
+    shared_ptr<Switcher> more_sw;
+    build_partial_god_ui(which_god, popup, desc_sw, more_sw);
+
+    bool done = false;
+    popup->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+        if (key == '!' || key == CK_MOUSE_CMD || key == '^')
+        {
+            int n = (desc_sw->current() + 1) % 3;
+            desc_sw->current() = more_sw->current() = n;
+#ifdef USE_TILE_WEB
+                tiles.json_open_object();
+                tiles.json_write_int("pane", n);
+                tiles.ui_state_change("describe-god", 0);
+#endif
+            return true;
+        }
+        return done = !popup->get_child()->on_event(ev);
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
+    _send_god_ui(which_god, false);
+#endif
+
+    ui::run_layout(popup, done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 bool describe_god_with_join(god_type which_god)
@@ -1101,59 +1154,134 @@ bool describe_god_with_join(god_type which_god)
         }
     }
 
-    enum join_step_type { INIT = 0, JOIN, ABANDON };
+    shared_ptr<ui::Popup> popup;
+    shared_ptr<Switcher> desc_sw;
+    shared_ptr<Switcher> more_sw;
+    build_partial_god_ui(which_god, popup, desc_sw, more_sw);
 
+    for (auto& child : *more_sw)
+    {
+        Text* label = static_cast<Text*>(child.get());
+        formatted_string text = label->get_text();
+        text += formatted_string::parse_string("  [<w>Enter</w>]: join religion");
+        label->set_text(text);
+    }
+
+    // States for the state machine
+    enum join_step_type {
+        SHOW = -1, // Show the usual god UI
+        JOIN, // Ask whether to join
+        ABANDON, // Ask whether to abandon god, if applicable
+    };
+
+    // Add separate text widgets for each of the four possible join-god prompts;
+    // then when a different prompt needs to be shown, we switch to that prompt.
+    // This is somewhat brittle, but ensures that the UI doesn't resize when
+    // switching between prompts.
     const string prompts[] = {
-        "",
         make_stringf("%sDo you wish to %sjoin this religion?",
                 service_fee.c_str(),
                 (you.worshipped[which_god]) ? "re" : ""),
         make_stringf("Are you sure you want to abandon %s?",
                 god_name(you.religion).c_str())
     };
-
-    god_desc_type gdesc = GDESC_OVERVIEW;
-    join_step_type step = INIT;
-    bool yesno_only = false;
-    while (true)
+    formatted_string prompt_fs;
+    for (int i = JOIN; i <= ABANDON; i++)
     {
-        formatted_string prompt;
-        if (step != INIT)
-        {
-            prompt.textcolour(channel_to_colour(MSGCH_PROMPT));
-            prompt.cprintf("%s%s", prompts[step].c_str(),
-                    yesno_only ? " [Y]es or [n]o only, please." : "");
-        }
-        int keyin = _describe_god_by_type(which_god, false, gdesc, prompt.to_colour_string());
+        prompt_fs.clear();
+        prompt_fs.textcolour(channel_to_colour(MSGCH_PROMPT));
 
+        prompt_fs.cprintf("%s", prompts[i].c_str());
+        more_sw->add_child(make_shared<Text>(prompt_fs));
+
+        prompt_fs.cprintf(" [Y]es or [n]o only, please.");
+        more_sw->add_child(make_shared<Text>(prompt_fs));
+    }
+
+    const int num_panes = 3; // overview, detailed, wrath
+
+    join_step_type step = SHOW;
+    bool yesno_only = false;
+    bool done = false, join = false;
+
+    // The join-god UI state machine transition function
+    popup->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int keyin = ev.key.keysym.sym;
+
+        // Always handle escape and pane-switching keys the same way
         if (keyin == CK_ESCAPE)
-            break;
-
-        if (step == INIT)
+            return done = true;
+        if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         {
-            if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
-                gdesc = static_cast<god_desc_type>((gdesc + 1) % NUM_GDESCS);
+            int n = (desc_sw->current() + 1) % num_panes;
+            desc_sw->current() = n;
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_int("pane", n);
+            tiles.ui_state_change("describe-god", 0);
+#endif
+            if (step == SHOW)
+                more_sw->current() = n;
             else
-                step = JOIN;
-            continue;
+            {
+                yesno_only = false;
+                goto update_ui;
+            }
+            return true;
+        }
+
+        // Next, allow child widgets to handle scrolling keys
+        if (keyin != ' ' && keyin != CK_ENTER)
+        if (popup->get_child()->on_event(ev))
+            return true;
+
+        if (step == SHOW)
+        {
+            step = JOIN;
+            goto update_ui;
         }
 
         if (keyin != 'Y' && toupper(keyin) != 'N')
         {
             yesno_only = true;
-            continue;
+            goto update_ui;
         }
         yesno_only = false;
 
         if (toupper(keyin) == 'N')
         {
             canned_msg(MSG_OK);
-            break;
+            return done = true;
         }
 
         if (step == ABANDON || (step == JOIN && you_worship(GOD_NO_GOD)))
-            return true;
+            return done = join = true;
         step = static_cast<join_step_type>(step + 1);
-    }
-    return false;
+
+update_ui:
+#ifdef USE_TILE_WEB
+        tiles.json_open_object();
+        string prompt = prompts[step] + (yesno_only ? " [Y]es or [n]o only, please." : "");
+        tiles.json_write_string("prompt", prompt);
+        tiles.json_write_int("pane", desc_sw->current());
+        tiles.ui_state_change("describe-god", 0);
+#endif
+        more_sw->current() = num_panes + step*2 + yesno_only;
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
+    _send_god_ui(which_god, true);
+#endif
+
+    ui::run_layout(popup, done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
+    return join;
 }

@@ -24,6 +24,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "scroller.h"
 #include "stairs.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -610,12 +611,9 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
     string disp = overview_description_string(true);
-    linebreak_string(disp, get_number_of_cols());
-    int flags = MF_ANYPRINTABLE | MF_NOSELECT;
-    if (Options.easy_exit_menu)
-        flags |= MF_EASY_EXIT;
+    linebreak_string(disp, 80);
+    int flags = FS_PREWRAPPED_TEXT; // TODO: add ANYPRINTABLE
     formatted_scroller(flags, disp).show();
-    redraw_screen();
 }
 
 static void _seen_staircase(const coord_def& pos)

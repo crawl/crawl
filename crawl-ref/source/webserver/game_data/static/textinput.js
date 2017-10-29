@@ -1,5 +1,5 @@
-define(["jquery", "comm", "client", "./enums", "./util", "./options"],
-function ($, comm, client, enums, util, options) {
+define(["jquery", "comm", "client", "./enums", "./util", "./options", "./ui"],
+function ($, comm, client, enums, util, options, ui) {
     "use strict";
 
     var HISTORY_SIZE = 10;
@@ -65,7 +65,7 @@ function ($, comm, client, enums, util, options) {
                 prompt = "Input here (ESC to cancel): ";
             input_div.append($("<span>").append(prompt));
             input_div.append($("<span class='input_dialog_box'>").append(input));
-            show_input_dialog("#input_dialog");
+            ui.show_popup("#input_dialog");
         }
 
         input.focus();
@@ -188,25 +188,6 @@ function ($, comm, client, enums, util, options) {
         return input_data.type;
     }
 
-    // see client.show_dialog and client.hide_dialog
-    function show_input_dialog(id)
-    {
-        var elem = $(id);
-        elem.stop(true, true).fadeIn(100, function () {
-            elem.focus();
-        });
-        client.center_element(elem);
-        input_data.in_overlay = $("#overlay").is(":visible");
-        $("#overlay").show();
-    }
-
-    function hide_input_dialog(id)
-    {
-        $("#input_dialog").blur().hide();
-        if (!input_data.in_overlay)
-            $("#overlay").hide();
-    }
-
     // Message handlers
 
     function init_input(data)
@@ -232,7 +213,7 @@ function ($, comm, client, enums, util, options) {
                 if (input_data.type == "messages")
                     input.remove();
                 else // "generic"
-                    hide_input_dialog();
+                    ui.hide_popup();
             }
         }
 

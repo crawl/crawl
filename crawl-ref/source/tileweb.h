@@ -18,6 +18,7 @@
 #include "status.h"
 #include "text-tag-type.h"
 #include "tiledoll.h"
+#include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
 
@@ -139,7 +140,10 @@ public:
     bool is_in_crt_menu();
     bool is_in_menu(Menu* m);
     void pop_menu();
-    void close_all_menus();
+    void push_ui_layout(const string& type, unsigned num_state_slots);
+    void pop_ui_layout();
+    void pop_all_ui_layouts();
+    void ui_state_change(const string& type, unsigned state_slot);
 
     void send_exit_reason(const string& type, const string& message = "");
     void send_dump_info(const string& type, const string& filename);
@@ -209,6 +213,10 @@ public:
     void dump();
     void update_input_mode(mouse_mode mode);
 
+    void send_mcache(mcache_entry *entry, bool submerged,
+                     bool send_doll = true);
+    void write_tileidx(tileidx_t t);
+
 protected:
     int m_sock;
     int m_max_msg_size;
@@ -233,12 +241,14 @@ protected:
     void json_open(const string& name, char opener, char type);
     void json_close(bool erase_if_empty, char type);
 
-    struct MenuInfo
+    struct UIStackFrame
     {
-        string tag;
+        enum { MENU, CRT, UI, } type;
         Menu* menu;
+        string crt_tag;
+        vector<string> ui_json;
     };
-    vector<MenuInfo> m_menu_stack;
+    vector<UIStackFrame> m_menu_stack;
 
     WebtilesUIState m_ui_state;
     WebtilesUIState m_last_ui_state;

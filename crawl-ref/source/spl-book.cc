@@ -277,9 +277,7 @@ int spell_rarity(spell_type which_spell)
 
 void read_book(item_def &book)
 {
-    clrscr();
     describe_item(book);
-    redraw_screen();
 }
 
 /**
@@ -476,7 +474,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w> Spells %s                 Type                          Failure  Level",
+                    make_stringf("<w>Spells %s                 Type                          Failure  Level ",
                         current_action == action::memorise ?
                             "(Memorise)" :
                         current_action == action::describe ?
@@ -540,6 +538,7 @@ private:
                     entries_changed = true;
                     break;
             }
+            update_title();
             update_more();
         }
         else if (keyin == CONTROL('F'))
@@ -561,7 +560,6 @@ private:
 
         if (entries_changed)
             update_entries();
-        draw_menu(entries_changed);
         return true;
     }
 
@@ -630,6 +628,7 @@ private:
             me->data = &spell;
             add_entry(me);
         }
+        update_menu(true);
     }
 
 public:
@@ -643,9 +642,14 @@ public:
         more_str(more_str_)
     {
         set_highlighter(nullptr);
-        set_title(new MenuEntry("")); // Actual text handled by calc_title
+        set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
 
         set_more(formatted_string::parse_string(more_str));
+#ifdef USE_TILE_LOCAL
+        FontWrapper *font = tiles.get_crt_font();
+        int title_width = font->string_width(calc_title());
+        m_ui.vbox->min_size() = {38 + title_width + 10, 0};
+#endif
 
         update_more();
         update_entries();
@@ -665,7 +669,7 @@ public:
             case action::unhide:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
                 update_entries();
-                draw_menu(true);
+                update_menu(true);
                 update_more();
                 break;
             }
@@ -865,8 +869,6 @@ bool learn_spell(spell_type specspell, bool wizard)
              spell_levels_required(specspell) != 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));
 
-    // Deactivate choice from tile inventory.
-    mouse_control mc(MOUSE_MODE_MORE);
     if (!yesno(prompt.c_str(), true, 'n', false))
     {
         canned_msg(MSG_OK);
