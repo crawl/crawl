@@ -267,7 +267,7 @@ Magic Resistance
 
 Size
   Different species have different sizes: Spriggans and Felids are little;
-  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas, Centaurs
+  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and Centaurs
   are large with a medium torso; all other species are medium-sized. Many
   transmutations will change your size too. Size affects your evasion: the
   smaller your character the more evasive it is. On the other hand, characters
