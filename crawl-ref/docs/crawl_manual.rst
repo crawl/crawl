@@ -265,6 +265,19 @@ Magic Resistance
   able to affect you. You can get a rough idea of your current MR by pressing
   '@' or '%'.
 
+Size
+  Different species have different sizes: Spriggans and Felids are little;
+  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas, Centaurs
+  are large with a medium torso; all other species are medium-sized. Many
+  transmutations will change your size too. Size affects your evasion: the
+  smaller your character the more evasive it is. On the other hand, characters
+  of larger than medium size do not suffer the usual attack penalties when
+  standing in shallow water. Characters of smaller than medium size will have
+  problems with some larger weapons. Little characters and large characters are
+  not able to use most types of armour. Players and monsters can only constrict
+  foes of the same size or smaller. In the dungeon you can also meet tiny, very
+  large and giant creatures.
+
 Stealth
   High stealth allows your character to move through the dungeon undetected.
   It is affected by your species, dexterity, Stealth skill, and the encumbrance
