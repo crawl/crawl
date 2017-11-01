@@ -2732,6 +2732,7 @@ NSUBST: a = 1:+ / *:x
 NSUBST: b = 1:+ / *:x
 NSUBST: c = 1:+ / *:x
 NSUBST: d = 1:+ / *:x
+KPROP:  *+ = no_tele_into
 MAP
   wwwwwwww
  wwwwwwwwww
