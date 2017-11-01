@@ -75,7 +75,7 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
     }
     else if (ability != NUM_ABILITIES && event.button == MouseEvent::RIGHT)
     {
-        describe_talent(get_talent(ability, false));
+        describe_ability(ability);
         redraw_screen();
         return CK_MOUSE_CMD;
     }
@@ -112,6 +112,9 @@ bool AbilityRegion::update_tip_text(string& tip)
         tip = "[L-Click] Use (%)";
         cmd.push_back(CMD_USE_ABILITY);
     }
+
+    tip += "\n[R-Click] Describe";
+    insert_commands(tip, cmd);
 
     return true;
 }
