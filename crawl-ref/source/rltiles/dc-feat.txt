@@ -157,6 +157,7 @@ statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
 statue_cerebov
+%syn DNGN_STATUE_CEREBOV
 statue_demonic_bust
 %syn DNGN_STATUE_DEMONIC_BUST
 statue_twins
