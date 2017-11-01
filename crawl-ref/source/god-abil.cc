@@ -3975,6 +3975,7 @@ bool dithmenos_shadow_step()
         }
     }
 
+    const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
     // perhaps this should be handled more gracefully.
     if (!you.move_to_pos(tgt.landing_site))
@@ -3986,6 +3987,9 @@ bool dithmenos_shadow_step()
     const actor *victim = actor_at(sdirect.target);
     mprf("You step into %s shadow.",
          apostrophise(victim->name(DESC_THE)).c_str());
+    // Using 'stepped = true' here because it's Shadow *Step*.
+    // This helps to evade splash upon landing on water.
+    moveto_location_effects(grd(old_pos), true, old_pos);
 
     return true;
 }
