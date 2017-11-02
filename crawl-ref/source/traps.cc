@@ -457,9 +457,15 @@ vector<coord_def> find_golubria_on_level()
     return ret;
 }
 
-static bool _find_other_passage_side(coord_def& to, bool& is_blocked)
+enum _passage_type
+{
+    _PASSAGE_FREE, _PASSAGE_BLOCKED, _PASSAGE_NONE
+};
+
+static _passage_type _find_other_passage_side(coord_def& to)
 {
     vector<coord_def> clear_passages;
+    bool has_blocks = false;
     for (coord_def passage : find_golubria_on_level())
     {
         if (passage != to)
@@ -467,14 +473,14 @@ static bool _find_other_passage_side(coord_def& to, bool& is_blocked)
             if (!actor_at(passage))
                 clear_passages.push_back(passage);
             else
-                is_blocked = true;
+                has_blocks = true;
         }
     }
     const int choices = clear_passages.size();
     if (choices < 1)
-        return false;
+        return has_blocks ? _PASSAGE_BLOCKED : _PASSAGE_NONE;
     to = clear_passages[random2(choices)];
-    return true;
+    return _PASSAGE_FREE;
 }
 
 // Returns a direction string from you.pos to the
@@ -546,22 +552,27 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_GOLUBRIA:
     {
         coord_def to = p;
-        bool is_blocked = false;
-        if (_find_other_passage_side(to, is_blocked))
+        _passage_type search_result = _find_other_passage_side(to);
+        if (search_result == _PASSAGE_FREE)
         {
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
-            triggerer.move_to_pos(to); // Should always be true.
+            // Should always be true.
+            bool assert_check = triggerer.move_to_pos(to);
+            ASSERT(assert_check);
+            
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
             know_trap_destroyed = you_trigger;
         }
         else if (you_trigger)
-            mprf("This passage %s!", is_blocked ?
+        {
+            mprf("This passage %s!", search_result == _PASSAGE_BLOCKED ?
                  "seems to be blocked by something" : "doesn't lead anywhere");
+        }
         break;
     }
     case TRAP_TELEPORT:
