@@ -457,13 +457,18 @@ vector<coord_def> find_golubria_on_level()
     return ret;
 }
 
-static bool _find_other_passage_side(coord_def& to)
+static bool _find_other_passage_side(coord_def& to, bool& is_blocked)
 {
     vector<coord_def> clear_passages;
     for (coord_def passage : find_golubria_on_level())
     {
-        if (passage != to && !actor_at(passage))
-            clear_passages.push_back(passage);
+        if (passage != to)
+        {
+            if (!actor_at(passage))
+                clear_passages.push_back(passage);
+            else
+                is_blocked = true;
+        }
     }
     const int choices = clear_passages.size();
     if (choices < 1)
@@ -504,7 +509,7 @@ void trap_def::trigger(actor& triggerer)
 
     // If set, the trap will be removed at the end of the
     // triggering process.
-    bool trap_destroyed = false, know_trap_destroyed = false;;
+    bool trap_destroyed = false, know_trap_destroyed = false;
 
     monster* m = triggerer.as_monster();
 
@@ -541,25 +546,22 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_GOLUBRIA:
     {
         coord_def to = p;
-        if (_find_other_passage_side(to))
+        bool is_blocked = false;
+        if (_find_other_passage_side(to, is_blocked))
         {
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
-            if (triggerer.move_to_pos(to))
-            {
-                if (you_trigger)
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &you);
-                else
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), m);
-                trap_destroyed = true;
-                know_trap_destroyed = you_trigger;
-            }
-            else
-                mpr("But it is blocked!");
+            triggerer.move_to_pos(to); // Should always be true.
+            place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
+            trap_destroyed = true;
+            know_trap_destroyed = you_trigger;
         }
+        else if (you_trigger)
+            mprf("This passage %s!", is_blocked ?
+                 "seems to be blocked by something" : "doesn't lead anywhere");
         break;
     }
     case TRAP_TELEPORT:
