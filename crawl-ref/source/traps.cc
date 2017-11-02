@@ -457,12 +457,12 @@ vector<coord_def> find_golubria_on_level()
     return ret;
 }
 
-enum _passage_type
+enum passage_type
 {
-    _PASSAGE_FREE, _PASSAGE_BLOCKED, _PASSAGE_NONE
+    PASSAGE_FREE, PASSAGE_BLOCKED, PASSAGE_NONE
 };
 
-static _passage_type _find_other_passage_side(coord_def& to)
+static passage_type _find_other_passage_side(coord_def& to)
 {
     vector<coord_def> clear_passages;
     bool has_blocks = false;
@@ -478,9 +478,9 @@ static _passage_type _find_other_passage_side(coord_def& to)
     }
     const int choices = clear_passages.size();
     if (choices < 1)
-        return has_blocks ? _PASSAGE_BLOCKED : _PASSAGE_NONE;
+        return has_blocks ? PASSAGE_BLOCKED : PASSAGE_NONE;
     to = clear_passages[random2(choices)];
-    return _PASSAGE_FREE;
+    return PASSAGE_FREE;
 }
 
 // Returns a direction string from you.pos to the
@@ -552,8 +552,8 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_GOLUBRIA:
     {
         coord_def to = p;
-        _passage_type search_result = _find_other_passage_side(to);
-        if (search_result == _PASSAGE_FREE)
+        passage_type search_result = _find_other_passage_side(to);
+        if (search_result == PASSAGE_FREE)
         {
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
@@ -561,8 +561,8 @@ void trap_def::trigger(actor& triggerer)
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
             // Should always be true.
-            bool assert_check = triggerer.move_to_pos(to);
-            ASSERT(assert_check);
+            bool moved = triggerer.move_to_pos(to);
+            ASSERT(moved);
             
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
@@ -570,7 +570,7 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (you_trigger)
         {
-            mprf("This passage %s!", search_result == _PASSAGE_BLOCKED ?
+            mprf("This passage %s!", search_result == PASSAGE_BLOCKED ?
                  "seems to be blocked by something" : "doesn't lead anywhere");
         }
         break;
