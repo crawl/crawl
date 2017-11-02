@@ -340,13 +340,15 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Wu Jian
     { { 1, "attack monsters by moving around them",
-           "no longer perform spinning attacks" },
+           "perform spinning attacks" },
       { 2, "perform distracting airborne attacks by moving against a solid obstacle",
-           "no longer perform airborne attacks" },
+           "perform airborne attacks" },
       { 3, "strike by moving towards foes, devastating them if distracted",
-           "no longer perform lunging strikes" },
-      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
-      { 5, ABIL_WU_JIAN_HEAVENLY_STORM, "summon a storm of heavenly clouds to empower your attacks" },
+           "perform lunging strikes" },
+      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds",
+           "move at supernatural speeds" },
+      { 5, ABIL_WU_JIAN_HEAVENLY_STORM, "summon a storm of heavenly clouds to empower your attacks",
+           "summon a storm of heavenly clouds" },
     },
 };
 
