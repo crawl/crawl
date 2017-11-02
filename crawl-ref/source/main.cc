@@ -1456,6 +1456,7 @@ static void _take_transporter()
             explored_tracked_feature(DNGN_TRANSPORTER);
         }
         mpr("You enter the transporter and appear at another place.");
+        id_floor_items();
     }
 }
 
@@ -1492,6 +1493,8 @@ static void _take_stairs(bool down)
         you.turn_is_over = (you.pos() != old_pos);
         if (!you.turn_is_over)
             mpr("This passage doesn't lead anywhere!");
+        else
+            id_floor_items();
     }
     else
     {
@@ -1500,6 +1503,7 @@ static void _take_stairs(bool down)
             start_delay<DescendingStairsDelay>(1);
         else
             start_delay<AscendingStairsDelay>(1);
+        id_floor_items();
     }
 }
 
