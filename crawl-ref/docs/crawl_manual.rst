@@ -1400,10 +1400,9 @@ turns up, like a dragon on the second dungeon level. These are not bugs!
 Actually, they are part of the randomness design goal. In this case, they also
 serve as additional motivation: in many situations, the OOD monster can be
 survived somehow, and the mental bond with the character will then surely grow.
-OOD monsters also help to keep players on their toes by making shallow, or
-cleared, levels still not trivial. In a similar vein, early trips to the Abyss
-are not deficits: there's more than one way out, and successfully escaping is
-exciting for anyone.
+OOD monsters also help to keep players on their toes by making shallow levels
+still not trivial. In a similar vein, early trips to the Abyss are not deficits:
+there's more than one way out, and successfully escaping is exciting for anyone.
 
 ########################################
 Appendices
