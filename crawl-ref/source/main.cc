@@ -1490,8 +1490,6 @@ static void _take_stairs(bool down)
         // only returns false if no trap was found, which shouldn't happen
         ASSERT(trap_triggered);
         you.turn_is_over = (you.pos() != old_pos);
-        if (!you.turn_is_over)
-            mpr("This passage doesn't lead anywhere!");
     }
     else
     {
