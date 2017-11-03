@@ -1882,7 +1882,7 @@ void melee_attack::handle_noise(const coord_def & pos)
     if (stab_attempt)
         return;
 
-    int loudness = damage_done / 4;
+    int loudness = random2avg(12, 3) + 1;
 
     // All non-stab melee attacks make some noise.
     loudness = max(1, loudness);
