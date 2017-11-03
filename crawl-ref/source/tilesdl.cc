@@ -256,7 +256,8 @@ void TilesFramework::hide_title()
     TitleRegion* reg = dynamic_cast<TitleRegion*>(
             m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     redraw();
-    reg->run();
+    if (!Options.tile_skip_title)
+        reg->run();
     delete reg;
     m_layers[LAYER_TILE_CONTROL].m_regions.clear();
 }
