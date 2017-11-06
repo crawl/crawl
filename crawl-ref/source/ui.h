@@ -66,6 +66,7 @@ public:
 
     // Wrapper functions which handle common behavior
     // - margins
+    // - debug drawing
     void render();
     UISizeReq get_preferred_size(int dim, int prosp_width);
     void allocate_region(i4 region);

@@ -20,6 +20,8 @@
 # include "stringutil.h"
 #endif
 
+#define UI_DEBUG_DRAW 0
+
 static struct UIRoot
 {
 public:
@@ -38,6 +40,15 @@ protected:
 
 void UI::render()
 {
+#ifdef USE_TILE_LOCAL
+#if UI_DEBUG_DRAW
+    LineBuffer buf;
+    const VColour vc(160, 80, 80, 255);
+    buf.add_square(m_region[0], m_region[1],
+            m_region[0] + m_region[2]-1, m_region[1] + m_region[3]-1, vc);
+    buf.draw();
+#endif
+#endif
     _render();
 }
 
