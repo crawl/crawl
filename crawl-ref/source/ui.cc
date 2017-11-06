@@ -46,6 +46,10 @@ UISizeReq UI::get_preferred_size(Direction dim, int prosp_width)
 {
     ASSERT((dim == HORZ) == (prosp_width == -1));
 
+    // XXX: This needs invalidation on widget/descendant property change!
+    if (cached_sr_valid[dim] && (!dim || cached_sr_pw == prosp_width))
+        return cached_sr[dim];
+
     prosp_width = dim ? prosp_width - margin[1] - margin[3] : prosp_width;
     UISizeReq ret = _get_preferred_size(dim, prosp_width);
     ASSERT(ret.min <= ret.nat);
@@ -57,6 +61,11 @@ UISizeReq UI::get_preferred_size(Direction dim, int prosp_width)
     if (dim ? expand_v : expand_h)
         ret.nat = ui_expand_sz;
     ret.nat = min(ret.nat, ui_expand_sz);
+
+    cached_sr_valid[dim] = true;
+    cached_sr[dim] = ret;
+    if (dim)
+        cached_sr_pw = prosp_width;
 
     return ret;
 }

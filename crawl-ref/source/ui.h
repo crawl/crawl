@@ -65,12 +65,18 @@ public:
 
     // Wrapper functions which handle common behavior
     // - margins
+    // - caching
     void render();
     UISizeReq get_preferred_size(Direction dim, int prosp_width);
     void allocate_region(i4 region);
 
 protected:
     i4 m_region;
+
+private:
+    bool cached_sr_valid[2] = { false, false };
+    UISizeReq cached_sr[2];
+    int cached_sr_pw;
 };
 
 // Box widget: similar to the CSS flexbox (without wrapping)
