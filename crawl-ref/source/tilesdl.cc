@@ -45,6 +45,7 @@
 #include "tilereg-title.h"
 #include "tileview.h"
 #include "travel.h"
+#include "ui.h"
 #include "unwind.h"
 #include "version.h"
 #include "viewgeom.h"
@@ -642,7 +643,7 @@ void TilesFramework::resize()
     update_dpi();
     calculate_default_options();
     do_layout();
-
+    ui_resize(m_windowsz.x, m_windowsz.y);
     wm->resize(m_windowsz);
 }
 
