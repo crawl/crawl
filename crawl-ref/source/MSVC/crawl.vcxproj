@@ -589,6 +589,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\traps.cc" />
     <ClCompile Include="..\travel.cc" />
     <ClCompile Include="..\tutorial.cc" />
+    <ClCompile Include="..\ui.cc" />
     <ClCompile Include="..\uncancel.cc" />
     <ClCompile Include="..\unicode.cc" />
     <ClCompile Include="..\version.cc" />
@@ -1026,6 +1027,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\travel-defs.h" />
     <ClInclude Include="..\travel.h" />
     <ClInclude Include="..\tutorial.h" />
+    <ClInclude Include="..\ui.h" />
     <ClInclude Include="..\uncancel.h" />
     <ClInclude Include="..\uncancellable-type.h" />
     <ClInclude Include="..\undead-state-type.h" />
