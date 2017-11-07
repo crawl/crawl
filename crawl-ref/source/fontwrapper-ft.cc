@@ -570,6 +570,11 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 
     for (int i = 0; text[i]; i++)
     {
+        if (text[i] == '\n')
+        {
+            width = 0;
+            continue;
+        }
         unsigned int c = map_unicode(text[i]);
         width += m_glyphs[c].advance;
         int adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
