@@ -1527,14 +1527,14 @@ Centaurs
 
 Ogres
   Ogres are huge, chunky creatures who are very strong and robust, but are not
-  nimble at all. Ogres mature almost as quickly as Humans. They possess a raw
-  talent for magic, but are poor at making use of magical devices.
+  nimble at all. They possess a raw talent for magic, but are poor at making
+  use of magical devices. Ogres mature almost as quickly as Humans.
 
   Their preferred methods of avoiding beatings are dodging and the use of
-  shields. Ogres find it most natural to fight using maces, polearms, staves,
-  and even their bare hands. While all sophisticated forms of missile combat are
-  too awkward for them, they are good at throwing things, in particular
-  boulders.
+  shields, but they can also use armours made from magical hides, since these
+  accommodate their large frames. Ogres are proficient at using all types of
+  melee weapons, yet all sophisticated forms of missile combat are too awkward
+  for them. They are, however, good at throwing things, in particular boulders.
 
 Trolls
   Trolls are monstrous creatures with powerful claws. They have thick, knobbly
