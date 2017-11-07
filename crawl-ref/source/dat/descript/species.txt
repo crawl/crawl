@@ -109,7 +109,7 @@ but almost no armour fits them.
 Ogre
 
 Large and strong, Ogres are mostly seen as brutes. They are extremely robust,
-and have an excellent grasp of magic.
+and have a moderate grasp of magic.
 %%%%
 Spriggan
 
