@@ -917,7 +917,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
     _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
     _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
-    _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE, 
+    _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE,
                          "add note (use <w>%:</w> to read notes)",
                          { CMD_DISPLAY_COMMANDS });
     _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);

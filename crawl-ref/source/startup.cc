@@ -967,10 +967,10 @@ static bool _exit_type_allows_menu_bypass(game_exit exit)
     // restart with last game died, won, or left: bypass if other settings allow
     // it. unknown corresponds to no previous game in this crawl
     // session.
-    return (exit == game_exit::death
-         || exit == game_exit::win
-         || exit == game_exit::unknown
-         || exit == game_exit::leave);
+    return exit == game_exit::death
+        || exit == game_exit::win
+        || exit == game_exit::unknown
+        || exit == game_exit::leave;
 }
 #endif
 

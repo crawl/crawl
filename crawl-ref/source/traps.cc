@@ -563,7 +563,7 @@ void trap_def::trigger(actor& triggerer)
             // Should always be true.
             bool moved = triggerer.move_to_pos(to);
             ASSERT(moved);
-            
+
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
             know_trap_destroyed = you_trigger;
