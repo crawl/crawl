@@ -2935,15 +2935,13 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
 void describe_ability(ability_type ability)
 {
 #ifdef USE_TILE_WEB
-    // XXX I have no idea what show_as_menu() does, can't find definition
     tiles_crt_control show_as_menu(CRT_MENU, "describe_ability");
 #endif
 
-    string desc = get_ability_desc(ability);
-    print_description(desc);
+    print_description(get_ability_desc(ability));
 
     mouse_control mc(MOUSE_MODE_MORE);
-    getchm();// FIXME description screen wouldn't show up without getchm()
+    getchm();// description screen wouldn't show up without getchm()
 }
 
 
