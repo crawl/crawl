@@ -70,6 +70,19 @@ public:
     UISizeReq get_preferred_size(Direction dim, int prosp_width);
     void allocate_region(i4 region);
 
+    void set_margin_for_crt(i4 _margin)
+    {
+#ifndef USE_TILE_LOCAL
+        margin = _margin;
+#endif
+    };
+    void set_margin_for_sdl(i4 _margin)
+    {
+#ifdef USE_TILE_LOCAL
+        margin = _margin;
+#endif
+    };
+
 protected:
     i4 m_region;
 
