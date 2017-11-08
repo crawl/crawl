@@ -339,9 +339,7 @@ static void _reset_game()
 {
     clrscr();
     // Unset by death, but not by saving with restart_after_save.
-    crawl_state.need_save = false;
-    crawl_state.type = GAME_TYPE_UNSPECIFIED;
-    crawl_state.updating_scores = false;
+    crawl_state.reset_game();
     clear_message_store();
     macro_clear_buffers();
     the_lost_ones.clear();
@@ -3340,8 +3338,10 @@ static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 
 static void _cancel_cmd_repeat()
 {
-    crawl_state.cancel_cmd_again();
-    crawl_state.cancel_cmd_repeat();
+    // need to force reset these so that history for again is consistent, even
+    // if a repeat didn't get started.
+    crawl_state.cancel_cmd_again("", true);
+    crawl_state.cancel_cmd_repeat("", true);
     flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
 }
 
@@ -3514,10 +3514,9 @@ static void _do_prev_cmd_again()
         return;
     }
 
-    if (crawl_state.prev_cmd == CMD_NO_CMD)
+    if (crawl_state.prev_cmd == CMD_NO_CMD || crawl_state.prev_cmd_keys.empty())
     {
-        mpr("No previous command to re-do.");
-        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_again("No previous command to re-do.", true);
         crawl_state.cancel_cmd_repeat();
         repeat_again_rec.clear();
         return;

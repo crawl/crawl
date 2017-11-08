@@ -1137,6 +1137,24 @@ string read_rc_file_macro(const string& field)
     return "";
 }
 
+// useful for debugging
+string keyseq_to_str(const keyseq &seq)
+{
+    string s = "";
+    for (auto k : seq)
+    {
+        if (k == '\n' || k == '\r')
+            s += "newline";
+        else if (k == '\t')
+            s += "tab";
+        else
+            s += (char) k;
+        s += ", ";
+    }
+    return s.size() == 0 ? s : s.substr(0, s.size() - 2);
+
+}
+
 void macro_init()
 {
     for (const auto &fn : Options.additional_macro_files)
