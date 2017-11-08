@@ -15,4 +15,3 @@ enum class game_exit
            // entry.
     crash
 };
-
