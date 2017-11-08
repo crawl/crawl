@@ -64,6 +64,21 @@ game_state::game_state()
 #endif
 }
 
+/**
+ * Cleanup for when the game is reset.
+ *
+ * @see main.cc:_reset_game()
+ */
+void game_state::reset_game()
+{
+    // Unset by death, but not by saving with restart_after_save.
+    need_save = false;
+    type = GAME_TYPE_UNSPECIFIED;
+    updating_scores = false;
+    reset_cmd_repeat();
+    reset_cmd_again();
+}
+
 void game_state::add_startup_error(const string &err)
 {
     startup_errors.push_back(err);
@@ -100,9 +115,9 @@ bool game_state::is_repeating_cmd() const
     return repeat_cmd != CMD_NO_CMD;
 }
 
-void game_state::cancel_cmd_repeat(string reason)
+void game_state::cancel_cmd_repeat(string reason, bool force)
 {
-    if (!is_repeating_cmd())
+    if (!force && !is_repeating_cmd())
         return;
 
     if (repeat_cmd == CMD_WIZARD)
@@ -134,12 +149,13 @@ void game_state::cancel_cmd_repeat(string reason)
         mpr(reason);
 }
 
-void game_state::cancel_cmd_again(string reason)
+void game_state::cancel_cmd_again(string reason, bool force)
 {
-    if (!doing_prev_cmd_again)
+    if (!force && !doing_prev_cmd_again)
         return;
 
-    flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
+    if (is_replaying_keys() || cmd_repeat_start)
+        flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
 
     if (is_processing_macro())
         flush_input_buffer(FLUSH_ABORT_MACRO);

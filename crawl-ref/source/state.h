@@ -141,6 +141,8 @@ protected:
 public:
     game_state();
 
+    void reset_game();
+
     void add_startup_error(const string &error);
     void show_startup_errors();
 
@@ -148,8 +150,8 @@ public:
 
     bool is_repeating_cmd() const;
 
-    void cancel_cmd_repeat(string reason = "");
-    void cancel_cmd_again(string reason = "");
+    void cancel_cmd_repeat(string reason = "", bool force=false);
+    void cancel_cmd_again(string reason = "", bool force=false);
     void cancel_cmd_all(string reason = "");
 
     void cant_cmd_repeat(string reason = "");
