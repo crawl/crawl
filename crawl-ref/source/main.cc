@@ -2011,10 +2011,13 @@ void process_command(command_type cmd)
 
     case CMD_QUIT:
     {
+        // TODO: msg whether this will start a new game? not very important
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character and %s?",
-                crawl_should_restart(game_exit::quit) ? "return to the main menu"
-                                                      : "quit the game"))
+            || yes_or_no("Are you sure you want to abandon this character%s?",
+                Options.newgame_after_quit ? "" : // hard to predict this case
+                (crawl_should_restart(game_exit::quit)
+                                            ? " and return to the main menu"
+                                            : " and quit the game")))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }

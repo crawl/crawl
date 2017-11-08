@@ -963,14 +963,16 @@ static void _choose_arena_teams(newgame_def& choice,
 #ifndef DGAMELAUNCH
 static bool _exit_type_allows_menu_bypass(game_exit exit)
 {
-    // restart with last game saved, quit, crashed, or aborted: don't bypass
+    // restart with last game saved, crashed, or aborted: don't bypass
     // restart with last game died, won, or left: bypass if other settings allow
-    // it. unknown corresponds to no previous game in this crawl
+    // it. If quit, bypass only if the relevant option is set.
+    // unknown corresponds to no previous game in this crawl
     // session.
     return exit == game_exit::death
         || exit == game_exit::win
         || exit == game_exit::unknown
-        || exit == game_exit::leave;
+        || exit == game_exit::leave
+        || (exit == game_exit::quit && Options.newgame_after_quit);
 }
 #endif
 

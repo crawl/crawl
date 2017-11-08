@@ -411,6 +411,8 @@ public:
                                     // CL options would bring up the startup
                                     // menu.
     bool        restart_after_save; // .. or on save
+    bool        newgame_after_quit; // override the restart_after_game behavior
+                                    // to always start a new game on quit.
 
     bool        name_bypasses_menu; // should the menu be skipped if there is
                                     // a name set on game start

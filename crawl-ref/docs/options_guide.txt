@@ -366,6 +366,11 @@ restart_after_save = false
         only has an effect if restart_after_game is set to maybe or true.
         This option is ignored for online games.
 
+newgame_after_quit = false
+        When true, if a name/combo is set, quit will do a fast restart. On this
+        setting, with restart_after_game as non-false, it may be possible to
+        exit crawl only via saving.
+
 name_bypasses_menu = true
         When set to true, having a valid name set via options will skip the main
         menu and jump right to a game or character selection (if there is no
