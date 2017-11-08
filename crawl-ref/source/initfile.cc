@@ -288,6 +288,7 @@ const vector<GameOption*> game_options::build_options_list()
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), false),
+        new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
         new StringGameOption(SIMPLE_NAME(map_file_name), ""),
         new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
@@ -1068,6 +1069,7 @@ void game_options::reset_options()
 #ifdef DGAMELAUNCH
     restart_after_game = MB_FALSE;
     restart_after_save = false;
+    newgame_after_quit = false;
     name_bypasses_menu = true;
 #else
 #ifdef USE_TILE_LOCAL
