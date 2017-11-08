@@ -1003,8 +1003,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (!is_useless_item(item))
     {
-        description += "\n    " +
-            _your_skill_desc(skill, could_set_target, mindelay_skill);
+        description += "\n    " + _your_skill_desc(skill,
+                    could_set_target && in_inventory(item), mindelay_skill);
     }
 
     if (could_set_target)
@@ -1435,7 +1435,8 @@ static string _describe_ammo(const item_def &item)
         if (!is_useless_item(item))
         {
             description += "\n    " +
-                    _your_skill_desc(SK_THROWING, could_set_target, target_skill);
+                    _your_skill_desc(SK_THROWING,
+                        could_set_target && in_inventory(item), target_skill);
         }
         if (could_set_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
@@ -1483,8 +1484,8 @@ static string _describe_armour(const item_def &item, bool verbose)
                 if (crawl_state.need_save)
                 {
                     description += "\n                            "
-                        + _your_skill_desc(SK_SHIELDS, could_set_target,
-                                            target_skill);
+                        + _your_skill_desc(SK_SHIELDS,
+                          could_set_target && in_inventory(item), target_skill);
                 }
                 else
                     description += "\n";
