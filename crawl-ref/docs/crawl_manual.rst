@@ -1097,9 +1097,9 @@ can be controlled. Many mutations are actually beneficial to your character, but
 there are plenty of nasty ones as well. Many mutations have multiple levels,
 each of which counts as a single mutation.
 
-You can also become mutated by overusing certain powerful enchantments,
-particularly 'Haste' and 'Invisibility', as your system absorbs too much magical
-energy. A single use of those effects will never cause dangerous levels of magical
+You can also become mutated by overusing certain powerful spells, particularly
+'Invisibility' and 'Irradiate', as your system absorbs too much magical energy.
+A single use of those effects will never cause dangerous levels of magical
 contamination, but multiple uses in short succession, or usage with existing
 contamination from other sources (e.g. from miscasting spells) can cause trouble.
 Mutations from magical contamination are almost always harmful.
