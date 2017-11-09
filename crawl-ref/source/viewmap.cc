@@ -613,10 +613,16 @@ static void _forget_map()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (env.map_knowledge(*ri).flags & MAP_VISIBLE_FLAG)
+        auto& flags = env.map_knowledge(*ri).flags;
+        // don't touch squares we can currently see
+        if (flags & MAP_VISIBLE_FLAG)
             continue;
-        env.map_knowledge(*ri).flags &= ~MAP_SEEN_FLAG;
-        env.map_knowledge(*ri).flags |= MAP_MAGIC_MAPPED_FLAG;
+        // squares we've seen in the past, pretend we've mapped instead
+        if (flags & MAP_SEEN_FLAG)
+        {
+            flags |= MAP_MAGIC_MAPPED_FLAG;
+            flags &= ~MAP_SEEN_FLAG;
+        }
         env.map_seen.set(*ri, false);
 #ifdef USE_TILE
         tiles.update_minimap(*ri);
