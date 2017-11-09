@@ -660,7 +660,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 env.map_knowledge(*ri).clear();
         }
 
-        if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
+        // Don't assume that DNGN_UNSEEN cells ever count as mapped.
+        // Because of a bug at one point in map forgetting, cells could
+        // spuriously get marked as mapped even when they were completely
+        // unseen.
+        const bool already_mapped = env.map_knowledge(*ri).mapped()
+                            && env.map_knowledge(*ri).feat() != DNGN_UNSEEN;
+
+        if (!wizard_map && (env.map_knowledge(*ri).seen() || already_mapped))
             continue;
 
         const dungeon_feature_type feat = grd(*ri);
