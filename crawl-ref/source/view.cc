@@ -596,11 +596,8 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
-                   coord_def pos)
+                   coord_def origin)
 {
-    if (!in_bounds(pos))
-        pos = you.pos();
-
     if (!force && !is_map_persistent())
     {
         if (!suppress_msg)
@@ -625,59 +622,63 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, C_SQUARE);
+    for (radius_iterator ri(in_bounds(origin) ? origin : you.pos(),
+                            map_radius, C_SQUARE);
          ri; ++ri)
     {
+        coord_def pos = *ri;
         if (!wizard_map)
         {
             int threshold = proportion;
 
-            const int dist = grid_distance(you.pos(), *ri);
+            const int dist = grid_distance(you.pos(), pos);
 
             if (dist > very_far)
                 threshold = threshold / 3;
             else if (dist > pfar)
                 threshold = threshold * 2 / 3;
 
-            if (difficulty(*ri) > threshold)
+            if (difficulty(pos) > threshold)
                 continue;
         }
 
-        if (env.map_knowledge(*ri).changed())
+        map_cell& knowledge = env.map_knowledge(pos);
+
+        if (knowledge.changed())
         {
             // If the player has already seen the square, update map
             // knowledge with the new terrain. Otherwise clear what we had
             // before.
-            if (env.map_knowledge(*ri).seen())
+            if (knowledge.seen())
             {
-                dungeon_feature_type newfeat = grd(*ri);
+                dungeon_feature_type newfeat = grd(pos);
                 if (newfeat == DNGN_UNDISCOVERED_TRAP)
                     newfeat = DNGN_FLOOR;
-                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(*ri) : TRAP_UNASSIGNED;
-                env.map_knowledge(*ri).set_feature(newfeat, env.grid_colours(*ri), tr);
+                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
+                knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }
             else
-                env.map_knowledge(*ri).clear();
+                knowledge.clear();
         }
 
         // Don't assume that DNGN_UNSEEN cells ever count as mapped.
         // Because of a bug at one point in map forgetting, cells could
         // spuriously get marked as mapped even when they were completely
         // unseen.
-        const bool already_mapped = env.map_knowledge(*ri).mapped()
-                            && env.map_knowledge(*ri).feat() != DNGN_UNSEEN;
+        const bool already_mapped = knowledge.mapped()
+                            && knowledge.feat() != DNGN_UNSEEN;
 
-        if (!wizard_map && (env.map_knowledge(*ri).seen() || already_mapped))
+        if (!wizard_map && (knowledge.seen() || already_mapped))
             continue;
 
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = grd(pos);
 
         bool open = true;
 
         if (feat_is_solid(feat) && !feat_is_closed_door(feat))
         {
             open = false;
-            for (adjacent_iterator ai(*ri); ai; ++ai)
+            for (adjacent_iterator ai(pos); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
                                         || feat_is_closed_door(grd(*ai))))
@@ -692,31 +693,31 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             if (wizard_map)
             {
-                env.map_knowledge(*ri).set_feature(grd(*ri), 0,
-                    feat_is_trap(grd(*ri)) ? get_trap_type(*ri)
+                knowledge.set_feature(grd(pos), 0,
+                    feat_is_trap(grd(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
-            else if (!env.map_knowledge(*ri).feat())
-                env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
-            if (emphasise(*ri))
-                env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
+            else if (!knowledge.feat())
+                knowledge.set_feature(magic_map_base_feat(grd(pos)));
+            if (emphasise(pos))
+                knowledge.flags |= MAP_EMPHASIZE;
 
             if (wizard_map)
             {
                 if (is_notable_terrain(feat))
-                    seen_notable_thing(feat, *ri);
+                    seen_notable_thing(feat, pos);
 
-                set_terrain_seen(*ri);
+                set_terrain_seen(pos);
 #ifdef USE_TILE
-                tile_wizmap_terrain(*ri);
+                tile_wizmap_terrain(pos);
 #endif
             }
             else
             {
-                set_terrain_mapped(*ri);
+                set_terrain_mapped(pos);
 
-                if (get_cell_map_feature(env.map_knowledge(*ri)) == MF_STAIR_BRANCH)
-                    seen_notable_thing(feat, *ri);
+                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, pos);
 
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
