@@ -162,25 +162,47 @@ class UIGrid : public UI
 public:
     UIGrid() : m_track_info_dirty(false) {};
 
-    void add_child(shared_ptr<UI> child, int x, int y);
+    void add_child(shared_ptr<UI> child, int x, int y, int w = 1, int h = 1);
+    int& track_flex_grow(int x, int y)
+    {
+        init_track_info();
+        ASSERT(x == -1 || y == -1);
+        return (x >= 0 ? m_col_info[x].flex_grow : m_row_info[y].flex_grow);
+    }
 
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
     virtual void _allocate_region() override;
 
 protected:
+    i4 get_tracks_region(int x, int y, int w, int h) const
+    {
+        return {
+            m_col_info[x].offset, m_row_info[y].offset,
+            m_col_info[x+w-1].size + m_col_info[x+w-1].offset - m_col_info[x].offset,
+            m_row_info[y+h-1].size + m_row_info[y+h-1].offset - m_row_info[y].offset,
+        };
+    }
+
     struct track_info {
         int size;
         int offset;
         UISizeReq sr;
+        int flex_grow;
     };
     vector<track_info> m_col_info;
     vector<track_info> m_row_info;
 
-    vector<i2> m_child_pos;
+    struct child_info {
+        i2 pos;
+        i2 span;
+    };
+    vector<child_info> m_child_info;
     vector<shared_ptr<UI>> m_children;
 
     void layout_track(int dim, UISizeReq sr, int size);
+    void set_track_offsets(vector<track_info>& tracks);
+    void compute_track_sizereqs(int dim);
     void init_track_info();
     bool m_track_info_dirty;
 };
