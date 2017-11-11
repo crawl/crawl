@@ -330,10 +330,11 @@ void UIStack::_allocate_region()
     }
 }
 
-void UIGrid::add_child(shared_ptr<UI> child, int x, int y)
+void UIGrid::add_child(shared_ptr<UI> child, int x, int y, int w, int h)
 {
-    m_child_pos.push_back({x, y});
-    m_children.push_back(move(child));
+    child_info ch = { {x, y}, {w, h} };
+    m_child_info.push_back(ch);
+    m_children.push_back(child);
     m_track_info_dirty = true;
 }
 
@@ -343,14 +344,12 @@ void UIGrid::init_track_info()
         return;
     m_track_info_dirty = false;
 
-    m_row_info.clear();
-    m_col_info.clear();
     // calculate the number of rows and columns
     int n_rows = 0, n_cols = 0;
-    for (auto pos : m_child_pos)
+    for (auto info : m_child_info)
     {
-        n_rows = max(n_rows, pos[1]+1);
-        n_cols = max(n_cols, pos[0]+1);
+        n_rows = max(n_rows, info.pos[1]+info.span[1]);
+        n_cols = max(n_cols, info.pos[0]+info.span[0]);
     }
     m_row_info.resize(n_rows);
     m_col_info.resize(n_cols);
@@ -362,18 +361,47 @@ void UIGrid::_render()
         child->render();
 }
 
+void UIGrid::compute_track_sizereqs(Direction dim)
+{
+    auto& track = dim ? m_row_info : m_col_info;
+#define DIV_ROUND_UP(n,d) (((n)+(d)-1)/(d))
+
+    for (auto& t : track)
+        t.sr = {0, 0};
+    for (size_t i = 0; i < m_children.size(); i++)
+    {
+        auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
+        // if merging horizontally, need to find (possibly multi-col) width
+        int prosp_width = dim ? get_tracks_region(cp[0], cp[1], cs[0], cs[1])[2] : -1;
+
+        const UISizeReq c = m_children[i]->get_preferred_size(dim, prosp_width);
+        // crappy but fast multitrack distribution here: if a child spans n tracks
+        // each track gets 1/n-th of its sizereq; good enough for our needs
+        for (int ti = cp[dim]; ti < cp[dim]+cs[dim]; ti++)
+        {
+            auto& s = track[ti].sr;
+            s.min = max(s.min, DIV_ROUND_UP(c.min, cs[dim]));
+            s.nat = max(s.nat, DIV_ROUND_UP(c.nat, cs[dim]));
+        }
+    }
+}
+
+void UIGrid::set_track_offsets(vector<track_info>& tracks)
+{
+    int acc = 0;
+    for (auto& track : tracks)
+    {
+        track.offset = acc;
+        acc += track.size;
+    }
+}
+
 UISizeReq UIGrid::_get_preferred_size(Direction dim, int prosp_width)
 {
     init_track_info();
 
     // get preferred column widths
-    for (size_t i = 0; i < m_children.size(); i++)
-    {
-        auto& s = m_col_info[m_child_pos[i][0]].sr;
-        UISizeReq c = m_children[i]->get_preferred_size(UI::HORZ, -1);
-        s.min = max(s.min, c.min);
-        s.nat = max(s.nat, c.nat);
-    }
+    compute_track_sizereqs(UI::HORZ);
 
     // total width min and nat
     UISizeReq w_sr = { 0, 0 };
@@ -387,17 +415,10 @@ UISizeReq UIGrid::_get_preferred_size(Direction dim, int prosp_width)
         return w_sr;
 
     layout_track(UI::HORZ, w_sr, prosp_width);
+    set_track_offsets(m_col_info);
 
     // get preferred row heights for those widths
-    for (size_t i = 0; i < m_children.size(); i++)
-    {
-        const auto& pos  = m_child_pos[i];
-        const int col_w = m_col_info[pos[0]].size;
-        auto& s = m_row_info[m_child_pos[i][1]].sr;
-        UISizeReq c = m_children[i]->get_preferred_size(UI::VERT, col_w);
-        s.min = max(s.min, c.min);
-        s.nat = max(s.nat, c.nat);
-    }
+    compute_track_sizereqs(UI::VERT);
 
     // total height min and nat
     UISizeReq h_sr = { 0, 0 };
@@ -412,14 +433,17 @@ UISizeReq UIGrid::_get_preferred_size(Direction dim, int prosp_width)
 
 void UIGrid::layout_track(Direction dim, UISizeReq sr, int size)
 {
-    int extra = size - sr.min;
-    ASSERT(extra >= 0);
-
-    // TODO: distribute extra space properly: currently it
-    // all goes to the second column
     auto& infos = dim ? m_row_info : m_col_info;
+
+    float extra = size - sr.min;
+    ASSERT(extra >= 0);
+    int sum_flex_grow = 0;
+    for (const auto& info : infos)
+        sum_flex_grow += info.flex_grow;
+    extra = sum_flex_grow > 0 ? extra/sum_flex_grow : 0;
+
     for (size_t i = 0; i < infos.size(); ++i)
-        infos[i].size = infos[i].sr.min + (i==1)*extra;
+        infos[i].size = infos[i].sr.min + extra*infos[i].flex_grow;
 }
 
 void UIGrid::_allocate_region()
@@ -428,34 +452,16 @@ void UIGrid::_allocate_region()
     UISizeReq h_sr = _get_preferred_size(UI::VERT, m_region[2]);
 
     layout_track(UI::VERT, h_sr, m_region[3]);
+    set_track_offsets(m_row_info);
 
-    // calculate the resulting offsets
-    int acc = 0;
-    for(size_t i = 0; i < m_row_info.size(); ++i)
-    {
-        m_row_info[i].offset = acc;
-        acc += m_row_info[i].size;
-    }
-    acc = 0;
-    for(size_t i = 0; i < m_col_info.size(); ++i)
-    {
-        m_col_info[i].offset = acc;
-        acc += m_col_info[i].size;
-    }
-
-    ASSERT(m_children.size() == m_child_pos.size());
+    ASSERT(m_children.size() == m_child_info.size());
     for (size_t i = 0; i < m_children.size(); i++)
     {
-        auto const& child = m_children[i];
-        i2 pos = m_child_pos[i];
-
-        i4 cell_reg = {
-            m_col_info[pos[0]].offset + m_region[0],
-            m_row_info[pos[1]].offset + m_region[1],
-            m_col_info[pos[0]].size,
-            m_row_info[pos[1]].size
-        };
-        child->allocate_region(cell_reg);
+        auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
+        i4 cell_reg = get_tracks_region(cp[0], cp[1], cs[0], cs[1]);
+        cell_reg[0] += m_region[0];
+        cell_reg[1] += m_region[1];
+        m_children[i]->allocate_region(cell_reg);
     }
 }
 
