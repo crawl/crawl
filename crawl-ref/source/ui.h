@@ -177,25 +177,53 @@ protected:
 class Grid : public Widget
 {
 public:
-    void add_child(shared_ptr<Widget> child, int x, int y);
+    void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
+    const int column_flex_grow(int x) const { return m_col_info[x].flex_grow; }
+    const int row_flex_grow(int y) const { return m_row_info[y].flex_grow; }
+    int& column_flex_grow(int x)
+    {
+        init_track_info();
+        return m_col_info[x].flex_grow;
+    }
+    int& row_flex_grow(int y)
+    {
+        init_track_info();
+        return m_row_info[y].flex_grow;
+    }
 
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 
 protected:
+    i4 get_tracks_region(int x, int y, int w, int h) const
+    {
+        return {
+            m_col_info[x].offset, m_row_info[y].offset,
+            m_col_info[x+w-1].size + m_col_info[x+w-1].offset - m_col_info[x].offset,
+            m_row_info[y+h-1].size + m_row_info[y+h-1].offset - m_row_info[y].offset,
+        };
+    }
+
     struct track_info {
         int size;
         int offset;
         SizeReq sr;
+        int flex_grow = 1;
     };
     vector<track_info> m_col_info;
     vector<track_info> m_row_info;
 
-    vector<i2> m_child_pos;
+    struct child_info {
+        i2 pos;
+        i2 span;
+    };
+    vector<child_info> m_child_info;
     vector<shared_ptr<Widget>> m_children;
 
     void layout_track(Direction dim, SizeReq sr, int size);
+    void set_track_offsets(vector<track_info>& tracks);
+    void compute_track_sizereqs(Direction dim);
     void init_track_info();
     bool m_track_info_dirty = false;
 };
