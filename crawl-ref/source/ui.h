@@ -232,6 +232,9 @@ void push_layout(shared_ptr<Widget> root);
 void pop_layout();
 void pump_events();
 
+void push_scissor(i4 scissor);
+void pop_scissor();
+
 // XXX: this is a hack used to ensure that when switching to a
 // layout-based UI, the starting window size is correct. This is necessary
 // because there's no way to query TilesFramework for the current screen size
