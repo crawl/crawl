@@ -388,6 +388,7 @@ bool TilesFramework::initialise()
     m_screen_height = wm->screen_height();
 
     GLStateManager::init();
+    glmanager->init_hidpi(densityNum, densityDen);
 
     m_image = new ImageManager();
 
@@ -469,6 +470,7 @@ bool TilesFramework::initialise()
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
+    m_fonts[stat_font].font->char_width();
     m_region_crt  = new CRTRegion(m_fonts[m_crt_font].font);
 
     m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
@@ -503,6 +505,8 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
+    // TODO: does each font really need to store its own density?
+    // could just use glmanager?
     if (!font->load_font(font_file, font_size, outline, densityNum, densityDen))
     {
         delete font;
@@ -905,6 +909,12 @@ void TilesFramework::do_layout()
     bool use_small_layout = is_using_small_layout();
     bool message_overlay = Options.tile_force_overlay ? true : use_small_layout;
 
+    const int min_msg_h =
+                m_region_msg->grid_height_to_pixels(Options.msg_min_height);
+    const int max_tile_h =
+                m_region_tile->grid_height_to_pixels(
+                            max(Options.view_max_height, ENV_SHOW_DIAMETER));
+
     if (use_small_layout)
     {
         // for now assuming that width > height:
@@ -929,11 +939,16 @@ void TilesFramework::do_layout()
         m_region_tab->set_small_layout(true, m_windowsz);
         m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
         //  * ox tells us the width of screen obscured by the tabs
-        sidebar_pw = (m_region_tab->ox*m_region_tab->dx/32) + get_crt_font()->char_width()*10;
+        sidebar_pw = m_region_tab->grid_width_to_pixels(m_region_tab->ox) / 32
+                        + m_region_stat->font().max_width(10);
         m_stat_x_divider = m_windowsz.x - sidebar_pw;
         // old logic, if we're going to impinge upon a nice square dregion
-        if (available_height_in_tiles * m_region_tile->dx > m_stat_x_divider)
-            m_stat_x_divider = available_height_in_tiles * m_region_tile->dx;
+        if (m_region_tile->grid_width_to_pixels(
+                            available_height_in_tiles) > m_stat_x_divider)
+        {
+            m_stat_x_divider =
+                m_region_tile->grid_width_to_pixels(available_height_in_tiles);
+        }
         // always overlay message area on dungeon
         message_y_divider = m_windowsz.y;
 
@@ -944,10 +959,11 @@ void TilesFramework::do_layout()
     {
         // normal layout code
 
-        int sidebar_min_pw = stat_width * m_region_stat->dx; // Ensure we can fit everything
-        sidebar_pw = m_region_tab->dx*7 - 10;
+        const int sidebar_min_pw = m_region_stat->grid_width_to_pixels(
+                                                                stat_width);
+        sidebar_pw = m_region_tab->grid_width_to_pixels(7) - 10;
         while (sidebar_pw < sidebar_min_pw)
-            sidebar_pw += m_region_tab->dx;
+            sidebar_pw += m_region_tab->grid_width_to_pixels(1);
 
         // Locations in pixels. stat_x_divider is the dividing vertical line
         // between dungeon view on the left and status area on the right.
@@ -962,23 +978,19 @@ void TilesFramework::do_layout()
 
         // Then, the optimal situation without the overlay - we can fit both
         // Options.view_max_height and at least Options.msg_min_height in the space.
-        if (max(Options.view_max_height, ENV_SHOW_DIAMETER)
-            * m_region_tile->dy + Options.msg_min_height
-            * m_region_msg->dy
-            <= m_windowsz.y && !message_overlay)
+
+        if (max_tile_h + min_msg_h <= m_windowsz.y && !message_overlay)
         {
-            message_y_divider = max(Options.view_max_height, ENV_SHOW_DIAMETER)
-                * m_region_tile->dy;
+            message_y_divider = max_tile_h;
             message_y_divider = max(message_y_divider, m_windowsz.y -
-                                    Options.msg_max_height * m_region_msg->dy);
+                m_region_msg->grid_height_to_pixels(Options.msg_max_height));
         }
         else
         {
             int available_height_in_tiles = 0;
-            available_height_in_tiles = (m_windowsz.y - (message_overlay
-                                                         ? 0 : (Options.msg_min_height
-                                                                * m_region_msg->dy)))
-                / m_region_tile->dy;
+            available_height_in_tiles =
+                (m_windowsz.y - (message_overlay ? 0 : min_msg_h))
+                        / m_region_tile->dy;
 
             // If we can't fit the full LOS to the available space, try using the
             // message overlay.
@@ -996,12 +1008,14 @@ void TilesFramework::do_layout()
                 }
             }
             else
-                message_y_divider = m_windowsz.y - Options.msg_min_height * m_region_msg->dy;
+                message_y_divider = m_windowsz.y - min_msg_h;
         }
     }
 
     // stick message display to the bottom of the window
     int msg_height = m_windowsz.y-message_y_divider;
+    // this is very slightly off on high-dpi displays, but it should be taken
+    // care of by resize_to_fit later
     msg_height = msg_height / m_region_msg->dy * m_region_msg->dy;
     message_y_divider = m_windowsz.y - msg_height;
 
@@ -1024,8 +1038,7 @@ void TilesFramework::do_layout()
     {
         m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
                                       // overlay at the bottom.
-        m_region_msg->resize_to_fit(m_stat_x_divider, Options.msg_min_height
-                                    * m_region_msg->dy);
+        m_region_msg->resize_to_fit(m_stat_x_divider, min_msg_h);
     }
     else
     {

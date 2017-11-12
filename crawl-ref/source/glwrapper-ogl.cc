@@ -208,17 +208,22 @@ void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
 
 /**
  * Calculate the device pixels given the logical pixels; the two may be
- * different on high-DPI devices (such as retina displays). This is not well-
- * defined if reset_view_for_resize has not been called.
+ * different on high-DPI devices (such as retina displays).
  *
  * @param n a value in logical pixels
  * @return the result in device pixels. May be the same, if the device isn't
  *          high-DPI.
  */
-int OGLStateManager::logical_to_device(int n)
+int OGLStateManager::logical_to_device(int n) const
 {
     return n * m_density_num / m_density_den;
 }
+
+int OGLStateManager::device_to_logical(int n, bool round) const
+{
+    return (n * m_density_den + (round ?  m_density_num - 1 : 0)) / m_density_num;
+}
+
 
 void OGLStateManager::set_scissor(int x, int y, unsigned int w, unsigned int h)
 {
@@ -232,13 +237,23 @@ void OGLStateManager::reset_scissor()
     glDisable(GL_SCISSOR_TEST);
 }
 
+void OGLStateManager::init_hidpi(int device, int logical)
+{
+    if (device == logical)
+        m_density_num = m_density_den = 1;
+    else
+    {
+        m_density_num = device;
+        m_density_den = logical;
+    }
+}
+
 void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
                                             const coord_def &m_drawablesz)
 {
     glViewport(0, 0, m_drawablesz.x, m_drawablesz.y);
     m_window_height = m_windowsz.y;
-    m_density_den = m_windowsz.x;
-    m_density_num = m_drawablesz.x;
+    init_hidpi(m_drawablesz.x, m_windowsz.x);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

@@ -530,29 +530,29 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     buf->draw(state);
 }
 
-unsigned int FTFontWrapper::string_height(const formatted_string &str) const
+unsigned int FTFontWrapper::string_height(const formatted_string &str, bool logical) const
 {
     string temp = str.tostring();
     return string_height(temp.c_str());
 }
 
-unsigned int FTFontWrapper::string_height(const char *text) const
+unsigned int FTFontWrapper::string_height(const char *text, bool logical) const
 {
     int height = 1;
     for (const char *itr = text; (*itr); itr++)
         if (*itr == '\n')
             height++;
 
-    return char_height() * height;
+    return max_height(height, logical);
 }
 
-unsigned int FTFontWrapper::string_width(const formatted_string &str)
+unsigned int FTFontWrapper::string_width(const formatted_string &str, bool logical)
 {
     string temp = str.tostring();
-    return string_width(temp.c_str());
+    return string_width(temp.c_str(), logical);
 }
 
-unsigned int FTFontWrapper::string_width(const char *text)
+unsigned int FTFontWrapper::string_width(const char *text, bool logical)
 {
     unsigned int base_width = max(-m_min_offset, 0);
     unsigned int max_width = 0;
@@ -576,7 +576,7 @@ unsigned int FTFontWrapper::string_width(const char *text)
     }
 
     max_width = max(width + adjust, max_width);
-    return max_width * scale_den / scale_num;
+    return logical ? (max_width * scale_den + scale_num - 1) / scale_num : max_width;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
@@ -916,16 +916,56 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     store(buf, x, y, ch, fg_col);
 }
 
-
-unsigned int FTFontWrapper::char_width() const
+/**
+ * Find the (max) width of a character, in device or logical pixels.
+ *
+ * This will round up if a font uses logically fractional advances! It is
+ * better to use max_width or string_width if you need multiple characters.
+ */
+unsigned int FTFontWrapper::char_width(bool logical) const
 {
-    return m_max_advance.x * scale_den / scale_num;
+    return max_width(1, logical);
 }
 
-unsigned int FTFontWrapper::char_height() const
+/**
+ * Find the (max) height of a character, in device or logical pixels.
+ *
+ * This will round up if a font uses logically fractional advances! It is
+ * better to use max_height or string_height if you need multiple characters.
+ */
+unsigned int FTFontWrapper::char_height(bool logical) const
 {
-    return m_max_advance.y * scale_den / scale_num;
+    return max_height(1, logical);
 }
+
+/**
+ * Find the (max) width of `length` characters, in device or logical pixels.
+ *
+ * This will take into account sub-logical-pixel advances. For non-fixed-width
+ * fonts use string_width.
+ */
+unsigned int FTFontWrapper::max_width(int length, bool logical) const
+{
+    const int device_length = m_max_advance.x * length;
+
+    return logical ? ((device_length * scale_den + scale_num - 1) / scale_num)
+                   : device_length;
+}
+
+/**
+ * Find the (max) height of `length` lines, in device or logical pixels.
+ *
+ * This will take into account sub-logical-pixel advances. For non-fixed-width
+ * fonts use string_height.
+ */
+unsigned int FTFontWrapper::max_height(int length, bool logical) const
+{
+    const int device_height = m_max_advance.y * length;
+
+    return logical ? ((device_height * scale_den + scale_num - 1) / scale_num)
+                   : device_height;
+}
+
 
 const GenericTexture *FTFontWrapper::font_tex() const
 {

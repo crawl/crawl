@@ -28,6 +28,9 @@ public:
     virtual void render() = 0;
     virtual void clear() = 0;
 
+    const virtual int grid_width_to_pixels(int x) const;
+    const virtual int grid_height_to_pixels(int y) const;
+
     // Geometry
     // <-----------------wx----------------------->
     // sx     ox                                ex
@@ -58,7 +61,8 @@ public:
     int ey;
 
 protected:
-    void recalculate();
+    virtual void recalculate();
+    virtual void calculate_grid_size(int inner_x, int inner_y);
     virtual void on_resize() = 0;
     void set_transform(bool no_scaling = false);
 };
