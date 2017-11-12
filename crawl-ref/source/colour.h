@@ -60,8 +60,8 @@ enum element_type
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
 #if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
-#endif
     ETC_PAKELLAS,       // Pakellas altar colours
+#endif
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_DISCO = 96,

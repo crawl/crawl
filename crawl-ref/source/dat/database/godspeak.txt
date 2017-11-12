@@ -605,6 +605,7 @@ Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
 %%%%
+# Remove Pakellas speech when TAG_MAJOR_VERSION > 34
 Pakellas penance
 
 Pakellas says: That's one approach which won't work here.

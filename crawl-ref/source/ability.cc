@@ -180,8 +180,11 @@ skill_type invo_skill(god_type god)
     {
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
+
+#if TAG_MAJOR_VERSION == 34
         case GOD_PAKELLAS:
             return SK_EVOCATIONS;
+#endif
         case GOD_ASHENZARI:
         case GOD_JIYVA:
         case GOD_GOZAG:
@@ -597,6 +600,7 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
       7, 0, 0, 10, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
+#if TAG_MAJOR_VERSION == 34
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
       0, 0, 0, generic_cost::fixed(1),
@@ -605,6 +609,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 2, {fail_basis::invo, 40, 5, 25}, abflag::none },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+#endif
 
     // Uskayaw
     { ABIL_USKAYAW_STOMP, "Stomp",
@@ -746,9 +751,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
+#if TAG_MAJOR_VERSION == 34
     // TODO: make this less hard-coded
     if (ability == ABIL_PAKELLAS_QUICK_CHARGE)
         ret += make_stringf(", %d MP", _pakellas_quick_charge_mp_cost());
+#endif
 
     if (ability == ABIL_HEAL_WOUNDS)
         ret += ", Permanent MP";
@@ -1539,6 +1546,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_PAKELLAS_DEVICE_SURGE:
         if (you.magic_points == 0)
         {
@@ -1550,6 +1558,7 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return pakellas_check_quick_charge(quiet);
+#endif
 
         // only available while your ancestor is alive.
     case ABIL_HEPLIAKLQANA_IDEALISE:
@@ -2985,6 +2994,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_PAKELLAS_DEVICE_SURGE:
     {
         fail_check();
@@ -3065,6 +3075,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         flash_view(UA_PLAYER, LIGHTGREEN);
 
         simple_god_message(" booms: Use this gift wisely!");
+#endif
 
 #ifndef USE_TILE_LOCAL
         // Allow extra time for the flash to linger.
