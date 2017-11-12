@@ -961,7 +961,9 @@ void TilesFramework::do_layout()
 
         const int sidebar_min_pw = m_region_stat->grid_width_to_pixels(
                                                                 stat_width);
-        sidebar_pw = m_region_tab->grid_width_to_pixels(7) - 10;
+        sidebar_pw = m_region_tab->grid_width_to_pixels(14) - 10;
+        if (sidebar_pw > m_windowsz.x / 3)
+            sidebar_pw = m_region_tab->grid_width_to_pixels(7) - 10;
         while (sidebar_pw < sidebar_min_pw)
             sidebar_pw += m_region_tab->grid_width_to_pixels(1);
 
