@@ -1198,6 +1198,7 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying sif-gifted rarebook!";
     }
 
+#if TAG_MAJOR_VERSION == 34
     // The crystal ball case should be handled elsewhere, but just in
     // case, it's also handled here.
     if (agent == GOD_PAKELLAS)
@@ -1208,6 +1209,7 @@ static string _why_reject(const item_def &item, int agent)
             return "Destroying CBoE that Pakellas hates!";
         }
     }
+#endif
 
     return ""; // all OK
 }
