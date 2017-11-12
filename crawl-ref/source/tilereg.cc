@@ -67,6 +67,23 @@ void Region::place(int _sx, int _sy)
     recalculate();
 }
 
+const int Region::grid_width_to_pixels(int x) const
+{
+    return x * dx;
+}
+
+const int Region::grid_height_to_pixels(int y) const
+{
+    return y * dy;
+}
+
+
+void Region::calculate_grid_size(int inner_x, int inner_y)
+{
+    mx = dx ? inner_x / dx : 0;
+    my = dy ? inner_y / dy : 0;
+}
+
 void Region::resize_to_fit(int _wx, int _wy)
 {
     if (_wx < 0 || _wy < 0)
@@ -80,8 +97,7 @@ void Region::resize_to_fit(int _wx, int _wy)
     int inner_x = _wx - 2 * ox;
     int inner_y = _wy - 2 * oy;
 
-    mx = dx ? inner_x / dx : 0;
-    my = dy ? inner_y / dy : 0;
+    calculate_grid_size(inner_x, inner_y);
 
     recalculate();
 
@@ -91,8 +107,8 @@ void Region::resize_to_fit(int _wx, int _wy)
 
 void Region::recalculate()
 {
-    wx = ox * 2 + mx * dx;
-    wy = oy * 2 + my * dy;
+    wx = ox * 2 + grid_width_to_pixels(mx);
+    wy = oy * 2 + grid_height_to_pixels(my);
     ex = sx + wx;
     ey = sy + wy;
 

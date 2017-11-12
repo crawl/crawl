@@ -51,6 +51,12 @@ public:
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 
+    FontWrapper &font() const;
+
+    void calculate_grid_size(int inner_x, int inner_y) override;
+    const int grid_width_to_pixels(int x) const override;
+    const int grid_height_to_pixels(int y) const override;
+
 protected:
     virtual void on_resize() override;
     FontWrapper *m_font;

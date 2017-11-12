@@ -33,7 +33,9 @@ public:
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt,
                               int xoffset=-1, int yoffset=-1) override;
-    int logical_to_device(int n);
+    void init_hidpi(int device, int logical) override;
+    int logical_to_device(int n) const override;
+    int device_to_logical(int n, bool round=true) const override;
 protected:
     GLState m_current_state;
 #ifdef __ANDROID__

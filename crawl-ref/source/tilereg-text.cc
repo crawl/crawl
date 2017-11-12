@@ -26,8 +26,18 @@ TextRegion::TextRegion(FontWrapper *font) :
 {
     ASSERT(font);
 
+    // warning: dx and dy are not guaranteed to be accurate for TextRegion
+    // because on high-dpi displays, glyphs may have fractional widths relative
+    // to logical pixels. Use `grid_width_to_pixels` etc instead, or use the
+    // functions on font().
     dx = m_font->char_width();
     dy = m_font->char_height();
+}
+
+FontWrapper &TextRegion::font() const
+{
+    ASSERT(m_font);
+    return *m_font;
 }
 
 void TextRegion::on_resize()
@@ -170,6 +180,24 @@ int TextRegion::wherex()
 int TextRegion::wherey()
 {
     return print_y + 1;
+}
+
+const int TextRegion::grid_width_to_pixels(int x) const
+{
+    return font().max_width(x);
+}
+
+const int TextRegion::grid_height_to_pixels(int y) const
+{
+    return font().max_height(y);
+}
+
+void TextRegion::calculate_grid_size(int inner_x, int inner_y)
+{
+    // This can't be calculated perfectly using just dx, because on hidpi
+    // displays, font rendering may involve sub-logical-pixel advances.
+    mx = glmanager->logical_to_device(inner_x) / font().char_width(false);
+    my = glmanager->logical_to_device(inner_y) / font().char_height(false);
 }
 
 void TextRegion::_setcursortype(int curstype)

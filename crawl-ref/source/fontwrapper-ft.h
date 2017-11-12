@@ -54,13 +54,15 @@ public:
     virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
                        const VColour &fg_col, const VColour &bg_col) override;
 
-    virtual unsigned int char_width() const override;
-    virtual unsigned int char_height() const override;
+    virtual unsigned int char_width(bool logical=true) const override;
+    virtual unsigned int char_height(bool logical=true) const override;
+    virtual unsigned int max_width(int length, bool logical=true) const override;
+    virtual unsigned int max_height(int length, bool logical=true) const override;
 
-    virtual unsigned int string_width(const char *text) override;
-    virtual unsigned int string_width(const formatted_string &str) override;
-    virtual unsigned int string_height(const char *text) const override;
-    virtual unsigned int string_height(const formatted_string &str) const override;
+    virtual unsigned int string_width(const char *text, bool logical=true) override;
+    virtual unsigned int string_width(const formatted_string &str, bool logical=true) override;
+    virtual unsigned int string_height(const char *text, bool logical=true) const override;
+    virtual unsigned int string_height(const formatted_string &str, bool logical=true) const override;
 
     // Try to split this string to fit in w x h pixel area.
     virtual formatted_string split(const formatted_string &str,
