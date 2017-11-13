@@ -21,29 +21,27 @@ enum object_selector
     OSEL_ANY                     =  -1,
     OSEL_WIELD                   =  -2,
     OSEL_UNIDENT                 =  -3,
-//  OSEL_EQUIP                   =  -4,
-    OSEL_RECHARGE                =  -5,
-    OSEL_ENCHANTABLE_ARMOUR      =  -6,
-    OSEL_BEOGH_GIFT              =  -7,
-    OSEL_DRAW_DECK               =  -8,
-    OSEL_THROWABLE               =  -9,
-    OSEL_EVOKABLE                = -10,
-    OSEL_WORN_ARMOUR             = -11,
-//  OSEL_FRUIT                   = -12,
-    OSEL_CURSED_WORN             = -13,
+    OSEL_RECHARGE                =  -4,
+    OSEL_ENCHANTABLE_ARMOUR      =  -5,
+    OSEL_BEOGH_GIFT              =  -6,
+    OSEL_DRAW_DECK               =  -7,
+    OSEL_THROWABLE               =  -8,
+    OSEL_EVOKABLE                =  -9,
+    OSEL_WORN_ARMOUR             = -10,
+    OSEL_CURSED_WORN             = -11,
 #if TAG_MAJOR_VERSION == 34
-    OSEL_UNCURSED_WORN_ARMOUR    = -14,
-    OSEL_UNCURSED_WORN_JEWELLERY = -15,
+    OSEL_UNCURSED_WORN_ARMOUR    = -12,
+    OSEL_UNCURSED_WORN_JEWELLERY = -13,
 #endif
-    OSEL_BRANDABLE_WEAPON        = -16,
-    OSEL_ENCHANTABLE_WEAPON      = -17,
-    OSEL_BLESSABLE_WEAPON        = -18,
-    OSEL_SUPERCHARGE             = -19,
-    OSEL_CURSABLE                = -20, // Items that are cursable and not
+    OSEL_BRANDABLE_WEAPON        = -14,
+    OSEL_ENCHANTABLE_WEAPON      = -15,
+    OSEL_BLESSABLE_WEAPON        = -16,
+    OSEL_SUPERCHARGE             = -17,
+    OSEL_CURSABLE                = -18, // Items that are cursable and not
                                         // known-cursed. Unknown-cursed items
                                         // are included, to prevent information
                                         // leakage.
-    OSEL_DIVINE_RECHARGE         = -21,
+    OSEL_DIVINE_RECHARGE         = -19,
 };
 
 /// Behaviour flags for prompt_invent_item().
