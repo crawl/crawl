@@ -570,7 +570,9 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 200;
                 break;
 
+#if TAG_MAJOR_VERSION == 34
             case SCR_RECHARGING:
+#endif
             case SCR_SUMMONING:
                 valued += 95;
                 break;

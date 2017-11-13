@@ -1417,9 +1417,9 @@ static void _generate_scroll_item(item_def& item, int force_type,
         // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
-            // total weight:    789  if depth_mod < 4
-            //                  908  otherwise
-            //                 -112  in sprint
+            // total weight:    709  if depth_mod < 4
+            //                  828  otherwise
+            //                 -122  in sprint
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
@@ -1429,7 +1429,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  45, SCR_AMNESIA,
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
-                 40, SCR_RECHARGING,
                  40, SCR_MAGIC_MAPPING,
                  32, SCR_FEAR,
                  32, SCR_FOG,

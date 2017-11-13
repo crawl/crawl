@@ -492,6 +492,7 @@ void zap_wand(int slot)
     you.turn_is_over = true;
 }
 
+#if TAG_MAJOR_VERSION == 34
 int recharge_wand(bool known, const string &pre_msg, int num, int den)
 {
     int item_slot = -1;
@@ -525,7 +526,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             }
         }
 
-        item_def &wand = you.inv[ item_slot ];
+        item_def &wand = you.inv[item_slot];
 
         if (!item_is_rechargeable(wand))
         {
@@ -575,6 +576,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
     return 0;
 }
+#endif
 
 // return a slot that has manual for given skill, or -1 if none exists
 // in case of multiple manuals the one with the fewest charges is returned
