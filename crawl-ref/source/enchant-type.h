@@ -173,6 +173,7 @@ enum enchant_type
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
     ENCH_RING_OF_THUNDER,
+    ENCH_WHIRLWIND_PINNED,
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
     // Update enchant_names[] in mon-ench.cc when adding or removing

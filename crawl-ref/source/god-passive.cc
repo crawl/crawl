@@ -416,9 +416,9 @@ static const vector<god_passive> god_passives[] =
 
     // Wu Jian
     {
-        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them." },
-        { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks by moving against a solid obstacle." },
-        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, dealing extra damage." },
+        { 2, passive_t::wu_jian_lunge, "strike by moving towards foes, dealing extra damage." },
+        { 3, passive_t::wu_jian_whirlwind, "attack monsters by moving around them and pin them in place." },
+        { 4, passive_t::wu_jian_wall_jump, "perform airborne attacks by moving against a solid obstacle." },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1704,6 +1704,13 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
 
         if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
             you.attribute[ATTR_HEAVENLY_STORM] += 2;
+
+        // Pin disappears as soon as the monster tries to move (preventing the move).
+        // This must be done in this way instead of with a normal duration because
+        // of the interaction with wall jump (by taking a slow turn, the monster would get
+        // rid of the enchantment before it has any appreciable effect) and due to the interaction
+        // with Serpent's Lash.
+        mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 1, nullptr, INFINITE_DURATION));
 
         you.apply_berserk_penalty = false;
 
