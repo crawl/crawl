@@ -2592,13 +2592,13 @@ static bool _is_cancellable_scroll(scroll_type scroll)
 {
     return scroll == SCR_IDENTIFY
            || scroll == SCR_BLINKING
-           || scroll == SCR_RECHARGING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
            || scroll == SCR_REMOVE_CURSE
 #if TAG_MAJOR_VERSION == 34
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
+           || scroll == SCR_RECHARGING
 #endif
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
@@ -2691,6 +2691,18 @@ string cannot_read_item_reason(const item_def &item)
                 return "You have no spells to forget!";
             return "";
 
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT, true);
+
+        case SCR_REMOVE_CURSE:
+            return _no_items_reason(OSEL_CURSED_WORN);
+
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
             if (!you.weapon())
@@ -2703,29 +2715,15 @@ string cannot_read_item_reason(const item_def &item)
             if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
                 return "Holy weapons cannot be cursed!";
             return "";
-#endif
 
-        case SCR_ENCHANT_ARMOUR:
-            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
-
-        case SCR_ENCHANT_WEAPON:
-            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
-
-        case SCR_IDENTIFY:
-            return _no_items_reason(OSEL_UNIDENT, true);
-
-        case SCR_RECHARGING:
-            return _no_items_reason(OSEL_RECHARGE);
-
-        case SCR_REMOVE_CURSE:
-            return _no_items_reason(OSEL_CURSED_WORN);
-
-#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
             return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
 
         case SCR_CURSE_JEWELLERY:
             return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
+
+        case SCR_RECHARGING:
+            return _no_items_reason(OSEL_RECHARGE);
 #endif
 
         default:
@@ -3040,16 +3038,6 @@ void read_scroll(item_def& scroll)
         cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
         break;
 
-    case SCR_RECHARGING:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            mpr("It is a scroll of recharging.");
-            // included in default force_more_message (to show it before menu)
-        }
-        cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
-        break;
-
     case SCR_ENCHANT_ARMOUR:
         if (!alreadyknown)
         {
@@ -3060,7 +3048,6 @@ void read_scroll(item_def& scroll)
         cancel_scroll =
             (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
         break;
-
 #if TAG_MAJOR_VERSION == 34
     // Should always be identified by Ashenzari.
     case SCR_CURSE_ARMOUR:
@@ -3070,6 +3057,16 @@ void read_scroll(item_def& scroll)
         cancel_scroll = !curse_item(armour, pre_succ_msg);
         break;
     }
+
+    case SCR_RECHARGING:
+        if (!alreadyknown)
+        {
+            mpr(pre_succ_msg);
+            mpr("It is a scroll of recharging.");
+            // included in default force_more_message (to show it before menu)
+        }
+        cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
+        break;
 #endif
 
     case SCR_HOLY_WORD:
@@ -3134,7 +3131,9 @@ void read_scroll(item_def& scroll)
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR
+#if TAG_MAJOR_VERSION == 34
         && which_scroll != SCR_RECHARGING
+#endif
         && which_scroll != SCR_AMNESIA)
     {
         mprf("It %s a %s.",
