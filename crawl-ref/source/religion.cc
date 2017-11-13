@@ -343,7 +343,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "move at supernatural speeds" },
       { 2, "perform damaging attacks by moving towards foes",
            "perform lunging strikes" },
-      { 3, "attack monsters by moving around them",
+      { 3, "attack monsters by moving around them and pin them in place",
            "perform spinning attacks" },
       { 4, "perform airborne attacks by moving against a solid obstacle",
            "perform airborne attacks" },

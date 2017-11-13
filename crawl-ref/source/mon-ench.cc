@@ -1460,6 +1460,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
     case ENCH_RING_OF_THUNDER:
+    case ENCH_WHIRLWIND_PINNED:
         decay_enchantment(en);
         break;
 
@@ -2174,7 +2175,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
-    "stilling the winds", "thunder_ringed",
+    "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown",
     "buggy",
 };
