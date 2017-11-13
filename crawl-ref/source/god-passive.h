@@ -298,7 +298,7 @@ void wu_jian_trigger_martial_arts(const coord_def& old_pos);
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
 bool wu_jian_can_wall_jump(const coord_def& target, bool messaging=false);
 void wu_jian_wall_jump_effects(const coord_def& old_pos);
-void wu_jian_trigger_serpents_lash(const coord_def& old_pos);
+void wu_jian_trigger_serpents_lash(const coord_def& old_pos, bool wall_jump);
 bool wu_jian_has_momentum(wu_jian_attack_type);
 void wu_jian_heaven_tick();
 void end_heavenly_storm();

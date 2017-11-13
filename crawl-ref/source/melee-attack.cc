@@ -342,15 +342,6 @@ void melee_attack::apply_black_mark_effects()
     }
 }
 
-// For WJC, does the defender count as being distracted?
-bool melee_attack::defender_wjc_distracted() const
-{
-    ASSERT(defender->is_monster());
-    return defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS)
-            || defender->as_monster()->foe != MHITYOU
-               && !mons_is_batty(*defender->as_monster());
-}
-
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -463,12 +454,10 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    // Fireworks when hitting distracted enemies.
-    // XXX: this seems massively overcomplicated.
+    // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->can_bleed()
-        && wu_jian_attack == WU_JIAN_ATTACK_LUNGE
-        && defender_wjc_distracted())
+        && wu_jian_has_momentum(wu_jian_attack))
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
                     damage_done / 5);
@@ -3372,14 +3361,7 @@ int melee_attack::martial_damage_mod(int dam)
 
     if (wu_jian_attack == WU_JIAN_ATTACK_LUNGE)
     {
-        if (defender_wjc_distracted())
-        {
-            mprf("%s is caught off-guard!",
-                 defender->as_monster()->name(DESC_THE).c_str());
-            dam = div_rand_round(dam * 16, 10);
-        }
-        else
-            dam = div_rand_round(dam * 13, 10);
+        dam = div_rand_round(dam * 12, 10);
     }
 
     return dam;

@@ -1450,7 +1450,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
-    case ENCH_DISTRACTED_ACROBATICS:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
@@ -2175,7 +2174,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
-    "stilling the winds", "thunder_ringed", "distracted by acrobatics",
+    "stilling the winds", "thunder_ringed",
     "vortex", "vortex_cooldown",
     "buggy",
 };

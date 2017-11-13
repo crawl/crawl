@@ -1666,8 +1666,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_GOLD_LUST)
-        || mons->has_ench(ENCH_DISTRACTED_ACROBATICS))
+    if (mons->has_ench(ENCH_GOLD_LUST))
     {
         mons->speed_increment -= non_move_energy;
         return;
