@@ -102,6 +102,8 @@ public:
     virtual void _render() = 0;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width);
     virtual void _allocate_region();
+    void _set_parent(Widget* p);
+    void _invalidate_sizereq();
 
     // Wrapper functions which handle common behavior
     // - margins
@@ -141,6 +143,7 @@ private:
     bool cached_sr_valid[2] = { false, false };
     SizeReq cached_sr[2];
     int cached_sr_pw;
+    Widget* m_parent = nullptr;
 };
 
 class Container : public Widget
