@@ -109,7 +109,7 @@ protected:
 class UI
 {
 public:
-    UI() : margin({0,0,0,0}), flex_grow(0), align_self(UI_ALIGN_UNSET), expand_h(false), expand_v(false), cached_sr_valid{false, false} {};
+    UI() : margin({0,0,0,0}), flex_grow(0), align_self(UI_ALIGN_UNSET), expand_h(false), expand_v(false), cached_sr_valid{false, false}, m_parent(nullptr) {};
     ~UI() {
         UI::slots.key_event.remove_by_target(this);
     }
@@ -122,6 +122,8 @@ public:
     virtual void _render() = 0;
     virtual UISizeReq _get_preferred_size(int dim, int prosp_width);
     virtual void _allocate_region();
+    void _set_parent(UI* p);
+    void _invalidate_sizereq();
 
     // Wrapper functions which handle common behavior
     // - margins
@@ -164,6 +166,7 @@ private:
     bool cached_sr_valid[2];
     UISizeReq cached_sr[2];
     int cached_sr_pw;
+    UI* m_parent;
 };
 
 // Box widget: similar to the CSS flexbox (without wrapping)
