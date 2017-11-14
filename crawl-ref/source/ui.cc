@@ -645,15 +645,31 @@ void UIGrid::layout_track(int dim, UISizeReq sr, int size)
 {
     auto& infos = dim ? m_row_info : m_col_info;
 
-    float extra = size - sr.min;
+    int extra = size - sr.min;
     ASSERT(extra >= 0);
-    int sum_flex_grow = 0;
-    for (const auto& info : infos)
-        sum_flex_grow += info.flex_grow;
-    extra = sum_flex_grow > 0 ? extra/sum_flex_grow : 0;
 
     for(size_t i = 0; i < infos.size(); ++i)
-        infos[i].size = infos[i].sr.min + extra*infos[i].flex_grow;
+        infos[i].size = infos[i].sr.min;
+
+    while (extra > 0)
+    {
+        int sum_flex_grow = 0, remainder = 0;
+        for (const auto& info : infos)
+            sum_flex_grow += info.size < info.sr.nat ? info.flex_grow : 0;
+        if (!sum_flex_grow)
+            break;
+
+        for(size_t i = 0; i < infos.size(); ++i)
+        {
+            float efg = infos[i].size < infos[i].sr.nat ? infos[i].flex_grow : 0;
+            int tr_extra = extra * efg / sum_flex_grow;
+            ASSERT(infos[i].size <= infos[i].sr.nat);
+            int taken = min(tr_extra, infos[i].sr.nat - infos[i].size);
+            infos[i].size += taken;
+            remainder += tr_extra - taken;
+        }
+        extra = remainder;
+    }
 }
 
 void UIGrid::_allocate_region()
