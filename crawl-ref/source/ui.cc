@@ -677,6 +677,52 @@ void UIGrid::on_event(UIEvent event)
     _on_event_on_children(event, m_children);
 }
 
+void UIScroller::set_scroll(int y)
+{
+    if (m_scroll == y)
+        return;
+    m_scroll = y;
+}
+
+void UIScroller::set_child(shared_ptr<UI> child)
+{
+    m_child = move(child);
+}
+
+void UIScroller::_render()
+{
+    if (m_child)
+    {
+        ui_push_scissor(m_region);
+        m_child->render();
+        ui_pop_scissor();
+    }
+}
+
+UISizeReq UIScroller::_get_preferred_size(int dim, int prosp_width)
+{
+    if (!m_child)
+        return { 0, 0 };
+
+    UISizeReq sr = m_child->get_preferred_size(dim, prosp_width);
+    if (dim) sr.min = 0; // can shrink to zero height
+    return sr;
+}
+
+void UIScroller::_allocate_region()
+{
+    UISizeReq sr = m_child->get_preferred_size(1, m_region[2]);
+    m_scroll = max(0, min(m_scroll, sr.nat-m_region[3]));
+    i4 ch_reg = {m_region[0], m_region[1]-m_scroll, m_region[2], sr.nat};
+    m_child->allocate_region(ch_reg);
+}
+
+void UIScroller::on_event(UIEvent event)
+{
+    UI::on_event(event);
+    m_child->on_event(event);
+}
+
 void UIRoot::set_child(shared_ptr<UI> ch)
 {
     m_child = move(ch);

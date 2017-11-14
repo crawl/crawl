@@ -315,6 +315,23 @@ protected:
     bool m_track_info_dirty;
 };
 
+class UIScroller : public UI
+{
+public:
+    UIScroller() : m_scroll(0) {};
+
+    void set_child(shared_ptr<UI> child);
+    void set_scroll(int y);
+    int get_scroll() const { return m_scroll; };
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual void on_event(UIEvent event) override;
+private:
+    int m_scroll;
+    shared_ptr<UI> m_child;
+};
+
 void ui_push_layout(shared_ptr<UI> root);
 void ui_pop_layout();
 void ui_pump_events();
