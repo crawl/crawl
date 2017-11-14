@@ -9,6 +9,7 @@
 #include <stack>
 
 #include "ui.h"
+#include "cio.h"
 
 #ifdef USE_TILE_LOCAL
 # include "windowmanager.h"
@@ -17,7 +18,6 @@
 #else
 # include "state.h"
 # include "view.h"
-# include "cio.h"
 # include "stringutil.h"
 #endif
 
@@ -43,6 +43,10 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
 
 static void ui_push_scissor(i4 scissor);
 static void ui_pop_scissor();
+
+#ifndef USE_TILE_LOCAL
+static void ui_clear_text_region(i4 region);
+#endif
 
 static struct UIRoot
 {
@@ -723,6 +727,102 @@ void UIScroller::on_event(UIEvent event)
     m_child->on_event(event);
 }
 
+void UIMenuEntry::_render()
+{
+#ifdef USE_TILE_LOCAL
+    if (selected)
+    {
+        ShapeBuffer buf;
+        buf.add(m_region[0], m_region[1], m_region[0]+m_region[2],
+                m_region[1]+m_region[3], VColour(100, 100, 100, 60));
+        buf.draw();
+    }
+#else
+    textbackground(selected ? WHITE : BLACK);
+    ui_clear_text_region(m_region);
+#endif
+}
+
+UISizeReq UIMenuEntry::_get_preferred_size(int dim, int prosp_width)
+{
+    return { 0, 0 };
+}
+
+void UIMenuEntry::_allocate_region() {}
+
+struct UIMenu::slots UIMenu::slots = {};
+
+void UIMenu::add_entry(shared_ptr<UIMenuEntry> entry)
+{
+    int y = m_entries.size(), w = entry->widgets.size();
+    m_items.add_child(entry, 0, y, w, 1);
+    for (int x = 0; x < (int)entry->widgets.size(); x++)
+        m_items.add_child(move(entry->widgets[x]), x, y);
+    m_entries.emplace_back(entry);
+}
+
+void UIMenu::scroll_selected_entry_into_view()
+{
+    if (m_selected >= 0)
+    {
+        i4 sel_reg = m_entries[m_selected]->get_region();
+        sel_reg[1] -= m_items.get_region()[1];
+        int ymin = sel_reg[1], ymax = sel_reg[1]+sel_reg[3];
+        int scroll = m_scroller.get_scroll();
+        int smin = scroll, smax = scroll + m_region[3];
+        if (ymin < smin) m_scroller.set_scroll(scroll - (smin-ymin));
+        if (ymax > smax) m_scroller.set_scroll(scroll + (ymax-smax));
+    }
+}
+
+void UIMenu::set_selected(int idx)
+{
+    idx = max(-1, min(idx, (int)m_entries.size()-1));
+    if (idx == m_selected)
+        return;
+    if (m_selected >= 0) m_entries[m_selected]->selected = false;
+    m_selected = idx;
+    if (m_selected >= 0) m_entries[m_selected]->selected = true;
+    scroll_selected_entry_into_view();
+    slots.selection_change.emit(this, move(m_selected));
+}
+
+void UIMenu::_render()
+{
+    m_scroller.render();
+}
+
+UISizeReq UIMenu::_get_preferred_size(int dim, int prosp_width)
+{
+    return m_scroller.get_preferred_size(dim, prosp_width);
+}
+
+void UIMenu::_allocate_region()
+{
+    m_scroller.allocate_region(m_region);
+    scroll_selected_entry_into_view();
+}
+
+void UIMenu::on_event(UIEvent event)
+{
+    UI::on_event(event);
+    m_scroller.on_event(event);
+    if (event.type == UI_EVENT_TYPE_KEY)
+    {
+        const int key = event.key.key;
+        if (key == CK_DOWN) set_selected(m_selected+1);
+        if (key == CK_UP) set_selected(m_selected-1);
+        if ((key == CK_PGDN || key == CK_PGUP) && m_entries.size() > 0)
+        {
+            // We blithely assume all items are the same height here
+            int items_per_page = m_scroller.get_region()[3]/m_entries[0]->get_region()[3];
+            set_selected(m_selected+items_per_page*(key == CK_PGUP ? -1 : 1));
+        }
+        if (key == CK_ENTER && m_selected >= 0)
+            slots.activate.emit(this, move(m_selected));
+    }
+}
+
 void UIRoot::set_child(shared_ptr<UI> ch)
 {
     m_child = move(ch);
@@ -811,6 +911,21 @@ static void ui_pop_scissor()
         glmanager->reset_scissor();
 #endif
 }
+
+#ifndef USE_TILE_LOCAL
+static void ui_clear_text_region(i4 region)
+{
+    if (scissor_stack.size() > 0)
+        region = aabb_intersect(region, scissor_stack.top());
+    if (region[2] <= 0 || region[3] <= 0)
+        return;
+    for (int y=region[1]; y < region[1]+region[3]; y++)
+    {
+        cgotoxy(region[0]+1, y+1);
+        cprintf("%*s", region[2], "");
+    }
+}
+#endif
 
 void ui_push_layout(shared_ptr<UI> root)
 {

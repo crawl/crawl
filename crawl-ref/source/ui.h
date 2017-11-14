@@ -143,6 +143,7 @@ public:
         margin = _margin;
 #endif
     };
+    i4 get_region() const { return m_region; }
 
     virtual void on_event(UIEvent event);
     static void _on_event_on_children(UIEvent event, vector<shared_ptr<UI>>& children);
@@ -330,6 +331,51 @@ public:
 private:
     int m_scroll;
     shared_ptr<UI> m_child;
+};
+
+class UIMenuEntry : public UI
+{
+public:
+    vector<shared_ptr<UI>> widgets;
+
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(int dim, int prosp_width) final override;
+    virtual void _allocate_region() final override;
+
+    bool selected;
+};
+
+class UIMenu : public UI
+{
+public:
+    UIMenu() : m_selected(-1) {
+        m_scroller.set_child(shared_ptr<UIGrid>(&m_items, [](UIGrid const*){}));
+    };
+    ~UIMenu() {
+        UIMenu::slots.selection_change.remove_by_target(this);
+        UIMenu::slots.activate.remove_by_target(this);
+    }
+    void add_entry(shared_ptr<UIMenuEntry> entry);
+    int& col_flex_grow(int x) { return m_items.track_flex_grow(x, -1); };
+    void set_selected(int idx);
+
+    static struct slots {
+        Slot<UI, void (int)> selection_change;
+        Slot<UI, void (int)> activate;
+    } slots;
+
+protected:
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual void on_event(UIEvent event) override;
+
+    void scroll_selected_entry_into_view();
+
+    vector<shared_ptr<UIMenuEntry>> m_entries;
+    UIGrid m_items;
+    UIScroller m_scroller;
+    int m_selected;
 };
 
 void ui_push_layout(shared_ptr<UI> root);
