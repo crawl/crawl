@@ -477,6 +477,21 @@ public:
     virtual I end() override { return I(new iter_impl_grid(m_child_info, m_child_info.end())); }
 };
 
+class Scroller : public Bin
+{
+public:
+    virtual ~Scroller() {};
+
+    virtual void set_scroll(int y);
+    int get_scroll() const { return m_scroll; };
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
+protected:
+    int m_scroll = 0;
+};
+
 void push_layout(shared_ptr<Widget> root);
 void pop_layout();
 void pump_events();
