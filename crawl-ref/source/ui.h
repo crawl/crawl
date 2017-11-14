@@ -403,6 +403,22 @@ public:
     virtual I end() override { return I(new iter_impl_grid(m_child_info, m_child_info.end())); }
 };
 
+class UIScroller : public UIBin
+{
+public:
+    virtual ~UIScroller() {};
+
+    void set_child(shared_ptr<UI> child);
+    virtual void set_scroll(int y);
+    int get_scroll() const { return m_scroll; };
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(wm_event event) override;
+protected:
+    int m_scroll = 0;
+};
+
 void ui_push_layout(shared_ptr<UI> root);
 void ui_pop_layout();
 void ui_pump_events();
