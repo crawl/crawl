@@ -736,6 +736,93 @@ void Grid::_allocate_region()
     }
 }
 
+void Scroller::set_scroll(int y)
+{
+    if (m_scroll == y)
+        return;
+    m_scroll = y;
+}
+
+void Scroller::_render()
+{
+    if (m_child)
+    {
+        push_scissor(m_region);
+        m_child->render();
+        pop_scissor();
+    }
+}
+
+SizeReq Scroller::_get_preferred_size(Direction dim, int prosp_width)
+{
+    if (!m_child)
+        return { 0, 0 };
+
+    SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
+    if (dim) sr.min = 0; // can shrink to zero height
+    return sr;
+}
+
+void Scroller::_allocate_region()
+{
+    SizeReq sr = m_child->get_preferred_size(Widget::VERT, m_region[2]);
+    m_scroll = max(0, min(m_scroll, sr.nat-m_region[3]));
+    i4 ch_reg = {m_region[0], m_region[1]-m_scroll, m_region[2], sr.nat};
+    m_child->allocate_region(ch_reg);
+}
+
+bool Scroller::on_event(const wm_event& event)
+{
+    if (Bin::on_event(event))
+        return true;
+#ifdef USE_TILE_LOCAL
+    const int line_delta = 20;
+#else
+    const int line_delta = 1;
+#endif
+    int delta = 0;
+    if (event.type == WME_KEYDOWN)
+    {
+        switch (event.key.keysym.sym)
+        {
+            case ' ': case '+': case CK_PGDN: case '>': case '\'':
+                delta = m_region[3];
+                break;
+
+            case '-': case CK_PGUP: case '<': case ';':
+                delta = -m_region[3];
+                break;
+
+            case CK_UP:
+                delta = -line_delta;
+                break;
+
+            case CK_DOWN:
+            case CK_ENTER:
+                delta = line_delta;
+                break;
+
+            case CK_HOME:
+                set_scroll(0);
+                return true;
+
+            case CK_END:
+                set_scroll(INT_MAX);
+                return true;
+        }
+    }
+    else if (event.type == WME_MOUSEWHEEL)
+        delta = event.mouse_event.py * line_delta;
+    else if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == MouseEvent::LEFT)
+        delta = line_delta;
+    if (delta != 0)
+    {
+        set_scroll(m_scroll+delta);
+        return true;
+    }
+    return false;
+}
+
 void UIRoot::push_child(shared_ptr<Widget> ch)
 {
     m_root.add_child(move(ch));
