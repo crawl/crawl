@@ -2030,9 +2030,6 @@ void handle_monster_move(monster* mons)
         {
             mons->speed_increment -= non_move_energy;
             mons->check_clinging(false);
-
-            if (mons->has_ench(ENCH_WHIRLWIND_PINNED))
-               mons->del_ench(ENCH_WHIRLWIND_PINNED);
         }
     }
     you.update_beholder(mons);

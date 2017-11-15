@@ -321,7 +321,7 @@ precision and damage for as long as they keep using martial attacks.
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
   ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them. The dizzying motion
-  .......       ....... briefly pins monsters in place.
+  .......       ....... pins monsters in place for one turn.
 
   ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault towards
   ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. enemies, striking all enemies adjacent to the landing
