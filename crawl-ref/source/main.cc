@@ -3316,12 +3316,8 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Wu Jian's lunge and whirlwind.
-    if (you_worship(GOD_WU_JIAN) && !attacking && !did_wall_jump)
-        wu_jian_trigger_martial_arts(initial_position);
-
-    if (you_worship(GOD_WU_JIAN) && !attacking && you.turn_is_over)
-        wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
+    if (you_worship(GOD_WU_JIAN))
+        wu_jian_end_of_turn_effects(attacking, did_wall_jump, you.turn_is_over, initial_position);
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
