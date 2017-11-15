@@ -370,6 +370,7 @@ void crawl_view_geometry::init_geometry()
 #ifndef USE_TILE_LOCAL
     if (!crawl_state.need_save)
     {
+#if 0
         if (termsz.x < MIN_COLS || termsz.y < MIN_LINES)
         {
             end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
@@ -385,6 +386,7 @@ void crawl_view_geometry::init_geometry()
                 x_left < 0 ? termsz.x - x_left : MIN_COLS,
                 y_left < 0 ? termsz.y - y_left : MIN_LINES);
         }
+#endif
     }
 #endif
 
