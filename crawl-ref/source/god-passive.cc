@@ -1526,14 +1526,14 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-void wu_jian_trigger_serpents_lash(const coord_def& old_pos, bool wall_jump)
+static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos, bool wall_jump)
 {
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
        return;
 
     if (wall_jump && you.attribute[ATTR_SERPENTS_LASH] == 1) {
         // No turn manipulation, since we are only refunding half
-        // a wall jump (the walk speed modifier for this special case
+        // a wall jump's time (the walk speed modifier for this special case
         // is already factored in main.cc)
         you.attribute[ATTR_SERPENTS_LASH] = 0;
     } else {
@@ -1660,7 +1660,7 @@ static void _wu_jian_lunge(const coord_def& old_pos)
              wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
                  " with incredible momentum" : "",
              mons->name(DESC_THE).c_str(),
-             number_of_attacks > 1 ? " in a flurry of attacks" : "");
+             number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
 
     for (int i = 0; i < number_of_attacks; i++)
@@ -1704,12 +1704,11 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
             you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
-        // Pin disappears as soon as the monster tries to move (preventing the move).
-        // This must be done in this way instead of with a normal duration because
-        // of the interaction with wall jump (by taking a slow turn, the monster would get
-        // rid of the enchantment before it has any appreciable effect) and due to the interaction
-        // with Serpent's Lash.
-        mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 1, nullptr, INFINITE_DURATION));
+        // Pin has a longer duration than one player turn, but gets cleared before
+        // its duration expires by wu_jian_upkeep. This is necessary to make sure it
+        // works well with Wall Jump's longer aut count.
+        mons->del_ench(ENCH_WHIRLWIND_PINNED);
+        mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 2, nullptr, BASELINE_DELAY * 5));
 
         you.apply_berserk_penalty = false;
 
@@ -1726,7 +1725,7 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
                  mons->name(DESC_THE).c_str(),
                  number_of_attacks > 1 ? " repeatedly" : "",
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
-                     " with incredible momentum" : "");
+                     ", with incredible momentum" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)
@@ -1741,7 +1740,7 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
     }
 }
 
-void wu_jian_trigger_martial_arts(const coord_def& old_pos)
+static void _wu_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     if (you.pos() == old_pos || you.duration[DUR_CONF])
         return;
@@ -1832,7 +1831,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
 
         you.apply_berserk_penalty = false;
 
-        // Twice the attacks as Wall Jump spends two turns
+        // Twice the attacks as Wall Jump spends twice the time
         const int number_of_attacks = _wu_jian_number_of_attacks(true);
         if (number_of_attacks == 0)
         {
@@ -1846,7 +1845,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
                  number_of_attacks > 1 ? "repeatedly " : "",
                  target->name(DESC_THE).c_str(),
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
-                     " with incredible momentum" : "");
+                     ", with incredible momentum" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)
@@ -1861,6 +1860,24 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         }
     }
 }
+
+void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+{
+    // This guarantees that the whirlwind pin status is capped to one turn of monster movement.
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->has_ench(ENCH_WHIRLWIND_PINNED) && !you.attribute[ATTR_SERPENTS_LASH])
+            mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
+
+    if (attacking)
+        return;
+
+    if (!did_wall_jump)
+        _wu_jian_trigger_martial_arts(initial_position);
+
+    if (you.turn_is_over)
+        _wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
+}
+
 
 /**
  * check if the monster in this cell exists and is a valid target for Uskayaw
