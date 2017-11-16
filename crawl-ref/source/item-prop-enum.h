@@ -727,13 +727,6 @@ enum wand_type
     NUM_WANDS
 };
 
-enum zap_count_type
-{
-    ZAPCOUNT_EMPTY       = -1,
-    ZAPCOUNT_UNKNOWN     = -2,
-    ZAPCOUNT_RECHARGED   = -3,
-};
-
 enum food_type
 {
     FOOD_MEAT_RATION,

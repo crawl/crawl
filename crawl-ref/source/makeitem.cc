@@ -1307,9 +1307,7 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     if (item.charges == 0)
         item.charges++;
 
-    item.used_count = 0;
-
-    // don't let monsters pickup early high-tier wands
+    // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
         item.flags |= ISFLAG_NO_PICKUP;
 }

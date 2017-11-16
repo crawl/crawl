@@ -1593,7 +1593,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
         return true;
 
     // Don't offer wands already maximally charged.
-    if (item_ident(it, ISFLAG_KNOW_PLUSES)
+    if (item_ident(it, ISFLAG_KNOW_TYPE)
         && it.charges >= wand_max_charges(it))
     {
         return false;
@@ -1649,11 +1649,7 @@ bool is_known_empty_wand(const item_def &item)
     if (item.base_type != OBJ_WANDS)
         return false;
 
-    // not charge-ID'd, but known empty (probably through hard experience)
-    if (item.used_count == ZAPCOUNT_EMPTY)
-        return true;
-
-    return item_ident(item, ISFLAG_KNOW_PLUSES) && item.charges <= 0;
+    return item_ident(item, ISFLAG_KNOW_TYPE) && item.charges <= 0;
 }
 
 /**

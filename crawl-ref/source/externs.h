@@ -548,9 +548,7 @@ struct item_def
     {
         // These must all be the same size!
         short plus2;        ///< legacy/generic name for this union
-        short used_count;   ///< the # of known times it was used (decks, wands)
-                            // for wands, may hold negative ZAPCOUNT knowledge
-                            // info (e.g. "recharged", "empty", "unknown")
+        short used_count;   ///< the # of times a deck was used
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short stash_freshness; ///< where stash.cc stores corpse freshness

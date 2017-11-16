@@ -4,7 +4,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
     ISFLAG_KNOW_CURSE        = 0x00000001,  // curse status
     ISFLAG_KNOW_TYPE         = 0x00000002,  // artefact name, sub/special types
-    ISFLAG_KNOW_PLUSES       = 0x00000004,  // to hit/to dam/to AC/charges
+    ISFLAG_KNOW_PLUSES       = 0x00000004,  // to hit/to dam/to AC
     ISFLAG_KNOW_PROPERTIES   = 0x00000008,  // know special artefact properties
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 

@@ -1110,10 +1110,6 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
             mons.props["wand_known"] = true;
         }
 
-        // Increment zap count.
-        if (wand.used_count >= 0)
-            wand.used_count++;
-
         mons.flags |= MF_SEEN_RANGED;
     }
 
@@ -1141,20 +1137,7 @@ static bool _handle_wand(monster& mons)
     }
 
     if (wand->charges <= 0)
-    {
-        if (wand->used_count != ZAPCOUNT_EMPTY)
-        {
-            if (simple_monster_message(mons, " zaps a wand."))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else if (!silenced(you.pos()))
-                mprf(MSGCH_SOUND, "You hear a zap.");
-            wand->used_count = ZAPCOUNT_EMPTY;
-            mons.lose_energy(EUT_ITEM);
-            return true;
-        }
-        else
-            return false;
-    }
+        return false;
 
     bool niceWand    = false;
     bool zap         = false;
