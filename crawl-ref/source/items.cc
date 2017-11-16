@@ -4608,13 +4608,13 @@ item_info get_item_info(const item_def& item)
         break;
     case OBJ_WANDS:
         if (item_type_known(item))
+        {
             ii.sub_type = item.sub_type;
+            ii.charges = item.charges;
+        }
         else
             ii.sub_type = NUM_WANDS;
         ii.subtype_rnd = item.subtype_rnd;
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.charges = item.charges;
-        ii.used_count = item.used_count; // num zapped/recharged or empty
         break;
     case OBJ_POTIONS:
         if (item_type_known(item))

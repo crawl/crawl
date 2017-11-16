@@ -2059,12 +2059,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if (all_wands)
             return true;
 
-        if (item.used_count == ZAPCOUNT_EMPTY)
-        {
-            if (msg)
-                mpr("This wand has no charges.");
-            return false;
-        }
         return true;
 
     case OBJ_WEAPONS:

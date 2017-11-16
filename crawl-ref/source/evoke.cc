@@ -448,15 +448,12 @@ void zap_wand(int slot)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    const bool has_charges = wand.charges > 0;
-    if (!has_charges && wand.used_count == ZAPCOUNT_EMPTY)
+    if (wand.charges <= 0)
     {
         mpr("This wand has no charges.");
         return;
     }
 
-    // Will waste charges.
-    const bool wasteful = !item_ident(wand, ISFLAG_KNOW_PLUSES);
     int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2)
                 * (you.get_mutation_level(MUT_MP_WANDS) + 3) / 3;
 
@@ -470,8 +467,6 @@ void zap_wand(int slot)
     else if (ret == SPRET_FAIL)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        // It's an empty wand; inscribe it that way.
-        wand.used_count = ZAPCOUNT_EMPTY;
         you.turn_is_over = true;
         return;
     }
@@ -481,51 +476,10 @@ void zap_wand(int slot)
 
     // Take off a charge.
     wand.charges--;
-    // And a few more, if you didn't know the wand's charges.
-    int wasted_charges = 0;
-    if (wasteful)
+
     {
-#ifdef DEBUG_DIAGNOSTICS
-        const int initial_charge = wand.plus;
-#endif
 
-        wasted_charges = 1 + random2(2); //1-2
-        wand.charges = max(0, wand.charges - wasted_charges);
-
-        dprf("Wasted %d charges (wand %d -> %d)", wasted_charges,
-             initial_charge, wand.charges);
-        mpr("Evoking this partially-identified wand wasted a few charges.");
     }
-
-    // Zap counts count from the last recharge.
-    if (wand.used_count == ZAPCOUNT_RECHARGED)
-        wand.used_count = 0;
-    // Increment zap count.
-    if (wand.used_count >= 0)
-    {
-        wand.used_count++;
-        if (wasteful)
-            wand.used_count += wasted_charges;
-    }
-
-    if (item_type_known(wand)
-        && (item_ident(wand, ISFLAG_KNOW_PLUSES)
-            || you.skill_rdiv(SK_EVOCATIONS) > random2(27)))
-    {
-        if (!item_ident(wand, ISFLAG_KNOW_PLUSES))
-        {
-            mpr("Your skill with magical items lets you calculate "
-                "the power of this device...");
-        }
-
-        mprf("This wand has %d charge%s left.",
-             wand.plus, wand.plus == 1 ? "" : "s");
-
-        set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-    }
-    // Mark as empty if necessary.
-    if (wand.charges == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
-        wand.used_count = ZAPCOUNT_EMPTY;
 
     practise_evoking(1);
     count_action(CACT_EVOKE, EVOC_WAND);
@@ -569,7 +523,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
         item_def &wand = you.inv[ item_slot ];
 
-        if (!item_is_rechargeable(wand, known))
+        if (!item_is_rechargeable(wand))
         {
             mpr("Choose an item to recharge, or Esc to abort.");
             more();
@@ -595,7 +549,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
         string desc;
 
-        if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
+        if (charged)
         {
             desc = make_stringf(" and now has %d charge%s",
                                 new_charges, new_charges == 1 ? "" : "s");
@@ -609,16 +563,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
              charged ? "glows" : "flickers",
              desc.c_str());
 
-        if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
-        {
-            mprf("It has %d charges and is fully charged.", new_charges);
-            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-        }
-
-        // Reinitialise zap counts.
         wand.charges  = new_charges;
-        wand.used_count = ZAPCOUNT_RECHARGED;
-
         you.wield_change = true;
         return 1;
     }

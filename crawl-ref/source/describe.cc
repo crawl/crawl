@@ -2010,23 +2010,7 @@ string get_item_description(const item_def &item, bool verbose,
 
     case OBJ_WANDS:
     {
-        const bool known_empty = is_known_empty_wand(item);
-
-        if (!item_ident(item, ISFLAG_KNOW_PLUSES) && !known_empty)
-        {
-            description << "\nIf evoked without being fully identified,"
-                           " several charges will be wasted out of"
-                           " unfamiliarity with the device.";
-        }
-
-
-        if (item_type_known(item) && !item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            description << "\nIt can have at most " << wand_max_charges(item)
-                        << " charges.";
-        }
-
-        if (known_empty)
+        if (is_known_empty_wand(item))
             description << "\nUnfortunately, it has no charges left.";
         break;
     }
