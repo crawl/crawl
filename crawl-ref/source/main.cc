@@ -706,10 +706,7 @@ static void _start_running(int dir, int mode)
         && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
         && count_adjacent_slime_walls(next_pos))
     {
-        if (dir == RDIR_REST)
-            mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-        else
-            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+        mprf(MSGCH_WARN, "You're about to run into a slime covered wall!");
         return;
     }
 
@@ -848,8 +845,8 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_DOWN_RIGHT:
         if (!i_feel_safe())
         {
-            return yesno("Really repeat movement command while monsters "
-                         "are nearby?", false, 'n');
+            return yesno("Really repeat movement command while danger "
+                         "is nearby?", false, 'n');
         }
 
         return true;
