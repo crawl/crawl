@@ -1040,7 +1040,7 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_RECHARGE:
     case OSEL_SUPERCHARGE:
-        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE);
+        return item_is_rechargeable(i);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true, true);

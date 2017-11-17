@@ -4817,15 +4817,10 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_set_property(item, ARTP_TWISTER, 0);
     }
 
-
-    // Monsters could zap wands below zero from 0.17-a0-739-g965e8eb
-    // to 0.17-a0-912-g3e33c8f. Also check for overcharged wands, in
-    // case someone was patient enough to let it wrap around.
-    if (item.base_type == OBJ_WANDS
-        && (item.charges < 0 || item.charges > wand_max_charges(item)))
-    {
+    // Monsters could zap wands below zero from
+    // 0.17-a0-739-g965e8eb to 0.17-a0-912-g3e33c8f.
+    if (item.base_type == OBJ_WANDS && item.charges < 0)
         item.charges = 0;
-    }
 
     if (item.base_type == OBJ_RODS && item.cursed())
         do_uncurse_item(item); // rods can't be cursed anymore

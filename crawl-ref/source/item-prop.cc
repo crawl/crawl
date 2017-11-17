@@ -1580,26 +1580,12 @@ bool check_armour_size(const item_def &item, size_type size)
  * Can the given item be recharged?
  *
  * @param it            The item in question.
- * @param hide_charged  Whether wands known to be full should be included.
  * @return              Whether the item can be recharged.
  *
  */
-bool item_is_rechargeable(const item_def &it, bool hide_charged)
+bool item_is_rechargeable(const item_def &it)
 {
-    if (it.base_type != OBJ_WANDS)
-        return false;
-
-    if (!hide_charged)
-        return true;
-
-    // Don't offer wands already maximally charged.
-    if (item_ident(it, ISFLAG_KNOW_TYPE)
-        && it.charges >= wand_max_charges(it))
-    {
-        return false;
-    }
-
-    return true;
+    return it.base_type == OBJ_WANDS;
 }
 
 int wand_charge_value(int type)
@@ -1608,33 +1594,21 @@ int wand_charge_value(int type)
     {
     case WAND_CLOUDS:
     case WAND_SCATTERSHOT:
-        return 3;
+        return 9;
 
     case WAND_ICEBLAST:
     case WAND_LIGHTNING:
     case WAND_ACID:
-        return 5;
+        return 15;
 
     default:
-        return 8;
+        return 24;
 
     case WAND_FLAME:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
-        return 16;
+        return 48;
     }
-}
-
-int wand_max_charges(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_WANDS);
-
-    const int charge_value = wand_charge_value(item.sub_type);
-
-    if (item.props.exists(PAKELLAS_SUPERCHARGE_KEY))
-        return 9 * charge_value / 2;
-
-    return charge_value * 3;
 }
 
 /**
