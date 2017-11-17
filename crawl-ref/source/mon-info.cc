@@ -114,6 +114,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
+    { ENCH_WHIRLWIND_PINNED, MB_PINNED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1207,6 +1208,8 @@ static string _verbose_info0(const monster_info& mi)
         return "webbed";
     if (mi.is(MB_PETRIFIED))
         return "petrified";
+    if (mi.is(MB_PINNED))
+        return "pinned";
     if (mi.is(MB_PETRIFYING))
         return "petrifying";
     if (mi.is(MB_MAD))
@@ -1402,6 +1405,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("frenzied and insane");
     if (is(MB_CONFUSED))
         v.emplace_back("confused");
+    if (is(MB_PINNED))
+        v.emplace_back("pinned by a whirlwind");
     if (is(MB_INVISIBLE))
         v.emplace_back("slightly transparent");
     if (is(MB_CHARMED))
