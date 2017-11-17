@@ -607,8 +607,6 @@ static const ability_def Ability_List[] =
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
       0, 0, 0, 2, {fail_basis::invo, 40, 5, 25}, abflag::none },
-    { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
 #endif
 
     // Uskayaw
@@ -3027,61 +3025,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         break;
     }
-
-    case ABIL_PAKELLAS_SUPERCHARGE:
-    {
-        fail_check();
-        simple_god_message(" will supercharge a wand.");
-        // included in default force_more_message
-
-        int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
-                                           OSEL_SUPERCHARGE, OPER_ANY,
-                                           invprompt_flag::escape_only);
-
-        if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
-            return SPRET_ABORT;
-
-        item_def& wand(you.inv[item_slot]);
-
-        if (!item_is_rechargeable(wand))
-        {
-            mpr("You cannot supercharge that!");
-            return SPRET_ABORT;
-        }
-
-        string prompt = "Do you wish to have " + wand.name(DESC_YOUR)
-                           + " supercharged?";
-
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-
-        set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-        wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
-
-        wand.props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
-        you.wield_change = true;
-        you.one_time_ability_used.set(GOD_PAKELLAS);
-
-        take_note(Note(NOTE_ID_ITEM, 0, 0, wand.name(DESC_A).c_str(),
-                  "supercharged by Pakellas"));
-
-        mprf(MSGCH_GOD, "Your %s glows brightly!",
-             wand.name(DESC_QUALNAME).c_str());
-
-        flash_view(UA_PLAYER, LIGHTGREEN);
-
-        simple_god_message(" booms: Use this gift wisely!");
 #endif
-
-#ifndef USE_TILE_LOCAL
-        // Allow extra time for the flash to linger.
-        delay(1000);
-#endif
-        break;
-    }
 
     case ABIL_USKAYAW_STOMP:
         fail_check();
@@ -3689,7 +3633,6 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
-    case ABIL_PAKELLAS_SUPERCHARGE:
         first_slot = letter_to_index('W');
         break;
     case ABIL_CONVERT_TO_BEOGH:

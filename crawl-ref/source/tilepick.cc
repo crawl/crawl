@@ -3489,8 +3489,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
-    case ABIL_PAKELLAS_SUPERCHARGE:
-        return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
 #endif
     // Hepliaklqana
     case ABIL_HEPLIAKLQANA_RECALL:
