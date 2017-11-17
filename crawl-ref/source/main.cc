@@ -3219,7 +3219,10 @@ static void _move_player(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        you.time_taken *= player_movement_speed();
+        // Serpent's Lash = 1 means half of the wall jump time is refunded, so the modifier is 2 * 1/2 = 1;
+        int wall_jump_modifier = (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
+
+        you.time_taken *= wall_jump_modifier * player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
         you.time_taken += additional_time_taken;
 
@@ -3313,12 +3316,8 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Wu Jian's lunge and whirlwind.
-    if (you_worship(GOD_WU_JIAN) && !attacking && !did_wall_jump)
-        wu_jian_trigger_martial_arts(initial_position);
-
-    if (you_worship(GOD_WU_JIAN) && !attacking && you.turn_is_over)
-        wu_jian_trigger_serpents_lash(initial_position);
+    if (you_worship(GOD_WU_JIAN))
+        wu_jian_end_of_turn_effects(attacking, did_wall_jump, you.turn_is_over, initial_position);
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)

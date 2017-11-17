@@ -637,7 +637,7 @@ static const ability_def Ability_List[] =
 
     // Wu Jian
     { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
-        0, 0, 0, 4, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
+        0, 0, 0, 2, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
     { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
@@ -3116,12 +3116,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_WU_JIAN_SERPENTS_LASH:
         if (you.attribute[ATTR_SERPENTS_LASH])
         {
-            mpr("You're already lashing out.");
+            mpr("You are already lashing out.");
             return SPRET_ABORT;
         }
         if (you.duration[DUR_EXHAUSTED])
         {
-            mpr("You're too exhausted to lash out.");
+            mpr("You are too exhausted to lash out.");
             return SPRET_ABORT;
         }
         fail_check();
