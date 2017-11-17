@@ -1770,9 +1770,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
-        if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
-            buff << "supercharged ";
-
         if (know_type)
             buff << "wand of " << _wand_type_name(item_typ);
         else

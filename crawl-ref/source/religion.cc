@@ -314,9 +314,6 @@ const vector<god_power> god_powers[NUM_GODS] =
            "spend your magic to charge your devices" },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
-      { 7, ABIL_PAKELLAS_SUPERCHARGE,
-           "Pakellas will now supercharge a wand... once.",
-           "Pakellas is no longer ready to supercharge a wand." },
     },
 
     // Uskayaw
