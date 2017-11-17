@@ -2505,7 +2505,7 @@ static void _add_fake_item(object_class_type base, int sub,
     ptmp->rnd       = 1;
 
     if (base == OBJ_WANDS && sub != NUM_WANDS)
-        ptmp->charges = wand_max_charges(*ptmp);
+        ptmp->charges = wand_charge_value(ptmp->sub_type);
     else if (base == OBJ_GOLD)
         ptmp->quantity = 18;
     else if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
