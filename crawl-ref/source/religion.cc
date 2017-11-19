@@ -1056,7 +1056,6 @@ static int _pakellas_low_wand()
 {
     static const vector<int> low_wands = {
         WAND_FLAME,
-        WAND_CONFUSION,
         WAND_POLYMORPH,
         WAND_RANDOM_EFFECTS,
     };
