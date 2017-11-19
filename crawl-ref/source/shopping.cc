@@ -430,10 +430,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 20;
                 break;
 
-            case WAND_CONFUSION:
-                valued += 15;
-                break;
-
             case WAND_FLAME:
             case WAND_RANDOM_EFFECTS:
                 valued += 10;

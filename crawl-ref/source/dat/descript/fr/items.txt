@@ -1042,10 +1042,6 @@ wand of cold
 
 Un instrument magique permettant de tirer de puissants missiles de froid.
 %%%%
-wand of confusion
-
-Un instrument magique qui provoque la confusion chez la créature ciblée.
-%%%%
 wand of digging
 
 Un instrument magique qui creuse des tunnels a travers la roche brute.

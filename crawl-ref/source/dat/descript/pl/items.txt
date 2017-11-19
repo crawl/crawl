@@ -736,10 +736,6 @@ wand of cold
 
 Magiczny przedmiot który strzela wielki strugami zimna.
 %%%%
-wand of confusion
-
-Magiczny przedmiot który pozwala zmieszać umysł jakiejś istoty.
-%%%%
 wand of digging
 
 Magiczny przedmiot który potrafi rozpuścić nie wzmocnioną skałę, tworząc tunel.
