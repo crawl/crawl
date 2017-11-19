@@ -1931,6 +1931,45 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 }
 
 /**
+ * Attempt to merge a wands charges into an existing wand of the same type in
+ * inventory.
+ *
+ * @param it[in]            The wand to merge.
+ * @param inv_slot[out]     The inventory slot the wand was placed in. -1 if
+ * not placed.
+ * @param quiet             Whether to suppress pickup messages.
+ */
+static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
+{
+    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    {
+        if (you.inv[inv_slot].base_type != OBJ_WANDS
+            || you.inv[inv_slot].sub_type != it.sub_type)
+        {
+            continue;
+        }
+
+        you.inv[inv_slot].charges += it.charges;
+
+        if (!quiet)
+        {
+#ifdef USE_SOUND
+            parse_sound(PICKUP_SOUND);
+#endif
+            mprf_nocap("%s (gained %d charges)",
+                        menu_colour_item_name(you.inv[inv_slot],
+                                                    DESC_INVENTORY).c_str(),
+                        it.charges);
+        }
+
+        return true;
+    }
+
+    inv_slot = -1;
+    return false;
+}
+
+/**
  * Maybe move an item to the slot given by the item_slot option.
  *
  * @param[in] item the item to be checked. Note that any references to this
@@ -2109,6 +2148,14 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     if (is_stackable_item(it)
         && _merge_stackable_item_into_inv(it, quant_got, inv_slot, quiet))
     {
+        return true;
+    }
+
+    // attempt to merge into an existing stack, if possible
+    if (it.base_type == OBJ_WANDS
+        && _merge_wand_charges(it, inv_slot, quiet))
+    {
+        quant_got = 1;
         return true;
     }
 
