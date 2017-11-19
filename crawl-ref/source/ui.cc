@@ -43,6 +43,7 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
 
 static void ui_push_scissor(i4 scissor);
 static void ui_pop_scissor();
+static i4 ui_get_scissor();
 
 #ifndef USE_TILE_LOCAL
 static void ui_clear_text_region(i4 region);
@@ -564,9 +565,8 @@ void UIStack::on_event(UIEvent event)
 void UIGrid::add_child(shared_ptr<UI> child, int x, int y, int w, int h)
 {
     child->_set_parent(this);
-    child_info ch = { {x, y}, {w, h} };
+    child_info ch = { {x, y}, {w, h}, move(child) };
     m_child_info.push_back(ch);
-    m_children.push_back(child);
     m_track_info_dirty = true;
     _invalidate_sizereq();
 }
@@ -586,12 +586,39 @@ void UIGrid::init_track_info()
     }
     m_row_info.resize(n_rows);
     m_col_info.resize(n_cols);
+
+    sort(m_child_info.begin(), m_child_info.end(), [](const child_info& a, const child_info& b) {
+        // XXX: sorting by colspan is a hack to get menu entry backgrounds drawn
+        // before menu text widgets. Alternatives: add z-index property to widgets,
+        // or make render() call order not matter by deferring rendering
+        return tie(a.pos[1], b.span[0]) < tie(b.pos[1], a.span[0]);
+    });
 }
 
 void UIGrid::_render()
 {
-    for (auto const& child : m_children)
-        child->render();
+    // Find the visible rows
+    i4 scissor = ui_get_scissor();
+    int row_min = 0, row_max = m_row_info.size()-1, i = 0;
+    for (; i < (int)m_row_info.size(); i++)
+        if (m_row_info[i].offset+m_row_info[i].size+m_region[1] >= scissor[1])
+        {
+            row_min = i;
+            break;
+        }
+    for (; i < (int)m_row_info.size(); i++)
+        if (m_row_info[i].offset+m_region[1] >= scissor[1]+scissor[3])
+        {
+            row_max = i-1;
+            break;
+        }
+
+    for (auto const& child : m_child_info)
+    {
+        if (child.pos[1] < row_min) continue;
+        if (child.pos[1] > row_max) break;
+        child.widget->render();
+    }
 }
 
 void UIGrid::compute_track_sizereqs(int dim)
@@ -601,13 +628,13 @@ void UIGrid::compute_track_sizereqs(int dim)
 
     for (auto& t : track)
         t.sr = {0, 0};
-    for (size_t i = 0; i < m_children.size(); i++)
+    for (size_t i = 0; i < m_child_info.size(); i++)
     {
         auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
         // if merging horizontally, need to find (possibly multi-col) width
         int prosp_width = dim ? get_tracks_region(cp[0], cp[1], cs[0], cs[1])[2] : -1;
 
-        const UISizeReq c = m_children[i]->get_preferred_size(dim, prosp_width);
+        const UISizeReq c = m_child_info[i].widget->get_preferred_size(dim, prosp_width);
         // crappy but fast multitrack distribution here: if a child spans n tracks
         // each track gets 1/n-th of its sizereq; good enough for our needs
         for (int ti = cp[dim]; ti < cp[dim]+cs[dim]; ti++)
@@ -703,21 +730,25 @@ void UIGrid::_allocate_region()
     layout_track(1, h_sr, m_region[3]);
     set_track_offsets(m_row_info);
 
-    ASSERT(m_children.size() == m_child_info.size());
-    for (size_t i = 0; i < m_children.size(); i++)
+    for (size_t i = 0; i < m_child_info.size(); i++)
     {
         auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
         i4 cell_reg = get_tracks_region(cp[0], cp[1], cs[0], cs[1]);
         cell_reg[0] += m_region[0];
         cell_reg[1] += m_region[1];
-        m_children[i]->allocate_region(cell_reg);
+        m_child_info[i].widget->allocate_region(cell_reg);
     }
 }
 
 void UIGrid::on_event(UIEvent event)
 {
     UI::on_event(event);
-    _on_event_on_children(event, m_children);
+    for (auto& child : m_child_info)
+    {
+        if (event.type == UI_EVENT_TYPE_MOUSE && !pos_in_rect(event.mouse.pos, child.widget->get_region()))
+            continue;
+        child.widget->on_event(event);
+    }
 }
 
 void UIScroller::set_scroll(int y)
@@ -952,6 +983,11 @@ static void ui_pop_scissor()
     else
         glmanager->reset_scissor();
 #endif
+}
+
+static i4 ui_get_scissor()
+{
+    return scissor_stack.top();
 }
 
 #ifndef USE_TILE_LOCAL

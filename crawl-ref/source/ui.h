@@ -311,9 +311,9 @@ protected:
     struct child_info {
         i2 pos;
         i2 span;
+        shared_ptr<UI> widget;
     };
     vector<child_info> m_child_info;
-    vector<shared_ptr<UI>> m_children;
 
     void layout_track(int dim, UISizeReq sr, int size);
     void set_track_offsets(vector<track_info>& tracks);
