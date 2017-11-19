@@ -773,11 +773,6 @@ wand of cold
 
 Ein magisches Gerät welches großartige Bolzen aus Kälte wirft.
 %%%%
-wand of confusion
-
-Ein magisches Gerät, das Verwirrung und Verwirrung in einem Zielwesen
-veranlasst.
-%%%%
 wand of disintegration
 
 Ein magisches Gerät, das die physische Struktur von irgendetwas außer den

@@ -973,10 +973,6 @@ wand of cold
 
 En magisk anordning, som kan kaste kolossale kuldekiler.
 %%%%
-wand of confusion
-
-En magisk enhed, som fremkalder forvirring og desorientering i målet.
-%%%%
 wand of digging
 
 En magisk anordning, som graver tunneller gennem uforarbejdet klippe.

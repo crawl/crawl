@@ -58,7 +58,6 @@ static const map<wand_type, spell_type> _wand_spells =
 {
     { WAND_FLAME, SPELL_THROW_FLAME },
     { WAND_PARALYSIS, SPELL_PARALYSE },
-    { WAND_CONFUSION, SPELL_CONFUSE },
     { WAND_DIGGING, SPELL_DIG },
     { WAND_ICEBLAST, SPELL_ICEBLAST },
     { WAND_LIGHTNING, SPELL_LIGHTNING_BOLT },

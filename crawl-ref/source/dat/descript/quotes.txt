@@ -3139,10 +3139,6 @@ wand of acid
 
 <wand>
 %%%%
-wand of confusion
-
-<wand>
-%%%%
 wand of digging
 
 <Passwall spell>

@@ -4262,8 +4262,8 @@ ORIENT: float
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
 ITEM:   wand of lightning / wand of iceblast / wand of acid
-ITEM:   wand of confusion / wand of disintegration / wand of paralysis \
-        / wand of enslavement / wand of polymorph
+ITEM:   wand of random effects / wand of disintegration / wand of paralysis \
+        / wand of enslavement / wand of polymorph w:5
 ITEM:   wand of clouds / wand of scattershot
 MONS: shadow imp, orc priest, kobold demonologist
 MONS: deep elf knight / fire crab / orc high priest / orc sorcerer
