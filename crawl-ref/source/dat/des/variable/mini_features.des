@@ -2754,17 +2754,16 @@ TAGS:   extra
 WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.
- : dgn.delayed_decay(_G,'B', 'human skeleton')
-KITEM:  A : wand of digging charges:0
+ : dgn.delayed_decay(_G,'A', 'human skeleton')
 # Prevent random teleportation getting you stuck
-KPROP:  AB = no_tele_into
-KFEAT:  AB = floor
+KPROP:  A = no_tele_into
+KFEAT:  A = floor
 MAP
      ....
     .XXXX.
    .XmmmmX.
   .XmmmmmmX.
-  .XmmABmmX.
+  .Xmm.AmmX.
   .XmmmmmmX.
    .XmmmmX.
     .XXXX.
@@ -2966,7 +2965,7 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = wand of disintegration charges:0 ident:all
+KITEM:  d = wand of disintegration ident:all
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody

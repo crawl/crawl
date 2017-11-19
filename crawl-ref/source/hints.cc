@@ -785,7 +785,7 @@ static bool _advise_use_wand()
             return true;
 
         // Empty wands are no good.
-        if (is_known_empty_wand(obj))
+        if (is_empty_wand(obj))
             continue;
 
         // Can it be used to fight?

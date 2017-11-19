@@ -435,7 +435,7 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
 static bool _is_appropriate_evokable(const item_def& item,
                                      const actor* target)
 {
-    if (!item_is_evokable(item, false, false, true))
+    if (!item_is_evokable(item, false))
         return false;
 
     // Only wands for now.
@@ -509,7 +509,7 @@ static bool _evoke_item_on_target(actor* target)
     if (item == nullptr)
         return false;
 
-    if (is_known_empty_wand(*item))
+    if (is_empty_wand(*item))
     {
         mpr("That wand is empty.");
         return false;

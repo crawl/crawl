@@ -374,8 +374,8 @@ static bool _has_hand_evokable()
     for (const auto &item : you.inv)
     {
         if (item.defined()
-            && item_is_evokable(item, true, true, true, false, false)
-            && !item_is_evokable(item, true, true, true, false, true))
+            && item_is_evokable(item, true, true, false, false)
+            && !item_is_evokable(item, true, true, false, true))
         {
             return true;
         }
@@ -1041,7 +1041,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_rechargeable(i);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true, true, true);
+        return item_is_evokable(i, true, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -1998,12 +1998,11 @@ bool item_is_wieldable(const item_def &item)
  * @param reach     Do weapons of reaching count?
  * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
- * @param all_wands When set, return true for empty wands.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
 bool item_is_evokable(const item_def &item, bool reach, bool known,
-                      bool all_wands, bool msg, bool equip)
+                      bool msg, bool equip)
 {
     const string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
@@ -2054,9 +2053,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        if (all_wands)
-            return true;
-
         return true;
 
     case OBJ_WEAPONS:

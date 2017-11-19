@@ -982,7 +982,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         }
         // Staves with an evokable ability but no melee effect.
         else if (is_weapon(*wpn)
-                 && item_is_evokable(*wpn, false, false, false, false, false))
+                 && item_is_evokable(*wpn, false, false, false, false))
         {
             boost[SK_EVOCATIONS] = 2;
         }

@@ -524,22 +524,6 @@ MAP
 .......
 ENDMAP
 
-# Wands for cheap! (Charges not included.)
-NAME: nicolae_for_you_no_charge
-DEPTH: D:5-, Depths, Elf, Orc
-TAGS: transparent
-SHUFFLE: bv/bc/cv/bm/vm/cm
-KFEAT: S = gadget shop type:Quality suffix:Used_Wands ; any wand charges:0
-MAP
-.......
-..b.v..
-.b...v.
-...S...
-.v...b.
-..v.b..
-.......
-ENDMAP
-
 # Sells only randbooks. All unique first editions with goofy names.
 NAME: nicolae_rare_books
 TAGS: transparent

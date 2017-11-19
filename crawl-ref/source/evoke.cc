@@ -477,8 +477,12 @@ void zap_wand(int slot)
     // Take off a charge.
     wand.charges--;
 
+    if (wand.charges == 0)
     {
+        ASSERT(in_inventory(wand));
 
+        mpr("The now-empty wand crumbles to dust.");
+        dec_inv_item_quantity(wand.link, 1);
     }
 
     practise_evoking(1);
@@ -1574,7 +1578,7 @@ bool evoke_item(int slot, bool check_range)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, false, true))
+    if (!item_is_evokable(item, true, false, true))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
