@@ -1578,30 +1578,6 @@ static bool _qazlal_retribution()
     return true;
 }
 
-bool drain_wands()
-{
-    vector<string> wands;
-    for (auto &wand : you.inv)
-    {
-        if (!wand.defined() || wand.base_type != OBJ_WANDS)
-            continue;
-
-        const int charges = wand.plus;
-        if (charges > 0 && coinflip())
-        {
-            const int charge_val = wand_charge_value(wand.sub_type);
-            wand.plus -= min(1 + random2(charge_val), charges);
-            // Display new number of charges when messaging.
-            wands.push_back(wand.name(DESC_PLAIN));
-        }
-    }
-    if (wands.empty())
-        return false;
-
-    mpr_comma_separated_list("Magical energy is drained from your ", wands);
-    return true;
-}
-
 static bool _choose_hostile_monster(const monster& mon)
 {
     return mon.attitude == ATT_HOSTILE;

@@ -3031,7 +3031,7 @@ void MiscastEffect::_zot()
     case 3:    // other misc stuff
     reroll_2:
         // Cases at the end are for players only.
-        switch (random2(target->is_player() ? 14 : 9))
+        switch (random2(target->is_player() ? 13 : 9))
         {
         case 0:
             target->paralyse(act_source, 2 + random2(4), cause);
@@ -3106,18 +3106,14 @@ void MiscastEffect::_zot()
             }
             break;
         case 10:
-            if (!drain_wands())
-                do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
-            break;
-        case 11:
             lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
-        case 12:
+        case 11:
             mpr("An unnatural silence engulfs you.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
             break;
-        case 13:
+        case 12:
             if (!mons_word_of_recall(nullptr, 2 + random2(3)))
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
