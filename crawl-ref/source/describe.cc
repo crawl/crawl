@@ -2008,13 +2008,6 @@ string get_item_description(const item_def &item, bool verbose,
         description << _describe_ammo(item);
         break;
 
-    case OBJ_WANDS:
-    {
-        if (is_known_empty_wand(item))
-            description << "\nUnfortunately, it has no charges left.";
-        break;
-    }
-
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             break;
@@ -2105,6 +2098,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_WANDS:
 #if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
 #endif

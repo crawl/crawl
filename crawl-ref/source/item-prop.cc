@@ -1612,18 +1612,19 @@ int wand_charge_value(int type)
 }
 
 /**
- * Is the given item a wand which is both empty & known to be empty?
+ * Is the given item a wand which is empty? Wands are normally destroyed when
+ * their charges are exhausted, but empty wands can still happen through
+ * wizmode or transfered games. XXX: Make this not possible.
  *
  * @param item  The item in question.
- * @return      Whether the wand is charge-id'd and empty, or at least known
- *              {empty}.
+ * @return      Whether the wand is empty.
  */
-bool is_known_empty_wand(const item_def &item)
+bool is_empty_wand(const item_def &item)
 {
     if (item.base_type != OBJ_WANDS)
         return false;
 
-    return item_ident(item, ISFLAG_KNOW_TYPE) && item.charges <= 0;
+    return item.charges <= 0;
 }
 
 /**
@@ -1992,7 +1993,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, true, false, true)
+    if (item_is_evokable(item, false, false, false, true)
         && !is_deck(item)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item))
     {
@@ -2014,7 +2015,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (!you.could_wield(item, true, true))
         return !skills.empty();
 
-    if (item_is_evokable(item, false, false, false, false, false)
+    if (item_is_evokable(item, false, false, false, false)
         && !is_deck(item)
         || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))

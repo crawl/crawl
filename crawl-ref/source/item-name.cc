@@ -1782,7 +1782,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (dbname)
             break;
 
-        if (know_type)
+        if (know_type && charges > 0)
             buff << " (" << charges << ")";
 
         break;
@@ -3492,7 +3492,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        if (is_known_empty_wand(item))
+        if (is_empty_wand(item))
             return true;
 
         if (!item_type_known(item))

@@ -1105,13 +1105,22 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
         set_ident_type(OBJ_WANDS, wand_type, true);
         if (!mons.props["wand_known"].get_bool())
-        {
             mprf("It is %s.", wand.name(DESC_A).c_str());
-            mons.props["wand_known"] = true;
-        }
 
-        mons.flags |= MF_SEEN_RANGED;
+        if (wand.charges <= 0)
+        {
+            mons.props["wand_known"] = false;
+            mprf("The now-empty wand crumbles to dust.");
+        }
+        else
+        {
+            mons.props["wand_known"] = true;
+            mons.flags |= MF_SEEN_RANGED;
+        }
     }
+
+    if (wand.charges <= 0)
+        dec_mitm_item_quantity(wand.index(), 1);
 
     mons.lose_energy(EUT_ITEM);
 }
