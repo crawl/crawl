@@ -512,9 +512,8 @@ void Stack::_allocate_region()
 
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
 {
-    child_info ch = { {x, y}, {w, h} };
+    child_info ch = { {x, y}, {w, h}, move(child) };
     m_child_info.push_back(ch);
-    m_children.push_back(child);
     m_track_info_dirty = true;
 }
 
@@ -533,12 +532,37 @@ void Grid::init_track_info()
     }
     m_row_info.resize(n_rows);
     m_col_info.resize(n_cols);
+
+    sort(m_child_info.begin(), m_child_info.end(),
+            [](const child_info& a, const child_info& b) {
+        return a.pos[1] < b.pos[1];
+    });
 }
 
 void Grid::_render()
 {
-    for (auto const& child : m_children)
-        child->render();
+    // Find the visible rows
+    i4 scissor = get_scissor();
+    int row_min = 0, row_max = m_row_info.size()-1, i = 0;
+    for (; i < (int)m_row_info.size(); i++)
+        if (m_row_info[i].offset+m_row_info[i].size+m_region[1] >= scissor[1])
+        {
+            row_min = i;
+            break;
+        }
+    for (; i < (int)m_row_info.size(); i++)
+        if (m_row_info[i].offset+m_region[1] >= scissor[1]+scissor[3])
+        {
+            row_max = i-1;
+            break;
+        }
+
+    for (auto const& child : m_child_info)
+    {
+        if (child.pos[1] < row_min) continue;
+        if (child.pos[1] > row_max) break;
+        child.widget->render();
+    }
 }
 
 void Grid::compute_track_sizereqs(Direction dim)
@@ -548,13 +572,13 @@ void Grid::compute_track_sizereqs(Direction dim)
 
     for (auto& t : track)
         t.sr = {0, 0};
-    for (size_t i = 0; i < m_children.size(); i++)
+    for (size_t i = 0; i < m_child_info.size(); i++)
     {
         auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
         // if merging horizontally, need to find (possibly multi-col) width
         int prosp_width = dim ? get_tracks_region(cp[0], cp[1], cs[0], cs[1])[2] : -1;
 
-        const SizeReq c = m_children[i]->get_preferred_size(dim, prosp_width);
+        const SizeReq c = m_child_info[i].widget->get_preferred_size(dim, prosp_width);
         // NOTE: items spanning multiple rows/cols don't contribute!
         if (cs[0] == 1 && cs[1] == 1)
         {
@@ -633,14 +657,13 @@ void Grid::_allocate_region()
     layout_track(Widget::VERT, h_sr, m_region[3]);
     set_track_offsets(m_row_info);
 
-    ASSERT(m_children.size() == m_child_info.size());
-    for (size_t i = 0; i < m_children.size(); i++)
+    for (size_t i = 0; i < m_child_info.size(); i++)
     {
         auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
         i4 cell_reg = get_tracks_region(cp[0], cp[1], cs[0], cs[1]);
         cell_reg[0] += m_region[0];
         cell_reg[1] += m_region[1];
-        m_children[i]->allocate_region(cell_reg);
+        m_child_info[i].widget->allocate_region(cell_reg);
     }
 }
 
@@ -748,6 +771,11 @@ void pop_scissor()
     else
         glmanager->reset_scissor();
 #endif
+}
+
+i4 get_scissor()
+{
+    return scissor_stack.top();
 }
 
 void push_layout(shared_ptr<Widget> root)
