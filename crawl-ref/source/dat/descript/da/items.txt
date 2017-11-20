@@ -754,12 +754,6 @@ scroll of random uselessness
 Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
 lykkes overhovedet at få den til at virke.
 %%%%
-scroll of recharging
-
-Denne skriftrulle genopfylder en valgfri, magisk vånd eller stoks ladninger.
-Når den bruges på en stok, øger den også stokkens kraftlager og den fart, den
-genvinder kraft med.
-%%%%
 scroll of remove curse
 
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser

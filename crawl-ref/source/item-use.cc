@@ -2721,9 +2721,6 @@ string cannot_read_item_reason(const item_def &item)
 
         case SCR_CURSE_JEWELLERY:
             return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
-
-        case SCR_RECHARGING:
-            return _no_items_reason(OSEL_RECHARGE);
 #endif
 
         default:
@@ -3059,14 +3056,11 @@ void read_scroll(item_def& scroll)
     }
 
     case SCR_RECHARGING:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            mpr("It is a scroll of recharging.");
-            // included in default force_more_message (to show it before menu)
-        }
-        cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
+    {
+        mpr("This item has been removed, sorry!");
+        cancel_scroll = true;
         break;
+    }
 #endif
 
     case SCR_HOLY_WORD:

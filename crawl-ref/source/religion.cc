@@ -310,8 +310,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Pakellas
     {
       { 0, "gain magical power from killing" },
-      { 1, ABIL_PAKELLAS_QUICK_CHARGE,
-           "spend your magic to charge your devices" },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
     },
