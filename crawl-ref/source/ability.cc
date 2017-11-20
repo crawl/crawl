@@ -605,8 +605,6 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
       0, 0, 0, generic_cost::fixed(1),
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
-    { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
-      0, 0, 0, 2, {fail_basis::invo, 40, 5, 25}, abflag::none },
 #endif
 
     // Uskayaw
@@ -734,11 +732,6 @@ int get_gold_cost(ability_type ability)
     }
 }
 
-static const int _pakellas_quick_charge_mp_cost()
-{
-    return max(1, you.magic_points * 2 / 3);
-}
-
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -748,12 +741,6 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
-
-#if TAG_MAJOR_VERSION == 34
-    // TODO: make this less hard-coded
-    if (ability == ABIL_PAKELLAS_QUICK_CHARGE)
-        ret += make_stringf(", %d MP", _pakellas_quick_charge_mp_cost());
-#endif
 
     if (ability == ABIL_HEAL_WOUNDS)
         ret += ", Permanent MP";
@@ -1553,9 +1540,6 @@ static bool _check_ability_possible(const ability_def& abil,
             return false;
         }
         return true;
-
-    case ABIL_PAKELLAS_QUICK_CHARGE:
-        return pakellas_check_quick_charge(quiet);
 #endif
 
         // only available while your ancestor is alive.
@@ -3000,29 +2984,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mprf(MSGCH_DURATION, "You feel a buildup of energy.");
         you.increase_duration(DUR_DEVICE_SURGE,
                               random2avg(you.piety / 4, 2) + 3, 100);
-        break;
-    }
-
-    case ABIL_PAKELLAS_QUICK_CHARGE:
-    {
-        fail_check();
-
-        const int mp_to_use = _pakellas_quick_charge_mp_cost();
-        ASSERT(mp_to_use > 0);
-
-        const int den = 100 * (get_real_mp(false) - you.mp_max_adj);
-        const int num =
-            stepdown(random2avg(you.skill(SK_EVOCATIONS, 10), 2) * mp_to_use,
-                     den / 3);
-
-        if (recharge_wand(true, "", num, den) <= 0)
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-
-        dec_mp(mp_to_use);
-
         break;
     }
 #endif

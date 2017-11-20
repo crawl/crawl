@@ -2460,10 +2460,6 @@ scroll of random uselessness
 
 <scroll>
 %%%%
-scroll of recharging
-
-<scroll>
-%%%%
 scroll of remove curse
 
 <scroll>

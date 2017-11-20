@@ -413,8 +413,6 @@ string no_selectables_message(int item_selector)
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
-    case OSEL_RECHARGE:
-        return "You aren't carrying any rechargeable items.";
     case OSEL_ENCHANTABLE_ARMOUR:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
@@ -1036,9 +1034,6 @@ bool item_is_selected(const item_def &i, int selector)
     case OBJ_SCROLLS:
         return itype == OBJ_SCROLLS
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
-
-    case OSEL_RECHARGE:
-        return item_is_rechargeable(i);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true);
