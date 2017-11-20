@@ -794,10 +794,6 @@ wand of invisibility
 
 Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
 %%%%
-wand of lightning
-
-Ein magisches Gerät welches großartige Bolzen aus Blitzen wirft.
-%%%%
 wand of magic darts
 
 Ein magisches Gerät, das kleine Bolzen der zerstörenden Energie wirft. Sie

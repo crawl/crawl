@@ -1068,10 +1068,6 @@ wand of invisibility
 
 Un instrument magique qui cache une créature à la vue des autres.
 %%%%
-wand of lightning
-
-Un instrument magique qui tire de puissants missiles d'électricité.
-%%%%
 wand of magic darts
 
 Un instrument magique qui tire de petits missiles d'énergie destructrice. Ils

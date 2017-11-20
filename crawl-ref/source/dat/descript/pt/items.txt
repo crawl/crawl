@@ -312,10 +312,6 @@ wand of invisibility
 
 Um dispositivo mágico capaz de ocultar uma criatura das demais.
 %%%%
-wand of lightning
-
-Um dispositivo mágico que arremessa grandes rajadas de raios.
-%%%%
 whip
 
 Um chicote.

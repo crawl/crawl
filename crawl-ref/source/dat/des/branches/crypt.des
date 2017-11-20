@@ -568,8 +568,8 @@ NAME:  weyrava_ghost_lake
 DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
 MONS:  flying skull
-MONS:  skeletal warrior ; long sword . shield . w:6 wand of lightning | nothing /\
-       skeletal warrior ; battleaxe | halberd . w:7 wand of lightning | nothing
+MONS:  skeletal warrior ; long sword . shield . w:6 wand of acid | nothing /\
+       skeletal warrior ; battleaxe | halberd . w:7 wand of acid | nothing
 SUBST: y = .:8 c
 SUBST: v = z .
 SUBST: w = w z:6

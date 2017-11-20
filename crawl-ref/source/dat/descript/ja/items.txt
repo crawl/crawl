@@ -710,10 +710,6 @@ wand of invisibility
 
 対象を他者の視覚から隠蔽する魔法の道具だ。
 %%%%
-wand of lightning
-
-強力な稲妻の矢を放つ魔法の道具だ。
-%%%%
 wand of magic darts
 
 小さな破壊エネルギーの矢を放つ魔法の道具だ。それらは絶対に外れることはない。

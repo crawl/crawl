@@ -418,7 +418,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_ICEBLAST:
-            case WAND_LIGHTNING:
             case WAND_DISINTEGRATION:
                 valued += 40;
                 good = true;

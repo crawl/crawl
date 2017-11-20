@@ -3001,7 +3001,7 @@ MONS:    necromancer ; wand of iceblast . \
          staff of fire w:15 | quarterstaff ego:flaming w:15 . \
          robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
          robe ego:resistance w:1
-MONS:    necromancer ; wand of lightning . \
+MONS:    necromancer ; wand of iceblast . \
          staff of cold ident:type | quarterstaff ego:freezing ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
@@ -4261,7 +4261,7 @@ DEPTH:  D:3-13
 ORIENT: float
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
-ITEM:   wand of lightning / wand of iceblast / wand of acid
+ITEM:   wand of iceblast / wand of acid
 ITEM:   wand of random effects / wand of disintegration / wand of paralysis \
         / wand of enslavement / wand of polymorph w:5
 ITEM:   wand of clouds / wand of scattershot
