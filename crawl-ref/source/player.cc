@@ -1926,7 +1926,7 @@ int player_movement_speed()
         mv--;
 
     if (you.duration[DUR_FROZEN])
-        mv += 4;
+        mv += 3;
 
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 3;
