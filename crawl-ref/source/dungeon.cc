@@ -5810,10 +5810,7 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return feat_is_water(feat)
-#if TAG_MAJOR_VERSION == 34
-           || player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE
-#endif
-           || player_in_branch(BRANCH_SWAMP) && feat == DNGN_TREE
+           || feat == DNGN_TREE
            || feat_is_lava(feat)
            || feat_is_wall(feat)
            || feat == DNGN_FLOOR;
