@@ -571,26 +571,23 @@ TAGS:   no_rotate no_vmirror no_hmirror
     { outer = 'n', inner = 'l', weight = 5 },
     { outer = 'n', inner = 'W', weight = 5 },
     { outer = 'n', inner = 'w', weight = 5 },
-    -- { outer = 'n', inner = 'G', weight = 1 }, -- Gas
     { outer = 'W', inner = 'w', weight = 2 },
     { outer = 'l', inner = 'l', weight = 1 },
     { outer = '1', inner = 'w', weight = 1 },
     { outer = '1', inner = 'W', weight = 1 },
-    { outer = 't', inner = 'w', weight = 1 },
-    { outer = 't', inner = 'W', weight = 1 },
+    { outer = 'w', inner = 't', weight = 1 },
+    { outer = 'W', inner = 't', weight = 1 },
     { outer = 'b', inner = 'b', weight = 1 },
     { outer = 'l', inner = 'b', weight = 2 },
     { outer = 'w', inner = 'b', weight = 2 },
     { outer = 'W', inner = 'b', weight = 2 },
-    { outer = 't', inner = 'b', weight = 1 },
+    { outer = '1', inner = 't', weight = 1 },
     { outer = 'l', inner = 'v', weight = 2 },
     { outer = 'w', inner = 'v', weight = 2 },
     { outer = 'W', inner = 'v', weight = 2 },
-    { outer = 't', inner = 'v', weight = 1 },
     { outer = 'l', inner = 'c', weight = 2 },
     { outer = 'w', inner = 'c', weight = 2 },
     { outer = 'W', inner = 'c', weight = 2 },
-    { outer = 't', inner = 'c', weight = 1 }
   }
 
   mons("plant")
