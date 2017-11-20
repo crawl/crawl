@@ -764,11 +764,6 @@ wand of invisibility
 Magiczny przedmiot który czyni stworzenie na które został skierowany
 niewidzialnym.
 %%%%
-wand of lightning
-
-Magiczny przedmiot który strzela piorunami. Uwaga, odbijają się one od
-większości ścian.
-%%%%
 wand of magic darts
 
 Magiczny przedmiot który strzela małymi pociskami surowej magii, które zawsze

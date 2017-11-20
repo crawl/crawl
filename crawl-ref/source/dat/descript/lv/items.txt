@@ -135,7 +135,3 @@ wand of fire
 
 Burvju ietaise, kas sviež lielus uguns šāviņus.
 %%%%
-wand of lightning
-
-Burvju ietaise, kas sviež lielus zibens šāviņus.
-%%%%

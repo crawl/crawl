@@ -998,10 +998,6 @@ wand of invisibility
 
 En magisk anordning, som kan skjule et væsen for andres øjne.
 %%%%
-wand of lightning
-
-En magisk enhed, som kaster kolossale lynkiler.
-%%%%
 wand of magic darts
 
 En magisk anordning, som kaster med små kiler af destruktiv energi. De rammer

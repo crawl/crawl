@@ -3159,10 +3159,6 @@ wand of iceblast
 
 <wand>
 %%%%
-wand of lightning
-
-<wand>
-%%%%
 wand of paralysis
 
 <wand>

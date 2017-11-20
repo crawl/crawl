@@ -665,10 +665,6 @@ wand of invisibility
 
 这件魔法道具能使目标生物隐形。
 %%%%
-wand of lightning
-
-一件发射闪电矢的魔法道具。
-%%%%
 wand of magic darts
 
 这件魔法道具能发射一种百发百中的小型魔法弹。

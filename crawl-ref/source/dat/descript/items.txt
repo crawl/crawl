@@ -1214,12 +1214,6 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-wand of lightning
-
-A magical device which throws great bolts of lightning. They inflict less
-damage than other similar bolts, but their damage partially bypasses armour
-and they can be bounced off walls to hit targets twice.
-%%%%
 wand of paralysis
 
 A magical device which can render a creature immobile, incapable of moving any

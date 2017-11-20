@@ -683,7 +683,7 @@ MONS:    freezing wraith
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
 : mons("necromancer / necromancer w:30 ; robe " .. coldres ..
-:   " . wand of lightning | wand of iceblast | nothing")
+:   " . wand of acid | wand of iceblast | nothing")
 : savage_simulacrum(_G)
 : mons(savage_ice)
 MONS:    ice statue

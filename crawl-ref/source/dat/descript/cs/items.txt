@@ -237,10 +237,6 @@ wand of fireball
 
 Magické zařízení, které vrhá vybuchující poryvy ohně.
 %%%%
-wand of lightning
-
-Magický přístroj, který vrhá velké blesky.
-%%%%
 wand of magic darts
 
 Magický přístroj, který vrhá malé údery destruktivní energie. Nikdy se nemine.
