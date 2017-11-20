@@ -5719,15 +5719,10 @@ int monster::action_energy(energy_use_type et) const
         move_cost -= 3;
 
     // Floundering monsters get the same penalty as the player, except that
-    // player get penalty on entering water, while monster get the penalty
-    // when leaving it.
+    // players get the penalty on entering water, while monsters get the
+    // penalty when leaving it.
     if (floundering())
-        move_cost += 3 + random2(8);
-
-    // If the monster cast it, it has more control and is there not
-    // as slow as when the player casts it.
-    if (has_ench(ENCH_LIQUEFYING))
-        move_cost -= 2;
+        move_cost += 6;
 
     // Never reduce the cost to zero
     return max(move_cost, 1);
@@ -5743,7 +5738,7 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     }
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
-        energy_loss += 5;
+        energy_loss += 4;
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
