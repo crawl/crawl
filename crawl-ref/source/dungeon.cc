@@ -5320,10 +5320,16 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
 
     for (auto c : path)
     {
-        if (!map_masked(c, mapmask) && overwriteable(grd(c)))
+        auto feat = grd(c);
+        if (!map_masked(c, mapmask) && overwriteable(feat))
         {
             grd(c) = DNGN_FLOOR;
             dgn_height_set_at(c);
+        }
+        else
+        {
+            dprf(DIAG_DNGN, "Failed to path through %s at (%d;%d) for connectivity",
+                 get_feature_def(feat).name, c.x, c.y);
         }
     }
 
