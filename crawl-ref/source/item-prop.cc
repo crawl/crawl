@@ -1162,13 +1162,11 @@ static iflags_t _full_ident_mask(const item_def& item)
 #endif
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
+    case OBJ_WANDS:
         flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
-        break;
-    case OBJ_WANDS:
-        flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
         break;
     case OBJ_JEWELLERY:
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
