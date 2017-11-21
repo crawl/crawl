@@ -1,5 +1,14 @@
 #pragma once
 
+/* Don't change the order of any enums in this file unless you are breaking
+ * save compatibility. See ../docs/develop/save_compatibility.txt for
+ * more details, including how to schedule both the current and future
+ * enum orders.
+ *
+ * If you do break compatibility and change the order, be sure to change
+ * rltiles/dc-item.txt to match.
+ */
+
 enum armour_type
 {
     ARM_ROBE, // order of mundane armour matters to _upgrade_body_armour
