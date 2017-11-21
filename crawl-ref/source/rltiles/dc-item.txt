@@ -631,12 +631,13 @@ i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
-i-brand-weapon SCR_BRAND_WEAPON
-#Remove the two i-enchant-weapon and recharging when TAG_MAJOR_VERSION > 34
+# Remove enchant weapon II when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_II
-i-enchant-weapon SCR_ENCHANT_WEAPON_III
-### Remove recharging when TAG_MAJOR_VERSION > 34
+i-brand-weapon SCR_BRAND_WEAPON
+# Remove recharging when TAG_MAJOR_VERSION > 34
 i-recharging SCR_RECHARGING
+# Remove enchant weapon III when TAG_MAJOR_VERSION > 34
+i-enchant-weapon SCR_ENCHANT_WEAPON_III
 %back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
