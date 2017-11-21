@@ -508,12 +508,13 @@ static bool _evoke_item_on_target(actor* target)
 
     if (item == nullptr)
         return false;
-
-    if (is_empty_wand(*item))
+#if TAG_MAJOR_VERSION == 34
+    if (is_known_empty_wand(*item))
     {
         mpr("That wand is empty.");
         return false;
     }
+#endif
 
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.

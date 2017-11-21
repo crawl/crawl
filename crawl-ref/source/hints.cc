@@ -784,10 +784,6 @@ static bool _advise_use_wand()
         if (!item_type_known(obj))
             return true;
 
-        // Empty wands are no good.
-        if (is_empty_wand(obj))
-            continue;
-
         // Can it be used to fight?
         switch (obj.sub_type)
         {
