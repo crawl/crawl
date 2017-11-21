@@ -42,7 +42,9 @@ enum object_selector
                                         // known-cursed. Unknown-cursed items
                                         // are included, to prevent information
                                         // leakage.
+#if TAG_MAJOR_VERSION == 34
     OSEL_DIVINE_RECHARGE         = -18,
+#endif
 };
 
 /// Behaviour flags for prompt_invent_item().
