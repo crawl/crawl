@@ -51,7 +51,7 @@ Monsters
 * Monsters no longer spawn after level-generation in most places.
   - This also eliminates the "super OOD" timer that could generate
     exceptionally hard monsters after a long time on the level.
-  - The number of monsters created during level generation is increased 
+  - The number of monsters created during level generation is increased
     to compensate.
   - Pandemonium and Abyss are unaffected by this change.
 * A fraction of the monsters generated with a level are created awake,
