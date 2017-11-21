@@ -2762,6 +2762,7 @@ KFEAT:  S = deep_water
 KITEM:  U = superb_item
 KITEM:  Q = acquire any
 KFEAT:  o = granite_statue
+KFEAT:  i = granite_statue
 SUBST:  X = xxx.., P = 1........., T = tttxxc
 KPROP:  U = no_tele_into
 {{
@@ -2785,14 +2786,14 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto", \
          }
-COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant_jade
+COLOUR: oiG = green
+TILE:   oiG = dngn_statue_elephant_jade
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
 xxxxX.....PPXxx
 xxtt.........Xxx                           xxxx
-xttGtxx.X..X..XxxcccccccccccccccccccccccxxxxT.xxx...@
+xttitxx.X..X..XxxcccccccccccccccccccccccxxxxT.xxx...@
 xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
 xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
 xttxcccc...c.P...+P.WwW+...%Qc.....+.....c.c...TTTx..
