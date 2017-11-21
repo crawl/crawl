@@ -622,18 +622,6 @@ to strengthen its power at the cost of some magic. The amount of magical power
 that can be used for a surge varies, but correlates with how devoted a follower
 is to Pakellas.
 %%%%
-Quick Charge ability
-
-Spends two thirds of your current pool of magic to charge a wand. The
-effectiveness of this depends on your current pool of magic and your
-Evocations skill.
-%%%%
-Supercharge ability
-
-Infuses magical energy into a wand. Its capacity is significantly increased
-beyond normal and fully charged to this new capacity. This ability may only be
-used once.
-%%%%
 # Qazlal
 Upheaval ability
 
