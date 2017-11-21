@@ -2786,8 +2786,9 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto", \
          }
-COLOUR: oiG = green
-TILE:   oiG = dngn_statue_elephant_jade
+COLOUR: oG = green
+TILE:   oG = dngn_statue_elephant_jade
+TILE:   i = dngn_statue_elephant
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
