@@ -3490,9 +3490,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        if (is_empty_wand(item))
+#if TAG_MAJOR_VERSION == 34
+        if (is_known_empty_wand(item))
             return true;
-
+#endif
         if (!item_type_known(item))
             return false;
 

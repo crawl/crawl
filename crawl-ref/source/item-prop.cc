@@ -1598,21 +1598,24 @@ int wand_charge_value(int type)
     }
 }
 
+
+#if TAG_MAJOR_VERSION == 34
 /**
  * Is the given item a wand which is empty? Wands are normally destroyed when
  * their charges are exhausted, but empty wands can still happen through
- * wizmode or transfered games. XXX: Make this not possible.
+ * transfered games.
  *
  * @param item  The item in question.
  * @return      Whether the wand is empty.
  */
-bool is_empty_wand(const item_def &item)
+bool is_known_empty_wand(const item_def &item)
 {
     if (item.base_type != OBJ_WANDS)
         return false;
 
-    return item.charges <= 0;
+    return item_ident(item, ISFLAG_KNOW_TYPE) && item.charges <= 0;
 }
+#endif
 
 /**
  * For purpose of Ashenzari's monster equipment identification & warning

@@ -110,7 +110,9 @@ bool check_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
 int wand_charge_value(int type) PURE;
-bool is_empty_wand(const item_def &item) PURE;
+#if TAG_MAJOR_VERSION == 34
+bool is_known_empty_wand(const item_def &item) PURE;
+#endif
 bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
