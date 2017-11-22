@@ -164,11 +164,18 @@ static void _change_labyrinth_border(const dgn_region &region,
     }
 }
 
+// Called as:
+// change_walls_from_centre(region_affected, centre,
+//                          { {dist1, feat1}, {dist2, feat2}, ... } )
+// What it does:
+// Examines each non-vault rock wall in region_affected, calculates
+// its (circular) distance from "centre" (the centre need not be in
+// region_affected). If distance^2 is less than or equal to dist1,
+// then it is replaced by feat1. Otherwise, if distance^2 <= dist2,
+// it is replaced by feat2, and so on. Features in vaults (MMT_VAULT)
+// are not affected.
 static void _change_walls_from_centre(const dgn_region &region,
                                       const coord_def &centre,
-                                      bool  rectangular,
-                                      unsigned mmask,
-                                      dungeon_feature_type wall,
                                       const vector<dist_feat> &ldist)
 {
     if (ldist.empty())
@@ -179,11 +186,10 @@ static void _change_walls_from_centre(const dgn_region &region,
         for (int x = region.pos.x; x < end.x; ++x)
         {
             const coord_def c(x, y);
-            if (grd(c) != wall || map_masked(c, mmask))
+            if (grd(c) != DNGN_ROCK_WALL || map_masked(c, MMT_VAULT))
                 continue;
 
-            const int distance =
-                rectangular? (c - centre).rdist() : (c - centre).abs();
+            const int distance = (c - centre).abs();
 
             for (const dist_feat &df : ldist)
             {
@@ -194,44 +200,6 @@ static void _change_walls_from_centre(const dgn_region &region,
                 }
             }
         }
-}
-
-// Called as:
-// change_walls_from_centre(region_affected, centre, rectangular, wall,
-//                           dist1, feat1, dist2, feat2, ..., 0)
-// What it does:
-// Examines each square in region_affected, calculates its distance from
-// "centre" (the centre need not be in region_affected). If the distance is
-// less than or equal to dist1, and the feature == wall, then it is replaced
-// by feat1. Otherwise, if the distance <= dist2 and feature == wall, it is
-// replaced by feat2, and so on. A distance of 0 indicates the end of the
-// list of distances.
-//
-static void _change_walls_from_centre(const dgn_region &region,
-                                      const coord_def &c,
-                                      bool  rectangular,
-                                      dungeon_feature_type wall,
-                                      ...)
-{
-    vector<dist_feat> ldist;
-
-    va_list args;
-    va_start(args, wall);
-
-    while (true)
-    {
-        const int dist = va_arg(args, int);
-        if (!dist)
-            break;
-
-        const dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>(va_arg(args, int));
-
-        ldist.emplace_back(dist, feat);
-    }
-    va_end(args);
-
-    _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);
 }
 
 static void _place_extra_lab_minivaults()
@@ -524,11 +492,8 @@ void dgn_build_labyrinth_level()
 
     _place_extra_lab_minivaults();
 
-    _change_walls_from_centre(lab, end, false,
-                              DNGN_ROCK_WALL,
-                              15 * 15, DNGN_METAL_WALL,
-                              34 * 34, DNGN_STONE_WALL,
-                              0);
+    _change_walls_from_centre(lab, end, { { 15 * 15, DNGN_METAL_WALL },
+                                          { 34 * 34, DNGN_STONE_WALL } });
 
     _change_labyrinth_border(lab, DNGN_PERMAROCK_WALL);
 
