@@ -69,7 +69,9 @@ FTFontWrapper::FTFontWrapper() :
     m_max_width(0),
     m_max_height(0),
     ttf(nullptr),
-    face(nullptr)
+    face(nullptr),
+    pixels(nullptr),
+    fsize(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
 }
@@ -84,45 +86,12 @@ FTFontWrapper::~FTFontWrapper()
     delete[] ttf;
 }
 
-bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline)
+bool FTFontWrapper::configure_font()
 {
     FT_Error error;
-    FT_Library library = FontLibrary::get();
-
-    outl = outline;
-
-    // TODO enne - need to find a cross-platform way to also
-    // attempt to locate system fonts by name...
-    // 1KB: fontconfig if we are not scared of hefty libraries
-    string font_path = datafile_path(font_name, false, true);
-    if (font_path.c_str()[0] == 0)
-        die_noline("Could not find font '%s'\n", font_name);
-
-    // Certain versions of freetype have problems reading files on Windows,
-    // do that ourselves.
-    FILE *f = fopen_u(font_path.c_str(), "rb");
-    if (!f)
-        die_noline("Could not read font '%s'\n", font_name);
-    unsigned long size = file_size(f);
-    ttf = new FT_Byte[size];
-    ASSERT(ttf);
-    if (fread(ttf, 1, size, f) != size)
-        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
-    fclose(f);
-
-    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
-    if (error == FT_Err_Unknown_File_Format)
-        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
-    else if (error)
-    {
-        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
-                   font_path.c_str(), size, error);
-    }
-
     error = FT_Set_Pixel_Sizes(face,
-                                display_density.logical_to_device(font_size),
-                                display_density.logical_to_device(font_size));
+                                display_density.logical_to_device(fsize),
+                                display_density.logical_to_device(fsize));
     ASSERT(!error);
 
     // Get maximum advance and other global metrics
@@ -134,11 +103,11 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
     m_max_height    = (face->bbox.yMax>>6)-(face->bbox.yMin>>6);//m_max_advance.y;
     m_min_offset    = 0;
-    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
     if (outl)
         m_max_width += 2, m_max_height += 2;
 
+    charsz = coord_def(1,1);
     // Grow character size to power of 2
     while (charsz.x < m_max_width)
         charsz.x *= 2;
@@ -157,6 +126,8 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
     m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
 
+    delete[] pixels; // for repeated calls
+
     pixels = new unsigned char[4 * charsz.x * charsz.y];
     memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
 
@@ -166,6 +137,10 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     // initialise empty texture of correct size
     m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
+
+    m_glyphmap.clear();
+    for (int i = 0; i < MAX_GLYPHS; i++)
+        m_glyphs[i] = GlyphInfo();
 
     // Special case c = 0 for full block.
     {
@@ -199,6 +174,48 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     for (int i = 0x20; i < 0x7f; i++)
         map_unicode(i);
     return true;
+}
+
+bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
+                              bool outline)
+{
+    FT_Error error;
+    FT_Library library = FontLibrary::get();
+
+    outl = outline;
+    fsize = font_size;
+
+    // TODO enne - need to find a cross-platform way to also
+    // attempt to locate system fonts by name...
+    // 1KB: fontconfig if we are not scared of hefty libraries
+    string font_path = datafile_path(font_name, false, true);
+    if (font_path.c_str()[0] == 0)
+        die_noline("Could not find font '%s'\n", font_name);
+
+    // Certain versions of freetype have problems reading files on Windows,
+    // do that ourselves.
+    FILE *f = fopen_u(font_path.c_str(), "rb");
+    if (!f)
+        die_noline("Could not read font '%s'\n", font_name);
+    unsigned long size = file_size(f);
+    ttf = new FT_Byte[size];
+    ASSERT(ttf);
+    if (fread(ttf, 1, size, f) != size)
+        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+    fclose(f);
+
+    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
+    if (error == FT_Err_Unknown_File_Format)
+        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
+    else if (error)
+    {
+        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+                   font_path.c_str(), size, error);
+    }
+
+    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
+
+    return configure_font();
 }
 
 void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)

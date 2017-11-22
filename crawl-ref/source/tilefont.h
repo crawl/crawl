@@ -22,6 +22,7 @@ public:
     // font loading
     virtual bool load_font(const char *font_name, unsigned int font_size,
                            bool outline) = 0;
+    virtual bool configure_font() = 0;
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,

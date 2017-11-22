@@ -105,7 +105,7 @@ struct HiDPIState
     int device_to_logical(int n, bool round=true) const;
     float scale_to_logical() const;
     float scale_to_device() const;
-    void update(int ndevice, int nlogical);
+    bool update(int ndevice, int nlogical);
 
     int get_device() const { return device; };
     int get_logical() const { return logical; };
@@ -154,6 +154,7 @@ public:
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
+    bool update_dpi();
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
@@ -187,6 +188,7 @@ public:
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 protected:
+    void reconfigure_fonts();
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);

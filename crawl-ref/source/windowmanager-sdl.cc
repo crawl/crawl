@@ -118,6 +118,9 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
             tile_event.resize.w = sdl_event.data1;
             tile_event.resize.h = sdl_event.data2;
             break;
+        case SDL_WINDOWEVENT_MOVED:
+            tile_event.type = WME_MOVE;
+            break;
         default:
             tile_event.type = WME_NOEVENT;
             break;
@@ -583,13 +586,13 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
 }
 #endif
 
-void SDLWrapper::init_hidpi()
+bool SDLWrapper::init_hidpi()
 {
     coord_def windowsz;
     coord_def drawablesz;
     SDL_GetWindowSize(m_window, &(windowsz.x), &(windowsz.y));
     SDL_GL_GetDrawableSize(m_window, &(drawablesz.x), &(drawablesz.y));
-    display_density.update(drawablesz.x, windowsz.x);
+    return display_density.update(drawablesz.x, windowsz.x);
 }
 
 void SDLWrapper::resize(coord_def &m_windowsz)
@@ -780,6 +783,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     {
     case WME_ACTIVEEVENT:
     case WME_RESIZE: // XXX
+    case WME_MOVE:
     case WME_EXPOSE: // XXX
         event = SDL_WINDOWEVENT;
         break;

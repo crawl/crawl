@@ -139,8 +139,14 @@ float HiDPIState::scale_to_device() const
     return (float) device / (float) logical;
 }
 
-void HiDPIState::update(int ndevice, int nlogical)
+/**
+ * Update the DPI, e.g. after a window move.
+ *
+ * @return whether the ratio changed.
+ */
+bool HiDPIState::update(int ndevice, int nlogical)
 {
+    HiDPIState old = *this;
     if (nlogical == ndevice)
         logical = device = 1;
     else
@@ -148,6 +154,9 @@ void HiDPIState::update(int ndevice, int nlogical)
         device = ndevice;
         logical = nlogical;
     }
+    // check if the ratios remain the same.
+    // yes, this is kind of a dumb way to do it.
+    return (old.device * 100 / old.logical) != (device * 100 / logical);
 }
 
 TilesFramework::TilesFramework() :
@@ -554,6 +563,13 @@ bool TilesFramework::initialise()
     return true;
 }
 
+void TilesFramework::reconfigure_fonts()
+{
+    // call this if DPI changes to regenerate the font
+    for (auto finfo : m_fonts)
+        finfo.font->configure_font();
+}
+
 int TilesFramework::load_font(const char *font_file, int font_size,
                               bool default_on_fail, bool outline)
 {
@@ -615,8 +631,19 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     tiles.place_cursor(CURSOR_MAP, cen);
 }
 
+bool TilesFramework::update_dpi()
+{
+    if (wm->init_hidpi())
+    {
+        reconfigure_fonts();
+        return true;
+    }
+    return false;
+}
+
 void TilesFramework::resize()
 {
+    update_dpi();
     calculate_default_options();
     do_layout();
 
@@ -870,6 +897,14 @@ int TilesFramework::getch_ck()
                 set_need_redraw();
                 return CK_REDRAW;
 
+            case WME_MOVE:
+                if (update_dpi())
+                {
+                    resize();
+                    set_need_redraw();
+                    return CK_REDRAW;
+                }
+                // intentional fallthrough
             case WME_EXPOSE:
                 set_need_redraw();
                 // AFAIK no need to return CK_REDRAW, as resize() hasn't been called
