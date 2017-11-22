@@ -97,8 +97,7 @@ public:
     static void shutdown();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz, int *densityNum,
-                     int *densityDen) = 0;
+    virtual int init(coord_def *m_windowsz) = 0;
 
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
@@ -120,6 +119,7 @@ public:
     virtual void show_keyboard() = 0;
 
     // Display functions
+    virtual void init_hidpi() = 0;
     virtual void resize(coord_def &m_windowsz) = 0;
     virtual void swap_buffers() = 0;
     virtual int screen_width() const = 0;

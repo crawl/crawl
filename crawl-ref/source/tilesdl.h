@@ -98,6 +98,23 @@ struct MouseEvent
     unsigned int py;
 };
 
+struct HiDPIState
+{
+    HiDPIState(int device_density, int logical_density);
+    int logical_to_device(int n) const;
+    int device_to_logical(int n, bool round=true) const;
+    float scale_to_logical() const;
+    float scale_to_device() const;
+    void update(int ndevice, int nlogical);
+
+    int get_device() const { return device; };
+    int get_logical() const { return logical; };
+
+private:
+    int device;
+    int logical;
+};
+
 class FontWrapper;
 class crawl_view_buffer;
 
@@ -179,8 +196,6 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
-    // screen pixel density ratio
-    int densityNum, densityDen;
     // screen pixels per view cell
     coord_def m_viewsc;
 
@@ -302,5 +317,6 @@ protected:
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
+extern HiDPIState display_density;
 
 #endif
