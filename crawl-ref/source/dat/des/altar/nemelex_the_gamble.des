@@ -73,9 +73,11 @@ end
 }}
 
 NAME:   grunt_nemelex_the_gamble
-TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh no_trap_gen no_monster_gen
+TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh no_trap_gen
+TAGS:   no_monster_gen no_item_gen
 WEIGHT: 2
 DEPTH:  D:2-13
+ITEM:   unobtainable any, unobtainable superb_item
 {{
     dgn.persist.nemelex_gamble_announced = false
     dgn.persist.nemelex_gamble_triggered = false
@@ -101,8 +103,8 @@ DEPTH:  D:2-13
     lua_marker('J', expire_marker)
     lua_marker('K', prize_marker)
     lua_marker('L', peril_marker)
-    lua_marker('N', props_marker{the_gamble_prize=1})
-    lua_marker('O', props_marker{the_gamble_peril=1})
+    lua_marker('M', props_marker{the_gamble_prize=1})
+    lua_marker('N', props_marker{the_gamble_peril=1})
     lua_marker('_', announce_marker)
 }}
 SHUFFLE: KL
@@ -111,7 +113,7 @@ MARKER: J = lua:transp_loc("the_gamble_entry")
 MARKER: K = lua:transp_dest_loc("the_gamble_entry")
 KFEAT:  L = transporter_landing
 KPROP:  KLMNOU89' = no_tele_into
-KITEM:  M = any, any, any, unobtainable superb_item
+NSUBST: " = 3:d / e / '
 MARKER: Q = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 10, pow_max = 10, delay = 10, \
                               size = 1, walk_dist = 0 }
@@ -119,10 +121,10 @@ MAP
 xxxxxxxxxxxxxxxxxxx
 xXXXXXXXxxxXXXXXXXx
 xXU'K'UoQJQoU'L'UXx
-xX'''''o._.o'''''Xx
-xX''M''o...o'8'9'Xx
-xX'''''o...o'''''Xx
-xXU'N'Uo...oU'O'UXx
+xX'"""'o._.o'''''Xx
+xX'"G"'o...o'8'9'Xx
+xX'"""'o...o'''''Xx
+xXU'M'Uo...oU'N'UXx
 xXXXXXXX...XXXXXXXx
 xxxxxxxxx+xxxxxxxxx
 ENDMAP
