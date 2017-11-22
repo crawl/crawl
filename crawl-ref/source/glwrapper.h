@@ -156,7 +156,6 @@ public:
                               unsigned int height, MipMapOptions mip_opt,
                               int xoffset=-1, int yoffset=-1) = 0;
 
-    virtual void init_hidpi(int device, int logical) =0;
     virtual int logical_to_device(int n) const = 0;
     virtual int device_to_logical(int n, bool round=true) const = 0;
 

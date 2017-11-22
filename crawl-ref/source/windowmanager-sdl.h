@@ -16,7 +16,7 @@ public:
     ~SDLWrapper();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz, int *densityNum, int *densityDen)
+    virtual int init(coord_def *m_windowsz)
         override;
 
     // Environment state functions
@@ -42,6 +42,7 @@ public:
     virtual void show_keyboard() override;
 
     // Display functions
+    virtual void init_hidpi() override;
     virtual void resize(coord_def &m_windowsz) override;
     virtual void swap_buffers() override;
     virtual int screen_width() const override;

@@ -84,7 +84,71 @@ static int _screen_sizes[4][8] =
 #endif
 };
 
+HiDPIState display_density(1,1);
+
 TilesFramework tiles;
+
+
+HiDPIState::HiDPIState(int device_density, int logical_density) :
+        device(device_density), logical(logical_density)
+{
+}
+
+/**
+ * Calculate the device pixels given the logical pixels; the two may be
+ * different on high-DPI devices (such as retina displays).
+ *
+ * @param n a value in logical pixels
+ * @return the result in device pixels. May be the same, if the device isn't
+ *          high-DPI.
+ */
+int HiDPIState::logical_to_device(int n) const
+{
+    return n * device / logical;
+}
+
+/**
+ * Calculate logical pixels given device pixels; the two may be
+ * different on high-DPI devices (such as retina displays).
+ *
+ * @param n a value in device pixels
+ * @param round whether to round (or truncate); defaults to true. Rounding is
+ *        safer, as truncating may lead to underestimating dimensions.
+ * @return the result in logical pixels. May be the same, if the device isn't
+ *          high-DPI.
+ */
+int HiDPIState::device_to_logical(int n, bool round) const
+{
+    return (n * logical + (round ?  device - 1 : 0)) / device;
+}
+
+/*
+ * Return a float multiplier such that device * multiplier = logical.
+ * for high-dpi displays, will be fractional.
+ */
+float HiDPIState::scale_to_logical() const
+{
+    return (float) logical / (float) device;
+}
+
+/*
+ * Return a float multiplier such that logical * multiplier = device.
+ */
+float HiDPIState::scale_to_device() const
+{
+    return (float) device / (float) logical;
+}
+
+void HiDPIState::update(int ndevice, int nlogical)
+{
+    if (nlogical == ndevice)
+        logical = device = 1;
+    else
+    {
+        device = ndevice;
+        logical = nlogical;
+    }
+}
 
 TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
@@ -377,7 +441,8 @@ bool TilesFramework::initialise()
         return false;
 
     // Initialize the wrapper
-    if (!wm->init(&m_windowsz, &densityNum, &densityDen))
+    // hidpi initialization happens here
+    if (!wm->init(&m_windowsz))
         return false;
 
     wm->set_window_title(title.c_str());
@@ -388,7 +453,6 @@ bool TilesFramework::initialise()
     m_screen_height = wm->screen_height();
 
     GLStateManager::init();
-    glmanager->init_hidpi(densityNum, densityDen);
 
     m_image = new ImageManager();
 
@@ -505,9 +569,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
-    // TODO: does each font really need to store its own density?
-    // could just use glmanager?
-    if (!font->load_font(font_file, font_size, outline, densityNum, densityDen))
+    if (!font->load_font(font_file, font_size, outline))
     {
         delete font;
         if (default_on_fail)

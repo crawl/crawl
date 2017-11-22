@@ -17,6 +17,7 @@
 #include "syscalls.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#include "tilesdl.h"
 #include "unicode.h"
 
 // maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
@@ -84,13 +85,10 @@ FTFontWrapper::~FTFontWrapper()
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline, int sc_num, int sc_den)
+                              bool outline)
 {
     FT_Error error;
     FT_Library library = FontLibrary::get();
-
-    this->scale_num = sc_num;
-    this->scale_den = sc_den;
 
     outl = outline;
 
@@ -122,8 +120,9 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
                    font_path.c_str(), size, error);
     }
 
-    error = FT_Set_Pixel_Sizes(face, font_size * scale_num / scale_den,
-                                     font_size * scale_num / scale_den);
+    error = FT_Set_Pixel_Sizes(face,
+                                display_density.logical_to_device(font_size),
+                                display_density.logical_to_device(font_size));
     ASSERT(!error);
 
     // Get maximum advance and other global metrics
@@ -483,8 +482,8 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
     m_tex.bind();
 
     GLW_3VF trans(x_pos, y_pos, 0.0f);
-    GLW_3VF scale((float)scale_den / (float)scale_num,
-                  (float)scale_den / (float)scale_num, 1);
+    GLW_3VF scale(display_density.scale_to_logical(),
+                  display_density.scale_to_logical(), 1);
 
     if (drop_shadow)
     {
@@ -576,14 +575,14 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
     }
 
     max_width = max(width + adjust, max_width);
-    return logical ? (max_width * scale_den + scale_num - 1) / scale_num : max_width;
+    return logical ? display_density.device_to_logical(max_width) : max_width;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 {
     int width = max(-m_min_offset, 0);
 
-    max_width *= scale_num / scale_den;
+    max_width *= display_density.scale_to_device();
 
     for (int i = 0; text[i]; i++)
     {
@@ -798,7 +797,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
         if (c == '\n')
         {
             x = orig_x;
-            y += m_max_advance.y * scale_den / scale_num;
+            y += m_max_advance.y * display_density.scale_to_logical();
         }
         else
             store(buf, x, y, c, col);
@@ -862,20 +861,21 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &col)
 {
     unsigned int c = map_unicode(ch);
+    float density_mult = display_density.scale_to_logical();
+
     if (!m_glyphs[c].renderable)
     {
-        x += m_glyphs[c].advance * scale_den / scale_num;
+        x += m_glyphs[c].advance * density_mult;
         return;
     }
 
     int this_width = m_glyphs[c].width;
 
-    float pos_sx = x + m_glyphs[c].offset * (float)scale_den / (float)scale_num;
-    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * (float)scale_den
-                                                           / (float)scale_num;
-    float pos_ex = pos_sx + this_width * (float)scale_den / (float)scale_num;
+    float pos_sx = x + m_glyphs[c].offset * density_mult;
+    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * density_mult;
+    float pos_ex = pos_sx + this_width * density_mult;
     float pos_ey = y + (m_max_height - m_glyphs[c].ascender + m_ascender)
-                   * (float)scale_den / (float)scale_num;
+                   * density_mult;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
@@ -887,7 +887,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     rect.set_col(col);
     buf.add_primitive(rect);
 
-    x += m_glyphs[c].advance * (float)scale_den / (float)scale_num;
+    x += m_glyphs[c].advance * density_mult;
 }
 
 /**
@@ -903,12 +903,14 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &fg_col, const VColour &bg_col)
 {
+    float density_mult = display_density.scale_to_logical();
+
     unsigned int c = map_unicode(ch);
     int this_width = m_glyphs[c].width;
     int normal_width = m_glyphs[map_unicode('9')].width;
 
-    float bg_width = max(this_width, normal_width) * (float)scale_den / (float)scale_num;
-    float bg_height = m_max_height * (float)scale_den / (float)scale_num;
+    float bg_width = max(this_width, normal_width) * density_mult;
+    float bg_height = m_max_height * density_mult;
     GLWPrim bg_rect(x, y, x + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
@@ -948,7 +950,7 @@ unsigned int FTFontWrapper::max_width(int length, bool logical) const
 {
     const int device_length = m_max_advance.x * length;
 
-    return logical ? ((device_length * scale_den + scale_num - 1) / scale_num)
+    return logical ? display_density.device_to_logical(device_length)
                    : device_length;
 }
 
@@ -962,7 +964,7 @@ unsigned int FTFontWrapper::max_height(int length, bool logical) const
 {
     const int device_height = m_max_advance.y * length;
 
-    return logical ? ((device_height * scale_den + scale_num - 1) / scale_num)
+    return logical ? display_density.device_to_logical(device_height)
                    : device_height;
 }
 
