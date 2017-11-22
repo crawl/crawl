@@ -140,12 +140,17 @@ UISizeReq UI::get_preferred_size(Direction dim, int prosp_width)
 
 void UI::allocate_region(i4 region)
 {
-    m_region = {
+    i4 new_region = {
         region[0] + margin[3],
         region[1] + margin[0],
         region[2] - margin[3] - margin[1],
         region[3] - margin[0] - margin[2],
     };
+
+    if (m_region == new_region && !alloc_queued)
+        return;
+    m_region = new_region;
+    alloc_queued = false;
 
     ASSERT(m_region[2] >= 0);
     ASSERT(m_region[3] >= 0);
@@ -174,6 +179,17 @@ void UI::_invalidate_sizereq()
     if (m_parent)
         m_parent->_invalidate_sizereq();
     ui_root.queue_layout();
+}
+
+void UI::_queue_allocation()
+{
+    if (alloc_queued)
+        return;
+    alloc_queued = true;
+    if (m_parent)
+        m_parent->_queue_allocation();
+    else
+        ui_root.queue_layout();
 }
 
 void UIBox::add_child(shared_ptr<UI> child)
@@ -335,7 +351,7 @@ void UIText::set_text(const formatted_string &fs)
     m_text += fs;
     _invalidate_sizereq();
     m_wrapped_size = { -1, -1 };
-    _allocate_region();
+    _queue_allocation();
 }
 
 void UIText::wrap_text_to_size(int width, int height)
@@ -535,6 +551,7 @@ void UIStack::add_child(shared_ptr<UI> child)
     child->_set_parent(this);
     m_children.push_back(move(child));
     _invalidate_sizereq();
+    _queue_allocation();
 }
 
 void UIStack::pop_child()
@@ -543,6 +560,7 @@ void UIStack::pop_child()
         return;
     m_children.pop_back();
     _invalidate_sizereq();
+    _queue_allocation();
 }
 
 void UIStack::_render()
@@ -768,6 +786,7 @@ void UIScroller::set_scroll(int y)
     if (m_scroll == y)
         return;
     m_scroll = y;
+    _queue_allocation();
 }
 
 void UIScroller::set_child(shared_ptr<UI> child)
