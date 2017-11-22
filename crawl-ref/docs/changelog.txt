@@ -8,7 +8,7 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The rate at which unique Pan lord level appear in Pandemonium is increased.
+* The rate at which unique Pan lord levels appear in Pandemonium is increased.
 * Transporters now have a 'landing site' that indicates their destination.
 
 Character
@@ -60,7 +60,7 @@ Items
   is used.
 * Potions of mutations remove fewer mutations on average and are a bit rarer.
 * Fan of Gales now disperses clouds at the user's location.
-* De-equipping an item currently giving you invisibility now gives extra
+* Un-equipping an item currently giving you invisibility now gives extra
   contamination.
 * Rods of lightning XP-recharge even when only partially used and only grant a
   power bonus for shots over consecutive turns.
