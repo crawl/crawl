@@ -104,6 +104,7 @@ public:
     virtual void _allocate_region();
     void _set_parent(Widget* p);
     void _invalidate_sizereq();
+    void _queue_allocation();
 
     // Wrapper functions which handle common behavior
     // - margins
@@ -143,6 +144,7 @@ private:
     bool cached_sr_valid[2] = { false, false };
     SizeReq cached_sr[2];
     int cached_sr_pw;
+    bool alloc_queued = false;
     Widget* m_parent = nullptr;
 };
 
