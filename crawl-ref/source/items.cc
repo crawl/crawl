@@ -2058,12 +2058,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (item.base_type == OBJ_WANDS)
     {
         set_ident_type(item, true);
-
-        if (have_passive(passive_t::identify_devices)
-            && !item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-        }
+        set_ident_flags(item, ISFLAG_KNOW_PLUSES);
     }
 
     maybe_identify_base_type(item);
