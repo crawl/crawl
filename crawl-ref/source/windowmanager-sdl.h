@@ -42,7 +42,7 @@ public:
     virtual void show_keyboard() override;
 
     // Display functions
-    virtual void init_hidpi() override;
+    virtual bool init_hidpi() override;
     virtual void resize(coord_def &m_windowsz) override;
     virtual void swap_buffers() override;
     virtual int screen_width() const override;

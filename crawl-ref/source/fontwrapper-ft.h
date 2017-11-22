@@ -29,6 +29,7 @@ public:
     // font loading
     virtual bool load_font(const char *font_name, unsigned int font_size,
                            bool outline) override;
+    virtual bool configure_font() override;
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
@@ -149,6 +150,7 @@ protected:
     FT_Face face;
     bool    outl;
     unsigned char *pixels;
+    unsigned int fsize;
 };
 
 #endif // USE_FT
