@@ -397,7 +397,6 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW prevents you from regenerating your magical power" },
         { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
                                      " killing" },
-        {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
         {  1, passive_t::bottle_mp,
               "GOD NOW collects and distills excess magic from your kills"
         },
@@ -1295,26 +1294,6 @@ ru_interference get_ru_attack_interference_level()
 
     else
         return DO_NOTHING;
-}
-
-/**
- * ID the charges of wands in the player's possession.
- */
-void pakellas_id_device_charges()
-{
-    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
-    {
-        if (!you.inv[which_item].defined()
-            || !(you.inv[which_item].base_type == OBJ_WANDS)
-            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES))
-        {
-            continue;
-        }
-        set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
-        mprf_nocap("%s",
-                   menu_colour_item_name(you.inv[which_item],
-                                               DESC_INVENTORY).c_str());
-    }
 }
 
 static bool _shadow_acts(bool spell)
