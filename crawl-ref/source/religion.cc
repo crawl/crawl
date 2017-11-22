@@ -599,9 +599,6 @@ void dec_penance(god_type god, int val)
             if (have_passive(passive_t::neutral_slimes))
                 add_daction(DACT_SLIME_NEW_ATTEMPT);
 
-            if (have_passive(passive_t::identify_devices))
-                pakellas_id_device_charges();
-
             if (have_passive(passive_t::friendly_plants)
                 && env.forest_awoken_until)
             {
@@ -3521,7 +3518,6 @@ static void _join_zin()
 static void _join_pakellas()
 {
     mprf(MSGCH_GOD, "You stop regenerating magic.");
-    pakellas_id_device_charges();
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
