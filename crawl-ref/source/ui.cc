@@ -133,12 +133,16 @@ UISizeReq UI::get_preferred_size(int dim, int prosp_width)
 
 void UI::allocate_region(i4 region)
 {
-    m_region = {
+    i4 new_region = {
         region[0] + margin[3],
         region[1] + margin[0],
         region[2] - margin[3] - margin[1],
         region[3] - margin[0] - margin[2],
     };
+
+    if (m_region == new_region)
+        return;
+    m_region = new_region;
 
     ASSERT(m_region[2] >= 0);
     ASSERT(m_region[3] >= 0);
