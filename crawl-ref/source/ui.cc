@@ -56,6 +56,9 @@ public:
 
     bool on_event(const wm_event& event);
     void queue_layout() { m_needs_layout = true; };
+    void expose() { needs_paint = true; };
+
+    bool needs_paint;
 
 protected:
     int m_w, m_h;
@@ -166,6 +169,7 @@ void Widget::allocate_region(i4 region)
 
     if (m_region == new_region && !alloc_queued)
         return;
+    ui_root.expose();
     m_region = new_region;
     alloc_queued = false;
 
@@ -367,6 +371,7 @@ void Text::set_text(const formatted_string &fs)
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();
+    ui_root.expose();
     m_wrapped_size = { -1, -1 };
     _queue_allocation();
 }
@@ -802,6 +807,7 @@ void Scroller::set_scroll(int y)
     if (m_scroll == y)
         return;
     m_scroll = y;
+    ui_root.expose();
     _queue_allocation();
 }
 
@@ -916,6 +922,15 @@ void UIRoot::resize(int w, int h)
     m_w = w;
     m_h = h;
     m_needs_layout = true;
+
+    // On console with the window size smaller than the minimum layout,
+    // enlarging the window will not cause any size reallocations, and the
+    // newly visible region of the terminal will not be filled.
+    // Fix: explicitly redraw the entire screen on resize: it won't
+    // be strictly necessary for most resizes, but won't hurt.
+#ifndef USE_TILE_LOCAL
+    needs_paint = true;
+#endif
 }
 
 void UIRoot::layout()
@@ -942,6 +957,9 @@ void UIRoot::layout()
 
 void UIRoot::render()
 {
+    if (!needs_paint)
+        return;
+
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw(0, 0);
 #else
@@ -965,6 +983,8 @@ void UIRoot::render()
 #else
     update_screen();
 #endif
+
+    needs_paint = false;
 }
 
 bool UIRoot::on_event(const wm_event& event)
@@ -1060,6 +1080,10 @@ void pump_events()
             wm->resize(ws);
             break;
         }
+
+        case WME_EXPOSE:
+            ui_root.needs_paint = true;
+            break;
 
         default:
             ui_root.on_event(event);
