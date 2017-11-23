@@ -32,6 +32,15 @@ static i4 aabb_intersect(i4 a, i4 b)
     return i;
 }
 
+static i4 aabb_union(i4 a, i4 b)
+{
+    a[2] += a[0]; a[3] += a[1];
+    b[2] += b[0]; b[3] += b[1];
+    i4 i = { min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3]) };
+    i[2] -= i[0]; i[3] -= i[1];
+    return i;
+}
+
 static inline bool pos_in_rect(i2 pos, i4 rect)
 {
     if (pos[0] < rect[0] || pos[0] >= rect[0]+rect[2])
@@ -52,7 +61,7 @@ static void ui_clear_text_region(i4 region);
 static struct UIRoot
 {
 public:
-    UIRoot() : m_child(nullptr), m_needs_layout(false) {};
+    UIRoot() : m_dirty_region({0, 0, 0, 0}), m_child(nullptr), m_needs_layout(false) {};
     void set_child(shared_ptr<UI> child);
 
     void resize(int w, int h);
@@ -61,13 +70,24 @@ public:
 
     void on_event(UIEvent event);
     void invalidate_sizereq() { m_needs_layout = true; };
-    void expose() { needs_paint = true; };
+    void expose_region(i4 r) {
+        if (r[2] == 0 || r[3] == 0)
+            return;
+        if (m_dirty_region[2] == 0)
+        {
+            m_dirty_region = r;
+            return;
+        }
+        m_dirty_region = aabb_union(m_dirty_region, r);
+        needs_paint = true;
+    };
 
     bool needs_paint;
 
 protected:
     int m_w, m_h;
     i4 m_region;
+    i4 m_dirty_region;
     shared_ptr<UI> m_child;
     bool m_needs_layout;
 } ui_root;
@@ -145,7 +165,8 @@ void UI::allocate_region(i4 region)
 
     if (m_region == new_region)
         return;
-    ui_root.expose();
+    ui_root.expose_region(m_region);
+    ui_root.expose_region(new_region);
     m_region = new_region;
 
     ASSERT(m_region[2] >= 0);
@@ -343,7 +364,7 @@ void UIText::set_text(const formatted_string &fs)
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();
-    ui_root.expose();
+    ui_root.expose_region(m_region);
     m_wrapped_size = { -1, -1 };
     _allocate_region();
 }
@@ -765,7 +786,7 @@ void UIScroller::set_scroll(int y)
     if (m_scroll == y)
         return;
     m_scroll = y;
-    ui_root.expose();
+    ui_root.expose_region(m_region);
     _allocate_region();
 }
 
@@ -867,7 +888,7 @@ void UIMenu::set_selected(int idx)
     if (m_selected >= 0) m_entries[m_selected]->selected = false;
     m_selected = idx;
     if (m_selected >= 0) m_entries[m_selected]->selected = true;
-    ui_root.expose();
+    ui_root.expose_region(m_region);
     scroll_selected_entry_into_view();
     slots.selection_change.emit(this, move(m_selected));
 }
@@ -926,10 +947,10 @@ void UIRoot::resize(int w, int h)
     // On console with the window size smaller than the minimum layout,
     // enlarging the window will not cause any size reallocations, and the
     // newly visible region of the terminal will not be filled.
-    // Fix: explicitly redraw the entire screen on resize: it won't
+    // Fix: explicitly mark the entire screen as dirty on resize: it won't
     // be strictly necessary for most resizes, but won't hurt.
 #ifndef USE_TILE_LOCAL
-    needs_paint = true;
+    expose_region({0, 0, w, h});
 #endif
 }
 
@@ -961,7 +982,11 @@ void UIRoot::render()
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw(0, 0);
 #else
-    clrscr();
+    // On console, clear and redraw only the dirty region of the screen
+    m_dirty_region = aabb_intersect(m_dirty_region, m_region);
+    textcolour(LIGHTGREY);
+    textbackground(BLACK);
+    ui_clear_text_region(m_dirty_region);
 #endif
 
     ui_push_scissor(m_region);
@@ -975,6 +1000,7 @@ void UIRoot::render()
 #endif
 
     needs_paint = false;
+    m_dirty_region = {0, 0, 0, 0};
 }
 
 void UIRoot::on_event(UIEvent event)
