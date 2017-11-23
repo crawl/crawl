@@ -30,6 +30,15 @@ static i4 aabb_intersect(i4 a, i4 b)
     return i;
 }
 
+static i4 aabb_union(i4 a, i4 b)
+{
+    a[2] += a[0]; a[3] += a[1];
+    b[2] += b[0]; b[3] += b[1];
+    i4 i = { min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3]) };
+    i[2] -= i[0]; i[3] -= i[1];
+    return i;
+}
+
 
 #ifdef USE_TILE_LOCAL
 static inline bool pos_in_rect(i2 pos, i4 rect)
@@ -40,6 +49,10 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
         return false;
     return true;
 }
+#endif
+
+#ifndef USE_TILE_LOCAL
+static void ui_clear_text_region(i4 region);
 #endif
 
 static struct UIRoot
@@ -54,13 +67,22 @@ public:
 
     bool on_event(wm_event event);
     void queue_layout() { m_needs_layout = true; };
-    void expose() { needs_paint = true; };
+    void expose_region(i4 r) {
+        if (r[2] == 0 || r[3] == 0)
+            return;
+        if (m_dirty_region[2] == 0)
+            m_dirty_region = r;
+        else
+            m_dirty_region = aabb_union(m_dirty_region, r);
+        needs_paint = true;
+    };
 
     bool needs_paint;
 
 protected:
     int m_w, m_h;
     i4 m_region;
+    i4 m_dirty_region{0, 0, 0, 0};
     UIStack m_root;
     bool m_needs_layout{false};
 } ui_root;
@@ -152,7 +174,8 @@ void UI::allocate_region(i4 region)
 
     if (m_region == new_region && !alloc_queued)
         return;
-    ui_root.expose();
+    ui_root.expose_region(m_region);
+    ui_root.expose_region(new_region);
     m_region = new_region;
     alloc_queued = false;
 
@@ -354,7 +377,7 @@ void UIText::set_text(const formatted_string &fs)
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();
-    ui_root.expose();
+    ui_root.expose_region(m_region);
     m_wrapped_size = { -1, -1 };
     _queue_allocation();
 }
@@ -791,7 +814,6 @@ void UIScroller::set_scroll(int y)
     if (m_scroll == y)
         return;
     m_scroll = y;
-    ui_root.expose();
     _queue_allocation();
 }
 
@@ -917,10 +939,10 @@ void UIRoot::resize(int w, int h)
     // On console with the window size smaller than the minimum layout,
     // enlarging the window will not cause any size reallocations, and the
     // newly visible region of the terminal will not be filled.
-    // Fix: explicitly redraw the entire screen on resize: it won't
+    // Fix: explicitly mark the entire screen as dirty on resize: it won't
     // be strictly necessary for most resizes, but won't hurt.
 #ifndef USE_TILE_LOCAL
-    needs_paint = true;
+    expose_region({0, 0, w, h});
 #endif
 }
 
@@ -954,7 +976,11 @@ void UIRoot::render()
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw(0, 0);
 #else
-    clrscr();
+    // On console, clear and redraw only the dirty region of the screen
+    m_dirty_region = aabb_intersect(m_dirty_region, m_region);
+    textcolour(LIGHTGREY);
+    textbackground(BLACK);
+    ui_clear_text_region(m_dirty_region);
 #endif
 
     ui_push_scissor(m_region);
@@ -976,6 +1002,7 @@ void UIRoot::render()
 #endif
 
     needs_paint = false;
+    m_dirty_region = {0, 0, 0, 0};
 }
 
 bool UIRoot::on_event(wm_event event)
@@ -1012,6 +1039,23 @@ i4 ui_get_scissor()
 {
     return scissor_stack.top();
 }
+
+#ifndef USE_TILE_LOCAL
+static void ui_clear_text_region(i4 region)
+{
+    if (scissor_stack.size() > 0)
+        region = aabb_intersect(region, scissor_stack.top());
+    if (region[2] <= 0 || region[3] <= 0)
+        return;
+    textcolour(LIGHTGREY);
+    textbackground(BLACK);
+    for (int y=region[1]; y < region[1]+region[3]; y++)
+    {
+        cgotoxy(region[0]+1, y+1);
+        cprintf("%*s", region[2], "");
+    }
+}
+#endif
 
 void ui_push_layout(shared_ptr<UI> root)
 {
