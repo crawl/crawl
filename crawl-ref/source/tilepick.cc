@@ -1833,7 +1833,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
-    else if (mons.is(MB_FLEEING))
+    if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
     else if (mons.is(MB_STABBABLE) || mons.is(MB_SLEEPING)
              || mons.is(MB_DORMANT))
@@ -1841,6 +1841,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         // XXX: should we have different tile flags for "stabbable" versus
         // "sleeping"?
         ch |= TILE_FLAG_STAB;
+        dprf("hi");
     }
     // Should petrify show the '?' symbol?
     else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING))
