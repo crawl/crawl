@@ -2267,6 +2267,8 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
+    wu_jian_end_of_turn_effects();
+
     viewwindow();
 
     if (you.cannot_act() && any_messages()
@@ -3316,8 +3318,8 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    if (you_worship(GOD_WU_JIAN))
-        wu_jian_end_of_turn_effects(attacking, did_wall_jump, you.turn_is_over, initial_position);
+    if (you_worship(GOD_WU_JIAN) && !attacking)
+        wu_jian_post_move_effects(did_wall_jump, you.turn_is_over, initial_position);
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)

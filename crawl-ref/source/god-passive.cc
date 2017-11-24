@@ -1862,16 +1862,16 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
     }
 }
 
-void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+void wu_jian_end_of_turn_effects()
 {
     // This guarantees that the whirlwind pin status is capped to one turn of monster movement.
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_WHIRLWIND_PINNED) && !you.attribute[ATTR_SERPENTS_LASH])
             mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
+}
 
-    if (attacking)
-        return;
-
+void wu_jian_post_move_effects(bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+{
     if (!did_wall_jump)
         _wu_jian_trigger_martial_arts(initial_position);
 
