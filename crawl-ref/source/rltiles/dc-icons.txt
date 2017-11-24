@@ -56,6 +56,7 @@ bound_soul BOUND_SOUL
 infested INFESTED
 corroded CORRODED
 swift SWIFT
+pinned PINNED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
