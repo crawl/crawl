@@ -298,5 +298,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging=false);
 void wu_jian_wall_jump_effects(const coord_def& old_pos);
 bool wu_jian_has_momentum(wu_jian_attack_type);
 void wu_jian_heaven_tick();
-void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_over, const coord_def& initial_position);
+void wu_jian_post_move_effects(bool did_wall_jump, bool turn_over, const coord_def& initial_position);
+void wu_jian_end_of_turn_effects();
 void end_heavenly_storm();
