@@ -3252,7 +3252,7 @@ static string _monster_attacks_description(const monster_info& mi)
         {
             attack_descs.push_back(
                 make_stringf("%s for up to %d fire damage",
-                             mon_attack_name(attack.type).c_str(),
+                             mon_attack_name(attack.type, false).c_str(),
                              flavour_damage(attack.flavour, mi.hd, false)));
             continue;
         }
@@ -3271,7 +3271,7 @@ static string _monster_attacks_description(const monster_info& mi)
         attack_descs.push_back(
             make_stringf("%s%s%s%s %s%s",
                          _special_flavour_prefix(attack.flavour),
-                         mon_attack_name(attack.type).c_str(),
+                         mon_attack_name(attack.type, false).c_str(),
                          _flavour_range_desc(attack.flavour),
                          count_desc.c_str(),
                          damage_desc.c_str(),
