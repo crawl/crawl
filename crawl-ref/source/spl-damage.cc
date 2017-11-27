@@ -1053,30 +1053,15 @@ static int _shatter_mon_dice(const monster *mon)
     case MONS_ROXANNE:
         return 6;
 
-    // 1/3 damage to liquids.
-    case MONS_WATER_ELEMENTAL:
-        return 1;
-
     default:
-        const bool petrifying = mon->petrifying();
-        const bool petrified = mon->petrified();
-
-        // Extra damage to petrifying/petrified things.
-        // Undo the damage reduction as well; base damage is 4 : 6.
-        if (petrifying || petrified)
-            return petrifying ? 6 : 12;
-        // No damage to insubstantials.
-        else if (mon->is_insubstantial())
-            return 0;
-        // 1/3 damage to fliers and slimes.
-        else if (mon->airborne() || mons_is_slime(*mon))
+        if (mon->is_insubstantial())
             return 1;
-        // 3/2 damage to ice.
-        else if (mon->is_icy())
-            return random_range(4, 5);
-        // Double damage to bone.
+        if (mon->petrifying() || mon->petrified())
+            return 6; // reduced later by petrification's damage reduction
         else if (mon->is_skeletal())
             return 6;
+        else if (mon->airborne() || mons_is_slime(*mon))
+            return 1;
         // Normal damage to everything else.
         else
             return 3;
@@ -1190,19 +1175,13 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
 static int _shatter_player_dice()
 {
     if (you.is_insubstantial())
-        return 0;
-    else if (you.petrified())
-        return 12; // reduced later
-    else if (you.petrifying())
-        return 6;  // reduced later
-    // Same order as for monsters -- petrified flyers get hit hard, skeletal
-    // flyers get no extra damage.
-    else if (you.airborne())
         return 1;
+    if (you.petrified() || you.petrifying())
+        return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.form == transformation::ice_beast)
-        return random_range(4, 5);
+    else if (you.airborne())
+        return 1;
     else
         return 3;
 }
