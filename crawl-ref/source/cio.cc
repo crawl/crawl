@@ -971,12 +971,13 @@ void fontbuf_line_reader::cursorto(int newcpos)
 
     if (newcpos >= length)
         c = ' ';
-    else
-        utf8towc(&c, buffer + newcpos);
+    utf8towc(&c, buffer + newcpos);
+
     pos_y = start.y;
     string preface(buffer, newcpos);
     pos_x = start.x + m_font_buf.get_font_wrapper().string_width(preface.c_str());
 
+    // redraw with a cursor
     m_font_buf.get_font_wrapper().store(m_font_buf, pos_x, pos_y, c,
         term_colours[LIGHTGRAY], term_colours[DARKGRAY]);
     m_font_buf.draw();

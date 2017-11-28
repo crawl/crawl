@@ -100,8 +100,10 @@ bool FTFontWrapper::configure_font()
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
     m_ascender      = (metrics.ascender>>6);
+    // if you're looking for realistic glyph sizes uses m_max_advance
+    // or char_width, these are still scaled.
     m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
-    m_max_height    = (face->bbox.yMax>>6)-(face->bbox.yMin>>6);//m_max_advance.y;
+    m_max_height    = (face->bbox.yMax >> 6) - (face->bbox.yMin >> 6);
     m_min_offset    = 0;
 
     if (outl)
@@ -904,6 +906,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     rect.set_col(col);
     buf.add_primitive(rect);
 
+
     x += m_glyphs[c].advance * density_mult;
 }
 
@@ -920,15 +923,17 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &fg_col, const VColour &bg_col)
 {
-    float density_mult = display_density.scale_to_logical();
+    const float density_mult = display_density.scale_to_logical();
 
-    unsigned int c = map_unicode(ch);
-    int this_width = m_glyphs[c].width;
-    int normal_width = m_glyphs[map_unicode('9')].width;
+    const unsigned int c = map_unicode(ch);
 
-    float bg_width = max(this_width, normal_width) * density_mult;
-    float bg_height = m_max_height * density_mult;
-    GLWPrim bg_rect(x, y, x + bg_width, y + bg_height);
+    // if the advance is 0, use the max width
+    const int this_width = m_glyphs[c].advance ? m_glyphs[c].advance : char_width(false);
+    const float bg_width = this_width * density_mult;
+    const float bg_height = char_height(false) * density_mult;
+    const float pos_sx = x + m_glyphs[c].offset * density_mult;
+
+    GLWPrim bg_rect(pos_sx, y, pos_sx + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
 
