@@ -1278,7 +1278,7 @@ void SkillMenu::init_button_row()
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
         m_clear_targets_button->set_highlight_colour(YELLOW);
-        add_item(m_clear_targets_button, 22, m_pos);
+        add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
     }
 }
