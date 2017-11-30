@@ -475,7 +475,7 @@ bool TilesFramework::initialise()
     calculate_default_options();
 
     m_crt_font    = load_font(Options.tile_font_crt_file.c_str(),
-                              Options.tile_font_crt_size, true, true);
+                              Options.tile_font_crt_size, true, false);
     m_msg_font    = load_font(Options.tile_font_msg_file.c_str(),
                               Options.tile_font_msg_size, true, false);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
@@ -483,7 +483,7 @@ bool TilesFramework::initialise()
     m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
                               Options.tile_font_tip_size, true, false);
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
-                              Options.tile_font_lbl_size, true, true);
+                              Options.tile_font_lbl_size, true, false);
 
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || m_lbl_font == -1)
