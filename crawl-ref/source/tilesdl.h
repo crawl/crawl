@@ -190,7 +190,7 @@ public:
 protected:
     void reconfigure_fonts();
     int load_font(const char *font_file, int font_size,
-                  bool default_on_fail, bool outline);
+                  bool default_on_fail);
     int handle_mouse(MouseEvent &event);
 
     void use_control_region(ControlRegion *region, bool use_control_layer = true);
@@ -257,7 +257,6 @@ protected:
     {
         string name;
         int size;
-        bool outline;
         FontWrapper *font;
     };
     vector<font_info> m_fonts;

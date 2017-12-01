@@ -106,9 +106,6 @@ bool FTFontWrapper::configure_font()
     m_max_height    = (face->bbox.yMax >> 6) - (face->bbox.yMin >> 6);
     m_min_offset    = 0;
 
-    if (outl)
-        m_max_width += 2, m_max_height += 2;
-
     charsz = coord_def(1,1);
     // Grow character size to power of 2
     while (charsz.x < m_max_width)
@@ -178,13 +175,11 @@ bool FTFontWrapper::configure_font()
     return true;
 }
 
-bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline)
+bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
 {
     FT_Error error;
     FT_Library library = FontLibrary::get();
 
-    outl = outline;
     fsize = font_size;
 
     // TODO enne - need to find a cross-platform way to also
@@ -246,8 +241,6 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
     // Was int prior to freetype 2.5.4, then became unsigned.
     typedef decltype(bmp->width) ftint;
     ftint bmp_width = bmp->width;
-    if (outl)
-        bmp_width += 2;
 
     m_glyphs[c].offset = face->glyph->bitmap_left;
     m_glyphs[c].advance = advance;
@@ -272,49 +265,21 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
         bmp->width = min(bmp->width, ftint(charsz.x));
         bmp->rows = min(bmp->rows, ftint(charsz.y));
 
-        if (outl)
-        {
-            for (ftint x = 0; x < bmp->width; x++)
-                for (ftint y = 0; y < bmp->rows; y++)
+        for (ftint x = 0; x < bmp->width; x++)
+            for (ftint y = 0; y < bmp->rows; y++)
+            {
+                unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
+                idx *= 4;
+                if (x < bmp->width && y < bmp->rows)
                 {
-                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
-                    idx *= 4;
-
-                    unsigned char orig = bmp->buffer[x + charw * y];
-
-                    unsigned char edge = 0;
-                    if (x > 0)
-                        edge = max(bmp->buffer[(x-1) + charw * y], edge);
-                    if (y > 0)
-                        edge = max(bmp->buffer[x + charw * (y-1)], edge);
-                    if (x < bmp->width - 1)
-                        edge = max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (y < bmp->rows - 1)
-                        edge = max(bmp->buffer[x + charw * (y+1)], edge);
-
-                    pixels[idx] = orig;
-                    pixels[idx + 1] = orig;
-                    pixels[idx + 2] = orig;
-                    pixels[idx + 3] = min((int)orig + edge, 255);
+                    unsigned char alpha = bmp->buffer[x + charw * y];
+                    pixels[idx] = 255;
+                    pixels[idx + 1] = 255;
+                    pixels[idx + 2] = 255;
+                    pixels[idx + 3] = alpha;
                 }
-        }
-        else
-        {
-            for (ftint x = 0; x < bmp->width; x++)
-                for (ftint y = 0; y < bmp->rows; y++)
-                {
-                    unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
-                    idx *= 4;
-                    if (x < bmp->width && y < bmp->rows)
-                    {
-                        unsigned char alpha = bmp->buffer[x + charw * y];
-                        pixels[idx] = 255;
-                        pixels[idx + 1] = 255;
-                        pixels[idx + 2] = 255;
-                        pixels[idx + 3] = alpha;
-                    }
-                }
-        }
+            }
+
         bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
                             MIPMAP_NONE,
                             (c % GLYPHS_PER_ROWCOL) * charsz.x,
