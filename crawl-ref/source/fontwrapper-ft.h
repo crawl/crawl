@@ -27,8 +27,7 @@ public:
     virtual ~FTFontWrapper();
 
     // font loading
-    virtual bool load_font(const char *font_name, unsigned int font_size,
-                           bool outline) override;
+    virtual bool load_font(const char *font_name, unsigned int font_size) override;
     virtual bool configure_font() override;
 
     // render just text
@@ -148,7 +147,6 @@ protected:
 
     FT_Byte *ttf;
     FT_Face face;
-    bool    outl;
     unsigned char *pixels;
     unsigned int fsize;
 };

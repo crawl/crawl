@@ -475,15 +475,15 @@ bool TilesFramework::initialise()
     calculate_default_options();
 
     m_crt_font    = load_font(Options.tile_font_crt_file.c_str(),
-                              Options.tile_font_crt_size, true, false);
+                              Options.tile_font_crt_size, true);
     m_msg_font    = load_font(Options.tile_font_msg_file.c_str(),
-                              Options.tile_font_msg_size, true, false);
+                              Options.tile_font_msg_size, true);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
-                              Options.tile_font_stat_size, true, false);
+                              Options.tile_font_stat_size, true);
     m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
-                              Options.tile_font_tip_size, true, false);
+                              Options.tile_font_tip_size, true);
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
-                              Options.tile_font_lbl_size, true, false);
+                              Options.tile_font_lbl_size, true);
 
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || m_lbl_font == -1)
@@ -571,13 +571,12 @@ void TilesFramework::reconfigure_fonts()
 }
 
 int TilesFramework::load_font(const char *font_file, int font_size,
-                              bool default_on_fail, bool outline)
+                              bool default_on_fail)
 {
     for (unsigned int i = 0; i < m_fonts.size(); i++)
     {
         font_info &finfo = m_fonts[i];
-        if (finfo.name == font_file && finfo.size == font_size
-            && outline == finfo.outline)
+        if (finfo.name == font_file && finfo.size == font_size)
         {
             return i;
         }
@@ -585,11 +584,11 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
-    if (!font->load_font(font_file, font_size, outline))
+    if (!font->load_font(font_file, font_size))
     {
         delete font;
         if (default_on_fail)
-            return load_font(MONOSPACED_FONT, 12, false, outline);
+            return load_font(MONOSPACED_FONT, 12, false);
         else
             return -1;
     }
@@ -598,7 +597,6 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     finfo.font = font;
     finfo.name = font_file;
     finfo.size = font_size;
-    finfo.outline = outline;
     m_fonts.push_back(finfo);
 
     return m_fonts.size() - 1;
