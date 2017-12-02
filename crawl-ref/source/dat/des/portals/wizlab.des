@@ -1504,15 +1504,14 @@ NAME:       wizlab_cloud
 TAGS:       no_rotate
 MONS:       air elemental w:20 / shock serpent w:5 / spark wasp w:5 \
             / wind drake w:5
-MONS:       fire crab / ghost crab / death drake / apocalypse crab
+MONS:       fire crab w:5 / ghost crab / death drake / apocalypse crab
 MONS:       spriggan air mage / blizzard demon
 {{
 wizname = crawl.make_name()
 kmons ("    5 = patrolling Cloud Mage dbname:Cloud_Mage name:"
               .. string.gsub(wizname, " ", "_")
               .. " ; robe_of_clouds . quick blade ego:electrocution \
-                     | quick blade ego:freezing | dagger ego:electrocution \
-                     | dagger ego:freezing")
+                     | dagger ego:electrocution | staff of air")
 }}
 KMONS:      D = twister
 MARKER:     ! = lua:fog_machine { \
@@ -1598,11 +1597,11 @@ MAP
 #######################nnn......nbb---bb!.....n######################
 ########################n......nbb-----bb.....nn#####################
 #######################nnn......b-------b......n#####################
-#######################n.!.....nb-<-A-<-b......n#####################
+#######################n.!.....n+-<-A-<-+......n#####################
 #######################n.b......b-------bn...!nn#####################
 #######################n.bn.....bb-----bb......n#####################
 #######################b+bbbb....bb---bb!.....nn#####################
-#######################n....bn...!bbbbb......nn######################
+#######################n....bn...!bb+bb......nn######################
 #######################n.dd.bn.............nnb#######################
 #######################n.dd.bnn...........bbbbbbbbb##################
 #######################n....b#n..........!...+....n##################
