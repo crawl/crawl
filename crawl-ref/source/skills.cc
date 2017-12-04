@@ -733,6 +733,8 @@ bool check_selected_skills()
     if (trainable_skill)
     {
         mpr("You need to enable at least one skill for training.");
+        // Training will be fixed up on load if this ASSERT triggers.
+        ASSERT(you.species != SP_GNOLL);
         more();
         reset_training();
         skill_menu();
