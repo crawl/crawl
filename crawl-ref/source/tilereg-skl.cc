@@ -73,6 +73,8 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         m_last_clicked_item = item_idx;
         if (!you.can_train[skill])
             mpr("You cannot train this skill.");
+        else if (you.species == SP_GNOLL)
+            mpr("Gnolls can't change their training allocations!");
         else if (you.skills[skill] >= 27)
             mpr("There's no point to toggling this skill anymore.");
         else
@@ -119,7 +121,7 @@ bool SkillRegion::update_tip_text(string& tip)
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot train this skill now.";
-    else
+    else if (you.species != SP_GNOLL)
     {
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
