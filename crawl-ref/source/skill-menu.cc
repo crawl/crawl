@@ -1005,6 +1005,9 @@ bool SkillMenu::exit()
 
     if (!enabled_skill && !all_skills_maxed())
     {
+        // Shouldn't happen, but crash rather than locking the player in the
+        // menu. Training will be fixed up on load.
+        ASSERT(you.species != SP_GNOLL);
         set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
