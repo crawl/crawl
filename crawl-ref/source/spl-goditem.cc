@@ -1301,7 +1301,8 @@ spret_type cast_random_effects(int pow, bolt& beam, bool fail)
                                  ZAP_ICEBLAST,
                                  ZAP_FIREBALL,
                                  ZAP_BOLT_OF_DRAINING,
-                                 ZAP_VENOM_BOLT);
+                                 ZAP_VENOM_BOLT,
+                                 ZAP_MALMUTATE);
     beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
     zapping(zap, pow, beam, false);

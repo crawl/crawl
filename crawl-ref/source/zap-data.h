@@ -1268,4 +1268,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0 // handled by explosion
 },
 
+{
+    ZAP_MALMUTATE,
+    "malmutate",
+    200,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    ETC_MUTAGENIC,
+    true,
+    BEAM_MALMUTATE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
 };
