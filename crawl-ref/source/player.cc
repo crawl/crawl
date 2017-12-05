@@ -5371,7 +5371,8 @@ bool player::can_water_walk() const
 
 int player::visible_igrd(const coord_def &where) const
 {
-    if (grd(where) == DNGN_LAVA
+    if (feat_is_closed_door(grd(where))
+        || grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && !species_likes_water(species)))
     {
