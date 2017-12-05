@@ -1088,7 +1088,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_monster(gc, *cell.monsterinfo());
     else if (cell.item())
     {
-        if (feat_is_stair(cell.feat()))
+        if (feat_is_stair(cell.feat()) || feat_is_closed_door(cell.feat()))
             _tile_place_item_marker(gc, *cell.item());
         else
             _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
