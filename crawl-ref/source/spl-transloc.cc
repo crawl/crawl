@@ -799,21 +799,20 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         return SPRET_ABORT;
     }
 
-    // Letting mostly-melee characters spam apport after every Shoals
-    // fight seems like it has too much grinding potential. We could
-    // weaken this for high power.
-    if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
+    // Let's look at the top item in that square...
+    // And don't allow apporting from shop inventories.
+    // Using visible_igrd takes care of deep water/lava where appropriate.
+    const int item_idx = you.visible_igrd(where);
+    if (item_idx == NON_ITEM || !in_bounds(where))
     {
-        mpr("The density of the terrain blocks your spell.");
+        mpr("You don't see anything to apport there.");
         return SPRET_ABORT;
     }
 
-    // Let's look at the top item in that square...
-    // And don't allow apporting from shop inventories.
-    const int item_idx = igrd(where);
-    if (item_idx == NON_ITEM || !in_bounds(where))
+    // check for visible but non-accessible items
+    if (you.accessible_igrd(where) == NON_ITEM)
     {
-        mpr("There are no items there.");
+        canned_msg(MSG_SOMETHING_IN_WAY);
         return SPRET_ABORT;
     }
 

@@ -5369,10 +5369,18 @@ bool player::can_water_walk() const
            || you.props.exists(TEMP_WATERWALK_KEY);
 }
 
+/// Items that are accessible to manipulation, e.g. by animate dead or apport
+int player::accessible_igrd(const coord_def &where) const
+{
+    if (feat_is_closed_door(grd(where)))
+        return NON_ITEM;
+    return visible_igrd(where);
+}
+
+/// Items that are visible to the player, e.g. not under lava
 int player::visible_igrd(const coord_def &where) const
 {
-    if (feat_is_closed_door(grd(where))
-        || grd(where) == DNGN_LAVA
+    if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && !species_likes_water(species)))
     {

@@ -307,7 +307,7 @@ static int _cull_items()
 /*---------------------------------------------------------------------*/
 stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
-    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
+    cur_link = accessible ? you.accessible_igrd(pos) : igrd(pos);
     if (cur_link != NON_ITEM)
         next_link = mitm[cur_link].link;
     else
@@ -2448,7 +2448,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
 
 const item_def* top_item_at(const coord_def& where)
 {
-    const int link = you.visible_igrd(where);
+    const int link = you.accessible_igrd(where);
     return (link == NON_ITEM) ? nullptr : &mitm[link];
 }
 
