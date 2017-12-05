@@ -3442,8 +3442,22 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
 
     case OBJ_ARMOUR:
-        return !can_wear_armour(item, false, true)
-                || (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND));
+        if (!can_wear_armour(item, false, true))
+            return true;
+
+        if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
+            return true;
+
+        if (is_artefact(item))
+            return false;
+
+        if (item.sub_type == ARM_SCARF
+            && get_armour_ego_type(item) == SPARM_SPIRIT_SHIELD
+            && you.spirit_shield(false, false))
+        {
+            return true;
+        }
+        return false;
 
     case OBJ_SCROLLS:
         if (temp && silenced(you.pos()))
