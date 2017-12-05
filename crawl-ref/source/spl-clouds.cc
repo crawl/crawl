@@ -309,7 +309,7 @@ void corpse_rot(actor* caster)
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
         if (!is_sanctuary(*ri) && !cloud_at(*ri))
-            for (stack_iterator si(*ri); si; ++si)
+            for (stack_iterator si(*ri, true); si; ++si)
                 if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
                     // Found a corpse. Skeletonise it if possible.
