@@ -1820,6 +1820,7 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_SOMETHING_IN_WAY:
             mpr("There's something in the way.");
+            break;
         case MSG_CANNOT_SEE:
             mpr("You can't see that place.");
             break;
