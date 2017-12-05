@@ -2544,7 +2544,7 @@ int fedhas_fungal_bloom()
             }
         }
 
-        for (stack_iterator j(*i); j; ++j)
+        for (stack_iterator j(*i, true); j; ++j)
         {
             bool corpse_on_pos = false;
 
