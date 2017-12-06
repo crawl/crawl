@@ -198,6 +198,12 @@ static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
     return false;
 }
 
+static bool _weapon_disallows_randart(int sub_type)
+{
+    // Clubs and blowguns are never randarts.
+    return sub_type == WPN_CLUB || sub_type == WPN_BLOWGUN;
+}
+
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
@@ -216,8 +222,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                 return true;
         }
 
-        // Clubs and blowguns are never randarts.
-        if (item.sub_type == WPN_CLUB || item.sub_type == WPN_BLOWGUN)
+        if (_weapon_disallows_randart(item.sub_type))
             return false;
 
         // Mean enchantment +6.
@@ -394,6 +399,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else
         _roll_weapon_type(item, item_level);
+
+    // Fall back to an ordinary item if randarts not allowed for this type.
+    if (item_level == ISPEC_RANDART && _weapon_disallows_randart(item.sub_type))
+        item_level = ISPEC_GOOD_ITEM;
 
     // Forced randart.
     if (item_level == ISPEC_RANDART)
