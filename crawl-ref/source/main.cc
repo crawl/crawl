@@ -3195,6 +3195,16 @@ static void _move_player(coord_def move)
                 you.turn_is_over = false;
                 return;
             }
+
+            if (Options.wall_jump_prompt && you.attribute[ATTR_WALL_JUMP_READY] == 0) {
+                mprf(MSGCH_PLAIN, "You put your %s on %s. Move against it again to jump.",
+                     you.foot_name(true).c_str(),
+                     feature_description_at(targ, false, DESC_THE, false).c_str());
+                you.attribute[ATTR_WALL_JUMP_READY] = 1;
+                you.turn_is_over = false;
+                return;
+            }
+            
             did_wall_jump = true;
             move_player_to_grid(wall_jump_landing_spot, false);
             wu_jian_wall_jump_effects(initial_position);
