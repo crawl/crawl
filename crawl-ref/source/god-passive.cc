@@ -1761,27 +1761,16 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
     {
         if (messaging)
         {
-            bool mon_in_los = false;
-            for (monster *m : monster_near_iterator(&you, LOS_NO_TRANS))
+            if (landing_actor)
             {
-                if (_can_attack_martial(m))
-                {
-                    mon_in_los = true;
-                    break;
-                }
+                mprf("You have no room to wall jump there; %s is in the way.",
+                    landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
+                                : "something you can't see");
             }
-            if (mon_in_los)
-            {
-                if (landing_actor)
-                {
-                    mprf("You have no room to wall jump; %s is in the way.",
-                        landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
-                                    : "something you can't see");
-                }
-                else
-                    mpr("You have no room to wall jump.");
-            }
+            else
+                mpr("You have no room to wall jump there.");
         }
+        you.attribute[ATTR_WALL_JUMP_READY] = 0;
         return false;
     }
 
