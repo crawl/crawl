@@ -2667,10 +2667,6 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         text += colour_to_str(colour);
         text += ">";
         entry->text = text;
-        // Use the generic tile for rune that haven't been gotten yet, to make
-        // it more clear at a glance.
-        if (!you.runes[rune])
-            const_cast<item_def*>(entry->item)->sub_type = NUM_RUNE_TYPES;
     }
     else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
     {
@@ -2717,7 +2713,7 @@ void display_runes()
                 item_def item;
                 item.base_type = OBJ_RUNES;
                 item.sub_type = rune;
-                item.quantity = 1;
+                item.quantity = you.runes[rune] ? 1 : 0;
                 item_colour(item);
                 items.push_back(item);
             }
@@ -2744,7 +2740,7 @@ void display_runes()
     item_def item;
     item.base_type = OBJ_ORBS;
     item.sub_type = ORB_ZOT;
-    item.quantity = 1;
+    item.quantity = player_has_orb() ? 1 : 0;
     items.push_back(item);
 
     // We've sorted this vector already, so disable menu sorting. Maybe we

@@ -478,7 +478,8 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return false;
 
-    if (quantity <= 0)
+    // Runes + orb of zot have a special uncollected tile
+    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
         return false;
 
     tileidx_t idx = tileidx_item(get_item_info(*item));
