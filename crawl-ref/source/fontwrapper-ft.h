@@ -9,6 +9,9 @@
 
 #include "tilefont.h"
 
+struct HiDPIState;
+extern HiDPIState display_density;
+
 // TODO enne - Fonts could be made better by:
 //
 // * handling kerning
@@ -24,8 +27,8 @@ public:
     virtual ~FTFontWrapper();
 
     // font loading
-    virtual bool load_font(const char *font_name, unsigned int font_size,
-                           bool outline, int scale_num, int scale_den) override;
+    virtual bool load_font(const char *font_name, unsigned int font_size) override;
+    virtual bool configure_font() override;
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
@@ -144,11 +147,8 @@ protected:
 
     FT_Byte *ttf;
     FT_Face face;
-    bool    outl;
     unsigned char *pixels;
-
-    int scale_num;
-    int scale_den;
+    unsigned int fsize;
 };
 
 #endif // USE_FT

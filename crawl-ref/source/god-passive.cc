@@ -397,7 +397,6 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW prevents you from regenerating your magical power" },
         { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
                                      " killing" },
-        {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
         {  1, passive_t::bottle_mp,
               "GOD NOW collects and distills excess magic from your kills"
         },
@@ -416,8 +415,8 @@ static const vector<god_passive> god_passives[] =
 
     // Wu Jian
     {
-        { 0, passive_t::wu_jian_lunge, "strike by moving towards foes, dealing extra damage." },
-        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them and pin them in place." },
+        { 0, passive_t::wu_jian_lunge, "perform damaging attacks by moving towards foes." },
+        { 1, passive_t::wu_jian_whirlwind, "lightly attack and pin monsters in place by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks by moving against a solid obstacle." },
     },
 };
@@ -1297,26 +1296,6 @@ ru_interference get_ru_attack_interference_level()
         return DO_NOTHING;
 }
 
-/**
- * ID the charges of wands in the player's possession.
- */
-void pakellas_id_device_charges()
-{
-    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
-    {
-        if (!you.inv[which_item].defined()
-            || !(you.inv[which_item].base_type == OBJ_WANDS)
-            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES))
-        {
-            continue;
-        }
-        set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
-        mprf_nocap("%s",
-                   menu_colour_item_name(you.inv[which_item],
-                                               DESC_INVENTORY).c_str());
-    }
-}
-
 static bool _shadow_acts(bool spell)
 {
     const passive_t pasv = spell ? passive_t::shadow_spells
@@ -1860,22 +1839,19 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
             aerial.attack();
         }
     }
-    you.attribute[ATTR_WALL_JUMP_READY] = 0;
 }
 
-void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+void wu_jian_end_of_turn_effects()
 {
     // This guarantees that the whirlwind pin status is capped to one turn of monster movement.
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_WHIRLWIND_PINNED) && !you.attribute[ATTR_SERPENTS_LASH])
             mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
+    you.attribute[ATTR_WALL_JUMP_READY] = 0;
+}
 
-    if (you.attribute[ATTR_WALL_JUMP_READY] > 0)
-       you.attribute[ATTR_WALL_JUMP_READY]--;
-
-    if (attacking)
-        return;
-
+void wu_jian_post_move_effects(bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+{
     if (!did_wall_jump)
         _wu_jian_trigger_martial_arts(initial_position);
 

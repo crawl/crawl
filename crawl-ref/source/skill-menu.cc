@@ -1005,6 +1005,9 @@ bool SkillMenu::exit()
 
     if (!enabled_skill && !all_skills_maxed())
     {
+        // Shouldn't happen, but crash rather than locking the player in the
+        // menu. Training will be fixed up on load.
+        ASSERT(you.species != SP_GNOLL);
         set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
@@ -1278,7 +1281,7 @@ void SkillMenu::init_button_row()
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
         m_clear_targets_button->set_highlight_colour(YELLOW);
-        add_item(m_clear_targets_button, 22, m_pos);
+        add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
     }
 }

@@ -204,6 +204,7 @@ define(function () {
     fg_flags.flags.INFESTED     = [0, 0x400000];
     fg_flags.flags.CORRODED     = [0, 0x800000];
     fg_flags.flags.SWIFT        = [0, 0x1000000];
+    fg_flags.flags.PINNED       = [0, 0x2000000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

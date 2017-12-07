@@ -1149,10 +1149,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>'). Type </console>"
                 "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
                 "<w>%</w> to evoke it.\n"
-                "Until you fully identify a wand, either with a scroll of "
-                "identification or by zapping it after gaining some Evocations "
-                "skill, you won't know how many charges it has, and you'll "
-                "waste a few charges every time you evoke it.";
+                "If you find more wands of the same type, they'll merge "
+                "into this wand and add charges to it.";
         cmd.push_back(CMD_EVOKE);
         break;
 

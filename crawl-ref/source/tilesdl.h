@@ -98,6 +98,23 @@ struct MouseEvent
     unsigned int py;
 };
 
+struct HiDPIState
+{
+    HiDPIState(int device_density, int logical_density);
+    int logical_to_device(int n) const;
+    int device_to_logical(int n, bool round=true) const;
+    float scale_to_logical() const;
+    float scale_to_device() const;
+    bool update(int ndevice, int nlogical);
+
+    int get_device() const { return device; };
+    int get_logical() const { return logical; };
+
+private:
+    int device;
+    int logical;
+};
+
 class FontWrapper;
 class crawl_view_buffer;
 
@@ -137,6 +154,7 @@ public:
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
+    bool update_dpi();
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
@@ -170,8 +188,9 @@ public:
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 protected:
+    void reconfigure_fonts();
     int load_font(const char *font_file, int font_size,
-                  bool default_on_fail, bool outline);
+                  bool default_on_fail);
     int handle_mouse(MouseEvent &event);
 
     void use_control_region(ControlRegion *region, bool use_control_layer = true);
@@ -179,8 +198,6 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
-    // screen pixel density ratio
-    int densityNum, densityDen;
     // screen pixels per view cell
     coord_def m_viewsc;
 
@@ -240,7 +257,6 @@ protected:
     {
         string name;
         int size;
-        bool outline;
         FontWrapper *font;
     };
     vector<font_info> m_fonts;
@@ -302,5 +318,6 @@ protected:
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
+extern HiDPIState display_density;
 
 #endif

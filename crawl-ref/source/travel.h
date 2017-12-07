@@ -644,3 +644,5 @@ void clear_level_target();
 
 void clear_travel_trail();
 int travel_trail_index(const coord_def& gc);
+
+bool stairs_destination_is_excluded(const stair_info &si);

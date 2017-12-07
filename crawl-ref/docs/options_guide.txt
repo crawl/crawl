@@ -900,10 +900,11 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         Any monster matching the regular expression will only interrupt your
         activity if the distance between you and the monster is less than the
         specified number. E.g. with
-             runrest_ignore_monster ^= fish:3
-        big fish and giant goldfish will be considered safe for travel, explore
-        and resting as long as the distance is at least 3. If a monster matches
-        multiple expressions, its distance is compared with the first match.
+             runrest_ignore_monster ^= bat:3
+        bats, vampire bats, fire bats, and battlespheres will be considered
+        safe for travel, explore and resting as long as the distance is at
+        least 3. If a monster matches multiple expressions, its distance is
+        compared with the first match.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop

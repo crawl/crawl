@@ -3050,7 +3050,7 @@ static void tag_read_you(reader &th)
         if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
         {
             you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
-            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+            you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
         }
     }
     else

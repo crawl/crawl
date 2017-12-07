@@ -15,13 +15,15 @@ function callback.nemelex_gamble_announce(data,triggerable,triggerer,marker,ev)
     end
 end
 
-function nemelex_gamble_make_transporter(prop)
-    trans_loc = dgn.find_marker_positions_by_prop(prop, 1)[1]
+function nemelex_gamble_make_transporter(exit_prop, cleanup_prop)
+    trans_loc = dgn.find_marker_positions_by_prop(exit_prop, 1)[1]
     dest_loc = dgn.find_marker_positions_by_prop("the_gamble_entry", 1)[1]
     dgn.place_transporter(trans_loc.x, trans_loc.y, dest_loc.x, dest_loc.y)
     if (you.see_cell(trans_loc.x, trans_loc.y)) then
         crawl.mpr("A transporter appears.")
     end
+    cleanup_loc = dgn.find_marker_positions_by_prop(cleanup_prop, 1)[1]
+    dgn.terrain_changed(cleanup_loc.x, cleanup_loc.y, "floor", false)
 end
 
 function nemelex_gamble_remove_transporter()
@@ -39,7 +41,8 @@ function callback.nemelex_gamble_prize(data,triggerable,triggerer,marker,ev)
     end
 
     crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
-    nemelex_gamble_make_transporter("the_gamble_prize")
+    nemelex_gamble_make_transporter("the_gamble_prize",
+                                    "the_gamble_peril_landing")
     dgn.persist.nemelex_gamble_triggered = true
 end
 
@@ -49,7 +52,8 @@ function callback.nemelex_gamble_peril(data,triggerable,triggerer,marker,ev)
     end
 
     crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
-    nemelex_gamble_make_transporter("the_gamble_peril")
+    nemelex_gamble_make_transporter("the_gamble_peril",
+                                    "the_gamble_prize_landing")
     dgn.persist.nemelex_gamble_triggered = true
 end
 
@@ -70,65 +74,14 @@ function callback.nemelex_gamble_expire(data,triggerable,triggerer,marker,ev)
     dgn.persist.nemelex_gamble_triggered = true
     nemelex_gamble_remove_transporter()
 end
-
--- Remove all code below until end of lua block when TAG_MAJOR > 35
-callback.grunt_nemelex_gamble_announce = callback.nemelex_gamble_announce
-
-function callback.grunt_nemelex_gamble_start(data,triggerable,triggerer,marker,ev)
-    if dgn.persist.grunt_nemelex_gamble_triggered then
-        return
-    end
-    dgn.persist.grunt_nemelex_gamble_triggered = true
-    slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
-    if crawl.coinflip() then
-        slave = dgn.find_marker_positions_by_prop("prize", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
-        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
-    else
-        slave = dgn.find_marker_positions_by_prop("peril", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
-        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
-    end
-    crawl.mpr("Your surroundings suddenly seem different.")
-end
-
-function callback.grunt_nemelex_gamble_finish1(data,triggerable,triggerer,marker,ev)
-    slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
-    crawl.mpr("Your surroundings suddenly seem different.")
-end
-
-function callback.grunt_nemelex_gamble_finish2(data,triggerable,triggerer,marker,ev)
-    slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
-    crawl.mpr("Your surroundings suddenly seem different.")
-end
-
-function callback.grunt_nemelex_gamble_expire(data,triggerable,triggerer,marker,ev)
-    if dgn.persist.grunt_nemelex_gamble_triggered then
-        return
-    end
-    if not dgn.persist.grunt_nemelex_gamble_announced then
-        return
-    end
-    data.dur = data.dur - ev:ticks()
-    if data.dur > 0 then
-        return
-    end
-    dgn.persist.grunt_nemelex_gamble_triggered = true
-    slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
-    if (you.see_cell(slave[1].x, slave[1].y)) then
-        crawl.mpr("<white>The teleporter glows with a rainbow of weird colours and disappears.</white>")
-    end
-end
 }}
 
 NAME:   grunt_nemelex_the_gamble
-TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh no_trap_gen no_monster_gen
+TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh no_trap_gen
+TAGS:   no_monster_gen no_item_gen
 WEIGHT: 2
 DEPTH:  D:2-13
+ITEM:   unobtainable any, unobtainable superb_item
 {{
     dgn.persist.nemelex_gamble_announced = false
     dgn.persist.nemelex_gamble_triggered = false
@@ -153,17 +106,20 @@ DEPTH:  D:2-13
     lua_marker('J', props_marker{the_gamble_entry=1})
     lua_marker('J', expire_marker)
     lua_marker('K', prize_marker)
+    lua_marker('K', props_marker{the_gamble_prize_landing=1})
     lua_marker('L', peril_marker)
-    lua_marker('N', props_marker{the_gamble_prize=1})
-    lua_marker('O', props_marker{the_gamble_peril=1})
+    lua_marker('L', props_marker{the_gamble_peril_landing=1})
+    lua_marker('M', props_marker{the_gamble_prize=1})
+    lua_marker('N', props_marker{the_gamble_peril=1})
     lua_marker('_', announce_marker)
 }}
 SHUFFLE: KL
 KFEAT:  _ = altar_nemelex_xobeh
 MARKER: J = lua:transp_loc("the_gamble_entry")
 MARKER: K = lua:transp_dest_loc("the_gamble_entry")
+KFEAT:  L = transporter_landing
 KPROP:  KLMNOU89' = no_tele_into
-KITEM:  M = any, any, any, unobtainable superb_item
+NSUBST: " = 3:d / e / '
 MARKER: Q = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 10, pow_max = 10, delay = 10, \
                               size = 1, walk_dist = 0 }
@@ -171,10 +127,10 @@ MAP
 xxxxxxxxxxxxxxxxxxx
 xXXXXXXXxxxXXXXXXXx
 xXU'K'UoQJQoU'L'UXx
-xX'''''o._.o'''''Xx
-xX''M''o...o'8'9'Xx
-xX'''''o...o'''''Xx
-xXU'N'Uo...oU'O'UXx
+xX'"""'o._.o'''''Xx
+xX'"G"'o...o'8'9'Xx
+xX'"""'o...o'''''Xx
+xXU'M'Uo...oU'N'UXx
 xXXXXXXX...XXXXXXXx
 xxxxxxxxx+xxxxxxxxx
 ENDMAP

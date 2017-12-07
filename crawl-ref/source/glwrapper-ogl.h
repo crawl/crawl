@@ -33,7 +33,6 @@ public:
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt,
                               int xoffset=-1, int yoffset=-1) override;
-    void init_hidpi(int device, int logical) override;
     int logical_to_device(int n) const override;
     int device_to_logical(int n, bool round=true) const override;
 protected:
@@ -42,8 +41,6 @@ protected:
     GLint m_last_tex;
 #endif
     int m_window_height;
-    int m_density_num;
-    int m_density_den;
 
 private:
     void glDebug(const char* msg);
@@ -79,6 +76,9 @@ protected:
 private:
     void glDebug(const char* msg);
 };
+
+struct HiDPIState;
+extern HiDPIState display_density;
 
 #endif // USE_GL
 #endif // USE_TILE_LOCAL

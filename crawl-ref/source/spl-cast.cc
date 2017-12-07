@@ -1372,11 +1372,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
-        if (evoked_item
-            && !item_ident(*evoked_item, ISFLAG_KNOW_PLUSES))
-        {
-            title += " <lightred>(will waste charges)</lightred>";
-        }
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();

@@ -17,6 +17,7 @@
 #include "syscalls.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#include "tilesdl.h"
 #include "unicode.h"
 
 // maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
@@ -68,7 +69,9 @@ FTFontWrapper::FTFontWrapper() :
     m_max_width(0),
     m_max_height(0),
     ttf(nullptr),
-    face(nullptr)
+    face(nullptr),
+    pixels(nullptr),
+    fsize(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
 }
@@ -83,47 +86,12 @@ FTFontWrapper::~FTFontWrapper()
     delete[] ttf;
 }
 
-bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline, int sc_num, int sc_den)
+bool FTFontWrapper::configure_font()
 {
     FT_Error error;
-    FT_Library library = FontLibrary::get();
-
-    this->scale_num = sc_num;
-    this->scale_den = sc_den;
-
-    outl = outline;
-
-    // TODO enne - need to find a cross-platform way to also
-    // attempt to locate system fonts by name...
-    // 1KB: fontconfig if we are not scared of hefty libraries
-    string font_path = datafile_path(font_name, false, true);
-    if (font_path.c_str()[0] == 0)
-        die_noline("Could not find font '%s'\n", font_name);
-
-    // Certain versions of freetype have problems reading files on Windows,
-    // do that ourselves.
-    FILE *f = fopen_u(font_path.c_str(), "rb");
-    if (!f)
-        die_noline("Could not read font '%s'\n", font_name);
-    unsigned long size = file_size(f);
-    ttf = new FT_Byte[size];
-    ASSERT(ttf);
-    if (fread(ttf, 1, size, f) != size)
-        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
-    fclose(f);
-
-    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
-    if (error == FT_Err_Unknown_File_Format)
-        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
-    else if (error)
-    {
-        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
-                   font_path.c_str(), size, error);
-    }
-
-    error = FT_Set_Pixel_Sizes(face, font_size * scale_num / scale_den,
-                                     font_size * scale_num / scale_den);
+    error = FT_Set_Pixel_Sizes(face,
+                                display_density.logical_to_device(fsize),
+                                display_density.logical_to_device(fsize));
     ASSERT(!error);
 
     // Get maximum advance and other global metrics
@@ -132,14 +100,13 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
     m_ascender      = (metrics.ascender>>6);
+    // if you're looking for realistic glyph sizes uses m_max_advance
+    // or char_width, these are still scaled.
     m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
-    m_max_height    = (face->bbox.yMax>>6)-(face->bbox.yMin>>6);//m_max_advance.y;
+    m_max_height    = (face->bbox.yMax >> 6) - (face->bbox.yMin >> 6);
     m_min_offset    = 0;
-    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
-    if (outl)
-        m_max_width += 2, m_max_height += 2;
-
+    charsz = coord_def(1,1);
     // Grow character size to power of 2
     while (charsz.x < m_max_width)
         charsz.x *= 2;
@@ -158,6 +125,8 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
     m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
 
+    delete[] pixels; // for repeated calls
+
     pixels = new unsigned char[4 * charsz.x * charsz.y];
     memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
 
@@ -167,6 +136,10 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     // initialise empty texture of correct size
     m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
+
+    m_glyphmap.clear();
+    for (int i = 0; i < MAX_GLYPHS; i++)
+        m_glyphs[i] = GlyphInfo();
 
     // Special case c = 0 for full block.
     {
@@ -202,6 +175,46 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return true;
 }
 
+bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
+{
+    FT_Error error;
+    FT_Library library = FontLibrary::get();
+
+    fsize = font_size;
+
+    // TODO enne - need to find a cross-platform way to also
+    // attempt to locate system fonts by name...
+    // 1KB: fontconfig if we are not scared of hefty libraries
+    string font_path = datafile_path(font_name, false, true);
+    if (font_path.c_str()[0] == 0)
+        die_noline("Could not find font '%s'\n", font_name);
+
+    // Certain versions of freetype have problems reading files on Windows,
+    // do that ourselves.
+    FILE *f = fopen_u(font_path.c_str(), "rb");
+    if (!f)
+        die_noline("Could not read font '%s'\n", font_name);
+    unsigned long size = file_size(f);
+    ttf = new FT_Byte[size];
+    ASSERT(ttf);
+    if (fread(ttf, 1, size, f) != size)
+        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+    fclose(f);
+
+    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
+    if (error == FT_Err_Unknown_File_Format)
+        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
+    else if (error)
+    {
+        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+                   font_path.c_str(), size, error);
+    }
+
+    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
+
+    return configure_font();
+}
+
 void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
 {
     // get on with rendering the new glyph
@@ -228,8 +241,6 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
     // Was int prior to freetype 2.5.4, then became unsigned.
     typedef decltype(bmp->width) ftint;
     ftint bmp_width = bmp->width;
-    if (outl)
-        bmp_width += 2;
 
     m_glyphs[c].offset = face->glyph->bitmap_left;
     m_glyphs[c].advance = advance;
@@ -254,49 +265,21 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
         bmp->width = min(bmp->width, ftint(charsz.x));
         bmp->rows = min(bmp->rows, ftint(charsz.y));
 
-        if (outl)
-        {
-            for (ftint x = 0; x < bmp->width; x++)
-                for (ftint y = 0; y < bmp->rows; y++)
+        for (ftint x = 0; x < bmp->width; x++)
+            for (ftint y = 0; y < bmp->rows; y++)
+            {
+                unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
+                idx *= 4;
+                if (x < bmp->width && y < bmp->rows)
                 {
-                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
-                    idx *= 4;
-
-                    unsigned char orig = bmp->buffer[x + charw * y];
-
-                    unsigned char edge = 0;
-                    if (x > 0)
-                        edge = max(bmp->buffer[(x-1) + charw * y], edge);
-                    if (y > 0)
-                        edge = max(bmp->buffer[x + charw * (y-1)], edge);
-                    if (x < bmp->width - 1)
-                        edge = max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (y < bmp->rows - 1)
-                        edge = max(bmp->buffer[x + charw * (y+1)], edge);
-
-                    pixels[idx] = orig;
-                    pixels[idx + 1] = orig;
-                    pixels[idx + 2] = orig;
-                    pixels[idx + 3] = min((int)orig + edge, 255);
+                    unsigned char alpha = bmp->buffer[x + charw * y];
+                    pixels[idx] = 255;
+                    pixels[idx + 1] = 255;
+                    pixels[idx + 2] = 255;
+                    pixels[idx + 3] = alpha;
                 }
-        }
-        else
-        {
-            for (ftint x = 0; x < bmp->width; x++)
-                for (ftint y = 0; y < bmp->rows; y++)
-                {
-                    unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
-                    idx *= 4;
-                    if (x < bmp->width && y < bmp->rows)
-                    {
-                        unsigned char alpha = bmp->buffer[x + charw * y];
-                        pixels[idx] = 255;
-                        pixels[idx + 1] = 255;
-                        pixels[idx + 2] = 255;
-                        pixels[idx + 3] = alpha;
-                    }
-                }
-        }
+            }
+
         bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
                             MIPMAP_NONE,
                             (c % GLYPHS_PER_ROWCOL) * charsz.x,
@@ -483,8 +466,8 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
     m_tex.bind();
 
     GLW_3VF trans(x_pos, y_pos, 0.0f);
-    GLW_3VF scale((float)scale_den / (float)scale_num,
-                  (float)scale_den / (float)scale_num, 1);
+    GLW_3VF scale(display_density.scale_to_logical(),
+                  display_density.scale_to_logical(), 1);
 
     if (drop_shadow)
     {
@@ -576,14 +559,14 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
     }
 
     max_width = max(width + adjust, max_width);
-    return logical ? (max_width * scale_den + scale_num - 1) / scale_num : max_width;
+    return logical ? display_density.device_to_logical(max_width) : max_width;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 {
     int width = max(-m_min_offset, 0);
 
-    max_width *= scale_num / scale_den;
+    max_width *= display_density.scale_to_device();
 
     for (int i = 0; text[i]; i++)
     {
@@ -798,7 +781,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
         if (c == '\n')
         {
             x = orig_x;
-            y += m_max_advance.y * scale_den / scale_num;
+            y += m_max_advance.y * display_density.scale_to_logical();
         }
         else
             store(buf, x, y, c, col);
@@ -862,20 +845,21 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &col)
 {
     unsigned int c = map_unicode(ch);
+    float density_mult = display_density.scale_to_logical();
+
     if (!m_glyphs[c].renderable)
     {
-        x += m_glyphs[c].advance * scale_den / scale_num;
+        x += m_glyphs[c].advance * density_mult;
         return;
     }
 
     int this_width = m_glyphs[c].width;
 
-    float pos_sx = x + m_glyphs[c].offset * (float)scale_den / (float)scale_num;
-    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * (float)scale_den
-                                                           / (float)scale_num;
-    float pos_ex = pos_sx + this_width * (float)scale_den / (float)scale_num;
+    float pos_sx = x + m_glyphs[c].offset * density_mult;
+    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * density_mult;
+    float pos_ex = pos_sx + this_width * density_mult;
     float pos_ey = y + (m_max_height - m_glyphs[c].ascender + m_ascender)
-                   * (float)scale_den / (float)scale_num;
+                   * density_mult;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
@@ -887,7 +871,8 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     rect.set_col(col);
     buf.add_primitive(rect);
 
-    x += m_glyphs[c].advance * (float)scale_den / (float)scale_num;
+
+    x += m_glyphs[c].advance * density_mult;
 }
 
 /**
@@ -903,13 +888,17 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &fg_col, const VColour &bg_col)
 {
-    unsigned int c = map_unicode(ch);
-    int this_width = m_glyphs[c].width;
-    int normal_width = m_glyphs[map_unicode('9')].width;
+    const float density_mult = display_density.scale_to_logical();
 
-    float bg_width = max(this_width, normal_width) * (float)scale_den / (float)scale_num;
-    float bg_height = m_max_height * (float)scale_den / (float)scale_num;
-    GLWPrim bg_rect(x, y, x + bg_width, y + bg_height);
+    const unsigned int c = map_unicode(ch);
+
+    // if the advance is 0, use the max width
+    const int this_width = m_glyphs[c].advance ? m_glyphs[c].advance : char_width(false);
+    const float bg_width = this_width * density_mult;
+    const float bg_height = char_height(false) * density_mult;
+    const float pos_sx = x + m_glyphs[c].offset * density_mult;
+
+    GLWPrim bg_rect(pos_sx, y, pos_sx + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
 
@@ -948,7 +937,7 @@ unsigned int FTFontWrapper::max_width(int length, bool logical) const
 {
     const int device_length = m_max_advance.x * length;
 
-    return logical ? ((device_length * scale_den + scale_num - 1) / scale_num)
+    return logical ? display_density.device_to_logical(device_length)
                    : device_length;
 }
 
@@ -962,7 +951,7 @@ unsigned int FTFontWrapper::max_height(int length, bool logical) const
 {
     const int device_height = m_max_advance.y * length;
 
-    return logical ? ((device_height * scale_den + scale_num - 1) / scale_num)
+    return logical ? display_density.device_to_logical(device_height)
                    : device_height;
 }
 

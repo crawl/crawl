@@ -894,7 +894,7 @@ static const mutation_def mut_data[] =
   "strong legs",
 
   {"You can hop short distances.",
-   "You can hop longer distances.",
+   "You can hop long distances.",
    ""},
 
   {"", "Your legs feel stronger.", ""},

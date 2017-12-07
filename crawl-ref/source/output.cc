@@ -2546,7 +2546,7 @@ string mutation_overview()
     const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
     if (size_adjective)
         mutations.emplace_back(size_adjective);
-        
+
     for (const string& str : fake_mutations(you.species, true))
     {
         if (species_is_draconian(you.species))

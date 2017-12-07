@@ -118,6 +118,9 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
             tile_event.resize.w = sdl_event.data1;
             tile_event.resize.h = sdl_event.data2;
             break;
+        case SDL_WINDOWEVENT_MOVED:
+            tile_event.type = WME_MOVE;
+            break;
         default:
             tile_event.type = WME_NOEVENT;
             break;
@@ -346,7 +349,7 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
-int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
+int SDLWrapper::init(coord_def *m_windowsz)
 {
 #ifdef __ANDROID__
     // Do SDL initialization
@@ -468,6 +471,7 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     SDL_GetWindowSize(m_window, &x, &y);
     m_windowsz->x = x;
     m_windowsz->y = y;
+    init_hidpi();
 #ifdef __ANDROID__
 # ifndef TOUCH_UI
     SDL_StartTextInput();
@@ -476,8 +480,6 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
 #endif
 
     SDL_GL_GetDrawableSize(m_window, &x, &y);
-    *densityNum = x;
-    *densityDen = m_windowsz->x;
     SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
                              MIN_SDL_WINDOW_SIZE_Y);
 
@@ -584,9 +586,19 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
 }
 #endif
 
+bool SDLWrapper::init_hidpi()
+{
+    coord_def windowsz;
+    coord_def drawablesz;
+    SDL_GetWindowSize(m_window, &(windowsz.x), &(windowsz.y));
+    SDL_GL_GetDrawableSize(m_window, &(drawablesz.x), &(drawablesz.y));
+    return display_density.update(drawablesz.x, windowsz.x);
+}
+
 void SDLWrapper::resize(coord_def &m_windowsz)
 {
     coord_def m_drawablesz;
+    init_hidpi();
     SDL_GL_GetDrawableSize(m_window, &(m_drawablesz.x), &(m_drawablesz.y));
     glmanager->reset_view_for_resize(m_windowsz, m_drawablesz);
 }
@@ -771,6 +783,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     {
     case WME_ACTIVEEVENT:
     case WME_RESIZE: // XXX
+    case WME_MOVE:
     case WME_EXPOSE: // XXX
         event = SDL_WINDOWEVENT;
         break;

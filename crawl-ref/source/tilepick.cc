@@ -1824,6 +1824,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_CORRODED;
     if (mons.is(MB_SWIFT))
         ch |= TILE_FLAG_SWIFT;
+    if (mons.is(MB_PINNED))
+        ch |= TILE_FLAG_PINNED;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -1831,7 +1833,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
-    else if (mons.is(MB_FLEEING))
+    if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
     else if (mons.is(MB_STABBABLE) || mons.is(MB_SLEEPING)
              || mons.is(MB_DORMANT))

@@ -84,7 +84,80 @@ static int _screen_sizes[4][8] =
 #endif
 };
 
+HiDPIState display_density(1,1);
+
 TilesFramework tiles;
+
+
+HiDPIState::HiDPIState(int device_density, int logical_density) :
+        device(device_density), logical(logical_density)
+{
+}
+
+/**
+ * Calculate the device pixels given the logical pixels; the two may be
+ * different on high-DPI devices (such as retina displays).
+ *
+ * @param n a value in logical pixels
+ * @return the result in device pixels. May be the same, if the device isn't
+ *          high-DPI.
+ */
+int HiDPIState::logical_to_device(int n) const
+{
+    return n * device / logical;
+}
+
+/**
+ * Calculate logical pixels given device pixels; the two may be
+ * different on high-DPI devices (such as retina displays).
+ *
+ * @param n a value in device pixels
+ * @param round whether to round (or truncate); defaults to true. Rounding is
+ *        safer, as truncating may lead to underestimating dimensions.
+ * @return the result in logical pixels. May be the same, if the device isn't
+ *          high-DPI.
+ */
+int HiDPIState::device_to_logical(int n, bool round) const
+{
+    return (n * logical + (round ?  device - 1 : 0)) / device;
+}
+
+/*
+ * Return a float multiplier such that device * multiplier = logical.
+ * for high-dpi displays, will be fractional.
+ */
+float HiDPIState::scale_to_logical() const
+{
+    return (float) logical / (float) device;
+}
+
+/*
+ * Return a float multiplier such that logical * multiplier = device.
+ */
+float HiDPIState::scale_to_device() const
+{
+    return (float) device / (float) logical;
+}
+
+/**
+ * Update the DPI, e.g. after a window move.
+ *
+ * @return whether the ratio changed.
+ */
+bool HiDPIState::update(int ndevice, int nlogical)
+{
+    HiDPIState old = *this;
+    if (nlogical == ndevice)
+        logical = device = 1;
+    else
+    {
+        device = ndevice;
+        logical = nlogical;
+    }
+    // check if the ratios remain the same.
+    // yes, this is kind of a dumb way to do it.
+    return (old.device * 100 / old.logical) != (device * 100 / logical);
+}
 
 TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
@@ -377,7 +450,8 @@ bool TilesFramework::initialise()
         return false;
 
     // Initialize the wrapper
-    if (!wm->init(&m_windowsz, &densityNum, &densityDen))
+    // hidpi initialization happens here
+    if (!wm->init(&m_windowsz))
         return false;
 
     wm->set_window_title(title.c_str());
@@ -388,7 +462,6 @@ bool TilesFramework::initialise()
     m_screen_height = wm->screen_height();
 
     GLStateManager::init();
-    glmanager->init_hidpi(densityNum, densityDen);
 
     m_image = new ImageManager();
 
@@ -402,15 +475,15 @@ bool TilesFramework::initialise()
     calculate_default_options();
 
     m_crt_font    = load_font(Options.tile_font_crt_file.c_str(),
-                              Options.tile_font_crt_size, true, true);
+                              Options.tile_font_crt_size, true);
     m_msg_font    = load_font(Options.tile_font_msg_file.c_str(),
-                              Options.tile_font_msg_size, true, false);
+                              Options.tile_font_msg_size, true);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
-                              Options.tile_font_stat_size, true, false);
+                              Options.tile_font_stat_size, true);
     m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
-                              Options.tile_font_tip_size, true, false);
+                              Options.tile_font_tip_size, true);
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
-                              Options.tile_font_lbl_size, true, true);
+                              Options.tile_font_lbl_size, true);
 
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || m_lbl_font == -1)
@@ -490,14 +563,20 @@ bool TilesFramework::initialise()
     return true;
 }
 
+void TilesFramework::reconfigure_fonts()
+{
+    // call this if DPI changes to regenerate the font
+    for (auto finfo : m_fonts)
+        finfo.font->configure_font();
+}
+
 int TilesFramework::load_font(const char *font_file, int font_size,
-                              bool default_on_fail, bool outline)
+                              bool default_on_fail)
 {
     for (unsigned int i = 0; i < m_fonts.size(); i++)
     {
         font_info &finfo = m_fonts[i];
-        if (finfo.name == font_file && finfo.size == font_size
-            && outline == finfo.outline)
+        if (finfo.name == font_file && finfo.size == font_size)
         {
             return i;
         }
@@ -505,13 +584,11 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
-    // TODO: does each font really need to store its own density?
-    // could just use glmanager?
-    if (!font->load_font(font_file, font_size, outline, densityNum, densityDen))
+    if (!font->load_font(font_file, font_size))
     {
         delete font;
         if (default_on_fail)
-            return load_font(MONOSPACED_FONT, 12, false, outline);
+            return load_font(MONOSPACED_FONT, 12, false);
         else
             return -1;
     }
@@ -520,7 +597,6 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     finfo.font = font;
     finfo.name = font_file;
     finfo.size = font_size;
-    finfo.outline = outline;
     m_fonts.push_back(finfo);
 
     return m_fonts.size() - 1;
@@ -553,8 +629,19 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     tiles.place_cursor(CURSOR_MAP, cen);
 }
 
+bool TilesFramework::update_dpi()
+{
+    if (wm->init_hidpi())
+    {
+        reconfigure_fonts();
+        return true;
+    }
+    return false;
+}
+
 void TilesFramework::resize()
 {
+    update_dpi();
     calculate_default_options();
     do_layout();
 
@@ -808,6 +895,14 @@ int TilesFramework::getch_ck()
                 set_need_redraw();
                 return CK_REDRAW;
 
+            case WME_MOVE:
+                if (update_dpi())
+                {
+                    resize();
+                    set_need_redraw();
+                    return CK_REDRAW;
+                }
+                // intentional fallthrough
             case WME_EXPOSE:
                 set_need_redraw();
                 // AFAIK no need to return CK_REDRAW, as resize() hasn't been called
