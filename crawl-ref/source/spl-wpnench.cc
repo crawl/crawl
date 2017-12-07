@@ -8,10 +8,12 @@
 #include "spl-wpnench.h"
 
 #include "areas.h"
+#include "god-item.h"
 #include "god-passive.h"
 #include "item-prop.h"
 #include "makeitem.h"
 #include "message.h"
+#include "player-equip.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -41,6 +43,11 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     const brand_type real_brand = get_weapon_brand(weapon);
     if (real_brand == SPWPN_ANTIMAGIC)
         calc_mp();
+    if (you.weapon() && is_holy_item(weapon) && you.form == transformation::lich)
+    {
+        mprf(MSGCH_DURATION, "%s falls away!", weapon.name(DESC_YOUR).c_str());
+        unequip_item(EQ_WEAPON);
+    }
 }
 
 /**
