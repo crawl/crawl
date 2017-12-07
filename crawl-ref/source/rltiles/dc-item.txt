@@ -970,6 +970,7 @@ error ROD_VENOM ROD_ID_LAST
 %sdir item/misc
 misc_orb ORB UNSEEN_ORB
 misc_orb2
+uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY
 misc_bottle MISC_BOTTLED_EFREET
@@ -1139,6 +1140,27 @@ rune_demonic_4
 rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
+
+%sdir item/misc/uncollected_runes
+generic MISC_UNCOLLECTED_RUNE_OF_ZOT
+rune_tartarus UNCOLLECTED_RUNE_TARTARUS
+rune_cocytus UNCOLLECTED_RUNE_COCYTUS
+rune_dis UNCOLLECTED_RUNE_DIS
+rune_gehenna UNCOLLECTED_RUNE_GEHENNA
+rune_cerebov UNCOLLECTED_RUNE_CEREBOV
+rune_gloorx_vloq UNCOLLECTED_RUNE_GLOORX_VLOQ
+rune_mnoleg UNCOLLECTED_RUNE_MNOLEG
+rune_lom_lobon UNCOLLECTED_RUNE_LOM_LOBON
+rune_snake UNCOLLECTED_RUNE_SNAKE
+rune_swamp UNCOLLECTED_RUNE_SWAMP
+rune_shoals UNCOLLECTED_RUNE_SHOALS
+rune_spider UNCOLLECTED_RUNE_SPIDER
+rune_slime UNCOLLECTED_RUNE_SLIME
+rune_vaults UNCOLLECTED_RUNE_VAULTS
+rune_tomb UNCOLLECTED_RUNE_TOMB
+rune_abyss UNCOLLECTED_RUNE_ABYSS
+rune_demonic UNCOLLECTED_RUNE_DEMONIC
+rune_elven UNCOLLECTED_RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt

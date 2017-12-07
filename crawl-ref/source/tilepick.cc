@@ -2316,6 +2316,39 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_uncollected_rune(const item_def &item)
+{
+    switch (item.sub_type)
+    {
+    // the hell runes:
+    case RUNE_DIS:         return TILE_UNCOLLECTED_RUNE_DIS;
+    case RUNE_GEHENNA:     return TILE_UNCOLLECTED_RUNE_GEHENNA;
+    case RUNE_COCYTUS:     return TILE_UNCOLLECTED_RUNE_COCYTUS;
+    case RUNE_TARTARUS:    return TILE_UNCOLLECTED_RUNE_TARTARUS;
+
+    // special pandemonium runes:
+    case RUNE_MNOLEG:      return TILE_UNCOLLECTED_RUNE_MNOLEG;
+    case RUNE_LOM_LOBON:   return TILE_UNCOLLECTED_RUNE_LOM_LOBON;
+    case RUNE_CEREBOV:     return TILE_UNCOLLECTED_RUNE_CEREBOV;
+    case RUNE_GLOORX_VLOQ: return TILE_UNCOLLECTED_RUNE_GLOORX_VLOQ;
+
+    case RUNE_DEMONIC:     return TILE_UNCOLLECTED_RUNE_DEMONIC;
+    case RUNE_ABYSSAL:     return TILE_UNCOLLECTED_RUNE_ABYSS;
+
+    case RUNE_SNAKE:       return TILE_UNCOLLECTED_RUNE_SNAKE;
+    case RUNE_SPIDER:      return TILE_UNCOLLECTED_RUNE_SPIDER;
+    case RUNE_SLIME:       return TILE_UNCOLLECTED_RUNE_SLIME;
+    case RUNE_VAULTS:      return TILE_UNCOLLECTED_RUNE_VAULTS;
+    case RUNE_TOMB:        return TILE_UNCOLLECTED_RUNE_TOMB;
+    case RUNE_SWAMP:       return TILE_UNCOLLECTED_RUNE_SWAMP;
+    case RUNE_SHOALS:      return TILE_UNCOLLECTED_RUNE_SHOALS;
+    case RUNE_ELF:         return TILE_UNCOLLECTED_RUNE_ELVEN;
+
+    case RUNE_FOREST:
+    default:               return TILE_MISC_UNCOLLECTED_RUNE_OF_ZOT;
+    }
+}
+
 static tileidx_t _tileidx_rune(const item_def &item)
 {
     switch (item.sub_type)
@@ -2573,12 +2606,16 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_corpse(item);
 
     case OBJ_ORBS:
+        if (item.quantity <= 0)
+            return TILE_UNCOLLECTED_ORB;
         return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
 
     case OBJ_RUNES:
+        if (item.quantity <= 0)
+            return _tileidx_uncollected_rune(item);
         return _tileidx_rune(item);
 
     case OBJ_DETECTED:
