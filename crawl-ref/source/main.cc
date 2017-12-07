@@ -3187,20 +3187,33 @@ static void _move_player(coord_def move)
             move_player_to_grid(targ, true);
         else if (can_wall_jump && !running)
         {
+            // whether there's space in the first place is checked earlier
+            // in wu_jian_can_wall_jump.
             auto wall_jump_direction = (you.pos() - targ).sgn();
             auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                            + wall_jump_direction);
             if (!check_moveto(wall_jump_landing_spot, "wall jump"))
             {
                 you.turn_is_over = false;
+                if (Options.wall_jump_prompt)
+                {
+                    mprf(MSGCH_PLAIN, "You take your %s off %s.",
+                        you.foot_name(true).c_str(),
+                        feature_description_at(targ, false,
+                                                    DESC_THE, false).c_str());
+                    you.attribute[ATTR_WALL_JUMP_READY] = 0;
+                }
                 return;
             }
 
-            if (Options.wall_jump_prompt && you.attribute[ATTR_WALL_JUMP_READY] == 0)
+            if (Options.wall_jump_prompt &&
+                you.attribute[ATTR_WALL_JUMP_READY] == 0)
             {
-                mprf(MSGCH_PLAIN, "You put your %s on %s. Move against it again to jump.",
-                     you.foot_name(true).c_str(),
-                     feature_description_at(targ, false, DESC_THE, false).c_str());
+                mprf(MSGCH_PLAIN,
+                    "You put your %s on %s. Move against it again to jump.",
+                    you.foot_name(true).c_str(),
+                    feature_description_at(targ, false,
+                                                    DESC_THE, false).c_str());
                 you.attribute[ATTR_WALL_JUMP_READY] = 1;
                 you.turn_is_over = false;
                 return;
