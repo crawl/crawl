@@ -1860,6 +1860,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
             aerial.attack();
         }
     }
+    you.attribute[ATTR_WALL_JUMP_READY] = 0;
 }
 
 void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_over, const coord_def& initial_position)
@@ -1868,6 +1869,9 @@ void wu_jian_end_of_turn_effects(bool attacking, bool did_wall_jump, bool turn_o
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_WHIRLWIND_PINNED) && !you.attribute[ATTR_SERPENTS_LASH])
             mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
+
+    if (you.attribute[ATTR_WALL_JUMP_READY] > 0)
+       you.attribute[ATTR_WALL_JUMP_READY]--;
 
     if (attacking)
         return;
