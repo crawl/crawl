@@ -251,18 +251,18 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
-    int i;
-    int j = -1;
+    int slot_i;
+    int letter_j = -1;
     string sname = spell_title(spell);
     lowercase(sname);
     // first we find a slot in our head:
-    for (i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (slot_i = 0; slot_i < MAX_KNOWN_SPELLS; slot_i++)
     {
-        if (you.spells[i] == SPELL_NO_SPELL)
+        if (you.spells[slot_i] == SPELL_NO_SPELL)
             break;
     }
 
-    you.spells[i] = spell;
+    you.spells[slot_i] = spell;
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
@@ -279,54 +279,54 @@ bool add_spell_to_memory(spell_type spell)
                 overwrite = false;
             else if (isaalpha(ch))
             {
-                const int slot = letter_to_index(ch);
-                const int existing = you.spell_letter_table[slot];
-                if (existing == -1)
+                const int new_letter = letter_to_index(ch);
+                const int existing_slot = you.spell_letter_table[new_letter];
+                if (existing_slot == -1)
                 {
-                    j = slot;
+                    letter_j = new_letter;
                     break;
                 }
                 else if (overwrite)
                 {
                     const string ename = lowercase_string(
-                            spell_title(static_cast<spell_type>(existing)));
+                            spell_title(get_spell_by_letter(ch)));
                     // Don't overwrite a spell matched by the same rule.
                     if (!entry.first.matches(ename))
                     {
-                        j = slot;
+                        letter_j = new_letter;
                         break;
                     }
                 }
                 // Otherwise continue on to the next letter in this rule.
             }
         }
-        if (j != -1)
+        if (letter_j != -1)
             break;
     }
     // If we didn't find a label above, choose the first available one.
-    if (j == -1)
-        for (j = 0; j < 52; j++)
+    if (letter_j == -1)
+        for (letter_j = 0; letter_j < 52; letter_j++)
         {
-            if (you.spell_letter_table[j] == -1)
+            if (you.spell_letter_table[letter_j] == -1)
                 break;
         }
 
     if (you.num_turns)
-        mprf("Spell assigned to '%c'.", index_to_letter(j));
+        mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
     // Swapping with an existing spell.
-    if (you.spell_letter_table[j] != -1)
+    if (you.spell_letter_table[letter_j] != -1)
     {
         // Find a spot for the spell being moved. Assumes there will be one.
-        for (int free = 0; free < 52; free++)
-            if (you.spell_letter_table[free] == -1)
+        for (int free_letter = 0; free_letter < 52; free_letter++)
+            if (you.spell_letter_table[free_letter] == -1)
             {
-                you.spell_letter_table[free] = you.spell_letter_table[j];
+                you.spell_letter_table[free_letter] = you.spell_letter_table[letter_j];
                 break;
             }
     }
 
-    you.spell_letter_table[j] = i;
+    you.spell_letter_table[letter_j] = slot_i;
 
     you.spell_no++;
 
