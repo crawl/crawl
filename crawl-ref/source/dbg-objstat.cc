@@ -171,7 +171,7 @@ static const char* missile_brand_field = "BrandNums";
 static const vector<string> monster_fields = {
     "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
     "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
-    "MonsNumChunks", "MonsNumMutChunks", "TotalNutr", "TotalCarnNutr",
+    "MonsNumChunks", "TotalNutr", "TotalCarnNutr",
     "TotalGhoulNutr",
 };
 
@@ -774,8 +774,6 @@ void objstat_record_monster(const monster *mons)
         you.mutation[MUT_CARNIVOROUS] = 0;
 
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
-        if (chunk_effect == CE_MUTAGEN)
-            _record_monster_stat(lev, mons_ind, "MonsNumMutChunks", chunks);
 
         if (chunk_effect == CE_CLEAN)
         {
@@ -863,8 +861,7 @@ static void _write_stat(map<string, double> &stats, string field)
              || field == "MonsHD"
              || field == "MonsHP"
              || field == "MonsXP"
-             || field == "MonsNumChunks"
-             || field == "MonsNumMutChunks")
+             || field == "MonsNumChunks")
     {
         value = stats[field] / stats["Num"];
     }

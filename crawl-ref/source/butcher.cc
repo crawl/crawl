@@ -111,9 +111,7 @@ static int _corpse_quality(const item_def &item, bool bottle_blood)
     const corpse_effect_type ce = determine_chunk_effect(item);
     // Being almost rotten away has 480 badness.
     int badness = 3 * item.freshness;
-    if (ce == CE_MUTAGEN)
-        badness += 1000;
-    else if (ce == CE_NOXIOUS)
+    if (ce == CE_NOXIOUS)
         badness += 1000;
 
     // Bottleable corpses first, unless forbidden
