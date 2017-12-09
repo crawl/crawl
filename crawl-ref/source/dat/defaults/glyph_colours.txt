@@ -10,10 +10,6 @@ item += good_item.*(potion|scroll):cyan
 item += emergency_item.*(potion|scroll):yellow
 item += dangerous_item.*(potion|scroll):magenta
 
-# Before 'forbidden' so they're red under Zin, and before 'useless' so mummies
-# still get darkgrey (last match wins).
-item += mutagenic.*:$mutagenic
-
 item += forbidden.*(potion|scroll|food):red
 
 item += unidentified.*(potion|scroll|book|jewellery|wand|magical staff).*:lightblue
