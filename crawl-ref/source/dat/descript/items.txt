@@ -591,10 +591,6 @@ morningstar
 
 A mace with a head covered in short spikes.
 %%%%
-mutagenic chunk of flesh
-
-<chunk of flesh>
-%%%%
 naga barding
 
 A special armour made for nagas, to wear over their tails.
