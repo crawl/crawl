@@ -62,7 +62,6 @@ $items{"deck of $_"} = 1 for $data =~ /^\s+"([^"]+)"/mg;
 
 $items{$_} = 1 for (split /\n/, <<END);
 chunk of flesh
-mutagenic chunk of flesh
 inedible chunk of flesh
 corpse
 eggplant
