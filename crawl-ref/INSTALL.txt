@@ -327,8 +327,9 @@ Building on Windows (MSVC)
 --------------------------
 
 * This build process is not currently maintained and is unlikely to be
-  straightforward in later versions of MSVC. If you get it to work, please
-  let us know and submit a patch!
+  straightforward in versions of MSVC besides those explicitly mentioned
+  here. If you get it to work on a more recent version, please let us know
+  and submit a patch!
 
 * If you do not have Visual Studio 2012 you can get the free Express edition
   (for Desktop) from http://www.microsoft.com/visualstudio/eng/downloads (look
