@@ -46,8 +46,7 @@ Crawl is known to run on the following platforms:
 - Microsoft Windows 2000/XP/Vista/7/8
 
 The only officially supported compilers are gcc (4.7 or newer) and clang (3.4
-or newer). On Windows, gcc is usually available as MinGW; compilation with MSVC
-(Microsoft Visual Studio 2013) is supported.
+or newer). On Windows, gcc is usually available as MinGW.
 
 There's no reason Crawl shouldn't work on other modern systems, especially
 Unixy ones, although some porting may be needed.
@@ -326,6 +325,10 @@ Building on Windows (Cygwin)
 
 Building on Windows (MSVC)
 --------------------------
+
+* This build process is not currently maintained and is unlikely to be
+  straightforward in later versions of MSVC. If you get it to work, please
+  let us know and submit a patch!
 
 * If you do not have Visual Studio 2012 you can get the free Express edition
   (for Desktop) from http://www.microsoft.com/visualstudio/eng/downloads (look
