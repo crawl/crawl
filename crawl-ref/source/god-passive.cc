@@ -1596,7 +1596,10 @@ static bool _can_attack_martial(const monster* mons)
 // made the same amount of attacks as tabbing.
 static int _wu_jian_number_of_attacks(bool wall_jump)
 {
-    const int move_delay = player_movement_speed() * player_speed();
+    // Under the effect of serpent's lash, move delay is normalized to 
+    // 10 aut for every character, to avoid punishing fast races.
+    const int move_delay = you.attribute[ATTR_SERPENTS_LASH] ? 100 : player_movement_speed() * player_speed();
+
     int attack_delay;
 
     {
