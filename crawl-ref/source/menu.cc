@@ -109,6 +109,7 @@ public:
     virtual void draw_more() = 0;
     virtual void set_num_columns(int columns) = 0;
     virtual bool scroll_page(int delta) = 0;
+    virtual bool scroll_line(int delta) = 0;
     virtual bool scroll_to_item(int index) = 0;
     virtual void get_visible_items_range(int &first, int &last) = 0;
 protected:
@@ -126,11 +127,11 @@ public:
     virtual void set_offset(int lines) override { m_offset = lines; }
     virtual void set_num_columns(int columns) override {}
     virtual bool scroll_page(int delta) override;
+    virtual bool scroll_line(int delta) override;
     virtual bool scroll_to_item(int index) override;
     virtual void get_visible_items_range(int &first, int &last) override;
 
     bool jump_to_item(int index);
-    bool scroll_line(int delta);
     void cgotoxy_for_index(int index);
 protected:
     int m_pagesize;
@@ -152,6 +153,7 @@ public:
     virtual void draw_more() override;
     virtual void set_num_columns(int columns) override;
     virtual bool scroll_page(int delta) override;
+    virtual bool scroll_line(int delta) override;
     virtual bool scroll_to_item(int index) override;
     virtual void get_visible_items_range(int &first, int &last) override;
 };
@@ -317,21 +319,19 @@ void MenuDisplayTile::draw_items()
         draw_stock_item(i, m_menu->items[i]);
     }
 
-    // XXX: This is ugly and could be improved upon. We do:
-    // 1) Tell renderer which page needs to be drawn
-    // 2) Layout and draw
-    // 3) Fetch the resulting page info from the renderer
-    tiles.get_menu()->cur_page = m_menu->cur_page;
+    tiles.get_menu()->set_menu_display(this);
     tiles.get_menu()->place_entries();
-    m_menu->cur_page = tiles.get_menu()->cur_page;
-    m_menu->num_pages = tiles.get_menu()->num_pages;
+    tiles.get_menu()->get_page_info(m_menu->cur_page, m_menu->num_pages);
 }
 
 bool MenuDisplayTile::scroll_page(int delta)
 {
-    int old_page = m_menu->cur_page;
-    m_menu->cur_page = max(1, min(m_menu->num_pages, old_page+delta));
-    return m_menu->cur_page != old_page;
+    return tiles.get_menu()->scroll_page(delta);
+}
+
+bool MenuDisplayTile::scroll_line(int delta)
+{
+    return tiles.get_menu()->scroll_line(delta);
 }
 
 bool MenuDisplayTile::item_in_page(int index)
@@ -343,23 +343,7 @@ bool MenuDisplayTile::item_in_page(int index)
 
 bool MenuDisplayTile::scroll_to_item(int index)
 {
-    index = min(index, ((int)m_menu->items.size()-1));
-
-    // XXX: we require valid layout info, but currently that's entangled
-    // with rendering. This should also re-layout only if it's dirty
-    draw_items();
-
-    // Go to the page with the item
-    for (int page = 1; page <= m_menu->num_pages; ++page)
-    {
-        tiles.get_menu()->cur_page = page;
-        if (item_in_page(index))
-        {
-            m_menu->cur_page = page;
-            return true;
-        }
-    }
-    return false;
+    return tiles.get_menu()->scroll_to_item(index);
 }
 
 void MenuDisplayTile::get_visible_items_range(int &first, int &last)
@@ -1626,14 +1610,12 @@ bool Menu::page_up()
 
 bool Menu::line_down()
 {
-    MenuDisplayText *text_display = dynamic_cast<MenuDisplayText*>(mdisplay);
-    return text_display && text_display->scroll_line(1);
+    return mdisplay->scroll_line(1);
 }
 
 bool Menu::line_up()
 {
-    MenuDisplayText *text_display = dynamic_cast<MenuDisplayText*>(mdisplay);
-    return text_display && text_display->scroll_line(-1);
+    return mdisplay->scroll_line(-1);
 }
 
 #ifdef USE_TILE_WEB
