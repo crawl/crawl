@@ -4126,7 +4126,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
 #endif
 
     spell_scroller fs(monster_spellset(mi), &mi, nullptr);
-    fs.add_text(inf.title);
+    fs.add_text(inf.title, true);
     fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
@@ -4138,7 +4138,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         fs.add_item_formatted_string(
                 formatted_string::parse_string("\n" + _toggle_message));
 
-        qs.add_text(inf.title);
+        qs.add_text(inf.title, true);
         qs.add_text(inf.quote, false, get_number_of_cols() - 1);
         qs.add_item_formatted_string(
                 formatted_string::parse_string("\n" + _toggle_message));
