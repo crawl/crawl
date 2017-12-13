@@ -50,7 +50,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             renderer.init(canvas[0]);
 
             $.each(item.tiles, function () {
-                renderer.draw_from_texture(this.t, 0, 0, this.tex, 0, 0, this.ymax);
+                renderer.draw_from_texture(this.t, 0, 0, this.tex, 0, 0, this.ymax, false);
             });
 
             elem.prepend(canvas);
