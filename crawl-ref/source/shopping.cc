@@ -2272,9 +2272,7 @@ void ShoppingList::display()
                              "%s with an entry fee of %d gold pieces.",
                              describe_thing(*thing, DESC_A).c_str(),
                              (int) thing_cost(*thing));
-
-                print_description(info.c_str());
-                getchm();
+                show_description(info.c_str());
             }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
