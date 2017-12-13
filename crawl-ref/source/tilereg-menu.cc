@@ -220,8 +220,7 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                     // sorted by texture first, e.g. you can never draw
                     // a dungeon tile over a monster tile.
                     TextureID tex  = tile.tex;
-                    m_tile_buf[tex].add_unscaled(tile.tile, entry.sx, entry.sy,
-                                                 tile.ymax);
+                    m_tile_buf[tex].add(tile.tile, entry.sx, entry.sy, 0, 0, false, tile.ymax, 1, 1);
                 }
             }
             else
