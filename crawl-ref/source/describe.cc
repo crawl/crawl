@@ -2831,10 +2831,7 @@ static bool _get_spell_description(const spell_type spell,
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
         && !you.has_spell(spell) && you_can_memorise(spell))
-    {
-        description += "\n(M)emorise this spell.\n";
         return true;
-    }
 
     return false;
 }
@@ -2868,14 +2865,18 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
 {
     string desc;
     const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
-    show_description(desc);
+    formatted_scroller menu;
+    menu.add_text(desc, false, get_number_of_cols());
 
-    mouse_control mc(MOUSE_MODE_MORE);
-    char ch;
-    if ((ch = getchm()) == 0)
-        ch = getchm();
+    if (can_mem)
+    {
+        menu.set_flags(menu.get_flags() | MF_ALWAYS_SHOW_MORE);
+        menu.set_more(formatted_string("(M)emorise this spell.", CYAN));
+    }
 
-    if (can_mem && toupper(ch) == 'M')
+    menu.show();
+
+    if (can_mem && toupper(menu.getkey()) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled) || !you.turn_is_over)
