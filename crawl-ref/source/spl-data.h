@@ -321,7 +321,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -411,7 +411,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -855,7 +855,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -995,7 +995,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -1006,7 +1006,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 #endif
@@ -1123,7 +1123,7 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     7, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -2015,7 +2015,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2358,7 +2358,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3314,7 +3314,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3336,7 +3336,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3347,7 +3347,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3358,7 +3358,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3369,7 +3369,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3380,7 +3380,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3402,7 +3402,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3413,7 +3413,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3425,7 +3425,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3436,7 +3436,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3447,7 +3447,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3458,7 +3458,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     25, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3469,7 +3469,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3480,7 +3480,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3491,7 +3491,7 @@ static const struct spell_desc spelldata[] =
     0,
     3, 3,
     3, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3515,7 +3515,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3526,7 +3526,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3537,7 +3537,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3548,7 +3548,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3559,7 +3559,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3570,7 +3570,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3592,7 +3592,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3614,7 +3614,7 @@ static const struct spell_desc spelldata[] =
     50,
     LOS_RADIUS, LOS_RADIUS,
     3, 5,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3638,7 +3638,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     20, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3695,7 +3695,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3706,7 +3706,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3717,7 +3717,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     15, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3728,7 +3728,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3739,7 +3739,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3761,7 +3761,7 @@ static const struct spell_desc spelldata[] =
     25,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3772,7 +3772,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3783,7 +3783,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3816,7 +3816,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3827,7 +3827,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3838,7 +3838,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3849,7 +3849,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3872,7 +3872,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3883,7 +3883,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3916,7 +3916,7 @@ static const struct spell_desc spelldata[] =
     200,
     VORTEX_RADIUS, VORTEX_RADIUS,
     5, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3949,7 +3949,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    TILEG_ERROR,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 };
