@@ -319,13 +319,12 @@ weapon += (short sword |...| unarmed | random | viable), <weapon>, ...
         (List option)
         Specifying the weapon option allows you to bypass the weapon
         selection screen. Tridents, flails, cutlasses, long swords, and war
-        axes are restricted to fighters and gladiators only, quarterstaves
-        are restricted to gladiators, and unarmed is restricted to races
-        with claws. The standard weapon prompt will be shown if an illegal
-        choice for the selected background is specified. The "viable" option
-        makes a random choice from among the "good" weapons for the chosen
-        character. Specifying more than one option causes the game to
-        randomly select a weapon from the given list. The combo option
+        axes are restricted to fighters and gladiators, and quarterstaves
+        are restricted to gladiators only. The standard weapon prompt will be
+        shown if an illegal choice for the selected background is specified.
+        The "viable" option makes a random choice from among the "good" weapons
+        for the chosen character. Specifying more than one option causes the
+        game to randomly select a weapon from the given list. The combo option
         overrides (and is overriden by) this option.
 
 species += (Human |...| Vampire | random | viable), <species>, ...
@@ -1169,8 +1168,8 @@ spell_slot ^= <regex>:<list of spell letters>
         spell matches multiple regexes, only the first is considered.
 
         Examples:
-        * if you want Haste to be placed on H:
-            spell_slot ^= Haste:H
+        * if you want Apportation to be placed on A:
+            spell_slot ^= Apportation:A
         * if you want Deflect Missiles to be placed on r normally or R if
           r is unavailable:
             spell_slot ^= Deflect:rR
