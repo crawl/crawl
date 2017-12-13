@@ -413,6 +413,8 @@ static bool _spell_filter(string key, string body)
 
     if (spell == SPELL_NO_SPELL)
         return true;
+    if (spell_removed(spell))
+        return true;
 
     if (get_spell_flags(spell) & SPFLAG_TESTING)
         return !you.wizard;
