@@ -442,6 +442,11 @@ static bool _handle_FAQ()
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
+
+#ifdef USE_TILE_LOCAL
+    // Ensure we get the full screen size when calling get_number_of_cols()
+    cgotoxy(1, 1);
+#endif
     const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
@@ -490,14 +495,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string(answer, width - 1, true);
-            {
-#ifdef USE_TILE_WEB
-                tiles_crt_control show_as_menu(CRT_MENU, "faq_entry");
-#endif
-                print_description(answer);
-                getchm();
-            }
+            show_description(answer);
         }
     }
 
