@@ -86,6 +86,23 @@ void print_description(const string &body)
     print_description(inf);
 }
 
+int show_description(const string &body)
+{
+    describe_info inf;
+    inf.body << body;
+    return show_description(inf);
+}
+
+class desc_proc_proxy
+{
+public:
+    int width() { return 10000000; }
+    int height() { return 10000000; }
+    void print(const string &str) { oss << str; }
+    void nextline() { oss << "\n"; }
+    ostringstream oss;
+};
+
 class default_desc_proc
 {
 public:
@@ -111,6 +128,24 @@ void print_description(const describe_info &inf)
 
     default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
+}
+
+int show_description(const describe_info &inf)
+{
+#ifdef USE_TILE_LOCAL
+    // Ensure we get the full screen size when calling get_number_of_cols()
+    cgotoxy(1, 1);
+#endif
+    desc_proc_proxy proc;
+    process_description<desc_proc_proxy>(proc, inf);
+
+    formatted_scroller desc_fs;
+    int flags = MF_NOSELECT | MF_NOWRAP;
+    desc_fs.set_flags(flags, false);
+    desc_fs.set_more();
+    desc_fs.add_text(proc.oss.str(), false, get_number_of_cols());
+    desc_fs.show();
+    return desc_fs.getkey();
 }
 
 static void _print_quote(const describe_info &inf)
