@@ -104,8 +104,6 @@ static const string _toggle_message =
 #endif
     " to toggle between the description and quote.";
 
-static int _print_toggle_message(const describe_info &inf, int& key);
-
 int show_description(const describe_info &inf)
 {
 #ifdef USE_TILE_LOCAL
@@ -141,7 +139,7 @@ int show_description(const describe_info &inf)
         formatted_scroller& fs = show_quote ? quote_fs : desc_fs;
         fs.show();
         int keyin = fs.getkey();
-        if (_print_toggle_message(inf, keyin))
+        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
             show_quote = !show_quote;
         else
         {
@@ -2265,39 +2263,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-/**
- * If the given description has an associated quote, print a message at the
- * bottom of the screen explaining how the player can toggle between viewing
- * that quote & the description, and then check whether the input corresponds
- * to such a toggle.
- *
- * @param inf[in]       The description in question.
- * @param key[in,out]   The input command. If zero, is set to getchm().
- * @return              Whether the description & quote should be toggled.
- */
-static int _print_toggle_message(const describe_info &inf, int& key)
-{
-    mouse_control mc(MOUSE_MODE_MORE);
-
-    if (inf.quote.empty())
-    {
-        if (!key)
-            key = getchm();
-        return false;
-    }
-
-    const int bottom_line = min(30, get_number_of_lines());
-    cgotoxy(1, bottom_line);
-    formatted_string::parse_string(_toggle_message).display();
-    if (!key)
-        key = getchm();
-
-    if (key == '!' || key == CK_MOUSE_CMD)
-        return true;
-
-    return false;
-}
-
 void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
 #ifdef USE_TILE_WEB
@@ -4168,9 +4133,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             fs.show();
 
         int keyin = (show_quote ? qs : fs).get_lastch();
-        // this is never actually displayed to the player
-        // we just use it to check whether we should toggle.
-        if (_print_toggle_message(inf, keyin))
+        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
             show_quote = !show_quote;
         else
             return keyin;
