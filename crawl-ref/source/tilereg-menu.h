@@ -25,8 +25,13 @@ public:
     void set_num_columns(int columns);
 
     void get_visible_items_range(int &first, int &last);
+    void get_page_info(int &first, int &last);
+    void set_menu_display(void *);
+    bool scroll_to_item(int index);
+    bool scroll_page(int delta);
+    bool scroll_line(int delta);
 
-    int cur_page;
+    int first_entry;
     int num_pages;
 
     virtual void place_entries();
@@ -34,6 +39,7 @@ protected:
     virtual void on_resize() override;
     int mouse_entry(int x, int y);
     int vis_item_first, vis_item_last;
+    void *m_menu_display;
 
     struct MenuRegionEntry
     {
@@ -53,13 +59,15 @@ protected:
     formatted_string m_more;
     int m_mouse_idx;
     int m_max_columns;
-    bool m_dirty;
+    bool m_buffer_dirty, m_layout_dirty;
 #ifdef TOUCH_UI
     int m_more_region_start;
 #endif
+    int m_end_height;
 
     virtual void run() override {};
-    void _place_entries(const int left_offset, const int top_offset,
+    void _place_entries();
+    void _do_layout(const int left_offset, const int top_offset,
                         const int menu_width);
     void _clear_buffers();
 

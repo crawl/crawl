@@ -372,8 +372,8 @@ int TilesFramework::draw_popup(Popup *popup)
     int col = 0;
     while (MenuEntry *me = popup->next_entry())
     {
-        col++;
         reg.set_entry(col, me->get_text(true), me->colour, me, false);
+        col++;
     }
     // fetch a return value
     use_control_region(&reg, false);
