@@ -559,12 +559,16 @@ static string _spell_sources(const spell_type spell)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+    {
+        if (item_type_removed(OBJ_BOOKS, i))
+            continue;
         for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
             if (sp == spell)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
             }
+    }
 
     if (books.empty())
         return "\n\nThis spell is not found in any books.";
