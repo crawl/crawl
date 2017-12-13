@@ -169,6 +169,7 @@ bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 
 # spells normally only used by monsters
+%back gui/spells/bg
 %sdir gui/spells/monster
 air_elementals AIR_ELEMENTALS
 %sdir misc
@@ -297,6 +298,7 @@ water_elementals WATER_ELEMENTALS
 %sdir misc
 error WIND_BLAST
 error WORD_OF_RECALL
+%back none
 
 # spells mimicking natural abilities
 %sdir gui/abilities
