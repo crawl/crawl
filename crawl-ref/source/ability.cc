@@ -1123,12 +1123,7 @@ string get_ability_desc(const ability_type ability)
 
 static void _print_talent_description(const talent& tal)
 {
-    clrscr();
-
-    print_description(get_ability_desc(tal.which));
-
-    getchm();
-    clrscr();
+    show_description(get_ability_desc(tal.which));
 }
 
 void no_ability_msg()

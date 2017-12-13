@@ -49,9 +49,9 @@
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
 static bool         _hints_feat_interesting(dungeon_feature_type feat);
-static void         _hints_describe_disturbance(int x, int y);
-static void         _hints_describe_cloud(int x, int y);
-static void         _hints_describe_feature(int x, int y);
+static void         _hints_describe_disturbance(int x, int y, ostringstream& ostr);
+static void         _hints_describe_cloud(int x, int y, ostringstream& ostr);
+static void         _hints_describe_feature(int x, int y, ostringstream& ostr);
 static bool         _water_is_disturbed(int x, int y);
 static void         _hints_healing_reminder();
 
@@ -3487,20 +3487,21 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
            || feat_is_statuelike(feat);
 }
 
-void hints_describe_pos(int x, int y)
+string hints_describe_pos(int x, int y)
 {
     cgotoxy(1, wherey());
-    _hints_describe_disturbance(x, y);
-    _hints_describe_cloud(x, y);
-    _hints_describe_feature(x, y);
+    ostringstream ostr;
+    _hints_describe_disturbance(x, y, ostr);
+    _hints_describe_cloud(x, y, ostr);
+    _hints_describe_feature(x, y, ostr);
+    return ostr.str();
 }
 
-static void _hints_describe_feature(int x, int y)
+static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 {
     const dungeon_feature_type feat = grd[x][y];
     const coord_def            where(x, y);
 
-    ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool boring = false;
@@ -3713,13 +3714,9 @@ static void _hints_describe_feature(int x, int y)
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
 }
 
-static void _hints_describe_cloud(int x, int y)
+static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
 {
     cloud_struct* cloud = cloud_at(coord_def(x, y));
     if (!cloud)
@@ -3727,8 +3724,6 @@ static void _hints_describe_cloud(int x, int y)
 
     const string cname = cloud->cloud_name(true);
     const cloud_type ctype = cloud->type;
-
-    ostringstream ostr;
 
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3763,18 +3758,12 @@ static void _hints_describe_cloud(int x, int y)
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
 }
 
-static void _hints_describe_disturbance(int x, int y)
+static void _hints_describe_disturbance(int x, int y, ostringstream& ostr)
 {
     if (!_water_is_disturbed(x, y))
         return;
-
-    ostringstream ostr;
 
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3785,10 +3774,6 @@ static void _hints_describe_disturbance(int x, int y)
             "it manually if you wish to.";
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
 }
 
 static bool _water_is_disturbed(int x, int y)

@@ -80,9 +80,6 @@ int hex_chance(const spell_type spell, const int hd);
 
 string get_command_description(const command_type cmd, bool terse);
 
-void print_description(const string &desc);
-void print_description(const describe_info &inf);
-
 int show_description(const string &body);
 int show_description(const describe_info &inf);
 

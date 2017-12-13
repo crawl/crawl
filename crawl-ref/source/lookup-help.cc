@@ -995,12 +995,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.footer = footer;
     inf.title  = title;
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "description");
-#endif
-
-    print_description(inf);
-    return getchm();
+    return show_description(inf);
 }
 
 /**

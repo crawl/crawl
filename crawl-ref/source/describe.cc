@@ -78,13 +78,6 @@ int count_desc_lines(const string &_desc, const int width)
     return count(begin(desc), end(desc), '\n');
 }
 
-void print_description(const string &body)
-{
-    describe_info inf;
-    inf.body << body;
-    print_description(inf);
-}
-
 int show_description(const string &body)
 {
     describe_info inf;
@@ -102,32 +95,15 @@ public:
     ostringstream oss;
 };
 
-class default_desc_proc
-{
-public:
-    int width() { return get_number_of_cols() - 1; }
-    int height() { return get_number_of_lines(); }
-    void print(const string &str) { cprintf("%s", str.c_str()); }
+/// A message explaining how the player can toggle between quote &
+static const string _toggle_message =
+    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
+#endif
+    " to toggle between the description and quote.";
 
-    void nextline()
-    {
-        if (wherey() < height())
-            cgotoxy(1, wherey() + 1);
-        else
-            cgotoxy(1, height());
-        // Otherwise cgotoxy asserts; let's just clobber the last line
-        // instead, which should be noticeable enough.
-    }
-};
-
-void print_description(const describe_info &inf)
-{
-    clrscr();
-    textcolour(LIGHTGREY);
-
-    default_desc_proc proc;
-    process_description<default_desc_proc>(proc, inf);
-}
+static int _print_toggle_message(const describe_info &inf, int& key);
 
 int show_description(const describe_info &inf)
 {
@@ -143,17 +119,35 @@ int show_description(const describe_info &inf)
     desc_fs.set_flags(flags, false);
     desc_fs.set_more();
     desc_fs.add_text(proc.oss.str(), false, get_number_of_cols());
-    desc_fs.show();
-    return desc_fs.getkey();
-}
 
-static void _print_quote(const describe_info &inf)
-{
-    clrscr();
-    textcolour(LIGHTGREY);
+    formatted_scroller quote_fs;
+    quote_fs.set_more();
 
-    default_desc_proc proc;
-    process_quote<default_desc_proc>(proc, inf);
+    if (!inf.quote.empty())
+    {
+        desc_fs.set_flags(desc_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        quote_fs.set_flags(quote_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        desc_fs.set_more(formatted_string::parse_string(_toggle_message));
+        quote_fs.set_more(formatted_string::parse_string(_toggle_message));
+
+        quote_fs.add_text(inf.title, true);
+        quote_fs.add_text(inf.quote, false, get_number_of_cols() - 1);
+    }
+
+    bool show_quote = false;
+    while (true)
+    {
+        formatted_scroller& fs = show_quote ? quote_fs : desc_fs;
+        fs.show();
+        int keyin = fs.getkey();
+        if (_print_toggle_message(inf, keyin))
+            show_quote = !show_quote;
+        else
+        {
+            clrscr();
+            return keyin;
+        }
+    }
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -2266,14 +2260,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-/// A message explaining how the player can toggle between quote &
-static const string _toggle_message =
-    "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
-#endif
-    " to toggle between the description and quote.";
-
 /**
  * If the given description has an associated quote, print a message at the
  * bottom of the screen explaining how the player can toggle between viewing
@@ -2309,24 +2295,15 @@ static int _print_toggle_message(const describe_info &inf, int& key)
 
 void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
-    describe_info inf;
-    get_feature_desc(pos, inf);
-
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "describe_feature");
 #endif
 
-    if (show_quote)
-        _print_quote(inf);
-    else
-        print_description(inf);
-
+    describe_info inf;
+    get_feature_desc(pos, inf);
     if (crawl_state.game_is_hints())
-        hints_describe_pos(pos.x, pos.y);
-
-    int key = 0;
-    if (_print_toggle_message(inf, key))
-        describe_feature_wide(pos, !show_quote);
+        inf.body << hints_describe_pos(pos.x, pos.y);
+    show_description(inf);
 }
 
 void get_item_desc(const item_def &item, describe_info &inf)
@@ -2947,14 +2924,7 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
  */
 void describe_ability(ability_type ability)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_ability");
-#endif
-
-    print_description(get_ability_desc(ability));
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    getchm();// description screen wouldn't show up without getchm()
+    show_description(get_ability_desc(ability));
 }
 
 
@@ -4273,15 +4243,8 @@ string get_ghost_description(const monster_info &mi, bool concise)
 void describe_skill(skill_type skill)
 {
     ostringstream data;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_skill");
-#endif
-
     data << get_skill_description(skill, true);
-
-    print_description(data.str());
-    getchm();
+    show_description(data.str());
 }
 
 // only used in tiles
