@@ -1078,7 +1078,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max)
         {
             var mod = tileinfos(tex);
-            this.draw_tile(idx, x, y, mod, ofsx, ofsy);
+            this.draw_tile(idx, x, y, mod, ofsx, ofsy, y_max);
         },
     });
 
