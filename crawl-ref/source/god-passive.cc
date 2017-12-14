@@ -9,6 +9,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "directn.h"
@@ -1596,7 +1597,7 @@ static bool _can_attack_martial(const monster* mons)
 // made the same amount of attacks as tabbing.
 static int _wu_jian_number_of_attacks(bool wall_jump)
 {
-    // Under the effect of serpent's lash, move delay is normalized to 
+    // Under the effect of serpent's lash, move delay is normalized to
     // 10 aut for every character, to avoid punishing fast races.
     const int move_delay = you.attribute[ATTR_SERPENTS_LASH] ? 100 : player_movement_speed() * player_speed();
 
@@ -1645,6 +1646,8 @@ static void _wu_jian_lunge(const coord_def& old_pos)
              mons->name(DESC_THE).c_str(),
              number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
+
+    count_action(CACT_INVOKE, ABIL_WU_JIAN_LUNGE);
 
     for (int i = 0; i < number_of_attacks; i++)
     {
@@ -1710,6 +1713,8 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
                      ", with incredible momentum" : "");
         }
+
+        count_action(CACT_INVOKE, ABIL_WU_JIAN_WHIRLWIND);
 
         for (int i = 0; i < number_of_attacks; i++)
         {
