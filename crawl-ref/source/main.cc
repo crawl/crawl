@@ -2876,6 +2876,56 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
+/**
+ * Do a walljump.
+ *
+ * This doesn't check whether there's space; see `wu_jian_can_wall_jump`.
+ * It does check whether the landing spot is safe, excluded, etc.
+ *
+ * @param targ the movement target (i.e. the wall being moved against).
+ * @return whether the jump culminated.
+ */
+static bool _do_wall_jump(coord_def targ)
+{
+    // whether there's space in the first place is checked earlier
+    // in wu_jian_can_wall_jump.
+    auto wall_jump_direction = (you.pos() - targ).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    {
+        you.turn_is_over = false;
+        if (Options.wall_jump_prompt)
+        {
+            mprf(MSGCH_PLAIN, "You take your %s off %s.",
+                you.foot_name(true).c_str(),
+                feature_description_at(targ, false,
+                                            DESC_THE, false).c_str());
+            you.attribute[ATTR_WALL_JUMP_READY] = 0;
+        }
+        return false;
+    }
+
+    if (Options.wall_jump_prompt &&
+        you.attribute[ATTR_WALL_JUMP_READY] == 0)
+    {
+        you.turn_is_over = false;
+        mprf(MSGCH_PLAIN,
+            "You put your %s on %s. Move against it again to jump.",
+            you.foot_name(true).c_str(),
+            feature_description_at(targ, false,
+                                            DESC_THE, false).c_str());
+        you.attribute[ATTR_WALL_JUMP_READY] = 1;
+        return false;
+    }
+
+    auto initial_position = you.pos();
+    move_player_to_grid(wall_jump_landing_spot, false);
+    count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
+    wu_jian_wall_jump_effects(initial_position);
+    return true;
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 static void _move_player(coord_def move)
@@ -3187,41 +3237,10 @@ static void _move_player(coord_def move)
             move_player_to_grid(targ, true);
         else if (can_wall_jump && !running)
         {
-            // whether there's space in the first place is checked earlier
-            // in wu_jian_can_wall_jump.
-            auto wall_jump_direction = (you.pos() - targ).sgn();
-            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
-                                           + wall_jump_direction);
-            if (!check_moveto(wall_jump_landing_spot, "wall jump"))
-            {
-                you.turn_is_over = false;
-                if (Options.wall_jump_prompt)
-                {
-                    mprf(MSGCH_PLAIN, "You take your %s off %s.",
-                        you.foot_name(true).c_str(),
-                        feature_description_at(targ, false,
-                                                    DESC_THE, false).c_str());
-                    you.attribute[ATTR_WALL_JUMP_READY] = 0;
-                }
-                return;
-            }
-
-            if (Options.wall_jump_prompt &&
-                you.attribute[ATTR_WALL_JUMP_READY] == 0)
-            {
-                mprf(MSGCH_PLAIN,
-                    "You put your %s on %s. Move against it again to jump.",
-                    you.foot_name(true).c_str(),
-                    feature_description_at(targ, false,
-                                                    DESC_THE, false).c_str());
-                you.attribute[ATTR_WALL_JUMP_READY] = 1;
-                you.turn_is_over = false;
-                return;
-            }
-
-            did_wall_jump = true;
-            move_player_to_grid(wall_jump_landing_spot, false);
-            wu_jian_wall_jump_effects(initial_position);
+            if (!_do_wall_jump(targ))
+                return; // wall jump only in the ready state, or cancelled
+            else
+                did_wall_jump = true;
         }
 
         // Now it is safe to apply the swappee's location effects. Doing
