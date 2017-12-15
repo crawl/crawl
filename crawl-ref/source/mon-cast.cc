@@ -2275,16 +2275,9 @@ static bool _can_force_door_shut(const coord_def& door)
             else
                 return false;
         }
-        // If there are items in the way, see if there's room to push them
-        // out of the way
-        else if (igrd(dc) != NON_ITEM)
-        {
-            if (!has_push_space(dc, 0))
-                return false;
-        }
     }
 
-    // Didn't find any items we couldn't displace
+    // Didn't find any actors we couldn't displace
     return true;
 }
 
@@ -2339,6 +2332,7 @@ static bool _should_force_door_shut(const coord_def& door)
 }
 
 /*
+ * Deprecated: see terrain.cc:get_push_spaces
  * Find an adjacent space to displace a stack of items or a creature.
  *
  * @param pos the starting position to displace from.
@@ -2486,8 +2480,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
             for (const auto &dc : all_door)
             {
                 // If there are things in the way, push them aside
+                push_items_from(dc, &veto_spots);
                 actor* act = actor_at(dc);
-                if (igrd(dc) != NON_ITEM || act)
+                if (act)
                 {
                     coord_def newpos;
                     // If we don't find a spot, try again ignoring tension.
@@ -2498,17 +2493,13 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     // sync with _can_force_door_shut.
                     ASSERTM(success, "No push space from (%d,%d)", dc.x, dc.y);
 
-                    move_items(dc, newpos);
-                    if (act)
+                    actor_at(dc)->move_to_pos(newpos);
+                    if (act->is_player())
                     {
-                        actor_at(dc)->move_to_pos(newpos);
-                        if (act->is_player())
-                        {
-                            stop_delay(true);
-                            player_pushed = true;
-                        }
-                        veto_spots.push_back(newpos);
+                        stop_delay(true);
+                        player_pushed = true;
                     }
+                    veto_spots.push_back(newpos);
                 }
             }
 
