@@ -1907,15 +1907,9 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     actor* act = actor_at(c);
     if (feat_is_solid(feat) && (igrd(c) != NON_ITEM || act))
     {
-        coord_def newpos;
-        get_push_space(c, newpos, act, true);
-        if (!newpos.origin())
-        {
-            move_items(c, newpos);
-            if (act)
-                actor_at(c)->move_to_pos(newpos);
-        }
-        else
+        push_items_from(c, nullptr);
+        push_actor_from(c, nullptr, true);
+        if (actor_at(c) || igrd(c) != NON_ITEM)
             feat = DNGN_FLOOR;
     }
 
