@@ -14,12 +14,6 @@ struct dice_def;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
-bool has_push_space(const coord_def& pos, actor* act,
-                    const vector<coord_def>* excluded = nullptr);
-bool get_push_space(const coord_def& pos, coord_def& newpos,
-                    actor* act, bool ignore_tension = false,
-                    const vector<coord_def>* excluded = nullptr);
-
 void aura_of_brilliance(monster* agent);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
