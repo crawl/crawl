@@ -3452,6 +3452,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         if (item.sub_type == ARM_SCARF
+            && item_type_known(item)
             && get_armour_ego_type(item) == SPARM_SPIRIT_SHIELD
             && you.spirit_shield(false, false))
         {
