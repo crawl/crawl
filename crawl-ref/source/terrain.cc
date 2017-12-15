@@ -2308,3 +2308,29 @@ bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded)
         result |= move_top_item(pos, targets[random2(targets.size())]);
     return result;
 }
+
+/**
+ * Push an actor from `pos` to some available space, if possible.
+ *
+ * @param pos the source position.
+ * @param excluded excluded positions that are a priori unavailable.
+ * @param random whether to chose the position randomly, or deterministically.
+ *        (Useful for systematically moving a bunch of actors at once.)
+ *
+ * @return the new coordinates for the actor.
+ */
+coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random)
+{
+    actor* act = actor_at(pos);
+    if (!act)
+        return coord_def(0,0);
+    vector<coord_def> targets = get_push_spaces(pos, true, excluded);
+    if (targets.empty())
+        return coord_def(0,0);
+    const coord_def newpos = random ? targets[random2(targets.size())]
+                                    : targets.front();
+    ASSERT(!newpos.origin());
+    act->move_to_pos(newpos);
+    // the new position of the monster is now an additional veto spot for monsters
+    return newpos;
+}

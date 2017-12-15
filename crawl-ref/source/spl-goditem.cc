@@ -783,9 +783,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor *act = actor_at(*ai))
             {
                 // Can't push ourselves.
-                coord_def newpos;
-                if (act->is_player()
-                    || !get_push_space(*ai, newpos, act, true, &veto_spots))
+                vector<coord_def> push_targets = get_push_spaces(*ai, true, &veto_spots);
+                if (act->is_player() || push_targets.empty())
                 {
                     success = false;
                     if (you.can_see(*act))
@@ -793,14 +792,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                     break;
                 }
                 else // the new position of the monster is now an additional veto spot for monsters
-                    veto_spots.push_back(newpos);
+                    veto_spots.push_back(push_targets.front());
             }
 
             // don't try to shove the orb of zot into lava and/or crash
             if (igrd(*ai) != NON_ITEM)
             {
                 coord_def newpos;
-                if (!get_push_space(*ai, newpos, nullptr, true, &adj_spots))
+                if (!has_push_spaces(*ai, false, &adj_spots))
                 {
                     success = false;
                     none_vis = false;
@@ -835,17 +834,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             continue;
 
         // The tile is occupied.
-        if (zin)
+        if (zin && actor_at(*ai))
         {
-            if (actor* act = actor_at(*ai))
-            {
-                coord_def newpos;
-                get_push_space(*ai, newpos, act, true, &veto_spots);
-                ASSERT(!newpos.origin());
-                act->move_to_pos(newpos);
-                // the new position of the monster is now an additional veto spot for monsters
-                veto_spots.push_back(newpos);
-            }
+            coord_def newpos = push_actor_from(*ai, &veto_spots, false);
+            ASSERT(!newpos.origin());
+            veto_spots.push_back(newpos);
         }
 
         // Make sure we have a legitimate tile.
@@ -863,17 +856,9 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (proceed)
         {
-            // All items are moved aside.
-            if (igrd(*ai) != NON_ITEM)
-            {
-                coord_def newpos;
-                get_push_space(*ai, newpos, nullptr, true, &adj_spots);
-                if (zin) // zin should've checked for this earlier
-                    ASSERT(!newpos.origin());
-                else if (newpos.origin())  // tomb just skips the tile
-                    continue;
-                move_items(*ai, newpos);
-            }
+            // All items are moved aside for zin, tomb just skips the tile.
+            if (igrd(*ai) != NON_ITEM && zin)
+                push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
