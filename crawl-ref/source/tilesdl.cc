@@ -577,9 +577,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     {
         font_info &finfo = m_fonts[i];
         if (finfo.name == font_file && finfo.size == font_size)
-        {
             return i;
-        }
     }
 
     FontWrapper *font = FontWrapper::create();
