@@ -181,6 +181,18 @@ static bool _is_soh(string name)
     return starts_with(lowercase(name), "the serpent of hell");
 }
 
+static string _soh_name(monster_type m_type)
+{
+    string flavour = serpent_of_hell_flavour(m_type);
+    flavour[0] = toupper(flavour[0]);
+
+    for (int b = BRANCH_FIRST_HELL; b <= BRANCH_LAST_HELL; ++b)
+        if (branches[b].shortname == flavour)
+            return string("The Serpent of Hell (") + branches[b].longname + ")";
+
+    die("bad serpent of hell monster_type");
+}
+
 static monster_type _mon_by_name(string name)
 {
     return _is_soh(name) ? _soh_type(name) : get_monster_by_name(name);
@@ -607,7 +619,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // Create and store fake monsters, so the menu code will
     // have something valid to refer to.
     monster_type m_type = _mon_by_name(str);
-    const string name = _is_soh(str) ? "The Serpent of Hell" : str;
+    const string name = _is_soh(str) ? _soh_name(m_type) : str;
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
