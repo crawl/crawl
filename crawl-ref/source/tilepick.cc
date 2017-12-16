@@ -701,9 +701,10 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
     {
         if (no_head_connect)
         {
-            if (_mons_is_kraken_tentacle(mon.type))
-                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-            else return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+            tileidx_t tile = _mons_is_kraken_tentacle(mon.type) ?
+                    TILEP_MONS_KRAKEN_TENTACLE_WATER : TILEP_MONS_ELDRITCH_TENTACLE_PORTAL;
+            bool vary = !(mon.props.exists("fake") && mon.props["fake"].get_bool());
+            return vary ? _mon_random(tile) : tile;
         }
 
         // Different handling according to relative positions.
@@ -1378,7 +1379,7 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 // extra parameters that have reasonable defaults for monsters where
 // only the type is known are pushed here.
 tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
-                               int tile_num_prop)
+                               int tile_num_prop, bool vary)
 {
     switch (type)
     {
@@ -1428,7 +1429,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
 
     const monster_type mtype = static_cast<monster_type>(type);
     const tileidx_t base_tile = get_mon_base_tile(mtype);
-    const mon_type_tile_variation vary_type = get_mon_tile_variation(mtype);
+    const mon_type_tile_variation vary_type = vary ? get_mon_tile_variation(mtype) : TVARY_NONE;
     switch (vary_type)
     {
     case TVARY_NONE:
@@ -1624,9 +1625,10 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     if (mon.props.exists(TILE_NUM_KEY))
         tile_num = mon.props[TILE_NUM_KEY].get_short();
 
+    bool vary = !(mon.props.exists("fake") && mon.props["fake"].get_bool());
     const tileidx_t base = tileidx_monster_base(mon.type, in_water,
                                                 mon.colour(true),
-                                                mon.number, tile_num);
+                                                mon.number, tile_num, vary);
 
     switch (mon.type)
     {
