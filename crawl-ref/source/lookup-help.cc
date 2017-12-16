@@ -159,21 +159,28 @@ private:
  * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
  * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
  */
-static monster_type _soh_type(string soh_name)
+static monster_type _soh_type(string &soh_name)
 {
-    // trying to minimize code duplication...
-    static const vector<monster_type> soh_types = {
-        MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL_DIS,
-        MONS_SERPENT_OF_HELL_COCYTUS, MONS_SERPENT_OF_HELL_TARTARUS,
-    };
+    const string flavour = lowercase_string(soh_name.substr(soh_name.find_last_of(' ')+1));
 
-    // grab 'cocytus' etc
-    const string flavour_name
-        = soh_name.substr(lowercase(soh_name).find("hell") + 5);
-    for (monster_type mtype : soh_types)
-        if (serpent_of_hell_flavour(mtype) == flavour_name)
-            return mtype;
-    return MONS_PROGRAM_BUG;
+    branch_type branch;
+    for (int b = BRANCH_FIRST_HELL; b <= BRANCH_LAST_HELL; ++b)
+        if (ends_with(flavour, lowercase_string(branches[b].shortname)))
+            branch = (branch_type)b;
+
+    switch (branch)
+    {
+        case BRANCH_COCYTUS:
+            return MONS_SERPENT_OF_HELL_COCYTUS;
+        case BRANCH_DIS:
+            return MONS_SERPENT_OF_HELL_DIS;
+        case BRANCH_TARTARUS:
+            return MONS_SERPENT_OF_HELL_TARTARUS;
+        case BRANCH_GEHENNA:
+            return MONS_SERPENT_OF_HELL;
+        default:
+            die("bad serpent of hell name");
+    }
 }
 
 static bool _is_soh(string name)
@@ -183,14 +190,8 @@ static bool _is_soh(string name)
 
 static string _soh_name(monster_type m_type)
 {
-    string flavour = serpent_of_hell_flavour(m_type);
-    flavour[0] = toupper(flavour[0]);
-
-    for (int b = BRANCH_FIRST_HELL; b <= BRANCH_LAST_HELL; ++b)
-        if (branches[b].shortname == flavour)
-            return string("The Serpent of Hell (") + branches[b].longname + ")";
-
-    die("bad serpent of hell monster_type");
+    branch_type b = serpent_of_hell_branch(m_type);
+    return string("The Serpent of Hell (") + branches[b].longname + ")";
 }
 
 static monster_type _mon_by_name(string name)
