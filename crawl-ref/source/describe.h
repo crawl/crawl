@@ -59,6 +59,7 @@ int describe_monsters(const monster_info &mi, bool force_seen = false,
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
+branch_type serpent_of_hell_branch(monster_type m);
 string serpent_of_hell_flavour(monster_type m);
 
 string player_spell_desc(spell_type spell);
