@@ -2304,6 +2304,7 @@ bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded)
     bool result = false;
     if (targets.empty())
         return false;
+    // TODO: splashing is flavorful, but how annoying is it in practice?
     while (igrd(pos) != NON_ITEM)
         result |= move_top_item(pos, targets[random2(targets.size())]);
     return result;
@@ -2315,7 +2316,8 @@ bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded)
  * @param pos the source position.
  * @param excluded excluded positions that are a priori unavailable.
  * @param random whether to chose the position randomly, or deterministically.
- *        (Useful for systematically moving a bunch of actors at once.)
+ *        (Useful for systematically moving a bunch of actors at once, when you
+ *        need to worry about domino effects.)
  *
  * @return the new coordinates for the actor.
  */
