@@ -2245,6 +2245,16 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
     }
 }
 
+/**
+ * Can any actors and items be pushed out of a doorway? An actor can be pushed
+ * for purposes of this check if there is a habitable target location and the
+ * actor is either the player or non-hostile. Items can be moved if there is
+ * any free space.
+ *
+ * @param door the door position
+ *
+ * @return true if any actors and items can be pushed out of the door.
+ */
 static bool _can_force_door_shut(const coord_def& door)
 {
     if (grd(door) != DNGN_OPEN_DOOR)
@@ -2275,7 +2285,8 @@ static bool _can_force_door_shut(const coord_def& door)
                 return false;
         }
         // If there are items in the way, see if there's room to push them
-        // out of the way
+        // out of the way. Having push space for an actor doesn't guarantee
+        // push space for items (e.g. with a flying actor over lava).
         if (igrd(dc) != NON_ITEM)
         {
             if (!has_push_spaces(dc, false, &door_spots))
@@ -2287,10 +2298,18 @@ static bool _can_force_door_shut(const coord_def& door)
     return true;
 }
 
+/**
+ * Get push spaces for an actor that maximize tension. If there are any push
+ * spaces at all, this function is guaranteed to return something.
+ *
+ * @param pos the position of the actor
+ * @param excluded a set of pre-excluded spots
+ *
+ * @return a vector of coordinates, empty if there are no push spaces at all.
+ */
 static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
                                             const vector<coord_def>* excluded)
 {
-    // if there are any push spaces at all, this will always return something non-empty.
     vector<coord_def> possible_spaces = get_push_spaces(pos, true, excluded);
     if (possible_spaces.empty())
         return possible_spaces;
@@ -2323,6 +2342,14 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
     return best;
 }
 
+/**
+ * Would forcing a door shut (possibly pushing the player) lower tension too
+ * much?
+ *
+ * @param door the door to check
+ *
+ * @return true iff forcing the door shut won't lower tension by more than 1/3.
+ */
 static bool _should_force_door_shut(const coord_def& door)
 {
     if (grd(door) != DNGN_OPEN_DOOR)
@@ -2349,7 +2376,8 @@ static bool _should_force_door_shut(const coord_def& door)
 
     if (player_in_door)
     {
-        coord_def newpos = _get_push_spaces_max_tension(you.pos(), &veto_spots).front();
+        coord_def newpos =
+                _get_push_spaces_max_tension(you.pos(), &veto_spots).front();
         you.move_to_pos(newpos);
     }
 
@@ -2382,6 +2410,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     if (!warden->can_see(you) || warden->foe != MHITYOU)
         return false;
 
+    // Greedy iteration through doors/stairs that you can see.
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
@@ -2405,12 +2434,16 @@ static bool _seal_doors_and_stairs(const monster* warden,
             for (const auto &dc : all_door)
             {
                 // If there are things in the way, push them aside
-                // This code is only reached for the player or non-hostile actors
+                // This is only reached for the player or non-hostile actors
                 actor* act = actor_at(dc);
                 if (act)
                 {
-                    vector<coord_def> targets = _get_push_spaces_max_tension(dc, &veto_spots);
-                    ASSERTM(!targets.empty(), "No push space from (%d,%d)", dc.x, dc.y);
+                    vector<coord_def> targets =
+                                _get_push_spaces_max_tension(dc, &veto_spots);
+                    // at this point, _can_force_door_shut should have
+                    // indicated that the door can be shut.
+                    ASSERTM(!targets.empty(), "No push space from (%d,%d)",
+                                                                dc.x, dc.y);
                     coord_def newpos = targets.front();
 
                     actor_at(dc)->move_to_pos(newpos);
