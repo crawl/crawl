@@ -4318,9 +4318,9 @@ string explore_discoveries::cleaned_feature_description(
     string s = lowercase_first(feature_description_at(pos));
     if (s.length() && s[s.length() - 1] == '.')
         s.erase(s.length() - 1);
-    if (s.find("a ") != string::npos)
+    if (starts_with(s, "a "))
         s = s.substr(2);
-    else if (s.find("an ") != string::npos)
+    else if (starts_with(s, "an "))
         s = s.substr(3);
     return s;
 }
