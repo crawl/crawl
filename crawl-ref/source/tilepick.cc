@@ -701,9 +701,18 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
     {
         if (no_head_connect)
         {
-            if (_mons_is_kraken_tentacle(mon.type))
-                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-            else return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+            tileidx_t tile;
+            switch (mon.type)
+            {
+                case MONS_KRAKEN_TENTACLE: tile = TILEP_MONS_KRAKEN_TENTACLE_WATER; break;
+                case MONS_STARSPAWN_TENTACLE: tile = TILEP_MONS_STARSPAWN_TENTACLE_S; break;
+                case MONS_ELDRITCH_TENTACLE: tile = TILEP_MONS_ELDRITCH_TENTACLE_PORTAL; break;
+                case MONS_SNAPLASHER_VINE: tile = TILEP_MONS_VINE_S; break;
+                default: die("bad tentacle type");
+            }
+
+            bool vary = !(mon.props.exists("fake") && mon.props["fake"].get_bool());
+            return vary ? _mon_random(tile) : tile;
         }
 
         // Different handling according to relative positions.
