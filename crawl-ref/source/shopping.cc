@@ -1305,7 +1305,7 @@ void ShopMenu::resort()
         break;
     case ORDER_TYPE:
         sort(begin(items), end(items),
-             [this](MenuEntry* a, MenuEntry* b) -> bool
+             [](MenuEntry* a, MenuEntry* b) -> bool
              {
                  const auto ai = dynamic_cast<ShopEntry*>(a)->item;
                  const auto bi = dynamic_cast<ShopEntry*>(b)->item;
