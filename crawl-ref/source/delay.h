@@ -113,6 +113,8 @@ public:
     Delay(int dur) : duration{dur}
     { }
 
+    virtual ~Delay() = default;
+
     /**
      * @return whether this is a running delay (run, rest, travel), which
      * involves moving/resting each turn until completed, rather than depending

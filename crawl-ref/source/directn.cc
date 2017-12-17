@@ -1244,7 +1244,7 @@ void direction_chooser::monster_cycle(int dir)
 void direction_chooser::feature_cycle_forward(int feature)
 {
     if (_find_square_wrapper(objfind_pos, 1,
-                             [feature, this](const coord_def& where)
+                             [feature](const coord_def& where)
                              {
                                  return map_bounds(where)
                                         && (you.see_cell(where)
