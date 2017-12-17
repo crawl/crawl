@@ -66,8 +66,7 @@ private:
                                    attack_flavour u_att_flav);
 };
 
-bool debug_check_ghosts();
+bool debug_check_ghosts(vector<ghost_demon> &ghosts);
+bool debug_check_ghost(const ghost_demon &ghost);
 int ghost_level_to_rank(const int xl);
 int ghost_rank_to_level(const int rank);
-
-extern vector<ghost_demon> ghosts;

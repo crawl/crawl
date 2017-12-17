@@ -12,6 +12,7 @@
 struct show_type;
 struct monster_info;
 struct map_cell;
+class ghost_demon;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -169,6 +170,9 @@ static inline void unmarshallSigned(reader& th, T& v)
 void tag_read(reader &inf, tag_type tag_id);
 void tag_write(tag_type tagID, writer &outf);
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor);
+
+vector<ghost_demon> tag_read_ghosts(reader &th);
+void tag_write_ghosts(writer &th, vector<ghost_demon> &ghosts);
 
 /* ***********************************************************************
  * misc
