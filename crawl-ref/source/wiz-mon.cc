@@ -177,10 +177,12 @@ void wizard_create_spec_monster_name()
         }
         ghost.job = static_cast<job_type>(job_id);
         ghost.xl = 7;
+        ghost.max_hp = 20;
 
         mon.set_ghost(ghost);
 
         ghosts.push_back(ghost);
+        ASSERT(debug_check_ghosts());
     }
 }
 
