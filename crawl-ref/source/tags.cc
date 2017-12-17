@@ -86,6 +86,8 @@
 #include "unwind.h"
 #include "version.h"
 
+vector<ghost_demon> global_ghosts; // only for reading/writing
+
 // defined in dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;
 extern map<level_pos, shop_type> shops_present;
@@ -315,8 +317,8 @@ static void tag_read_level_tiles(reader &th);
 static void _regenerate_tile_flavour();
 static void _draw_tiles();
 
-static void tag_construct_ghost(writer &th);
-static void tag_read_ghost(reader &th);
+static void tag_construct_ghost(writer &th, vector<ghost_demon> &);
+static vector<ghost_demon> tag_read_ghost(reader &th);
 
 static void marshallGhost(writer &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost(reader &th);
@@ -1165,7 +1167,7 @@ void tag_write(tag_type tagID, writer &outf)
         tag_construct_level_tiles(th);
         break;
     case TAG_GHOST:
-        tag_construct_ghost(th);
+        tag_construct_ghost(th, global_ghosts);
         break;
     default:
         // I don't know how to make that!
@@ -1296,7 +1298,7 @@ void tag_read(reader &inf, tag_type tag_id)
 #endif
         break;
     case TAG_GHOST:
-        tag_read_ghost(th);
+        global_ghosts = tag_read_ghost(th);
         break;
     default:
         // I don't know how to read that!
@@ -6844,7 +6846,7 @@ static ghost_demon unmarshallGhost(reader &th)
     return ghost;
 }
 
-static void tag_construct_ghost(writer &th)
+static void tag_construct_ghost(writer &th, vector<ghost_demon> &ghosts)
 {
     // How many ghosts?
     marshallShort(th, ghosts.size());
@@ -6853,13 +6855,28 @@ static void tag_construct_ghost(writer &th)
         marshallGhost(th, ghost);
 }
 
-static void tag_read_ghost(reader &th)
+static vector<ghost_demon> tag_read_ghost(reader &th)
 {
+    vector<ghost_demon> result;
     int nghosts = unmarshallShort(th);
 
     if (nghosts < 1 || nghosts > MAX_GHOSTS)
-        return;
+        return result;
 
     for (int i = 0; i < nghosts; ++i)
-        ghosts.push_back(unmarshallGhost(th));
+        result.push_back(unmarshallGhost(th));
+    return result;
+}
+
+vector<ghost_demon> tag_read_ghosts(reader &th)
+{
+    global_ghosts.clear();
+    tag_read(th, TAG_GHOST);
+    return global_ghosts; // should use copy semantics?
+}
+
+void tag_write_ghosts(writer &th, vector<ghost_demon> &ghosts)
+{
+    global_ghosts = ghosts;
+    tag_write(TAG_GHOST, th);
 }

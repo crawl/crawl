@@ -29,8 +29,6 @@
 #define MAX_GHOST_HP        400
 #define MAX_GHOST_EVASION    60
 
-vector<ghost_demon> ghosts;
-
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =
 {
@@ -768,59 +766,65 @@ int ghost_demon::n_extra_ghosts()
     return MAX_GHOSTS - 1;
 }
 
+bool debug_check_ghost(const ghost_demon &ghost)
+{
+    // Values greater than the allowed maximum or less then the
+    // allowed minimum signalise bugginess.
+    if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
+        return false;
+    if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
+        return false;
+    if (ghost.xl < 1 || ghost.xl > 27)
+        return false;
+    if (ghost.ev > MAX_GHOST_EVASION)
+        return false;
+    if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
+        return false;
+    if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
+        return false;
+    if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
+        return false;
+    if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
+        return false;
+    if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
+        return false;
+    if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
+        return false;
+    if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
+        return false;
+
+    if (ghost.brand == SPWPN_HOLY_WRATH)
+        return false;
+
+    // Only (very) ugly things get non-plain attack types and
+    // flavours.
+    if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
+        return false;
+
+    // Name validation.
+    if (!validate_player_name(ghost.name, false))
+        return false;
+    // Many combining characters can come per every letter, but if there's
+    // that much, it's probably a maliciously forged ghost of some kind.
+    if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
+        return false;
+    if (ghost.name != trimmed_string(ghost.name))
+        return false;
+
+    // Check for non-existing spells.
+    for (const mon_spell_slot &slot : ghost.spells)
+        if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
+            return false;
+
+    return true;
+}
+
 // Sanity checks for some ghost values.
-bool debug_check_ghosts()
+bool debug_check_ghosts(vector<ghost_demon> &ghosts)
 {
     for (const ghost_demon &ghost : ghosts)
-    {
-        // Values greater than the allowed maximum or less then the
-        // allowed minimum signalise bugginess.
-        if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
+        if (!debug_check_ghost(ghost))
             return false;
-        if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
-            return false;
-        if (ghost.xl < 1 || ghost.xl > 27)
-            return false;
-        if (ghost.ev > MAX_GHOST_EVASION)
-            return false;
-        if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
-            return false;
-        if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
-            return false;
-        if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
-            return false;
-        if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
-            return false;
-        if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
-            return false;
-        if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
-            return false;
-        if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
-            return false;
-
-        if (ghost.brand == SPWPN_HOLY_WRATH)
-            return false;
-
-        // Only (very) ugly things get non-plain attack types and
-        // flavours.
-        if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
-            return false;
-
-        // Name validation.
-        if (!validate_player_name(ghost.name, false))
-            return false;
-        // Many combining characters can come per every letter, but if there's
-        // that much, it's probably a maliciously forged ghost of some kind.
-        if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
-            return false;
-        if (ghost.name != trimmed_string(ghost.name))
-            return false;
-
-        // Check for non-existing spells.
-        for (const mon_spell_slot &slot : ghost.spells)
-            if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
-                return false;
-    }
     return true;
 }
 
