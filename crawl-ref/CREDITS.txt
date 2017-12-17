@@ -24,6 +24,7 @@
     Haran Pilpel
     Johanna Ploog
     David Lawrence Ramsey
+    Isaac Sloat
     J. Van
     Robert Vollmert
     Enne Walker
@@ -317,7 +318,6 @@ The Dungeon Crawl Stone Soup development team is:
     Aaron Pixton
     David Ploog
     Sage
-    Isaac Sloat
     Marc H. Thoben
     Chris West
     Samuel Wilson
