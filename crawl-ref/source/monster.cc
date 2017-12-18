@@ -4604,6 +4604,9 @@ void monster::ghost_init(bool need_pos)
     // if we have a home first. {due}
     if (need_pos && !in_bounds(pos()))
         find_place_to_live();
+
+    bind_melee_flags();
+    bind_spell_flags(); // does this even do anything on ghosts?
 }
 
 void monster::uglything_init(bool only_mutate)
