@@ -34,6 +34,7 @@
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
+#include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -1108,7 +1109,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Never generate bones files of wizard or tutorial characters -- bwr
     if (!non_death && !crawl_state.game_is_tutorial() && !you.wizard)
-        save_ghost();
+        save_ghosts(ghost_demon::find_ghosts());
 
     end_game(se, hiscore_index);
 }

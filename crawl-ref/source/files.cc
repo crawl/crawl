@@ -1183,7 +1183,7 @@ static void _make_level(dungeon_feature_type stair_taken,
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
         && one_chance_in(3))
     {
-        load_ghost(true);
+        load_ghosts(true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1821,7 +1821,7 @@ static vector<ghost_demon> _load_ghost_vec(bool creating_level, bool wiz_cmd)
  * @param creating_level    Whether a level is currently being generated.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level)
+bool load_ghosts(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -2388,7 +2388,7 @@ static FILE* _make_bones_file(string * return_gfilename)
  * @param force   Forces ghost generation even in otherwise-disallowed levels.
  **/
 
-void save_ghost(bool force)
+void save_ghosts(const vector<ghost_demon> &ghosts, bool force)
 {
 #ifdef BONES_DIAGNOSTICS
     const bool do_diagnostics =
@@ -2401,8 +2401,6 @@ void save_ghost(bool force)
 #  endif
         ;
 #endif // BONES_DIAGNOSTICS
-
-    vector<ghost_demon> ghosts = ghost_demon::find_ghosts();
 
     if (ghosts.empty())
     {
