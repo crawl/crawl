@@ -326,6 +326,9 @@ Building on Windows (Cygwin)
 Building on Windows 10 (Linux Subsystem) (console and webtiles only)
 --------------------------------------------------------------------
 
+Local tiles (built with TILES=y) does not currently work with this method, but
+webtiles (bult with WEBTILES=y) does, as does console (built with just 'make').
+
 * Follow the instructions on Microsoft's website at
   https://docs.microsoft.com/en-us/windows/wsl/install-win10 to set up the
   Windows Subsystem for Linux.
@@ -333,9 +336,7 @@ Building on Windows 10 (Linux Subsystem) (console and webtiles only)
 * Make sure to run 'apt-get update' to get the latest versions of the package
   lists, if using Ubuntu.
 
-* Follow the Linux instructions to build Crawl. Local tiles (built with TILES=y)
-  does not currently work with this method, but webtiles (bult with WEBTILES=y)
-  does, as does console (built with just 'make').
+* Follow the Linux instructions to build Crawl.
 
 Building on Windows (MSVC)
 --------------------------
