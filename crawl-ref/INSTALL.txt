@@ -43,7 +43,7 @@ Crawl is known to run on the following platforms:
 - Any Unix with GNU or BSD userland.
 - Mac OS X.
 - Android.
-- Microsoft Windows 2000/XP/Vista/7/8
+- Microsoft Windows 2000/XP/Vista/7/8/10
 
 The only officially supported compilers are gcc (4.7 or newer) and clang (3.4
 or newer). On Windows, gcc is usually available as MinGW.
@@ -322,6 +322,20 @@ Building on Windows (Cygwin)
   sources in c:\crawl\source, you would type 'cd /cygdrive/c/crawl/source'.
 
 * Follow the Linux build instructions to build Crawl.
+
+Building on Windows 10 (Linux Subsystem) (console and webtiles only)
+--------------------------------------------------------------------
+
+* Follow the instructions on Microsoft's website at
+  https://docs.microsoft.com/en-us/windows/wsl/install-win10 to set up the
+  Windows Subsystem for Linux.
+
+* Make sure to run 'apt-get update' to get the latest versions of the package
+  lists, if using Ubuntu.
+
+* Follow the Linux instructions to build Crawl. Local tiles (built with TILES=y)
+  does not currently work with this method, but webtiles (bult with WEBTILES=y)
+  does, as does console (built with just 'make').
 
 Building on Windows (MSVC)
 --------------------------
