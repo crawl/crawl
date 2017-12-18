@@ -51,7 +51,7 @@ public:
 
 
 public:
-    static vector<ghost_demon> find_ghosts();
+    static const vector<ghost_demon> find_ghosts();
 
 private:
     static int n_extra_ghosts();

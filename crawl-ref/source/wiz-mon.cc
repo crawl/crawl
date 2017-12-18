@@ -1192,9 +1192,9 @@ void debug_ghosts()
     const char c = toalower(getchm());
 
     if (c == 'c')
-        save_ghost(true);
+        save_ghosts(ghost_demon::find_ghosts(), true);
     else if (c == 'l')
-        load_ghost(false);
+        load_ghosts(false);
     else
         canned_msg(MSG_OK);
 }

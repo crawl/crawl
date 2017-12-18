@@ -688,7 +688,7 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     return spell;
 }
 
-vector<ghost_demon> ghost_demon::find_ghosts()
+const vector<ghost_demon> ghost_demon::find_ghosts()
 {
     vector<ghost_demon> gs;
 

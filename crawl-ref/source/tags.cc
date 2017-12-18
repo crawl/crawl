@@ -6875,7 +6875,7 @@ vector<ghost_demon> tag_read_ghosts(reader &th)
     return global_ghosts; // should use copy semantics?
 }
 
-void tag_write_ghosts(writer &th, vector<ghost_demon> &ghosts)
+void tag_write_ghosts(writer &th, const vector<ghost_demon> &ghosts)
 {
     global_ghosts = ghosts;
     tag_write(TAG_GHOST, th);
