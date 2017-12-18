@@ -801,6 +801,16 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEMOTION:
                 {
+                    // For consecutive mouse events, ignore all but the last,
+                    // since these can come in faster than crawl can redraw.
+                    //
+                    // Note that get_event_count() is misleadingly named and only
+                    // peeks at the first event, and so will only return 0 or 1.
+                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
+                    ASSERT(count >= 0);
+                    if (count > 0)
+                        continue;
+
                     // Record mouse pos for tooltip timer
                     if (m_mouse.x != (int)event.mouse_event.px
                         || m_mouse.y != (int)event.mouse_event.py)
@@ -846,19 +856,6 @@ int TilesFramework::getch_ck()
                         prev_msg_alt_text = m_region_msg->alt_text();
                         set_need_redraw();
                     }
-
-                    // Don't break back to Crawl and redraw for every mouse
-                    // event, because there's a lot of them.
-                    //
-                    // If there are other mouse events in the queue
-                    // (possibly because redrawing is slow or the user
-                    // is moving the mouse really quickly), process those
-                    // first, before bothering to redraw the screen.
-                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
-                    ASSERT(count >= 0);
-                    if (count > 0)
-                        continue;
-
                 }
                break;
 
