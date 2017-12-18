@@ -1873,9 +1873,6 @@ bool load_ghost(bool creating_level)
         mons->set_ghost(loaded_ghosts[0]);
         mons->type = MONS_PLAYER_GHOST;
         mons->ghost_init();
-        mons->bind_melee_flags();
-        if (mons->has_spells())
-            mons->bind_spell_flags();
 
         loaded_ghosts.erase(loaded_ghosts.begin());
 #ifdef BONES_DIAGNOSTICS

@@ -2948,8 +2948,6 @@ void define_monster(monster& mons)
         ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));
-        mons.bind_melee_flags();
-        mons.bind_spell_flags();
         break;
     }
 
