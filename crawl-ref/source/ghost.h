@@ -52,11 +52,11 @@ public:
 
 public:
     static const vector<ghost_demon> find_ghosts();
+    static int max_ghosts_per_level(int absdepth);
 
 private:
-    static int n_extra_ghosts();
-    static void find_extra_ghosts(vector<ghost_demon> &ghosts, int n);
-    static void find_transiting_ghosts(vector<ghost_demon> &gs, int n);
+    static void find_extra_ghosts(vector<ghost_demon> &ghosts);
+    static void find_transiting_ghosts(vector<ghost_demon> &gs);
     static void announce_ghost(const ghost_demon &g);
 
 private:
