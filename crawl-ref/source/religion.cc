@@ -3740,54 +3740,13 @@ void god_pitch(god_type which_god)
         return;
     }
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "god_pitch");
-#endif
-
-    describe_god(which_god, false);
-
-    string service_fee = "";
-    if (which_god == GOD_GOZAG)
-    {
-        if (fee == 0)
-        {
-            service_fee = string("Gozag will waive the service fee if you ")
-                          + random_choose("act now", "join today") + "!\n";
-        }
-        else
-        {
-            service_fee = make_stringf(
-                    "The service fee for joining is currently %d gold; you"
-                    " have %d.\n",
-                    fee, you.gold);
-        }
-    }
-    const string prompt = make_stringf("%sDo you wish to %sjoin this religion?",
-                                       service_fee.c_str(),
-                                       (you.worshipped[which_god]) ? "re" : "");
-
-    cgotoxy(1, 21, GOTO_CRT);
-    textcolour(channel_to_colour(MSGCH_PROMPT));
-    if (!yesno(prompt.c_str(), false, 'n', true, true, false, nullptr, GOTO_CRT))
-    {
-        you.turn_is_over = false; // Okay, opt out.
-        redraw_screen();
-        return;
-    }
-
-    const string abandon = make_stringf("Are you sure you want to abandon %s?",
-                                        god_name(you.religion).c_str());
-    if (!you_worship(GOD_NO_GOD) && !yesno(abandon.c_str(), false, 'n', true,
-                                           true, false, nullptr, GOTO_CRT))
+    if (describe_god_with_join(which_god))
+        join_religion(which_god);
+    else
     {
         you.turn_is_over = false;
-        canned_msg(MSG_OK);
         redraw_screen();
-        return;
     }
-
-    // OK, so join the new religion.
-    join_religion(which_god);
 }
 
 /** Ask the user for a god by name.
