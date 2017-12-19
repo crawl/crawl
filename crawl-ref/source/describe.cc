@@ -2260,10 +2260,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
 void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_feature");
-#endif
-
     describe_info inf;
     get_feature_desc(pos, inf);
     if (crawl_state.game_is_hints())
@@ -2485,10 +2481,6 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
     if (!item.defined())
         return true;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
-#endif
 
     string desc = get_item_description(item, true, false);
 
@@ -2856,10 +2848,6 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 void describe_spell(spell_type spelled, const monster_info *mon_owner,
                     const item_def* item)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_spell");
-#endif
-
     string desc;
     const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
     formatted_scroller menu;
@@ -4075,10 +4063,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         else
             inf.footer += "\n" + footer;
     }
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
-#endif
 
 #ifdef USE_TILE_LOCAL
     // Ensure we get the full screen size when calling get_number_of_cols()
