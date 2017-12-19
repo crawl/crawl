@@ -396,6 +396,11 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
     return food1->freshness < food2->freshness;
 }
 
+static hunger_state_t _max_chunk_state(bool like_chunks = player_likes_chunks())
+{
+    return like_chunks ? HS_VERY_FULL : HS_HUNGRY;
+}
+
 /** Make the prompt for chunk eating/corpse draining.
  *
  *  @param only_auto Don't actually make a prompt: if there are
@@ -410,12 +415,8 @@ int prompt_eat_chunks(bool only_auto)
 
     // If we *know* the player can eat chunks, doesn't have the gourmand
     // effect and isn't hungry, don't prompt for chunks.
-    if (you.species != SP_VAMPIRE
-        && you.hunger_state >= (player_likes_chunks() ? HS_ENGORGED
-                                                      : HS_SATIATED))
-    {
+    if (you.species != SP_VAMPIRE && you.hunger_state > _max_chunk_state())
         return 0;
-    }
 
     bool found_valid = false;
     vector<item_def *> chunks;
@@ -584,7 +585,7 @@ static int _chunk_nutrition(bool likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
 
-    if (you.hunger_state < (likes_chunks ? HS_ENGORGED : HS_SATIATED))
+    if (you.hunger_state <= _max_chunk_state(likes_chunks))
     {
         return likes_chunks ? nutrition
                             : _apply_herbivore_nutrition_effects(nutrition);
