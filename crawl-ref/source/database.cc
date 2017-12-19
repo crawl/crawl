@@ -139,6 +139,10 @@ static TextDB AllDBs[] =
             "hints.txt",    // hints mode
             "tutorial.txt", // tutorial mode
             nullptr),
+
+    TextDB("ui", "descript/",
+            "ui.txt",   // UI elements
+            nullptr),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -151,6 +155,7 @@ static TextDB& QuotesDB      = AllDBs[6];
 static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
 static TextDB& HintsDB       = AllDBs[9];
+static TextDB& UIDB          = AllDBs[10];
 
 static string _db_cache_path(string db, const char *lang)
 {
@@ -892,4 +897,16 @@ string getMiscString(const string &misc, const string &suffix)
 string getHintString(const string &key)
 {
     return unwrap_desc(_query_database(HintsDB, key, true, true));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// UI DB specific functions.
+
+string get_ui(const string &key)
+{
+    string result;
+    result = unwrap_desc(_query_database(UIDB, key, true, true));
+    result.erase(remove(result.begin(), result.end(), '\n'), result.end());
+    result = result + ": ";
+    return result;
 }
