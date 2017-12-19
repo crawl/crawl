@@ -580,11 +580,11 @@ static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
 }
 
-static int _chunk_nutrition(int likes_chunks)
+static int _chunk_nutrition(bool likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
 
-    if (you.hunger_state < HS_SATIATED + likes_chunks)
+    if (you.hunger_state < (likes_chunks ? HS_ENGORGED : HS_SATIATED))
     {
         return likes_chunks ? nutrition
                             : _apply_herbivore_nutrition_effects(nutrition);
