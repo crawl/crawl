@@ -1194,7 +1194,7 @@ void debug_ghosts()
     if (c == 'c')
         save_ghosts(ghost_demon::find_ghosts(), true);
     else if (c == 'l')
-        load_ghosts(false);
+        load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), false);
     else
         canned_msg(MSG_OK);
 }

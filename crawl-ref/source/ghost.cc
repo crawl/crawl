@@ -703,21 +703,18 @@ const vector<ghost_demon> ghost_demon::find_ghosts()
     // Pick up any other ghosts that happen to be on the level if we
     // have space. If the player is undead, add one to the ghost quota
     // for the level.
-    find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
+    find_extra_ghosts(gs);
 
     return gs;
 }
 
 void ghost_demon::find_transiting_ghosts(
-    vector<ghost_demon> &gs, int n)
+    vector<ghost_demon> &gs)
 {
-    if (n <= 0)
-        return;
-
     const m_transit_list *mt = get_transit_list(level_id::current());
     if (mt)
     {
-        for (auto i = mt->begin(); i != mt->end() && n > 0; ++i)
+        for (auto i = mt->begin(); i != mt->end(); ++i)
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
@@ -726,7 +723,6 @@ void ghost_demon::find_transiting_ghosts(
                 {
                     announce_ghost(*m.ghost);
                     gs.push_back(*m.ghost);
-                    --n;
                 }
             }
         }
@@ -740,30 +736,26 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 #endif
 }
 
-void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs, int n)
+void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
 {
-    for (monster_iterator mi; mi && n > 0; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get())
         {
             // Bingo!
             announce_ghost(*(mi->ghost));
             gs.push_back(*(mi->ghost));
-            --n;
         }
     }
 
     // Check the transit list for the current level.
-    find_transiting_ghosts(gs, n);
+    find_transiting_ghosts(gs);
 }
 
-// Returns the number of extra ghosts allowed on the level.
-int ghost_demon::n_extra_ghosts()
+/// Returns the number of extra ghosts allowed on the specified level.
+int ghost_demon::max_ghosts_per_level(int absdepth)
 {
-    if (env.absdepth0 < 10)
-        return 0;
-
-    return MAX_GHOSTS - 1;
+    return absdepth < 10 ? 1 : MAX_GHOSTS;
 }
 
 bool debug_check_ghost(const ghost_demon &ghost)

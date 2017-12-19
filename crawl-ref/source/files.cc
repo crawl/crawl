@@ -1183,7 +1183,7 @@ static void _make_level(dungeon_feature_type stair_taken,
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
         && one_chance_in(3))
     {
-        load_ghosts(true);
+        load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1818,10 +1818,12 @@ static vector<ghost_demon> _load_ghost_vec(bool creating_level, bool wiz_cmd)
 /**
  * Attempt to load one or more ghosts into the level.
  *
+ * @param max_ghosts        A maximum number of ghosts to creat.
+ *                          Set to <= 0 to load as many as possible.
  * @param creating_level    Whether a level is currently being generated.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghosts(bool creating_level)
+bool load_ghosts(int max_ghosts, bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1854,16 +1856,19 @@ bool load_ghosts(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
-             (unsigned int)loaded_ghosts.size());
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s), will attempt to place %d of them",
+             (unsigned int)loaded_ghosts.size(), max_ghosts);
     }
 
-    unsigned int  unplaced_ghosts = loaded_ghosts.size();
     bool          ghost_errors    = false;
 #endif
 
+    max_ghosts = max_ghosts <= 0 ? loaded_ghosts.size()
+                                 : min(max_ghosts, (int) loaded_ghosts.size());
+    int placed_ghosts = 0;
+
     // Translate ghost to monster and place.
-    while (!loaded_ghosts.empty())
+    while (!loaded_ghosts.empty() && placed_ghosts < max_ghosts)
     {
         monster * const mons = get_free_monster();
         if (!mons)
@@ -1875,10 +1880,11 @@ bool load_ghosts(bool creating_level)
         mons->ghost_init();
 
         loaded_ghosts.erase(loaded_ghosts.begin());
+        placed_ghosts++;
+
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
-            unplaced_ghosts--;
             if (!mons->alive())
             {
                 mprf(MSGCH_DIAGNOSTICS, "Placed ghost is not alive.");
@@ -1896,15 +1902,18 @@ bool load_ghosts(bool creating_level)
     }
 
 #ifdef BONES_DIAGNOSTICS
-    if (do_diagnostics && unplaced_ghosts > 0)
+    if (do_diagnostics && placed_ghosts < max_ghosts)
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
-             (unsigned int)loaded_ghosts.size());
+             max_ghosts - placed_ghosts);
         ghost_errors = true;
     }
     if (ghost_errors)
         more();
 #endif
+    // resave any unused ghosts
+    if (!loaded_ghosts.empty())
+        save_ghosts(loaded_ghosts);
 
     return true;
 }
