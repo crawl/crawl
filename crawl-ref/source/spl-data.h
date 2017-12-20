@@ -3654,6 +3654,7 @@ static const struct spell_desc spelldata[] =
     TILEG_ERROR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CIGOTUVIS_EMBRACE, "Cigotuvi's Embrace",
     SPTYP_NECROMANCY,
@@ -3662,8 +3663,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_CIGOTUVIS_EMBRACE,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_GRAVITAS, "Gell's Gravitas",

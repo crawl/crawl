@@ -217,7 +217,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Unlife
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
-    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_BORGNJORS_VILE_CLUTCH,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,

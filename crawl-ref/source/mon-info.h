@@ -153,8 +153,8 @@ enum monster_info_flags
 #endif
     MB_RESISTANCE,
     MB_HEXED,
-    MB_BONE_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
+    MB_BONE_ARMOUR,
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
 #endif
