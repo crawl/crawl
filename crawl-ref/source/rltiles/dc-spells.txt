@@ -100,7 +100,6 @@ regeneration REGENERATION
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
-twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 
