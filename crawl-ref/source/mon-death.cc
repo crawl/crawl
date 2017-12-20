@@ -1974,7 +1974,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     mons_clear_trapping_net(&mons);
-    mons.stop_constricting_all(false);
+    mons.stop_constricting_all();
     mons.stop_being_constricted();
 
     you.remove_beholder(mons);
@@ -2936,7 +2936,7 @@ void monster_cleanup(monster* mons)
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is
     // cleaned up first, we wouldn't get a message anyway.
-    mons->stop_constricting_all(false, true);
+    mons->stop_constricting_all(false, false, true);
 
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);

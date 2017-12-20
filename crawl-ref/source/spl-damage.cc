@@ -3213,3 +3213,35 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
 
     return SPRET_SUCCESS;
 }
+
+static void _setup_borgnjors_vile_clutch(bolt &beam, int pow)
+{
+    beam.name         = "borgnjor's vile clutch";
+    beam.aux_source   = "borgnjors_vile_clutch";
+    beam.flavour      = BEAM_BORGNJORS_VILE_CLUTCH;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour       = GREEN;
+    beam.source_id    = MID_PLAYER;
+    beam.thrower      = KILL_YOU;
+    beam.is_explosion = true;
+    beam.ex_size      = 1;
+    beam.ench_power   = pow;
+    beam.origin_spell = SPELL_BORGNJORS_VILE_CLUTCH;
+}
+
+spret_type cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_SOMETHING_IN_WAY);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    _setup_borgnjors_vile_clutch(beam, pow);
+    mpr("Decaying hands burst forth from the earth!");
+    beam.explode();
+
+    return SPRET_SUCCESS;
+}

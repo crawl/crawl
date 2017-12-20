@@ -915,7 +915,7 @@ void move_solo_tentacle(monster* tentacle)
         if (constrictee->is_player())
             stop_delay(true);
     }
-    tentacle->clear_far_constrictions();
+    tentacle->clear_invalid_constrictions();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -1110,7 +1110,7 @@ void move_child_tentacles(monster* mons)
             if (constrictee->is_player())
                 stop_delay(true);
         }
-        tentacle->clear_far_constrictions();
+        tentacle->clear_invalid_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;

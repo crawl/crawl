@@ -3569,7 +3569,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     }
 
     // End constriction.
-    mon.stop_constricting_all(false);
+    mon.stop_constricting_all();
     mon.stop_being_constricted();
 
     // Cancel fleeing and such.
@@ -5173,7 +5173,6 @@ void reset_all_monsters()
         {
             delete mons.constricting;
             mons.constricting = nullptr;
-            mons.clear_constricted();
         }
         mons.reset();
     }

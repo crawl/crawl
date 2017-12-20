@@ -85,6 +85,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_CHILLING_BREATH, ZAP_BREATHE_FROST },
     { SPELL_ICEBLAST, ZAP_ICEBLAST },
     { SPELL_ACID_SPLASH, ZAP_BREATHE_ACID },
+    { SPELL_BORGNJORS_VILE_CLUTCH, ZAP_BORGNJORS_VILE_CLUTCH},
 };
 
 zap_type spell_to_zap(spell_type spell)

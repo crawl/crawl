@@ -2950,7 +2950,7 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage() const
+int monster::constriction_damage(bool /* direct */) const
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -2961,9 +2961,9 @@ int monster::constriction_damage() const
     return -1;
 }
 
-bool monster::constriction_does_damage() const
+bool monster::constriction_does_damage(bool direct) const
 {
-    return constriction_damage();
+    return constriction_damage(direct);
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or
@@ -5653,7 +5653,7 @@ void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
     if (!valid_target)
         return;
 
-    stop_constricting_all();
+    stop_constricting_all(false, true);
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
     if (hibernate)
@@ -6516,15 +6516,23 @@ bool monster::attempt_escape(int attempts)
     escape_attempts += attempts;
     attfactor = 3 * escape_attempts;
 
-    if (constricted_by != MID_PLAYER)
+    if (constricted_by == MID_PLAYER)
+    {
+        if (has_ench(ENCH_BORGNJORS_VILE_CLUTCH))
+        {
+            randfact = roll_dice(1, 10 + div_rand_round(
+                    calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 5));
+        }
+        else
+            randfact = roll_dice(1, 3 + you.experience_level);
+    }
+    else
     {
         randfact = roll_dice(1, 5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
         randfact += roll_dice(1, themonst->get_hit_dice());
     }
-    else
-        randfact = roll_dice(1, 3 + you.experience_level);
 
     if (attfactor > randfact)
     {

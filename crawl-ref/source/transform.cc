@@ -1841,7 +1841,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     // normally non-constricting players to constrict, this would need to
     // be changed.
     if (!form_keeps_mutations(which_trans))
-        you.stop_constricting_all(false);
+        you.stop_constricting_all(false, true);
 
     // Stop being constricted if we are now too large.
     if (you.is_constricted())

@@ -1924,7 +1924,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
-    mon->stop_constricting_all(false);
+    mon->stop_constricting_all();
     mon->stop_being_constricted();
 
     if (orig.halo_radius()

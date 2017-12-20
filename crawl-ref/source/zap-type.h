@@ -85,5 +85,6 @@ enum zap_type
     ZAP_BECKONING,
     ZAP_FIRE_STORM,
     ZAP_MALMUTATE,
+    ZAP_BORGNJORS_VILE_CLUTCH,
     NUM_ZAPS
 };

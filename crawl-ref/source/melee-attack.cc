@@ -97,7 +97,7 @@ bool melee_attack::handle_phase_attempted()
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !can_reach())
         || attk_type == AT_CONSTRICT
-           && (!attacker->can_constrict(defender)
+           && (!attacker->can_constrict(defender, true)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
         --effective_attack_number;
@@ -1285,7 +1285,7 @@ bool melee_attack::player_aux_unarmed()
         // Determine and set damage and attack words.
         player_aux_setup(atk);
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
+        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender, true))
             continue;
 
         to_hit = random2(calc_your_to_hit_unarmed(atk));
@@ -2905,7 +2905,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender))
+        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender, true))
         {
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD]
                 && !you.duration[DUR_WATER_HOLD_IMMUNITY])

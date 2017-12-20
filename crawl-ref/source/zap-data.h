@@ -1286,4 +1286,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_BORGNJORS_VILE_CLUTCH,
+    "",
+    200,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    GREEN,
+    true,
+    BEAM_BORGNJORS_VILE_CLUTCH,
+    DCHAR_FIRED_BURST,
+    true,
+    false,
+    true,
+    0 // handled by explosion
+},
+
 };

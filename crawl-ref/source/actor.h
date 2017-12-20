@@ -422,20 +422,23 @@ public:
 
     void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false);
-    void stop_constricting_all(bool intentional = false, bool quiet = false);
+    void stop_constricting_all(bool intentional = false,
+                               bool direct_only = false,
+                               bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender) const;
-    void clear_far_constrictions();
+    bool can_constrict(const actor* defender, bool direct) const;
+    void clear_invalid_constrictions();
     void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
+    bool is_directly_constricted() const;
     bool is_constricting() const;
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
-    virtual int constriction_damage() const = 0;
-    virtual bool constriction_does_damage() const = 0;
+    virtual int constriction_damage(bool direct) const = 0;
+    virtual bool constriction_does_damage(bool direct) const = 0;
     virtual bool clear_far_engulf() = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
@@ -451,6 +454,7 @@ public:
     static actor *ensure_valid_actor(actor *act);
 
 private:
+    void constriction_damage_defender(actor &defender, int duration);
     void end_constriction(mid_t whom, bool intentional, bool quiet);
 };
 
