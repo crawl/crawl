@@ -582,7 +582,13 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
             return i;
     }
 
-    return -1;
+    return INT_MAX;
+}
+
+static int _find_newline(const char *s)
+{
+    const char *nl = strchr(s, '\n');
+    return nl ? nl-s : INT_MAX;
 }
 
 formatted_string FTFontWrapper::split(const formatted_string &str,
@@ -603,30 +609,37 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     char *line = &base[0];
     while (true)
     {
+        int nl = _find_newline(line);
         int line_end = find_index_before_width(line, max_width);
-        if (line_end == -1)
+        if (line_end == INT_MAX && nl == INT_MAX)
             break;
 
         int space_idx = 0;
-        for (char *search = &line[line_end]; search > line; search--)
+        if (nl < line_end)
+            space_idx = nl;
+        else
         {
-            if (*search == ' ')
+            space_idx = -1;
+            for (char *search = &line[line_end]; search > line; search--)
             {
-                space_idx = search - line;
-                break;
+                if (*search == ' ')
+                {
+                    space_idx = search - line;
+                    break;
+                }
             }
         }
 
-        if (++num_lines >= max_lines || !space_idx)
+        if (++num_lines >= max_lines || space_idx == -1)
         {
+            line_end = min(line_end, nl);
             int ellipses;
-            if (space_idx && space_idx - line_end > 2)
+            if (space_idx != -1 && space_idx - line_end > 2)
                 ellipses = space_idx;
             else
                 ellipses = line_end - 2;
 
-            size_t idx = &line[ellipses] - &base[0];
-            ret = ret.chop(idx);
+            ret = ret.chop_bytes(&line[ellipses] - &base[0]);
             ret += formatted_string("..");
             return ret;
         }
