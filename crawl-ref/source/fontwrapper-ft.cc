@@ -637,7 +637,14 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             if (space_idx != -1 && space_idx - line_end > 2)
                 ellipses = space_idx;
             else
-                ellipses = line_end - 2;
+            {
+                ellipses = line_end;
+                for (unsigned i = 0; i < strlen(".."); i++)
+                {
+                    char *prev = prev_glyph(&line[ellipses], line);
+                    ellipses = (prev ? prev : line) - line;
+                }
+            }
 
             ret = ret.chop_bytes(&line[ellipses] - &base[0]);
             ret += formatted_string("..");
