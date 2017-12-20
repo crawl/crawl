@@ -469,15 +469,35 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
 
     constrictee->clear_constricted();
 
+    monster * const mons = monster_by_mid(whom);
+    bool vile_clutch = mons && mons->has_ench(ENCH_BORGNJORS_VILE_CLUTCH);
+
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
+        string attacker_desc;
+        string attacker_pronoun;
+
+        if (vile_clutch)
+        {
+            attacker_desc = "The zombie hands";
+            attacker_pronoun = "their";
+        }
+        else
+        {
+            attacker_desc = name(DESC_THE);
+            attacker_pronoun = pronoun(PRONOUN_POSSESSIVE);
+        }
+
         mprf("%s %s %s grip on %s.",
-                name(DESC_THE).c_str(),
-                conj_verb(intentional ? "release" : "lose").c_str(),
-                pronoun(PRONOUN_POSSESSIVE).c_str(),
-                constrictee->name(DESC_THE).c_str());
+             attacker_desc.c_str(),
+             conj_verb(intentional ? "release" : "lose").c_str(),
+             attacker_pronoun.c_str(),
+             constrictee->name(DESC_THE).c_str());
     }
+
+    if (vile_clutch)
+        mons->del_ench(ENCH_BORGNJORS_VILE_CLUTCH);
 
     if (constrictee->is_player())
         you.redraw_evasion = true;
@@ -503,16 +523,29 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
     }
 }
 
-void actor::stop_constricting_all(bool intentional, bool quiet)
+void actor::stop_constricting_all(bool intentional, bool direct_only,
+                                  bool quiet)
 {
     if (!constricting)
         return;
 
     for (const auto &entry : *constricting)
-        end_constriction(entry.first, intentional, quiet);
+    {
+        if (direct_only)
+        {
+            const actor * const victim = actor_by_mid(entry.first);
+            if (victim && !victim->is_directly_constricted())
+                continue;
+        }
 
-    delete constricting;
-    constricting = 0;
+        end_constriction(entry.first, intentional, quiet);
+    }
+
+    if (constricting->empty())
+    {
+        delete constricting;
+        constricting = 0;
+    }
 }
 
 void actor::stop_being_constricted(bool quiet)
@@ -527,7 +560,7 @@ void actor::stop_being_constricted(bool quiet)
     clear_constricted();
 }
 
-void actor::clear_far_constrictions()
+void actor::clear_invalid_constrictions()
 {
     clear_constrictions_far_from(pos());
 }
@@ -537,8 +570,13 @@ void actor::clear_constrictions_far_from(const coord_def &where)
     clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
-    if (!constrictor || !adjacent(where, constrictor->pos()))
+    if (!constrictor
+        // Only direct constriction must be adjacent.
+        || (is_directly_constricted()
+            && !adjacent(where, constrictor->pos())))
+    {
         stop_being_constricted();
+    }
 
     if (!constricting)
         return;
@@ -547,8 +585,13 @@ void actor::clear_constrictions_far_from(const coord_def &where)
     for (const auto &entry : *constricting)
     {
         actor* const constrictee = actor_by_mid(entry.first);
-        if (!constrictee || !adjacent(where, constrictee->pos()))
+
+        if (!constrictee
+            || (constrictee->is_directly_constricted()
+                && !adjacent(where, constrictee->pos())))
+        {
             need_cleared.push_back(entry.first);
+        }
     }
 
     for (mid_t whom : need_cleared)
@@ -584,6 +627,13 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
+bool actor::is_directly_constricted() const
+{
+    return is_constricted()
+        && (is_player()
+            || !as_monster()->has_ench(ENCH_BORGNJORS_VILE_CLUTCH));
+}
+
 void actor::accum_has_constricted()
 {
     if (!constricting)
@@ -593,16 +643,24 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender) const
+bool actor::can_constrict(const actor* defender, bool direct) const
 {
     ASSERT(defender); // XXX: change to actor &defender
-    return (!is_constricting() || has_usable_tentacle())
-           && !defender->is_constricted()
-           && can_see(*defender)
-           && !confused()
-           && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
-           && defender->res_constrict() < 3
-           && adjacent(pos(), defender->pos());
+
+    if (direct)
+    {
+        return (!is_constricting() || has_usable_tentacle())
+               && !defender->is_constricted()
+               && can_see(*defender)
+               && !confused()
+               && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
+               && defender->res_constrict() < 3
+               && adjacent(pos(), defender->pos());
+    }
+
+    return can_see(*defender)
+        && !defender->is_constricted()
+        && defender->res_constrict() < 3;
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -610,6 +668,102 @@ bool actor::can_constrict(const actor* defender) const
 #else
 # define DIAG_ONLY(x) (void)0
 #endif
+
+/*
+ * Damage the defender with constriction damage. Longer duration gives more
+ * damage (albeit with a 5 turn step-down. Direct constriction uses
+ * strength-based base damage that is modified by XL, whereas indirect,
+ * spell-based constriction uses spellpower.
+ *
+ * @param defender The defender being constricted.
+ * @param duration How long the defender has been constricted in AUT.
+ */
+void actor::constriction_damage_defender(actor &defender, int duration)
+{
+
+    const bool direct = defender.is_directly_constricted();
+    int damage = constriction_damage(direct);
+
+    DIAG_ONLY(const int basedam = damage);
+    damage += div_rand_round(damage * stepdown((float)duration, 50.0),
+                             BASELINE_DELAY * 5);
+    if (is_player() && direct)
+        damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
+
+    DIAG_ONLY(const int durdam = damage);
+    damage -= random2(1 + (defender.armour_class() / 2));
+    DIAG_ONLY(const int acdam = damage);
+    damage = timescale_damage(this, damage);
+    DIAG_ONLY(const int timescale_dam = damage);
+
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
+                           "", false);
+    DIAG_ONLY(const int infdam = damage);
+
+    string exclamations;
+    if (damage <= 0 && is_player()
+        && you.can_see(defender))
+    {
+        exclamations = ", but do no damage.";
+    }
+    else if (damage < HIT_WEAK)
+        exclamations = ".";
+    else if (damage < HIT_MED)
+        exclamations = "!";
+    else if (damage < HIT_STRONG)
+        exclamations = "!!";
+    else
+    {
+        int tmpdamage = damage;
+        exclamations = "!!!";
+        while (tmpdamage >= 2 * HIT_STRONG)
+        {
+            exclamations += "!";
+            tmpdamage >>= 1;
+        }
+    }
+
+    if (is_player() || you.can_see(*this))
+    {
+        string attacker_desc;
+        if (!direct)
+           attacker_desc =  "The zombie hands";
+        else if (is_player())
+           attacker_desc =  "You";
+        else
+           attacker_desc =  name(DESC_THE);
+
+        mprf("%s %s %s%s%s", attacker_desc.c_str(),
+             conj_verb("constrict").c_str(),
+             defender.name(DESC_THE).c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+             make_stringf(" for %d", damage).c_str(),
+#else
+             "",
+#endif
+             exclamations.c_str());
+    }
+    else if (you.can_see(defender) || defender.is_player())
+    {
+        mprf("%s %s constricted%s%s",
+             defender.name(DESC_THE).c_str(),
+             defender.conj_verb("are").c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+             make_stringf(" for %d", damage).c_str(),
+#else
+             "",
+#endif
+             exclamations.c_str());
+    }
+
+    dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+         name(DESC_PLAIN, true).c_str(),
+         defender.name(DESC_PLAIN, true).c_str(),
+         basedam, durdam, acdam, timescale_dam, infdam);
+
+    if (defender.is_monster() && defender.as_monster()->hit_points < 1)
+        monster_die(*defender.as_monster(), this);
+}
 
 // Deal damage over time
 void actor::handle_constriction()
@@ -620,9 +774,9 @@ void actor::handle_constriction()
     // Constriction should have stopped the moment the actors became
     // non-adjacent; but disabling constriction by hand in every single place
     // is too error-prone.
-    clear_far_constrictions();
+    clear_invalid_constrictions();
 
-    if (!constricting || !constriction_damage())
+    if (!constricting)
         return;
 
     auto i = constricting->begin();
@@ -630,90 +784,13 @@ void actor::handle_constriction()
     while (constricting && i != constricting->end())
     {
         actor* const defender = actor_by_mid(i->first);
-        int duration = i->second;
-        ASSERT(defender);
+        const int duration = i->second;
 
         // Must increment before potentially killing the constrictee and
         // thus invalidating the old i.
         ++i;
 
-        int damage = constriction_damage();
-
-        DIAG_ONLY(const int basedam = damage);
-        damage += div_rand_round(damage * stepdown((float)duration, 50.0),
-                                 BASELINE_DELAY * 5);
-        if (is_player())
-            damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-        DIAG_ONLY(const int durdam = damage);
-        damage -= random2(1 + (defender->armour_class() / 2));
-        DIAG_ONLY(const int acdam = damage);
-        damage = timescale_damage(this, damage);
-        DIAG_ONLY(const int timescale_dam = damage);
-
-        damage = defender->hurt(this, damage, BEAM_MISSILE,
-                                KILLED_BY_MONSTER, "", "", false);
-        DIAG_ONLY(const int infdam = damage);
-
-        string exclamations;
-        if (damage <= 0 && is_player()
-            && you.can_see(*defender))
-        {
-            exclamations = ", but do no damage.";
-        }
-        else if (damage < HIT_WEAK)
-            exclamations = ".";
-        else if (damage < HIT_MED)
-            exclamations = "!";
-        else if (damage < HIT_STRONG)
-            exclamations = "!!";
-        else
-        {
-            int tmpdamage = damage;
-            exclamations = "!!!";
-            while (tmpdamage >= 2*HIT_STRONG)
-            {
-                exclamations += "!";
-                tmpdamage >>= 1;
-            }
-        }
-
-        if (is_player() || you.can_see(*this))
-        {
-            mprf("%s %s %s%s%s",
-                 (is_player() ? "You"
-                              : name(DESC_THE).c_str()),
-                 conj_verb("constrict").c_str(),
-                 defender->name(DESC_THE).c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclamations.c_str());
-        }
-        else if (you.can_see(*defender) || defender->is_player())
-        {
-            mprf("%s %s constricted%s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("are").c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclamations.c_str());
-        }
-
-        dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
-             name(DESC_PLAIN, true).c_str(),
-             defender->name(DESC_PLAIN, true).c_str(),
-             basedam, durdam, acdam, timescale_dam, infdam);
-
-        if (defender->is_monster()
-            && defender->as_monster()->hit_points < 1)
-        {
-            monster_die(*defender->as_monster(), this);
-        }
+        constriction_damage_defender(*defender, duration);
     }
 }
 

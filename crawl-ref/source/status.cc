@@ -420,7 +420,7 @@ bool fill_status_info(int status, status_info* inf)
             const monster * const cstr = monster_by_mid(you.constricted_by);
             ASSERT(cstr);
             const bool damage =
-                cstr->constriction_does_damage();
+                cstr->constriction_does_damage(you.is_directly_constricted());
 
             inf->light_colour = YELLOW;
             inf->light_text   = damage ? "Held" : "Constr";

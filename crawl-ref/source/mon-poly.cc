@@ -410,7 +410,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // current constrictor. Rather than trying to handle these as special
     // cases, just stop the constriction entirely. The usual message about
     // evaporating and reforming justifies this behaviour.
-    mons->stop_constricting_all(false);
+    mons->stop_constricting_all();
     mons->stop_being_constricted();
 
     mons->check_clinging(false);

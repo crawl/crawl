@@ -76,7 +76,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     crawl_view.set_player_at(c);
     set_position(c);
 
-    clear_far_constrictions();
+    clear_invalid_constrictions();
     end_searing_ray();
 }
 
@@ -837,9 +837,49 @@ bool player::shove(const char* feat_name)
     return false;
 }
 
-int player::constriction_damage() const
+void player::clear_invalid_indirect_constrictions()
 {
-    return roll_dice(2, div_rand_round(strength(), 5));
+    if (!constricting)
+        return;
+
+    vector<mid_t> need_cleared;
+    for (const auto &entry : *constricting)
+    {
+        const actor * const constrictee = actor_by_mid(entry.first);
+        // Constriction doesn't work out of LOS.
+        if (constrictee
+            && constrictee->alive()
+            && !constrictee->is_directly_constricted()
+            && !see_cell(constrictee->pos()))
+        {
+            need_cleared.push_back(entry.first);
+        }
+    }
+
+    for (auto whom : need_cleared)
+        stop_constricting(whom, false, false);
+}
+
+void player::clear_invalid_constrictions()
+{
+    clear_constrictions_far_from(pos());
+    clear_invalid_indirect_constrictions();
+}
+
+/*
+ * Calculate base constriction damage.
+ *
+ * @param direct True if this is for direct constriction, false otherwise (e.g.
+ *               Borg's Vile Clutch), false otherwise.
+ * @returns The base damage.
+ */
+int player::constriction_damage(bool direct) const
+{
+    if (direct)
+        return roll_dice(2, div_rand_round(strength(), 5));
+
+    return roll_dice(2, 5 + div_rand_round(
+                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 15));
 }
 
 /**

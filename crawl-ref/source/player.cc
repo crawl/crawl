@@ -6673,7 +6673,7 @@ void player::paralyse(actor *who, int str, string source)
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
-    stop_constricting_all();
+    stop_constricting_all(false, true);
     end_searing_ray();
 }
 
@@ -7140,7 +7140,7 @@ void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
     set_position(c);
-    clear_far_constrictions();
+    clear_invalid_constrictions();
 }
 
 bool player::asleep() const
@@ -7195,7 +7195,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
 
     mpr("You fall asleep.");
 
-    stop_constricting_all();
+    stop_constricting_all(false, true);
     end_searing_ray();
     stop_delay();
     flash_view(UA_MONSTER, DARKGREY);
@@ -7525,8 +7525,8 @@ static string _constriction_description()
                               num_free_tentacles,
                               num_free_tentacles > 1 ? "s" : "");
     }
-    // name of what this monster is constricted by, if any
-    if (you.is_constricted())
+
+    if (you.is_directly_constricted())
     {
         const monster * const constrictor = monster_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -7535,26 +7535,33 @@ static string _constriction_description()
             cinfo += "\n";
 
         cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage() ?
+                              constrictor->constriction_does_damage(true) ?
                                   "held" : "constricted",
                               constrictor->name(DESC_A).c_str());
     }
 
-    if (you.constricting && !you.constricting->empty())
+    if (you.is_constricting())
     {
         for (const auto &entry : *you.constricting)
         {
             monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
+
+            if (!whom->is_directly_constricted())
+                continue;
+
             c_name.push_back(whom->name(DESC_A));
         }
 
-        if (!cinfo.empty())
-            cinfo += "\n";
+        if (!c_name.empty())
+        {
+            if (!cinfo.empty())
+                cinfo += "\n";
 
-        cinfo += "You are constricting ";
-        cinfo += comma_separated_line(c_name.begin(), c_name.end());
-        cinfo += ".";
+            cinfo += "You are constricting ";
+            cinfo += comma_separated_line(c_name.begin(), c_name.end());
+            cinfo += ".";
+        }
     }
 
     return cinfo;
@@ -8113,7 +8120,7 @@ void player_end_berserk()
         {
             mprf(MSGCH_WARN, "You pass out from exhaustion.");
             you.increase_duration(DUR_PARALYSIS, roll_dice(1, 4));
-            you.stop_constricting_all();
+            you.stop_constricting_all(false, true);
         }
     }
 

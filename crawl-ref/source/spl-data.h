@@ -3931,6 +3931,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BORGNJORS_VILE_CLUTCH, "Borgnjor's Vile Clutch",
+    SPTYP_NECROMANCY | SPTYP_EARTH,
+    SPFLAG_TARGET,
+    5,
+    200,
+    5, 5,
+    5, 4,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
