@@ -2190,6 +2190,16 @@ string get_item_description(const item_def &item, bool verbose,
     return description.str();
 }
 
+string get_cloud_desc(cloud_type cloud)
+{
+    if (cloud == CLOUD_NONE)
+        return "";
+    const string cl_name = cloud_type_name(cloud);
+    const string cl_desc = getLongDescription(cl_name + " cloud");
+    return "A cloud of " + cl_name + (cl_desc.empty() ? "." : ".\n\n")
+        + cl_desc + extra_cloud_info(cloud);
+}
+
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
@@ -2252,13 +2262,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 
     if (const cloud_type cloud = env.map_knowledge(pos).cloud())
-    {
-        const string cl_name = cloud_type_name(cloud);
-        const string cl_desc = getLongDescription(cl_name + " cloud");
-        inf.body << "\n\nA cloud of " << cl_name
-                 << (cl_desc.empty() ? "." : ".\n\n")
-                 << cl_desc << extra_cloud_info(cloud);
-    }
+        inf.body << "\n\n" + get_cloud_desc(cloud);
 
     inf.quote = getQuoteString(db_name);
 }
