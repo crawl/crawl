@@ -721,7 +721,6 @@ static void _fix_missing_constrictions()
 
 static void _marshall_constriction(writer &th, const actor *who)
 {
-    _marshall_as_int(th, who->held);
     marshallInt(th, who->constricted_by);
     marshallInt(th, who->escape_attempts);
 
@@ -735,7 +734,10 @@ static void _marshall_constriction(writer &th, const actor *who)
 
 static void _unmarshall_constriction(reader &th, actor *who)
 {
-    who->held = unmarshall_int_as<held_type>(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NO_ACTOR_HELD)
+        unmarshallInt(th);
+#endif
     who->constricted_by = unmarshallInt(th);
     who->escape_attempts = unmarshallInt(th);
 
@@ -5111,7 +5113,7 @@ void marshallMonster(writer &th, const monster& m)
     uint32_t parts = 0;
     if (mons_is_ghost_demon(m.type))
         parts |= MP_GHOST_DEMON;
-    if (m.held || m.constricting && m.constricting->size())
+    if (m.constricting && m.constricting->size())
         parts |= MP_CONSTRICTION;
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         if (m.inv[i] != NON_ITEM)

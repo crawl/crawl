@@ -596,6 +596,8 @@ public:
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     int         constriction_damage() const override;
+    bool        constriction_does_damage() const override
+                    { return true; };
 
     int       has_claws(bool allow_tran = true) const override;
     bool      has_usable_claws(bool allow_tran = true) const;

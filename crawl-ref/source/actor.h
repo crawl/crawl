@@ -6,7 +6,6 @@
 #include "energy-use-type.h"
 #include "equipment-type.h"
 #include "god-type.h"
-#include "held-type.h"
 #include "item-prop-enum.h"
 #include "mon-holy-type.h"
 #include "random-var.h"
@@ -411,8 +410,6 @@ public:
 
     // Constriction stuff:
 
-    // What is holding us?  Not necessarily a monster.
-    held_type held;
     mid_t constricted_by;
     int escape_attempts;
 
@@ -438,6 +435,7 @@ public:
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
+    virtual bool constriction_does_damage() const = 0;
     virtual bool clear_far_engulf() = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.

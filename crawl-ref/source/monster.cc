@@ -2961,6 +2961,11 @@ int monster::constriction_damage() const
     return -1;
 }
 
+bool monster::constriction_does_damage() const
+{
+    return constriction_damage();
+}
+
 /** Return true if the monster temporarily confused. False for butterflies, or
     other permanently confused monsters.
 */

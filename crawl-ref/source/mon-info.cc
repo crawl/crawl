@@ -723,20 +723,18 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->is_constricted())
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
-        if (constrictor)
-        {
-            constrictor_name = (m->held == HELD_MONSTER ? "held by "
-                                                        : "constricted by ")
-                               + constrictor->name(_article_for(constrictor),
-                                                   true);
-        }
+        ASSERT(constrictor);
+        constrictor_name = (constrictor->constriction_does_damage() ?
+                            "held by " : "constricted by ")
+                           + constrictor->name(_article_for(constrictor),
+                                               true);
     }
 
     // names of what this monster is constricting, if any
     if (m->constricting)
     {
-        const char *gerund = m->constriction_damage() ? "constricting "
-                                                      : "holding ";
+        const char *gerund =
+            m->constriction_does_damage() ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
             if (const actor* const constrictee = actor_by_mid(entry.first))

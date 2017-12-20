@@ -7528,12 +7528,16 @@ static string _constriction_description()
     // name of what this monster is constricted by, if any
     if (you.is_constricted())
     {
+        const monster * const constrictor = monster_by_mid(you.constricted_by);
+        ASSERT(constrictor);
+
         if (!cinfo.empty())
             cinfo += "\n";
 
         cinfo += make_stringf("You are being %s by %s.",
-                      you.held == HELD_MONSTER ? "held" : "constricted",
-                      monster_by_mid(you.constricted_by)->name(DESC_A).c_str());
+                              constrictor->constriction_does_damage() ?
+                                  "held" : "constricted",
+                              constrictor->name(DESC_A).c_str());
     }
 
     if (you.constricting && !you.constricting->empty())

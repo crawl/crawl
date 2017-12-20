@@ -455,7 +455,6 @@ void actor::clear_clinging()
 void actor::clear_constricted()
 {
     constricted_by = 0;
-    held = HELD_NONE;
     escape_attempts = 0;
 }
 
@@ -565,7 +564,6 @@ void actor::start_constricting(actor &whom, int dur)
 
     (*constricting)[whom.mid] = dur;
     whom.constricted_by = mid;
-    whom.held = constriction_damage() ? HELD_CONSTRICTED : HELD_MONSTER;
 
     if (whom.is_player())
         you.redraw_evasion = true;
