@@ -426,6 +426,28 @@ formatted_string formatted_string::chop(int length) const
     return result;
 }
 
+formatted_string formatted_string::chop_bytes(int length) const
+{
+    formatted_string result;
+    for (const fs_op& op : ops)
+    {
+        if (op.type == FSOP_TEXT)
+        {
+            result.ops.push_back(op);
+            string& new_string = result.ops[result.ops.size()-1].text;
+            int w = new_string.length();
+            if (w > length)
+                new_string = new_string.substr(0, length);
+            length -= w;
+            if (length <= 0)
+                break;
+        }
+        else
+            result.ops.push_back(op);
+    }
+    return result;
+}
+
 void formatted_string::del_char()
 {
     for (auto i = ops.begin(); i != ops.end(); ++i)
