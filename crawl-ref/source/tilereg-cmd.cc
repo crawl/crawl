@@ -8,16 +8,16 @@
 #include "areas.h"
 #include "cio.h"
 #include "command.h"
+#include "describe.h"
 #include "enum.h"
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "nearby-danger.h"
-#include "process-desc.h"
-#include "process-desc.h"
 #include "religion.h"
 #include "spl-cast.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
@@ -143,10 +143,7 @@ bool CommandRegion::update_alt_text(string &alt)
     describe_info inf;
     inf.body << desc;
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 

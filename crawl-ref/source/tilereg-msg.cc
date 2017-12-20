@@ -5,10 +5,12 @@
 #include "tilereg-msg.h"
 
 #include "libutil.h"
+#include "format.h"
 #include "macro.h"
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "tiles-build-specific.h"
+#include "stringutil.h"
 
 MessageRegion::MessageRegion(FontWrapper *font) :
     TextRegion(font),
@@ -63,7 +65,13 @@ void MessageRegion::render()
     {
         coord_def min_pos(sx, sy);
         coord_def max_pos(ex, ey);
-        m_font->render_string(sx + ox, sy + oy, m_alt_text.c_str(),
+        // these hover strings never use the last line
+        string text = m_font->split(formatted_string(m_alt_text),
+                ex-sx-2*ox, ey-sy-2*oy-m_font->char_height()).tostring();
+        if (ends_with(text, ".."))
+            text = text.substr(0, text.find_last_of('\n')) + "\n...";
+
+        m_font->render_string(sx + ox, sy + oy, text.c_str(),
                               min_pos, max_pos, WHITE, false);
         return;
     }
