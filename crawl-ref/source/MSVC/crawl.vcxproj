@@ -753,7 +753,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\god-type.h" />
     <ClInclude Include="..\god-wrath.h" />
     <ClInclude Include="..\hash.h" />
-    <ClInclude Include="..\held-type.h" />
     <ClInclude Include="..\hints.h" />
     <ClInclude Include="..\hiscores.h" />
     <ClInclude Include="..\holy-word-source-type.h" />

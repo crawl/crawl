@@ -446,6 +446,7 @@ public:
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
     int constriction_damage() const override;
+    bool constriction_does_damage() const override;
 
     bool can_throw_large_rocks() const override;
     bool can_speak();
