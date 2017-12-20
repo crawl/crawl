@@ -228,7 +228,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_ENGLACIATION,
 },
 
-{   // Book of Battle (replacing Morphology)
+{   // Book of Battle
     SPELL_INFUSION,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_SONG_OF_SLAYING,
