@@ -95,8 +95,8 @@ enum class abflag
                         //0x00000040,
                         //0x00000080,
     conf_ok             = 0x00000100, // can use even if confused
-    ration              = 0x00000200, // ability requires a ration
-    variable_ration     = 0x00000400, // ability requires ration or piety
+    rations             = 0x00000200, // ability requires 2 rations per target
+    rations_or_piety    = 0x00000400, // ability requires 2 rations or piety
     variable_mp         = 0x00000800, // costs a variable amount of MP
                         //0x00001000,
                         //0x00002000,
@@ -501,11 +501,11 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_FEDHAS_EVOLUTION, "Evolution",
-      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::variable_ration },
+      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::rations_or_piety },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
       2, 0, 50, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_FEDHAS_PLANT_RING, "Growth",
-      2, 0, 0, 0, {fail_basis::invo, 40, 5, 20}, abflag::ration },
+      2, 0, 0, 0, {fail_basis::invo, 40, 5, 20}, abflag::rations },
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction",
       4, 0, 100, 1, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_RAIN, "Rain",
@@ -774,11 +774,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::ration)
-        ret += ", Ration";
+    if (abil.flags & abflag::rations)
+        ret += ", 2 Rations per target";
 
-    if (abil.flags & abflag::variable_ration)
-        ret += ", Ration or Piety";
+    if (abil.flags & abflag::rations_or_piety)
+        ret += ", Piety or 2 Rations";
 
     if (abil.flags & abflag::skill_drain)
         ret += ", Skill drain";
@@ -876,6 +876,12 @@ static const string _detailed_cost_description(ability_type ability)
         else
             ret << "variable";
     }
+
+    if (abil.flags & abflag::rations_or_piety)
+        ret << "\nPiety, or 2 rations";
+
+    if (abil.flags & abflag::rations)
+        ret << "\nRations: 2 per target";
 
     if (abil.flags & abflag::remove_curse_scroll)
     {
