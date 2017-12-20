@@ -16,6 +16,7 @@
 #include "areas.h"
 #include "branch.h"
 #include "colour.h"
+#include "database.h"
 #include "describe.h"
 #ifndef USE_TILE_LOCAL
 #include "directn.h"
@@ -612,7 +613,7 @@ static void _print_stats_noise(int x, int y)
     int level = silence ? 0 : you.get_noise_perception(true);
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf("Noise: ");
+    cprintf(get_ui("Noise").c_str());
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
@@ -1437,7 +1438,7 @@ void print_stats_level()
     int ypos = 8;
     cgotoxy(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("Place: ");
+    CPRINTF(get_ui("Place").c_str());
 
     textcolour(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
