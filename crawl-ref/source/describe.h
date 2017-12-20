@@ -84,6 +84,7 @@ string get_command_description(const command_type cmd, bool terse);
 
 int show_description(const string &body);
 int show_description(const describe_info &inf);
+string process_description(const describe_info &inf);
 
 const char* get_size_adj(const size_type size, bool ignore_medium = false);
 
@@ -98,29 +99,3 @@ int str_to_trap(const string &s);
 int count_desc_lines(const string& _desc, const int width);
 
 string extra_cloud_info(cloud_type cloud_type);
-
-
-class alt_desc_proc
-{
-public:
-    alt_desc_proc(int _w, int _h) { w = _w; h = _h; }
-
-    int width() { return w; }
-    int height() { return h; }
-
-    void nextline();
-    void print(const string &str);
-    static int count_newlines(const string &str);
-
-    // Remove trailing newlines.
-    static void trim(string &str);
-    // rfind consecutive newlines and truncate.
-    static bool chop(string &str);
-
-    void get_string(string &str);
-
-protected:
-    int w;
-    int h;
-    ostringstream ostr;
-};

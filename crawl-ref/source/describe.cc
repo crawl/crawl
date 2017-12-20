@@ -86,16 +86,6 @@ int show_description(const string &body)
     return show_description(inf);
 }
 
-class desc_proc_proxy
-{
-public:
-    int width() { return 10000000; }
-    int height() { return 10000000; }
-    void print(const string &str) { oss << str; }
-    void nextline() { oss << "\n"; }
-    ostringstream oss;
-};
-
 /// A message explaining how the player can toggle between quote &
 static const string _toggle_message =
     "Press '<w>!</w>'"
@@ -110,14 +100,13 @@ int show_description(const describe_info &inf)
     // Ensure we get the full screen size when calling get_number_of_cols()
     cgotoxy(1, 1);
 #endif
-    desc_proc_proxy proc;
-    process_description<desc_proc_proxy>(proc, inf);
+    string desc = process_description(inf);
 
     formatted_scroller desc_fs;
     int flags = MF_NOSELECT | MF_NOWRAP;
     desc_fs.set_flags(flags, false);
     desc_fs.set_more();
-    desc_fs.add_text(proc.oss.str(), false, get_number_of_cols());
+    desc_fs.add_text(desc, false, get_number_of_cols());
 
     formatted_scroller quote_fs;
     quote_fs.set_more();
@@ -147,6 +136,22 @@ int show_description(const describe_info &inf)
             return keyin;
         }
     }
+}
+
+string process_description(const describe_info &inf)
+{
+    string desc;
+    if (!inf.prefix.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.prefix));
+    if (!inf.title.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.title));
+    desc += "\n\n" + trimmed_string(filtered_lang(inf.body.str()));
+    if (!inf.suffix.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.suffix));
+    if (!inf.footer.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.footer));
+    trim_string(desc);
+    return desc;
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -4231,59 +4236,6 @@ string get_command_description(const command_type cmd, bool terse)
     }
 
     return result.substr(0, result.length() - 1);
-}
-
-void alt_desc_proc::nextline()
-{
-    ostr << "\n";
-}
-
-void alt_desc_proc::print(const string &str)
-{
-    ostr << str;
-}
-
-int alt_desc_proc::count_newlines(const string &str)
-{
-    return count(begin(str), end(str), '\n');
-}
-
-void alt_desc_proc::trim(string &str)
-{
-    int idx = str.size();
-    while (--idx >= 0)
-    {
-        if (str[idx] != '\n')
-            break;
-    }
-    str.resize(idx + 1);
-}
-
-bool alt_desc_proc::chop(string &str)
-{
-    int loc = -1;
-    for (size_t i = 1; i < str.size(); i++)
-        if (str[i] == '\n' && str[i-1] == '\n')
-            loc = i;
-
-    if (loc == -1)
-        return false;
-
-    str.resize(loc);
-    return true;
-}
-
-void alt_desc_proc::get_string(string &str)
-{
-    str = replace_all(ostr.str(), "\n\n\n\n", "\n\n");
-    str = replace_all(str, "\n\n\n", "\n\n");
-
-    trim(str);
-    while (count_newlines(str) > h)
-    {
-        if (!chop(str))
-            break;
-    }
 }
 
 /**
