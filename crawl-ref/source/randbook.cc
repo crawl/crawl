@@ -988,8 +988,6 @@ void make_book_kiku_gift(item_def &book, bool first)
                             : SPELL_PAIN);
         chosen_spells[3] = (!can_regen || coinflip())
             ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
-        chosen_spells[4] = SPELL_CONTROL_UNDEAD;
-
     }
     else
     {

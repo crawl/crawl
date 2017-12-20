@@ -643,6 +643,7 @@ static const struct spell_desc spelldata[] =
     TILEG_PAIN,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
     SPTYP_NECROMANCY,
@@ -651,8 +652,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_CONTROL_UNDEAD,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",

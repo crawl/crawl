@@ -1293,7 +1293,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
     case SPELL_TWISTED_RESURRECTION:
-    case SPELL_CONTROL_UNDEAD:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
