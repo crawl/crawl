@@ -780,7 +780,6 @@ bool actor::can_constrict(const actor* defender, bool direct) const
  */
 void actor::constriction_damage_defender(actor &defender, int duration)
 {
-
     const bool direct = defender.is_directly_constricted();
     int damage = constriction_damage(direct);
 
@@ -827,11 +826,11 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     {
         string attacker_desc;
         if (!direct)
-           attacker_desc =  "The zombie hands";
+            attacker_desc = "The zombie hands";
         else if (is_player())
-           attacker_desc =  "You";
+            attacker_desc = "You";
         else
-           attacker_desc =  name(DESC_THE);
+            attacker_desc = name(DESC_THE);
 
         mprf("%s %s %s%s%s", attacker_desc.c_str(),
              conj_verb("constrict").c_str(),
