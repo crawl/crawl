@@ -837,35 +837,6 @@ bool player::shove(const char* feat_name)
     return false;
 }
 
-void player::clear_invalid_indirect_constrictions()
-{
-    if (!constricting)
-        return;
-
-    vector<mid_t> need_cleared;
-    for (const auto &entry : *constricting)
-    {
-        const actor * const constrictee = actor_by_mid(entry.first);
-        // Constriction doesn't work out of LOS.
-        if (constrictee
-            && constrictee->alive()
-            && !constrictee->is_directly_constricted()
-            && !see_cell(constrictee->pos()))
-        {
-            need_cleared.push_back(entry.first);
-        }
-    }
-
-    for (auto whom : need_cleared)
-        stop_constricting(whom, false, false);
-}
-
-void player::clear_invalid_constrictions()
-{
-    clear_constrictions_far_from(pos());
-    clear_invalid_indirect_constrictions();
-}
-
 /*
  * Calculate base constriction damage.
  *

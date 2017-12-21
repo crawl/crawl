@@ -3229,8 +3229,9 @@ static void _move_player(coord_def move)
             clear_travel_trail();
 
         // clear constriction data
-        you.stop_constricting_all(true, true);
-        you.stop_being_constricted();
+        you.stop_directly_constricting_all(true);
+        if (you.is_directly_constricted())
+            you.stop_being_constricted();
 
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)

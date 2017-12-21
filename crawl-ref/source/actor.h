@@ -422,14 +422,17 @@ public:
 
     void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false);
-    void stop_constricting_all(bool intentional = false,
-                               bool direct_only = false,
-                               bool quiet = false);
+    void stop_constricting_all(bool intentional = false, bool quiet = false);
+    void stop_directly_constricting_all(bool intentional = false,
+                                        bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
     bool can_constrict(const actor* defender, bool direct) const;
+    bool has_invalid_direct_constrictor(const coord_def &where) const;
+    void clear_direct_constrictions_far_from(const coord_def &where);
+    bool has_invalid_indirect_constrictor() const;
+    void clear_invalid_indirect_constrictions();
     void clear_invalid_constrictions();
-    void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
