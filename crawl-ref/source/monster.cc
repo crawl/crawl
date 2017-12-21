@@ -2963,7 +2963,7 @@ int monster::constriction_damage(bool /* direct */) const
 
 bool monster::constriction_does_damage(bool direct) const
 {
-    return constriction_damage(direct);
+    return constriction_damage(direct) > 0;
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or
