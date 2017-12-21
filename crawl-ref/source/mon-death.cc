@@ -2936,7 +2936,7 @@ void monster_cleanup(monster* mons)
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is
     // cleaned up first, we wouldn't get a message anyway.
-    mons->stop_constricting_all(false, false, true);
+    mons->stop_constricting_all(false, true);
 
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);

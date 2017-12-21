@@ -6652,7 +6652,7 @@ void player::paralyse(actor *who, int str, string source)
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
-    stop_constricting_all(false, true);
+    stop_directly_constricting_all(false);
     end_searing_ray();
 }
 
@@ -7174,7 +7174,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
 
     mpr("You fall asleep.");
 
-    stop_constricting_all(false, true);
+    stop_directly_constricting_all(false);
     end_searing_ray();
     stop_delay();
     flash_view(UA_MONSTER, DARKGREY);
@@ -8053,7 +8053,7 @@ void player_end_berserk()
         {
             mprf(MSGCH_WARN, "You pass out from exhaustion.");
             you.increase_duration(DUR_PARALYSIS, roll_dice(1, 4));
-            you.stop_constricting_all(false, true);
+            you.stop_directly_constricting_all(false);
         }
     }
 

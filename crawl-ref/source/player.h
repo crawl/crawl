@@ -594,11 +594,9 @@ public:
     int         damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
-    void        clear_invalid_constrictions();
     int         constriction_damage(bool direct) const override;
     bool        constriction_does_damage(bool /* direct */) const override
                     { return true; };
-    void        clear_invalid_indirect_constrictions();
 
     int       has_claws(bool allow_tran = true) const override;
     bool      has_usable_claws(bool allow_tran = true) const;

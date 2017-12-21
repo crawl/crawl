@@ -1794,7 +1794,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
     if (!mons_is_immotile(*mons)
         && simple_monster_message(*mons, " suddenly stops moving!"))
     {
-        mons->stop_constricting_all(false, true);
+        mons->stop_directly_constricting_all();
         obvious_effect = true;
     }
 

@@ -2693,7 +2693,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    clear_constrictions_far_from(c);
+    clear_direct_constrictions_far_from(c);
 
     set_position(c);
 }
@@ -5632,7 +5632,7 @@ void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
     if (!valid_target)
         return;
 
-    stop_constricting_all(false, true);
+    stop_directly_constricting_all(false);
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
     if (hibernate)

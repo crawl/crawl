@@ -523,22 +523,57 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
     }
 }
 
-void actor::stop_constricting_all(bool intentional, bool direct_only,
-                                  bool quiet)
+/**
+ * Stop constricting all defenders, regardless of type of constriction.
+ *
+ * @param intentional True if this was intentional, which affects the language
+ *                    in any message.
+ * @param quiet       If True, don't display a message.
+ */
+void actor::stop_constricting_all(bool intentional, bool quiet)
 {
     if (!constricting)
         return;
 
     for (const auto &entry : *constricting)
-    {
-        if (direct_only)
-        {
-            const actor * const victim = actor_by_mid(entry.first);
-            if (victim && !victim->is_directly_constricted())
-                continue;
-        }
-
         end_constriction(entry.first, intentional, quiet);
+
+    delete constricting;
+    constricting = 0;
+}
+
+static bool _invalid_constrictee(const actor *constrictee)
+{
+    return !constrictee || !constrictee->is_constricted();
+}
+
+/**
+ * Stop directly constricting all defenders.
+ *
+ * @param intentional True if this was intentional, which affects the language
+ *                    in any message.
+ * @param quiet       If True, don't display a message.
+ */
+void actor::stop_directly_constricting_all(bool intentional, bool quiet)
+{
+    if (!constricting)
+        return;
+
+    vector<mid_t> need_cleared;
+    for (const auto &entry : *constricting)
+    {
+        const actor * const constrictee = actor_by_mid(entry.first);
+        if (_invalid_constrictee(constrictee)
+            || constrictee->is_directly_constricted())
+        {
+            need_cleared.push_back(entry.first);
+        }
+    }
+
+    for (auto whom : need_cleared)
+    {
+        end_constriction(whom, intentional, quiet);
+        constricting->erase(whom);
     }
 
     if (constricting->empty())
@@ -562,21 +597,40 @@ void actor::stop_being_constricted(bool quiet)
 
 void actor::clear_invalid_constrictions()
 {
-    clear_constrictions_far_from(pos());
+    clear_direct_constrictions_far_from(pos());
+    clear_invalid_indirect_constrictions();
 }
 
-void actor::clear_constrictions_far_from(const coord_def &where)
+/**
+ * Does the actor have a direct constrictor that's invalid for the given
+ * position? Direct constriction (e.g. by nagas and octopode players or
+ * AF_CONSTRICT) must happen between adjacent squares.
+ *
+ * @param where The position to consider.
+ * @returns     True if the constrictor is defined, direct, and invalid, false
+ *              otherwise.
+ */
+bool actor::has_invalid_direct_constrictor(const coord_def &where) const
+{
+    if (!is_directly_constricted())
+        return false;
+
+    const actor* const attacker = actor_by_mid(constricted_by);
+    return attacker && !adjacent(attacker->pos(), where);
+}
+
+/**
+ * Clear any constriction-like engulfing attacks or direct constriction that's
+ * too far from the given position.
+ *
+ * @param where The position to consider.
+ */
+void actor::clear_direct_constrictions_far_from(const coord_def &where)
 {
     clear_far_engulf();
-    actor* const constrictor = actor_by_mid(constricted_by);
 
-    if (!constrictor
-        // Only direct constriction must be adjacent.
-        || (is_directly_constricted()
-            && !adjacent(where, constrictor->pos())))
-    {
+    if (has_invalid_direct_constrictor(where))
         stop_being_constricted();
-    }
 
     if (!constricting)
         return;
@@ -584,17 +638,58 @@ void actor::clear_constrictions_far_from(const coord_def &where)
     vector<mid_t> need_cleared;
     for (const auto &entry : *constricting)
     {
-        actor* const constrictee = actor_by_mid(entry.first);
-
-        if (!constrictee
-            || (constrictee->is_directly_constricted()
-                && !adjacent(where, constrictee->pos())))
+        const actor * const constrictee = actor_by_mid(entry.first);
+        if (_invalid_constrictee(constrictee)
+            || constrictee->has_invalid_direct_constrictor(where))
         {
             need_cleared.push_back(entry.first);
         }
     }
 
     for (mid_t whom : need_cleared)
+        stop_constricting(whom, false, false);
+}
+
+/**
+ * Does the actor have an indirect constrictor that's invalid?
+ *
+ * @returns     True if the constrictor is defined, indirect, and invalid,
+ *  l           false otherwise.
+ */
+bool actor::has_invalid_indirect_constrictor() const
+{
+    if (!is_constricted() || is_directly_constricted())
+        return false;
+
+    const actor* const attacker = actor_by_mid(constricted_by);
+    // Constriction doesn't work out of LOS.
+    return !attacker || !attacker->see_cell(pos())
+}
+
+/**
+ * Clear any indirect constrictions (e.g. from Borgnjor's Vile Clutch) that are
+ * no longer valid.
+ */
+void actor::clear_invalid_indirect_constrictions()
+{
+    if (has_invalid_indirect_constrictor())
+        stop_being_constricted();
+
+    if (!constricting)
+        return;
+
+    vector<mid_t> need_cleared;
+    for (const auto &entry : *constricting)
+    {
+        const actor * const constrictee = actor_by_mid(entry.first);
+        if (_invalid_constrictee(constrictee)
+            || constrictee->has_invalid_indirect_constrictor())
+        {
+            need_cleared.push_back(entry.first);
+        }
+    }
+
+    for (auto whom : need_cleared)
         stop_constricting(whom, false, false);
 }
 
