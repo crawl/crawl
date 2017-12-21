@@ -662,8 +662,11 @@ bool actor::has_invalid_indirect_constrictor() const
         return false;
 
     const actor* const attacker = actor_by_mid(constricted_by);
-    // Constriction doesn't work out of LOS.
-    return !attacker || !attacker->see_cell(pos())
+    return !attacker
+        // Constriction doesn't work out of LOS.
+        || !attacker->see_cell(pos())
+        // All current indirect constriction requires reachable ground.
+        || !feat_has_solid_floor(grd(pos()));
 }
 
 /**
@@ -755,7 +758,9 @@ bool actor::can_constrict(const actor* defender, bool direct) const
 
     return can_see(*defender)
         && !defender->is_constricted()
-        && defender->res_constrict() < 3;
+        && defender->res_constrict() < 3
+        // All current indrect forms of constriction require reachable ground.
+        && feat_has_solid_floor(grd(defender->pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
