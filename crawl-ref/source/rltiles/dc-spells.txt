@@ -88,7 +88,6 @@ animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
 bolt_of_draining BOLT_OF_DRAINING
 borgnjors_revivification BORGNJORS_REVIVIFICATION
-control_undead CONTROL_UNDEAD
 corpse_rot CORPSE_ROT
 death_channel DEATH_CHANNEL
 deaths_door DEATHS_DOOR
@@ -101,9 +100,7 @@ regeneration REGENERATION
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
-twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
-cigotuvis_embrace CIGOTUVIS_EMBRACE
 infestation INFESTATION
 
 %sdir gui/spells/poison

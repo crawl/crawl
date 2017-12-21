@@ -2693,7 +2693,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    clear_constrictions_far_from(c);
+    clear_direct_constrictions_far_from(c);
 
     set_position(c);
 }
@@ -2950,7 +2950,7 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage() const
+int monster::constriction_damage(bool /* direct */) const
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -2959,6 +2959,11 @@ int monster::constriction_damage() const
             return attack.damage;
     }
     return -1;
+}
+
+bool monster::constriction_does_damage(bool direct) const
+{
+    return constriction_damage(direct) > 0;
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or
@@ -3123,11 +3128,6 @@ int monster::shield_bonus() const
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
-    if (has_ench(ENCH_BONE_ARMOUR))
-    {
-        const int bone_armour = 6 + get_hit_dice() / 3;
-        sh = max(sh + bone_armour, bone_armour);
-    }
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
@@ -3140,21 +3140,6 @@ int monster::shield_bonus() const
     return sh;
 }
 
-/**
- * After being hit or blocking an attack, possibly remove the monster's bone
- * armour (if it has any).
- *
- * Currently a 1/4 chance each time.
- */
-void monster::maybe_degrade_bone_armour()
-{
-    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
-    {
-        del_ench(ENCH_BONE_ARMOUR);
-        simple_monster_message(*this, "'s corpse armour sloughs away.");
-    }
-}
-
 int monster::shield_block_penalty() const
 {
     return 4 * shield_blocks * shield_blocks;
@@ -3165,7 +3150,6 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
-    maybe_degrade_bone_armour();
 }
 
 int monster::shield_bypass_ability(int) const
@@ -5651,7 +5635,7 @@ void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
     if (!valid_target)
         return;
 
-    stop_constricting_all();
+    stop_directly_constricting_all(false);
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
     if (hibernate)
@@ -6172,9 +6156,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         add_ench(ENCH_RING_OF_THUNDER);
     }
-
-    if (alive())
-        maybe_degrade_bone_armour();
 }
 
 reach_type monster::reach_range() const
@@ -6514,15 +6495,23 @@ bool monster::attempt_escape(int attempts)
     escape_attempts += attempts;
     attfactor = 3 * escape_attempts;
 
-    if (constricted_by != MID_PLAYER)
+    if (constricted_by == MID_PLAYER)
+    {
+        if (has_ench(ENCH_BORGNJORS_VILE_CLUTCH))
+        {
+            randfact = roll_dice(1, 10 + div_rand_round(
+                    calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 5));
+        }
+        else
+            randfact = roll_dice(1, 3 + you.experience_level);
+    }
+    else
     {
         randfact = roll_dice(1, 5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
         randfact += roll_dice(1, themonst->get_hit_dice());
     }
-    else
-        randfact = roll_dice(1, 3 + you.experience_level);
 
     if (attfactor > randfact)
     {

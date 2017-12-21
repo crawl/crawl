@@ -1841,10 +1841,10 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     // normally non-constricting players to constrict, this would need to
     // be changed.
     if (!form_keeps_mutations(which_trans))
-        you.stop_constricting_all(false);
+        you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large.
-    if (you.is_constricted())
+    if (you.is_directly_constricted())
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -2026,7 +2026,7 @@ void untransform(bool skip_move)
     }
 
     // Stop being constricted if we are now too large.
-    if (you.is_constricted())
+    if (you.is_directly_constricted())
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))

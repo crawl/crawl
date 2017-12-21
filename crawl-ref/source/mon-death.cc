@@ -1974,7 +1974,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     mons_clear_trapping_net(&mons);
-    mons.stop_constricting_all(false);
+    mons.stop_constricting_all();
     mons.stop_being_constricted();
 
     you.remove_beholder(mons);

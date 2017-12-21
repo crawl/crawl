@@ -643,6 +643,7 @@ static const struct spell_desc spelldata[] =
     TILEG_PAIN,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
     SPTYP_NECROMANCY,
@@ -651,8 +652,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_CONTROL_UNDEAD,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
@@ -855,7 +857,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_TWISTED_RESURRECTION,
+    TILEG_ERROR,
 },
 
 {
@@ -3652,6 +3654,7 @@ static const struct spell_desc spelldata[] =
     TILEG_ERROR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CIGOTUVIS_EMBRACE, "Cigotuvi's Embrace",
     SPTYP_NECROMANCY,
@@ -3660,8 +3663,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_CIGOTUVIS_EMBRACE,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
@@ -3927,6 +3931,17 @@ static const struct spell_desc spelldata[] =
     200,
     VORTEX_RADIUS, VORTEX_RADIUS,
     5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_BORGNJORS_VILE_CLUTCH, "Borgnjor's Vile Clutch",
+    SPTYP_NECROMANCY | SPTYP_EARTH,
+    SPFLAG_TARGET,
+    5,
+    200,
+    5, 5,
+    5, 4,
     TILEG_ERROR,
 },
 

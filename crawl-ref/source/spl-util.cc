@@ -1244,13 +1244,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your ring of flames would instantly melt the ice.";
         break;
 
-    case SPELL_CIGOTUVIS_EMBRACE:
-        if (temp && you.form == transformation::statue)
-            return "the corpses won't embrace your stony flesh.";
-        if (temp && you.duration[DUR_ICY_ARMOUR])
-            return "the corpses won't embrace your icy flesh.";
-        break;
-
     case SPELL_SUBLIMATION_OF_BLOOD:
         // XXX: write player_can_bleed(bool temp) & use that
         if (you.species == SP_GARGOYLE
@@ -1292,8 +1285,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
-    case SPELL_TWISTED_RESURRECTION:
-    case SPELL_CONTROL_UNDEAD:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:

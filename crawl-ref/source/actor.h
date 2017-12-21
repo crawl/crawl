@@ -6,7 +6,6 @@
 #include "energy-use-type.h"
 #include "equipment-type.h"
 #include "god-type.h"
-#include "held-type.h"
 #include "item-prop-enum.h"
 #include "mon-holy-type.h"
 #include "random-var.h"
@@ -411,8 +410,6 @@ public:
 
     // Constriction stuff:
 
-    // What is holding us?  Not necessarily a monster.
-    held_type held;
     mid_t constricted_by;
     int escape_attempts;
 
@@ -426,18 +423,25 @@ public:
     void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false);
     void stop_constricting_all(bool intentional = false, bool quiet = false);
+    void stop_directly_constricting_all(bool intentional = false,
+                                        bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender) const;
-    void clear_far_constrictions();
-    void clear_constrictions_far_from(const coord_def &where);
+    bool can_constrict(const actor* defender, bool direct) const;
+    bool has_invalid_direct_constrictor(const coord_def &where) const;
+    void clear_direct_constrictions_far_from(const coord_def &where);
+    bool has_invalid_indirect_constrictor() const;
+    void clear_invalid_indirect_constrictions();
+    void clear_invalid_constrictions();
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
+    bool is_directly_constricted() const;
     bool is_constricting() const;
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
-    virtual int constriction_damage() const = 0;
+    virtual int constriction_damage(bool direct) const = 0;
+    virtual bool constriction_does_damage(bool direct) const = 0;
     virtual bool clear_far_engulf() = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
@@ -453,6 +457,7 @@ public:
     static actor *ensure_valid_actor(actor *act);
 
 private:
+    void constriction_damage_defender(actor &defender, int duration);
     void end_constriction(mid_t whom, bool intentional, bool quiet);
 };
 

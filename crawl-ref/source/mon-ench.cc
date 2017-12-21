@@ -326,6 +326,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
              name(DESC_THE).c_str());
         break;
 
+    case ENCH_BORGNJORS_VILE_CLUTCH:
+        you.start_constricting(*this);
+        mprf(MSGCH_WARN, "Zombie hands grab %s.",
+             name(DESC_THE).c_str());
+        break;
+
     default:
         break;
     }
@@ -973,6 +979,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer infested.");
         break;
 
+    case ENCH_BORGNJORS_VILE_CLUTCH:
+        if (is_constricted())
+            stop_being_constricted(quiet);
+        break;
+
     case ENCH_STILL_WINDS:
         end_still_winds();
         break;
@@ -1461,6 +1472,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STILL_WINDS:
     case ENCH_RING_OF_THUNDER:
     case ENCH_WHIRLWIND_PINNED:
+    case ENCH_BORGNJORS_VILE_CLUTCH:
         decay_enchantment(en);
         break;
 
@@ -2176,7 +2188,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
-    "vortex", "vortex_cooldown",
+    "vortex", "vortex_cooldown", "borgnjors_vile_clutch",
     "buggy",
 };
 

@@ -3324,7 +3324,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     // Let go of all constrictees; only stop *being* constricted if we are now
     // too far away (done in move_to_pos above).
-    mons.stop_constricting_all(true);
+    mons.stop_directly_constricting_all(false);
 
     mons.check_redraw(mons.pos() - delta);
     mons.apply_location_effects(mons.pos() - delta);

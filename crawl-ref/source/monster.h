@@ -200,7 +200,6 @@ public:
     bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
-    void maybe_degrade_bone_armour();
 
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
@@ -445,7 +444,8 @@ public:
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
-    int constriction_damage() const override;
+    int constriction_damage(bool direct) const override;
+    bool constriction_does_damage(bool direct) const override;
 
     bool can_throw_large_rocks() const override;
     bool can_speak();
