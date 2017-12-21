@@ -259,51 +259,25 @@ int cast_selective_amnesia(const string &pre_msg)
     int slot;
 
     // Pick a spell to forget.
-    mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
     keyin = list_spells(false, false, false, "Forget which spell?");
     redraw_screen();
 
-    while (true)
+    if (isaalpha(keyin))
     {
-        if (key_is_escape(keyin))
-        {
-            canned_msg(MSG_OK);
-            return -1;
-        }
-
-        if (keyin == '?' || keyin == '*')
-        {
-            keyin = list_spells(false, false, false, "Forget which spell?");
-            redraw_screen();
-        }
-
-        if (!isaalpha(keyin))
-        {
-            clear_messages();
-            mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
-            keyin = get_ch();
-            continue;
-        }
-
         spell = get_spell_by_letter(keyin);
         slot = get_spell_slot_by_letter(keyin);
 
-        if (spell == SPELL_NO_SPELL)
+        if (spell != SPELL_NO_SPELL)
         {
-            mpr("You don't know that spell.");
-            mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
-            keyin = get_ch();
+            if (!pre_msg.empty())
+                mpr(pre_msg);
+            del_spell_from_memory_by_slot(slot);
+            return 1;
         }
-        else
-            break;
     }
 
-    if (!pre_msg.empty())
-        mpr(pre_msg);
-
-    del_spell_from_memory_by_slot(slot);
-
-    return 1;
+    canned_msg(MSG_OK);
+    return -1;
 }
 
 spret_type cast_infusion(int pow, bool fail)
