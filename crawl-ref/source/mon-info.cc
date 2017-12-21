@@ -733,7 +733,7 @@ monster_info::monster_info(const monster* m, int milev)
     // Names of what this monster is directly constricting, if any
     if (m->constricting)
     {
-        const char *gerund =
+        const char *participle =
             m->constriction_does_damage(true) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
@@ -741,7 +741,7 @@ monster_info::monster_info(const monster* m, int milev)
 
             if (constrictee && constrictee->is_directly_constricted())
             {
-                constricting_name.push_back(gerund
+                constricting_name.push_back(participle
                                             + constrictee->name(
                                                   _article_for(constrictee),
                                                   true));
