@@ -771,9 +771,9 @@ bool actor::can_constrict(const actor* defender, bool direct) const
 
 /*
  * Damage the defender with constriction damage. Longer duration gives more
- * damage (albeit with a 5 turn step-down. Direct constriction uses
- * strength-based base damage that is modified by XL, whereas indirect,
- * spell-based constriction uses spellpower.
+ * damage, but with a 50 aut step-down. Direct constriction uses strength-based
+ * base damage that is modified by XL, whereas indirect, spell-based
+ * constriction uses spellpower.
  *
  * @param defender The defender being constricted.
  * @param duration How long the defender has been constricted in AUT.
