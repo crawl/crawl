@@ -5841,7 +5841,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         if (origin_spell == SPELL_INFESTATION
             || origin_spell == SPELL_BORGNJORS_VILE_CLUTCH)
         {
-            loudness = spell_effect_noise(SPELL_INFESTATION);
+            loudness = spell_effect_noise(origin_spell);
         }
 
         // Lee's Rapid Deconstruction can target the tiles on the map
