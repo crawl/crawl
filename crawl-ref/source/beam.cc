@@ -5032,7 +5032,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_BORGNJORS_VILE_CLUTCH:
-        rc = you.can_constrict(mon, false);
+        rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
         break;
 
     default:
