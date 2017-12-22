@@ -693,7 +693,7 @@ void ghost_demon::find_transiting_ghosts(
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
                 const monster& m = i->mons;
-                if (m.ghost.get() && !m.props.exists("mirrored_ghost"))
+                if (m.ghost.get() && !m.props.exists(MIRRORED_GHOST_KEY))
                 {
                     announce_ghost(*m.ghost);
                     gs.push_back(*m.ghost);
@@ -715,7 +715,7 @@ void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get()
-            && !mi->props.exists("mirrored_ghost"))
+            && !mi->props.exists(MIRRORED_GHOST_KEY))
         {
             // Bingo!
             announce_ghost(*(mi->ghost));

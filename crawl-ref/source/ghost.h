@@ -13,6 +13,8 @@
 #include "mutant-beast.h"
 #include "species-type.h"
 
+#define MIRRORED_GHOST_KEY "mirrored_ghost"
+
 class ghost_demon
 {
 public:

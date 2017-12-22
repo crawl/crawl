@@ -651,6 +651,8 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.ac = quantise(ghost.ac, 5);
         i_ghost.damage = ghost.damage;
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
+        if (m->props.exists(MIRRORED_GHOST_KEY))
+            props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
 
         // describe abnormal (branded) ghost weapons
         if (ghost.brand != SPWPN_NORMAL)
