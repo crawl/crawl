@@ -91,10 +91,6 @@ Conjure Flame spell
 
 这道法术创造出一团火云。
 %%%%
-Control Undead spell
-
-这道法术尝试让施法者周围的所有不死生物都变成施法者的奴仆。
-%%%%
 Corona spell
 
 这道法术创造出一个光圈把目标生物围住，使目标生物的身体发光。

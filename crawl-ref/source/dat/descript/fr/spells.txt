@@ -178,10 +178,6 @@ Conjure Flame spell
 
 Ce sort crée une colonne de flammes ronflantes.
 %%%%
-Control Undead spell
-
-Ce sort tente d'asservir tous les morts-vivants à portée du sorcier.
-%%%%
 Controlled Blink spell
 
 Ce sort permet une translocation à courte distance, avec un contrôle précis.

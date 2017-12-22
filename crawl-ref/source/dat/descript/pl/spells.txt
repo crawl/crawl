@@ -107,10 +107,6 @@ Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
 tymczasową zaporę przeciw wrogom którzy boją się poparzeń — i zadaje spore
 obrażenia tym którzy w nią wejdą.
 %%%%
-Control Undead spell
-
-Ten czar próbuje zniewolić nieumarłych na których zostanie rzucony.
-%%%%
 Corona spell
 
 Ten czar tworzy poświatę wokół ofiary, czyniąc ją bardziej widoczną. W

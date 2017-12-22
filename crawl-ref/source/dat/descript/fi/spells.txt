@@ -36,10 +36,6 @@ Confuse spell
 
 Tämä taika aiheuttaa olennon mieleen hämmennystä ja sekaannusta.
 %%%%
-Control Undead spell
-
-Tällä loitsulla voi yrittää alistaa lähellä olevia epäkuolleita.
-%%%%
 Cure Poison spell
 
 Tämä loitsu poistaa myrkkyä käyttäjän elimistöstä.
