@@ -2954,7 +2954,7 @@ void define_monster(monster& mons)
         ghost_demon ghost;
         ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
         if (mcls == MONS_PLAYER_GHOST)
-            mons.props["mirrored_ghost"] = true;
+            mons.props[MIRRORED_GHOST_KEY] = true;
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));
         break;
