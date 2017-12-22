@@ -604,7 +604,7 @@ void actor::clear_invalid_constrictions()
 /**
  * Does the actor have a direct constrictor that's invalid for the given
  * position? Direct constriction (e.g. by nagas and octopode players or
- * AF_CONSTRICT) must happen between adjacent squares.
+ * AT_CONSTRICT) must happen between adjacent squares.
  *
  * @param where The position to consider.
  * @returns     True if the constrictor is defined, direct, and invalid, false
