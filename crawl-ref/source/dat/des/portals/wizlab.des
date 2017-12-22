@@ -899,7 +899,7 @@ ITEM:       any jewellery randart
 : else
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 : end
-ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
+ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
 SHUFFLE:    de / h~ / j|
