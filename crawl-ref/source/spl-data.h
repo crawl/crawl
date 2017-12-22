@@ -3942,7 +3942,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 4,
-    TILEG_ERROR,
+    TILEG_BORGNJORS_VILE_CLUTCH,
 },
 
 {
