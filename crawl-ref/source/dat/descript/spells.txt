@@ -203,8 +203,9 @@ will briefly paralyse the caster. It has no effect on the undead.
 %%%%
 Borgnjor's Vile Clutch spell
 
-Calls forth hands from corpses interred beneath the dungeon floor. Enemies
-caught in the area will be held in place and constricted until they break free.
+Calls forth hands from corpses interred beneath the dungeon floor long ago.
+Enemies caught in the area will be held in place and constricted until they
+break free.
 %%%%
 Brain Feed spell
 
