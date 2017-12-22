@@ -3848,6 +3848,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PLAYER_GHOST:
         inf.body << "The apparition of " << get_ghost_description(mi) << ".\n";
+        if (mi.props.exists(MIRRORED_GHOST_KEY))
+            inf.body << "It looks just like you...spooky!\n";
         break;
 
     case MONS_PLAYER_ILLUSION:
