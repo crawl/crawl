@@ -752,7 +752,7 @@ void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
     find_transiting_ghosts(gs);
 }
 
-/// Returns the number of extra ghosts allowed on the specified level.
+/// Returns the number of ghosts allowed on the specified level.
 int ghost_demon::max_ghosts_per_level(int absdepth)
 {
     return absdepth < 10 ? 1 : MAX_GHOSTS;
