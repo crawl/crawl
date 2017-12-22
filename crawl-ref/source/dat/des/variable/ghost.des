@@ -40,3 +40,38 @@ nn.Q.nn
  nnnnn
  .P@S.
 ENDMAP
+
+NAME:   vaults_ghost_runed
+WEIGHT: 50
+TAGS:   vaults_room player_ghost luniq_player_ghost no_tele_into allow_dup
+KFEAT:  + = runed_door
+KITEM:  1 = any useful good_item / nothing
+KMONS:  ! = generate_awake player ghost
+SHUFFLE: 123!
+MAP
+......
+.nnnn.
+.n1.n.
+.n.!n.
+.n++n.
+......
+ENDMAP
+
+# based on st_lines
+NAME:   vaults_ghost_runed2
+WEIGHT: 100
+TAGS:   vaults_hard player_ghost luniq_player_ghost no_tele_into allow_dup
+KFEAT:  + = runed_door
+KITEM:  1 = acquire any / any useful good_item
+KMONS:  ! = player ghost
+KMONS:  2 = generate_awake patrolling vault warden
+KMONS:  3 = generate_awake patrolling vault guard
+SHUFFLE: 123!
+MAP
+........
+nnn++nnn
+..+!2+..
+..+31+..
+nnn++nnn
+........
+ENDMAP
