@@ -1806,6 +1806,65 @@ static vector<ghost_demon> _load_ghost_vec(bool creating_level, bool wiz_cmd)
 }
 
 /**
+ * Attempt to fill in a monster based on bones files.
+ *
+ * @param mons the monster to fill in
+ *
+ * @return whether there was a saved ghost that could be used.
+ */
+bool define_ghost_from_bones(monster& mons)
+{
+    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
+
+#ifdef BONES_DIAGNOSTICS
+    const bool do_diagnostics = true;
+#endif
+
+    vector<ghost_demon> loaded_ghosts = _load_ghost_vec(true, wiz_cmd);
+    if (loaded_ghosts.empty())
+        return false;
+
+#ifdef BONES_DIAGNOSTICS
+    if (do_diagnostics)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s), placing %s",
+             (unsigned int)loaded_ghosts.size(), loaded_ghosts[0].name.c_str());
+    }
+    bool          ghost_errors    = false;
+#endif
+
+    mons.set_ghost(loaded_ghosts[0]);
+    mons.type = MONS_PLAYER_GHOST;
+    mons.ghost_init(false);
+
+#ifdef BONES_DIAGNOSTICS
+    if (do_diagnostics)
+    {
+        if (!mons.alive())
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Placed ghost is not alive.");
+            ghost_errors = true;
+        }
+        else if (mons.type != MONS_PLAYER_GHOST)
+        {
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Placed ghost is not MONS_PLAYER_GHOST, but %s",
+                 mons.name(DESC_PLAIN, true).c_str());
+            ghost_errors = true;
+        }
+    }
+    if (ghost_errors)
+        more();
+#endif
+
+    loaded_ghosts.erase(loaded_ghosts.begin());
+
+    if (!loaded_ghosts.empty())
+        save_ghosts(loaded_ghosts);
+    return true;
+}
+
+/**
  * Attempt to load one or more ghosts into the level.
  *
  * @param max_ghosts        A maximum number of ghosts to creat.

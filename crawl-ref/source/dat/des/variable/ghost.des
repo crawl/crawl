@@ -1,0 +1,42 @@
+##############################################################################
+# Ghost vaults
+#
+##############################################################################
+
+###############################################################################
+# Two basic ghost vaults
+NAME:   basic_ghost_runed
+WEIGHT: 10000
+DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt, Zot, Dis, Geh, Tar, Coc
+TAGS:   player_ghost luniq_player_ghost no_tele_into allow_dup
+KFEAT:  + = runed_door
+KITEM:  1 = acquire any / any useful good_item
+KMONS:  ! = player ghost
+MAP
+nnnn
++!1n
+nnnn
+ENDMAP
+
+NAME:   basic_ghost_transp
+WEIGHT: 10000
+DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt, Zot, Dis, Geh, Tar, Coc
+TAGS:   player_ghost luniq_player_ghost no_tele_into allow_dup
+KITEM:  1 = acquire any / any useful good_item
+KMONS:  ! = player ghost
+SHUFFLE: 1AQR, PS
+MARKER: P = lua:transp_loc("basic_ghost_transp_entry")
+MARKER: Q = lua:transp_dest_loc("basic_ghost_transp_entry")
+MARKER: R = lua:transp_loc("basic_ghost_transp_exit")
+MARKER: S = lua:transp_dest_loc("basic_ghost_transp_exit")
+SUBST: A = .
+MAP
+ nnnnn
+nn.1.nn
+n.$.$.n
+nA.!.Rn
+n.$.$.n
+nn.Q.nn
+ nnnnn
+ .P@S.
+ENDMAP
