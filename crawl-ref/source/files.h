@@ -110,6 +110,7 @@ public:
 
 void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false);
 bool load_ghosts(int max_ghosts, bool creating_level);
+bool define_ghost_from_bones(monster& mons);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);

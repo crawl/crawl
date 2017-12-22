@@ -28,6 +28,7 @@
 #include "env.h"
 #include "errors.h"
 #include "fight.h"
+#include "files.h"
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -2942,10 +2943,18 @@ void define_monster(monster& mons)
     }
 
     case MONS_PLAYER_GHOST:
+    {
+        if (define_ghost_from_bones(mons))
+            break;
+        dprf("No ghosts found in bones, falling back on mirrored player");
+        // intentional fallthrough -- fall back on mirroring the player
+    }
     case MONS_PLAYER_ILLUSION:
     {
         ghost_demon ghost;
         ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
+        if (mcls == MONS_PLAYER_GHOST)
+            mons.props["mirrored_ghost"] = true;
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));
         break;
