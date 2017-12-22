@@ -518,7 +518,7 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
         if (constricting->empty())
         {
             delete constricting;
-            constricting = 0;
+            constricting = nullptr;
         }
     }
 }
