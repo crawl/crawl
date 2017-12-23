@@ -605,15 +605,8 @@ static spell_type _choose_mem_spell(spell_list &spells,
 {
     sort(spells.begin(), spells.end(), _sort_mem_spells);
 
-#ifdef USE_TILE_LOCAL
-    const bool text_only = false;
-#else
-    const bool text_only = true;
-#endif
-
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    text_only);
+                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
 #ifdef USE_TILE_LOCAL
     // [enne] Hack. Use a separate title, so the column headers are aligned.
     spell_menu.set_title(

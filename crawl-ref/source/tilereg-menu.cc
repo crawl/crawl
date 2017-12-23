@@ -150,7 +150,7 @@ static bool _has_hotkey_prefix(const string &s)
 void MenuRegion::_place_entries()
 {
     const int tile_indent     = 20;
-    const int text_indent     = (Options.tile_menu_icons ? 58 : 20);
+    const int text_indent     = _draw_tiles() ? 58 : 20;
     const VColour selected_colour(50, 50, 10, 255);
 
     int more_height = (count_linebreaks(m_more)+1) * m_font_entry->char_height();
@@ -228,14 +228,15 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
     m_layout_dirty = false;
     m_buffer_dirty = true;
 
+    const bool draw_tiles = _draw_tiles();
     const int heading_indent  = 10;
     const int tile_indent     = 20;
-    const int text_indent     = (Options.tile_menu_icons ? 58 : 20);
-    const int max_tile_height = (Options.tile_menu_icons ? 32 : 0);
+    const int text_indent     = draw_tiles ? 58 : 20;
+    const int max_tile_height = draw_tiles ? 32 : 0;
     const int entry_buffer    = 1;
 
     int column = -1; // an initial increment makes this 0
-    if (!Options.tile_menu_icons)
+    if (!draw_tiles)
         set_num_columns(1);
     const int max_columns  = min(2, m_max_columns);
     const int column_width = menu_width / max_columns;
@@ -275,7 +276,7 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
             entry.ey = entry.sy + text_height;
 
             // wrap titles to two lines if they don't fit
-            if (Options.tile_menu_icons && entry.ex > entry.sx + menu_width)
+            if (draw_tiles && entry.ex > entry.sx + menu_width)
             {
                 int w = menu_width;
                 int h = m_font_entry->char_height() * 2;
@@ -304,7 +305,7 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
             // Split menu entries that don't fit into a single line into
             // two lines.
-            if (Options.tile_menu_icons && text_sx + text_width > entry_start + column_width - tile_indent)
+            if (draw_tiles && text_sx + text_width > entry_start + column_width - tile_indent)
             {
                 formatted_string text;
                 if (_has_hotkey_prefix(entry.text.tostring()))
@@ -525,6 +526,16 @@ void MenuRegion::set_more(const formatted_string &more)
     m_more.clear();
     m_more += more;
     m_layout_dirty = true;
+}
+
+bool MenuRegion::_draw_tiles() const
+{
+    if (!Options.tile_menu_icons)
+        return false;
+    for (const auto& entry : m_entries)
+        if (entry.valid && !entry.heading && !entry.tiles.empty())
+            return true;
+    return false;
 }
 
 #endif
