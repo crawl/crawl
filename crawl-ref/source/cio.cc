@@ -763,17 +763,8 @@ void line_reader::insert_char_at_cursor(int ch)
         length += len;
         buffer[length] = 0;
         pos += w;
-        if (!w)
-        {
-            cursorto(0);
-            print_segment();
-        }
-        else
-        {
-            putwch(ch);
-            if (*cur)
-                print_segment(cur - buffer);
-        }
+        cursorto(0);
+        print_segment();
         cursorto(pos);
     }
 }
