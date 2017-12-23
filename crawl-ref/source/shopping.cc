@@ -2158,13 +2158,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu()
-#ifdef USE_TILE_LOCAL
-        : Menu(MF_MULTISELECT,"",false)
-#else
-        : Menu()
-#endif
-    { }
+    ShoppingListMenu() : Menu() {}
 
 protected:
     void draw_title();
