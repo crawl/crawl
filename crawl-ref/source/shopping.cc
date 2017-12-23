@@ -2159,48 +2159,41 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu() : Menu() {}
+    ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
 
 protected:
-    void draw_title();
+    virtual formatted_string calc_title() override;
 };
 
-void ShoppingListMenu::draw_title()
+formatted_string ShoppingListMenu::calc_title()
 {
-    if (title)
+    formatted_string fs;
+    const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
+
+    fs.textcolour(title->colour);
+    fs.cprintf("%d %s%s, total %d gold",
+                title->quantity, title->text.c_str(),
+                title->quantity > 1? "s" : "",
+                total_cost);
+
+    string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    switch (menu_action)
     {
-        const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
-
-        cgotoxy(1, 1);
-        formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total %d gold",
-                   title->quantity, title->text.c_str(),
-                   title->quantity > 1? "s" : "",
-                   total_cost);
-        fs.display();
-
-#ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
-#endif
-        string s = "<lightgrey>  [<w>a-z</w>] ";
-
-        switch (menu_action)
-        {
-        case ACT_EXECUTE:
-            s += "<w>travel</w>|examine|delete";
-            break;
-        case ACT_EXAMINE:
-            s += "travel|<w>examine</w>|delete";
-            break;
-        default:
-            s += "travel|examine|<w>delete</w>";
-            break;
-        }
-
-        s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
-
-        draw_title_suffix(formatted_string::parse_string(s), false);
+    case ACT_EXECUTE:
+        s += "<w>travel</w>|examine|delete";
+        break;
+    case ACT_EXAMINE:
+        s += "travel|<w>examine</w>|delete";
+        break;
+    default:
+        s += "travel|examine|<w>delete</w>";
+        break;
     }
+
+    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
+    fs += formatted_string::parse_string(s);
+    return fs;
 }
 
 /**

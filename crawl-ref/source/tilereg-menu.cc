@@ -38,9 +38,11 @@ void MenuRegion::set_num_columns(int columns)
 
 int MenuRegion::mouse_entry(int x, int y)
 {
+    if (!m_entries[0].valid)
+        return 0;
     place_entries();
 
-    const int scroll_y = -m_entries[vis_item_first].sy + m_entries[0].sy;
+    const int scroll_y = _get_layout_scroll_y();
     y -= scroll_y;
 
     for (int i = 0; i < (int)m_entries.size(); i++)
@@ -60,8 +62,9 @@ int MenuRegion::mouse_entry(int x, int y)
 int MenuRegion::handle_mouse(MouseEvent &event)
 {
     m_mouse_idx = -1;
-
-    const int scroll_y = -m_entries[vis_item_first].sy + m_entries[0].sy;
+    if (!m_entries[0].valid)
+        return 0;
+    const int scroll_y = _get_layout_scroll_y();
 
     int x, y;
     if (!mouse_pos(event.px, event.py, x, y))
@@ -125,8 +128,6 @@ int MenuRegion::handle_mouse(MouseEvent &event)
 
 void MenuRegion::place_entries()
 {
-    if (!m_entries[0].valid)
-        return;
     _do_layout(0, 0, mx);
     if (vis_item_first == -1)
         scroll_to_item(0);
@@ -153,10 +154,11 @@ void MenuRegion::_place_entries()
     const int text_indent     = _draw_tiles() ? 58 : 20;
     const VColour selected_colour(50, 50, 10, 255);
 
+    m_font_buf.add(m_title, sx + ox, sy + oy);
     int more_height = (count_linebreaks(m_more)+1) * m_font_entry->char_height();
     m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
 
-    const int scroll_y = -m_entries[vis_item_first].sy + m_entries[0].sy;
+    const int scroll_y = _get_layout_scroll_y();
 
     for (int index = 0; index < (int)m_entries.size(); ++index)
     {
@@ -336,7 +338,8 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
 
     // Limit page size to ensure <= 52 items visible
     const int min_row_height = max(max_tile_height, text_height) + entry_buffer;
-    m_end_height = min(min_row_height*52/max_columns, my - more_height);
+    const int title_height = (count_linebreaks(m_title)+1) * m_font_entry->char_height();
+    m_end_height = min(min_row_height*52/max_columns, my - more_height - title_height);
 #ifdef TOUCH_UI
     m_more_region_start = m_end_height;
 #endif
@@ -515,10 +518,11 @@ void MenuRegion::on_resize()
     m_layout_dirty = true;
 }
 
-void MenuRegion::set_offset(int lines)
+void MenuRegion::set_title(const formatted_string &title)
 {
-    oy = (lines - 1) * m_font_entry->char_height() + 4;
-    my = wy - oy;
+    m_title.clear();
+    m_title += title;
+    m_layout_dirty = true;
 }
 
 void MenuRegion::set_more(const formatted_string &more)
@@ -536,6 +540,12 @@ bool MenuRegion::_draw_tiles() const
         if (entry.valid && !entry.heading && !entry.tiles.empty())
             return true;
     return false;
+}
+
+int MenuRegion::_get_layout_scroll_y() const
+{
+    const int title_height = (count_linebreaks(m_title)+1) * m_font_entry->char_height();
+    return title_height - m_entries[vis_item_first].sy;
 }
 
 #endif
