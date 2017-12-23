@@ -6497,7 +6497,7 @@ bool monster::attempt_escape(int attempts)
 
     if (constricted_by == MID_PLAYER)
     {
-        if (has_ench(ENCH_BORGNJORS_VILE_CLUTCH))
+        if (has_ench(ENCH_VILE_CLUTCH))
         {
             randfact = roll_dice(1, 10 + div_rand_round(
                     calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 5));

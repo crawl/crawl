@@ -173,7 +173,7 @@ enum monster_info_flags
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
     MB_PINNED,
-    MB_BORGNJORS_VILE_CLUTCH,
+    MB_VILE_CLUTCH,
     NUM_MB_FLAGS
 };
 

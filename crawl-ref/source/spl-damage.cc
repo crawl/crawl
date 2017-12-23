@@ -3216,9 +3216,9 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
 
 static void _setup_borgnjors_vile_clutch(bolt &beam, int pow)
 {
-    beam.name         = "borgnjor's vile clutch";
-    beam.aux_source   = "borgnjors_vile_clutch";
-    beam.flavour      = BEAM_BORGNJORS_VILE_CLUTCH;
+    beam.name         = "vile clutch";
+    beam.aux_source   = "vile_clutch";
+    beam.flavour      = BEAM_VILE_CLUTCH;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour       = GREEN;
     beam.source_id    = MID_PLAYER;

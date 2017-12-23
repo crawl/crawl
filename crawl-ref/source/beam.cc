@@ -202,7 +202,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_INFESTATION:
     case BEAM_PAIN:
     case BEAM_AGONY:
-    case BEAM_BORGNJORS_VILE_CLUTCH:
+    case BEAM_VILE_CLUTCH:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -3291,7 +3291,7 @@ void bolt::affect_player_enchantment(bool resistible)
     }
 
     // Never affects the player.
-    if (flavour == BEAM_INFESTATION || flavour == BEAM_BORGNJORS_VILE_CLUTCH)
+    if (flavour == BEAM_INFESTATION || flavour == BEAM_VILE_CLUTCH)
         return;
 
     // You didn't resist it.
@@ -4942,7 +4942,7 @@ bool bolt::has_saving_throw() const
     case BEAM_UNRAVELLED_MAGIC:
     case BEAM_INFESTATION:
     case BEAM_IRRESISTIBLE_CONFUSION:
-    case BEAM_BORGNJORS_VILE_CLUTCH:
+    case BEAM_VILE_CLUTCH:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5031,7 +5031,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_INFESTATION);
         break;
 
-    case BEAM_BORGNJORS_VILE_CLUTCH:
+    case BEAM_VILE_CLUTCH:
         rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
         break;
 
@@ -5584,10 +5584,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
-    case BEAM_BORGNJORS_VILE_CLUTCH:
+    case BEAM_VILE_CLUTCH:
     {
         const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
-        mon->add_ench(mon_enchant(ENCH_BORGNJORS_VILE_CLUTCH, 0, &you, dur));
+        mon->add_ench(mon_enchant(ENCH_VILE_CLUTCH, 0, &you, dur));
         obvious_effect = true;
         return MON_AFFECTED;
     }
@@ -6078,7 +6078,7 @@ bool bolt::nasty_to(const monster* mon) const
             return !mon->wont_attack();
         case BEAM_ENSLAVE_SOUL:
         case BEAM_INFESTATION:
-        case BEAM_BORGNJORS_VILE_CLUTCH:
+        case BEAM_VILE_CLUTCH:
         case BEAM_SLOW:
         case BEAM_PARALYSIS:
         case BEAM_DISPEL_UNDEAD:
@@ -6355,7 +6355,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SHARED_PAIN:           return "shared pain";
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
     case BEAM_INFESTATION:           return "infestation";
-    case BEAM_BORGNJORS_VILE_CLUTCH: return "borgnjor's vile clutch";
+    case BEAM_VILE_CLUTCH:           return "vile clutch";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

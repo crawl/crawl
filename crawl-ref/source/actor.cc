@@ -470,7 +470,7 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     constrictee->clear_constricted();
 
     monster * const mons = monster_by_mid(whom);
-    bool vile_clutch = mons && mons->has_ench(ENCH_BORGNJORS_VILE_CLUTCH);
+    bool vile_clutch = mons && mons->has_ench(ENCH_VILE_CLUTCH);
 
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
@@ -497,7 +497,7 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     }
 
     if (vile_clutch)
-        mons->del_ench(ENCH_BORGNJORS_VILE_CLUTCH);
+        mons->del_ench(ENCH_VILE_CLUTCH);
 
     if (constrictee->is_player())
         you.redraw_evasion = true;
@@ -729,7 +729,7 @@ bool actor::is_directly_constricted() const
 {
     return is_constricted()
         && (is_player()
-            || !as_monster()->has_ench(ENCH_BORGNJORS_VILE_CLUTCH));
+            || !as_monster()->has_ench(ENCH_VILE_CLUTCH));
 }
 
 void actor::accum_has_constricted()

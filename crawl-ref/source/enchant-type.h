@@ -176,7 +176,7 @@ enum enchant_type
     ENCH_WHIRLWIND_PINNED,
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
-    ENCH_BORGNJORS_VILE_CLUTCH,
+    ENCH_VILE_CLUTCH,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
