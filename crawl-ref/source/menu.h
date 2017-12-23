@@ -293,8 +293,7 @@ class Menu
     friend class MenuDisplayText;
     friend class MenuDisplayTile;
 public:
-    Menu(int flags = MF_MULTISELECT, const string& tagname = "",
-         bool text_only = true);
+    Menu(int flags = MF_MULTISELECT, const string& tagname = "");
 
     virtual ~Menu();
 
@@ -466,8 +465,8 @@ protected:
 class ToggleableMenu : public Menu
 {
 public:
-    ToggleableMenu(int _flags = MF_MULTISELECT, bool text_only = true)
-        : Menu(_flags, "", text_only) {}
+    ToggleableMenu(int _flags = MF_MULTISELECT)
+        : Menu(_flags) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
 protected:
     virtual int pre_process(int key) override;
