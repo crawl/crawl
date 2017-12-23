@@ -108,7 +108,8 @@ public:
     void go_to(const level_id &level);
 };
 
-void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false);
+void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false,
+                                                    bool use_store = true);
 bool load_ghosts(int max_ghosts, bool creating_level);
 bool define_ghost_from_bones(monster& mons);
 
