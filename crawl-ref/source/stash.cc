@@ -1565,7 +1565,7 @@ class StashSearchMenu : public Menu
 {
 public:
     StashSearchMenu(const char* sort_style_,const char* filtered_)
-        : Menu(),
+        : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING),
           request_toggle_sort_method(false),
           request_toggle_filter_useless(false),
           sort_style(sort_style_),
@@ -1580,42 +1580,35 @@ public:
 
 protected:
     bool process_key(int key) override;
-    void draw_title() override;
+    virtual formatted_string calc_title() override;
 };
 
-void StashSearchMenu::draw_title()
+formatted_string StashSearchMenu::calc_title()
 {
-    if (title)
+    formatted_string fs;
+    fs.textcolour(title->colour);
+    fs.cprintf("%d %s%s",
+                title->quantity, title->text.c_str(),
+                title->quantity == 1 ? "" : "es");
+    if (title->quantity == 0 && filtered)
     {
-        cgotoxy(1, 1);
-        formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s",
-                   title->quantity, title->text.c_str(),
-                   title->quantity == 1 ? "" : "es");
-        fs.display();
-
-#ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
-#endif
-        if (title->quantity == 0 && filtered)
-        {
-            // TODO: it might be better to just force filtered=false in the
-            // display loop if only useless items are found.
-            draw_title_suffix(formatted_string::parse_string(
-                "<lightgrey>"
-                ": only useless items found; press <w>=</w> to show."
-                "</lightgrey>"), false);
-        } else {
-            draw_title_suffix(formatted_string::parse_string(make_stringf(
-                "<lightgrey>"
-                ": <w>%s</w> [toggle: <w>!</w>],"
-                " by <w>%s</w> [<w>/</w>],"
-                " <w>%s</w> useless & duplicates [<w>=</w>]"
-                "</lightgrey>",
-                menu_action == ACT_EXECUTE ? "travel" : "view  ",
-                sort_style, filtered)), false);
-        }
+        // TODO: it might be better to just force filtered=false in the
+        // display loop if only useless items are found.
+        fs += formatted_string::parse_string(
+            "<lightgrey>"
+            ": only useless items found; press <w>=</w> to show."
+            "</lightgrey>");
+    } else {
+        fs += formatted_string::parse_string(make_stringf(
+            "<lightgrey>"
+            ": <w>%s</w> [toggle: <w>!</w>],"
+            " by <w>%s</w> [<w>/</w>],"
+            " <w>%s</w> useless & duplicates [<w>=</w>]"
+            "</lightgrey>",
+            menu_action == ACT_EXECUTE ? "travel" : "view  ",
+            sort_style, filtered));
     }
+    return fs;
 }
 
 bool StashSearchMenu::process_key(int key)
