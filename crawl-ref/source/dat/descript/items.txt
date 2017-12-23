@@ -28,7 +28,7 @@ magical backlash significantly drains the wearer. The amulet is carved from ruby
 amulet of inaccuracy
 
 An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells. Holding it in your hand makes it tremble.
+targeting monsters via ranged attacks or spells. Holding it makes your hand tremble.
 %%%%
 amulet of magic regeneration
 
@@ -131,7 +131,7 @@ book of cantrips
 
 A book containing a small selection of very basic magic spells, intended for
 beginners who wish to learn the rudiments of one of the featured magical
-schools.
+schools. The backbone of magical academies everywhere.
 %%%%
 book of changes
 
@@ -171,7 +171,7 @@ book of enchantments
 A spellbook containing an assortment of powerful Hexes and Charms, which
 sparkles and shimmers as the pages are flipped.
 %%%%
-XXXXXXXXXXXXXXXXXbook of fire
+book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
 the secret college of the djinn. The tome is uncomfortably hot to the touch.
@@ -184,25 +184,25 @@ book of fixed theme
 
 A book of magic spells.
 %%%%
-XXXXXXXXXXXXXXXXXbook of flames
+book of flames
 
 The standard text used in arcane academies by students of the elemental magic
 of Fire. The tome is warm to the touch.
 %%%%
 book of frost
 
-XXXXXXXXXXXXXXXXXA book of magic spells, often used as an introduction to the elemental magics
+A book of magic spells, often used as an introduction to the elemental magics
 of Ice. The tome is cold to the touch.
 %%%%
-XXXXXXXXXXXXXXXXXbook of geomancy
+book of geomancy
 
 A book containing basic spells involving the element of Earth. After perusing the tome’s contents your fingers come away caked in dirt.
 %%%%
-XXXXXXXXXXXXXXXXXbook of ice
+book of ice
 
 A book of advanced magical spells using the element of Ice. The tome is bitingly cold to the touch.
 %%%%
-XXXXXXXXXXXXXXXXXbook of maledictions
+book of maledictions
 
 A book of Hexes, describing spells to confound and weaken. Reading the tome leaves you baffled, through magical means or otherwise.
 %%%%
@@ -218,7 +218,7 @@ foes. Superstitious wizards claim that the book itself actually absorbs ill
 fortune, and carry it around as a talisman, but the effects of this seem
 subtle at best.
 %%%%
-XXXXXXXXXXXXXXXXXbook of necromancy
+book of necromancy
 
 A macabre book containing basic Necromancy spells. The mere presence of this tome makes nearby corpses twitch.
 %%%%
@@ -241,16 +241,16 @@ book of summonings
 An advanced treatise on Summoning magics, detailing ways of summoning and
 binding creatures from all manners of realms.
 %%%%
-XXXXXXXXXXXXXXXXXbook of the dragon
+book of the dragon
 
 A magical book of spells which allow some command over dragons and their
 aspects. The cover is illustrated with a wizard riding a drake.
 %%%%
-XXXXXXXXXXXXXXXXXbook of the earth
+book of the earth
 
 A textbook of advanced Earth magic. The tome is as heavy as stone.
 %%%%
-XXXXXXXXXXXXXXXXXbook of the sky
+book of the sky
 
 A magical book containing powerful elemental spells of Air. The tome, through thick, weighs less than a feather.
 %%%%
@@ -304,9 +304,9 @@ centaur barding
 
 An armour made for centaurs, to wear over their equine half.
 %%%%
-XXXXXXXXXXXXXXXXXchain mail
+chain mail
 
-A suit of armour laboriously made out of tiny metal rings.
+A suit of armour laboriously assembled out of tiny metal rings.
 %%%%
 chunk of flesh
 
@@ -338,13 +338,13 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
-XXXXXXXXXXXXXXXXXdagger
+dagger
 
 A double-edged fighting knife with a sharp point. A favourite of backstabbers throughout history.
 %%%%
 decaying skeleton
 
-A decaying skeleton.
+A decaying skeleton. Particularly tough sinews cling to the bones.
 %%%%
 deck of destruction
 
@@ -416,7 +416,7 @@ fen folio
 
 A collection of spells once used by the great swamp civilizations.
 %%%%
-XXXXXXXXXXXXXXXXXfigurine of a ziggurat
+figurine of a ziggurat
 
 A small figurine made of some strange material, shaped like a stepped pyramid.
 It is remarkably detailed – almost like a real, vast structure, somehow shrunk
@@ -437,11 +437,11 @@ A length of wood with a reinforced sling at one end, able to fire projectiles
 at high velocity. It deals more damage when launching purpose-made ammunition,
 rather than stones found on the floor.
 %%%%
-XXXXXXXXXXXXXXXXXgiant club
+giant club
 
 A giant lump of wood. Simple, but effective.
 %%%%
-XXXXXXXXXXXXXXXXXgiant spiked club
+giant spiked club
 
 A giant lump of wood ornamented with sharp spikes at one end.
 %%%%
@@ -454,7 +454,7 @@ gold dragon scales
 The scales of a gold dragon. It is much heavier than most dragon scale armours,
 and grants its wearer resistance to poison, fire and cold.
 %%%%
-XXXXXXXXXXXXXXXXXgold piece
+gold piece
 
 A pile of glittering gold coins. Their sides depict various monarchs, all long since dead.
 %%%%
@@ -478,7 +478,7 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
-XXXXXXXXXXXXXXXXXhand axe
+hand axe
 
 A small axe, useful for hacking branches, limbs, and bones.
 %%%%
@@ -514,7 +514,7 @@ while rendering its wearer more susceptible to fire.
 %%%%
 inedible chunk of flesh
 
-<chunk of flesh>
+Unappetising even for a chunk of flesh.
 %%%%
 javelin
 
@@ -570,7 +570,7 @@ Consecutive evocations cause the discharge to be sustained, which increases the
 power level up to four times and allows the blast to be redirected to affect an
 area.
 %%%%
-XXXXXXXXXXXXXXXXXlong sword
+long sword
 
 A sword with a long, slashing blade. A staple of knights and brigands everywhere.
 %%%%
@@ -585,7 +585,7 @@ A short club with a metal head.
 manual
 
 A valuable book which allows one to practise a certain skill more efficiently
-when carried.
+when carried. It is detailed and dry.
 %%%%
 morningstar
 
@@ -662,12 +662,12 @@ A potion which can send one into an incoherent rage, distilled from little more 
 %%%%
 potion of blood
 
-A potion containing the essence of life.
+A potion containing the essence of life. It takes great self-control not to quaff it at once.
 %%%%
 potion of brilliance
 
 A potion which greatly increases the intelligence and magical power of one who
-drinks it.
+drinks it. More than one spell has been invented under the influence of this beverage.
 %%%%
 potion of cancellation
 
@@ -679,9 +679,9 @@ potion of curing
 A potion which heals some wounds, clears the mind and cures poison and disease.
 It can also slightly repair rotting.
 %%%%
-XXXXXXXXXXXXXXXXXpotion of degeneration
+potion of degeneration
 
-A noxious concoction which reduces strength, intelligence and dexterity. Drink with care.
+A noxious concoction which reduces strength, intelligence and dexterity. Drink with care, if at all.
 %%%%
 potion of experience
 
@@ -735,7 +735,7 @@ A mysterious item resembling a rune of some kind. Once evoked, it will make the
 user glow blue and add a reverb to all sound... and there may be other effects
 as well.
 %%%%
-XXXXXXXXXXXXXXXXXquarterstaff
+quarterstaff
 
 A sturdy wooden pole, meant for fighting while young and hobbling while old.
 %%%%
@@ -966,7 +966,7 @@ scroll of magic mapping
 
 A scroll that reveals the surroundings of the one who reads it.
 %%%%
-XXXXXXXXXXXXXXXXXscroll of noise
+scroll of noise
 
 A prank scroll that creates a loud noise when read, akin to that of a raspberry.
 %%%%
@@ -1052,7 +1052,7 @@ A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
 and Ice Magic, they can freeze those struck by it.
 %%%%
-XXXXXXXXXXXXXXXXXstaff of conjuration
+staff of conjuration
 
 A staff that increases the power of conjurations cast by its wielder. The weapon vibrates with raw power.
 %%%%
@@ -1087,7 +1087,7 @@ protects them from the effects of poison. If the wielder is skilled in
 Evocations and Poison Magic, they can poison creatures struck by it — even if
 the victims are normally resistant.
 %%%%
-XXXXXXXXXXXXXXXXXstaff of power
+staff of power
 
 A staff that provides an increased reservoir of magical power to its wielder. Holding it makes one’s hair stand on end.
 %%%%
@@ -1095,7 +1095,7 @@ staff of summoning
 
 A staff that increases the power of summonings cast by its wielder.
 %%%%
-XXXXXXXXXXXXXXXXXstaff of wizardry
+staff of wizardry
 
 A staff that increases the ability of its wielder to use magical spells. The weapon is engraved with strings of runes, many of which are simple mnemonics.
 %%%%
@@ -1160,7 +1160,7 @@ troll leather armour
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
 flesh.
 %%%%
-XXXXXXXXXXXXXXXXXwand of acid
+wand of acid
 
 A magical device which throws bolts of corrosive acid. Holding it stings a little.
 %%%%
@@ -1195,7 +1195,7 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-XXXXXXXXXXXXXXXXXwand of paralysis
+wand of paralysis
 
 A magical device which can render a creature immobile, incapable of moving any
 of its limbs. Holding it makes your hand stiff.
@@ -1205,7 +1205,7 @@ wand of polymorph
 A magical device which causes a creature to be transmogrified into another
 form. It is especially effective against shape-changing creatures.
 %%%%
-XXXXXXXXXXXXXXXXXwand of random effects
+wand of random effects
 
 A magical device which can produce a variety of effects. Reliably entertaining in even the most dire of circumstances.
 %%%%
@@ -1224,7 +1224,7 @@ A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
 %%%%
-XXXXXXXXXXXXXXXXXyoung poisoner's handbook
+young poisoner's handbook
 
 An introductory book for the magic arts of poison. Perusing the tome makes you queasy.
 %%%%
