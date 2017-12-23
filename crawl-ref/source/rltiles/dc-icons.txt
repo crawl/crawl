@@ -57,6 +57,7 @@ infested INFESTED
 corroded CORRODED
 swift SWIFT
 pinned PINNED
+vile_clutch VILE_CLUTCH
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
