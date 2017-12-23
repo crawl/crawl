@@ -292,6 +292,9 @@ class Menu
 {
     friend class MenuDisplayText;
     friend class MenuDisplayTile;
+#ifdef USE_TILE_LOCAL
+    friend class menu_filter_line_reader;
+#endif
 public:
     Menu(int flags = MF_MULTISELECT, const string& tagname = "");
 
@@ -306,10 +309,6 @@ public:
     int  get_flags() const        { return flags; }
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
-
-    bool draw_title_suffix(const string &s, bool titlefirst = true);
-    bool draw_title_suffix(const formatted_string &fs, bool titlefirst = true);
-    void update_title();
 
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
@@ -388,6 +387,10 @@ protected:
 
     int last_selected;
 
+#ifdef USE_TILE_LOCAL
+    char* m_filter_text; // nullptr == not in filter mode
+#endif
+
     MenuDisplay *mdisplay;
 
 protected:
@@ -395,13 +398,11 @@ protected:
                                   string &line, bool check_eol);
     void do_menu();
     virtual string get_select_count_string(int count) const;
-    virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);
-    void webtiles_set_suffix(const formatted_string title);
 
     void webtiles_write_tiles(const MenuEntry& me) const;
     void webtiles_update_items(int start, int end) const;
@@ -419,7 +420,6 @@ protected:
 
     bool _webtiles_title_changed;
     formatted_string _webtiles_title;
-    formatted_string _webtiles_suffix;
 
     inline int webtiles_section_start() const
     {
@@ -432,7 +432,7 @@ protected:
 #endif
 
     virtual void draw_title();
-    virtual void write_title();
+    virtual void calc_title(formatted_string &fs);
     virtual int title_height() const;
     virtual void draw_menu();
     virtual bool page_down();

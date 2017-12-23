@@ -2284,7 +2284,7 @@ protected:
         {
             //return the menu title to its previous text.
             set_title(temp_title);
-            update_title();
+            draw_title();
             num = -2;
 
             // Disarm ^D here, because process_key doesn't always set lastch.
@@ -2321,7 +2321,7 @@ protected:
                 lastch = CONTROL('D');
                 temp_title = title->text;
                 set_title("Select to reset item to default: ");
-                update_title();
+                draw_title();
             }
 
             return true;

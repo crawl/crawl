@@ -20,7 +20,7 @@ public:
 
     void set_entry(int index, const string &s, int colour, const MenuEntry *me,
                    bool mark_selected = true);
-    void set_offset(int lines);
+    void set_title(const formatted_string &more);
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);
 
@@ -41,6 +41,7 @@ protected:
     int vis_item_first, vis_item_last;
     void *m_menu_display;
     bool _draw_tiles() const;
+    int _get_layout_scroll_y() const;
 
     struct MenuRegionEntry
     {
@@ -57,6 +58,7 @@ protected:
 
     ImageManager *m_image;
     FontWrapper *m_font_entry;
+    formatted_string m_title;
     formatted_string m_more;
     int m_mouse_idx;
     int m_max_columns;

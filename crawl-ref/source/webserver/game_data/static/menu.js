@@ -415,12 +415,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     function update_title()
     {
         $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
-
-        if (menu.title.suffix)
-        {
-            $("#menu_title").append(" <span id='menu_suffix'>"
-                + util.formatted_string_to_html(menu.title.suffix) + "</span>");
-        }
     }
 
     function pattern_select()
