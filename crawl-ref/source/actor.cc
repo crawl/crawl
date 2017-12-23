@@ -878,19 +878,18 @@ void actor::handle_constriction()
     if (!constricting)
         return;
 
-    auto i = constricting->begin();
-    // monster_die() can cause constricting() to go away.
-    while (constricting && i != constricting->end())
+    // need to make a copy, since constriction_damage_defender can
+    // unpredictably invalidate constricting
+    constricting_t tmp_constricting = *constricting;
+    for (auto &i : tmp_constricting)
     {
-        actor* const defender = actor_by_mid(i->first);
-        const int duration = i->second;
-
-        // Must increment before potentially killing the constrictee and
-        // thus invalidating the old i.
-        ++i;
-
-        constriction_damage_defender(*defender, duration);
+        actor* const defender = actor_by_mid(i.first);
+        const int duration = i.second;
+        if (defender)
+            constriction_damage_defender(*defender, duration);
     }
+
+    clear_invalid_constrictions();
 }
 
 string actor::describe_props() const
