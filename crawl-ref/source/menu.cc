@@ -377,7 +377,7 @@ void MenuDisplayTile::set_num_columns(int columns)
 }
 #endif
 
-Menu::Menu(int _flags, const string& tagname, bool text_only)
+Menu::Menu(int _flags, const string& tagname)
   : f_selitem(nullptr), f_keyfilter(nullptr),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
     title2(nullptr), flags(_flags), tag(tagname),
@@ -386,13 +386,7 @@ Menu::Menu(int _flags, const string& tagname, bool text_only)
     alive(false), last_selected(-1)
 {
 #ifdef USE_TILE_LOCAL
-    if (text_only)
-    {
-        ASSERT(!(flags & MF_USE_TWO_COLUMNS));
-        mdisplay = new MenuDisplayText(this);
-    }
-    else
-        mdisplay = new MenuDisplayTile(this);
+    mdisplay = new MenuDisplayTile(this);
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
@@ -2002,6 +1996,10 @@ void column_composer::compose_formatted_column(
 
 formatted_scroller::formatted_scroller() : Menu(MF_NOSELECT)
 {
+#ifdef USE_TILE_LOCAL
+    delete mdisplay;
+    mdisplay = new MenuDisplayText(this);
+#endif
     set_highlighter(nullptr);
 }
 

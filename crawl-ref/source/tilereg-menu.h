@@ -40,6 +40,7 @@ protected:
     int mouse_entry(int x, int y);
     int vis_item_first, vis_item_last;
     void *m_menu_display;
+    bool _draw_tiles() const;
 
     struct MenuRegionEntry
     {
