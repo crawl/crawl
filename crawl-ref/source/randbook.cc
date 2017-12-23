@@ -972,6 +972,8 @@ void make_book_kiku_gift(item_def &book, bool first)
     for (int i = 0; i < RANDBOOK_SIZE; i++)
         chosen_spells[i] = SPELL_NO_SPELL;
 
+    // Each book should guarantee the player at least one corpse-using
+    // spell, to complement Receive Corpses.
     if (first)
     {
         bool can_bleed = you.species != SP_GARGOYLE
@@ -991,11 +993,11 @@ void make_book_kiku_gift(item_def &book, bool first)
     }
     else
     {
-        chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_AGONY;
+        chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
         chosen_spells[1] = (you.species == SP_FELID || coinflip())
             ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
-                                         SPELL_SIMULACRUM,
+                                         SPELL_AGONY,
                                          SPELL_DEATH_CHANNEL);
 
         spell_type extra_spell;
