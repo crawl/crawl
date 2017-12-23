@@ -1188,11 +1188,13 @@ void debug_miscast(int target_index)
 #ifdef DEBUG_BONES
 void debug_ghosts()
 {
-    mprf(MSGCH_PROMPT, "(C)reate or (L)oad bones file?");
+    mprf(MSGCH_PROMPT, "(C)reate, create (T)emporary, or (L)oad bones file?");
     const char c = toalower(getchm());
 
     if (c == 'c')
-        save_ghosts(ghost_demon::find_ghosts(), true);
+        save_ghosts(ghost_demon::find_ghosts(), true, true);
+    else if (c == 't')
+        save_ghosts(ghost_demon::find_ghosts(), true, false);
     else if (c == 'l')
         load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), false);
     else
