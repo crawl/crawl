@@ -539,7 +539,7 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
         end_constriction(entry.first, intentional, quiet);
 
     delete constricting;
-    constricting = 0;
+    constricting = nullptr;
 }
 
 static bool _invalid_constrictee(const actor *constrictee)
@@ -579,7 +579,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     if (constricting->empty())
     {
         delete constricting;
-        constricting = 0;
+        constricting = nullptr;
     }
 }
 
