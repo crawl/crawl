@@ -981,13 +981,13 @@ void make_book_kiku_gift(item_def &book, bool first)
             && you.species != SP_MUMMY;
         bool can_regen = you.species != SP_DEEP_DWARF
             && you.species != SP_MUMMY;
-        bool pain = coinflip();
 
-        chosen_spells[0] = pain ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
+        chosen_spells[0] = SPELL_PAIN;
         chosen_spells[1] = SPELL_CORPSE_ROT;
-        chosen_spells[2] = (can_bleed ? SPELL_SUBLIMATION_OF_BLOOD
-                            : pain ? SPELL_ANIMATE_SKELETON
-                            : SPELL_PAIN);
+        chosen_spells[2] = SPELL_ANIMATE_SKELETON;
+        if (can_bleed) // Replace one of the corpse-using spells
+            chosen_spells[random_range(1, 2)] = SPELL_SUBLIMATION_OF_BLOOD;
+
         chosen_spells[3] = (!can_regen || coinflip())
             ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
     }
