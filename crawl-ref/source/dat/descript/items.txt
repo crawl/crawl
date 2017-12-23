@@ -11,54 +11,54 @@ amulet of faith
 A talisman crafted to call the attention of the gods to its wearer. This divine
 attention makes it easier to please your god, but your god will also take more
 notice of your transgressions. The amulet will drain some of your divine favour
-when removed.
+when removed. The amulet depicts whichever god you follow.
 %%%%
 amulet of guardian spirit
 
 An amulet containing a protective spirit which will cause any damage taken to
-be divided between the wearer's reserves of health and magic.
+be divided between the wearer's reserves of health and magic. When you hold the amulet to your ear, the spirit inside reassures you that you'll come to no harm.
 %%%%
 amulet of harm
 
 An amulet created to amplify all damage dealt by the wearer. As an unfortunate
 side effect, it also amplifies all damage dealt to the wearer, albeit to a
 lesser degree. When the effects of the amulet are severed by removing it, the
-magical backlash significantly drains the wearer.
+magical backlash significantly drains the wearer. The amulet is carved from ruby.
 %%%%
 amulet of inaccuracy
 
 An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells.
+targeting monsters via ranged attacks or spells. Holding it in your hand makes it tremble.
 %%%%
 amulet of magic regeneration
 
 An amulet that substantially increases the wearer's normal rate of magic
 regeneration. In order to function, it must first attune itself to the wearer's
-body with full reserves of magic.
+body with full reserves of magic. Elvish runes encircle the amulet's perimeter.
 %%%%
-XXXXXXXXXXXXXXXXXamulet of nothing
+amulet of nothing
 
 An amulet with no special properties. Often worn by humans.
 %%%%
 amulet of rage
 
-XXXXXXXXXXXXXXXXXA possessed amulet that enables its wearer to attempt to enter a state of berserk rage.
+A possessed amulet that enables its wearer to attempt to enter a state of berserk rage. The observant adventurer will hear the amulet growling during battle.
 %%%%
 amulet of reflection
 
 An amulet which exerts a force that blocks some incoming attacks, and can even
-reflect any blocked ranged attacks back towards the attacker.
+reflect any blocked ranged attacks back towards the attacker. The amulet is made of a shiny material akin to silver.
 %%%%
 amulet of regeneration
 
 An amulet that increases the wearer's natural regeneration rate. In order to
-function, it must first attune itself to the wearer's body at full health.
+function, it must first attune itself to the wearer's body at full health. The amulet is covered in lichen.
 %%%%
 amulet of the gourmand
 
 An amulet that allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
-digestion are cumulative over time and are initially small.
+digestion are cumulative over time and are initially small. The amulet is distended, as if it were full.
 %%%%
 animal skin
 
