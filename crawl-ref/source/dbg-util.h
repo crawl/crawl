@@ -21,6 +21,7 @@ struct coord_def;
 
 string debug_coord_str(const coord_def &pos);
 
+string debug_constriction_string(const actor *act);
 void debug_dump_constriction(const actor *act);
 void debug_dump_mon(const monster* mon, bool recurse);
 

@@ -5587,6 +5587,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VILE_CLUTCH:
     {
         const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
+        dprf("Vile clutch duration: %d", dur);
         mon->add_ench(mon_enchant(ENCH_VILE_CLUTCH, 0, &you, dur));
         obvious_effect = true;
         return MON_AFFECTED;

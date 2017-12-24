@@ -120,41 +120,46 @@ string debug_mon_str(const monster* mon)
     return out;
 }
 
-static void _debug_mid_name(mid_t mid)
+static string _debug_mid_name(mid_t mid)
 {
     if (mid == MID_PLAYER)
-    {
-        fprintf(stderr, "player %s",
-                debug_coord_str(you.pos()).c_str());
-    }
+        return make_stringf("player %s", debug_coord_str(you.pos()).c_str());
     else
     {
         monster * const mons = monster_by_mid(mid);
         if (mons)
-            fprintf(stderr, "%s", debug_mon_str(mons).c_str());
+            return debug_mon_str(mons);
         else
-            fprintf(stderr, "bad monster[%" PRImidt"]", mid);
+            return make_stringf("bad monster[%" PRImidt"]", mid);
     }
 }
 
-void debug_dump_constriction(const actor *act)
+string debug_constriction_string(const actor *act)
 {
+    string s;
     if (act->constricting)
     {
         for (const auto &entry : *act->constricting)
         {
-            fprintf(stderr, "Constricting ");
-            _debug_mid_name(entry.first);
-            fprintf(stderr, " for %d ticks\n", entry.second);
+            s += make_stringf("Constricting %s for %d ticks.\n",
+                        _debug_mid_name(entry.first).c_str(), entry.second);
         }
     }
 
     if (act->constricted_by)
     {
-        fprintf(stderr, "Constricted by ");
-        _debug_mid_name(act->constricted_by);
-        fprintf(stderr, "\n");
+        s += make_stringf("Constricted by %s for %d ticks.\n",
+                _debug_mid_name(act->constricted_by).c_str(),
+                    actor_by_mid(act->constricted_by)->constricting->find(act->mid)->second);
     }
+    return s;
+}
+
+void debug_dump_constriction(const actor *act)
+{
+    string desc = debug_constriction_string(act);
+    if (!desc.empty())
+        fprintf(stderr, "%s", desc.c_str());
 }
 
 void debug_dump_mon(const monster* mon, bool recurse)

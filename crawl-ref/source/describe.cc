@@ -26,6 +26,7 @@
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "database.h"
+#include "dbg-util.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe-spells.h"
@@ -4087,6 +4088,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         for (const auto &entry : blame)
             inf.body << "    " << entry.get_string() << "\n";
     }
+    inf.body << "\n\n" << debug_constriction_string(&mons);
 #endif
 }
 
