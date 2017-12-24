@@ -284,11 +284,13 @@ static int _player_ghost_movement_energy()
     if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         energy += 1;
 
-    if (energy < FASTEST_PLAYER_MOVE_SPEED)
-        energy = FASTEST_PLAYER_MOVE_SPEED;
+    energy = max(12, energy);
 
     return energy;
 }
+
+static const set<brand_type> ghost_banned_brands =
+                { SPWPN_HOLY_WRATH, SPWPN_CHAOS, SPWPN_DISTORTION };
 
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
@@ -344,9 +346,8 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
 
-                // Ghosts can't get holy wrath, but they get to keep
-                // the weapon.
-                if (brand == SPWPN_HOLY_WRATH)
+                // normalize banned weapon brands
+                if (ghost_banned_brands.count(brand) > 0)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
