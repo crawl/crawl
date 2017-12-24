@@ -284,7 +284,7 @@ static int _player_ghost_movement_energy()
     if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         energy += 1;
 
-    energy = max(12, energy);
+    energy = max(10, energy);
 
     return energy;
 }
