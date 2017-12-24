@@ -11,7 +11,7 @@ amulet of faith
 A talisman crafted to call the attention of the gods to its wearer. This divine
 attention makes it easier to please your god, but your god will also take more
 notice of your transgressions. The amulet will drain some of your divine favour
-when removed. The amulet depicts whichever god you follow.
+when removed.
 %%%%
 amulet of guardian spirit
 
@@ -23,7 +23,7 @@ amulet of harm
 An amulet created to amplify all damage dealt by the wearer. As an unfortunate
 side effect, it also amplifies all damage dealt to the wearer, albeit to a
 lesser degree. When the effects of the amulet are severed by removing it, the
-magical backlash significantly drains the wearer. The amulet is carved from ruby.
+magical backlash significantly drains the wearer.
 %%%%
 amulet of inaccuracy
 
@@ -47,12 +47,12 @@ A possessed amulet that enables its wearer to attempt to enter a state of berser
 amulet of reflection
 
 An amulet which exerts a force that blocks some incoming attacks, and can even
-reflect any blocked ranged attacks back towards the attacker. The amulet is made of a shiny material akin to silver.
+reflect any blocked ranged attacks back towards the attacker. The amulet is well polished.
 %%%%
 amulet of regeneration
 
 An amulet that increases the wearer's natural regeneration rate. In order to
-function, it must first attune itself to the wearer's body at full health. The amulet is covered in lichen.
+function, it must first attune itself to the wearer's body at full health.
 %%%%
 amulet of the gourmand
 
@@ -125,13 +125,13 @@ and other miscellaneous larceny.
 book of callings
 
 An introductory text on the magical summoning of beasts and beings from other
-realms.
+realms. The front cover shows an apprentice being mobbed by a horde of imps.
 %%%%
 book of cantrips
 
 A book containing a small selection of very basic magic spells, intended for
 beginners who wish to learn the rudiments of one of the featured magical
-schools. The backbone of magical academies everywhere.
+schools. The backbone of magical academies above ground everywhere.
 %%%%
 book of changes
 
@@ -174,7 +174,7 @@ sparkles and shimmers as the pages are flipped.
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
-the secret college of the djinn. The tome is uncomfortably hot to the touch.
+the secret college of the djinn. The tome is warm to the touch.
 %%%%
 book of fixed level
 
@@ -187,12 +187,12 @@ A book of magic spells.
 book of flames
 
 The standard text used in arcane academies by students of the elemental magic
-of Fire. The tome is warm to the touch.
+of Fire. The tome is slightly warm to the touch.
 %%%%
 book of frost
 
 A book of magic spells, often used as an introduction to the elemental magics
-of Ice. The tome is cold to the touch.
+of Ice. The tome is slightly cold to the touch.
 %%%%
 book of geomancy
 
@@ -200,11 +200,11 @@ A book containing basic spells involving the element of Earth. After perusing th
 %%%%
 book of ice
 
-A book of advanced magical spells using the element of Ice. The tome is bitingly cold to the touch.
+A book of advanced magical spells using the element of Ice. The tome is cold to the touch.
 %%%%
 book of maledictions
 
-A book of Hexes, describing spells to confound and weaken. Reading the tome leaves you baffled, through magical means or otherwise.
+A book of Hexes, describing spells to confound and weaken.
 %%%%
 book of minor magic
 
@@ -456,7 +456,7 @@ and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
-A pile of glittering gold coins. Their sides depict various monarchs, all long since dead.
+A pile of glittering gold coins. They depict various monarchs, all long since dead.
 %%%%
 grand grimoire
 
@@ -585,7 +585,7 @@ A short club with a metal head.
 manual
 
 A valuable book which allows one to practise a certain skill more efficiently
-when carried. It is detailed and dry.
+when carried. It is as detailed as it is dry.
 %%%%
 morningstar
 
@@ -681,7 +681,7 @@ It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
-A noxious concoction which reduces strength, intelligence and dexterity. Drink with care, if at all.
+A noxious concoction which reduces strength, intelligence and dexterity.
 %%%%
 potion of experience
 
@@ -737,7 +737,7 @@ as well.
 %%%%
 quarterstaff
 
-A sturdy wooden pole, meant for fighting while young and hobbling while old.
+A sturdy wooden pole, used for fighting while young and hobbling while old.
 %%%%
 quicksilver dragon scales
 
@@ -968,7 +968,7 @@ A scroll that reveals the surroundings of the one who reads it.
 %%%%
 scroll of noise
 
-A prank scroll that creates a loud noise when read, akin to that of a raspberry.
+A prank scroll that creates a loud noise when read, akin to that of a thunderous raspberry.
 %%%%
 scroll of random uselessness
 
@@ -1162,7 +1162,7 @@ flesh.
 %%%%
 wand of acid
 
-A magical device which throws bolts of corrosive acid. Holding it stings a little.
+A magical device which throws bolts of corrosive acid.
 %%%%
 wand of clouds
 
@@ -1226,5 +1226,5 @@ between all sorts of creatures.
 %%%%
 young poisoner's handbook
 
-An introductory book for the magic arts of poison. Perusing the tome makes you queasy.
+An introductory book for the magic arts of poison.
 %%%%
