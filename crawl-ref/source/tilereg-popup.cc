@@ -30,8 +30,7 @@ void PopupRegion::render()
 #ifdef DEBUG_TILES_REDRAW
     cprintf("rendering PopupRegion\n");
 #endif
-    if (m_dirty)
-        place_entries();
+    place_entries();
 
     MenuRegion::set_transform();
     m_shape_buf.draw();
@@ -43,6 +42,10 @@ void PopupRegion::render()
 
 void PopupRegion::place_entries()
 {
+    _do_layout(ex / 4, ey / 4, ex / 2);
+    if (!m_buffer_dirty)
+        return;
+
     _clear_buffers();
     const VColour bgcolour(0, 0, 0, 63);
     const VColour border(255, 255, 255, 255);
@@ -51,7 +54,7 @@ void PopupRegion::place_entries()
     m_shape_buf.add(ex / 4 - 2, ey / 4 - 2,
                     ex * 3 / 4 + 2, ey * 3 / 4 + 2, border);
     m_shape_buf.add(ex / 4, ey / 4, ex * 3 / 4, ey * 3 / 4, panel);
-    _place_entries(ex / 4, ey / 4, ex / 2);
+    _place_entries();
 }
 
 void PopupRegion::run()

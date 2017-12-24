@@ -517,6 +517,10 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
+    case CK_HOME:
+        list_commands(0, true);
+        return -1;
+
     case '#':
         // If the game has begun, show dump.
         if (crawl_state.need_save)
@@ -712,9 +716,6 @@ void show_levelmap_help()
 void show_targeting_help()
 {
     column_composer cols(2, 40);
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines() - 1);
-
     cols.add_formatted(0, targeting_help_1, true);
 #ifdef WIZARD
     if (you.wizard)
@@ -1233,9 +1234,6 @@ void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
 {
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
-
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines() - 1);
 
     if (crawl_state.game_is_hints_tutorial())
         _add_formatted_hints_help(cols);

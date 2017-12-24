@@ -32,7 +32,11 @@ int CRTRegion::handle_mouse(MouseEvent &event)
         }
     }
     else
+    {
+        event.px -= sx + ox;
+        event.py -= sy + oy;
         ret_val = m_attached_menu->handle_mouse(event);
+    }
     return ret_val;
 }
 
@@ -59,6 +63,7 @@ void CRTRegion::render()
     // render all the inherited texts
     TextRegion::render();
 
+    set_transform(true); // TextRegion::render() clears the transform
     // render the attached menu if it exists
     if (m_attached_menu != nullptr)
         m_attached_menu->draw_menu();

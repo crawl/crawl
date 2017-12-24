@@ -1152,8 +1152,11 @@ void TilesFramework::do_layout()
 
     layout_statcol();
 
-    m_region_crt->place(0, 0, 0);
-    m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
+    // Make the CRT 80x24 and centre it
+    m_region_crt->ox = 10;
+    m_region_crt->oy = 10;
+    m_region_crt->resize(80, 24);
+    m_region_crt->place((m_windowsz.x-m_region_crt->wx)/2, (m_windowsz.y-m_region_crt->wy)/2);
 
     m_region_menu->place(0, 0, 0);
     m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);

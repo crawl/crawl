@@ -605,15 +605,8 @@ static spell_type _choose_mem_spell(spell_list &spells,
 {
     sort(spells.begin(), spells.end(), _sort_mem_spells);
 
-#ifdef USE_TILE_LOCAL
-    const bool text_only = false;
-#else
-    const bool text_only = true;
-#endif
-
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    text_only);
+                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
 #ifdef USE_TILE_LOCAL
     // [enne] Hack. Use a separate title, so the column headers are aligned.
     spell_menu.set_title(
@@ -670,13 +663,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
 #endif
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
-
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (spells.size() > 52
-        && (spell_menu.maxpagesize() > 52 || spell_menu.maxpagesize() == 0))
-    {
-        spell_menu.set_maxpagesize(52);
-    }
 
     for (unsigned int i = 0; i < spells.size(); i++)
     {
