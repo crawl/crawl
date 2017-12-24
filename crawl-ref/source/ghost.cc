@@ -266,31 +266,8 @@ void ghost_demon::init_pandemonium_lord()
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
 }
 
-// Returns the movement speed for a player ghost. Note that this is a
-// a movement cost, so lower is better.
-//FIXME: deduplicate with player_movement_speed()
-static int _player_ghost_movement_energy()
-{
-    int energy = 10;
-
-    if (int fast = you.get_mutation_level(MUT_FAST, false))
-        energy -= fast + 1;
-    if (int slow = you.get_mutation_level(MUT_SLOW, false))
-        energy += slow + 2;
-
-    if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
-        energy -= 1;
-
-    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
-        energy += 1;
-
-    energy = max(10, energy);
-
-    return energy;
-}
-
 static const set<brand_type> ghost_banned_brands =
-                { SPWPN_HOLY_WRATH, SPWPN_CHAOS, SPWPN_DISTORTION };
+                { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
 
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
@@ -321,7 +298,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     set_resist(resists, MR_RES_ROTTING, you.res_rotting());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
-    move_energy = _player_ghost_movement_energy();
+    move_energy = 10;
     speed       = 10;
 
     damage = 4;
