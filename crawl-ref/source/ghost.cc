@@ -22,6 +22,7 @@
 #include "ng-input.h"
 #include "skills.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stringutil.h"
 #include "unwind.h"
 
@@ -756,6 +757,21 @@ void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
 int ghost_demon::max_ghosts_per_level(int absdepth)
 {
     return absdepth < 10 ? 1 : MAX_GHOSTS;
+}
+
+static const set<branch_type> ghosts_banned =
+            { BRANCH_ABYSS, BRANCH_LABYRINTH, BRANCH_SEWER, BRANCH_OSSUARY,
+              BRANCH_BAILEY, BRANCH_ICE_CAVE, BRANCH_VOLCANO, BRANCH_WIZLAB,
+              BRANCH_DESOLATION, BRANCH_TEMPLE };
+
+
+/// Is the current location eligible for ghosts?
+bool ghost_demon::ghost_eligible()
+{
+    return !crawl_state.game_is_tutorial()
+        && !Options.seed
+        && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
+        && ghosts_banned.count(you.where_are_you) == 0;
 }
 
 bool debug_check_ghost(const ghost_demon &ghost)

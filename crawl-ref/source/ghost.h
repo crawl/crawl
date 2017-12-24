@@ -53,6 +53,8 @@ public:
 public:
     static const vector<ghost_demon> find_ghosts();
     static int max_ghosts_per_level(int absdepth);
+    static bool ghost_eligible();
+
 
 private:
     static void find_extra_ghosts(vector<ghost_demon> &ghosts);

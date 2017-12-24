@@ -1177,14 +1177,8 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    if (!crawl_state.game_is_tutorial()
-        && !Options.seed
-        && !player_in_branch(BRANCH_ABYSS)
-        && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(3))
-    {
+    if (ghost_demon::ghost_eligible() && one_chance_in(3))
         load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), true);
-    }
     env.turns_on_level = 0;
     // sanctuary
     env.sanctuary_pos  = coord_def(-1, -1);
@@ -2420,13 +2414,8 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, the Temple, or the Abyss.
-    if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)
-                   || player_in_branch(BRANCH_ABYSS)))
-    {
+    if (!force && !ghost_demon::ghost_eligible())
         return;
-    }
 
     if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
     {
