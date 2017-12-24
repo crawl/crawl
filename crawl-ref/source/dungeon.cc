@@ -371,7 +371,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
         mapstat_report_map_veto(e.what());
 #endif
         // try not to lose any ghosts that have been placed
-        save_ghosts(ghost_demon::find_ghosts(false));
+        save_ghosts(ghost_demon::find_ghosts(false), false, false);
         return false;
     }
 
