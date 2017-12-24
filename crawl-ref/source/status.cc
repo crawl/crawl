@@ -423,8 +423,8 @@ bool fill_status_info(int status, status_info* inf)
                 cstr->constriction_does_damage(you.is_directly_constricted());
 
             inf->light_colour = YELLOW;
-            inf->light_text   = damage ? "Held" : "Constr";
-            inf->short_text   = damage ? "held" : "constricted";
+            inf->light_text   = damage ? "Constr"      : "Held";
+            inf->short_text   = damage ? "constricted" : "held";
         }
         break;
 

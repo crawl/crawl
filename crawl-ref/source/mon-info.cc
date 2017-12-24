@@ -725,7 +725,7 @@ monster_info::monster_info(const monster* m, int milev)
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
         constrictor_name = (constrictor->constriction_does_damage(true) ?
-                            "held by " : "constricted by ")
+                            "constricted by " : "held by ")
                            + constrictor->name(_article_for(constrictor),
                                                true);
     }
