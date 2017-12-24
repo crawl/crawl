@@ -1705,7 +1705,6 @@ bool mons_class_can_use_stairs(monster_type mc)
     return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
-           && mc != MONS_PLAYER_GHOST
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY;
 }
