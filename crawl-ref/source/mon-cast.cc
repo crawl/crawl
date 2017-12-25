@@ -1742,8 +1742,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ANIMATE_DEAD:
 #endif
     case SPELL_TWISTED_RESURRECTION:
-#if TAG_MAJOR_VERSION == 34
     case SPELL_CIGOTUVIS_EMBRACE:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SIMULACRUM:
 #endif
     case SPELL_CALL_IMP:
@@ -6096,6 +6096,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                              mons->foe, god);
         return;
 
+    case SPELL_CIGOTUVIS_EMBRACE:
+        harvest_corpses(*mons);
+        if (crawl_state.game_is_arena() || you.can_see(*mons))
+        {
+            mprf("The bodies of the dead form a shell around %s.",
+                 mons->name(DESC_THE).c_str());
+        }
+        mons->add_ench(ENCH_BONE_ARMOUR);
+        return;
+
     case SPELL_CALL_IMP:
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         create_monster(
@@ -8073,6 +8083,13 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
         return !twisted_resurrection(mon, 500, SAME_ATTITUDE(mon), mon->foe,
                                      mon->god, false);
+
+    case SPELL_CIGOTUVIS_EMBRACE:
+        if (friendly && !_animate_dead_okay(monspell))
+            return true;
+        if (mon->has_ench(ENCH_BONE_ARMOUR))
+            return true;
+        return !harvest_corpses(*mon, true);
 
     //XXX: unify with the other SPELL_FOO_OTHER spells?
     case SPELL_BERSERK_OTHER:
