@@ -272,6 +272,14 @@ Chilling Breath spell
 
 Exhales a blast of frost that may knock back airborne targets.
 %%%%
+Cigotuvi's Embrace spell
+
+Violently mutilates all nearby corpses, wrapping them around the caster to
+serve as both armour and shield. The carrion will fall away over time, faster
+and faster as more is piled on, though increased power will tighten its grasp
+on the caster's body. It has no effect on casters in Statue Form, or with
+Ozocubu's Armour active.
+%%%%
 Cleansing Flame spell
 
 <Cleansing Flame ability>
