@@ -317,6 +317,10 @@ Conjure Flame spell
 
 Creates a blazing column of flame in a targeted empty location.
 %%%%
+Control Undead spell
+
+Enslaves any undead in the vicinity of the caster.
+%%%%
 Controlled Blink spell
 
 Translocates the caster a short distance, with precise control. Be wary that

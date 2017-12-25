@@ -92,6 +92,7 @@ static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
+static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_conjure_flame_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
@@ -1861,8 +1862,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_HUNTING_CRY:
     case SPELL_CONDENSATION_SHIELD:
-    case SPELL_CONTROL_UNDEAD:
 #endif
+    case SPELL_CONTROL_UNDEAD:
     case SPELL_CLEANSING_FLAME:
     case SPELL_DRAINING_GAZE:
     case SPELL_CONFUSION_GAZE:
@@ -4794,6 +4795,81 @@ static int _mons_mass_confuse(monster* mons, bool actual)
     return retval;
 }
 
+static int _mons_control_undead(monster* mons, bool actual)
+{
+    int retval = -1;
+
+    const int pow = _ench_power(SPELL_CONTROL_UNDEAD, *mons);
+
+    if (mons->see_cell_no_trans(you.pos())
+        && mons->can_see(you)
+        && !mons->wont_attack()
+        && you.holiness() & MH_UNDEAD)
+    {
+        retval = 0;
+
+        if (actual)
+        {
+            int res_margin = you.check_res_magic(pow);
+            if (res_margin > 0)
+                mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
+            else
+            {
+                enchant_actor_with_flavour(&you, mons, BEAM_ENSLAVE);
+                retval = 1;
+            }
+        }
+    }
+
+    enchant_type good = (mons->wont_attack()) ? ENCH_CHARM
+                                              : ENCH_HEXED;
+    enchant_type bad  = (mons->wont_attack()) ? ENCH_HEXED
+                                              : ENCH_CHARM;
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        if (mons_immune_magic(**mi)
+            || mons_is_firewood(**mi)
+            || (mons_atts_aligned(mi->attitude, mons->attitude)
+                && !mi->has_ench(bad))
+            || !(mi->holiness() & MH_UNDEAD))
+        {
+            continue;
+        }
+
+        retval = max(retval, 0);
+
+        int res_margin = mi->check_res_magic(pow);
+        if (res_margin > 0)
+        {
+            if (actual)
+            {
+                simple_monster_message(**mi,
+                    mi->resist_margin_phrase(res_margin).c_str());
+            }
+            continue;
+        }
+        if (actual)
+        {
+            retval = 1;
+            if (you.can_see(**mi))
+            {
+                mprf("%s submits to %s will!",
+                     mi->name(DESC_YOUR).c_str(),
+                     apostrophise(mons->name(DESC_THE)).c_str());
+            }
+            if (mi->has_ench(bad))
+                mi->del_ench(bad);
+            else
+                mi->add_ench(mon_enchant(good, 0, mons));
+        }
+    }
+
+    return retval;
+}
+
 static coord_def _mons_fragment_target(const monster &mon)
 {
     coord_def target(GXM+1, GYM+1);
@@ -6118,9 +6194,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_CONTROL_UNDEAD:
-#endif
     case SPELL_SUMMON_UNDEAD:
         _do_high_level_summon(mons, spell_cast, _pick_undead_summon,
                               2 + random2(mons->spell_hd(spell_cast) / 5 + 1),
@@ -6805,6 +6878,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_scattershot(mons, splpow, foe->pos());
         return;
     }
+
+    case SPELL_CONTROL_UNDEAD:
+        _mons_control_undead(mons);
+        return;
 
     case SPELL_CLEANSING_FLAME:
         simple_monster_message(*mons, " channels a blast of cleansing flame!");
@@ -8077,6 +8154,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONFUSION_GAZE:
         return !foe || !mon->can_see(*foe);
 
+    case SPELL_CONTROL_UNDEAD:
+        return _mons_control_undead(mon, false) < 0;
+
     case SPELL_SCATTERSHOT:
         return !foe
                || !scattershot_tracer(mon, _mons_spellpower(monspell, *mon),
@@ -8159,7 +8239,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONTROL_WINDS:
     case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
-    case SPELL_CONTROL_UNDEAD:
 #endif
     case SPELL_NO_SPELL:
         return true;
