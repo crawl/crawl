@@ -121,6 +121,40 @@ protected:
     vector<shared_ptr<UI>> m_children;
 };
 
+class UIText : public UI
+{
+public:
+    UIText() : wrap_text(false), ellipsize(false)
+#ifdef USE_TILE_LOCAL
+    , m_font_buf(tiles.get_crt_font()), m_wrapped_size{ -1, -1 }
+#endif
+    {}
+    UIText(string text) : UIText()
+    {
+        set_text(formatted_string::parse_string(text));
+    }
+
+    void set_text(const formatted_string &fs);
+
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+    bool wrap_text, ellipsize;
+
+protected:
+    void wrap_text_to_size(int width, int height);
+
+    formatted_string m_text;
+#ifdef USE_TILE_LOCAL
+    formatted_string m_text_wrapped;
+    FontBuffer m_font_buf;
+#else
+    vector<formatted_string> m_wrapped_lines;
+#endif
+    i2 m_wrapped_size;
+};
+
 class UIImage : public UI
 {
 public:
