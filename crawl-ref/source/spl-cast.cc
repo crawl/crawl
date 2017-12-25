@@ -1800,6 +1800,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
+    case SPELL_CONTROL_UNDEAD:
+        return mass_enchantment(ENCH_CHARM, powc, fail);
+
     case SPELL_AURA_OF_ABJURATION:
         return cast_aura_of_abjuration(powc, fail);
 
@@ -2281,7 +2284,6 @@ const set<spell_type> removed_spells =
     SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,
     SPELL_CURE_POISON,
-    SPELL_CONTROL_UNDEAD,
 #endif
 };
 
