@@ -527,6 +527,9 @@ static int _spell_enhancement(spell_type spell)
     if (you.form == transformation::shadow)
         enhanced -= 2;
 
+    if (you.form == transformation::dragon && spell == SPELL_DRAGON_CALL)
+        enhanced++;
+
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
 
