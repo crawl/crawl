@@ -1844,6 +1844,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
 
+    case SPELL_CIGOTUVIS_EMBRACE:
+        return corpse_armour(powc, fail);
+
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
 
@@ -2279,7 +2282,6 @@ const set<spell_type> removed_spells =
     SPELL_MASS_CONFUSION,
     SPELL_CURE_POISON,
     SPELL_CONTROL_UNDEAD,
-    SPELL_CIGOTUVIS_EMBRACE,
 #endif
 };
 

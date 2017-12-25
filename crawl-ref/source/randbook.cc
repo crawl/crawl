@@ -1004,6 +1004,8 @@ void make_book_kiku_gift(item_def &book, bool first)
         do
         {
             extra_spell = random_choose(SPELL_ANIMATE_DEAD,
+                                        SPELL_CIGOTUVIS_EMBRACE,
+                                        SPELL_BORGNJORS_VILE_CLUTCH,
                                         SPELL_AGONY,
                                         SPELL_BORGNJORS_VILE_CLUTCH,
                                         SPELL_EXCRUCIATING_WOUNDS,

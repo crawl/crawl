@@ -83,6 +83,8 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
+static int _bone_armour_bonus();
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -2286,6 +2288,7 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
+    shield += _bone_armour_bonus() * 2;
     shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
@@ -5770,6 +5773,23 @@ int player_icemail_armour_class()
 }
 
 /**
+ * How many points of AC/SH does the player get from their current bone armour?
+ *
+ * ((power / 100) + 0.5) * (# of corpses). (That is, between 0.5 and 1.5 AC+SH
+ * per corpse.)
+ * @return          The AC/SH bonus * 100. (For scale reasons.)
+ */
+static int _bone_armour_bonus()
+{
+    if (!you.attribute[ATTR_BONE_ARMOUR])
+        return 0;
+
+    const int power = calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true);
+    // rounding errors here, but not sure of a good way to avoid that.
+    return you.attribute[ATTR_BONE_ARMOUR] * (50 + power);
+}
+
+/**
  * How many points of AC does the player get from their sanguine armour, if
  * they have any?
  *
@@ -5948,6 +5968,7 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_CORROSION])
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
+    AC += _bone_armour_bonus();
     AC += sanguine_armour_bonus();
 
     return AC / scale;
@@ -8016,6 +8037,52 @@ string player::hands_act(const string &plural_verb,
 {
     const bool space = !object.empty() && !_is_end_punct(object[0]);
     return "Your " + hands_verb(plural_verb) + (space ? " " : "") + object;
+}
+
+/**
+ * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
+ * or over time.
+ *
+ * Chance of losing a point of ac/sh increases with current number of corpses
+ * (ATTR_BONE_ARMOUR). Each added corpse increases the chance of losing a bit
+ * by 5/4x. (So ten corpses are a 9x chance, twenty are 87x...)
+ *
+ * Base chance is 1/500 (per aut) - 2% per turn, 63% within 50 turns.
+ * At 10 corpses, that becomes a 17% per-turn chance, 61% within 5 turns.
+ * At 20 corpses, that's 20% per-aut, 90% per-turn...
+ *
+ * Getting hit/blocking has a higher (BONE_ARMOUR_HIT_RATIO *) chance;
+ * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
+ * 90% at ten...
+ *
+ * @param trials  The number of times to potentially shed armour.
+ */
+void player::maybe_degrade_bone_armour(int trials)
+{
+    if (attribute[ATTR_BONE_ARMOUR] <= 0)
+        return;
+
+    const int base_denom = 50 * BASELINE_DELAY;
+    int denom = base_denom;
+    for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
+        denom = div_rand_round(denom * 4, 5);
+
+    const int degraded_armour = binomial(trials, 1, denom);
+    dprf("degraded armour? (%d armour, %d/%d in %d trials): %d",
+         attribute[ATTR_BONE_ARMOUR], 1, denom, trials, degraded_armour);
+    if (degraded_armour <= 0)
+        return;
+
+    you.attribute[ATTR_BONE_ARMOUR]
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - degraded_armour);
+
+    if (!you.attribute[ATTR_BONE_ARMOUR])
+        mpr("The last of your corpse armour falls away.");
+    else
+        for (int i = 0; i < degraded_armour; ++i)
+            mpr("A chunk of your corpse armour falls away.");
+
+    redraw_armour_class = true;
 }
 
 int player::inaccuracy() const

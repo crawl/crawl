@@ -104,6 +104,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
+    { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
     { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
@@ -1512,6 +1513,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
         v.emplace_back("control wrested from you");
+    if (is(MB_BONE_ARMOUR))
+        v.emplace_back("corpse armoured");
     if (is(MB_BRILLIANCE_AURA))
         v.emplace_back("aura of brilliance");
     if (is(MB_EMPOWERED_SPELLS))

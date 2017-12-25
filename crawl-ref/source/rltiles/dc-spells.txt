@@ -101,6 +101,7 @@ simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
+cigotuvis_embrace CIGOTUVIS_EMBRACE
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
 
