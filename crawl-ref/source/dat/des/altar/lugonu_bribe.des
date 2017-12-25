@@ -36,7 +36,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Elyvilon="book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
-              randbook owner:Lugonu spells:simulacrum&animate_dead \
+              randbook owner:Lugonu spells:simulacrum&cigotuvi's_embrace \
                        numspells:2",
          Gozag="amulet of the gourmand ident:type /\
               randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
