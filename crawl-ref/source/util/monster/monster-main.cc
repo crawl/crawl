@@ -1268,6 +1268,9 @@ int main(int argc, char* argv[])
             case CE_NOXIOUS:
                 printf("%s", colour(DARKGREY, "noxious").c_str());
                 break;
+            case CE_MUTAGEN:
+                printf("%s", colour(MAGENTA, "mutagenic").c_str());
+                break;
             // We should't get here; including these values so we can get
             // compiler
             // warnings for unhandled enum values.
