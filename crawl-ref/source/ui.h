@@ -136,6 +136,38 @@ protected:
     vector<shared_ptr<UI>> m_children;
 };
 
+class UIText : public UI
+{
+public:
+    UIText() {}
+    UIText(string text) : UIText()
+    {
+        set_text(formatted_string::parse_string(text));
+    }
+
+    void set_text(const formatted_string &fs);
+
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+    bool wrap_text = false;
+    bool ellipsize = false;
+
+protected:
+    void wrap_text_to_size(int width, int height);
+
+    formatted_string m_text;
+#ifdef USE_TILE_LOCAL
+    struct brkpt { unsigned int op, line; };
+    vector<brkpt> m_brkpts;
+    formatted_string m_text_wrapped;
+#else
+    vector<formatted_string> m_wrapped_lines;
+#endif
+    i2 m_wrapped_size = { -1, -1 };
+};
+
 class UIImage : public UI
 {
 public:

@@ -258,6 +258,163 @@ void UIBox::_allocate_region()
     }
 }
 
+void UIText::set_text(const formatted_string &fs)
+{
+    m_text.clear();
+    m_text += fs;
+    m_wrapped_size = { -1, -1 };
+    _allocate_region();
+}
+
+void UIText::wrap_text_to_size(int width, int height)
+{
+    i2 wrapped_size = { width, height };
+    if (m_wrapped_size == wrapped_size)
+        return;
+    m_wrapped_size = wrapped_size;
+
+    height = height ? height : 0xfffffff;
+
+#ifdef USE_TILE_LOCAL
+    if (wrap_text || ellipsize)
+        m_text_wrapped = tiles.get_crt_font()->split(m_text, width, height);
+    else
+        m_text_wrapped = m_text;
+
+    m_brkpts.clear();
+    m_brkpts.emplace_back(brkpt({0, 0}));
+    unsigned tally = 0, acc = 0;
+    for (unsigned i = 0; i < m_text_wrapped.ops.size(); i++)
+    {
+        formatted_string::fs_op &op = m_text_wrapped.ops[i];
+        if (op.type != FSOP_TEXT)
+            continue;
+        if (acc > 0)
+        {
+            m_brkpts.emplace_back(brkpt({i, tally}));
+            acc = 0;
+        }
+        unsigned n = count(op.text.begin(), op.text.end(), '\n');
+        acc += n;
+        tally += n;
+    }
+#else
+    m_wrapped_lines.clear();
+    formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
+    // add ellipsis to last line of text if necessary
+    if (height < (int)m_wrapped_lines.size())
+    {
+        auto& last_line = m_wrapped_lines[height-1], next_line = m_wrapped_lines[height];
+        last_line += formatted_string(" ");
+        last_line += next_line;
+        last_line = last_line.chop(width-2);
+        last_line += formatted_string("..");
+        m_wrapped_lines.resize(height);
+    }
+#endif
+}
+
+void UIText::_render()
+{
+    i4 region = m_region;
+    if (scissor_stack.size() > 0)
+        region = aabb_intersect(region, scissor_stack.top());
+    if (region[2] <= 0 || region[3] <= 0)
+        return;
+
+#ifdef USE_TILE_LOCAL
+    const int line_height = tiles.get_crt_font()->char_height();
+    const unsigned line_min = (region[1]-m_region[1]) / line_height;
+    const unsigned line_max = (region[1]+region[3]-m_region[1]) / line_height;
+
+    int line_off = 0;
+    int ops_min = 0, ops_max = m_text_wrapped.ops.size();
+    {
+        int i = 1;
+        for (; i < (int)m_brkpts.size(); i++)
+            if (m_brkpts[i].line >= line_min)
+            {
+                ops_min = m_brkpts[i-1].op;
+                line_off = m_brkpts[i-1].line;
+                break;
+            }
+        for (; i < (int)m_brkpts.size(); i++)
+            if (m_brkpts[i].line > line_max)
+            {
+                ops_max = m_brkpts[i].op;
+                break;
+            }
+    }
+
+    formatted_string slice;
+    slice.ops = vector<formatted_string::fs_op>(
+        m_text_wrapped.ops.begin()+ops_min,
+        m_text_wrapped.ops.begin()+ops_max);
+
+    // XXX: should be moved into a new function render_formatted_string()
+    // in FTFontWrapper, that, like render_textblock(), would automatically
+    // handle swapping atlas glyphs as necessary.
+    FontBuffer m_font_buf(tiles.get_crt_font());
+    m_font_buf.add(slice, m_region[0], m_region[1]+line_height*line_off);
+    m_font_buf.draw();
+#else
+    const auto& lines = m_wrapped_lines;
+    for (size_t i = 0; i < min(lines.size(), (long unsigned)region[3]); i++)
+    {
+        cgotoxy(region[0]+1, region[1]+1+i);
+        lines[i+region[1]-m_region[1]].chop(region[2]).display(0);
+    }
+#endif
+}
+
+UISizeReq UIText::_get_preferred_size(Direction dim, int prosp_width)
+{
+#ifdef USE_TILE_LOCAL
+    FontWrapper *font = tiles.get_crt_font();
+    if (!dim)
+    {
+        int w = font->string_width(m_text);
+        // XXX: should be width of '..', unless string itself is shorter than '..'
+        static constexpr int min_ellipsized_width = 0;
+        static constexpr int min_wrapped_width = 0; // XXX: should be width of longest word
+        return { ellipsize ? min_ellipsized_width : wrap_text ? min_wrapped_width : w, w };
+    }
+    else
+    {
+        wrap_text_to_size(prosp_width, 0);
+        int height = font->string_height(m_text_wrapped);
+        return { ellipsize ? (int)font->char_height() : height, height };
+    }
+#else
+    if (!dim)
+    {
+        int w = 0, line_w = 0;
+        for (auto const& ch : m_text.tostring())
+        {
+            w = ch == '\n' ? max(w, line_w) : w;
+            line_w = ch == '\n' ? 0 : line_w+1;
+        }
+        w = max(w, line_w);
+
+        // XXX: should be width of '..', unless string itself is shorter than '..'
+        static constexpr int min_ellipsized_width = 0;
+        static constexpr int min_wrapped_width = 0; // XXX: should be char width of longest word in text
+        return { ellipsize ? min_ellipsized_width : wrap_text ? min_wrapped_width : w, w };
+    }
+    else
+    {
+        wrap_text_to_size(prosp_width, 0);
+        int height = m_wrapped_lines.size();
+        return { ellipsize ? 1 : height, height };
+    }
+#endif
+}
+
+void UIText::_allocate_region()
+{
+    wrap_text_to_size(m_region[2], m_region[3]);
+}
+
 void UIImage::set_tile(tile_def tile)
 {
 #ifdef USE_TILE_LOCAL
