@@ -12,7 +12,6 @@
 #include "cio.h"
 
 #ifdef USE_TILE_LOCAL
-# include "windowmanager.h"
 # include "glwrapper.h"
 # include "tilebuf.h"
 #else
@@ -33,6 +32,18 @@ static i4 aabb_intersect(i4 a, i4 b)
     return i;
 }
 
+
+#ifdef USE_TILE_LOCAL
+static inline bool pos_in_rect(i2 pos, i4 rect)
+{
+    if (pos[0] < rect[0] || pos[0] >= rect[0]+rect[2])
+        return false;
+    if (pos[1] < rect[1] || pos[1] >= rect[1]+rect[3])
+        return false;
+    return true;
+}
+#endif
+
 static struct UIRoot
 {
 public:
@@ -43,6 +54,8 @@ public:
     void layout();
     void render();
 
+    bool on_event(const wm_event& event);
+
 protected:
     int m_w, m_h;
     i4 m_region;
@@ -51,6 +64,53 @@ protected:
 } ui_root;
 
 static stack<i4> scissor_stack;
+
+struct Widget::slots Widget::slots = {};
+
+bool Widget::on_event(const wm_event& event)
+{
+    if (event.type == WME_KEYDOWN || event.type == WME_KEYUP)
+        return Widget::slots.event.emit(this, event);
+    else
+        return false;
+}
+
+static inline bool _maybe_propagate_event(wm_event event, shared_ptr<Widget> &child)
+{
+#ifdef USE_TILE_LOCAL
+    if (event.type == WME_MOUSEMOTION)
+    {
+        i2 pos = {(int)event.mouse_event.px, (int)event.mouse_event.py};
+        if (!pos_in_rect(pos, child->get_region()))
+            return false;
+    }
+#endif
+    return child->on_event(event);
+}
+
+bool Container::on_event(const wm_event& event)
+{
+    if (Widget::on_event(event))
+        return true;
+    for (shared_ptr<Widget> &child : *this)
+        if (_maybe_propagate_event(event, child))
+            return true;
+    return false;
+}
+
+bool Bin::on_event(const wm_event& event)
+{
+    if (Widget::on_event(event))
+        return true;
+    if (_maybe_propagate_event(event, m_child))
+        return true;
+    return false;
+}
+
+void Bin::set_child(shared_ptr<Widget> child)
+{
+    m_child = move(child);
+}
 
 void Widget::render()
 {
@@ -510,6 +570,15 @@ void Stack::_allocate_region()
     }
 }
 
+bool Stack::on_event(const wm_event& event)
+{
+    if (Widget::on_event(event))
+        return true;
+    if (m_children.size() > 0 &&_maybe_propagate_event(event, m_children.back()))
+        return true;
+    return false;
+}
+
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
 {
     child_info ch = { {x, y}, {w, h}, move(child) };
@@ -748,6 +817,11 @@ void UIRoot::render()
 #endif
 }
 
+bool UIRoot::on_event(const wm_event& event)
+{
+    return m_root.on_event(event);
+}
+
 void push_scissor(i4 scissor)
 {
     if (scissor_stack.size() > 0)
@@ -795,12 +869,37 @@ void resize(int w, int h)
 
 void pump_events()
 {
-    ui_root.layout();
-    ui_root.render();
+#ifdef USE_TILE_LOCAL
+    // Don't render while there are unhandled mousewheel events,
+    // since these can come in faster than crawl can redraw.
+    // unlike mousemotion events, we don't drop all but the last event
+    if (!wm->get_event_count(WME_MOUSEWHEEL))
+#endif
+    {
+        ui_root.layout();
+        ui_root.render();
+    }
 
 #ifdef USE_TILE_LOCAL
     wm_event event = {0};
-    while (!wm->wait_event(&event));
+    while (true)
+    {
+        if (!wm->wait_event(&event))
+            continue;
+        if (event.type == WME_MOUSEMOTION)
+        {
+            // For consecutive mouse events, ignore all but the last,
+            // since these can come in faster than crawl can redraw.
+            //
+            // Note that get_event_count() is misleadingly named and only
+            // peeks at the first event, and so will only return 0 or 1.
+            if (wm->get_event_count(WME_MOUSEMOTION) > 0)
+                continue;
+        }
+        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
+            continue;
+        break;
+    }
 
     switch (event.type)
     {
@@ -813,6 +912,7 @@ void pump_events()
         }
 
         default:
+            ui_root.on_event(event);
             break;
     }
 #else
@@ -828,6 +928,13 @@ void pump_events()
         console_shutdown();
         console_startup();
         ui_root.resize(get_number_of_cols(), get_number_of_lines());
+    }
+    else
+    {
+        wm_event ev = {0};
+        ev.type = WME_KEYDOWN;
+        ev.key.keysym.sym = k;
+        ui_root.on_event(ev);
     }
 #endif
 }

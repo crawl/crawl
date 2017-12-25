@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef USE_TILE_LOCAL
-
-#include "tiletex.h"
-#include "tiles-build-specific.h"
+# include "tiletex.h"
+# include "tiles-build-specific.h"
+#endif
 
 enum wm_event_type
 {
@@ -45,6 +45,42 @@ struct wm_keyboard_event
     wm_keysym keysym;
 };
 
+struct MouseEvent
+{
+    enum mouse_event_type
+    {
+        PRESS,
+        RELEASE,
+        MOVE,
+        WHEEL,
+    };
+
+    enum mouse_event_button
+    {
+        NONE        = 0x00,
+        LEFT        = 0x01,
+        MIDDLE      = 0x02,
+        RIGHT       = 0x04,
+        SCROLL_UP   = 0x08,
+        SCROLL_DOWN = 0x10,
+    };
+
+    // Padding for ui_event
+    unsigned char type;
+
+    // kind of event
+    mouse_event_type event;
+    // if PRESS or RELEASE, the button pressed
+    mouse_event_button button;
+    // bitwise-or of buttons currently pressed
+    unsigned short held;
+    // bitwise-or of key mods currently pressed
+    unsigned char mod;
+    // location of events in pixels and in window coordinate space
+    unsigned int px;
+    unsigned int py;
+};
+
 struct wm_resize_event
 {
     unsigned char type;
@@ -81,6 +117,8 @@ struct wm_event
     wm_quit_event quit;
     wm_custom_event custom;
 };
+
+#ifdef USE_TILE_LOCAL
 
 // custom timer callback function
 typedef unsigned int (*wm_timer_callback)(unsigned int interval, void* param);
