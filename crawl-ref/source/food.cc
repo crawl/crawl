@@ -387,7 +387,7 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
 
     // At this point, we know both are corpses or chunks, edible
 
-    // Always offer inedible chunks last.
+    // Always offer poisonous/mutagenic chunks last.
     if (is_bad_food(*food1) && !is_bad_food(*food2))
         return false;
     if (is_bad_food(*food2) && !is_bad_food(*food1))
@@ -867,7 +867,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 /**
  * Determine the 'effective' chunk type for a given piece of carrion (chunk or
  * corpse), for the player.
- * E.g., ghouls treat rotting and poisonous chunks as normal chunks.
+ * E.g., ghouls treat rotting and mutagenic chunks as normal chunks.
  *
  * @param carrion       The actual chunk or corpse.
  * @return              A chunk type corresponding to the effect eating the
@@ -880,7 +880,7 @@ corpse_effect_type determine_chunk_effect(const item_def &carrion)
 
 /**
  * Determine the 'effective' chunk type for a given input for the player.
- * E.g., ghouls/vampires treat rotting and poisonous chunks as normal chunks.
+ * E.g., ghouls/vampires treat rotting and mutagenic chunks as normal chunks.
  *
  * @param chunktype     The actual chunk type.
  * @return              A chunk type corresponding to the effect eating a chunk
