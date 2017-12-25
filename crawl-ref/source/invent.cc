@@ -1574,7 +1574,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // You know that forbidden chunks are bad.
+    // You know that mutagenic chunks mutate you.
     if (oper == OPER_EAT && you_worship(GOD_ZIN) && god_hates_item(item))
     {
         penance = true;
