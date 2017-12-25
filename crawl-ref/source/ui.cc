@@ -32,6 +32,15 @@ static i4 aabb_intersect(i4 a, i4 b)
     return i;
 }
 
+static inline bool pos_in_rect(i2 pos, i4 rect)
+{
+    if (pos[0] < rect[0] || pos[0] >= rect[0]+rect[2])
+        return false;
+    if (pos[1] < rect[1] || pos[1] >= rect[1]+rect[3])
+        return false;
+    return true;
+}
+
 static void ui_push_scissor(i4 scissor);
 static void ui_pop_scissor();
 
@@ -45,6 +54,8 @@ public:
     void layout();
     void render();
 
+    void on_event(UIEvent event);
+
 protected:
     int m_w, m_h;
     i4 m_region;
@@ -53,6 +64,24 @@ protected:
 } ui_root;
 
 static stack<i4> scissor_stack;
+
+struct UI::slots UI::slots = {};
+
+void UI::on_event(UIEvent event)
+{
+    if (event.type == UI_EVENT_TYPE_KEY)
+        UI::slots.key_event.emit(this, move(event.key));
+}
+
+void UI::_on_event_on_children(UIEvent event, vector<shared_ptr<UI>>& children)
+{
+    for (auto& child : children)
+    {
+        if (event.type == UI_EVENT_TYPE_MOUSE && !pos_in_rect(event.mouse.pos, child->m_region))
+            continue;
+        child->on_event(event);
+    }
+}
 
 void UI::render()
 {
@@ -272,6 +301,12 @@ void UIBox::_allocate_region()
         m_children[i]->allocate_region(cr);
         cr[horz ? 0 : 1] += cr[horz ? 2 : 3];
     }
+}
+
+void UIBox::on_event(UIEvent event)
+{
+    UI::on_event(event);
+    _on_event_on_children(event, m_children);
 }
 
 void UIText::set_text(const formatted_string &fs)
@@ -495,6 +530,12 @@ void UIStack::_allocate_region()
     }
 }
 
+void UIStack::on_event(UIEvent event)
+{
+    UI::on_event(event);
+    _on_event_on_children(event, m_children);
+}
+
 void UIGrid::add_child(shared_ptr<UI> child, int x, int y, int w, int h)
 {
     child_info ch = { {x, y}, {w, h} };
@@ -630,6 +671,12 @@ void UIGrid::_allocate_region()
     }
 }
 
+void UIGrid::on_event(UIEvent event)
+{
+    UI::on_event(event);
+    _on_event_on_children(event, m_children);
+}
+
 void UIRoot::set_child(shared_ptr<UI> ch)
 {
     m_child = move(ch);
@@ -686,6 +733,12 @@ void UIRoot::render()
 #else
     update_screen();
 #endif
+}
+
+void UIRoot::on_event(UIEvent event)
+{
+    if (m_child)
+        m_child->on_event(event);
 }
 
 static void ui_push_scissor(i4 scissor)
@@ -745,6 +798,24 @@ void ui_pump_events()
 
     switch (event.type)
     {
+        case WME_KEYDOWN:
+            {
+                UIEvent ev;
+                ev.key = {event.key.keysym.sym};
+                ev.type = UI_EVENT_TYPE_KEY;
+                ui_root.on_event(ev);
+            }
+            break;
+
+        case WME_MOUSEMOTION:
+            {
+                UIEvent ev;
+                ev.mouse.pos = {(int)event.mouse_event.px, (int)event.mouse_event.py};
+                ev.type = UI_EVENT_TYPE_MOUSE;
+                ui_root.on_event(ev);
+            }
+            break;
+
         case WME_RESIZE:
         {
             ui_root.resize(event.resize.w, event.resize.h);
@@ -768,6 +839,13 @@ void ui_pump_events()
         console_shutdown();
         console_startup();
         ui_root.resize(get_number_of_cols(), get_number_of_lines());
+    }
+    else
+    {
+        UIEvent ev;
+        ev.key = {k};
+        ev.type = UI_EVENT_TYPE_KEY;
+        ui_root.on_event(ev);
     }
 #endif
 }

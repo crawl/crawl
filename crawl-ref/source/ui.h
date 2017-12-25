@@ -31,6 +31,32 @@ struct i2 {
     inline bool operator==(const i2& rhs) { return equal(begin(xy), end(xy), begin(rhs.xy)); }
 };
 
+struct UIKeyEvent
+{
+    int key;
+};
+
+struct UIMouseEvent
+{
+    i2 pos;
+};
+
+typedef enum {
+    UI_EVENT_TYPE_NONE = -1,
+    UI_EVENT_TYPE_KEY,
+    UI_EVENT_TYPE_MOUSE,
+} UIEvent_type;
+
+struct UIEvent
+{
+    UIEvent() : type(UI_EVENT_TYPE_NONE) { key.key = 0; };
+    union {
+        UIKeyEvent key;
+        UIMouseEvent mouse;
+    };
+    UIEvent_type type;
+};
+
 struct UISizeReq
 {
     int min, nat;
@@ -50,10 +76,43 @@ typedef enum {
     UI_JUSTIFY_END,
 } UIJustify_type;
 
+template<typename, typename> class Slot;
+
+template<class Target, class... Args>
+class Slot<Target, void (Args...)>
+{
+public:
+    typedef function<void (Args...)> HandlerSig;
+    typedef multimap<Target*, HandlerSig> HandlerMap;
+    void emit(Target *target, Args&&... args)
+    {
+        auto i = handlers.equal_range(target);
+        for (auto it = i.first; it != i.second; ++it)
+        {
+            HandlerSig func = it->second;
+            func(forward<Args>(args)...);
+        }
+    }
+    void on(Target *target, HandlerSig handler)
+    {
+        auto new_pair = pair<Target*, HandlerSig>(target, handler);
+        handlers.insert(new_pair);
+    }
+    void remove_by_target(Target *target)
+    {
+        handlers.erase(target);
+    }
+protected:
+    HandlerMap handlers;
+};
+
 class UI
 {
 public:
     UI() : margin({0,0,0,0}), flex_grow(0), align_self(UI_ALIGN_UNSET), expand_h(false), expand_v(false), cached_sr_valid{false, false} {};
+    ~UI() {
+        UI::slots.key_event.remove_by_target(this);
+    }
 
     i4 margin;
     int flex_grow;
@@ -85,6 +144,18 @@ public:
 #endif
     };
 
+    virtual void on_event(UIEvent event);
+    static void _on_event_on_children(UIEvent event, vector<shared_ptr<UI>>& children);
+
+    template<class T, class... Args, typename F>
+    void on(Slot<T, void (Args...)>& slot, F&& cb)
+    {
+        slot.on(this, cb);
+    }
+    static struct slots {
+        Slot<UI, void (UIKeyEvent)> key_event;
+    } slots;
+
 protected:
     i4 m_region;
 
@@ -113,6 +184,7 @@ public:
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
     virtual void _allocate_region() override;
+    virtual void on_event(UIEvent event) override;
 
 protected:
     vector<int> layout_main_axis(vector<UISizeReq>& ch_psz, int main_sz);
@@ -186,6 +258,7 @@ public:
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
     virtual void _allocate_region() override;
+    virtual void on_event(UIEvent event) override;
 
 protected:
     vector<shared_ptr<UI>> m_children;
@@ -207,6 +280,7 @@ public:
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(int dim, int prosp_width) override;
     virtual void _allocate_region() override;
+    virtual void on_event(UIEvent event) override;
 
 protected:
     i4 get_tracks_region(int x, int y, int w, int h) const
