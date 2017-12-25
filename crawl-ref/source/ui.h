@@ -139,6 +139,48 @@ protected:
     vector<shared_ptr<Widget>> m_children;
 };
 
+class Text : public Widget
+{
+public:
+    Text() {}
+    Text(string text) : Text()
+    {
+        set_text(formatted_string(text));
+    }
+    Text(formatted_string text) : Text()
+    {
+        set_text(text);
+    }
+
+    void set_text(const formatted_string &fs);
+    void set_text(string text)
+    {
+        set_text(formatted_string(text));
+    };
+
+    const formatted_string& get_text() { return m_text; };
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+    bool wrap_text = false;
+    bool ellipsize = false;
+
+protected:
+    void wrap_text_to_size(int width, int height);
+
+    formatted_string m_text;
+#ifdef USE_TILE_LOCAL
+    struct brkpt { unsigned int op, line; };
+    vector<brkpt> m_brkpts;
+    formatted_string m_text_wrapped;
+#else
+    vector<formatted_string> m_wrapped_lines;
+#endif
+    i2 m_wrapped_size = { -1, -1 };
+};
+
 class Image : public Widget
 {
 public:
