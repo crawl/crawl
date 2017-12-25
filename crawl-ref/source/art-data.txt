@@ -1219,7 +1219,6 @@ MP:      +4
 BOOL:    mutate, elec, chaotic
 VALUE:   400
 
-# TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
 NAME:    crown of Eternal Torment
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -1229,7 +1228,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-BOOL:    evil, seeinv, nogen, curse
+BOOL:    evil, seeinv, curse
 
 ENUM:    VINES
 NAME:    robe of Vines
