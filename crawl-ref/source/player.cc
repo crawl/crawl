@@ -2232,8 +2232,10 @@ int player_armour_shield_spell_penalty()
  */
 int player_wizardry(spell_type spell)
 {
-    return you.wearing(EQ_RINGS, RING_WIZARDRY)
-           + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
+    const int item_wiz = you.wearing(EQ_RINGS, RING_WIZARDRY)
+                          + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
+    const int form_wiz = you.form == transformation::dragon && spell == SPELL_DRAGON_CALL;
+    return item_wiz + form_wiz;
 }
 
 /**
