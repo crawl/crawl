@@ -11,6 +11,7 @@
 #include "format.h"
 #include "tilefont.h"
 #include "tiledef-gui.h"
+#include "windowmanager.h"
 #ifdef USE_TILE_LOCAL
 # include "tilesdl.h"
 # include "tilebuf.h"
@@ -37,6 +38,38 @@ struct UISizeReq
     int min, nat;
 };
 
+template<typename, typename> class Slot;
+
+template<class Target, class... Args>
+class Slot<Target, bool (Args...)>
+{
+public:
+    typedef function<bool (Args...)> HandlerSig;
+    typedef multimap<Target*, HandlerSig> HandlerMap;
+    bool emit(Target *target, Args&... args)
+    {
+        auto i = handlers.equal_range(target);
+        for (auto it = i.first; it != i.second; ++it)
+        {
+            HandlerSig func = it->second;
+            if (func(forward<Args>(args)...))
+                return true;
+        }
+        return false;
+    }
+    void on(Target *target, HandlerSig handler)
+    {
+        auto new_pair = pair<Target*, HandlerSig>(target, handler);
+        handlers.insert(new_pair);
+    }
+    void remove_by_target(Target *target)
+    {
+        handlers.erase(target);
+    }
+protected:
+    HandlerMap handlers;
+};
+
 class UI
 {
 public:
@@ -52,6 +85,10 @@ public:
         HORZ = 0,
         VERT,
     };
+
+    virtual ~UI() {
+        UI::slots.event.remove_by_target(this);
+    }
 
     i4 margin = {0,0,0,0};
     int flex_grow = 1;
@@ -83,6 +120,17 @@ public:
 #endif
     };
 
+    virtual bool on_event(wm_event event);
+
+    template<class T, class... Args, typename F>
+    void on(Slot<T, bool (Args...)>& slot, F&& cb)
+    {
+        slot.on(this, cb);
+    }
+    static struct slots {
+        Slot<UI, bool (wm_event)> event;
+    } slots;
+
 protected:
     i4 m_region;
 
@@ -92,12 +140,89 @@ private:
     int cached_sr_pw;
 };
 
+class UIContainer : public UI
+{
+protected:
+    class iter_impl
+    {
+    public:
+        virtual ~iter_impl() {};
+        virtual void operator++() = 0;
+        virtual shared_ptr<UI>& operator*() = 0;
+        virtual bool equal (iter_impl &other) const = 0;
+    };
+
+public:
+    virtual ~UIContainer() {}
+    class iterator
+    {
+    public:
+        iterator(iter_impl *_it) : it(_it) {};
+        ~iterator() { delete it; };
+        void operator++() { ++(*it); };
+        bool operator==(iterator &other) const {
+            return typeid(it) == typeid(other.it) && it->equal(*other.it);
+        };
+        bool operator!=(iterator &other) const { return !(*this == other); }
+        shared_ptr<UI>& operator*() { return **it; };
+    protected:
+        iter_impl *it;
+    };
+
+    virtual bool on_event(wm_event event) override;
+
+protected:
+    virtual iterator begin() = 0;
+    virtual iterator end() = 0;
+};
+
+class UIBin : public UI
+{
+public:
+    virtual ~UIBin() {}
+    virtual bool on_event(wm_event event) override;
+    virtual shared_ptr<UI> get_child() { return m_child; };
+protected:
+    shared_ptr<UI> m_child;
+};
+
+class UIContainerVec : public UIContainer
+{
+public:
+    virtual ~UIContainerVec() {}
+private:
+    typedef UIContainer::iterator I;
+
+    class iter_impl_vec : public iter_impl
+    {
+    private:
+        typedef vector<shared_ptr<UI>> C;
+    public:
+        explicit iter_impl_vec (C& _c, C::iterator _it) : c(_c), it(_it) {};
+    protected:
+        virtual void operator++() override { ++it; };
+        virtual shared_ptr<UI>& operator*() override { return *it; };
+        virtual bool equal (iter_impl &_other) const override {
+            iter_impl_vec &other = static_cast<iter_impl_vec&>(_other);
+            return c == other.c && it == other.it;
+        };
+
+        C& c;
+        C::iterator it;
+    };
+
+protected:
+    virtual I begin() override { return I(new iter_impl_vec(m_children, m_children.begin())); }
+    virtual I end() override { return I(new iter_impl_vec(m_children, m_children.end())); }
+    vector<shared_ptr<UI>> m_children;
+};
+
 // Box widget: similar to the CSS flexbox (without wrapping)
 //  - Lays its children out in either a row or a column
 //  - Extra space is allocated according to each child's flex_grow property
 //  - align and justify properties work like flexbox's
 
-class UIBox : public UI
+class UIBox : public UIContainerVec
 {
 public:
     enum Justify {
@@ -120,6 +245,7 @@ public:
         expand_h = expand_flags & EXPAND_H;
         expand_v = expand_flags & EXPAND_V;
     };
+    virtual ~UIBox() {}
     void add_child(shared_ptr<UI> child);
     bool horz;
     Justify justify_items = START;
@@ -132,8 +258,6 @@ public:
 protected:
     vector<int> layout_main_axis(vector<UISizeReq>& ch_psz, int main_sz);
     vector<int> layout_cross_axis(vector<UISizeReq>& ch_psz, int cross_sz);
-
-    vector<shared_ptr<UI>> m_children;
 };
 
 class UIText : public UI
@@ -144,6 +268,7 @@ public:
     {
         set_text(formatted_string::parse_string(text));
     }
+    virtual ~UIText() {}
 
     void set_text(const formatted_string &fs);
 
@@ -171,6 +296,7 @@ protected:
 class UIImage : public UI
 {
 public:
+    virtual ~UIImage() {}
     void set_tile(tile_def tile);
 
     bool shrink_h = false, shrink_v = false;
@@ -187,9 +313,10 @@ protected:
 #endif
 };
 
-class UIStack : public UI
+class UIStack : public UIContainerVec
 {
 public:
+    virtual ~UIStack() {};
     void add_child(shared_ptr<UI> child);
     void pop_child();
     size_t num_children() const { return m_children.size(); }
@@ -198,14 +325,13 @@ public:
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-
-protected:
-    vector<shared_ptr<UI>> m_children;
+    virtual bool on_event(wm_event event) override;
 };
 
-class UIGrid : public UI
+class UIGrid : public UIContainer
 {
 public:
+    virtual ~UIGrid() {};
     void add_child(shared_ptr<UI> child, int x, int y, int w = 1, int h = 1);
     int& track_flex_grow(int x, int y)
     {
@@ -241,6 +367,7 @@ protected:
         i2 pos;
         i2 span;
         shared_ptr<UI> widget;
+        inline bool operator==(const child_info& rhs) const { return widget == rhs.widget; }
     };
     vector<child_info> m_child_info;
 
@@ -249,6 +376,31 @@ protected:
     void compute_track_sizereqs(Direction dim);
     void init_track_info();
     bool m_track_info_dirty = false;
+
+private:
+    typedef UIContainer::iterator I;
+
+    class iter_impl_grid : public iter_impl
+    {
+    private:
+        typedef vector<child_info> C;
+    public:
+        explicit iter_impl_grid (C& _c, C::iterator _it) : c(_c), it(_it) {};
+    protected:
+        virtual void operator++() override { ++it; };
+        virtual shared_ptr<UI>& operator*() override { return it->widget; };
+        virtual bool equal (iter_impl &_other) const override {
+            iter_impl_grid &other = static_cast<iter_impl_grid&>(_other);
+            return c == other.c && it == other.it;
+        };
+
+        C c;
+        C::iterator it;
+    };
+
+public:
+    virtual I begin() override { return I(new iter_impl_grid(m_child_info, m_child_info.begin())); }
+    virtual I end() override { return I(new iter_impl_grid(m_child_info, m_child_info.end())); }
 };
 
 void ui_push_layout(shared_ptr<UI> root);
