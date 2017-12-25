@@ -224,6 +224,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Control
+    SPELL_CONTROL_UNDEAD,
     SPELL_ENGLACIATION,
 },
 
