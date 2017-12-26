@@ -2240,12 +2240,21 @@ static tileidx_t _tileidx_chunk(const item_def &item)
 
 static tileidx_t _tileidx_food(const item_def &item)
 {
+
     switch (item.sub_type)
     {
-    case FOOD_CHUNK:        return _tileidx_chunk(item);
+    case FOOD_CHUNK:
+        return _tileidx_chunk(item);
     case FOOD_RATION:
-    case NUM_FOODS:         return TILE_FOOD_RATION;
-    default:                return TILE_ERROR;
+    case NUM_FOODS:
+    {
+        // rnd should never be 0, but just in case...
+        const int offset = max(item.rnd - 1, 0) %
+                            (TILE_FOOD_RATION_LAST - TILE_FOOD_RATION_FIRST);
+        return TILE_FOOD_RATION + offset;
+    }
+    default:
+        return TILE_ERROR;
     }
 }
 

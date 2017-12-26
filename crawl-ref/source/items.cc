@@ -2068,6 +2068,10 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         mark_had_book(item);
     }
 
+    // Normalize ration tile in inventory
+    if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_RATION)
+        item.rnd = 1;
+
     note_inscribe_item(item);
 
     // avoid blood potion timer/stack size mismatch

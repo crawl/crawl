@@ -348,3 +348,30 @@ MAP
  x.2.2.x
  xxxxxxx
 ENDMAP
+
+# Welcome to Pandemonium Pizzeria; is this for carry-out or delivery?
+# (Ideally the cashier would have a silly hat, but they can't wear hats.)
+NAME:   grunt_pizzeria
+DEPTH:  D:8-14
+: food_weight(_G, 8)
+WEIGHT: 10
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+MONS:   human ; short sword | rapier / \
+        orc warrior ; dagger / \
+        spriggan ; dagger
+ITEM:   ration tile:food_pizza
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+xxxxxxx
+xvvvdex
+xvO+..x
+xvvv.xx
+x$1...x
+xmmm.xx
+x.....x
+xmm+mmx
+ ..@..
+ENDMAP
