@@ -4127,15 +4127,6 @@ static void tag_read_you_dungeon(reader &th)
     }
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_TOMB_HATCHES)
-    {
-        PlaceInfo pinfo = you.get_place_info(BRANCH_TOMB);
-        if (pinfo.levels_seen > 0)
-            you.props[TOMB_STONE_STAIRS_KEY] = true;
-    }
-#endif
-
-#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_LEVEL_XP_INFO)
     {
 #endif
