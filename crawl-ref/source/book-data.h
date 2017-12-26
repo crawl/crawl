@@ -151,6 +151,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
+    SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
 },
@@ -207,13 +208,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DISJUNCTION,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
+    SPELL_POISONOUS_CLOUD,
 },
-#endif
 
 {   // Book of Unlife
     SPELL_RECALL,
