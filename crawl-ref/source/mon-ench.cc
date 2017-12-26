@@ -981,7 +981,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_VILE_CLUTCH:
         if (is_constricted())
-            stop_being_constricted(quiet);
+        {
+            // We handle the end-of-enchantment message here since the method
+            // of constriction is no longer detectable.
+            if (!quiet && you.can_see(*this))
+            {
+                mprf("The zombie hands release their grip on %s.",
+                        name(DESC_THE).c_str());
+            }
+            stop_being_constricted(true);
+        }
         break;
 
     case ENCH_STILL_WINDS:
