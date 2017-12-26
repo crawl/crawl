@@ -163,7 +163,7 @@ static void _print_character_info(const newgame_def& ng)
 
 void choose_tutorial_character(newgame_def& ng_choice)
 {
-    ng_choice.species = SP_HUMAN;
+    ng_choice.species = SP_HIGH_ELF;
     ng_choice.job = JOB_FIGHTER;
     ng_choice.weapon = WPN_FLAIL;
 }
@@ -176,8 +176,9 @@ void choose_tutorial_character(newgame_def& ng_choice)
 static const species_type species_order[] =
 {
     // comparatively human-like looks
-    SP_HUMAN,          SP_DEEP_ELF,
-    SP_DEEP_DWARF,     SP_HILL_ORC,
+    SP_HUMAN,          SP_HIGH_ELF,
+    SP_DEEP_ELF,       SP_DEEP_DWARF,
+    SP_HILL_ORC,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -968,6 +969,7 @@ static species_group species_groups[] =
             SP_CENTAUR,
             SP_SPRIGGAN,
             SP_TENGU,
+            SP_HIGH_ELF,
             SP_DEEP_ELF,
             SP_OGRE,
             SP_DEEP_DWARF,
