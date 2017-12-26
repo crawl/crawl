@@ -1623,6 +1623,14 @@ Deep Elves
    losing all colouration. They are poor at melee combat, but excellent
    at fighting from a distance.
 
+High Elves
+  This is a tall and powerful Elven species who advance in levels slowly,
+  requiring half again as much experience as Humans. They have good intelligence
+  and dexterity, but suffer in strength. Compared with Humans, they have fewer
+  HP but more magic. Among all races, they are best with blades and bows. They
+  are not very good with necromancy or with earth or poison magic, but are
+  highly skilled with most other forms of magic, especially Air and Charms.
+
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
   were witches' familiars that were magically augmented to provide help for
