@@ -30,9 +30,7 @@ enum book_type
     BOOK_AIR,
     BOOK_SKY,
     BOOK_WARP,
-#if TAG_MAJOR_VERSION == 34
     BOOK_ENVENOMATIONS,
-#endif
     BOOK_UNLIFE,
 #if TAG_MAJOR_VERSION == 34
     BOOK_CONTROL,
