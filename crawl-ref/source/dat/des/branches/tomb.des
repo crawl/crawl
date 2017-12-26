@@ -444,7 +444,6 @@ MONS:     sphinx / nothing
 MONS:     obsidian statue / orange crystal statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
-: set_feature_name("escape_hatch_down", "one-way staircase leading down")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -817,8 +816,6 @@ MONS: mummy
 : tomb_guardian_set(_G)
 : tomb_mummy_priest_set(_G)
 : set_border_fill_type("permarock_wall")
-: set_feature_name("escape_hatch_down", "one-way staircase leading down")
-: set_feature_name("escape_hatch_up", "one-way staircase leading up")
 #
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
@@ -1007,8 +1004,6 @@ SUBST:    DE = .
 MARKER:   F = lua:hatch_name("tomb3_exit_1")
 MARKER:   H = lua:hatch_name("tomb3_exit_2")
 SUBST:    FH = <
-: set_feature_name("escape_hatch_down", "one-way staircase leading down")
-: set_feature_name("escape_hatch_up", "one-way staircase leading up")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
