@@ -3474,7 +3474,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_CURSE_ARMOUR:
 #endif
         case SCR_ENCHANT_WEAPON:
-        case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;
         case SCR_SUMMONING:

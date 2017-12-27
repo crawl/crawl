@@ -645,21 +645,9 @@ void ash_check_bondage(bool msg)
     }
 
     you.bondage_level = 0;
-    // kittehs don't obey hoomie rules!
-    if (you.species == SP_FELID)
-    {
-        for (int i = EQ_LEFT_RING; i <= EQ_AMULET; ++i)
-            if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
-                ++you.bondage_level;
-
-        // Allow full bondage when all available slots are cursed.
-        if (you.bondage_level == 3)
+    for (int i = ET_WEAPON; i < NUM_ET; ++i)
+        if (new_bondage[i] > 0)
             ++you.bondage_level;
-    }
-    else
-        for (int i = ET_WEAPON; i < NUM_ET; ++i)
-            if (new_bondage[i] > 0)
-                ++you.bondage_level;
 
     int flags = 0;
     if (msg)

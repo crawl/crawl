@@ -1638,8 +1638,8 @@ Felids
   case, eviscerated their former masters and gone out into the world.
 
   While fully capable of using speech and most forms of magic, Felids are at a
-  serious disadvantage due to their inability to use armour or weapons. Like all
-  cats, Felids are incapable of thriving on vegetable food, and need meat to
+  serious disadvantage due to their inability to use weapons or most armour. Like 
+  all cats, Felids are incapable of thriving on vegetable food, and need meat to
   survive.
 
   Their agility and stealth are legendary, as is their ability to get to hard to
