@@ -741,6 +741,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_DEMON_TRIDENT,    7 },
                 { WPN_WAR_AXE,          3 },
         } } },
+        { MONS_NORRIS,
+            { { { WPN_SCIMITAR,         12 },
+                { WPN_LONG_SWORD,       10 },
+                { WPN_BROAD_AXE,        9 },
+                { WPN_EVENINGSTAR,      7 },
+                { WPN_DOUBLE_SWORD,     7 },
+                { WPN_DEMON_TRIDENT,    7 },
+                { WPN_WAR_AXE,          3 },
+        } } },
         { MONS_HELL_KNIGHT,
             { { { WPN_DEMON_WHIP,       1 },
                 { WPN_DEMON_BLADE,      1 },
@@ -1109,6 +1118,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_URUG:
+    case MONS_NORRIS:
         if (x_chance_in_y(5, 9))
             level = ISPEC_GOOD_ITEM;
         else if (type != MONS_DONALD)
