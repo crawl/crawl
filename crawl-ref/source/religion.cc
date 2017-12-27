@@ -1352,7 +1352,7 @@ static bool _give_trog_oka_gift(bool forced)
     }
 
     // Should gift catnip instead.
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID && you_worship(GOD_TROG))
         return false;
 
     const bool need_missiles = _need_missile_gift(forced);
@@ -1364,14 +1364,15 @@ static bool _give_trog_oka_gift(bool forced)
             && one_chance_in(4)))
     {
         if (you_worship(GOD_TROG)
-            || (you_worship(GOD_OKAWARU) && coinflip()))
+            || (you_worship(GOD_OKAWARU) && coinflip()
+                && you.species != SP_FELID))
         {
             gift_type = OBJ_WEAPONS;
         }
         else
             gift_type = OBJ_ARMOUR;
     }
-    else if (need_missiles)
+    else if (need_missiles && you.species != SP_FELID)
         gift_type = OBJ_MISSILES;
     else
         return false;

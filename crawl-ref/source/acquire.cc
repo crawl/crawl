@@ -746,9 +746,6 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
-        return OBJ_RANDOM;
-
     int type_wanted = OBJ_RANDOM;
 
     int useless_count = 0;
@@ -1468,7 +1465,6 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         bad_class.set(OBJ_WEAPONS);
         bad_class.set(OBJ_MISSILES);
-        bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
     }
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
