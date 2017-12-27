@@ -969,7 +969,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (you.species == SP_OCTOPODE || you.species == SP_FELID)
+            if (you.species == SP_FELID)
             {
                 if (verbose)
                     mpr("You can't wear that!");
