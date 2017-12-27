@@ -658,6 +658,17 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    //Norris is probably out of place, fix that later
+    {  MST_NORRIS,
+      {
+       { SPELL_BRAIN_FEED, 12, MON_SPELL_PRIEST },
+       { SPELL_SMITING, 12, MON_SPELL_PRIEST },
+       { SPELL_INVISIBILITY, 12, MON_SPELL_PRIEST },
+       { SPELL_CONFUSE, 12, MON_SPELL_PRIEST },
+       { SPELL_PARALYSE, 12, MON_SPELL_PRIEST },
+      }
+    },
+
     {  MST_ORB_SPIDER,
       {
        { SPELL_IOOD, 57, MON_SPELL_MAGICAL },
