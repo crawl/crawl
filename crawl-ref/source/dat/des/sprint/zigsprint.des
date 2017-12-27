@@ -420,7 +420,7 @@ function choose_mset_3(e)
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
-               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg")
 -- Holy
   else
@@ -554,7 +554,7 @@ local rnd = crawl.random2(142)
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
-               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory / Khufu /\
