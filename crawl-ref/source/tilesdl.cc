@@ -18,6 +18,7 @@
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "state.h"
 #include "tiledef-dngn.h"
@@ -644,6 +645,17 @@ void TilesFramework::resize()
     calculate_default_options();
     do_layout();
     ui_resize(m_windowsz.x, m_windowsz.y);
+    wm->resize(m_windowsz);
+}
+
+void TilesFramework::resize_event(int w, int h)
+{
+    m_windowsz.x = w;
+    m_windowsz.y = h;
+
+    update_dpi();
+    calculate_default_options();
+    do_layout();
     wm->resize(m_windowsz);
 }
 
@@ -1540,6 +1552,16 @@ void TilesFramework::redraw()
 #endif
 
     m_last_tick_redraw = wm->get_ticks();
+}
+
+void TilesFramework::render_current_regions()
+{
+    // need to call with show_updates=false, which is passed to viewwindow
+    if (m_active_layer == LAYER_NORMAL)
+        redraw_screen(false);
+
+    for (Region *region : m_layers[m_active_layer].m_regions)
+        region->render();
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)

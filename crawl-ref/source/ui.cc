@@ -975,6 +975,8 @@ void UIRoot::render()
 
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw(0, 0);
+    tiles.render_current_regions();
+    glmanager->reset_transform();
 #else
     // On console, clear and redraw only the dirty region of the screen
     m_dirty_region = aabb_intersect(m_dirty_region, m_region);
@@ -1111,8 +1113,7 @@ void ui_pump_events()
         case WME_RESIZE:
         {
             ui_root.resize(event.resize.w, event.resize.h);
-            coord_def ws(event.resize.w, event.resize.h);
-            wm->resize(ws);
+            tiles.resize_event(event.resize.w, event.resize.h);
             break;
         }
 
