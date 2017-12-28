@@ -286,6 +286,11 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
 
+    case JOB_PRIEST:
+        you.religion = GOD_ZIN;
+        you.piety = 45;
+        break;
+
     case JOB_WANDERER:
         create_wanderer();
         break;

@@ -290,6 +290,10 @@ Warper player ghost
 Wanderer player ghost
 
 @player ghost@
+%%%%
+Priest player ghost
+
+@player ghost@
 ########################################
 # Shouts by monster symbol
 ########################################
