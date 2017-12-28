@@ -80,6 +80,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "tilepick.h"
 #include "travel.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -2070,7 +2071,10 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     // Normalize ration tile in inventory
     if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_RATION)
-        item.rnd = 1;
+    {
+        item.props["item_tile_name"] = "food_ration_inventory";
+        bind_item_tile(item);
+    }
 
     note_inscribe_item(item);
 
