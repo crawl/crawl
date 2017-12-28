@@ -1933,6 +1933,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);
 
+    case SPELL_AVOIDANCE:
+        return cast_avoidance(powc, fail);
+
     default:
         if (spell_removed(spell))
         {

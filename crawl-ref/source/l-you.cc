@@ -160,6 +160,7 @@ LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
 LUARET1(you_silenced, boolean, silenced(you.pos()))
+LUARET1(you_avoiding, boolean, you.duration[DUR_AVOIDANCE])
 LUARET1(you_sick, boolean, you.disease)
 LUARET1(you_contaminated, number, get_contamination_level())
 LUARET1(you_feel_safe, boolean, i_feel_safe())
@@ -668,6 +669,7 @@ static const struct luaL_reg you_clib[] =
     { "mighty",       you_mighty },
     { "agile",        you_agile },
     { "brilliant",    you_brilliant },
+    { "avoiding",     you_avoiding },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
     { "contaminated", you_contaminated },

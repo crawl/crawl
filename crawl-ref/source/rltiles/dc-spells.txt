@@ -142,6 +142,7 @@ spellforged_servitor SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
 apportation APPORTATION
+avoidance AVOIDANCE
 beckoning BECKONING
 blink BLINK
 controlled_blink CONTROLLED_BLINK
