@@ -518,7 +518,9 @@ static int _keyhelp_keyfilter(int ch)
         break;
 
     case CK_HOME:
-        list_commands(0, true);
+        list_commands(0);
+        clrscr();
+        redraw_screen();
         return -1;
 
     case '#':
@@ -1230,7 +1232,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             false);
 }
 
-void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
+void list_commands(int hotkey, string highlight_string)
 {
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
@@ -1242,10 +1244,4 @@ void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
 
     show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
                        hotkey, highlight_string);
-
-    if (do_redraw_screen)
-    {
-        clrscr();
-        redraw_screen();
-    }
 }
