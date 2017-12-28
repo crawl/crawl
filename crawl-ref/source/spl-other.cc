@@ -345,3 +345,22 @@ spret_type cast_darkness(int pow, bool fail)
 
     return SPRET_SUCCESS;
 }
+
+spret_type cast_avoidance(int pow, bool fail)
+{
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+    {
+        mpr("You are anchored firmly to the material plane!");
+        return SPRET_ABORT;
+    }
+    
+    fail_check();
+    if(!you.duration[DUR_AVOIDANCE])
+        mpr("You feel the strange sensation of being on two planes at once.");
+    else
+        mpr("You feel the material plane grow further away.");
+    
+    you.increase_duration(DUR_AVOIDANCE, 5 + random2(pow), 30);
+    you.redraw_evasion = true;
+    return SPRET_SUCCESS;
+}

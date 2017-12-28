@@ -3504,6 +3504,7 @@ void bolt::affect_player_enchantment(bool resistible)
             you.duration[DUR_TELEPORT] = 0;
             mpr("Your teleport is interrupted.");
         }
+        you.duration[DUR_AVOIDANCE] = 0;
         you.redraw_evasion = true;
         obvious_effect = true;
         break;

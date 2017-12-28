@@ -457,5 +457,6 @@ enum spell_type : int
     SPELL_IGNITION,
     SPELL_VORTEX,
     SPELL_BORGNJORS_VILE_CLUTCH,
+    SPELL_AVOIDANCE,
     NUM_SPELLS
 };

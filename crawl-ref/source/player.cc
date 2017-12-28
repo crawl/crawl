@@ -2092,6 +2092,9 @@ static int _player_evasion_bonuses()
 
     // mutations
     evbonus += you.get_mutation_level(MUT_GELATINOUS_BODY);
+    
+    if (you.duration[DUR_AVOIDANCE])
+        evbonus += 8;
 
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
