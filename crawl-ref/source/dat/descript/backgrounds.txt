@@ -88,6 +88,11 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
 %%%%
+Priest
+
+Priests are followers of Zin, spreading the god's word to the Dungeon's
+inhabitants.
+%%%%
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from

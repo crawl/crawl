@@ -296,6 +296,16 @@ static const map<job_type, job_def> job_data =
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
       { SK_INVOCATIONS, 3 }, { SK_WEAPON, 2 }, },
 } },
+
+{ JOB_PRIEST, {
+    "Pr", "Priest",
+    4, 4, 4,
+    { SP_HUMAN, SP_HILL_ORC, SP_FORMICID, SP_HALFLING, SP_KOBOLD,
+      SP_SPRIGGAN, SP_BASE_DRACONIAN },
+    { "robe" },
+    WCHOICE_PLAIN,
+    { {SK_FIGHTING, 2}, {SK_DODGING, 1}, {SK_INVOCATIONS, 5}, {SK_WEAPON, 3}, },
+} },
 #if TAG_MAJOR_VERSION == 34
 { JOB_HEALER, {
     "He", "Healer",
@@ -308,15 +318,6 @@ static const map<job_type, job_def> job_data =
 
 { JOB_JESTER, {
     "Jr", "Jester",
-    0, 0, 0,
-    { },
-    { },
-    WCHOICE_NONE,
-    { },
-} },
-
-{ JOB_PRIEST, {
-    "Pr", "Priest",
     0, 0, 0,
     { },
     { },
