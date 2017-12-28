@@ -24,8 +24,7 @@ void show_stash_search_help();
 void show_butchering_help();
 void show_skill_menu_help();
 
-void list_commands(int hotkey = 0, bool do_redraw_screen = false,
-                   string highlight_string = "");
+void list_commands(int hotkey = 0, string highlight_string = "");
 
 int show_keyhelp_menu(const vector<formatted_string> &lines,
                       bool with_manual, bool easy_exit = false,
