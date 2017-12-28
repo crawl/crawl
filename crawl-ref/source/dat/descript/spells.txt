@@ -65,11 +65,6 @@ Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
 any nearby bodies of deep water.
 %%%%
-Avoidance spell
-
-Causes the caster to phase in and out of the material plane, allowing them to
-occasionally avoid blows entirely. Totally not Phase Shift.
-%%%%
 Awaken Earth spell
 
 Animates some rock walls adjacent to a target – including the target itself if
@@ -1013,6 +1008,11 @@ Phantom Mirror spell
 
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
+%%%%
+Phase Shift spell
+
+Causes the caster to phase in and out of the material plane, allowing them to
+occasionally avoid blows entirely.
 %%%%
 Plane Rend spell
 

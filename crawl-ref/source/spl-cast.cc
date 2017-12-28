@@ -1933,8 +1933,8 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);
 
-    case SPELL_AVOIDANCE:
-        return cast_avoidance(powc, fail);
+    case SPELL_PHASE_SHIFT:
+        return cast_phase_shift(powc, fail);
 
     default:
         if (spell_removed(spell))
@@ -2287,7 +2287,6 @@ const set<spell_type> removed_spells =
     SPELL_FLY,
     SPELL_STONESKIN,
     SPELL_SUMMON_SWARM,
-    SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,
     SPELL_CURE_POISON,
 #endif
