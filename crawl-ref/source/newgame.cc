@@ -1273,7 +1273,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%', false, _highlight_pattern(ng));
+                list_commands('%', _highlight_pattern(ng));
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_VIABLE:
                 if (choice_type == C_JOB)
@@ -1608,7 +1608,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_HELP:
             list_commands('?');
@@ -2032,7 +2032,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             // TODO: fix
             return;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');
