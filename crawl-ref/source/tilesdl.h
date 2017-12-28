@@ -97,6 +97,7 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
+    void resize_event(int w, int h);
     void layout_statcol();
     void calculate_default_options();
     void clrscr();
@@ -123,6 +124,8 @@ public:
     bool need_redraw() const;
     void redraw();
     bool update_dpi();
+
+    void render_current_regions();
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
