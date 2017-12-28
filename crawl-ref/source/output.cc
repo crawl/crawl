@@ -504,7 +504,7 @@ static bool _boosted_ac()
 static bool _boosted_ev()
 {
     return you.duration[DUR_AGILITY]
-           || you.duration[DUR_AVOIDANCE];
+           || you.duration[DUR_PHASE_SHIFT];
 }
 
 static bool _boosted_sh()

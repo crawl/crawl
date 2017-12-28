@@ -1425,17 +1425,6 @@ static const struct spell_desc spelldata[] =
     3, 0,
     TILEG_ERROR,
 },
-
-{
-    SPELL_PHASE_SHIFT, "Phase Shift",
-    SPTYP_TRANSLOCATION,
-    SPFLAG_HELPFUL | SPFLAG_UTILITY,
-    5,
-    200,
-    -1, -1,
-    4, 0,
-    TILEG_ERROR,
-},
 #endif
 
 {
@@ -3942,14 +3931,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AVOIDANCE, "Avoidance",
+    SPELL_PHASE_SHIFT, "Phase Shift",
     SPTYP_TRANSLOCATION,
     SPFLAG_HELPFUL | SPFLAG_UTILITY,
     5,
     200,
     -1, 1,
     4, 0,
-    TILEG_AVOIDANCE,
+    TILEG_PHASE_SHIFT,
 },
 
 {
