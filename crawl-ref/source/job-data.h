@@ -285,16 +285,18 @@ static const map<job_type, job_def> job_data =
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
       { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
-#if TAG_MAJOR_VERSION == 34
+
 { JOB_DEATH_KNIGHT, {
     "DK", "Death Knight",
-    0, 0, 0,
-    { },
-    { },
-    WCHOICE_NONE,
-    { },
+    5, 3, 4,
+    { SP_HUMAN, SP_MINOTAUR, SP_HILL_ORC, SP_DEMONSPAWN, SP_MERFOLK,
+      SP_BASE_DRACONIAN, SP_MUMMY, },
+    { "leather armour plus:1" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+      { SK_INVOCATIONS, 3 }, { SK_WEAPON, 2 }, },
 } },
-
+#if TAG_MAJOR_VERSION == 34
 { JOB_HEALER, {
     "He", "Healer",
     0, 0, 0,
