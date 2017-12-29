@@ -300,48 +300,6 @@ void hiscores_print_list(int display_count, int format, int newest_entry)
     }
 }
 
-static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
-{
-    TextItem* tmp = nullptr;
-    tmp = new TextItem();
-
-    coord_def min_coord(1,1);
-    coord_def max_coord(1,2);
-
-    tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
-
-    tmp->set_text(hiscores_format_single(se));
-    tmp->set_description_text(hiscores_format_single_long(se, true));
-    tmp->set_id(id);
-    tmp->set_bounds(coord_def(1,1), coord_def(1,2));
-
-    scroller->attach_item(tmp);
-    tmp->set_visible(true);
-}
-
-static void _construct_hiscore_table(MenuScroller* scroller)
-{
-    FILE *scores = _hs_open("r", _score_file_name());
-
-    if (scores == nullptr)
-        return;
-
-    int i;
-    // read highscore file
-    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
-    {
-        hs_list[i].reset(new scorefile_entry);
-        if (_hs_read(scores, *hs_list[i]) == false)
-            break;
-    }
-
-    _hs_close(scores, _score_file_name());
-
-    for (int j=0; j<i; j++)
-        _add_hiscore_row(scroller, *hs_list[j], j);
-}
-
 static void _show_morgue(scorefile_entry& se)
 {
     formatted_scroller morgue_file;
@@ -395,101 +353,137 @@ static void _show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
-    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
-    const int max_line   = get_number_of_lines() - 1;
-    const int max_col    = get_number_of_cols() - 1;
-
-    const int scores_col_start = 4;
-    const int descriptor_col_start = 4;
-    const int scores_row_start = 10;
-    const int scores_col_end = max_col;
-    const int scores_row_end = max_line - 1;
-
-    bool smart_cursor_enabled = is_smart_cursor_enabled();
-
-    clrscr();
-
-    PrecisionMenu menu;
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-
-    MenuScroller* score_entries = new MenuScroller();
-
-    score_entries->init(coord_def(scores_col_start, scores_row_start),
-            coord_def(scores_col_end, scores_row_end), "score entries");
-
-    _construct_hiscore_table(score_entries);
-
-    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(descriptor_col_start, 1),
-            coord_def(get_number_of_cols(), scores_row_start - 1),
-            "descriptor");
-
+    auto heading = make_shared<UIText>("<yellow>Dungeon Crawl High Scores</yellow>");
+    heading->set_margin_for_crt({0, 0, 1, 0});
+    heading->set_margin_for_sdl({0, 0, 20, 0});
 #ifdef USE_TILE_LOCAL
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-#else
-    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
-#endif
-    highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
-
-    MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
-    // This freeform will only contain unfocusable texts
-    freeform->allow_focus(false);
-    freeform->set_visible(true);
-
-    NoSelectTextItem* tmp = new NoSelectTextItem();
-    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc or R-click "
-        "exits.  ]";
-    tmp->set_text(text);
-    tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
-    tmp->set_fg_colour(CYAN);
-    freeform->attach_item(tmp);
-    tmp->set_visible(true);
-
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
+    heading->align_self = UI_ALIGN_CENTER;
 #endif
 
-    score_entries->set_visible(true);
-    descriptor->set_visible(true);
-    highlighter->set_visible(true);
+    auto game_desc = make_shared<UIText>("");
+    game_desc->align_self = UI_ALIGN_STRETCH;
+    game_desc->set_margin_for_crt({0, 0, 1, 0});
 
-    menu.attach_object(freeform);
-    menu.attach_object(score_entries);
-    menu.attach_object(descriptor);
-    menu.attach_object(highlighter);
+    auto game_list = make_shared<UIMenu>();
+    game_list->align_self = UI_ALIGN_STRETCH;
+    game_list->set_margin_for_sdl({20, 0, 0, 0});
 
-    menu.set_active_object(score_entries);
-    score_entries->set_active_item((MenuItem*) nullptr);
-    score_entries->activate_first_item();
-
-    enable_smart_cursor(false);
-    while (true)
     {
-        menu.draw_menu();
-        textcolour(WHITE);
-        const int keyn = getch_ck();
+        FILE *scores = _hs_open("r", _score_file_name());
 
-        if (keyn == CK_REDRAW)
-            continue;
+        if (scores == nullptr)
+            return;
 
-        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
+        int i;
+        // read highscore file
+        for (i = 0; i < SCORE_FILE_ENTRIES; i++)
         {
-            // Go back to the menu and return the smart cursor to its previous state
-            enable_smart_cursor(smart_cursor_enabled);
+            hs_list[i].reset(new scorefile_entry);
+            if (_hs_read(scores, *hs_list[i]) == false)
+                break;
+            game_list->add_entry(hs_list[i]->make_menu_entry());
+        }
+
+        _hs_close(scores, _score_file_name());
+    }
+
+    game_list->col_flex_grow(0) = 1;
+    game_list->col_flex_grow(1) = 1;
+    game_list->col_flex_grow(2) = 1;
+    game_list->col_flex_grow(3) = 1;
+    game_list->col_flex_grow(4) = 9;
+    game_list->col_flex_grow(5) = 1;
+    game_list->flex_grow = 1;
+
+    // XXX: need to access a separate weak pointer from lambda, to prevent use-after-free
+    weak_ptr<UIMenu> game_list_ref = game_list;
+    game_list->on(UIMenu::slots.selection_change, [game_list_ref, game_desc](int idx) {
+        if (idx == -1)
+        {
+            game_list_ref.lock()->set_selected(0);
             return;
         }
+        scorefile_entry& se = *hs_list[idx];
+        string desc = hiscores_format_single_long(se, true);
+        desc = desc + string(10-count(desc.begin(), desc.end(), '\n'), '\n');
+        game_desc->set_text(formatted_string::parse_string(desc));
+    });
+    game_list->set_selected(0);
 
-        if (menu.process_key(keyn))
-        {
-            menu.clear_selections();
-            _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
-            clrscr();
-#ifdef USE_TILE_LOCAL
-            tiles.get_crt()->attach_menu(&menu);
-#endif
-        }
+    game_list->on(UIMenu::slots.activate, [](int idx) {
+        scorefile_entry& se = *hs_list[idx];
+        _show_morgue(se);
+    });
+
+    auto vbox = make_shared<UIBox>(false, false, false);
+    vbox->add_child(move(heading));
+    vbox->add_child(move(game_desc));
+    vbox->add_child(move(game_list));
+    vbox->set_margin_for_sdl({10, 10, 10, 10});
+
+    // Make a nice textured box to show the highscores in
+    vector<shared_ptr<UIImage>> box_img(9);
+    vector<string> paths = {
+        "border-topleft", "border-top", "border-topright",
+        "border-left", "background", "border-right",
+        "border-botleft", "border-bottom", "border-botright"
+    };
+    for (int i=0; i<9; i++)
+    {
+        box_img[i] = make_shared<UIImage>();
+        box_img[i]->set_file("rltiles/gui/skin/box-" + paths[i] + ".png");
+        box_img[i]->shrink_h = i==1 || i == 4 || i==7;
+        box_img[i]->shrink_v = i==3 || i == 4 || i==5;
     }
+
+    auto box_grid = make_shared<UIGrid>();
+    for(int y = 0; y < 3; y++)
+        for(int x = 0; x < 3; x++)
+            box_grid->add_child(move(box_img[y*3+x]), x+1, y+1);
+    box_grid->add_child(move(vbox), 2, 2);
+
+    // XXX: Add struts around the box, because UIGrid barfs with empty tracks
+#ifdef USE_TILE_LOCAL
+    const bool expand_struts = true;
+#else
+    const bool expand_struts = false;
+#endif
+    box_grid->add_child(move(make_shared<UIBox>(false, expand_struts, false)), 0, 2);
+    box_grid->add_child(move(make_shared<UIBox>(false, expand_struts, false)), 4, 2);
+    box_grid->add_child(move(make_shared<UIBox>(false, false, expand_struts)), 2, 0);
+    box_grid->add_child(move(make_shared<UIBox>(false, false, expand_struts)), 2, 4);
+
+    box_grid->set_margin_for_sdl({20, 20, 20, 20});
+    box_grid->track_flex_grow(0, -1) = 1;
+    box_grid->track_flex_grow(2, -1) = 1000;
+    box_grid->track_flex_grow(4, -1) = 1;
+    box_grid->track_flex_grow(-1, 0) = 1;
+    box_grid->track_flex_grow(-1, 2) = 1000;
+    box_grid->track_flex_grow(-1, 4) = 1;
+
+    // Show the UI stacked on top of a generic background image
+    auto stk = make_shared<UIStack>();
+    auto demo_bg = make_shared<UIImage>();
+    demo_bg->set_file("rltiles/gui/skin/demo-bg.png");
+    demo_bg->expand_h = true;
+    demo_bg->expand_v = true;
+    demo_bg->shrink_h = true;
+    demo_bg->shrink_v = true;
+    stk->add_child(move(demo_bg));
+    stk->add_child(move(box_grid));
+
+    bool done = false;
+    stk->on(UI::slots.key_event, [&done](UIKeyEvent ev) {
+        if (key_is_escape(ev.key))
+            done = true;
+        return;
+    });
+
+    ui_push_layout(move(stk));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
+    clrscr();
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
@@ -1730,6 +1724,34 @@ string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
     line += game_time(verbosity);
 
     return line;
+}
+
+shared_ptr<UIMenuEntry> scorefile_entry::make_menu_entry() const
+{
+    auto entry = make_shared<UIMenuEntry>();
+    entry->widgets.emplace_back(make_shared<UIText>(make_stringf("%8d", points)));
+    entry->widgets.emplace_back(make_shared<UIText>(name));
+    entry->widgets.emplace_back(make_shared<UIText>(make_stringf("%s-%02d", race_class_name.c_str(), lvl)));
+    entry->widgets.emplace_back(make_shared<UIText>((wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : ""));
+    entry->widgets.emplace_back(make_shared<UIText>(death_description(DDV_ONELINE).erase(0, 1)));
+    entry->widgets.emplace_back(make_shared<UIText>(death_place(DDV_ONELINE)));
+
+    for (auto const& w : entry->widgets)
+    {
+        w->set_margin_for_crt({0, 1, 0, 0});
+        w->set_margin_for_sdl({2, 10, 4, 0});
+#ifndef USE_TILE_LOCAL
+        w->expand_h = true;
+#endif
+    }
+    static_cast<UIText*>(entry->widgets[4].get())->ellipsize = true;
+#ifndef USE_TILE_LOCAL
+    entry->widgets[0]->margin[3] = 2;
+#else
+    entry->widgets[0]->margin[3] = 10;
+#endif
+
+    return entry;
 }
 
 string scorefile_entry::game_time(death_desc_verbosity verbosity) const

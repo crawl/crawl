@@ -242,6 +242,7 @@ transform.o \
 traps.o \
 travel.o \
 tutorial.o \
+ui.o \
 uncancel.o \
 unicode.o \
 view.o \

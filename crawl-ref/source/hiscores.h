@@ -7,6 +7,7 @@
 
 #include "god-type.h"
 #include "score-format-type.h"
+#include "ui.h"
 
 class scorefile_entry;
 
@@ -161,6 +162,7 @@ public:
     bool parse(const string &line);
 
     string hiscore_line(death_desc_verbosity verbosity) const;
+    shared_ptr<UIMenuEntry> make_menu_entry() const;
 
     string character_description(death_desc_verbosity) const;
     // Full description of death: Killed by an xyz wielding foo

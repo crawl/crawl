@@ -124,6 +124,14 @@ public:
 
     bool load_textures(bool need_mips);
     void unload_textures();
+    inline const tile_info &tile_def_info(tile_def tile) const;
 
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
+
+// TODO: This function should be moved elsewhere (where?) and called by
+// the ImageManager.
+inline const tile_info &ImageManager::tile_def_info(tile_def tile) const
+{
+    return m_textures[tile.tex].get_info(tile.tile);
+}
