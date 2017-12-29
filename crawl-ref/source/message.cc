@@ -25,6 +25,7 @@
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
+#include "scroller.h"
 #include "sound.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1980,31 +1981,37 @@ void load_messages(reader& inf)
 
 void replay_messages()
 {
-    formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
+    formatted_scroller hist(FS_START_AT_END | FS_PREWRAPPED_TEXT);
     hist.set_more();
 
     const store_t msgs = buffer.get_store();
+    formatted_string lines;
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
             string text = msgs[i].full_text();
             linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             vector<formatted_string> parts;
-            formatted_string::parse_string_to_multiple(text, parts);
+            formatted_string::parse_string_to_multiple(text, parts, 80);
             for (unsigned int j = 0; j < parts.size(); ++j)
             {
-                formatted_string line;
                 prefix_type p = prefix_type::none;
                 if (j == parts.size() - 1 && i + 1 < msgs.size()
                     && msgs[i+1].turn > msgs[i].turn)
                 {
                     p = prefix_type::turn_end;
                 }
-                line.add_glyph(_prefix_glyph(p));
-                line += parts[j];
-                hist.add_item_formatted_string(line);
+                if (!lines.empty())
+                    lines.add_glyph('\n');
+                lines.add_glyph(_prefix_glyph(p));
+                lines += parts[j];
             }
         }
+    hist.add_formatted_string(lines);
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
 
     hist.show();
 }
