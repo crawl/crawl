@@ -904,6 +904,74 @@ bool UIScroller::on_event(wm_event event)
     return false;
 }
 
+UIPopup::UIPopup(shared_ptr<UI> child)
+{
+    vector<shared_ptr<UIImage>> box_img(9);
+    for (int i=0; i<9; i++)
+    {
+        box_img[i] = make_shared<UIImage>();
+        box_img[i]->set_tile(tile_def(TILEG_SKIN_BOX+i, TEX_GUI));
+        box_img[i]->shrink_h = i==1 || i == 4 || i==7;
+        box_img[i]->shrink_v = i==3 || i == 4 || i==5;
+    }
+
+    auto box_grid = make_shared<UIGrid>();
+    for (int y = 0; y < 3; y++)
+        for (int x = 0; x < 3; x++)
+            box_grid->add_child(move(box_img[y*3+x]), x+1, y+1);
+    box_grid->add_child(child, 2, 2);
+
+    // XXX: Add struts around the box, because UIGrid barfs with empty tracks
+#ifdef USE_TILE_LOCAL
+    const bool centre = true;
+#else
+    const bool centre = false;
+#endif
+    using E = UIBox::Expand;
+    E expand_horz = centre ? E::EXPAND_H : E::NONE;
+    E expand_vert = centre ? E::EXPAND_V : E::NONE;
+    box_grid->add_child(make_shared<UIBox>(VERT, expand_horz), 0, 2);
+    box_grid->add_child(make_shared<UIBox>(VERT, expand_horz), 4, 2);
+    box_grid->add_child(make_shared<UIBox>(VERT, expand_vert), 2, 0);
+    box_grid->add_child(make_shared<UIBox>(VERT, expand_vert), 2, 4);
+
+    box_grid->set_margin_for_sdl({15, 15, 15, 15});
+    box_grid->track_flex_grow(0, -1) = 1;
+    box_grid->track_flex_grow(2, -1) = 10000;
+    box_grid->track_flex_grow(4, -1) = 1;
+    box_grid->track_flex_grow(-1, 0) = 1;
+    box_grid->track_flex_grow(-1, 2) = 10000;
+    box_grid->track_flex_grow(-1, 4) = 1;
+
+    m_child = move(child);
+    m_root = move(box_grid);
+    m_root->_set_parent(this);
+}
+
+void UIPopup::_render()
+{
+#ifdef USE_TILE_LOCAL
+    m_buf.draw();
+#endif
+    m_root->render();
+}
+
+UISizeReq UIPopup::_get_preferred_size(Direction dim, int prosp_width)
+{
+    return m_root->get_preferred_size(dim, prosp_width);
+}
+
+void UIPopup::_allocate_region()
+{
+#ifdef USE_TILE_LOCAL
+    m_buf.clear();
+    m_buf.add(m_region[0], m_region[1],
+            m_region[0] + m_region[2], m_region[1] + m_region[3],
+            VColour(0, 0, 0, 150));
+#endif
+    m_root->allocate_region(m_region);
+}
+
 void UIRoot::push_child(shared_ptr<UI> ch)
 {
     m_root.add_child(move(ch));
