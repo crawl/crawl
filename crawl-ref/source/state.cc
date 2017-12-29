@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "unwind.h"
 
@@ -86,18 +87,16 @@ void game_state::add_startup_error(const string &err)
 
 void game_state::show_startup_errors()
 {
-    formatted_scroller error_menu;
-    error_menu.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP
-                         | MF_EASY_EXIT);
-    error_menu.set_more(
-        formatted_string::parse_string(
-                           "<cyan>[ + : Page down.   - : Page up."
-                           "                    Esc or Enter to continue.]"));
-    error_menu.set_title(
-        new MenuEntry("Warning: Crawl encountered errors during startup:",
-                      MEL_TITLE));
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+    formatted_scroller error_menu(FS_EASY_EXIT);
+    error_menu.set_more( formatted_string::parse_string(
+        "<cyan>Press Esc or Enter to continue."));
+    error_menu.set_title(formatted_string::parse_string(
+        "<yellow>Warning: Crawl encountered errors during startup:"));
     for (const string &err : startup_errors)
-        error_menu.add_entry(new MenuEntry(err));
+        error_menu.add_raw_text(err + "\n");
     error_menu.show();
 }
 

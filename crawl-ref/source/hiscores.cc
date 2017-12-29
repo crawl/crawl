@@ -44,6 +44,7 @@
 #include "ouch.h"
 #include "place.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "state.h"
 #include "status.h"
@@ -341,12 +342,11 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 
 static void _show_morgue(scorefile_entry& se)
 {
-    formatted_scroller morgue_file;
-    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+    int flags = FS_PREWRAPPED_TEXT;
     if (Options.easy_exit_menu)
-        flags |= MF_EASY_EXIT;
+        flags |= FS_EASY_EXIT;
+    formatted_scroller morgue_file(flags);
 
-    morgue_file.set_flags(flags, false);
     morgue_file.set_tag("morgue");
     morgue_file.set_more();
 
@@ -355,7 +355,7 @@ static void _show_morgue(scorefile_entry& se)
                          + strip_filename_unsafe_chars(morgue_base) + ".txt";
     FILE* morgue = lk_open("r", morgue_path);
 
-    if (!morgue)
+    if (!morgue) // TODO: add an error message
         return;
 
     char buf[200];
@@ -367,12 +367,10 @@ static void _show_morgue(scorefile_entry& se)
         size_t newline_pos = line.find_last_of('\n');
         if (newline_pos != string::npos)
             line.erase(newline_pos);
-        morgue_text += "<w>" + line + "</w>" + '\n';
+        morgue_text += "<w>" + replace_all(line, "<", "<<") + "</w>" + '\n';
     }
 
     lk_close(morgue, morgue_path);
-
-    clrscr();
 
     column_composer cols(2, 40);
     cols.add_formatted(
@@ -384,9 +382,8 @@ static void _show_morgue(scorefile_entry& se)
 
     unsigned i;
     for (i = 0; i < blines.size(); ++i)
-        morgue_file.add_item_formatted_string(blines[i]);
+        morgue_file.add_formatted_string(blines[i], true);
 
-    textcolour(WHITE);
     morgue_file.show();
 }
 

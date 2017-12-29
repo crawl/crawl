@@ -31,7 +31,6 @@ enum MenuEntryLevel
     MEL_TITLE,
     MEL_SUBTITLE,
     MEL_ITEM,
-    MEL_END_OF_SECTION,
 };
 
 struct menu_letter
@@ -415,22 +414,8 @@ protected:
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(int index, const MenuEntry *me) const;
 
-    void webtiles_update_section_boundaries();
-
-    int _webtiles_section_start;
-    int _webtiles_section_end;
-
     bool _webtiles_title_changed;
     formatted_string _webtiles_title;
-
-    inline int webtiles_section_start() const
-    {
-        return _webtiles_section_start == -1 ? 0 : _webtiles_section_start;
-    }
-    inline int webtiles_section_end() const
-    {
-        return _webtiles_section_end == -1 ? items.size() : _webtiles_section_end;
-    }
 #endif
 
     virtual void draw_title();
@@ -513,43 +498,6 @@ private:
 
     vector<column> columns;
     vector<formatted_string> flines;
-};
-
-// This class is for when (some of) your items are formatted, and
-// you want mostly a browser.
-//
-// If MF_NOSELECT, hotkeys jump to menu items.
-// If MF_SINGLESELECT, hotkeys end the menu immediately.
-// MF_MULTISELECT is not supported.
-class formatted_scroller : public Menu
-{
-public:
-    formatted_scroller();
-    formatted_scroller(int flags, const string& s);
-    virtual void set_flags(int new_flags, bool use_options = true) override;
-    virtual void add_item_formatted_string(const formatted_string& s,
-                                           int hotkey = 0);
-    virtual void wrap_formatted_string(const formatted_string& s,
-                                       int width = get_number_of_cols()-1);
-    virtual void add_item_string(const string& s, int hotkey = 0);
-    virtual void add_text(const string& s, bool new_line = false,
-                          int wrap_col = 0);
-    virtual void add_raw_text(const string& s, bool new_line = false,
-                              int wrap_col = 0);
-    virtual bool jump_to_hotkey(int keyin);
-    virtual vector<MenuEntry *> show(bool reuse_selections = false) override;
-    int get_lastch() { return lastch; }
-    virtual ~formatted_scroller();
-protected:
-
-    virtual void draw_index_item(int index, const MenuEntry* me) const override;
-    virtual bool process_key(int keyin) override;
-    bool jump_to(int linenum, bool no_scroll = false);
-
-#ifdef USE_TILE_WEB
-    virtual void webtiles_write_item(int index,
-                                     const MenuEntry* me) const override;
-#endif
 };
 
 /**

@@ -515,8 +515,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>X?</w>     list map-mode commands\n",
                        true);
 
-    int key = show_keyhelp_menu(cols.formatted_lines(), false,
-                                Options.easy_exit_menu);
+    int key = show_keyhelp_menu(cols.formatted_lines());
     if (do_redraw_screen)
         redraw_screen();
     return key;

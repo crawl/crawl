@@ -27,6 +27,7 @@
 #include "menu.h"
 #include "message.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -705,7 +706,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
     desc.cprintf("\n\n%s%*s%s\n", header,
-            min(80, get_number_of_cols()) - 1 - strwidth(header) - strwidth(cost),
+            80 - strwidth(header) - strwidth(cost),
             "", cost);
 
     bool have_any = false;
@@ -921,7 +922,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    const int numcols = min(80, get_number_of_cols()) - 1;
     for (const auto& power : get_god_powers(which_god))
     {
         // hack: don't mention the necronomicon alone unless it
@@ -954,7 +954,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         if (abil_cost == "(None)")
             abil_cost = "";
 
-        desc.cprintf("%s%*s%s\n", buf.c_str(), numcols - desc_len - (int)abil_cost.size(),
+        desc.cprintf("%s%*s%s\n", buf.c_str(), 80 - desc_len - (int)abil_cost.size(),
                 "", abil_cost.c_str());
         desc.textcolour(god_colour(which_god));
     }
@@ -1008,15 +1008,9 @@ static formatted_string _god_overview_description(god_type which_god)
 
 static int _describe_god_by_type(god_type which_god, bool give_title, god_desc_type gdesc, string more)
 {
-#ifdef USE_TILE_LOCAL
-    // Ensure we get the full screen size when calling get_number_of_cols()
-    cgotoxy(1, 1);
-#endif
-
     formatted_string desc;
 
     // Title: has extra left-aligned text on first pane
-    const int numcols = min(80, get_number_of_cols()) - 1;
     if (give_title)
     {
         desc.textcolour(WHITE);
@@ -1024,7 +1018,7 @@ static int _describe_god_by_type(god_type which_god, bool give_title, god_desc_t
         desc.textcolour(LIGHTGREY);
     }
     // Center top line even if it already contains "Religion" (len = 8)
-    desc += _print_top_line(which_god, numcols - (give_title ? 2*8 : 0));
+    desc += _print_top_line(which_god, 80 - (give_title ? 2*8 : 0));
 
     // Contents of each pane
     switch (gdesc)
@@ -1042,7 +1036,7 @@ static int _describe_god_by_type(god_type which_god, bool give_title, god_desc_t
         die("Unknown god description type!");
     }
 
-    formatted_scroller fs;
+    formatted_scroller fs(FS_EASY_EXIT | FS_PREWRAPPED_TEXT);
     const char* place = nullptr;
     switch (gdesc)
     {
@@ -1056,12 +1050,17 @@ static int _describe_god_by_type(god_type which_god, bool give_title, god_desc_t
             "|<w>Right-click</w>"
 #endif
             "]: %s", place);
-    fs.set_more(formatted_string::parse_string(more));
+    formatted_string fs_more = formatted_string::parse_string(more);
+    fs_more.cprintf("%*s", 80-(int)fs_more.tostring().length(), "");
+    fs.set_more(fs_more);
 
-    fs.set_flags(MF_EASY_EXIT | MF_ALWAYS_SHOW_MORE | MF_NOSELECT | MF_NOWRAP, false);
-    fs.wrap_formatted_string(desc, numcols);
+    vector<formatted_string> lines;
+    formatted_string::parse_string_to_multiple(desc.to_colour_string(), lines, 80);
+    for (const auto& line : lines)
+        fs.add_formatted_string(line, true);
+    fs.add_raw_text(string(24-lines.size(), '\n'));
     fs.show();
-    return fs.getkey();
+    return fs.get_lastch();
 }
 
 void describe_god(god_type which_god, bool give_title)
@@ -1071,6 +1070,9 @@ void describe_god(god_type which_god, bool give_title)
         mpr("You are not religious.");
         return;
     }
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
     god_desc_type gdesc = GDESC_OVERVIEW;
     while (true)
     {
@@ -1111,6 +1113,10 @@ bool describe_god_with_join(god_type which_god)
         make_stringf("Are you sure you want to abandon %s?",
                 god_name(you.religion).c_str())
     };
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
 
     god_desc_type gdesc = GDESC_OVERVIEW;
     join_step_type step = INIT;

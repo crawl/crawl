@@ -53,6 +53,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "scroller.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
@@ -816,7 +817,7 @@ static void _describe_cards(vector<card_type> cards)
         else
             data << "\n";
         data << "<w>" << name << "</w>\n"
-             << get_linebreak_string(desc, get_number_of_cols() - 1)
+             << desc
              << "\n" << which_decks(card) << "\n";
     }
     formatted_scroller fs(0, data.str());
