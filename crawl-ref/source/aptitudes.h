@@ -128,7 +128,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_INVOCATIONS,     1),
     APT(SP_DEEP_ELF,        SK_EVOCATIONS,      1),
 
-#if TAG_MAJOR_VERSION == 34
     // SP_SLUDGE_ELF
     APT(SP_SLUDGE_ELF,      SK_FIGHTING,        1),
     APT(SP_SLUDGE_ELF,      SK_SHORT_BLADES,   -1),
@@ -163,7 +162,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SLUDGE_ELF,      SK_POISON_MAGIC,    1),
     APT(SP_SLUDGE_ELF,      SK_INVOCATIONS,     1),
     APT(SP_SLUDGE_ELF,      SK_EVOCATIONS,      0),
-#endif
 
     // SP_HALFLING
     APT(SP_HALFLING,        SK_FIGHTING,       -1),
