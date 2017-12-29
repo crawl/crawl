@@ -2973,6 +2973,11 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
+    // don't allow wall jump against close doors via movement -- need to use
+    // the ability
+    if (can_wall_jump && feat_is_closed_door(targ_grid))
+        can_wall_jump = false;
+
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"

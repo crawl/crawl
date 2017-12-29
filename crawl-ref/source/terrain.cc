@@ -374,6 +374,7 @@ bool feat_can_wall_jump_against(dungeon_feature_type feat)
 {
     return feat_is_wall(feat)
            || feat == DNGN_GRATE
+           || feat_is_closed_door(feat)
            || feat_is_tree(feat)
            || feat_is_statuelike(feat);
 }
