@@ -497,6 +497,21 @@ protected:
     int m_scroll = 0;
 };
 
+class Popup : public Bin
+{
+public:
+    Popup(shared_ptr<Widget> child);
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+protected:
+    shared_ptr<Widget> m_root;
+#ifdef USE_TILE_LOCAL
+    ShapeBuffer m_buf;
+#endif
+};
+
 void push_layout(shared_ptr<Widget> root);
 void pop_layout();
 void pump_events();
