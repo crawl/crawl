@@ -696,23 +696,24 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
-#if TAG_MAJOR_VERSION == 34
+
 { SP_SLUDGE_ELF, {
     "SE",
     "Sludge Elf", "Elven", "Elf",
     SPF_ELVEN,
-    0, -1, 1, 3,
+    0, -1, 1, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
+    8, 9, 9, // 26
     { STAT_INT, STAT_DEX }, 4,
     {},
     {},
     {},
-    {}, // not a starting race
-    {}, // not a starting race
+    { JOB_TRANSMUTER, JOB_NECROMANCER, JOB_SUMMONER, JOB_ENCHANTER,
+      JOB_EARTH_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
+    { SK_UNARMED_COMBAT, SK_STAVES },
 } },
-
+#if TAG_MAJOR_VERSION == 34
 { SP_LAVA_ORC, {
     "LO",
     "Lava Orc", "Orcish", "Orc",

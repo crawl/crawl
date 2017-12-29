@@ -154,6 +154,8 @@ function species_mock(e)
     e.kmons("1 = tentacled monstrosity")
   elseif you.race() == "Ogre" then
     e.kmons("1 = ettin skeleton")
+  elseif you.race() == "Sludge Elf" then
+    e.kmons("1 = slime creature")
   elseif you.race() == "Spriggan" then
     e.kmons("1 = unseen horror")
   elseif you.race() == "Tengu" then

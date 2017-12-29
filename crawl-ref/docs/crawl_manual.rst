@@ -1631,6 +1631,14 @@ High Elves
   are not very good with necromancy or with earth or poison magic, but are
   highly skilled with most other forms of magic, especially Air and Charms.
 
+Sludge Elves
+  Unlike their forest-dwelling High Elven cousins, Sludge Elves prefer to live 
+  in the swamp so as to maintain a proximity to their primary form of sustenance:
+  tar. They eschew the use of traditional magic and weaponry in combat, instead
+  preferring the more primal feeling of unarmed fighting. Most Sludge Elves adopt
+  the path of the transmuter, and are comfortable dabbling in necromantic, poison,
+  and elemental magic.
+
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
   were witches' familiars that were magically augmented to provide help for
