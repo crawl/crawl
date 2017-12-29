@@ -11,6 +11,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "los-def.h"
 #include "losglobal.h"
@@ -468,19 +469,26 @@ targeter_walljump::targeter_walljump() :
 {
 }
 
+bool targeter_walljump::valid_aim(coord_def a)
+{
+    return wu_jian_can_wall_jump(a, why_not);
+}
+
 aff_type targeter_walljump::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
         return AFF_NO;
 
-    if ((loc - aim).rdist() > 9)
-        return AFF_NO;
+    auto wall_jump_direction = (you.pos() - aim).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+    if (loc == wall_jump_landing_spot)
+        return AFF_YES;
 
-    coord_def centre(9,9);
-    if (exp_map_min(loc - aim + centre) < INT_MAX)
-        return AFF_NO;
+    if (loc.distance_from(wall_jump_landing_spot) == 1 && monster_at(loc))
+        return AFF_YES;
 
-    return AFF_YES;
+    return AFF_NO;
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :
