@@ -564,12 +564,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     clrscr();
 
     // XXX: this should be somewhere else.
-    if (!crawl_state.startup_errors.empty()
-        && !Options.suppress_startup_errors)
-    {
+    if (!crawl_state.startup_errors.empty() && !Options.suppress_startup_errors)
         crawl_state.show_startup_errors();
-        clrscr();
-    }
 
     textcolour(LIGHTGREY);
 
@@ -1269,13 +1265,13 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
             case M_HELP:
                  // access to the help files
                 if (choice_type == C_JOB)
-                    list_commands('2');
+                    show_help('2');
                 else
-                    list_commands('1');
+                    show_help('1');
 
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%', _highlight_pattern(ng));
+                show_help('%', _highlight_pattern(ng));
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_VIABLE:
                 if (choice_type == C_JOB)
@@ -1647,10 +1643,10 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%', _highlight_pattern(ng));
+            show_help('%', _highlight_pattern(ng));
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_HELP:
-            list_commands('?');
+            show_help('?');
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
@@ -2071,10 +2067,10 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             // TODO: fix
             return;
         case M_APTITUDES:
-            list_commands('%', _highlight_pattern(ng));
+            show_help('%', _highlight_pattern(ng));
             return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
-            list_commands('?');
+            show_help('?');
             return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);

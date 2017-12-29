@@ -58,6 +58,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-book.h"
@@ -70,8 +71,14 @@
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
+ #include "tiledef-dngn.h"
+#endif
+#ifdef USE_TILE
+ #include "tilepick.h"
 #endif
 #include "unicode.h"
+
+using namespace ui;
 
 int count_desc_lines(const string &_desc, const int width)
 {
@@ -96,45 +103,37 @@ static const string _toggle_message =
 
 int show_description(const describe_info &inf)
 {
-#ifdef USE_TILE_LOCAL
-    // Ensure we get the full screen size when calling get_number_of_cols()
-    cgotoxy(1, 1);
-#endif
     string desc = process_description(inf);
 
-    formatted_scroller desc_fs;
-    int flags = MF_NOSELECT | MF_NOWRAP;
-    desc_fs.set_flags(flags, false);
-    desc_fs.set_more();
-    desc_fs.add_text(desc, false, get_number_of_cols());
+    formatted_scroller desc_fs(FS_EASY_EXIT);
+    desc_fs.set_title(formatted_string(inf.title));
+    desc_fs.add_text(trimmed_string(desc), false);
 
-    formatted_scroller quote_fs;
-    quote_fs.set_more();
+    formatted_scroller quote_fs(FS_EASY_EXIT);
 
     if (!inf.quote.empty())
     {
-        desc_fs.set_flags(desc_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
-        quote_fs.set_flags(quote_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
         desc_fs.set_more(formatted_string::parse_string(_toggle_message));
         quote_fs.set_more(formatted_string::parse_string(_toggle_message));
 
-        quote_fs.add_text(inf.title, true);
-        quote_fs.add_text(inf.quote, false, get_number_of_cols() - 1);
+        quote_fs.set_title(formatted_string(inf.title));
+        quote_fs.add_text(trimmed_string(inf.quote), false);
     }
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
 
     bool show_quote = false;
     while (true)
     {
         formatted_scroller& fs = show_quote ? quote_fs : desc_fs;
         fs.show();
-        int keyin = fs.getkey();
+        int keyin = fs.get_lastch();
         if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
             show_quote = !show_quote;
         else
-        {
-            clrscr();
             return keyin;
-        }
     }
 }
 
@@ -1900,14 +1899,6 @@ string get_item_description(const item_def &item, bool verbose,
 {
     ostringstream description;
 
-    if (!dump && !lookup)
-    {
-        string name = item.name(DESC_INVENTORY_EQUIP);
-        if (!in_inventory(item))
-            name = uppercase_first(name);
-        description << name << ".";
-    }
-
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump && !you.suppress_wizard)
     {
@@ -2283,7 +2274,10 @@ void get_item_desc(const item_def &item, describe_info &inf)
     // Don't use verbose descriptions if the item contains spells,
     // so we can actually output these spells if space is scarce.
     const bool verbose = !item.has_spells();
-    inf.body << get_item_description(item, verbose);
+    string name = item.name(DESC_INVENTORY_EQUIP) + ".";
+    if (!in_inventory(item))
+        name = uppercase_first(name);
+    inf.body << name << get_item_description(item, verbose);
 }
 
 static vector<command_type> _allowed_actions(const item_def& item)
@@ -2438,7 +2432,6 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     const int slot = item.link;
     ASSERT_RANGE(slot, 0, ENDOFPACK);
 
-    redraw_screen();
     switch (action)
     {
     case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
@@ -2493,6 +2486,10 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     if (!item.defined())
         return true;
 
+    string name = item.name(DESC_INVENTORY_EQUIP) + ".";
+    if (!in_inventory(item))
+        name = uppercase_first(name);
+
     string desc = get_item_description(item, true, false);
 
     string quote;
@@ -2508,42 +2505,116 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     }
 
     if (crawl_state.game_is_hints())
-        desc += hints_describe_item(item);
+        desc += "\n\n" + hints_describe_item(item);
 
     if (fixup_desc)
         fixup_desc(desc);
-    // spellbooks have their own UIs, so we don't currently support the
-    // inscribe/drop/etc prompt UI for them.
-    // ...it would be nice if we did, though.
-    if (item.has_spells())
+
+    formatted_string fs_desc = formatted_string::parse_string(desc);
+
+    spellset spells = item_spellset(item);
+    describe_spellset(spells, &item, fs_desc, nullptr);
+
+    const bool do_actions = in_inventory(item) // Dead men use no items.
+            && !(you.pending_revival || crawl_state.updating_scores);
+
+    vector<command_type> actions;
+    if (do_actions)
+        actions = _allowed_actions(item);
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+
+#ifdef USE_TILE
+    vector<tile_def> item_tiles;
+    get_tiles_for_item(item, item_tiles, true);
+    if (item_tiles.size() > 0)
     {
-        formatted_string fdesc(formatted_string::parse_string(desc));
-        list_spellset(item_spellset(item), nullptr, &item, fdesc);
+        auto tiles_stack = make_shared<Stack>();
+        for (const auto &tile : item_tiles)
+        {
+            auto icon = make_shared<Image>();
+            icon->set_tile(tile);
+            tiles_stack->add_child(move(icon));
+        }
+        title_hbox->add_child(move(tiles_stack));
+    }
+#endif
+
+    auto title = make_shared<Text>(name);
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 10});
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto text = make_shared<Text>(trimmed_string(fs_desc.to_colour_string()));
+    text->wrap_text = true;
+    scroller->set_child(text);
+    vbox->add_child(scroller);
+
+    if (!actions.empty())
+    {
+        formatted_string footer_text("", CYAN);
+        if (!spells.empty())
+            footer_text.cprintf("Select a spell, or ");
+        footer_text += formatted_string(_actions_desc(actions, item));
+        auto footer = make_shared<Text>();
+        footer->set_text(footer_text);
+        footer->set_margin_for_crt({1, 0, 0, 0});
+        footer->set_margin_for_sdl({20, 0, 0, 0});
+        vbox->add_child(move(footer));
+    }
+
+    auto popup = make_shared<ui::Popup>(move(vbox));
+
+    bool done = false;
+    command_type action;
+    int lastch;
+    popup->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+        lastch = key;
+        action = _get_action(key, actions);
+        if (action != CMD_NO_CMD)
+            done = true;
+        else if (key == ' ' || key == CK_ESCAPE)
+            done = true;
+        else if (key >= 'a' && key <= 'z')
+        {
+            const vector<spell_type> flat_spells = map_chars_to_spells(spells, nullptr);
+
+            const int spell_index = letter_to_index(key);
+            ASSERT(spell_index >= 0);
+            if ((size_t) spell_index >= flat_spells.size())
+                return false;
+            const spell_type chosen_spell = flat_spells[spell_index];
+            describe_spell(chosen_spell, nullptr, &item);
+            done = already_learning_spell();
+        }
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
+    ui::run_layout(move(popup), done);
+
+    if (action != CMD_NO_CMD)
+        return _do_action(item, actions, lastch);
+    else if (item.has_spells())
+    {
         // only continue the inventory loop if we didn't start memorizing a
         // spell & didn't destroy the item for amnesia.
-        return !already_learning_spell() && item.is_valid();
+        return !already_learning_spell();
     }
-    else
-    {
-        const bool do_actions = in_inventory(item) // Dead men use no items.
-                                && !(you.pending_revival
-                                     || crawl_state.updating_scores);
-        vector<command_type> actions;
-        formatted_scroller menu;
-        menu.set_flags(MF_SINGLESELECT);
-        menu.add_text(desc, false, get_number_of_cols());
-        if (do_actions)
-        {
-            actions = _allowed_actions(item);
-            menu.set_flags(menu.get_flags() | MF_ALWAYS_SHOW_MORE);
-            menu.set_more(formatted_string(_actions_desc(actions, item), CYAN));
-        }
-        menu.show();
-        if (do_actions)
-            return _do_action(item, actions, menu.getkey());
-        else
-            return true;
-    }
+    return true;
 }
 
 void inscribe_item(item_def &item)
@@ -2770,8 +2841,6 @@ static bool _get_spell_description(const spell_type spell,
 {
     description.reserve(500);
 
-    description  = spell_title(spell);
-    description += "\n\n";
     const string long_descrip = getLongDescription(string(spell_title(spell))
                                                    + " spell");
 
@@ -2851,7 +2920,6 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
     inf.body << desc;
 }
 
-
 /**
  * Examine a given spell. List its description and details, and handle
  * memorizing the spell in question, if the player is able & chooses to do so.
@@ -2861,28 +2929,71 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
  *                  description, 'mon_owner' is that monster. Else, null.
  * @param item      The item holding the spell, if any.
  */
-void describe_spell(spell_type spelled, const monster_info *mon_owner,
+void describe_spell(spell_type spell, const monster_info *mon_owner,
                     const item_def* item)
 {
     string desc;
-    const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
-    formatted_scroller menu;
-    menu.add_text(desc, false, get_number_of_cols());
+    bool can_mem = _get_spell_description(spell, mon_owner, desc, item);
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+
+#ifdef USE_TILE
+    auto spell_icon = make_shared<Image>();
+    spell_icon->set_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+    title_hbox->add_child(move(spell_icon));
+#endif
+
+    auto title = make_shared<Text>();
+    title->set_text(formatted_string(spell_title(spell)));
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 10});
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto text = make_shared<Text>();
+    text->set_text(formatted_string::parse_string(trimmed_string(desc)));
+    text->wrap_text = true;
+    scroller->set_child(move(text));
+    vbox->add_child(scroller);
 
     if (can_mem)
     {
-        menu.set_flags(menu.get_flags() | MF_ALWAYS_SHOW_MORE);
-        menu.set_more(formatted_string("(M)emorise this spell.", CYAN));
+        auto more = make_shared<Text>();
+        more->set_text(formatted_string("(M)emorise this spell.", CYAN));
+        more->set_margin_for_crt({1, 0, 0, 0});
+        more->set_margin_for_sdl({20, 0, 0, 0});
+        vbox->add_child(move(more));
     }
 
-    menu.show();
+    auto popup = make_shared<ui::Popup>(move(vbox));
 
-    if (can_mem && toupper(menu.getkey()) == 'M')
+    bool done = false;
+    int lastch;
+    popup->on(Widget::slots.event, [&done, &lastch](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        lastch = ev.key.keysym.sym;
+        done = (toupper(lastch) == 'M' || lastch == CK_ESCAPE);
+        return done;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
+    ui::run_layout(move(popup), done);
+
+    if (toupper(lastch) == 'M')
     {
-        redraw_screen();
-        if (!learn_spell(spelled) || !you.turn_is_over)
+        redraw_screen(); // necessary to ensure stats is redrawn (!?)
+        if (!learn_spell(spell) || !you.turn_is_over)
             more();
-        redraw_screen();
     }
 }
 
@@ -4080,61 +4191,93 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 int describe_monsters(const monster_info &mi, bool force_seen,
                       const string &footer)
 {
-    describe_info inf;
     bool has_stat_desc = false;
+    describe_info inf;
+    formatted_string desc;
+
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
-    if (!footer.empty())
-    {
-        if (inf.footer.empty())
-            inf.footer = footer;
-        else
-            inf.footer += "\n" + footer;
-    }
+    spellset spells = monster_spellset(mi);
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
 
 #ifdef USE_TILE_LOCAL
-    // Ensure we get the full screen size when calling get_number_of_cols()
-    cgotoxy(1, 1);
+    auto dgn = make_shared<Dungeon>();
+    dgn->width = dgn->height = 1;
+    dgn->buf().add_monster(mi, 0, 0);
+    title_hbox->add_child(move(dgn));
 #endif
 
-    spell_scroller fs(monster_spellset(mi), &mi, nullptr);
-    fs.add_text(inf.title, true);
-    fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
+    auto title = make_shared<Text>();
+    title->set_text(formatted_string(inf.title));
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 10});
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto text = make_shared<Text>();
+    desc += formatted_string(inf.body.str());
     if (crawl_state.game_is_hints())
-        fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
+        desc += formatted_string(hints_describe_monster(mi, has_stat_desc));
+    desc += formatted_string(inf.footer);
+    desc = formatted_string::parse_string(trimmed_string(desc));
 
-    formatted_scroller qs;
-
-    fs.set_more();
-    qs.set_more();
+    text->set_text(desc);
+    text->wrap_text = true;
+    scroller->set_child(text);
+    vbox->add_child(scroller);
 
     if (!inf.quote.empty())
     {
-        fs.set_flags(fs.get_flags() | MF_ALWAYS_SHOW_MORE);
-        qs.set_flags(qs.get_flags() | MF_ALWAYS_SHOW_MORE);
-        fs.set_more(formatted_string::parse_string(_toggle_message));
-        qs.set_more(formatted_string::parse_string(_toggle_message));
-
-        qs.add_text(inf.title, true);
-        qs.add_text(inf.quote, false, get_number_of_cols() - 1);
+        auto more = make_shared<Text>(_toggle_message);
+        more->set_margin_for_crt({1, 0, 0, 0});
+        more->set_margin_for_sdl({20, 0, 0, 0});
+        vbox->add_child(move(more));
     }
 
-    fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
+    auto popup = make_shared<ui::Popup>(move(vbox));
 
+    bool done = false;
     bool show_quote = false;
-    while (true)
-    {
-        if (show_quote)
-            qs.show();
-        else
-            fs.show();
-
-        int keyin = (show_quote ? qs : fs).get_lastch();
-        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
+    int lastch;
+    popup->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+        lastch = key;
+        done = key == CK_ESCAPE;
+        if (!inf.quote.empty() && (key == '!' || key == CK_MOUSE_CMD))
+        {
             show_quote = !show_quote;
-        else
-            return keyin;
-    }
+            text->set_text(show_quote ? formatted_string(trimmed_string(inf.quote)) : desc);
+        }
+        if (key >= 'a' && key <= 'z')
+        {
+            const vector<spell_type> flat_spells = map_chars_to_spells(spells, nullptr);
+
+            const int spell_index = letter_to_index(key);
+            ASSERT(spell_index >= 0);
+            if ((size_t) spell_index >= flat_spells.size())
+                return false;
+
+            const spell_type chosen_spell = flat_spells[spell_index];
+            describe_spell(chosen_spell, &mi, nullptr);
+        }
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
+    ui::run_layout(move(popup), done);
+    return lastch;
 }
 
 static const char* xl_rank_names[] =

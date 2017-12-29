@@ -3802,10 +3802,7 @@ bool hints_monster_interesting(const monster* mons)
 
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
     bool dangerous = false;
     if (mons_is_unique(mi.type))
     {
@@ -3918,11 +3915,11 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                 "important clues as to how to deal with them.";
     }
 
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    return broken;
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 void hints_observe_cell(const coord_def& gc)

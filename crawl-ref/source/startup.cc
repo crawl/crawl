@@ -772,7 +772,7 @@ again:
         }
         else if (keyn == '?')
         {
-            list_commands();
+            show_help();
 
             // If we had a save selected, reset type so that the save
             // will continue to be selected when we restart the menu.
@@ -907,7 +907,7 @@ again:
             return;
 
         case GAME_TYPE_INSTRUCTIONS:
-            list_commands();
+            show_help();
             // restart because help messes up CRTRegion
             goto again;
 
