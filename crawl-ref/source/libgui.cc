@@ -204,8 +204,7 @@ bool kbhit()
     if (crawl_state.tiles_disabled || crawl_state.seen_hups)
         return false;
     // Look for the presence of any keyboard events in the queue.
-    int count = wm->get_event_count(WME_KEYDOWN)
-                + wm->get_event_count(WME_KEYPRESS);
+    int count = wm->get_event_count(WME_KEYDOWN);
     return count > 0;
 }
 
