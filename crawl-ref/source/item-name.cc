@@ -3370,6 +3370,8 @@ bool is_useless_item(const item_def &item, bool temp)
     if (you.species == SP_UNKNOWN)
         return false;
 
+    bool known_holy = false;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -3384,10 +3386,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
-        if (!item_type_known(item))
-            return false;
+        known_holy = (is_artefact(item)
+                     && artefact_known_property(item, ARTP_BRAND) == SPWPN_HOLY_WRATH)
+                     || (item_type_known(item) && is_holy_item(item));
 
-        if (you.undead_or_demonic() && is_holy_item(item))
+        if (you.undead_or_demonic() && known_holy)
         {
             if (!temp && you.form == transformation::lich
                 && you.species != SP_DEMONSPAWN)
