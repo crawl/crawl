@@ -1058,7 +1058,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         if (mon->petrifying() || mon->petrified())
             return 6; // reduced later by petrification's damage reduction
-        else if (mon->is_skeletal())
+        else if (mon->is_skeletal() || mon->is_icy())
             return 6;
         else if (mon->airborne() || mons_is_slime(*mon))
             return 1;
@@ -1125,30 +1125,24 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
         chance = 100;
         break;
 
-    case DNGN_METAL_WALL:
-        chance = pow / 10;
-        break;
-
     case DNGN_ORCISH_IDOL:
     case DNGN_GRANITE_STATUE:
-        chance = 50;
+        chance = 100;
+        break;
+
+    case DNGN_METAL_WALL:
+        chance = 15;
         break;
 
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_STONE_WALL:
-        chance = pow / 6;
+        chance = 25;
         break;
 
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_ROCK_WALL:
     case DNGN_SLIMY_WALL:
-        chance = pow / 4;
-        break;
-
     case DNGN_CRYSTAL_WALL:
-        chance = 50;
-        break;
-
     case DNGN_TREE:
         chance = 33;
         break;
@@ -1178,7 +1172,9 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue
+             || you.form == transformation::ice_beast
+             || you.species == SP_GARGOYLE)
         return 6;
     else if (you.airborne())
         return 1;

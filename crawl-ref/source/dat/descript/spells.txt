@@ -1139,10 +1139,12 @@ shadow.
 %%%%
 Shatter spell
 
-Causes an enormous burst of concussive force around the caster. Flying and
-gelatinous creatures can escape the worst effects, and insubstantial creatures
-are entirely unaffected, but all others will be gravely injured by the blast.
-It may also destroy nearby walls.
+Causes an enormous burst of concussive force around the caster, dealing severe
+damage to all nearby creatures. It is especially effective against those made
+from ice, bone, or any wall-like substance (such as rock, metal or crystal), as
+well as those turned to stone by petrification. It is less effective against
+flying, gelatinous and insubstantial creatures. It may also destroy nearby
+walls.
 %%%%
 Shock spell
 
