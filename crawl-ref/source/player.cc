@@ -6031,11 +6031,20 @@ bool player::heal(int amount)
  */
 mon_holy_type player::holiness(bool temp) const
 {
-    mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
+    mon_holy_type holi;
 
-    if (species == SP_GARGOYLE ||
-        temp && (form == transformation::statue
-                 || form == transformation::wisp || petrified()))
+    // Lich form takes precedence over a species' base holiness
+    if (undead_state(temp))
+        holi = MH_UNDEAD;
+    else if (species == SP_GARGOYLE)
+        holi = MH_NONLIVING;
+    else
+        holi = MH_NATURAL;
+
+    // Petrification takes precedence over base holiness and lich form
+    if (temp && (form == transformation::statue
+                 || form == transformation::wisp
+                 || petrified()))
     {
         holi = MH_NONLIVING;
     }
