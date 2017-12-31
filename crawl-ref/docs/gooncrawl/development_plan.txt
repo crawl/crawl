@@ -30,7 +30,9 @@ Re-implement Priest background
 Needs design questions answered before proceeding (simple implementation)
 
 Re-implement scrolls of recharging
--How should recharging work with wand stacking?  Add charges the same as before, or adjust the numbers (now that wands no longer hit a charge cap)?  Count it as finding another wand of the same type?
+-How should recharging work with wand stacking?  Add charges the same as before, or 
+  adjust the numbers (now that wands no longer hit a charge cap)?  Count it as 
+  finding another wand of the same type?
 Implement scarf and/or cloak wearing for felids
 -Just scarves, or scarves and cloaks?
 Re-implement boulder beetles
@@ -42,13 +44,16 @@ Re-implement normal sheep
 -Any stat tweaks before implementing?
 
 
-Complex implementation (these might get pushed to the next version to get a baseline pushed out)
+Complex implementation (these might get pushed to the next version to get a 
+baseline pushed out)
 
 Re-implement Pakellas (will still require adjusting abilities to stacked wands system)
 -What will Quick Charge do with wand stacking?
--Stick with No MP regen+MP on kill?  If so, stick with gifted potion of magic for overflow MP?
+-Stick with No MP regen+MP on kill?  If so, stick with gifted potion of magic for 
+  overflow MP?
 -What will Supercharge do with wand stacking?
--Should Pakellas still give gifts?  If so, follow current piety breakpoint gift system (like Kiku’s) or swap to gifts from piety system (like Oka/Sif/Trog)?
+-Should Pakellas still give gifts?  If so, follow current piety breakpoint gift 
+  system (like Kiku’s) or swap to gifts from piety system (like Oka/Sif/Trog)?
 Re-implement rods
 -What should be done about wand of clouds/wand of scattershot?
 -What should be done about ‘lightning rod’ evocable?
@@ -60,11 +65,15 @@ Implement ‘permanent buff’ system from Hellcrawl
 -How complex is it to pull over from Hellcrawl? (something I need to investigate)
 -Any adjustments from how Hellcrawl’s system works?
 Re-implement hammers (for Crazy Yiuf)
--This is only here because I’ve never messed around with adding a weapon type, it should be easy to insert and make vault adjustments once I read into it
+-This is only here because I’ve never messed around with adding a weapon type, it 
+  should be easy to insert and make vault adjustments once I read into it
 Rework Hell effects
--SKULL.GIF recommended looking for a pre-existing Hell effect rework, so I’ll find and post that first for discussion before trying to go in and reformat it myself
+-SKULL.GIF recommended looking for a pre-existing Hell effect rework, so I’ll find and 
+  post that first for discussion before trying to go in and reformat it myself
 Implement Virulence spell
 -Spell level, schools, spellpower cap, any special features (like a spellpower boost)?
--How does the spell work with the different tiers of rPois (-rPois/no resist/+rPois/immune to poison)?
--Need to make sure monsters can be affected by the Virulence effect (it may only be a player-based effect at the moment)
+-How does the spell work with the different tiers of rPois 
+  (-rPois/no resist/+rPois/immune to poison)?
+-Need to make sure monsters can be affected by the Virulence effect 
+  (it may only be a player-based effect at the moment)
 
