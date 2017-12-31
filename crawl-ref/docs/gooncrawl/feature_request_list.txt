@@ -1,0 +1,114 @@
+List of requested features goes here (as well as my feedback on what needs to be done to implement and likelihood of implementation in the near future). Feature is not guaranteed to go in unless it receives majority approval from the SA Crawl thread.
+
+*=My notes, just talking about what's needed and the amount of work. Is not indicative of likelihood to implement feature, but may be an indicator as to how much time it will take to implement it.
+-------------------
+more crabs +1000
+
+*Takes time and vague, create a specific implementation
+-------------------
+New muts???
+
+*Will take work to implement, so work on designs until one has a specific design to be voted upon and I will look into putting it in depending on how complex it gets.
+-------------------
+Feature Request: Donald
+
+*But he's still in the game. Do you mean Wiglaf?
+-------------------
+Jester class
+
+*I would need to find the April Fool's fork it is located in to see how much work it would take to implement.
+-------------------
+Multi-same slot equips for species
+
+*I would need to look into how Octopodes do it, and it probably won't be easy to adapt.
+-------------------
+New spells
+
+*Need to flesh out specific designs before implementing, and anything that uses an effect not already within the game will take more effort to create. Will likely need to set up an open "Design" section on wiki to map out a non-existing spell for design before suggesting for feature implementation.
+-------------------
+Bring back Hive
+
+*Can probably look at the Nostalgia branch on how to do this, but will likely take some more work beyond that. Could also be a timed portal, but that might be equally hard (looking at Desolation instead for an example).
+-------------------
+Re-Add Repel Missiles spell
+
+*Should be simple
+-------------------
+Add new unique monsters
+
+*Need to have an exact design (stats, dungeon range, abilities, etc.) to have a concise idea for voting/implementing.
+-------------------
+Change the rare wands (if brought back) into uncommon evocables instead of wands
+
+*Would need to work out a design for each if doing this, and they would probably be more effort to implement than reverting a previously existing wand+zap effect.
+-------------------
+Wand of Teleport to Wand of Teleport Other
+
+*Should be fairly easy to port over from the spell
+-------------------
+Jiyva Zealot
+
+*Would need to work out what stat boosts/skill distribution/starting equipment it receives
+-------------------
+Guaranteed Wizlab/other portals
+
+*where should they be guaranteed? should random ones still occur if a permanent one is placed? can probably copy over static placement from perma-bazaars
+-------------------
+Goldify spellbooks
+
+*I forget if Hellcrawl already did this, I think it did. Would have to investigate how reliant it is on Hellcrawl specific code, and interactions with book amnesia if re-implemented.
+-------------------
+Achievements
+
+*I remember the official dev team was working on them for a while, but then stopped; I forget the reason why, but likely because it was a lot of work to integrate with the rest of the game.
+-------------------
+Jiyva altar guaranteed outside Slime entrance
+
+*I guess this can be discussed regardless of whether or not it passes getting added to Temple lists. It's pretty easy to modify all Slime entrance vaults to add a Jiyva altar, so no issue implementing.
+-------------------
+Poison Magic rework/new spells/acid spells/removal
+
+*Needs lots of design. Either what new direction should be, what new spells to add and what they do, or where to relocate existing spells if removal of the spell school occurs. Will probably take a lot of effort.
+-------------------
+Archaeologist/Skill locked chests
+
+*SteelNeuron already made most of it, so only some minor code updates to implement if desired.
+-------------------
+Skeleton species
+
+*Same as above
+-------------------
+Battlesphere back in Cj starter book
+
+*Pretty simple to swap spells between books
+-------------------
+Spawn more bazaars
+
+*Would need to add more perma-bazaars to existing vaults, or increase chance to spawn bazaar portal (potentially allowing for multiple timed bazaar portals to spawn). Might take some work to track down chance rate, not as much work to increase vault spawned bazaars.
+-------------------
+Rework Jiyva
+
+*Needs a good design to decide to rework into. Will also likely take some work to track down which numbers affect certain aspects of Jiyva to tweak them for minor changes.
+-------------------
+Bring back Haste spell
+
+*Should be easy to revert
+-------------------
+Disc of storms
+
+*Should be a simple revert
+-------------------
+Playable boulder beetles
+
+*This looks like a fuckton of work, especially making a player based boulder ability. I'll put it on the list anyway.
+-------------------
+Add Floodkiller as a unique
+
+*If everyone wants it, I don't mind. Needs level spawn ranges, stats, abilities, etc.
+-------------------
+Remove XP penalty for summons
+
+*May or may not be difficult, depending on how much any supporting systems have changed since implementing the penalty 
+-------------------
+
+Post angrily at me if I missed something.
