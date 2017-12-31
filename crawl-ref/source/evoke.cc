@@ -492,6 +492,90 @@ void zap_wand(int slot)
     you.turn_is_over = true;
 }
 
+int recharge_wand(bool known, const string &pre_msg, int num, int den)
+{
+    int item_slot = -1;
+    bool divine = num >= 0 && den >= 0;
+    do
+    {
+        if (item_slot == -1)
+        {
+            item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
+                                           OSEL_RECHARGE,
+                                           OPER_ANY,
+                                           invprompt_flag::escape_only);
+        }
+
+        if (item_slot == PROMPT_NOTHING)
+            return known ? -1 : 0;
+
+        if (item_slot == PROMPT_ABORT)
+        {
+            if (known
+                || crawl_state.seen_hups
+                || yesno("Really abort (and waste the scroll)?", false, 0))
+            {
+                canned_msg(MSG_OK);
+                return known ? -1 : 0;
+            }
+            else
+            {
+                item_slot = -1;
+                continue;
+            }
+        }
+
+        item_def &wand = you.inv[item_slot];
+
+        if (!item_is_rechargeable(wand))
+        {
+            mpr("Choose an item to recharge, or Esc to abort.");
+            more();
+
+            // Try again.
+            item_slot = -1;
+            continue;
+        }
+
+        int charge_gain = wand_charge_value(wand.sub_type);
+
+        const int new_charges =
+            divine
+            ? min<int>(charge_gain,
+                       max<int>(wand.charges + 1,
+                                wand.charges + charge_gain * num / den))
+            : max<int>(wand.charges,
+                       min(charge_gain,
+                           wand.charges +
+                           1 + random2avg(charge_gain, 3)));
+
+        const bool charged = (new_charges > wand.plus);
+
+        string desc;
+
+        if (charged)
+        {
+            desc = make_stringf(" and now has %d charge%s",
+                                new_charges, new_charges == 1 ? "" : "s");
+        }
+
+        if (known && !pre_msg.empty())
+            mpr(pre_msg);
+
+        mprf("%s %s for a moment%s.",
+             wand.name(DESC_YOUR).c_str(),
+             charged ? "glows" : "flickers",
+             desc.c_str());
+
+        wand.charges  = new_charges;
+        you.wield_change = true;
+        return 1;
+    }
+    while (true);
+
+    return 0;
+}
+
 // return a slot that has manual for given skill, or -1 if none exists
 // in case of multiple manuals the one with the fewest charges is returned
 int manual_slot_for_skill(skill_type skill)
