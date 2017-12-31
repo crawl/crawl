@@ -1,0 +1,12 @@
+The following procedure will be followed when merging from Trunk on the main repository:
+
+
+Major feature changes/additions/removals: Run through the thread first before committing to Gooncrawl.
+
+Minor feature changes/additions/removals: Merge, vote to remove if meeting derision.
+
+Bug Fixes: Auto-merge unless related to a specific feature change that has either not been approved or is pending approval.
+
+UI Changes: Minor fixes/changes/improvements (tile fixes, new tiles, etc.) will be auto-merged unless attached to a feature that has not been merged/changed. Major changes (ex. the noise bar) will be treated as features.
+
+Documentation updates: May or may not get merged depending on above, but I will admit that it will probably fall behind unless I specifically remember or am reminded to update something.

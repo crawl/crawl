@@ -1,0 +1,93 @@
+Features will be gauged on the following criteria:
+Thread majority decision is 66% of a vote, yes or no.
+
+Contested votes (votes where no side reaches the majority threshold) will require further discussion/design and a future revote before being considered again.
+
+“Yes, with changes” counts as a yes for majority votes.  If a vote wins a Yes majority without needing “Yes, with changes”, the feature will be implemented without changes and change suggestions will be recorded for future reference if the thread decides a change needs to be made.  If a vote cannot win a Yes majority without needing “Yes, with changes” votes, the feature will be accepted for implementation, but a change needs to be decided upon before implementing (likely through a vote runoff to ensure a choice is made).
+
+“Fuck off” counts the same as a no for majority votes, other than being a more emphatic “No”.  If a No majority wins where “Fuck off” exceeds the number of “No” votes, a topic will likely not be considered again unless there is a massive change of opinion in the thread.
+
+“I don’t know/I don’t care” votes will use the following Gooncrawl lizard-brain philosophy, as long as the number of votes does not meet or exceed all other voting categories:
+-New stuff/bringing back removed stuff is usually good, so add it (Yes)
+-Removals are bad, so don’t do them (No)
+-Flavor stuff is always good (Yes)
+-The optimal man does not exist, so no changes directly relating to fixing tedium (No)
+-Other changes can be good or bad, so tentatively accept them but request discussion (Yes, with changes)
+If the number of “I don’t know/I don’t care” votes meets or exceeds the next highest category, the feature will follow the rules for a contested vote, regardless of the above philosophy.
+
+Features are not set in stone; they can always have a (thread accepted) change later.
+
+This list will be updated as features are surveyed (added to this list) or implemented (removed from this list).
+
+Last Survey: Dec 20, 2017...Data: https://docs.google.com/spreadsheets/d/1hBhd6CLgu5pNpbN91r11rb3njQTEafvDICR_WGA7r7c/edit?usp=sharing
+------------------------------------------------------------------------------------
+
+‘Yes’ majority (no changes)
+
+Re-implement Pakellas (will still require adjusting abilities to stacked wands system)
+Re-implement rods (keep ‘rod’ wands as wands or revert to rods?)
+Re-implement scrolls of recharging
+Re-implement wands of haste
+Re-implement wands of heal wounds
+Re-implement wands of teleportation
+Re-implement high elves
+Re-implement sludge elves
+Re-implement pizza
+Re-implement Poisonous Cloud
+Re-implement Phase Shift
+Re-implement Singularity
+Re-implement Crown of Eternal Torment
+Re-implement purple chunks
+Implement ‘permanent buff’ system from Hellcrawl
+Re-implement potions of restore abilities
+Re-implement Norris
+Revert Tomb hatch changes (back to stairs)
+Re-implement boulder beetles
+Raise Ogre M&F aptitude to +3
+Implement hat wearing for felids
+Implement scarf and/or cloak wearing for felids (decide how far to go before implementing)
+Implement helmet wearing for octopodes
+Add Jiyva to Temple gods
+Re-implement hammers (for Crazy Yiuf)
+Re-implement book amnesia
+Re-implement spellpower boost for Dragon Call in Dragon Form
+Re-implement normal sheep
+Re-implement baleful ‘baaas’ for all sheep (if missing)
+Re-implement sticky flame interaction with all sheep (if missing)
+Re-implement Death Knight background
+Re-implement Priest background
+Implement Virulence spell
+Rework Hell effects
+Rework or remove Malmutate from monster spell lists
+
+
+‘Yes’ majority (needs changes before implementation)
+
+Nemelex rework/unwork (need to decide what Nemelex should be before implementing)
+Remove Vaults rune lock (this is simple, but falls under here due to “I don’t know” voting rules. Probably just needs a discussion in the thread first before going ahead with an implementation)
+Implement “helmet shell” ability for octopodes wearing helmets
+Rework Okawaru
+Re-implement Healer background
+Remove SInv from entropy weavers (was a couple points short without “I don’t know”, so needs discussion)
+
+
+Contested Result/”I don’t know” majority
+
+Re-implement mountain dwarves
+Re-implement Fulsome Distillation
+Re-implement Evaporate
+Raise Ogre M&F to +1 (overridden by straight Yes majority for +3)
+Rework miscast system
+Re-implement Crusader background
+Re-implement Paladin background
+Re-implement Reaver background
+Re-implement Stalker background
+
+
+‘No’ Majority
+
+Remove food
+Remove Tomb
+Remove miscast system
+Re-implement item destruction
+

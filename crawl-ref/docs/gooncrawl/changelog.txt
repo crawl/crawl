@@ -1,0 +1,34 @@
+Gooncrawl Version 1.0:
+
+Species
+----------
+-Reimplemented High Elves
+-Reimplemented Sludge Elves
+-Added hat and scarf equipment options to felids
+-Added helmet equipment option to octopodes
+-Increased Ogre Maces&Flails aptitude to +3
+
+Backgrounds
+----------
+-Reimplemented Death Knights
+-Reimplemented Priests
+
+Spells
+----------
+-Reimplemented Poisonous Cloud
+-Reimplemented Phase Shift
+-Reimplemented Control Undead
+-Reimplemented Cigotuvi's Embrace
+-Reimplemented spellpower boost for Dragon Call while in Dragon Form
+
+Items
+----------
+-Reimplemented Crown of Eternal Torment
+
+Monsters
+----------
+-Reimplemented Norris
+
+Dungeon
+----------
+-Changed Tomb trap doors back to stone stairs (kept Tomb:3 treasure chamber door addition)

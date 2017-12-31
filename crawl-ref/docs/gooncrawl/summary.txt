@@ -1,0 +1,5 @@
+Gooncrawl is a collaboration fork of DCSS, with the intention of implementing additions/removals/changes/reversions to DCSS based on the majority whims of the DCSS thread on the Something Awful forums.
+
+Design Philosophy - Whatever the SA thread wants, whether it's putting in fun shit, fixing broken shit, or balancing around the optimal man (this last one probably won't happen). The only limitation is how much time anyone want to sink into something. Merges will continue to occur from the mainline DCSS branch (following the merge directions), with the exception of any patch which brings mass ire from the thread.
+
+How to join the dev team - :10bux: for design input and requests, or make pull requests for requested features on the features page. You can also submit whatever other pull requests you want, but it's up to the SA thread if it gets merged.
