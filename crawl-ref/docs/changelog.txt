@@ -1,15 +1,18 @@
-Stone Soup 0.21 (up to 0.21-a0-474-g05767a1)
+Stone Soup 0.21 (up to 0.21-a0-642-g5d013b2)
 --------------------------------------------
 
 Highlights
 ----------
 * New species: Gnolls
 * New god: Wu Jian Council
+* New spell: Borgnjor's Vile Clutch
 
 Branches, Environment
 ---------------------
 * The rate at which unique Pan lord levels appear in Pandemonium is increased.
 * Transporters now have a 'landing site' that indicates their destination.
+* The Hellbinder and Cloud Mage Wizlabs have been revamped to give greater and
+  more varied challenges as well improved loot.
 
 Character
 ---------
@@ -22,7 +25,6 @@ Gods
 ----
 * New (temple) god: Wu Jian Council
   - Grants free 'martial' attacks from certain movement actions:
-
     * 0*: Moving toward an enemy triggers 'Lunge', which attacks the enemy and
       does extra damage.
     * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind',
@@ -37,6 +39,9 @@ Gods
   - Piety is gained through defeating foes.
 * Gozag Potion Petition no longer offers haste/berserk potions for species
   that can't haste/berserk.
+* Zin blocks 100% of mutations at 6* piety. At that piety level, potions of
+  mutation now only remove mutations and don't cause piety loss.
+* Zin no longer has a mutation removal one-time ability at 6* piety.
 
 Interface
 ---------
@@ -58,15 +63,28 @@ Items
   charges.
 * Wands identify charges upon pickup and are destroyed when their last charge
   is used.
+* Items in a doorways no longer prevent closing doors in most instances.
+  - Items get pushed out of the doorway when the player closes the door.
+  - Doors refuse to close only if the items would fall into deep water or lava.
 * Potions of mutations remove fewer mutations on average and are a bit rarer.
 * Fan of Gales now disperses clouds at the user's location.
 * Un-equipping an item currently giving you invisibility now gives extra
   contamination.
 * Rods of lightning XP-recharge even when only partially used and only grant a
   power bonus for shots over consecutive turns.
+* Scarves are never made as artefacts.
+* Wands of random effects include malmutate in the set of possible effects.
+* Permanent food has been simplified.
+  - Rations are now the only type of permanent food, replacing bread and meat
+    rations, fruit, and royal jelly.
+  - Ration item generation and well as the herbivore and carnivore mutations
+    have been balanced to keep available nutrition the same as before.
+  - Fedhas abilities that formerly required a piece of fruit instead require
+    two rations.
 * Removed:
   - Wands of confusion and lightning.
   - Scrolls of recharging.
+  - Mutagenic chunks.
 
 Monsters
 --------
@@ -80,7 +98,15 @@ Monsters
   but never near stairs.
 * Air elementals now have a Vortex ability, which creates a short-range,
   short-duration tornado effect.
+* Player ghosts have normal speed regardless of species, never have a chaos
+  ego on their melee attack, and no longer generate in portal branches.
 
+Spells
+------
+* New spell: Borgnjor's Vile Clutch (L5 Necromancy/Earth); calls forth undead
+  hands from the earth over a smite-targeted area to constrict hostile monsters.
+  Appears in the Necromancer starting book, the book of Unlife, and the book of
+  Dreams.
 
 Stone Soup 0.20 (20170525)
 --------------------------
