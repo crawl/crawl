@@ -1655,6 +1655,10 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
     if (arm.base_type != OBJ_ARMOUR)
         return false;
 
+    // Armour types that can never be enchanted.
+    if (!armour_is_enchantable(arm))
+        return false;
+
     // If we don't know the plusses, assume enchanting is possible.
     if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
