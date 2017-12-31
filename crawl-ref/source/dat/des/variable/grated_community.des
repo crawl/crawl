@@ -228,7 +228,7 @@ KFEAT: * = altar_sif_muna / w:5 altar_ashenzari
 KITEM: " = gold, any potion / nothing, any potion / nothing, any potion /\
            nothing
 KFEAT: 8 = granite_statue / fountain_sparkling / fountain_blue / w:1 floor
-KITEM: ? = scroll of vulnerability / nothing, any scroll / nothing
+KITEM: ? = scroll of recharging / nothing, any scroll / nothing
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic /\
 :        nothing, any potion / nothing")
 KITEM: & = book of power / book of party tricks / book of alchemy / nothing

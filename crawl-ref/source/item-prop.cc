@@ -773,7 +773,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
-    { OBJ_SCROLLS,   SCR_RECHARGING},
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -1576,6 +1575,19 @@ bool check_armour_size(const item_def &item, size_type size)
 
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
+
+/**
+ * Can the given item be recharged?
+ *
+ * @param it            The item in question.
+ * @return              Whether the item can be recharged.
+ *
+ */
+bool item_is_rechargeable(const item_def &it)
+{
+    return it.base_type == OBJ_WANDS;
+}
+
 
 int wand_charge_value(int type)
 {

@@ -978,6 +978,10 @@ scroll of random uselessness
 
 A scroll with no apparent practical use.
 %%%%
+scroll of recharging
+
+A scroll that restores the charges of any magical wand chosen by its reader.
+%%%%
 scroll of remove curse
 
 A scroll that removes any curses from the reader's equipped items.

@@ -632,7 +632,6 @@ i-acquirement SCR_ACQUIREMENT
 # Remove enchant weapon II when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_II
 i-brand-weapon SCR_BRAND_WEAPON
-# Remove recharging when TAG_MAJOR_VERSION > 34
 i-recharging SCR_RECHARGING
 # Remove enchant weapon III when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_III
