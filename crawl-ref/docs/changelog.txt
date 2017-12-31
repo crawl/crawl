@@ -12,7 +12,7 @@ Branches, Environment
 * The rate at which unique Pan lord levels appear in Pandemonium is increased.
 * Transporters now have a 'landing site' that indicates their destination.
 * The Hellbinder and Cloud Mage Wizlabs have been revamped to give greater and
-  more varied challenges as well improved loot.
+  more varied challenges as well as improved loot.
 
 Character
 ---------
@@ -107,6 +107,9 @@ Spells
   hands from the earth over a smite-targeted area to constrict hostile monsters.
   Appears in the Necromancer starting book, the book of Unlife, and the book of
   Dreams.
+* Removed:
+  - Control Undead.
+  - Cigotuvi's Embrace.
 
 Stone Soup 0.20 (20170525)
 --------------------------
