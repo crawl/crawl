@@ -151,9 +151,11 @@ blowgun2
 
 sling1 WPN_HUNTING_SLING
 sling2
+sling3
 %rim 0
-fustibalus WPN_FUSTIBALUS
+fustibalus1 WPN_FUSTIBALUS
 fustibalus2
+fustibalus3
 
 shortbow1 WPN_SHORTBOW
 shortbow2
