@@ -32,6 +32,9 @@ Gods
       movement.
     * 2*: Moving against solid obstacles triggers a two-turn Wall Jump, moving
       two tiles in the opposite direction and attacking any adjacent enemies.
+      This ability can also be triggered via an (a)bility, and the movement-
+      based mode can be disabled using `wall_jump_move = false` in your rc
+      file for more careful play.
   - 3*: Active 'Serpent's Lash' ability, granting two free movement actions,
     of which any martial actions will never miss.
   - 5*: Active 'Heavenly Storm' ability, creating opaque clouds and increasing

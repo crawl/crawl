@@ -46,7 +46,8 @@ The contents of this text are:
                 tc_exclude_circle, runrest_ignore_message,
                 runrest_stop_message, runrest_safe_poison,
                 runrest_ignore_monster, rest_wait_both, rest_wait_percent,
-                explore_auto_rest, auto_exclude
+                explore_auto_rest, auto_exclude, wall_jump_move,
+                wall_jump_prompt
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
@@ -926,6 +927,17 @@ auto_exclude += <monster name>, <monster name>, ...
         automatically set centered on this monster, meaning autoexplore won't
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
+
+wall_jump_move = true
+        If true, a WJC character (with the appropriate piety level) can wall
+        jump simply by moving against a solid feature. Otherwise, they can only
+        do so by using the (a)bility. It is never possible to wall jump off of
+        closed doors via movement.
+
+wall_jump_prompt = false
+        If true, and wall_jump_move is also true, then a WJC character can wall
+        jump via movement by moving twice against a solid feature. No effect if
+        wall_jump_move = false.
 
 3-g     Command Enhancements.
 -----------------------------
