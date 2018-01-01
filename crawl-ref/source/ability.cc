@@ -447,15 +447,15 @@ static const ability_def Ability_List[] =
     { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
       0, 0, 0, 0, {fail_basis::invo}, abflag::piety },
     { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100,
-      generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::conf_ok },
+      generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ELYVILON_PURIFICATION, "Purification",
       3, 0, 300, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
     { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
-      2, 0, 250, 3, {fail_basis::invo, 40, 5, 20}, abflag::conf_ok },
+      2, 0, 250, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
-      0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::conf_ok },
+      0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -641,7 +641,7 @@ static const ability_def Ability_List[] =
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
     { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::none },
     { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::none },
-    { ABIL_WU_JIAN_WALLJUMP, "Wall jump", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_WU_JIAN_WALLJUMP, "Wall jump", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3053,6 +3053,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
         break;
+
+    case ABIL_WU_JIAN_WALLJUMP:
+        fail_check();
+        return wu_jian_wall_jump_ability() ? SPRET_SUCCESS : SPRET_ABORT;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();

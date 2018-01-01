@@ -146,7 +146,6 @@
     Anders Heggestøyl
     Alex Henry
     R. Dan Henry
-    Aidan Holm
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
@@ -297,6 +296,7 @@ The Dungeon Crawl Stone Soup development team is:
     gammafunk
     Shayne Halvorson
     Brendan Hickey
+    Aidan Holm
     Pete Hurst
     Eino Keskitalo
     Vsevolod Kozlov

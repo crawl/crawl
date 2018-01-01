@@ -18,6 +18,7 @@
 #include "bloodspatter.h"
 #include "branch.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -7123,4 +7124,209 @@ void hepliaklqana_choose_identity()
 {
     _hepliaklqana_choose_name();
     _hepliaklqana_choose_gender();
+}
+
+bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
+{
+    if (!have_passive(passive_t::wu_jian_wall_jump)
+        || !feat_can_wall_jump_against(grd(target))
+        || you.is_stationary()
+        || you.digging)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
+{
+    if (target.distance_from(you.pos()) != 1)
+    {
+        error_ret = "You can only wall jump against adjacent positions.";
+        return false;
+    }
+
+    if (!wu_jian_can_wall_jump_in_principle(target))
+    {
+        if (!feat_can_wall_jump_against(grd(target)))
+        {
+            error_ret = string("You cannot wall jump against ") +
+                feature_description_at(target, false, DESC_THE, true);
+        }
+        else
+            error_ret = "";
+        return false;
+    }
+
+    auto wall_jump_direction = (you.pos() - target).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+
+    monster* beholder = you.get_beholder(target);
+    if (beholder)
+    {
+        error_ret = make_stringf("You cannot move your %s away from %s to wall jump!",
+             you.foot_name(true).c_str(),
+             beholder->name(DESC_THE, true).c_str());
+        return false;
+    }
+
+    monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
+    if (fearmonger)
+    {
+        error_ret = make_stringf("You are too afraid to wall jump closer to %s!",
+             fearmonger->name(DESC_THE, true).c_str());
+        return false;
+    }
+
+    const actor* landing_actor = actor_at(wall_jump_landing_spot);
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+        || !in_bounds(wall_jump_landing_spot)
+        || !you.is_habitable(wall_jump_landing_spot)
+        || landing_actor)
+    {
+        if (landing_actor)
+        {
+            error_ret = make_stringf(
+                "You have no room to wall jump there; %s is in the way.",
+                landing_actor->observable()
+                            ? landing_actor->name(DESC_THE).c_str()
+                            : "something you can't see");
+        }
+        else
+            error_ret = "You have no room to wall jump there.";
+        you.attribute[ATTR_WALL_JUMP_READY] = 0;
+        return false;
+    }
+    error_ret = "";
+    return true;
+}
+
+/**
+ * Do a walljump.
+ *
+ * This doesn't check whether there's space; see `wu_jian_can_wall_jump`.
+ * It does check whether the landing spot is safe, excluded, etc.
+ *
+ * @param targ the movement target (i.e. the wall being moved against).
+ * @return whether the jump culminated.
+ */
+bool wu_jian_do_wall_jump(coord_def targ, bool ability)
+{
+    // whether there's space in the first place is checked earlier
+    // in wu_jian_can_wall_jump.
+    auto wall_jump_direction = (you.pos() - targ).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    {
+        you.turn_is_over = false;
+        if (!ability && Options.wall_jump_prompt)
+        {
+            mprf(MSGCH_PLAIN, "You take your %s off %s.",
+                you.foot_name(true).c_str(),
+                feature_description_at(targ, false,
+                                            DESC_THE, false).c_str());
+            you.attribute[ATTR_WALL_JUMP_READY] = 0;
+        }
+        return false;
+    }
+
+    if (!ability && Options.wall_jump_prompt &&
+        you.attribute[ATTR_WALL_JUMP_READY] == 0)
+    {
+        you.turn_is_over = false;
+        mprf(MSGCH_PLAIN,
+            "You put your %s on %s. Move against it again to jump.",
+            you.foot_name(true).c_str(),
+            feature_description_at(targ, false,
+                                            DESC_THE, false).c_str());
+        you.attribute[ATTR_WALL_JUMP_READY] = 1;
+        return false;
+    }
+
+    auto initial_position = you.pos();
+    move_player_to_grid(wall_jump_landing_spot, false);
+    if (!ability)
+        count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
+    wu_jian_wall_jump_effects(initial_position);
+    return true;
+}
+
+bool wu_jian_wall_jump_ability()
+{
+    // This needs to be kept in sync with direct walljumping via movement.
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+    string wj_error;
+    bool has_targets = false;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (wu_jian_can_wall_jump(*ai, wj_error))
+        {
+            has_targets = true;
+            break;
+        }
+
+    if (!has_targets)
+    {
+        mpr("There is nothing to wall jump against here.");
+        return false;
+    }
+
+    if (you.is_nervous())
+    {
+        mpr("You are too terrified to wall jump!");
+        return false;
+    }
+
+    // query for location:
+    dist beam;
+
+    while (1)
+    {
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_ANY;
+        args.range = 1;
+        args.needs_path = false; // TODO: overridden by hitfunc?
+        args.top_prompt = "Aiming: <white>Wall jump</white>";
+        args.self = CONFIRM_CANCEL;
+        targeter_walljump tgt;
+        tgt.obeys_mesmerise = true;
+        args.hitfunc = &tgt;
+        {
+            // TODO: make this unnecessary
+            direction_chooser dc(beam, args);
+            dc.needs_path = false;
+            dc.choose_direction();
+        }
+        if (crawl_state.seen_hups)
+        {
+            clear_messages();
+            mpr("Cancelling wall jump due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+            return false;         // early return
+
+        if (wu_jian_can_wall_jump(beam.target, wj_error))
+            break;
+    }
+
+    if (!wu_jian_do_wall_jump(beam.target, true))
+        return false;
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    return true;
 }

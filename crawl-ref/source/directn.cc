@@ -507,14 +507,14 @@ direction_chooser::direction_chooser(dist& moves_,
     mode(args.mode),
     range(args.range),
     just_looking(args.just_looking),
-    needs_path(args.needs_path),
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
     show_floor_desc(args.show_floor_desc),
     hitfunc(args.hitfunc),
-    default_place(args.default_place)
+    default_place(args.default_place),
+    needs_path(args.needs_path)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -1039,6 +1039,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     {
         // Special colouring in tutorial or hints mode.
         const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
+        // TODO: this seems to trigger when there are no monsters in range
+        // of the hitfunc, regardless of what's in the way, and it shouldn't.
         mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
             "All monsters which could be auto-targeted are covered by "
             "a wall or statue which interrupts your line of fire, even "

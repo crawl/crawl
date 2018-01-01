@@ -806,15 +806,14 @@ deadly shrapnel. It can be used on monsters made of ice, bone, or any wall-like
 substance, as well as those turned to stone by petrification. Its damage is
 strongly reduced by armour.
 
-Targets made from rock, stone, ice or bone will cause a small or medium-sized
-explosion. Metal targets will cause a small but particularly damaging
-explosion, and targets made from crystal will cause a large and extremely
-damaging explosion.
+Targets made from rock, stone, ice or bone will cause a small explosion. Metal
+targets will cause a small but more damaging explosion, and targets made from
+crystal will cause a large and more damaging explosion.
 
 At high power, this spell is capable of destroying some walls: rock, stone or
 metal walls have a chance of being destroyed with at least 5, 6 or 7 bars of
-power. Crystal walls are particularly brittle and have a chance of being
-destroyed at any power level.
+power respectively. Crystal walls are particularly brittle and have a chance of
+being destroyed at any power level.
 %%%%
 Legendary Destruction spell
 
@@ -1159,10 +1158,12 @@ shadow.
 %%%%
 Shatter spell
 
-Causes an enormous burst of concussive force around the caster. Flying and
-gelatinous creatures can escape the worst effects, and insubstantial creatures
-are entirely unaffected, but all others will be gravely injured by the blast.
-It may also destroy nearby walls.
+Causes an enormous burst of concussive force around the caster, dealing severe
+damage to all nearby creatures. It is especially effective against those made
+from ice, bone, or any wall-like substance (such as rock, metal or crystal), as
+well as those turned to stone by petrification. It is less effective against
+flying, gelatinous and insubstantial creatures. It may also destroy nearby
+walls.
 %%%%
 Shock spell
 

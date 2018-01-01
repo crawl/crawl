@@ -112,6 +112,7 @@ class targeter_walljump : public targeter_smite
 public:
     targeter_walljump();
     aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def a) override;
 };
 
 class targeter_transference : public targeter_smite

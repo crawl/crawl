@@ -710,7 +710,8 @@ static void _start_running(int dir, int mode)
         return;
     }
 
-    if (wu_jian_can_wall_jump(next_pos))
+    string wall_jump_err;
+    if (wu_jian_can_wall_jump(next_pos, wall_jump_err))
        return; // Do not wall jump while running.
 
     you.running.initialise(dir, mode);
@@ -2870,56 +2871,6 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-/**
- * Do a walljump.
- *
- * This doesn't check whether there's space; see `wu_jian_can_wall_jump`.
- * It does check whether the landing spot is safe, excluded, etc.
- *
- * @param targ the movement target (i.e. the wall being moved against).
- * @return whether the jump culminated.
- */
-static bool _do_wall_jump(coord_def targ)
-{
-    // whether there's space in the first place is checked earlier
-    // in wu_jian_can_wall_jump.
-    auto wall_jump_direction = (you.pos() - targ).sgn();
-    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
-                                   + wall_jump_direction);
-    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
-    {
-        you.turn_is_over = false;
-        if (Options.wall_jump_prompt)
-        {
-            mprf(MSGCH_PLAIN, "You take your %s off %s.",
-                you.foot_name(true).c_str(),
-                feature_description_at(targ, false,
-                                            DESC_THE, false).c_str());
-            you.attribute[ATTR_WALL_JUMP_READY] = 0;
-        }
-        return false;
-    }
-
-    if (Options.wall_jump_prompt &&
-        you.attribute[ATTR_WALL_JUMP_READY] == 0)
-    {
-        you.turn_is_over = false;
-        mprf(MSGCH_PLAIN,
-            "You put your %s on %s. Move against it again to jump.",
-            you.foot_name(true).c_str(),
-            feature_description_at(targ, false,
-                                            DESC_THE, false).c_str());
-        you.attribute[ATTR_WALL_JUMP_READY] = 1;
-        return false;
-    }
-
-    auto initial_position = you.pos();
-    move_player_to_grid(wall_jump_landing_spot, false);
-    count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
-    wu_jian_wall_jump_effects(initial_position);
-    return true;
-}
-
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 static void _move_player(coord_def move)
@@ -3001,7 +2952,9 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-    bool can_wall_jump = wu_jian_can_wall_jump(targ);
+    string wall_jump_err;
+    bool can_wall_jump = Options.wall_jump_move &&
+                            wu_jian_can_wall_jump(targ, wall_jump_err);
     bool did_wall_jump = false;
     // You can't walk out of bounds!
     if (!in_bounds(targ) && !can_wall_jump)
@@ -3013,6 +2966,11 @@ static void _move_player(coord_def move)
     }
 
     const dungeon_feature_type targ_grid = grd(targ);
+
+    // don't allow wall jump against close doors via movement -- need to use
+    // the ability
+    if (can_wall_jump && feat_is_closed_door(targ_grid))
+        can_wall_jump = false;
 
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
@@ -3232,7 +3190,7 @@ static void _move_player(coord_def move)
             move_player_to_grid(targ, true);
         else if (can_wall_jump && !running)
         {
-            if (!_do_wall_jump(targ))
+            if (!wu_jian_do_wall_jump(targ, false))
                 return; // wall jump only in the ready state, or cancelled
             else
                 did_wall_jump = true;
@@ -3282,10 +3240,11 @@ static void _move_player(coord_def move)
 
     if (!attacking && !targ_pass && !can_wall_jump && !running
         && moving && !beholder && !fmonger
+        && Options.wall_jump_move
         && wu_jian_can_wall_jump_in_principle(targ))
     {
         // do messaging for a failed wall jump
-        wu_jian_can_wall_jump(targ, true);
+        mpr(wall_jump_err);
     }
 
     // BCR - Easy doors single move

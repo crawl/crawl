@@ -4881,8 +4881,8 @@ static coord_def _mons_fragment_target(const monster &mon)
     {
         bool temp;
         bolt beam;
-        if (!setup_fragmentation_beam(beam, pow, mons, mons->target, false,
-                                      true, true, nullptr, temp, temp))
+        if (!setup_fragmentation_beam(beam, pow, mons, mons->target, true,
+                                      nullptr, temp, temp))
         {
             return target;
         }
@@ -4899,8 +4899,8 @@ static coord_def _mons_fragment_target(const monster &mon)
             continue;
 
         bolt beam;
-        if (!setup_fragmentation_beam(beam, pow, mons, *di, false, true, true,
-                                      nullptr, temp, temp))
+        if (!setup_fragmentation_beam(beam, pow, mons, *di, true, nullptr,
+                                      temp, temp))
         {
             continue;
         }
@@ -4910,20 +4910,10 @@ static coord_def _mons_fragment_target(const monster &mon)
         if (!mons_should_fire(beam))
             continue;
 
-        bolt beam2;
-        if (!setup_fragmentation_beam(beam2, pow, mons, *di, false, false, true,
-                                      nullptr, temp, temp))
+        if (beam.foe_info.count > 0
+            && beam.foe_info.power > maxpower)
         {
-            continue;
-        }
-
-        beam2.range = range;
-        fire_tracer(mons, beam2, true);
-
-        if (beam2.foe_info.count > 0
-            && beam2.foe_info.power > maxpower)
-        {
-            maxpower = beam2.foe_info.power;
+            maxpower = beam.foe_info.power;
             target = *di;
         }
     }

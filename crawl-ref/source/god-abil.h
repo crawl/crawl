@@ -190,3 +190,8 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
+
+bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
+bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
+bool wu_jian_do_wall_jump(coord_def targ, bool ability);
+bool wu_jian_wall_jump_ability();

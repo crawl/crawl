@@ -18,5 +18,5 @@ This is a checklist for integrating a new developer into the team.
  * On the Tavern, add them to the Dungeon Master group.
  * Subscribe their email address to C-R-D:
         https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss
- * Ask |amethyst or edlothiol to add them to the private mailing list.
+ * Ask advil or |amethyst to add them to the private mailing list.
  * Send an announcement/welcome message on C-R-D.

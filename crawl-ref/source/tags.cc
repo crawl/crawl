@@ -4870,6 +4870,12 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = FOOD_RATION;
         item.quantity = max(1, div_rand_round(item.quantity, 5));
     }
+    if (item.is_type(OBJ_FOOD, FOOD_RATION) && item.pos == ITEM_IN_INVENTORY)
+    {
+        item.props["item_tile_name"] = "food_ration_inventory";
+        bind_item_tile(item);
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))

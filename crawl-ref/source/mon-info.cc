@@ -360,7 +360,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
-    i_ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
         i_ghost.species = SP_HUMAN;

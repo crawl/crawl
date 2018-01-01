@@ -1745,51 +1745,6 @@ static void _wu_jian_trigger_martial_arts(const coord_def& old_pos)
         _wu_jian_whirlwind(old_pos);
 }
 
-bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
-{
-    if (!have_passive(passive_t::wu_jian_wall_jump)
-        || !feat_can_wall_jump_against(grd(target))
-        || you.is_stationary()
-        || you.digging)
-    {
-        return false;
-    }
-    return true;
-}
-
-bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
-{
-    if (!wu_jian_can_wall_jump_in_principle(target))
-        return false;
-
-    auto wall_jump_direction = (you.pos() - target).sgn();
-    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
-                                   + wall_jump_direction);
-
-    const actor* landing_actor = actor_at(wall_jump_landing_spot);
-    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
-        || !in_bounds(wall_jump_landing_spot)
-        || !you.is_habitable(wall_jump_landing_spot)
-        || landing_actor)
-    {
-        if (messaging)
-        {
-            if (landing_actor)
-            {
-                mprf("You have no room to wall jump there; %s is in the way.",
-                    landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
-                                : "something you can't see");
-            }
-            else
-                mpr("You have no room to wall jump there.");
-        }
-        you.attribute[ATTR_WALL_JUMP_READY] = 0;
-        return false;
-    }
-
-    return true;
-}
-
 void wu_jian_wall_jump_effects(const coord_def& old_pos)
 {
     vector<monster*> targets;
