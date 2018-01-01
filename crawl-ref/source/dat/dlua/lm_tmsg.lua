@@ -67,6 +67,7 @@ function TimedMessaging:init(tmarker, cm, verbose)
     end
   end
 
+  self._have_entered_level = false
   if verbose and self.initmsg then
     self:emit_message(cm, self.initmsg)
   end
@@ -163,6 +164,11 @@ function TimedMessaging:say_message(cm, dur)
 end
 
 function TimedMessaging:event(luamark, cmarker, event)
+  if event:type() == dgn.dgn_event_type('entered_level') then
+    self._have_entered_level = true
+  elseif not self._have_entered_level then
+    return
+  end
   if luamark.dur < self.check or luamark.dur <= 100 and self.check > -150 then
     self.check = luamark.dur - 250
     if luamark.dur > 900 then
