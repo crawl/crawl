@@ -493,6 +493,7 @@ spectral_spear MONS_SPECTRAL_SPEAR
 donald MONS_DONALD
 edmund MONS_EDMUND
 erica MONS_ERICA
+erica_swordless MONS_ERICA_SWORDLESS
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
 %rim 0
