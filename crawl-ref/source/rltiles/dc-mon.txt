@@ -907,9 +907,7 @@ fannar MONS_FANNAR
 %sdir mon/humanoids/elves
 elf MONS_ELF
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
-%rim 0
 deep_elf_archer MONS_DEEP_ELF_ARCHER
-%rim 1
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
@@ -918,7 +916,9 @@ deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR
 deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
-deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
+deep_elf_elementalist1 MONS_DEEP_ELF_ELEMENTALIST
+deep_elf_elementalist2
+deep_elf_elementalist3
 %sdir mon/vault
 ## From the Cigotuvi wizlab
 deformed_elf MONS_DEFORMED_ELF
