@@ -509,10 +509,11 @@ static void _describe_book(const spellbook_contents &book,
 #endif
             && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
+            int chance = hex_chance(spell, hd);
+            int ch_len = to_string(chance).length();
             description.cprintf("%c - (%d%%) %s",
-                            spell_letter,
-                            hex_chance(spell, hd),
-                            chop_string(spell_title(spell), 22).c_str());
+                            spell_letter, chance,
+                            chop_string(spell_title(spell), 25-ch_len).c_str());
         }
         else
         {
