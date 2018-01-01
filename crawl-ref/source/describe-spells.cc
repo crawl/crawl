@@ -484,7 +484,7 @@ static void _describe_book(const spellbook_contents &book,
 
     // only display header for book spells
     if (source_item)
-        description.cprintf("\n Spells                             Type                      Level");
+        description.cprintf("\n Spells                           Type                      Level");
     description.cprintf("\n");
 
     // list spells in two columns, instead of one? (monster books)
