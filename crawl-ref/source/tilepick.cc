@@ -1679,6 +1679,19 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_AGNES_STAVELESS;
         }
 
+        case MONS_ERICA:
+        {
+            // For if Erica loses her flaming scimitar
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon
+                && weapon->is_type(OBJ_WEAPONS, WPN_SCIMITAR)
+                && weapon->brand == SPWPN_FLAMING)
+            {
+                return TILEP_MONS_ERICA;
+            }
+            else
+                return TILEP_MONS_ERICA_SWORDLESS;
+        }
 
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
