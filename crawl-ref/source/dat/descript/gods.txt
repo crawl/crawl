@@ -323,9 +323,11 @@ precision and damage for as long as they keep using martial attacks.
   ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
   .......       ....... motion pins monsters in place for one turn.
 
-  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault towards
-  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. enemies, striking all enemies adjacent to the landing
-  ..x....       ..x.... spot.
+  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault towards enemies, striking all
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. enemies adjacent to the landing spot. Triggered by
+  ..#....       ..#.... moving into the wall, or via the (a)bility menu. Set
+                        rc option <lightred>wall_jump_move = false</lightred> to disable movement-
+                        activated wall jump.
 
 %%%%
 Kikubaaqudgha powers
