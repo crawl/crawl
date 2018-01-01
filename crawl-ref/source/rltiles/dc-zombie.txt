@@ -75,6 +75,8 @@ zombie_elephant MONS_ZOMBIE_ELEPHANT
 zombie_quicksilver_dragon MONS_ZOMBIE_QUICKSILVER_DRAGON
 zombie_golden_dragon MONS_ZOMBIE_GOLDEN_DRAGON
 zombie_iron_dragon MONS_ZOMBIE_IRON_DRAGON
+zombie_yak MONS_ZOMBIE_YAK
+zombie_bear MONS_ZOMBIE_BEAR
 
 %sdir mon/undead/skeletons
 ## Skeletons
@@ -102,6 +104,7 @@ skeleton_hydra3
 skeleton_hydra4
 skeleton_hydra5
 skeleton_ugly_thing MONS_SKELETON_UGLY_THING
+skeleton_draconian MONS_SKELETON_DRACONIAN
 
 ## Simulacra
 %sdir mon/undead/simulacra
