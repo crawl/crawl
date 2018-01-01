@@ -1095,7 +1095,6 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_GNOLL:
     case TILEP_MONS_ZOMBIE_ORC:
     case TILEP_MONS_ZOMBIE_HUMAN:
-    case TILEP_MONS_ZOMBIE_DRACONIAN:
     case TILEP_MONS_ZOMBIE_ELF:
     case TILEP_MONS_ZOMBIE_MERFOLK:
     case TILEP_MONS_ZOMBIE_MINOTAUR:
@@ -1157,6 +1156,8 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
         return TILEP_MONS_SKELETON_DRAKE;
     case TILEP_MONS_ZOMBIE_UGLY_THING:
         return TILEP_MONS_SKELETON_UGLY_THING;
+    case TILEP_MONS_ZOMBIE_DRACONIAN:
+        return TILEP_MONS_SKELETON_DRACONIAN;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -1252,6 +1253,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_SALAMANDER,              TILEP_MONS_ZOMBIE_SALAMANDER, },
         { MONS_SPRIGGAN,                TILEP_MONS_ZOMBIE_SPRIGGAN, },
         { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR, },
+        { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK, },
+        { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR, },
     };
 
     struct shape_size_tiles
