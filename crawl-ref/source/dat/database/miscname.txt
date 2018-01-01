@@ -324,3 +324,188 @@ You hear words spoken in a strange and terrible language...
 
 You hear diabolical laughter!
 %%%%
+eating_ration
+
+That ration really hit the spot!
+
+That jerky was delicious!
+
+w:1
+That royal jelly was slimy, yet satisfying!
+
+w:1
+That jerky was jerk-a-riffic!
+
+@_carni_mmm_@ Ham and pineapple pizza.
+
+@_carni_mmm_@ Super Supreme pizza.
+
+# Apparently, in some locales "pepperoni" is a word for sausage rather than
+# a type of bell peppers like in Europe.
+@_carni_mmm_@ Pepperoni pizza.
+
+{{
+if you.race() == "Ghoul" then
+    return "Anchovies pizza... pretty bad, even for you."
+elseif you.race() == "Felid" then
+    return "Anchovies pizza! Purrfect..."
+else
+    return "Yeuchh! Anchovies pizza."
+end
+}}
+
+@_carni_mmm_@ Chicken pizza.
+
+w:1
+Mmm... That's the fabled Pandemonium Pizza!
+
+Mmm... @_cheese_kind_@ pizza.
+
+@_herbi_mmm_@ Vegetable pizza.
+
+@_herbi_mmm_@ Peppers pizza.
+
+@_herbi_mmm_@ Mushroom pizza.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivore") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivore") > 0 then
+    return "Yeuchh!"
+else
+    return "Mmm..."
+end
+}}
+%%%%
+_cheese_kind_
+
+Cheddar
+
+Edam
+
+Wensleydale
+
+Camembert
+
+Goat cheese
+
+Fruit cheese
+
+Mozzarella
+
+Sheep cheese
+
+Yak cheese
+%%%%
+eating_fruit
+
+Mmmm... Yummy @_fruit_type_@.
+
+That @_fruit_type_@ was delicious!
+
+Mmm - a full handful of @_small_fruits_@!
+
+w:1
+That @_peel_fruit_@ was delicious! Even the peel tasted good!
+
+w:1
+That @_sour_fruit_@ was rather sour... but delicious nonetheless!
+
+That choko was very bland.
+
+w:1
+That durian smelled terrible... but tasted delicious!
+
+w:1
+That snozzcumber tasted truly putrid!
+%%%%
+_fruit_type_
+
+orange
+
+banana
+
+pear
+
+apple
+
+apricot
+
+tomato
+
+peach
+
+plum
+
+rambutan
+
+lychee
+
+mango
+
+watermelon
+
+coconut
+
+breadfruit
+
+eggfruit
+
+dragonfruit
+
+guava
+
+mangosteen
+
+tangerine
+%%%%
+_small_fruits_
+
+strawberries
+
+blueberries
+
+blackberries
+
+bilberries
+
+raspberries
+
+huckleberries
+
+gooseberries
+
+cherries
+
+grapes
+
+sultanas
+
+figs
+
+dates
+
+almonds
+%%%%
+_peel_fruit_
+
+orange
+
+banana
+%%%%
+_sour_fruit_
+
+lemon
+
+lime
+%%%%

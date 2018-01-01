@@ -353,11 +353,32 @@ static void _describe_food_change(int food_increment)
 static void _finished_eating_message(food_type type)
 {
     const bool herbivorous = you.get_mutation_level(MUT_HERBIVOROUS) > 0;
+    const bool carnivorous = you.get_mutation_level(MUT_CARNIVOROUS) > 0;
 
     if (type == FOOD_RATION)
     {
-        mpr("That ration really hit the spot!");
-        return;
+        if (!carnivorous && coinflip())
+        {
+            const string taste = getMiscString("eating_fruit");
+            if (taste.empty())
+            {
+                mpr("Eugh, buggy fruit.");
+                return;
+            }
+            mprf("%s", taste.c_str());
+            return;
+        }
+        else
+        {
+           const string taste = getMiscString("eating_ration");
+            if (taste.empty())
+            {
+                mpr("Bleh, buggy ration.");
+                return;
+            }
+            mprf("%s", taste.c_str());
+            return; 
+        }
     }
     else if (herbivorous && food_is_meaty(type))
     {
