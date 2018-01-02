@@ -687,9 +687,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
  */
 static int _hw_wand_weight()
 {
-    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
+    if (you.get_mutation_level(MUT_NO_DEVICE_HEAL) != 3)
         return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
+    if (!you.get_mutation_level(MUT_NO_LOVE))
         return 5; // can be used on allies...? XXX: should be weight 1?
     return 0; // with no allies, totally useless
 }
@@ -702,7 +702,7 @@ static int _haste_wand_weight()
 {
     if (you.species != SP_FORMICID)
         return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
+    if (!you.get_mutation_level(MUT_NO_LOVE))
         return 5; // can be used on allies...? XXX: should be weight 1?
     return 0; // with no allies, totally useless
 }

@@ -463,20 +463,8 @@ void zap_wand(int slot)
     spret_type ret = your_spells(spell, power, false, &wand);
 
     if (ret == SPRET_ABORT)
-        return;
-    }
-    else if (zap_wand.target == you.pos())
     {
-        if (wand.sub_type == WAND_TELEPORTATION
-            && you.no_tele_print_reason(false, false))
-        {
-            return;
-        }
-        else if (wand.sub_type == WAND_HASTING && you.stasis())
-        {
-            mpr("Your stasis prevents you from being hasted.");
-            return;
-        }
+        return;
     }
     else if (ret == SPRET_FAIL)
     {

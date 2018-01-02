@@ -1411,6 +1411,21 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         if (spd.isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
             return SPRET_ABORT;
+        
+        if (spd.isMe() && evoked_item != nullptr)
+        {
+            if (evoked_item->sub_type == WAND_TELEPORTATION
+                && you.no_tele_print_reason(false, false))
+            {
+                return SPRET_FAIL;
+            }
+            else if (spd.isMe() && evoked_item->sub_type == WAND_HASTING
+                     && you.stasis())
+            {
+                mpr("Your stasis prevents you from being hasted.");
+                return SPRET_FAIL;
+            }
+        }
     }
 
     if (evoked_item)
