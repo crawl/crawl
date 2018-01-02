@@ -2723,6 +2723,9 @@ static void tag_read_you(reader &th)
     if (you.attribute[ATTR_SEARING_RAY] > 3)
         you.attribute[ATTR_SEARING_RAY] = 0;
 
+    if (you.attribute[ATTR_DELAYED_FIREBALL])
+        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+
     if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
     {
         for (int i = 0; i < NUM_STATS; ++i)

@@ -7,9 +7,6 @@
 struct bolt;
 class dist;
 
-#if TAG_MAJOR_VERSION == 34
-spret_type cast_delayed_fireball(bool fail);
-#endif
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
