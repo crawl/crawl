@@ -69,7 +69,7 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
     { WAND_HASTING, SPELL_HASTE },
     { WAND_TELEPORTATION, SPELL_TELEPORT_OTHER },
-    { WAND_HEAL_WOUNDS, SPELL_MINOR_HEALING },
+    { WAND_HEAL_WOUNDS, SPELL_HEAL_WOUNDS },
 };
 
 
