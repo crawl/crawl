@@ -776,6 +776,11 @@ wand of fireball
 
 Ein magisches Gerät welches explodierende Feuerstöße wirft.
 %%%%
+wand of hasting
+
+Ein magisches Gerät welches Verzauberungen wirkt um die Aktion einer Kreatur
+beschleunigt in welche sie sich bewegt.
+%%%%
 wand of invisibility
 
 Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
@@ -793,6 +798,10 @@ zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
 wand of random effects
 
 Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
+%%%%
+wand of teleportation
+
+Ein magisches Gerät, das ein Wesen veranlasst, zufällig verlagert zu werden.
 %%%%
 whip
 

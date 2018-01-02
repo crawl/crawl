@@ -1051,6 +1051,11 @@ wand of fireball
 
 Un instrument magique qui tire des salves de flammes explosives.
 %%%%
+wand of hasting
+
+Un instrument magique qui lance un enchantement accélérant la vitesse
+d'exécution des actions de la créature ciblée.
+%%%%
 wand of invisibility
 
 Un instrument magique qui cache une créature à la vue des autres.
@@ -1068,6 +1073,10 @@ créature. Ceci est particulièrement efficace contre les changeurs de forme.
 wand of random effects
 
 Un instrument magique qui peut produire une grande variété d'effets.
+%%%%
+wand of teleportation
+
+Un instrument magique qui téléporte aléatoirement une créature ciblée.
 %%%%
 whip
 

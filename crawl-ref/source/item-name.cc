@@ -610,9 +610,11 @@ static const char* _wand_type_name(int wandtype)
     switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
+    case WAND_HASTING:         return "hasting";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
+    case WAND_TELEPORTATION:   return "teleportation";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
     case WAND_ACID:            return "acid";
@@ -3121,6 +3123,17 @@ bool is_emergency_item(const item_def &item)
 
     switch (item.base_type)
     {
+    case OBJ_WANDS:
+        switch (item.sub_type)
+        {
+        case WAND_HASTING:
+            return !have_passive(passive_t::no_haste)
+                && you.species != SP_FORMICID;
+        case WAND_TELEPORTATION:
+            return you.species != SP_FORMICID;
+        default:
+            return false;
+        }
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
@@ -3494,8 +3507,21 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
+<<<<<<< HEAD:crawl-ref/source/item-name.cc
 #if TAG_MAJOR_VERSION == 34
         if (is_known_empty_wand(item))
+=======
+        // haste wand is useless for Formicid if they can't get allies
+        if (item.sub_type == WAND_HASTING
+            && item_type_known(item)
+            && you.species == SP_FORMICID
+            && player_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
+
+        if (you.magic_points < wand_mp_cost() && temp)
+>>>>>>> parent of a6f7038... Remove wands of hasting and teleportation:crawl-ref/source/itemname.cc
             return true;
 #endif
         if (!item_type_known(item))

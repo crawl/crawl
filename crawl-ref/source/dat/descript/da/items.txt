@@ -975,6 +975,11 @@ wand of fireball
 
 En magisk anordning, som kaster eksplosive ildkugler.
 %%%%
+wand of hasting
+
+En magisk anordning, som kaster fortryllelser, der får målet til at bevæge sig
+og handle hurtigere.
+%%%%
 wand of invisibility
 
 En magisk anordning, som kan skjule et væsen for andres øjne.
@@ -992,6 +997,10 @@ effektiv mod formskiftende væsener.
 wand of random effects
 
 En magisk anordning, som kan producere en lang række effekter.
+%%%%
+wand of teleportation
+
+En magisk anordning, som translokerer et væsen til et tilfældigt sted.
 %%%%
 whip
 

@@ -746,6 +746,11 @@ wand of fireball
 Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
 miejscu.
 %%%%
+wand of hasting
+
+Magiczny przedmiot który rzuca czar który przyspiesza wszystkie działania
+istoty na którą został skierowany.
+%%%%
 wand of invisibility
 
 Magiczny przedmiot który czyni stworzenie na które został skierowany
@@ -766,6 +771,11 @@ wand of random effects
 
 Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
 jakiejkolwiek innej różdżki.
+%%%%
+wand of teleportation
+
+Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
+przypadkowe miejsce. Nie działa to natychmiastowo.
 %%%%
 whip
 

@@ -464,6 +464,20 @@ void zap_wand(int slot)
 
     if (ret == SPRET_ABORT)
         return;
+    }
+    else if (zap_wand.target == you.pos())
+    {
+        if (wand.sub_type == WAND_TELEPORTATION
+            && you.no_tele_print_reason(false, false))
+        {
+            return;
+        }
+        else if (wand.sub_type == WAND_HASTING && you.stasis())
+        {
+            mpr("Your stasis prevents you from being hasted.");
+            return;
+        }
+    }
     else if (ret == SPRET_FAIL)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -476,14 +490,6 @@ void zap_wand(int slot)
 
     // Take off a charge.
     wand.charges--;
-
-    if (wand.charges == 0)
-    {
-        ASSERT(in_inventory(wand));
-
-        mpr("The now-empty wand crumbles to dust.");
-        dec_inv_item_quantity(wand.link, 1);
-    }
 
     practise_evoking(1);
     count_action(CACT_EVOKE, EVOC_WAND);

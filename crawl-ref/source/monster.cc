@@ -777,14 +777,21 @@ bool monster::can_use_missile(const item_def &item) const
 bool monster::likes_wand(const item_def &item) const
 {
     ASSERT(item.base_type == OBJ_WANDS);
-    // kind of a hack
-    // assumptions:
-    // bad wands are value 48, so won't be used past hd 4
-    // mediocre wands are value 24; won't be used past hd 8
-    // good wands are value 15; won't be used past hd 9
-    // best wands are value 9; won't be used past hd 10
-    // better implementations welcome
-    return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
+    switch (item.sub_type)
+    {
+        case WAND_TELEPORTATION:
+        case WAND_HASTING:
+            return true; // goodwands
+        default:
+            // kind of a hack
+            // assumptions:
+            // bad wands are value 48, so won't be used past hd 4
+            // mediocre wands are value 24; won't be used past hd 8
+            // good wands are value 15; won't be used past hd 9
+            // best wands are value 9; won't be used past hd 10
+            // better implementations welcome
+            return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
+    }
 }
 
 void monster::equip_weapon(item_def &item, bool msg)

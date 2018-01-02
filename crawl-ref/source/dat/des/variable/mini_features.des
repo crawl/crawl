@@ -2754,7 +2754,8 @@ TAGS:   extra
 WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.
- : dgn.delayed_decay(_G,'A', 'human skeleton')
+ : dgn.delayed_decay(_G,'B', 'human skeleton')
+KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
 # Prevent random teleportation getting you stuck
 KPROP:  A = no_tele_into
 KFEAT:  A = floor
