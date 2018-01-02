@@ -12,7 +12,7 @@
 #include "libutil.h"
 #include "monster.h"
 #include "output.h"
-#include "process-desc.h"
+#include "describe.h"
 #include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
@@ -135,11 +135,7 @@ bool MonsterRegion::update_alt_text(string &alt)
 
     get_square_desc(gc, inf);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 
