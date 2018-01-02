@@ -842,11 +842,16 @@ Ancestor Identity ability
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
+Wall Jump ability
+
+Vaults off an adjacent wall towards enemies, striking all enemies adjacent to
+the landing spot and taking two turns to complete the motion.
+%%%%
 Serpent's Lash ability
 
-Allows you to move at supernatural speeds for a short distance, travelling
-a length of two tiles instantly. Martial attacks performed under the
-effect of Serpent's Lash are more damaging and never miss.
+Allows you to move at supernatural speeds, making any movements up to a
+distance of two tiles instantly. Martial attacks performed under the effect of
+Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability
 

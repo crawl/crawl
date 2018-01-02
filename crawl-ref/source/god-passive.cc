@@ -1533,15 +1533,11 @@ static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
         update_turn_count();
     }
 
-
-    // these messages are a little silly...
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
     {
         you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
-        mpr(coinflip() ? "ZOOOM!" : "SWOOSH!");
+        mpr("Your supernatural speed expires.");
     }
-    else
-        mpr(coinflip() ? "Zoom!" : "Swooosh!");
 
     if (!cell_is_solid(old_pos))
         check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
