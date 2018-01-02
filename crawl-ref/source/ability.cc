@@ -2349,10 +2349,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
-        int power = you.skill(SK_INVOCATIONS, 4);
-        beam.range = LOS_RADIUS;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
 
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
 
         if (beam.target == you.pos())
@@ -2363,7 +2366,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         monster* mons = monster_at(beam.target);
         if (mons == nullptr || !you.can_see(*mons)
-            || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
+            || !yred_can_enslave_soul(mons))
         {
             mpr("You see nothing there you can enslave the soul of!");
             return SPRET_ABORT;
@@ -2376,7 +2379,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
         fail_check();
-        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, nullptr, fail);
+
+        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
+        mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, &you,
+                                   duration * BASELINE_DELAY));
+        simple_monster_message(*mons, "'s soul is now ripe for the taking.");
+        break;
     }
 
     case ABIL_OKAWARU_HEROISM:
