@@ -2784,10 +2784,12 @@ string player_spell_desc(spell_type spell)
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
- * @param item          The item holding the spell, if any.
- * @return              Whether you can memorise the spell.
+ * @param item          The item (book or rod) holding the spell, if any.
+ * @return              BOOK_MEM if you can memorise the spell
+ *                      BOOK_FORGET if you can forget it
+ *                      BOOK_NEITHER if you can do neither.
  */
-static bool _get_spell_description(const spell_type spell,
+static int _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,
                                   string &description,
                                   const item_def* item = nullptr)
@@ -2841,23 +2843,32 @@ static bool _get_spell_description(const spell_type spell,
     else
         description += player_spell_desc(spell);
 
-    // Don't allow memorization after death.
+    // Don't allow memorization or amnesia after death.
     // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
-        return false;
+        return BOOK_NEITHER;
 
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
-        && !you.has_spell(spell) && you_can_memorise(spell))
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
-        description += "\n(M)emorise this spell.\n";
-        return true;
+        if (you.has_spell(spell))
+        {
+            description += "\n(F)orget this spell by destroying the book.\n";
+            if (you_worship(GOD_SIF_MUNA))
+                description +="Sif Muna frowns upon the destroying of books.\n";
+            return BOOK_FORGET;
+        }
+        else if (you_can_memorise(spell))
+        {
+            description += "\n(M)emorise this spell.\n";
+            return BOOK_MEM;
+        }
     }
 
-    return false;
+    return BOOK_NEITHER;
 }
 
 /**
@@ -2893,7 +2904,8 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
 #endif
 
     string desc;
-    const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
+    const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
+                                                     item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -2901,10 +2913,17 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (can_mem && toupper(ch) == 'M')
+    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled) || !you.turn_is_over)
+            more();
+        redraw_screen();
+    }
+    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
+    {
+        redraw_screen();
+        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
             more();
         redraw_screen();
     }

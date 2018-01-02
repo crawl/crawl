@@ -33,6 +33,7 @@ bool can_learn_spell(bool silent = false);
 bool learn_spell();
 void learn_spell_from(const item_def &book);
 bool learn_spell(spell_type spell, bool wizard = false);
+bool forget_spell_from_book(spell_type spell, const item_def* book);
 
 string desc_cannot_memorise_reason(spell_type spell);
 
