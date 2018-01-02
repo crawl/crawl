@@ -39,6 +39,9 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+    JOB_SLIME_PRIEST,
+    JOB_BLOOD_KNIGHT,
+    JOB_TORPOR_KNIGHT,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

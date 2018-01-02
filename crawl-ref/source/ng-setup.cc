@@ -263,6 +263,36 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
         break;
+		
+    case JOB_SLIME_PRIEST:
+        you.religion = GOD_JIYVA;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+		
+    case JOB_TORPOR_KNIGHT:
+        you.religion = GOD_CHEIBRIADOS;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+		
+    case JOB_BLOOD_KNIGHT:
+        you.religion = GOD_MAKHLEB;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
@@ -276,6 +306,8 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
 
         break;
+		
+    
 
     case JOB_WANDERER:
         create_wanderer();

@@ -87,6 +87,17 @@ static const map<job_type, job_def> job_data =
     { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_WEAPON, 3 }, },
 } },
 
+{ JOB_BLOOD_KNIGHT, {
+    "BK", "Blood Knight",
+    5, 4, 3,
+    { SP_HILL_ORC, SP_GNOLL, SP_DEEP_DWARF, SP_DEMONSPAWN, 
+      SP_FORMICID },
+    { "leather armour" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_INVOCATIONS, 3 }, { SK_DODGING, 1 },
+      { SK_ARMOUR, 1 }, { SK_WEAPON, 1 } },
+} },
+
 { JOB_CHAOS_KNIGHT, {
     "CK", "Chaos Knight",
     4, 4, 4,
@@ -214,6 +225,17 @@ static const map<job_type, job_def> job_data =
       { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
 } },
 
+{ JOB_SLIME_PRIEST, {
+    "SP", "Slime Priest",
+    4, 4, 4,
+    { SP_TROLL, SP_OCTOPODE, SP_MINOTAUR, SP_SPRIGGAN,
+      SP_DEMONSPAWN, },
+    { "ring mail plus:1" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, 
+      { SK_WEAPON, 3 }, },
+} },
+
 { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
@@ -223,6 +245,16 @@ static const map<job_type, job_def> job_data =
     WCHOICE_NONE,
     { { SK_SUMMONINGS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
       { SK_STEALTH, 2 }, },
+} },
+
+{ JOB_TORPOR_KNIGHT, {
+    "TK", "Torpor Knight",
+    4, 4, 4,
+    { SP_HILL_ORC, SP_MINOTAUR },
+    { "plate armour ego:ponderousness" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, 
+      { SK_WEAPON, 3 }, },
 } },
 
 { JOB_TRANSMUTER, {

@@ -24,10 +24,8 @@ notifications:
     email:
         on_success: change
         on_failure: always
-#        recipients:
-#          - crawl-ref-commits@lists.sourceforge.net
     irc:
-        channels: "chat.freenode.net##crawl-dev"
+        channels: "chat.freenode.net##crawl-forks"
         on_success: change
         on_failure: always
         use_notice: true
