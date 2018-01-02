@@ -531,7 +531,7 @@ i-flame WAND_REMOVEME
 i-slowing WAND_REMOVEME9
 i-hasting WAND_HASTING
 i-flame WAND_REMOVEME2
-i-heal_wounds WAND_HEAL_WOUNDS
+i-heal_wounds WAND_REMOVEME6
 i-paralysis WAND_PARALYSIS
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4
@@ -539,8 +539,13 @@ i-confusion WAND_REMOVEME10
 i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
+<<<<<<< HEAD
+i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
+=======
 i-teleportation WAND_TELEPORTATION
+i-lightning WAND_LIGHTNING
+>>>>>>> parent of a6f7038... Remove wands of hasting and teleportation
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID

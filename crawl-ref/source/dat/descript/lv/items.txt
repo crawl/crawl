@@ -135,8 +135,3 @@ wand of fire
 
 Burvju ietaise, kas sviež lielus uguns šāviņus.
 %%%%
-=======
-wand of heal wounds
-
-Burvju ietaise, kas var sadziedēt radījuma brūces.
-%%%%

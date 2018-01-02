@@ -611,7 +611,6 @@ static const char* _wand_type_name(int wandtype)
     {
     case WAND_FLAME:           return "flame";
     case WAND_HASTING:         return "hasting";
-    case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
@@ -3132,8 +3131,6 @@ bool is_emergency_item(const item_def &item)
                 && you.species != SP_FORMICID;
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
-        case WAND_HEAL_WOUNDS:
-            return you.can_device_heal();
         default:
             return false;
         }
@@ -3509,15 +3506,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
-
-        // heal wand is useless for VS if they can't get allies
-        if (item.sub_type == WAND_HEAL_WOUNDS
-            && item_type_known(item)
-            && !you.can_device_heal()
-            && you.get_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
 
         // haste wand is useless for Formicid if they can't get allies
         if (item.sub_type == WAND_HASTING

@@ -159,24 +159,6 @@ static const zap_info zap_data[] =
     1
 },
 
-{
-    ZAP_HEAL_WOUNDS,
-    "",
-    100,
-    new dicedef_calculator<1, 7, 1, 3>,
-    nullptr,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_HEALING,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
 _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 
 {
