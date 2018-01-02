@@ -487,6 +487,19 @@ void zap_wand(int slot)
 
     // Spend MP.
     dec_mp(mp_cost, false);
+<<<<<<< HEAD
+=======
+    if (wand.sub_type != WAND_HEAL_WOUNDS
+        && wand.sub_type != WAND_TELEPORTATION)
+    {
+        const int surge = pakellas_surge_devices();
+        surge_power(you.spec_evoke() + surge);
+        power = player_adjust_evoc_power(power, surge);
+    }
+
+    // zapping() updates beam.
+    zapping(type_zapped, power, beam);
+>>>>>>> parent of 2007a24... Remove wands of heal wounds
 
     // Take off a charge.
     wand.charges--;

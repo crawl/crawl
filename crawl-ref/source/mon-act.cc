@@ -1179,6 +1179,15 @@ static bool _handle_wand(monster& mons)
         }
         return false;
 
+    case WAND_HEAL_WOUNDS:
+        if (mons.hit_points <= mons.max_hit_points / 2)
+        {
+            beem.target = mons.pos();
+            niceWand = true;
+            break;
+        }
+        return false;
+
     case WAND_TELEPORTATION:
         if (mons.hit_points <= mons.max_hit_points / 2
             || mons.caught())

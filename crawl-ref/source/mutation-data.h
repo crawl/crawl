@@ -1233,9 +1233,9 @@ static const mutation_def mut_data[] =
 { MUT_NO_DEVICE_HEAL, 3, 3, mutflag::bad, false,
   "no device heal",
 
-  {"Devices are less effective at restoring your health.",
-   "Devices are poor at restoring your health.",
-   "Devices cannot restore your health."},
+  {"Potions and wands are less effective at restoring your health.",
+   "Potions and wands are poor at restoring your health.",
+   "Potions and wands cannot restore your health."},
 
   {"Your system partially rejects artificial healing.",
    "Your system mostly rejects artificial healing.",

@@ -1285,7 +1285,8 @@ static int _random_wand_subtype()
                                   3, WAND_CLOUDS,
                                   3, WAND_SCATTERSHOT,
                                   3, WAND_TELEPORTATION,
-                                  1, WAND_HASTING);
+                                  1, WAND_HASTING,
+                                  1, WAND_HEAL_WOUNDS);
 }
 
 /**
