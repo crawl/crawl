@@ -2592,7 +2592,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_LUGONU_BANISH:
     {
-        beam.range = LOS_RADIUS;
+        beam.range = you.current_vision;
         const int pow = 68 + you.skill(SK_INVOCATIONS, 3);
 
         direction_chooser_args args;
