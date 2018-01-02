@@ -2412,7 +2412,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
-        beam.range = LOS_RADIUS;
+        beam.range = min((int)you.current_vision, 5);
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
@@ -2421,9 +2421,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                     + random2(1 + you.skill(SK_INVOCATIONS, 1))
                     + random2(1 + you.skill(SK_INVOCATIONS, 1));
 
-        // Since the actual beam is random, check with BEAM_MMISSILE and the
-        // highest range possible.
-        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, LOS_RADIUS))
+        // Since the actual beam is random, check with BEAM_MMISSILE.
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, beam.range))
             return SPRET_ABORT;
 
         fail_check();
@@ -2432,10 +2431,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         switch (random2(5))
         {
         case 0: zapping(ZAP_THROW_FLAME, power, beam); break;
-        case 1: zapping(ZAP_PAIN,  power, beam); break;
+        case 1: zapping(ZAP_PAIN, power, beam); break;
         case 2: zapping(ZAP_STONE_ARROW, power, beam); break;
         case 3: zapping(ZAP_SHOCK, power, beam); break;
-        case 4: zapping(ZAP_BREATHE_ACID, power/2, beam); break;
+        case 4: zapping(ZAP_BREATHE_ACID, power / 2, beam); break;
         }
         break;
     }
@@ -2450,7 +2449,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
     {
-        beam.range = 5;
+        beam.range = you.current_vision;
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
@@ -2459,9 +2458,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                     + random2(1 + you.skill(SK_INVOCATIONS, 1))
                     + random2(1 + you.skill(SK_INVOCATIONS, 1));
 
-        // Since the actual beam is random, check with BEAM_MMISSILE and the
-        // highest range possible.
-        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, LOS_RADIUS))
+        // Since the actual beam is random, check with BEAM_MMISSILE.
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, beam.range))
             return SPRET_ABORT;
 
         fail_check();
