@@ -1511,18 +1511,21 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos, bool wall_jump)
+static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
+                                           bool wall_jump)
 {
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
        return;
 
     if (wall_jump && you.attribute[ATTR_SERPENTS_LASH] == 1)
     {
-        // No turn manipulation, since we are only refunding half
-        // a wall jump's time (the walk speed modifier for this special case
-        // is already factored in main.cc)
+        // No turn manipulation, since we are only refunding half a wall jump's
+        // time (the walk speed modifier for this special case is already
+        // factored in main.cc)
         you.attribute[ATTR_SERPENTS_LASH] = 0;
-    } else {
+    }
+    else
+    {
         you.turn_is_over = false;
         you.elapsed_time_at_last_input = you.elapsed_time;
         you.attribute[ATTR_SERPENTS_LASH] -= wall_jump ? 2 : 1;
@@ -1591,20 +1594,21 @@ bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 static bool _can_attack_martial(const monster* mons)
 {
     return !(mons->wont_attack()
-           || mons_is_firewood(*mons)
-           || mons_is_projectile(mons->type)
-           || !you.can_see(*mons));
+             || mons_is_firewood(*mons)
+             || mons_is_projectile(mons->type)
+             || !you.can_see(*mons));
 }
 
-// A mismatch between attack speed and move speed may cause
-// any particular martial attack to be doubled, tripled, or
-// not happen at all. Given enough time moving, you would have
-// made the same amount of attacks as tabbing.
+// A mismatch between attack speed and move speed may cause any particular
+// martial attack to be doubled, tripled, or not happen at all. Given enough
+// time moving, you would have made the same amount of attacks as tabbing.
 static int _wu_jian_number_of_attacks(bool wall_jump)
 {
     // Under the effect of serpent's lash, move delay is normalized to
     // 10 aut for every character, to avoid punishing fast races.
-    const int move_delay = you.attribute[ATTR_SERPENTS_LASH] ? 100 : player_movement_speed() * player_speed();
+    const int move_delay = you.attribute[ATTR_SERPENTS_LASH]
+                           ? 100
+                           : player_movement_speed() * player_speed();
 
     int attack_delay;
 
@@ -1618,7 +1622,8 @@ static int _wu_jian_number_of_attacks(bool wall_jump)
         attack_delay = you.attack_delay().roll();
     }
 
-    return div_rand_round(wall_jump ? 2 * move_delay : move_delay, attack_delay * BASELINE_DELAY);
+    return div_rand_round(wall_jump ? 2 * move_delay : move_delay,
+                          attack_delay * BASELINE_DELAY);
 }
 
 static void _wu_jian_lunge(const coord_def& old_pos)
@@ -1664,7 +1669,7 @@ static void _wu_jian_lunge(const coord_def& old_pos)
     }
 }
 
-/// Monsters adjacent to the given pos that are valid targets for whirlwind.
+// Monsters adjacent to the given pos that are valid targets for whirlwind.
 static vector<monster*> _get_whirlwind_targets(coord_def pos)
 {
     vector<monster*> targets;
@@ -1695,11 +1700,13 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
             you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
-        // Pin has a longer duration than one player turn, but gets cleared before
-        // its duration expires by wu_jian_upkeep. This is necessary to make sure it
-        // works well with Wall Jump's longer aut count.
+        // Pin has a longer duration than one player turn, but gets cleared
+        // before its duration expires by wu_jian_end_of_turn_effects. This is
+        // necessary to make sure it works well with Wall Jump's longer aut
+        // count.
         mons->del_ench(ENCH_WHIRLWIND_PINNED);
-        mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 2, nullptr, BASELINE_DELAY * 5));
+        mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 2, nullptr,
+                                   BASELINE_DELAY * 5));
 
         you.apply_berserk_penalty = false;
 
@@ -1800,15 +1807,20 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
 
 void wu_jian_end_of_turn_effects()
 {
-    // This guarantees that the whirlwind pin status is capped to one turn of monster movement.
+    // This guarantees that the whirlwind pin status is capped to one turn of
+    // monster movement.
     for (monster_iterator mi; mi; ++mi)
-        if (mi->has_ench(ENCH_WHIRLWIND_PINNED) && !you.attribute[ATTR_SERPENTS_LASH])
+        if (mi->has_ench(ENCH_WHIRLWIND_PINNED)
+            && !you.attribute[ATTR_SERPENTS_LASH])
+        {
             mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
-    you.attribute[ATTR_WALL_JUMP_READY] = 0;
+        }
 
+    you.attribute[ATTR_WALL_JUMP_READY] = 0;
 }
 
-void wu_jian_post_move_effects(bool did_wall_jump, const coord_def& initial_position)
+void wu_jian_post_move_effects(bool did_wall_jump,
+                               const coord_def& initial_position)
 {
     if (!did_wall_jump)
         _wu_jian_trigger_martial_arts(initial_position);
@@ -1816,7 +1828,6 @@ void wu_jian_post_move_effects(bool did_wall_jump, const coord_def& initial_posi
     if (you.turn_is_over)
         _wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
 }
-
 
 /**
  * check if the monster in this cell exists and is a valid target for Uskayaw
