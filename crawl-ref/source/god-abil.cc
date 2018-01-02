@@ -1851,6 +1851,18 @@ bool yred_injury_mirror()
            && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
 }
 
+bool yred_can_enslave_soul(monster* mon)
+{
+    return (mon->holiness() & MH_NATURAL
+            || mon->holiness() & MH_DEMONIC
+            || mon->holiness() & MH_HOLY)
+           && !mon->is_summoned()
+           && !mons_enslaved_body_and_soul(*mon)
+           && mon->attitude != ATT_FRIENDLY
+           && mons_intel(*mon) >= I_HUMAN
+           && mon->type != MONS_PANDEMONIUM_LORD;
+}
+
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon

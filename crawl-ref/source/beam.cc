@@ -4929,7 +4929,6 @@ bool bolt::has_saving_throw() const
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
-    case BEAM_ENSLAVE_SOUL:
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_BECKONING:
@@ -4972,17 +4971,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_POLYMORPH:
         rc = mon->can_polymorph();
-        break;
-
-    case BEAM_ENSLAVE_SOUL:
-        rc = (mon->holiness() & MH_NATURAL
-              || mon->holiness() & MH_DEMONIC
-              || mon->holiness() & MH_HOLY)
-             && !mon->is_summoned()
-             && !mons_enslaved_body_and_soul(*mon)
-             && mon->attitude != ATT_FRIENDLY
-             && mons_intel(*mon) >= I_HUMAN
-             && mon->type != MONS_PANDEMONIUM_LORD;
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -5186,19 +5174,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         mon->hurt(agent(), damage.roll());
         return MON_AFFECTED;
-
-    case BEAM_ENSLAVE_SOUL:
-    {
-        if (!ench_flavour_affects_monster(flavour, mon))
-            return MON_UNAFFECTED;
-
-        obvious_effect = true;
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
-        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(),
-                                  duration * BASELINE_DELAY));
-        simple_monster_message(*mon, "'s soul is now ripe for the taking.");
-        return MON_AFFECTED;
-    }
 
     case BEAM_PAIN:
     {
@@ -6078,7 +6053,6 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_BECKONING:
             // Friendly and good neutral monsters don't mind being teleported.
             return !mon->wont_attack();
-        case BEAM_ENSLAVE_SOUL:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
         case BEAM_SLOW:
@@ -6319,7 +6293,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";
-    case BEAM_ENSLAVE_SOUL:          return "enslave soul";
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";
     case BEAM_DISPEL_UNDEAD:         return "dispel undead";

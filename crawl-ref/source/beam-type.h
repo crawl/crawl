@@ -46,7 +46,6 @@ enum beam_type                  // bolt::flavour
     BEAM_MALMUTATE,
     BEAM_ENSLAVE,
     BEAM_BANISH,
-    BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,

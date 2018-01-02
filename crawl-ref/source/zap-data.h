@@ -714,24 +714,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
-    ZAP_ENSLAVE_SOUL,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_ENSLAVE_SOUL,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
     ZAP_AGONY,
     "agony",
     100,
