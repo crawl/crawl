@@ -357,15 +357,6 @@ static void _remove_spell_attributes(spell_type spell)
                                  : "your spell is no longer protecting you");
         }
         break;
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DELAYED_FIREBALL:
-        if (you.attribute[ATTR_DELAYED_FIREBALL])
-        {
-            you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
-        }
-        break;
-#endif
     default:
         break;
     }
@@ -1205,12 +1196,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must stand on solid ground to cast this.";
         }
         break;
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DELAYED_FIREBALL:
-        if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
-            return "you are already charged.";
-        break;
-#endif
+
     case SPELL_BORGNJORS_REVIVIFICATION:
         if (temp && you.hp == you.hp_max)
             return "you cannot be healed further.";

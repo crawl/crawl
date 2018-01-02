@@ -1057,21 +1057,6 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
-static void _maybe_cancel_repeat(spell_type spell)
-{
-#if TAG_MAJOR_VERSION == 34
-    switch (spell)
-    {
-    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
-                                                 spell_title(spell)));
-        break;
-
-    default:
-        break;
-    }
-#endif
-}
-
 static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail);
 
@@ -1490,9 +1475,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
     dprf("Spell #%d, power=%d", spell, powc);
 
-    if (crawl_state.prev_cmd == CMD_CAST_SPELL && god == GOD_NO_GOD)
-        _maybe_cancel_repeat(spell);
-
     // Have to set aim first, in case the spellcast kills its first target
     if (you.props.exists("battlesphere") && allow_fail)
         aim_battlesphere(&you, spell, powc, beam);
@@ -1623,11 +1605,6 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     // Demonspawn ability, no failure.
     case SPELL_CALL_DOWN_DAMNATION:
         return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DELAYED_FIREBALL:
-        return cast_delayed_fireball(fail);
-#endif
 
     // LOS spells
 
@@ -2280,6 +2257,7 @@ const set<spell_type> removed_spells =
     SPELL_CURE_POISON,
     SPELL_CONTROL_UNDEAD,
     SPELL_CIGOTUVIS_EMBRACE,
+    SPELL_DELAYED_FIREBALL,
 #endif
 };
 

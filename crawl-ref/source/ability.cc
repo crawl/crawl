@@ -314,10 +314,6 @@ static const ability_def Ability_List[] =
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 200, 0, {fail_basis::xl, 50, 1}, abflag::none },
 
-#if TAG_MAJOR_VERSION == 34
-    { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
-      0, 0, 0, 0, {}, abflag::instant },
-#endif
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
       0, 0, 0, 0, {}, abflag::instant },
 
@@ -1639,9 +1635,6 @@ bool activate_talent(const talent& tal)
         case ABIL_EVOKE_TURN_VISIBLE:
 #endif
         case ABIL_END_TRANSFORMATION:
-#if TAG_MAJOR_VERSION == 34
-        case ABIL_DELAYED_FIREBALL:
-#endif
         case ABIL_CANCEL_PPROJ:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
@@ -1839,33 +1832,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
         return frog_hop(fail);
-
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_DELAYED_FIREBALL:
-    {
-        fail_check();
-        // Note: Power level of ball calculated at release. - bwr
-        int power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
-        beam.range = spell_range(SPELL_FIREBALL, power);
-
-        targeter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
-
-        direction_chooser_args args;
-        args.mode = TARG_HOSTILE;
-        args.top_prompt = "Aiming: <white>Delayed Fireball</white>";
-        args.hitfunc = &tgt;
-        if (!spell_direction(spd, beam, &args))
-            return SPRET_ABORT;
-
-        if (!zapping(ZAP_FIREBALL, power, beam, true, nullptr, false))
-            return SPRET_ABORT;
-
-        // Only one allowed, since this is instantaneous. - bwr
-        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        viewwindow();
-        break;
-    }
-#endif
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -3409,12 +3375,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
     }
-
-#if TAG_MAJOR_VERSION == 34
-    // Checking for unreleased Delayed Fireball.
-    if (you.attribute[ ATTR_DELAYED_FIREBALL ])
-        _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
-#endif
 
     if (you.duration[DUR_PORTAL_PROJECTILE])
         _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
