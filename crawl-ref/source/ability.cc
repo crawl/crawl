@@ -2176,7 +2176,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ZIN_IMPRISON:
     {
-        beam.range = LOS_RADIUS;
+        beam.range = LOS_MAX_RANGE;
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
