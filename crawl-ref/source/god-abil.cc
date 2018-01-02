@@ -7264,6 +7264,21 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
     if (!ability)
         count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
     wu_jian_wall_jump_effects(initial_position);
+
+    if (ability)
+    {
+        // TODO: code duplication with movement...
+        // TODO: check engulfing
+        int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
+
+        you.time_taken = player_speed() * wall_jump_modifier * player_movement_speed();
+        you.time_taken = div_rand_round(you.time_taken, 10);
+
+        // need to set this here in case serpent's lash isn't active
+        you.turn_is_over = true;
+        request_autopickup();
+        wu_jian_post_move_effects(true, initial_position);
+    }
     return true;
 }
 
