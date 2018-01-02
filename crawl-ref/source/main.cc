@@ -3322,7 +3322,7 @@ static void _move_player(coord_def move)
     }
 
     if (you_worship(GOD_WU_JIAN) && !attacking)
-        wu_jian_post_move_effects(did_wall_jump, you.turn_is_over, initial_position);
+        wu_jian_post_move_effects(did_wall_jump, initial_position);
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
