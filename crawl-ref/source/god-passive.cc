@@ -1808,7 +1808,7 @@ void wu_jian_end_of_turn_effects()
 
 }
 
-void wu_jian_post_move_effects(bool did_wall_jump, bool turn_over, const coord_def& initial_position)
+void wu_jian_post_move_effects(bool did_wall_jump, const coord_def& initial_position)
 {
     if (!did_wall_jump)
         _wu_jian_trigger_martial_arts(initial_position);
