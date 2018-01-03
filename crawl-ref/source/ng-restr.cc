@@ -29,6 +29,10 @@ static bool _banned_combination(job_type job, species_type species)
             return true;
         }
         break;
+    case SP_MUMMY:
+        if (job == JOB_ALCHEMIST)
+            return true;
+        break;
     case SP_DEMIGOD:
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
@@ -36,6 +40,7 @@ static bool _banned_combination(job_type job, species_type species)
             || job == JOB_SLIME_PRIEST
             || job == JOB_BLOOD_KNIGHT
             || job == JOB_TORPOR_KNIGHT
+            || job == JOB_ANNIHILATOR
             || job == JOB_MONK)
         {
             return true;

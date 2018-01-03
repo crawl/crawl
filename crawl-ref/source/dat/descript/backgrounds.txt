@@ -9,6 +9,16 @@ Air Elementalist
 Air Elementalists have learned the Shock spell. Later on, their book of Air
 provides them with the flexibility to survive.
 %%%%
+Alchemist
+
+Alchemists carry a variety of helpful potions and a dagger but are inexperienced
+with combat.
+%%%%
+Annihilator
+
+Annihilators follow the destructive magical god Vehumet. They know the Magic
+Dart spell and eventually learn new spells directly from their god.
+%%%%
 Arcane Marksman
 
 Arcane Marksmen carry ranged weapons, and use magic to make their foes more
@@ -29,6 +39,11 @@ Berserker
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
 raging berserker early on, apart from hubris.
 %%%%
+Blood Knight
+
+Blood Knights follow the chaotic and destructive god Makhleb. They start with little
+skill in their chosen weapon but soon learn to invoke Makhleb's power.
+%%%%
 Chaos Knight
 
 Chaos Knights are playthings of the unpredictable Xom, and are subject to the
@@ -37,6 +52,11 @@ god's constantly changing moods.
 Conjurer
 
 Conjurers confront problems with damaging spells from the book of Conjurations.
+%%%%
+Deprived
+
+Deprived start with nothing but a ration and almost no skills. Survival may prove...
+difficult.
 %%%%
 Earth Elementalist
 
@@ -47,6 +67,11 @@ Enchanter
 
 Enchanters use spells from the book of Maledictions to incapacitate their foes,
 and are equipped with an enchanted dagger.
+%%%%
+Entomologist
+
+Entomologists study insects and related creatures. They bring along a net and a sack 
+of spiders, and can also summon butterflies. 
 %%%%
 Fighter
 
@@ -83,20 +108,54 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
 %%%%
+Noble
+
+Nobles are wealthy elites who enter the dungeon looking for adventure. They 
+have poor attributes but bring the best equipment money can buy.
+%%%%
+Redneck
+
+Rednecks bring their trusty wand of scattershot and a potion of degeneration
+to the dungeon. They aren't good at much besides fighting.
+%%%%
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
 the book of Battle.
+%%%%
+Slime Priest
+
+Slime Priests follow the shapeless slime god Jiyva and are sent into the dungeon
+to spread slime and jellies.
+%%%%
+Sorcerer
+
+Sorcerers were born into a particularly magical lineage. They start with a
+random destructive spellbook and a robe of archmagi.
+%%%%
+Storm Cleric
+
+Storm clerics spread destruction in the name of Qazlal.
 %%%%
 Summoner
 
 Summoners start with the book of Callings and are able to cast Summon Small
 Mammal from the start.
 %%%%
+Torpor Knight
+
+Torpor Knights follow Cheibriados and wear heavy, ponderous armour to gain
+their god's favour more quickly.
+%%%%
 Transmuter
 
 Transmuters start with the book of Changes. They can learn spells to shift
 their form, as well as to turn sticks into snakes.
+%%%%
+Understudy
+
+It's opening night for "The Orb of Zot" and the hero is sick! The Understudy
+must learn their role quickly if they want to make it through the final act.   
 %%%%
 Venom Mage
 

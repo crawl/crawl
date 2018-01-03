@@ -129,6 +129,9 @@ item_def* newgame_make_item(object_class_type base,
     item.plus      = plus;
     item.brand     = force_ego;
 
+    if(item.base_type == OBJ_BOOKS && you.char_class == JOB_UNDERSTUDY)
+        return &item;
+	
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
@@ -293,6 +296,16 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
         break;
+		
+    case JOB_STORM_CLERIC:
+        you.religion = GOD_QAZLAL;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
@@ -307,8 +320,29 @@ static void _give_items_skills(const newgame_def& ng)
 
         break;
 		
-    
-
+    case JOB_ANNIHILATOR:
+        you.religion = GOD_VEHUMET;
+        you.piety = 35;
+        add_spell_to_memory(SPELL_MAGIC_DART);
+        you.gift_timeout = roll_dice(2, 5);
+        break;        
+		
+    case JOB_ENTOMOLOGIST:
+        add_spell_to_memory(SPELL_SUMMON_BUTTERFLIES);
+        break;
+		
+    case JOB_NOBLE:
+        you.gold = 200;
+        break;
+		
+    case JOB_SORCERER:
+        create_sorcerer();
+        break;
+	
+    case JOB_UNDERSTUDY:
+        create_understudy();
+        break;
+		
     case JOB_WANDERER:
         create_wanderer();
         break;
@@ -319,6 +353,10 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (you.char_class == JOB_ABYSSAL_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+    else if (you.char_class == JOB_STORM_CLERIC)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+    else if (you.char_class == JOB_NOBLE)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +3);
     else if (you.char_class == JOB_CHAOS_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
     else if (job_gets_ranged_weapons(you.char_class))

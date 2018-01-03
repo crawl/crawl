@@ -43,6 +43,26 @@ static const map<job_type, job_def> job_data =
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_ALCHEMIST, {
+    "Al", "Alchemist",
+    2, 5, 5,
+    { SP_SPRIGGAN },
+    { "dagger", "robe", "potion of mutation", "potion of lignification",
+      "potion of cancellation", "potion of resistance", "potion of invisibility"},
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 2 }, { SK_DODGING, 4 }, { SK_STEALTH, 3 }, },
+} },
+
+{ JOB_ANNIHILATOR, {
+    "An", "Annihilator",
+    0, 8, 4,
+    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN},
+    { "robe" },
+    WCHOICE_NONE,
+    { { SK_CONJURATIONS, 3 }, { SK_SPELLCASTING, 3 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 1 }, },
+} },
+
 { JOB_ARCANE_MARKSMAN, {
     "AM", "Arcane Marksman",
     2, 5, 5,
@@ -119,6 +139,15 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_DEPRIVED, {
+    "De", "Deprived",
+    4, 4, 4,
+    { SP_TROLL, },
+    { "bread ration" },
+    WCHOICE_NONE,
+    { { SK_STEALTH, 1 }, },
+} },
+
 { JOB_EARTH_ELEMENTALIST, {
     "EE", "Earth Elementalist",
     0, 7, 5,
@@ -138,6 +167,16 @@ static const map<job_type, job_def> job_data =
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },
+} },
+
+{ JOB_ENTOMOLOGIST, {
+    "Et", "Entomologist",
+    2, 4, 6,
+    { SP_TENGU, },
+    { "dagger", "throwing net", "sack of spiders", "robe"},
+    WCHOICE_NONE,
+    { { SK_SPELLCASTING, 1 }, { SK_DODGING, 3 }, { SK_EVOCATIONS, 1 },
+      { SK_WEAPON, 1 }, { SK_STEALTH, 4 }, },
 } },
 
 { JOB_FIGHTER, {
@@ -215,6 +254,26 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_NOBLE, {
+    "No", "Noble",
+    0, 0, 0,
+    { SP_DEMIGOD, SP_TROLL, SP_MINOTAUR },
+    { "ring mail plus:3" },
+    WCHOICE_GOOD,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+      { SK_STEALTH, 1 }, { SK_WEAPON, 2 } },
+} },
+
+{ JOB_REDNECK, {
+    "Rn", "Redneck",
+    10, -2, 4,
+    { SP_MINOTAUR, SP_HILL_ORC},
+    { "potion of degeneration", "robe",
+       "hat", "wand of scattershot charges:2" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 5 }, { SK_DODGING, 1 }, },
+} },
+
 { JOB_SKALD, {
     "Sk", "Skald",
     3, 5, 4,
@@ -236,6 +295,27 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 }, },
 } },
 
+{ JOB_SORCERER, {
+    "So", "Sorcerer",
+    -1, 10, 3,
+    { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
+      SP_MUMMY, },
+    { "robe plus:-2 ego:archmagi" },
+    WCHOICE_NONE,
+    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 2 }, },
+    //further randomized spell skills given later
+} },
+
+{ JOB_STORM_CLERIC, {
+    "SC", "Storm Cleric",
+    4, 4, 4,
+    { SP_FORMICID, SP_MINOTAUR },
+    { "ring mail" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, 
+      { SK_WEAPON, 3 }, { SK_INVOCATIONS, 3 }, },
+} },
+
 { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
@@ -254,7 +334,7 @@ static const map<job_type, job_def> job_data =
     { "plate armour ego:ponderousness" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, 
-      { SK_WEAPON, 3 }, },
+      { SK_WEAPON, 2 }, { SK_INVOCATIONS, 2 }, },
 } },
 
 { JOB_TRANSMUTER, {
@@ -266,6 +346,15 @@ static const map<job_type, job_def> job_data =
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_TRANSMUTATIONS, 2 }, },
+} },
+
+{ JOB_UNDERSTUDY, {
+    "Us", "Understudy",
+    4, 4, 4,
+    { SP_BASE_DRACONIAN, SP_GNOLL },
+    { "robe" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 1 }, { SK_DODGING, 1 }, }, // Also gets 4 randomized weapon skill
 } },
 
 { JOB_VENOM_MAGE, {

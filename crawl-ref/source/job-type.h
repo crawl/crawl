@@ -42,6 +42,15 @@ enum job_type
     JOB_SLIME_PRIEST,
     JOB_BLOOD_KNIGHT,
     JOB_TORPOR_KNIGHT,
+	JOB_DEPRIVED,
+    JOB_REDNECK,
+    JOB_ALCHEMIST,
+    JOB_ENTOMOLOGIST,
+    JOB_ANNIHILATOR,
+    JOB_NOBLE,
+    JOB_STORM_CLERIC,
+    JOB_UNDERSTUDY,
+    JOB_SORCERER,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

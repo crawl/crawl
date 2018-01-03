@@ -770,6 +770,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_SKALD:
+        case JOB_NOBLE:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_WHITE3;
             parts[TILEP_PART_LEG]   = TILEP_LEG_SKIRT_OFS;
             parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_IRON;
@@ -791,6 +792,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_BERSERKER:
+        case JOB_REDNECK:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ANIMAL_SKIN;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;
             break;
@@ -819,6 +821,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_WIZARD:
+        case JOB_SORCERER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_GANDALF_G;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_CYAN_DIM;
@@ -896,6 +899,8 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_TRANSMUTER:
+        case JOB_ALCHEMIST:
+        case JOB_ENTOMOLOGIST:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_RAINBOW;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_MAGENTA_DIM;
@@ -903,6 +908,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_CONJURER:
+        case JOB_ANNIHILATOR:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_MAGENTA;
             parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_MAGE2;
@@ -952,6 +958,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_GLADIATOR:
+        case JOB_STORM_CLERIC:
             parts[TILEP_PART_HAND2] = TILEP_HAND2_SHIELD_ROUND2;
             parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
@@ -959,10 +966,12 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_MONK:
+        case JOB_DEPRIVED:
             parts[TILEP_PART_BODY]  = TILEP_BODY_MONK_BLACK;
             break;
 
         case JOB_WANDERER:
+        case JOB_UNDERSTUDY:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_HAWAII;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_BROWN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;

@@ -1070,18 +1070,21 @@ static job_group jobs_order[] =
     {
         "Warrior",
         coord_def(0, 0), 15,
-        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
+        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
+          JOB_NOBLE }
     },
     {
         "Adventurer",
         coord_def(0, 7), 15,
-        { JOB_ARTIFICER, JOB_WANDERER }
+        { JOB_ARTIFICER, JOB_WANDERER, JOB_UNDERSTUDY, 
+		  JOB_DEPRIVED }
     },
     {
         "Zealot",
         coord_def(15, 0), 20,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT, JOB_SLIME_PRIEST,
-          JOB_BLOOD_KNIGHT, JOB_TORPOR_KNIGHT }
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
+          JOB_SLIME_PRIEST, JOB_ANNIHILATOR, JOB_BLOOD_KNIGHT, 
+          JOB_TORPOR_KNIGHT, JOB_STORM_CLERIC }
     },
     {
         "Warrior-mage",
@@ -1090,11 +1093,17 @@ static job_group jobs_order[] =
           JOB_ENCHANTER }
     },
     {
+        "Esoteric",
+        coord_def(35, 7), 21,
+        { JOB_REDNECK, JOB_ALCHEMIST, JOB_ENTOMOLOGIST }
+    },
+    {
         "Mage",
         coord_def(56, 0), 22,
         { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
+          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE,
+	      JOB_SORCERER }
     }
 };
 
