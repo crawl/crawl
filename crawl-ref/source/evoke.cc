@@ -59,6 +59,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "state.h"
@@ -1529,6 +1530,21 @@ static spret_type _phantom_mirror()
     return SPRET_SUCCESS;
 }
 
+static _shard_of_zot()
+{
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+    {
+        mpr("Your anchoring prevents you from evoking the shard!");
+        return SPRET_ABORT;
+    }
+    
+    const int base_pow = 40 + you.skill(SK_EVOCATIONS, 5);
+    mass_enchantment(ENCH_TP, base_pow);
+    you_teleport();
+    
+    return SPRET_SUCCESS;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1792,6 +1808,21 @@ bool evoke_item(int slot, bool check_range)
                 expend_xp_evoker(item.sub_type);
                 if (!evoker_charges(item.sub_type))
                     mpr("The lightning rod overheats!");
+            }
+            else
+                return false;
+            break;
+
+        case MISC_SHARD_OF_ZOT:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if(_shard_of_zot())
+            {
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
             }
             else
                 return false;

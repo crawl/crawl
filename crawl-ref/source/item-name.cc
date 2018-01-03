@@ -1004,6 +1004,7 @@ static string misc_type_name(int type, bool known)
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
+    case MISC_SHARD_OF_ZOT:              return "shard of Zot";
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif

@@ -1024,6 +1024,11 @@ scythe
 
 A farm implement, usually only used by untrained mobs in combat.
 %%%%
+shard of Zot
+
+A small fragment of the Orb of Zot. Evoking it allows the wielder to unleash
+translocational energy on everything in sight, including themselves.
+%%%%
 shield
 
 A piece of wood and metal, to be strapped on one arm for defence. It is

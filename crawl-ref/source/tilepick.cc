@@ -2470,6 +2470,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
 
+    case MISC_SHARD_OF_ZOT:
+        return evoker_charges(item.sub_type) ? TILE_MISC_SHARD_OF_ZOT
+                                             : TILE_MISC_SHARD_OF_ZOT_INERT;
+
     case MISC_ZIGGURAT:
         return TILE_MISC_ZIGGURAT;
 

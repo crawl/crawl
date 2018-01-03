@@ -1747,7 +1747,8 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
-                                      MISC_PHANTOM_MIRROR);
+                                      MISC_PHANTOM_MIRROR,
+                                      MISC_SHARD_OF_ZOT);
     }
 
     if (is_deck(item))

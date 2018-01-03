@@ -3884,6 +3884,8 @@ colour_t item_def::miscellany_colour() const
             return YELLOW;
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
+        case MISC_SHARD_OF_ZOT:
+            return BROWN;
 #if TAG_MAJOR_VERSION == 34
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:

@@ -995,6 +995,8 @@ misc_box MISC_BOX_OF_BEASTS
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_shard_of_zot MISC_SHARD_OF_ZOT
+misc_shard_of_zot_inert MISC_SHARD_OF_ZOT_INERT
 misc_zigfig MISC_ZIGGURAT
 misc_deck MISC_DECK
 %start
