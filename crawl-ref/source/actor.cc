@@ -542,7 +542,7 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
     constricting = nullptr;
 }
 
-static bool _invalid_constrictee(const actor *constrictee)
+static bool _invalid_constricting_map_entry(const actor *constrictee)
 {
     return !constrictee || !constrictee->is_constricted();
 }
@@ -563,7 +563,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     for (const auto &entry : *constricting)
     {
         const actor * const constrictee = actor_by_mid(entry.first);
-        if (_invalid_constrictee(constrictee)
+        if (_invalid_constricting_map_entry(constrictee)
             || constrictee->is_directly_constricted())
         {
             need_cleared.push_back(entry.first);
@@ -639,7 +639,7 @@ void actor::clear_direct_constrictions_far_from(const coord_def &where)
     for (const auto &entry : *constricting)
     {
         const actor * const constrictee = actor_by_mid(entry.first);
-        if (_invalid_constrictee(constrictee)
+        if (_invalid_constricting_map_entry(constrictee)
             || constrictee->has_invalid_direct_constrictor(where))
         {
             need_cleared.push_back(entry.first);
@@ -685,7 +685,7 @@ void actor::clear_invalid_indirect_constrictions()
     for (const auto &entry : *constricting)
     {
         const actor * const constrictee = actor_by_mid(entry.first);
-        if (_invalid_constrictee(constrictee)
+        if (_invalid_constricting_map_entry(constrictee)
             || constrictee->has_invalid_indirect_constrictor())
         {
             need_cleared.push_back(entry.first);
