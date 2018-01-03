@@ -595,87 +595,45 @@ void actor::stop_being_constricted(bool quiet)
     clear_constricted();
 }
 
-void actor::clear_invalid_constrictions()
-{
-    clear_direct_constrictions_far_from(pos());
-    clear_invalid_indirect_constrictions();
-}
-
 /**
- * Does the actor have a direct constrictor that's invalid for the given
- * position? Direct constriction (e.g. by nagas and octopode players or
- * AT_CONSTRICT) must happen between adjacent squares.
+ * Does the actor have an constrictor that's now invalid? Checks validity based
+ * on the type of constriction being done to the actor.
  *
- * @param where The position to consider.
- * @returns     True if the constrictor is defined, direct, and invalid, false
- *              otherwise.
+ * @param move True if we are checking after the actor has moved.
+ * @returns    True if the constrictor is defined yet invalid, false
+ *             otherwise.
  */
-bool actor::has_invalid_direct_constrictor(const coord_def &where) const
+bool actor::has_invalid_constrictor(bool move) const
 {
-    if (!is_directly_constricted())
+    if (!is_constricted())
         return false;
 
     const actor* const attacker = actor_by_mid(constricted_by);
-    return attacker && !adjacent(attacker->pos(), where);
-}
+    if (!attacker)
+        return true;
 
-/**
- * Clear any constriction-like engulfing attacks or direct constriction that's
- * too far from the given position.
- *
- * @param where The position to consider.
- */
-void actor::clear_direct_constrictions_far_from(const coord_def &where)
-{
-    clear_far_engulf();
+    // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
+    // must happen between adjacent squares.
+    if (is_directly_constricted())
+        return !adjacent(attacker->pos(), pos());
 
-    if (has_invalid_direct_constrictor(where))
-        stop_being_constricted();
-
-    if (!constricting)
-        return;
-
-    vector<mid_t> need_cleared;
-    for (const auto &entry : *constricting)
-    {
-        const actor * const constrictee = actor_by_mid(entry.first);
-        if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->has_invalid_direct_constrictor(where))
-        {
-            need_cleared.push_back(entry.first);
-        }
-    }
-
-    for (mid_t whom : need_cleared)
-        stop_constricting(whom, false, false);
-}
-
-/**
- * Does the actor have an indirect constrictor that's invalid?
- *
- * @returns     True if the constrictor is defined, indirect, and invalid,
- *  l           false otherwise.
- */
-bool actor::has_invalid_indirect_constrictor() const
-{
-    if (!is_constricted() || is_directly_constricted())
-        return false;
-
-    const actor* const attacker = actor_by_mid(constricted_by);
-    return !attacker
+    // Indirect constriction requires the defender not to move.
+    return move
+        // Indirect constriction requires reachable ground.
+        || !feat_has_solid_floor(grd(pos()))
         // Constriction doesn't work out of LOS.
-        || !attacker->see_cell(pos())
-        // All current indirect constriction requires reachable ground.
-        || !feat_has_solid_floor(grd(pos()));
+        || !attacker->see_cell(pos());
 }
 
 /**
- * Clear any indirect constrictions (e.g. from Borgnjor's Vile Clutch) that are
- * no longer valid.
+ * Clear any constrictions that are no longer valid.
+ *
+ * @param movement True if we are clearing invalid constrictions after
+ *                 the actor has moved, false otherwise.
  */
-void actor::clear_invalid_indirect_constrictions()
+void actor::clear_invalid_constrictions(bool move)
 {
-    if (has_invalid_indirect_constrictor())
+    if (has_invalid_constrictor(move))
         stop_being_constricted();
 
     if (!constricting)
@@ -686,7 +644,7 @@ void actor::clear_invalid_indirect_constrictions()
     {
         const actor * const constrictee = actor_by_mid(entry.first);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->has_invalid_indirect_constrictor())
+            || constrictee->has_invalid_constrictor())
         {
             need_cleared.push_back(entry.first);
         }
