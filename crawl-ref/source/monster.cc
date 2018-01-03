@@ -2693,9 +2693,11 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    clear_direct_constrictions_far_from(c);
-
     set_position(c);
+
+    // Do constriction invalidation after to the move, so that all LOS checking
+    // is available.
+    clear_invalid_constrictions(true);
 }
 
 bool monster::fumbles_attack()
