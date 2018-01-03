@@ -1645,6 +1645,7 @@ bool activate_talent(const talent& tal)
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         case ABIL_SIF_MUNA_DIVINE_ENERGY:
         case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
+        case ABIL_WU_JIAN_WALLJUMP:
             hungerCheck = false;
             break;
         default:
