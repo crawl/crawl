@@ -163,8 +163,8 @@
        "book of transfigurations", "ring of teleportation",
        "scroll of teleportation", "triple sword", "triple crossbow",
        "troll leather armour", "manual of throwing",
-       "wand of teleportation", "manual of translocations",
-       "manual of transmutations", "tomahawk", "trident", "throwing net" }
+       "manual of translocations", "manual of transmutations", "tomahawk",
+       "trident", "throwing net" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }
 

@@ -739,8 +739,7 @@ ENDMAP
 NAME: nicolae_lab_stuck
 TAGS: extra
 : dgn.delayed_decay(_G, 'v', 'human skeleton')
-KITEM: w = wand of digging charges:0 ident:all /\
-           wand of teleportation charges:0 ident:all
+KITEM: w = wand of digging charges:0 ident:all
 KPROP: w'v = no_tele_into
 MAP
 ......

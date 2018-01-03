@@ -713,7 +713,3 @@ wand of random effects
 
 変化に富んだ効果を引き起こす魔法の道具だ。
 %%%%
-wand of teleportation
-
-対象に無作為な空間転位を引き起こす魔法の道具だ。
-%%%%

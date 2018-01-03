@@ -540,7 +540,7 @@ i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
 i-lightning WAND_REMOVEME11
-i-teleportation WAND_TELEPORTATION
+i-teleportation WAND_REMOVEME8
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID

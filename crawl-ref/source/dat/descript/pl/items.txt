@@ -772,11 +772,6 @@ wand of random effects
 Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
 jakiejkolwiek innej różdżki.
 %%%%
-wand of teleportation
-
-Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
-przypadkowe miejsce. Nie działa to natychmiastowo.
-%%%%
 whip
 
 Bat z byczej skóry.

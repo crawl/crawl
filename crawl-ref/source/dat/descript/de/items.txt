@@ -799,10 +799,6 @@ wand of random effects
 
 Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
 %%%%
-wand of teleportation
-
-Ein magisches Gerät, das ein Wesen veranlasst, zufällig verlagert zu werden.
-%%%%
 whip
 
 Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den

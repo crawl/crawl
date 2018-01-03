@@ -1226,11 +1226,6 @@ wand of scattershot
 A magical device which fires powerful blasts of metallic shrapnel. Its damage
 is strongly reduced by armour.
 %%%%
-wand of teleportation
-
-A magical device which causes a creature to be randomly translocated after a
-short delay.
-%%%%
 war axe
 
 A military axe with a long haft and a single-bladed head.
