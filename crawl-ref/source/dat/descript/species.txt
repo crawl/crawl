@@ -58,6 +58,11 @@ Gargoyle
 Made of living stone, Gargoyles have a preternatural affinity for the earth.
 They have low health, but their stone bodies are incredibly tough.
 %%%%
+Grue
+
+Grues are strange, stealthy predators that are adapted to life in the darkness. 
+They slip further into the shadows as they grow. 
+%%%%
 Gnoll
 
 Gnolls are canine-like humanoids. They have incredible proficiency and

@@ -417,6 +417,24 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_GRUE, {
+    "Gu",
+    "Grue", "Gruesome", nullptr,
+    SPF_NO_HAIR,
+    0, 0, 0, 3,
+    MONS_GHOUL,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 7, 10, // 26
+    { STAT_STR, STAT_DEX }, 5,
+    { { MUT_NIGHTSTALKER, 1, 1 }, { MUT_NIGHTSTALKER, 1, 11 }, 
+      { MUT_NIGHTSTALKER, 1, 21 }, },
+    {},
+    {},
+    { JOB_ASSASSIN, JOB_EARTH_ELEMENTALIST, JOB_TRANSMUTER,
+      JOB_GLADIATOR, JOB_VENOM_MAGE },
+    { SK_UNARMED_COMBAT, SK_LONG_BLADES, SK_MACES_FLAILS, SK_BOWS },
+} },
+
 { SP_HALFLING, {
     "Ha",
     "Halfling", nullptr, nullptr,

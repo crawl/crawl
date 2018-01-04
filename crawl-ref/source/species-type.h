@@ -54,6 +54,7 @@ enum species_type
     SP_BARACHI,
     SP_GNOLL,
     SP_CRYSTAL_DWARF,
+    SP_GRUE,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

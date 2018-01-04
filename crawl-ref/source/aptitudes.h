@@ -1019,6 +1019,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GARGOYLE,         SK_INVOCATIONS,     1),
     APT(SP_GARGOYLE,         SK_EVOCATIONS,     -1),
 
+    // SP_GRUE
+    APT(SP_GRUE,         SK_FIGHTING,        1),
+    APT(SP_GRUE,         SK_SHORT_BLADES,    0),
+    APT(SP_GRUE,         SK_LONG_BLADES,     0),
+    APT(SP_GRUE,         SK_AXES,            0),
+    APT(SP_GRUE,         SK_MACES_FLAILS,    0),
+    APT(SP_GRUE,         SK_POLEARMS,       -1),
+    APT(SP_GRUE,         SK_STAVES,          0),
+    APT(SP_GRUE,         SK_SLINGS,         -1),
+    APT(SP_GRUE,         SK_BOWS,           -1),
+    APT(SP_GRUE,         SK_CROSSBOWS,      -1),
+    APT(SP_GRUE,         SK_THROWING,       -1),
+    APT(SP_GRUE,         SK_ARMOUR,         -1),
+    APT(SP_GRUE,         SK_DODGING,        -1),
+    APT(SP_GRUE,         SK_STEALTH,         3),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_GRUE,         SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_GRUE,         SK_SHIELDS,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_GRUE,         SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_GRUE,         SK_UNARMED_COMBAT,  1),
+    APT(SP_GRUE,         SK_SPELLCASTING,   -1),
+    APT(SP_GRUE,         SK_CONJURATIONS,   -1),
+    APT(SP_GRUE,         SK_HEXES,          -1),
+    APT(SP_GRUE,         SK_CHARMS,          0),
+    APT(SP_GRUE,         SK_SUMMONINGS,     -2),
+    APT(SP_GRUE,         SK_NECROMANCY,      0),
+    APT(SP_GRUE,         SK_TRANSLOCATIONS,  1),
+    APT(SP_GRUE,         SK_TRANSMUTATIONS,  1),
+    APT(SP_GRUE,         SK_FIRE_MAGIC,      0),
+    APT(SP_GRUE,         SK_ICE_MAGIC,       0),
+    APT(SP_GRUE,         SK_AIR_MAGIC,      -1),
+    APT(SP_GRUE,         SK_EARTH_MAGIC,     0),
+    APT(SP_GRUE,         SK_POISON_MAGIC,    1),
+    APT(SP_GRUE,         SK_INVOCATIONS,    -1),
+    APT(SP_GRUE,         SK_EVOCATIONS,      0),	
+	
    // SP_CRYSTAL_DWARF
     APT(SP_CRYSTAL_DWARF,         SK_FIGHTING,        0),
     APT(SP_CRYSTAL_DWARF,         SK_SHORT_BLADES,   -1),

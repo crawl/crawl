@@ -89,7 +89,7 @@ static const map<job_type, job_def> job_data =
     "As", "Assassin",
     3, 3, 6,
     { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
-      SP_VINE_STALKER, },
+      SP_VINE_STALKER, SP_GRUE },
     { "dagger plus:2", "blowgun", "robe", "cloak", "needle ego:poisoned q:8",
       "needle ego:curare q:2" },
     WCHOICE_NONE,
