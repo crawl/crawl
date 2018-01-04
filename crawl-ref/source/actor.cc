@@ -281,6 +281,8 @@ bool actor::no_cast(bool calc_unid, bool items) const
 
 bool actor::reflection(bool calc_unid, bool items) const
 {
+    if(is_player() && you.species == SP_CRYSTAL_DWARF)
+        return true;
     return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
 }
 

@@ -9,6 +9,11 @@ Centaur
 Swift, strong and bulky, Centaurs are particularly skilled with ranged
 weaponry.
 %%%%
+Crystal Dwarf
+
+Crystal Dwarves have reflective, crystalline skin that naturally shields them.
+Though less robust than other dwarves, they are skilled at elemental magic.
+%%%%
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they

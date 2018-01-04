@@ -73,6 +73,23 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_CRYSTAL_DWARF, {
+    "DD",
+    "Crystal Dwarf", "Dwarven", "Dwarf",
+    SPF_NONE,
+    -1, -1, 0, 4,
+    MONS_DEEP_DWARF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 9, 7, // 25
+    { STAT_STR, STAT_INT }, 4,
+    { },
+    {"Your crystal skin shields you.", "Your crystal skin is reflective."},
+    {"crystal skin", "reflection" },
+    { JOB_FIGHTER, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
+      JOB_EARTH_ELEMENTALIST, JOB_FIRE_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_AXES, SK_CROSSBOWS },
+} },
+
 { SP_DEEP_DWARF, {
     "DD",
     "Deep Dwarf", "Dwarven", "Dwarf",

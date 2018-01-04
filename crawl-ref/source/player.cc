@@ -2288,6 +2288,8 @@ int player_shield_class()
     shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
+    if(you.species == SP_CRYSTAL_DWARF)
+        shield += 400 + you.experience_level * 100;
 
     return (shield + 50) / 100;
 }
@@ -2963,6 +2965,11 @@ void level_change(bool skip_attribute_increase)
         if (species_is_draconian(you.species) && !(you.experience_level % 3))
         {
             mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
+            you.redraw_armour_class = true;
+        }
+        else if(you.species == SP_CRYSTAL_DWARF && (you.experience_level % 2))
+        {
+			mprf(MSGCH_INTRINSIC_GAIN, "You feel more shielded.");
             you.redraw_armour_class = true;
         }
         if (!updated_maxhp)

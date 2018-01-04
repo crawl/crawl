@@ -299,7 +299,7 @@ static const map<job_type, job_def> job_data =
     "So", "Sorcerer",
     -1, 10, 3,
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_MUMMY, },
+      SP_CRYSTAL_DWARF, },
     { "robe plus:-2 ego:archmagi" },
     WCHOICE_NONE,
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 2 }, },
