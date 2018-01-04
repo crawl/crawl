@@ -553,49 +553,6 @@ static void _recap_card_keys(vector<string> &keys)
 }
 
 /**
- * Make a list of all books that contain a given spell.
- *
- * @param spell_type spell      The spell in question.
- * @return                      A formatted list of books containing
- *                              the spell, e.g.:
- *    \n\nThis spell can be found in the following books: dreams, burglary.
- *    or
- *    \n\nThis spell is not found in any books.
- */
-static string _spell_sources(const spell_type spell)
-{
-    item_def item;
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-    vector<string> books;
-
-    item.base_type = OBJ_BOOKS;
-    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-    {
-        if (item_type_removed(OBJ_BOOKS, i))
-            continue;
-        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
-            if (sp == spell)
-            {
-                item.sub_type = i;
-                books.push_back(item.name(DESC_PLAIN));
-            }
-    }
-
-    if (books.empty())
-        return "\n\nThis spell is not found in any books.";
-
-    string desc;
-
-    desc += "\n\nThis spell can be found in the following book";
-    if (books.size() > 1)
-        desc += "s";
-    desc += ":\n ";
-    desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
-
-    return desc;
-}
-
-/**
  * Make a basic, no-frills ?/<foo> menu entry.
  *
  * @param letter    The letter for the entry. (E.g. 'e' for the fifth entry.)
@@ -1064,12 +1021,9 @@ static int _describe_spell(const string &key, const string &suffix,
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
     ASSERT(spell != SPELL_NO_SPELL);
-
-    const string spell_info = player_spell_desc(spell);
-    const string source_info = _spell_sources(spell);
-    return _describe_key(key, suffix, footer, spell_info + source_info);
+    describe_spell(spell, nullptr, nullptr, true);
+    return 0;
 }
-
 
 /**
  * Describe the card with the given name.
