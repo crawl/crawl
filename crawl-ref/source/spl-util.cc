@@ -1341,9 +1341,10 @@ bool spell_no_hostile_in_range(spell_type spell)
 {
     const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
+
     switch (spell)
     {
-    // These don't target monsters.
+    // These don't target monsters or can target features.
     case SPELL_APPORTATION:
     case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
@@ -1351,10 +1352,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-
-    // Shock and Lightning Bolt are no longer here, as the code below can
-    // account for possible bounces.
-
+    // This can always potentially hit out-of-LOS, although this is conditional
+    // on spell-power.
     case SPELL_FIRE_STORM:
         return false;
 
@@ -1405,18 +1404,21 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (minRange < 0 || range < 0)
         return false;
 
+    const unsigned int flags = get_spell_flags(spell);
+
     // The healing spells.
-    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
+    if (testbits(flags, SPFLAG_HELPFUL))
         return false;
 
-    const bool neutral = testbits(get_spell_flags(spell), SPFLAG_NEUTRAL);
+    const bool neutral = testbits(flags, SPFLAG_NEUTRAL);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
     beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
-    if (spell == SPELL_RANDOM_BOLT) // don't let it think that there are no susceptible monsters in range
+    // Don't let it think that there are no susceptible monsters in range
+    if (spell == SPELL_RANDOM_BOLT)
         zap = ZAP_DEBUGGING_RAY;
 
     if (zap != NUM_ZAPS)
