@@ -96,6 +96,8 @@ public:
     Align align_self = UNSET;
     bool expand_h = false, expand_v = false;
     const i4 get_region() const { return m_region; }
+    i2& min_size() { _invalidate_sizereq(); return m_min_size; }
+    i2& max_size() { _invalidate_sizereq(); return m_max_size; }
 
     virtual void _render() = 0;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width);
@@ -144,6 +146,7 @@ private:
     int cached_sr_pw;
     bool alloc_queued = false;
     UI* m_parent = nullptr;
+    i2 m_min_size = { 0, 0 }, m_max_size = { INT_MAX, INT_MAX };
 };
 
 class UIContainer : public UI

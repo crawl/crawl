@@ -41,6 +41,11 @@ int formatted_scroller::show()
         vbox->add_child(move(title));
     }
 
+#ifdef USE_TILE_LOCAL
+    if (!(m_flags & FS_PREWRAPPED_TEXT))
+        vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+
     m_scroller = make_shared<UIScroller>();
 #ifndef USE_TILE_LOCAL // ensure CRT scroller uses full height
     m_scroller->expand_v = true;
