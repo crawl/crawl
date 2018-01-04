@@ -69,7 +69,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
-#include "version.h"
 #include "view.h"
 
 #ifdef DEBUG_RELIGION
@@ -426,10 +425,6 @@ static bool _is_disabled_god(god_type god)
     // Disabled, pending a rework.
     case GOD_PAKELLAS:
         return true;
-
-    // Trunk-only until we finish the god.
-    case GOD_WU_JIAN:
-        return Version::ReleaseType != VER_ALPHA;
 
     default:
         return false;
