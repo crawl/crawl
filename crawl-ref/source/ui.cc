@@ -156,10 +156,6 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     SizeReq ret = _get_preferred_size(dim, prosp_width);
     ASSERT(ret.min <= ret.nat);
 
-    int m = margin[1-dim] + margin[3-dim];
-    ret.min += m;
-    ret.nat += m;
-
     // Order is important: max sizes limit expansion, and don't include margins
     const bool expand = dim ? expand_v : expand_h;
     const bool shrink = dim ? shrink_v : shrink_h;
@@ -170,6 +166,17 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
         ret.nat = ui_expand_sz;
     else if (shrink)
         ret.nat = ret.min;
+
+    ASSERT(m_min_size[dim] <= m_max_size[dim]);
+    ret.min = max(ret.min, m_min_size[dim]);
+    ret.nat = min(ret.nat, max(m_max_size[dim], ret.min));
+    ret.nat = max(ret.nat, ret.min);
+    ASSERT(ret.min <= ret.nat);
+
+    int m = margin[1-dim] + margin[3-dim];
+    ret.min += m;
+    ret.nat += m;
+
     ret.nat = min(ret.nat, ui_expand_sz);
 
     cached_sr_valid[dim] = true;
