@@ -203,10 +203,6 @@ COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
 bool is_starting_species(species_type species)
 {
-    // Trunk-only until we finish the species.
-    if (species == SP_GNOLL && Version::ReleaseType != VER_ALPHA)
-        return false;
-
     return find(species_order, species_order + ARRAYSZ(species_order),
                 species) != species_order + ARRAYSZ(species_order);
 }
