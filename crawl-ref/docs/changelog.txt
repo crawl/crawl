@@ -1,5 +1,5 @@
-Stone Soup 0.21 (up to 0.21-a0-642-g5d013b2)
---------------------------------------------
+Stone Soup 0.21 (20180105)
+--------------------------
 
 Highlights
 ----------
@@ -45,6 +45,8 @@ Gods
 * Zin blocks 100% of mutations at 6* piety. At that piety level, potions of
   mutation now only remove mutations and don't cause piety loss.
 * Zin no longer has a mutation removal one-time ability at 6* piety.
+* Makhleb's Minor Destruction has slightly lowered range, and Makhleb's Major
+  Destruction has slightly increased range.
 
 Interface
 ---------
@@ -59,6 +61,7 @@ Interface
 * New -force-map objstat/mapstat option to always place a given map on each
   level.
 * New objstat fields for tracking monster numbers/XP from vaults.
+* Many new tiles for artefact weapons and monsters.
 
 Items
 -----
@@ -103,6 +106,7 @@ Monsters
   short-duration tornado effect.
 * Player ghosts have normal speed regardless of species, never have a chaos
   ego on their melee attack, and no longer generate in portal branches.
+* Pandemonium lords can no longer have the Shatter spell.
 
 Spells
 ------
@@ -110,6 +114,11 @@ Spells
   hands from the earth over a smite-targeted area to constrict hostile monsters.
   Appears in the Necromancer starting book, the book of Unlife, and the book of
   Dreams.
+* Shatter's damage has been simplified to use one of three dice values for
+  susceptibility, and can now slightly damage insubstantial monsters. Intrinsic
+  player/monster susceptibility takes precedence for damage over flight status.
+* Lee's Rapid Deconstruction now gives each material type a fixed explosion
+  damage and size that doesn't increase when a wall is destroyed.
 * Removed:
   - Control Undead.
   - Cigotuvi's Embrace.
