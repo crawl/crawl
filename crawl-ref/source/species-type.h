@@ -55,6 +55,7 @@ enum species_type
     SP_GNOLL,
     SP_CRYSTAL_DWARF,
     SP_GRUE,
+    SP_ANGEL,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

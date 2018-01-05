@@ -6392,7 +6392,8 @@ bool player::permanent_flight() const
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
-        || get_mutation_level(MUT_BIG_WINGS);
+        || get_mutation_level(MUT_BIG_WINGS)
+        || species == SP_ANGEL;
 }
 
 bool player::tengu_flight() const

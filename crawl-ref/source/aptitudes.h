@@ -1214,6 +1214,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_TENGU,           SK_INVOCATIONS,    -1),
     APT(SP_TENGU,           SK_EVOCATIONS,      0),
 
+    // SP_ANGEL
+    APT(SP_ANGEL,           SK_FIGHTING,        0),
+    APT(SP_ANGEL,           SK_SHORT_BLADES,    0),
+    APT(SP_ANGEL,           SK_LONG_BLADES,     0),
+    APT(SP_ANGEL,           SK_AXES,           -2),
+    APT(SP_ANGEL,           SK_MACES_FLAILS,    0),
+    APT(SP_ANGEL,           SK_POLEARMS,        0),
+    APT(SP_ANGEL,           SK_STAVES,          0),
+    APT(SP_ANGEL,           SK_SLINGS,         -1),
+    APT(SP_ANGEL,           SK_BOWS,           -1),
+    APT(SP_ANGEL,           SK_CROSSBOWS,      -1),
+    APT(SP_ANGEL,           SK_THROWING,       -1),
+    APT(SP_ANGEL,           SK_ARMOUR,         -1),
+    APT(SP_ANGEL,           SK_DODGING,         2),
+    APT(SP_ANGEL,           SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_ANGEL,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_ANGEL,           SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_ANGEL,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_ANGEL,           SK_UNARMED_COMBAT,  0),
+    APT(SP_ANGEL,           SK_SPELLCASTING,    0),
+    APT(SP_ANGEL,           SK_CONJURATIONS,    0),
+    APT(SP_ANGEL,           SK_HEXES,           0),
+    APT(SP_ANGEL,           SK_CHARMS,          0),
+    APT(SP_ANGEL,           SK_SUMMONINGS,      0),
+    APT(SP_ANGEL,           SK_NECROMANCY,     -4),
+    APT(SP_ANGEL,           SK_TRANSLOCATIONS,  0),
+    APT(SP_ANGEL,           SK_TRANSMUTATIONS,  0),
+    APT(SP_ANGEL,           SK_FIRE_MAGIC,      0),
+    APT(SP_ANGEL,           SK_ICE_MAGIC,      -1),
+    APT(SP_ANGEL,           SK_AIR_MAGIC,       0),
+    APT(SP_ANGEL,           SK_EARTH_MAGIC,    -1),
+    APT(SP_ANGEL,           SK_POISON_MAGIC,   -2),
+    APT(SP_ANGEL,           SK_INVOCATIONS,     3),
+    APT(SP_ANGEL,           SK_EVOCATIONS,     -1),
+	
     // SP_MERFOLK
     APT(SP_MERFOLK,         SK_FIGHTING,        1),
     APT(SP_MERFOLK,         SK_SHORT_BLADES,    2),

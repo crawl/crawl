@@ -204,7 +204,7 @@ static const map<job_type, job_def> job_data =
     "Gl", "Gladiator",
     6, 0, 6,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE,
-      SP_CENTAUR, },
+      SP_CENTAUR, SP_ANGEL },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
     { { SK_FIGHTING, 2 }, { SK_THROWING, 2 }, { SK_DODGING, 3 },
