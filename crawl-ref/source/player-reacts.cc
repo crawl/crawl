@@ -1075,6 +1075,8 @@ void player_reacts()
     // XOM now ticks from here, to increase his reaction time to tension.
     if (you_worship(GOD_XOM))
         xom_tick();
+    if(you.species == SP_CHAOSKIN)
+        chaoskin_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
 

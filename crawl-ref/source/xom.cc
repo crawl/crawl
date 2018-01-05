@@ -412,6 +412,21 @@ void xom_tick()
     }
 }
 
+void chaoskin_tick()
+{
+    if(one_chance_in(5))
+    {
+	    const int tension = get_tension(GOD_XOM);
+        const int chance = (tension ==  0 ? 1 :
+                            tension <=  5 ? 2 :
+                            tension <= 10 ? 3 :
+                            tension <= 20 ? 4
+                                          : 5);
+	    if(x_chance_in_y(chance*chance, 100))
+            xom_acts(random2(100), MB_MAYBE, tension);
+	}
+}
+
 static bool mon_nearby(function<bool(monster&)> filter)
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

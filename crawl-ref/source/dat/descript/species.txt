@@ -12,6 +12,11 @@ Centaur
 Swift, strong and bulky, Centaurs are particularly skilled with ranged
 weaponry.
 %%%%
+Chaoskin
+
+Created by Xom for reasons unknown, Chaoskin constantly evolve. They are better 
+than average at everything, but can't escape Xom's attention for long.
+%%%%
 Crystal Dwarf
 
 Crystal Dwarves have reflective, crystalline skin that naturally shields them.

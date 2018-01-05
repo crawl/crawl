@@ -605,6 +605,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_MINOTAUR:
         return TILEP_BASE_MINOTAUR;
     case SP_DEMONSPAWN:
+    case SP_CHAOSKIN:
         return TILEP_BASE_DEMONSPAWN;
     case SP_GHOUL:
     case SP_GRUE:

@@ -80,6 +80,7 @@ enum xom_event_type
 };
 
 void xom_tick();
+void chaoskin_tick();
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);

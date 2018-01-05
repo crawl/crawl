@@ -92,6 +92,24 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_CHAOSKIN, {
+    "Ch",
+    "Chaoskin", "Chaotic", nullptr,
+    SPF_NONE,
+    1, 1, 0, 3,
+    MONS_HUMAN,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 9, 9, // 27
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_EVOLUTION, 1, 3 }, { MUT_EVOLUTION, 1, 12 }, },
+    {},
+    {},
+    { JOB_BERSERKER, JOB_CONJURER, JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_CRYSTAL_DWARF, {
     "DD",
     "Crystal Dwarf", "Dwarven", "Dwarf",

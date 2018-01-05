@@ -49,6 +49,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HUMAN,           SK_POISON_MAGIC,    0),
     APT(SP_HUMAN,           SK_INVOCATIONS,     1),
     APT(SP_HUMAN,           SK_EVOCATIONS,      0),
+	
+    // SP_CHAOSKIN
+    APT(SP_CHAOSKIN,           SK_FIGHTING,        1),
+    APT(SP_CHAOSKIN,           SK_SHORT_BLADES,    1),
+    APT(SP_CHAOSKIN,           SK_LONG_BLADES,     1),
+    APT(SP_CHAOSKIN,           SK_AXES,            1),
+    APT(SP_CHAOSKIN,           SK_MACES_FLAILS,    1),
+    APT(SP_CHAOSKIN,           SK_POLEARMS,        1),
+    APT(SP_CHAOSKIN,           SK_STAVES,          1),
+    APT(SP_CHAOSKIN,           SK_SLINGS,          1),
+    APT(SP_CHAOSKIN,           SK_BOWS,            1),
+    APT(SP_CHAOSKIN,           SK_CROSSBOWS,       1),
+    APT(SP_CHAOSKIN,           SK_THROWING,        1),
+    APT(SP_CHAOSKIN,           SK_ARMOUR,          1),
+    APT(SP_CHAOSKIN,           SK_DODGING,         1),
+    APT(SP_CHAOSKIN,           SK_STEALTH,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CHAOSKIN,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_CHAOSKIN,           SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CHAOSKIN,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_CHAOSKIN,           SK_UNARMED_COMBAT,  1),
+    APT(SP_CHAOSKIN,           SK_SPELLCASTING,    1),
+    APT(SP_CHAOSKIN,           SK_CONJURATIONS,    1),
+    APT(SP_CHAOSKIN,           SK_HEXES,           1),
+    APT(SP_CHAOSKIN,           SK_CHARMS,          1),
+    APT(SP_CHAOSKIN,           SK_SUMMONINGS,      1),
+    APT(SP_CHAOSKIN,           SK_NECROMANCY,      1),
+    APT(SP_CHAOSKIN,           SK_TRANSLOCATIONS,  1),
+    APT(SP_CHAOSKIN,           SK_TRANSMUTATIONS,  1),
+    APT(SP_CHAOSKIN,           SK_FIRE_MAGIC,      1),
+    APT(SP_CHAOSKIN,           SK_ICE_MAGIC,       1),
+    APT(SP_CHAOSKIN,           SK_AIR_MAGIC,       1),
+    APT(SP_CHAOSKIN,           SK_EARTH_MAGIC,     1),
+    APT(SP_CHAOSKIN,           SK_POISON_MAGIC,    1),
+    APT(SP_CHAOSKIN,           SK_INVOCATIONS,     1),
+    APT(SP_CHAOSKIN,           SK_EVOCATIONS,      1),
 
 #if TAG_MAJOR_VERSION == 34
     // SP_HIGH_ELF
