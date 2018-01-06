@@ -304,6 +304,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         invalidate_agrid(true);
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        break;
+
     case ENCH_FROZEN:
         calc_speed();
         break;
@@ -786,6 +790,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, "'s inner flame fades away.");
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        if (!quiet && alive())
+            simple_monster_message(*this, " stops rolling.");
+        break;
+
     //The following should never happen, but just in case...
 
     case ENCH_MUTE:
@@ -1255,7 +1265,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                 coord_def swapdest;
                 if (mon->wont_attack()
                     && !mon->is_stationary()
-                    && !mons_is_projectile(*mon)
+                    && !mon->is_projectile()
                     && !mon->cannot_act()
                     && !mon->asleep()
                     && swap_check(mon, swapdest, true))
@@ -2157,10 +2167,10 @@ static const char *enchant_names[] =
 #endif
     "breath timer",
 #if TAG_MAJOR_VERSION == 34
-    "deaths_door", "rolling",
+    "deaths_door",
 #endif
-    "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting",
+    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
@@ -2449,6 +2459,9 @@ int mon_enchant::calc_duration(const monster* mons,
         return random_range(25, 35) * 10;
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
+    case ENCH_ROLLING:
+        cturn = 10000 / _mod_speed(25, mons->speed);
+        break;
     case ENCH_WRETCHED:
         cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
         break;

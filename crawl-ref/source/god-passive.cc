@@ -1168,7 +1168,7 @@ void qazlal_storm_clouds()
         do
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                                  CLOUD_DUST);
+                                       CLOUD_DUST);
         } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);

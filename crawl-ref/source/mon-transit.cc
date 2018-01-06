@@ -302,6 +302,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
     if (!mons.alive()
         || mons.speed_increment < 50
         || mons.incapacitated()
+        || mons_is_boulder(mons)
         || mons.is_stationary())
     {
         return false;

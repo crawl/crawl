@@ -436,6 +436,7 @@ public:
     bool wont_attack() const override;
     bool pacified() const;
 
+    bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
     bool has_spell(spell_type spell) const override;
     mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
@@ -550,6 +551,7 @@ public:
 
     bool is_illusion() const;
     bool is_divine_companion() const;
+    bool is_projectile() const;
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
 

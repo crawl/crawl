@@ -1597,7 +1597,7 @@ void handle_monster_move(monster* mons)
     }
 #endif
 
-    if (mons_is_projectile(*mons))
+    if (mons->is_projectile())
     {
         if (iood_act(*mons))
             return;
@@ -2736,8 +2736,8 @@ static bool _mons_can_displace(const monster* mpusher,
         return false;
     }
 
-    // OODs should crash into things, not push them around.
-    if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
+    // Boulders and OODs should crash into things, not push them around.
+    if (mpusher->is_projectile() || mpushee->is_projectile())
         return false;
 
     // Fleeing monsters cannot push past other fleeing monsters

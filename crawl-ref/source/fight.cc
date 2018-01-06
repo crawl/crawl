@@ -130,6 +130,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
+        // Boulders can't melee while they're rolling past you
+        if (attacker->as_monster()->rolling())
+            return false;
+
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
         behaviour_event(attacker->as_monster(), ME_ALERT, defender);

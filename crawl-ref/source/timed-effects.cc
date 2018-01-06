@@ -1182,8 +1182,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon->type == MONS_BALLISTOMYCETE_SPORE)
         return;
 
-    // special movement code for ioods
-    if (mons_is_projectile(*mon))
+    // special movement code for ioods, boulder beetles...
+    if (mon->is_projectile())
     {
         iood_catchup(mon, turns);
         return;
@@ -1313,6 +1313,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
+        case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
             del_ench(entry.first);
