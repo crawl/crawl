@@ -84,6 +84,7 @@ protected:
 
     int find_index_before_width(const char *str, int max_width);
 
+    unsigned int map_unicode(char *ch);
     unsigned int map_unicode(char32_t uchar, bool update);
     unsigned int map_unicode(char32_t uchar);
     void load_glyph(unsigned int c, char32_t uchar);
