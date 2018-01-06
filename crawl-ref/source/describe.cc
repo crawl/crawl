@@ -2587,18 +2587,13 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
             done = true;
         else if (key == ' ' || key == CK_ESCAPE)
             done = true;
-        else if (key >= 'a' && key <= 'z')
-        {
-            const vector<spell_type> flat_spells = map_chars_to_spells(spells, nullptr);
-
-            const int spell_index = letter_to_index(key);
-            ASSERT(spell_index >= 0);
-            if ((size_t) spell_index >= flat_spells.size())
-                return false;
-            const spell_type chosen_spell = flat_spells[spell_index];
-            describe_spell(chosen_spell, nullptr, &item);
-            done = already_learning_spell();
-        }
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [key](const pair<spell_type,char>& e) { return e.second == key; });
+        if (entry == spell_map.end())
+            return false;
+        describe_spell(entry->first, nullptr, &item);
+        done = already_learning_spell();
         return true;
     });
 
@@ -4312,18 +4307,12 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             show_quote = !show_quote;
             text->set_text(show_quote ? formatted_string(trimmed_string(inf.quote)) : desc);
         }
-        if (key >= 'a' && key <= 'z')
-        {
-            const vector<spell_type> flat_spells = map_chars_to_spells(spells, nullptr);
-
-            const int spell_index = letter_to_index(key);
-            ASSERT(spell_index >= 0);
-            if ((size_t) spell_index >= flat_spells.size())
-                return false;
-
-            const spell_type chosen_spell = flat_spells[spell_index];
-            describe_spell(chosen_spell, &mi, nullptr);
-        }
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [key](const pair<spell_type,char>& e) { return e.second == key; });
+        if (entry == spell_map.end())
+            return false;
+        describe_spell(entry->first, &mi, nullptr);
         return true;
     });
 
