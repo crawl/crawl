@@ -1158,10 +1158,6 @@ static int _describe_god(const string &key, const string &/*suffix*/,
 {
     const god_type which_god = str_to_god(key);
     ASSERT(which_god != GOD_NO_GOD);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
-#endif
     describe_god(which_god, true);
 
     return 0; // no exact matches for gods, so output doesn't matter
