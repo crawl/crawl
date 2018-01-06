@@ -1,4 +1,5 @@
 language: cpp
+sudo: required
 compiler:
     - clang
     - gcc
@@ -20,10 +21,10 @@ git:
     submodules: false
 install: perl .travis/deps.pl
 script: perl .travis/build.pl
-notifications:
-    email:
-        on_success: change
-        on_failure: always
+#notifications:
+#    email:
+#        on_success: change
+#        on_failure: always
 #        recipients:
 #          - crawl-ref-commits@lists.sourceforge.net
 #    irc:
