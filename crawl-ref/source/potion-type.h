@@ -31,8 +31,8 @@ enum potion_type
 #endif
     POT_EXPERIENCE,
     POT_MAGIC,
-#if TAG_MAJOR_VERSION == 34
     POT_RESTORE_ABILITIES,
+#if TAG_MAJOR_VERSION == 34
     POT_STRONG_POISON,
 #endif
     POT_BERSERK_RAGE,

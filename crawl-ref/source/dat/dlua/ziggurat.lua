@@ -583,7 +583,8 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup w:7000 /" ..
+  local good_loot = dgn.item_spec("* no_pickup w:6960 /" ..
+                                  "potion of restore abilities no_pickup w:40 /" ..
                                   dgn.good_scrolls)
   local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
                                    "potion of experience no_pickup w:190 q:1 /" ..

@@ -268,7 +268,6 @@ public:
     }
 };
 
-
 class PotionHaste : public PotionEffect
 {
 private:
@@ -380,7 +379,6 @@ public:
         return true;
     }
 };
-
 
 class PotionFlight : public PotionEffect
 {
@@ -629,6 +627,34 @@ public:
         inc_mp(POT_MAGIC_MP);
         mpr("Magic courses through your body.");
         return true;
+    }
+};
+
+class PotionRestoreAbilities : public PotionEffect
+{
+private:
+    PotionRestoreAbilities() : PotionEffect(POT_RESTORE_ABILITIES) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionRestoreAbilities);
+public:
+    static const PotionRestoreAbilities &instance()
+    {
+        static PotionRestoreAbilities inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        bool nothing_happens = true;
+        if (you.duration[DUR_BREATH_WEAPON])
+        {
+            mprf(MSGCH_RECOVERY, "You have got your breath back.");
+            you.duration[DUR_BREATH_WEAPON] = 0;
+            nothing_happens = false;
+        }
+
+        // Give a message if no message otherwise.
+        if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
+            mpr("You feel refreshed.");
+        return nothing_happens;
     }
 };
 
@@ -1111,34 +1137,6 @@ public:
     }
 };
 
-class PotionRestoreAbilities : public PotionEffect
-{
-private:
-    PotionRestoreAbilities() : PotionEffect(POT_RESTORE_ABILITIES) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionRestoreAbilities);
-public:
-    static const PotionRestoreAbilities &instance()
-    {
-        static PotionRestoreAbilities inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        bool nothing_happens = true;
-        if (you.duration[DUR_BREATH_WEAPON])
-        {
-            mprf(MSGCH_RECOVERY, "You have got your breath back.");
-            you.duration[DUR_BREATH_WEAPON] = 0;
-            nothing_happens = false;
-        }
-
-        // Give a message if no message otherwise.
-        if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
-            mpr("You feel refreshed.");
-        return nothing_happens;
-    }
-};
-
 class PotionCureMutation : public PotionEffect
 {
 private:
@@ -1309,8 +1307,8 @@ static const PotionEffect* potion_effects[] =
 #endif
     &PotionExperience::instance(),
     &PotionMagic::instance(),
-#if TAG_MAJOR_VERSION == 34
     &PotionRestoreAbilities::instance(),
+#if TAG_MAJOR_VERSION == 34
     &PotionPoison::instance(),
 #endif
     &PotionBerserk::instance(),
