@@ -446,19 +446,25 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
  */
-vector<spell_type> map_chars_to_spells(const spellset &spells,
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
                                        const item_def* const source_item)
 {
+    char next_ch = 'a';
     const vector<spell_type> flat_spells = _spellset_contents(spells);
+    vector<pair<spell_type,char>> ret;
     if (!_list_spells_doublecolumn(source_item))
-        return flat_spells;
-
-    vector<spell_type> column_spells;
-    for (size_t i = 0; i < flat_spells.size(); i += 2)
-        column_spells.emplace_back(flat_spells[i]);
-    for (size_t i = 1; i < flat_spells.size(); i += 2)
-        column_spells.emplace_back(flat_spells[i]);
-    return column_spells;
+    {
+        for (auto spell : flat_spells)
+            ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
+    }
+    else
+    {
+        for (size_t i = 0; i < flat_spells.size(); i += 2)
+            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
+        for (size_t i = 1; i < flat_spells.size(); i += 2)
+            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
+    }
+    return ret;
 }
 
 /**
@@ -466,7 +472,7 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  *
  * @param book              A labeled set of spells, corresponding to a book
  *                          or monster spellbook.
- * @param spell_letters     The letters to use for each spell.
+ * @param spell_map         The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
  * @param mon_owner         If this spellset is being examined from a monster's
@@ -474,7 +480,7 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  *                          it's null.
  */
 static void _describe_book(const spellbook_contents &book,
-                           map<spell_type, char> &spell_letters,
+                           vector<pair<spell_type,char>> &spell_map,
                            const item_def* const source_item,
                            formatted_string &description,
                            const monster_info *mon_owner)
@@ -500,10 +506,9 @@ static void _describe_book(const spellbook_contents &book,
         description.textcolour(_spell_colour(spell, source_item));
 
         // don't crash if we have more spells than letters.
-        const char *spell_letter_index = map_find(spell_letters, spell);
-        const char spell_letter = spell_letter_index ?
-                                  index_to_letter(*spell_letter_index) :
-                                  ' ';
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
+        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
@@ -564,17 +569,9 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description,
                        const monster_info *mon_owner)
 {
-    // make a map of characters to spells...
-    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
-                                                               source_item);
-    // .. and spells to characters.
-    map<spell_type, char> spell_letters;
-    // TODO: support more than 26 spells
-    for (size_t c = 0; c < flat_spells.size() && c < 26; c++)
-        spell_letters[flat_spells[c]] = (char) c;
-
+    auto spell_map = map_chars_to_spells(spells, source_item);
     for (auto book : spells)
-        _describe_book(book, spell_letters, source_item, description, mon_owner);
+        _describe_book(book, spell_map, source_item, description, mon_owner);
 }
 
 /**

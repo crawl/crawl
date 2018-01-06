@@ -25,7 +25,7 @@ typedef vector<spellbook_contents> spellset;
 
 spellset item_spellset(const item_def &item);
 spellset monster_spellset(const monster_info &mi);
-vector<spell_type> map_chars_to_spells(const spellset &spells,
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
                                        const item_def* const source_item);
 void describe_spellset(const spellset &spells,
                        const item_def* const source_item,
