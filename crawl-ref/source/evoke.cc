@@ -1530,7 +1530,7 @@ static spret_type _phantom_mirror()
     return SPRET_SUCCESS;
 }
 
-static _shard_of_zot()
+static spret_type _shard_of_zot()
 {
     if (you.duration[DUR_DIMENSION_ANCHOR])
     {
