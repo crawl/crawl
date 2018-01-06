@@ -2580,6 +2580,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
+        key = key == '{' ? 'i' : key;
         lastch = key;
         action = _get_action(key, actions);
         if (action != CMD_NO_CMD)
