@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "cloud.h"
 #include "database.h"
+#include "dbg-util.h"
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
@@ -1025,6 +1026,24 @@ static int _describe_spell(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_skill(const string &key, const string &suffix,
+                             string footer)
+{
+    const string skill_name = key.substr(0, key.size() - suffix.size());
+    const skill_type skill = skill_from_name(skill_name.c_str());
+    describe_skill(skill);
+    return 0;
+}
+
+static int _describe_ability(const string &key, const string &suffix,
+                             string footer)
+{
+    const string abil_name = key.substr(0, key.size() - suffix.size());
+    const ability_type abil = ability_by_name(abil_name.c_str());
+    describe_ability(abil);
+    return 0;
+}
+
 /**
  * Describe the card with the given name.
  *
@@ -1073,8 +1092,17 @@ static int _describe_item(const string &key, const string &suffix,
     item_def item;
     if (!get_item_by_exact_name(item, key.c_str()))
         die("Unable to get item %s by name", key.c_str());
-    string stats = get_item_description(item, true, false, true);
-    return _describe_key(key, suffix, footer, stats);
+    describe_item(item);
+    return 0;
+}
+
+static int _describe_feature(const string &key, const string &suffix,
+                             string footer)
+{
+    const string feat_name = key.substr(0, key.size() - suffix.size());
+    const dungeon_feature_type feat = feat_by_desc(feat_name);
+    describe_feature_type(feat);
+    return 0;
 }
 
 /**
@@ -1214,10 +1242,10 @@ static const vector<LookupType> lookup_types = {
                _describe_spell, lookup_type::db_suffix),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_skill, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_ability, lookup_type::db_suffix),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
@@ -1226,7 +1254,7 @@ static const vector<LookupType> lookup_types = {
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_feature, lookup_type::none),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god, lookup_type::none),
