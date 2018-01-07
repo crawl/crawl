@@ -101,7 +101,7 @@ static const string _toggle_message =
 
 int show_description(const describe_info &inf)
 {
-    string desc = process_description(inf);
+    string desc = process_description(inf, false);
 
     formatted_scroller desc_fs(FS_EASY_EXIT);
     desc_fs.set_title(formatted_string(inf.title));
@@ -135,12 +135,12 @@ int show_description(const describe_info &inf)
     }
 }
 
-string process_description(const describe_info &inf)
+string process_description(const describe_info &inf, bool include_title)
 {
     string desc;
     if (!inf.prefix.empty())
         desc += "\n\n" + trimmed_string(filtered_lang(inf.prefix));
-    if (!inf.title.empty())
+    if (!inf.title.empty() && include_title)
         desc += "\n\n" + trimmed_string(filtered_lang(inf.title));
     desc += "\n\n" + trimmed_string(filtered_lang(inf.body.str()));
     if (!inf.suffix.empty())
