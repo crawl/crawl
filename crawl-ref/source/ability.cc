@@ -1096,7 +1096,7 @@ static string _sacrifice_desc(const ability_type ability)
 }
 
 // XXX: should this be in describe.cc?
-string get_ability_desc(const ability_type ability)
+string get_ability_desc(const ability_type ability, bool need_title)
 {
     const string& name = ability_name(ability);
 
@@ -1115,8 +1115,9 @@ string get_ability_desc(const ability_type ability)
     }
 
     ostringstream res;
-    res << name << "\n\n" << lookup << "\n"
-        << _detailed_cost_description(ability);
+    if (need_title)
+        res << name << "\n\n";
+    res << lookup << "\n" << _detailed_cost_description(ability);
 
     const string quote = getQuoteString(name + " ability");
     if (!quote.empty())
