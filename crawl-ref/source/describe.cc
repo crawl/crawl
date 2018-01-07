@@ -2272,7 +2272,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-void describe_feature_wide(const coord_def& pos, bool show_quote)
+void describe_feature_wide(const coord_def& pos)
 {
     describe_info inf;
     get_feature_desc(pos, inf);
