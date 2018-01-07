@@ -25,6 +25,7 @@
 #include "butcher.h"
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
+#include "colour.h"
 #include "database.h"
 #include "dbg-util.h"
 #include "decks.h"
@@ -75,6 +76,8 @@
 #endif
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tileview.h"
+ #include "tile-flags.h"
 #endif
 #include "unicode.h"
 
@@ -2183,17 +2186,56 @@ string get_item_description(const item_def &item, bool verbose,
     return description.str();
 }
 
-string get_cloud_desc(cloud_type cloud)
+string get_cloud_desc(cloud_type cloud, bool include_title)
 {
     if (cloud == CLOUD_NONE)
         return "";
     const string cl_name = cloud_type_name(cloud);
     const string cl_desc = getLongDescription(cl_name + " cloud");
-    return "A cloud of " + cl_name + (cl_desc.empty() ? "." : ".\n\n")
-        + cl_desc + extra_cloud_info(cloud);
+
+    string ret;
+    if (include_title)
+        ret = "A cloud of " + cl_name + (cl_desc.empty() ? "." : ".\n\n");
+    ret += cl_desc + extra_cloud_info(cloud);
+    return ret;
 }
 
-void get_feature_desc(const coord_def &pos, describe_info &inf)
+static vector<pair<string,string>> _get_feature_extra_descs(const coord_def &pos)
+{
+    vector<pair<string,string>> ret;
+    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    if (!feat_is_solid(feat))
+    {
+        if (haloed(pos) && !umbraed(pos))
+        {
+            ret.emplace_back(pair<string,string>(
+                    "A halo.", getLongDescription("haloed")));
+        }
+        if (umbraed(pos) && !haloed(pos))
+        {
+            ret.emplace_back(pair<string,string>(
+                    "An umbra.", getLongDescription("umbraed")));
+        }
+        if (liquefied(pos))
+        {
+            ret.emplace_back(pair<string,string>(
+                    "Liquefied ground.", getLongDescription("liquefied")));
+        }
+        if (disjunction_haloed(pos))
+        {
+            ret.emplace_back(pair<string,string>(
+                    "Translocational energy.", getLongDescription("disjunction haloed")));
+        }
+    }
+    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+    {
+        ret.emplace_back(pair<string,string>(
+                    "A cloud of "+cloud_type_name(cloud)+".", get_cloud_desc(cloud, false)));
+    }
+    return ret;
+}
+
+void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_extra)
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
@@ -2239,34 +2281,123 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     inf.body << long_desc;
 
-    if (!feat_is_solid(feat))
+    if (include_extra)
     {
-        string area_desc = "";
-        if (haloed(pos) && !umbraed(pos))
-            area_desc += "\n" + getLongDescription("haloed");
-        if (umbraed(pos) && !haloed(pos))
-            area_desc += "\n" + getLongDescription("umbraed");
-        if (liquefied(pos))
-            area_desc += "\n" + getLongDescription("liquefied");
-        if (disjunction_haloed(pos))
-            area_desc += "\n" + getLongDescription("disjunction haloed");
-
-        inf.body << area_desc;
+        auto extra_descs = _get_feature_extra_descs(pos);
+        for (const auto &d : extra_descs)
+            inf.body << (d == extra_descs.back() ? "" : "\n") << d.second;
     }
-
-    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
-        inf.body << "\n\n" + get_cloud_desc(cloud);
 
     inf.quote = getQuoteString(db_name);
 }
 
 void describe_feature_wide(const coord_def& pos)
 {
-    describe_info inf;
-    get_feature_desc(pos, inf);
+    typedef struct {
+        string title, body;
+        tile_def tile;
+    } feat_info;
+
+    vector<feat_info> feats;
+
+    {
+        describe_info inf;
+        get_feature_desc(pos, inf, false);
+        feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+        f.title = inf.title;
+        f.body = trimmed_string(inf.body.str());
+#ifdef USE_TILE_LOCAL
+        tileidx_t tile = tileidx_feature(pos);
+        apply_variations(env.tile_flv(pos), &tile, pos);
+        f.tile = tile_def(tile, get_dngn_tex(tile));
+#endif
+        feats.emplace_back(f);
+    }
+    auto extra_descs = _get_feature_extra_descs(pos);
+    for (const auto &desc : extra_descs)
+    {
+        feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+        f.title = desc.first;
+        f.body = trimmed_string(desc.second);
+#ifdef USE_TILE_LOCAL
+        if (desc.first == "A halo.")
+            f.tile = tile_def(TILE_HALO_RANGE, TEX_FEAT);
+        else if (desc.first == "An umbra.")
+            f.tile = tile_def(TILE_UMBRA, TEX_FEAT);
+        else if  (desc.first == "Liquefied ground.")
+            f.tile = tile_def(TILE_LIQUEFACTION, TEX_FLOOR);
+        else
+            f.tile = tile_def(env.tile_bk_cloud(pos) & ~TILE_FLAG_FLYING, TEX_DEFAULT);
+#endif
+        feats.emplace_back(f);
+    }
     if (crawl_state.game_is_hints())
-        inf.body << hints_describe_pos(pos.x, pos.y);
-    show_description(inf);
+    {
+        string hint_text = trimmed_string(hints_describe_pos(pos.x, pos.y));
+        if (!hint_text.empty())
+        {
+            feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+            f.title = "Hints.";
+            f.body = hint_text;
+            f.tile = tile_def(TILEG_STARTUP_HINTS, TEX_GUI);
+            feats.emplace_back(f);
+        }
+    }
+
+    auto scroller = make_shared<Scroller>();
+    auto vbox = make_shared<Box>(Widget::VERT);
+
+    for (const auto &feat : feats)
+    {
+        auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+        auto icon = make_shared<Image>();
+        icon->set_tile(feat.tile);
+        title_hbox->add_child(move(icon));
+#endif
+        auto title = make_shared<Text>(feat.title);
+        title->set_margin_for_crt({0, 0, 0, 0});
+        title->set_margin_for_sdl({0, 0, 0, 10});
+        title_hbox->add_child(move(title));
+        title_hbox->align_items = Widget::CENTER;
+
+        bool has_desc = feat.body != feat.title && feat.body != "";
+        if (has_desc || &feat != &feats.back())
+        {
+            title_hbox->set_margin_for_crt({0, 0, 1, 0});
+            title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+        }
+        vbox->add_child(move(title_hbox));
+
+        if (has_desc)
+        {
+            auto text = make_shared<Text>(feat.body);
+            if (&feat != &feats.back())
+                text->set_margin_for_sdl({0, 0, 20, 0});
+            text->wrap_text = true;
+            vbox->add_child(text);
+        }
+    }
+#ifdef USE_TILE_LOCAL
+    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+    scroller->set_child(move(vbox));
+
+    auto popup = make_shared<ui::Popup>(scroller);
+
+    bool done = false;
+    popup->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        done = !scroller->on_event(ev);
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
+    ui::run_layout(move(popup), done);
 }
 
 void get_item_desc(const item_def &item, describe_info &inf)
