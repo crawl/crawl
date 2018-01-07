@@ -3489,12 +3489,15 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
 
 string hints_describe_pos(int x, int y)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
     _hints_describe_disturbance(x, y, ostr);
     _hints_describe_cloud(x, y, ostr);
     _hints_describe_feature(x, y, ostr);
-    return ostr.str();
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 static void _hints_describe_feature(int x, int y, ostringstream& ostr)
@@ -3502,7 +3505,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     const dungeon_feature_type feat = grd[x][y];
     const coord_def            where(x, y);
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     bool boring = false;
 
@@ -3712,8 +3716,6 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                 "or vampires, can smell blood from a distance and may come "
                 "looking.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
@@ -3725,7 +3727,8 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
     const string cname = cloud->cloud_name(true);
     const cloud_type ctype = cloud->type;
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     ostr << "The " << cname << " ";
 
@@ -3756,24 +3759,19 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
                 "you and a square, you won't be able to see anything in that "
                 "square.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_disturbance(int x, int y, ostringstream& ostr)
 {
     if (!_water_is_disturbed(x, y))
         return;
-
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
+    if (!ostr.str().empty())
+        ostr << "\n\n";
     ostr << "The strange disturbance means that there's a monster hiding "
             "under the surface of the shallow water. Submerged monsters will "
             "not be autotargeted when doing a ranged attack while there are "
             "other, visible targets in sight. Of course you can still target "
             "it manually if you wish to.";
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static bool _water_is_disturbed(int x, int y)

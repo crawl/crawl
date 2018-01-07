@@ -85,7 +85,7 @@ string get_command_description(const command_type cmd, bool terse);
 
 int show_description(const string &body);
 int show_description(const describe_info &inf);
-string process_description(const describe_info &inf);
+string process_description(const describe_info &inf, bool include_title = true);
 
 const char* get_size_adj(const size_type size, bool ignore_medium = false);
 
