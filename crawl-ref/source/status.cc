@@ -405,8 +405,13 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {
+            // Our constrictor isn't, valid so don't report this status.
+            if (you.has_invalid_constrictor())
+                return false;
+
             const monster * const cstr = monster_by_mid(you.constricted_by);
             ASSERT(cstr);
+
             const bool damage =
                 cstr->constriction_does_damage(you.is_directly_constricted());
 
