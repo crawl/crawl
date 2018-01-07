@@ -47,8 +47,8 @@ string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool lookup = false);
 
 void describe_feature_wide(const coord_def& pos);
-string get_cloud_desc(cloud_type cloud);
-void get_feature_desc(const coord_def &gc, describe_info &inf);
+string get_cloud_desc(cloud_type cloud, bool include_title = true);
+void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
 
 bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
