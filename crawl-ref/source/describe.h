@@ -47,6 +47,7 @@ string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool lookup = false);
 
 void describe_feature_wide(const coord_def& pos);
+void describe_feature_type(dungeon_feature_type feat);
 string get_cloud_desc(cloud_type cloud, bool include_title = true);
 void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
 
