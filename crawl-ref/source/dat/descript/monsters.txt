@@ -2114,6 +2114,11 @@ simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
+singularity
+
+A gravitational singularity, which pulls in enemies of its creator and
+violently warps them in the process.
+%%%%
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with
