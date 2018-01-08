@@ -76,6 +76,7 @@ Young Poisoner's Handbook
 Grand Grimoire
 Necronomicon
 Fen Folio
+Akashic Record
 END
 
 $items{"decaying skeleton"} = 1 if $db;
