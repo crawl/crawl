@@ -16,6 +16,7 @@
 #endif
 #include "message.h"
 #include "options.h"
+#include "output.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef TOUCH_UI
@@ -94,7 +95,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
                     cprintf("%s", prompt.c_str());
             }
 
-            tmp = getchm(KMC_CONFIRM);
+            while ((tmp = getchm(KMC_CONFIRM)) == CK_REDRAW)
+                redraw_screen();
 #endif
         }
 
