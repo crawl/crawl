@@ -23,6 +23,7 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "stat-type.h"
@@ -161,7 +162,8 @@ bool attribute_increase()
 #ifdef TOUCH_UI
             keyin = pop.pop();
 #else
-            keyin = getchm();
+            while ((keyin = getchm()) == CK_REDRAW)
+                redraw_screen();
 #endif
         }
         tried_lua = true;
