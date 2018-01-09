@@ -373,6 +373,7 @@ public:
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
+    virtual int singularity_radius() const = 0;
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

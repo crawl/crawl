@@ -2934,7 +2934,8 @@ void monster_cleanup(monster* mons)
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius()
         || mons->umbra_radius()
-        || mons->silence_radius())
+        || mons->silence_radius()
+        || mons->singularity_radius())
     {
         invalidate_agrid();
     }
