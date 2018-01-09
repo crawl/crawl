@@ -670,11 +670,11 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    const dungeon_feature_type feat = feat_by_desc(str);
     MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
     me->data = &key;
 
 #ifdef USE_TILE
+    const dungeon_feature_type feat = feat_by_desc(str);
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
