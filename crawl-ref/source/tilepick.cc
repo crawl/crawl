@@ -619,11 +619,13 @@ static tileidx_t _mon_random(tileidx_t tile)
     return tile + ui_random(count);
 }
 
+#ifdef USE_TILE
 static bool _mons_is_kraken_tentacle(const int mtype)
 {
     return mtype == MONS_KRAKEN_TENTACLE
            || mtype == MONS_KRAKEN_TENTACLE_SEGMENT;
 }
+#endif
 
 tileidx_t tileidx_tentacle(const monster_info& mon)
 {
