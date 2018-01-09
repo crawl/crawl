@@ -1022,43 +1022,33 @@ int singularity_range(int pow, int strength)
     return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
 }
 
-spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
-                            bool fail)
+spret_type cast_singularity(int pow, const coord_def& where, bool fail)
 {
     if (cell_is_solid(where))
     {
-        if (agent->is_player())
-            mpr("You can't place that within a solid object!");
+        mpr("You can't place that within a solid object!");
         return SPRET_ABORT;
     }
 
-    actor* victim = actor_at(where);
-    if (victim)
+    monster* mons = monster_at(where);
+    if (mons)
     {
-        if (you.can_see(*victim))
+        if (you.can_see(*mons))
         {
-            if (agent->is_player())
-                mpr("You can't place the singularity on a creature.");
+            mpr("You can't place the singularity on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
-        if (agent->is_player())
-            canned_msg(MSG_GHOSTLY_OUTLINE);
-        else if (you.can_see(*victim))
-        {
-            mprf("%s %s for a moment.",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("distort").c_str());
-        }
+        canned_msg(MSG_GHOSTLY_OUTLINE);
         return SPRET_SUCCESS;
     }
 
     fail_check();
 
     for (monster_iterator mi; mi; ++mi)
-        if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
+        if (mi->type == MONS_SINGULARITY)
         {
             simple_monster_message(**mi, " implodes!");
             monster_die(**mi, KILL_RESET, NON_MONSTER);
@@ -1066,10 +1056,8 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 
     monster* singularity = create_monster(
                                 mgen_data(MONS_SINGULARITY,
-                                          agent->is_player()
-                                          ? BEH_FRIENDLY
-                                          : SAME_ATTITUDE(agent->as_monster()),
-                                          where, MHITNOT, MG_FORCE_PLACE,
+                                          BEH_FRIENDLY,
+                                          where, MHITYOU, MG_FORCE_PLACE,
                                           GOD_NO_GOD));
 
     if (singularity)
