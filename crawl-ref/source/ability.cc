@@ -1646,6 +1646,7 @@ bool activate_talent(const talent& tal)
         case ABIL_SIF_MUNA_DIVINE_ENERGY:
         case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
         case ABIL_WU_JIAN_WALLJUMP:
+        case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
             hungerCheck = false;
             break;
         default:
@@ -1808,8 +1809,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         else
         {
-            mpr("You are already prepared to dig.");
-            return SPRET_ABORT;
+            you.digging = false;
+            mpr("You retract your mandibles.");
         }
         break;
 
