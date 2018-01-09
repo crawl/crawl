@@ -1007,6 +1007,11 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+int gravitas_range(int pow, int strength)
+{
+    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
+}
+
 int singularity_range(int pow, int strength)
 {
     // XXX: unify some of this functionality.
@@ -1055,8 +1060,8 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
     for (monster_iterator mi; mi; ++mi)
         if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
         {
-            simple_monster_message(*mi, " implodes!");
-            monster_die(*mi, KILL_RESET, NON_MONSTER);
+            simple_monster_message(**mi, " implodes!");
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
         }
 
     monster* singularity = create_monster(
@@ -1064,16 +1069,8 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
                                           agent->is_player()
                                           ? BEH_FRIENDLY
                                           : SAME_ATTITUDE(agent->as_monster()),
-                                          agent,
-                                          // It's summoned, but it uses
-                                          // its own mechanic to time out.
-                                          0, SPELL_SINGULARITY,
                                           where, MHITNOT, MG_FORCE_PLACE,
-                                          GOD_NO_GOD, MONS_NO_MONSTER,
-                                          pow / 20, COLOUR_INHERIT,
-                                          PROX_ANYWHERE,
-                                          level_id::current(),
-                                          (pow / 10) + 1));
+                                          GOD_NO_GOD));
 
     if (singularity)
     {
@@ -1199,7 +1196,7 @@ void singularity_pull(const monster *singularity)
 
         if (ai->alive() && !ai->is_stationary())
         {
-            attract_actor(singularity, *ai, singularity->pos(),
+            _attract_actor(singularity, *ai, singularity->pos(),
                           10 * singularity->get_hit_dice(), strength);
         }
     }
