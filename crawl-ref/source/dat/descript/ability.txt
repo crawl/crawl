@@ -93,6 +93,9 @@ Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
 moving into a wall will start tunneling. Doing so makes some noise and causes
 hunger, and is a little slower than walking.
+
+Once active, activating the ability again or making any non-digging movement
+action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
