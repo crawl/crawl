@@ -337,6 +337,23 @@ public:
     virtual bool on_event(wm_event event) override;
 };
 
+class UISwitcher : public UIContainerVec
+{
+public:
+    virtual ~UISwitcher() {};
+    void add_child(shared_ptr<UI> child);
+    size_t num_children() const { return m_children.size(); }
+    int& current();
+
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(wm_event event) override;
+
+protected:
+    int m_current;
+};
+
 class UIGrid : public UIContainer
 {
 public:
