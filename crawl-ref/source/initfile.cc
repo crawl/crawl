@@ -91,6 +91,7 @@ system_environment SysEnv;
 game_options Options;
 
 static string _get_save_path(string subdir);
+static string _supported_language_listing();
 
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
@@ -2594,7 +2595,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "language")
     {
         if (!set_lang(field.c_str()))
-            report_error("No translations for language: %s\n", field.c_str());
+        {
+            report_error("No translations for language '%s'.\n"
+                         "Languages with at least partial translation: %s",
+                         field.c_str(), _supported_language_listing().c_str());
+        }
     }
     else if (key == "fake_lang")
         set_fake_langs(field);
@@ -3475,6 +3480,14 @@ static const language_def lang_data[] =
     { lang_t::SV, "sv", { "swedish", "svenska" } },
     { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
 };
+
+static string _supported_language_listing()
+{
+    return comma_separated_fn(&lang_data[0], &lang_data[ARRAYSZ(lang_data)],
+                              [](language_def ld){return ld.code ? ld.code : "en";},
+                              ",", ",",
+                              [](language_def ld){return true;});
+}
 
 bool game_options::set_lang(const char *lc)
 {
