@@ -59,10 +59,10 @@ FontWrapper* FontWrapper::create()
 }
 
 FTFontWrapper::FTFontWrapper() :
-    m_glyphs(nullptr),
-    m_glyphs_lru(0),
-    m_glyphs_mru(0),
-    m_glyphs_top(0),  // reinitialised to 1 in load_font
+    m_atlas(nullptr),
+    m_atlas_lru(0),
+    m_atlas_mru(0),
+    m_atlas_top(0),  // reinitialised to 1 in load_font
     m_max_advance(0, 0),
     m_min_offset(0),
     charsz(1,1),
@@ -78,7 +78,7 @@ FTFontWrapper::FTFontWrapper() :
 
 FTFontWrapper::~FTFontWrapper()
 {
-    delete[] m_glyphs;
+    delete[] m_atlas;
     delete[] pixels;
     delete m_buf;
     if (face)
@@ -139,21 +139,16 @@ bool FTFontWrapper::configure_font()
 
     m_glyphmap.clear();
     for (int i = 0; i < MAX_GLYPHS; i++)
-        m_glyphs[i] = GlyphInfo();
+        m_atlas[i] = FontAtlasEntry();
 
     // Special case c = 0 for full block.
     {
         m_glyphmap[0] = 0;
-        m_glyphs_top = 1;
-        m_glyphs_lru = 1; // otherwise LRU algorithm will overwrite 0
-        m_glyphs_mru = 0;
-        m_glyphs[0].offset  = 0;
-        m_glyphs[0].advance = 0;
-        m_glyphs[0].ascender = 0;
-        m_glyphs[0].renderable = false;
-        m_glyphs[0].uchar   = MISSING_CHAR;
-        m_glyphs[0].prev    = 0;
-        m_glyphs[0].next    = 0;
+        m_atlas_top = 1;
+        m_atlas_lru = 1; // otherwise LRU algorithm will overwrite 0
+        m_atlas_mru = 0;
+        m_atlas[0].prev    = 0;
+        m_atlas[0].next    = 0;
         for (int x = 0; x < m_max_width; x++)
             for (int y = 0; y < m_max_height; y++)
             {
@@ -210,20 +205,49 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
                    font_path.c_str(), size, error);
     }
 
-    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
+    m_atlas = new FontAtlasEntry[MAX_GLYPHS];
 
     return configure_font();
+}
+
+FTFontWrapper::GlyphInfo& FTFontWrapper::get_glyph_info(char32_t ch)
+{
+    // cache glyph info in a single large buffer by unicode codepoint
+    // currently dat/ only has codepoints going up to around 65536
+    if (ch >= m_glyphs.size())
+    {
+        auto old_sz = m_glyphs.size();
+        m_glyphs.resize(ch+1);
+        for (size_t i = old_sz; i < m_glyphs.size(); i++)
+            m_glyphs[i].valid = false;
+    }
+    GlyphInfo &glyph = m_glyphs[ch];
+    if (!glyph.valid)
+    {
+        FT_Int glyph_index = FT_Get_Char_Index(face, ch);
+        if (!glyph_index)
+            glyph_index = FT_Get_Char_Index(face, MISSING_CHAR);
+        // need to use FT_LOAD_RENDER, otherwise glyph->bitmap isn't loaded
+        FT_Error error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
+                (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
+        ASSERT(!error);
+        FT_Bitmap *bmp = &face->glyph->bitmap;
+        ASSERT(bmp);
+
+        glyph.offset = face->glyph->bitmap_left;
+        glyph.advance = face->glyph->advance.x >> 6;
+        glyph.ascender = face->glyph->bitmap_top;
+        glyph.width = bmp->width;
+        glyph.renderable = !!bmp->buffer;
+        glyph.valid = true;
+    }
+    return glyph;
 }
 
 void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
 {
     // get on with rendering the new glyph
     FT_Error error;
-    m_glyphs[c].offset  = 0;
-    m_glyphs[c].advance = 0;
-    m_glyphs[c].ascender = m_ascender;
-    m_glyphs[c].renderable = false;
-
     FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
 
     if (!glyph_index)
@@ -236,26 +260,16 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
     FT_Bitmap *bmp = &face->glyph->bitmap;
     ASSERT(bmp);
 
-    int advance = face->glyph->advance.x >> 6;
-
     // Was int prior to freetype 2.5.4, then became unsigned.
     typedef decltype(bmp->width) ftint;
-    ftint bmp_width = bmp->width;
-
-    m_glyphs[c].offset = face->glyph->bitmap_left;
-    m_glyphs[c].advance = advance;
-    m_glyphs[c].ascender = face->glyph->bitmap_top;
-    m_glyphs[c].width = bmp_width;
 
     // Some glyphs (e.g. ' ') don't get a buffer.
     if (bmp->buffer)
     {
-        m_glyphs[c].renderable = true;
-
         ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
         ASSERT(bmp->num_grays == 256);
 
-        // Horizontal offset stored in m_glyphs and handled when drawing
+        // Horizontal offset stored in m_atlas and handled when drawing
         const unsigned int offset_x = 0;
         const unsigned int offset_y = 0;
         memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
@@ -297,39 +311,39 @@ unsigned int FTFontWrapper::map_unicode(char *ch)
 
 unsigned int FTFontWrapper::map_unicode(char32_t uchar)
 {
-    unsigned int c;  // index in m_glyphs
+    unsigned int c;  // index in m_atlas
     if (!m_glyphmap.count(uchar))
     {
         // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
-        if (m_glyphs_top == MAX_GLYPHS)
+        if (m_atlas_top == MAX_GLYPHS)
         {
             dprintf("replacing %d (%lc) with %d (%lc)\n",
-                    m_glyphs[m_glyphs_lru].uchar,
-                    m_glyphs[m_glyphs_lru].uchar,
+                    m_atlas[m_atlas_lru].uchar,
+                    m_atlas[m_atlas_lru].uchar,
                     uchar,
                     uchar);
             // create a pointer in gmap to the lru entry in gdata
-            c = m_glyphs_lru;
+            c = m_atlas_lru;
             // delete lru glyph from map
-            m_glyphmap.erase(m_glyphs[m_glyphs_lru].uchar);
+            m_glyphmap.erase(m_atlas[m_atlas_lru].uchar);
             // move lru on to next
-            m_glyphs_lru = m_glyphs[c].next;
-            m_glyphs[m_glyphs_lru].prev = 0;
+            m_atlas_lru = m_atlas[c].next;
+            m_atlas[m_atlas_lru].prev = 0;
         }
         else // glyph data is not full
         {
-            // create a pointer in m_glyphmap to the top of m_glyphs
-            c = m_glyphs_top;
+            // create a pointer in m_glyphmap to the top of m_atlas
+            c = m_atlas_top;
             // move top index on
-            m_glyphs_top++;
+            m_atlas_top++;
         }
 
         // set some default prev/next values
-        m_glyphs[c].prev = m_glyphs_mru;
-        m_glyphs[m_glyphs_mru].next = c;
-        m_glyphs[c].next = 0;
+        m_atlas[c].prev = m_atlas_mru;
+        m_atlas[m_atlas_mru].next = c;
+        m_atlas[c].next = 0;
         // update links between char and map
-        m_glyphs[c].uchar = uchar;
+        m_atlas[c].uchar = uchar;
         m_glyphmap[uchar] = c;
 
         load_glyph(c, uchar);
@@ -340,40 +354,40 @@ unsigned int FTFontWrapper::map_unicode(char32_t uchar)
     else // we found uchar in glyphmap
     {
         c = m_glyphmap[uchar];
-        if (m_glyphs_mru != c)
+        if (m_atlas_mru != c)
         {
             // point the <char previous to this one> to the <char after this one> and vice-versa
             dprintf("moving %lc: %lc -> %lc; %lc <- %lc",
                     uchar,
-                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar,
-                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
-                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
-                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar);
-            m_glyphs[m_glyphs[c].prev].next = m_glyphs[c].next;
-            m_glyphs[m_glyphs[c].next].prev = m_glyphs[c].prev;
+                    m_atlas[m_atlas[m_glyphmap[uchar]].prev].uchar,
+                    m_atlas[m_atlas[m_glyphmap[uchar]].next].uchar,
+                    m_atlas[m_atlas[m_glyphmap[uchar]].next].uchar,
+                    m_atlas[m_atlas[m_glyphmap[uchar]].prev].uchar);
+            m_atlas[m_atlas[c].prev].next = m_atlas[c].next;
+            m_atlas[m_atlas[c].next].prev = m_atlas[c].prev;
         }
     }
 
     // regardless of how we came about 'c'
-    if (m_glyphs_mru != c)
+    if (m_atlas_mru != c)
     {
         // point the last character we wrote out to the one we're writing
         dprintf("updating %lc, next = %lc",
-                m_glyphs[m_glyphs_mru].uchar, uchar);
-        m_glyphs[m_glyphs_mru].next = c;
-        m_glyphs[c].prev = m_glyphs_mru;
+                m_atlas[m_atlas_mru].uchar, uchar);
+        m_atlas[m_atlas_mru].next = c;
+        m_atlas[c].prev = m_atlas_mru;
     }
 
     // update the mru to this one
-    m_glyphs_mru = c;
+    m_atlas_mru = c;
     // if we've just used the lru glyph, move onto the next one
-    if (m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0)
-        m_glyphs_lru = m_glyphs[m_glyphs_lru].next;
+    if (m_atlas_mru == m_atlas_lru && m_atlas[m_atlas_lru].next != 0)
+        m_atlas_lru = m_atlas[m_atlas_lru].next;
 
     dprintf("rendering %d (%x; <<<<<<%lc>>>>>>); lru is %lc, next lru is %lc\n",
             uchar, uchar, uchar,
-            m_glyphs[m_glyphs_lru].uchar,
-            m_glyphs[m_glyphs[m_glyphs_lru].next].uchar);
+            m_atlas[m_atlas_lru].uchar,
+            m_atlas[m_atlas[m_atlas_lru].next].uchar);
 
     return m_glyphmap[uchar];
 }
@@ -384,7 +398,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                                      unsigned int width, unsigned int height,
                                      bool drop_shadow)
 {
-    if (!chars || !colours || !width || !height || !m_glyphs)
+    if (!chars || !colours || !width || !height || !m_atlas)
         return;
 
     coord_def adv(max(-m_min_offset, 0), 0);
@@ -400,6 +414,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         for (unsigned int x = 0; x < width; x++)
         {
             unsigned int c = map_unicode(chars[i]);
+            GlyphInfo &glyph = get_glyph_info(chars[i]);
             uint8_t col_bg = colours[i] >> 4;
             uint8_t col_fg = colours[i] & 0xF;
 
@@ -415,19 +430,19 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 m_buf->add(rect);
             }
 
-            adv.x += m_glyphs[c].offset;
+            adv.x += glyph.offset;
 
-            if (m_glyphs[c].renderable)
+            if (glyph.renderable)
             {
-                int this_width = m_glyphs[c].width;
+                int this_width = glyph.width;
 
                 float tex_x = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
                 float tex_y = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
 
-                GLWPrim rect(adv.x, adv.y - m_glyphs[c].ascender + m_ascender,
-                             adv.x + this_width, adv.y + m_max_height - m_glyphs[c].ascender + m_ascender);
+                GLWPrim rect(adv.x, adv.y - glyph.ascender + m_ascender,
+                             adv.x + this_width, adv.y + m_max_height - glyph.ascender + m_ascender);
 
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
@@ -439,7 +454,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
             }
 
             i++;
-            adv.x += m_glyphs[c].advance - m_glyphs[c].offset;
+            adv.x += glyph.advance - glyph.offset;
 
             // See if we need to flush prematurely.
             if (n_subst == MAX_GLYPHS - 1)
@@ -559,9 +574,11 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
         }
         else
         {
-            unsigned int c = map_unicode(itr);
-            width += m_glyphs[c].advance;
-            adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
+            char32_t ch;
+            utf8towc(&ch, itr);
+            GlyphInfo &glyph = get_glyph_info(ch);
+            width += glyph.advance;
+            adjust = max(0, glyph.width - glyph.advance);
         }
     }
 
@@ -582,9 +599,11 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
             width = 0;
             continue;
         }
-        unsigned int c = map_unicode(itr);
-        width += m_glyphs[c].advance;
-        int adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
+        char32_t ch;
+        utf8towc(&ch, itr);
+        GlyphInfo &glyph = get_glyph_info(ch);
+        width += glyph.advance;
+        int adjust = max(0, glyph.width - glyph.advance);
         if (width + adjust > max_width)
             return itr-text;
     }
@@ -877,20 +896,21 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &col)
 {
     unsigned int c = map_unicode(ch);
+    GlyphInfo &glyph = get_glyph_info(ch);
     float density_mult = display_density.scale_to_logical();
 
-    if (!m_glyphs[c].renderable)
+    if (!glyph.renderable)
     {
-        x += m_glyphs[c].advance * density_mult;
+        x += glyph.advance * density_mult;
         return;
     }
 
-    int this_width = m_glyphs[c].width;
+    int this_width = glyph.width;
 
-    float pos_sx = x + m_glyphs[c].offset * density_mult;
-    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * density_mult;
+    float pos_sx = x + glyph.offset * density_mult;
+    float pos_sy = y - (glyph.ascender - m_ascender) * density_mult;
     float pos_ex = pos_sx + this_width * density_mult;
-    float pos_ey = y + (m_max_height - m_glyphs[c].ascender + m_ascender)
+    float pos_ey = y + (m_max_height - glyph.ascender + m_ascender)
                    * density_mult;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
@@ -904,7 +924,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     buf.add_primitive(rect);
 
 
-    x += m_glyphs[c].advance * density_mult;
+    x += glyph.advance * density_mult;
 }
 
 /**
@@ -920,15 +940,14 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &fg_col, const VColour &bg_col)
 {
+    GlyphInfo &glyph = get_glyph_info(ch);
     const float density_mult = display_density.scale_to_logical();
 
-    const unsigned int c = map_unicode(ch);
-
     // if the advance is 0, use the max width
-    const int this_width = m_glyphs[c].advance ? m_glyphs[c].advance : char_width(false);
+    const int this_width = glyph.advance ? glyph.advance : char_width(false);
     const float bg_width = this_width * density_mult;
     const float bg_height = char_height(false) * density_mult;
-    const float pos_sx = x + m_glyphs[c].offset * density_mult;
+    const float pos_sx = x + glyph.offset * density_mult;
 
     GLWPrim bg_rect(pos_sx, y, pos_sx + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
