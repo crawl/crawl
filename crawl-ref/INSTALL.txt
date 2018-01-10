@@ -284,7 +284,17 @@ from within the MSYS2 Shell.
 
   pacman -S mingw-w64-x86_64-toolchain
 
-  After the packages install, you're ready to build crawl!
+  At this point you may need to add the newly installed toolchain to your path.
+  You can do this with the following line, either at the command line (for that
+  shell instance only) or in the file `~/.bashrc` to make it permanent:
+  
+  export PATH=$PATH:/mingw64/bin
+  
+  To test that this worked, run:
+  
+  gcc -v
+  
+  After the packages are installed and gcc runs, you're ready to build crawl!
 
 * To get the Crawl source, you can follow the steps in the Source Code Checkout
   section above to clone Crawl into your MSYS2 home directory. If you've
