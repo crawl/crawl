@@ -2549,7 +2549,7 @@ language = <two-letter language code>
         has translations in every supported language, but volunteer translators
         have offered translations of particularly wordy text such as god and
         monster descriptions. Text with no known translation will be displayed
-        in English.
+        in English. Some languages may require changing the font.
 
         Partially supported language codes:
         cs: Czech
@@ -2571,7 +2571,6 @@ language = <two-letter language code>
         ru: Russian
         sv: Swedish
         zh: Chinese
-
 
 fake_lang = <lang1>[,<lang2>[,...]]
         Set one or more fake languages, applied in the order provided (order
