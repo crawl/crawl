@@ -402,6 +402,23 @@ public:
     virtual bool on_event(const wm_event& event) override;
 };
 
+class Switcher : public ContainerVec
+{
+public:
+    virtual ~Switcher() {};
+    void add_child(shared_ptr<Widget> child);
+    size_t num_children() const { return m_children.size(); }
+    int& current();
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
+
+protected:
+    int m_current;
+};
+
 class Grid : public Container
 {
 public:

@@ -655,6 +655,63 @@ bool Stack::on_event(const wm_event& event)
     return false;
 }
 
+void Switcher::add_child(shared_ptr<Widget> child)
+{
+    child->_set_parent(this);
+    m_children.push_back(move(child));
+    _invalidate_sizereq();
+    _queue_allocation();
+}
+
+int& Switcher::current()
+{
+    ui_root.expose_region(m_region);
+    return m_current;
+}
+
+void Switcher::_render()
+{
+    if (m_children.size() == 0)
+        return;
+    m_current = max(0, min(m_current, (int)m_children.size()));
+    m_children[m_current]->render();
+}
+
+SizeReq Switcher::_get_preferred_size(Direction dim, int prosp_width)
+{
+    SizeReq r = { 0, 0 };
+    for (auto const& child : m_children)
+    {
+        SizeReq c = child->get_preferred_size(dim, prosp_width);
+        r.min = max(r.min, c.min);
+        r.nat = max(r.nat, c.nat);
+    }
+    return r;
+}
+
+void Switcher::_allocate_region()
+{
+    for (auto const& child : m_children)
+    {
+        i4 cr = m_region;
+        SizeReq pw = child->get_preferred_size(Widget::HORZ, -1);
+        cr[2] = min(max(pw.min, m_region[2]), pw.nat);
+        SizeReq ph = child->get_preferred_size(Widget::VERT, cr[2]);
+        cr[3] = min(max(ph.min, m_region[3]), ph.nat);
+        child->allocate_region(cr);
+    }
+}
+
+bool Switcher::on_event(const wm_event& event)
+{
+    if (Widget::on_event(event))
+        return true;
+    m_current = max(0, min(m_current, (int)m_children.size()));
+    if (m_children.size() > 0 &&_maybe_propagate_event(event, m_children[m_current]))
+        return true;
+    return false;
+}
+
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
 {
     child->_set_parent(this);
