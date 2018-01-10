@@ -2551,6 +2551,28 @@ language = <two-letter language code>
         monster descriptions. Text with no known translation will be displayed
         in English.
 
+        Partially supported language codes:
+        cs: Czech
+        da: Danish
+        de: German
+        el: Greek
+        es: Spanish
+        fi: Finnish
+        fr: French
+        hu: Hungarian
+        it: Italian
+        ja: Japanese
+        ko: Korean
+        lt: Lithuanian
+        lv: Latvian
+        nl: Dutch
+        pl: Polish
+        pt: Portuguese
+        ru: Russian
+        sv: Swedish
+        zh: Chinese
+
+
 fake_lang = <lang1>[,<lang2>[,...]]
         Set one or more fake languages, applied in the order provided (order
         does matter!) The same language can be set more than once, though it
