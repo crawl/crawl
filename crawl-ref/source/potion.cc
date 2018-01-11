@@ -346,8 +346,8 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_brilliant ? "more clever" : "clever");
+        mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
+             were_brilliant ? "more " : "");
         you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
         if (!were_brilliant)
             notify_stat_change(STAT_INT, 5, true);
@@ -370,8 +370,8 @@ public:
     {
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_agile ? "more agile" : "agile");
+        mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
+             were_agile ? "more " : "");
 
         you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
 
