@@ -1346,6 +1346,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
+    if (!defender->alive())
+        return true; // can get a cleaned up dead monster for summons+pain bond
+
     if (atk == UNAT_CONSTRICT)
         attacker->start_constricting(*defender);
 
