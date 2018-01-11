@@ -1346,69 +1346,69 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
-    if (!defender->alive())
-        return true; // can get a cleaned up dead monster for summons+pain bond
-
-    if (atk == UNAT_CONSTRICT)
-        attacker->start_constricting(*defender);
-
-    if (damage_done > 0 || atk == UNAT_CONSTRICT)
+    if (defender->alive())
     {
-        player_announce_aux_hit();
+        if (atk == UNAT_CONSTRICT)
+            attacker->start_constricting(*defender);
 
-        if (damage_brand == SPWPN_ACID)
-            defender->splash_with_acid(&you, 3);
-
-        if (damage_brand == SPWPN_VENOM && coinflip())
-            poison_monster(defender->as_monster(), &you);
-
-        // Normal vampiric biting attack, not if already got stabbing special.
-        if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
-            && (!stab_attempt || stab_bonus <= 0))
+        if (damage_done > 0 || atk == UNAT_CONSTRICT)
         {
-            _player_vampire_draws_blood(defender->as_monster(), damage_done);
-        }
+            player_announce_aux_hit();
 
-        if (damage_brand == SPWPN_ANTIMAGIC && you.has_mutation(MUT_ANTIMAGIC_BITE)
-            && damage_done > 0)
-        {
-            const bool spell_user = defender->antimagic_susceptible();
+            if (damage_brand == SPWPN_ACID)
+                defender->splash_with_acid(&you, 3);
 
-            antimagic_affects_defender(damage_done * 32);
+            if (damage_brand == SPWPN_VENOM && coinflip())
+                poison_monster(defender->as_monster(), &you);
 
-            // MP drain suppressed under Pakellas, but antimagic still applies.
-            if (!have_passive(passive_t::no_mp_regen) || spell_user)
+            // Normal vampiric biting attack, not if already got stabbing special.
+            if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
+                && (!stab_attempt || stab_bonus <= 0))
             {
-                mprf("You %s %s %s.",
-                     have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
-                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                     spell_user ? "magic" : "power");
+                _player_vampire_draws_blood(defender->as_monster(), damage_done);
             }
 
-            if (!have_passive(passive_t::no_mp_regen)
-                && you.magic_points != you.max_magic_points
-                && !defender->as_monster()->is_summoned()
-                && !mons_is_firewood(*defender->as_monster()))
+            if (damage_brand == SPWPN_ANTIMAGIC && you.has_mutation(MUT_ANTIMAGIC_BITE)
+                && damage_done > 0)
             {
-                int drain = random2(damage_done * 2) + 1;
-                // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
-                // 0.25 at mana == max_mana
-                drain = (int)((1.25 - you.magic_points / you.max_magic_points)
-                              * drain);
-                if (drain)
+                const bool spell_user = defender->antimagic_susceptible();
+
+                antimagic_affects_defender(damage_done * 32);
+
+                // MP drain suppressed under Pakellas, but antimagic still applies.
+                if (!have_passive(passive_t::no_mp_regen) || spell_user)
                 {
-                    mpr("You feel invigorated.");
-                    inc_mp(drain);
+                    mprf("You %s %s %s.",
+                         have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
+                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                         spell_user ? "magic" : "power");
+                }
+
+                if (!have_passive(passive_t::no_mp_regen)
+                    && you.magic_points != you.max_magic_points
+                    && !defender->as_monster()->is_summoned()
+                    && !mons_is_firewood(*defender->as_monster()))
+                {
+                    int drain = random2(damage_done * 2) + 1;
+                    // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
+                    // 0.25 at mana == max_mana
+                    drain = (int)((1.25 - you.magic_points / you.max_magic_points)
+                                  * drain);
+                    if (drain)
+                    {
+                        mpr("You feel invigorated.");
+                        inc_mp(drain);
+                    }
                 }
             }
         }
-    }
-    else // no damage was done
-    {
-        mprf("You %s %s%s.",
-             aux_verb.c_str(),
-             defender->name(DESC_THE).c_str(),
-             you.can_see(*defender) ? ", but do no damage" : "");
+        else // no damage was done
+        {
+            mprf("You %s %s%s.",
+                 aux_verb.c_str(),
+                 defender->name(DESC_THE).c_str(),
+                 you.can_see(*defender) ? ", but do no damage" : "");
+        }
     }
 
     if (defender->as_monster()->hit_points < 1)
