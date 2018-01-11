@@ -765,7 +765,7 @@ static string _vampire_Ascreen_footer(bool first_page)
             "]: %s", text);
 }
 
-static void _display_vampire_attributes()
+static string _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
 
@@ -836,19 +836,8 @@ static void _display_vampire_attributes()
         result += "\n";
     }
 
-    result += "\n";
-    result += _vampire_Ascreen_footer(false);
     trim_string_right(result);
-
-    formatted_scroller attrib_menu(FS_EASY_EXIT);
-    attrib_menu.add_text(result);
-
-    attrib_menu.show();
-    if (attrib_menu.get_lastch() == '!'
-        || attrib_menu.get_lastch() == CK_MOUSE_CMD)
-    {
-        display_mutations();
-    }
+    return result;
 }
 
 void display_mutations()
@@ -862,38 +851,75 @@ void display_mutations()
         extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
     if (_num_transient)
         extra += "<magenta>[]</magenta>   : Transient mutations.";
-    if (you.species == SP_VAMPIRE)
-    {
-        if (!extra.empty())
-            extra += "\n";
-
-        extra += _vampire_Ascreen_footer(true);
-    }
 
     if (!extra.empty())
     {
         mutation_s += "\n\n\n\n";
         mutation_s += extra;
     }
+    trim_string_right(mutation_s);
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU);
 #endif
-
-    formatted_scroller mutation_menu(FS_EASY_EXIT);
-    mutation_menu.set_title(formatted_string::parse_string("<white>Innate Abilities, Weirdness & Mutations</white>"));
-    mutation_menu.add_text(mutation_s);
-
     mouse_control mc(MOUSE_MODE_MORE);
 
-    mutation_menu.show();
+    auto vbox = make_shared<UIBox>(UI::VERT);
 
-    if (you.species == SP_VAMPIRE
-        && (mutation_menu.get_lastch() == '!'
-            || mutation_menu.get_lastch() == CK_MOUSE_CMD))
+    auto title = make_shared<UIText>("<white>Innate Abilities, Weirdness & Mutations</white>");
+    title->align_self = UI::CENTER;
+    vbox->add_child(move(title));
+
+    auto switcher = make_shared<UISwitcher>();
+
+    const string vamp_s = you.species == SP_VAMPIRE ?_display_vampire_attributes() : "N/A";
+    const string descs[3] =  { mutation_s, vamp_s };
+    for (int i = 0; i < 2; i++)
     {
-        _display_vampire_attributes();
+        auto scroller = make_shared<UIScroller>();
+        auto text = make_shared<UIText>(descs[static_cast<int>(i)]);
+        text->wrap_text = true;
+        scroller->set_child(text);
+        switcher->add_child(move(scroller));
     }
+
+    switcher->current() = 0;
+    switcher->set_margin_for_sdl({20, 0, 0, 0});
+    switcher->set_margin_for_crt({1, 0, 0, 0});
+    switcher->expand_h = false;
+#ifdef USE_TILE_LOCAL
+    switcher->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+    vbox->add_child(switcher);
+
+    auto bottom = make_shared<UIText>(_vampire_Ascreen_footer(true));
+    bottom->set_margin_for_sdl({20, 0, 0, 0});
+    bottom->set_margin_for_crt({1, 0, 0, 0});
+    if (you.species == SP_VAMPIRE)
+        vbox->add_child(bottom);
+
+    auto popup = make_shared<UIPopup>(vbox);
+
+    bool done = false;
+    int lastch;
+    popup->on(UI::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        lastch = ev.key.keysym.sym;
+        if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
+        {
+            int c = switcher->current();
+            switcher->current() = 1 - c;
+            bottom->set_text(formatted_string::parse_string(_vampire_Ascreen_footer(c)));
+        } else
+            done = !vbox->on_event(ev);
+        return true;
+    });
+
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
