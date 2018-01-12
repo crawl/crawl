@@ -756,9 +756,9 @@ int SDLWrapper::wait_event(wm_event *event)
         utf8towc(&wc, sdlevent.text.text);
         if (prev_keycode && _key_suppresses_textinput(prev_keycode) == wc)
         {
-            // this needs to return something, or the key reading loop in
-            // macro.cc:_getch_mul behaves weird (blocks on reading a new
-            // key). TODO: other 0 returns in this function?
+            // this needs to return something, or the event loop in
+            // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
+            // is handled in macro.cc:_getch_mul.
             prev_keycode = 0;
             event->key.keysym.sym = CK_NO_KEY;
             return 1;
