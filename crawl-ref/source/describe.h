@@ -83,8 +83,8 @@ int hex_chance(const spell_type spell, const int hd);
 
 string get_command_description(const command_type cmd, bool terse);
 
-int show_description(const string &body);
-int show_description(const describe_info &inf);
+int show_description(const string &body, const tile_def *tile = nullptr);
+int show_description(const describe_info &inf, const tile_def *tile = nullptr);
 string process_description(const describe_info &inf, bool include_title = true);
 
 const char* get_size_adj(const size_type size, bool ignore_medium = false);

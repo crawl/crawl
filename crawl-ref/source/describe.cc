@@ -87,7 +87,7 @@ int count_desc_lines(const string &_desc, const int width)
     return count(begin(desc), end(desc), '\n');
 }
 
-int show_description(const string &body)
+int show_description(const string &body, const tile_def *tile)
 {
     describe_info inf;
     inf.body << body;
@@ -102,40 +102,89 @@ static const string _toggle_message =
 #endif
     " to toggle between the description and quote.";
 
-int show_description(const describe_info &inf)
+int show_description(const describe_info &inf, const tile_def *tile)
 {
-    string desc = process_description(inf, false);
+    auto vbox = make_shared<UIBox>(UI::VERT);
 
-    formatted_scroller desc_fs(FS_EASY_EXIT);
-    desc_fs.set_title(formatted_string(inf.title));
-    desc_fs.add_text(trimmed_string(desc), false);
+    if (!inf.title.empty())
+    {
+        auto title_hbox = make_shared<UIBox>(UI::HORZ);
 
-    formatted_scroller quote_fs(FS_EASY_EXIT);
+#ifdef USE_TILE
+        if (tile)
+        {
+            auto icon = make_shared<UIImage>();
+            icon->set_tile(*tile);
+            icon->set_margin_for_sdl({0, 10, 0, 0});
+            title_hbox->add_child(move(icon));
+        }
+#endif
+
+        auto title = make_shared<UIText>(inf.title);
+        title_hbox->add_child(move(title));
+
+        title_hbox->align_items = UI::CENTER;
+        title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+        title_hbox->set_margin_for_crt({0, 0, 1, 0});
+        vbox->add_child(move(title_hbox));
+    }
+
+    auto switcher = make_shared<UISwitcher>();
+
+    const string descs[2] =  {
+        trimmed_string(process_description(inf, false)),
+        trimmed_string(inf.quote),
+    };
+
+    for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
+    {
+        const auto &desc = descs[static_cast<int>(i)];
+        auto scroller = make_shared<UIScroller>();
+        auto text = make_shared<UIText>(trimmed_string(desc));
+        text->wrap_text = true;
+        scroller->set_child(text);
+        switcher->add_child(move(scroller));
+    }
+
+    switcher->current() = 0;
+    switcher->expand_h = false;
+#ifdef USE_TILE_LOCAL
+    switcher->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+    vbox->add_child(switcher);
 
     if (!inf.quote.empty())
     {
-        desc_fs.set_more(formatted_string::parse_string(_toggle_message));
-        quote_fs.set_more(formatted_string::parse_string(_toggle_message));
-
-        quote_fs.set_title(formatted_string(inf.title));
-        quote_fs.add_text(trimmed_string(inf.quote), false);
+        auto footer = make_shared<UIText>(_toggle_message);
+        footer->set_margin_for_sdl({20, 0, 0, 0});
+        footer->set_margin_for_crt({1, 0, 0, 0});
+        vbox->add_child(move(footer));
     }
+
+    auto popup = make_shared<UIPopup>(vbox);
+
+    bool done = false;
+    int lastch;
+    popup->on(UI::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        lastch = ev.key.keysym.sym;
+        if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
+            switcher->current() = 1 - switcher->current();
+        else
+            done = !vbox->on_event(ev);
+        return true;
+    });
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU);
 #endif
 
-    bool show_quote = false;
-    while (true)
-    {
-        formatted_scroller& fs = show_quote ? quote_fs : desc_fs;
-        fs.show();
-        int keyin = fs.get_lastch();
-        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
-            show_quote = !show_quote;
-        else
-            return keyin;
-    }
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
+    return lastch;
 }
 
 string process_description(const describe_info &inf, bool include_title)
