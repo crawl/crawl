@@ -68,6 +68,8 @@ protected:
 
 private:
     void glDebug(const char *msg);
+
+    int prev_keycode;
 };
 
 #endif // USE_SDL
