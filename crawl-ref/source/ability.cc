@@ -1128,7 +1128,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
 static void _print_talent_description(const talent& tal)
 {
-    show_description(get_ability_desc(tal.which));
+    describe_ability(tal.which);
 }
 
 void no_ability_msg()

@@ -938,7 +938,8 @@ int LookupType::describe(const string &key, bool exact_match) const
  * @return              The keypress the user made to exit.
  */
 static int _describe_key(const string &key, const string &suffix,
-                         string footer, const string &extra_info)
+                         string footer, const string &extra_info,
+                         const tile_def *tile = nullptr)
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
@@ -956,7 +957,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.footer = footer;
     inf.title  = title;
 
-    return show_description(inf);
+    return show_description(inf, tile);
 }
 
 /**
@@ -1058,7 +1059,12 @@ static int _describe_card(const string &key, const string &suffix,
     const string card_name = key.substr(0, key.size() - suffix.size());
     const card_type card = name_to_card(card_name);
     ASSERT(card != NUM_CARDS);
+#ifdef USE_TILE
+    tile_def tile = tile_def(TILE_MISC_CARD, TEX_DEFAULT);
+    return _describe_key(key, suffix, footer, which_decks(card) + "\n", &tile);
+#else
     return _describe_key(key, suffix, footer, which_decks(card) + "\n");
+#endif
 }
 
 /**
@@ -1075,7 +1081,15 @@ static int _describe_cloud(const string &key, const string &suffix,
     const string cloud_name = key.substr(0, key.size() - suffix.size());
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
+#ifdef USE_TILE
+    cloud_info fake_cloud_info;
+    fake_cloud_info.type = cloud;
+    const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
+    tile_def tile = tile_def(idx, TEX_DEFAULT);
+    return _describe_key(key, suffix, footer, extra_cloud_info(cloud), &tile);
+#else
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
+#endif
 }
 
 /**
