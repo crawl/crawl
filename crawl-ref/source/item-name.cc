@@ -1201,8 +1201,10 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         else if (sub_type == BOOK_AKASHIC_RECORD)
             return "Akashic Record";
+#endif
 
         return string("book of ") + _book_type_name(sub_type);
     }
