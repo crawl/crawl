@@ -150,7 +150,6 @@ phase_shift PHASE_SHIFT
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 shroud_of_golubria SHROUD_OF_GOLUBRIA
-singularity SINGULARITY
 gravitas GRAVITAS
 
 %sdir gui/spells/transmutation

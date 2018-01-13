@@ -4400,8 +4400,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    kill_method_type kill_type, string /*source*/,
                    string /*aux*/, bool cleanup_dead, bool attacker_effects)
 {
-    if (mons_is_projectile(type) || mid == MID_ANON_FRIEND
-        || type == MONS_SINGULARITY || type == MONS_PLAYER_SHADOW)
+    if (mons_is_projectile(type)
+        || mid == MID_ANON_FRIEND
+        || type == MONS_PLAYER_SHADOW)
     {
         return 0;
     }

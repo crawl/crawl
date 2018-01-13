@@ -1194,12 +1194,6 @@ Creates an icy replica from the corpse of the original being. This magic is
 unstable, so eventually the replica will sublimate into a freezing cloud.
 Simulacra cannot leave the level they were created on.
 %%%%
-Singularity spell
-
-Compresses space into a gravitational singularity, pulling nearby enemies of
-the caster towards it and warping them violently in the process. The caster
-can only maintain one singularity at a time.
-%%%%
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the

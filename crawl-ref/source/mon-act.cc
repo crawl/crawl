@@ -1597,24 +1597,6 @@ void handle_monster_move(monster* mons)
     }
 #endif
 
-    if (mons->type == MONS_SINGULARITY)
-    {
-        const actor * const summoner = actor_by_mid(mons->summoner);
-        if (!summoner || !summoner->alive())
-        {
-            mons->suicide();
-            return;
-        }
-        if (--mons->countdown <= 0)
-            mons->suicide();
-        else
-        {
-            singularity_pull(mons);
-            mons->speed_increment -= 10;
-        }
-        return;
-    }
-
     if (mons->is_projectile())
     {
         if (iood_act(*mons))

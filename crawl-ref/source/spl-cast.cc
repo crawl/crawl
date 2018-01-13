@@ -1180,17 +1180,11 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_shotgun>(&you, shotgun_beam_count(pow),
                                              range);
     case SPELL_GRAVITAS:
-<<<<<<< HEAD
         return make_unique<targeter_smite>(&you, range,
                                            gravitas_range(pow, 2),
                                            gravitas_range(pow));
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
-
-    case SPELL_SINGULARITY:
-        return make_unique<targeter_smite>(&you, range, singularity_range(pow, 2),
-                                                singularity_range(pow));
-
     case SPELL_RANDOM_BOLT:
         return make_unique<targeter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow,
                                           0, 0);

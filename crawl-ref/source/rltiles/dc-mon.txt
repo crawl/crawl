@@ -266,10 +266,6 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
-singularity1 MONS_SINGULARITY /*'*'*/
-singularity2
-singularity3
-singularity4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
