@@ -95,6 +95,7 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_conjure_flame_pos(const monster &mon);
+static coord_def _mons_singularity_pos(const monster* mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
@@ -1510,6 +1511,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_SCATTERSHOT:           // ditto
+    case SPELL_SINGULARITY:           // ditto
         _setup_fake_beam(beam, *mons);
         break;
 
@@ -3661,6 +3663,54 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
     }
 
     return enemy > friendly;
+}
+
+/**
+ * Pick a target for conjuring a singularity.
+ * Since a singularity can't harm its caster, this should always
+ * give a valid target if it can see any enemies.
+ *
+ * @param[in] mon The monster casting this.
+ * @returns The best position for creating a singularity.
+ */
+static coord_def _mons_singularity_pos(const monster* mon)
+{
+    ASSERT(mon); // XXX: change to const monster &mon
+    const int pow = _mons_spellpower(SPELL_SINGULARITY, *mon);
+    const int rad = singularity_range(pow);
+    int max_strength = 0, max_count = 0;
+    coord_def retval;
+
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        int strength = 0;
+
+        if (cell_is_solid(*di) || actor_at(*di))
+            continue;
+        for (radius_iterator ri(*di, rad, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        {
+            actor* victim = actor_at(*ri);
+            if (!victim
+                || !mon->can_see(*victim)
+                || mons_aligned(mon, victim))
+            {
+                continue;
+            }
+            strength += ((pow / 10) + 1) / (4 + grid_distance(*di, *ri));
+        }
+        if (strength == 0)
+            continue;
+        if (strength > max_strength
+            || (strength == max_strength && one_chance_in(++max_count)))
+        {
+            if (strength > max_strength)
+                max_count = 1;
+            max_strength = strength;
+            retval = *di;
+        }
+    }
+
+    return retval;
 }
 
 /** Chooses a matching spell from this spell list, based on frequency.
@@ -6959,6 +7009,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_UPHEAVAL:
         _mons_upheaval(*mons, *foe);
         return;
+
+    case SPELL_SINGULARITY:
+    {
+        if (in_bounds(pbolt.target))
+           cast_singularity(mons, splpow, pbolt.target, false);
+        else if (you.can_see(*mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+
+        return;
+    }
     }
 
     if (spell_is_direct_explosion(spell_cast))

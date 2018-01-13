@@ -1908,7 +1908,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_fulminating_prism(&you, powc, beam.target, fail);
 
     case SPELL_SINGULARITY:
-        return cast_singularity(powc, beam.target, fail);
+        return cast_singularity(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
