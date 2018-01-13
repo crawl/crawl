@@ -1180,6 +1180,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_shotgun>(&you, shotgun_beam_count(pow),
                                              range);
     case SPELL_GRAVITAS:
+<<<<<<< HEAD
         return make_unique<targeter_smite>(&you, range,
                                            gravitas_range(pow, 2),
                                            gravitas_range(pow));
@@ -1906,9 +1907,6 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
-
-    case SPELL_SINGULARITY:
-        return cast_singularity(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
