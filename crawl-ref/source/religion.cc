@@ -2182,6 +2182,7 @@ void god_speaks(god_type god, const char *mesg)
 
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
+    fake_mon.mid        = MID_NOBODY;
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
     fake_mon.set_position(you.pos());
