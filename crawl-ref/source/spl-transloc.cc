@@ -1062,6 +1062,12 @@ spret_type cast_singularity(int pow, const coord_def& where, bool fail)
 
     if (singularity)
     {
+        // Used to be part of monster_number in mgen-data I think, need to create here instead
+        singularity->countdown = pow / 20;
+
+        // Set singularity HD (for pull calculations)
+        singularity->set_hit_dice((pow / 10) + 1);
+
         if (you.can_see(*singularity))
         {
             const bool friendly = singularity->wont_attack();

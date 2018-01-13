@@ -1187,7 +1187,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_unravelling>(&you, range, pow);
 
     case SPELL_SINGULARITY:
-        return make_unique<targeter_smite>(&you, range, singularity_range(pow, 2),
+        return make_unique<targeter_smite>(&you, range, 0,
                                                 singularity_range(pow));
 
     case SPELL_RANDOM_BOLT:

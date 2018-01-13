@@ -140,7 +140,8 @@ static void _actor_areas(actor *a)
     if ((r = a->singularity_radius()) >= 0)
     {
         // HACK HACK HACK
-        r = isqrt(a->get_experience_level()); 
+        const int r1 = max(0, min(LOS_RADIUS, a->get_experience_level() - 4));
+        r = r1 * r1;
         
         _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, a->pos(), r));
 
@@ -755,7 +756,7 @@ int monster::singularity_radius() const
 {
     switch (type)
     {
-    // HACK HACK HACK
+    // TODO: Put the radius calculations here instead of just a boolean check
     case MONS_SINGULARITY:
         return 1;
     default:
