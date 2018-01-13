@@ -29,6 +29,8 @@ int gravitas_range(int pow, int strength = 1);
 int singularity_range(int pow, int strength = 1);
 spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
                             bool fail);
+void attract_actor(const actor* agent, actor* victim, const coord_def pos,
+                   int pow, int strength);
 void singularity_pull(const monster *singularity);
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret_type cast_gravitas(int pow, const coord_def& where, bool fail);

@@ -1667,7 +1667,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SINGULARITY, "Singularity",
     SPTYP_TRANSLOCATION,
-    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
+    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,

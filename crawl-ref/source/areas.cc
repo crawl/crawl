@@ -137,14 +137,14 @@ static void _actor_areas(actor *a)
     }
 
     // XXX: make this a proper function
-    if ((r = a->type == MONS_SINGULARITY) >= 0)
+    if (a->type == MONS_SINGULARITY)
     {
         r = isqrt(a->get_experience_level());
 
         _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, a->pos(), r));
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::disjunction);
+            _set_agrid_flag(*ri, APROP_DISJUNCTION);
         no_areas = false;
     }
 }

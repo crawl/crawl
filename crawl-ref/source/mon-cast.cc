@@ -1065,7 +1065,11 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_SPECTRAL_WEAPON:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
+<<<<<<< HEAD
+=======
+        case SPELL_CONJURE_FLAME:
         case SPELL_SINGULARITY:
+>>>>>>> parent of eafbe2f... Remove the Singularity monster spell
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -1511,8 +1515,18 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_SCATTERSHOT:           // ditto
-    case SPELL_SINGULARITY:           // ditto
+<<<<<<< HEAD
         _setup_fake_beam(beam, *mons);
+=======
+    case SPELL_SINGULARITY:           // ditto
+        beam.flavour  = BEAM_DEVASTATION;
+        beam.pierce   = true;
+        // Doesn't take distance into account, but this is just a tracer so
+        // we'll ignore that. We need some damage on the tracer so the monster
+        // doesn't think the spell is useless against other monsters.
+        beam.damage   = dice_def(42, 1);
+        beam.range    = LOS_RADIUS;
+>>>>>>> parent of eafbe2f... Remove the Singularity monster spell
         break;
 
     case SPELL_PETRIFYING_CLOUD:
@@ -1924,6 +1938,44 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     else
         pbolt.aux_source.clear();
 
+<<<<<<< HEAD
+=======
+    // Your shadow can target these spells at other monsters;
+    // other monsters can't.
+    if (mons->mid != MID_PLAYER)
+    {
+        if (spell_cast == SPELL_HASTE
+            || spell_cast == SPELL_MIGHT
+            || spell_cast == SPELL_INVISIBILITY
+            || spell_cast == SPELL_MINOR_HEALING
+            || spell_cast == SPELL_TELEPORT_SELF
+            || spell_cast == SPELL_SILENCE)
+        {
+            pbolt.target = mons->pos();
+        }
+        else if (spell_cast == SPELL_LRD)
+        {
+            pbolt.target = _mons_fragment_target(mons);
+            pbolt.aimed_at_spot = true; // to get noise to work properly
+        }
+        else if (spell_cast == SPELL_CONJURE_FLAME)
+        {
+            pbolt.target = _mons_conjure_flame_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_FULMINANT_PRISM)
+        {
+            pbolt.target = _mons_prism_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_SINGULARITY)
+        {
+            pbolt.target = _mons_singularity_pos(mons);
+            pbolt.aimed_at_spot = true; // ditto
+        }
+     }
+
+>>>>>>> parent of eafbe2f... Remove the Singularity monster spell
     return true;
 }
 
@@ -4107,7 +4159,19 @@ bool handle_mon_spell(monster* mons)
     if (!hspell_pass.size())
         return false;
 
+<<<<<<< HEAD
     bolt beem = setup_targetting_beam(*mons);
+=======
+            if ((spell_cast == SPELL_LRD
+                 || spell_cast == SPELL_CONJURE_FLAME
+                 || spell_cast == SPELL_FULMINANT_PRISM
+                 || spell_cast == SPELL_SINGULARITY)
+                && !in_bounds(beem.target))
+            {
+                spell_cast = SPELL_NO_SPELL;
+                continue;
+            }
+>>>>>>> parent of eafbe2f... Remove the Singularity monster spell
 
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(mons))
@@ -8316,6 +8380,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_EPHEMERAL_INFUSION:
+<<<<<<< HEAD
+    case SPELL_SINGULARITY:
     case SPELL_GRAND_AVATAR:
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:
@@ -8328,6 +8394,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONTROL_WINDS:
     case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
+=======
+>>>>>>> parent of eafbe2f... Remove the Singularity monster spell
 #endif
     case SPELL_NO_SPELL:
         return true;
