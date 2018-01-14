@@ -75,6 +75,39 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
 }
 
+void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
+{
+    tileidx_t t    = tileidx_monster(mon);
+    tileidx_t t0   = t & TILE_FLAG_MASK;
+    tileidx_t flag = t & (~TILE_FLAG_MASK);
+
+    // Copied from _tile_place_monster()
+    if (!mons_class_is_stationary(mon.type) || mon.type == MONS_TRAINING_DUMMY)
+    {
+        tileidx_t mcache_idx = mcache.register_monster(mon);
+        t = flag | (mcache_idx ? mcache_idx : t0);
+        t0 = t & TILE_FLAG_MASK;
+    }
+
+    // Copied from ::add()
+    if (t0 >= TILEP_MCACHE_START)
+    {
+        mcache_entry *entry = mcache.get(t0);
+        if (entry)
+            pack_mcache(entry, x, y, false);
+        else
+            m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, false, false);
+    }
+    else if (t0 >= TILE_MAIN_MAX)
+        m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
+
+    // hijack pack_foreground() to draw status icons
+    packed_cell fake_cell;
+    fake_cell.fg = flag;
+    fake_cell.bg = 0;
+    pack_foreground(x, y, fake_cell);
+}
+
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
                                       bool in_water)
 {
