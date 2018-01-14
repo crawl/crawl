@@ -15,6 +15,7 @@
 #ifdef USE_TILE_LOCAL
 # include "tilesdl.h"
 # include "tilebuf.h"
+# include "tiledgnbuf.h"
 #endif
 
 // This is used instead of std::array because travis uses older versions of GCC
@@ -438,6 +439,24 @@ protected:
     ShapeBuffer m_buf;
 #endif
 };
+
+#ifdef USE_TILE_LOCAL
+class UIDungeon : public UI
+{
+public:
+    UIDungeon() : width(0), height(0), m_buf((ImageManager*)tiles.get_image_manager()), m_dirty(false) {};
+    virtual ~UIDungeon() {};
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+
+    unsigned width, height;
+    DungeonCellBuffer& buf() { m_dirty = true; return m_buf; };
+
+protected:
+    DungeonCellBuffer m_buf;
+    bool m_dirty;
+};
+#endif
 
 void ui_push_layout(shared_ptr<UI> root);
 void ui_pop_layout();

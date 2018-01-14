@@ -972,6 +972,24 @@ void UIPopup::_allocate_region()
     m_root->allocate_region(m_region);
 }
 
+#ifdef USE_TILE_LOCAL
+void UIDungeon::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {32, 32, 1};
+    glmanager->set_transform(t, s);
+    m_buf.draw();
+    glmanager->reset_transform();
+#endif
+}
+
+UISizeReq UIDungeon::_get_preferred_size(Direction dim, int prosp_width)
+{
+    int sz = (dim ? height : width)*32;
+    return {sz, sz};
+}
+#endif
+
 void UIRoot::push_child(shared_ptr<UI> ch)
 {
     m_root.add_child(move(ch));
