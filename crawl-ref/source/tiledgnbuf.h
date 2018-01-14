@@ -22,6 +22,7 @@ public:
     DungeonCellBuffer(ImageManager *im);
 
     void add(const packed_cell &cell, int x, int y);
+    void add_monster(const monster_info &mon, int x, int y);
     void add_dngn_tile(int tileidx, int x, int y, bool in_water = false);
     void add_main_tile(int tileidx, int x, int y);
     void add_main_tile(int tileidx, int x, int y, int ox, int oy);
