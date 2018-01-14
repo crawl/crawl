@@ -15,6 +15,7 @@
 #ifdef USE_TILE_LOCAL
 # include "tilesdl.h"
 # include "tilebuf.h"
+# include "tiledgnbuf.h"
 #endif
 
 namespace ui {
@@ -511,6 +512,24 @@ protected:
     ShapeBuffer m_buf;
 #endif
 };
+
+#ifdef USE_TILE_LOCAL
+class Dungeon : public Widget
+{
+public:
+    Dungeon() : width(0), height(0), m_buf((ImageManager*)tiles.get_image_manager()), m_dirty(false) {};
+    virtual ~Dungeon() {};
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+
+    unsigned width, height;
+    DungeonCellBuffer& buf() { m_dirty = true; return m_buf; };
+
+protected:
+    DungeonCellBuffer m_buf;
+    bool m_dirty;
+};
+#endif
 
 void push_layout(shared_ptr<Widget> root);
 void pop_layout();
