@@ -273,7 +273,7 @@ ENDMAP
 ##############################################################################
 # III   Altars to minor gods
 #
-# These are non-Temple gods like Beogh, Jiyva, Lugonu.
+# These are non-Temple gods like Beogh, Lugonu.
 ##############################################################################
 
 ### Altars possibly to Lugonu ################################################
@@ -376,27 +376,6 @@ c1..c...
 ccccc...
 ENDMAP
 
-
-### Altars to Jiyva ##########################################################
-
-NAME:   jiyva_altar_1
-DEPTH:  D:8-
-KFEAT:  _ = altar_jiyva
-: if you.depth() > 9 then
-NSUBST: 1 = 3:1 / *:2
-: elseif you.depth() > 11 then
-NSUBST: 1 = 2:1 / *:2
-: elseif you.depth() > 13 then
-NSUBST: 1 = 1:1 / *:2
-: end
-MONS:  jelly, slime creature
-MAP
-.....
-..1..
-.1_1.
-..1..
-.....
-ENDMAP
 
 ### Ecumenical altars ########################################################
 
