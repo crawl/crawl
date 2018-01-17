@@ -86,6 +86,11 @@ FTFontWrapper::~FTFontWrapper()
     delete[] ttf;
 }
 
+/**
+ * Configure the font based on metrics, and initialize caches. This may be
+ * called multiple times when cached information needs to be reset, e.g. upon
+ * changing DPI.
+ */
 bool FTFontWrapper::configure_font()
 {
     FT_Error error;
@@ -138,6 +143,8 @@ bool FTFontWrapper::configure_font()
     m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     m_glyphmap.clear();
+    m_glyphs.clear();
+
     for (int i = 0; i < MAX_GLYPHS; i++)
         m_atlas[i] = FontAtlasEntry();
 
