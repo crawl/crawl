@@ -1274,7 +1274,22 @@ void ui_pump_events()
             break;
 
         default:
-            ui_root.on_event(event);
+            if (!ui_root.on_event(event) && event.type == WME_MOUSEBUTTONDOWN)
+            {
+                // If a mouse event wasn't handled, send it through again as a
+                // fake key event, for compatibility
+                int key;
+                if (event.mouse_event.button == MouseEvent::LEFT)
+                    key = CK_MOUSE_CLICK;
+                else if (event.mouse_event.button == MouseEvent::RIGHT)
+                    key = CK_MOUSE_CMD;
+                else break;
+
+                wm_event ev = {0};
+                ev.type = WME_KEYDOWN;
+                ev.key.keysym.sym = key;
+                ui_root.on_event(ev);
+            }
             break;
     }
 #else
