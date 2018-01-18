@@ -196,7 +196,7 @@ void update_screen()
 
 bool kbhit()
 {
-    if (crawl_state.tiles_disabled)
+    if (crawl_state.tiles_disabled || crawl_state.seen_hups)
         return false;
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WME_KEYDOWN)
