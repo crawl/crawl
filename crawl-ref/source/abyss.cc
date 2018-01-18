@@ -1807,6 +1807,7 @@ static bool _is_grid_corruptible(const coord_def &c)
     case DNGN_CLEAR_PERMAROCK_WALL:
     case DNGN_OPEN_SEA:
     case DNGN_LAVA_SEA:
+    case DNGN_TRANSPORTER_LANDING: // entry already taken care of as stairs
         return false;
 
     case DNGN_METAL_WALL:
