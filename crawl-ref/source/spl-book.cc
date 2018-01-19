@@ -863,8 +863,6 @@ bool learn_spell(spell_type specspell, bool wizard)
              spell_levels_required(specspell) != 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));
 
-    // Deactivate choice from tile inventory.
-    mouse_control mc(MOUSE_MODE_MORE);
     if (!yesno(prompt.c_str(), true, 'n', false))
     {
         canned_msg(MSG_OK);
