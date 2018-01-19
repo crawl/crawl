@@ -849,8 +849,8 @@ int player::constriction_damage(bool direct) const
     if (direct)
         return roll_dice(2, div_rand_round(strength(), 5));
 
-    return roll_dice(2, 5 + div_rand_round(
-                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 15));
+    return roll_dice(2, div_rand_round(75 +
+                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
 }
 
 /**
