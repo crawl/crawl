@@ -2172,7 +2172,7 @@ NAME:	malcolmrose_arrival_bitcoin
 ## Great cryptocurrency wealth awaits this run.
 ORIENT:	float
 TAGS:	no_rotate no_hmirror no_vmirror arrival no_monster_gen
-MONS:   bat, moon troll
+MONS:   bat
 ITEM:   gold q:1
 MAP
 ...c+ccc+cccccccccc
