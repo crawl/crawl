@@ -2169,15 +2169,15 @@ xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:	malcolmrose_arrival_bitcoin
-## Great cryptocurrency wealth awaits this run. To the moon (troll)!
+## Great cryptocurrency wealth awaits this run.
 ORIENT:	float
 TAGS:	no_rotate no_hmirror no_vmirror arrival no_monster_gen
 MONS:   bat, moon troll
 ITEM:   gold q:1
 MAP
-...c+ccc+cccccccooo
-...cWc.cWc..1...o2o
-...c.c.c.cc.....ooo
+...c+ccc+cccccccccc
+...cWc.cWc..1.....c
+...c.c.c.cc.......c
 cccc...d..cc......c
 +W...d...d.cc.....c
 cccc.d......c.....c
