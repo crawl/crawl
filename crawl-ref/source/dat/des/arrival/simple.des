@@ -2167,3 +2167,34 @@ ttt...ss.............ss...ttt
  tt.......................tt
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   malcolmrose_arrival_bitcoin
+## Great cryptocurrency wealth awaits this run. Player is encouraged to stifle their greed and escape the worms instead of grabbing all the coins immediately.
+ORIENT: float
+TAGS:   no_rotate no_hmirror no_vmirror arrival no_monster_gen
+MONS:	worm
+ITEM:   gold q:1
+MAP
+   .........
+   .c+ccc+c.
+   .cWc.cWc..
+   .c.c.c.cc..
+.cccc...d..cc..
+.+W...d...d.cc..
+.cccc.d......cl.
+....c...cc..d.c.
+   .cd..cc....c.
+   .c......d..c.
+   .c{..d.d..cl.
+   .c..d.....cl.
+   .c...cc....c.
+   .c...cc.dd.c.
+....c.d......>c.
+.cccc......d.cl.
+.+W.d..d..d.cc..
+.cccc......cc..
+....c1ccc1cc..
+   .cWcccWc..
+   .c+ccc+c.
+   .........
+ENDMAP
