@@ -424,8 +424,9 @@ string no_selectables_message(int item_selector)
     case OBJ_POTIONS:
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
+        return "You aren't carrying any scrolls.";
     case OBJ_BOOKS:
-        return "You aren't carrying any spellbooks or scrolls.";
+        return "You don't have any books.";
     case OBJ_WANDS:
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
@@ -1012,9 +1013,6 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_THROWABLE:
     {
-        if (you_worship(GOD_TROG) && item_is_spellbook(i))
-            return true;
-
         if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
             return false;
 
