@@ -177,6 +177,7 @@ public:
     int obtainable_runes; // can be != 15 in Sprint
 
     FixedBitVector<NUM_SPELLS> spell_library;
+    FixedBitVector<NUM_SPELLS> hidden_spells;
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
