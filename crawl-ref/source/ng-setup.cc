@@ -363,10 +363,6 @@ static void _give_basic_knowledge()
 {
     identify_inventory();
 
-    for (const item_def& i : you.inv)
-        if (i.base_type == OBJ_BOOKS)
-            mark_had_book(i);
-
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
 

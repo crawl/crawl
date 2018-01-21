@@ -1695,10 +1695,6 @@ static void tag_construct_you_items(writer &th)
     for (int j = 0; j < MAX_UNRANDARTS; ++j)
         marshallByte(th,you.unique_items[j]);
 
-    marshallByte(th, NUM_FIXED_BOOKS);
-    for (int j = 0; j < NUM_FIXED_BOOKS; ++j)
-        marshallByte(th,you.had_book[j]);
-
     marshallShort(th, NUM_WEAPONS);
     for (int j = 0; j < NUM_WEAPONS; ++j)
         marshallInt(th,you.seen_weapon[j]);
@@ -3821,19 +3817,18 @@ static void tag_read_you_items(reader &th)
     for (int j = NUM_UNRANDARTS; j < count; j++)
         unmarshallByte(th);
 
-    // how many books?
-    count = unmarshallUByte(th);
-    COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
-    for (int j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
-        you.had_book.set(j, unmarshallByte(th));
-    for (int j = count; j < NUM_FIXED_BOOKS; ++j)
-        you.had_book.set(j, false);
-    for (int j = NUM_FIXED_BOOKS; j < count; ++j)
-        unmarshallByte(th);
-
-    // how many spells?
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
     {
+        // how many books?
+        count = unmarshallUByte(th);
+        COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
+        for (int j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
+            unmarshallByte(th);
+        for (int j = NUM_FIXED_BOOKS; j < count; ++j)
+            unmarshallByte(th);
+
+        // how many spells?
         count = unmarshallShort(th);
         ASSERT(count >= 0);
         for (int j = 0; j < count && j < NUM_SPELLS; ++j)
@@ -3841,6 +3836,7 @@ static void tag_read_you_items(reader &th)
         for (int j = NUM_SPELLS; j < count; ++j)
             unmarshallByte(th);
     }
+#endif
 
     count = unmarshallShort(th);
     ASSERT(count >= 0);
