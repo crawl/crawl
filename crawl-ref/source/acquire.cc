@@ -1373,11 +1373,6 @@ int acquirement_create_item(object_class_type class_wanted,
             }
             // That might have changed the item's subtype.
             item_colour(acq_item);
-
-            // Don't mark books as seen if only generated for the
-            // acquirement statistics.
-            if (!debug)
-                mark_had_book(acq_item);
         }
         else if (acq_item.base_type == OBJ_JEWELLERY)
         {

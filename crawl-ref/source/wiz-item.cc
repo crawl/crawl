@@ -65,7 +65,6 @@ static void _make_all_books()
 
         item_def book(mitm[thing]);
 
-        mark_had_book(book);
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
 
