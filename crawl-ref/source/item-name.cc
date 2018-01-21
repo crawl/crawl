@@ -3439,8 +3439,10 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == ARM_SCARF
             && item_type_known(item)
-            && get_armour_ego_type(item) == SPARM_SPIRIT_SHIELD
-            && you.spirit_shield(false, false))
+            && (get_armour_ego_type(item) == SPARM_SPIRIT_SHIELD
+                && you.spirit_shield(false, false)
+                || get_armour_ego_type(item) == SPARM_CLOUD_IMMUNE
+                   && have_passive(passive_t::cloud_immunity)))
         {
             return true;
         }
