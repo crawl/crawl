@@ -333,11 +333,8 @@ Building on Windows (Cygwin)
 
 * Follow the Linux build instructions to build Crawl.
 
-Building on Windows 10 (Linux Subsystem) (console and webtiles only)
+Building on Windows 10 (Linux Subsystem)
 --------------------------------------------------------------------
-
-Local tiles (built with TILES=y) does not currently work with this method, but
-webtiles (bult with WEBTILES=y) does, as does console (built with just 'make').
 
 * Follow the instructions on Microsoft's website at
   https://docs.microsoft.com/en-us/windows/wsl/install-win10 to set up the
@@ -347,6 +344,14 @@ webtiles (bult with WEBTILES=y) does, as does console (built with just 'make').
   lists, if using Ubuntu.
 
 * Follow the Linux instructions to build Crawl.
+
+* Console and Webtiles will work without any further configuration. To get SDL
+  tiles to work, you need an X server running on Windows; Xming is an option
+  that has worked in the past. If you run into an error about not finding a
+  matching GLX visual, try running:
+
+  export SDL_VIDEO_X11_VISUALID=
+
 
 Building on Windows (MSVC)
 --------------------------
