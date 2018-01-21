@@ -413,6 +413,24 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_FUNGOID, {
+    "Fu",
+    "Fungoid", nullptr, "Mushroom",
+    SPF_NONE,
+    0, 1, 0, 4,
+    MONS_WANDERING_MUSHROOM,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 8, 8, // 25
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_SLOW, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 }, },
+    { "You have roots in place of feet.",
+      "You sometimes release spores when you attack enemies in melee." },
+    { "no boots", "spores" },
+    { JOB_HUNTER, JOB_ARCANE_MARKSMAN, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_BOWS,
+      SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_GARGOYLE, {
     "Gr",
     "Gargoyle", nullptr, nullptr,

@@ -1174,6 +1174,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMONSPAWN,      SK_POISON_MAGIC,    0),
     APT(SP_DEMONSPAWN,      SK_INVOCATIONS,     3),
     APT(SP_DEMONSPAWN,      SK_EVOCATIONS,      0),
+	
+    // SP_FUNGOID
+    APT(SP_FUNGOID,           SK_FIGHTING,        0),
+    APT(SP_FUNGOID,           SK_SHORT_BLADES,   -1),
+    APT(SP_FUNGOID,           SK_LONG_BLADES,    -1),
+    APT(SP_FUNGOID,           SK_AXES,           -1),
+    APT(SP_FUNGOID,           SK_MACES_FLAILS,   -1),
+    APT(SP_FUNGOID,           SK_POLEARMS,       -1),
+    APT(SP_FUNGOID,           SK_STAVES,         -1),
+    APT(SP_FUNGOID,           SK_SLINGS,          2),
+    APT(SP_FUNGOID,           SK_BOWS,            1),
+    APT(SP_FUNGOID,           SK_CROSSBOWS,       1),
+    APT(SP_FUNGOID,           SK_THROWING,        1),
+    APT(SP_FUNGOID,           SK_ARMOUR,          0),
+    APT(SP_FUNGOID,           SK_DODGING,         0),
+    APT(SP_FUNGOID,           SK_STEALTH,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FUNGOID,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_FUNGOID,           SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FUNGOID,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_FUNGOID,           SK_UNARMED_COMBAT,  0),
+    APT(SP_FUNGOID,           SK_SPELLCASTING,   -1),
+    APT(SP_FUNGOID,           SK_CONJURATIONS,    0),
+    APT(SP_FUNGOID,           SK_HEXES,           2),
+    APT(SP_FUNGOID,           SK_CHARMS,          0),
+    APT(SP_FUNGOID,           SK_SUMMONINGS,     -1),
+    APT(SP_FUNGOID,           SK_NECROMANCY,      0),
+    APT(SP_FUNGOID,           SK_TRANSLOCATIONS, -2),
+    APT(SP_FUNGOID,           SK_TRANSMUTATIONS,  0),
+    APT(SP_FUNGOID,           SK_FIRE_MAGIC,     -1),
+    APT(SP_FUNGOID,           SK_ICE_MAGIC,      -1),
+    APT(SP_FUNGOID,           SK_AIR_MAGIC,      -1),
+    APT(SP_FUNGOID,           SK_EARTH_MAGIC,     2),
+    APT(SP_FUNGOID,           SK_POISON_MAGIC,   -1),
+    APT(SP_FUNGOID,           SK_INVOCATIONS,     0),
+    APT(SP_FUNGOID,           SK_EVOCATIONS,      0),
 
     // SP_GHOUL
     APT(SP_GHOUL,           SK_FIGHTING,        1),

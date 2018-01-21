@@ -192,7 +192,7 @@ static const species_type species_order[] =
     SP_GARGOYLE,       SP_FORMICID,
     SP_BARACHI,        SP_GNOLL,
     // mostly human shape but made of a strange substance
-    SP_VINE_STALKER,
+    SP_VINE_STALKER,   SP_FUNGOID,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
@@ -994,6 +994,7 @@ static species_group species_groups[] =
             SP_MUMMY,
             SP_ANGEL,
             SP_CHAOSKIN,
+            SP_FUNGOID,
         }
     },
 };

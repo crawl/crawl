@@ -385,6 +385,30 @@ bool melee_attack::handle_phase_hit()
 
         return false;
     }
+	
+    if(attacker->is_player() &&you.species == SP_FUNGOID
+       && you.form == transformation::none)
+    {
+        // Fungoids have a separate chance to confuse monsters that applies before
+        // checking weapon brand and will stack with confusing touch
+		
+        // Doesn't work on unbreathing monsters, chance scales with xl
+        if (x_chance_in_y(10 + you.experience_level / 2, 25))
+        {
+            mprf("You release spores at %s.", defender->name(DESC_THE).c_str());
+            if (x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()), 100)
+                && !defender->as_monster()->check_clarity(false)
+                   && !defender->is_unbreathing())
+            {
+               // Declaring these just to pass to the enchant function.
+               bolt beam_temp;
+               beam_temp.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
+               beam_temp.flavour   = BEAM_CONFUSION;
+               beam_temp.source_id = attacker->mid;
+               beam_temp.apply_enchantment_to_monster(defender->as_monster());
+            }
+        }
+    }
 
     if (attacker->is_player() && you.duration[DUR_INFUSION])
     {

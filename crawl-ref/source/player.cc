@@ -7089,11 +7089,16 @@ bool player::polymorph(int pow)
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
     {
-        f = random_choose(transformation::bat,
-                          transformation::fungus,
-                          transformation::pig,
-                          transformation::tree,
-                          transformation::wisp);
+        if(you.species == SP_FUNGOID) // always get fungus form
+            f = transformation::fungus;
+        else
+        {
+            f = random_choose(transformation::bat,
+                              transformation::fungus,
+                              transformation::pig,
+                              transformation::tree,
+                              transformation::wisp);
+        }
         // need to do a dry run first, as Zin's protection has a random factor
         if (transform(pow, f, true, true))
             break;

@@ -66,7 +66,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ARCANE_MARKSMAN, {
     "AM", "Arcane Marksman",
     2, 5, 5,
-    { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, SP_CENTAUR, },
+    { SP_FORMICID, SP_DEEP_ELF, SP_FUNGOID, SP_SPRIGGAN, SP_TROLL, SP_CENTAUR, },
     { "robe", "book of Debilitation" },
     WCHOICE_RANGED,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
