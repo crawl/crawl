@@ -1418,6 +1418,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.pos().y);
 
     marshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+    marshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
 
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
@@ -2474,8 +2475,13 @@ static void tag_read_you(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_BOOKS)
+    {
 #endif
-        unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+    unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+    unmarshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
     // how many spells?
     you.spell_no = 0;
     count = unmarshallUByte(th);
