@@ -2167,3 +2167,34 @@ ttt...ss.............ss...ttt
  tt.......................tt
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   malcolmrose_arrival_greedy_hall
+## Gold themed vault. Player is encouraged to stifle their greed
+## and run away from the worms instead of collecting gold immediately.
+ORIENT: float
+TAGS:   no_rotate no_hmirror no_vmirror arrival no_monster_gen
+TILE:   G = dngn_golden_statue
+RTILE:  x = wall_sandstone
+FTILE:  _-G = floor_limestone, _-. = floor_limestone, _-d = floor_limestone, _-1 = floor_limestone, _-> = floor_limestone
+MONS:   worm
+ITEM:   gold q:1
+MAP
+.................
+.xxxxx+xxx+xxxxx.
+.xWWWxWxWxWxWWWx.
+.xx......d....xx.
+.+W....d...d..W+.
+.xx....d...d..xx.
+.xW.GG.....GGdWx.
+.xW.GG.....GG.Wx.
+.xW.........d.Wx.
+.xW.....{d.d..Wx.
+.xW.....d.....Wx.
+.xWdGG.....GG.Wx.
+.xWdGG.....GG.Wx.
+.x..d.d....d..>x.
+.xxxx.....d.xxxx.
+.x1...........1x.
+.xWWWWWWWWWWWWWx.
+.xxxxxxxxxxxxxxx.
+.................
