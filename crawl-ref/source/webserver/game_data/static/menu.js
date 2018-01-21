@@ -515,6 +515,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             var container = $("ol");
             container.empty();
             $.each(menu.items, function(i, item) {
+                item.elem.data("item", item);
                 container.append(item.elem);
             });
         }
