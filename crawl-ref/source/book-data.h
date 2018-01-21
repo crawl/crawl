@@ -161,6 +161,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_VAMPIRIC_DRAINING,
     SPELL_REGENERATION,
     SPELL_ANIMATE_DEAD,
+    SPELL_DISPEL_UNDEAD,
 },
 
 {   // Book of Callings
