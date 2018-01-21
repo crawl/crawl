@@ -277,24 +277,6 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-void mark_had_book(const item_def &book)
-{
-    ASSERT(book.base_type == OBJ_BOOKS);
-
-    if (!item_is_spellbook(book))
-        return;
-
-    if (!book.props.exists(SPELL_LIST_KEY))
-        mark_had_book(static_cast<book_type>(book.sub_type));
-}
-
-void mark_had_book(book_type booktype)
-{
-    ASSERT_RANGE(booktype, 0, MAX_FIXED_BOOK + 1);
-
-    you.had_book.set(booktype);
-}
-
 void read_book(item_def &book)
 {
     clrscr();

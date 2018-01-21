@@ -1508,11 +1508,6 @@ static bool _gift_sif_kiku_gift(bool forced)
         if (thing_created == NON_ITEM)
             return false;
 
-        // Mark the book type as known to avoid duplicate
-        // gifts if players don't read their gifts for some
-        // reason.
-        mark_had_book(gift);
-
         move_item_to_grid(&thing_created, you.pos(), true);
 
         if (thing_created != NON_ITEM)

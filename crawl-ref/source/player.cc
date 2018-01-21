@@ -5129,7 +5129,6 @@ player::player()
 
     magic_contamination = 0;
 
-    had_book.reset();
     seen_weapon.init(0);
     seen_armour.init(0);
     seen_misc.reset();
