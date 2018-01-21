@@ -548,10 +548,7 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (reuse_selections)
         get_selected(&sel);
     else
-    {
         deselect_all(false);
-        sel.clear();
-    }
 
 #ifdef USE_TILE_LOCAL
     // XXX: reset any title from the previously shown menu that's stored
@@ -1048,6 +1045,7 @@ void Menu::deselect_all(bool update_view)
             }
         }
     }
+    sel.clear();
 }
 
 int Menu::get_first_visible() const
