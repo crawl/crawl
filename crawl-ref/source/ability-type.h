@@ -52,7 +52,9 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    ABIL_MAX_INTRINSIC = ABIL_HOP,
+    // Kitsune
+    ABIL_CHARM,
+    ABIL_MAX_INTRINSIC = ABIL_CHARM,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

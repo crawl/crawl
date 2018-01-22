@@ -63,6 +63,7 @@ enum species_type
     SP_PROFOUND_ELF,
     SP_EMBER_ELF,
     SP_YETI,
+    SP_KITSUNE,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

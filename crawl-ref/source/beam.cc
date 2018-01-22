@@ -1655,16 +1655,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                                               int pow,
                                               bool* did_msg)
 {
-    // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
     {
         if (you.get_mutation_level(MUT_NO_LOVE))
             return true;
 
         if (mons->friendly())
-            return true;
-
-        if (!(mons->holiness() & MH_UNDEAD))
             return true;
 
         int res_margin = mons->check_res_magic(pow);

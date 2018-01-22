@@ -435,6 +435,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MUMMY,           SK_POISON_MAGIC,   -2),
     APT(SP_MUMMY,           SK_INVOCATIONS,    -1),
     APT(SP_MUMMY,           SK_EVOCATIONS,     -2),
+	
+    // SP_KITSUNE
+    APT(SP_KITSUNE,           SK_FIGHTING,       -2),
+    APT(SP_KITSUNE,           SK_SHORT_BLADES,   -1),
+    APT(SP_KITSUNE,           SK_LONG_BLADES,    -2),
+    APT(SP_KITSUNE,           SK_AXES,           -2),
+    APT(SP_KITSUNE,           SK_MACES_FLAILS,   -2),
+    APT(SP_KITSUNE,           SK_POLEARMS,       -2),
+    APT(SP_KITSUNE,           SK_STAVES,         -2),
+    APT(SP_KITSUNE,           SK_SLINGS,         -2),
+    APT(SP_KITSUNE,           SK_BOWS,           -2),
+    APT(SP_KITSUNE,           SK_CROSSBOWS,      -2),
+    APT(SP_KITSUNE,           SK_THROWING,       -2),
+    APT(SP_KITSUNE,           SK_ARMOUR,         -2),
+    APT(SP_KITSUNE,           SK_DODGING,        -2),
+    APT(SP_KITSUNE,           SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_KITSUNE,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_KITSUNE,           SK_SHIELDS,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_KITSUNE,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_KITSUNE,           SK_UNARMED_COMBAT, -1),
+    APT(SP_KITSUNE,           SK_SPELLCASTING,    1),
+    APT(SP_KITSUNE,           SK_CONJURATIONS,   -3),
+    APT(SP_KITSUNE,           SK_HEXES,          -1),
+    APT(SP_KITSUNE,           SK_CHARMS,         -1),
+    APT(SP_KITSUNE,           SK_SUMMONINGS,     -1),
+    APT(SP_KITSUNE,           SK_NECROMANCY,     -3),
+    APT(SP_KITSUNE,           SK_TRANSLOCATIONS, -2),
+    APT(SP_KITSUNE,           SK_TRANSMUTATIONS,  1),
+    APT(SP_KITSUNE,           SK_FIRE_MAGIC,     -1),
+    APT(SP_KITSUNE,           SK_ICE_MAGIC,      -1),
+    APT(SP_KITSUNE,           SK_AIR_MAGIC,      -1),
+    APT(SP_KITSUNE,           SK_EARTH_MAGIC,    -1),
+    APT(SP_KITSUNE,           SK_POISON_MAGIC,   -1),
+    APT(SP_KITSUNE,           SK_INVOCATIONS,     1),
+    APT(SP_KITSUNE,           SK_EVOCATIONS,     -3),
 
     // SP_NAGA
     APT(SP_NAGA,            SK_FIGHTING,        0),

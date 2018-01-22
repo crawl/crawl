@@ -325,6 +325,7 @@ static const ability_def Ability_List[] =
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::delay },
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
+	{ ABIL_CHARM, "Charm Monsters", 0, 0, 0, 0, {}, abflag::exhaustion },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1828,6 +1829,15 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
         return frog_hop(fail);
+		
+    case ABIL_CHARM:
+        if(you.duration[DUR_EXHAUSTED])
+        {
+			mpr("You're too exhausted to do that!");
+            return SPRET_ABORT;
+        }
+        you.increase_duration(DUR_EXHAUSTED, 25 - you.experience_level / 2 + random2(8));
+        return mass_enchantment(ENCH_CHARM, 10 + you.experience_level * 4);
 
 #if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
@@ -3323,6 +3333,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
+	
+    if (you.species == SP_KITSUNE)
+        _add_talent(talents, ABIL_CHARM, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

@@ -598,6 +598,22 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_KITSUNE, {
+    "Ki",
+    "Kitsune", nullptr, "Fox",
+    SPF_NONE,
+    1, -1, 0, 6,
+    MONS_HUMAN,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    5, 11, 11, // 27
+    { STAT_INT, STAT_DEX }, 4,
+    { {MUT_CLAWS, 1, 1 }, },
+    {"You can charm monsters.", "You have fox ears (no helmets)."},
+    {"charm monsters", "no helmets"},
+    { JOB_WIZARD, JOB_TRANSMUTER, JOB_EARTH_ELEMENTALIST },
+    { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_KOBOLD, {
     "Ko",
     "Kobold", nullptr, nullptr,

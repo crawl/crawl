@@ -181,6 +181,7 @@ static const species_type species_order[] =
     SP_CRYSTAL_DWARF,  SP_GRUE,
     SP_ANGEL,          SP_CHAOSKIN,
     SP_PROFOUND_ELF,   SP_EMBER_ELF,
+    SP_KITSUNE,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_LEPRECHAUN,
@@ -1010,6 +1011,7 @@ static species_group species_groups[] =
         20,
         {
             SP_PROFOUND_ELF,
+            SP_KITSUNE,
         }
     },
 };
