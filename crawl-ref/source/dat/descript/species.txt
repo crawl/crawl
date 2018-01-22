@@ -144,6 +144,11 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
 %%%%
+Profound Elf
+
+Deeper than a Deep Elf and twice as elven, Profound Elves are extremely frail 
+magical experts.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans make highly competent stabbers

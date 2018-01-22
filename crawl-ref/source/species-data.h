@@ -184,6 +184,24 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
 } },
 
+{ SP_PROFOUND_ELF, {
+    "PE",
+    "Profound Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -2, -4, 4, 5,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    2, 16, 12, // 30
+    { STAT_INT }, 2,
+    {},
+    {},
+    {},
+    { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
+      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE, JOB_ANNIHILATOR },
+    { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
+} },
+
 { SP_DEMIGOD, {
     "Dg",
     "Demigod", "Divine", nullptr,

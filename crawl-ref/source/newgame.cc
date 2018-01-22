@@ -180,6 +180,7 @@ static const species_type species_order[] =
     SP_DEEP_DWARF,     SP_HILL_ORC,
     SP_CRYSTAL_DWARF,  SP_GRUE,
     SP_ANGEL,          SP_CHAOSKIN,
+    SP_PROFOUND_ELF,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_LEPRECHAUN,
@@ -964,7 +965,7 @@ static species_group species_groups[] =
     },
     {
         "Intermediate",
-        coord_def(25, 0),
+        coord_def(18, 0),
         20,
         {
             SP_HUMAN,
@@ -983,7 +984,7 @@ static species_group species_groups[] =
     },
     {
         "Advanced",
-        coord_def(50, 0),
+        coord_def(36, 0),
         20,
         {
             SP_VINE_STALKER,
@@ -998,6 +999,14 @@ static species_group species_groups[] =
             SP_ANGEL,
             SP_CHAOSKIN,
             SP_FUNGOID,
+        }
+    },
+    {
+        "Expert",
+        coord_def(54, 0),
+        20,
+        {
+            SP_PROFOUND_ELF,
         }
     },
 };

@@ -162,7 +162,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ENCHANTER, {
     "En", "Enchanter",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
+    { SP_DEEP_ELF, SP_FELID, SP_PROFOUND_ELF, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
     { "dagger plus:1", "robe", "book of Maledictions" },
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },

@@ -164,6 +164,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_POISON_MAGIC,    1),
     APT(SP_DEEP_ELF,        SK_INVOCATIONS,     1),
     APT(SP_DEEP_ELF,        SK_EVOCATIONS,      1),
+	
+    // SP_PROFOUND_ELF
+    APT(SP_PROFOUND_ELF,        SK_FIGHTING,       -4),
+    APT(SP_PROFOUND_ELF,        SK_SHORT_BLADES,    0),
+    APT(SP_PROFOUND_ELF,        SK_LONG_BLADES,    -2),
+    APT(SP_PROFOUND_ELF,        SK_AXES,           -4),
+    APT(SP_PROFOUND_ELF,        SK_MACES_FLAILS,   -6),
+    APT(SP_PROFOUND_ELF,        SK_POLEARMS,       -6),
+    APT(SP_PROFOUND_ELF,        SK_STAVES,          0),
+    APT(SP_PROFOUND_ELF,        SK_SLINGS,         -4),
+    APT(SP_PROFOUND_ELF,        SK_BOWS,            2),
+    APT(SP_PROFOUND_ELF,        SK_CROSSBOWS,      -2),
+    APT(SP_PROFOUND_ELF,        SK_THROWING,        0),
+    APT(SP_PROFOUND_ELF,        SK_ARMOUR,         -4),
+    APT(SP_PROFOUND_ELF,        SK_DODGING,         4),
+    APT(SP_PROFOUND_ELF,        SK_STEALTH,         6),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_PROFOUND_ELF,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_PROFOUND_ELF,        SK_SHIELDS,        -4),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_PROFOUND_ELF,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_PROFOUND_ELF,        SK_UNARMED_COMBAT, -4),
+    APT(SP_PROFOUND_ELF,        SK_SPELLCASTING,    6),
+    APT(SP_PROFOUND_ELF,        SK_CONJURATIONS,    2),
+    APT(SP_PROFOUND_ELF,        SK_HEXES,           6),
+    APT(SP_PROFOUND_ELF,        SK_CHARMS,          8),
+    APT(SP_PROFOUND_ELF,        SK_SUMMONINGS,      2),
+    APT(SP_PROFOUND_ELF,        SK_NECROMANCY,      4),
+    APT(SP_PROFOUND_ELF,        SK_TRANSLOCATIONS,  2),
+    APT(SP_PROFOUND_ELF,        SK_TRANSMUTATIONS,  2),
+    APT(SP_PROFOUND_ELF,        SK_FIRE_MAGIC,      2),
+    APT(SP_PROFOUND_ELF,        SK_ICE_MAGIC,       2),
+    APT(SP_PROFOUND_ELF,        SK_AIR_MAGIC,       0),
+    APT(SP_PROFOUND_ELF,        SK_EARTH_MAGIC,     2),
+    APT(SP_PROFOUND_ELF,        SK_POISON_MAGIC,    2),
+    APT(SP_PROFOUND_ELF,        SK_INVOCATIONS,     2),
+    APT(SP_PROFOUND_ELF,        SK_EVOCATIONS,      2),
 
 #if TAG_MAJOR_VERSION == 34
     // SP_SLUDGE_ELF
