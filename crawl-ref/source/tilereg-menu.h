@@ -79,6 +79,7 @@ protected:
     // TODO enne - remove this?
     ShapeBuffer m_shape_buf;
     LineBuffer m_line_buf;
+    LineBuffer m_div_line_buf;
     FontBuffer m_font_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
