@@ -62,6 +62,7 @@ enum species_type
     SP_FLAN,
     SP_PROFOUND_ELF,
     SP_EMBER_ELF,
+    SP_YETI,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

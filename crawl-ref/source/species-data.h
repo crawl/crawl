@@ -843,6 +843,22 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
+
+{ SP_YETI, {
+    "Ye",
+    "Yeti", nullptr, nullptr,
+    SPF_NONE,
+    0, 2, 0, 3,
+    MONS_OGRE,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
+    8, 9, 11, // 28
+    { STAT_INT, STAT_DEX }, 5,
+    { { MUT_PASSIVE_FREEZE, 1, 7 }, },
+    {},
+    {},
+    { JOB_ICE_ELEMENTALIST, JOB_NECROMANCER, JOB_CONJURER },
+    { SK_LONG_BLADES, SK_POLEARMS, SK_STAVES },
+} },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
     "SE",

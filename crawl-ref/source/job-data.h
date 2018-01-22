@@ -225,7 +225,7 @@ static const map<job_type, job_def> job_data =
     "IE", "Ice Elementalist",
     0, 7, 5,
     { SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
-      SP_GARGOYLE, },
+      SP_YETI, },
     { "robe", "book of Frost" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_ICE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
