@@ -1018,6 +1018,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LEPRECHAUN,        SK_POISON_MAGIC,   -1),
     APT(SP_LEPRECHAUN,        SK_INVOCATIONS,     0),
     APT(SP_LEPRECHAUN,        SK_EVOCATIONS,      0),
+	
+    // SP_FLAN
+    APT(SP_FLAN,        SK_FIGHTING,       -1),
+    APT(SP_FLAN,        SK_SHORT_BLADES,    0),
+    APT(SP_FLAN,        SK_LONG_BLADES,     0),
+    APT(SP_FLAN,        SK_AXES,            0),
+    APT(SP_FLAN,        SK_MACES_FLAILS,    0),
+    APT(SP_FLAN,        SK_POLEARMS,        0),
+    APT(SP_FLAN,        SK_STAVES,          0),
+    APT(SP_FLAN,        SK_SLINGS,          0),
+    APT(SP_FLAN,        SK_BOWS,            0),
+    APT(SP_FLAN,        SK_CROSSBOWS,       0),
+    APT(SP_FLAN,        SK_THROWING,        0),
+    APT(SP_FLAN,        SK_ARMOUR,          0),
+    APT(SP_FLAN,        SK_DODGING,         0),
+    APT(SP_FLAN,        SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FLAN,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_FLAN,        SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FLAN,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_FLAN,        SK_UNARMED_COMBAT,  0),
+    APT(SP_FLAN,        SK_SPELLCASTING,   -1),
+    APT(SP_FLAN,        SK_CONJURATIONS,    0),
+    APT(SP_FLAN,        SK_HEXES,           0),
+    APT(SP_FLAN,        SK_CHARMS,          0),
+    APT(SP_FLAN,        SK_SUMMONINGS,      0),
+    APT(SP_FLAN,        SK_NECROMANCY,      0),
+    APT(SP_FLAN,        SK_TRANSLOCATIONS,  0),
+    APT(SP_FLAN,        SK_TRANSMUTATIONS,  0),
+    APT(SP_FLAN,        SK_FIRE_MAGIC,      0),
+    APT(SP_FLAN,        SK_ICE_MAGIC,       0),
+    APT(SP_FLAN,        SK_AIR_MAGIC,       0),
+    APT(SP_FLAN,        SK_EARTH_MAGIC,     0),
+    APT(SP_FLAN,        SK_POISON_MAGIC,    0),
+    APT(SP_FLAN,        SK_INVOCATIONS,     0),
+    APT(SP_FLAN,        SK_EVOCATIONS,     -2),
 
     // SP_MINOTAUR
     APT(SP_MINOTAUR,        SK_FIGHTING,        2),

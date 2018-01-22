@@ -191,6 +191,7 @@ static const species_type species_order[] =
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
     SP_BARACHI,        SP_GNOLL,
+    SP_FLAN,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,   SP_FUNGOID,
     // celestial species
@@ -958,6 +959,7 @@ static species_group species_groups[] =
             SP_TROLL,
             SP_GHOUL,
             SP_CRYSTAL_DWARF,
+            SP_CENTAUR,
         }
     },
     {
@@ -968,7 +970,6 @@ static species_group species_groups[] =
             SP_HUMAN,
             SP_KOBOLD,
             SP_DEMONSPAWN,
-            SP_CENTAUR,
             SP_SPRIGGAN,
             SP_TENGU,
             SP_DEEP_ELF,
@@ -977,6 +978,7 @@ static species_group species_groups[] =
             SP_GNOLL,
             SP_GRUE,
             SP_LEPRECHAUN,
+            SP_FLAN,
         }
     },
     {

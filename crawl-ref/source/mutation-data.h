@@ -184,6 +184,14 @@ static const mutation_def mut_data[] =
   {"You feel conductive.", "", ""},
 },
 
+{ MUT_CORROSION_RESISTANCE, 2, 1, mutflag::good, true,
+  "corrosion resistance",
+
+  {"You are resistant to corrosion. (rCorr)", "", ""},
+  {"You feel resistant to corrosion.", "", ""},
+  {"You no longer feel resistant to corrosion.", "", ""},
+},
+
 { MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal, true,
   "electricity vulnerability",
 

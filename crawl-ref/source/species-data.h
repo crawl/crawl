@@ -56,6 +56,25 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_FLAN, {
+    "Fl",
+    "Flan", nullptr, nullptr,
+    SPF_NO_HAIR,
+    -1, -1, 0, 3,
+    MONS_JELLY,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    10, 10, 10, // 30
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_GELATINOUS_BODY, 3, 1}, {MUT_CORROSION_RESISTANCE, 1, 1} },
+    { "Your gelatinous body takes the shape of your armour (ER/2)",
+      "You sometimes corrode monsters when you hit them."},
+    { "ER/2", "corrosion", },
+    { JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_GNOLL, {
     "Gn",
     "Gnoll", nullptr, nullptr,
@@ -424,7 +443,7 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_SLOW, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 }, },
     { "You have roots in place of feet.",
-      "You sometimes release spores when you attack enemies in melee." },
+      "You sometimes release spores when you attack." },
     { "no boots", "spores" },
     { JOB_HUNTER, JOB_ARCANE_MARKSMAN, JOB_EARTH_ELEMENTALIST },
     { SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_BOWS,

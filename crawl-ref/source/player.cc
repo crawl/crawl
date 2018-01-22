@@ -1476,6 +1476,12 @@ bool player::res_corr(bool calc_unid, bool items) const
     {
         return true;
     }
+	
+    if (form_keeps_mutations()
+        && get_mutation_level(MUT_CORROSION_RESISTANCE) > 0)
+    {
+        return true;
+    }
 
     return actor::res_corr(calc_unid, items);
 }
@@ -5674,8 +5680,11 @@ int player::unadjusted_body_armour_penalty() const
  */
 int player::adjusted_body_armour_penalty(int scale) const
 {
+    int unadjusted_penalty = you.species == SP_FLAN ? 
+        unadjusted_body_armour_penalty() / 2 : 
+        unadjusted_body_armour_penalty();
     const int base_ev_penalty =
-        max(0, unadjusted_body_armour_penalty()
+        max(0, unadjusted_penalty
                    - get_mutation_level(MUT_STURDY_FRAME) * 2);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)

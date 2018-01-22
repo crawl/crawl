@@ -56,6 +56,11 @@ Felid
 Felids are many-lived cats possessing sentience. They are incapable of advanced
 item manipulation or the use of armour or weapons.
 %%%%
+Flan
+
+Flans are gelatinous and slightly corrosive beings. Their fluid shape lets them fit
+easily into any body armour, but they cannot wear other armour types.
+%%%%
 Fungoid
 
 Fungoids are mushroom-like humanoids with roots instead of feet. They move exceptionally

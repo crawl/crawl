@@ -386,6 +386,13 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 	
+    if(attacker->is_player() &&you.species == SP_FLAN
+       && you.form == transformation::none && one_chance_in(3))
+	{
+        mprf("Your touch drips with acid.");
+        defender->corrode_equipment();
+	}
+	
     if(attacker->is_player() &&you.species == SP_FUNGOID
        && you.form == transformation::none)
     {
