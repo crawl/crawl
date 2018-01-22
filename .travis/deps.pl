@@ -21,11 +21,11 @@ else {
         liblua5.1-0-dbg
     );
 
-    push @deps, qw(
-        libsdl2-dev
-        libsdl2-image-dev
-        libsdl2-mixer-dev
-    ) if $ENV{TILES} || $ENV{WEBTILES};
+#    push @deps, qw(
+#        libsdl2-dev
+#        libsdl2-image-dev
+#        libsdl2-mixer-dev
+#    ) if $ENV{TILES} || $ENV{WEBTILES};
 }
 
 retry(qw(sudo apt-get install), @deps);
