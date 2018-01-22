@@ -165,6 +165,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_INVOCATIONS,     1),
     APT(SP_DEEP_ELF,        SK_EVOCATIONS,      1),
 	
+    // SP_EMBER_ELF
+    APT(SP_EMBER_ELF,        SK_FIGHTING,       -1),
+    APT(SP_EMBER_ELF,        SK_SHORT_BLADES,    0),
+    APT(SP_EMBER_ELF,        SK_LONG_BLADES,     0),
+    APT(SP_EMBER_ELF,        SK_AXES,           -2),
+    APT(SP_EMBER_ELF,        SK_MACES_FLAILS,   -1),
+    APT(SP_EMBER_ELF,        SK_POLEARMS,       -1),
+    APT(SP_EMBER_ELF,        SK_STAVES,          0),
+    APT(SP_EMBER_ELF,        SK_SLINGS,         -1),
+    APT(SP_EMBER_ELF,        SK_BOWS,            0),
+    APT(SP_EMBER_ELF,        SK_CROSSBOWS,      -1),
+    APT(SP_EMBER_ELF,        SK_THROWING,       -1),
+    APT(SP_EMBER_ELF,        SK_ARMOUR,         -1),
+    APT(SP_EMBER_ELF,        SK_DODGING,         0),
+    APT(SP_EMBER_ELF,        SK_STEALTH,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_EMBER_ELF,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_EMBER_ELF,        SK_SHIELDS,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_EMBER_ELF,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_EMBER_ELF,        SK_UNARMED_COMBAT, -1),
+    APT(SP_EMBER_ELF,        SK_SPELLCASTING,    0),
+    APT(SP_EMBER_ELF,        SK_CONJURATIONS,    0),
+    APT(SP_EMBER_ELF,        SK_HEXES,           0),
+    APT(SP_EMBER_ELF,        SK_CHARMS,          0),
+    APT(SP_EMBER_ELF,        SK_SUMMONINGS,      0),
+    APT(SP_EMBER_ELF,        SK_NECROMANCY,      0),
+    APT(SP_EMBER_ELF,        SK_TRANSLOCATIONS,  1),
+    APT(SP_EMBER_ELF,        SK_TRANSMUTATIONS,  1),
+    APT(SP_EMBER_ELF,        SK_FIRE_MAGIC,      1),
+    APT(SP_EMBER_ELF,        SK_ICE_MAGIC,       0),
+    APT(SP_EMBER_ELF,        SK_AIR_MAGIC,       0),
+    APT(SP_EMBER_ELF,        SK_EARTH_MAGIC,     0),
+    APT(SP_EMBER_ELF,        SK_POISON_MAGIC,    0),
+    APT(SP_EMBER_ELF,        SK_INVOCATIONS,     0),
+    APT(SP_EMBER_ELF,        SK_EVOCATIONS,      0),
+
     // SP_PROFOUND_ELF
     APT(SP_PROFOUND_ELF,        SK_FIGHTING,       -4),
     APT(SP_PROFOUND_ELF,        SK_SHORT_BLADES,    0),

@@ -46,6 +46,11 @@ Draconian
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
 a colour.
 %%%%
+Ember Elf
+
+Ember Elves have depleted magical reserves, but regenerate magical power quickly.
+As they develop, their magic becomes more powerful but harder to control.
+%%%%
 Formicid
 
 Formicids are humanoid ants adept at digging. Their limbs are exceptionally

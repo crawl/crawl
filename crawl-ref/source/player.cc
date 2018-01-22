@@ -1140,6 +1140,9 @@ int player_mp_regen()
 
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 25;
+	
+    if (you.species == SP_EMBER_ELF)
+        regen_amount *= 3;
 
     return regen_amount;
 }

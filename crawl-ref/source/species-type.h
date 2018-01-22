@@ -61,6 +61,7 @@ enum species_type
     SP_LEPRECHAUN,
     SP_FLAN,
     SP_PROFOUND_ELF,
+    SP_EMBER_ELF,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

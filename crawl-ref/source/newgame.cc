@@ -180,7 +180,7 @@ static const species_type species_order[] =
     SP_DEEP_DWARF,     SP_HILL_ORC,
     SP_CRYSTAL_DWARF,  SP_GRUE,
     SP_ANGEL,          SP_CHAOSKIN,
-    SP_PROFOUND_ELF,
+    SP_PROFOUND_ELF,   SP_EMBER_ELF,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_LEPRECHAUN,
@@ -961,6 +961,8 @@ static species_group species_groups[] =
             SP_GHOUL,
             SP_CRYSTAL_DWARF,
             SP_CENTAUR,
+            SP_DEEP_DWARF,
+            SP_VINE_STALKER,
         }
     },
     {
@@ -975,11 +977,11 @@ static species_group species_groups[] =
             SP_TENGU,
             SP_DEEP_ELF,
             SP_OGRE,
-            SP_DEEP_DWARF,
             SP_GNOLL,
             SP_GRUE,
             SP_LEPRECHAUN,
             SP_FLAN,
+            SP_EMBER_ELF,
         }
     },
     {
@@ -987,7 +989,6 @@ static species_group species_groups[] =
         coord_def(36, 0),
         20,
         {
-            SP_VINE_STALKER,
             SP_VAMPIRE,
             SP_DEMIGOD,
             SP_FORMICID,
