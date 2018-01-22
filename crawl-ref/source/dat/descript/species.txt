@@ -104,6 +104,11 @@ Kobold
 
 Kobolds are small, mischievous and a little fragile, but multi-talented.
 %%%%
+Leprechaun
+
+Leprechauns are small and frail but versatile. Their intrinsic luck gives them 
+a knack for finding better items and more gold than other species.
+%%%%
 Merfolk
 
 Half fish, half human, Merfolk are citizens of both water and land. They are

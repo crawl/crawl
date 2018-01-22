@@ -558,6 +558,22 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_STAVES, SK_CROSSBOWS },
 } },
 
+{ SP_LEPRECHAUN, {
+    "Le",
+    "Leprechaun", nullptr, nullptr,
+    SPF_NONE,
+    0, -2, 0, 3,
+    MONS_BOGGART,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    6, 6, 12, // 24
+    { STAT_INT, STAT_DEX }, 5,
+    {},
+    {"You are lucky with gold and items."},
+    {"luck"},
+    { JOB_SKALD, JOB_WARPER, JOB_WIZARD},
+    { SK_MACES_FLAILS, SK_LONG_BLADES, SK_CROSSBOWS },
+} },
+
 { SP_MERFOLK, {
     "Mf",
     "Merfolk", "Merfolkian", nullptr,

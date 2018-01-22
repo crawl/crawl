@@ -1831,6 +1831,12 @@ int items(bool allow_uniques,
         allow_uniques = false;
 
     item.brand = force_ego;
+	
+    //simply the dankest species feature
+    if(you.species == SP_LEPRECHAUN)
+    {
+		item_level += 5 + random2avg(10 + you.experience_level, 2);
+	}
 
     // cap item_level unless an acquirement-level item {dlb}:
     if (item_level > 50 && !force_good)

@@ -574,6 +574,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HILL_ORC:
         return TILEP_BASE_ORC;
     case SP_KOBOLD:
+    case SP_LEPRECHAUN:
         return TILEP_BASE_KOBOLD;
     case SP_MUMMY:
         return TILEP_BASE_MUMMY;

@@ -58,6 +58,7 @@ enum species_type
     SP_ANGEL,
     SP_CHAOSKIN,
     SP_FUNGOID,
+    SP_LEPRECHAUN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

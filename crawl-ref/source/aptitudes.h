@@ -979,6 +979,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SPRIGGAN,        SK_POISON_MAGIC,    0),
     APT(SP_SPRIGGAN,        SK_INVOCATIONS,     0),
     APT(SP_SPRIGGAN,        SK_EVOCATIONS,      3),
+	
+    // SP_LEPRECHAUN
+    APT(SP_LEPRECHAUN,        SK_FIGHTING,       -1),
+    APT(SP_LEPRECHAUN,        SK_SHORT_BLADES,    1),
+    APT(SP_LEPRECHAUN,        SK_LONG_BLADES,     1),
+    APT(SP_LEPRECHAUN,        SK_AXES,            1),
+    APT(SP_LEPRECHAUN,        SK_MACES_FLAILS,    1),
+    APT(SP_LEPRECHAUN,        SK_POLEARMS,        1),
+    APT(SP_LEPRECHAUN,        SK_STAVES,          1),
+    APT(SP_LEPRECHAUN,        SK_SLINGS,          1),
+    APT(SP_LEPRECHAUN,        SK_BOWS,            1),
+    APT(SP_LEPRECHAUN,        SK_CROSSBOWS,       1),
+    APT(SP_LEPRECHAUN,        SK_THROWING,        1),
+    APT(SP_LEPRECHAUN,        SK_ARMOUR,          0),
+    APT(SP_LEPRECHAUN,        SK_DODGING,         1),
+    APT(SP_LEPRECHAUN,        SK_STEALTH,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_LEPRECHAUN,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_LEPRECHAUN,        SK_SHIELDS,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_LEPRECHAUN,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_LEPRECHAUN,        SK_UNARMED_COMBAT, -1),
+    APT(SP_LEPRECHAUN,        SK_SPELLCASTING,    1),
+    APT(SP_LEPRECHAUN,        SK_CONJURATIONS,   -1),
+    APT(SP_LEPRECHAUN,        SK_HEXES,           1),
+    APT(SP_LEPRECHAUN,        SK_CHARMS,          5),
+    APT(SP_LEPRECHAUN,        SK_SUMMONINGS,      0),
+    APT(SP_LEPRECHAUN,        SK_NECROMANCY,     -1),
+    APT(SP_LEPRECHAUN,        SK_TRANSLOCATIONS,  2),
+    APT(SP_LEPRECHAUN,        SK_TRANSMUTATIONS,  0),
+    APT(SP_LEPRECHAUN,        SK_FIRE_MAGIC,     -1),
+    APT(SP_LEPRECHAUN,        SK_ICE_MAGIC,      -1),
+    APT(SP_LEPRECHAUN,        SK_AIR_MAGIC,      -1),
+    APT(SP_LEPRECHAUN,        SK_EARTH_MAGIC,    -1),
+    APT(SP_LEPRECHAUN,        SK_POISON_MAGIC,   -1),
+    APT(SP_LEPRECHAUN,        SK_INVOCATIONS,     0),
+    APT(SP_LEPRECHAUN,        SK_EVOCATIONS,      0),
 
     // SP_MINOTAUR
     APT(SP_MINOTAUR,        SK_FIGHTING,        2),
