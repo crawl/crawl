@@ -172,7 +172,12 @@ void MenuRegion::_place_entries()
         {
             const int w = entry.ex - entry.sx, h = entry.ey - entry.sy;
             formatted_string split = m_font_entry->split(entry.text, w, h);
-            m_font_buf.add(split, entry.sx, entry.sy+scroll_y);
+            // +5 and +8 give: top margin of 5px, line-text sep of 3px, bottom margin of 2px
+            if (index < (int)m_entries.size()-1 && m_entries[index+1].valid
+                    && !m_entries[index+1].heading)
+                m_div_line_buf.add(entry.sx, entry.sy+scroll_y+5,
+                        mx-entry.sx, entry.sy+scroll_y+5, VColour(0, 64, 255, 70));
+            m_font_buf.add(split, entry.sx, entry.sy+scroll_y+8);
         }
         else
         {
@@ -275,7 +280,8 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
             entry.sx = heading_indent + left_offset;
             entry.ex = entry.sx + text_width + left_offset;
             entry.sy = height;
-            entry.ey = entry.sy + text_height;
+            // 10px extra used for divider line and padding
+            entry.ey = entry.sy + text_height + 10;
 
             // wrap titles to two lines if they don't fit
             if (draw_tiles && entry.ex > entry.sx + menu_width)
@@ -446,6 +452,7 @@ void MenuRegion::render()
     set_transform();
     m_shape_buf.draw();
     m_line_buf.draw();
+    m_div_line_buf.draw();
     for (int i = 0; i < TEX_MAX; i++)
         m_tile_buf[i].draw();
     m_font_buf.draw();
@@ -455,6 +462,7 @@ void MenuRegion::_clear_buffers()
 {
     m_shape_buf.clear();
     m_line_buf.clear();
+    m_div_line_buf.clear();
     for (int i = 0; i < TEX_MAX; i++)
         m_tile_buf[i].clear();
     m_font_buf.clear();
