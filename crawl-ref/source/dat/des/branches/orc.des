@@ -1310,8 +1310,8 @@ TAGS: extra decor no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI
-# Makeshift hammer and chisel
-KITEM: H = club
+KITEM: H = hammer
+# There's no chisel item, so
 KITEM: C = dagger
 KITEM: r = stone q:1 / nothing w:5
 MAP

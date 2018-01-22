@@ -554,9 +554,7 @@ enum weapon_type
 {
     WPN_CLUB,
     WPN_WHIP,
-#if TAG_MAJOR_VERSION == 34
     WPN_HAMMER,
-#endif
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
