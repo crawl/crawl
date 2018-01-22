@@ -242,11 +242,14 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
     const int max_tile_height = draw_tiles ? 32 : 0;
     const int entry_buffer    = 1;
 
-    int column = -1; // an initial increment makes this 0
     if (!draw_tiles)
         set_num_columns(1);
-    const int max_columns  = min(2, m_max_columns);
-    const int column_width = menu_width / max_columns;
+    const int max_columns = min(2, m_max_columns);
+    int num_columns = 1;
+
+col_retry:
+    int column = -1; // an initial increment makes this 0
+    const int column_width = menu_width / num_columns;
     const int text_height = m_font_entry->char_height();
     const int more_height = (count_linebreaks(m_more)+1) * m_font_entry->char_height();
 
@@ -265,7 +268,7 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
             continue;
         }
 
-        column = entry.heading ? 0 : (column+1) % max_columns;
+        column = entry.heading ? 0 : (column+1) % num_columns;
 
         if (column == 0)
         {
@@ -296,7 +299,7 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
             }
 
             row_height = max(row_height, entry.ey - entry.sy);
-            column = max_columns-1;
+            column = num_columns-1;
         }
         else
         {
@@ -345,10 +348,18 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
     // Limit page size to ensure <= 52 items visible
     const int min_row_height = max(max_tile_height, text_height) + entry_buffer;
     const int title_height = (count_linebreaks(m_title)+1) * m_font_entry->char_height();
-    m_end_height = min(min_row_height*52/max_columns, my - more_height - title_height);
+    m_end_height = min(min_row_height*52/num_columns, my - more_height - title_height);
 #ifdef TOUCH_UI
     m_more_region_start = m_end_height;
 #endif
+
+    // If there's not enough space to fit everything on a single screen, try
+    // again with more columns (if we haven't hit the max no. of columns)
+    if (height+row_height > my-more_height-title_height && num_columns < max_columns)
+    {
+        num_columns++;
+        goto col_retry;
+    }
 
     // Give each entry a page number
     int page = 1, page_top = top_offset;
