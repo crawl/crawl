@@ -1,4 +1,4 @@
-# Dungeon Crawl Stone Soup: Spicy Soup variation
+# Dungeon Crawl Stone Soup: Spicy fork
 
 ---
 
@@ -15,7 +15,6 @@ Multiple difficulty levels:
   when starting a game, it will ask the player for what difficulty level they want to play.
   difficulty levels:
     easy:
-      1/4 chance monster attacks will miss / spells will fail
       monsters have 20% less health. 
       monsters do 20% less damage.
       monsters have 20% slower attack
