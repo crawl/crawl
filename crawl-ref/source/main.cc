@@ -425,6 +425,30 @@ NORETURN static void _launch_game()
                     << species_name(you.species)
                     << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
+
+        if (Options.multiple_difficulty_levels) {
+            msg::stream << "<white>You are playing the ";
+
+            switch (crawl_state.difficulty) {
+                case DIFFICULTY_EASY:
+                    msg::stream << "Easy";
+                    break;
+                case DIFFICULTY_STANDARD:
+                    msg::stream << "Standard";
+                    break;
+                case DIFFICULTY_CHALLENGE:
+                    msg::stream << "Challenge";
+                    break;
+                case DIFFICULTY_NIGHTMARE:
+                    msg::stream << "Nightmare";
+                    break;
+                default:
+                    break;
+            }
+
+            msg::stream << " difficulty mode</white> <yellow></yellow>"
+                        << endl;
+        }
     }
 
 #ifdef USE_TILE

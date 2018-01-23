@@ -767,6 +767,7 @@ void TilesFramework::_send_player(bool force_full)
         _update_int(force_full, c.deaths, you.deaths, "deaths");
     }
 
+    _update_int(force_full, c.diff, (int)crawl_state.difficulty, "diff");
     _update_int(force_full, c.experience_level, you.experience_level, "xl");
     _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
     _update_int(force_full, c.gold, you.gold, "gold");

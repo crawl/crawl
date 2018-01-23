@@ -77,6 +77,18 @@ def watch_socket_dirs():
         if socket_dir in added_dirs: continue
         watcher.watch(socket_dir, handle_new_socket)
 
+def diff_string(level):
+    result = "Unknown"
+    if level == "0":
+        result = "Easy"
+    if level == "1":
+        result = "Standard"
+    if level == "2":
+        result = "Challenge"
+    if level == "3":
+        result = "Nightmare"
+    return result
+
 class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop=None):
         self.game_params = game_params
@@ -302,6 +314,11 @@ class CrawlProcessHandlerBase(object):
             "idle_time": (self.idle_time() if self.is_idle() else 0),
             "game_id": self.game_params["id"],
             }
+        if "difficulty" in self.where.keys():
+            entry["diff"] = diff_string(self.where["difficulty"])
+        else:
+            entry["diff"] = "Unknown"
+
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
                 entry[key] = self.where[key]

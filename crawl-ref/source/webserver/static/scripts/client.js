@@ -805,6 +805,7 @@ function (exports, $, key_conversion, chat, comm) {
         username_entry.text(data.username);
         set("username", username_entry);
         set("game_id", data.game_id);
+        set("diff", data.diff);
         set("xl", data.xl);
         set("char", data.char);
         set("place", data.place);

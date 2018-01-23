@@ -1220,6 +1220,15 @@ static void _redraw_title()
         _draw_wizmode_flag("EX-WIZARD");
     else if (you.explore && !small_layout)
         _draw_wizmode_flag("EXPLORE");
+    else if (Options.multiple_difficulty_levels && crawl_state.difficulty == DIFFICULTY_EASY)
+        _draw_wizmode_flag("EASY");
+    else if (Options.multiple_difficulty_levels && crawl_state.difficulty == DIFFICULTY_STANDARD)
+        _draw_wizmode_flag("STANDARD");
+    else if (Options.multiple_difficulty_levels && crawl_state.difficulty == DIFFICULTY_CHALLENGE)
+        _draw_wizmode_flag("CHALLENGE");
+    else if (Options.multiple_difficulty_levels && crawl_state.difficulty == DIFFICULTY_NIGHTMARE)
+        _draw_wizmode_flag("NIGHTMARE");
+
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif

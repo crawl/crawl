@@ -192,3 +192,13 @@ enum
 {
     NUM_MAX_DOLLS = 10,
 };
+
+enum game_difficulty_level
+{
+    DIFFICULTY_ASK = -1,
+    DIFFICULTY_EASY = 0,
+    DIFFICULTY_STANDARD = 1,
+    DIFFICULTY_CHALLENGE,
+    DIFFICULTY_NIGHTMARE,
+};
+
