@@ -1591,6 +1591,9 @@ void handle_playing_harp()
     const int base_pow = 10 + you.skill(SK_EVOCATIONS, 1);
     inc_hp(base_pow);
 
+    // Make a small bit of noise for flavor
+    noisy(4, you.pos());
+
     // Stop healing at max HP (harp doesn't heal rot)
     if (you.hp == you.hp_max)
         end_playing_harp(true);
