@@ -1084,7 +1084,7 @@ void game_options::reset_options()
                    "inscribed",
                    false, false);
 
-    multiple_difficulty_levels = true;
+    multiple_difficulty_levels = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.

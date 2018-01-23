@@ -2919,6 +2919,8 @@ void define_monster(monster& mons)
             break;
     }
 
+    if (hp <= 0) hp = 1;
+
     const int hp_max = hp;
 
     // So let it be written, so let it be done.
