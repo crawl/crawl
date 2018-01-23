@@ -22,9 +22,7 @@
 #include "options.h"
 #include "prompt.h"
 #include "religion.h"
-#if TAG_MAJOR_VERSION == 34
-# include "shopping.h" // REMOVED_DEAD_SHOPS_KEY
-#endif
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
