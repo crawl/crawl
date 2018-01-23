@@ -573,7 +573,7 @@ void ash_check_bondage(bool msg)
             s = ET_ARMOUR;
         // Missing hands mean fewer rings
         else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
-                 && you.get_mutation_level(MUT_MISSING_HAND))
+                 && (you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE))
         {
             continue;
         }
@@ -611,7 +611,8 @@ void ash_check_bondage(bool msg)
                 {
                     if (s == ET_WEAPON
                         && (_two_handed()
-                            || you.get_mutation_level(MUT_MISSING_HAND)))
+                            || you.get_mutation_level(MUT_MISSING_HAND)
+                            || you.species == SP_UNIPODE))
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;

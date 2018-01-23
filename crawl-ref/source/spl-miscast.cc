@@ -1077,7 +1077,7 @@ void MiscastEffect::_charms(int severity)
             }
             else if (target->is_player())
             {
-                if (you.species == SP_OCTOPODE)
+                if (you.species == SP_OCTOPODE || you.species == SP_UNIPODE)
                     you_msg = "Your beak vibrates slightly."; // the only hard part
                 else
                     you_msg = "Your skull vibrates slightly.";
@@ -1610,7 +1610,7 @@ void MiscastEffect::_necromancy(int severity)
             mon_msg_seen = "@The_monster@ twitches violently.";
             break;
         case 3:
-            if (you.species == SP_OCTOPODE)
+            if (you.species == SP_OCTOPODE || you.species == SP_UNIPODE)
                 you_msg = "You feel numb.";
             else
                 you_msg = "Your bones ache.";

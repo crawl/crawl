@@ -1954,7 +1954,8 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.form == transformation::blade_hands)
         {
-            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND)
+                && you.species != SP_UNIPODE;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS
@@ -2582,6 +2583,15 @@ string mutation_overview()
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", you.has_tentacles(false)),
             !form_keeps_mutations()));
+    }
+	
+    if (you.species == SP_UNIPODE)
+    {
+        mutations.push_back(_annotate_form_based("amphibious",
+                                                 !form_likes_water()));
+        mutations.push_back(_annotate_form_based(
+            make_stringf("1 ring"),
+            !get_form()->slot_available(EQ_RING_EIGHT)));
     }
 
     if (you.can_water_walk())

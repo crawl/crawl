@@ -628,6 +628,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_FELID:
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
+    case SP_UNIPODE:
         return TILEP_BASE_OCTOPODE;
     case SP_FORMICID:
         return TILEP_BASE_FORMICID;

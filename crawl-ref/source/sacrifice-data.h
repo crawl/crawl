@@ -152,7 +152,7 @@ static const sacrifice_def sac_data[] =
   65,
   SK_SHIELDS,
   nullptr,
-  nullptr,
+  []() { return you.species != SP_UNIPODE; },
 },
 
 { ABIL_RU_SACRIFICE_EXPERIENCE, MUT_INEXPERIENCED,

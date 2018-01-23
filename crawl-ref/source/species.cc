@@ -95,6 +95,7 @@ string species_walking_verb(species_type sp)
     case SP_TENGU:
         return "Glid";
     case SP_OCTOPODE:
+    case SP_UNIPODE:
         return "Wriggl";
     case SP_VINE_STALKER:
         return "Stalk";
@@ -218,6 +219,7 @@ string species_prayer_action(species_type species)
         case SP_NAGA:
             return "coil in front of";
         case SP_OCTOPODE:
+        case SP_UNIPODE:
             return "curl up in front of";
         case SP_FELID:
             // < TGWi> you curl up on the altar and go to sleep

@@ -1253,6 +1253,9 @@ bool melee_attack::player_gets_aux_punch()
     {
         return false;
     }
+	
+    if (you.species == SP_UNIPODE)
+        return false;
 
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!

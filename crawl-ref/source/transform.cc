@@ -511,7 +511,7 @@ public:
      */
     string transform_message(transformation previous_trans) const override
     {
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE;
 
         // XXX: a little ugly
         return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
@@ -524,7 +524,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE;
 
         // XXX: a little ugly
         return make_stringf("Your %s revert%s to %s normal proportions.",
@@ -594,7 +594,7 @@ public:
         if (you.has_usable_tentacles(true))
             return "Stone tentacles";
 
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE;
         return make_stringf("Stone fist%s", singular ? "" : "s");
     }
 };
@@ -620,7 +620,7 @@ public:
      */
     string get_uc_attack_name(string default_name) const override
     {
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE;
         return make_stringf("Ice fist%s", singular ? "" : "s");
     }
 };
@@ -1301,12 +1301,12 @@ string blade_parts(bool terse)
 
     if (you.species == SP_FELID)
         str = terse ? "paw" : "front paw";
-    else if (you.species == SP_OCTOPODE)
+    else if (you.species == SP_OCTOPODE || you.species == SP_UNIPODE)
         str = "tentacle";
     else
         str = "hand";
 
-    if (!you.get_mutation_level(MUT_MISSING_HAND))
+    if (!you.get_mutation_level(MUT_MISSING_HAND) && you.species != SP_UNIPODE)
         str = pluralise(str);
 
     return str;

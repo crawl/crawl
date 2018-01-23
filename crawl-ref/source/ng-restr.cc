@@ -122,6 +122,12 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     {
         return CC_RESTRICTED;
     }
+	
+    if (ng.species == SP_UNIPODE 
+        && (wpn == WPN_QUARTERSTAFF || wpn == WPN_SHORTBOW))
+    {
+       return CC_BANNED;
+    }
 
     if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR
         && !(ng.job == JOB_FIGHTER && ng.species == SP_FORMICID))

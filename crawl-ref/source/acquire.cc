@@ -494,7 +494,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
 
         const bool two_handed = you.hands_reqd(item_considered) == HANDS_TWO;
 
-        if (two_handed && you.get_mutation_level(MUT_MISSING_HAND))
+        if (two_handed && (you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE))
             continue;
 
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
@@ -578,7 +578,8 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 
     // Rings are (number of usable rings) times as common as amulets.
     // XXX: unify this with the actual check for ring slots
-    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
+    const int ring_num = (you.species == SP_OCTOPODE ? 8 
+	: you.species == SP_UNIPODE ? 1 : 2)
                        - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
 
     // Try ten times to give something the player hasn't seen.

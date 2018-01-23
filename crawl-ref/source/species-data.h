@@ -763,6 +763,26 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_UNIPODE, {
+    "Up",
+    "Unipode", "Unipoid", "Unipus",
+    SPF_NO_HAIR,
+    0, -1, 0, 3,
+    MONS_OCTOPODE,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    7, 10, 7, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
+    { "You cannot wear most types of armour.",
+      "You are very stealthy in the water. (Stealth+)" },
+    { "almost no armour", "stealthy swim" },
+    { JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, JOB_ASSASSIN,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE, JOB_SLIME_PRIEST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_SPRIGGAN, {
     "Sp",
     "Spriggan", nullptr, nullptr,

@@ -1759,6 +1759,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OCTOPODE,        SK_POISON_MAGIC,    2),
     APT(SP_OCTOPODE,        SK_INVOCATIONS,     1),
     APT(SP_OCTOPODE,        SK_EVOCATIONS,      1),
+	
+    // SP_UNIPODE
+    APT(SP_UNIPODE,        SK_FIGHTING,        0),
+    APT(SP_UNIPODE,        SK_SHORT_BLADES,    0),
+    APT(SP_UNIPODE,        SK_LONG_BLADES,     0),
+    APT(SP_UNIPODE,        SK_AXES,            0),
+    APT(SP_UNIPODE,        SK_MACES_FLAILS,    0),
+    APT(SP_UNIPODE,        SK_POLEARMS,        0),
+    APT(SP_UNIPODE,        SK_STAVES,          0),
+    APT(SP_UNIPODE,        SK_SLINGS,          0),
+    APT(SP_UNIPODE,        SK_BOWS,          UNUSABLE_SKILL),
+    APT(SP_UNIPODE,        SK_CROSSBOWS,       0),
+    APT(SP_UNIPODE,        SK_THROWING,        0),
+    APT(SP_UNIPODE,        SK_ARMOUR,        UNUSABLE_SKILL),
+    APT(SP_UNIPODE,        SK_DODGING,         0),
+    APT(SP_UNIPODE,        SK_STEALTH,         4),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_UNIPODE,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_UNIPODE,        SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_UNIPODE,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_UNIPODE,        SK_UNARMED_COMBAT,  0),
+    APT(SP_UNIPODE,        SK_SPELLCASTING,   -1),
+    APT(SP_UNIPODE,        SK_CONJURATIONS,    0),
+    APT(SP_UNIPODE,        SK_HEXES,           0),
+    APT(SP_UNIPODE,        SK_CHARMS,          0),
+    APT(SP_UNIPODE,        SK_SUMMONINGS,      0),
+    APT(SP_UNIPODE,        SK_NECROMANCY,      0),
+    APT(SP_UNIPODE,        SK_TRANSLOCATIONS,  0),
+    APT(SP_UNIPODE,        SK_TRANSMUTATIONS,  0),
+    APT(SP_UNIPODE,        SK_FIRE_MAGIC,      0),
+    APT(SP_UNIPODE,        SK_ICE_MAGIC,       0),
+    APT(SP_UNIPODE,        SK_AIR_MAGIC,       0),
+    APT(SP_UNIPODE,        SK_EARTH_MAGIC,     0),
+    APT(SP_UNIPODE,        SK_POISON_MAGIC,    2),
+    APT(SP_UNIPODE,        SK_INVOCATIONS,     1),
+    APT(SP_UNIPODE,        SK_EVOCATIONS,      1),
 
 #if TAG_MAJOR_VERSION == 34
     // It seems that we need to keep this as long as SP_DJINNI/SP_LAVAORC
