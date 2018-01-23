@@ -1544,7 +1544,9 @@ static bool _randart_is_conflicting(const item_def &item,
         break;
 
     case RING_TELEPORTATION:
+#if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
+#endif
         conflicts = ARTP_PREVENT_TELEPORTATION;
         break;
 
