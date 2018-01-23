@@ -16,6 +16,7 @@
 #include "dgn-event.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "food.h"
 #include "god-abil.h" // RU_SAC_XP_LEVELS
@@ -78,6 +79,9 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     clear_invalid_constrictions();
     end_searing_ray();
+    // Assume moving is voluntary, but only display message if playing harp
+    if (you.attribute[ATTR_PLAYING_HARP])
+        end_playing_harp(true);
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)

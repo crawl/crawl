@@ -725,6 +725,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_PLAYING_HARP:
+        if (you.attribute[ATTR_PLAYING_HARP])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text  = "Harp";
+        }
+        break;
+
     default:
         if (!found)
         {

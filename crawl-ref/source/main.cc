@@ -203,6 +203,7 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
+static void _do_playing_harp();
 static void _input();
 
 static void _safe_move_player(coord_def move);
@@ -1056,6 +1057,9 @@ static void _input()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
         end_searing_ray();
+        // Don't display harp message if not actually playing
+        if (you.attribute[ATTR_PLAYING_HARP])
+            end_playing_harp(false);
         handle_delay();
 
         // Some delays reset you.time_taken.
@@ -1174,6 +1178,8 @@ static void _input()
             _do_berserk_no_combat_penalty();
 
         _do_searing_ray();
+
+        _do_playing_harp();
 
         world_reacts();
     }
@@ -2810,6 +2816,29 @@ static void _do_searing_ray()
         handle_searing_ray();
     else
         end_searing_ray();
+}
+
+/* If the user is playing the harp of healing, check to make sure they haven't
+ * moved or taken an action other than waiting. Other status checks performed in
+ * handle_playing_harp() in evoke.cc or where end_searing_ray() is usually checked.
+ */
+static void _do_playing_harp()
+{
+    if (you.attribute[ATTR_PLAYING_HARP] == 0)
+        return;
+
+    // Convert prepping value into initialized value 
+    // (to avoid immediate cancel on starting turn)
+    if (you.attribute[ATTR_PLAYING_HARP] == -1)
+    {
+        you.attribute[ATTR_PLAYING_HARP] = 1;
+        return;
+    }
+    
+    if (crawl_state.prev_cmd == CMD_WAIT)
+        handle_playing_harp();
+    else
+        end_playing_harp(true);
 }
 
 static void _safe_move_player(coord_def move)

@@ -1545,6 +1545,67 @@ static spret_type _shard_of_zot()
     return SPRET_SUCCESS;
 }
 
+static spret_type _harp_of_healing()
+{
+    // Giant wall of special cases (probably missing some)
+    if (!you.can_device_heal() || silenced(you.pos()))
+    {
+        mpr("You are unable to hear the harp's music.");
+        return SPRET_ABORT;
+    }
+    else if (you.confused() || you.duration[DUR_MESMERISED]
+             || you.berserk() || you.duration[DUR_BRAINLESS]
+             || you.duration[DUR_COLLAPSE] || you.duration[DUR_CLUMSY])
+    {
+        mpr("You are in no state to start playing the harp!");
+        return SPRET_ABORT;
+    }
+    else if (you.duration[DUR_DEATHS_DOOR])
+    {
+        mpr("You cannot hear the harp's music in death's doorway!");
+        return SPRET_ABORT;
+    }
+
+    you.attribute[ATTR_PLAYING_HARP] = -1;
+    mpr("You begin to play the harp.");
+    handle_playing_harp();
+
+    return SPRET_SUCCESS;
+}
+/* Handles checking if user can still play harp, then heals them 
+ * if they can. If not, cancel the status.
+ */
+void handle_playing_harp()
+{
+    // Various special cases if user can no longer play harp
+    if (you.confused() || you.berserk() || you.duration[DUR_MESMERISED]
+        || you.duration[DUR_BRAINLESS] || you.duration[DUR_COLLAPSE] 
+        || you.duration[DUR_CLUMSY] || silenced(you.pos())
+        || you.duration[DUR_DEATHS_DOOR] || !you.can_device_heal())
+    {
+        end_playing_harp(false);
+        return;
+    }
+
+    // Heal for 10 + (1 * Evocations), can adjust later if too weak/strong
+    const int base_pow = 10 + you.skill(SK_EVOCATIONS, 1);
+    inc_hp(base_pow);
+
+    // Stop healing at max HP (harp doesn't heal rot)
+    if (you.hp == you.hp_max)
+        end_playing_harp(true);
+}
+
+void end_playing_harp(bool voluntary)
+{
+    if (voluntary)
+        mpr("You stop playing the harp.");
+    else
+        mpr("Your playing has been interrupted!");
+    
+    you.attribute[ATTR_PLAYING_HARP] = 0;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1820,6 +1881,21 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if(_shard_of_zot())
+            {
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
+            }
+            else
+                return false;
+            break;
+
+        case MISC_HARP_OF_HEALING:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if(_harp_of_healing())
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);

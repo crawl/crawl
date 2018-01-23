@@ -732,6 +732,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_LAMP_OF_FIRE:
         case MISC_LIGHTNING_ROD:
         case MISC_SHARD_OF_ZOT:
+        case MISC_HARP_OF_HEALING:
             valued += 400;
             break;
 

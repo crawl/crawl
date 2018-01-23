@@ -659,22 +659,25 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     {
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
-                                       (NO_LOVE ?     0 :  7)},
+                                       (NO_LOVE ?   0 :  7)},
         {MISC_SACK_OF_SPIDERS,
-                                       (NO_LOVE ?     0 :  7)},
+                                       (NO_LOVE ?   0 :  7)},
         {MISC_PHANTOM_MIRROR,
-                                       (NO_LOVE ?     0 :  7)},
+                                       (NO_LOVE ?   0 :  7)},
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
-            (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
+            (you.seen_misc[MISC_LIGHTNING_ROD] ?    0 : 17)},
         {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?     0 : 17)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?  0 : 17)},
         {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
+            (you.seen_misc[MISC_FAN_OF_GALES] ?     0 : 17)},
         {MISC_SHARD_OF_ZOT,
-            (you.seen_misc[MISC_SHARD_OF_ZOT] ?       0 : 17)},
+            (you.seen_misc[MISC_SHARD_OF_ZOT] ?     0 : 17)},
+        {MISC_HARP_OF_HEALING,
+            ((you.seen_misc[MISC_HARP_OF_HEALING]
+             || !you.can_device_heal()) ?           0 : 17)},
     };
 
     const int * const choice = random_choose_weighted(choices);

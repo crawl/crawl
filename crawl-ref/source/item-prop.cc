@@ -3015,6 +3015,7 @@ static const map<int, const char*> debt_map = {
     { MISC_HORN_OF_GERYON,      "horn_debt" },
     { MISC_LIGHTNING_ROD,       "rod_debt" },
     { MISC_SHARD_OF_ZOT,        "shard_debt" },
+    { MISC_HARP_OF_HEALING,     "harp_debt" },
 };
 
 /**

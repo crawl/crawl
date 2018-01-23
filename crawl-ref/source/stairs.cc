@@ -16,6 +16,7 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
+#include "evoke.h"
 #include "files.h"
 #include "fprop.h"
 #include "god-abil.h"
@@ -565,6 +566,10 @@ void floor_transition(dungeon_feature_type how,
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
+    // Assume magical level changes are involuntary, but only display 
+    // message if playing harp
+    if (you.attribute[ATTR_PLAYING_HARP])
+        end_playing_harp(false);
 
     // Fire level-leaving trigger.
     leaving_level_now(how);

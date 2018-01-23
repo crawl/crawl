@@ -1003,6 +1003,7 @@ static string misc_type_name(int type, bool known)
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
     case MISC_SHARD_OF_ZOT:              return "shard of Zot";
+    case MISC_HARP_OF_HEALING:           return "harp of healing";
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
@@ -3751,6 +3752,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_PHANTOM_MIRROR:
             return you.get_mutation_level(MUT_NO_LOVE)
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
+
+        case MISC_HARP_OF_HEALING:
+            return !you.can_device_heal();
 
         default:
             return you.get_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);

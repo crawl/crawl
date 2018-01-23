@@ -31,6 +31,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "errors.h"
 #include "exercise.h"
 #include "food.h"
@@ -6679,6 +6680,9 @@ void player::paralyse(actor *who, int str, string source)
 
     stop_directly_constricting_all(false);
     end_searing_ray();
+    // Paralysis is involuntary, but only display message if playing harp
+    if (you.attribute[ATTR_PLAYING_HARP])
+        end_playing_harp(false);
 }
 
 void player::petrify(actor *who, bool force)
@@ -6722,6 +6726,10 @@ bool player::fully_petrify(actor *foe, bool quiet)
 
     end_searing_ray();
 
+    // Petrification is involuntary, but only display message if playing harp
+    if (you.attribute[ATTR_PLAYING_HARP])
+        end_playing_harp(false);
+    
     return true;
 }
 
@@ -7201,6 +7209,9 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
 
     stop_directly_constricting_all(false);
     end_searing_ray();
+    // Sleep is involuntary, but only display message if playing harp
+    if (you.attribute[ATTR_PLAYING_HARP])
+        end_playing_harp(false);
     stop_delay();
     flash_view(UA_MONSTER, DARKGREY);
 
