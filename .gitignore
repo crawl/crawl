@@ -1,0 +1,26 @@
+# -*- conf-unix -*- vim:ft=conf
+# The above comment makes Emacs and vim treat this file as a configuration file
+
+*.[oa]
+*.ann
+*.DS_Store
+core
+core.*
+err.txt
+TAGS
+tags
+cscope.*
+*.massif
+callgrind.out.*
+*.dSYM
+tmp/
+.dir-locals.el
+crawlLocal
+crawlDebug
+.DS_Store
+README.html
+*.o-*
+.idea
+*.swp
+*CMakeLists.txt
+cmake-build-debug

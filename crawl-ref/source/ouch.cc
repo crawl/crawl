@@ -825,6 +825,26 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             dam /= 2;
         else if (you.petrifying())
             dam = dam * 10 / 15;
+
+        if (Options.multiple_difficulty_levels) {
+            switch (crawl_state.difficulty)
+            {
+                case DIFFICULTY_EASY:
+                    dam = dam * 80 / 100;
+                    break;
+                case DIFFICULTY_STANDARD:
+                    break;
+                case DIFFICULTY_CHALLENGE:
+                    dam = dam * 110 / 100;
+                    break;
+                case DIFFICULTY_NIGHTMARE:
+                    dam = dam * 120 / 100;
+                    break;
+                default:
+                    // should not be possible
+                    break;
+            }
+        }
     }
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);

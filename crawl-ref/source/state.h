@@ -128,6 +128,8 @@ struct game_state
     // character has been loaded from a previous save.
     std::string save_rcs_version;
 
+    game_difficulty_level difficulty;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();

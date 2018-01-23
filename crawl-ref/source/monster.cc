@@ -391,6 +391,25 @@ random_var monster::attack_delay(const item_def *projectile,
     random_var delay(property(*weap, PWPN_SPEED));
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
         delay = div_rand_round(delay * 2, 3);
+
+    switch (crawl_state.difficulty)
+    {
+        case DIFFICULTY_EASY:
+            delay = div_rand_round(delay * 120, 100);
+            break;
+        case DIFFICULTY_STANDARD:
+            break;
+        case DIFFICULTY_CHALLENGE:
+            delay = div_rand_round(delay * 90, 100);
+            break;
+        case DIFFICULTY_NIGHTMARE:
+            delay = div_rand_round(delay * 80, 100);
+            break;
+        default:
+            // should not be possible
+            break;
+    }
+
     return (random_var(10) + delay) / 2;
 }
 

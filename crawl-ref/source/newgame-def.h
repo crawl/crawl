@@ -36,6 +36,8 @@ struct newgame_def
     // the choice was for a viable character or not.
     bool fully_random;
 
+    game_difficulty_level difficulty;
+
     newgame_def();
     void clear_character();
 };

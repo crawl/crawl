@@ -1333,6 +1333,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.wizard || you.suppress_wizard);
 
     marshallByte(th, crawl_state.type);
+    marshallByte(th, crawl_state.difficulty);
     if (crawl_state.game_is_tutorial())
         marshallString2(th, crawl_state.map);
 
@@ -2227,6 +2228,18 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         crawl_state.map = unmarshallString2(th);
     else
         crawl_state.map = "";
+
+    crawl_state.difficulty = (game_difficulty_level) unmarshallUByte(th);
+    switch(crawl_state.difficulty)
+    {
+        case DIFFICULTY_EASY:
+        case DIFFICULTY_STANDARD:
+        case DIFFICULTY_CHALLENGE:
+        case DIFFICULTY_NIGHTMARE:
+            break;
+        default:
+            crawl_state.difficulty = DIFFICULTY_STANDARD;
+    }
 
     if (major > 32 || major == 32 && minor > 26)
     {

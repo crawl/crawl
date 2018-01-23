@@ -384,6 +384,7 @@ void setup_game(const newgame_def& ng)
 {
     crawl_state.type = ng.type;
     crawl_state.map  = ng.map;
+    crawl_state.difficulty = ng.difficulty;
 
     switch (crawl_state.type)
     {
