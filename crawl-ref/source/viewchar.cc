@@ -66,7 +66,11 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
         // arch .. item_food
         '\\',  '}',  '~',  '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',  '%',
         // item_scroll .. item_amulet
-         '?',  '=',  '!',  '(',  ':',  '|',  '|',  '}',  '%',  '%',  '$',  '"',
+         '?',  '=',  '!',  '(',  ':',  '|',
+#if TAG_MAJOR_VERSION == 34
+         '|',
+#endif
+         '}',  '%',  '%',  '$',  '"',
         // cloud .. tree
          '0', '0', '0', '0', '7',
 #if TAG_MAJOR_VERSION == 34
