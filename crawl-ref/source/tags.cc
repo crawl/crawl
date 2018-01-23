@@ -304,7 +304,9 @@ static void tag_read_you(reader &th);
 static void tag_read_you_items(reader &th);
 static void tag_read_you_dungeon(reader &th);
 static void tag_read_lost_monsters(reader &th);
+#if TAG_MAJOR_VERSION == 34
 static void tag_read_lost_items(reader &th);
+#endif
 static void tag_read_companions(reader &th);
 
 static void tag_construct_level(writer &th);
@@ -2264,6 +2266,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         you.explore = unmarshallBoolean(th);
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _cap_mutation_at(mutation_type mut, int cap)
 {
     if (you.mutation[mut] > cap)
@@ -2277,6 +2280,7 @@ static void _cap_mutation_at(mutation_type mut, int cap)
     if (you.innate_mutation[mut] > cap)
         you.innate_mutation[mut] = cap;
 }
+#endif
 
 static void tag_read_you(reader &th)
 {
@@ -4155,6 +4159,7 @@ static void tag_read_you_dungeon(reader &th)
     for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
+#if TAG_MAJOR_VERSION == 34
         if (place_info.is_global()
             && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
         {
@@ -4169,9 +4174,12 @@ static void tag_read_you_dungeon(reader &th)
         }
         else
         {
+#endif
             // These should all be branch-specific, not global
             ASSERT(!place_info.is_global());
+#if TAG_MAJOR_VERSION == 34
         }
+#endif
         you.set_place_info(place_info);
     }
 
