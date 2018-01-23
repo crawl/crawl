@@ -4887,8 +4887,8 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "returning",
 #endif
         "chaos",
-        "evasion",
 #if TAG_MAJOR_VERSION == 34
+        "evasion",
         "confuse",
 #endif
         "penetration",
