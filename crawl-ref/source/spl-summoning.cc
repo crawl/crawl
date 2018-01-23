@@ -1701,7 +1701,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         *motions_r |= DEAD_ARE_HOPPING;
     }
     else if (mons_genus(zombie_type)    == MONS_WORKER_ANT
+#if TAG_MAJOR_VERSION == 34
              || mons_genus(zombie_type) == MONS_BEETLE
+#endif
              || mons_base_char(zombie_type) == 's') // many genera
     {
         *motions_r |= DEAD_ARE_CRAWLING;
