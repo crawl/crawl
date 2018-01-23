@@ -2289,8 +2289,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                        && mons.evil())
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
-                && (you_worship(GOD_PAKELLAS)
-                    || random2(you.piety) >= piety_breakpoint(0)))
+                && (random2(you.piety) >= piety_breakpoint(0)
+#if TAG_MAJOR_VERSION == 34
+                    || you_worship(GOD_PAKELLAS)
+#endif
+                   )
+                )
             {
                 int hp_heal = 0, mp_heal = 0;
 
@@ -2307,6 +2311,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::mp_on_kill))
                 {
+#if TAG_MAJOR_VERSION == 34
                     switch (you.religion)
                     {
                     case GOD_PAKELLAS:
@@ -2314,9 +2319,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                         break;
                     case GOD_VEHUMET:
                     default:
+#endif
                         mp_heal = 1 + random2(mons.get_experience_level() / 2);
+#if TAG_MAJOR_VERSION == 34
                         break;
                     }
+#endif
                 }
 
                 if (hp_heal && you.hp < you.hp_max
@@ -2335,6 +2343,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     mp_heal -= tmp;
                 }
 
+#if TAG_MAJOR_VERSION == 34
                 // perhaps this should go to its own function
                 if (mp_heal
                     && have_passive(passive_t::bottle_mp)
@@ -2364,6 +2373,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                         }
                     }
                 }
+#endif
             }
 
             if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
