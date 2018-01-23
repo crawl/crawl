@@ -1096,6 +1096,7 @@ static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _CHILLY_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "The dagger glows with an icy blue light!");
@@ -1129,9 +1130,11 @@ static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 }
+#endif
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _FLAMING_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "The scimitar bursts into red hot flame!");
@@ -1158,6 +1161,7 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 }
+#endif
 
 ///////////////////////////////////////////////////
 
@@ -1276,6 +1280,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     calc_hp();
@@ -1292,6 +1297,7 @@ static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 {
     calc_hp();
 }
+#endif
 
 ///////////////////////////////////////////////////
 
