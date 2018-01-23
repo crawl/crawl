@@ -980,7 +980,9 @@ static const Form* forms[] =
     &FormPig::instance(),
     &FormAppendage::instance(),
     &FormTree::instance(),
+#if TAG_MAJOR_VERSION == 34
     &FormPorcupine::instance(),
+#endif
 
     &FormWisp::instance(),
 #if TAG_MAJOR_VERSION == 34
