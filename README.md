@@ -10,7 +10,7 @@ I'll pull over features little by little from circus animals into this fork.
 
 Current features that differ from vanilla crawl:
 
-# Multiple difficulty levels: (multiple_difficulty_levels=true)
+## Multiple difficulty levels: (multiple_difficulty_levels=true)
 When starting a game, the player will be asked for what difficulty level they want to play.
 
 - difficulty levels:
@@ -29,7 +29,7 @@ When starting a game, the player will be asked for what difficulty level they wa
     - monsters do 20% more damage
     - monsters have 20% faster attack
 
-# Different experience sources: (different_experience_sources=true)
+## Different experience sources: (different_experience_sources=true)
 Instead of only getting experience from killing monsters, this option introduces several alternatives, opening up new playstyles.
 
 - You will gain experience from killing monsters 
@@ -39,7 +39,7 @@ Instead of only getting experience from killing monsters, this option introduces
 
 However, experience doesn't stack up like before. The amount of experience gained from any of these things are relative to the difficulty of the challenge and level of the player. It's balanced in a way that if you only focussed on killing monsters, you'd end up with about the same experience that you would in normal crawl. On the other hand, you can get a comparable level of experience just focussing on diving as deep as you can and avoiding most monsters. But if you do both, you'll not gain any additional experience. Another example: if you collect a bunch of experience potions and drink them all one after another on a deep dungeon level, your first few will give you a bunch of experience, but each following potion will rapidly diminish in how much experience it provides. 
 
-## To Do:
+### To Do:
 - one hit kill protection
 - foodless mode
 - unlimited basic ammo mode
@@ -49,4 +49,6 @@ However, experience doesn't stack up like before. The amount of experience gaine
 - monsters can't climb stairs
 - healing potions restore health
 - extra mutations
+- species enhancements
+- additional potions
 
