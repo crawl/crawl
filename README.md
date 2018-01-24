@@ -18,16 +18,19 @@ When starting a game, the player will be asked for what difficulty level they wa
     - monsters have 20% less health. 
     - monsters do 20% less damage.
     - monsters have 20% slower attack
+    - 20% more potions are generated (a little less gold is generated to balance it out)
   - standard:
     - monsters behave exactly as in vanilla crawl
   - challenge:
     - monsters have 10% more health
     - monsters do 10% more damage
     - monsters have 10% faster attack
+    - 10% less potions are generated (a little more gold is generated to balance it out)
   - nightmare:
     - monsters have 20% more health
     - monsters do 20% more damage
     - monsters have 20% faster attack
+    - 20% less potions are generated (a little more gold is generated to balance it out)
 
 ## Different experience sources: (different_experience_sources=true)
 Instead of only getting experience from killing monsters, this option introduces several alternatives, opening up new playstyles.

@@ -171,6 +171,7 @@ const vector<GameOption*> game_options::build_options_list()
 
         new BoolGameOption(SIMPLE_NAME(multiple_difficulty_levels), false),
         new BoolGameOption(SIMPLE_NAME(different_experience_sources), false),
+        new BoolGameOption(SIMPLE_NAME(heal_wounds_potion_gives_full_health), false),
         new BoolGameOption(SIMPLE_NAME(debug_exp), false),
 
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
@@ -1088,6 +1089,7 @@ void game_options::reset_options()
 
     multiple_difficulty_levels = false;
     different_experience_sources = false;
+    heal_wounds_potion_gives_full_health = false;
     debug_exp = false;
 
     // These are only used internally, and only from the commandline:

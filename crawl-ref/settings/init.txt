@@ -87,4 +87,5 @@
 
 # multiple_difficulty_levels = true
 # different_experience_sources = true
+# heal_wounds_potion_gives_full_health = true
 

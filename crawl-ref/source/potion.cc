@@ -200,7 +200,14 @@ public:
             return false;
         }
 
+
+        /* old way
         int amount = 10 + random2avg(28, 3);
+         */
+
+        int amount = you.hp_max;
+        amount = max(20, amount);
+
         if (is_potion)
             amount = you.scale_potion_healing(amount);
         // Pay for rot right off the top.

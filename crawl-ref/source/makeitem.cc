@@ -1372,7 +1372,10 @@ static void _generate_potion_item(item_def& item, int force_type,
         {
             // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
+                                           /* original
                                            105, POT_HEAL_WOUNDS,
+                                            */
+                                            30, POT_HEAL_WOUNDS,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
                                             73, POT_HASTE,
@@ -1846,6 +1849,26 @@ int items(bool allow_uniques,
     {
         ASSERT(force_type == OBJ_RANDOM);
         // Total weight: 1960
+        int potion_weight = 176;
+        int gold_weight = 440;
+        int weight_shift = 0;
+        switch (crawl_state.difficulty) {
+            case DIFFICULTY_EASY:
+                weight_shift = potion_weight * 20 / 100;
+                break;
+            case DIFFICULTY_CHALLENGE:
+                weight_shift = -potion_weight * 10 / 100;
+                break;
+            case DIFFICULTY_NIGHTMARE:
+                weight_shift = -potion_weight * 20 / 100;
+                break;
+            default:
+                break;
+        }
+        // we want to keep all other item generation balanced.
+        potion_weight += weight_shift;
+        gold_weight -= weight_shift;
+
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     30, OBJ_BOOKS,
@@ -1854,10 +1877,16 @@ int items(bool allow_uniques,
                                    140, OBJ_FOOD,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
+                                    /* original
                                    176, OBJ_POTIONS,
+                                     */
+                                   potion_weight, OBJ_POTIONS,
                                    300, OBJ_MISSILES,
                                    320, OBJ_SCROLLS,
+                                    /* original
                                    440, OBJ_GOLD);
+                                     */
+                                   gold_weight, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 5000))

@@ -459,6 +459,7 @@ public:
 
     bool        multiple_difficulty_levels;
     bool        different_experience_sources;
+    bool        heal_wounds_potion_gives_full_health;
     bool        debug_exp;
 
     lang_t              language;         // Translation to use.
