@@ -504,6 +504,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_RECALL, x, y, -status_shift, 0);
         status_shift += 9;
     }
+    if (fg & TILE_FLAG_VILE_CLUTCH)
+    {
+        m_buf_icons.add(TILEI_VILE_CLUTCH, x, y, -status_shift, 0);
+        status_shift += 11;
+    }
 
     // Summoned and anim. weap. icons will overlap if you have a
     // summoned dancing weapon, but that's rare and still looks okay.
