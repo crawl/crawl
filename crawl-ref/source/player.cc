@@ -2624,8 +2624,10 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
             mprf("exp_gained before: %d", player_exp_gained);
         }
         player_exp_gained = div_rand_round(player_exp_gained * exp_ratio, 100);
-        mprf("exp_ratio: %d", exp_ratio);
-        mprf("exp_gained after: %d", player_exp_gained);
+        if (Options.debug_exp) {
+            mprf("exp_ratio: %d", exp_ratio);
+            mprf("exp_gained after: %d", player_exp_gained);
+        }
 
         if (exp_ratio > 250) {
             mprf("You learned a huge amount from that.");

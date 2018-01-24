@@ -84,5 +84,7 @@
 # include                 = 0.14_monster_glyphs.txt
 
 # Here are the spice edition expansion options (Look at the readme for details)
+
 # multiple_difficulty_levels = true
-#
+# different_experience_sources = true
+
