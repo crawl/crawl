@@ -120,11 +120,9 @@ static string _spell_base_description(spell_type spell, bool viewing)
     desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
-    highlight = failure_rate_colour(spell);
-    desc << "<" << colour_to_str(highlight) << ">";
-    const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    desc << chop_string(failure, 12);
-    desc << "</" << colour_to_str(highlight) << ">";
+    const string failure_rate = spell_failure_rate_string(spell);
+    const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
+    desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
 
     return desc.str();
@@ -2083,6 +2081,14 @@ string failure_rate_to_string(int fail)
 string spell_hunger_string(spell_type spell)
 {
     return hunger_cost_string(spell_hunger(spell));
+}
+
+string spell_failure_rate_string(spell_type spell)
+{
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const string colour = colour_to_str(failure_rate_colour(spell));
+    return make_stringf("<%s>%s</%s>",
+            colour.c_str(), failure.c_str(), colour.c_str());
 }
 
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
