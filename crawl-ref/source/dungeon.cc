@@ -152,6 +152,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
+static void _place_experience_potions();
+
 static void _dgn_unregister_vault(const map_def &map);
 static void _remember_vault_placement(const vault_placement &place, bool extra);
 
@@ -312,6 +314,13 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
             {
                 for (monster_iterator mi; mi; ++mi)
                     gozag_set_bribe(*mi);
+
+                if (Options.different_experience_sources
+                    && !is_safe_branch(you.where_are_you)
+                        )
+                {
+                    _place_experience_potions();
+                }
 
                 return true;
             }
@@ -3828,6 +3837,19 @@ static void _randomly_place_item(int item)
     }
     else
         move_item_to_grid(&item, itempos);
+}
+
+static void _place_experience_potions()
+{
+    const int num_potions = 1;
+
+    dprf("attempting to place %d experience potions", num_potions);
+
+    for (int i = 0; i < num_potions; i++)
+    {
+        int item = items(true, OBJ_POTIONS, POT_EXPERIENCE, 99);
+        _randomly_place_item(item);
+    }
 }
 
 /**

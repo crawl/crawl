@@ -1026,6 +1026,9 @@ void forget_map(bool rot = false);
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
 
+const int potion_experience_for_this_floor();
+const int experience_for_this_floor();
+
 int xp_to_level_diff(int xp, int scale=1);
 
 void level_change(bool skip_attribute_increase = false);

@@ -509,6 +509,10 @@ static void _setup_generic(const newgame_def& ng)
 
     initialise_item_descriptions();
 
+    // potions of experience are always identified
+    if (Options.different_experience_sources)
+        set_ident_type(OBJ_POTIONS, POT_EXPERIENCE, true);
+
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {

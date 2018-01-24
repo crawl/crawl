@@ -458,6 +458,7 @@ public:
                                    // autopickup status
 
     bool        multiple_difficulty_levels;
+    bool        different_experience_sources;
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

@@ -170,6 +170,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
 
         new BoolGameOption(SIMPLE_NAME(multiple_difficulty_levels), false),
+        new BoolGameOption(SIMPLE_NAME(different_experience_sources), false),
 
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
         new BoolGameOption(SIMPLE_NAME(show_game_time), true),
@@ -1085,6 +1086,7 @@ void game_options::reset_options()
                    false, false);
 
     multiple_difficulty_levels = false;
+    different_experience_sources = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.

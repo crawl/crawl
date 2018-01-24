@@ -82,6 +82,7 @@
 #include "view.h"
 #include "wizard-option-type.h"
 #include "xom.h"
+#include "place.h"
 
 static void _moveto_maybe_repel_stairs()
 {
@@ -2579,6 +2580,28 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
         return;
+
+    if (Options.different_experience_sources) {
+        const int exp_total_for_next_level = exp_needed(you.experience_level + 1, 0);
+        int exp_ratio = exp_gained * 1000 / exp_total_for_next_level;
+        if (exp_ratio > 400) exp_ratio = 400;
+        if (exp_ratio < 10) exp_ratio = 0;
+        mprf("exp_total_for_next_level: %d", exp_total_for_next_level);
+        mprf("exp_gained before: %d", exp_gained);
+        exp_gained = exp_gained * exp_ratio / 100;
+        mprf("exp_ratio: %d", exp_ratio);
+        mprf("exp_gained after: %d", exp_gained);
+
+        if (exp_ratio > 250) {
+            mprf("You learned a huge amount from that.");
+        } else if (exp_ratio > 150) {
+            mprf("You learned a lot from that.");
+        } else if (exp_ratio < 10 || exp_gained == 0) {
+            mprf("You didn't learn anything from that.");
+//        } else if (exp_ratio < 50) {
+//            mprf("You didn't learn much from that.");
+        }
+    }
 
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
@@ -8086,6 +8109,22 @@ void player_end_berserk()
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
     you.redraw_quiver = true; // Can throw again.
+}
+
+const int experience_for_this_floor()
+{
+    int exp = 0;
+
+    if (!is_safe_branch(you.where_are_you)
+        && !(you.where_are_you == BRANCH_DUNGEON && you.depth == 1)
+            )
+    {
+        int how_deep = absdungeon_depth(you.where_are_you, you.depth);
+
+        exp = exp_needed(how_deep, 0);
+    }
+
+    return exp;
 }
 
 /**
