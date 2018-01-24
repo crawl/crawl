@@ -810,7 +810,7 @@ void floor_transition(dungeon_feature_type how,
         {
 
             unsigned int actual_gain = 0;
-            gain_exp(exp, &actual_gain);
+            gain_exp(exp, &actual_gain, true);
             // this isn't needed since the gain_exp function does this already
 //            if (actual_gain > exp * 2) {
 //                mprf(MSGCH_INTRINSIC_GAIN, "You gained a lot of exp for entering this floor.");

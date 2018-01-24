@@ -46,3 +46,7 @@ However, experience doesn't stack up like before. The amount of experience gaine
 - level cap removal
 - spell power cap removal
 - instant rest 
+- monsters can't climb stairs
+- healing potions restore health
+- extra mutations
+

@@ -1024,7 +1024,7 @@ void display_char_status();
 void forget_map(bool rot = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
+void gain_exp(unsigned int exp_gained, unsigned int *actual_gain = nullptr, bool floor_exp = false);
 
 const int potion_experience_for_this_floor();
 const int experience_for_this_floor();

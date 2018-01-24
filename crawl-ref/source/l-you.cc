@@ -869,7 +869,7 @@ LUAFN(_you_at_branch_bottom)
     PLUARET(boolean, at_branch_bottom());
 }
 
-LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1)))
+LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1), nullptr, false))
 
 LUAFN(you_mutate)
 {
