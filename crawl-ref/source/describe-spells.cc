@@ -606,7 +606,7 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
 {
     const bool can_memorise = source_item
                               && source_item->base_type == OBJ_BOOKS
-                              && in_inventory(*source_item);
+                              && (in_inventory(*source_item) || source_item->pos == you.pos());
 
     formatted_string &description = initial_desc;
     describe_spellset(spells, source_item, description, mon_owner);

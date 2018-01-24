@@ -2846,7 +2846,8 @@ static bool _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+    const bool in_inv_or_at_pos = in_inventory(*item) || item->pos == you.pos();
+    if (item && item->base_type == OBJ_BOOKS && in_inv_or_at_pos
         && !you.has_spell(spell) && you_can_memorise(spell))
     {
         description += "\n(M)emorise this spell.\n";
