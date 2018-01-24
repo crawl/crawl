@@ -459,6 +459,7 @@ public:
 
     bool        multiple_difficulty_levels;
     bool        different_experience_sources;
+    bool        debug_exp;
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

@@ -2581,28 +2581,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     if (crawl_state.game_is_arena())
         return;
 
-    if (Options.different_experience_sources) {
-        const int exp_total_for_next_level = exp_needed(you.experience_level + 1, 0);
-        int exp_ratio = exp_gained * 1000 / exp_total_for_next_level;
-        if (exp_ratio > 400) exp_ratio = 400;
-        if (exp_ratio < 10) exp_ratio = 0;
-        mprf("exp_total_for_next_level: %d", exp_total_for_next_level);
-        mprf("exp_gained before: %d", exp_gained);
-        exp_gained = exp_gained * exp_ratio / 100;
-        mprf("exp_ratio: %d", exp_ratio);
-        mprf("exp_gained after: %d", exp_gained);
-
-        if (exp_ratio > 250) {
-            mprf("You learned a huge amount from that.");
-        } else if (exp_ratio > 150) {
-            mprf("You learned a lot from that.");
-        } else if (exp_ratio < 10 || exp_gained == 0) {
-            mprf("You didn't learn anything from that.");
-//        } else if (exp_ratio < 50) {
-//            mprf("You didn't learn much from that.");
-        }
-    }
-
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
     _handle_god_wrath(exp_gained);
@@ -2633,10 +2611,37 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     dprf("gain_exp: %d", exp_gained);
 
-    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
+    int player_exp_gained = exp_gained;
+    if (Options.different_experience_sources) {
+//        const int exp_total_for_next_level = exp_needed(you.experience_level + 1, 0);
+        const int adjusted_level = you.experience_level + 1;
+        const int cubed_level = adjusted_level * adjusted_level * adjusted_level;
+        int exp_ratio = player_exp_gained * 20 * 100 / cubed_level;
+        if (exp_ratio > 400) exp_ratio = 400;
+        if (exp_ratio < 10) exp_ratio = 0;
+//        mprf("exp_total_for_next_level: %d", exp_total_for_next_level);
+        if (Options.debug_exp) {
+            mprf("exp_gained before: %d", player_exp_gained);
+        }
+        player_exp_gained = div_rand_round(player_exp_gained * exp_ratio, 100);
+        mprf("exp_ratio: %d", exp_ratio);
+        mprf("exp_gained after: %d", player_exp_gained);
+
+        if (exp_ratio > 250) {
+            mprf("You learned a huge amount from that.");
+        } else if (exp_ratio > 150) {
+            mprf("You learned a lot from that.");
+        } else if (exp_ratio < 10 || player_exp_gained == 0) {
+            mprf("You didn't learn anything from that.");
+//        } else if (exp_ratio < 50) {
+//            mprf("You didn't learn much from that.");
+        }
+    }
+
+    if (you.experience + player_exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
-        you.experience += exp_gained;
+        you.experience += player_exp_gained;
 
     you.exp_available += 10 * skill_xp;
 
