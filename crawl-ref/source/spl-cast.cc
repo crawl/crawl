@@ -82,6 +82,7 @@
 #include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
+static string _spell_failure_rate_description(spell_type spell);
 
 void surge_power(const int enhanced)
 {
@@ -727,10 +728,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 else
                 {
                     string fail_chance = spell_failure_rate_string(you.last_cast_spell);
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s "
-                                       "(%s risk of failure)</w>",
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>",
                                        spell_title(you.last_cast_spell),
-                                       fail_chance.c_str());
+                                       _spell_failure_rate_description(you.last_cast_spell).c_str());
                     mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
                                        "? or * to list all spells.");
                 }
@@ -1372,8 +1372,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         }
 
         string fail_chance = spell_failure_rate_string(spell);
-        string title = make_stringf("Aiming: <w>%s (%s risk of failure)</w>",
-                            spell_title(spell), fail_chance.c_str());
+        string title = make_stringf("Aiming: <w>%s</w> <lightgrey>(%s)</lightgrey>",
+                            spell_title(spell),
+                            _spell_failure_rate_description(spell).c_str());
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
@@ -2078,6 +2079,17 @@ string spell_failure_rate_string(spell_type spell)
     const string colour = colour_to_str(failure_rate_colour(spell));
     return make_stringf("<%s>%s</%s>",
             colour.c_str(), failure.c_str(), colour.c_str());
+}
+
+static string _spell_failure_rate_description(spell_type spell)
+{
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const char *severity_adj = fail_severity_adjs[fail_severity(spell)];
+    const string colour = colour_to_str(failure_rate_colour(spell));
+    const char *col = colour.c_str();
+
+    return make_stringf("<%s>%s</%s>; <%s>%s</%s> risk of failure",
+            col, severity_adj, col, col, failure.c_str(), col);
 }
 
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
