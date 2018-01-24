@@ -471,6 +471,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 #endif
 
+            case POT_HEAL_WOUNDS:
+                valued += 200;
+                break;
+
             case POT_RESISTANCE:
             case POT_HASTE:
                 valued += 100;
@@ -485,7 +489,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case POT_BERSERK_RAGE:
-            case POT_HEAL_WOUNDS:
 #if TAG_MAJOR_VERSION == 34
             case POT_RESTORE_ABILITIES:
 #endif

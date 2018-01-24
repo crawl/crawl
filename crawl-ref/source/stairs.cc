@@ -800,6 +800,27 @@ void floor_transition(dungeon_feature_type how,
     else
         maybe_update_stashes();
 
+    if (Options.different_experience_sources && crawl_state.need_floor_exp)
+    {
+        int exp = experience_for_this_floor();
+        if (exp < 0)
+            exp = 0;
+
+        if (exp)
+        {
+
+            unsigned int actual_gain = 0;
+            gain_exp(exp, &actual_gain, true);
+            // this isn't needed since the gain_exp function does this already
+//            if (actual_gain > exp * 2) {
+//                mprf(MSGCH_INTRINSIC_GAIN, "You gained a lot of exp for entering this floor.");
+//            } else if (actual_gain == 0) {
+//                mprf(MSGCH_INTRINSIC_GAIN, "You didn't gain any exp for entering this floor.");
+//            }
+        }
+        crawl_state.need_floor_exp = false;
+    }
+
     request_autopickup();
 }
 

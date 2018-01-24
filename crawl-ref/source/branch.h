@@ -99,6 +99,7 @@ bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();
+bool is_safe_branch(branch_type branch);
 
 branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);
 branch_type branch_by_shortname(const string &branch);

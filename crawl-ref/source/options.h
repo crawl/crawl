@@ -457,6 +457,11 @@ public:
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status
 
+    bool        multiple_difficulty_levels;
+    bool        different_experience_sources;
+    bool        heal_wounds_potion_gives_full_health;
+    bool        debug_exp;
+
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
     vector<flang_entry> fake_langs;       // The fake language(s) in use.

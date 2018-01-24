@@ -200,7 +200,14 @@ public:
             return false;
         }
 
+
+        /* old way
         int amount = 10 + random2avg(28, 3);
+         */
+
+        int amount = you.hp_max;
+        amount = max(20, amount);
+
         if (is_potion)
             amount = you.scale_potion_healing(amount);
         // Pay for rot right off the top.
@@ -581,14 +588,21 @@ public:
 
         if (you.experience_level < you.get_max_xl())
         {
-            mpr("You feel more experienced!");
             // Defer calling level_change() until later in drink() to prevent
             // SIGHUP abuse.
+            /*
             adjust_level(1, true);
+             */
+
+            unsigned int actual_experience = experience_for_this_floor();
+            gain_exp(actual_experience, &actual_experience);
+            if (actual_experience > 0)
+                mpr("You feel more experienced!");
         }
         else
             mpr("A flood of memories washes over you.");
 
+        /*
         // these are included in default force_more_message
         const int exp = 7500 * you.experience_level;
         if (you.species == SP_GNOLL)
@@ -598,6 +612,7 @@ public:
         }
         else
             skill_menu(SKMF_EXPERIENCE, exp);
+        */
         return true;
     }
 };

@@ -82,6 +82,7 @@
 #include "view.h"
 #include "wizard-option-type.h"
 #include "xom.h"
+#include "place.h"
 
 static void _moveto_maybe_repel_stairs()
 {
@@ -2575,7 +2576,7 @@ static void _handle_god_wrath(int exp)
     }
 }
 
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
+void gain_exp(unsigned int exp_gained, unsigned int *actual_gain, bool floor_exp=false)
 {
     if (crawl_state.game_is_arena())
         return;
@@ -2597,7 +2598,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
-    _reduce_abyss_xp_timer(skill_xp);
+    if (!floor_exp)
+        _reduce_abyss_xp_timer(skill_xp);
     _handle_xp_drain(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
@@ -2610,10 +2612,40 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     dprf("gain_exp: %d", exp_gained);
 
-    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
+    int player_exp_gained = exp_gained;
+    if (Options.different_experience_sources) {
+//        const int exp_total_for_next_level = exp_needed(you.experience_level + 1, 0);
+        const int adjusted_level = you.experience_level + 1;
+        const int cubed_level = adjusted_level * adjusted_level * adjusted_level;
+        double exp_ratio_double = sqrt(player_exp_gained * 5.0 / cubed_level);
+        int exp_ratio = exp_ratio_double * 100;
+
+//        mprf("exp_total_for_next_level: %d", exp_total_for_next_level);
+        if (Options.debug_exp) {
+            mprf("exp_gained before: %d", player_exp_gained);
+        }
+        player_exp_gained = div_rand_round(player_exp_gained * exp_ratio, 100);
+        skill_xp = player_exp_gained;
+        if (Options.debug_exp) {
+            mprf("exp_ratio: %d", exp_ratio);
+            mprf("exp_gained after: %d", player_exp_gained);
+        }
+
+        if (exp_ratio > 250) {
+            mprf("You learned a huge amount from that.");
+        } else if (exp_ratio > 150) {
+            mprf("You learned a lot from that.");
+        } else if (player_exp_gained == 0) {
+            mprf("You didn't learn anything from that.");
+//        } else if (exp_ratio < 50) {
+//            mprf("You didn't learn much from that.");
+        }
+    }
+
+    if (you.experience + player_exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
-        you.experience += exp_gained;
+        you.experience += player_exp_gained;
 
     you.exp_available += 10 * skill_xp;
 
@@ -8086,6 +8118,27 @@ void player_end_berserk()
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
     you.redraw_quiver = true; // Can throw again.
+}
+
+const int experience_for_this_floor()
+{
+    int exp = 0;
+
+    if (!is_safe_branch(you.where_are_you)
+        && !(you.where_are_you == BRANCH_DUNGEON && you.depth == 1)
+            )
+    {
+        int how_deep = absdungeon_depth(you.where_are_you, you.depth) + 1;
+        if (Options.debug_exp) {
+            mprf("abs depth: %d", how_deep);
+        }
+
+//        exp = exp_needed(how_deep, 0);
+        exp = how_deep * how_deep;
+        exp = exp * exp / 20;
+    }
+
+    return exp;
 }
 
 /**

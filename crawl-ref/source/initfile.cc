@@ -168,6 +168,12 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
+
+        new BoolGameOption(SIMPLE_NAME(multiple_difficulty_levels), false),
+        new BoolGameOption(SIMPLE_NAME(different_experience_sources), false),
+        new BoolGameOption(SIMPLE_NAME(heal_wounds_potion_gives_full_health), false),
+        new BoolGameOption(SIMPLE_NAME(debug_exp), false),
+
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
         new BoolGameOption(SIMPLE_NAME(show_game_time), true),
         new BoolGameOption(SIMPLE_NAME(equip_bar), false),
@@ -581,6 +587,23 @@ static string _weapon_to_str(weapon_type wpn_type)
     case WPN_RANDOM:
     default:
         return "random";
+    }
+}
+
+static string _difficulty_to_str(game_difficulty_level diff)
+{
+    switch (diff)
+    {
+        case DIFFICULTY_EASY:
+            return "Easy";
+        case DIFFICULTY_STANDARD:
+            return "Standard";
+        case DIFFICULTY_CHALLENGE:
+            return "Challenge";
+        case DIFFICULTY_NIGHTMARE:
+            return "Nightmare";
+        default:
+            return "Unknown";
     }
 }
 
@@ -1063,6 +1086,11 @@ void game_options::reset_options()
                    "javelin / tomahawk / stone / rock / net, "
                    "inscribed",
                    false, false);
+
+    multiple_difficulty_levels = false;
+    different_experience_sources = false;
+    heal_wounds_potion_gives_full_health = false;
+    debug_exp = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.

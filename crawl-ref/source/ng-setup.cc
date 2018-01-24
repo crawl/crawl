@@ -384,6 +384,7 @@ void setup_game(const newgame_def& ng)
 {
     crawl_state.type = ng.type;
     crawl_state.map  = ng.map;
+    crawl_state.difficulty = ng.difficulty;
 
     switch (crawl_state.type)
     {
@@ -507,6 +508,10 @@ static void _setup_generic(const newgame_def& ng)
     _give_basic_knowledge();
 
     initialise_item_descriptions();
+
+    // potions of experience are always identified
+    if (Options.different_experience_sources)
+        set_ident_type(OBJ_POTIONS, POT_EXPERIENCE, true);
 
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)

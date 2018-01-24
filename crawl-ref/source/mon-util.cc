@@ -2900,6 +2900,27 @@ void define_monster(monster& mons)
     // Some calculations.
     if (hp == 0)
         hp = hit_points(m->avg_hp_10x);
+
+    switch (crawl_state.difficulty)
+    {
+        case DIFFICULTY_EASY:
+            hp = hp * 80 / 100;
+            break;
+        case DIFFICULTY_STANDARD:
+            break;
+        case DIFFICULTY_CHALLENGE:
+            hp = hp * 110 / 100;
+            break;
+        case DIFFICULTY_NIGHTMARE:
+            hp = hp * 120 / 100;
+            break;
+        default:
+            // should not be possible
+            break;
+    }
+
+    if (hp <= 0) hp = 1;
+
     const int hp_max = hp;
 
     // So let it be written, so let it be done.

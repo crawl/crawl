@@ -320,6 +320,13 @@ string branch_rune_desc(branch_type br, bool remaining_only)
     return desc;
 }
 
+bool is_safe_branch(branch_type branch)
+{
+    return branch == BRANCH_TROVE
+           || branch == BRANCH_BAZAAR
+           || branch == BRANCH_TEMPLE;
+}
+
 branch_type rune_location(rune_type rune)
 {
     for (const auto& br : branches)
