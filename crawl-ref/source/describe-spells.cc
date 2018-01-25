@@ -506,7 +506,10 @@ static void _describe_book(const spellbook_contents &book,
 
         int pow = mons_power_for_hd(spell, hd, false);
         int range = spell_range(spell, pow, false);
-        string range_str = range >= 0 ? make_stringf(" (%d)", range) : "";
+        bool in_range = mon_owner && grid_distance(you.pos(), mon_owner->pos) <= range;
+        const char *range_col = in_range ? "lightred" : "lightgray";
+        string range_str = range < 0 ? "" :
+            make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
         string hex_str = "";
 
         if (hd > 0 && crawl_state.need_save
@@ -524,7 +527,7 @@ static void _describe_book(const spellbook_contents &book,
             }
         }
 
-        int hex_len = hex_str.length(), range_len = range_str.length();
+        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 4;
 
         description.cprintf("%c - %s%s%s", spell_letter, hex_str.c_str(),
                 chop_string(spell_title(spell), 29-hex_len-range_len).c_str(),
