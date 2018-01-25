@@ -62,6 +62,9 @@ tile_full_screen=false
 # Alternative vi bindings for Colemak users.
 # include = colemak_command_keys.txt
 
+# Alternative vi bindings for Neo users.
+# include = neo_command_keys.txt
+
 # Override the vi movement keys with a non-command.
 # include = no_vi_command_keys.txt
 
