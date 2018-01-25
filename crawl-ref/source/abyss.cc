@@ -428,6 +428,9 @@ void banished(const string &who, const int power)
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
                      level_id(BRANCH_ABYSS, depth), true);
+    // (Try to) Place an exit near banished players
+    _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 5, DNGN_FLOOR,
+                        DNGN_EXIT_ABYSS, 50, true);
     // This is an honest abyss entry, mark milestone
     mark_milestone("abyss.enter",
         "was cast into the Abyss!" + _who_banished(who), "parent");
