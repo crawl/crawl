@@ -72,9 +72,7 @@ enum monster_type                      // menv[].type
     MONS_ALLIGATOR,
     MONS_CROCODILE,
     MONS_HYDRA,
-#if TAG_MAJOR_VERSION == 34
     MONS_SHEEP,
-#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_DREAM_SHEEP,
 #endif

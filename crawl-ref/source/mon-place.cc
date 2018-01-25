@@ -1826,6 +1826,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_NAGA_RITUALIST,  { {}, {{ BAND_NAGA_RITUALIST, {3, 6} }}}},
     { MONS_RIVER_RAT,       { {}, {{ BAND_GREEN_RATS, {4, 10} }}}},
     { MONS_HELL_RAT,        { {}, {{ BAND_HELL_RATS, {3, 7} }}}},
+    { MONS_SHEEP,           { {}, {{ BAND_SHEEP, {3, 8} }}}},
     { MONS_DREAM_SHEEP,     { {}, {{ BAND_DREAM_SHEEP, {3, 7} }}}},
     { MONS_GHOUL,           { {}, {{ BAND_GHOULS, {2, 5} }}}},
     { MONS_KIRKE,           { {}, {{ BAND_HOGS, {3, 8}, true }}}},
@@ -1842,8 +1843,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ANCIENT_CHAMPION, { {2}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
     { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
     { MONS_CYCLOPS,         { { 0, 0, []() {
-        return player_in_branch(BRANCH_SHOALS); }},
-                                  {{ BAND_DREAM_SHEEP, {2, 5}, true }}}},
+        return one_chance_in(5) || player_in_branch(BRANCH_SHOALS); }},
+                                  {{ BAND_SHEEP, {2, 5}, true }}}},
     { MONS_ALLIGATOR,       { { 5, 0, []() {
         return !player_in_branch(BRANCH_LAIR); }},
                                   {{ BAND_ALLIGATOR, {1, 2}, true }}}},
@@ -2075,6 +2076,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_GNOLLS,              {{{MONS_GNOLL, 1}}}},
     { BAND_HARPIES,             {{{MONS_HARPY, 1}}}},
     { BAND_RAIJU,               {{{MONS_RAIJU, 1}}}},
+    { BAND_SHEEP,               {{{MONS_SHEEP, 1}}}},
     { BAND_PIKEL,               {{{MONS_SLAVE, 1}}}},
     { BAND_WIGHTS,              {{{MONS_WIGHT, 1}}}},
     { BAND_JACKALS,             {{{MONS_JACKAL, 1}}}},

@@ -18,3 +18,16 @@ VISUAL:A frightened @monster@ leaps away.
 
 VISUAL:@The_monster@ stampedes away.
 %%%%
+sheep flee
+
+w:30
+@The_monster@ bleats in terror.
+
+VISUAL:@The_monster@ is struck with panic!
+
+VISUAL:@The_monster@ panics and turns to flee.
+
+VISUAL:A frightened @monster@ leaps away.
+
+VISUAL:@The_monster@ stampedes away.
+%%%%

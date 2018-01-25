@@ -6558,6 +6558,11 @@ default obsidian statue
 
 VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
 %%%%
+################## Sheep ###################################
+sheep
+
+@The_monster@ "Baaaas" balefully.
+%%%%
 ################## Silent spectre ##########################
 silenced silent spectre
 
