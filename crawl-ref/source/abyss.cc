@@ -1482,7 +1482,7 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    int num_monsters = 15 + you.depth * (1 + coinflip());
+    int num_monsters = 10 + you.depth * 3;
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
