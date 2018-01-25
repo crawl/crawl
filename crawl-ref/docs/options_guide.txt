@@ -182,6 +182,16 @@ additional option files in the settings/ directory; these allow setting
 some options and monster glyphs to their defaults from older versions.
 See the header of the default init.txt for more details.
 
+The following files are automatically included with Crawl for easy usage, and
+can be included without any further setup:
+
+* advanced_optioneering.txt
+* dvorak_command_keys.txt
+* colemak_command_keys.txt
+* neo_command_keys.txt
+* no_vi_command_keys.txt
+* safe_move_shift.txt
+
 0-b     Options on the command line.
 ------------------------------------
 
