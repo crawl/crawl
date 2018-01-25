@@ -601,7 +601,7 @@ void do_crash_dump()
 
         _dump_ver_stuff(stderr);
 
-        dump_crash_info(stderr);
+        fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
         write_stack_trace(stderr, 0);
         call_gdb(stderr);
 
@@ -623,8 +623,11 @@ void do_crash_dump()
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
-    if (!crawl_state.test && !_assert_msg.empty())
-        fprintf(stderr, "\n%s", _assert_msg.c_str());
+    const string signal_info = crash_signal_info();
+    const string cause_msg = _assert_msg.empty() ? signal_info : _assert_msg;
+
+    if (!crawl_state.test && !cause_msg.empty())
+        fprintf(stderr, "\n%s", cause_msg.c_str());
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
@@ -653,8 +656,8 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-    if (!_assert_msg.empty())
-        fprintf(file, "%s\n\n", _assert_msg.c_str());
+    if (!cause_msg.empty())
+        fprintf(file, "%s\n\n", cause_msg.c_str());
 
     _dump_ver_stuff(file);
 
@@ -665,7 +668,8 @@ void do_crash_dump()
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
     // might themselves cause crashes.
-    dump_crash_info(file);
+    if (!signal_info.empty())
+        fprintf(file, "%s\n\n", signal_info.c_str());
     write_stack_trace(file, 0);
     fprintf(file, "\n");
 
@@ -750,7 +754,7 @@ void do_crash_dump()
 
     set_msg_dump_file(nullptr);
 
-    mark_milestone("crash", _assert_msg, "", t);
+    mark_milestone("crash", cause_msg, "", t);
 
     if (file != stderr)
         fclose(file);
