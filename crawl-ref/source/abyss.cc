@@ -372,6 +372,14 @@ static string _who_banished(const string &who)
     return who.empty() ? who : " (" + who + ")";
 }
 
+// Don't send low level players to their certain doom
+static int _cap_abyss_entry_depth(int depth)
+{
+    if (you.experience_level < 6) return min(2, depth);
+    if (you.experience_level < 11) return min(3, depth);
+    return depth;
+}
+
 static int _banished_depth(const int power)
 {
     // Linear, with the max going from (1,1) to (25,5)
@@ -386,7 +394,8 @@ static int _banished_depth(const int power)
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
     const int mindepth = (4 * power + 7) / 23;
-    return min(5, max(1, random_range(mindepth, maxdepth)));
+    int depth = min(5, max(1, random_range(mindepth, maxdepth)));
+    return _cap_abyss_entry_depth(depth);
 }
 
 void banished(const string &who, const int power)
