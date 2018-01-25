@@ -574,6 +574,10 @@ void describe_spellset(const spellset &spells,
     auto spell_map = map_chars_to_spells(spells, source_item);
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
+
+    if (mon_owner)
+        description.cprintf("\n(x%%) indicates the chance to beat your MR"
+                ", and (y) indicates the spell range.\n");
 }
 
 #ifdef USE_TILE_WEB
