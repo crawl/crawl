@@ -728,9 +728,18 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
-                         spell_title(you.last_cast_spell));
-                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press ? or * to list all spells.");
+                    ostringstream desc;
+                    const string failure = failure_rate_to_string(raw_spell_fail(you.last_cast_spell));
+                    int colour = failure_rate_colour(you.last_cast_spell);
+                    desc << "<" << colour_to_str(colour) << ">";
+                    desc << chop_string(failure, failure.length());
+                    desc << "</" << colour_to_str(colour) << ">";
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s "
+                                       "(%s risk of failure)</w>",
+                                       spell_title(you.last_cast_spell),
+                                       desc.str().c_str());
+                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
+                                       "? or * to list all spells.");
                 }
 
                 keyin = get_ch();
@@ -1112,16 +1121,26 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     }
 
     const int severity = fail_severity(spell);
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
         && !fake_spell)
     {
-        string prompt = make_stringf("The spell is %s to cast%s "
-                                     "Continue anyway?",
+        string prompt = make_stringf("The spell is %s to cast "
+                                     "(%s risk of failure)%s ",
                                      fail_severity_adjs[severity],
+                                     failure.c_str(),
                                      severity > 1 ? "!" : ".");
 
+        if (failure == "100%")
+        {
+            mprf(MSGCH_WARN, "%s", prompt.c_str());
+            mprf(MSGCH_WARN, "It is impossible to cast this spell!");
+            return true;
+        }
+
+        prompt = make_stringf("%s Continue anyway?", prompt.c_str());
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
