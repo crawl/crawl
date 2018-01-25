@@ -305,11 +305,12 @@ static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
 static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
                                bool placed_abyssal_rune)
 {
-    // During game start, number and level of items mustn't be higher than
-    // that on level 1.
-    int num_items = 150, items_level = 52;
+    int num_items = you.depth * 30;
+    int items_level = you.depth * 10 + 2;
     int items_placed = 0;
 
+    // During game start, number and level of items mustn't be higher than
+    // that on level 1.
     if (player_in_starting_abyss())
     {
         num_items   = 3 + roll_dice(3, 11);
