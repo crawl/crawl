@@ -271,7 +271,7 @@ void init_crash_handler()
 #endif // if defined(USE_UNIX_SIGNALS)
 }
 
-void dump_crash_info(FILE* file)
+string crash_signal_info()
 {
 #if defined(UNIX)
     #ifdef TARGET_OS_FREEBSD
@@ -288,9 +288,11 @@ void dump_crash_info(FILE* file)
 
     if (name == nullptr)
         name = "INVALID";
-
-    fprintf(file, "Crash caused by signal #%d: %s\n\n", _crash_signal, name);
+    return make_stringf("Crash caused by signal #%d: %s", _crash_signal, name);
+#else
+    return "";
 #endif
+
 }
 
 #if defined(BACKTRACE_SUPPORTED)
