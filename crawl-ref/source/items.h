@@ -150,6 +150,8 @@ bool get_item_by_name(item_def *item, const char* specs,
                       object_class_type class_wanted,
                       bool create_for_real = false);
 
+bool get_item_by_exact_name(item_def &item, const char* name);
+
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
 
