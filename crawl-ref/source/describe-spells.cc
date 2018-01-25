@@ -521,17 +521,14 @@ static void _describe_book(const spellbook_contents &book,
             if (you.immune_to_hex(spell))
                 hex_str = "(immune) ";
             else
-            {
-                int chance = hex_chance(spell, hd);
-                hex_str = make_stringf("(%d%%) ", chance);
-            }
+                hex_str = make_stringf("(%d%%) ", hex_chance(spell, hd));
         }
 
         int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 4;
 
-        description.cprintf("%c - %s%s%s", spell_letter, hex_str.c_str(),
+        description.cprintf("%c - %s%s%s", spell_letter,
                 chop_string(spell_title(spell), 29-hex_len-range_len).c_str(),
-                range_str.c_str());
+                hex_str.c_str(), range_str.c_str());
 
         // only display type & level for book spells
         if (doublecolumn)
