@@ -1288,9 +1288,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
-                            : 7500 - 1250 * (you.depth - 1);
-
+    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250 : 3750;
     int exits_wanted  = 0;
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
