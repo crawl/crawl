@@ -1147,23 +1147,19 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    string stats;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
-        || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
-        || get_item_by_name(&item, key.c_str(), OBJ_MISSILES)
-        || get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+    if (!get_item_by_exact_name(item, key.c_str()))
+        die("Unable to get item %s by name", key.c_str());
+    if (item.base_type == OBJ_BOOKS)
     {
-        // don't request description since _describe_key handles that
-        stats = get_item_description(item, true, false, true);
-    }
-    // spellbooks are interactive & so require special handling
-    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS))
-    {
+        // spellbooks are interactive & so require special handling
         item_colour(item);
         return _describe_spellbook(item);
     }
-
-    return _describe_key(key, suffix, footer, stats);
+    else
+    {
+        string stats = get_item_description(item, true, false, true);
+        return _describe_key(key, suffix, footer, stats);
+    }
 }
 
 /**

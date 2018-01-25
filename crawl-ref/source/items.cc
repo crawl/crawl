@@ -4556,6 +4556,47 @@ bool get_item_by_name(item_def *item, const char* specs,
     return true;
 }
 
+bool get_item_by_exact_name(item_def &item, const char* name)
+{
+    item.clear();
+    item.quantity = 1;
+    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
+    item.flags |= ISFLAG_IDENT_MASK;
+
+    string name_lc = lowercase_string(string(name));
+
+    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    {
+        if (i == OBJ_RUNES) // runes aren't shown in ?/I
+            continue;
+
+        item.base_type = static_cast<object_class_type>(i);
+        item.sub_type = 0;
+
+        // _deck_from_specs doesn't use exact matches, but it's close enough
+        if (item.base_type == OBJ_MISCELLANY && starts_with(name_lc, "deck of"))
+        {
+            _deck_from_specs(name, item, false);
+
+            // deck creation cancelled, clean up item.
+            if (item.base_type == OBJ_UNASSIGNED)
+                return false;
+            return item.sub_type != 0;
+        }
+
+        if (!item.sub_type)
+        {
+            for (int j = 0; j < get_max_subtype(item.base_type); ++j)
+            {
+                item.sub_type = j;
+                if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
 void move_items(const coord_def r, const coord_def p)
 {
     ASSERT_IN_BOUNDS(r);
