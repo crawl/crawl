@@ -1017,6 +1017,7 @@ ENDMAP
 ### Jiyva overflow altars ##########################################################
 
 NAME:   jiyva_altar_1
+TAGS: uniq_overflow_jiyva temple_overflow_jiyva temple_overflow_1
 DEPTH:  D:8-
 KFEAT:  _ = altar_jiyva
 : if you.depth() > 9 then
