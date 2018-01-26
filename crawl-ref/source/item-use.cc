@@ -882,7 +882,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
     }
-    
+
     if (sub_type == ARM_CLOAK && you.species == SP_FELID)
     {
         if (verbose)

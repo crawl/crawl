@@ -1297,6 +1297,16 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.ex_size = origin.prism_charge;
 }
 
+static void _setup_disaster_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_MMISSILE;
+    beam.damage  = dice_def(3, origin.get_hit_dice());
+    beam.name    = "blast of energy";
+    beam.colour  = MAGENTA;
+    beam.ex_size = 2;
+}
+
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -1359,6 +1369,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (type == MONS_FULMINANT_PRISM)
     {
         _setup_prism_explosion(beam, *mons);
+        sanct_msg = "By Zin's power, the prism's explosion is contained.";
+    }
+        else if (type == MONS_DISASTER_PRISM)
+    {
+        _setup_disaster_explosion(beam, *mons);
         sanct_msg = "By Zin's power, the prism's explosion is contained.";
     }
     else if (type == MONS_BENNU)
@@ -1906,7 +1921,7 @@ static void _special_corpse_messaging(monster &mons)
  */
 item_def* monster_die(monster& mons, killer_type killer,
                       int killer_index, bool silent, bool wizard, bool fake)
-{
+ {
     ASSERT(!invalid_monster(&mons));
 
     const bool was_visible = you.can_see(mons);
@@ -2082,6 +2097,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         || mons.type == MONS_BALL_LIGHTNING
         || mons.type == MONS_LURKING_HORROR
         || (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge > 0)
+        || (mons.type == MONS_DISASTER_PRISM && mons.prism_charge > 0)
         || mons.type == MONS_BENNU
         || mons.has_ench(ENCH_INNER_FLAME))
     {

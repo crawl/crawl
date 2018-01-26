@@ -1537,11 +1537,11 @@ static spret_type _shard_of_zot()
         mpr("Your anchoring prevents you from evoking the shard!");
         return SPRET_ABORT;
     }
-    
+
     const int base_pow = 40 + you.skill(SK_EVOCATIONS, 5);
     mass_enchantment(ENCH_TP, base_pow);
     you_teleport();
-    
+
     return SPRET_SUCCESS;
 }
 
@@ -1883,7 +1883,7 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
-            if(_shard_of_zot())
+            if (_shard_of_zot())
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);

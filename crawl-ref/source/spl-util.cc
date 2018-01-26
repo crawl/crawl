@@ -1300,6 +1300,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (orb_limits_translocation())
             return "the Orb prevents this spell from working.";
 
+    case SPELL_BLADE_OF_DISASTER:
+    if (temp && you.duration[DUR_BLADE_OF_DISASTER])
+        return "you couldn't be more disastrous!";
+    if (temp && you.duration[DUR_NO_MORE_DISASTER])
+        return "your disaster has temporarily ended!";
+
     default:
         break;
     }

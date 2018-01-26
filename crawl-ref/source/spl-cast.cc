@@ -1396,7 +1396,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         if (spd.isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
             return SPRET_ABORT;
-        
+
         if (spd.isMe() && evoked_item != nullptr)
         {
             if (evoked_item->sub_type == WAND_HASTING
@@ -1798,6 +1798,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
+
+    case SPELL_BLADE_OF_DISASTER:
+        return cast_blade_of_disaster(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:

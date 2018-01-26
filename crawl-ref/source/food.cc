@@ -377,7 +377,7 @@ static void _finished_eating_message(food_type type)
                 return;
             }
             mprf("%s", taste.c_str());
-            return; 
+            return;
         }
     }
     else if (herbivorous && food_is_meaty(type))

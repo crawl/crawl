@@ -476,6 +476,14 @@ bool fill_status_info(int status, status_info* inf)
                            you.props[SONG_OF_SLAYING_KEY].get_int());
         break;
 
+    case DUR_BLADE_OF_DISASTER:
+    inf->light_text = "Disaster";
+        break;
+
+    case DUR_NO_MORE_DISASTER:
+    inf->light_text = "-Disaster";
+         break;
+
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {

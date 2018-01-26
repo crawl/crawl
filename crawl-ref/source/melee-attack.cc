@@ -470,6 +470,17 @@ bool melee_attack::handle_phase_hit()
     if (damage_done > 0)
         apply_black_mark_effects();
 
+    if (attacker->is_player() && !cleaving
+        && you.duration[DUR_BLADE_OF_DISASTER]
+        && !defender->as_monster()->is_summoned()
+        && !mons_is_firewood(*defender->as_monster())
+        && !mons_is_conjured(defender->type))
+    {
+        const coord_def prismtarget = defender->pos();
+        Disaster_Prism(&you, prismtarget,
+        calc_spell_power(SPELL_BLADE_OF_DISASTER,true), you.religion);
+    }
+
     if (attacker->is_player())
     {
         // Always upset monster regardless of damage.

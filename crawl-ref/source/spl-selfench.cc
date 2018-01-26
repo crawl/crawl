@@ -362,3 +362,12 @@ spret_type cast_transform(int pow, transformation which_trans, bool fail)
     transform(pow, which_trans);
     return SPRET_SUCCESS;
 }
+
+spret_type cast_blade_of_disaster(int pow, bool fail)
+{
+    fail_check();
+
+    mpr("You call disaster forth from your blade!");
+        you.set_duration(DUR_BLADE_OF_DISASTER, 5);
+        return SPRET_SUCCESS;
+}

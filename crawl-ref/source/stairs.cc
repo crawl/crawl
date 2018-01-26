@@ -215,7 +215,7 @@ static void _clear_golubria_traps()
 static void _clear_prisms()
 {
     for (auto &mons : menv_real)
-        if (mons.type == MONS_FULMINANT_PRISM)
+        if (mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_DISASTER_PRISM)
             mons.reset();
 }
 

@@ -3909,6 +3909,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BLADE_OF_DISASTER, "Blade of Disaster",
+    SPTYP_CHARMS | SPTYP_CONJURATION,
+    SPFLAG_HELPFUL,
+    6,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_EXCRUCIATING_WOUNDS,
+},
+
+{
     SPELL_VORTEX, "Vortex",
     SPTYP_AIR,
     SPFLAG_AREA,

@@ -133,6 +133,16 @@ melee damage significantly.
 While transformed, any equipped weapons are melded. The caster also becomes
 unable to evoke wands, and casting spells becomes somewhat more difficult.
 %%%%
+Blade of Disaster spell
+
+Manifests the fury of battle into crystallized sparks with each swing of the
+caster's weapon. The sparks explode in a large radius shortly after the spell
+expires. The damage of the explosion is based on both spellpower and the
+caster's weapon.
+
+Unarmed fighters find it easier to channel the full power of the spell into their
+attacks, but lose the benefit of their weapon.
+%%%%
 Blink Allies Away spell
 
 Blinks allies in sight of the caster away from a nearby enemy.

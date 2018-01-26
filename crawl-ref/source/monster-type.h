@@ -888,6 +888,7 @@ enum monster_type                      // menv[].type
 
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
+    MONS_DISASTER_PRISM,
 
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus

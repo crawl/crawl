@@ -3022,6 +3022,51 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
     return SPRET_SUCCESS;
 }
 
+bool weapon_is_disastrous(const item_def *wpn)
+{
+    return wpn && is_weapon(*wpn) && !is_range_weapon(*wpn);
+}
+
+void Disaster_Prism(actor* agent, coord_def where, int pow, god_type god)
+{
+    ASSERT(agent);
+    int boompower;
+    item_def* wpn = agent->weapon();
+
+    if (!weapon_is_disastrous(wpn))
+    {
+        if (wpn)
+            boompower = pow/8;
+
+/*The mechanics of the spell make unarmed very hard to balance against weapons.
+I don't want to disallow unarmed and I don't want to try and count the effects
+of slaying and particularly, brands, into the strength of weapons. So unarmed
+gets no benefit from an equipped weapon, but gets extra spellpower.*/
+            else
+                boompower = pow/4;
+    }
+    else
+        boompower = property(*you.weapon(), PWPN_DAMAGE) + pow/8;
+
+    int hd = boompower;
+
+    mgen_data disaster(MONS_DISASTER_PRISM,
+                 agent->is_player() ? BEH_FRIENDLY
+                                    : SAME_ATTITUDE(agent->as_monster()),
+                 where);
+                 //target->mindex();
+    disaster.set_summoned(agent, 0, SPELL_BLADE_OF_DISASTER);
+    disaster.hd = hd;
+    monster* BoD = create_monster(disaster);
+
+    if (!BoD)
+    {
+        return;
+    }
+
+    return;
+}
+
 monster* find_spectral_weapon(const actor* agent)
 {
     if (agent->props.exists("spectral_weapon"))

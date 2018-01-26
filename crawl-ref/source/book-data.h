@@ -92,6 +92,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Tempests
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
+    SPELL_BLADE_OF_DISASTER,
     SPELL_IGNITION,
     SPELL_TORNADO,
     SPELL_SHATTER,
