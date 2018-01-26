@@ -1,52 +1,14 @@
-v1.0:
-Good for implementing without needing design questions answered
+Features leftover from v1.0 list
 
-Re-implement wands of haste
-Re-implement wands of heal wounds
-Re-implement wands of teleportation
-Re-implement high elves
-Re-implement sludge elves
-Re-implement pizza
-Re-implement Poisonous Cloud
-Re-implement Phase Shift
-Re-implement Singularity
-Re-implement Crown of Eternal Torment
-Re-implement purple chunks
-Re-implement potions of restore abilities
-Re-implement Norris
-Revert Tomb hatch changes (back to stairs)
-Raise Ogre M&F aptitude to +3
-Implement hat wearing for felids
-Implement helmet wearing for octopodes
-Add Jiyva to Temple gods
-Re-implement book amnesia
-Re-implement spellpower boost for Dragon Call in Dragon Form
-Re-implement baleful ‘baaas’ for all sheep (for normal sheep when re-added)
-Re-implement sticky flame interaction with all sheep (for normal sheep when re-added)
-Re-implement Death Knight background
-Re-implement Priest background
-
-
-Needs design questions answered before proceeding (simple implementation)
-
-Re-implement scrolls of recharging
--How should recharging work with wand stacking?  Add charges the same as before, or 
-  adjust the numbers (now that wands no longer hit a charge cap)?  Count it as 
-  finding another wand of the same type?
-Implement scarf and/or cloak wearing for felids
--Just scarves, or scarves and cloaks?
-Re-implement boulder beetles
--Where should they spawn (aside from specified vaults)?
--Any stat tweaks before implementing?
-Re-implement normal sheep
--Where should they spawn?
--Which vaults should they replace dream sheep in?
--Any stat tweaks before implementing?
-
-
-Complex implementation (these might get pushed to the next version to get a 
-baseline pushed out)
-
+Re-implement wands of heal wounds 
+- Was buggy, implemented harp of healing
+Re-implement wands of teleportation 
+- Was buggy, implemented shard of zot
+Re-implement Singularity - Was super broken, needs lots of work to fix and bring back
+Implement hat wearing for felids 
+- Still need to fix Ashenzari interaction with new equip slots
+Re-implement spellpower boost for Dragon Call in Dragon Form 
+- Need to highlight when spell is boosted
 Re-implement Pakellas (will still require adjusting abilities to stacked wands system)
 -What will Quick Charge do with wand stacking?
 -Stick with No MP regen+MP on kill?  If so, stick with gifted potion of magic for 
@@ -59,17 +21,13 @@ Re-implement rods
 -What should be done about ‘lightning rod’ evocable?
 -Should rods work as they did before (wield to use) or use a different system?
 Rework or remove Malmutate from monster spell lists
--I’ve still got to work this fucker out, I’m not ripping out everything just yet.
+-Cacodemons and neqoxecs are changed, will wait and see about orbs of fire and shining eyes
 Implement ‘permanent buff’ system from Hellcrawl
 -Which spells receive the perma buff system, and which will use the current system?
 -How complex is it to pull over from Hellcrawl? (something I need to investigate)
 -Any adjustments from how Hellcrawl’s system works?
-Re-implement hammers (for Crazy Yiuf)
--This is only here because I’ve never messed around with adding a weapon type, it 
-  should be easy to insert and make vault adjustments once I read into it
 Rework Hell effects
--SKULL.GIF recommended looking for a pre-existing Hell effect rework, so I’ll find and 
-  post that first for discussion before trying to go in and reformat it myself
+-Couldn't find branch with Hell effects rework, might have to work from scratch
 Implement Virulence spell
 -Spell level, schools, spellpower cap, any special features (like a spellpower boost)?
 -How does the spell work with the different tiers of rPois 

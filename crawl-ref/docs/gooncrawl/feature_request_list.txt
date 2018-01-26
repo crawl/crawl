@@ -142,5 +142,122 @@ Remove XP penalty for summons
 *May or may not be difficult, depending on how much any supporting systems have changed
   since implementing the penalty 
 -------------------
+Increase power/reduce timer of XP evokers by number of evokers picked up
+
+*Would need to look into how hard it is to read quantity or add plusses to them
+-------------------
+Re-add lava orcs and djinni
+
+*Might be lots of work, a lot of that code for both is ancient now.
+-------------------
+Felid mummies for Tomb
+
+*Maybe make a tile variant for one of the types of mummies?  I don't have art skills for this, though.
+-------------------
+Brands for unarmed attacks
+
+*Need to figure out the approach for doing so, will likely be difficult regardless.
+-------------------
+Guarantee a magic (or better) sling for Joseph
+
+*Pretty easy, some uniques already have a chance/guarantee to copy the code from
+-------------------
+Replace large rocks with cannonballs
+
+*Easy rename/reflavoring, but needs a good tile or what's the point
+-------------------
+Replace wand of polymorph with a scroll that hits everything on screen
+
+*I have to figure out if polymorph is a valid mass enchantment type. If it is, super easy; if it isn't, might take a bit of work but probably not too bad.
+-------------------
+Put Battlesphere back in Cj starter book
+
+*Super easy to move spells around between books, 5 minute change tops.
+-------------------
+Give Deep Dwarves back their recharging ability
+
+*Should be simple, although this would give them two abilities (self heal, recharge).
+-------------------
+Bring back cTele
+
+*I don't know how much the backend has changed in relation to cTele, which might throw things off. Might still be simple, though.
+-------------------
+Re-add old unrands
+
+*Mention the specific ones and I'll put it to a vote.
+-------------------
+Racial armor
+
+*This is a pretty old system, so it might be a pain to bring it back.
+-------------------
+Add shops/bazaars to Pan
+
+*I 'think' this is probably easy to accomplish
+-------------------
+Add trowel card effects to Abyss:5
+
+*Depends on if the trowel effect still exists and works in modern Crawl. Otherwise, might be a pain.
+-------------------
+Old corrosion effects (permanently degrade weapon and armor enchantment)
+
+*Probably not very popular, but putting it on the list anyway. I think this would be pretty easy to put back in.
+-------------------
+Re-add contaminated/poisonous chunks
+
+*Also probably not popular, but also probably easy to put back in.
+-------------------
+Re-implement weight system
+
+*This is not popular and also likely a big pain in the ass at this point, because many new things never had mass.
+-------------------
+Wielded item + spell combos
+
+*Some might be easy to put back in, others not so much.
+-------------------
+Permanent undead minions
+
+*I think it's pretty easy to re-implement this, just need to find the timers
+-------------------
+Train by use skilling (victory dancing)
+
+*Probably not popular, and I'm not familiar with the old system. Would likely be a large project.
+-------------------
+Gnomes
+
+*Gnolls took the abbreviation, so Gnomes would need a new one. Otherwise, bland species additions are easy.
+-------------------
+Grey Elves
+
+*Pretty easy, but would need to figure out how sparkle ability worked (maybe from nostalgia branch?)
+-------------------
+Dungeon lengthening (Dungeon to 27, Orc to 3/4, etc.)
+
+*I'll put one in a vote if enough people voice for it. Might turn into a pain the ass (depending on work to redo spawn tables)
+-------------------
+Old Ignite Poison functionality (auto fire damage to enemies with 'poisonous' chunks)
+
+*With poisoned chunks removed, this might be harder to implement.
+-------------------
+Clouds working beyond LoS
+
+*I think the change was recent, so it should be easy to revert
+-------------------
+Rename barachians to hopkins
+
+*Very simple
+-------------------
+Change Oka weapon gifting
+
+*Depending on implementation request, simple to tough
+-------------------
+Summonable 'bomber' monsters
+
+*Might be easier to rework Inner Flame to be more flexible than adding a new summon. Otherwise, Summon Flaming Sheep might work?
+-------------------
+Bring back lightning discussed
+
+*Might be simple, might be tough. Need to look into it.
+-------------------
+
 
 Post angrily at me if I missed something.

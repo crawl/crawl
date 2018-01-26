@@ -3,5 +3,11 @@ https://docs.google.com/document/d/1Rwo9hdgEL3SPr1zC9cJH9KxhPpNCxTKkTVAG-njr7I8/
 Dec 20, 2017 FR Survey Data: 
 https://docs.google.com/spreadsheets/d/1hBhd6CLgu5pNpbN91r11rb3njQTEafvDICR_WGA7r7c/edit?usp=sharing
 
-Dec 29, 2017 Pizza Implementation Survey Results:
 Dec 29, 2017 Pizza Implementation Survey Data:
+https://docs.google.com/spreadsheets/d/1MjOdcjtzHR42tiRVyscJdv4ul-OoUXZkHuxHpbhzmc4/edit?usp=sharing
+
+Healing Evocable Survey Data:
+https://docs.google.com/spreadsheets/d/1XWp65k-kmirwddB5wn9-Q9DE012-2GL2At7gddjSt6I/edit?usp=sharing
+
+Blades of Disaster Pull Request Survey Data:
+https://docs.google.com/spreadsheets/d/1IZccabWVr5P3JZkS0XO0YoIw3hPliHktq1j1pshBjHU/edit?usp=sharing
