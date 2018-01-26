@@ -3,6 +3,7 @@ sudo: required
 compiler:
     - clang
     - gcc
+sudo: required
 before_install:
     - perl .travis/apt.pl
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
