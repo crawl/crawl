@@ -6,12 +6,16 @@ Species
 -Reimplemented Sludge Elves
 -Added hat and scarf equipment options to felids
 -Added helmet equipment option to octopodes
--Increased Ogre Maces&Flails aptitude to +3
+-Increased Ogre Maces & Flails aptitude to +3
 
 Backgrounds
 ----------
 -Reimplemented Death Knights
 -Reimplemented Priests
+
+Gods
+----------
+-Added Jiyva to the list of Temple gods
 
 Spells
 ----------
@@ -20,15 +24,38 @@ Spells
 -Reimplemented Control Undead
 -Reimplemented Cigotuvi's Embrace
 -Reimplemented spellpower boost for Dragon Call while in Dragon Form
+-Reimplemented book amnesia
+-Added Blades of Disaster: A L6 Charms/Conj spell that temporarily allows you to summon
+  prisms as you attack enemies in melee for a short period of time, detonating them all 
+  when the spell expires. The prisms scale with the user's spellpower and weapon damage.
 
 Items
 ----------
--Reimplemented Crown of Eternal Torment
+-Reimplemented Crown of Eternal Torment unique item
+-Reimplemented scrolles of recharging
+-Reimplemented wands of hasting
+-Reimplemented potions of restore abilities
+-Reimplemented hammers
+-Added shards of Zot: A fragment of the Orb of Zot, which can be evoked to teleport the user,
+  as well as attempt to teleport all other monsters in line of sight.
+-Added harps of healing: A musical instrument that can be evoked to heal the user, as long as
+  they stay still to continue playing the instrument.
 
 Monsters
 ----------
 -Reimplemented Norris
+-Reimplemented boulder beetles
+-Reimplemented normal sheep
+-Replaced Malmutate on neqoxecs with Paralyze
+-Replaced Malmutate on cacodemons with Entropic Weave
 
 Dungeon
 ----------
 -Changed Tomb trap doors back to stone stairs (kept Tomb:3 treasure chamber door addition)
+-Added some vaults
+
+Misc
+----------
+-Added random food flavor descriptions when eating rations
+-Kept the old fat cacodemon tile
+-Added the crablang fake language (still a WIP)
