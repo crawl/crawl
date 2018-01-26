@@ -650,6 +650,33 @@ MAP
 .............
 ENDMAP
 
+NAME:   elyvilon_alcovefable
+TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:2-
+KFEAT:  C = altar_elyvilon
+KMONS:  F = patrolling thorn hunter att:good_neutral
+MONS:   patrolling yak att:good_neutral
+MONS:   patrolling human skeleton att:good_neutral
+MONS:   patrolling deep dwarf skeleton att:good_neutral
+MONS:   patrolling merfolk javelineer att:good_neutral
+MONS:   patrolling kobold att:good_neutral
+MONS:   patrolling iron golem att:good_neutral
+MONS:   patrolling death yak att:good_neutral
+: interest_check(_G)
+SUBST: { = {[(
+MAP
+  xxxxxxx
+ xx.....xx
+ x...4...x
+ x3.....5x
+@x2..C..6x@
+ x...F...x
+ x.1...7.x
+ xx..{..xx
+  xxxxxxx
+ENDMAP
+
 ### Fedhas overflow altars ####################################################
 
 NAME:   fedhas_altar_1
