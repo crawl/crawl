@@ -3449,7 +3449,7 @@ static const map<string, flang_t> fake_lang_names = {
     
     { "crab", flang_t::crab },
     { "crabman", flang_t::crab },
-    { "crabman"s, flang_t::crab },
+    { "crabmans", flang_t::crab },
 };
 
 struct language_def
