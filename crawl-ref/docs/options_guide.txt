@@ -2578,7 +2578,7 @@ fake_lang = <lang1>[,<lang2>[,...]]
         may not end up making much sense... At most 3 fake langs can be set at
         a time.
 
-        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt:<n>)
+        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt|crab:<n>)
         Experiment to find out what they do!
 
 read_persist_options = false

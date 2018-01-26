@@ -9,4 +9,5 @@ enum class flang_t
     wide,
     grunt,
     butt,
+    crab,
 };
