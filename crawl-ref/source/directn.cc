@@ -1855,7 +1855,14 @@ bool direction_chooser::do_main_loop()
     reinitialize_move_flags();
 
     const coord_def old_target = target();
-    const command_type key_command = behaviour->get_command();
+    const int key = behaviour->get_key();
+    if (key == CK_REDRAW)
+    {
+        redraw_screen(false);
+        return false;
+    }
+
+    const command_type key_command = behaviour->get_command(key);
     behaviour->update_top_prompt(&top_prompt);
     bool loop_done = false;
 
