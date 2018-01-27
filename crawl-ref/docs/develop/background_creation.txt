@@ -95,7 +95,7 @@ count as a Adventurer, so I'll update the entry for them:
         {
             "Adventurer",
             coord_def(0, 7), 15,
-            { JOB_ARTIFICER, JOB_WANDERER, JOB_SHEPARD }
+            { JOB_ARTIFICER, JOB_WANDERER, JOB_SHEPHERD }
         },
 
 And we're done. Compile and enjoy your new background!
