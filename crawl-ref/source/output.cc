@@ -1478,7 +1478,7 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
-void redraw_screen()
+void redraw_screen(bool show_updates)
 {
     if (!crawl_state.need_save)
     {
@@ -1518,11 +1518,11 @@ void redraw_screen()
     if (Options.messages_at_top)
     {
         display_message_window();
-        viewwindow();
+        viewwindow(show_updates);
     }
     else
     {
-        viewwindow();
+        viewwindow(show_updates);
         display_message_window();
     }
 
