@@ -58,6 +58,7 @@ corroded CORRODED
 swift SWIFT
 pinned PINNED
 vile_clutch VILE_CLUTCH
+possessable POSSESSABLE
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
