@@ -163,7 +163,7 @@ static monster_type _soh_type(string &soh_name)
 {
     const string flavour = lowercase_string(soh_name.substr(soh_name.find_last_of(' ')+1));
 
-    branch_type branch;
+    branch_type branch = NUM_BRANCHES;
     for (int b = BRANCH_FIRST_HELL; b <= BRANCH_LAST_HELL; ++b)
         if (ends_with(flavour, lowercase_string(branches[b].shortname)))
             branch = (branch_type)b;
