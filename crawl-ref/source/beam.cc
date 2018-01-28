@@ -6201,8 +6201,10 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    if (mgrd(you.pos()) < MAX_MONSTERS)
-        return &menv[mgrd(you.pos())]; // there's a dith shadow at your pos
+    // Check for whether this is actually a dith shadow, not you
+    if (monster* shadow = monster_at(you.pos()))
+        if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
+            return shadow;
 
     if (YOU_KILL(nominal_ktype))
         return &you;
