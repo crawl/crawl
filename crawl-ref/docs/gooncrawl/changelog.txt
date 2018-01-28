@@ -32,7 +32,7 @@ Spells
 Items
 ----------
 -Reimplemented Crown of Eternal Torment unique item
--Reimplemented scrolles of recharging
+-Reimplemented scrolls of recharging
 -Reimplemented wands of hasting
 -Reimplemented potions of restore abilities
 -Reimplemented hammers
@@ -57,5 +57,6 @@ Dungeon
 Misc
 ----------
 -Added random food flavor descriptions when eating rations
+-Mutagenic chunks are back
 -Kept the old fat cacodemon tile
 -Added the crablang fake language (still a WIP)
