@@ -117,7 +117,7 @@ force_more_message += hiss of flowing sand
 force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
-force_more_message += distant wind
+force_more_message += hear a distant wind
 
 # Religion
 force_more_message += press .* to convert to Beogh
