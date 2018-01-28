@@ -6218,6 +6218,10 @@ actor* bolt::agent(bool ignore_reflection) const
             return &menv[YOU_FAULTLESS];
         nominal_source = reflector;
     }
+
+    if (mgrd(you.pos()) < MAX_MONSTERS)
+        return &menv[mgrd(you.pos())]; // there's a dith shadow at your pos
+
     if (YOU_KILL(nominal_ktype))
         return &you;
     else
