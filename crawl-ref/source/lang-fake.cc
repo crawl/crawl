@@ -746,6 +746,9 @@ void filter_lang(string &str)
             case flang_t::butt:
                 _butt(str, fake_lang.value);
                 continue;
+            case flang_t::crab:
+                repl = crab;
+                break;
             default:
                 continue;
         }
