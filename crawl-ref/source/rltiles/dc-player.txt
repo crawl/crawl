@@ -527,6 +527,7 @@ dark_maul DARK_MAUL
 spellbinder SPELLBINDER
 firestarter FIRESTARTER
 majin MAJIN
+fists_of_thunder FISTS_OF_THUNDER
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE

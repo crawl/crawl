@@ -1305,6 +1305,16 @@ BRAND:    SPWPN_FLAMING
 FIRE:     -1
 COLD:     -1
 
+NAME:     hand wraps "Fists of Thunder"
+INSCRIP:  elec
+OBJ:      OBJ_ARMOUR/ARM_GLOVES
+TYPE:     hand wraps
+COLOUR:   BLUE
+TILE:     urand_fists_of_thunder
+TILE_EQ:  fists_of_thunder
+SLAY:     2
+BOOL:     elec
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

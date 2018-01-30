@@ -669,3 +669,8 @@ A strange sword, one blade blistering hot and the other icy cold. When it hits
 its target the thermal gradient increases. What causes this effect is unknown
 but it is rumored that otherworldly forces are involved.
 %%%%
+hand wraps "Fists of Thunder"
+
+A simple set of hand wraps, cracking with electricity. Unlike most gloves they
+don't cover any claws the wearer has, and they can deliver a real shock to
+anyone on the receiving end of a punch.

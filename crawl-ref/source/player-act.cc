@@ -223,6 +223,9 @@ brand_type player::damage_brand(int)
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
+    if (player_equip_unrand(UNRAND_FISTS_OF_THUNDER))
+        return SPWPN_ELECTROCUTION;
+
     return get_form()->get_uc_brand();
 }
 
