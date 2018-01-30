@@ -61,16 +61,16 @@ colour_t feature_def::colour() const
 
 /** What colour should be used for this feature when out of LOS?
  *
- *  @returns The map_colour from the feature option if given, otherwise
- *           the normal map_colour.
+ *  @returns The unseen_colour from the feature option if given, otherwise
+ *           the normal unseen_colour.
  */
-colour_t feature_def::map_colour() const
+colour_t feature_def::unseen_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && ofeat->map_dcolour)
-        return ofeat->map_dcolour;
+    if (ofeat && ofeat->unseen_dcolour)
+        return ofeat->unseen_dcolour;
 
-    return map_dcolour;
+    return unseen_dcolour;
 }
 
 /** What colour should be used for this feature when we have knowledge of it?
@@ -122,7 +122,7 @@ colour_t feature_def::em_colour() const
 static void _create_colours(feature_def &f)
 {
     if (f.seen_dcolour == BLACK)
-        f.seen_dcolour = f.map_dcolour;
+        f.seen_dcolour = f.unseen_dcolour;
 
     if (f.seen_em_dcolour == BLACK)
         f.seen_em_dcolour = f.seen_dcolour;
