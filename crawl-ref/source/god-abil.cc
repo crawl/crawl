@@ -1897,7 +1897,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
             convert2bad(*wpn);
         }
     }
-    monster_drop_things(mon, false, is_holy_item);
+    monster_drop_things(mon, false, [](const item_def& item)
+                                    { return is_holy_item(item); });
     mon->remove_avatars();
 
     const monster orig = *mon;
