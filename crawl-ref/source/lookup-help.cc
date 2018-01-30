@@ -142,7 +142,8 @@ private:
     /// a function taking a single character & returning a list of keys
     /// corresponding to that glyph
     keys_by_glyph glyph_fetch;
-    /// no idea, sorry :(
+    /// take the list of keys that were automatically found and fix them
+    /// up if necessary
     db_keys_recap recap;
     /// take a letter & a key, return a corresponding new menu entry
     menu_entry_generator menu_gen;
@@ -632,7 +633,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // HACK: Set an arbitrary humanoid monster as base type.
     if (mons_class_is_zombified(m_type))
         base_type = MONS_GOBLIN;
-    // FIXME: This doesn't generate proper draconian monsters.
+
     monster_info fake_mon(m_type, base_type);
     fake_mon.props["fake"] = true;
 
@@ -1052,7 +1053,14 @@ static int _describe_monster(const string &key, const string &suffix,
     if (mons_is_ghost_demon(mon_num) || mons_class_is_zombified(mon_num))
         return _describe_generic(key, suffix, footer);
 
-    monster_info mi(mon_num);
+    monster_type base_type = MONS_NO_MONSTER;
+    // Might be better to show all possible combinations rather than picking
+    // one at random as this does?
+    if (mons_is_draconian_job(mon_num))
+        base_type = random_draconian_monster_species();
+    else if (mons_is_demonspawn_job(mon_num))
+        base_type = random_demonspawn_monster_species();
+    monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
