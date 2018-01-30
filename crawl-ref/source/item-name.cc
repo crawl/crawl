@@ -3384,7 +3384,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
-        if (!item_type_known(item))
+        if (!item_type_known(item) && !item_brand_known(item))
             return false;
 
         if (you.undead_or_demonic() && is_holy_item(item))

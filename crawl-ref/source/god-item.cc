@@ -465,7 +465,9 @@ static bool item_handling_is_evil(const item_def &item)
     if (is_demonic(item))
         return true;
 
-    if ((item_type_known(item) || is_unrandom_artefact(item))
+    if ((item_type_known(item)
+         || item_brand_known(item)
+         || is_unrandom_artefact(item))
         && is_evil_item(item))
     {
         return true;
@@ -493,7 +495,7 @@ conduct_type god_hates_item_handling(const item_def &item)
     switch (you.religion)
     {
     case GOD_ZIN:
-        if (!item_type_known(item))
+        if (!item_type_known(item) && !item_brand_known(item))
             return DID_NOTHING;
 
         if (is_unclean_item(item))
@@ -504,8 +506,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_YREDELEMNUL:
-        if (item_type_known(item) && is_holy_item(item))
+        if ((item_type_known(item) || item_brand_known(item))
+            && is_holy_item(item))
+        {
             return DID_HOLY;
+        }
         break;
 
     case GOD_TROG:
@@ -519,13 +524,16 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_FEDHAS:
-        if (item_type_known(item) && is_corpse_violating_item(item))
+        if ((item_type_known(item) || item_brand_known(item))
+            && is_corpse_violating_item(item))
+        {
             return DID_CORPSE_VIOLATION;
+        }
         break;
 
     case GOD_CHEIBRIADOS:
-        if (item_type_known(item) && (_is_potentially_hasty_item(item)
-                                      || is_hasty_item(item))
+        if ((item_type_known(item) || item_brand_known(item))
+            && (_is_potentially_hasty_item(item) || is_hasty_item(item))
             // Don't need item_type_known for quick blades.
             || item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
         {
@@ -534,7 +542,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_DITHMENOS:
-        if (item_type_known(item)
+        if ((item_type_known(item) || item_brand_known(item))
             && (_is_potentially_fiery_item(item) || is_fiery_item(item)))
         {
             return DID_FIRE;
@@ -550,7 +558,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
     }
 
-    if (item_type_known(item) && is_potentially_evil_item(item)
+    if ((item_type_known(item) || item_brand_known(item))
+        && is_potentially_evil_item(item)
         && is_good_god(you.religion))
     {
         return DID_EVIL;
