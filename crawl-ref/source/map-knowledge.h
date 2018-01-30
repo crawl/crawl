@@ -36,6 +36,8 @@ void clear_map(bool clear_items = true, bool clear_mons = true);
  */
 void clear_map_or_travel_trail();
 
+map_feature get_cell_map_feature(const coord_def& gc);
 map_feature get_cell_map_feature(const map_cell& cell);
+bool is_explore_horizon(const coord_def& c);
 
 void reautomap_level();

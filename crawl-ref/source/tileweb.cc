@@ -1104,7 +1104,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
     else if (current_mc.monsterinfo())
         json_write_null("mon");
 
-    map_feature mf = get_cell_map_feature(next_mc);
+    map_feature mf = get_cell_map_feature(gc);
     if (get_cell_map_feature(current_mc) != mf)
         json_write_int("mf", mf);
 

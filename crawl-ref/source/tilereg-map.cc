@@ -65,6 +65,7 @@ void MapRegion::init_colours()
     m_colours[MF_EXCL_ROOT]     = Options.tile_excl_centre_col;
     m_colours[MF_EXCL]          = Options.tile_excluded_col;
     m_colours[MF_PLAYER]        = Options.tile_player_col;
+    m_colours[MF_EXPLORE_HORIZON] = Options.tile_explore_horizon_col;
 }
 
 MapRegion::~MapRegion()

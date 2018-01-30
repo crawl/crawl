@@ -507,6 +507,7 @@ public:
     VColour     tile_water_col;
     VColour     tile_deep_water_col;
     VColour     tile_lava_col;
+    VColour     tile_explore_horizon_col;
     VColour     tile_excluded_col;
     VColour     tile_excl_centre_col;
     VColour     tile_window_col;

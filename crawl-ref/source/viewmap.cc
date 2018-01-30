@@ -107,29 +107,6 @@ bool travel_colour_override(const coord_def& p)
         return false;
 }
 
-static bool _is_explore_horizon(const coord_def& c)
-{
-    if (env.map_knowledge(c).feat() != DNGN_UNSEEN)
-        return false;
-
-    // Note: c might be on map edge, walkable squares not really.
-    for (adjacent_iterator ai(c); ai; ++ai)
-        if (in_bounds(*ai))
-        {
-            dungeon_feature_type feat = env.map_knowledge(*ai).feat();
-            if (feat != DNGN_UNSEEN
-                && !feat_is_solid(feat)
-                && !feat_is_door(feat))
-            {
-                return true;
-            }
-        }
-
-    return false;
-}
-#endif
-
-#ifndef USE_TILE_LOCAL
 static char32_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).symbol();
@@ -361,7 +338,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
                 const show_class show = get_cell_show_class(env.map_knowledge(c));
 
-                if (show == SH_NOTHING && _is_explore_horizon(c))
+                if (show == SH_NOTHING && is_explore_horizon(c))
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
                     cell->glyph = fd.symbol();

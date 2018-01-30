@@ -343,6 +343,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_transporter_landing_col), "#5200aa"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
+        new TileColGameOption(SIMPLE_NAME(tile_explore_horizon_col), "#ffa07a"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
 #ifdef TOUCH_UI
@@ -4131,6 +4132,7 @@ static void _write_minimap_colours()
     _write_vcolour("tile_water_col", Options.tile_water_col);
     _write_vcolour("tile_deep_water_col", Options.tile_deep_water_col);
     _write_vcolour("tile_lava_col", Options.tile_lava_col);
+    _write_vcolour("tile_explore_horizon_col", Options.tile_explore_horizon_col);
     _write_vcolour("tile_excluded_col", Options.tile_excluded_col);
     _write_vcolour("tile_excl_centre_col", Options.tile_excl_centre_col);
     _write_vcolour("tile_window_col", Options.tile_window_col);
