@@ -326,6 +326,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_downstairs_col), "#ff00ff"),
         new TileColGameOption(SIMPLE_NAME(tile_excl_centre_col), "#552266"),
         new TileColGameOption(SIMPLE_NAME(tile_excluded_col), "#552266"),
+        new TileColGameOption(SIMPLE_NAME(tile_explore_horizon_col), "#ffa07a"),
         new TileColGameOption(SIMPLE_NAME(tile_feature_col), "#997700"),
         new TileColGameOption(SIMPLE_NAME(tile_floor_col), "#333333"),
         new TileColGameOption(SIMPLE_NAME(tile_item_col), "#005544"),
@@ -343,7 +344,6 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_transporter_landing_col), "#5200aa"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
-        new TileColGameOption(SIMPLE_NAME(tile_explore_horizon_col), "#ffa07a"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
 #ifdef TOUCH_UI
@@ -4107,30 +4107,31 @@ static void _write_vcolour(const string &name, VColour colour)
 
 static void _write_minimap_colours()
 {
-    _write_vcolour("tile_player_col", Options.tile_player_col);
-    _write_vcolour("tile_monster_col", Options.tile_monster_col);
-    _write_vcolour("tile_plant_col", Options.tile_plant_col);
-    _write_vcolour("tile_item_col", Options.tile_item_col);
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
     _write_vcolour("tile_floor_col", Options.tile_floor_col);
     _write_vcolour("tile_wall_col", Options.tile_wall_col);
     _write_vcolour("tile_mapped_floor_col", Options.tile_mapped_floor_col);
     _write_vcolour("tile_mapped_wall_col", Options.tile_mapped_wall_col);
     _write_vcolour("tile_door_col", Options.tile_door_col);
-    _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
+    _write_vcolour("tile_item_col", Options.tile_item_col);
+    _write_vcolour("tile_monster_col", Options.tile_monster_col);
+    _write_vcolour("tile_plant_col", Options.tile_plant_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
+    _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
+    _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
+    _write_vcolour("tile_feature_col", Options.tile_feature_col);
+    _write_vcolour("tile_water_col", Options.tile_water_col);
+    _write_vcolour("tile_lava_col", Options.tile_lava_col);
+    _write_vcolour("tile_trap_col", Options.tile_trap_col);
+    _write_vcolour("tile_excl_centre_col", Options.tile_excl_centre_col);
+    _write_vcolour("tile_excluded_col", Options.tile_excluded_col);
+    _write_vcolour("tile_player_col", Options.tile_player_col);
+    _write_vcolour("tile_deep_water_col", Options.tile_deep_water_col);
+    _write_vcolour("tile_portal_col", Options.tile_portal_col);
     _write_vcolour("tile_transporter_col", Options.tile_transporter_col);
     _write_vcolour("tile_transporter_landing_col", Options.tile_transporter_landing_col);
-    _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
-    _write_vcolour("tile_portal_col", Options.tile_portal_col);
-    _write_vcolour("tile_feature_col", Options.tile_feature_col);
-    _write_vcolour("tile_trap_col", Options.tile_trap_col);
-    _write_vcolour("tile_water_col", Options.tile_water_col);
-    _write_vcolour("tile_deep_water_col", Options.tile_deep_water_col);
-    _write_vcolour("tile_lava_col", Options.tile_lava_col);
     _write_vcolour("tile_explore_horizon_col", Options.tile_explore_horizon_col);
-    _write_vcolour("tile_excluded_col", Options.tile_excluded_col);
-    _write_vcolour("tile_excl_centre_col", Options.tile_excl_centre_col);
+
     _write_vcolour("tile_window_col", Options.tile_window_col);
 }
 
