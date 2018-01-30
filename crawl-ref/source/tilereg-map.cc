@@ -65,6 +65,8 @@ void MapRegion::init_colours()
     m_colours[MF_PLAYER]        = Options.tile_player_col;
     m_colours[MF_DEEP_WATER]    = Options.tile_deep_water_col;
     m_colours[MF_PORTAL]        = Options.tile_portal_col;
+    m_colours[MF_TRANSPORTER]   = Options.tile_transporter_col;
+    m_colours[MF_TRANSPORTER_LANDING] = Options.tile_transporter_landing_col;
     m_colours[MF_EXPLORE_HORIZON] = Options.tile_explore_horizon_col;
 }
 
