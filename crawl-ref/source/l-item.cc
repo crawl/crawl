@@ -418,6 +418,12 @@ static int l_item_do_stacks(lua_State *ls)
                       [&] (const item_def &item) -> bool
                       {
                           return items_stack(*first, item);
+                      })
+         || first->base_type == OBJ_WANDS
+            && any_of(begin(you.inv), end(you.inv),
+                      [&] (const item_def &item) -> bool
+                      {
+                          return first->sub_type == item.sub_type;
                       });
         lua_pushboolean(ls, any_stack);
     }
