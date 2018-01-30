@@ -167,9 +167,14 @@ void fire_target_behaviour::set_prompt()
     }
 
     // And a key hint.
-    msg << (no_other_items ? "(i - inventory)"
-                           : "(i - inventory. (,) - cycle)")
-        << ": ";
+    string key_hint = no_other_items
+                        ? "(<w>%</w> - inventory) "
+                        : "(<w>%</w> - inventory. <w>%</w>/<w>%</w> - cycle) ";
+    insert_commands(key_hint,
+                    { CMD_DISPLAY_INVENTORY,
+                      CMD_CYCLE_QUIVER_BACKWARD,
+                      CMD_CYCLE_QUIVER_FORWARD });
+    msg << key_hint;
 
     // Describe the selected item for firing.
     if (!active_item())
@@ -237,13 +242,18 @@ command_type fire_target_behaviour::get_command(int key)
     if (key == -1)
         key = get_key();
 
-    switch (key)
+    if (key == CMD_TARGET_CANCEL)
+        chosen_ammo = false;
+    else
     {
-    case '(': case CONTROL('N'): cycle_fire_item(true);  return CMD_NO_CMD;
-    case ')': case CONTROL('P'): cycle_fire_item(false); return CMD_NO_CMD;
-    case 'i': pick_fire_item_from_inventory(); return CMD_NO_CMD;
-    case '?': display_help(); return CMD_NO_CMD;
-    case CMD_TARGET_CANCEL: chosen_ammo = false; break;
+        switch (key_to_command(key, KMC_DEFAULT))
+        {
+        case CMD_CYCLE_QUIVER_BACKWARD: cycle_fire_item(true);  return CMD_NO_CMD;
+        case CMD_CYCLE_QUIVER_FORWARD: cycle_fire_item(false); return CMD_NO_CMD;
+        case CMD_DISPLAY_INVENTORY: pick_fire_item_from_inventory(); return CMD_NO_CMD;
+        case CMD_DISPLAY_COMMANDS: display_help(); return CMD_NO_CMD;
+        default: break;
+        }
     }
 
     return targeting_behaviour::get_command(key);
