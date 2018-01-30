@@ -1574,13 +1574,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // You know that forbidden chunks are bad.
-    if (oper == OPER_EAT && you_worship(GOD_ZIN) && god_hates_item(item))
-    {
-        penance = true;
-        return true;
-    }
-
     // Everything else depends on knowing the item subtype/brand.
     if (!item_type_known(item))
         return false;
