@@ -178,23 +178,26 @@ bool attribute_increase()
                 return false;
             break;
 
-        case 's':
         case 'S':
             for (int i = 0; i < statgain; i++)
                 modify_stat(STAT_STR, 1, false);
             return true;
 
-        case 'i':
         case 'I':
             for (int i = 0; i < statgain; i++)
                 modify_stat(STAT_INT, 1, false);
             return true;
 
-        case 'd':
         case 'D':
             for (int i = 0; i < statgain; i++)
                 modify_stat(STAT_DEX, 1, false);
             return true;
+
+        case 's':
+        case 'i':
+        case 'd':
+            mprf(MSGCH_PROMPT, "Uppercase letters only, please.");
+            break;
 #ifdef TOUCH_UI
         default:
             status->text = "Please choose an option below"; // too naggy?
