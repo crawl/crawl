@@ -1554,7 +1554,7 @@ void TilesFramework::update_minimap(const coord_def& gc)
     if (!crawl_state.game_is_arena() && gc == you.pos() && you.on_current_level)
         mf = MF_PLAYER;
     else
-        mf = get_cell_map_feature(env.map_knowledge(gc));
+        mf = get_cell_map_feature(gc);
 
     // XXX: map_cell show have exclusion info
     if (mf == MF_FLOOR || mf == MF_MAP_FLOOR || mf == MF_WATER
