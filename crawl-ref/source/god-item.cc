@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "food.h"
+#include "god-conduct.h"
 #include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -499,97 +500,60 @@ bool is_fiery_spell(spell_type spell)
     return bool(disciplines & SPTYP_FIRE);
 }
 
-static bool _your_god_hates_spell(spell_type spell)
-{
-    return god_hates_spell(spell, you.religion);
-}
-
 /**
- * Does the player's god hate them using the given item? If so, why?
+ * What conducts can one violate using this item?
  * This should only be based on the player's knowledge.
  *
- * XXX: We should really be returning a list of all possible conducts for the
- * item and potentially letting callers filter them by the current god; this
- * is duplicating god-conduct.cc otherwise.
- *
  * @param item  The item in question.
- * @return      Why the player's god hates the item, e.g. DID_HOLY for holy
- *              wrath items under Yredremnul; else DID_NOTHING.
+ * @return      List of conducts that can be violated with this; empty if none.
  */
-conduct_type god_hates_item_handling(const item_def &item)
+vector<conduct_type> item_conducts(const item_def &item)
 {
-    if (is_good_god(you.religion) && is_evil_item(item, false))
-        return DID_EVIL;
+    vector<conduct_type> conducts;
 
-    switch (you.religion)
+    // Special case for Zin mutagenic chunks after this got refactored, go in
+    // and actually fix it in is_chaotic_item at some point
+    if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && is_mutagenic(item)
+        && you.religion == GOD_ZIN)
+        conducts.push_back(DID_CHAOS);
+
+    if (is_evil_item(item, false))
+        conducts.push_back(DID_EVIL);
+
+    if (is_unclean_item(item, false))
+        conducts.push_back(DID_UNCLEAN);
+
+    if (is_chaotic_item(item, false))
+        conducts.push_back(DID_CHAOS);
+
+    if (is_holy_item(item, false))
+        conducts.push_back(DID_HOLY);
+
+    if (item_is_spellbook(item))
+        conducts.push_back(DID_SPELL_MEMORISE);
+
+    if (item.sub_type == BOOK_MANUAL && item_type_known(item)
+        && is_magic_skill((skill_type)item.plus))
     {
-    case GOD_ZIN:
-        // Handled here rather than is_forbidden_food() because you can
-        // butcher or otherwise desecrate the corpses all you want, just as
-        // long as you don't eat the chunks. This check must come before the
-        // item_type_known() check because the latter returns false for food
-        // (and other item types without identification).
-        if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && is_mutagenic(item))
-            return DID_DELIBERATE_MUTATING;
-
-        if (!item_type_known(item) && !item_brand_known(item))
-            return DID_NOTHING;
-
-        if (is_unclean_item(item, false))
-            return DID_UNCLEAN;
-
-        if (is_chaotic_item(item, false))
-            return DID_CHAOS;
-        break;
-
-    case GOD_YREDELEMNUL:
-        if (is_holy_item(item, false))
-            return DID_HOLY;
-        break;
-
-    case GOD_TROG:
-        if (item_is_spellbook(item))
-            return DID_SPELL_MEMORISE;
-        if (item.sub_type == BOOK_MANUAL && item_type_known(item)
-            && is_harmful_skill((skill_type)item.plus))
-        {
-            return DID_SPELL_PRACTISE;
-        }
-        break;
-
-    case GOD_FEDHAS:
-        if (is_corpse_violating_item(item, false))
-            return DID_CORPSE_VIOLATION;
-        break;
-
-    case GOD_CHEIBRIADOS:
-        if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
-            return DID_HASTY;
-        break;
-
-    case GOD_DITHMENOS:
-        if (_is_potentially_fiery_item(item) || is_fiery_item(item, false))
-            return DID_FIRE;
-        break;
-
-    case GOD_PAKELLAS:
-        if (is_channeling_item(item, false))
-            return DID_CHANNEL;
-        break;
-
-    default:
-        break;
+        conducts.push_back(DID_SPELL_PRACTISE);
     }
 
-    if (is_good_god(you.religion) && is_potentially_evil_item(item, false))
-        return DID_EVIL;
+    if (is_corpse_violating_item(item, false))
+        conducts.push_back(DID_CORPSE_VIOLATION);
 
-    if (item_type_known(item) && _is_book_type(item, _your_god_hates_spell))
-    {
-        return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
-    }                          // will ever be needed for spellbooks.
+    if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
+        conducts.push_back(DID_HASTY);
 
-    return DID_NOTHING;
+    if (_is_potentially_fiery_item(item) || is_fiery_item(item, false))
+        conducts.push_back(DID_FIRE);
+
+    if (is_channeling_item(item, false))
+        conducts.push_back(DID_CHANNEL);
+
+    if (is_potentially_evil_item(item, false))
+        conducts.push_back(DID_EVIL);
+
+    return conducts;
 }
 
 bool god_hates_item(const item_def &item)
