@@ -2136,7 +2136,7 @@ string get_item_description(const item_def &item, bool verbose,
         }
     }
 
-    if (god_hates_item_handling(item))
+    if (god_hates_item(item))
     {
         description << "\n\n" << uppercase_first(god_name(you.religion))
                     << " disapproves of the use of such an item.";

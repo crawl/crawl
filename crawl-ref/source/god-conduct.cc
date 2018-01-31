@@ -1185,6 +1185,14 @@ bool god_hates_cannibalism(god_type god)
     return divine_peeves[god].count(DID_CANNIBALISM);
 }
 
+conduct_type god_hates_item_handling(const item_def& item)
+{
+    for (conduct_type conduct : item_conducts(item))
+        if (divine_peeves[you.religion].count(conduct))
+            return conduct;
+    return DID_NOTHING;
+}
+
 /**
  * Handle god conducts triggered by hurting a monster. Currently set up to only
  * account for Uskayaw's use pattern; if anyone else uses it, add a second case.
