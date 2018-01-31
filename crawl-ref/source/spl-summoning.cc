@@ -63,6 +63,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -88,6 +89,87 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
                            spell_type spell)
 {
     return _summon_data(you, pal, dur, god, spell);
+}
+
+
+/**
+ * Check target location to ensure it's valid for fixed position summons.
+ * Only players can cast spells that target a location.
+ *
+ * @param where         The target coordinate to check.
+ * @param monster_type  The type of monster to be checked for placement.
+ * @param spell         The spell being cast.
+ * @param pow           The spell power.
+ * @param fail          If true, return SPRET_FAIL unless the spell is aborted.
+ * @returns             Returns SPRET_ABORT if target location is not valid,
+ *                      SPRET_NONE if there is no trap, otherwise
+ *                      SPRET_SUCCESS or SPRET_FAIL based on fail.
+ */
+static spret_type _check_fixed_summon_loc(const coord_def& where,
+                                          monster_type mon_type,
+                                          spell_type spell, int pow,
+                                          bool fail)
+{
+    if (grid_distance(where, you.pos()) > spell_range(spell, pow)
+        || !in_bounds(where))
+    {
+        mpr("That's too far away.");
+        return SPRET_ABORT;
+    }
+
+    if (!monster_habitable_grid(mon_type, grd(where)))
+    {
+        mpr("You can't place that there.");
+        return SPRET_ABORT;
+    }
+
+    // Look for a monster at the target location
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(*mons))
+        {
+            mpr("That space is already occupied.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        // Let player know there's a monster here and toggle autopickup.
+        canned_msg(MSG_GHOSTLY_OUTLINE);
+        autotoggle_autopickup(true);
+
+        // We charge mana for the detection of the invisible monster.
+        return SPRET_SUCCESS;
+    }
+
+    // Look for a trap at the target location.
+    const trap_def *ptrap = trap_at(where);
+    if (ptrap)
+    {
+        const trap_def& trap = *ptrap;
+        const trap_type trap_type = ptrap->type;
+        const bool player_knows_trap = (trap.is_known(&you));
+
+        if  (!can_place_on_trap(mon_type, trap_type))
+        {
+            // Tell player they can't target this kind of trap.
+            if (player_knows_trap)
+            {
+                mpr("The trap prevents you from targeting this location.");
+                return SPRET_ABORT;
+            }
+
+            fail_check();
+
+            // Let the player know there's a shaft or teleport trap here
+            mpr("You see a mysterious outline, and the spell fizzles.");
+
+            // We charge mana for the detection of the trap.
+            return SPRET_SUCCESS;
+        }
+    }
+    return SPRET_NONE;
 }
 
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
@@ -922,35 +1004,13 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 {
     const int dur = 2;
 
-    if (grid_distance(where, you.pos()) > spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
-                                                      pow)
-        || !in_bounds(where))
-    {
-        mpr("That's too far away.");
-        return SPRET_ABORT;
-    }
+    spret_type check_loc = _check_fixed_summon_loc(where,
+                                                     MONS_LIGHTNING_SPIRE,
+                                                     SPELL_SUMMON_LIGHTNING_SPIRE,
+                                                     pow, fail);
 
-    if (!monster_habitable_grid(MONS_HUMAN, grd(where)))
-    {
-        mpr("You can't construct there.");
-        return SPRET_ABORT;
-    }
-
-    monster* mons = monster_at(where);
-    if (mons)
-    {
-        if (you.can_see(*mons))
-        {
-            mpr("That space is already occupied.");
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        // invisible monster
-        mpr("Something you can't see is blocking your construction!");
-        return SPRET_SUCCESS;
-    }
+    if (check_loc != SPRET_NONE)
+        return check_loc;
 
     fail_check();
 
@@ -2950,47 +3010,13 @@ bool fire_battlesphere(monster* mons)
 spret_type cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail)
 {
-    if (grid_distance(where, caster->pos())
-        > spell_range(SPELL_FULMINANT_PRISM, pow))
-    {
-        if (caster->is_player())
-            mpr("That's too far away.");
-        return SPRET_ABORT;
-    }
+    spret_type check_loc = _check_fixed_summon_loc(where,
+                                                     MONS_FULMINANT_PRISM,
+                                                     SPELL_FULMINANT_PRISM,
+                                                     pow, fail);
 
-    if (cell_is_solid(where))
-    {
-        if (caster->is_player())
-            mpr("You can't conjure that within a solid object!");
-        return SPRET_ABORT;
-    }
-
-    actor* victim = monster_at(where);
-    if (victim)
-    {
-        if (caster->can_see(*victim))
-        {
-            if (caster->is_player())
-                mpr("You can't place the prism on a creature.");
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        // FIXME: maybe should do _paranoid_option_disable() here?
-        if (caster->is_player()
-            || (you.can_see(*caster) && you.see_cell(where)))
-        {
-            if (you.can_see(*victim))
-            {
-                mprf("%s %s.", victim->name(DESC_THE).c_str(),
-                               victim->conj_verb("twitch").c_str());
-            }
-            else
-                canned_msg(MSG_GHOSTLY_OUTLINE);
-        }
-        return SPRET_SUCCESS;      // Don't give free detection!
-    }
+    if (check_loc != SPRET_NONE)
+        return check_loc;
 
     fail_check();
 
