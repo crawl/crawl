@@ -903,34 +903,32 @@ void LookupType::display_keys(vector<string> &key_list) const
 
     desc_menu.sort();
 
-    while (true)
+    desc_menu.on_single_selection = [this, doing_mons](const MenuEntry& item)
     {
-        vector<MenuEntry*> sel = desc_menu.show();
-        redraw_screen();
-        if (sel.empty())
+        /* redraw_screen(); */
+        ASSERT(item.hotkeys.size() >= 1);
+
+        string key;
+
+        if (doing_mons)
         {
-            if (toggleable_sort() && desc_menu.getkey() == CONTROL('S'))
-                desc_menu.toggle_sorting();
-            else
-                return; // only exit from this function
+            monster_info* mon = (monster_info*) item.data;
+            key = _mons_desc_key(mon->type);
         }
         else
-        {
-            ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() >= 1);
+            key = *((string*) item.data);
 
-            string key;
+        describe(key);
+        return true;
+    };
 
-            if (doing_mons)
-            {
-                monster_info* mon = (monster_info*) sel[0]->data;
-                key = _mons_desc_key(mon->type);
-            }
-            else
-                key = *((string*) sel[0]->data);
-
-            describe(key);
-        }
+    while (true)
+    {
+        desc_menu.show();
+        if (toggleable_sort() && desc_menu.getkey() == CONTROL('S'))
+            desc_menu.toggle_sorting();
+        else
+            break;
     }
 }
 

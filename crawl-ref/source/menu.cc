@@ -909,7 +909,32 @@ bool Menu::process_key(int keyin)
         select_items(keyin, num);
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
-            return false;
+        {
+            if (!on_single_selection)
+                return false;
+#ifdef USE_TILE_LOCAL
+            // XXX: clear the title before we call the hook, so that it's not
+            // visible; the visible menu item range is set to [0,-1]
+            // (for reasons I haven't looked at), so items won't be visible.
+            formatted_string fs;
+            mdisplay->draw_title(fs);
+#endif
+#ifdef USE_TILE_WEB
+            // XXX: on_single_selection is designed to show UI without hiding
+            // the menu, but webtiles can't handle that at the moment, so hide
+            // the menu then show it after the hook has returned
+            tiles.pop_menu();
+#endif
+            if (!on_single_selection(*sel[0]))
+                return false;
+            deselect_all(true);
+#ifdef USE_TILE_WEB
+            tiles.push_menu(this);
+            _webtiles_title_changed = false;
+#endif
+            draw_menu();
+            return true;
+        }
 
         draw_title();
 

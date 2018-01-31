@@ -710,26 +710,22 @@ static spell_type _choose_mem_spell(spell_list &spells,
         spell_menu.add_entry(me);
     }
 
-    while (true)
+    spell_type spell = SPELL_NO_SPELL;
+    spell_menu.on_single_selection = [&spell, &spell_menu](const MenuEntry& item)
     {
-        vector<MenuEntry*> sel = spell_menu.show();
-
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-
-        if (sel.empty())
-            return SPELL_NO_SPELL;
-
-        ASSERT(sel.size() == 1);
-
-        const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
+        spell = *static_cast<spell_type*>(item.data);
         ASSERT(is_valid_spell(spell));
 
-        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
-            describe_spell(spell, nullptr);
-        else
-            return spell;
-    }
+        if (spell_menu.menu_action != Menu::ACT_EXAMINE)
+            return false;
+        describe_spell(spell, nullptr);
+        return true;
+    };
+
+    spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    return spell;
 }
 
 bool can_learn_spell(bool silent)

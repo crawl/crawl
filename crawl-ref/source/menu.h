@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <ctime>
 #include <chrono>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -351,6 +352,7 @@ public:
 
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
+    function<bool(const MenuEntry&)> on_single_selection;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
