@@ -740,22 +740,14 @@ void full_describe_view()
     // (Maybe that should be reversed in the case of monsters.)
     // For ASCII, the 'x' information may include short database descriptions.
 
-    // Menu loop
-    vector<MenuEntry*> sel;
-    while (true)
+    desc_menu.on_single_selection = [&desc_menu](const MenuEntry& sel)
     {
-        sel = desc_menu.show();
-        redraw_screen();
-
-        if (sel.empty())
-            break;
-
         // HACK: quantity == 1: monsters, quantity == 2: items
-        const int quant = sel[0]->quantity;
+        const int quant = sel.quantity;
         if (quant == 1)
         {
             // Get selected monster.
-            monster_info* m = static_cast<monster_info* >(sel[0]->data);
+            monster_info* m = static_cast<monster_info* >(sel.data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -774,22 +766,16 @@ void full_describe_view()
                 clear_messages();
             }
             else // ACT_EXECUTE -> view/travel
-            {
                 do_look_around(m->pos);
-                break;
-            }
         }
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = static_cast<item_def*>(sel[0]->data);
+            item_def* i = static_cast<item_def*>(sel.data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
             else // ACT_EXECUTE -> view/travel
-            {
                 do_look_around(i->pos);
-                break;
-            }
         }
         else
         {
@@ -801,12 +787,13 @@ void full_describe_view()
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_feature_wide(c);
             else // ACT_EXECUTE -> view/travel
-            {
                 do_look_around(c);
-                break;
-            }
         }
-    }
+        return desc_menu.menu_action == InvMenu::ACT_EXAMINE;
+    };
+    desc_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
 
 #ifndef USE_TILE_LOCAL
     if (!list_items.empty())

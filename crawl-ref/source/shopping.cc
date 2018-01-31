@@ -2253,20 +2253,10 @@ void ShoppingList::display()
 
     fill_out_menu(shopmenu);
 
-    vector<MenuEntry*> sel;
-    while (true)
+    shopmenu.on_single_selection = [this, &shopmenu](const MenuEntry& sel)
     {
-        // Abuse of the quantity field.
-        mtitle->quantity = list->size();
-
-        redraw_screen();
-        sel = shopmenu.show();
-
-        if (sel.empty())
-            break;
-
         const CrawlHashTable* thing =
-            static_cast<const CrawlHashTable *>(sel[0]->data);
+            static_cast<const CrawlHashTable *>(sel.data);
 
         const bool is_item = thing_is_item(*thing);
 
@@ -2282,16 +2272,15 @@ void ShoppingList::display()
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
                 if (!yesno(prompt.c_str(), true, 'n'))
-                    continue;
+                    return true;
             }
 
             const level_pos lp(thing_pos(*thing));
             start_translevel_travel(lp);
-            break;
+            return false;
         }
         else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
         {
-            clrscr();
             if (is_item)
             {
                 const item_def &item = get_thing_item(*thing);
@@ -2311,19 +2300,19 @@ void ShoppingList::display()
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
-            const int index = shopmenu.get_entry_index(sel[0]);
+            const int index = shopmenu.get_entry_index(&sel);
             if (index == -1)
             {
                 mprf(MSGCH_ERROR, "ERROR: Unable to delete thing from shopping list!");
                 more();
-                continue;
+                return true;
             }
 
             del_thing_at_index(index);
             if (list->empty())
             {
                 mpr("Your shopping list is now empty.");
-                break;
+                return false;
             }
 
             shopmenu.clear();
@@ -2331,7 +2320,10 @@ void ShoppingList::display()
         }
         else
             die("Invalid menu action type");
-    }
+        return true;
+    };
+
+    shopmenu.show();
     redraw_screen();
 }
 

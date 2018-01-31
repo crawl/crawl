@@ -1727,30 +1727,11 @@ bool StashTracker::display_search_results(
 
     stashmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
 
-    vector<MenuEntry*> sel;
-    while (true)
+    stashmenu.on_single_selection = [&stashmenu, &search, &nohl](const MenuEntry& item)
     {
-        sel = stashmenu.show();
-
-        default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
-        if (stashmenu.request_toggle_sort_method)
+        stash_search_result *res = static_cast<stash_search_result *>(item.data);
+        if (stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
         {
-            sort_by_dist = !sort_by_dist;
-            return true;
-        }
-
-        if (stashmenu.request_toggle_filter_useless)
-        {
-            filter_useless = !filter_useless;
-            return true;
-        }
-
-        if (sel.size() == 1
-            && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
-        {
-            stash_search_result *res =
-                static_cast<stash_search_result *>(sel[0]->data);
-
             if (res->item.defined())
             {
                 item_def it = res->item;
@@ -1763,21 +1744,30 @@ bool StashTracker::display_search_results(
             }
             else if (res->shop)
                 res->shop->show_menu(res->pos);
-            continue;
         }
-        break;
-    }
-
-    redraw_screen();
-    if (sel.size() == 1 && stashmenu.menu_action == Menu::ACT_EXECUTE)
-    {
-        const stash_search_result *res =
-                static_cast<stash_search_result *>(sel[0]->data);
-        level_pos lp = res->pos;
-        if (show_map(lp, true, true, true))
-            start_translevel_travel(lp);
         else
-            return true;
+        {
+            level_pos lp = res->pos;
+            if (show_map(lp, true, true, true))
+            {
+                start_translevel_travel(lp);
+                return false;
+            }
+        }
+        return true;
+    };
+
+    vector<MenuEntry*> sel = stashmenu.show();
+    default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
+    if (stashmenu.request_toggle_sort_method)
+    {
+        sort_by_dist = !sort_by_dist;
+        return true;
+    }
+    if (stashmenu.request_toggle_filter_useless)
+    {
+        filter_useless = !filter_useless;
+        return true;
     }
     return false;
 }

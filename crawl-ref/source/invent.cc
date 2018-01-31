@@ -1177,24 +1177,19 @@ void display_inventory()
     if (you.pending_revival || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
-    while (true)
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    menu.load_inv_items(OSEL_ANY, -1);
+    menu.set_type(MT_INVLIST);
+
+    menu.on_single_selection = [](const MenuEntry& item)
     {
-        unsigned char select =
-            _invent_select(nullptr, MT_INVLIST, OSEL_ANY, -1, flags);
+        unsigned char select = item.hotkeys[0];
+        const int invidx = letter_to_index(select);
+        ASSERT(you.inv[invidx].defined());
+        return describe_item(you.inv[invidx]);
+    };
 
-        if (isaalpha(select))
-        {
-            const int invidx = letter_to_index(select);
-            if (you.inv[invidx].defined())
-            {
-                if (!describe_item(you.inv[invidx]))
-                    break;
-            }
-        }
-        else
-            break;
-    }
-
+    menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();
 }

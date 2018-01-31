@@ -258,24 +258,27 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         spell_menu.add_entry(me);
     }
 
-    while (true)
+    int choice = 0;
+    spell_menu.on_single_selection = [&choice, &spell_menu](const MenuEntry& item)
     {
-        vector<MenuEntry*> sel = spell_menu.show();
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
-            return 0;
-
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
+        ASSERT(item.hotkeys.size() == 1);
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
-            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]), nullptr);
-            redraw_screen();
+            describe_spell(get_spell_by_letter(item.hotkeys[0]), nullptr);
+            redraw_screen(); // XXX: not needed?
+            return true;
         }
         else
-            return sel[0]->hotkeys[0];
-    }
+        {
+            choice = item.hotkeys[0];
+            return false;
+        }
+    };
+
+    spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    return choice;
 }
 
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)

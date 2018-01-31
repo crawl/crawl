@@ -3227,23 +3227,22 @@ int choose_ability_menu(const vector<talent>& talents)
         }
     }
 
-    while (true)
+    int ret = -1;
+    abil_menu.on_single_selection = [&abil_menu, &talents, &ret](const MenuEntry& sel)
     {
-        vector<MenuEntry*> sel = abil_menu.show(false);
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
-            return -1;
-
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
-        int selected = *(static_cast<int*>(sel[0]->data));
+        ASSERT(sel.hotkeys.size() == 1);
+        int selected = *(static_cast<int*>(sel.data));
 
         if (abil_menu.menu_action == Menu::ACT_EXAMINE)
             _print_talent_description(talents[selected]);
         else
-            return *(static_cast<int*>(sel[0]->data));
-    }
+            ret = *(static_cast<int*>(sel.data));
+        return abil_menu.menu_action == Menu::ACT_EXAMINE;
+    };
+    abil_menu.show(false);
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    return ret;
 }
 
 string describe_talent(const talent& tal)
