@@ -1754,8 +1754,8 @@ Gnolls
   In order to survive with this limitation, Gnolls use their universal
   knowledge and excellent physical attributes of strength, intelligence, and
   dexterity to take advantage of every resource they find in the Dungeon. They
-  also have powerful noses have adapted to the Dungeon's scents, allowing them
-  to easily locate where treasures lay hidden.
+  also have powerful noses adapted to the Dungeon's scents, allowing them to
+  easily locate where treasures lay hidden.
 
 The Undead
 ========================================
