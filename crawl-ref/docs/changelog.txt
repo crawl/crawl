@@ -1,3 +1,22 @@
+Stone Soup 0.21.1 (20180201)
+----------------------------
+
+Bugfix Release
+--------------
+* Dith shadow mimic of launcher attacks no longer copies the enchant and ego
+  of the launcher.
+* Monsters lose constriction by Borgnjor's Vile Clutch when they are moved by
+  any means.
+* Formicids can now manually cancel digging, allowing them to use Wu Jian's
+  Wall Jump ability after digging.
+* Wu Jian's Wall Jump ability now works under silence.
+* New splash screen art.
+* Numlock on Windows systems no longer causes unpredictable repeating
+  movement.
+* Alt-F4 no longer causes freezing in Tiles on Windows systems.
+* Resizing the local Tiles window during prompts no longer causes crashes.
+* SDL 2 contrib updated to 2.0.7, which fixes compilation under Msys2.
+
 Stone Soup 0.21 (20180105)
 --------------------------
 
