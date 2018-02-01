@@ -104,6 +104,9 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
+    if(you.species == SP_GOLEM)
+        return true;
+
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
                                                   you.species == SP_DEMIGOD ?

@@ -1195,6 +1195,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
+        if(you.species == SP_GOLEM)
+            return "this spell won't do you any good, sorry.";
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
@@ -1249,6 +1251,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.species == SP_GARGOYLE
             || you.species == SP_GHOUL
             || you.species == SP_MUMMY
+            || you.species == SP_GOLEM
             || (temp && !form_can_bleed(you.form)))
         {
             return "you have no blood to sublime.";

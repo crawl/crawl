@@ -652,10 +652,13 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     switch (eq)
     {
     case EQ_LEFT_RING:
-        if (you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE)
+        if (you.get_mutation_level(MUT_MISSING_HAND) || you.species == SP_UNIPODE
+            || you.species == SP_GOLEM)
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
+            if(you.species == SP_GOLEM)
+                return MB_FALSE;
         return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
     case EQ_RING_EIGHT:
@@ -673,7 +676,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species == SP_FELID ? MB_FALSE :
+        return you.species == SP_FELID || you.species == SP_GOLEM ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
 
@@ -681,6 +684,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RINGS:
     case EQ_ALL_ARMOUR:
     case EQ_AMULET:
+        if(you.species == SP_GOLEM)
+            return MB_FALSE;
         return MB_TRUE;
 
     case EQ_RING_AMULET:
@@ -5865,6 +5870,10 @@ int player::racial_ac(bool temp) const
             return 200 + 100 * experience_level * 2 / 5     // max 20
                        + 100 * max(0, experience_level - 7) * 2 / 5;
         }
+        else if (species == SP_GOLEM)
+        {
+			return 500 + 100 * experience_level; // max 32
+        }
     }
 
     return 0;
@@ -6054,14 +6063,14 @@ mon_holy_type player::holiness(bool temp) const
 {
     mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
 
-    if (species == SP_GARGOYLE ||
+    if (species == SP_GARGOYLE || species == SP_GOLEM ||
         temp && (form == transformation::statue
                  || form == transformation::wisp || petrified()))
     {
         holi = MH_NONLIVING;
     }
 
-    if (is_good_god(religion))
+    if (is_good_god(religion) || species == SP_ANGEL)
         holi |= MH_HOLY;
 
     if (is_evil_god(religion) || species == SP_DEMONSPAWN)
@@ -7036,6 +7045,9 @@ bool player::can_safely_mutate(bool temp) const
 {
     if (!can_mutate())
         return false;
+	
+    if(you.species == SP_GOLEM)
+       return false;
 
     return undead_state(temp) == US_ALIVE
            || undead_state(temp) == US_SEMI_UNDEAD;

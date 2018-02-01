@@ -65,6 +65,7 @@ enum species_type
     SP_YETI,
     SP_KITSUNE,
     SP_UNIPODE,
+    SP_GOLEM,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

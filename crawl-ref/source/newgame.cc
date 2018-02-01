@@ -201,7 +201,7 @@ static const species_type species_order[] =
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
     SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE,
+    SP_VAMPIRE,        SP_GOLEM,
     // not humanoid at all
     SP_FELID,          SP_OCTOPODE,
     SP_UNIPODE,
@@ -999,7 +999,7 @@ static species_group species_groups[] =
             SP_OCTOPODE,
             SP_FELID,
             SP_BARACHI,
-            SP_MUMMY,
+            SP_GOLEM,
             SP_ANGEL,
             SP_CHAOSKIN,
             SP_FUNGOID,
@@ -1014,6 +1014,7 @@ static species_group species_groups[] =
             SP_PROFOUND_ELF,
             SP_KITSUNE,
             SP_UNIPODE,
+            SP_MUMMY,
         }
     },
 };

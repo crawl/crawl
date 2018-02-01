@@ -4487,9 +4487,14 @@ bool gozag_call_merchant()
              || type == SHOP_ARMOUR_ANTIQUE
              || type == SHOP_WEAPON
              || type == SHOP_WEAPON_ANTIQUE))
-        {
-            continue;
-        }
+                continue;
+        if (you.species == SP_GOLEM &&
+            (type == SHOP_ARMOUR
+             || type == SHOP_ARMOUR_ANTIQUE
+             || type == SHOP_WEAPON
+             || type == SHOP_WEAPON_ANTIQUE
+             || type == SHOP_JEWELLERY))
+                continue;
         valid_shops.push_back(type);
     }
 

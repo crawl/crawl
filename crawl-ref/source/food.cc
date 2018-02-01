@@ -120,12 +120,12 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 
 bool you_foodless()
 {
-    return you.undead_state() == US_UNDEAD;
+    return you.undead_state() == US_UNDEAD || you.species == SP_GOLEM;
 }
 
 bool you_foodless_normally()
 {
-    return you.undead_state(false) == US_UNDEAD;
+    return you.undead_state(false) == US_UNDEAD || you.species == SP_GOLEM;
 }
 
 bool prompt_eat_item(int slot)

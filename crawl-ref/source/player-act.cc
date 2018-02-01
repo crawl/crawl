@@ -396,7 +396,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
         return true;
     }
-    else if (species == SP_FELID)
+    else if (species == SP_FELID || species == SP_GOLEM)
     {
         if (!quiet)
             mpr("You can't use weapons.");
@@ -590,6 +590,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";
+    else if (species == SP_GOLEM)
+        adj = "clay";
     else if (species == SP_OCTOPODE || species == SP_UNIPODE)
         str = "tentacle";
 
@@ -786,6 +788,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You're too calm and focused to rage.";
     else if (is_lifeless_undead(temp))
         msg = "You cannot raise a blood rage in your lifeless body.";
+    else if (you.species == SP_GOLEM)
+        msg = "You are incapable of feeling rage.";
     else if (stasis())
         msg = "Your stasis prevents you from going berserk.";
     else

@@ -21,6 +21,7 @@ static bool _banned_combination(job_type job, species_type species)
     switch (species)
     {
     case SP_FELID:
+    case SP_GOLEM:
         if (job == JOB_GLADIATOR
             || job == JOB_ASSASSIN
             || job == JOB_HUNTER
@@ -112,7 +113,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Some special cases:
 
-    if (ng.species == SP_FELID && wpn != WPN_UNARMED)
+    if ((ng.species == SP_FELID || ng.species == SP_GOLEM)&& wpn != WPN_UNARMED)
         return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,

@@ -1720,6 +1720,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_POISON_MAGIC,   -1),
     APT(SP_FELID,           SK_INVOCATIONS,     0),
     APT(SP_FELID,           SK_EVOCATIONS,      1),
+	
+    // SP_GOLEM
+    APT(SP_GOLEM,           SK_FIGHTING,        0),
+    APT(SP_GOLEM,           SK_SHORT_BLADES,  UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_LONG_BLADES,   UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_AXES,          UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_MACES_FLAILS,  UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_POLEARMS,      UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_STAVES,        UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_SLINGS,        UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_BOWS,          UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_CROSSBOWS,     UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_THROWING,      UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_ARMOUR,        UNUSABLE_SKILL),
+    APT(SP_GOLEM,           SK_DODGING,        -1),
+    APT(SP_GOLEM,           SK_STEALTH,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_GOLEM,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_GOLEM,           SK_SHIELDS,       UNUSABLE_SKILL),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_GOLEM,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_GOLEM,           SK_UNARMED_COMBAT,  1),
+    APT(SP_GOLEM,           SK_SPELLCASTING,   -2),
+    APT(SP_GOLEM,           SK_CONJURATIONS,   -1),
+    APT(SP_GOLEM,           SK_HEXES,          -1),
+    APT(SP_GOLEM,           SK_CHARMS,         -1),
+    APT(SP_GOLEM,           SK_SUMMONINGS,      0),
+    APT(SP_GOLEM,           SK_NECROMANCY,     -1),
+    APT(SP_GOLEM,           SK_TRANSLOCATIONS, -1),
+    APT(SP_GOLEM,           SK_TRANSMUTATIONS, -1),
+    APT(SP_GOLEM,           SK_FIRE_MAGIC,     -1),
+    APT(SP_GOLEM,           SK_ICE_MAGIC,      -1),
+    APT(SP_GOLEM,           SK_AIR_MAGIC,      -1),
+    APT(SP_GOLEM,           SK_EARTH_MAGIC,     0),
+    APT(SP_GOLEM,           SK_POISON_MAGIC,   -1),
+    APT(SP_GOLEM,           SK_INVOCATIONS,     1),
+    APT(SP_GOLEM,           SK_EVOCATIONS,     -2),
 
     // SP_OCTOPODE
     APT(SP_OCTOPODE,        SK_FIGHTING,        0),

@@ -726,6 +726,25 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_GOLEM, {
+    "Go",
+    "Golem", nullptr, nullptr,
+    SPF_NONE,
+    -2, 2, 0, 6,
+    MONS_TOENAIL_GOLEM,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
+    20, 20, 20, // 60, no growth
+    set<stat_type>(), 28,
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_TORMENT_RESISTANCE, 1, 1 },	
+      { MUT_UNBREATHING, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 8 },
+      { MUT_HEAT_RESISTANCE, 1, 8 }, { MUT_SHOCK_RESISTANCE, 1, 16 }, 
+      { MUT_COLD_RESISTANCE, 1, 24 }, { MUT_HEAT_RESISTANCE, 1, 24 } },
+    { "You cannot use equipment.", "You do not eat." },
+    {},
+    { JOB_EARTH_ELEMENTALIST, JOB_SUMMONER, JOB_MONK},
+    { SK_UNARMED_COMBAT },
+} },
+
 { SP_OGRE, {
     "Og",
     "Ogre", "Ogreish", nullptr,

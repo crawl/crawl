@@ -376,7 +376,7 @@ void god_power::display(bool gaining, const char* fmt) const
     // hack: don't mention the necronomicon alone unless it wasn't
     // already mentioned by the other message
     if (abil == ABIL_KIKU_GIFT_NECRONOMICON
-        && you.species != SP_FELID)
+        && you.species != SP_FELID && you.species != SP_GOLEM)
     {
         return;
     }
@@ -1352,7 +1352,7 @@ static bool _give_trog_oka_gift(bool forced)
     }
 
     // Should gift catnip instead.
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID || you.species == SP_GOLEM)
         return false;
 
     const bool need_missiles = _need_missile_gift(forced);
@@ -3098,6 +3098,9 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
+    if(which_god == GOD_ASHENZARI && you.species == SP_GOLEM)
+        return false;
+	
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;

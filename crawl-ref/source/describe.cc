@@ -2328,7 +2328,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     case OBJ_MISSILES:
         if (_could_set_training_target(item, false))
             actions.push_back(CMD_SET_SKILL_TARGET);
-        if (you.species != SP_FELID)
+        if (you.species != SP_FELID && you.species != SP_GOLEM)
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:

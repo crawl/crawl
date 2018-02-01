@@ -640,6 +640,7 @@ string describe_mutations(bool center_title)
                     make_stringf("Your %s. (AC +%d)",
                        you.species == SP_NAGA ? "serpentine skin is tough" :
                        you.species == SP_GARGOYLE ? "stone body is resilient" :
+                       you.species == SP_GOLEM ? "clay body is tough" :
                                                     scale_clause.c_str(),
                        you.racial_ac(false) / 100),
                     player_is_shapechanged()
@@ -686,7 +687,7 @@ string describe_mutations(bool center_title)
             !get_form()->slot_available(EQ_RING_EIGHT));
     }
 	
-    if (you.species != SP_FELID)
+    if (you.species != SP_FELID && you.species != SP_GOLEM)
     {
         switch (you.body_size(PSIZE_TORSO, true))
         {
@@ -1269,7 +1270,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Already immune.
-    if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
+    if ((you.species == SP_GARGOYLE || you.species == SP_GOLEM) && mutat == MUT_POISON_RESISTANCE)
         return true;
 
     // We can't use is_useless_skill() here, since species that can still wear

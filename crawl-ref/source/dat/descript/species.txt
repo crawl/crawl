@@ -81,6 +81,11 @@ Gargoyle
 Made of living stone, Gargoyles have a preternatural affinity for the earth.
 They have low health, but their stone bodies are incredibly tough.
 %%%%
+Golem
+
+Formed from clay, Golems are robust constructs that cannot use equipment. They
+begin with incredible attributes that do not increase as they grow.
+%%%%
 Grue
 
 Grues are strange, stealthy predators that are adapted to life in the darkness. 

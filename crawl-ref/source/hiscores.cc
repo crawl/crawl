@@ -2180,7 +2180,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_WATER:
-        if (you.undead_state())
+        if (you.undead_state() || you.species == SP_GOLEM)
         {
             if (terse)
                 desc = "fell apart";

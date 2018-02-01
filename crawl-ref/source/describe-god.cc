@@ -974,7 +974,7 @@ static void _describe_god_powers(god_type which_god)
         // hack: don't mention the necronomicon alone unless it
         // wasn't already mentioned by the other description
         if (power.abil == ABIL_KIKU_GIFT_NECRONOMICON
-            && you.species != SP_FELID)
+            && you.species != SP_FELID && you.species != SP_GOLEM)
         {
             continue;
         }
