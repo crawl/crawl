@@ -1634,7 +1634,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
 
         if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+                                  || artefact_property(item, ARTP_FRAGILE))
+            || you.species == SP_ROBOT)
         {
             return true;
         }
@@ -1654,7 +1655,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
 
         if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+                                  || artefact_property(item, ARTP_FRAGILE))
+            || you.species == SP_ROBOT)
         {
             return true;
         }

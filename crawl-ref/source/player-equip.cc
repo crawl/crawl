@@ -185,6 +185,12 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
+	
+    if (you.species == SP_ROBOT && !meld)
+    {
+        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
+        dec_inv_item_quantity(item.link, 1);
+    }
 }
 
 ///////////////////////////////////////////////////////////

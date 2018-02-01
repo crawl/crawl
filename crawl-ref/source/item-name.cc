@@ -3593,7 +3593,8 @@ bool is_useless_item(const item_def &item, bool temp)
                        || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID
                    || you.get_mutation_level(MUT_NO_ARTIFICE)
-                   || you.species == SP_GOLEM;
+                   || you.species == SP_GOLEM
+                   || you.species == SP_ROBOT;
 
         case RING_RESIST_CORROSION:
             return you.res_corr(false, false);

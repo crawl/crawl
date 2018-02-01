@@ -1663,6 +1663,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
     }
+    else if (you.species == SP_ROBOT)
+    {
+        msg = "You are made of metal and cannot transform.";
+        success = false;
+    }
     else if (which_trans == transformation::lich
              && you.duration[DUR_DEATHS_DOOR])
     {

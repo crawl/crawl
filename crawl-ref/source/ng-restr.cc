@@ -53,7 +53,8 @@ static bool _banned_combination(job_type job, species_type species)
 
     if (job == JOB_TRANSMUTER
         && (species_undead_type(species) == US_UNDEAD
-           || species_undead_type(species) == US_HUNGRY_DEAD))
+           || species_undead_type(species) == US_HUNGRY_DEAD
+           || species == SP_ROBOT))
     {
         return true;
     }

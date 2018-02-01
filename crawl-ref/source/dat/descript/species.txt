@@ -169,6 +169,11 @@ Ratling
 Ratlings are verminous humanoids that mature at an incredible pace, but learn
 very slowly. They have an affinity for poison magic.
 %%%%
+Robot
+
+Robots are metallic humanoids crafted by Dwarves. They break equipment when
+uninstalling it and have a poor grasp of religion, but can shoot lasers.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans make highly competent stabbers

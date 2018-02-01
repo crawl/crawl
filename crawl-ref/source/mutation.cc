@@ -1270,9 +1270,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Already immune.
-    if ((you.species == SP_GARGOYLE || you.species == SP_GOLEM) && mutat == MUT_POISON_RESISTANCE)
+    if ((you.species == SP_GARGOYLE || you.species == SP_GOLEM || you.species == SP_ROBOT)
+        && mutat == MUT_POISON_RESISTANCE)
+    {
         return true;
-
+    }
+		
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
     if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL

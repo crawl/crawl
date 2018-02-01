@@ -1798,6 +1798,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GOLEM,           SK_POISON_MAGIC,   -1),
     APT(SP_GOLEM,           SK_INVOCATIONS,     1),
     APT(SP_GOLEM,           SK_EVOCATIONS,     -2),
+	
+    // SP_ROBOT
+    APT(SP_ROBOT,        SK_FIGHTING,        0),
+    APT(SP_ROBOT,        SK_SHORT_BLADES,    0),
+    APT(SP_ROBOT,        SK_LONG_BLADES,     0),
+    APT(SP_ROBOT,        SK_AXES,            0),
+    APT(SP_ROBOT,        SK_MACES_FLAILS,    0),
+    APT(SP_ROBOT,        SK_POLEARMS,        0),
+    APT(SP_ROBOT,        SK_STAVES,          0),
+    APT(SP_ROBOT,        SK_SLINGS,          0),
+    APT(SP_ROBOT,        SK_BOWS,            0),
+    APT(SP_ROBOT,        SK_CROSSBOWS,       0),
+    APT(SP_ROBOT,        SK_THROWING,        0),
+    APT(SP_ROBOT,        SK_ARMOUR,          0),
+    APT(SP_ROBOT,        SK_DODGING,         0),
+    APT(SP_ROBOT,        SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_ROBOT,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_ROBOT,        SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_ROBOT,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_ROBOT,        SK_UNARMED_COMBAT,  0),
+    APT(SP_ROBOT,        SK_SPELLCASTING,   -2),
+    APT(SP_ROBOT,        SK_CONJURATIONS,   -1),
+    APT(SP_ROBOT,        SK_HEXES,          -1),
+    APT(SP_ROBOT,        SK_CHARMS,         -1),
+    APT(SP_ROBOT,        SK_SUMMONINGS,     -1),
+    APT(SP_ROBOT,        SK_NECROMANCY,     -1),
+    APT(SP_ROBOT,        SK_TRANSLOCATIONS, -1),
+    APT(SP_ROBOT,        SK_TRANSMUTATIONS, -1),
+    APT(SP_ROBOT,        SK_FIRE_MAGIC,     -1),
+    APT(SP_ROBOT,        SK_ICE_MAGIC,      -1),
+    APT(SP_ROBOT,        SK_AIR_MAGIC,      -1),
+    APT(SP_ROBOT,        SK_EARTH_MAGIC,    -1),
+    APT(SP_ROBOT,        SK_POISON_MAGIC,   -1),
+    APT(SP_ROBOT,        SK_INVOCATIONS,    -4),
+    APT(SP_ROBOT,        SK_EVOCATIONS,      2),
 
     // SP_OCTOPODE
     APT(SP_OCTOPODE,        SK_FIGHTING,        0),

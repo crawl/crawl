@@ -315,13 +315,25 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     {
         you.slow_down(0, strength);
     }
-
+	
     if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
     {
         mprf(MSGCH_WARN, "The flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.props.erase("sticky_flame_source");
         you.props.erase("sticky_flame_aux");
+    }
+	
+    if (flavour == BEAM_FIRE && you.species == SP_ROBOT
+        && you.res_fire() <= 0 && coinflip())
+    {
+        you.slow_down(0, strength);
+    }
+	
+    if (flavour == BEAM_ELECTRICITY && you.species == SP_ROBOT
+        && you.res_elec() <= 0 && coinflip())
+    {
+        you.slow_down(0, strength);
     }
 }
 

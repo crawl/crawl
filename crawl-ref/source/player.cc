@@ -6065,7 +6065,7 @@ mon_holy_type player::holiness(bool temp) const
 {
     mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
 
-    if (species == SP_GARGOYLE || species == SP_GOLEM ||
+    if (species == SP_GARGOYLE || species == SP_GOLEM || species == SP_ROBOT ||
         temp && (form == transformation::statue
                  || form == transformation::wisp || petrified()))
     {
@@ -7048,7 +7048,7 @@ bool player::can_safely_mutate(bool temp) const
     if (!can_mutate())
         return false;
 	
-    if(you.species == SP_GOLEM)
+    if(you.species == SP_GOLEM || you.species == SP_ROBOT)
        return false;
 
     return undead_state(temp) == US_ALIVE
@@ -7066,7 +7066,7 @@ bool player::is_lifeless_undead(bool temp) const
 
 bool player::can_polymorph() const
 {
-    return !(transform_uncancellable || is_lifeless_undead());
+    return !(transform_uncancellable || is_lifeless_undead() || you.species == SP_ROBOT);
 }
 
 bool player::can_bleed(bool allow_tran) const

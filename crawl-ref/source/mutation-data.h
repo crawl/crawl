@@ -679,6 +679,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_LASER_BREATH, 0, 1, mutflag::good, false,
+  "laser",
+
+  {"You can shoot a disintegration laser from your mouth.",
+   "",
+   ""},
+
+  {"",
+   "",
+   ""},
+
+  {"", "", ""},
+},
+
 { MUT_TENGU_FLIGHT, 0, 2, mutflag::good, false,
   "able to fly",
 

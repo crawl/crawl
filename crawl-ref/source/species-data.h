@@ -762,6 +762,25 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT },
 } },
 
+{ SP_ROBOT, {
+    "Ro",
+    "Robot", nullptr, nullptr,
+    SPF_NONE,
+    -1, 0, -1, 3,
+    MONS_IRON_GOLEM,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 11, 4, // 24
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_TORMENT_RESISTANCE, 1, 1 },	
+      { MUT_UNBREATHING, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 }, {MUT_LASER_BREATH, 1, 1} },
+    { "You break items when uninstalling them.", "You are sometimes slowed by electricity and fire.", 
+      "You do not eat." },
+    { "fragile equipment", "slowed by fire and elec", "no food"},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_ARTIFICER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_OGRE, {
     "Og",
     "Ogre", "Ogreish", nullptr,

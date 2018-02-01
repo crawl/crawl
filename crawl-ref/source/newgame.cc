@@ -199,9 +199,10 @@ static const species_type species_order[] =
     SP_VINE_STALKER,   SP_FUNGOID,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
-    // undead species
+    // undead and nonliving species
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,        SP_GOLEM,
+    SP_ROBOT,
     // not humanoid at all
     SP_FELID,          SP_OCTOPODE,
     SP_UNIPODE,
@@ -982,7 +983,7 @@ static species_group species_groups[] =
             SP_OGRE,
             SP_GNOLL,
             SP_GRUE,
-            SP_LEPRECHAUN,
+            SP_ROBOT,
             SP_FLAN,
             SP_EMBER_ELF,
         }
@@ -1016,6 +1017,7 @@ static species_group species_groups[] =
             SP_UNIPODE,
             SP_MUMMY,
             SP_RATLING,
+            SP_LEPRECHAUN,
         }
     },
 };

@@ -54,7 +54,8 @@ enum ability_type
     ABIL_HOP,
     // Kitsune
     ABIL_CHARM,
-    ABIL_MAX_INTRINSIC = ABIL_CHARM,
+    ABIL_LASER,
+    ABIL_MAX_INTRINSIC = ABIL_LASER,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

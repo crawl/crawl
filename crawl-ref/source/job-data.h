@@ -183,7 +183,7 @@ static const map<job_type, job_def> job_data =
     "Fi", "Fighter",
     8, 0, 4,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
-      SP_CENTAUR, },
+      SP_CENTAUR, SP_ROBOT },
     { "scale mail", "shield", "potion of might" },
     WCHOICE_GOOD,
     { { SK_FIGHTING, 3 }, { SK_SHIELDS, 3 }, { SK_ARMOUR, 3 },
