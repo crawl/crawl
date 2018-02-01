@@ -598,6 +598,23 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_RATLING, {
+    "Ra",
+    "Ratling", nullptr, nullptr,
+    SPF_NONE,
+    5, -1, 0, 3,
+    MONS_RAT,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    8, 8, 8, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_FANGS, 2, 1 }, { MUT_POISON_ENHANCER, 1, 12 }, },
+    { "Your bite is poisonous."},
+    { "poisonous bite"},
+    { JOB_BERSERKER, JOB_VENOM_MAGE, JOB_GLADIATOR},
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_KITSUNE, {
     "Ki",
     "Kitsune", nullptr, "Fox",

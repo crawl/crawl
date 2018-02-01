@@ -181,7 +181,7 @@ static const species_type species_order[] =
     SP_CRYSTAL_DWARF,  SP_GRUE,
     SP_ANGEL,          SP_CHAOSKIN,
     SP_PROFOUND_ELF,   SP_EMBER_ELF,
-    SP_KITSUNE,
+    SP_KITSUNE,        SP_RATLING,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_LEPRECHAUN,
@@ -1015,6 +1015,7 @@ static species_group species_groups[] =
             SP_KITSUNE,
             SP_UNIPODE,
             SP_MUMMY,
+            SP_RATLING,
         }
     },
 };

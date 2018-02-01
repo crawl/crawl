@@ -164,6 +164,11 @@ Profound Elf
 Deeper than a Deep Elf and twice as elven, Profound Elves are extremely frail 
 magical experts.
 %%%%
+Ratling
+
+Ratlings are verminous humanoids that mature at an incredible pace, but learn
+very slowly. They have an affinity for poison magic.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans make highly competent stabbers

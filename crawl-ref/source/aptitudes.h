@@ -436,6 +436,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MUMMY,           SK_INVOCATIONS,    -1),
     APT(SP_MUMMY,           SK_EVOCATIONS,     -2),
 	
+    // SP_RATLING
+    APT(SP_RATLING,           SK_FIGHTING,       -3),
+    APT(SP_RATLING,           SK_SHORT_BLADES,   -2),
+    APT(SP_RATLING,           SK_LONG_BLADES,    -2),
+    APT(SP_RATLING,           SK_AXES,           -2),
+    APT(SP_RATLING,           SK_MACES_FLAILS,   -2),
+    APT(SP_RATLING,           SK_POLEARMS,       -2),
+    APT(SP_RATLING,           SK_STAVES,         -2),
+    APT(SP_RATLING,           SK_SLINGS,         -2),
+    APT(SP_RATLING,           SK_BOWS,           -2),
+    APT(SP_RATLING,           SK_CROSSBOWS,      -2),
+    APT(SP_RATLING,           SK_THROWING,       -2),
+    APT(SP_RATLING,           SK_ARMOUR,         -2),
+    APT(SP_RATLING,           SK_DODGING,        -2),
+    APT(SP_RATLING,           SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_RATLING,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_RATLING,           SK_SHIELDS,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_RATLING,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_RATLING,           SK_UNARMED_COMBAT, -2),
+    APT(SP_RATLING,           SK_SPELLCASTING,   -3),
+    APT(SP_RATLING,           SK_CONJURATIONS,   -2),
+    APT(SP_RATLING,           SK_HEXES,          -2),
+    APT(SP_RATLING,           SK_CHARMS,         -2),
+    APT(SP_RATLING,           SK_SUMMONINGS,     -2),
+    APT(SP_RATLING,           SK_NECROMANCY,     -2),
+    APT(SP_RATLING,           SK_TRANSLOCATIONS, -2),
+    APT(SP_RATLING,           SK_TRANSMUTATIONS, -2),
+    APT(SP_RATLING,           SK_FIRE_MAGIC,     -2),
+    APT(SP_RATLING,           SK_ICE_MAGIC,      -2),
+    APT(SP_RATLING,           SK_AIR_MAGIC,      -2),
+    APT(SP_RATLING,           SK_EARTH_MAGIC,    -2),
+    APT(SP_RATLING,           SK_POISON_MAGIC,    0),
+    APT(SP_RATLING,           SK_INVOCATIONS,    -3),
+    APT(SP_RATLING,           SK_EVOCATIONS,     -3),
+	
     // SP_KITSUNE
     APT(SP_KITSUNE,           SK_FIGHTING,       -2),
     APT(SP_KITSUNE,           SK_SHORT_BLADES,   -1),

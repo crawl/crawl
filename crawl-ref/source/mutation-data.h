@@ -665,6 +665,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_POISON_ENHANCER, 0, 1, mutflag::good, false,
+  "enhanced poison magic",
+
+  {"Your verminous nature enhances your poison magic.",
+   "",
+   ""},
+
+  {"You feel toxic.",
+   "",
+   ""},
+
+  {"", "", ""},
+},
+
 { MUT_TENGU_FLIGHT, 0, 2, mutflag::good, false,
   "able to fly",
 

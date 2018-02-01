@@ -66,6 +66,7 @@ enum species_type
     SP_KITSUNE,
     SP_UNIPODE,
     SP_GOLEM,
+    SP_RATLING,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
