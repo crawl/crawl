@@ -62,44 +62,6 @@
 #include "windowmanager.h"
 #endif
 
-#ifdef USE_TILE_LOCAL
-Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
-{
-}
-
-Popup::~Popup()
-{
-    deleteAll(m_entries);
-}
-
-void Popup::set_prompt(string prompt)
-{
-    m_prompt = prompt;
-}
-
-void Popup::push_entry(MenuEntry *me)
-{
-    m_entries.push_back(me);
-}
-
-MenuEntry* Popup::next_entry()
-{
-    if (m_curr >= m_entries.size())
-    {
-        m_curr = 0;
-        return nullptr;
-    }
-    MenuEntry *me = m_entries[m_curr];
-    m_curr ++;
-    return me;
-}
-
-int Popup::pop()
-{
-    return tiles.draw_popup(this);
-}
-#endif
-
 class MenuDisplay
 {
 public:
@@ -381,13 +343,13 @@ void MenuDisplayTile::set_num_columns(int columns)
 }
 #endif
 
-Menu::Menu(int _flags, const string& tagname)
+Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
   : f_selitem(nullptr), f_keyfilter(nullptr),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), more("-more-", true), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_selected(-1)
+    alive(false), last_selected(-1), m_kmc(kmc)
 {
 #ifdef USE_TILE_LOCAL
     mdisplay = new MenuDisplayTile(this);
@@ -578,7 +540,7 @@ void Menu::do_menu()
             _webtiles_title_changed = false;
         }
 #endif
-        int keyin = getchm(KMC_MENU, getch_ck);
+        int keyin = getchm(m_kmc, getch_ck);
 
         if (!process_key(keyin))
             return;

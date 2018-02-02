@@ -23,7 +23,6 @@ class Region;
 class CRTRegion;
 class CRTRegionSingleSelect;
 class MenuRegion;
-class PopupRegion;
 class TileRegion;
 class DungeonRegion;
 class GridRegion;
@@ -146,7 +145,6 @@ public:
 
     void draw_doll_edit();
 
-    int draw_popup(Popup *popup);
     void set_map_display(const bool display);
     bool get_map_display();
     void do_map_display();

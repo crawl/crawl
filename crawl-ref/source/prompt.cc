@@ -66,17 +66,17 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
 #ifdef TOUCH_UI
-    Popup pop{prompt};
+    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
     MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y');
+    MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
     y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
-    MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 0, 'N');
+    MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
     n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
 
-    pop.push_entry(new MenuEntry(prompt, MEL_TITLE));
-    pop.push_entry(status);
-    pop.push_entry(y_me);
-    pop.push_entry(n_me);
+    pop.set_title(new MenuEntry(prompt, MEL_TITLE));
+    pop.add_entry(status);
+    pop.add_entry(y_me);
+    pop.add_entry(n_me);
 #endif
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -85,7 +85,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (!crawl_state.seen_hups)
         {
 #ifdef TOUCH_UI
-            tmp = pop.pop();
+            pop.show();
+            tmp = pop.getkey();
 #else
             if (!noprompt)
             {
