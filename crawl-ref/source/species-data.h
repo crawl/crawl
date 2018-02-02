@@ -935,6 +935,23 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_WEREWOLF, {
+    "We",
+    "Werewolf", nullptr, "Wolf",
+    SPF_NONE,
+    -1, 0, 0, 4,
+    MONS_WOLF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    10, 7, 9, // 26
+    { STAT_STR, STAT_DEX }, 5,
+    {},
+    {"You sometimes transform uncontrollably when attacking."},
+    {"werewolf transformation"},
+    { JOB_MONK, JOB_GLADIATOR, JOB_BERSERKER, JOB_NECROMANCER },
+    { SK_STAVES, SK_AXES, SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_UNARMED_COMBAT,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_YETI, {
     "Ye",
     "Yeti", nullptr, nullptr,

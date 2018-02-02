@@ -242,6 +242,17 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh"
+},
+
+{
+    transformation::werewolf, MONS_WOLF, "Werewolf", "wolf-form", "werewolf",
+    "a werewolf.",
+    EQF_PHYSICAL, MR_NO_FLAGS,
+    BAD_DURATION, 5, 5, SIZE_CHARACTER, 12,
+    3, 0, 0, true, 10, 5, -1,
+    SPWPN_NORMAL, LIGHTGREY, "Teeth and claws", { "hit", "claw", "bite", "mangle" },
+    FC_DEFAULT, FC_DEFAULT, FC_ENABLE, true, true,
+    "howl", 4, "front paw", "paw", "", "flesh"
 }
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

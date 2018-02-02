@@ -199,7 +199,12 @@ Vine Stalker
 Frail symbionts, Vine Stalkers cannot regain health from devices or potions.
 Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
+Werewolf
+
+Though the moon does not shine inside the dungeon, Werewolves' uncontrollable
+lycanthropy is sometimes triggered by their bloodlust. 
+%%%%
 Yeti
 
 Yeti are large, seldom-seen creatures that live on frozen mountain peaks. 
-Sufficiently mature Yeti can passively freeze adjacent foes.
+Sufficiently mature Yeti passively freeze their foes.

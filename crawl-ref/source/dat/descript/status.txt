@@ -529,6 +529,14 @@ and resistant to poison, but vulnerable to fire.
 
 Any equipped weapons and armour are melded, and you are unable to evoke wands.
 %%%%
+Werewolf status
+
+You have transformed into your monstrous, wolflike form. You gain strength, dexterity,
+and maximum hitpoints, but casting spells is more difficult. Your melee attack's 
+strength is proportional to your experience level.
+
+Any equipped weapons and armour are melded.
+%%%%
 Dragon status
 
 {{

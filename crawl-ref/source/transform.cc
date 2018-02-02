@@ -757,6 +757,47 @@ public:
     }
 };
 
+class FormWerewolf : public Form
+{
+private:
+    FormWerewolf() : Form(transformation::werewolf) { }
+    DISALLOW_COPY_AND_ASSIGN(FormWerewolf);
+public:
+    static const FormWerewolf &instance() { static FormWerewolf inst; return inst; }
+
+    /**
+     * Get an monster type corresponding to the transformation.
+     *
+     * (Used for console player glyphs.)
+     *
+     * @return  A monster type corresponding to the player in this form.
+     */
+    monster_type get_equivalent_mons() const override
+    {
+        return MONS_WOLF;
+    }
+
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("You %s in werewolf-form.",
+                            past_tense ? "were" : "are");
+    }
+
+    /**
+     * Get a string describing the form you're turning into. (If not the same
+     * as the one used to describe this form in @.
+     */
+    string get_transform_description() const override
+    {
+        return make_stringf("a werewolf.");
+    }
+	
+    int get_base_unarmed_damage() const override
+    {
+        return 9 + 4 * you.experience_level / 3;
+    }
+};
+
 class FormPig : public Form
 {
 private:
@@ -989,6 +1030,7 @@ static const Form* forms[] =
     &FormFungus::instance(),
     &FormShadow::instance(),
     &FormHydra::instance(),
+    &FormWerewolf::instance(),
 };
 
 const Form* get_form(transformation xform)

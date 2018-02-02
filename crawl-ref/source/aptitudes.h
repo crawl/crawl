@@ -1681,6 +1681,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VAMPIRE,         SK_POISON_MAGIC,   -1),
     APT(SP_VAMPIRE,         SK_INVOCATIONS,    -1),
     APT(SP_VAMPIRE,         SK_EVOCATIONS,     -1),
+	
+    // SP_WEREWOLF
+    APT(SP_WEREWOLF,         SK_FIGHTING,        0),
+    APT(SP_WEREWOLF,         SK_SHORT_BLADES,    1),
+    APT(SP_WEREWOLF,         SK_LONG_BLADES,     1),
+    APT(SP_WEREWOLF,         SK_AXES,            1),
+    APT(SP_WEREWOLF,         SK_MACES_FLAILS,    1),
+    APT(SP_WEREWOLF,         SK_POLEARMS,        1),
+    APT(SP_WEREWOLF,         SK_STAVES,          1),
+    APT(SP_WEREWOLF,         SK_SLINGS,         -1),
+    APT(SP_WEREWOLF,         SK_BOWS,           -1),
+    APT(SP_WEREWOLF,         SK_CROSSBOWS,      -1),
+    APT(SP_WEREWOLF,         SK_THROWING,       -1),
+    APT(SP_WEREWOLF,         SK_ARMOUR,          1),
+    APT(SP_WEREWOLF,         SK_DODGING,         0),
+    APT(SP_WEREWOLF,         SK_STEALTH,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_WEREWOLF,         SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_WEREWOLF,         SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_WEREWOLF,         SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_WEREWOLF,         SK_UNARMED_COMBAT,  0),
+    APT(SP_WEREWOLF,         SK_SPELLCASTING,   -1),
+    APT(SP_WEREWOLF,         SK_CONJURATIONS,   -1),
+    APT(SP_WEREWOLF,         SK_HEXES,          -1),
+    APT(SP_WEREWOLF,         SK_CHARMS,         -1),
+    APT(SP_WEREWOLF,         SK_SUMMONINGS,     -1),
+    APT(SP_WEREWOLF,         SK_NECROMANCY,     -1),
+    APT(SP_WEREWOLF,         SK_TRANSLOCATIONS, -1),
+    APT(SP_WEREWOLF,         SK_TRANSMUTATIONS, -2),
+    APT(SP_WEREWOLF,         SK_FIRE_MAGIC,     -1),
+    APT(SP_WEREWOLF,         SK_ICE_MAGIC,      -1),
+    APT(SP_WEREWOLF,         SK_AIR_MAGIC,      -1),
+    APT(SP_WEREWOLF,         SK_EARTH_MAGIC,    -1),
+    APT(SP_WEREWOLF,         SK_POISON_MAGIC,   -1),
+    APT(SP_WEREWOLF,         SK_INVOCATIONS,     0),
+    APT(SP_WEREWOLF,         SK_EVOCATIONS,     -1),
 
     // SP_DEEP_DWARF
     APT(SP_DEEP_DWARF,      SK_FIGHTING,       -1),

@@ -671,6 +671,8 @@ void player::attacking(actor *other, bool ranged)
         return;
 
     const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
+    if(you.species == SP_WEREWOLF && one_chance_in(50))
+        you.polymorph(25 + you.experience_level);
     if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);
 }

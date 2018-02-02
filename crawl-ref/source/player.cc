@@ -7121,6 +7121,8 @@ bool player::polymorph(int pow)
     {
         if(you.species == SP_FUNGOID) // always get fungus form
             f = transformation::fungus;
+        else if(you.species == SP_WEREWOLF)
+            f = transformation::werewolf;
         else
         {
             f = random_choose(transformation::bat,
