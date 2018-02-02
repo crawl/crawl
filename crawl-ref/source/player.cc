@@ -3640,6 +3640,11 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void calc_mp()
 {
+    if(you.species == SP_OBSIDIAN_DWARF)
+    {
+       you.magic_points = you.max_magic_points = 0;
+       return calc_hp();	   
+    }
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
@@ -3664,7 +3669,7 @@ void dec_mp(int mp_loss, bool silent)
 
     if (mp_loss < 1)
         return;
-
+	
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
@@ -3710,6 +3715,11 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if(you.species == SP_OBSIDIAN_DWARF)
+    {
+        return enough_hp(minimum, suppress_msg);
+    }
+	
     if (you.magic_points < minimum)
     {
         if (!suppress_msg)
@@ -3743,7 +3753,7 @@ static bool _should_stop_resting(int cur, int max)
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
-
+	
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
 

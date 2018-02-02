@@ -472,7 +472,10 @@ void zap_wand(int slot)
     }
 
     // Spend MP.
-    dec_mp(mp_cost, false);
+    if(you.species == SP_OBSIDIAN_DWARF)
+        dec_hp(mp_cost, false);
+    else
+        dec_mp(mp_cost, false);
 
     // Take off a charge.
     wand.charges--;

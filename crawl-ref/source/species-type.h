@@ -69,6 +69,7 @@ enum species_type
     SP_RATLING,
     SP_ROBOT,
     SP_WEREWOLF,
+    SP_OBSIDIAN_DWARF,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

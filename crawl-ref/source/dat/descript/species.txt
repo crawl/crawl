@@ -149,6 +149,11 @@ Naga
 Nagas are hybrids; human from the chest up, with a scaly, muscular torso
 trailing off like that of a snake. They move slowly but are naturally resilient.
 %%%%
+Obsidian Dwarf
+
+An ancient species in which the fire of magic has cooled, Obsidian Dwarves must 
+expend their lifeforce to cast spells. They both cause and receive extra harm.
+%%%%
 Octopode
 
 Octopodes are a species of amphibious cephalopods. They can wear eight rings,

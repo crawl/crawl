@@ -258,7 +258,10 @@ static bool _OLGREB_evoke(item_def *item, bool* did_work, bool* unevokable)
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
         your_spells(SPELL_VENOM_BOLT, power, false);
 
-    dec_mp(4);
+    if(you.species == SP_OBSIDIAN_DWARF)
+        dec_hp(4, false);
+    else 
+        dec_mp(4);
     make_hungry(50, false, true);
     practise_evoking(1);
 

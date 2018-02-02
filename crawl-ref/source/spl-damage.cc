@@ -2933,7 +2933,10 @@ void handle_searing_ray()
     beam.fire();
     trigger_battlesphere(&you, beam);
 
-    dec_mp(1);
+    if(you.species == SP_OBSIDIAN_DWARF)
+        dec_hp(1,false);
+    else
+        dec_mp(1);
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
     {

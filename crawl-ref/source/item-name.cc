@@ -3568,6 +3568,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_MAGIC:
+            return you.species == SP_OBSIDIAN_DWARF;
         }
 
         return false;
@@ -3611,7 +3613,7 @@ bool is_useless_item(const item_def &item, bool temp)
                     || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false);
+            return you.spirit_shield(false, false) || you.species == SP_OBSIDIAN_DWARF;
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -3647,6 +3649,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);
+			
+        case RING_MAGICAL_POWER:
+            return you.species == SP_OBSIDIAN_DWARF;
 
         default:
             return false;
@@ -3736,6 +3741,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_PHANTOM_MIRROR:
             return you.get_mutation_level(MUT_NO_LOVE)
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            return you.species == SP_OBSIDIAN_DWARF || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         default:
             return you.get_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);

@@ -896,7 +896,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam != INSTANT_DEATH)
     {
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
-            && !(aux && strstr(aux, "flay_damage")))
+            && !(aux && strstr(aux, "flay_damage")) && you.species != SP_OBSIDIAN_DWARF)
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,

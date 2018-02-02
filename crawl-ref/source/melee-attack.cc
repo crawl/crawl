@@ -431,7 +431,10 @@ bool melee_attack::handle_phase_hit()
             if (hurt > 0)
             {
                 damage_done = hurt;
-                dec_mp(1);
+                if(you.species == SP_OBSIDIAN_DWARF)
+                    dec_hp(1,false);
+                else
+                    dec_mp(1);
             }
         }
     }

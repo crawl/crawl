@@ -443,7 +443,10 @@ static void _place_dragon()
         if (!dragon)
             continue;
 
-        dec_mp(mp_cost);
+        if(you.species == SP_OBSIDIAN_DWARF)
+            dec_hp(mp_cost, false);
+        else
+            dec_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
             mpr("A dragon arrives to answer your call!");
 

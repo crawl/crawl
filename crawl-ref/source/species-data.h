@@ -166,6 +166,23 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_LONG_BLADES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_OBSIDIAN_DWARF, {
+    "OD",
+    "Obsidian Dwarf", "Dwarven", "Dwarf",
+    SPF_NONE,
+    -1, 1, 0, 3,
+    MONS_DEEP_DWARF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 10, 6, // 25
+    { STAT_STR, STAT_INT }, 4,
+    { },
+    { "You have no magical power.", "You expend HP in place of MP.", 
+      "You both give and receive extra harm." },
+    { "no MP", "cast from HP", "harm" },
+    { JOB_BERSERKER, JOB_FIRE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_CONJURER },
+    { SK_MACES_FLAILS, SK_AXES, SK_LONG_BLADES, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_DEEP_ELF, {
     "DE",
     "Deep Elf", "Elven", "Elf",

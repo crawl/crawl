@@ -182,7 +182,7 @@ static const species_type species_order[] =
     SP_ANGEL,          SP_CHAOSKIN,
     SP_PROFOUND_ELF,   SP_EMBER_ELF,
     SP_KITSUNE,        SP_RATLING,
-    SP_WEREWOLF,
+    SP_WEREWOLF,       SP_OBSIDIAN_DWARF,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,       SP_LEPRECHAUN,
@@ -997,7 +997,7 @@ static species_group species_groups[] =
             SP_VAMPIRE,
             SP_DEMIGOD,
             SP_FORMICID,
-            SP_NAGA,
+            SP_OBSIDIAN_DWARF,
             SP_OCTOPODE,
             SP_FELID,
             SP_BARACHI,
@@ -1020,6 +1020,7 @@ static species_group species_groups[] =
             SP_RATLING,
             SP_LEPRECHAUN,
             SP_WEREWOLF,
+            SP_NAGA,
         }
     },
 };

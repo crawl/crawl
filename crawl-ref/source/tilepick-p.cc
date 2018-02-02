@@ -473,6 +473,7 @@ tileidx_t tileidx_player()
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
     case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
+    case transformation::werewolf:  ch = TILEP_TRAN_WEREWOLF;  break;
     case transformation::hydra:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
                                                            you.heads() - 1);
                                     break;
@@ -622,6 +623,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VAMPIRE;
     case SP_DEEP_DWARF:
     case SP_CRYSTAL_DWARF:
+    case SP_OBSIDIAN_DWARF:
         return TILEP_BASE_DEEP_DWARF;
     case SP_GARGOYLE:
     case SP_GOLEM:

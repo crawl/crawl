@@ -1407,7 +1407,46 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CRYSTAL_DWARF,         SK_EARTH_MAGIC,     1),
     APT(SP_CRYSTAL_DWARF,         SK_POISON_MAGIC,    1),
     APT(SP_CRYSTAL_DWARF,         SK_INVOCATIONS,     0),
-    APT(SP_CRYSTAL_DWARF,         SK_EVOCATIONS,      0),	
+    APT(SP_CRYSTAL_DWARF,         SK_EVOCATIONS,      0),
+
+    // SP_OBSIDIAN_DWARF
+    APT(SP_OBSIDIAN_DWARF,         SK_FIGHTING,        0),
+    APT(SP_OBSIDIAN_DWARF,         SK_SHORT_BLADES,    0),
+    APT(SP_OBSIDIAN_DWARF,         SK_LONG_BLADES,     0),
+    APT(SP_OBSIDIAN_DWARF,         SK_AXES,            1),
+    APT(SP_OBSIDIAN_DWARF,         SK_MACES_FLAILS,    0),
+    APT(SP_OBSIDIAN_DWARF,         SK_POLEARMS,        0),
+    APT(SP_OBSIDIAN_DWARF,         SK_STAVES,          0),
+    APT(SP_OBSIDIAN_DWARF,         SK_SLINGS,         -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_BOWS,           -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_CROSSBOWS,      -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_THROWING,       -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_ARMOUR,          1),
+    APT(SP_OBSIDIAN_DWARF,         SK_DODGING,         0),
+    APT(SP_OBSIDIAN_DWARF,         SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_OBSIDIAN_DWARF,         SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_OBSIDIAN_DWARF,         SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_OBSIDIAN_DWARF,         SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_OBSIDIAN_DWARF,         SK_UNARMED_COMBAT, -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_SPELLCASTING,    0),
+    APT(SP_OBSIDIAN_DWARF,         SK_CONJURATIONS,    1),
+    APT(SP_OBSIDIAN_DWARF,         SK_HEXES,           0),
+    APT(SP_OBSIDIAN_DWARF,         SK_CHARMS,          0),
+    APT(SP_OBSIDIAN_DWARF,         SK_SUMMONINGS,     -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_NECROMANCY,     -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_TRANSLOCATIONS,  0),
+    APT(SP_OBSIDIAN_DWARF,         SK_TRANSMUTATIONS,  0),
+    APT(SP_OBSIDIAN_DWARF,         SK_FIRE_MAGIC,      0),
+    APT(SP_OBSIDIAN_DWARF,         SK_ICE_MAGIC,      -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_AIR_MAGIC,      -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_EARTH_MAGIC,     0),
+    APT(SP_OBSIDIAN_DWARF,         SK_POISON_MAGIC,   -1),
+    APT(SP_OBSIDIAN_DWARF,         SK_INVOCATIONS,     0),
+    APT(SP_OBSIDIAN_DWARF,         SK_EVOCATIONS,     -1),		
 	
     // SP_DEMONSPAWN
     APT(SP_DEMONSPAWN,      SK_FIGHTING,        0),

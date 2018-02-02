@@ -851,14 +851,20 @@ bool cast_a_spell(bool check_range, spell_type spell)
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    dec_mp(cost, true);
+    if(you.species == SP_OBSIDIAN_DWARF)
+        dec_hp(cost, true);
+    else 
+        dec_mp(cost, true);
 
     const spret_type cast_result = your_spells(spell, 0, true);
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
+        if(you.species == SP_OBSIDIAN_DWARF)
+            inc_hp(cost);
+        else 
+            inc_mp(cost, true);
         return false;
     }
 

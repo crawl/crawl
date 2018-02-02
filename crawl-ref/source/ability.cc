@@ -987,10 +987,23 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        if (you.attribute[ATTR_DIVINE_ENERGY])
+        if (you.species == SP_OBSIDIAN_DWARF)
+        {
+            return ABIL_NON_ABILITY;
+        }
+        else if (you.attribute[ATTR_DIVINE_ENERGY])
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
-        return ability;
-
+        else 
+            return ability;
+		
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+        if (you.species == SP_OBSIDIAN_DWARF)
+        {
+            return ABIL_NON_ABILITY;
+        }
+        else 
+            return ability;
+		
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         if (you.species == SP_GNOLL)
             return ABIL_NON_ABILITY;
@@ -3157,7 +3170,10 @@ static void _pay_ability_costs(const ability_def& abil)
          abil.mp_cost, hp_cost, food_cost, piety_cost);
 
     if (abil.mp_cost)
-        dec_mp(abil.mp_cost);
+        if(you.species == SP_OBSIDIAN_DWARF)
+            dec_hp(abil.mp_cost, false);
+        else
+            dec_mp(abil.mp_cost);
 
     if (abil.hp_cost)
         dec_hp(hp_cost, false);

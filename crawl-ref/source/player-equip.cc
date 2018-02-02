@@ -766,7 +766,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
 static void _spirit_shield_message(bool unmeld)
 {
-    if (!unmeld && you.spirit_shield() < 2)
+    if(you.species == SP_OBSIDIAN_DWARF)
+        mpr("You feel a protective spirit watch you for a moment, then depart.");
+    else if (!unmeld && you.spirit_shield() < 2)
     {
         dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");

@@ -1774,11 +1774,21 @@ void canned_msg(canned_message_type which_message)
             mpr("You don't know any spells.");
             break;
         case MSG_MANA_INCREASE:
-            mpr("You feel your magic capacity increase.");
+        {
+            if(you.species == SP_OBSIDIAN_DWARF)
+                mpr("You feel magic enter you for a moment.");
+            else
+                mpr("You feel your magic capacity increase.");
             break;
+        }
         case MSG_MANA_DECREASE:
-            mpr("You feel your magic capacity decrease.");
+        {
+            if(you.species == SP_OBSIDIAN_DWARF)
+                mpr("You feel even more devoid of magic for a moment.");
+            else
+                mpr("You feel your magic capacity decrease.");
             break;
+        }
         case MSG_DISORIENTED:
             mpr("You feel momentarily disoriented.");
             break;
@@ -1807,17 +1817,28 @@ void canned_msg(canned_message_type which_message)
             mpr("Your health is already full.");
             break;
         case MSG_FULL_MAGIC:
-            mpr("Your reserves of magic are already full.");
+        {
+            if(you.species == SP_OBSIDIAN_DWARF)
+                mpr("You don't have magical reserves.");
+            else
+                mpr("Your reserves of magic are already full.");
             break;
+        }
         case MSG_GAIN_HEALTH:
             mpr("You feel better.");
             break;
         case MSG_GAIN_MAGIC:
-            mpr("You feel your power returning.");
+        {
+            if(you.species != SP_OBSIDIAN_DWARF)
+                mpr("You feel your power returning.");
             break;
+        }
         case MSG_MAGIC_DRAIN:
-            mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+        {
+            if(you.species != SP_OBSIDIAN_DWARF)
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
+        }
         case MSG_SOMETHING_IN_WAY:
             mpr("There's something in the way.");
             break;

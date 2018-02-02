@@ -891,7 +891,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if (!did_return)
             pbolt.drop_object();
         // Costs 1 MP per shot.
-        dec_mp(1);
+        if(you.species == SP_OBSIDIAN_DWARF)
+            dec_hp(1, false);
+        else
+            dec_mp(1);
     }
     else
     {
