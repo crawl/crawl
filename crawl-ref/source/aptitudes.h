@@ -1175,6 +1175,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SPRIGGAN,        SK_INVOCATIONS,     0),
     APT(SP_SPRIGGAN,        SK_EVOCATIONS,      3),
 	
+    // SP_HEDGEHOG
+    APT(SP_HEDGEHOG,        SK_FIGHTING,       -2),
+    APT(SP_HEDGEHOG,        SK_SHORT_BLADES,    3),
+    APT(SP_HEDGEHOG,        SK_LONG_BLADES,     0),
+    APT(SP_HEDGEHOG,        SK_AXES,           -1),
+    APT(SP_HEDGEHOG,        SK_MACES_FLAILS,   -1),
+    APT(SP_HEDGEHOG,        SK_POLEARMS,       -5),
+    APT(SP_HEDGEHOG,        SK_STAVES,          0),
+    APT(SP_HEDGEHOG,        SK_SLINGS,          2),
+    APT(SP_HEDGEHOG,        SK_BOWS,           -2),
+    APT(SP_HEDGEHOG,        SK_CROSSBOWS,      -2),
+    APT(SP_HEDGEHOG,        SK_THROWING,       -2),
+    APT(SP_HEDGEHOG,        SK_ARMOUR,        UNUSABLE_SKILL),
+    APT(SP_HEDGEHOG,        SK_DODGING,         4),
+    APT(SP_HEDGEHOG,        SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_HEDGEHOG,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_HEDGEHOG,        SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_HEDGEHOG,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_HEDGEHOG,        SK_UNARMED_COMBAT,  2),
+    APT(SP_HEDGEHOG,        SK_SPELLCASTING,    0),
+    APT(SP_HEDGEHOG,        SK_CONJURATIONS,    0),
+    APT(SP_HEDGEHOG,        SK_HEXES,           2),
+    APT(SP_HEDGEHOG,        SK_CHARMS,          2),
+    APT(SP_HEDGEHOG,        SK_SUMMONINGS,     -2),
+    APT(SP_HEDGEHOG,        SK_NECROMANCY,     -2),
+    APT(SP_HEDGEHOG,        SK_TRANSLOCATIONS,  3),
+    APT(SP_HEDGEHOG,        SK_TRANSMUTATIONS, -2),
+    APT(SP_HEDGEHOG,        SK_FIRE_MAGIC,      0),
+    APT(SP_HEDGEHOG,        SK_ICE_MAGIC,       0),
+    APT(SP_HEDGEHOG,        SK_AIR_MAGIC,       1),
+    APT(SP_HEDGEHOG,        SK_EARTH_MAGIC,     0),
+    APT(SP_HEDGEHOG,        SK_POISON_MAGIC,    0),
+    APT(SP_HEDGEHOG,        SK_INVOCATIONS,     0),
+    APT(SP_HEDGEHOG,        SK_EVOCATIONS,      0),
+	
     // SP_LEPRECHAUN
     APT(SP_LEPRECHAUN,        SK_FIGHTING,       -1),
     APT(SP_LEPRECHAUN,        SK_SHORT_BLADES,    1),

@@ -196,7 +196,7 @@ static const species_type species_order[] =
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
     SP_BARACHI,        SP_GNOLL,
-    SP_FLAN,
+    SP_FLAN,           SP_HEDGEHOG,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,   SP_FUNGOID,
     // celestial species
@@ -1023,6 +1023,7 @@ static species_group species_groups[] =
             SP_WEREWOLF,
             SP_NAGA,
             SP_WATER_SPRITE,
+            SP_HEDGEHOG,
         }
     },
 };

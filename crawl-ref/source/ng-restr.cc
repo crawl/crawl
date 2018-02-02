@@ -34,6 +34,10 @@ static bool _banned_combination(job_type job, species_type species)
         if (job == JOB_ALCHEMIST)
             return true;
         break;
+    case SP_HEDGEHOG:
+        if (job == JOB_TORPOR_KNIGHT)
+            return true;
+        break;
     case SP_DEMIGOD:
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT

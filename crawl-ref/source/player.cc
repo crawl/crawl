@@ -1972,6 +1972,9 @@ int player_movement_speed()
           mv = div_rand_round(7*6, 5); // balance for the cap at 6
     }
 
+    if (you.species == SP_HEDGEHOG)
+        mv = FASTEST_PLAYER_MOVE_SPEED;
+	
     // We'll use the old value of six as a minimum, with haste this could
     // end up as a speed of three, which is about as fast as we want
     // the player to be able to go (since 3 is 3.33x as fast and 2 is 5x,
@@ -2023,6 +2026,9 @@ int player_speed()
         ps /= 10;
     }
 
+    if(you.species == SP_HEDGEHOG)
+        return min(10, ps);
+	
     return ps;
 }
 

@@ -749,7 +749,8 @@ void yell(const actor* mon)
     {
         mprf("You %s%s at %s!",
              shout_verb.c_str(),
-             you.duration[DUR_RECITE] ? " your recitation" : "",
+             you.duration[DUR_RECITE] ? " your recitation" : 
+                 you.species == SP_HEDGEHOG ? " 'you're too slow!'" : "",
              mon->name(DESC_THE).c_str());
     }
     else

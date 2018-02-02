@@ -597,6 +597,23 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES },
 } },
 
+{ SP_HEDGEHOG, {
+    "OC",
+    "Hedgehog", nullptr, nullptr,
+    SPF_NONE,
+    1, -2, 1, 3,
+    MONS_PORCUPINE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    9, 6, 9, // 24
+    { STAT_STR, STAT_DEX }, 5,
+    { { MUT_SCREAM, 3, 1 }, { MUT_FAST, 3, 1 }, { MUT_SPINY, 1, 1 }, 
+	  { MUT_SPINY, 1, 11 }, { MUT_SPINY, 1, 21 } },
+    { "You always go fast, even when slowed."},
+    { "gotta go fast"},
+    { JOB_BERSERKER, JOB_MONK, JOB_AIR_ELEMENTALIST, JOB_WARPER },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_SLINGS },
+} },
+
 { SP_HUMAN, {
     "Hu",
     "Human", nullptr, nullptr,
@@ -627,7 +644,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_FANGS, 2, 1 }, { MUT_POISON_ENHANCER, 1, 12 }, },
     { "Your bite is poisonous."},
     { "poisonous bite"},
-    { JOB_BERSERKER, JOB_VENOM_MAGE, JOB_GLADIATOR},
+    { JOB_BERSERKER, JOB_VENOM_MAGE, JOB_GLADIATOR },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
@@ -984,7 +1001,7 @@ static const map<species_type, species_def> species_data =
     {"You sometimes transform uncontrollably when attacking."},
     {"werewolf transformation"},
     { JOB_MONK, JOB_GLADIATOR, JOB_BERSERKER, JOB_NECROMANCER },
-    { SK_STAVES, SK_AXES, SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_UNARMED_COMBAT,
+    { SK_STAVES, SK_AXES, SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
