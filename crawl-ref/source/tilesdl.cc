@@ -37,7 +37,6 @@
 #include "tilereg-menu.h"
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
-#include "tilereg-popup.h"
 #include "tilereg-skl.h"
 #include "tilereg-spl.h"
 #include "tilereg-stat.h"
@@ -361,25 +360,6 @@ void TilesFramework::do_map_display()
 {
     m_map_mode_enabled = true;
     m_region_tab->activate_tab(TAB_NAVIGATION);
-}
-
-int TilesFramework::draw_popup(Popup *popup)
-{
-    PopupRegion reg(m_image, m_fonts[m_crt_font].font);
-    // place popup region to cover screen
-    reg.place(0, 0, 0);
-    reg.resize_to_fit(m_windowsz.x, m_windowsz.y);
-
-    // get menu items to draw
-    int col = 0;
-    while (MenuEntry *me = popup->next_entry())
-    {
-        reg.set_entry(col, me->get_text(true), me->colour, me, false);
-        col++;
-    }
-    // fetch a return value
-    use_control_region(&reg, false);
-    return reg.get_retval();
 }
 
 void TilesFramework::use_control_region(ControlRegion *reg,
