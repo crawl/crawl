@@ -55,7 +55,8 @@ enum ability_type
     // Kitsune
     ABIL_CHARM,
     ABIL_LASER,
-    ABIL_MAX_INTRINSIC = ABIL_LASER,
+    ABIL_FULL_HEAL,
+    ABIL_MAX_INTRINSIC = ABIL_FULL_HEAL,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

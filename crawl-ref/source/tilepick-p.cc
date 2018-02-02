@@ -606,6 +606,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_DEMIGOD:
         return TILEP_BASE_DEMIGOD;
     case SP_SPRIGGAN:
+    case SP_WATER_SPRITE:
         return TILEP_BASE_SPRIGGAN;
     case SP_MINOTAUR:
         return TILEP_BASE_MINOTAUR;

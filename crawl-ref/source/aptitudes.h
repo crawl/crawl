@@ -1681,6 +1681,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MERFOLK,         SK_POISON_MAGIC,    1),
     APT(SP_MERFOLK,         SK_INVOCATIONS,     1),
     APT(SP_MERFOLK,         SK_EVOCATIONS,      0),
+	
+    // SP_WATER_SPRITE
+    APT(SP_WATER_SPRITE,         SK_FIGHTING,        0),
+    APT(SP_WATER_SPRITE,         SK_SHORT_BLADES,    2),
+    APT(SP_WATER_SPRITE,         SK_LONG_BLADES,     1),
+    APT(SP_WATER_SPRITE,         SK_AXES,            0),
+    APT(SP_WATER_SPRITE,         SK_MACES_FLAILS,    1),
+    APT(SP_WATER_SPRITE,         SK_POLEARMS,        1),
+    APT(SP_WATER_SPRITE,         SK_STAVES,          1),
+    APT(SP_WATER_SPRITE,         SK_SLINGS,          0),
+    APT(SP_WATER_SPRITE,         SK_BOWS,            0),
+    APT(SP_WATER_SPRITE,         SK_CROSSBOWS,       0),
+    APT(SP_WATER_SPRITE,         SK_THROWING,        0),
+    APT(SP_WATER_SPRITE,         SK_ARMOUR,         -2),
+    APT(SP_WATER_SPRITE,         SK_DODGING,        -1),
+    APT(SP_WATER_SPRITE,         SK_STEALTH,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_WATER_SPRITE,         SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_WATER_SPRITE,         SK_SHIELDS,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_WATER_SPRITE,         SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_WATER_SPRITE,         SK_UNARMED_COMBAT,  0),
+    APT(SP_WATER_SPRITE,         SK_SPELLCASTING,    0),
+    APT(SP_WATER_SPRITE,         SK_CONJURATIONS,    0),
+    APT(SP_WATER_SPRITE,         SK_HEXES,           0),
+    APT(SP_WATER_SPRITE,         SK_CHARMS,          1),
+    APT(SP_WATER_SPRITE,         SK_SUMMONINGS,      0),
+    APT(SP_WATER_SPRITE,         SK_NECROMANCY,     -1),
+    APT(SP_WATER_SPRITE,         SK_TRANSLOCATIONS,  2),
+    APT(SP_WATER_SPRITE,         SK_TRANSMUTATIONS,  0),
+    APT(SP_WATER_SPRITE,         SK_FIRE_MAGIC,     -2),
+    APT(SP_WATER_SPRITE,         SK_ICE_MAGIC,       1),
+    APT(SP_WATER_SPRITE,         SK_AIR_MAGIC,       0),
+    APT(SP_WATER_SPRITE,         SK_EARTH_MAGIC,    -2),
+    APT(SP_WATER_SPRITE,         SK_POISON_MAGIC,   -2),
+    APT(SP_WATER_SPRITE,         SK_INVOCATIONS,     0),
+    APT(SP_WATER_SPRITE,         SK_EVOCATIONS,      0),
 
     // SP_VAMPIRE
     APT(SP_VAMPIRE,         SK_FIGHTING,       -1),

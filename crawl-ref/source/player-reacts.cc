@@ -90,6 +90,7 @@
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
@@ -1082,6 +1083,9 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+	
+    if(you.species == SP_WATER_SPRITE && !there_are_monsters_nearby(true))
+       inc_hp(9999);
 }
 
 void extract_manticore_spikes(const char* endmsg)

@@ -341,6 +341,8 @@ static const ability_def Ability_List[] =
       1, 0, 50, 0, {fail_basis::evo, 40, 2}, abflag::none },
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+    { ABIL_FULL_HEAL, "Fully Heal",
+      0, 0, 0, 0, {}, abflag::none },
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
       0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
@@ -746,7 +748,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
-    if (ability == ABIL_HEAL_WOUNDS)
+    if (ability == ABIL_HEAL_WOUNDS || ability == ABIL_FULL_HEAL)
         ret += ", Permanent MP";
 
     if (abil.hp_cost)
@@ -920,6 +922,11 @@ static const string _detailed_cost_description(ability_type ability)
     {
         ret << "\nIt has a chance of reducing your maximum magic capacity "
                "when used.";
+    }
+	
+    if(abil.ability == ABIL_FULL_HEAL)
+    {
+        ret << "\nIt will reduce your maximum magic capacity when used.";
     }
 
     return ret.str();
@@ -1484,6 +1491,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_HEAL_WOUNDS:
+    case ABIL_FULL_HEAL:
         if (you.hp == you.hp_max)
         {
             if (!quiet)
@@ -1812,6 +1820,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             rot_mp(1);
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
+        break;
+
+    case ABIL_FULL_HEAL:
+        fail_check();
+        mpr("Your magical essence is drained by the effort!");
+        rot_mp(1);
+        inc_hp(9999);
         break;
 
     case ABIL_DIG:
@@ -3356,6 +3371,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Species-based abilities.
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_HEAL_WOUNDS, check_confused);
+	
+    if(you.species == SP_WATER_SPRITE)
+        _add_talent(talents, ABIL_FULL_HEAL, check_confused);
 
     if (you.species == SP_FORMICID
         && (form_keeps_mutations() || include_unusable))

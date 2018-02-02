@@ -2700,6 +2700,10 @@ string cannot_read_item_reason(const item_def &item)
 
     // the below only applies to scrolls. (it's easier to read books, since
     // that's just a UI/strategic thing.)
+	
+    // water sprite
+    if(you.species == SP_WATER_SPRITE && there_are_monsters_nearby(true))
+        return "You cannot read scrolls with monsters nearby!";
 
     if (silenced(you.pos()))
         return "Magic scrolls do not work when you're silenced!";
@@ -2711,7 +2715,7 @@ string cannot_read_item_reason(const item_def &item)
     // ru
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
-
+	
     // don't waste the player's time reading known scrolls in situations where
     // they'd be useless
 

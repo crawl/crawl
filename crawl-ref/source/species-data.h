@@ -874,6 +874,25 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_SLINGS },
 } },
 
+{ SP_WATER_SPRITE, {
+    "WS",
+    "Water Sprite", nullptr, "Sprite",
+    SPF_NONE,
+    0, -4, 1, 5,
+    MONS_WATER_NYMPH,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    6, 10, 10, // 26
+    { STAT_INT, STAT_DEX }, 5,
+    { { MUT_SLOW, 3, 1 }, { MUT_ACUTE_VISION, 1, 1 }, },
+    {"You heal instantly when no monsters are nearby.", 
+     "You cannot read scrolls in the presence of monsters.",
+     "You can move somewhat faster in water.",
+	 "You are resistant to damage."},
+    {"heal when alone", "no scrolls in combat", "faster in water", "damage resistance"},
+    { JOB_ASSASSIN, JOB_WARPER, JOB_HUNTER },
+    { SK_LONG_BLADES, SK_STAVES, SK_POLEARMS, SK_BOWS, SK_CROSSBOWS },
+} },
+
 { SP_TENGU, {
     "Te",
     "Tengu", nullptr, nullptr,
