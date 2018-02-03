@@ -636,6 +636,10 @@ static void _setup_generic(const newgame_def& ng)
 
     // Get rid of god companions left from previous games
     init_companions();
+	
+    // Setup bodach aspect
+    if(you.species == SP_BODACH)
+        you.attribute[ATTR_BODACH_ASPECT] = 1;
 
     // Create the save file.
     if (Options.no_save)

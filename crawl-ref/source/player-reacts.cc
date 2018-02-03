@@ -845,6 +845,11 @@ static void _decrement_durations()
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
             _decrement_simple_duration((duration_type) i, delay);
+		
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 4)
+    {
+        fatal_attraction(you.pos(), &you, 10 + 7 * you.experience_level);
+    }
 }
 
 

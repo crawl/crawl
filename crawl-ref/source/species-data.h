@@ -56,6 +56,24 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_BODACH, {
+    "Bo",
+    "Bodach", nullptr, nullptr,
+    SPF_NO_HAIR,
+    -1, 0, 0, 3,
+    MONS_WRETCHED_STAR,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 7, 7, // 21
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { },
+    { "Your aspect changes uncontrollably as you grow."},
+    { "aspect changes" },
+    { JOB_BERSERKER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_FLAN, {
     "Fl",
     "Flan", nullptr, nullptr,
@@ -121,7 +139,7 @@ static const map<species_type, species_def> species_data =
     9, 9, 9, // 27
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_EVOLUTION, 1, 3 }, { MUT_EVOLUTION, 1, 12 }, },
-    {},
+    { "You are occasionally noticed by Xom."},
     {},
     { JOB_BERSERKER, JOB_CONJURER, JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST },

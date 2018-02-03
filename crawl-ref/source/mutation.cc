@@ -630,6 +630,13 @@ string describe_mutations(bool center_title)
             result += str + "\n";
     }
 
+    // Have to put this here for correct mutation ordering.
+    if(you.species == SP_BODACH)
+    {
+        if (you.experience_level >= 8)
+            result += "You can force your aspect to change by infusing magic.\n";
+	}
+
     if (you.racial_ac(false) > 0)
     {
         const string scale_clause = string(scale_type(you.species))
@@ -641,6 +648,7 @@ string describe_mutations(bool center_title)
                        you.species == SP_NAGA ? "serpentine skin is tough" :
                        you.species == SP_GARGOYLE ? "stone body is resilient" :
                        you.species == SP_GOLEM ? "clay body is tough" :
+                       you.species == SP_BODACH ? "dense body is resilient" :
                                                     scale_clause.c_str(),
                        you.racial_ac(false) / 100),
                     player_is_shapechanged()
@@ -656,6 +664,38 @@ string describe_mutations(bool center_title)
             result += "<green>You heal slowly.</green>\n";
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
+    }
+	
+    if (you.species == SP_BODACH)
+    {
+        switch (you.attribute[ATTR_BODACH_ASPECT])
+        {
+        case 1:   
+            result += "You auxiliary attacks sometimes engulf monsters in chaos.\n";
+            result += "You sometimes resist elemental damage. (50% chance)\n";
+            result += "You are in touch with primordial magic. (wiz)\n";
+            break;
+        case 2:
+            result += "You are unusually evasive.\n";
+            result += make_stringf("You %s missiles.\n", 
+                                   you.experience_level > 12 ? "deflect" : "repel"); 
+            result += "You are immune to clouds.\n";
+            result += "You resist sticky flame.\n";
+            break;
+        case 3:
+            result += "You have enhanced slaying and spellpower.\n";
+            result += "You sometimes retaliate with fire when attacked. \n";
+            result += "You make noise when moving. \n";
+            break;
+        case 4:
+            result += "You cover ground slowly.\n";
+            result += "Enemies are attracted to your dense body. \n";
+            result += "You do not take damage from collisions.\n";
+            result += "You are hard to see. (Stealth++)\n";
+            break;
+        default:
+            break;
+        }
     }
 
     if (you.species == SP_OCTOPODE)

@@ -1057,6 +1057,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BASE_DRACONIAN,  SK_POISON_MAGIC,    0),
     APT(SP_BASE_DRACONIAN,  SK_INVOCATIONS,     1),
     APT(SP_BASE_DRACONIAN,  SK_EVOCATIONS,      0),
+	
+    // SP_BODACH
+    APT(SP_BODACH,  SK_FIGHTING,       -1),
+    APT(SP_BODACH,  SK_SHORT_BLADES,    0),
+    APT(SP_BODACH,  SK_LONG_BLADES,     0),
+    APT(SP_BODACH,  SK_AXES,            0),
+    APT(SP_BODACH,  SK_MACES_FLAILS,    0),
+    APT(SP_BODACH,  SK_POLEARMS,        0),
+    APT(SP_BODACH,  SK_STAVES,          0),
+    APT(SP_BODACH,  SK_SLINGS,          0),
+    APT(SP_BODACH,  SK_BOWS,            0),
+    APT(SP_BODACH,  SK_CROSSBOWS,       0),
+    APT(SP_BODACH,  SK_THROWING,        0),
+    APT(SP_BODACH,  SK_ARMOUR,          0),
+    APT(SP_BODACH,  SK_DODGING,         0),
+    APT(SP_BODACH,  SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BODACH,  SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_BODACH,  SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BODACH,  SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_BODACH,  SK_UNARMED_COMBAT,  0),
+    APT(SP_BODACH,  SK_SPELLCASTING,   -1),
+    APT(SP_BODACH,  SK_CONJURATIONS,    0),
+    APT(SP_BODACH,  SK_HEXES,           0),
+    APT(SP_BODACH,  SK_CHARMS,          0),
+    APT(SP_BODACH,  SK_SUMMONINGS,      0),
+    APT(SP_BODACH,  SK_NECROMANCY,      0),
+    APT(SP_BODACH,  SK_TRANSLOCATIONS,  0),
+    APT(SP_BODACH,  SK_TRANSMUTATIONS,  0),
+    APT(SP_BODACH,  SK_FIRE_MAGIC,      0),
+    APT(SP_BODACH,  SK_ICE_MAGIC,       0),
+    APT(SP_BODACH,  SK_AIR_MAGIC,       0),
+    APT(SP_BODACH,  SK_EARTH_MAGIC,     0),
+    APT(SP_BODACH,  SK_POISON_MAGIC,    0),
+    APT(SP_BODACH,  SK_INVOCATIONS,     0),
+    APT(SP_BODACH,  SK_EVOCATIONS,      0),
 
     // SP_CENTAUR
     APT(SP_CENTAUR,         SK_FIGHTING,        0),

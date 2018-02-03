@@ -290,6 +290,12 @@ bool melee_attack::handle_phase_dodged()
         {
             do_minotaur_retaliation();
         }
+		
+        if (defender->is_player() && you.species == SP_BODACH
+            && you.attribute[ATTR_BODACH_ASPECT] == 3)
+        {
+            do_bodach_retaliation();
+        }
 
         // Retaliations can kill!
         if (!attacker->alive())
@@ -1240,6 +1246,10 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     {
 		damage_brand = SPWPN_VENOM;
     }
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1)
+    {
+        damage_brand = SPWPN_CHAOS;
+    }
 }
 
 /**
@@ -1399,7 +1409,14 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
-
+		
+        if (damage_brand == SPWPN_CHAOS && !you_worship(GOD_ZIN)
+           && !cloud_at(defender->pos()) && x_chance_in_y(5 + you.experience_level / 3, 15))
+		{
+            place_cloud(CLOUD_CHAOS, defender->pos(), 1 + random2(3), &you);
+            mprf("%s is engulfed in chaos!", defender->name(DESC_THE).c_str());
+        }
+            
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
@@ -3294,6 +3311,38 @@ void melee_attack::do_minotaur_retaliation()
     }
 }
 
+void melee_attack::do_bodach_retaliation()
+{
+	if (you.strength() + you.dex() > random2(50))
+    {
+        int dmg = 5 + you.experience_level / 3;
+        dmg = player_stat_modify_damage(dmg);
+        dmg = random2(dmg);
+        dmg = player_apply_fighting_skill(dmg, true);
+        dmg = player_apply_misc_modifiers(dmg);
+        dmg = player_apply_slaying_bonuses(dmg, true);
+        dmg = player_apply_final_multipliers(dmg);
+        int hurt = attacker->apply_ac(dmg);
+        hurt = resist_adjust_damage(attacker, BEAM_FIRE, hurt);
+
+        mpr("You retaliate!");
+        dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
+        if (hurt <= 0)
+        {
+            mprf("You burn %s, but do no damage.",
+                 attacker->name(DESC_THE).c_str());
+            return;
+        }
+        else
+        {
+            mprf("You burn %s%s",
+                 attacker->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(hurt).c_str());
+            attacker->hurt(&you, hurt);
+        }
+    }
+}
+
 /**
  * Launch a long blade counterattack against the attacker. No sanity checks;
  * caller beware!
@@ -3648,3 +3697,4 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
            && mons_has_blood(mon->type)
            && !testbits(mon->flags, MF_SPECTRALISED);
 }
+

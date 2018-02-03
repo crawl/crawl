@@ -1229,6 +1229,17 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
+    if(you.species == SP_BODACH)
+    {
+		if(you.attribute[ATTR_BODACH_ASPECT] == 1)
+            species = "Primal " + species;
+        if(you.attribute[ATTR_BODACH_ASPECT] == 2)
+            species = "Gaseous " + species;
+        if(you.attribute[ATTR_BODACH_ASPECT] == 3)
+            species = "Plasma " + species;
+        if(you.attribute[ATTR_BODACH_ASPECT] == 4)
+            species = "Dark " + species;
+    }
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {

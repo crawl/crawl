@@ -1,4 +1,6 @@
 %%%%
+Angel 
+
 Angels are graceful, holy beings created by the Shining One. Most angels continue
 to serve their maker, but they are free to follow another god if they wish.
 %%%%
@@ -6,6 +8,11 @@ Barachi
 
 Barachim are amphibious humanoids who rebelled against the gods. They're fast
 learners and can hop long distances, but are otherwise slow and easily seen.
+%%%%
+Bodach
+
+Bodach are mortal descendants of an ancient celestial species. They change 
+between four distinct aspects, but have limited control over the process.
 %%%%
 Centaur
 
@@ -106,6 +113,11 @@ Hill Orc
 Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
 most, orcs are very proud and many of them feel superior.
 %%%%
+Hedgehog
+
+Rolling around at the speed of sound, Hedgehogs have got places to go and gotta
+follow their rainbow.
+%%%%
 Human
 
 Humans advance quickly in levels and have equal abilities in most skills.
@@ -203,6 +215,11 @@ Vine Stalker
 
 Frail symbionts, Vine Stalkers cannot regain health from devices or potions.
 Their magical reserves absorb damage, and they pack a magic-restoring bite.
+%%%%
+Water Sprite
+
+Water Sprites are slow, extremely frail, and cannot read scrolls in the presence
+of monsters. However, they instantly heal themselves when alone.
 %%%%
 Werewolf
 

@@ -1063,3 +1063,13 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         return true;
     }
 }
+	
+bool actor_collision_immune(const actor *agent)
+{
+	if(agent->is_player() && you.species == SP_BODACH
+    && you.attribute[ATTR_BODACH_ASPECT] == 4)
+    {
+        return true;
+    }
+    return false;
+}

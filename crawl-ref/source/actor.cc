@@ -1034,13 +1034,19 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         }
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        other->hurt(agent, other->apply_ac(damage.roll()),
+        if(!actor_collision_immune(other))
+        {
+            other->hurt(agent, other->apply_ac(damage.roll()),
                     BEAM_MISSILE, KILLED_BY_COLLISION,
                     othername, thisname);
+        }
         if (alive())
         {
-            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-                 KILLED_BY_COLLISION, thisname, othername);
+            if(!actor_collision_immune(this))
+            {
+                hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+                     KILLED_BY_COLLISION, thisname, othername);
+            }
         }
         return;
     }
@@ -1062,9 +1068,12 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(), conj_verb("stop").c_str());
         }
     }
-    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-         KILLED_BY_COLLISION, "",
-         feature_description_at(newpos, false, DESC_A, false));
+    if(!actor_collision_immune(this))
+    {
+        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+             KILLED_BY_COLLISION, "",
+             feature_description_at(newpos, false, DESC_A, false));
+    }
 }
 
 /// Is this creature despised by the so-called 'good gods'?

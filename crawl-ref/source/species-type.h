@@ -72,6 +72,7 @@ enum species_type
     SP_OBSIDIAN_DWARF,
     SP_WATER_SPRITE,
     SP_HEDGEHOG,
+    SP_BODACH,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

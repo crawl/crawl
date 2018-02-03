@@ -470,6 +470,14 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         power *= 10 + 4 * augmentation_amount();
         power /= 10;
     }
+	
+    // Being a plasma aspect Bodach boosts spell power
+    if (!fail_rate_check)
+    {
+		if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 3)
+        power *= 11 + you.experience_level / 3;
+        power /= 10;
+    }
 
     // Each level of horror reduces spellpower by 10%
     if (you.duration[DUR_HORROR] && !fail_rate_check)

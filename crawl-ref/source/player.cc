@@ -445,6 +445,11 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
     }
+	
+    if(you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 3)
+    {
+        noisy(3 + you.experience_level / 5, you.pos());
+    }
 
     id_floor_items();
 
@@ -1338,6 +1343,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     // species:
     if (you.species == SP_MUMMY)
         rf--;
+	
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        rf++;
 
     // mutations:
     rf += you.get_mutation_level(MUT_HEAT_RESISTANCE, temp);
@@ -1418,6 +1427,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
                 rc++;
         }
     }
+	
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        rc++;    
 
     if (items)
     {
@@ -1492,6 +1505,10 @@ bool player::res_corr(bool calc_unid, bool items) const
     {
         return true;
     }
+	
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        return true;
 
     return actor::res_corr(calc_unid, items);
 }
@@ -1522,6 +1539,10 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             re++;
     }
+	
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        re++;
 
     // mutations:
     re += you.get_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
@@ -1642,6 +1663,10 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
 
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        rp++;
+	
     if (temp)
     {
         // potions/cards:
@@ -1683,6 +1708,9 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     }
 
     if (get_form()->res_sticky_flame())
+        rsf++;
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 2)
         rsf++;
 
     if (rsf > 1)
@@ -1886,6 +1914,10 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         pl += you.wearing(EQ_STAFF, STAFF_DEATH, calc_unid);
     }
+	
+    if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
+        && coinflip())
+        pl++;
 
     // undead/demonic power
     pl += you.get_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE, temp);
@@ -1961,6 +1993,12 @@ int player_movement_speed()
         mv *= 10 + slow * 2;
         mv /= 10;
     }
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 4)
+    {
+        mv *= 12;
+        mv /= 10;
+	}
 
     if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
     {
@@ -2126,6 +2164,11 @@ static int _player_evasion_bonuses()
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 2)
+    {
+        evbonus += 5 + you.experience_level / 3;
+    }
 
     return evbonus;
 }
@@ -2259,7 +2302,10 @@ int player_armour_shield_spell_penalty()
  */
 int player_wizardry(spell_type spell)
 {
-    return you.wearing(EQ_RINGS, RING_WIZARDRY)
+    int wz = 0;
+    if(you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1)
+        wz++;
+    return wz + you.wearing(EQ_RINGS, RING_WIZARDRY)
            + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
 }
 
@@ -2849,6 +2895,18 @@ void level_change(bool skip_attribute_increase)
                     you.redraw_armour_class = true;
                 }
                 break;
+				
+            case SP_BODACH:
+                if (you.experience_level % 3 == 1)
+                {
+                    mpr("You feel your aspect shift.");
+					bodach_realignment();
+                    you.redraw_armour_class = true;
+                    you.redraw_evasion = true;
+                }
+                if (you.experience_level == 8)
+                    mpr("You can now force yourself to align with a new aspect.");
+                break;
 
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
@@ -3165,6 +3223,11 @@ int player_stealth()
         else if (you.hunger_state <= HS_HUNGRY)
             stealth += STEALTH_PIP;
     }
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 4)
+    {
+        stealth += STEALTH_PIP * 2;
+    }
 
     if (!you.airborne())
     {
@@ -3469,6 +3532,8 @@ bool player::stasis() const
 
 bool player::cloud_immune(bool calc_unid, bool items) const
 {
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 2)
+        return true;
     return have_passive(passive_t::cloud_immunity)
         || actor::cloud_immune(calc_unid, items);
 }
@@ -3563,6 +3628,9 @@ int slaying_bonus(bool ranged)
         ret += 4;
 
     ret += 3 * augmentation_amount();
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 3)
+        ret += 1 + you.experience_level / 3;
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         ret += you.props[SONG_OF_SLAYING_KEY].get_int();
@@ -5658,6 +5726,11 @@ int player::missile_deflection() const
 {
     if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
+	
+    if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 2)
+    {
+        return you.experience_level > 12 ? 2 : 1;
+    }
 
     if (get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
@@ -5894,6 +5967,11 @@ int player::racial_ac(bool temp) const
         {
 			return 500 + 100 * experience_level; // max 32
         }
+    }
+    // dark aspect Bodach get AC whether they're formchanged or not
+    if (species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 4)
+    {
+        return 300 + 100 * experience_level / 3; // max 12
     }
 
     return 0;
@@ -8183,4 +8261,16 @@ void refresh_weapon_protection()
 
     you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
     you.redraw_armour_class = true;
+}
+
+void bodach_realignment()
+{
+	if (you.species != SP_BODACH)
+        return;
+    int old_aspect = you.attribute[ATTR_BODACH_ASPECT];
+    while (old_aspect == you.attribute[ATTR_BODACH_ASPECT])
+    {
+        you.attribute[ATTR_BODACH_ASPECT] = 1 + random2(4); //between 1 and 4
+    }
+    you.redraw_title = true;
 }

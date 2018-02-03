@@ -87,6 +87,16 @@ Heal Wounds ability
 Heals the user significantly, with a chance of permanently reducing the user's
 maximum magic capacity by one.
 %%%%
+Fully Heal ability
+
+Heals the user to complete health, permanently reducing their maximum magic capacity
+by one in the process.
+%%%%
+Change Aspect ability
+
+Forcefully realigns the user to a new (randomly chosen) aspect. The process is quite
+exhausting and permanently reduces the user's maximum magic capacity by one.
+%%%%
 Dig ability
 
 Allows making tunnels through soft rock and rusted grates. Activating the

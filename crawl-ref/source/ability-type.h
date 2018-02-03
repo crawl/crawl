@@ -54,9 +54,13 @@ enum ability_type
     ABIL_HOP,
     // Kitsune
     ABIL_CHARM,
+    // Robot
     ABIL_LASER,
+    // Water Sprite
     ABIL_FULL_HEAL,
-    ABIL_MAX_INTRINSIC = ABIL_FULL_HEAL,
+    // Bodach
+    ABIL_REALIGN,
+    ABIL_MAX_INTRINSIC = ABIL_REALIGN,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

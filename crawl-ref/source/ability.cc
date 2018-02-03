@@ -343,6 +343,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
     { ABIL_FULL_HEAL, "Fully Heal",
       0, 0, 0, 0, {}, abflag::none },
+    { ABIL_REALIGN, "Change Aspect",
+      0, 0, 0, 0, {}, abflag::none },
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
       0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
@@ -748,7 +750,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
-    if (ability == ABIL_HEAL_WOUNDS || ability == ABIL_FULL_HEAL)
+    if (ability == ABIL_HEAL_WOUNDS || ability == ABIL_FULL_HEAL || ability == ABIL_REALIGN)
         ret += ", Permanent MP";
 
     if (abil.hp_cost)
@@ -924,7 +926,7 @@ static const string _detailed_cost_description(ability_type ability)
                "when used.";
     }
 	
-    if(abil.ability == ABIL_FULL_HEAL)
+    if(abil.ability == ABIL_FULL_HEAL || abil.ability == ABIL_REALIGN)
     {
         ret << "\nIt will reduce your maximum magic capacity when used.";
     }
@@ -1506,6 +1508,15 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_REALIGN:
+        if (get_real_mp(false) < 1)
+        {
+            if (!quiet)
+                mpr("You don't have enough innate magic capacity.");
+            return false;
+        }
+        return true;   
+		
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
     {
@@ -1827,6 +1838,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mpr("Your magical essence is drained by the effort!");
         rot_mp(1);
         inc_hp(9999);
+        break;
+		
+    case ABIL_REALIGN:
+        fail_check();
+        mpr("You align yourself with a new aspect.");
+		rot_mp(1);
+        bodach_realignment();
         break;
 
     case ABIL_DIG:
@@ -3372,8 +3390,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_HEAL_WOUNDS, check_confused);
 	
-    if(you.species == SP_WATER_SPRITE)
+    if (you.species == SP_WATER_SPRITE)
         _add_talent(talents, ABIL_FULL_HEAL, check_confused);
+	
+    if (you.species == SP_BODACH && you.experience_level >= 8)
+        _add_talent(talents, ABIL_REALIGN, check_confused);
 
     if (you.species == SP_FORMICID
         && (form_keeps_mutations() || include_unusable))
