@@ -1644,7 +1644,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_UNARMED_COMBAT:
-            if (species == SP_FELID)
+            if (species == SP_FELID || species == SP_FELID_MUMMY)
             {
                 result = claw_and_tooth_titles[skill_rank];
                 break;

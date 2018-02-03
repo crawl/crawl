@@ -747,7 +747,8 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && (you.species == SP_FELID || you.species == SP_GOLEM))
+    if (class_wanted == OBJ_ARMOUR && (you.species == SP_FELID || you.species == SP_GOLEM
+        || you.species == SP_FELID_MUMMY))
         return OBJ_RANDOM;
 
     int type_wanted = OBJ_RANDOM;
@@ -1465,7 +1466,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     ASSERT(!crawl_state.game_is_arena());
 
     FixedBitVector<NUM_OBJECT_CLASSES> bad_class;
-    if (you.species == SP_FELID || you.species == SP_GOLEM)
+    if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
     {
         bad_class.set(OBJ_WEAPONS);
         bad_class.set(OBJ_MISSILES);

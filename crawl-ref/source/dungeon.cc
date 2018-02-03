@@ -4292,7 +4292,8 @@ static object_class_type _acquirement_object_class()
         OBJ_STAVES,
     };
 
-    const int nc = (you.species == SP_FELID || you.species == SP_GOLEM) ? 4 : ARRAYSZ(classes);
+    const int nc = (you.species == SP_FELID || you.species == SP_GOLEM
+                    || you.species == SP_FELID_MUMMY) ? 4 : ARRAYSZ(classes);
     return classes[random2(nc)];
 }
 

@@ -694,7 +694,8 @@ static int armour_equip_delay(const item_def &item)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_FELID || you.species == SP_GOLEM)
+    if (base_type != OBJ_ARMOUR || you.species == SP_FELID 
+        || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
     {
         if (verbose)
             mpr("You can't wear that.");
@@ -1048,7 +1049,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.species == SP_FELID || you.species == SP_GOLEM)
+    if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
     {
         mpr("You can't wear anything.");
         return false;
@@ -2077,7 +2078,7 @@ static void _vampire_corpse_help()
 
 void drink(item_def* potion)
 {
-    if (you.species == SP_MUMMY)
+    if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
     {
         mpr("You can't drink.");
         return;
@@ -2555,7 +2556,7 @@ void random_uselessness()
         break;
 
     case 3:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
             mpr("Your bandages flutter.");
         else // if (you.can_smell())
             mprf("You smell %s.", _weird_smell().c_str());
@@ -2568,7 +2569,7 @@ void random_uselessness()
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
+        else if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY || coinflip())
             mpr("Your ears itch!");
         else
             mpr("Your nose twitches suddenly!");

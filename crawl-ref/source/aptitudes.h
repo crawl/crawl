@@ -1955,6 +1955,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_INVOCATIONS,     0),
     APT(SP_FELID,           SK_EVOCATIONS,      1),
 	
+    // SP_FELID_MUMMY
+    APT(SP_FELID_MUMMY,           SK_FIGHTING,        0),
+    APT(SP_FELID_MUMMY,           SK_SHORT_BLADES,  UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_LONG_BLADES,   UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_AXES,          UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_MACES_FLAILS,  UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_POLEARMS,      UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_STAVES,        UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_SLINGS,        UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_BOWS,          UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_CROSSBOWS,     UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_THROWING,      UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_ARMOUR,        UNUSABLE_SKILL),
+    APT(SP_FELID_MUMMY,           SK_DODGING,        -2),
+    APT(SP_FELID_MUMMY,           SK_STEALTH,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FELID_MUMMY,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_FELID_MUMMY,           SK_SHIELDS,       UNUSABLE_SKILL),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FELID_MUMMY,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_FELID_MUMMY,           SK_UNARMED_COMBAT, -2),
+    APT(SP_FELID_MUMMY,           SK_SPELLCASTING,    2),
+    APT(SP_FELID_MUMMY,           SK_CONJURATIONS,   -2),
+    APT(SP_FELID_MUMMY,           SK_HEXES,          -1),
+    APT(SP_FELID_MUMMY,           SK_CHARMS,         -2),
+    APT(SP_FELID_MUMMY,           SK_SUMMONINGS,     -2),
+    APT(SP_FELID_MUMMY,           SK_NECROMANCY,      0),
+    APT(SP_FELID_MUMMY,           SK_TRANSLOCATIONS, -2),
+    APT(SP_FELID_MUMMY,           SK_TRANSMUTATIONS, -2),
+    APT(SP_FELID_MUMMY,           SK_FIRE_MAGIC,     -2),
+    APT(SP_FELID_MUMMY,           SK_ICE_MAGIC,      -2),
+    APT(SP_FELID_MUMMY,           SK_AIR_MAGIC,      -2),
+    APT(SP_FELID_MUMMY,           SK_EARTH_MAGIC,    -2),
+    APT(SP_FELID_MUMMY,           SK_POISON_MAGIC,   -2),
+    APT(SP_FELID_MUMMY,           SK_INVOCATIONS,    -1),
+    APT(SP_FELID_MUMMY,           SK_EVOCATIONS,     -2),
+	
     // SP_GOLEM
     APT(SP_GOLEM,           SK_FIGHTING,        0),
     APT(SP_GOLEM,           SK_SHORT_BLADES,  UNUSABLE_SKILL),

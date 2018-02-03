@@ -251,7 +251,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
     }
 
     // Mummies can't do anything with food or potions.
-    if (you.species == SP_MUMMY)
+    if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
         return item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD;
 	
     if(you.species == SP_GOLEM || you.species == SP_ROBOT)
@@ -415,7 +415,8 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-                if (you.species != SP_FELID && you.species != SP_GOLEM)
+                if (you.species != SP_FELID && you.species != SP_GOLEM
+                    && you.species != SP_FELID_MUMMY)
                 {
                     _handle_wield_tip(tmp, cmd);
                     if (is_throwable(&you, item))
@@ -453,7 +454,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
-                if (you.species != SP_FELID && you.species != SP_GOLEM)
+                if (you.species != SP_FELID && you.species != SP_GOLEM
+                    && you.species != SP_FELID_MUMMY)
                 {
                     tmp += "Wear (%)";
                     cmd.push_back(CMD_WEAR_ARMOUR);
@@ -472,7 +474,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 cmd.push_back(CMD_REMOVE_JEWELLERY);
                 break;
             case OBJ_MISSILES:
-                if (you.species != SP_FELID && you.species != SP_GOLEM)
+                if (you.species != SP_FELID && you.species != SP_GOLEM
+                    && you.species != SP_FELID_MUMMY)
                 {
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
@@ -482,7 +485,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                if (you.species != SP_FELID && you.species != SP_GOLEM)
+                if (you.species != SP_FELID && you.species != SP_GOLEM
+                    && you.species != SP_FELID_MUMMY)
                 {
                     tmp += "Evoke (%)";
                     cmd.push_back(CMD_EVOKE);

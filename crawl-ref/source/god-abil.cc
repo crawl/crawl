@@ -4478,12 +4478,12 @@ bool gozag_call_merchant()
         // first index.
         if (type == SHOP_FOOD)
             continue;
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
             continue;
         if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
-        if (you.species == SP_FELID &&
-            (type == SHOP_ARMOUR
+        if (you.species == SP_FELID || you.species == SP_FELID_MUMMY
+		    && (type == SHOP_ARMOUR
              || type == SHOP_ARMOUR_ANTIQUE
              || type == SHOP_WEAPON
              || type == SHOP_WEAPON_ANTIQUE))

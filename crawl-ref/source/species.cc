@@ -222,6 +222,7 @@ string species_prayer_action(species_type species)
         case SP_UNIPODE:
             return "curl up in front of";
         case SP_FELID:
+        case SP_FELID_MUMMY:
             // < TGWi> you curl up on the altar and go to sleep
             return "sit before";
         default:

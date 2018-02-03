@@ -2163,7 +2163,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
     }
     else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
              && !you.get_mutation_level(MUT_BEAK) && you.species != SP_UNIPODE
-          || form_changed_physiology())
+            && you.species != SP_FELID_MUMMY || form_changed_physiology())
     {
         hand_vec.emplace_back("nose");
         plural_vec.push_back(false);
@@ -2171,7 +2171,8 @@ static void _get_hand_type(string &hand, bool &can_plural)
 
     if (you.form == transformation::bat
         || you.species != SP_MUMMY && you.species != SP_OCTOPODE
-           && !form_changed_physiology() && you.species != SP_UNIPODE)
+           && !form_changed_physiology() && you.species != SP_UNIPODE
+           && you.species != SP_FELID_MUMMY)
     {
         hand_vec.emplace_back("ear");
         plural_vec.push_back(true);
@@ -2179,7 +2180,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
 
     if (!form_changed_physiology()
         && you.species != SP_FELID && you.species != SP_OCTOPODE
-        && you.species != SP_UNIPODE)
+        && you.species != SP_UNIPODE && you.species != SP_FELID_MUMMY)
     {
         hand_vec.emplace_back("elbow");
         plural_vec.push_back(true);

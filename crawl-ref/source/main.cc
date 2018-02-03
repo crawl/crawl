@@ -1564,6 +1564,11 @@ static void _do_remove_armour()
         return;
     }
 	
+    if (you.species == SP_FELID_MUMMY)
+    {
+        mpr("You can't remove your bandages, sorry.");
+    }
+	
     if (you.species == SP_GOLEM)
     {
         mpr("You can't wear armour to begin with, sorry.");
@@ -1642,7 +1647,8 @@ static void _do_display_map()
 
 static void _do_cycle_quiver(int dir)
 {
-    if (you.species == SP_FELID || you.species == SP_GOLEM)
+    if (you.species == SP_FELID || you.species == SP_GOLEM 
+        || you.species == SP_FELID_MUMMY)
     {
         mpr("You can't grasp things well enough to throw them.");
         return;

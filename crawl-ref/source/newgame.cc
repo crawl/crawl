@@ -207,7 +207,7 @@ static const species_type species_order[] =
     SP_ROBOT,
     // not humanoid at all
     SP_FELID,          SP_OCTOPODE,
-    SP_UNIPODE,
+    SP_UNIPODE,        SP_FELID_MUMMY,
 };
 COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
@@ -1025,6 +1025,7 @@ static species_group species_groups[] =
             SP_WATER_SPRITE,
             SP_HEDGEHOG,
             SP_BODACH,
+            SP_FELID_MUMMY,
         }
     },
 };
@@ -1803,7 +1804,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults)
 {
     // No weapon use at all. The actual item will be removed later.
-    if (ng.species == SP_FELID)
+    if (ng.species == SP_FELID || ng.species == SP_FELID_MUMMY)
         return true;
 
     if (!job_has_weapon_choice(ng.job))

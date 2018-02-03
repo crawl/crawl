@@ -2172,7 +2172,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (race == SP_MUMMY)
+            if (race == SP_MUMMY || race == SP_FELID_MUMMY)
                 desc += "Turned to ash by lava";
             else
                 desc += "Took a swim in molten lava";
@@ -2184,7 +2184,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (terse)
                 desc = "fell apart";
-            else if (race == SP_MUMMY)
+            else if (race == SP_MUMMY || race == SP_FELID_MUMMY)
                 desc = "Soaked and fell apart";
             else
                 desc = "Sank and fell apart";

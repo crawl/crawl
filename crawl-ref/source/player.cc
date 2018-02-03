@@ -681,7 +681,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species == SP_FELID || you.species == SP_GOLEM ? MB_FALSE :
+        return you.species == SP_FELID || you.species == SP_GOLEM 
+               || you.species == SP_FELID_MUMMY ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
 
@@ -766,6 +767,7 @@ bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.species == SP_NAGA
         || you.species == SP_FELID
+        || you.species == SP_FELID_MUMMY
         || you.species == SP_OCTOPODE
         || you.species == SP_UNIPODE
         || you.species == SP_FUNGOID
@@ -1341,7 +1343,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     }
 
     // species:
-    if (you.species == SP_MUMMY)
+    if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
         rf--;
 	
     if (calc_unid && you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 1
@@ -3243,7 +3245,7 @@ int player_stealth()
             stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
-        else if (you.species == SP_FELID
+        else if (you.species == SP_FELID || you.species == SP_FELID_MUMMY
                  && (you.form == transformation::none
                      || you.form == transformation::appendage))
         {
@@ -7280,7 +7282,7 @@ bool player::can_throw_large_rocks() const
 
 bool player::can_smell() const
 {
-    return species != SP_MUMMY;
+    return species != SP_MUMMY && species != SP_FELID_MUMMY;
 }
 
 bool player::can_sleep(bool holi_only) const

@@ -262,7 +262,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
-                    else if (you.species == SP_FELID)
+                    else if (you.species == SP_FELID || you.species == SP_FELID_MUMMY)
                         buff << " (in mouth)";
                     else
                         buff << " (in " << you.hand_name(false) << ")";
@@ -3133,7 +3133,7 @@ bool is_emergency_item(const item_def &item)
             return false;
         }
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
             return false;
 
         switch (item.sub_type)
@@ -3176,7 +3176,7 @@ bool is_good_item(const item_def &item)
     case OBJ_SCROLLS:
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
             return false;
         switch (item.sub_type)
         {
@@ -3222,7 +3222,7 @@ bool is_bad_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
         case SCR_CURSE_WEAPON:
-            if (you.species == SP_FELID)
+            if (you.species == SP_FELID || you.species == SP_FELID_MUMMY)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
@@ -3234,7 +3234,7 @@ bool is_bad_item(const item_def &item, bool temp)
         }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_FELID_MUMMY)
             return false;
 
         switch (item.sub_type)
@@ -3374,7 +3374,7 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (you.species == SP_FELID || you.species == SP_GOLEM)
+        if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
             return true;
 
         if (!you.could_wield(item, true, !temp)
@@ -3412,7 +3412,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
         // Save for the above spells, all missiles are useless for felids.
-        if (you.species == SP_FELID || you.species == SP_GOLEM)
+        if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
             return true;
 
         // These are the same checks as in is_throwable(), except that
@@ -3476,7 +3476,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON:
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
-            return you.species == SP_FELID || you.species == SP_GOLEM;
+            return you.species == SP_FELID || you.species == SP_GOLEM 
+                   || you.species == SP_FELID_MUMMY;
         case SCR_SUMMONING:
             return you.get_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_FOG:
@@ -3663,7 +3664,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
 
     case OBJ_STAVES:
-        if (you.species == SP_FELID || you.species == SP_GOLEM)
+        if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
             return true;
         if (!you.could_wield(item, true, !temp))
         {

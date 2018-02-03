@@ -22,6 +22,7 @@ static bool _banned_combination(job_type job, species_type species)
     {
     case SP_FELID:
     case SP_GOLEM:
+    case SP_FELID_MUMMY:
         if (job == JOB_GLADIATOR
             || job == JOB_ASSASSIN
             || job == JOB_HUNTER
@@ -29,10 +30,6 @@ static bool _banned_combination(job_type job, species_type species)
         {
             return true;
         }
-        break;
-    case SP_MUMMY:
-        if (job == JOB_ALCHEMIST)
-            return true;
         break;
     case SP_HEDGEHOG:
         if (job == JOB_TORPOR_KNIGHT)
@@ -60,8 +57,10 @@ static bool _banned_combination(job_type job, species_type species)
            || species_undead_type(species) == US_HUNGRY_DEAD
            || species == SP_ROBOT))
     {
-        return true;
+        return true;	   
     }
+    if (job == JOB_ALCHEMIST && (species == SP_MUMMY || species == SP_FELID_MUMMY))
+        return true;
 
     return false;
 }
@@ -118,7 +117,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Some special cases:
 
-    if ((ng.species == SP_FELID || ng.species == SP_GOLEM)&& wpn != WPN_UNARMED)
+    if ((ng.species == SP_FELID || ng.species == SP_GOLEM || ng.species == SP_FELID_MUMMY)
+        && wpn != WPN_UNARMED)
         return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,

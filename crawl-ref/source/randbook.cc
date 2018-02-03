@@ -980,9 +980,11 @@ void make_book_kiku_gift(item_def &book, bool first)
             && you.species != SP_GOLEM
             && you.species != SP_ROBOT
             && you.species != SP_GHOUL
-            && you.species != SP_MUMMY;
+            && you.species != SP_MUMMY
+            && you.species != SP_FELID_MUMMY;
         bool can_regen = you.species != SP_DEEP_DWARF
-            && you.species != SP_MUMMY;
+            && you.species != SP_MUMMY
+            && you.species != SP_FELID_MUMMY;
 
         chosen_spells[0] = SPELL_PAIN;
         chosen_spells[1] = SPELL_CORPSE_ROT;
@@ -996,7 +998,8 @@ void make_book_kiku_gift(item_def &book, bool first)
     else
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
-        chosen_spells[1] = (you.species == SP_FELID || you.species == SP_GOLEM || coinflip())
+        chosen_spells[1] = (you.species == SP_FELID || you.species == SP_GOLEM 
+                           || you.species == SP_FELID_MUMMY || coinflip())
             ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_AGONY,
@@ -1012,7 +1015,8 @@ void make_book_kiku_gift(item_def &book, bool first)
                                         SPELL_BOLT_OF_DRAINING,
                                         SPELL_SIMULACRUM,
                                         SPELL_DEATH_CHANNEL);
-            if ((you.species == SP_FELID || you.species == SP_GOLEM)
+            if ((you.species == SP_FELID || you.species == SP_GOLEM
+                 || you.species == SP_FELID_MUMMY)
                 && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
             {
                 extra_spell = SPELL_NO_SPELL;

@@ -1400,7 +1400,7 @@ void print_stats()
     }
     you.wield_change  = false;
 
-    if (you.species == SP_FELID || you.species == SP_GOLEM)
+    if (you.species == SP_FELID || you.species == SP_GOLEM || you.species == SP_FELID_MUMMY)
     {
         // There are no circumstances under which Felids could quiver something.
         // Reduce line counter for status display.

@@ -68,6 +68,11 @@ Felid
 Felids are many-lived cats possessing sentience. They are incapable of advanced
 item manipulation or the use of armour or weapons.
 %%%%
+Felid Mummy
+
+Felid Mummies are undead Felids whose lives have run out. It would take a true display
+of skill for one of these beings to snatch the Orb.
+%%%%
 Flan
 
 Flans are gelatinous and slightly corrosive beings. Their fluid shape lets them fit

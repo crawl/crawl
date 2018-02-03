@@ -632,6 +632,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_GARGOYLE;
     case SP_FELID:
         return TILEP_BASE_FELID;
+    case SP_FELID_MUMMY:
+        return TILEP_TRAN_LICH_FELID;
     case SP_OCTOPODE:
     case SP_UNIPODE:
         return TILEP_BASE_OCTOPODE;
@@ -694,6 +696,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             break;
         case SP_MUMMY:
+        case SP_FELID_MUMMY:
             hair = 0;
             break;
         case SP_TROLL:

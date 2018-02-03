@@ -727,7 +727,7 @@ string describe_mutations(bool center_title)
             !get_form()->slot_available(EQ_RING_EIGHT));
     }
 	
-    if (you.species != SP_FELID && you.species != SP_GOLEM)
+    if (you.species != SP_FELID && you.species != SP_GOLEM && you.species != SP_FELID_MUMMY)
     {
         switch (you.body_size(PSIZE_TORSO, true))
         {

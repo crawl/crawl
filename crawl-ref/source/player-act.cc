@@ -396,7 +396,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
         return true;
     }
-    else if (species == SP_FELID || species == SP_GOLEM)
+    else if (species == SP_FELID || species == SP_GOLEM || species == SP_FELID_MUMMY)
     {
         if (!quiet)
             mpr("You can't use weapons.");
@@ -478,7 +478,7 @@ static string _hand_name_singular()
     if (!get_form()->hand_name.empty())
         return get_form()->hand_name;
 
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID || you.species == SP_FELID_MUMMY)
         return "paw";
 
     if (you.has_usable_claws())
@@ -540,7 +540,7 @@ static string _foot_name_singular(bool *can_plural)
         return "underbelly";
     }
 
-    if (you.species == SP_FELID)
+    if (you.species == SP_FELID || you.species == SP_FELID_MUMMY)
         return "paw";
 
     if (you.fishtail)
@@ -588,7 +588,7 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "scaled";
     else if (species == SP_TENGU)
         adj = "feathered";
-    else if (species == SP_MUMMY)
+    else if (species == SP_MUMMY || species == SP_FELID_MUMMY)
         adj = "bandage-wrapped";
     else if (species == SP_GOLEM)
         adj = "clay";
@@ -622,7 +622,9 @@ string player::unarmed_attack_name() const
 {
     string default_name = "Nothing wielded";
 
-    if (has_usable_claws(true))
+    if(species == SP_FELID_MUMMY)
+        default_name = "Paws";
+    else if (has_usable_claws(true))
     {
         if (species == SP_FELID)
             default_name = "Teeth and claws";

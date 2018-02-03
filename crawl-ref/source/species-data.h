@@ -485,6 +485,27 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT },
 } },
 
+{ SP_FELID_MUMMY, {
+    "FM",
+    "Felid Mummy", "Feline", "Cat",
+    SPF_NONE,
+    -1, -4, 1, 6,
+    MONS_FELID,
+    HT_LAND, US_UNDEAD, SIZE_LITTLE,
+    4, 9, 11, // 24
+    { STAT_INT, STAT_DEX }, 5,
+    { { MUT_ACUTE_VISION, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, 
+      { MUT_COLD_RESISTANCE, 1, 1 }, { MUT_TORMENT_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_NECRO_ENHANCER, 1, 13 }, 
+      { MUT_NECRO_ENHANCER, 1, 26 }, },
+    { "You do not eat or drink.",
+      "Your flesh is vulnerable to fire." },
+    { "no food or potions", "fire vulnerability" },
+    { JOB_WIZARD, JOB_CONJURER, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_FIRE_ELEMENTALIST, JOB_SUMMONER },
+    { SK_UNARMED_COMBAT },
+} },
+
 { SP_FORMICID, {
     "Fo",
     "Formicid", nullptr, "Ant",

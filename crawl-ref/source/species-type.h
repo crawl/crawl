@@ -73,6 +73,7 @@ enum species_type
     SP_WATER_SPRITE,
     SP_HEDGEHOG,
     SP_BODACH,
+    SP_FELID_MUMMY,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
