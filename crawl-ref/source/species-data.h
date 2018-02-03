@@ -845,7 +845,7 @@ static const map<species_type, species_def> species_data =
     9, 11, 4, // 24
     { STAT_STR, STAT_INT }, 4,
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_TORMENT_RESISTANCE, 1, 1 },	
-      { MUT_UNBREATHING, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 }, {MUT_LASER_BREATH, 1, 1} },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 }, {MUT_LASER_BREATH, 1, 5} },
     { "You break items when uninstalling them.", "You are sometimes slowed by electricity and fire.", 
       "You do not eat." },
     { "fragile equipment", "slowed by fire and elec", "no food"},

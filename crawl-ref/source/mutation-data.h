@@ -686,7 +686,7 @@ static const mutation_def mut_data[] =
    "",
    ""},
 
-  {"",
+  {"Your disintegration laser is now operational.",
    "",
    ""},
 
