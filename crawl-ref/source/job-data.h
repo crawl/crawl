@@ -264,6 +264,15 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 1 }, { SK_WEAPON, 2 } },
 } },
 
+{ JOB_FARMER, {
+    "Fa", "Farmer",
+    8, 0, 8,
+    { SP_MERFOLK, SP_MINOTAUR },
+    { "scythe plus:4", "robe" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_WEAPON, 3 } },
+} },
+
 { JOB_REDNECK, {
     "Rn", "Redneck",
     10, -2, 4,
@@ -306,6 +315,15 @@ static const map<job_type, job_def> job_data =
     //further randomized spell skills given later
 } },
 
+{ JOB_LIBRARIAN, {
+    "Li", "Librarian",
+    0, 9, 3,
+    { SP_SPRIGGAN, SP_OCTOPODE, SP_VINE_STALKER, SP_EMBER_ELF, },
+    { "robe", "dagger" },
+    WCHOICE_NONE,
+    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 4 }, },
+} },
+
 { JOB_STORM_CLERIC, {
     "SC", "Storm Cleric",
     4, 4, 4,
@@ -335,6 +353,45 @@ static const map<job_type, job_def> job_data =
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, 
       { SK_WEAPON, 2 }, { SK_INVOCATIONS, 2 }, },
+} },
+
+{ JOB_ACCURSED, {
+    "AC", "Accursed",
+    4, 4, 4,
+    { SP_HILL_ORC, SP_MINOTAUR, SP_MERFOLK, SP_GARGOYLE },
+    { },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 }, 
+      { SK_WEAPON, 2 }, },
+} },
+
+{ JOB_CHEF, {
+    "Ch", "Chef",
+    4, 4, 4,
+    { SP_SPRIGGAN, SP_TROLL },
+    { "dagger plus:1", "robe", "ration q:10" },
+    WCHOICE_NONE,
+    { { SK_SPELLCASTING, 2 }, { SK_WEAPON, 2 }, { SK_DODGING, 2 },
+	  { SK_FIRE_MAGIC, 1 }, { SK_ICE_MAGIC, 1}, },
+} },
+
+{ JOB_GAMBLER, {
+    "Ga", "Gambler",
+    4, 4, 4,
+    { SP_SPRIGGAN, SP_TROLL, SP_HILL_ORC },
+    { "dagger" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 3 }, { SK_DODGING, 1 },
+	  { SK_ARMOUR, 1 }, { SK_INVOCATIONS, 2}, { SK_STEALTH, 2 }, },
+} },
+
+{ JOB_MERCHANT, {
+    "Me", "Merchant",
+    4, 4, 4,
+    { SP_HILL_ORC, SP_MINOTAUR },
+    { "robe", "pair of boots", "hat" },
+    WCHOICE_PLAIN,
+    { { SK_STEALTH, 1 }, { SK_DODGING, 1 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_TRANSMUTER, {

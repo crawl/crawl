@@ -797,6 +797,11 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
             break;
+			
+        case JOB_CHEF:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
+            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_WHITE;
+            break;
 
         case JOB_CHAOS_KNIGHT:
             parts[TILEP_PART_BODY]  = TILEP_BODY_MESH_BLACK;
@@ -805,6 +810,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_ABYSSAL_KNIGHT:
+        case JOB_ACCURSED:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHOULDER_PAD;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
@@ -986,6 +992,9 @@ void tilep_job_default(int job, dolls_data *doll)
 
         case JOB_MONK:
         case JOB_DEPRIVED:
+        case JOB_FARMER:
+        case JOB_GAMBLER:
+        case JOB_MERCHANT:
             parts[TILEP_PART_BODY]  = TILEP_BODY_MONK_BLACK;
             break;
 

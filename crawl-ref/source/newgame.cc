@@ -1122,7 +1122,8 @@ static job_group jobs_order[] =
         coord_def(15, 0), 20,
         { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
           JOB_SLIME_PRIEST, JOB_ANNIHILATOR, JOB_BLOOD_KNIGHT, 
-          JOB_TORPOR_KNIGHT, JOB_STORM_CLERIC }
+          JOB_TORPOR_KNIGHT, JOB_STORM_CLERIC, JOB_ACCURSED,
+          JOB_GAMBLER, JOB_MERCHANT }
     },
     {
         "Warrior-mage",
@@ -1132,8 +1133,9 @@ static job_group jobs_order[] =
     },
     {
         "Esoteric",
-        coord_def(35, 7), 21,
-        { JOB_REDNECK, JOB_ALCHEMIST, JOB_ENTOMOLOGIST }
+        coord_def(35, 6), 21,
+        { JOB_REDNECK, JOB_ALCHEMIST, JOB_ENTOMOLOGIST, JOB_FARMER,	
+          JOB_CHEF }
     },
     {
         "Mage",
@@ -1141,7 +1143,7 @@ static job_group jobs_order[] =
         { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE,
-	      JOB_SORCERER }
+	      JOB_SORCERER, JOB_LIBRARIAN }
     }
 };
 

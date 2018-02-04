@@ -42,6 +42,9 @@ static bool _banned_combination(job_type job, species_type species)
             || job == JOB_SLIME_PRIEST
             || job == JOB_BLOOD_KNIGHT
             || job == JOB_TORPOR_KNIGHT
+            || job == JOB_MERCHANT
+            || job == JOB_GAMBLER
+            || job == JOB_ACCURSED
             || job == JOB_ANNIHILATOR
             || job == JOB_MONK)
         {
@@ -60,6 +63,9 @@ static bool _banned_combination(job_type job, species_type species)
         return true;	   
     }
     if (job == JOB_ALCHEMIST && (species == SP_MUMMY || species == SP_FELID_MUMMY))
+        return true;
+	
+    if ((job == JOB_ACCURSED || job == JOB_FARMER) && species == SP_GOLEM)
         return true;
 
     return false;

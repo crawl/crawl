@@ -687,7 +687,7 @@ static void _wanderer_cover_equip_holes()
     }
 }
 
-//random spellbook and spell skill plus mutations
+//random spellbook and spell skill
 void create_sorcerer()
 {
    skill_type magic_skill = random_choose(SK_ICE_MAGIC,
@@ -728,6 +728,22 @@ void create_sorcerer()
     }
 	newgame_make_item(OBJ_BOOKS, book);
     you.skills[magic_skill] += 3;
+}
+
+void librarian_books()
+{
+    book_type book_one = (book_type) random2(BOOK_ANNIHILATIONS);
+    while(item_type_removed(OBJ_BOOKS, book_one))
+    {
+        book_one = (book_type) random2(BOOK_ANNIHILATIONS);
+	}
+    book_type book_two = (book_type) random2(BOOK_ANNIHILATIONS);
+    while(book_two == book_one || item_type_removed(OBJ_BOOKS, book_two))
+    {
+        book_two = (book_type) random2(BOOK_ANNIHILATIONS);
+    }
+    newgame_make_item(OBJ_BOOKS, book_one);
+    newgame_make_item(OBJ_BOOKS, book_two);
 }
 
 //like a wanderer but with more limited parameters

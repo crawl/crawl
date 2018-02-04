@@ -4,6 +4,11 @@ Abyssal Knight
 Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
 spread corruption and chaos.
 %%%%
+Accursed
+
+Accursed serve Ashenzari, the god of curses, and come to the dungeon partially
+bound with cursed equipment.
+%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their book of Air
@@ -73,6 +78,10 @@ Entomologist
 Entomologists study insects and related creatures. They bring along a net and a sack 
 of spiders, and can also summon butterflies. 
 %%%%
+Farmer
+
+Farmers carry a sharp, trusty scythe and have great attributes, but little else.
+%%%%
 Fighter
 
 Fighters are equipped with armour and shield, as well as a weapon of their
@@ -110,13 +119,13 @@ start out with the Pain spell.
 %%%%
 Noble
 
-Nobles are wealthy elites who enter the dungeon looking for adventure. They 
+Nobles are wealthy elites who enter the Dungeon looking for adventure. They 
 have poor attributes but bring the best equipment money can buy.
 %%%%
 Redneck
 
 Rednecks bring their trusty wand of scattershot and a potion of degeneration
-to the dungeon. They aren't good at much besides fighting.
+to the Dungeon. They aren't good at much besides fighting.
 %%%%
 Skald
 
@@ -130,12 +139,32 @@ to spread slime and jellies.
 %%%%
 Sorcerer
 
-Sorcerers were born into a particularly magical lineage. They start with a
-random destructive spellbook and a robe of archmagi.
+Sorcerers start with a random destructive spellbook and a (well-worn) 
+robe of archmagi.
 %%%%
 Storm Cleric
 
 Storm clerics spread destruction in the name of Qazlal.
+%%%%
+Gambler
+
+Followers of Nemelex Xobeh who have lost everything in a run of bad luck sometimes
+venture into the Dungeon. They'll need Nemelex's help to turn things around.
+%%%%
+Merchant
+
+Merchants are followers of Gozag. Whether newly established or unsuccessful on the 
+surface world, they enter the Dungeon desperate for a source of income.
+%%%%
+Chef
+
+Chefs know the basics of magically cooking and freezing monsters (though oddly they
+prefer butchered chunks raw). They are well supplied with food.
+%%%%
+Librarian
+
+Librarians come to the Dungeon in search of new books for their collection. They bring
+a few random books along with them and know the Apportation spell.
 %%%%
 Summoner
 

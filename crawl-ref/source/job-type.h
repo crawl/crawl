@@ -51,6 +51,12 @@ enum job_type
     JOB_STORM_CLERIC,
     JOB_UNDERSTUDY,
     JOB_SORCERER,
+    JOB_ACCURSED,
+    JOB_FARMER,
+    JOB_CHEF,
+    JOB_GAMBLER,
+    JOB_MERCHANT,
+    JOB_LIBRARIAN,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

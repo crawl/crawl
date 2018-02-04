@@ -287,6 +287,16 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
 		
+    case JOB_GAMBLER:
+        you.religion = GOD_NEMELEX_XOBEH;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+		
     case JOB_BLOOD_KNIGHT:
         you.religion = GOD_MAKHLEB;
         you.piety = 35;
@@ -299,6 +309,16 @@ static void _give_items_skills(const newgame_def& ng)
 		
     case JOB_STORM_CLERIC:
         you.religion = GOD_QAZLAL;
+        you.piety = 35;
+
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+		
+    case JOB_ACCURSED:
+        you.religion = GOD_ASHENZARI;
         you.piety = 35;
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
@@ -320,6 +340,11 @@ static void _give_items_skills(const newgame_def& ng)
 
         break;
 		
+    case JOB_MERCHANT:
+        you.religion = GOD_GOZAG;
+        you.gold = 1;
+        break;
+		
     case JOB_ANNIHILATOR:
         you.religion = GOD_VEHUMET;
         you.piety = 35;
@@ -331,12 +356,21 @@ static void _give_items_skills(const newgame_def& ng)
         add_spell_to_memory(SPELL_SUMMON_BUTTERFLIES);
         break;
 		
+    case JOB_CHEF:
+        add_spell_to_memory(SPELL_FLAME_TONGUE);
+        add_spell_to_memory(SPELL_FREEZE);
+		
     case JOB_NOBLE:
-        you.gold = 200;
+        you.gold = 300;
         break;
 		
     case JOB_SORCERER:
         create_sorcerer();
+        break;
+		
+    case JOB_LIBRARIAN:
+        add_spell_to_memory(SPELL_APPORTATION);
+        librarian_books();
         break;
 	
     case JOB_UNDERSTUDY:
@@ -355,6 +389,19 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
     else if (you.char_class == JOB_STORM_CLERIC)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+    else if (you.char_class == JOB_ACCURSED)
+    {
+        item_def* wpn = newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +2);
+        if(wpn)
+        {
+            do_curse_item(*wpn);
+		}
+        item_def* armour = newgame_make_item(OBJ_ARMOUR, ARM_ROBE, 1, +2);
+        if(armour)
+        {
+			do_curse_item(*armour);
+        } 
+    }
     else if (you.char_class == JOB_NOBLE)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +3);
     else if (you.char_class == JOB_CHAOS_KNIGHT)
