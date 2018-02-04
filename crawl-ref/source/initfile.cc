@@ -326,7 +326,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_downstairs_col), "#ff00ff"),
         new TileColGameOption(SIMPLE_NAME(tile_excl_centre_col), "#552266"),
         new TileColGameOption(SIMPLE_NAME(tile_excluded_col), "#552266"),
-        new TileColGameOption(SIMPLE_NAME(tile_explore_horizon_col), "#242A93"),
+        new TileColGameOption(SIMPLE_NAME(tile_explore_horizon_col), "#6B301B"),
         new TileColGameOption(SIMPLE_NAME(tile_feature_col), "#997700"),
         new TileColGameOption(SIMPLE_NAME(tile_floor_col), "#333333"),
         new TileColGameOption(SIMPLE_NAME(tile_item_col), "#005544"),
