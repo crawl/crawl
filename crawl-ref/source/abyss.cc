@@ -733,6 +733,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     if (env.map_forgotten.get())
         (*env.map_forgotten.get())(p).clear();
     env.map_seen.set(p, false);
+#ifdef USE_TILE
+    tile_forget_map(p);
+#endif
     StashTrack.update_stash(p);
 }
 
