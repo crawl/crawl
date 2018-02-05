@@ -2853,7 +2853,8 @@ static int _get_spell_description(const spell_type spell,
         description += "\n" + quote;
 
     if (item && item->base_type == OBJ_BOOKS
-        && (in_inventory(*item) || item->pos == you.pos())
+        && (in_inventory(*item)
+            || item->pos == you.pos() && !is_shop_item(*item))
         && !you.has_spell(spell) && you_can_memorise(spell))
     {
         if (you.has_spell(spell))

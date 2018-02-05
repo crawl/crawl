@@ -19,6 +19,7 @@
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -606,7 +607,9 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
 {
     const bool can_memorise = source_item
                               && source_item->base_type == OBJ_BOOKS
-                              && (in_inventory(*source_item) || source_item->pos == you.pos());
+                              && (in_inventory(*source_item)
+                                  || source_item->pos == you.pos()
+                                     && !is_shop_item(*source_item));
 
     formatted_string &description = initial_desc;
     describe_spellset(spells, source_item, description, mon_owner);
