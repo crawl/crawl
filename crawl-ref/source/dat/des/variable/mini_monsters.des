@@ -124,7 +124,7 @@ DEPTH:  D:9-, Spider
 MONS:   killer bee, meliai, queen bee, hornet
 KMONS:  *R = worm
 KITEM:  * = *
-KITEM:  R = ration
+KITEM:  R = ration tile:food_honeycomb
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
@@ -157,7 +157,7 @@ NAME:   minivault_7
 TAGS:   uniq_beehive patrolling
 DEPTH:  D:9-
 MONS:   queen bee, meliai, killer bee
-KITEM:  R = ration / nothing
+KITEM:  R = ration tile:food_honeycomb / nothing
 COLOUR: x = yellow
 TILE:   x = wall_wax
 : if you.absdepth() < 12 then
