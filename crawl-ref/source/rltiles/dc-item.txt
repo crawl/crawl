@@ -556,7 +556,7 @@ i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 bread_ration FOOD_RATION UNSEEN_FOOD FOOD_RATION_FIRST FOOD_RATION_INVENTORY
 meat_ration
 cheese
-honeycomb
+honeycomb FOOD_HONEYCOMB
 sausage
 pizza FOOD_PIZZA
 beef_jerky
