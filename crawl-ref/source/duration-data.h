@@ -560,7 +560,12 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
-
+    { DUR_ACROBAT, 0, "",
+      "acrobat", "",
+      "", D_NO_FLAGS,
+      {{ "", []() {
+          you.redraw_evasion = true;
+      }}}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
@@ -647,5 +652,6 @@ static const duration_def duration_data[] =
     { DUR_MAGIC_ARMOUR, 0, "", "", "old magic armour", "", D_NO_FLAGS},
     { DUR_MAGIC_SHIELD, 0, "", "", "old magic shield", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
+
 #endif
 };
