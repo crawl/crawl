@@ -1160,13 +1160,16 @@ int player_mp_regen()
     return regen_amount;
 }
 
-// Amulet of regeneration needs to be worn while at full health before it begins
-// to function.
-void update_regen_amulet_attunement()
+// Some amulets need to be worn while at full health before they begin to
+// function.
+void update_amulet_attunement_by_health()
 {
+    // amulet of regeneration
+    // You must be wearing the amulet and able to regenerate to get benefits.
     if (you.wearing(EQ_AMULET, AMU_REGENERATION)
-        && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
+        && !you.get_mutation_level(MUT_NO_REGENERATION) == 0)
     {
+        // If you hit max HP, turn on the amulet.
         if (you.hp == you.hp_max
             && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
         {
@@ -1177,6 +1180,20 @@ void update_regen_amulet_attunement()
     }
     else
         you.props[REGEN_AMULET_ACTIVE] = 0;
+
+    // amulet of the acrobat
+    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+    {
+        if (you.hp == you.hp_max
+            && you.props[ACROBAT_AMULET_ACTIVE].get_int() == 0)
+        {
+            you.props[ACROBAT_AMULET_ACTIVE] = 1;
+            mpr("Your amulet attunes itself to your body. You feel like "
+                "doing cartwheels.");
+        }
+    }
+    else
+        you.props[ACROBAT_AMULET_ACTIVE] = 0;
 }
 
 // Amulet of magic regeneration needs to be worn while at full magic before it
@@ -2116,6 +2133,12 @@ static int _player_evasion_bonuses()
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
+
+    // If you have an active amulet of the acrobat and just moved, get massive
+    // EV bonus. We also display this bonus if the duration isn't in effect but
+    // it was during the last move. It's a little hacky.
+    if (you.duration[DUR_ACROBAT] || you.props[LAST_ACTION_WAS_MOVE_KEY].get_bool())
+        evbonus += 15;
 
     return evbonus;
 }

@@ -197,5 +197,6 @@ enum duration_type
     DUR_PHASE_SHIFT,
     DUR_BLADE_OF_DISASTER,
     DUR_NO_MORE_DISASTER,
+    DUR_ACROBAT,
     NUM_DURATIONS
 };

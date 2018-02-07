@@ -1117,6 +1117,13 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
+        // Clear "last action was a move" flag.
+        if (you.props[LAST_ACTION_WAS_MOVE_KEY].get_bool())
+        {
+            you.props[LAST_ACTION_WAS_MOVE_KEY] = false;
+            you.redraw_evasion = true;
+        }
+
 #ifdef USE_TILE_LOCAL
         cursor_control con(false);
 #endif
@@ -1689,6 +1696,7 @@ static void _do_list_gold()
 void process_command(command_type cmd)
 {
     you.apply_berserk_penalty = true;
+
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -3388,6 +3396,17 @@ static void _move_player(coord_def move)
 
     if (you_worship(GOD_WU_JIAN) && !attacking)
         wu_jian_post_move_effects(did_wall_jump, initial_position);
+
+    // If you actually moved, then you are eligible for amulet of the acrobat.
+    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
+        && !attacking
+        && moving
+        && !did_wall_jump)
+    {
+        you.duration[DUR_ACROBAT] = you.time_taken;
+        you.props[LAST_ACTION_WAS_MOVE_KEY] = true;
+        you.redraw_evasion = true;
+    }
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
