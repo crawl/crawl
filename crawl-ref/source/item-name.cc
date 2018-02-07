@@ -825,6 +825,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
         case AMU_REFLECTION:             return "Reflect";
+        case AMU_ACROBAT:                return "Acrobat";
         case AMU_NOTHING:                return "";
         default: return "buggy";
         }

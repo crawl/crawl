@@ -2054,6 +2054,16 @@ bool player_is_shapechanged()
     return true;
 }
 
+void update_acrobat_status()
+{
+    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() != 1)
+        return;
+
+    you.duration[DUR_ACROBAT] = you.time_taken;
+    you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = true;
+    you.redraw_evasion = true;
+}
+
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
 static int _player_evasion_size_factor(bool base = false)
@@ -2070,6 +2080,7 @@ int player_shield_racial_factor()
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
                                                   : _player_evasion_size_factor(true)));
 }
+
 
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
@@ -2121,7 +2132,7 @@ static int _player_evasion_bonuses()
     // If you have an active amulet of the acrobat and just moved, get massive
     // EV bonus. We also display this bonus if the duration isn't in effect but
     // it was during the last move. It's a little hacky.
-    if (you.duration[DUR_ACROBAT] || you.props[LAST_ACTION_WAS_MOVE_KEY].get_bool())
+    if (you.duration[DUR_ACROBAT] || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
         evbonus += 15;
 
     return evbonus;

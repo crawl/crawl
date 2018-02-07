@@ -1113,10 +1113,10 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
-        // Clear "last action was a move" flag.
-        if (you.props[LAST_ACTION_WAS_MOVE_KEY].get_bool())
+        // Clear "last action was a move or rest" flag.
+        if (you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
         {
-            you.props[LAST_ACTION_WAS_MOVE_KEY] = false;
+            you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = false;
             you.redraw_evasion = true;
         }
 
@@ -1756,7 +1756,7 @@ void process_command(command_type cmd)
         break;
     }
 #endif
-    case CMD_REST:            _do_rest(); break;
+    case CMD_REST:           _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:
     case CMD_GO_DOWNSTAIRS:
@@ -1822,7 +1822,7 @@ void process_command(command_type cmd)
             break;
         // else fall-through
     case CMD_WAIT:
-        you.turn_is_over = true;
+        update_acrobat_status();
         break;
 
     case CMD_PICKUP:
@@ -3335,16 +3335,9 @@ static void _move_player(coord_def move)
     if (you_worship(GOD_WU_JIAN) && !attacking)
         wu_jian_post_move_effects(did_wall_jump, initial_position);
 
-    // If you actually moved, then you are eligible for amulet of the acrobat.
-    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
-        && !attacking
-        && moving
-        && !did_wall_jump)
-    {
-        you.duration[DUR_ACROBAT] = you.time_taken;
-        you.props[LAST_ACTION_WAS_MOVE_KEY] = true;
-        you.redraw_evasion = true;
-    }
+    // If you actually moved you are eligible for amulet of the acrobat.
+    if (!attacking && moving && !did_wall_jump)
+        update_acrobat_status();
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
