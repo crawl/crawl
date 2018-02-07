@@ -1377,8 +1377,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         string title = make_stringf("Aiming: <w>%s</w>", spell_title(spell));
         if (allow_fail)
+        {
             title += make_stringf(" <lightgrey>(%s)</lightgrey>",
                 _spell_failure_rate_description(spell).c_str());
+        }
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
