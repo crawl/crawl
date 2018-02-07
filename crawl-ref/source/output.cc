@@ -507,7 +507,7 @@ static bool _boosted_ev()
            || you.duration[DUR_PHASE_SHIFT]
            || (you.wearing(EQ_AMULET, AMU_ACROBAT)
                 && (you.duration[DUR_ACROBAT]
-                   || you.props[LAST_ACTION_WAS_MOVE_KEY].get_bool()));
+                   || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool()));
 }
 
 static bool _boosted_sh()
