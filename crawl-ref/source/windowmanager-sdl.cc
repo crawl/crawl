@@ -699,9 +699,40 @@ static char32_t _key_suppresses_textinput(int keycode)
     return result;
 }
 
+int SDLWrapper::send_textinput(wm_event *event)
+{
+    event->type = WME_KEYPRESS;
+    do
+    {
+        // pop a key off the input queue
+        char32_t wc;
+        int wc_bytelen = utf8towc(&wc, m_textinput_queue.c_str());
+        m_textinput_queue.erase(0, wc_bytelen);
+
+        if (prev_keycode && _key_suppresses_textinput(prev_keycode) == wc)
+        {
+            // this needs to return something, or the event loop in
+            // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
+            // is handled in macro.cc:_getch_mul.
+            prev_keycode = 0;
+            if (!m_textinput_queue.empty())
+                continue;
+            event->key.keysym.sym = CK_NO_KEY;
+            return 1;
+        }
+        event->key.keysym.sym = wc;
+    }
+    while (false);
+    return 1;
+}
+
 int SDLWrapper::wait_event(wm_event *event)
 {
     SDL_Event sdlevent;
+
+    if (!m_textinput_queue.empty())
+        return send_textinput(event);
+
     if (!SDL_WaitEvent(&sdlevent))
         return 0;
 
@@ -750,21 +781,9 @@ int SDLWrapper::wait_event(wm_event *event)
         break;
     case SDL_TEXTINPUT:
     {
-        event->type = WME_KEYPRESS;
-        // XXX: handle multiple keys?
-        char32_t wc;
-        utf8towc(&wc, sdlevent.text.text);
-        if (prev_keycode && _key_suppresses_textinput(prev_keycode) == wc)
-        {
-            // this needs to return something, or the event loop in
-            // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
-            // is handled in macro.cc:_getch_mul.
-            prev_keycode = 0;
-            event->key.keysym.sym = CK_NO_KEY;
-            return 1;
-        }
-        event->key.keysym.sym = wc;
-        break;
+        ASSERT(m_textinput_queue.empty());
+        m_textinput_queue = string(sdlevent.text.text);
+        return send_textinput(event);
     }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
