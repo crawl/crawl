@@ -1622,14 +1622,14 @@ static int _wu_jian_number_of_attacks(bool wall_jump)
                           attack_delay * BASELINE_DELAY);
 }
 
-static void _wu_jian_lunge(const coord_def& old_pos)
+static bool _wu_jian_lunge(const coord_def& old_pos)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
     if (!mons || !_can_attack_martial(mons) || !mons->alive())
-        return;
+        return false;
 
     if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
         you.attribute[ATTR_HEAVENLY_STORM] += 2;
@@ -1642,7 +1642,7 @@ static void _wu_jian_lunge(const coord_def& old_pos)
     {
         mprf("You lunge at %s, but your attack speed is too slow for a blow "
              "to land.", mons->name(DESC_THE).c_str());
-        return;
+        return false;
     }
     else
     {
@@ -1663,6 +1663,8 @@ static void _wu_jian_lunge(const coord_def& old_pos)
         lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
         lunge.attack();
     }
+
+    return true;
 }
 
 // Monsters adjacent to the given pos that are valid targets for whirlwind.
@@ -1676,11 +1678,13 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
     return targets;
 }
 
-static void _wu_jian_whirlwind(const coord_def& old_pos)
+static bool _wu_jian_whirlwind(const coord_def& old_pos)
 {
+    bool did_at_least_one_attack = false;
+
     const vector<monster*> targets = _get_whirlwind_targets(you.pos());
     if (targets.empty())
-        return;
+        return did_at_least_one_attack;
 
     const vector<monster*> old_targets = _get_whirlwind_targets(old_pos);
     vector<monster*> common_targets;
@@ -1732,20 +1736,28 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
+            if (!did_at_least_one_attack)
+              did_at_least_one_attack = true;
         }
     }
+
+    return did_at_least_one_attack;
 }
 
-static void _wu_jian_trigger_martial_arts(const coord_def& old_pos)
+static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
 {
+    bool did_wu_jian_attacks = false;
+
     if (you.pos() == old_pos || you.duration[DUR_CONF])
-        return;
+        return did_wu_jian_attacks;
 
     if (have_passive(passive_t::wu_jian_lunge))
-        _wu_jian_lunge(old_pos);
+        did_wu_jian_attacks = _wu_jian_lunge(old_pos);
 
     if (have_passive(passive_t::wu_jian_whirlwind))
-        _wu_jian_whirlwind(old_pos);
+        did_wu_jian_attacks |= _wu_jian_whirlwind(old_pos);
+
+    return did_wu_jian_attacks;
 }
 
 void wu_jian_wall_jump_effects(const coord_def& old_pos)
@@ -1815,14 +1827,18 @@ void wu_jian_end_of_turn_effects()
     you.attribute[ATTR_WALL_JUMP_READY] = 0;
 }
 
-void wu_jian_post_move_effects(bool did_wall_jump,
+bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position)
 {
+    bool did_wu_jian_attacks = false;
+
     if (!did_wall_jump)
-        _wu_jian_trigger_martial_arts(initial_position);
+        did_wu_jian_attacks = _wu_jian_trigger_martial_arts(initial_position);
 
     if (you.turn_is_over)
         _wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
+
+    return did_wu_jian_attacks;
 }
 
 /**
