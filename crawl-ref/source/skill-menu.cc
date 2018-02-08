@@ -873,6 +873,7 @@ void SkillMenu::init(int flag)
     m_ff->set_visible(true);
     m_highlighter->set_visible(true);
     refresh_button_row();
+    do_skill_enabled_check();
 }
 
 static keyfun_action _keyfun_target_input(int &ch)
@@ -983,6 +984,32 @@ void SkillMenu::cancel_help()
     set_default_help();
 }
 
+/**
+ * Does the player need to enable a skill?
+ * Side effect: will set an error message in the help line if so.
+ *
+ * @return true if the check passes: either a skill is enabled or no skills
+ *         can be enabled.
+ */
+bool SkillMenu::do_skill_enabled_check()
+{
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        if (skill_trained(i))
+            return true;
+    }
+
+    if (!all_skills_maxed())
+    {
+        // Shouldn't happen, but crash rather than locking the player in the
+        // menu. Training will be fixed up on load.
+        ASSERT(you.species != SP_GNOLL);
+        set_help("<lightred>You need to enable at least one skill.</lightred>");
+        return false;
+    }
+    return true;
+}
+
 // Before we exit, make sure there's at least one skill enabled.
 bool SkillMenu::exit()
 {
@@ -992,25 +1019,8 @@ bool SkillMenu::exit()
         return true;
     }
 
-    bool enabled_skill = false;
-
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
-        if (skill_trained(i))
-        {
-            enabled_skill = true;
-            break;
-        }
-    }
-
-    if (!enabled_skill && !all_skills_maxed())
-    {
-        // Shouldn't happen, but crash rather than locking the player in the
-        // menu. Training will be fixed up on load.
-        ASSERT(you.species != SP_GNOLL);
-        set_help("<lightred>You need to enable at least one skill.</lightred>");
+    if (!do_skill_enabled_check())
         return false;
-    }
 
     if (is_set(SKMF_EXPERIENCE))
     {
