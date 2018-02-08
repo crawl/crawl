@@ -1167,7 +1167,7 @@ void update_amulet_attunement_by_health()
     // amulet of regeneration
     // You must be wearing the amulet and able to regenerate to get benefits.
     if (you.wearing(EQ_AMULET, AMU_REGENERATION)
-        && !you.get_mutation_level(MUT_NO_REGENERATION) == 0)
+        && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
     {
         // If you hit max HP, turn on the amulet.
         if (you.hp == you.hp_max
