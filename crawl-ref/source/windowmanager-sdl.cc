@@ -850,6 +850,11 @@ void SDLWrapper::delay(unsigned int ms)
 
 unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
+    // check for enqueued characters from a multi-char textinput event
+    // count is floored to 1 for consistency with other event types
+    if (type == WME_KEYPRESS && m_textinput_queue.size() > 0)
+        return 1;
+
     // Look for the presence of any keyboard events in the queue.
     Uint32 event;
     switch (type)
