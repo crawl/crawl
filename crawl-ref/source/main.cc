@@ -3394,19 +3394,13 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
+    bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking)
-        wu_jian_post_move_effects(did_wall_jump, initial_position);
+        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump, initial_position);
 
-    // If you actually moved, then you are eligible for amulet of the acrobat.
-    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
-        && !attacking
-        && moving
-        && !did_wall_jump)
-    {
-        you.duration[DUR_ACROBAT] = you.time_taken;
-        you.props[LAST_ACTION_WAS_MOVE_KEY] = true;
-        you.redraw_evasion = true;
-    }
+    // If you actually moved you are eligible for amulet of the acrobat.
+    if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
+        update_acrobat_status();
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
