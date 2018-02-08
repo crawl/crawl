@@ -202,4 +202,5 @@ private:
 
     TextItem* find_closest_selectable(int start_ln, int col);
     void set_links();
+    bool do_skill_enabled_check();
 };
