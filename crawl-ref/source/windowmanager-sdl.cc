@@ -318,7 +318,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
                                    MouseEvent &tile_event)
 {
     tile_event.held  = MouseEvent::NONE;
-    tile_event.event = MouseEvent::PRESS; // XXX
+    tile_event.event = MouseEvent::WHEEL;
     tile_event.button = (sdl_event.y > 0) ? MouseEvent::SCROLL_DOWN
                                           : MouseEvent::SCROLL_UP;
     tile_event.px = sdl_event.x;
@@ -798,7 +798,7 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_event(sdlevent.button, event->mouse_event);
         break;
     case SDL_MOUSEWHEEL:
-        event->type = WME_MOUSEBUTTONDOWN; // XXX
+        event->type = WME_MOUSEWHEEL;
         _translate_wheel_event(sdlevent.wheel, event->mouse_event);
         break;
     case SDL_QUIT:
@@ -888,6 +888,10 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     case WME_MOUSEBUTTONDOWN:
         event = SDL_MOUSEBUTTONDOWN;
+        break;
+
+    case WME_MOUSEWHEEL:
+        event = SDL_MOUSEWHEEL;
         break;
 
     case WME_QUIT:
