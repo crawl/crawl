@@ -780,8 +780,10 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
-#ifdef USE_TILE
     const branch_type branch = branch_by_shortname(str);
+    int hotkey = branches[branch].travel_shortcut;
+    me->hotkeys = {hotkey, tolower(hotkey)};
+#ifdef USE_TILE
     me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
 #endif
 
