@@ -721,7 +721,7 @@ int TilesFramework::getch_ck()
 
         unsigned int ticks = 0;
 
-        if (wm->wait_event(&event))
+        if (wm->wait_event(&event, INT_MAX))
         {
             ticks = wm->get_ticks();
             if (!mouse_target_mode && event.type != WME_CUSTOMEVENT)
