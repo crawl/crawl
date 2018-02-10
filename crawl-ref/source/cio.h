@@ -291,8 +291,10 @@ public:
 
 protected:
     int read_line_core(bool reset_cursor);
+    int process_key_core(int ch);
     virtual void print_segment(int start_point=0, int overprint=0);
     virtual void cursorto(int newcpos);
+    virtual int getkey();
 
     virtual int process_key(int ch);
     void backspace();
@@ -341,6 +343,21 @@ protected:
     FontBuffer& m_font_buf;
 };
 #endif
+
+class resumable_line_reader : public line_reader
+{
+public:
+    resumable_line_reader(char *buf, size_t sz) : line_reader(buf, sz, sz) { read_line(); };
+    int putkey(int ch) { return process_key_core(ch); };
+protected:
+    virtual int getkey() override { return CK_NO_KEY; };
+    virtual int process_key(int ch) override
+    {
+        return ch == CK_NO_KEY ? CK_NO_KEY : line_reader::process_key(ch);
+    }
+    virtual void print_segment(int start_point=0, int overprint=0) override {};
+    int key;
+};
 
 typedef int keycode_type;
 

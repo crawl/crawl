@@ -726,14 +726,14 @@ int SDLWrapper::send_textinput(wm_event *event)
     return 1;
 }
 
-int SDLWrapper::wait_event(wm_event *event)
+int SDLWrapper::wait_event(wm_event *event, int timeout)
 {
     SDL_Event sdlevent;
 
     if (!m_textinput_queue.empty())
         return send_textinput(event);
 
-    if (!SDL_WaitEvent(&sdlevent))
+    if (!SDL_WaitEventTimeout(&sdlevent, timeout))
         return 0;
 
     if (sdlevent.type != SDL_TEXTINPUT)
