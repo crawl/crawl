@@ -502,7 +502,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   = 'You need to log in to send messages!')
                 return
 
-            receiver.handle_chat_message(self.username, text)
+            if not receiver.handle_chat_command(self.username, text):
+                receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
         error = register_user(username, password, email)
