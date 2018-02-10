@@ -70,6 +70,7 @@ struct MouseEvent
         PRESS,
         RELEASE,
         MOVE,
+        WHEEL,
     };
 
     enum mouse_event_button
