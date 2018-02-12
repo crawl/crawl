@@ -249,4 +249,4 @@ bool item_is_evokable(const item_def &item, bool reach = true,
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
-int digit_inscription_to_inv_index(char digit, operation_types oper);
+item_def *digit_inscription_to_item(char digit, operation_types oper);

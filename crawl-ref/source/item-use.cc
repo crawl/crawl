@@ -262,9 +262,7 @@ item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
         // Handle inscribed item keys
         if (isadigit(keyin))
         {
-            const int idx = digit_inscription_to_inv_index(keyin, oper);
-            if (idx >= 0)
-                target = &item_from_int(true, idx);
+            target = digit_inscription_to_item(keyin, oper);
         }
         // TODO: handle * key
         else if (keyin == ',')
