@@ -626,7 +626,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     {
         MenuEntry* me =
-            new MenuEntry("     Spells                        Type          "
+            new MenuEntry(" Spells                            Type          "
                           "                Failure  Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -634,12 +634,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 #else
     spell_menu.set_title(
-        new MenuEntry("     Spells (Memorisation)         Type          "
+        new MenuEntry(" Spells (Memorisation)             Type          "
                       "                Failure  Level",
             MEL_TITLE));
 
     spell_menu.set_title(
-        new MenuEntry("     Spells (Description)          Type          "
+        new MenuEntry(" Spells (Description)              Type          "
                       "                Failure  Level",
             MEL_TITLE), false);
 #endif

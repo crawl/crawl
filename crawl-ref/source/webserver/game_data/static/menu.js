@@ -22,6 +22,14 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         return item.colour || 7;
     }
 
+    function menu_title_indent()
+    {
+        if (!options.get("tile_menu_icons")
+            || !(menu.tag === "ability" || menu.tag === "spell"))
+            return 0;
+        return dungeon_renderer.cell_width + 2; // menu <ol> has a 2px margin
+    }
+
     function set_item_contents(item, elem)
     {
         elem.html(util.formatted_string_to_html(item_text(item)));
@@ -29,6 +37,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         elem.removeClass();
         elem.addClass("level" + item.level);
         elem.addClass("fg" + col);
+
+        if (item.level < 2)
+            elem.css("padding-left", menu_title_indent()+"px");
 
         if (item_selectable(item))
         {
@@ -415,6 +426,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     function update_title()
     {
         $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
+        $("#menu_title").css("padding-left", menu_title_indent()+"px");
 
         if (menu.title.suffix)
         {
