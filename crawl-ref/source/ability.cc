@@ -3145,9 +3145,9 @@ int choose_ability_menu(const vector<talent>& talents)
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry("  Ability - do what?                 "
+            new ToggleableMenuEntry(" Ability - do what?                  "
                                     "Cost                          Failure",
-                                    "  Ability - describe what?           "
+                                    " Ability - describe what?            "
                                     "Cost                          Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
@@ -3155,9 +3155,9 @@ int choose_ability_menu(const vector<talent>& talents)
     }
 #else
     abil_menu.set_title(
-        new ToggleableMenuEntry("  Ability - do what?                 "
+        new ToggleableMenuEntry(" Ability - do what?                  "
                                 "Cost                          Failure",
-                                "  Ability - describe what?           "
+                                " Ability - describe what?            "
                                 "Cost                          Failure",
                                 MEL_TITLE));
 #endif
@@ -3210,15 +3210,11 @@ int choose_ability_menu(const vector<talent>& talents)
     if (found_invocations)
     {
 #ifdef USE_TILE_LOCAL
-        ToggleableMenuEntry* subtitle =
-            new ToggleableMenuEntry("    Invocations - ",
-                                    "    Invocations - ", MEL_ITEM);
+        MenuEntry* subtitle = new MenuEntry(" Invocations -    ", MEL_ITEM);
         subtitle->colour = BLUE;
         abil_menu.add_entry(subtitle);
 #else
-        abil_menu.add_entry(
-            new ToggleableMenuEntry("    Invocations - ",
-                                    "    Invocations - ", MEL_SUBTITLE));
+        abil_menu.add_entry(new MenuEntry(" Invocations -    ", MEL_SUBTITLE));
 #endif
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
