@@ -420,7 +420,6 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     {
         for (unsigned int x = 0; x < width; x++)
         {
-            unsigned int c = map_unicode(chars[i]);
             GlyphInfo &glyph = get_glyph_info(chars[i]);
             uint8_t col_bg = colours[i] >> 4;
             uint8_t col_fg = colours[i] & 0xF;
@@ -441,6 +440,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             if (glyph.renderable)
             {
+                unsigned int c = map_unicode(chars[i]);
                 int this_width = glyph.width;
 
                 float tex_x = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
@@ -902,7 +902,6 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           char32_t ch, const VColour &col)
 {
-    unsigned int c = map_unicode(ch);
     GlyphInfo &glyph = get_glyph_info(ch);
     float density_mult = display_density.scale_to_logical();
 
@@ -912,6 +911,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
         return;
     }
 
+    unsigned int c = map_unicode(ch);
     int this_width = glyph.width;
 
     float pos_sx = x + glyph.offset * density_mult;
