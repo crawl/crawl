@@ -434,7 +434,8 @@ protected:
     virtual void draw_title();
     virtual formatted_string calc_title();
     virtual int title_height() const;
-    virtual void draw_menu();
+    void draw_menu(bool update_entries = false);
+    void draw_more();
     virtual bool page_down();
     virtual bool line_down();
     virtual bool page_up();
@@ -458,7 +459,6 @@ protected:
     virtual bool allow_easy_exit() const;
 
     virtual string help_key() const { return ""; }
-    virtual bool always_redraw() const { return false; }
 };
 
 /// Allows toggling by specific keys.
