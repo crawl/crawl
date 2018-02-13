@@ -3751,7 +3751,7 @@ Dowan_Duvessa_dies_invisible
 %%%%
 Dowan_Duvessa_dies_distance
 
-@Duvessa_Dowan_dies_distance@
+You hear a distant wail of despair.
 %%%%
 Dowan_Duvessa_dies_bytwin
 
