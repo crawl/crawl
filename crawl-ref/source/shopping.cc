@@ -966,7 +966,6 @@ class ShopMenu : public InvMenu
     friend class ShopEntry;
 
     shop_struct& shop;
-    bool looking = false;
     shopping_order order = ORDER_DEFAULT;
     level_pos pos;
     bool can_purchase;
@@ -1051,8 +1050,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
       pos(_pos),
       can_purchase(_can_purchase)
 {
-    if (!can_purchase)
-        looking = true;
+    menu_action = can_purchase ? ACT_EXECUTE : ACT_EXAMINE;
 
     set_tag("shop");
 
@@ -1121,10 +1119,10 @@ void ShopMenu::update_help()
         "%s  [%s] %s\n"
         "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
-        looking       ? "[<w>!</w>] buy|<w>examine</w> items" :
-                        "[<w>!</w>] <w>buy</w>|examine items",
+        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
+                                     "[<w>!</w>] buy|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
-        looking ? "examine item" : "select item for purchase",
+        menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
@@ -1299,7 +1297,10 @@ bool ShopMenu::process_key(int keyin)
     case '?':
         if (can_purchase)
         {
-            looking = !looking;
+            if (menu_action == ACT_EXECUTE)
+                menu_action = ACT_EXAMINE;
+            else
+                menu_action = ACT_EXECUTE;
             update_help();
             draw_more();
         }
@@ -1343,7 +1344,8 @@ bool ShopMenu::process_key(int keyin)
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size() && looking)
+    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
+        && menu_action == ACT_EXAMINE)
     {
         item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
             items[letter_to_index(keyin)])->item));
