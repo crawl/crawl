@@ -166,7 +166,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         else if (menu.jump_to)
         {
             scroll_to_item(menu.jump_to, true);
-        } else {
+        } else if (menu.items.length > 0) {
             scroll_to_item(0, true);
         }
     }
@@ -578,7 +578,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         client.center_element($("#menu"));
         if (menu.anchor_last)
             scroll_bottom_to_item(menu.last_visible, true);
-        else
+        else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
         // scrolling might not call this, but still need to show/hide more
         menu_scroll_handler();
