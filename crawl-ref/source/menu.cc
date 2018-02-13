@@ -922,7 +922,7 @@ bool Menu::process_key(int keyin)
     if (!isadigit(keyin))
         num = -1;
 
-    if (nav && repaint || always_redraw())
+    if (nav && repaint)
     {
 #ifdef USE_TILE_WEB
         webtiles_update_scroll_pos();
@@ -1457,7 +1457,7 @@ int Menu::get_entry_index(const MenuEntry *e) const
     return -1;
 }
 
-void Menu::draw_menu()
+void Menu::draw_menu(bool update_entries)
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
@@ -1474,7 +1474,34 @@ void Menu::draw_menu()
     if ((a > 0 && items[a-1]->level != MEL_END_OF_SECTION)
         || (b < (int)items.size()-1 && items[b+1]->level != MEL_END_OF_SECTION)
         || is_set(MF_ALWAYS_SHOW_MORE))
-        mdisplay->draw_more();
+    {
+        draw_more();
+    }
+
+#ifdef USE_TILE_WEB
+    if (update_entries)
+    {
+        tiles.json_open_object();
+        tiles.json_write_string("msg", "update_menu");
+        tiles.json_write_int("total_items", items.size());
+        tiles.json_close_object();
+        tiles.finish_message();
+        if (items.size() > 0)
+            webtiles_update_items(0, items.size() - 1);
+    }
+#endif
+}
+
+void Menu::draw_more()
+{
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu");
+    tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
+    mdisplay->draw_more();
 }
 
 int Menu::item_colour(int, const MenuEntry *entry) const

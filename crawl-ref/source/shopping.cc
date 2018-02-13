@@ -978,11 +978,6 @@ class ShopMenu : public InvMenu
     void purchase_selected();
 
     virtual bool process_key(int keyin) override;
-    virtual void draw_menu() override;
-    // Selecting one item may remove another from the shopping list, or change
-    // the colour others need to have, so we can't be lazy with redrawing
-    // elements.
-    virtual bool always_redraw() const override { return true; }
 
 public:
     bool bought_something = false;
@@ -1080,25 +1075,6 @@ void ShopMenu::init_entries()
     }
 }
 
-void ShopMenu::draw_menu()
-{
-    // Unlike other menus, selecting one item in the shopping menu may change
-    // other ones (because of the colour scheme). Keypresses also need to
-    // update the more, which is hijacked for use as help text.
-#ifdef USE_TILE_WEB
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "update_menu");
-    tiles.json_write_string("more", more.to_colour_string());
-    tiles.json_write_int("total_items", items.size());
-    tiles.json_close_object();
-    tiles.finish_message();
-    if (items.size() > 0)
-        webtiles_update_items(0, items.size() - 1);
-#endif
-
-    InvMenu::draw_menu();
-}
-
 int ShopMenu::selected_cost() const
 {
     int cost = 0;
@@ -1187,7 +1163,7 @@ void ShopMenu::purchase_selected()
                    col.c_str(),
                    col.c_str()));
         more += old_more;
-        draw_menu();
+        draw_more();
         return;
     }
     more = formatted_string::parse_string(make_stringf(
@@ -1197,11 +1173,11 @@ void ShopMenu::purchase_selected()
                cost,
                col.c_str()));
     more += old_more;
-    draw_menu();
+    draw_more();
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         more = old_more;
-        draw_menu();
+        draw_more();
         return;
     }
     sort(begin(selected), end(selected),
@@ -1263,7 +1239,7 @@ void ShopMenu::purchase_selected()
     else
         update_help();
 
-    draw_menu();
+    draw_menu(true);
 }
 
 // Doesn't handle redrawing itself.
@@ -1324,7 +1300,7 @@ bool ShopMenu::process_key(int keyin)
         {
             looking = !looking;
             update_help();
-            draw_menu();
+            draw_more();
         }
         return true;
     case ' ':
@@ -1353,14 +1329,14 @@ bool ShopMenu::process_key(int keyin)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
-        draw_menu();
+        draw_menu(true);
         return true;
     }
     case '/':
         ++order;
         resort();
         update_help();
-        draw_menu();
+        draw_menu(true);
         return true;
     default:
         break;
@@ -1399,8 +1375,7 @@ bool ShopMenu::process_key(int keyin)
             shopping_list.del_thing(item, &pos);
         else
             shopping_list.add_thing(item, item_price(item, shop), &pos);
-        // not draw_item since other items may enter/leave shopping list
-        draw_menu();
+        draw_menu(true);
         return true;
     }
 
@@ -1410,7 +1385,7 @@ bool ShopMenu::process_key(int keyin)
     {
         // Update the footer to display the new $$$ info.
         update_help();
-        draw_menu();
+        draw_menu(true);
     }
     return ret;
 }
