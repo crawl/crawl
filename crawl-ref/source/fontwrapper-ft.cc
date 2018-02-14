@@ -144,6 +144,24 @@ bool FTFontWrapper::configure_font()
     for (int i = 0; i < MAX_GLYPHS; i++)
         m_atlas[i] = FontAtlasEntry();
 
+    // atlas[0] always contains a full-white block (never evicted)
+    // this is currently used by colour_bar
+    {
+        for (int x = 0; x < m_max_width; x++)
+            for (int y = 0; y < m_max_height; y++)
+            {
+                unsigned int idx = x + y * m_max_width;
+                idx *= 4;
+                pixels[idx]     = 255;
+                pixels[idx + 1] = 255;
+                pixels[idx + 2] = 255;
+                pixels[idx + 3] = 255;
+            }
+        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                                          MIPMAP_NONE, 0, 0);
+        ASSERT(success);
+    }
+
     // precache common chars
     for (int i = 0x20; i < 0x7f; i++)
         map_unicode(i);
@@ -294,7 +312,7 @@ unsigned int FTFontWrapper::map_unicode(char *ch)
 unsigned int FTFontWrapper::map_unicode(char32_t uchar)
 {
     unsigned int c = MAX_GLYPHS;
-    for (unsigned int i = 0; i < MAX_GLYPHS; i++)
+    for (unsigned int i = 1; i < MAX_GLYPHS; i++)
         if (m_atlas[i].uchar == uchar)
         {
             c = i;
@@ -303,8 +321,8 @@ unsigned int FTFontWrapper::map_unicode(char32_t uchar)
 
     if (c == MAX_GLYPHS) // not found: need to load into atlas
     {
-        bool atlas_full = m_atlas_lru.size() == MAX_GLYPHS;
-        c = atlas_full ? m_atlas_lru[0] : m_atlas_lru.size();
+        bool atlas_full = m_atlas_lru.size() == MAX_GLYPHS-1;
+        c = atlas_full ? m_atlas_lru[0] : m_atlas_lru.size()+1;
         m_atlas[c].uchar = uchar;
         load_glyph(c, uchar);
         n_subst++;
