@@ -116,20 +116,10 @@ protected:
 
     struct FontAtlasEntry
     {
-        // index of prev/next glyphs in LRU
-        unsigned int prev; unsigned int next;
-        // charcode of glyph
         char32_t uchar;
     };
     FontAtlasEntry *m_atlas;
-
-    map<char32_t, unsigned int> m_glyphmap;
-    // index of least recently used glyph
-    char32_t m_atlas_lru;
-    // index of most recently used glyph
-    char32_t m_atlas_mru;
-    // index of last populated glyph until m_glyphs[] is full
-    char32_t m_atlas_top;
+    vector<char32_t> m_atlas_lru;
 
     // count of glyph loads in the current text block
     int n_subst;

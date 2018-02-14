@@ -60,9 +60,6 @@ FontWrapper* FontWrapper::create()
 
 FTFontWrapper::FTFontWrapper() :
     m_atlas(nullptr),
-    m_atlas_lru(0),
-    m_atlas_mru(0),
-    m_atlas_top(0),  // reinitialised to 1 in load_font
     m_max_advance(0, 0),
     m_min_offset(0),
     charsz(1,1),
@@ -142,34 +139,10 @@ bool FTFontWrapper::configure_font()
     // initialise empty texture of correct size
     m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
 
-    m_glyphmap.clear();
     m_glyphs.clear();
 
     for (int i = 0; i < MAX_GLYPHS; i++)
         m_atlas[i] = FontAtlasEntry();
-
-    // Special case c = 0 for full block.
-    {
-        m_glyphmap[0] = 0;
-        m_atlas_top = 1;
-        m_atlas_lru = 1; // otherwise LRU algorithm will overwrite 0
-        m_atlas_mru = 0;
-        m_atlas[0].prev    = 0;
-        m_atlas[0].next    = 0;
-        for (int x = 0; x < m_max_width; x++)
-            for (int y = 0; y < m_max_height; y++)
-            {
-                unsigned int idx = x + y * m_max_width;
-                idx *= 4;
-                pixels[idx]     = 255;
-                pixels[idx + 1] = 255;
-                pixels[idx + 2] = 255;
-                pixels[idx + 3] = 255;
-            }
-        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                                          MIPMAP_NONE, 0, 0);
-        ASSERT(success);
-    }
 
     // precache common chars
     for (int i = 0x20; i < 0x7f; i++)
@@ -213,6 +186,8 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
     }
 
     m_atlas = new FontAtlasEntry[MAX_GLYPHS];
+    m_atlas_lru.clear();
+    m_atlas_lru.reserve(MAX_GLYPHS);
 
     return configure_font();
 }
@@ -318,85 +293,29 @@ unsigned int FTFontWrapper::map_unicode(char *ch)
 
 unsigned int FTFontWrapper::map_unicode(char32_t uchar)
 {
-    unsigned int c;  // index in m_atlas
-    if (!m_glyphmap.count(uchar))
+    unsigned int c = MAX_GLYPHS;
+    for (unsigned int i = 0; i < MAX_GLYPHS; i++)
+        if (m_atlas[i].uchar == uchar)
+        {
+            c = i;
+            break;
+        }
+
+    if (c == MAX_GLYPHS) // not found: need to load into atlas
     {
-        // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
-        if (m_atlas_top == MAX_GLYPHS)
-        {
-            dprintf("replacing %d (%lc) with %d (%lc)\n",
-                    m_atlas[m_atlas_lru].uchar,
-                    m_atlas[m_atlas_lru].uchar,
-                    uchar,
-                    uchar);
-            // create a pointer in gmap to the lru entry in gdata
-            c = m_atlas_lru;
-            // delete lru glyph from map
-            m_glyphmap.erase(m_atlas[m_atlas_lru].uchar);
-            // move lru on to next
-            m_atlas_lru = m_atlas[c].next;
-            m_atlas[m_atlas_lru].prev = 0;
-        }
-        else // glyph data is not full
-        {
-            // create a pointer in m_glyphmap to the top of m_atlas
-            c = m_atlas_top;
-            // move top index on
-            m_atlas_top++;
-        }
-
-        // set some default prev/next values
-        m_atlas[c].prev = m_atlas_mru;
-        m_atlas[m_atlas_mru].next = c;
-        m_atlas[c].next = 0;
-        // update links between char and map
+        bool atlas_full = m_atlas_lru.size() == MAX_GLYPHS;
+        c = atlas_full ? m_atlas_lru[0] : m_atlas_lru.size();
         m_atlas[c].uchar = uchar;
-        m_glyphmap[uchar] = c;
-
         load_glyph(c, uchar);
         n_subst++;
-
-        dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
-    }
-    else // we found uchar in glyphmap
-    {
-        c = m_glyphmap[uchar];
-        if (m_atlas_mru != c)
-        {
-            // point the <char previous to this one> to the <char after this one> and vice-versa
-            dprintf("moving %lc: %lc -> %lc; %lc <- %lc",
-                    uchar,
-                    m_atlas[m_atlas[m_glyphmap[uchar]].prev].uchar,
-                    m_atlas[m_atlas[m_glyphmap[uchar]].next].uchar,
-                    m_atlas[m_atlas[m_glyphmap[uchar]].next].uchar,
-                    m_atlas[m_atlas[m_glyphmap[uchar]].prev].uchar);
-            m_atlas[m_atlas[c].prev].next = m_atlas[c].next;
-            m_atlas[m_atlas[c].next].prev = m_atlas[c].prev;
-        }
     }
 
-    // regardless of how we came about 'c'
-    if (m_atlas_mru != c)
-    {
-        // point the last character we wrote out to the one we're writing
-        dprintf("updating %lc, next = %lc",
-                m_atlas[m_atlas_mru].uchar, uchar);
-        m_atlas[m_atlas_mru].next = c;
-        m_atlas[c].prev = m_atlas_mru;
-    }
+    auto it = find(m_atlas_lru.begin(), m_atlas_lru.end(), (uint8_t)c);
+    if (it != m_atlas_lru.end())
+        m_atlas_lru.erase(it);
+    m_atlas_lru.push_back(c);
 
-    // update the mru to this one
-    m_atlas_mru = c;
-    // if we've just used the lru glyph, move onto the next one
-    if (m_atlas_mru == m_atlas_lru && m_atlas[m_atlas_lru].next != 0)
-        m_atlas_lru = m_atlas[m_atlas_lru].next;
-
-    dprintf("rendering %d (%x; <<<<<<%lc>>>>>>); lru is %lc, next lru is %lc\n",
-            uchar, uchar, uchar,
-            m_atlas[m_atlas_lru].uchar,
-            m_atlas[m_atlas[m_atlas_lru].next].uchar);
-
-    return m_glyphmap[uchar];
+    return c;
 }
 
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
