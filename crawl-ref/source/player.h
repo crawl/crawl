@@ -29,7 +29,6 @@
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
-#include "seed-type.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"
@@ -357,8 +356,8 @@ public:
     // A list of allies awaiting an active recall
     vector<mid_t> recall_list;
 
-    // Hash seeds for deterministic stuff.
-    FixedVector<uint32_t, NUM_SEEDS> game_seeds;
+    // Hash seed for deterministic stuff.
+    uint32_t game_seed;
 
     // -------------------
     // Non-saved UI state:

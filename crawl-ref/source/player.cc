@@ -5214,8 +5214,7 @@ player::player()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
-    for (int i = 0; i < NUM_SEEDS; i++)
-        game_seeds[i] = get_uint32();
+    game_seed = get_uint32();
 
     old_hunger          = hunger;
 

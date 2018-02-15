@@ -915,7 +915,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\score-format-type.h" />
     <ClInclude Include="..\screen-mode.h" />
     <ClInclude Include="..\SDLMain.h" />
-    <ClInclude Include="..\seed-type.h" />
     <ClInclude Include="..\seen-context-type.h" />
     <ClInclude Include="..\sense-type.h" />
     <ClInclude Include="..\shop-type.h" />
