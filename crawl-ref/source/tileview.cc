@@ -389,6 +389,7 @@ static int _find_variants(tileidx_t idx, int variant, vector<int> &out)
     }
     if (!total)
     {
+        out.clear();
         out.push_back(tile_dngn_probs(idx));
         for (int i = 1; i < count; ++i)
         {
