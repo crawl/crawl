@@ -52,7 +52,6 @@
 
 typedef vector<spell_type>                     spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
-static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
 static const map<wand_type, spell_type> _wand_spells =
 {
@@ -334,27 +333,25 @@ static void _list_available_spells(spell_set &available_spells)
         available_spells.insert(gift);
 }
 
-/**
- * Take a list of spells and filter them to only those that the player can
- * currently memorize.
- *
- * @param available_spells      The list of spells to be filtered.
- * @param mem_spells[out]       The list of memorizeable spells to populate.
- * @param num_misc[out]         How many spells are unmemorizable for 'misc
- *                              reasons' (e.g. player species)
- * @param return                The reason the player can't currently memorize
- *                              any spells, if they can't. Otherwise, "".
- */
-static string _filter_memorizable_spells(const spell_set &available_spells,
-                                         spell_list &mem_spells,
-                                         unsigned int &num_misc)
+static void _get_mem_list(spell_list &mem_spells,
+                          bool just_check = false)
 {
-    unsigned int num_known      = 0;
-                 num_misc       = 0;
-    unsigned int num_restricted = 0;
-    unsigned int num_low_xl     = 0;
-    unsigned int num_low_levels = 0;
-    unsigned int num_memable    = 0;
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+
+    if (available_spells.empty())
+    {
+        if (!just_check)
+            mprf(MSGCH_PROMPT, "Your library has no spells.");
+        return;
+    }
+
+    int num_known      = 0;
+    int num_misc       = 0;
+    int num_restricted = 0;
+    int num_low_xl     = 0;
+    int num_low_levels = 0;
+    int num_memable    = 0;
 
     for (const spell_type spell : available_spells)
     {
@@ -385,57 +382,41 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
         }
     }
 
+    const int total = num_known + num_misc + num_low_xl + num_low_levels
+                      + num_restricted;
+
+    const char* unavail_reason;
+
     if (num_memable || num_low_levels > 0 || num_low_xl > 0)
-        return "";
-
-    unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
-                         + num_restricted;
-
-    if (num_known == total)
-        return "You already know all available spells.";
-    if (num_restricted == total || num_restricted + num_known == total)
+        unavail_reason = "";
+    else if (num_known == total)
+        unavail_reason = "You already know all available spells.";
+    else if (num_restricted == total || num_restricted + num_known == total)
     {
-        return "You cannot currently memorise any of the available spells "
-               "because you cannot use those schools of magic.";
+        unavail_reason = "You cannot currently memorise any of the available "
+                         "spells because you cannot use those schools of "
+                         "magic.";
     }
-    if (num_misc == total || (num_known + num_misc) == total
-        || num_misc + num_known + num_restricted == total)
+    else if (num_misc == total || (num_known + num_misc) == total
+             || num_misc + num_known + num_restricted == total)
     {
-        return "You cannot memorise any of the available spells.";
+        unavail_reason = "You cannot memorise any of the available spells.";
     }
-
-    return "You can't memorise any new spells for an unknown reason; please "
-           "file a bug report.";
-}
-
-
-static void _get_mem_list(spell_list &mem_spells,
-                          unsigned int &num_misc,
-                          bool just_check = false)
-{
-    spell_set     available_spells;
-    _list_available_spells(available_spells);
-
-    if (available_spells.empty())
+    else
     {
-        if (!just_check)
-            mprf(MSGCH_PROMPT, "Your library has no spells.");
-        return;
+        unavail_reason = "You can't memorise any new spells for an unknown "
+                         "reason; please file a bug report.";
     }
 
-    const string unavail_reason = _filter_memorizable_spells(available_spells,
-                                                             mem_spells,
-                                                             num_misc);
-    if (!just_check && !unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+    if (!just_check && *unavail_reason)
+        mprf(MSGCH_PROMPT, "%s", unavail_reason);
 }
 
 bool has_spells_to_memorise(bool silent)
 {
     spell_list      mem_spells;
-    unsigned int    num_misc;
 
-    _get_mem_list(mem_spells, num_misc, silent);
+    _get_mem_list(mem_spells, silent);
     return !mem_spells.empty();
 }
 
@@ -475,8 +456,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 vector<spell_type> get_mem_spell_list()
 {
     spell_list      mem_spells;
-    unsigned int    num_misc;
-    _get_mem_list(mem_spells, num_misc);
+    _get_mem_list(mem_spells);
 
     if (mem_spells.empty())
         return spell_list();
@@ -545,11 +525,13 @@ private:
             bool entries_changed = false;
             switch (current_action)
             {
-                case action::memorise: current_action = action::describe; break;
+                case action::memorise:
+                    current_action = action::describe;
+                    entries_changed = true; // need to add hotkeys
+                    break;
                 case action::describe: current_action = action::hide; break;
                 case action::hide:
                     current_action = action::unhide;
-                    entries_changed = true;
                     break;
                 case action::unhide:
                     current_action = action::memorise;
@@ -618,7 +600,13 @@ private:
             desc << "</" << colour_to_str(colour) << ">";
             desc << spell_difficulty(spell);
 
-            MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1, hotkey++);
+            MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
+            // don't add a hotkey if you can't memorise it
+                    (current_action == action::memorise && !you_can_memorise(spell)) ?
+                    ' ' : char(hotkey));
+            // But do increment hotkeys anyway, to keep the memorise and
+            // describe hotkeys consistent.
+            ++hotkey;
 
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
@@ -668,24 +656,23 @@ public:
     }
 };
 
-static spell_type _choose_mem_spell(spell_list &spells,
-                                    unsigned int num_misc)
+static spell_type _choose_mem_spell()
 {
+    // If we've gotten this far, we know that at least one spell here is
+    // memorisable, which is enough.
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+    spell_list spells;
+    for (spell_type spell : available_spells)
+        if (!you.has_spell(spell))
+            spells.push_back(spell);
+    sort(spells.begin(), spells.end(), _sort_mem_spells);
+
     string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                    "</lightgreen>",
                                    player_spell_levels(),
                                    (player_spell_levels() > 1
                                     || player_spell_levels() == 0) ? "s" : "");
-
-    if (num_misc > 0)
-    {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
-                                 "</lightred>",
-                                 num_misc,
-                                 num_misc > 1 ? "s" : "");
-    }
-
-    sort(spells.begin(), spells.end(), _sort_mem_spells);
 
     MemoriseMenu spell_menu(spells, more_str);
     
@@ -731,13 +718,12 @@ bool learn_spell()
         return false;
 
     spell_list      mem_spells;
-    unsigned int num_misc;
-    _get_mem_list(mem_spells, num_misc);
+    _get_mem_list(mem_spells);
 
     if (mem_spells.empty())
         return false;
 
-    spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
+    spell_type specspell = _choose_mem_spell();
 
     if (specspell == SPELL_NO_SPELL)
     {
