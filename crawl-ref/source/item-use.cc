@@ -3299,14 +3299,6 @@ void tile_item_use(int idx)
                 eat_food(idx);
             return;
 
-        case OBJ_BOOKS:
-            if (item_is_spellbook(item)
-                && check_warning_inscriptions(item, OPER_MEMORISE))
-            {
-                learn_spell_from(item);
-            }
-            return;
-
         case OBJ_SCROLLS:
             if (check_warning_inscriptions(item, OPER_READ))
                 read(&you.inv[idx]);

@@ -315,32 +315,6 @@ bool player_can_memorise(const item_def &book)
 }
 
 /**
- * List all spells in the given book.
- *
- * @param book      The book to be read.
- * @param spells    The list of spells to populate. Doesn't have to be empty.
- * @return          Whether the given book is invalid (empty).
- */
-static bool _get_book_spells(const item_def& book, spell_set &spells)
-{
-    int num_spells = 0;
-    for (spell_type spell : spells_in_book(book))
-    {
-        num_spells++;
-        spells.insert(spell);
-    }
-
-    if (num_spells == 0)
-    {
-        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
-             "file a bug report.", book.name(DESC_PLAIN).c_str());
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * Populate the given list with all spells the player can currently memorize,
  * from library or Vehumet. Does not filter by currently known spells, spell
  * levels, etc.
@@ -454,34 +428,6 @@ static void _get_mem_list(spell_list &mem_spells,
                                                              num_misc);
     if (!just_check && !unavail_reason.empty())
         mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
-}
-
-/// Give the player a memorization prompt for the spells from the given book.
-void learn_spell_from(const item_def &book)
-{
-    spell_set available_spells;
-    const bool book_error = _get_book_spells(book, available_spells);
-    if (book_error)
-        more();
-    if (available_spells.empty())
-        return;
-
-    spell_list mem_spells;
-    unsigned int num_misc;
-    const string unavail_reason = _filter_memorizable_spells(available_spells,
-                                                             mem_spells,
-                                                             num_misc);
-    if (!unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
-    if (mem_spells.empty())
-        return;
-
-    const spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
-
-    if (specspell == SPELL_NO_SPELL)
-        canned_msg(MSG_OK);
-    else
-        learn_spell(specspell);
 }
 
 bool has_spells_to_memorise(bool silent)
