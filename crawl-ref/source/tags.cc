@@ -1635,9 +1635,8 @@ static void tag_construct_you(writer &th)
     for (mid_t recallee : you.recall_list)
         _marshall_as_int(th, recallee);
 
-    marshallUByte(th, NUM_SEEDS);
-    for (int i = 0; i < NUM_SEEDS; i++)
-        marshallInt(th, you.game_seeds[i]);
+    marshallUByte(th, 1); // number of seeds: always 1
+    marshallInt(th, you.game_seed);
 
     CANARY;
 
@@ -3612,11 +3611,9 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUByte(th);
-    ASSERT(count <= NUM_SEEDS);
-    for (int i = 0; i < count; i++)
-        you.game_seeds[i] = unmarshallInt(th);
-    for (int i = count; i < NUM_SEEDS; i++)
-        you.game_seeds[i] = get_uint32();
+    you.game_seed = count > 0 ? unmarshallInt(th) : get_uint32();
+    for (int i = 1; i < count; i++)
+        unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
