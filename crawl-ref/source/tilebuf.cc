@@ -318,8 +318,11 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
                             const VColour &col)
 {
-    add(sx-1, sy, ex-1, sy, col);
-    add(ex, sy-1, ex, ey-1, col);
+    GLW_3VF scale;
+    glmanager->get_transform(nullptr, &scale);
+    float dx = 1.0/scale.x, dy = 1.0/scale.y;
+    add(sx-dx, sy, ex-dx, sy, col);
+    add(ex, sy-dy, ex, ey-dy, col);
     add(ex, ey, sx, ey, col);
     add(sx, ey, sx, sy, col);
 }
