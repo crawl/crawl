@@ -75,8 +75,8 @@ armour and a short sword.
 %%%%
 Ice Elementalist
 
-Ice Elementalists start the Freeze spell. The spells in their library when they
-begin are quite versatile.
+Ice Elementalists begin with the Freeze spell. The spells in their starting
+library are quite versatile.
 %%%%
 Monk
 
