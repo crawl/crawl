@@ -456,6 +456,8 @@ protected:
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
+
     virtual bool process_key(int keyin);
 
     virtual bool allow_easy_exit() const;
