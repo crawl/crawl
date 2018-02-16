@@ -455,7 +455,7 @@ function ($, comm, client, enums, cr, util, options) {
                 var ctrlf = String.fromCharCode(6);
                 var enter = String.fromCharCode(13);
                 var text = ctrlf + input.val() + enter;
-                comm.send_message("input", { text: text + "\n" });
+                comm.send_message("input", { text: text });
 
                 restore();
                 ev.preventDefault();
