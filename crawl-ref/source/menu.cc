@@ -927,11 +927,11 @@ bool Menu::process_key(int keyin)
 #endif
             if (!on_single_selection(*sel[0]))
                 return false;
-            deselect_all(true);
 #ifdef USE_TILE_WEB
             tiles.push_menu(this);
             _webtiles_title_changed = false;
 #endif
+            deselect_all(true);
             draw_menu();
             return true;
         }
