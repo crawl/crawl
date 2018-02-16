@@ -563,7 +563,13 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     mdisplay->set_offset(1 + title_height());
 
     if (is_set(MF_START_AT_END))
+    {
+#ifdef USE_TILE_LOCAL
+        // XXX: needed so that scroll_to_item knows the visible set of items
+        mdisplay->draw_items();
+#endif
         mdisplay->scroll_to_item(INT_MAX);
+    }
 
     do_menu();
 
@@ -2083,7 +2089,11 @@ void formatted_scroller::add_raw_text(const string& s, bool new_line,
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
                                                    int hotkey)
 {
+#ifdef USE_TILE_LOCAL
+    MenuEntry* me = new MenuEntry(fs.to_colour_string());
+#else
     MenuEntry* me = new MenuEntry;
+#endif
     me->data = new formatted_string(fs);
     if (hotkey)
     {
