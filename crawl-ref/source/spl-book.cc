@@ -549,20 +549,8 @@ private:
         else if (keyin == CONTROL('F'))
         {
             char linebuf[80] = "";
-#ifdef USE_TILE_LOCAL
-            m_filter_text = linebuf; draw_title();
-            menu_filter_line_reader reader(this, linebuf, sizeof linebuf, 80);
-            reader.set_location(coord_def(0, 0));
-            bool validline = reader.read_line() != CK_ESCAPE;
-            m_filter_text = nullptr; draw_title();
-#else
-            cgotoxy(1,1);
-            clear_to_end_of_line();
-            textcolour(WHITE);
-            cprintf("Search for what? (regex) ");
-            textcolour(LIGHTGREY);
-            bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
-#endif
+            const bool validline = title_prompt(linebuf, sizeof linebuf,
+                                                "Search for what? (regex) ");
             string old_search = search_text;
             if (validline)
                 search_text = linebuf;
@@ -586,12 +574,12 @@ private:
         deleteAll(items);
 #ifdef USE_TILE_LOCAL
         // [enne] Hack. Use a separate title, so the column headers are aligned.
-        MenuEntry* me =
+        MenuEntry* subtitle =
             new MenuEntry(" Spells                            Type          "
                           "                Failure  Level",
                 MEL_ITEM);
-        me->colour = BLUE;
-        add_entry(me);
+        subtitle->colour = BLUE;
+        add_entry(subtitle);
 #endif
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
