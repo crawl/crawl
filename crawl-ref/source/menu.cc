@@ -667,6 +667,26 @@ void menu_filter_line_reader::print_segment(int s, int o) {}
 void menu_filter_line_reader::cursorto(int newcpos) {}
 #endif
 
+bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+{
+    bool validline;
+#ifdef USE_TILE_LOCAL
+    m_filter_text = linebuf; draw_title();
+    menu_filter_line_reader reader(this, linebuf, bufsz, bufsz);
+    reader.set_location(coord_def(0, 0));
+    validline = reader.read_line() != CK_ESCAPE;
+    m_filter_text = nullptr; draw_title();
+#else
+    cgotoxy(1,1);
+    clear_to_end_of_line();
+    textcolour(WHITE);
+    cprintf("%s", prompt);
+    textcolour(LIGHTGREY);
+    validline = !cancellable_get_line(linebuf, bufsz);
+#endif
+    return validline;
+}
+
 bool Menu::process_key(int keyin)
 {
     if (items.empty())
@@ -760,20 +780,8 @@ bool Menu::process_key(int keyin)
             break;
         char linebuf[80] = "";
 
-#ifdef USE_TILE_LOCAL
-        m_filter_text = linebuf; draw_title();
-        menu_filter_line_reader reader(this, linebuf, sizeof linebuf, 80);
-        reader.set_location(coord_def(0, 0));
-        bool validline = reader.read_line() != CK_ESCAPE;
-        m_filter_text = nullptr; draw_title();
-#else
-        cgotoxy(1,1);
-        clear_to_end_of_line();
-        textcolour(WHITE);
-        cprintf("Select what? (regex) ");
-        textcolour(LIGHTGREY);
-        bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
-#endif
+        const bool validline = title_prompt(linebuf, sizeof linebuf,
+                                            "Select what? (regex) ");
         if (validline && linebuf[0])
         {
             text_pattern tpat(linebuf, true);
