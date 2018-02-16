@@ -553,6 +553,12 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
         sel.clear();
     }
 
+#ifdef USE_TILE_LOCAL
+    // XXX: reset any title from the previously shown menu that's stored
+    // in the MenuRegion
+    formatted_string fs;
+    mdisplay->draw_title(fs);
+#endif
     // Reset offset to default.
     mdisplay->set_offset(1 + title_height());
 
