@@ -500,6 +500,7 @@ protected:
 private:
     spell_list& spells;
     string more_str;
+    string search_text;
 
     void update_more()
     {
@@ -516,13 +517,13 @@ private:
 
     virtual bool process_key(int keyin) override
     {
+        bool entries_changed = false;
         if (keyin == '!' || keyin == '?'
 #ifdef TOUCH_UI
             || keyin == CK_TOUCH_DUMMY
 #endif
            )
         {
-            bool entries_changed = false;
             switch (current_action)
             {
                 case action::memorise:
@@ -532,6 +533,7 @@ private:
                 case action::describe: current_action = action::hide; break;
                 case action::hide:
                     current_action = action::unhide;
+                    entries_changed = true;
                     break;
                 case action::unhide:
                     current_action = action::memorise;
@@ -541,12 +543,38 @@ private:
 #ifndef USE_TILE_LOCAL
             update_more();
 #endif
-            if (entries_changed)
-                update_entries();
-            draw_menu(entries_changed);
-            return true;
-        } 
-        return Menu::process_key(keyin);
+        }
+        else if (keyin == CONTROL('F'))
+        {
+            char linebuf[80] = "";
+#ifdef USE_TILE_LOCAL
+            m_filter_text = linebuf; draw_title();
+            menu_filter_line_reader reader(this, linebuf, sizeof linebuf, 80);
+            reader.set_location(coord_def(0, 0));
+            bool validline = reader.read_line() != CK_ESCAPE;
+            m_filter_text = nullptr; draw_title();
+#else
+            cgotoxy(1,1);
+            clear_to_end_of_line();
+            textcolour(WHITE);
+            cprintf("Search for what? (regex) ");
+            textcolour(LIGHTGREY);
+            bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
+#endif
+            string old_search = search_text;
+            if (validline)
+                search_text = linebuf;
+            else
+                search_text = "";
+            entries_changed = old_search != search_text;
+        }
+        else
+            return Menu::process_key(keyin);
+
+        if (entries_changed)
+            update_entries();
+        draw_menu(entries_changed);
+        return true;
     }
 
     // Update the list of spells. If show_hidden is true, show only hidden
@@ -565,10 +593,18 @@ private:
 #endif
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
+        text_pattern pat(search_text, true);
         for (spell_type& spell : spells)
         {
             if (you.hidden_spells.get(spell) != show_hidden)
                 continue;
+
+            if (!search_text.empty()
+                && !pat.matches(spell_title(spell))
+                && !pat.matches(spell_schools_string(spell)))
+            {
+                continue;
+            }
 
             ostringstream desc;
 
@@ -620,7 +656,9 @@ private:
 public:
     MemoriseMenu(spell_list& list, string more_str_)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING, "spell"),
+               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
+               // To have the ctrl-f menu show up in webtiles
+               | MF_ALLOW_FILTER, "spell"),
         current_action(action::memorise),
         spells(list),
         more_str(more_str_)
