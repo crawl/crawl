@@ -980,6 +980,13 @@ int you_min_hunger()
     return 0;
 }
 
+// General starvation penalties (such as inability to use spells/abilities and
+// reduced accuracy) don't apply to bloodless vampires or starving ghouls.
+bool apply_starvation_penalties()
+{
+    return you.hunger_state <= HS_STARVING && !you_min_hunger();
+}
+
 void handle_starvation()
 {
     // Don't faint or die while eating.

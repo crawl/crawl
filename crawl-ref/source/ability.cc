@@ -1653,8 +1653,7 @@ bool activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && !you.undead_state() && !you_foodless()
-        && you.hunger_state <= HS_STARVING)
+    if (hungerCheck && apply_starvation_penalties())
     {
         canned_msg(MSG_TOO_HUNGRY);
         crawl_state.zero_turns_taken();

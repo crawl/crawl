@@ -1596,7 +1596,7 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (you.hunger_state <= HS_STARVING && !you_min_hunger())
+    if (apply_starvation_penalties())
     {
         mpr("You're too hungry to rest.");
         return;
@@ -3016,7 +3016,7 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (you.hunger_state <= HS_STARVING && you.undead_state() == US_ALIVE)
+        if (apply_starvation_penalties())
         {
             you.digging = false;
             canned_msg(MSG_TOO_HUNGRY);

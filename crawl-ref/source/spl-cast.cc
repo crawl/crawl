@@ -639,8 +639,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (!you.undead_state() && !you_foodless()
-        && you.hunger_state <= HS_STARVING)
+    if (apply_starvation_penalties())
     {
         if (!quiet)
             canned_msg(MSG_NO_ENERGY);

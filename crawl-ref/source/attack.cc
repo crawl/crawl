@@ -23,6 +23,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "food.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "item-name.h"
@@ -203,7 +204,7 @@ int attack::calc_to_hit(bool random)
                                          && using_weapon()));
 
         // hunger penalty
-        if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        if (apply_starvation_penalties())
             mhit -= 3;
 
         // armour penalty
