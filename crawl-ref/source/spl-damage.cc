@@ -913,22 +913,6 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (mons->res_wind())
-    {
-        if (mons->observable())
-        {
-            mprf("But air would do no harm to %s!",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-        mprf("The air twists arounds and harmlessly tosses %s around.",
-             mons->name(DESC_THE).c_str());
-        // Bailing out early, no need to upset the gods or the target.
-        return SPRET_SUCCESS; // you still did discover the invisible monster
-    }
-
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 

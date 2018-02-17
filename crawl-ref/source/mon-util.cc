@@ -2168,9 +2168,9 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_wind(monster_type mc)
+bool mons_class_res_tornado(monster_type mc)
 {
-    return get_resist(get_mons_class_resists(mc), MR_RES_WIND);
+    return get_resist(get_mons_class_resists(mc), MR_RES_TORNADO);
 }
 
 /**
