@@ -1253,7 +1253,7 @@ int main(int argc, char* argv[])
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
         res2(YELLOW, holy, mon.res_holy_energy());
         res2(LIGHTMAGENTA, torm, mon.res_torment());
-        res2(LIGHTBLUE, wind, mon.res_wind());
+        res2(LIGHTBLUE, tornado, mon.res_tornado());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());
         res2(LIGHTCYAN, silver, mon.how_chaotic() ? -1 : 0);
 

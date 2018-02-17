@@ -888,7 +888,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_NEGATIVE_ENERGY:
             return act.res_negative_energy() >= 3;
         case CLOUD_TORNADO:
-            return act.res_wind();
+            return act.res_tornado();
         case CLOUD_RAIN:
             return !act.is_fiery();
         default:

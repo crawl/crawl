@@ -124,7 +124,7 @@ spret_type cast_tornado(int powc, bool fail)
         if (!m)
             continue;
         if (mons_att_wont_attack(m->attitude)
-            && !mons_class_res_wind(m->type)
+            && !mons_class_res_tornado(m->type)
             && !mons_is_projectile(m->type))
         {
             friendlies = true;
@@ -353,7 +353,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                 leda = victim->liquefied_ground()
                        || victim->is_monster()
                           && _mons_is_unmovable(victim->as_monster());
-                if (!victim->res_wind())
+                if (!victim->res_tornado())
                 {
                     if (victim->is_monster())
                     {
