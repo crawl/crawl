@@ -1634,6 +1634,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 }
 
+static bool _check_ability_dangerous(const ability_type ability, bool quiet = false)
+{
+    if (ability == ABIL_TRAN_BAT)
+        return !check_form_stat_safety(transformation::bat, quiet);
+    else if (ability == ABIL_END_TRANSFORMATION
+        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        return !check_form_stat_safety(transformation::bat, quiet);
+    else
+        return false;
+}
+
 bool check_ability_possible(const ability_type ability, bool quiet)
 {
     return _check_ability_possible(get_ability_def(ability), quiet);
@@ -1641,29 +1652,9 @@ bool check_ability_possible(const ability_type ability, bool quiet)
 
 bool activate_talent(const talent& tal)
 {
-    // These are checked here rather than in _check_ability_possible()
-    // because the player is warned and asked whether to continue
-    if (tal.which == ABIL_TRAN_BAT)
-    {
-        if (!check_form_stat_safety(transformation::bat))
-        {
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-    }
-    else if (tal.which == ABIL_END_TRANSFORMATION
-        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-    {
-        if (!check_form_stat_safety(transformation::none))
-        {
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-    }
-
     const ability_def& abil = get_ability_def(tal.which);
 
-    if (!_check_ability_possible(abil))
+    if (_check_ability_dangerous(abil.ability) || !_check_ability_possible(abil))
     {
         crawl_state.zero_turns_taken();
         return false;
