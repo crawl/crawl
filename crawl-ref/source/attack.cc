@@ -203,7 +203,7 @@ int attack::calc_to_hit(bool random)
                                          && using_weapon()));
 
         // hunger penalty
-        if (you.hunger_state <= HS_STARVING)
+        if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
             mhit -= 3;
 
         // armour penalty
