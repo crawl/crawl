@@ -277,7 +277,7 @@ bool form_keeps_mutations(transformation form = you.form);
 bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat);
 
-bool check_form_stat_safety(transformation new_form);
+bool check_form_stat_safety(transformation new_form, bool quiet = false);
 
 bool transform(int pow, transformation which_trans,
                bool involuntary = false, bool just_check = false,
