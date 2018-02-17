@@ -1248,9 +1248,7 @@ bool activate_ability()
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
-static bool _check_ability_possible(const ability_def& abil,
-                                    bool hungerCheck = true,
-                                    bool quiet = false)
+static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
     if (you.berserk())
     {
@@ -1258,6 +1256,39 @@ static bool _check_ability_possible(const ability_def& abil,
             canned_msg(MSG_TOO_BERSERK);
         return false;
     }
+
+    // Doing these would outright kill the player.
+    // (or, in the case of the stat-zeros, they'd at least be extremely
+    // dangerous.)
+    if (abil.ability == ABIL_STOP_FLYING)
+    {
+        if (is_feat_dangerous(grd(you.pos()), false, true))
+        {
+            if (!quiet)
+                mpr("Stopping flight right now would be fatal!");
+            return false;
+        }
+    }
+    else if (abil.ability == ABIL_END_TRANSFORMATION)
+    {
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        {
+            if (!quiet)
+                mprf("Turning back right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+
+            return false;
+        }
+    }
+
+    if ((abil.ability == ABIL_EVOKE_BERSERK || abil.ability == ABIL_TROG_BERSERK)
+        && !you.can_go_berserk(true))
+        return false;
+
+    if ((abil.ability == ABIL_EVOKE_FLIGHT || abil.ability == ABIL_TRAN_BAT || abil.ability == ABIL_FLY)
+        && !flight_allowed())
+        return false;
+
 
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
     {
@@ -1279,6 +1310,43 @@ static bool _check_ability_possible(const ability_def& abil,
             return false;
         }
     }
+
+    // Some abilities don't need a hunger check.
+    bool hungerCheck = true;
+    switch (abil.ability)
+    {
+        case ABIL_RENOUNCE_RELIGION:
+        case ABIL_CONVERT_TO_BEOGH:
+        case ABIL_STOP_FLYING:
+#if TAG_MAJOR_VERSION == 34
+        case ABIL_EVOKE_TURN_VISIBLE:
+#endif
+        case ABIL_END_TRANSFORMATION:
+        case ABIL_CANCEL_PPROJ:
+        case ABIL_STOP_RECALL:
+        case ABIL_TRAN_BAT:
+        case ABIL_ASHENZARI_END_TRANSFER:
+        case ABIL_HEPLIAKLQANA_IDENTITY:
+        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+        case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        case ABIL_SIF_MUNA_DIVINE_ENERGY:
+        case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
+        case ABIL_WU_JIAN_WALLJUMP:
+        case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
+            hungerCheck = false;
+            break;
+        default:
+            break;
+    }
+
+    if (hungerCheck && apply_starvation_penalties())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_HUNGRY);
+        return false;
+    }
+
     // Don't insta-starve the player.
     // (Losing consciousness possible from 400 downward.)
     if (hungerCheck && !you.undead_state())
@@ -1327,6 +1395,16 @@ static bool _check_ability_possible(const ability_def& abil,
             }
         }
     }
+
+    // Check that we can afford to pay the costs.
+    // Note that mutation shenanigans might leave us with negative MP,
+    // so don't fail in that case if there's no MP cost.
+    if (abil.mp_cost > 0 && !enough_mp(abil.mp_cost, quiet, true))
+        return false;
+
+    const int hpcost = abil.hp_cost.cost(you.hp_max);
+    if (hpcost > 0 && !enough_hp(hpcost, quiet))
+        return false;
 
     switch (abil.ability)
     {
@@ -1556,35 +1634,16 @@ static bool _check_ability_possible(const ability_def& abil,
     }
 }
 
-bool check_ability_possible(const ability_type ability, bool hungerCheck,
-                            bool quiet)
+bool check_ability_possible(const ability_type ability, bool quiet)
 {
-    return _check_ability_possible(get_ability_def(ability), hungerCheck,
-                                   quiet);
+    return _check_ability_possible(get_ability_def(ability), quiet);
 }
 
 bool activate_talent(const talent& tal)
 {
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    // Doing these would outright kill the player.
-    // (or, in the case of the stat-zeros, they'd at least be extremely
-    // dangerous.)
-    if (tal.which == ABIL_STOP_FLYING)
-    {
-        if (is_feat_dangerous(grd(you.pos()), false, true))
-        {
-            mpr("Stopping flight right now would be fatal!");
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-    }
-    else if (tal.which == ABIL_TRAN_BAT)
+    // These are checked here rather than in _check_ability_possible()
+    // because the player is warned and asked whether to continue
+    if (tal.which == ABIL_TRAN_BAT)
     {
         if (!check_form_stat_safety(transformation::bat))
         {
@@ -1592,17 +1651,9 @@ bool activate_talent(const talent& tal)
             return false;
         }
     }
-    else if (tal.which == ABIL_END_TRANSFORMATION)
+    else if (tal.which == ABIL_END_TRANSFORMATION
+        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Turning back right now would cause you to %s!",
-                 env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-
         if (!check_form_stat_safety(transformation::none))
         {
             crawl_state.zero_turns_taken();
@@ -1610,75 +1661,9 @@ bool activate_talent(const talent& tal)
         }
     }
 
-    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true))
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT || tal.which == ABIL_FLY)
-        && !flight_allowed())
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    // Some abilities don't need a hunger check.
-    bool hungerCheck = true;
-    switch (tal.which)
-    {
-        case ABIL_RENOUNCE_RELIGION:
-        case ABIL_CONVERT_TO_BEOGH:
-        case ABIL_STOP_FLYING:
-#if TAG_MAJOR_VERSION == 34
-        case ABIL_EVOKE_TURN_VISIBLE:
-#endif
-        case ABIL_END_TRANSFORMATION:
-        case ABIL_CANCEL_PPROJ:
-        case ABIL_STOP_RECALL:
-        case ABIL_TRAN_BAT:
-        case ABIL_ASHENZARI_END_TRANSFER:
-        case ABIL_HEPLIAKLQANA_IDENTITY:
-        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
-        case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
-        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
-        case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-        case ABIL_WU_JIAN_WALLJUMP:
-        case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
-            hungerCheck = false;
-            break;
-        default:
-            break;
-    }
-
-    if (hungerCheck && apply_starvation_penalties())
-    {
-        canned_msg(MSG_TOO_HUNGRY);
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
     const ability_def& abil = get_ability_def(tal.which);
 
-    // Check that we can afford to pay the costs.
-    // Note that mutation shenanigans might leave us with negative MP,
-    // so don't fail in that case if there's no MP cost.
-    if (abil.mp_cost > 0 && !enough_mp(abil.mp_cost, false, true))
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    const int hpcost = abil.hp_cost.cost(you.hp_max);
-    if (hpcost > 0 && !enough_hp(hpcost, false))
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    if (!_check_ability_possible(abil, hungerCheck))
+    if (!_check_ability_possible(abil))
     {
         crawl_state.zero_turns_taken();
         return false;
