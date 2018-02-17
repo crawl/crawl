@@ -792,8 +792,7 @@ void full_describe_view()
         return desc_menu.menu_action == InvMenu::ACT_EXAMINE;
     };
     desc_menu.show();
-    if (!crawl_state.doing_prev_cmd_again)
-        redraw_screen();
+    redraw_screen();
 
 #ifndef USE_TILE_LOCAL
     if (!list_items.empty())

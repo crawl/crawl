@@ -265,7 +265,6 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
             describe_spell(get_spell_by_letter(item.hotkeys[0]), nullptr);
-            redraw_screen(); // XXX: not needed?
             return true;
         }
         else

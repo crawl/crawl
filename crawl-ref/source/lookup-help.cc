@@ -905,7 +905,6 @@ void LookupType::display_keys(vector<string> &key_list) const
 
     desc_menu.on_single_selection = [this, doing_mons](const MenuEntry& item)
     {
-        /* redraw_screen(); */
         ASSERT(item.hotkeys.size() >= 1);
 
         string key;
