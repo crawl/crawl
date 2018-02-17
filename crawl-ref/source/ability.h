@@ -35,8 +35,7 @@ int abil_skill_weight(ability_type abil);
 
 void no_ability_msg();
 bool activate_ability();
-bool check_ability_possible(const ability_type ability, bool hungerCheck = true,
-                            bool quiet = false);
+bool check_ability_possible(const ability_type ability, bool quiet = false);
 bool activate_talent(const talent& tal);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
