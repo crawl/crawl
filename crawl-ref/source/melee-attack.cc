@@ -3487,6 +3487,12 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     if (apply_starvation_penalties())
         your_to_hit -= 3;
 
+    if (you.duration[DUR_VERTIGO])
+        your_to_hit -= 5;
+
+    if (you.confused())
+        your_to_hit -= 5;
+
     your_to_hit += slaying_bonus();
 
     return your_to_hit;
