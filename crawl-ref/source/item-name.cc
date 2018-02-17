@@ -3635,7 +3635,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                        && regeneration_is_inhibited())
                    || (temp && you.species == SP_VAMPIRE
-                      && you.hunger_state <= HS_STARVING);
+                       && you.hunger_state <= HS_STARVING);
 
         case AMU_MANA_REGENERATION:
             return you_worship(GOD_PAKELLAS);

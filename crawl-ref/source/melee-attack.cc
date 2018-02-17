@@ -1490,7 +1490,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
-    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    if (apply_starvation_penalties())
         damage -= random2(5);
 
     return damage;
@@ -3484,7 +3484,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     if (you.get_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
-    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    if (apply_starvation_penalties())
         your_to_hit -= 3;
 
     your_to_hit += slaying_bonus();
