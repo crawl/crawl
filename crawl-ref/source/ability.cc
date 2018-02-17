@@ -83,6 +83,10 @@
 #include "unicode.h"
 #include "view.h"
 
+#ifdef USE_TILE
+# include "tiledef-icons.h"
+#endif
+
 enum class abflag
 {
     none                = 0x00000000,
@@ -3168,8 +3172,17 @@ int choose_ability_menu(const vector<talent>& talents)
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_ability(talents[i].which), TEX_GUI));
 #endif
+            if (!check_ability_possible(talents[i].which, true))
+            {
+                me->colour = COL_INAPPLICABLE;
+#ifdef USE_TILE
+                me->add_tile(tile_def(TILEI_MESH, TEX_ICONS));
+#endif
+            }
+            else if (_check_ability_dangerous(talents[i].which, true))
+                me->colour = COL_DANGEROUS;
             // Only check this here, since your god can't hate its own abilities
-            if (god_hates_ability(talents[i].which, you.religion))
+            else if (god_hates_ability(talents[i].which, you.religion))
                 me->colour = COL_FORBIDDEN;
             abil_menu.add_entry(me);
         }
@@ -3197,6 +3210,15 @@ int choose_ability_menu(const vector<talent>& talents)
                 me->add_tile(tile_def(tileidx_ability(talents[i].which),
                                       TEX_GUI));
 #endif
+                if (!check_ability_possible(talents[i].which, true))
+                {
+                    me->colour = COL_INAPPLICABLE;
+#ifdef USE_TILE
+                    me->add_tile(tile_def(TILEI_MESH, TEX_ICONS));
+#endif
+                }
+                else if (_check_ability_dangerous(talents[i].which, true))
+                    me->colour = COL_DANGEROUS;
                 abil_menu.add_entry(me);
             }
         }
