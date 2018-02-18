@@ -13,6 +13,7 @@ from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
 import process_handler
+import userdb
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -214,7 +215,8 @@ if __name__ == "__main__":
     shed_privileges()
 
     if dgl_mode:
-        ensure_user_db_exists()
+        userdb.ensure_user_db_exists()
+    userdb.ensure_settings_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)

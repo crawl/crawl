@@ -185,6 +185,16 @@ class CrawlProcessHandlerBase(object):
                 result.append(w)
         return result
 
+    def get_primary_receiver(self):
+        # TODO: does this work with console? Probably not...
+        if self.username is None:
+            return None
+        receivers = self.get_receivers_by_username(self.username)
+        for r in receivers:
+            if not r.watched_game:
+                return r
+        return None
+
     def send_to_user(self, username, msg, **data):
         # a single user may be viewing from multiple receivers
         for receiver in self.get_receivers_by_username(username):
@@ -227,17 +237,39 @@ class CrawlProcessHandlerBase(object):
         watchers.sort(key=lambda s:s.lower())
         return (player_name, watchers)
 
-    def mute(self, source, target):
-        player_name, watchers = self.get_watchers()
+    def is_player(self, username):
         # TODO: probably doesn't work for console players spectating themselves
         # TODO: let admin accounts mute as well?
-        if (source != player_name):
+        player_name, watchers = self.get_watchers()
+        return (username == player_name)
+
+    def restore_mutelist(self, source, l):
+        if not self.is_player(source) or l is None:
+            return
+        if len(l) == 0:
+            return
+        self.muted = {u for u in l if u != source}
+        self.handle_notification(source, "Restoring mute list.")
+        self.show_mute_list(source)
+        self.logger.info("Player '%s' restoring mutelist %s" %
+                                            (source, repr(list(self.muted))))
+
+    def save_mutelist(self, source):
+        if not self.is_player(source):
+            return
+        receiver = self.get_primary_receiver()
+        if receiver is not None:
+            receiver.save_mutelist(list(self.muted))
+
+    def mute(self, source, target):
+        if not self.is_player(source):
             self.handle_notification(source,
-                                    "Only the player can mute spectators.")
+                            "You do not have permission to mute spectators.")
             return False
         if (source == target):
             self.handle_notification(source, "You can't mute yourself!")
             return False
+        player_name, watchers = self.get_watchers()
         watchers = set(watchers)
         if not target in watchers:
             self.handle_notification(source, "Mute who??")
@@ -246,18 +278,19 @@ class CrawlProcessHandlerBase(object):
         self.handle_notification(source,
                             "Spectator '%s' has now been muted." % target)
         self.muted |= {target}
+        self.save_mutelist(source)
         return True
 
     def unmute(self, source, target):
-        player_name, watchers = self.get_watchers()
-        if (source != player_name):
+        if not self.is_player(source):
             self.handle_notification(source,
-                                    "Only the player can unmute spectators.")
+                            "You do not have permission to unmute spectators.")
             return False
         if (source == target):
             self.handle_notification(source,
                                     "You can't unmute (or mute) yourself!")
             return False
+        player_name, watchers = self.get_watchers()
         watchers = set(watchers)
         if not target in self.muted:
             self.handle_notification(source, "Unmute who??")
@@ -265,13 +298,12 @@ class CrawlProcessHandlerBase(object):
         self.logger.info("Player '%s' has unmuted '%s'" % (source, target))
         self.handle_notification(source, "You have unmuted '%s'." % target)
         self.muted -= {target}
+        self.save_mutelist(source)
         return True
 
     def show_mute_list(self, source):
-        player_name, watchers = self.get_watchers()
-        # TODO: I don't quite understand player_name vs. self.username
-        if (source != player_name):
-            return False # TODO: is this the best way?
+        if not self.is_player(source):
+            return False
         names = list(self.muted)
         names.sort(key=lambda s: s.lower())
         if len(names) == 0:
