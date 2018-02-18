@@ -977,6 +977,7 @@ function (exports, $, key_conversion, chat, comm) {
         playing = true;
         watching = false;
     }
+
     function crawl_ended(data)
     {
         playing = false;

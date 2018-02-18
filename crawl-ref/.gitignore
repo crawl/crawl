@@ -183,6 +183,7 @@ Thumbs.db
 
 # Webtiles stuff
 passwd.db3
+user_settings.db3
 *.ttyrec
 /source/rcs
 
