@@ -143,7 +143,7 @@ longbow "Zephyr"
 
 This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
 one of the children of Uskayaw. The bow can be pulled with incredible speed,
-and it launches swift and true. It is also nearly indestructable, which is
+and it launches swift and true. It is also nearly indestructible, which is
 fortunate given that the original owner was ripped to pieces by jealous
 celebrants.
 %%%%
