@@ -2285,7 +2285,6 @@ protected:
         {
             //return the menu title to its previous text.
             set_title(temp_title);
-            draw_title();
             num = -2;
 
             // Disarm ^D here, because process_key doesn't always set lastch.
@@ -2322,7 +2321,6 @@ protected:
                 lastch = CONTROL('D');
                 temp_title = title->text;
                 set_title("Select to reset item to default: ");
-                draw_title();
             }
 
             return true;
@@ -2603,8 +2601,7 @@ void check_item_knowledge(bool unknown_items)
 
     string prompt = "(_ for help)";
     //TODO: when the menu is opened, the text is not justified properly.
-    stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
-                                                         - strwidth(prompt)),
+    stitle = stitle + string(max(0, 80 - strwidth(stitle) - strwidth(prompt)),
                              ' ') + prompt;
 
     menu.set_preselect(&selected_items);
@@ -2692,7 +2689,6 @@ void display_runes()
     auto title = make_stringf("<white>Runes of Zot (</white>"
                               "<%s>%d</%s><white> collected) & Orbs of Power</white>",
                               col, runes_in_pack(), col);
-    title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
     InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
 

@@ -225,23 +225,19 @@ void Widget::_set_parent(Widget* p)
     m_parent = p;
 }
 
-void Widget::_invalidate_sizereq()
+void Widget::_invalidate_sizereq(bool immediate)
 {
-    cached_sr_valid[0] = false;
-    cached_sr_valid[1] = false;
-    if (m_parent)
-        m_parent->_invalidate_sizereq();
-    ui_root.queue_layout();
+    for (auto w = this; w && !w->alloc_queued; w = w->m_parent)
+        fill(begin(w->cached_sr_valid), end(w->cached_sr_valid), false);
+    if (immediate)
+        ui_root.queue_layout();
 }
 
-void Widget::_queue_allocation()
+void Widget::_queue_allocation(bool immediate)
 {
-    if (alloc_queued)
-        return;
-    alloc_queued = true;
-    if (m_parent)
-        m_parent->_queue_allocation();
-    else
+    for (auto w = this; w && !w->alloc_queued; w = w->m_parent)
+        w->alloc_queued = true;
+    if (immediate)
         ui_root.queue_layout();
 }
 
