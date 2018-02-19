@@ -118,14 +118,9 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless()
+bool you_foodless(bool temp)
 {
-    return you.undead_state() == US_UNDEAD;
-}
-
-bool you_foodless_normally()
-{
-    return you.undead_state(false) == US_UNDEAD;
+    return you.undead_state(temp) == US_UNDEAD;
 }
 
 bool prompt_eat_item(int slot)
@@ -154,9 +149,10 @@ bool prompt_eat_item(int slot)
     return true;
 }
 
-static bool _eat_check(bool check_hunger = true, bool silent = false)
+static bool _eat_check(bool check_hunger = true, bool silent = false,
+                                                            bool temp = true)
 {
-    if (you_foodless())
+    if (you_foodless(temp))
     {
         if (!silent)
         {
@@ -763,14 +759,14 @@ bool is_noxious(const item_def &food)
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
 // be eaten (respecting species and mutations set).
-bool is_inedible(const item_def &item)
+bool is_inedible(const item_def &item, bool temp)
 {
     // Mummies and liches don't eat.
-    if (you_foodless())
+    if (you_foodless(temp))
         return true;
 
     if (item.base_type == OBJ_FOOD // XXX: removeme?
-        && !can_eat(item, true, false))
+        && !can_eat(item, true, false, temp))
     {
         return true;
     }
@@ -790,7 +786,7 @@ bool is_inedible(const item_def &item)
             item_def chunk = item;
             chunk.base_type = OBJ_FOOD;
             chunk.sub_type  = FOOD_CHUNK;
-            if (is_inedible(chunk))
+            if (is_inedible(chunk, temp))
                 return true;
         }
     }
@@ -855,8 +851,10 @@ bool is_forbidden_food(const item_def &food)
  *  @param food the item (must be a corpse or food item)
  *  @param suppress_msg whether to print why you can't eat it
  *  @param check_hunger whether to check how hungry you are currently
+ *  @param temp whether to factor in temporary forms
  */
-bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
+bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
+                                                                bool temp)
 {
 #define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
@@ -868,7 +866,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
         check_hunger = false;
 
     // [ds] These redundant checks are now necessary - Lua might be calling us.
-    if (!_eat_check(check_hunger, suppress_msg))
+    if (!_eat_check(check_hunger, suppress_msg, temp))
         return false;
 
     if (is_noxious(food))

@@ -218,12 +218,11 @@ interlevel-travel.depth.prompt
 butchering
 
 <h>Butchering<h>
-<w>y, c</w>: Butcher/bottle the selected corpse.
-<w>a</w>   : Butcher/bottle this corpse and all the ones following in the stack.
-      If the prompt is about bottling the blood, all bloodless corpses
-      will be skipped.
-<w>q</w>   : Quit the prompt (don't butcher/bottle anything).
-<w>n</w>   : Don't butcher/bottle this corpse, skip to the next one.
+Only corpses that your species can butcher or bottle will be available here.
+<w>y</w>      : Butcher/bottle the selected corpse.
+<w>a, c, e</w>: Butcher/bottle this corpse and all the ones following in the stack.
+<w>q</w>      : Quit the prompt (don't butcher/bottle anything).
+<w>n</w>      : Don't butcher/bottle this corpse, skip to the next one.
       (This is the default behaviour if you answer with anything not
        listed here.)
 

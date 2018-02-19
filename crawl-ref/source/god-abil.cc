@@ -4209,7 +4209,7 @@ static int _gozag_max_shops()
     const int max_non_food_shops = 3;
 
     // add a food shop if you can eat (non-mu/dj)
-    if (!you_foodless_normally())
+    if (!you_foodless(false))
         return max_non_food_shops + 1;
     return max_non_food_shops;
 }
@@ -4307,7 +4307,7 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
     shop_type type = NUM_SHOPS;
-    if (index == 0 && !you_foodless_normally())
+    if (index == 0 && !you_foodless(false))
         type = SHOP_FOOD;
     else
     {
