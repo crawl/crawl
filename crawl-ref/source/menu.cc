@@ -1243,19 +1243,10 @@ bool Menu::process_key(int keyin)
         {
             if (!on_single_selection)
                 return false;
-#ifdef USE_TILE_WEB
-            // XXX: on_single_selection is designed to show UI without hiding
-            // the menu, but webtiles can't handle that at the moment, so hide
-            // the menu then show it after the hook has returned
-            tiles.pop_menu();
-#endif
-            if (!on_single_selection(*sel[0]))
+            MenuEntry *item = sel[0];
+            if (!on_single_selection(*item))
                 return false;
-#ifdef USE_TILE_WEB
-            tiles.push_menu(this);
-            _webtiles_title_changed = false;
-#endif
-            deselect_all(true);
+            deselect_all();
             return true;
         }
 
