@@ -321,10 +321,12 @@ body {
 
 .menu_title {
     white-space: pre;
+    margin-bottom: 5px;
 }
 
 .menu_more {
     white-space: pre;
+    margin-top: 5px;
 }
 
 .menu_contents {
@@ -334,16 +336,24 @@ body {
 .menu_contents ol {
     list-style: none;
     padding: 0;
-    margin: 2px;
+    margin: 0;
 }
 
 .menu_contents li {
     white-space: pre;
+    padding: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.001);
 }
 
 .menu_contents li.selectable:hover {
-    outline: 1px solid lightgray;
+    background: rgba(255,255,255,0.15);
     cursor: pointer;
+    color: white;
+}
+
+.menu_contents li.selectable:active {
+    background: black;
+    border: 1px solid #222;
 }
 
 .menu_contents li.placeholder {
