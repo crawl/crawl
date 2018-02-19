@@ -307,43 +307,50 @@ body {
 }
 
 /* menus */
-#menu {
+.menu {
     line-height: 1.2em;
     min-width: 40em;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
-#menu_title {
+.menu_title {
     white-space: pre;
 }
 
-#menu_more {
+.menu_more {
     white-space: pre;
 }
 
-#menu_contents {
+.menu_contents {
     overflow: hidden;
 }
 
-#menu_contents ol {
+.menu_contents ol {
     list-style: none;
     padding: 0;
     margin: 2px;
 }
 
-#menu_contents li {
+.menu_contents li {
     white-space: pre;
 }
 
-#menu_contents li.selectable:hover {
+.menu_contents li.selectable:hover {
     outline: 1px solid lightgray;
     cursor: pointer;
 }
 
-#menu_contents li.placeholder {
+.menu_contents li.placeholder {
     color: darkgray;
 }
 
-#menu .pattern_select {
+.menu .pattern_select {
     height: 1em;
     border: 0;
     padding: 0;
@@ -409,7 +416,7 @@ body {
 #game .bg14 { background-color: #fce94f; } /* yellow */
 #game .bg15 { background-color: #eeeeec; } /* white */
 
-#menu_txt {
+.menu_txt {
     width: 80ch;
 }
 

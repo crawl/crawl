@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div id="register" class="floating_dialog" style="display: none;">
+      <div id="register" class="hidden">
         <span id="register_message"></span>
         <form action="#" id="register_form">
           <label for="username">Username:</label>
@@ -52,7 +52,7 @@
         </form>
       </div>
 
-      <div id="rc_edit" class="floating_dialog" style="display: none;">
+      <div id="rc_edit" class="hidden">
         <form action="#" id="rc_edit_form">
           <textarea class="text" name="rc_file_contents" id="rc_file_contents"
                     cols="80" rows="25">
@@ -63,11 +63,11 @@
         </form>
       </div>
 
-      <div id="exit_game" class="floating_dialog" style="display: none;">
+      <div id="exit_game" class="hidden">
           <p id="exit_game_reason"></p>
           <pre id="exit_game_message"></pre>
           <p id="exit_game_dump"></p>
-          <a class="hide_dialog" href="javascript:">Close</a>
+          <a href=# data-action=close>Close</a>
       </div>
 
       <div id="banner">{% include banner.html %}</div>
@@ -154,15 +154,13 @@
         <img style="display:none;" alt="" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
       </div>
 
-      <div id="stale_processes_message" class="floating_dialog"
-           style="display: none;" tabindex="1000">
+      <div id="stale_processes_message" class="hidden" tabindex="1000">
         There are some stale <span class="game_name"></span> processes.
         They'll be stopped in <span class="recover_timeout"></span> seconds.
         Press a key now if you don't want this to happen!
       </div>
 
-      <div id="force_terminate" class="floating_dialog"
-           style="display: none;" tabindex="1001">
+      <div id="force_terminate" class="hidden" tabindex="1001">
         Couldn't stop one of your stale <span class="game_name"></span> processes
         gracefully. Force its termination? [yn]
         <br>
@@ -174,6 +172,17 @@
     </div>
 
     <div id="overlay"></div>
+    <div id="ui-stack"></div>
+
+    <div class="templates">
+        <div class="ui-popup">
+            <div class=ui-popup-overlay></div>
+            <div class=ui-popup-outer>
+                <div class=ui-popup-inner>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="chat" style="display: none;">
       <a href="javascript:" id="chat_caption">

@@ -429,6 +429,10 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 {
     const newgame_def ng_reset = ng;
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
     if (ng.type == GAME_TYPE_TUTORIAL)
     {
         choose_tutorial_character(choice);

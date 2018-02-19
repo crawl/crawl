@@ -1,6 +1,6 @@
-define(["jquery", "comm", "client", "./enums", "./cell_renderer",
+define(["jquery", "comm", "client", "ui", "./enums", "./cell_renderer",
         "./util", "./options"],
-function ($, comm, client, enums, cr, util, options) {
+function ($, comm, client, ui, enums, cr, util, options) {
     "use strict";
 
     var chunk_size = 50;
@@ -89,73 +89,49 @@ function ($, comm, client, enums, cr, util, options) {
 
     function display_menu()
     {
-        var menu_div = $("<div>");
+        var menu_div = $(".templates > .menu").clone();
         menu_div.addClass("menu_" + menu.tag);
         menu.elem = menu_div;
-
-        $("#menu").html(menu_div);
 
         if (menu.type === "crt")
         {
             // Custom-drawn CRT menu
-            menu_div.attr("id", "menu_txt");
-            client.show_dialog("#menu");
-            menu_div.bind("text_update", function () {
-                client.center_element($("#menu"));
-            });
+            menu_div.removeClass("menu").addClass("menu_txt");
+            ui.show_popup(menu_div);
             return;
         }
 
         // Normal menu
-        menu_div.prepend("<div id='menu_title'>");
+        menu_div.prepend("<div class='menu_title'>");
         update_title();
 
-        var content_div= $("<div id='menu_contents'>");
-        content_div.css({
-            "max-height": $(window).height() - 100
-        });
+        var content_div= $("<div class='menu_contents'>");
         menu_div.append(content_div);
 
-        var items_inner = $("<div id='menu_contents_inner'>");
+        var items_inner = $("<div class='menu_contents_inner'>");
         content_div.append(items_inner);
 
         var container = $("<ol>");
         items_inner.append(container);
 
-        if (!menu.created)
-        {
-            var chunk = menu.items;
-            menu.items = { length: menu.total_items };
-            menu.first_present = 999999;
-            menu.last_present = -999999;
-            prepare_item_range(menu.chunk_start,
-                               menu.chunk_start + chunk.length - 1,
-                               true, container);
-            update_item_range(menu.chunk_start, chunk);
-        }
-        else
-        {
-            for (var i = menu.first_present; i <= menu.last_present; ++i)
-            {
-                var item = menu.items[i];
-                if (!item) continue;
-                item.elem = $("<li>...</li>");
-                item.elem.data("item", item);
-                item.elem.addClass("placeholder");
-                container.append(item.elem);
-                set_item_contents(item, item.elem);
-            }
-        }
+        var chunk = menu.items;
+        menu.items = { length: menu.total_items };
+        menu.first_present = 999999;
+        menu.last_present = -999999;
+        prepare_item_range(menu.chunk_start,
+                            menu.chunk_start + chunk.length - 1,
+                            true, container);
+        update_item_range(menu.chunk_start, chunk);
 
-        menu_div.append("<div id='menu_more'>" + util.formatted_string_to_html(menu.more)
+        menu_div.append("<div class='menu_more'>" + util.formatted_string_to_html(menu.more)
                         + "</div>");
 
         content_div.scroll(menu_scroll_handler);
 
         menu.server_scroll = true;
-        menu.created = true;
 
-        client.show_dialog("#menu");
+        ui.show_popup(menu_div);
+        handle_size_change();
 
         if (menu.flags & enums.menu_flag.START_AT_END)
         {
@@ -211,7 +187,7 @@ function ($, comm, client, enums, cr, util, options) {
             }
         }
 
-        container = container || $("#menu_contents_inner ol");
+        container = container || menu.elem.find(".menu_contents_inner ol");
 
         // Find the place where we add the new elements
         var present_index = end;
@@ -322,7 +298,7 @@ function ($, comm, client, enums, cr, util, options) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
+        var contents = menu.elem.find(".menu_contents")
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top - baseline);
@@ -343,7 +319,7 @@ function ($, comm, client, enums, cr, util, options) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
+        var contents = menu.elem.find(".menu_contents")
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top + item.elem.height()
@@ -357,7 +333,7 @@ function ($, comm, client, enums, cr, util, options) {
 
     function update_visible_indices()
     {
-        var contents = $("#menu_contents");
+        var contents = menu.elem.find(".menu_contents")
         var top = contents.offset().top;
         var bottom = top + contents.innerHeight();
         menu.first_visible = null;
@@ -368,7 +344,7 @@ function ($, comm, client, enums, cr, util, options) {
             var item = menu.items[i];
             var item_top = item.elem.offset().top;
             var item_bottom = item_top + item.elem.outerHeight();
-            if (item_top <= top && item_bottom >= top)
+            if (item_top < top && item_bottom >= top)
             {
                 var candidate = Number(i) + 1;
                 while (menu.items[candidate] == null &&
@@ -423,13 +399,14 @@ function ($, comm, client, enums, cr, util, options) {
 
     function update_title()
     {
-        $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
-        $("#menu_title").css("padding-left", menu_title_indent()+"px");
+        var title = menu.elem.find(".menu_title")
+        title.html(util.formatted_string_to_html(menu.title.text));
+        title.css("padding-left", menu_title_indent()+"px");
     }
 
     function pattern_select()
     {
-        var title = $("#menu_title");
+        var title = menu.elem.find(".menu_title")
         title.html("Select what? (regex) ");
         var input = $("<input class='text pattern_select' type='text'>");
         title.append(input);
@@ -468,7 +445,11 @@ function ($, comm, client, enums, cr, util, options) {
 
     function open_menu(data)
     {
-        if (data.replace) menu_stack.pop();
+        if (data.replace)
+        {
+            menu_stack.pop();
+            ui.hide_popup();
+        }
         menu_stack.push(data);
         menu = data;
 
@@ -478,26 +459,8 @@ function ($, comm, client, enums, cr, util, options) {
     function close_menu()
     {
         menu_stack.pop();
-
-        if (menu_stack.length == 0)
-        {
-            menu = null;
-            // Delay closing the dialog a bit to prevent flickering
-            // if the game immediately opens another one
-            // (e.g. when looking at an item from the inventory)
-            if (menu_close_timeout)
-                clearTimeout(menu_close_timeout);
-            menu_close_timeout = setTimeout(function () {
-                menu_close_timeout = null;
-                if (menu_stack.length == 0)
-                    client.hide_dialog();
-            }, 50);
-        }
-        else
-        {
-            menu = menu_stack[menu_stack.length - 1];
-            display_menu();
-        }
+        ui.hide_popup();
+        menu = menu_stack[menu_stack.length - 1];
     }
 
     function update_menu(data)
@@ -518,9 +481,7 @@ function ($, comm, client, enums, cr, util, options) {
             });
         }
         update_title();
-        $("#menu_more").html(util.formatted_string_to_html(menu.more));
-
-        client.center_element($("#menu"));
+        menu.elem.find(".menu_more").html(util.formatted_string_to_html(menu.more));
     }
 
     function update_menu_items(data)
@@ -546,13 +507,12 @@ function ($, comm, client, enums, cr, util, options) {
         if (menu_stack.length > 0) return;
 
         menu_stack = data.menus;
-        if (menu_stack.length > 0)
+        menu = null;
+        for (var i = 0; i < menu_stack.length; i++)
         {
-            menu = menu_stack[menu_stack.length - 1];
+            menu = menu_stack[i];
             display_menu();
         }
-        else
-            menu = null;
     }
 
     comm.register_handlers({
@@ -570,33 +530,25 @@ function ($, comm, client, enums, cr, util, options) {
     {
         if (!menu) return;
 
-        var items = $("#menu_contents");
-        items.css({
-            "max-height": $(window).height() - 100
-        });
-        client.center_element($("#menu"));
         if (menu.anchor_last)
             scroll_bottom_to_item(menu.last_visible, true);
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
-        // scrolling might not call this, but still need to show/hide more
-        menu_scroll_handler();
+
+        if (menu.type != "crt" && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
+        {
+            var contents_height = menu.elem.find(".menu_contents_inner").height();
+            var contents = menu.elem.find(".menu_contents");
+            var more = menu.elem.find(".menu_more");
+            var avail_height = contents.height() + more.height();
+            more[0].classList.toggle("hidden", contents_height <= avail_height);
+        }
     }
 
     function menu_scroll_handler()
     {
-        var contents = $("#menu_contents");
         update_visible_indices();
         schedule_server_scroll();
-        if (menu.last_visible >= menu.items.length - 1
-            && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
-        {
-            $("#menu_more").css("visibility", "hidden");
-        }
-        else
-        {
-            $("#menu_more").css("visibility", "visible");
-        }
     }
 
     function menu_keydown_handler(event)
@@ -707,13 +659,13 @@ function ($, comm, client, enums, cr, util, options) {
         if (options.get("tile_font_crt_size") === 0)
         {
             $("#crt").css("font-size", "");
-            $("#menu").css("font-size", "");
+            $(".menu").css("font-size", "");
         }
         else
         {
             $("#crt").css("font-size",
                 options.get("tile_font_crt_size") + "px");
-            $("#menu").css("font-size",
+            $(".menu").css("font-size",
                 options.get("tile_font_crt_size") + "px");
         }
 
@@ -722,7 +674,7 @@ function ($, comm, client, enums, cr, util, options) {
         {
             family += ", monospace";
             $("#crt").css("font-family", family);
-            $("#menu").css("font-family", family);
+            $(".menu").css("font-family", family);
         }
 
         handle_size_change();

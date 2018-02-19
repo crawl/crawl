@@ -408,6 +408,10 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
     clrscr();
     cprintf("Goodbye, %s.", you.your_name.c_str());
     cprintf("\n\n    "); // Space padding where # would go in list format
