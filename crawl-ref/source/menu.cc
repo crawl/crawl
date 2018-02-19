@@ -51,81 +51,116 @@
 #endif
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
- #include "tilereg-menu.h"
 #endif
 #ifdef USE_TILE
  #include "travel.h"
 #endif
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
 #include "windowmanager.h"
 #endif
 
-class MenuDisplay
+using namespace ui;
+
+class UIMenu : public Widget
 {
 public:
-    MenuDisplay(Menu *menu) : m_menu(menu) {};
-    virtual ~MenuDisplay() {}
-    virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
-    virtual void draw_items() = 0;
-    virtual bool item_in_page(int index) = 0;
-    virtual void set_offset(int lines) = 0;
-    virtual void draw_title(formatted_string &fs) = 0;
-    virtual void draw_more() = 0;
-    virtual void set_num_columns(int columns) = 0;
-    virtual bool scroll_page(int delta) = 0;
-    virtual bool scroll_line(int delta) = 0;
-    virtual bool scroll_to_item(int index) = 0;
-    virtual void get_visible_items_range(int &first, int &last) = 0;
+    UIMenu(Menu *menu) : m_menu(menu), vis_item_first(0), vis_item_last(0), title_height(0), more_height(0)
+
+#ifdef USE_TILE_LOCAL
+    , m_num_columns(1), m_max_height(INT_MAX), m_mouse_idx(-1), m_font_entry(tiles.get_crt_font()), m_font_buf(m_font_entry)
+#endif
+    {
+#ifdef USE_TILE_LOCAL
+        const ImageManager *m_image = tiles.get_image_manager();
+        for (int i = 0; i < TEX_MAX; i++)
+            m_tile_buf[i].set_tex(&m_image->m_textures[i]);
+#else
+        expand_h = true;
+#endif
+        expand_v = true;
+    };
+    ~UIMenu() {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+#ifdef USE_TILE_LOCAL
+    virtual bool on_event(const wm_event& event) override;
+#endif
+
+    void update_more();
+    void update_title(formatted_string &fs);
+    void update_item(int index);
+    void update_items();
+
+    bool scroll_page(int delta);
+    bool scroll_line(int delta);
+    bool scroll_to_item(int index, bool force = false);
+
+    void get_visible_items_range(int &first, int &last);
+    bool item_in_page(int index);
+
 protected:
     Menu *m_menu;
-};
+    int vis_item_first, vis_item_last;
+    formatted_string title;
+    int title_height, more_height;
 
-class MenuDisplayText : public MenuDisplay
-{
-public:
-    MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_first_entry(0) {};
-    virtual void draw_stock_item(int index, const MenuEntry *me) override;
-    virtual void draw_items() override;
-    virtual bool item_in_page(int index) override;
-    virtual void draw_title(formatted_string &fs) override;
-    virtual void draw_more() override;
-    virtual void set_offset(int lines) override { m_offset = lines; }
-    virtual void set_num_columns(int columns) override {}
-    virtual bool scroll_page(int delta) override;
-    virtual bool scroll_line(int delta) override;
-    virtual bool scroll_to_item(int index) override;
-    virtual void get_visible_items_range(int &first, int &last) override;
+    bool m_show_more;
 
-    bool jump_to_item(int index);
-    void cgotoxy_for_index(int index);
-protected:
+#ifndef USE_TILE_LOCAL
     int m_pagesize;
-    int m_offset;
-    int m_first_entry;
-    int m_last_entry;
+#else
+    void do_layout(int mw, int mh);
+    int get_scroll_y() const {
+        if (!item_info.size())
+            return 0;
+        else
+            return title_height - item_info[vis_item_first].y;
+    };
 
-    int recalculate_page_size();
+    int m_nat_column_width, m_height; // set by do_layout()
+
+    struct MenuItemInfo {
+        int x, y, h, column;
+        formatted_string text;
+        vector<tile_def> tiles;
+        bool heading;
+    };
+    vector<MenuItemInfo> item_info;
+
+    void pack_buffers();
+    int mouse_entry(const int x, const int y);
+
+    // starts at 1, may be changed to 2 at the end of the first allocation cycle
+    // if there's not enough vertical space, and is reset to 1 at the end of the
+    // second allocation cycle
+    int m_num_columns;
+    // set at the end of the allocation cycle: used by mouse_entry()
+    int m_real_num_columns;
+    int m_single_col_height;
+    int m_max_height;
+
+    bool m_draw_tiles;
+    int m_mouse_idx;
+    FontWrapper *m_font_entry;
+
+    ShapeBuffer m_shape_buf;
+    LineBuffer m_line_buf, m_div_line_buf;
+    FontBuffer m_font_buf;
+    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
+
+    static constexpr int pad_right = 10;
+#endif
+
+private:
+    int _formatted_string_height(const formatted_string &s) const;
 };
 
-class MenuDisplayTile : public MenuDisplay
-{
-public:
-    MenuDisplayTile(Menu *menu) : MenuDisplay(menu) {};
-    virtual void draw_stock_item(int index, const MenuEntry *me) override;
-    virtual void draw_items() override;
-    virtual bool item_in_page(int index) override;
-    virtual void set_offset(int lines) override;
-    virtual void draw_title(formatted_string &fs) override;
-    virtual void draw_more() override;
-    virtual void set_num_columns(int columns) override;
-    virtual bool scroll_page(int delta) override;
-    virtual bool scroll_line(int delta) override;
-    virtual bool scroll_to_item(int index) override;
-    virtual void get_visible_items_range(int &first, int &last) override;
-};
-
+#ifndef USE_TILE_LOCAL
 static bool menu_entries_have_dup_hotkeys(vector<MenuEntry*>& items)
 {
     bool used_hotkeys[52] = {0};
@@ -146,200 +181,590 @@ static bool menu_entries_have_dup_hotkeys(vector<MenuEntry*>& items)
     }
     return false;
 }
+#endif
 
-int MenuDisplayText::recalculate_page_size()
-{
-    m_pagesize = get_number_of_lines() - m_menu->title_height() - 1;
-    if (menu_entries_have_dup_hotkeys(m_menu->items))
-        m_pagesize = min(52, m_pagesize);
-
-    m_last_entry = min(m_first_entry + m_pagesize, (int)m_menu->items.size()) - 1;
-
-    return m_pagesize;
-}
-
-void MenuDisplayText::draw_items()
-{
-    recalculate_page_size();
-
-    for (int i = m_first_entry; i <= m_last_entry; ++i)
-        m_menu->draw_item(i);
-
-    // Update the paging info so we can set the title correctly
-    m_menu->num_pages = m_menu->items.empty() ? 1 : ((m_menu->items.size()-1) / m_pagesize + 1);
-    m_menu->cur_page = m_first_entry / m_pagesize + 1;
-}
-
-bool MenuDisplayText::item_in_page(int index)
-{
-    return index >= m_first_entry && index < m_first_entry + m_pagesize;
-}
-
-bool MenuDisplayText::scroll_page(int delta)
-{
-    return scroll_to_item(m_first_entry + m_pagesize*delta);
-}
-
-bool MenuDisplayText::scroll_line(int delta)
-{
-    return scroll_to_item(m_first_entry + delta);
-}
-
-// XXX: This is a nasty but at least localized hack...
-void MenuDisplayText::cgotoxy_for_index(int index)
-{
-    cgotoxy(1, m_offset + index - m_first_entry);
-}
-
-bool MenuDisplayText::scroll_to_item(int index)
-{
-    // XXX: why was this needed
-    if (m_menu->items.empty())
-        return false;
-
-    int old_first = m_first_entry;
-    recalculate_page_size();
-
-    int dir = index < m_first_entry ? -1 : 1;
-
-    // Find leading edge of page area
-    for (int i = dir == -1 ? m_first_entry : m_last_entry; ; i += dir, m_first_entry += dir)
-    {
-        if (m_first_entry == index)
-            break;
-        if (i+dir < 0 || i+dir >= (int)m_menu->items.size())
-            break;
-    }
-
-    return old_first != m_first_entry;
-}
-
-bool MenuDisplayText::jump_to_item(int index)
-{
-    int old_first = m_first_entry;
-    recalculate_page_size();
-
-    const int breakpoint = m_menu->items.size() - m_pagesize;
-    m_first_entry = max(0, min(index, breakpoint));
-
-    return old_first != m_first_entry;
-}
-
-void MenuDisplayText::get_visible_items_range(int &first, int &last)
-{
-    first = m_first_entry;
-    last = m_last_entry;
-}
-
-void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
+void UIMenu::update_items()
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
-
-    cgotoxy(1, m_offset + index - m_first_entry);
-
-    const int col = m_menu->item_colour(index, me);
-    textcolour(col);
-    const bool needs_cursor = (m_menu->get_cursor() == index
-                               && m_menu->is_set(MF_MULTISELECT));
-
-    if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
-    {
-        formatted_string s = formatted_string::parse_string(
-            me->get_text(needs_cursor), col);
-        s.chop(get_number_of_cols()).display();
-    }
-    else
-    {
-        string text = me->get_text(needs_cursor);
-        text = chop_string(text, get_number_of_cols());
-        cprintf("%s", text.c_str());
-    }
-}
-
-void MenuDisplayText::draw_title(formatted_string &fs)
-{
-    const int x = wherex(), y = wherey();
-    cgotoxy(1, 1);
-    // pad title to take up the full line length (see bf862027bc)
-    fs.cprintf("%-*s", get_number_of_cols() - (int)fs.tostring().length(), "");
-    fs.display();
-    cgotoxy(x, y);
-}
-
-void MenuDisplayText::draw_more()
-{
-    cgotoxy(1, m_offset + m_pagesize -
-            count_linebreaks(m_menu->get_more()));
-    textcolour(LIGHTGREY);
-    m_menu->get_more().display();
-}
 
 #ifdef USE_TILE_LOCAL
-void MenuDisplayTile::draw_items()
+    item_info.resize(m_menu->items.size());
+#endif
+    for (unsigned int i = 0; i < m_menu->items.size(); ++i)
+        update_item(i);
+
+#ifdef USE_TILE_LOCAL
+    // update m_draw_tiles
+    m_draw_tiles = false;
+    for (const auto& entry : item_info)
+        if (!entry.heading && !entry.tiles.empty())
+        {
+            m_draw_tiles = Options.tile_menu_icons;
+            break;
+        }
+#endif
+}
+
+bool UIMenu::scroll_page(int delta)
 {
+#ifdef USE_TILE_LOCAL
+    ASSERT(delta == -1 || delta == 1);
+
+    if (delta == 1) // Scroll down
+        return scroll_to_item(vis_item_last);
+
+    int f = vis_item_first;
+    while (f > 0 && item_info[vis_item_first].y - item_info[f-1].y <= m_height)
+        f--;
+    return scroll_to_item(f);
+#else
+    return scroll_to_item(vis_item_first + (vis_item_last-vis_item_first)*delta);
+#endif
+}
+
+bool UIMenu::scroll_line(int delta)
+{
+#ifdef USE_TILE_LOCAL
+    int cur = vis_item_first, idx = vis_item_first;
+    while ((idx+delta >= 0 && idx+delta < (int)item_info.size()) && item_info[cur].y == item_info[idx].y)
+        idx += delta;
+    return scroll_to_item(idx);
+#else
+    return scroll_to_item(vis_item_first + delta);
+#endif
+}
+
+bool UIMenu::item_in_page(int index)
+{
+    return vis_item_first <= index && index < vis_item_last;
+}
+
+bool UIMenu::scroll_to_item(int index, bool force)
+{
+    if ((index == vis_item_first && !force))
+        return false;
+    index = max(0, min(index, (int)m_menu->items.size()-1));
+    const int old_vif = vis_item_first;
+
+#ifdef USE_TILE_LOCAL
+    // Move index to point to the first entry in this row
+    while (index > 0 && item_info[index-1].y == item_info[index].y) index--;
+
+    // Given first visible item = index, scan forward to find the last visible item
+    int l;
+    for (l = index; l < (int)item_info.size()
+            && item_info[l].y+item_info[l].h - item_info[index].y <= m_height; l++) {}
+    --l;
+
+    // If l == end of menu, move index backwards
+    if (l == (int)item_info.size()-1)
+    {
+        ASSERT(index == 0 || item_info[index-1].y < item_info[index].y);
+        while (index > 0 && item_info[l].y+item_info[l].h - item_info[index-1].y <= m_height)
+            index--;
+    }
+
+    vis_item_first = index;
+    vis_item_last = l+1;
+#else
+    vis_item_first = index;
+    vis_item_last = index + m_pagesize;
+
+    int extra = vis_item_last - m_menu->items.size();
+    if (extra > 0)
+    {
+        vis_item_first = max(vis_item_first - extra, 0);
+        vis_item_last = min(vis_item_first + m_pagesize, (int)m_menu->items.size());
+    }
+#endif
+    ASSERT(0 <= vis_item_first);
+    ASSERT(vis_item_first < (int)(m_menu->items.size() ? m_menu->items.size() : 1));
+    ASSERT(vis_item_first <= vis_item_last && vis_item_last <= (int)m_menu->items.size());
+
+    if (old_vif != vis_item_first)
+        _queue_allocation();
+
+    return old_vif != vis_item_first;
+}
+
+void UIMenu::get_visible_items_range(int &first, int &last)
+{
+    first = vis_item_first;
+    last = vis_item_last;
+}
+
+void UIMenu::update_item(int index)
+{
+#ifndef USE_TILE_LOCAL
+    if (!item_in_page(index))
+        return;
+#endif
     if (crawl_state.doing_prev_cmd_again)
         return;
-
-    for (unsigned int i = 0; i < m_menu->items.size(); ++i)
-        draw_stock_item(i, m_menu->items[i]);
-
-    tiles.get_menu()->set_menu_display(this);
-    tiles.get_menu()->place_entries();
-    tiles.get_menu()->get_page_info(m_menu->cur_page, m_menu->num_pages);
-}
-
-bool MenuDisplayTile::scroll_page(int delta)
-{
-    return tiles.get_menu()->scroll_page(delta);
-}
-
-bool MenuDisplayTile::scroll_line(int delta)
-{
-    return tiles.get_menu()->scroll_line(delta);
-}
-
-bool MenuDisplayTile::item_in_page(int index)
-{
-    int a, b;
-    get_visible_items_range(a, b);
-    return a <= index && index <= b;
-}
-
-bool MenuDisplayTile::scroll_to_item(int index)
-{
-    return tiles.get_menu()->scroll_to_item(index);
-}
-
-void MenuDisplayTile::get_visible_items_range(int &first, int &last)
-{
-    tiles.get_menu()->get_visible_items_range(first, last);
-}
-
-void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
-{
-    int colour = m_menu->item_colour(index, me);
+    _queue_allocation();
+#ifdef USE_TILE_LOCAL
+    const MenuEntry *me = m_menu->items[index];
+    int colour = m_menu->item_colour(me);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
     string text = me->get_text(needs_cursor);
-    tiles.get_menu()->set_entry(index, text, colour, me, !m_menu->is_set(MF_QUIET_SELECT));
+
+    item_info.resize(m_menu->items.size());
+
+    auto& entry = item_info[index];
+    entry.text.clear();
+    entry.text.textcolour(colour);
+    entry.text += formatted_string::parse_string(text);
+    entry.heading = me->level == MEL_TITLE || me->level == MEL_SUBTITLE;
+    entry.tiles.clear();
+    me->get_tiles(entry.tiles);
+#endif
 }
 
-void MenuDisplayTile::set_offset(int lines) {}
-
-void MenuDisplayTile::draw_title(formatted_string &fs)
+int UIMenu::_formatted_string_height(const formatted_string &s) const
 {
-    tiles.get_menu()->set_title(fs);
+#ifdef USE_TILE_LOCAL
+    const int line_height = m_font_entry->char_height();
+#else
+    const int line_height = 1;
+#endif
+    return s.tostring() == "" ? 0 : (count_linebreaks(s)+1) * line_height;
 }
 
-void MenuDisplayTile::draw_more()
+void UIMenu::update_title(formatted_string &new_title)
 {
-    tiles.get_menu()->set_more(m_menu->get_more());
+    title = new_title;
+    title_height = _formatted_string_height(title);
+    _queue_allocation();
 }
 
-void MenuDisplayTile::set_num_columns(int columns)
+void UIMenu::update_more()
 {
-    tiles.get_menu()->set_num_columns(columns);
+    more_height = _formatted_string_height(m_menu->get_more());
+    _queue_allocation();
+}
+
+#ifdef USE_TILE_LOCAL
+static bool _has_hotkey_prefix(const string &s)
+{
+    // [enne] - Ugh, hack. Maybe MenuEntry could specify the
+    // presence and length of this substring?
+    bool let = (s[1] >= 'a' && s[1] <= 'z' || s[1] >= 'A' && s[1] <= 'Z');
+    bool plus = (s[3] == '-' || s[3] == '+' || s[3] == '#');
+    return let && plus && s[0] == ' ' && s[2] == ' ' && s[4] == ' ';
+}
+
+void UIMenu::do_layout(int mw, int mh)
+{
+    const int entry_buffer = 3;
+    const int min_column_width = 400;
+    const int max_column_width = mw / m_num_columns;
+    const int text_height = m_font_entry->char_height();
+
+    int column = -1; // an initial increment makes this 0
+    int column_width = 0;
+    int row_height = 0;
+    int height = -entry_buffer;
+
+    vector<short> row_heights;
+    row_heights.reserve(m_menu->items.size());
+
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        auto& entry = item_info[i];
+
+        column = entry.heading ? 0 : (column+1) % m_num_columns;
+
+        if (column == 0)
+        {
+            height += row_height + entry_buffer;
+            row_heights.push_back(row_height);
+            row_height = 0;
+        }
+
+        const int text_width = m_font_entry->string_width(entry.text);
+
+        entry.y = height;
+        entry.column = column;
+
+        if (entry.heading)
+        {
+            entry.x = 0;
+            // extra space here is used for divider line and padding; note that
+            // we only want top padding if we're not the first item, since the
+            // popup and the more already have padding.
+            row_height = text_height + (i == 0 ? 5 : 10);
+
+            // wrap titles to two lines if they don't fit
+            if (m_draw_tiles && text_width > mw)
+            {
+                formatted_string split = m_font_entry->split(entry.text, mw, UINT_MAX);
+                row_height = max(row_height, (int)m_font_entry->string_height(split));
+            }
+
+            column = m_num_columns-1;
+        }
+        else
+        {
+            const int text_indent = m_draw_tiles ? 38 : 0;
+
+            entry.x = text_indent;
+            int text_sx = text_indent;
+            int item_height = max(text_height, !entry.tiles.empty() ? 32 : 0);
+
+            // Split menu entries that don't fit into a single line into two lines.
+            if (m_draw_tiles && (text_width > max_column_width-entry.x-pad_right))
+            {
+                formatted_string text;
+                if (_has_hotkey_prefix(entry.text.tostring()))
+                {
+                    formatted_string header = entry.text.chop(5);
+                    text_sx += m_font_entry->string_width(header);
+                    text = entry.text;
+                    // remove hotkeys. As Enne said above, this is a monstrosity.
+                    for (int k = 0; k < 5; k++)
+                        text.del_char();
+                }
+                else
+                    text += entry.text;
+
+                int w = max_column_width - text_sx - pad_right;
+                formatted_string split = m_font_entry->split(text, w, UINT_MAX);
+                int string_height = m_font_entry->string_height(split);
+                string_height = min(string_height, text_height*2);
+                item_height = max(item_height, string_height);
+            }
+
+            column_width = max(column_width, text_sx + text_width + pad_right);
+
+            row_height = max(row_height, item_height);
+        }
+    }
+    height += row_height;
+    row_heights.push_back(row_height);
+
+    {
+        int row = 0;
+        for (size_t i = 0; i < m_menu->items.size(); ++i)
+        {
+            auto& entry = item_info[i];
+            if (entry.column == 0)
+                row++;
+            entry.h = row_heights[row];
+        }
+    }
+
+    // Limit page size to ensure <= 52 items visible
+    int max_height = INT_MAX;
+    size_t a = 0, b = 0, num_items = 0;
+    while (b < item_info.size())
+    {
+        if (num_items < 52)
+            num_items += !item_info[b++].heading;
+        else if (num_items == 52)
+        {
+            int delta = item_info[b-1].h + item_info[b-1].y - item_info[a].y;
+            max_height = min(max_height, delta);
+            do
+            {
+                num_items -= !item_info[a++].heading;
+            }
+            while (item_info[a].column != 0);
+        }
+    }
+
+    m_height = min({mh-title_height, max_height, height});
+
+    m_show_more = height > m_height || m_menu->is_set(MF_ALWAYS_SHOW_MORE);
+    if (m_show_more)
+        m_height = min(m_height, mh-title_height-more_height);
+
+    m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
+}
+#endif
+
+void UIMenu::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+
+    m_shape_buf.draw();
+    m_div_line_buf.draw();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].draw();
+    m_font_buf.draw();
+    m_line_buf.draw();
+
+    glmanager->reset_transform();
+#else
+    // pad title to take up the full line length (see bf862027bc)
+    formatted_string t = title;
+    t.cprintf("%-*s", m_region[2] - (int)t.tostring().length(), "");
+    cgotoxy(m_region[0]+1, m_region[1]+1);
+    t.display();
+
+    for (int i = vis_item_first; i < vis_item_last; i++)
+    {
+        const MenuEntry *me = m_menu->items[i];
+        int y = i - vis_item_first + 1;
+        cgotoxy(m_region[0]+1, m_region[1]+title_height+y);
+        const int col = m_menu->item_colour(me);
+        textcolour(col);
+        const bool needs_cursor = (m_menu->get_cursor() == i && m_menu->is_set(MF_MULTISELECT));
+
+        if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
+        {
+            formatted_string s = formatted_string::parse_string(
+                me->get_text(needs_cursor), col);
+            s.chop(m_region[2]).display();
+        }
+        else
+        {
+            string text = me->get_text(needs_cursor);
+            text = chop_string(text, m_region[2]);
+            cprintf("%s", text.c_str());
+        }
+    }
+
+    // if not everything is visible...
+    if (m_show_more && more_height > 0)
+    {
+        cgotoxy(m_region[0]+1, m_region[1]+1+m_region[3]-more_height);
+        textcolour(LIGHTGREY);
+        m_menu->more.display();
+    }
+#endif
+}
+
+SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
+{
+#ifdef USE_TILE_LOCAL
+    if (!dim)
+    {
+        do_layout(INT_MAX, INT_MAX);
+        int max_menu_width = min(1400, m_nat_column_width * m_num_columns);
+        int title_width = m_font_entry->string_width(title) + pad_right;
+        int more_width = m_font_entry->string_width(m_menu->more);
+        return {max(title_width, more_width), max({max_menu_width, title_width, more_width})};
+    }
+    else
+    {
+        do_layout(prosp_width, m_max_height);
+        int size = m_height + title_height + (m_show_more ? more_height : 0);
+        if (m_num_columns == 1)
+            m_single_col_height = size;
+        return {0, size};
+    }
+#else
+    if (!dim)
+        return {0, 80};
+    else
+        return {title_height + more_height + 1, 24};
+#endif
+}
+
+void UIMenu::_allocate_region()
+{
+#ifdef USE_TILE_LOCAL
+    if (expand_v)
+    {
+        expand_v = false;
+        m_max_height = m_region[3];
+        // If a 1-column layout won't fit, use two columns
+        if (m_single_col_height > m_max_height)
+        if (m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS))
+            m_num_columns = 2;
+        _invalidate_sizereq();
+        _queue_allocation();
+    }
+    else
+    {
+        do_layout(m_region[2], m_region[3]);
+        scroll_to_item(vis_item_first, true); // update vis_item_last
+        pack_buffers();
+        m_real_num_columns = m_num_columns;
+
+        // Prepare for next layout cycle
+        m_num_columns = 1;
+        m_max_height = INT_MAX;
+        expand_v = true;
+        _invalidate_sizereq(false);
+        _queue_allocation(false);
+    }
+#else
+    m_pagesize = m_region[3] - title_height;
+    m_show_more = m_pagesize > more_height
+        && (m_pagesize < (int)m_menu->items.size() || m_menu->is_set(MF_ALWAYS_SHOW_MORE));
+    if (m_show_more)
+        m_pagesize -= more_height;
+    if (menu_entries_have_dup_hotkeys(m_menu->items))
+        m_pagesize = min(52, m_pagesize);
+    scroll_to_item(vis_item_first, true); // update vis_item_last
+#endif
+}
+
+#ifdef USE_TILE_LOCAL
+int UIMenu::mouse_entry(const int x, const int y)
+{
+    for (int i = vis_item_first; i < vis_item_last; ++i)
+    {
+        const auto& entry = item_info[i];
+        const int w = m_region[2] / m_real_num_columns;
+        const int entry_x = entry.column * w;
+        if (x >= entry_x && x < entry_x+w && y >= entry.y && y < entry.y+entry.h)
+            return i;
+    }
+    return -1;
+}
+
+bool UIMenu::on_event(const wm_event& event)
+{
+    if (Widget::on_event(event))
+        return true;
+    if (event.type != WME_MOUSEMOTION
+     && event.type != WME_MOUSEBUTTONDOWN
+     && event.type != WME_MOUSEWHEEL)
+    {
+        return false;
+    }
+
+    const int x = event.mouse_event.px - m_region[0],
+              y = event.mouse_event.py - m_region[1] - get_scroll_y();
+
+    if (event.type == WME_MOUSEMOTION)
+    {
+        int old_idx = m_mouse_idx;
+        m_mouse_idx = mouse_entry(x, y);
+        if (old_idx != m_mouse_idx)
+            _queue_allocation();
+        return true;
+    }
+
+    int key = -1;
+    if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == MouseEvent::LEFT)
+    {
+        int entry = mouse_entry(x, y);
+        if (entry != -1 && m_menu->items[entry]->hotkeys.size() > 0)
+            key = m_menu->items[entry]->hotkeys[0];
+#ifdef TOUCH_UI
+        else if (y < title_height
+            || y >= m_region[3] - title_height - more_height)
+            key = CK_TOUCH_DUMMY;
+#endif
+    }
+    else if (event.type == WME_MOUSEWHEEL)
+        key = event.mouse_event.button == MouseEvent::SCROLL_DOWN ? CK_DOWN : CK_UP;
+
+    if (key != -1)
+    {
+        wm_event ev = {0};
+        ev.type = WME_KEYDOWN;
+        ev.key.keysym.sym = key;
+        on_event(ev);
+    }
+
+    return true;
+}
+
+void UIMenu::pack_buffers()
+{
+    m_shape_buf.clear();
+    m_div_line_buf.clear();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].clear();
+    m_font_buf.clear();
+    m_line_buf.clear();
+
+    const VColour selected_colour(50, 50, 10, 255);
+    const VColour header_div_colour(64, 64, 64, 200);
+
+    m_font_buf.add(title, 0, 0);
+    if (m_show_more)
+        m_font_buf.add(m_menu->more, 0, m_region[3] - more_height);
+
+    if (!item_info.size())
+        return;
+
+    const int scroll_y = get_scroll_y();
+    const int col_width = m_region[2] / m_num_columns;
+
+    for (int i = vis_item_first; i < vis_item_last; ++i)
+    {
+        const auto& entry = item_info[i];
+        const auto me = m_menu->items[i];
+        const int entry_x = entry.column * col_width;
+        const int entry_ex = entry_x + col_width;
+
+        if (entry.heading)
+        {
+            formatted_string split = m_font_entry->split(entry.text, m_region[2], entry.h);
+            // see corresponding section in do_layout()
+            int line_y = entry.y + scroll_y + (i == 0 ? 0 : 5);
+            if (i < (int)item_info.size()-1 && !item_info[i+1].heading)
+            {
+                m_div_line_buf.add(entry.x, line_y,
+                        entry.x+m_num_columns*col_width, line_y, header_div_colour);
+            }
+            m_font_buf.add(split, entry.x, line_y+3);
+        }
+        else
+        {
+            const int ty = entry.y + max(entry.h-32, 0)/2;
+            for (const tile_def &tile : entry.tiles)
+            {
+                // NOTE: This is not perfect. Tiles will be drawn
+                // sorted by texture first, e.g. you can never draw
+                // a dungeon tile over a monster tile.
+                TextureID tex  = tile.tex;
+                m_tile_buf[tex].add(tile.tile, entry_x, ty+scroll_y, 0, 0, false, tile.ymax, 1, 1);
+            }
+
+            const int text_indent = m_draw_tiles ? 38 : 0;
+            int text_sx = entry_x + text_indent, text_sy = entry.y;
+            text_sy += (entry.h - m_font_entry->char_height()) / 2;
+
+            // Split off and render any hotkey prefix first
+            formatted_string text;
+            if (_has_hotkey_prefix(entry.text.tostring()))
+            {
+                formatted_string header = entry.text.chop(5);
+                m_font_buf.add(header, text_sx, text_sy+scroll_y);
+                text_sx += m_font_entry->string_width(header);
+                text = entry.text;
+                // remove hotkeys. As Enne said above, this is a monstrosity.
+                for (int k = 0; k < 5; k++)
+                    text.del_char();
+            }
+            else
+                text += entry.text;
+
+            // Line wrap and render the remaining text
+            int w = entry_ex-text_sx - pad_right;
+            int h = m_font_entry->char_height() * 2;
+            formatted_string split = m_font_entry->split(text, w, h);
+            int string_height = m_font_entry->string_height(split);
+            if (string_height == entry.h)
+                text_sy = entry.y;
+
+            m_font_buf.add(split, text_sx, text_sy+scroll_y);
+        }
+        if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
+        {
+            m_shape_buf.add(entry_x-1, entry.y-1+scroll_y,
+                    entry_ex+1, entry.y+entry.h+1+scroll_y, selected_colour);
+        }
+        if (i == m_mouse_idx && !entry.heading && me->hotkeys.size() > 0)
+        {
+            const VColour mouse_colour(160, 160, 160, 255);
+            m_line_buf.add_square(entry_x-1,
+                                  entry.y+scroll_y,
+                                  entry_x+col_width+1,
+                                  entry.y+entry.h+1+scroll_y,
+                                  mouse_colour);
+        }
+    }
 }
 #endif
 
@@ -347,17 +772,13 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
   : f_selitem(nullptr), f_keyfilter(nullptr),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
     title2(nullptr), flags(_flags), tag(tagname),
-    cur_page(1), more("-more-", true), items(), sel(),
+    cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_selected(-1), m_kmc(kmc)
+    alive(false), last_selected(-1), m_kmc(kmc), m_filter(nullptr)
 {
-#ifdef USE_TILE_LOCAL
-    mdisplay = new MenuDisplayTile(this);
-    m_filter_text = nullptr;
-#else
-    mdisplay = new MenuDisplayText(this);
-#endif
+    menu_ui = make_shared<UIMenu>(this);
     set_flags(flags);
+    more = formatted_string::parse_string("<blue>-more-</blue>");
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
@@ -404,7 +825,6 @@ Menu::~Menu()
     if (title2)
         delete title2;
     delete highlighter;
-    delete mdisplay;
 }
 
 void Menu::clear()
@@ -419,8 +839,6 @@ void Menu::set_flags(int new_flags, bool use_options)
     if (use_options && Options.easy_exit_menu)
         flags |= MF_EASY_EXIT;
 
-    mdisplay->set_num_columns((flags & MF_USE_TWO_COLUMNS) ? 2 : 1);
-
 #ifdef DEBUG
     int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
     ASSERT(sel_flag == MF_NOSELECT || sel_flag == MF_SINGLESELECT || sel_flag == MF_MULTISELECT);
@@ -430,6 +848,7 @@ void Menu::set_flags(int new_flags, bool use_options)
 void Menu::set_more(const formatted_string &fs)
 {
     more = fs;
+    update_more();
 }
 
 void Menu::set_more()
@@ -469,6 +888,7 @@ void Menu::set_title(MenuEntry *e, bool first)
         title2 = e;
         title2->level = MEL_TITLE;
     }
+    update_title();
 }
 
 void Menu::add_entry(MenuEntry *entry)
@@ -479,7 +899,7 @@ void Menu::add_entry(MenuEntry *entry)
 
 void Menu::reset()
 {
-    mdisplay->scroll_to_item(0);
+    menu_ui->scroll_to_item(0);
 }
 
 vector<MenuEntry *> Menu::show(bool reuse_selections)
@@ -494,23 +914,8 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     else
         deselect_all(false);
 
-#ifdef USE_TILE_LOCAL
-    // XXX: reset any title from the previously shown menu that's stored
-    // in the MenuRegion
-    formatted_string fs;
-    mdisplay->draw_title(fs);
-#endif
-    // Reset offset to default.
-    mdisplay->set_offset(1 + title_height());
-
     if (is_set(MF_START_AT_END))
-    {
-#ifdef USE_TILE_LOCAL
-        // XXX: needed so that scroll_to_item knows the visible set of items
-        mdisplay->draw_items();
-#endif
-        mdisplay->scroll_to_item(INT_MAX);
-    }
+        menu_ui->scroll_to_item(INT_MAX);
 
     do_menu();
 
@@ -523,15 +928,37 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 
 void Menu::do_menu()
 {
+    bool done = false;
+    auto popup_ui = make_shared<ui::Popup>(menu_ui);
+
+    menu_ui->on(Widget::slots.event, [this, &done](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        if (m_filter)
+        {
+            int key = m_filter->putkey(ev.key.keysym.sym);
+            if (key != -1)
+            {
+                delete m_filter;
+                m_filter = nullptr;
+            }
+            update_title();
+            return true;
+        }
+        done = !process_key(ev.key.keysym.sym);
+        return true;
+    });
+
+    update_menu();
+    ui::push_layout(popup_ui, m_kmc);
+
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);
     _webtiles_title_changed = false;
 #endif
 
-    draw_menu();
-
     alive = true;
-    while (alive)
+    while (alive && !done && !crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
         if (_webtiles_title_changed)
@@ -540,11 +967,10 @@ void Menu::do_menu()
             _webtiles_title_changed = false;
         }
 #endif
-        int keyin = getchm(m_kmc, getch_ck);
-
-        if (!process_key(keyin))
-            return;
+        ui::pump_events();
     }
+    alive = false;
+    ui::pop_layout();
 }
 
 int Menu::get_cursor() const
@@ -580,54 +1006,31 @@ int Menu::post_process(int k)
     return k;
 }
 
-#ifdef USE_TILE_LOCAL
-class menu_filter_line_reader : public line_reader
+bool Menu::filter_with_regex(const char *re)
 {
-public:
-    menu_filter_line_reader(Menu *menu, char *buf, size_t buf_sz,
-            int wrap_col = get_number_of_cols()) : line_reader(buf, buf_sz, wrap_col), m_menu(menu) {}
-    int read_line(bool clear_previous = true, bool reset_cursor = false) override;
-protected:
-    Menu *m_menu;
-    int process_key(int ch) override;
-    void print_segment(int start_point=0, int overprint=0) override;
-    void cursorto(int newcpos) override;
-};
-
-int menu_filter_line_reader::read_line(bool clear_previous, bool reset_cursor)
-{
-    UNUSED(clear_previous);
-    UNUSED(reset_cursor);
-#if defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
-    cursor_control con(true);
-    return line_reader::read_line_core(true);
+    text_pattern tpat(re, true);
+    for (unsigned int i = 0; i < items.size(); ++i)
+    {
+        if (items[i]->level == MEL_ITEM
+            && tpat.matches(items[i]->get_text()))
+        {
+            select_index(i);
+            if (flags & MF_SINGLESELECT)
+            {
+                // Return the first item found.
+                get_selected(&sel);
+                return false;
+            }
+        }
+    }
+    get_selected(&sel);
+    return true;
 }
-
-int menu_filter_line_reader::process_key(int ch)
-{
-    int ret = (ch == CK_REDRAW) ? -1 : line_reader::process_key(ch);
-    m_menu->draw_title();
-    return ret;
-}
-
-void menu_filter_line_reader::print_segment(int s, int o) {}
-void menu_filter_line_reader::cursorto(int newcpos) {}
-#endif
 
 bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
 {
     bool validline;
-#ifdef USE_TILE_LOCAL
-    m_filter_text = linebuf; draw_title();
-    menu_filter_line_reader reader(this, linebuf, bufsz, bufsz);
-    reader.set_location(coord_def(0, 0));
-    validline = reader.read_line() != CK_ESCAPE;
-    m_filter_text = nullptr;
-    draw_title();
-#else
+#ifdef USE_TILE_WEB
     mouse_control mc(MOUSE_MODE_PROMPT);
     cgotoxy(1,1);
     clear_to_end_of_line();
@@ -636,7 +1039,18 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
     textcolour(LIGHTGREY);
     line_reader reader(linebuf, bufsz, get_number_of_cols());
     validline = !reader.read_line("");
+#else
+    ASSERT(!m_filter);
+    m_filter = new resumable_line_reader(linebuf, bufsz);
+    update_title();
+    do
+    {
+        ui::pump_events();
+    }
+    while (m_filter && !crawl_state.seen_hups);
+    validline = linebuf[0];
 #endif
+
     return validline;
 }
 
@@ -661,7 +1075,7 @@ bool Menu::process_key(int keyin)
             menu_action = ACT_EXECUTE;
 
         sel.clear();
-        draw_title();
+        update_title();
         return true;
     }
 #ifdef TOUCH_UI
@@ -673,21 +1087,22 @@ bool Menu::process_key(int keyin)
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
-        draw_title();
+        update_title();
         return true;
     }
 
-    bool nav = false, repaint = false;
-
     if (f_keyfilter)
         keyin = (*f_keyfilter)(keyin);
-
     keyin = pre_process(keyin);
+
+#ifdef USE_TILE_WEB
+    const int old_vis_first = get_first_visible();
+#endif
+    bool scrolled_off_end = false;
 
     switch (keyin)
     {
     case CK_REDRAW:
-        draw_menu();
         return true;
 #ifndef TOUCH_UI
     case 0:
@@ -702,62 +1117,36 @@ bool Menu::process_key(int keyin)
     case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
-        nav = true;
-        repaint = page_down();
-        if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
-            repaint = mdisplay->scroll_to_item(0);
+        scrolled_off_end = !page_down();
+        if (scrolled_off_end && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
+            scrolled_off_end = !menu_ui->scroll_to_item(0);
         break;
     case CK_PGUP: case '<': case ';':
-        nav = true;
-        repaint = page_up();
+        scrolled_off_end = !page_up();
         break;
     case CK_UP:
-        nav = true;
-        repaint = line_up();
+        scrolled_off_end = !line_up();
         break;
     case CK_DOWN:
-        nav = true;
-        repaint = line_down();
+        scrolled_off_end = !line_down();
         break;
     case CK_HOME:
-        nav = true;
-        repaint = mdisplay->scroll_to_item(0);
+        scrolled_off_end = !menu_ui->scroll_to_item(0);
         break;
     case CK_END:
-        nav = true;
-        repaint = mdisplay->scroll_to_item(INT_MAX);
+        scrolled_off_end = !menu_ui->scroll_to_item(INT_MAX);
         break;
     case CONTROL('F'):
-    {
-        if (!(flags & MF_ALLOW_FILTER))
-            break;
-        char linebuf[80] = "";
-
-        const bool validline = title_prompt(linebuf, sizeof linebuf,
-                                            "Select what? (regex) ");
-        if (validline && linebuf[0])
+        if ((flags & MF_ALLOW_FILTER))
         {
-            text_pattern tpat(linebuf, true);
-            for (unsigned int i = 0; i < items.size(); ++i)
-            {
-                if (items[i]->level == MEL_ITEM
-                    && tpat.matches(items[i]->get_text()))
-                {
-                    select_index(i);
-                    if (flags & MF_SINGLESELECT)
-                    {
-                        // Return the first item found.
-                        get_selected(&sel);
-                        return false;
-                    }
-                }
-            }
-            get_selected(&sel);
+            char linebuf[80] = "";
+
+            const bool validline = title_prompt(linebuf, sizeof linebuf,
+                                                "Select what? (regex) ");
+
+            return (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
         }
-        nav = true;
-        repaint = true;
         break;
-    }
     case '.':
         if (last_selected == -1 && is_set(MF_MULTISELECT))
             last_selected = 0;
@@ -770,20 +1159,16 @@ bool Menu::process_key(int keyin)
                 InvEntry::set_show_cursor(true);
                 select_index(next, num);
                 get_selected(&sel);
-                draw_title();
+                update_title();
                 if (get_cursor() < next)
                 {
-                    mdisplay->scroll_to_item(0);
-                    nav = true;
+                    menu_ui->scroll_to_item(0);
+                    break;
                 }
             }
 
-            if (!nav && !in_page(last_selected))
-            {
+            if (!in_page(last_selected))
                 page_down();
-                nav = true;
-            }
-            repaint = true;
         }
         break;
 
@@ -800,28 +1185,20 @@ bool Menu::process_key(int keyin)
             if (last_selected < it_count
                 && items[last_selected]->level == MEL_ITEM)
             {
-                draw_item(last_selected);
+                menu_ui->update_item(last_selected);
             }
 
             const int next_cursor = get_cursor();
             if (next_cursor != -1)
             {
                 if (next_cursor < last_selected)
-                {
-                    mdisplay->scroll_to_item(0);
-                    nav = true;
-                    repaint = true;
-                }
+                    menu_ui->scroll_to_item(0);
                 else if (!in_page(last_selected))
-                {
                     page_down();
-                    nav = true;
-                    repaint = true;
-                }
                 else if (next_cursor < it_count
                          && items[next_cursor]->level == MEL_ITEM)
                 {
-                    draw_item(next_cursor);
+                    menu_ui->update_item(next_cursor);
                 }
             }
         }
@@ -829,11 +1206,7 @@ bool Menu::process_key(int keyin)
 
     case '_':
         if (!help_key().empty())
-        {
             show_specific_help(help_key());
-            nav     = true;
-            repaint = true;
-        }
         break;
 
 #ifdef TOUCH_UI
@@ -870,13 +1243,6 @@ bool Menu::process_key(int keyin)
         {
             if (!on_single_selection)
                 return false;
-#ifdef USE_TILE_LOCAL
-            // XXX: clear the title before we call the hook, so that it's not
-            // visible; the visible menu item range is set to [0,-1]
-            // (for reasons I haven't looked at), so items won't be visible.
-            formatted_string fs;
-            mdisplay->draw_title(fs);
-#endif
 #ifdef USE_TILE_WEB
             // XXX: on_single_selection is designed to show UI without hiding
             // the menu, but webtiles can't handle that at the moment, so hide
@@ -890,11 +1256,10 @@ bool Menu::process_key(int keyin)
             _webtiles_title_changed = false;
 #endif
             deselect_all(true);
-            draw_menu();
             return true;
         }
 
-        draw_title();
+        update_title();
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -911,14 +1276,12 @@ bool Menu::process_key(int keyin)
     if (!isadigit(keyin))
         num = -1;
 
-    if (nav && repaint)
-    {
 #ifdef USE_TILE_WEB
+    if (old_vis_first != get_first_visible())
         webtiles_update_scroll_pos();
 #endif
-        draw_menu();
-    }
-    else if (nav && allow_easy_exit() && is_set(MF_EASY_EXIT))
+
+    if (scrolled_off_end && allow_easy_exit() && is_set(MF_EASY_EXIT))
         return false;
     return true;
 }
@@ -970,7 +1333,7 @@ void Menu::deselect_all(bool update_view)
             items[i]->select(0);
             if (update_view)
             {
-                draw_item(i);
+                menu_ui->update_item(i);
 #ifdef USE_TILE_WEB
                 webtiles_update_item(i);
 #endif
@@ -983,7 +1346,7 @@ void Menu::deselect_all(bool update_view)
 int Menu::get_first_visible() const
 {
     int a, b;
-    mdisplay->get_visible_items_range(a, b);
+    menu_ui->get_visible_items_range(a, b);
     return a;
 }
 
@@ -1363,7 +1726,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 
     last_selected = idx;
     items[idx]->select(qty);
-    draw_item(idx);
+    menu_ui->update_item(idx);
 #ifdef USE_TILE_WEB
     webtiles_update_item(idx);
 #endif
@@ -1376,12 +1739,12 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
         if (old_cursor != -1 && old_cursor < it_count
             && items[old_cursor]->level == MEL_ITEM)
         {
-            draw_item(old_cursor);
+            menu_ui->update_item(old_cursor);
         }
         if (new_cursor != -1 && new_cursor < it_count
             && items[new_cursor]->level == MEL_ITEM)
         {
-            draw_item(new_cursor);
+            menu_ui->update_item(new_cursor);
         }
     }
 }
@@ -1389,7 +1752,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 void Menu::select_index(int index, int qty)
 {
     int first_vis, last_vis;
-    mdisplay->get_visible_items_range(first_vis, last_vis);
+    menu_ui->get_visible_items_range(first_vis, last_vis);
 
     int si = index == -1 ? first_vis : index;
 
@@ -1447,23 +1810,13 @@ int Menu::get_entry_index(const MenuEntry *e) const
     return -1;
 }
 
-void Menu::draw_menu(bool update_entries)
+void Menu::update_menu(bool update_entries)
 {
-    if (crawl_state.doing_prev_cmd_again)
+    menu_ui->update_items();
+    update_title();
+
+    if (!alive)
         return;
-
-    clrscr();
-    mdisplay->set_offset(1 + title_height());
-
-    mdisplay->draw_items();
-
-    draw_title();
-
-    int a, b;
-    mdisplay->get_visible_items_range(a, b);
-    if ((a > 0) || (b < (int)items.size()-1) || is_set(MF_ALWAYS_SHOW_MORE))
-        draw_more();
-
 #ifdef USE_TILE_WEB
     if (update_entries)
     {
@@ -1478,11 +1831,13 @@ void Menu::draw_menu(bool update_entries)
 #endif
 }
 
-void Menu::draw_more()
+void Menu::update_more()
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
-
+    menu_ui->update_more();
+    if (!alive)
+        return;
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
@@ -1490,10 +1845,9 @@ void Menu::draw_more()
     tiles.json_close_object();
     tiles.finish_message();
 #endif
-    mdisplay->draw_more();
 }
 
-int Menu::item_colour(int, const MenuEntry *entry) const
+int Menu::item_colour(const MenuEntry *entry) const
 {
     int icol = -1;
     if (highlighter)
@@ -1504,20 +1858,18 @@ int Menu::item_colour(int, const MenuEntry *entry) const
 
 formatted_string Menu::calc_title() { return formatted_string(); }
 
-void Menu::draw_title()
+void Menu::update_title()
 {
     if (!title || crawl_state.doing_prev_cmd_again)
         return;
 
     formatted_string fs;
 
-#ifdef USE_TILE_LOCAL
-    if (m_filter_text)
+    if (m_filter)
     {
         fs.textcolour(WHITE);
-        fs.cprintf("Select what? (regex) %s", m_filter_text);
+        fs.cprintf("Select what? (regex) %s", m_filter->get_text().c_str());
     } else
-#endif
         fs = calc_title();
 
     if (fs.empty())
@@ -1527,7 +1879,7 @@ void Menu::draw_title()
         if (!first)
             ASSERT(title2);
 
-        auto col = item_colour(-1, first ? title : title2);
+        auto col = item_colour(first ? title : title2);
         string text = (first ? title->get_text() : title2->get_text());
 
         fs = formatted_string(col);
@@ -1538,71 +1890,38 @@ void Menu::draw_title()
             fs.cprintf("%s", text.c_str());
     }
 
-    if (flags & MF_SHOW_PAGENUMBERS)
-    {
-        // The total number of pages is well defined, but the current
-        // page a bit less so. To make sense, we hack it so that your
-        // current page is based on the first line you're seeing, *unless*
-        // you're seeing the last item.
-
-        if (in_page(items.size() - 1))
-            cur_page = num_pages;
-        fs.cprintf(" (page %d of %d)", cur_page, num_pages);
-    }
-
     if (!is_set(MF_QUIET_SELECT) && is_set(MF_MULTISELECT))
         fs.cprintf("%s", get_select_count_string(sel.size()).c_str());
 
-    mdisplay->draw_title(fs);
+    menu_ui->update_title(fs);
 #ifdef USE_TILE_WEB
     webtiles_set_title(fs);
 #endif
 }
 
-int Menu::title_height() const
-{
-    return !!title;
-}
-
 bool Menu::in_page(int index) const
 {
-    return mdisplay->item_in_page(index);
-}
-
-void Menu::draw_item(int index) const
-{
-    if (!in_page(index) || crawl_state.doing_prev_cmd_again)
-        return;
-
-    draw_index_item(index, items[index]);
-}
-
-void Menu::draw_index_item(int index, const MenuEntry *me) const
-{
-    if (crawl_state.doing_prev_cmd_again)
-        return;
-
-    mdisplay->draw_stock_item(index, me);
+    return menu_ui->item_in_page(index);
 }
 
 bool Menu::page_down()
 {
-    return mdisplay->scroll_page(1);
+    return menu_ui->scroll_page(1);
 }
 
 bool Menu::page_up()
 {
-    return mdisplay->scroll_page(-1);
+    return menu_ui->scroll_page(-1);
 }
 
 bool Menu::line_down()
 {
-    return mdisplay->scroll_line(1);
+    return menu_ui->scroll_line(1);
 }
 
 bool Menu::line_up()
 {
-    return mdisplay->scroll_line(-1);
+    return menu_ui->scroll_line(-1);
 }
 
 #ifdef USE_TILE_WEB
@@ -1654,14 +1973,10 @@ void Menu::webtiles_write_menu(bool replace) const
 
 void Menu::webtiles_scroll(int first)
 {
-    if (first >= (int) items.size()) first = (int) items.size() - 1;
-    if (first < 0) first = 0;
-
-    if (mdisplay->scroll_to_item(first))
+    if (menu_ui->scroll_to_item(first))
     {
-        draw_menu();
-        update_screen();
         webtiles_update_scroll_pos();
+        ui_force_render();
     }
 }
 
@@ -1716,7 +2031,7 @@ void Menu::webtiles_update_items(int start, int end) const
         if (me->selected_qty)
             tiles.json_write_int("sq", me->selected_qty);
         tiles.json_write_string("text", me->get_text());
-        int col = item_colour(i, me);
+        int col = item_colour(me);
         // previous colour field is deleted by client if new one not sent
         if (col != MENU_ITEM_STOCK_COLOUR)
             tiles.json_write_int("colour", col);
@@ -1804,7 +2119,7 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     if (me->selected_qty)
         tiles.json_write_int("sq", me->selected_qty);
 
-    int col = item_colour(index, me);
+    int col = item_colour(me);
     if (col != MENU_ITEM_STOCK_COLOUR)
         tiles.json_write_int("colour", col);
 
@@ -1999,8 +2314,7 @@ int ToggleableMenu::pre_process(int key)
         if (auto pt = dynamic_cast<ToggleableMenuEntry*>(title))
             pt->toggle();
 
-        // Redraw
-        draw_menu();
+        update_menu();
 
 #ifdef USE_TILE_WEB
         webtiles_update_items(0, items.size() - 1);

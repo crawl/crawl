@@ -149,7 +149,6 @@ public:
     bool get_map_display();
     void do_map_display();
 
-    MenuRegion *get_menu() { return m_region_menu; }
     bool is_fullscreen() { return m_fullscreen; }
 
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
@@ -220,7 +219,6 @@ protected:
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
-    MenuRegion      *m_region_menu;
 
     struct font_info
     {

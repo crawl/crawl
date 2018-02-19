@@ -538,6 +538,7 @@ private:
                     entries_changed = true;
                     break;
             }
+            update_title();
             update_more();
         }
         else if (keyin == CONTROL('F'))
@@ -559,7 +560,6 @@ private:
 
         if (entries_changed)
             update_entries();
-        draw_menu(entries_changed);
         return true;
     }
 
@@ -628,6 +628,7 @@ private:
             me->data = &spell;
             add_entry(me);
         }
+        update_menu(true);
     }
 
 public:
@@ -663,7 +664,7 @@ public:
             case action::unhide:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
                 update_entries();
-                draw_menu(true);
+                update_menu(true);
                 update_more();
                 break;
             }
