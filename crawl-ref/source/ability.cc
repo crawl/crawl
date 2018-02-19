@@ -1129,6 +1129,9 @@ string get_ability_desc(const ability_type ability)
 
 static void _print_talent_description(const talent& tal)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_ability");
+#endif
     clrscr();
 
     print_description(get_ability_desc(tal.which));
