@@ -210,23 +210,19 @@ void UI::_set_parent(UI* p)
     m_parent = p;
 }
 
-void UI::_invalidate_sizereq()
+void UI::_invalidate_sizereq(bool immediate)
 {
-    cached_sr_valid[0] = false;
-    cached_sr_valid[1] = false;
-    if (m_parent)
-        m_parent->_invalidate_sizereq();
-    ui_root.queue_layout();
+    for (UI* w = this; w && !w->alloc_queued; w = w->m_parent)
+        fill(begin(w->cached_sr_valid), end(w->cached_sr_valid), false);
+    if (immediate)
+        ui_root.queue_layout();
 }
 
-void UI::_queue_allocation()
+void UI::_queue_allocation(bool immediate)
 {
-    if (alloc_queued)
-        return;
-    alloc_queued = true;
-    if (m_parent)
-        m_parent->_queue_allocation();
-    else
+    for (UI* w = this; w && !w->alloc_queued; w = w->m_parent)
+        w->alloc_queued = true;
+    if (immediate)
         ui_root.queue_layout();
 }
 

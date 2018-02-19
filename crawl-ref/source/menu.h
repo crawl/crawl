@@ -265,17 +265,16 @@ enum MenuFlag
     MF_ALLOW_FILTER     = 0x0100,   ///< Control-F will ask for regex and
                                     ///< select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
-    MF_SHOW_PAGENUMBERS = 0x0400,   ///< Show "(page X of Y)" when appropriate
-    MF_TOGGLE_ACTION    = 0x0800,   ///< ToggleableMenu toggles action as well
-    MF_EASY_EXIT        = 0x1000,   ///< Exit when scrolling off the end
-    MF_START_AT_END     = 0x2000,   ///< Scroll to end of list
-    MF_PRESELECTED      = 0x4000,   ///< Has a preselected entry.
-    MF_QUIET_SELECT     = 0x8000,   ///< No selection box and no count.
+    MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
+    MF_EASY_EXIT        = 0x0800,   ///< Exit when scrolling off the end
+    MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
+    MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
+    MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.
 
-    MF_USE_TWO_COLUMNS  = 0x10000,  ///< Only valid for tiles menus
+    MF_USE_TWO_COLUMNS  = 0x8000,  ///< Only valid for tiles menus
 };
 
-class MenuDisplay;
+class UIMenu;
 
 ///////////////////////////////////////////////////////////////////////
 // NOTE
@@ -290,8 +289,7 @@ class MenuDisplay;
 
 class Menu
 {
-    friend class MenuDisplayText;
-    friend class MenuDisplayTile;
+    friend class UIMenu;
 #ifdef USE_TILE_LOCAL
     friend class menu_filter_line_reader;
 #endif
@@ -331,6 +329,8 @@ public:
         select_filter = filter;
     }
 
+    void update_menu(bool update_entries = false);
+
     virtual int getkey() const { return lastch; }
 
     void reset();
@@ -344,7 +344,7 @@ public:
 
     int get_first_visible() const;
 
-    virtual int item_colour(int index, const MenuEntry *me) const;
+    virtual int item_colour(const MenuEntry *me) const;
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
     typedef int (*keyfilter_tfn)(int keyin);
@@ -389,19 +389,15 @@ protected:
     int last_selected;
     KeymapContext m_kmc;
 
-#ifdef USE_TILE_LOCAL
-    char* m_filter_text; // nullptr == not in filter mode
-#endif
+    resumable_line_reader *m_filter;
 
-    MenuDisplay *mdisplay;
+    shared_ptr<UIMenu> menu_ui;
 
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
     virtual string get_select_count_string(int count) const;
-    virtual void draw_item(int index) const;
-    virtual void draw_index_item(int index, const MenuEntry *me) const;
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);
@@ -419,11 +415,8 @@ protected:
     formatted_string _webtiles_title;
 #endif
 
-    virtual void draw_title();
     virtual formatted_string calc_title();
-    virtual int title_height() const;
-    void draw_menu(bool update_entries = false);
-    void draw_more();
+    void update_more();
     virtual bool page_down();
     virtual bool line_down();
     virtual bool page_up();
@@ -449,6 +442,10 @@ protected:
     virtual bool allow_easy_exit() const;
 
     virtual string help_key() const { return ""; }
+
+    virtual void update_title();
+protected:
+    bool filter_with_regex(const char *re);
 };
 
 /// Allows toggling by specific keys.

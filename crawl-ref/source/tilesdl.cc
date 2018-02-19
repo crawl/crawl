@@ -34,7 +34,6 @@
 #include "tilereg-inv.h"
 #include "tilereg-map.h"
 #include "tilereg-mem.h"
-#include "tilereg-menu.h"
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
 #include "tilereg-skl.h"
@@ -241,7 +240,6 @@ void TilesFramework::shutdown()
     delete m_region_cmd_meta;
     delete m_region_cmd_map;
     delete m_region_crt;
-    delete m_region_menu;
 
     m_region_tile  = nullptr;
     m_region_stat  = nullptr;
@@ -257,7 +255,6 @@ void TilesFramework::shutdown()
     m_region_cmd_meta = nullptr;
     m_region_cmd_map  = nullptr;
     m_region_crt   = nullptr;
-    m_region_menu  = nullptr;
 
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
         delete it->second;
@@ -528,15 +525,12 @@ bool TilesFramework::initialise()
     m_fonts[stat_font].font->char_width();
     m_region_crt  = new CRTRegion(m_fonts[m_crt_font].font);
 
-    m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
-
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
-    m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
 
     cgotoxy(1, 1, GOTO_CRT);
 
@@ -1141,9 +1135,6 @@ void TilesFramework::do_layout()
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
-    m_region_menu->place(0, 0, 0);
-    m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
-
     crawl_view.init_view();
 }
 
@@ -1435,8 +1426,6 @@ void TilesFramework::clrscr()
         m_region_msg->clear();
     if (m_region_crt)
         m_region_crt->clear();
-    if (m_region_menu)
-        m_region_menu->clear();
 
     cgotoxy(1,1);
 
