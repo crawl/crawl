@@ -69,16 +69,16 @@ define(function() {
         9: 9,
 
         // Numpad / Arrow keys
-        45: -250,
-        35: -1001,
-        40: -253,//-1002,
-        34: -1003,
-        37: -252,//-1004,
-        12: -247,
-        39: -251,//-1006,
-        36: -1007,
-        38: -254,//-1008,
-        33: -1009,
+        45: CK_INSERT,
+        35: CK_END,
+        40: CK_DOWN,
+        34: CK_PGDN,
+        37: CK_LEFT,
+        12: CK_CLEAR,
+        39: CK_RIGHT,
+        36: CK_HOME,
+        38: CK_UP,
+        33: CK_PGUP,
 
         // Function keys
         112: -1011, // F1
