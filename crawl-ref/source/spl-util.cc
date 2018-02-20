@@ -1297,7 +1297,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (orb_limits_translocation())
+        if (orb_limits_translocation(temp))
             return "the Orb prevents this spell from working.";
 
     case SPELL_BLADE_OF_DISASTER:
