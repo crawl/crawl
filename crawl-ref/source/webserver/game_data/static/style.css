@@ -459,7 +459,7 @@ body {
 #game .bg14 { background-color: #fce94f; } /* yellow */
 #game .bg15 { background-color: #eeeeec; } /* white */
 
-.menu_txt {
+.menu_txt:not(.menu_crt_shrink) {
     width: 80ch;
 }
 

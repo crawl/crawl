@@ -611,7 +611,7 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
     string disp = overview_description_string(true);
     linebreak_string(disp, 80);
