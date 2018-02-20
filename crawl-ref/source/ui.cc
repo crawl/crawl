@@ -1163,8 +1163,12 @@ void UIRoot::render()
     m_dirty_region = {0, 0, 0, 0};
 }
 
+static function<bool(wm_event)> event_filter;
+
 bool UIRoot::on_event(wm_event event)
 {
+    if (event_filter && event_filter(event))
+        return true;
     return m_root.on_event(event);
 }
 
@@ -1349,4 +1353,29 @@ void ui_pump_events()
         ui_root.on_event(ev);
     }
 #endif
+}
+
+int ui_getch(KeymapContext km)
+{
+    // ui_getch() can be called when there are no widget layouts, i.e.
+    // older layout/rendering code is being used. these parts of code don't
+    // set a dirty region, so we should do that now. One example of this
+    // is mprf() called from yesno()
+    ui_root.needs_paint = true;
+
+    int key;
+    bool done = false;
+    event_filter = [&](wm_event event) {
+        if (event.type != WME_KEYDOWN)
+            return false;
+        key = event.key.keysym.sym;
+        done = true;
+        return true;
+    };
+    ui_root.keymap_stack.emplace_back(km);
+    while (!done)
+        ui_pump_events();
+    ui_root.keymap_stack.pop_back();
+    event_filter = nullptr;
+    return key;
 }

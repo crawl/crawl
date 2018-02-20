@@ -23,6 +23,7 @@
 #include "tiledef-gui.h"
 #endif
 #include "viewchar.h"
+#include "ui.h"
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
@@ -96,8 +97,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
                     cprintf("%s", prompt.c_str());
             }
 
-            while ((tmp = getchm(KMC_CONFIRM)) == CK_REDRAW)
-                redraw_screen();
+            tmp = ui_getch(KMC_CONFIRM);
 #endif
         }
 
@@ -221,7 +221,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
     {
         mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
-        int tmp = getchm(KMC_CONFIRM);
+        int tmp = ui_getch(KMC_CONFIRM);
 
         if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
             || crawl_state.seen_hups)
