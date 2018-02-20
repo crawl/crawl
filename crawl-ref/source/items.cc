@@ -1829,7 +1829,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
 
 static void _get_book(const item_def& it, bool quiet)
 {
-    bool newspells = false;
+    vector<string> spellnames;
     if (!quiet)
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
     for (spell_type st : spells_in_book(it))
@@ -1837,13 +1837,24 @@ static void _get_book(const item_def& it, bool quiet)
         if (!you.spell_library[st])
         {
             you.spell_library.set(st, true);
-            newspells = true;
-            if (!quiet && you_can_memorise(st))
-                mprf("You add the spell %s to your library.", spell_title(st));
+            if (you_can_memorise(st))
+                spellnames.push_back(spell_title(st));
+            else
+                you.hidden_spells.set(st, true);
         }
     }
-    if (!newspells && !quiet)
-        mpr("Unfortunately, it added no spells to the library.");
+    if (!quiet)
+    {
+        if (!spellnames.empty())
+        {
+            mprf("You add the spell%s %s to your library.",
+                 spellnames.size() > 1 ? "s" : "",
+                 comma_separated_line(spellnames.begin(),
+                                      spellnames.end()).c_str());
+        }
+        else
+            mpr("Unfortunately, it added no spells to the library.");
+    }
 }
 
 // Adds all books in the player's inventory to library.

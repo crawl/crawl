@@ -478,12 +478,12 @@ protected:
         return formatted_string::parse_string(
                     make_stringf("<w> Your Spells - [%s] (toggle with '!')",
                         current_action == action::memorise ?
-                            "<blue>Memorise</blue><w>|Describe|Hide|Un-hide" :
+                            "<blue>Memorise</blue><w>|Describe|Hide|Show" :
                         current_action == action::describe ?
-                            "Memorise|<blue>Describe</blue><w>|Hide|Un-hide" :
+                            "Memorise|<blue>Describe</blue><w>|Hide|Show" :
                         current_action == action::hide ?
-                            "Memorise|Describe|<blue>Hide</blue><w>|Un-hide" :
-                            "Memorise|Describe|Hide|<blue>Un-hide</blue><w>"));
+                            "Memorise|Describe|<blue>Hide</blue><w>|Show" :
+                            "Memorise|Describe|Hide|<blue>Show</blue><w>"));
 #else
         return formatted_string::parse_string(
                     make_stringf("<w> Spells %s                 Type                          Failure  Level",
@@ -493,7 +493,7 @@ protected:
                             "(Describe)" :
                         current_action == action::hide ?
                             "(Hide)    " :
-                            "(Un-hide) "));
+                            "(Show)    "));
 #endif
     }
 
@@ -504,15 +504,25 @@ private:
 
     void update_more()
     {
+        int hidden = 0;
+        for (spell_type& spell : spells)
+            if (you.hidden_spells.get(spell))
+                hidden++;
+
+        string hidden_str = make_stringf("   %d spell%s hidden",
+                                         hidden,
+                                         hidden > 1 ? "s" : "");
+
         set_more(formatted_string::parse_string(more_str +
-                    make_stringf("   [%s]",
+                    make_stringf("   [<w>!</w>/<w>?</w>]: %s%s",
                         current_action == action::memorise ?
-                            "<w>Memorise</w>|Describe|Hide|Un-hide" :
+                            "<w>Memorise</w>|Describe|Hide|Show" :
                         current_action == action::describe ?
-                            "Memorise|<w>Describe</w>|Hide|Un-hide" :
+                            "Memorise|<w>Describe</w>|Hide|Show" :
                         current_action == action::hide ?
-                            "Memorise|Describe|<w>Hide</w>|Un-hide" :
-                            "Memorise|Describe|Hide|<w>Un-hide</w>")));
+                            "Memorise|Describe|<w>Hide</w>|Show" :
+                            "Memorise|Describe|Hide|<w>Show</w>",
+                        hidden ? hidden_str.c_str() : "")));
     }
 
     virtual bool process_key(int keyin) override
@@ -675,6 +685,7 @@ public:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
                 update_entries();
                 draw_menu(true);
+                update_more();
                 break;
             }
             return true;
