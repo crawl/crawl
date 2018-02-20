@@ -39,6 +39,17 @@ define(["jquery", "comm"], function ($, comm) {
                     lines.eq(i).empty();
             }
         }
+        if (area.hasClass("menu_crt_shrink"))
+        {
+            var klist = Object.keys(data.lines)
+            while (klist.length > 0)
+            {
+                var i = klist.pop();
+                if (data.lines[i] !== "")
+                    break;
+                delete data.lines[i];
+            }
+        }
         for (var line in data.lines)
             set_text_area_line(data.id, line, data.lines[line]);
         area.trigger("text_update");

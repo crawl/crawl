@@ -88,7 +88,7 @@ void game_state::add_startup_error(const string &err)
 void game_state::show_startup_errors()
 {
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
     formatted_scroller error_menu(FS_EASY_EXIT);
     error_menu.set_more( formatted_string::parse_string(
