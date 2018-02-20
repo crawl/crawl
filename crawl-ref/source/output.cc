@@ -2486,7 +2486,7 @@ void print_overview_screen()
     overview.add_text(_status_mut_rune_list(get_number_of_cols()));
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
     overview.show();
 }
