@@ -513,8 +513,9 @@ private:
                                          hidden,
                                          hidden > 1 ? "s" : "");
 
-        set_more(formatted_string::parse_string(more_str +
-                    make_stringf("   [<w>!</w>/<w>?</w>]: %s%s",
+        set_more(formatted_string::parse_string(more_str
+#ifndef USE_TILE_LOCAL
+                  + make_stringf("   [<w>!</w>/<w>?</w>]: %s%s",
                         current_action == action::memorise ?
                             "<w>Memorise</w>|Describe|Hide|Show" :
                         current_action == action::describe ?
@@ -522,7 +523,9 @@ private:
                         current_action == action::hide ?
                             "Memorise|Describe|<w>Hide</w>|Show" :
                             "Memorise|Describe|Hide|<w>Show</w>",
-                        hidden ? hidden_str.c_str() : "")));
+                        hidden ? hidden_str.c_str() : "")
+#endif
+                ));
     }
 
     virtual bool process_key(int keyin) override
