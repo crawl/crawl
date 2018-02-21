@@ -343,7 +343,7 @@ of Trog
 w:20
 of Trog's @divine_esteem@
 
-of Trog's @_anger_name_@
+of Trog's @_anger_quality_@
 
 w:15
 of the @_weapon_animal_@

@@ -90,6 +90,14 @@ Melee
 %%%%
 _anger_name_
 
+@_anger_quality_@
+
+w:3
+@_anger_possessive_@
+
+%%%%
+_anger_quality_
+
 Anger
 
 Fury
@@ -113,6 +121,8 @@ Outrage
 Scorn
 
 Disproportionate Response
+%%%%
+_anger_possessive_
 
 the Extremely Mad
 
@@ -1515,7 +1525,7 @@ Undertaker
 
 Embalmer
 
-Trog's @_anger_name_@
+Trog's @_anger_quality_@
 
 Hellblazer
 
