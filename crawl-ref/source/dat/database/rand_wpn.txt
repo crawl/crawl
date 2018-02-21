@@ -144,12 +144,10 @@ Iconoclasm
 
 Regicide
 
-# Lemuel's Suggestions
 the Warrior
 
 the Doomed Warrior
 
-# akrasiac patch
 the Pyrrhic Victory
 
 #killing
@@ -169,14 +167,13 @@ Fear
 
 Massacring
 
-# was Pain, clashing with the brand
+# Don't use "Pain", it's easily confused with the brand
 Insufficient Pleasure
 
 Agony
 
 Trauma
 
-# Lemuel's suggestion
 Hacking and Slashing
 
 # related to cutting
@@ -563,7 +560,6 @@ Puffball
 
 Slime-mould
 %%%%
-# undead and evil beings
 _evil_stuff_
 
 Hell's Wrath
@@ -624,7 +620,6 @@ the Unspeakable One
 
 the Wraith
 %%%%
-# catastrophes etc.
 _catastrophe_name_
 
 the Inferno
@@ -639,7 +634,7 @@ Floods
 
 Ruination
 
-# the Apocalypse
+# Apocalyptic events
 the Apocalypse
 
 Armageddon
@@ -863,10 +858,8 @@ Royalism
 
 the Silent Majority
 
-# akrasiac patch
 Impeachment
 
-# umm, quoi?
 Freehold
 
 Attainder
@@ -1380,7 +1373,6 @@ False Hope
 
 the Pharaoh's Fist
 
-# akrasiac patch
 Irrepressible Laughter
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
@@ -1517,7 +1509,6 @@ Leviticus
 
 Grim
 
-# Lemuel's suggestions
 Eviscerator
 
 Undertaker
@@ -1593,7 +1584,6 @@ Bung
 
 Bingo
 
-# from the crawl.akrasiac.org patch
 Cookie Cutter
 
 ETAOIN SHRDLU
