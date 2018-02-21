@@ -1387,7 +1387,9 @@ item_def *digit_inscription_to_item(char digit, operation_types oper)
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined()
                 && item_matches_digit_inscription(you.inv[i], digit, oper))
+        {
             return &you.inv[i];
+        }
 
     for (stack_iterator si(you.pos(), true); si; ++si)
         if (item_matches_digit_inscription(*si, digit, oper))

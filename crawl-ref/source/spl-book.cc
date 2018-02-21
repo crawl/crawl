@@ -712,7 +712,7 @@ static spell_type _choose_mem_spell()
                                     || player_spell_levels() == 0) ? "s" : "");
 
     MemoriseMenu spell_menu(spells, more_str);
-    
+
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();

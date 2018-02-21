@@ -1279,8 +1279,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
             if (!quiet)
+            {
                 mprf("Turning back right now would cause you to %s!",
                     env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+            }
 
             return false;
         }
@@ -1288,11 +1290,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     if ((abil.ability == ABIL_EVOKE_BERSERK || abil.ability == ABIL_TROG_BERSERK)
         && !you.can_go_berserk(true))
+    {
         return false;
+    }
 
     if ((abil.ability == ABIL_EVOKE_FLIGHT || abil.ability == ABIL_TRAN_BAT || abil.ability == ABIL_FLY)
         && !flight_allowed())
+    {
         return false;
+    }
 
 
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))

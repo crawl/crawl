@@ -1976,9 +1976,7 @@ void column_composer::add_formatted(int ncol,
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty())
-    {
         newlines.emplace_back();
-    }
 
     for (const string &seg : segs)
         newlines.push_back(formatted_string::parse_string(seg));

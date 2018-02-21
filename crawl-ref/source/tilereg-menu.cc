@@ -175,8 +175,10 @@ void MenuRegion::_place_entries()
             // +5 and +8 give: top margin of 5px, line-text sep of 3px, bottom margin of 2px
             if (index < (int)m_entries.size()-1 && m_entries[index+1].valid
                     && !m_entries[index+1].heading)
+            {
                 m_div_line_buf.add(entry.sx, entry.sy+scroll_y+5,
                         mx-entry.sx, entry.sy+scroll_y+5, VColour(0, 64, 255, 70));
+            }
             m_font_buf.add(split, entry.sx, entry.sy+scroll_y+8);
         }
         else
@@ -222,8 +224,10 @@ void MenuRegion::_place_entries()
             m_font_buf.add(split, text_sx, text_sy+scroll_y);
         }
         if (entry.selected)
+        {
             m_shape_buf.add(entry.sx-1, entry.sy-1+scroll_y,
                     entry.ex+1, entry.ey+1+scroll_y, selected_colour);
+        }
     }
 }
 
