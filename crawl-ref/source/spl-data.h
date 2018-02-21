@@ -1664,18 +1664,16 @@ static const struct spell_desc spelldata[] =
     TILEG_FULMINANT_PRISM,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SINGULARITY, "Singularity",
     SPTYP_TRANSLOCATION,
-    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,
     20, 0,
-    TILEG_ERROR,
+    TILEG_SINGULARITY,
 },
-#endif
 
 {
     SPELL_PARALYSE, "Paralyse",

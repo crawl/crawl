@@ -26,6 +26,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
+#include "monster-type.h"
 
 enum class areaprop
 {
@@ -133,6 +134,17 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::umbra);
+        no_areas = false;
+    }
+	
+    if (a->type == MONS_SINGULARITY)
+    {
+        r = isqrt(a->get_experience_level());
+
+        _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+            _set_agrid_flag(*ri, areaprop::disjunction);
         no_areas = false;
     }
 }

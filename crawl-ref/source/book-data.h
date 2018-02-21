@@ -208,6 +208,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DISPERSAL,
     SPELL_CONTROLLED_BLINK,
     SPELL_DISJUNCTION,
+	SPELL_SINGULARITY,
 },
 
 {   // Book of Envenomations
