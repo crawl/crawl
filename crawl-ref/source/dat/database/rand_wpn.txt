@@ -114,8 +114,6 @@ Scorn
 
 Disproportionate Response
 
-No More Talking
-
 the Extremely Mad
 
 the Absolute Madman
@@ -1601,6 +1599,8 @@ Cookie Cutter
 ETAOIN SHRDLU
 
 Lorem Ipsum
+
+No More Talking
 
 # These three are from old Crawl code.
 Plojy
