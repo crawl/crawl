@@ -121,7 +121,7 @@ Condemnation
 Reproof
 
 w:70
-@_anger_name_@
+@_anger_quality_@
 %%%%
 _xom_esteem_
 
