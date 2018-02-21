@@ -590,6 +590,7 @@ private:
                           "                Failure  Level",
                 MEL_ITEM);
         subtitle->colour = BLUE;
+        subtitle->add_tile(tile_def(0, TEX_GUI)); // invisible tile
         add_entry(subtitle);
 #endif
         const bool show_hidden = current_action == action::unhide;
