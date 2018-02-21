@@ -19,6 +19,7 @@
 #include "tilefont.h"
 #include "tilesdl.h"
 #include "unicode.h"
+#include "unwind.h"
 
 // maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
 #define MAX_GLYPHS 256
@@ -137,6 +138,7 @@ bool FTFontWrapper::configure_font()
             4 * m_ft_width * m_ft_height);
 
     // initialise empty texture of correct size
+    unwind_bool noscaling(Options.tile_filter_scaling, false);
     m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     m_glyphs.clear();
@@ -157,6 +159,7 @@ bool FTFontWrapper::configure_font()
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = 255;
             }
+
         bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
                                           MIPMAP_NONE, 0, 0);
         ASSERT(success);
@@ -294,6 +297,7 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
                 }
             }
 
+        unwind_bool noscaling(Options.tile_filter_scaling, false);
         bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
                             MIPMAP_NONE,
                             (c % GLYPHS_PER_ROWCOL) * charsz.x,
