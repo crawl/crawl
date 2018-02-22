@@ -1092,12 +1092,12 @@ xxx.....G.....xxx
        @..
 ENDMAP
 
-NAME:	c7071_tmnt
-TAGS:	no_item_gen no_monster_gen
-DEPTH:	D:13-, Shoals
-MONS:	rat
-MONS:	snapping turtle name:juvenile name_adjective
-ITEM:	quarterstaff / dagger / longsword / dire flail / potion of mutation w:60 / \ 
+NAME:   c7071_tmnt
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:13-, Shoals
+MONS:   rat
+MONS:   snapping turtle name:juvenile name_adjective
+ITEM:   quarterstaff / dagger / longsword / dire flail / potion of mutation w:60 / \
         ration tile:food_pizza w:120 / nothing w:450
 MAP
  xxxxxxx

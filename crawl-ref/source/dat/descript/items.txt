@@ -494,9 +494,9 @@ and fire.
 harp of healing
 
 A mystical instrument infused with restorative power. Evoking it allows the wielder
-to start playing the harp, healing them over time to full HP based on their 
+to start playing the harp, healing them over time to full HP based on their
 Evocations skill so long as they maintain focus on playing. The harp's music is not
-strong enough to cure rotted flesh. 
+strong enough to cure rotted flesh.
 %%%%
 hat
 

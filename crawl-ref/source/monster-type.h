@@ -840,7 +840,7 @@ enum monster_type                      // menv[].type
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
 #endif
-	MONS_SINGULARITY,
+    MONS_SINGULARITY,
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
     MONS_BLOCK_OF_ICE,

@@ -1009,7 +1009,7 @@ spret_type cast_dispersal(int pow, bool fail)
 
 int gravitas_range(int pow, int strength)
 {
-	return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
+    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
 }
 
 spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
@@ -1069,26 +1069,26 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
                                           PROX_ANYWHERE,
                                           level_id::current(),
                                           (pow / 10) + 1));*/
-	
-	mgen_data data(MONS_SINGULARITY,  agent->is_player()
-								? BEH_FRIENDLY
-								: SAME_ATTITUDE(agent->as_monster()),
-								where,
-								MHITNOT,
-								MG_FORCE_PLACE,
-								GOD_NO_GOD);
-	// It's summoned, but it uses
+
+    mgen_data data(MONS_SINGULARITY,  agent->is_player()
+                                ? BEH_FRIENDLY
+                                : SAME_ATTITUDE(agent->as_monster()),
+                                where,
+                                MHITNOT,
+                                MG_FORCE_PLACE,
+                                GOD_NO_GOD);
+    // It's summoned, but it uses
     // its own mechanic to time out.
-	data.set_summoned(agent, 0, SPELL_SINGULARITY, GOD_NO_GOD);
-	data.summon_type = SPELL_SINGULARITY;
-	data.set_prox(PROX_ANYWHERE);
-	data.hd = (pow / 10) + 1;
-	
-	monster* singularity = create_monster(data);
+    data.set_summoned(agent, 0, SPELL_SINGULARITY, GOD_NO_GOD);
+    data.summon_type = SPELL_SINGULARITY;
+    data.set_prox(PROX_ANYWHERE);
+    data.hd = (pow / 10) + 1;
+
+    monster* singularity = create_monster(data);
 
     if (singularity)
     {
-		singularity->countdown = pow / 20;
+        singularity->countdown = pow / 20;
         if (you.can_see(*singularity))
         {
             const bool friendly = singularity->wont_attack();
@@ -1140,9 +1140,9 @@ static void _attract_actor(const actor* agent, actor* victim,
         {
             if (victim != act_at_space
                 && act_at_space->type != MONS_SINGULARITY)
-			{
+            {
                 victim->collide(newpos, agent, pow);
-			}
+            }
             break;
         }
         else if (!victim->is_habitable(newpos))

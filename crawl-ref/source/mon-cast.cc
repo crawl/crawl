@@ -404,7 +404,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _target_beam_setup(_mons_conjure_flame_pos),
         MSPELL_LOGIC_NONE, 6
     } },
-	{ SPELL_SINGULARITY, {
+    { SPELL_SINGULARITY, {
         _always_worthwhile,
         [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
             const int splpow = _mons_spellpower(slot.spell, caster);
@@ -1077,7 +1077,7 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_SPECTRAL_WEAPON:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
-		case SPELL_SINGULARITY:
+        case SPELL_SINGULARITY:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -6964,8 +6964,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_GRAVITAS:
         fatal_attraction(foe->pos(), mons, splpow);
         return;
-		
-	case SPELL_SINGULARITY:
+
+    case SPELL_SINGULARITY:
     {
         if (in_bounds(pbolt.target))
            cast_singularity(mons, splpow, pbolt.target, false);
@@ -8296,8 +8296,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             if (_mons_can_bind_soul(mon, *mi))
                 return false;
         return true;
-		
-	case SPELL_SINGULARITY:
+
+    case SPELL_SINGULARITY:
     {
         if (!foe)
             return true;

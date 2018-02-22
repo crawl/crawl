@@ -566,7 +566,7 @@ void floor_transition(dungeon_feature_type how,
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
-    // Assume magical level changes are involuntary, but only display 
+    // Assume magical level changes are involuntary, but only display
     // message if playing harp
     if (you.attribute[ATTR_PLAYING_HARP])
         end_playing_harp(false);

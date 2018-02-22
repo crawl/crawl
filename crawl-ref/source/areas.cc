@@ -136,7 +136,7 @@ static void _actor_areas(actor *a)
             _set_agrid_flag(*ri, areaprop::umbra);
         no_areas = false;
     }
-	
+
     if (a->type == MONS_SINGULARITY)
     {
         r = isqrt(a->get_experience_level());
