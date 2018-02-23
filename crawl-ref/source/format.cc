@@ -99,10 +99,11 @@ void formatted_string::parse_string_to_multiple(const string &s,
         vector<string> pre_split = move(lines);
         for (string &line : pre_split)
         {
-            if (line.empty())
-                lines.emplace_back(" ");
-            while (!line.empty())
+            do
+            {
                 lines.push_back(wordwrap_line(line, wrap_col, true, true));
+            }
+            while (!line.empty());
         }
     }
 
