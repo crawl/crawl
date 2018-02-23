@@ -43,6 +43,8 @@ public:
 
     const formatted_string& get_contents() { return contents; };
 
+    string highlight;
+
 protected:
 
     formatted_string contents;

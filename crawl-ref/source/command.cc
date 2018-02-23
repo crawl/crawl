@@ -1260,6 +1260,7 @@ private:
 void show_help(int section, string highlight_string)
 {
     help_popup help(section);
+    help.highlight = highlight_string;
     int key = help.show();
 
     switch (key)

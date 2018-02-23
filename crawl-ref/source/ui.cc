@@ -389,6 +389,13 @@ void UIText::set_text(const formatted_string &fs)
     _queue_allocation();
 }
 
+void UIText::set_highlight_pattern(string pattern, bool line)
+{
+    hl_pat = pattern;
+    hl_line = line;
+    ui_root.expose_region(m_region);
+}
+
 void UIText::wrap_text_to_size(int width, int height)
 {
     i2 wrapped_size = { width, height };
@@ -437,6 +444,18 @@ void UIText::wrap_text_to_size(int width, int height)
 #endif
 }
 
+static vector<size_t> _find_highlights(const string& haystack, const string& needle, int a, int b)
+{
+    vector<size_t> highlights;
+    size_t pos = haystack.find(needle, max(a-(int)needle.size()+1, 0));
+    while (pos != string::npos && pos < b+needle.size()-1)
+    {
+        highlights.push_back(pos);
+        pos = haystack.find(needle, pos+1);
+    }
+    return highlights;
+}
+
 void UIText::_render()
 {
     i4 region = m_region;
@@ -474,6 +493,97 @@ void UIText::_render()
         m_text_wrapped.ops.begin()+ops_min,
         m_text_wrapped.ops.begin()+ops_max);
 
+    if (!hl_pat.empty())
+    {
+        const auto& full_text = m_text.tostring();
+
+        // need to find the byte ranges in full_text that our slice corresponds to
+        // note that the indexes are the same in both m_text and m_text_wrapped
+        // only because wordwrapping only replaces ' ' with '\n': in other words,
+        // this is fairly brittle
+        ASSERT(full_text.size() == m_text_wrapped.tostring().size());
+        int begin_idx = ops_min == 0 ? 0 : m_text_wrapped.tostring(0, ops_min-1).size();
+        int end_idx = begin_idx + m_text_wrapped.tostring(ops_min, ops_max-1).size();
+
+        vector<size_t> highlights = _find_highlights(full_text, hl_pat, begin_idx, end_idx);
+
+        const int ox = m_region[0], oy = m_region[1]+line_height*line_off;
+        size_t lacc = 0, line = 0;
+        FontWrapper *font = tiles.get_crt_font();
+        bool inside = false;
+        for (unsigned i = 0; i < slice.ops.size() && !highlights.empty(); i++)
+        {
+            const auto& op = slice.ops[i];
+            if (op.type != FSOP_TEXT)
+                continue;
+            size_t oplen = op.text.size();
+            size_t start = highlights[0] - begin_idx - lacc,
+                   end = highlights[0] - begin_idx - lacc + hl_pat.size();
+
+            size_t sx = 0, ex = font->string_width(op.text.c_str());
+            size_t sy = 0, ey = line_height;
+            bool started = false, ended = false;
+
+            if (start >= 0 && start < oplen)
+            {
+                {
+                    size_t line_start = full_text.rfind('\n', highlights[0]);
+                    line_start = line_start == string::npos ? 0 : line_start+1;
+                    const string before = full_text.substr(line_start, highlights[0]-line_start);
+                    sx = font->string_width(before.c_str());
+                }
+                {
+                    const string before = full_text.substr(lacc+begin_idx, highlights[0]-lacc-begin_idx);
+                    sy = font->string_height(before.c_str()) - line_height;
+                }
+                started = true;
+            }
+            if (end >= 0 && end < oplen)
+            {
+                {
+                    size_t line_start = full_text.rfind('\n', highlights[0]+hl_pat.size()-1);
+                    line_start = line_start == string::npos ? 0 : line_start+1;
+                    const string to_end = full_text.substr(line_start, highlights[0]+hl_pat.size()-line_start);
+                    ex = font->string_width(to_end.c_str());
+                }
+                {
+                    const string to_end = full_text.substr(lacc+begin_idx, highlights[0]+hl_pat.size()-1-lacc-begin_idx);
+                    ey = font->string_height(to_end.c_str());
+                }
+                ended = true;
+            }
+
+            if (started || ended || inside)
+            {
+                m_hl_buf.clear();
+                for (size_t y = oy+line+sy; y < oy+line+ey; y+=line_height)
+                {
+                    if (hl_line)
+                    {
+                        m_hl_buf.add(region[0], y, region[0]+region[2], y + line_height,
+                            VColour(255, 255, 0, 50));
+                    }
+                    else
+                        m_hl_buf.add(ox + sx, y, ox + ex, y + line_height,
+                            VColour(255, 255, 0, 50));
+                }
+                m_hl_buf.draw();
+            }
+            inside = !ended && (inside || started);
+
+            if (ended)
+            {
+                highlights.erase(highlights.begin()+0);
+                i--;
+            }
+            else
+            {
+                lacc += oplen;
+                line += font->string_height(op.text.c_str()) - line_height;
+            }
+        }
+    }
+
     // XXX: should be moved into a new function render_formatted_string()
     // in FTFontWrapper, that, like render_textblock(), would automatically
     // handle swapping atlas glyphs as necessary.
@@ -482,10 +592,59 @@ void UIText::_render()
     m_font_buf.draw();
 #else
     const auto& lines = m_wrapped_lines;
+    vector<size_t> highlights;
+    int begin_idx = 0;
+
+    if (!hl_pat.empty())
+    {
+        for (int i = 0; i < region[1]-m_region[1]; i++)
+            begin_idx += m_wrapped_lines[i].tostring().size()+1;
+        int end_idx = begin_idx;
+        for (int i = region[1]-m_region[1]; i < region[1]-m_region[1]+region[3]; i++)
+            end_idx += m_wrapped_lines[i].tostring().size()+1;
+        highlights = _find_highlights(m_text.tostring(), hl_pat, begin_idx, end_idx);
+    }
+
+    unsigned int hl_idx = 0;
     for (size_t i = 0; i < min(lines.size(), (long unsigned)region[3]); i++)
     {
         cgotoxy(region[0]+1, region[1]+1+i);
-        lines[i+region[1]-m_region[1]].chop(region[2]).display(0);
+        formatted_string line = lines[i+region[1]-m_region[1]];
+        int end_idx = begin_idx + line.tostring().size();
+
+        // convert highlights on this line to a list of line cuts
+        vector<size_t> cuts = {0};
+        for (; hl_idx < highlights.size() && (int)highlights[hl_idx] < end_idx; hl_idx++)
+        {
+            ASSERT(highlights[hl_idx]+hl_pat.size() >= (size_t)begin_idx);
+            int la = max((int)highlights[hl_idx] - begin_idx, 0);
+            int lb = min(highlights[hl_idx]+hl_pat.size() - begin_idx, (size_t)end_idx - begin_idx);
+            ASSERT(la < lb);
+            cuts.push_back(la);
+            cuts.push_back(lb);
+        }
+        cuts.push_back(end_idx - begin_idx);
+
+        // keep the last highlight if it extend into the next line
+        if (hl_idx && highlights[hl_idx-1]+hl_pat.size() > (size_t)end_idx)
+            hl_idx--;
+
+        // cut the line, and highlight alternate segments
+        formatted_string out;
+        for (size_t j = 0; j+1 < cuts.size(); j++)
+        {
+            formatted_string slice = line.substr_bytes(cuts[j], cuts[j+1]-cuts[j]);
+            if (j%2)
+            {
+                out.textcolour(WHITE);
+                out.cprintf("%s", slice.tostring().c_str());
+            }
+            else
+                out += slice;
+        }
+        out.chop(region[2]).display(0);
+
+        begin_idx = end_idx + 1; // +1 is for the newline
     }
 #endif
 }
