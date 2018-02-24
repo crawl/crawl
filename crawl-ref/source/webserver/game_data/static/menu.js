@@ -124,7 +124,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         menu_div.append("<div class='menu_more'>" + util.formatted_string_to_html(menu.more)
                         + "</div>");
 
-        menu.server_scroll = true;
+        if (client.is_watching())
+            menu.following_player_scroll = true;
 
         ui.show_popup(menu_div);
         handle_size_change();
@@ -275,9 +276,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         contents.scrollTop(item.elem.offset().top - baseline);
 
         menu.anchor_last = false;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-        menu_scroll_handler();
+        menu_scroll_handler(was_server_initiated);
     }
 
     function scroll_bottom_to_item(item_or_index, was_server_initiated)
@@ -295,9 +294,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                            - baseline - contents.innerHeight());
 
         menu.anchor_last = true;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-        menu_scroll_handler();
+        menu_scroll_handler(was_server_initiated);
     }
 
     function update_visible_indices()
@@ -359,12 +356,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function schedule_server_scroll()
     {
-        if (update_server_scroll_timeout)
-        {
-            clearTimeout(update_server_scroll_timeout);
-            update_server_scroll_timeout = null;
-        }
-        update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
+        if (!update_server_scroll_timeout)
+            update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
     }
 
     function update_title()
@@ -462,8 +455,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function server_menu_scroll(data)
     {
+        if (!client.is_watching())
+            return;
         menu.server_first_visible = data.first;
-        if (menu.server_scroll)
+        if (menu.following_player_scroll)
             scroll_to_item(data.first, true);
     }
 
@@ -510,8 +505,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         }
     }
 
-    function menu_scroll_handler()
+    function menu_scroll_handler(was_server_initiated)
     {
+        // XXX: punt on detecting user-initiated scrolling for now
+        if (was_server_initiated === false)
+            menu.following_player_scroll = false;
+
         update_visible_indices();
         schedule_server_scroll();
     }
