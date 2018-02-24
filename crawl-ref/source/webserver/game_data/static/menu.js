@@ -3,8 +3,6 @@ define(["jquery", "comm", "client", "./ui", "./enums", "./cell_renderer",
 function ($, comm, client, ui, enums, cr, util, options, scroller) {
     "use strict";
 
-    var chunk_size = 50;
-
     // Helpers
 
     function item_selectable(item)
@@ -118,9 +116,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         menu.items = { length: menu.total_items };
         menu.first_present = 999999;
         menu.last_present = -999999;
-        prepare_item_range(menu.chunk_start,
-                            menu.chunk_start + chunk.length - 1,
-                            true, container);
         update_item_range(menu.chunk_start, chunk);
 
         menu.scroller = scroller(content_div[0]);
@@ -146,11 +141,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         }
     }
 
-    function prepare_item_range(start, end, no_request, container)
+    function prepare_item_range(start, end, container)
     {
         // Guarantees that the given (inclusive) range of item indices
-        // exists; requests them from the server if necessary, except
-        // if no_request is true.
+        // exists
 
         if (start < 0) start = 0;
         if (end >= menu.total_items)
@@ -168,25 +162,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (start > end) return;
         while (menu.items[end] !== undefined && start <= end)
             end--;
-
-        // Extend to chunk_size, but only if we are actually
-        // requesting items (otherwise we would end up with
-        // placeholders for which items are never requested).
-        if (!no_request)
-        {
-            while (end - start + 1 < chunk_size
-                   && menu.items[end + 1] === undefined
-                   && end < menu.total_items - 1)
-            {
-                end++;
-            }
-            while (end - start + 1 < chunk_size
-                   && menu.items[start - 1] === undefined
-                   && start > 0)
-            {
-                start--;
-            }
-        }
 
         container = container || menu.elem.find(".menu_contents_inner ol");
 
@@ -226,14 +201,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             menu.first_present = start;
         if (end > menu.last_present)
             menu.last_present = end;
-
-        // Request the actual elements
-        if (!no_request)
-            comm.send_message("*request_menu_range", { start: start, end: end });
     }
 
     function update_item_range(chunk_start, items_list)
     {
+        prepare_item_range(0, menu.total_items-1);
         for (var i = 0; i < items_list.length; ++i)
         {
             var real_index = i + chunk_start;
@@ -295,8 +267,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                      item_or_index.index : item_or_index);
         if (menu.first_visible == index) return;
 
-        prepare_item_range(index, index + chunk_size - 1);
-
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
         var contents = $(menu.scroller.scrollElement);
@@ -315,8 +285,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var index = (item_or_index.elem ?
                      item_or_index.index : item_or_index);
         if (menu.last_visible == index) return;
-
-        prepare_item_range(index - chunk_size + 1, index);
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
@@ -494,12 +462,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function update_menu_items(data)
     {
-        prepare_item_range(data.chunk_start,
-                           data.chunk_start + data.items.length - 1,
-                           true);
-
         update_item_range(data.chunk_start, data.items);
-
         handle_size_change();
     }
 
