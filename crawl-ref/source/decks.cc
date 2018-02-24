@@ -796,11 +796,15 @@ static void _describe_cards(vector<card_type> cards)
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "describe_cards");
 #endif
-
+    bool seen[NUM_CARDS] = {0};
     ostringstream data;
     bool first = true;
     for (card_type card : cards)
     {
+        if (seen[card])
+            continue;
+        seen[card] = true;
+
         string name = card_name(card);
         string desc = getLongDescription(name + " card");
         if (desc.empty())
