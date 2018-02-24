@@ -6729,7 +6729,7 @@ bool player::fully_petrify(actor *foe, bool quiet)
     // Petrification is involuntary, but only display message if playing harp
     if (you.attribute[ATTR_PLAYING_HARP])
         end_playing_harp(false);
-    
+
     return true;
 }
 

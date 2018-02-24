@@ -1572,14 +1572,14 @@ static spret_type _harp_of_healing()
 
     return SPRET_SUCCESS;
 }
-/* Handles checking if user can still play harp, then heals them 
+/* Handles checking if user can still play harp, then heals them
  * if they can. If not, cancel the status.
  */
 void handle_playing_harp()
 {
     // Various special cases if user can no longer play harp
     if (you.confused() || you.berserk() || you.duration[DUR_MESMERISED]
-        || you.duration[DUR_BRAINLESS] || you.duration[DUR_COLLAPSE] 
+        || you.duration[DUR_BRAINLESS] || you.duration[DUR_COLLAPSE]
         || you.duration[DUR_CLUMSY] || silenced(you.pos())
         || you.duration[DUR_DEATHS_DOOR] || !you.can_device_heal())
     {
@@ -1605,7 +1605,7 @@ void end_playing_harp(bool voluntary)
         mpr("You stop playing the harp.");
     else
         mpr("Your playing has been interrupted!");
-    
+
     you.attribute[ATTR_PLAYING_HARP] = 0;
 }
 
@@ -1898,7 +1898,7 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
-            if(_harp_of_healing())
+            if (_harp_of_healing())
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);

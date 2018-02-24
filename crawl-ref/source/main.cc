@@ -2827,14 +2827,14 @@ static void _do_playing_harp()
     if (you.attribute[ATTR_PLAYING_HARP] == 0)
         return;
 
-    // Convert prepping value into initialized value 
+    // Convert prepping value into initialized value
     // (to avoid immediate cancel on starting turn)
     if (you.attribute[ATTR_PLAYING_HARP] == -1)
     {
         you.attribute[ATTR_PLAYING_HARP] = 1;
         return;
     }
-    
+
     if (crawl_state.prev_cmd == CMD_WAIT)
         handle_playing_harp();
     else

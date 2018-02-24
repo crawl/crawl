@@ -819,7 +819,7 @@ static void _decrement_durations()
     dec_elixir_player(delay);
 
     you.maybe_degrade_bone_armour(delay);
-    
+
     extract_manticore_spikes("You carefully extract the barbed spikes from "
                              "your body.");
 
