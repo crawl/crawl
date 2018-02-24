@@ -794,7 +794,7 @@ static void _describe_cards(vector<card_type> cards)
     ASSERT(!cards.empty());
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_cards");
+    tiles_crt_control show_as_menu(CRT_MENU);
 #endif
     bool seen[NUM_CARDS] = {0};
     ostringstream data;
@@ -869,7 +869,7 @@ bool stack_five(int slot)
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "deck_stack");
+    tiles_crt_control show_as_menu(CRT_MENU);
 #endif
 
     vector<card_type> draws;
