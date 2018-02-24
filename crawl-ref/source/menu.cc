@@ -1916,8 +1916,6 @@ bool Menu::line_up()
 }
 
 #ifdef USE_TILE_WEB
-static const int chunk_size = 50; // Should be equal to the one defined in menu.js
-
 void Menu::webtiles_write_menu(bool replace) const
 {
     if (crawl_state.doing_prev_cmd_again)
@@ -1935,15 +1933,8 @@ void Menu::webtiles_write_menu(bool replace) const
     tiles.json_write_string("more", more.to_colour_string());
 
     int count = items.size();
-
-    bool complete_send = count <= chunk_size * 2;
-    int start;
-    if (is_set(MF_START_AT_END) && !complete_send)
-        start = count - chunk_size;
-    else
-        start = 0;
-
-    int end = start + (complete_send ? count : chunk_size);
+    int start = 0;
+    int end = start + count;
 
     tiles.json_write_int("total_items", count);
     tiles.json_write_int("chunk_start", start);
@@ -1975,8 +1966,8 @@ void Menu::webtiles_handle_item_request(int start, int end)
 {
     start = min(max(0, start), (int)items.size()-1);
     if (end < start) end = start;
-    if (end >= min(start + chunk_size, (int)items.size()))
-        end = min(start + chunk_size, (int)items.size()) - 1;
+    if (end >= (int)items.size())
+        end = (int)items.size() - 1;
 
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu_items");
