@@ -735,18 +735,6 @@ bool deck_deal()
     return true;
 }
 
-static void _redraw_stacked_cards(const vector<card_type>& draws,
-                                  unsigned int selected)
-{
-    for (unsigned int i = 0; i < draws.size(); ++i)
-    {
-        cgotoxy(1, i+2);
-        textcolour(selected == i ? WHITE : LIGHTGREY);
-        cprintf("%u - %s", i+1, card_name(draws[i]));
-        clear_to_end_of_line();
-    }
-}
-
 static bool _card_in_deck(card_type card, const deck_archetype *pdeck)
 {
     return any_of(pdeck->begin(), pdeck->end(),
@@ -860,6 +848,53 @@ bool deck_stack()
     return true;
 }
 
+class StackFiveMenu : public Menu
+{
+    virtual bool process_key(int keyin) override;
+    vector<card_type>& draws;
+    vector<uint8_t>& flags;
+public:
+    StackFiveMenu(vector<card_type>& d, vector<uint8_t>& f)
+        : Menu(MF_NOSELECT | MF_ALWAYS_SHOW_MORE), draws(d), flags(f) {};
+};
+
+bool StackFiveMenu::process_key(int keyin)
+{
+    if (keyin == CK_ENTER)
+    {
+        formatted_string old_more = more;
+        set_more(formatted_string::parse_string(
+                "Are you done? (press y or Y to confirm)"));
+        if (yesno(nullptr, true, 'n', false, false, true))
+            return false;
+        set_more(old_more);
+    }
+    else if (keyin == '?')
+        _describe_cards(draws);
+    else if (keyin >= '1' && keyin <= '0' + static_cast<int>(draws.size()))
+    {
+        const unsigned int i = keyin - '1';
+        for (unsigned int j = 0; j < items.size(); j++)
+            if (items[j]->selected())
+            {
+                swap(draws[i], draws[j]);
+                swap(flags[i], flags[j]);
+                swap(items[i]->text, items[j]->text);
+                items[j]->colour = LIGHTGREY;
+                select_item_index(i, 0, false); // this also updates the item
+                select_item_index(j, 0, false);
+                return true;
+            }
+        items[i]->colour = WHITE;
+        select_item_index(i, 1, false);
+    }
+    else if (keyin == CK_ESCAPE)
+        return !crawl_state.seen_hups;
+    else
+        Menu::process_key(keyin);
+    return true;
+}
+
 bool stack_five(int slot)
 {
     item_def& deck(you.inv[slot]);
@@ -868,10 +903,6 @@ bool stack_five(int slot)
 
     const int num_cards    = cards_in_deck(deck);
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
 
     vector<card_type> draws;
     vector<uint8_t>   flags;
@@ -892,71 +923,23 @@ bool stack_five(int slot)
     deck.used_count = -num_to_stack;
     props[STACKED_KEY] = true;
     you.wield_change = true;
-    bool done = true;
 
-    if (draws.size() > 1)
+    StackFiveMenu menu(draws, flags);
+    MenuEntry *const title = new MenuEntry("Select two cards to swap them:", MEL_TITLE);
+    menu.set_title(title);
+    for (unsigned int i = 0; i < draws.size(); i++)
     {
-        bool need_prompt_redraw = true;
-        unsigned int selected = draws.size();
-        while (true)
-        {
-            if (need_prompt_redraw)
-            {
-                clrscr();
-                cgotoxy(1,1);
-                textcolour(WHITE);
-                cprintf("Press a digit to select a card, then another digit "
-                        "to swap it.");
-                cgotoxy(1,10);
-                cprintf("Press ? for the card descriptions, or Enter to "
-                        "accept.");
-
-                _redraw_stacked_cards(draws, selected);
-                need_prompt_redraw = false;
-            }
-
-            // Hand-hacked implementation, instead of using Menu. Oh well.
-            const int c = getchk();
-            if (c == CK_ENTER)
-            {
-                cgotoxy(1,11);
-                textcolour(LIGHTGREY);
-                cprintf("Are you done? (press y or Y to confirm)");
-                if (toupper(getchk()) == 'Y')
-                    break;
-
-                cgotoxy(1,11);
-                clear_to_end_of_line();
-                continue;
-            }
-
-            if (c == '?')
-            {
-                _describe_cards(draws);
-                need_prompt_redraw = true;
-            }
-            else if (c >= '1' && c <= '0' + static_cast<int>(draws.size()))
-            {
-                const unsigned int new_selected = c - '1';
-                if (selected < draws.size())
-                {
-                    swap(draws[selected], draws[new_selected]);
-                    swap(flags[selected], flags[new_selected]);
-                    selected = draws.size();
-                }
-                else
-                    selected = new_selected;
-
-                _redraw_stacked_cards(draws, selected);
-            }
-            else if (c == CK_ESCAPE && crawl_state.seen_hups)
-            {
-                done = false;
-                break; // continue on game restore
-            }
-        }
-        redraw_screen();
+        MenuEntry * const entry = new MenuEntry(card_name(draws[i]), MEL_ITEM, 1, '1'+i);
+#ifdef USE_TILE
+        entry->add_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+#endif
+        menu.add_entry(entry);
     }
+    menu.set_more(formatted_string::parse_string(
+                "<lightgrey>Press <w>?</w> for the card descriptions"
+                " or <w>Enter</w> to accept."));
+    menu.show();
+
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
         _push_top_card(deck, draws[draws.size() - 1 - i],
@@ -966,7 +949,7 @@ bool stack_five(int slot)
     _check_buggy_deck(deck);
     you.wield_change = true;
 
-    return done;
+    return !crawl_state.seen_hups;
 }
 
 // Draw the next three cards, discard two and pick one.
