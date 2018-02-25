@@ -1243,7 +1243,12 @@ static int _describe_branch(const string &key, const string &suffix,
             + "\n\n"
             + branch_rune_desc(branch, false);
 
+#ifdef USE_TILE
+    tile_def tile = tile_def(tileidx_branch(branch), TEX_FEAT);
+    return _describe_key(key, suffix, footer, info, &tile);
+#else
     return _describe_key(key, suffix, footer, info);
+#endif
 }
 
 /// All types of ?/ queries the player can enter.
