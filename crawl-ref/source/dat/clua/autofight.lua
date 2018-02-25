@@ -26,7 +26,7 @@ AUTOFIGHT_WAIT = false
 AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
 
-local function delta_to_vi(dx, dy)
+local function delta_to_cmd(dx, dy)
   local d2v = {
     [-1] = { [-1] = "CMD_MOVE_UP_LEFT",  [0] = "CMD_MOVE_LEFT",  [1] = "CMD_MOVE_DOWN_LEFT"},
     [0]  = { [-1] = "CMD_MOVE_UP",                               [1] = "CMD_MOVE_DOWN"},
@@ -35,7 +35,7 @@ local function delta_to_vi(dx, dy)
   return d2v[dx][dy]
 end
 
-local function target_delta_to_vi(dx, dy)
+local function target_delta_to_cmd(dx, dy)
   local d2v = {
     [-1] = { [-1] = "CMD_TARGET_UP_LEFT",  [0] = "CMD_TARGET_LEFT",  [1] = "CMD_TARGET_DOWN_LEFT"},
     [0]  = { [-1] = "CMD_TARGET_UP",                                 [1] = "CMD_TARGET_DOWN"},
@@ -58,10 +58,10 @@ end
 
 local function vector_move(a, dx, dy)
   for i = 1,abs(dx) do
-    a[#a+1] = target_delta_to_vi(sign(dx), 0)
+    a[#a+1] = target_delta_to_cmd(sign(dx), 0)
   end
   for i = 1,abs(dy) do
-    a[#a+1] = target_delta_to_vi(0, sign(dy))
+    a[#a+1] = target_delta_to_cmd(0, sign(dy))
   end
 end
 
@@ -157,7 +157,7 @@ local function move_towards(dx, dy)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.do_commands({delta_to_vi(move[1],move[2])})
+    crawl.do_commands({delta_to_cmd(move[1],move[2])})
   end
 end
 
@@ -290,7 +290,7 @@ local function attack_reach(x,y)
 end
 
 local function attack_melee(x,y)
-  crawl.do_commands({delta_to_vi(x, y)})
+  crawl.do_commands({delta_to_cmd(x, y)})
 end
 
 local function set_stop_level(key, value, mode)
@@ -361,7 +361,7 @@ function attack(allow_movement)
     crawl.mpr("You are too confused!")
   elseif caught then
     if AUTOFIGHT_CAUGHT then
-      crawl.do_commands({delta_to_vi(1, 0)}) -- Direction doesn't matter.
+      crawl.do_commands({delta_to_cmd(1, 0)}) -- Direction doesn't matter.
     else
       crawl.mpr("You are " .. caught .. "!")
     end
