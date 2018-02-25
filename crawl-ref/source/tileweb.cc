@@ -343,7 +343,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         first.check(JSON_NUMBER);
         // last visible item is sent too, but currently unused
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
             m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
     }
     else if (msgtype == "*request_menu_range")
@@ -353,7 +353,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper end = json_find_member(obj.node, "end");
         end.check(JSON_NUMBER);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
         {
             m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
                                                                    (int) end->number_);
@@ -521,19 +521,20 @@ void TilesFramework::_send_layout()
 
 void TilesFramework::push_menu(Menu* m)
 {
-    MenuInfo mi;
-    mi.menu = m;
-    m_menu_stack.push_back(mi);
+    UIStackFrame frame;
+    frame.type = UIStackFrame::MENU;
+    frame.menu = m;
+    m_menu_stack.push_back(frame);
     m->webtiles_write_menu();
     tiles.finish_message();
 }
 
 void TilesFramework::push_crt_menu(string tag)
 {
-    MenuInfo mi;
-    mi.menu = nullptr;
-    mi.tag = tag;
-    m_menu_stack.push_back(mi);
+    UIStackFrame frame;
+    frame.type = UIStackFrame::CRT;
+    frame.crt_tag = tag;
+    m_menu_stack.push_back(frame);
 
     json_open_object();
     json_write_string("msg", "menu");
@@ -545,30 +546,73 @@ void TilesFramework::push_crt_menu(string tag)
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return is_in_menu(nullptr);
+    return !m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::CRT;
 }
 
 bool TilesFramework::is_in_menu(Menu* m)
 {
-    return !m_menu_stack.empty() && m_menu_stack.back().menu == m;
+    return !m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU
+        && m_menu_stack.back().menu == m;
 }
 
 void TilesFramework::pop_menu()
 {
     if (m_menu_stack.empty()) return;
-    MenuInfo mi = m_menu_stack.back();
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"close_menu\"}");
 }
 
-void TilesFramework::close_all_menus()
+void TilesFramework::pop_all_ui_layouts()
 {
-    while (m_menu_stack.size())
-        pop_menu();
+    for (auto it = m_menu_stack.crbegin(); it != m_menu_stack.crend(); it++)
+    {
+        if (it->type == UIStackFrame::UI)
+            send_message("{\"msg\":\"ui-pop\"}");
+        else
+            send_message("{\"msg\":\"close_menu\"}");
+    }
+    m_menu_stack.clear();
+
     // This is a bit of a hack, in case the client-side menu stack ever gets
     // out of sync with m_menu_stack. (This can maybe happen for reasons that I
     // don't fully understand, on spectator join.)
     send_message("{\"msg\":\"close_all_menus\"}");
+}
+
+void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots)
+{
+    ASSERT(m_json_stack.size() == 1);
+    ASSERT(m_json_stack.back().type == '}'); // enums, schmenums
+    tiles.json_write_string("msg", "ui-push");
+    tiles.json_write_string("type", type);
+    tiles.json_close_object();
+    UIStackFrame frame;
+    frame.type = UIStackFrame::UI;
+    frame.ui_json.resize(num_state_slots+1);
+    frame.ui_json[0] = m_msg_buf;
+    m_menu_stack.push_back(frame);
+    tiles.finish_message();
+}
+
+void TilesFramework::pop_ui_layout()
+{
+    if (m_menu_stack.empty()) return;
+    m_menu_stack.pop_back();
+    send_message("{\"msg\":\"ui-pop\"}");
+}
+
+void TilesFramework::ui_state_change(const string& type, unsigned state_slot)
+{
+    ASSERT(!m_menu_stack.empty());
+    UIStackFrame &top = m_menu_stack.back();
+    ASSERT(top.type == UIStackFrame::UI);
+    ASSERT(m_json_stack.size() == 1);
+    ASSERT(m_json_stack.back().type == '}');
+    tiles.json_write_string("msg", "ui-state");
+    tiles.json_write_string("type", type);
+    tiles.json_close_object();
+    top.ui_json[state_slot+1] = m_msg_buf;
+    tiles.finish_message();
 }
 
 static void _send_text_cursor(bool enabled)
@@ -1650,20 +1694,31 @@ void TilesFramework::_send_everything()
 
     // Menus
     json_open_object();
-    json_write_string("msg", "init_menus");
-    json_open_array("menus");
-    for (MenuInfo &menu : m_menu_stack)
+    json_write_string("msg", "ui-stack");
+    json_open_array("items");
+    for (UIStackFrame &frame : m_menu_stack)
     {
-        if (menu.menu)
-            menu.menu->webtiles_write_menu();
-        else
+        if (frame.type == UIStackFrame::MENU)
+            frame.menu->webtiles_write_menu();
+        else if (frame.type == UIStackFrame::CRT)
         {
             json_open_object();
             json_write_string("msg", "menu");
             json_write_string("type", "crt");
-            json_write_string("tag", menu.tag);
+            json_write_string("tag", frame.crt_tag);
             json_close_object();
         }
+        else
+        {
+            for (const auto& json : frame.ui_json)
+                if (!json.empty())
+                {
+                    m_msg_buf.append(json);
+                    json_write_comma();
+                }
+            continue;
+        }
+        json_write_comma();
     }
     json_close_array();
     json_close_object();
