@@ -1492,7 +1492,7 @@ void redraw_screen(bool show_updates)
     }
 
 #ifdef USE_TILE_WEB
-    tiles.close_all_menus();
+    tiles.pop_all_ui_layouts();
 #endif
 
     draw_border();

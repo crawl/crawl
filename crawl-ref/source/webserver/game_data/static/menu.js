@@ -462,26 +462,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             scroll_to_item(data.first, true);
     }
 
-    function init_menus(data)
-    {
-        if (menu_stack.length > 0) return;
-
-        menu_stack = data.menus;
-        menu = null;
-        for (var i = 0; i < menu_stack.length; i++)
-        {
-            menu = menu_stack[i];
-            display_menu();
-        }
-    }
-
     comm.register_handlers({
         "menu": open_menu,
         "close_menu": close_menu,
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
-        "init_menus": init_menus
     });
 
     // Event handlers
