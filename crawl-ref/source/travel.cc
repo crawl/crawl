@@ -4345,7 +4345,8 @@ static bool _feat_is_branchlike(dungeon_feature_type feat)
         || feat == DNGN_ENTER_HELL
         || feat == DNGN_ENTER_ABYSS
         || feat == DNGN_EXIT_THROUGH_ABYSS
-        || feat == DNGN_ENTER_PANDEMONIUM;
+        || feat == DNGN_ENTER_PANDEMONIUM
+        || feat == DNGN_ABYSS_TO_ZOT;
 }
 
 void explore_discoveries::found_feature(const coord_def &pos,

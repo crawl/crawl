@@ -193,6 +193,7 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     {
         return feat_is_portal_entrance(grd(where))
                || grd(where) == DNGN_TRANSIT_PANDEMONIUM
+               || grd(where) == DNGN_ABYSS_TO_ZOT
                || grd(where) == DNGN_TRANSPORTER;
     }
 

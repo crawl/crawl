@@ -893,6 +893,7 @@ static bool is_ash_portal(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSS_TO_ZOT:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     // DNGN_TRANSIT_PANDEMONIUM is too mundane

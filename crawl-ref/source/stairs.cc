@@ -677,6 +677,8 @@ void floor_transition(dungeon_feature_type how,
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
             if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
                 mpr("The abyssal rune of Zot can be found at this depth.");
+            if (you.depth == 5)
+                mpr("One-way passage to the Realm of Zot can be found at and below this depth.");
             break;
         }
         if (!forced)
@@ -936,6 +938,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 
     case DNGN_EXIT_THROUGH_ABYSS:
         return level_id(BRANCH_ABYSS);
+
+    case DNGN_ABYSS_TO_ZOT:
+        return level_id(BRANCH_ZOT, 1);
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:

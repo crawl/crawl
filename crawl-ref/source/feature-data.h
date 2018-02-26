@@ -353,6 +353,7 @@ PORTAL_EXIT(DNGN_EXIT_HELL, "gateway back into the Dungeon", "exit_hell", LIGHTR
 PORTAL_ENTRANCE(DNGN_ENTER_ABYSS, "one-way gate to the infinite horrors of the Abyss", "enter_abyss", ETC_WARP),
 PORTAL_ENTRANCE(DNGN_EXIT_THROUGH_ABYSS, "exit through the horrors of the Abyss", "exit_through_abyss", ETC_WARP),
 PORTAL_EXIT(DNGN_EXIT_ABYSS, "gateway leading out of the Abyss", "exit_abyss", ETC_WARP),
+PORTAL_ENTRANCE(DNGN_ABYSS_TO_ZOT, "one-way gate leading to the Realm of Zot", "abyss_to_zot", MAGENTA),
 
 PORTAL_ENTRANCE(DNGN_ENTER_PANDEMONIUM, "one-way gate leading to the halls of Pandemonium", "enter_pandemonium", LIGHTBLUE),
 PORTAL_EXIT(DNGN_TRANSIT_PANDEMONIUM, "gate leading to another region of Pandemonium", "transit_pandemonium", LIGHTGREEN),

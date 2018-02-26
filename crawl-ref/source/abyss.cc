@@ -307,7 +307,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1.
-    int num_items = 150, items_level = 52;
+    int num_items = 140+you.depth*10, items_level = 51+you.depth;
     int items_placed = 0;
 
     if (player_in_starting_abyss())
@@ -383,9 +383,10 @@ static int _banished_depth(const int power)
     // always
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
+    // Now with banishment up to A:27, if you can get that much spellpower somehow.
     const int maxdepth = div_rand_round((power + 5), 6);
     const int mindepth = (4 * power + 7) / 23;
-    return min(5, max(1, random_range(mindepth, maxdepth)));
+    return min(27, max(1, random_range(mindepth, maxdepth)));
 }
 
 void banished(const string &who, const int power)
@@ -401,7 +402,7 @@ void banished(const string &who, const int power)
             down_stairs(DNGN_ABYSSAL_STAIR);
         else
         {
-            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            // On Abyss:27 we can't go deeper; cause a shift to a new area
             mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
             abyss_teleport();
         }
@@ -1197,6 +1198,7 @@ static void _update_abyss_terrain(const coord_def &p,
     {
         case DNGN_EXIT_ABYSS:
         case DNGN_ABYSSAL_STAIR:
+        case DNGN_ABYSS_TO_ZOT:
             return;
         default:
             break;
@@ -1281,8 +1283,16 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
+    int exit_chance = 7500;
+    if (you.depth <= 5)
+    {
+        exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
                             : 7500 - 1250 * (you.depth - 1);
+    }
+    else
+    {
+        exit_chance = 1250 - 25 * (you.depth - 5);
+    }
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1326,6 +1336,8 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         if (morph)
             continue;
 
+        // If we're at Abyss:5 or deeper, a small chance to place an exit into Zot:5.
+
         // Place abyss exits, stone arches, and altars to liven up the scene
         // (only on area creation, not on morphing).
         _abyss_check_place_feat(p, exit_chance,
@@ -1340,8 +1352,14 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 _abyss_pick_altar(),
                                 abyss_genlevel_mask)
         ||
+        (you.depth >= 5 && _abyss_check_place_feat(p, 2500-(25*(you.depth-5)),
+                                nullptr,
+                                nullptr,
+                                DNGN_ABYSS_TO_ZOT,
+                                abyss_genlevel_mask))
+        ||
         level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
+        && _abyss_check_place_feat(p, you.depth <= 5 ? 1900 : 1900-(25*(you.depth-5)), nullptr, nullptr,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }

@@ -262,6 +262,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_ABYSS;
     case DNGN_ABYSSAL_STAIR:
         return TILE_DNGN_ABYSSAL_STAIR;
+    case DNGN_ABYSS_TO_ZOT:
+        return TILE_DNGN_ENTER_ZOT_OPEN;
     case DNGN_EXIT_HELL:
         return TILE_DNGN_RETURN_HELL;
     case DNGN_EXIT_ABYSS:

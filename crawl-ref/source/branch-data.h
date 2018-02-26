@@ -191,7 +191,7 @@ const Branch branches[NUM_BRANCHES] =
       'F', {}, BRANCH_NOISE_NORMAL },
 #endif
 
-    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
+    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 27, 24,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS, DNGN_FLOOR, // can't get trapped in abyss
       "Abyss", "the Abyss", "Abyss",
