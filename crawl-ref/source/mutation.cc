@@ -765,6 +765,27 @@ static string _vampire_Ascreen_footer(bool first_page)
             "]: %s", text);
 }
 
+static int _vampire_bloodlessness()
+{
+    switch (you.hunger_state)
+    {
+    case HS_ENGORGED:
+    case HS_VERY_FULL:
+    case HS_FULL:
+        return 1;
+    case HS_SATIATED:
+        return 2;
+    case HS_HUNGRY:
+    case HS_VERY_HUNGRY:
+    case HS_NEAR_STARVING:
+        return 3;
+    case HS_STARVING:
+    case HS_FAINTING:
+        return 4;
+    }
+    die("bad hunger state %d", you.hunger_state);
+}
+
 static string _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -802,26 +823,7 @@ static string _display_vampire_attributes()
          "berserk              ", "yes        ", "yes        ", "no         ", "no    "}
     };
 
-    int current = 0;
-    switch (you.hunger_state)
-    {
-    case HS_ENGORGED:
-    case HS_VERY_FULL:
-    case HS_FULL:
-        current = 1;
-        break;
-    case HS_SATIATED:
-        current = 2;
-        break;
-    case HS_HUNGRY:
-    case HS_VERY_HUNGRY:
-    case HS_NEAR_STARVING:
-        current = 3;
-        break;
-    case HS_STARVING:
-    case HS_FAINTING:
-        current = 4;
-    }
+    int current = _vampire_bloodlessness();
 
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
@@ -858,11 +860,6 @@ void display_mutations()
         mutation_s += extra;
     }
     trim_string_right(mutation_s);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
-    mouse_control mc(MOUSE_MODE_MORE);
 
     auto vbox = make_shared<UIBox>(UI::VERT);
 
@@ -908,18 +905,36 @@ void display_mutations()
         lastch = ev.key.keysym.sym;
         if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {
-            int c = switcher->current();
-            switcher->current() = 1 - c;
+            int c = 1 - switcher->current();
+            switcher->current() = c;
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_int("pane", c);
+            tiles.ui_state_change("mutations", 0);
+#endif
             bottom->set_text(formatted_string::parse_string(_vampire_Ascreen_footer(c)));
         } else
             done = !vbox->on_event(ev);
         return true;
     });
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_write_string("mutations", mutation_s);
+    if (you.species == SP_VAMPIRE)
+        tiles.json_write_int("vampire", _vampire_bloodlessness());
+    tiles.push_ui_layout("mutations", 1);
+#endif
+
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Usage: test/stress/abyss game_id, where game_id must be a number.  If not
+# provided, it defaults to the script's PID.
+#
+# After starting, it's good to customize the instance somewhat, especially
+# the race.  Nagas and octopodes are prime choices because of constriction.
+#
+# You can learn spells via &^M (when there are no monsters on the screen,
+# if you adjust the spell via =s to an uppercase letter, the bot will randomly
+# cast it from time to time.  If more than one spell uses a capital letter,
+# one will be picked at random.  Sadly, this works only for spells that don't
+# require a target.
+
+# When a crash happens:
+# * backup the save just to be safe
+# * ensure you have the same terminal size
+# * re-run test/stress/abyss specifying the same number.  If you didn't
+#   provide one initially, it is given in the save's name.
+# * if all went well, you will see the exact same crash
+# * debug it!
+
+GAME=${1:-$$}
+
+while ./crawl -name "Abyss-$GAME" -rc test/stress/abyss.rc -seed "$GAME" -gdb
+  do
+    # ^Q to exit the loop, &^C to crash and retain the save
+    if ! [ -f "saves/Abyss-$GAME.cs" ]
+      then exit
+    fi
+  done

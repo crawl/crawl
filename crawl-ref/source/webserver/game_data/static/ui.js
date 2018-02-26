@@ -130,12 +130,60 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         return $popup;
     }
 
+    function mutations(desc)
+    {
+        var $popup = $(".templates > .mutations").clone();
+        var $body = $popup.find(".body");
+        var $footer = $popup.find(".footer");
+        var $muts = $body.children().first(), $vamp = $body.children().last();
+        $muts.html(fmt_body_txt(util.formatted_string_to_html(desc.mutations)));
+        scroller($muts[0]);
+        paneset_cycle($body);
+
+        if (desc.vampire !== undefined)
+        {
+            var css = ".vamp-attrs th:nth-child(%d) { background: #111; }";
+            css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
+            css = css.replace(/%d/g, desc.vampire + 1);
+            $vamp.children("style").html(css);
+            scroller($vamp[0]);
+            paneset_cycle($footer);
+        }
+        else
+        {
+            $vamp.remove();
+            $footer.remove();
+        }
+
+        $popup.on("keydown", function (event) {
+            if (event.key === "!" || event.key === "^")
+            {
+                paneset_cycle($body);
+                paneset_cycle($footer);
+            }
+        });
+        return $popup;
+    }
+
+    function mutations_update(msg)
+    {
+        var $popup = top_popup();
+        if (!$popup.hasClass("mutations"))
+            return;
+        if (msg.pane !== undefined && client.is_watching())
+        {
+            paneset_cycle($popup.children(".body"), msg.pane);
+            paneset_cycle($popup.children(".footer"), msg.pane);
+        }
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
         "describe-item" : describe_item,
         "describe-spell" : describe_spell,
         "describe-cards" : describe_cards,
+        "mutations" : mutations,
     };
 
     function register_ui_handlers(dict)
@@ -166,6 +214,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
     function recv_ui_state(msg)
     {
         var ui_handlers = {
+            "mutations" : mutations_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

@@ -1,0 +1,12 @@
+name = startup
+species = mu
+background = ck
+weapon = mace
+restart_after_game = false
+show_more = false
+tile_skip_title = true
+
+Lua{
+    local ctrl_s = string.char(19)
+    crawl.sendkeys(ctrl_s)
+}
