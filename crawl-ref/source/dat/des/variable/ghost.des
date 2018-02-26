@@ -6,25 +6,23 @@
 ###############################################################################
 # Two basic ghost vaults
 NAME:   basic_ghost_runed
-CHANCE: 25%
-DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt, Zot, Dis, Geh, Tar, Coc
+CHANCE: 20%
+DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt, Zot
 TAGS:   player_ghost luniq_player_ghost chance_player_ghost no_tele_into no_trap_gen allow_dup
-KFEAT:  + = runed_door
-KITEM:  1 = acquire any / any useful good_item
-KMONS:  ! = player ghost
+KITEM:  ! = any useful good_item / nothing
+KMONS:  ! = generate_awake player ghost
 MAP
-nnnn
-+!1n
-nnnn
+nnn
+=!n
+nnn
 ENDMAP
 
 NAME:   basic_ghost_transp
-CHANCE: 25%
-DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt, Zot, Dis, Geh, Tar, Coc
+CHANCE: 20%
+DEPTH:  D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, Vaults, Crypt
 TAGS:   player_ghost luniq_player_ghost chance_player_ghost no_tele_into no_trap_gen allow_dup
-KITEM:  1 = acquire any / any useful good_item
-KMONS:  ! = player ghost
-SHUFFLE: 1AQR, PS
+KMONS:  ! = generate_awake player ghost
+SHUFFLE: |AQR, PS
 MARKER: P = lua:transp_loc("basic_ghost_transp_entry")
 MARKER: Q = lua:transp_dest_loc("basic_ghost_transp_entry")
 MARKER: R = lua:transp_loc("basic_ghost_transp_exit")
@@ -32,7 +30,7 @@ MARKER: S = lua:transp_dest_loc("basic_ghost_transp_exit")
 SUBST: A = .
 MAP
  nnnnn
-nn.1.nn
+nn.|.nn
 n.$.$.n
 nA.!.Rn
 n.$.$.n
@@ -41,19 +39,31 @@ nn.Q.nn
  .P@S.
 ENDMAP
 
+NAME:   basic_ghost_runed_special
+CHANCE: 10%
+DEPTH:  Depths, Crypt, Zot, Pan, Dis, Geh, Tar, Coc
+TAGS:   player_ghost luniq_player_ghost chance_player_ghost no_tele_into no_trap_gen allow_dup
+KITEM:  ! = acquire any / any useful good_item
+KMONS:  ! = generate_awake player ghost
+MAP
+nnn
+=!n
+nnn
+ENDMAP
+
 NAME:   vaults_ghost_runed
 WEIGHT: 50
 TAGS:   vaults_room player_ghost luniq_player_ghost no_trap_gen no_tele_into allow_dup
-KFEAT:  + = runed_door
 KITEM:  1 = any useful good_item / nothing
 KMONS:  ! = generate_awake player ghost
-SHUFFLE: 123!
+KMONS:  2 = vault_guard / nothing
+SHUFFLE: 12!
 MAP
 ......
 .nnnn.
-.n1.n.
-.n.!n.
-.n++n.
+.n12n.
+.n2!n.
+.n==n.
 ......
 ENDMAP
 
@@ -61,17 +71,16 @@ ENDMAP
 NAME:   vaults_ghost_runed2
 WEIGHT: 100
 TAGS:   vaults_hard player_ghost luniq_player_ghost no_trap_gen no_tele_into allow_dup
-KFEAT:  + = runed_door
-KITEM:  1 = acquire any / any useful good_item
-KMONS:  ! = player ghost
+KITEM:  1 = acquire any / any useful good_item / nothing
+KMONS:  ! = generate_awake player ghost
 KMONS:  2 = generate_awake patrolling vault warden
 KMONS:  3 = generate_awake patrolling vault guard
 SHUFFLE: 123!
 MAP
 ........
-nnn++nnn
-..+!2+..
-..+31+..
-nnn++nnn
+nnn==nnn
+..=!2=..
+..=31=..
+nnn==nnn
 ........
 ENDMAP
