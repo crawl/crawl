@@ -1717,7 +1717,7 @@ static string _bones_permastore_file()
 // There are two kinds of bones files: temporary bones files and the
 // permastore. Temporary bones files are ephemeral: ghosts will be reused only
 // if they are on the floor where the player dies. The permastore is a more
-// permanent stock of ghosts (per levle) to use as a backup in case the
+// permanent stock of ghosts (per level) to use as a backup in case the
 // temporary bones files are depleted.
 
 /**
@@ -2481,10 +2481,10 @@ static FILE* _make_bones_file(string * return_gfilename)
     {
         const string g_file_name = make_stringf("%s%s_%d", bone_dir.c_str(),
                                                 base_filename.c_str(), i);
-        FILE *gfil = lk_open_exclusive(g_file_name);
+        FILE *ghost_file = lk_open_exclusive(g_file_name);
         // need to check file size, so can't open 'wb' - would truncate!
 
-        if (!gfil)
+        if (!ghost_file)
         {
             dprf("Could not open %s", g_file_name.c_str());
             continue;
@@ -2493,7 +2493,7 @@ static FILE* _make_bones_file(string * return_gfilename)
         dprf("found %s", g_file_name.c_str());
 
         *return_gfilename = g_file_name;
-        return gfil;
+        return ghost_file;
     }
 
     return nullptr;
@@ -2539,9 +2539,9 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
     if (rewrite)
     {
         string permastore_file = _bones_permastore_file();
-        FILE *gfil = lk_open("wb", permastore_file);
+        FILE *ghost_file = lk_open("wb", permastore_file);
 
-        if (!gfil)
+        if (!ghost_file)
         {
             // this will fail silently if the lock fails, seems safest
             // TODO: better lock system for servers?
@@ -2552,11 +2552,11 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
 
         dprf("Rewriting ghost permastore %s with %u ghosts",
                     permastore_file.c_str(), (unsigned int) permastore.size());
-        writer outw(permastore_file, gfil);
+        writer outw(permastore_file, ghost_file);
         _write_ghost_version(outw);
         tag_write_ghosts(outw, permastore);
 
-        lk_close(gfil, permastore_file);
+        lk_close(ghost_file, permastore_file);
         return true;
     }
     return false;
