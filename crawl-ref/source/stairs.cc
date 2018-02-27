@@ -172,8 +172,28 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 static void _climb_message(dungeon_feature_type stair, bool going_up,
                            branch_type old_branch)
 {
+    if (stair == DNGN_ABYSS_TO_ZOT)
+    {
+        big_cloud(CLOUD_PURPLE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
+#ifdef USE_TILE_LOCAL
+        tiles.add_overlay(you.pos(), tileidx_zap(MAGENTA));
+        update_screen();
+#else
+        flash_view(UA_BRANCH_ENTRY, MAGENTA);
+#endif
+        mpr("Your senses are dulled as you hear an electric hum and everything flashes purple.");
+        // included in default force_more_message
+    }
+
     if (!is_connected_branch(old_branch))
+    {
         return;
+    }
+        
+    if (stair == DNGN_EXIT_ZOT && runes_in_pack() < 3)
+    {
+        mprf("As you exit, the gate slams shut behind you!");
+    }
 
     if (feat_is_portal(stair))
         mpr("The world spins around you as you enter the gateway.");
@@ -595,6 +615,10 @@ void floor_transition(dungeon_feature_type how,
         you.banished_by = "";
         you.banished_power = 0;
     }
+    else if (how == DNGN_ABYSS_TO_ZOT)
+    {
+        mark_milestone("abyss.exit", "Escaped the Abyss into Zot");
+    }
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -640,13 +664,15 @@ void floor_transition(dungeon_feature_type how,
 
     if (how == DNGN_EXIT_ABYSS
         || how == DNGN_EXIT_PANDEMONIUM
-        || how == DNGN_EXIT_THROUGH_ABYSS)
+        || how == DNGN_EXIT_THROUGH_ABYSS
+        || how == DNGN_ABYSS_TO_ZOT)
     {
         mpr("You pass through the gate.");
         take_note(Note(NOTE_MESSAGE, 0, 0,
             how == DNGN_EXIT_ABYSS ? "Escaped the Abyss" :
             how == DNGN_EXIT_PANDEMONIUM ? "Escaped Pandemonium" :
             how == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss" :
+            how == DNGN_ABYSS_TO_ZOT ? "Escaped the Abyss into Zot" :
             "Buggered into bugdom"), true);
 
         if (!you.wizard || !crawl_state.is_replaying_keys())

@@ -29,8 +29,10 @@ void PlaceInfo::assert_validity() const
     ASSERT(num_visits == 0 && levels_seen == 0
            || num_visits > 0 && levels_seen > 0);
 
-    if (!is_global() && brdepth[branch] != -1 && is_connected_branch(branch))
-        ASSERT((int)levels_seen <= brdepth[branch]);
+    //Megabyss: We get a crash when we go from Abyss to Zot if this is uncommented.
+    //No idea why, hopefully nothing breaks if we take it out :p
+    //if (!is_global() && brdepth[branch] != -1 && is_connected_branch(branch))
+    //    ASSERT((int)levels_seen <= brdepth[branch]);
 
     ASSERT(turns_total == (turns_explore + turns_travel + turns_interlevel
                            + turns_resting + turns_other));

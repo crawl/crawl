@@ -190,7 +190,7 @@ FEATFN_MEMOIZED(feat_is_portal_entrance, feat)
         return false;
 
     for (branch_iterator it; it; ++it)
-    {
+    { 
         if (it->entry_stairs == feat
             && !is_connected_branch(it->id))
         {
@@ -347,6 +347,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_TRANSPORTER:
+    case DNGN_ABYSS_TO_ZOT:
         return CMD_GO_DOWNSTAIRS;
 
     default:

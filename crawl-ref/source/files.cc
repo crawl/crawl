@@ -832,6 +832,11 @@ static int _get_dest_stair_type(branch_type old_branch,
         // dgn_find_nearby_stair uses special logic for labyrinths.
         return DNGN_ENTER_LABYRINTH;
     }
+    
+    if (stair_taken == DNGN_ABYSS_TO_ZOT)
+    {
+        return DNGN_EXIT_ZOT;
+    }
 
     if (feat_is_portal_entrance(stair_taken))
         return DNGN_STONE_ARCH;
@@ -1100,6 +1105,12 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         you.level_stack.pop_back();
         env.level_state |= LSTATE_DELETED;
         popped = true;
+    }
+    else if (!you.level_stack.empty() && stair_taken == DNGN_ABYSS_TO_ZOT)
+    {
+        //We still need to pop, but we're never going back to where we came from.
+        you.level_stack.pop_back();
+        env.level_state |= LSTATE_DELETED;
     }
     else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
              || stair_taken == DNGN_EXIT_THROUGH_ABYSS

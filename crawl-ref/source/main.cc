@@ -1287,7 +1287,8 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         if (ftype != it->entry_stairs)
             continue;
 
-        if (!is_existing_level(level_id(it->id, 1)))
+        //Megabyss: You can now get into Zot without having 3 runes via the back door.
+        //if (!is_existing_level(level_id(it->id, 1)))
         {
             min_runes = runes_for_branch(it->id);
             if (runes_in_pack() < min_runes)
@@ -1327,7 +1328,15 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
         return yesno("Are you sure you wish to approach this portal? There's no "
                      "telling what its forces would wreak upon your fragile "
                      "self.", false, 'n');
-
+    case DNGN_ABYSS_TO_ZOT:
+        if (runes_in_pack() >= 3) { return true; }
+        return yesno("If you enter this portal you will be placed just inside "
+                     "of the Realm of Zot. If you do not have 3 runes, you "
+                     "will be able to leave but not re-enter. Continue?", false, 'n');
+    case DNGN_EXIT_ZOT:
+        if (runes_in_pack() >= 3) { return true; }
+        return yesno("You will not be able to re-enter the Realm of Zot "
+                     "via this staircase without 3 runes. Continue? ", false, 'n');
     default:
         return true;
     }
