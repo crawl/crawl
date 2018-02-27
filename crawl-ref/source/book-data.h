@@ -214,6 +214,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+	SPELL_VIRULENCE,
     SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
@@ -342,6 +343,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_IGNITE_POISON,
     SPELL_PETRIFY,
     SPELL_INTOXICATE,
+	SPELL_VIRULENCE,
     SPELL_IRRADIATE,
 },
 

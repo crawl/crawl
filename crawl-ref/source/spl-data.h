@@ -2935,7 +2935,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_VIRULENCE,
 },
 
 #if TAG_MAJOR_VERSION == 34

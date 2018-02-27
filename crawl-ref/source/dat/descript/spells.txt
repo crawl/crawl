@@ -1592,6 +1592,7 @@ Fires a penetrating bolt of poison.
 Virulence spell
 
 Makes a targeted creature more vulnerable to poison.
+Completely immune creatures are not affected.
 %%%%
 Volley of Thorns spell
 
