@@ -481,8 +481,6 @@ static void _setup_generic(const newgame_def& ng)
     // This function depends on stats and mutations being finalised.
     _give_items_skills(ng);
 
-    add_held_books_to_library();
-
     if (you.species == SP_DEMONSPAWN)
         roll_demonspawn_mutations();
 
@@ -503,6 +501,9 @@ static void _setup_generic(const newgame_def& ng)
         _setup_tutorial_miscs();
 
     _give_basic_knowledge();
+
+    // Must be after _give_basic_knowledge
+    add_held_books_to_library();
 
     initialise_item_descriptions();
 
