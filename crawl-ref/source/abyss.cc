@@ -307,8 +307,10 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1.
-    //150 on Abyss:1, 2248 on Abyss:27
-    int num_items = 145 + you.depth*5 + (you.depth*you.depth*you.depth)/10, items_level = 51+you.depth;
+    int num_items = 1000;
+    int items_level = 51+you.depth;
+    // 1/200 in Abyss:1, 1/115 in Abyss:5, 1/57 in Abyss:10, 1/14 in Abyss:20, 1/5 in Abyss:27
+    int item_chance = (int) (230.0/pow(2.0, you.depth/5.0));
     int items_placed = 0;
 
     if (player_in_starting_abyss())
@@ -324,7 +326,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
     {
         if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
         {
-            if (items_placed < num_items && one_chance_in(200))
+            if (items_placed < num_items && one_chance_in(item_chance))
             {
                 // [ds] Don't place abyssal rune in this loop to avoid
                 // biasing rune placement toward the north-west of the
@@ -1494,8 +1496,8 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    //16-17 at Abyss:1, 114-141 at Abyss:27
-    int num_monsters = 15 + you.depth * (1 + coinflip()) + (you.depth*you.depth)/10;
+    //16-17 at Abyss:1, 42-69 at Abyss:27
+    int num_monsters = 15 + you.depth * (1 + coinflip());
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
