@@ -965,6 +965,11 @@ static void _describe_god_powers(god_type which_god)
         break;
     }
 
+    case GOD_LUGONU:
+        have_any = true;
+        cprintf("You are protected from the effects of unwielding distortion weapons.\n");
+        break;
+
     default:
         break;
     }
