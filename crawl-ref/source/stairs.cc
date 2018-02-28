@@ -579,6 +579,19 @@ void floor_transition(dungeon_feature_type how,
                       bool forced, bool going_up, bool shaft, bool update_travel_cache)
 {
     const level_id old_level = level_id::current();
+    
+    if (whither.branch == BRANCH_ABYSS)
+    {
+        int old_abyss_depth = you.props[ABYSS_DEPTH_KEY].get_int();
+        you.props[ABYSS_DEPTH_KEY] = max(old_abyss_depth, whither.depth);
+        if (old_abyss_depth < 27 && whither.depth >= 27)
+        {
+            mprf("<magenta>Beware - disturbing the bottom of the Abyss has permanently "
+                 "weakened the barrier between the Abyss and the dungeon.</magenta>");
+            mark_milestone("abyss.corrupt", "entered the bottom of the Abyss, permanently corrupting the dungeon!");
+            take_note(Note(NOTE_MESSAGE, 0, 0, "Entered the bottom of the Abyss, permanently corrupting the dungeon!"), true);
+        }
+    }
 
     // Clean up fake blood.
     heal_flayed_effect(&you, true, true);
@@ -617,7 +630,7 @@ void floor_transition(dungeon_feature_type how,
     }
     else if (how == DNGN_ABYSS_TO_ZOT)
     {
-        mark_milestone("abyss.exit", "Escaped the Abyss into Zot");
+        mark_milestone("abyss.exit", "escaped the Abyss into Zot!");
     }
 
     // Interlevel travel data.
@@ -834,6 +847,11 @@ void floor_transition(dungeon_feature_type how,
         maybe_update_stashes();
 
     request_autopickup();
+    
+    if (you.props[ABYSS_DEPTH_KEY].get_int() >= 27)
+    {
+        lugonu_corrupt_level(300, true);
+    }
 }
 
 /**

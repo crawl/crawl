@@ -446,9 +446,9 @@ map_marker *map_lua_marker::parse(const string &s, const string &ctx)
 //////////////////////////////////////////////////////////////////////////
 // map_corruption_marker
 
-map_corruption_marker::map_corruption_marker(const coord_def &p,
+map_corruption_marker::map_corruption_marker(map_marker_type mtype, const coord_def &p,
                                              int dur)
-    : map_marker(MAT_CORRUPTION_NEXUS, p), duration(dur)
+    : map_marker(mtype, p), duration(dur)
 {
 }
 
@@ -473,7 +473,7 @@ map_marker *map_corruption_marker::read(reader &in, map_marker_type)
 
 map_marker *map_corruption_marker::clone() const
 {
-    map_corruption_marker *mark = new map_corruption_marker(pos, duration);
+    map_corruption_marker *mark = new map_corruption_marker(type, pos, duration);
     return mark;
 }
 

@@ -99,7 +99,7 @@ public:
 class map_corruption_marker : public map_marker
 {
 public:
-    map_corruption_marker(const coord_def &pos = coord_def(0, 0),
+    map_corruption_marker(map_marker_type type = MAT_CORRUPTION_NEXUS, const coord_def &pos = coord_def(0, 0),
                           int dur = 0);
 
     void write(writer &) const override;

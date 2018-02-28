@@ -307,7 +307,8 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1.
-    int num_items = 140+you.depth*10, items_level = 51+you.depth;
+    //150 on Abyss:1, 2248 on Abyss:27
+    int num_items = 145 + you.depth*5 + (you.depth*you.depth*you.depth)/10, items_level = 51+you.depth;
     int items_placed = 0;
 
     if (player_in_starting_abyss())
@@ -1317,7 +1318,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     }
 
     int ii = 0;
-    int delta = you.time_taken * (you.abyss_speed + 40) / 200;
+    int delta = you.time_taken * (you.abyss_speed + 35 + you.depth*5) / 200;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
@@ -1493,7 +1494,8 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    int num_monsters = 15 + you.depth * (1 + coinflip());
+    //16-17 at Abyss:1, 114-141 at Abyss:27
+    int num_monsters = 15 + you.depth * (1 + coinflip()) + (you.depth*you.depth)/10;
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
@@ -1650,7 +1652,7 @@ retry:
 
 static void _increase_depth()
 {
-    int delta = you.time_taken * (you.abyss_speed + 40) / 200;
+    int delta = you.time_taken * (you.abyss_speed + 35 + you.depth*5) / 200;
     if (!have_passive(passive_t::slow_abyss))
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
@@ -1704,25 +1706,33 @@ struct corrupt_env
     corrupt_env(): rock_colour(BLACK), floor_colour(BLACK) { }
 };
 
-static void _place_corruption_seed(const coord_def &pos, int duration)
+static void _place_corruption_seed(bool megabyss, const coord_def &pos, int duration)
 {
-    env.markers.add(new map_corruption_marker(pos, duration));
+    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
+    env.markers.add(new map_corruption_marker(type, pos, duration));
     // Corruption markers don't need activation, though we might
     // occasionally miss other unactivated markers by clearing.
     env.markers.clear_need_activate();
 }
 
-static void _initialise_level_corrupt_seeds(int power)
+static void _initialise_level_corrupt_seeds(int power, bool megabyss)
 {
     const int low = power * 40 / 100, high = power * 140 / 100;
-    const int nseeds = random_range(-1, min(2 + power / 110, 4), 2);
+    int nseeds = random_range(-1, min(2 + power / 110, 4), 2);
+    if (megabyss)
+    {
+        nseeds = random_range(1, 3);
+    }
 
     const int aux_seed_radius = 4;
 
     dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
 
-    // The corruption centreed on the player is free.
-    _place_corruption_seed(you.pos(), high + 300);
+    // The corruption centred on the player is free.
+    if (!megabyss)
+    {
+        _place_corruption_seed(megabyss, you.pos(), high + 300);
+    }
 
     for (int i = 0; i < nseeds; ++i)
     {
@@ -1730,14 +1740,21 @@ static void _initialise_level_corrupt_seeds(int power)
         int tries = 100;
         while (tries-- > 0)
         {
-            where = dgn_random_point_from(you.pos(), aux_seed_radius, 2);
+            if (megabyss)
+            {
+                where = random_in_bounds();
+            }
+            else
+            {
+                where = dgn_random_point_from(you.pos(), aux_seed_radius, 2);
+            }
             if (grd(where) == DNGN_FLOOR && !env.markers.find(where, MAT_ANY))
                 break;
             where.reset();
         }
 
         if (!where.origin())
-            _place_corruption_seed(where, random_range(low, high, 2) + 300);
+            _place_corruption_seed(megabyss, where, random_range(low, high, 2) + 300);
     }
 }
 
@@ -1800,11 +1817,12 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     cmark->duration -= duration;
 }
 
-void run_corruption_effects(int duration)
+void run_corruption_effects(int duration, bool megabyss)
 {
-    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
+    for (map_marker *mark : env.markers.get_all(type))
     {
-        if (mark->get_type() != MAT_CORRUPTION_NEXUS)
+        if (mark->get_type() != type)
             continue;
 
         _apply_corruption_effect(mark, duration);
@@ -1955,11 +1973,12 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     }
 }
 
-static void _corrupt_level_features(const corrupt_env &cenv)
+static void _corrupt_level_features(const corrupt_env &cenv, bool megabyss)
 {
     vector<coord_def> corrupt_seeds;
+    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
 
-    for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+    for (const map_marker *mark : env.markers.get_all(type))
         corrupt_seeds.push_back(mark->pos);
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
@@ -1982,17 +2001,19 @@ static void _corrupt_level_features(const corrupt_env &cenv)
     }
 }
 
-static bool _is_level_corrupted()
+static bool _is_level_corrupted(bool megabyss)
 {
+    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
+
     if (player_in_branch(BRANCH_ABYSS))
         return true;
 
-    return !!env.markers.find(MAT_CORRUPTION_NEXUS);
+    return !!env.markers.find(type);
 }
 
-bool is_level_incorruptible(bool quiet)
+bool is_level_incorruptible(bool quiet, bool megabyss)
 {
-    if (_is_level_corrupted())
+    if (_is_level_corrupted(megabyss))
     {
         if (!quiet)
             mpr("This place is already infused with evil and corruption.");
@@ -2021,24 +2042,32 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
     cenv->floor_colour = colour;
 }
 
-bool lugonu_corrupt_level(int power)
+bool lugonu_corrupt_level(int power, bool megabyss)
 {
-    if (is_level_incorruptible())
+    if (is_level_incorruptible(megabyss, megabyss))
+    {
         return false;
+    }
 
-    simple_god_message("'s Hand of Corruption reaches out!");
-    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
+    if (megabyss)
+    {
+        mprf("<magenta>This place has been corrupted by the Abyss.</magenta>");
+    }
+    else
+    {
+        simple_god_message("'s Hand of Corruption reaches out!");
+        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
-    mark_corrupted_level(level_id::current());
+        mark_corrupted_level(level_id::current());
+        flash_view(UA_PLAYER, MAGENTA);
+    }
 
-    flash_view(UA_PLAYER, MAGENTA);
-
-    _initialise_level_corrupt_seeds(power);
+    _initialise_level_corrupt_seeds(power, megabyss);
 
     corrupt_env cenv;
     _corrupt_choose_colours(&cenv);
-    _corrupt_level_features(cenv);
-    run_corruption_effects(300);
+    _corrupt_level_features(cenv, megabyss);
+    run_corruption_effects(300, megabyss);
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.

@@ -1485,7 +1485,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_LUGONU_CORRUPT:
-        return !is_level_incorruptible(quiet);
+        return !is_level_incorruptible(quiet, false);
 
     case ABIL_LUGONU_ABYSS_ENTER:
         if (player_in_branch(BRANCH_ABYSS))
@@ -2597,7 +2597,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();
-        if (!lugonu_corrupt_level(300 + you.skill(SK_INVOCATIONS, 15)))
+        if (!lugonu_corrupt_level(300 + you.skill(SK_INVOCATIONS, 15), false))
             return SPRET_ABORT;
         break;
 

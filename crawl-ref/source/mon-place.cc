@@ -383,6 +383,12 @@ monster_type pick_random_monster(level_id place,
         if (!_is_random_monster(type))
             return type;
     }
+    
+    //Abyss has a spawn table designed for being 5 floors long. As we get deeper into the Abyss, spawn more, rather than harder, enemies.
+    if (place.branch == BRANCH_ABYSS && place.depth > 5)
+    {
+        place.depth = 5;
+    }
 
     if (allow_ood)
         _apply_ood(place);
