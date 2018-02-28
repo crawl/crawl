@@ -1531,6 +1531,9 @@ void Menu::draw_menu(bool update_entries)
 
 void Menu::draw_more()
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
@@ -1554,7 +1557,7 @@ formatted_string Menu::calc_title() { return formatted_string(); }
 
 void Menu::draw_title()
 {
-    if (!title)
+    if (!title || crawl_state.doing_prev_cmd_again)
         return;
 
     formatted_string fs;
