@@ -1206,7 +1206,13 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // Up and down both work for shops, portals, and altars.
     if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
-        if (you.berserk())
+        if (crawl_state.doing_prev_cmd_again)
+        {
+            mprf("You can't repeat %s actions.",
+                ftype == DNGN_ENTER_SHOP ? "shop" : "altar");
+            crawl_state.cancel_cmd_all();
+        }
+        else if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
         else if (ftype == DNGN_ENTER_SHOP) // don't convert to capitalism
             shop();
