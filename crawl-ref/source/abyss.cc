@@ -389,7 +389,7 @@ static int _banished_depth(const int power)
     // Now with banishment up to A:27, if you can get that much spellpower somehow.
     const int maxdepth = div_rand_round((power + 5), 6);
     const int mindepth = (4 * power + 7) / 23;
-    return min(27, max(1, random_range(mindepth, maxdepth)));
+    return min(brdepth[BRANCH_ABYSS], max(1, random_range(mindepth, maxdepth)));
 }
 
 void banished(const string &who, const int power)
@@ -1710,8 +1710,7 @@ struct corrupt_env
 
 static void _place_corruption_seed(bool megabyss, const coord_def &pos, int duration)
 {
-    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
-    env.markers.add(new map_corruption_marker(type, pos, duration));
+    env.markers.add(new map_corruption_marker(pos, duration, megabyss));
     // Corruption markers don't need activation, though we might
     // occasionally miss other unactivated markers by clearing.
     env.markers.clear_need_activate();
@@ -1821,13 +1820,17 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
 
 void run_corruption_effects(int duration, bool megabyss)
 {
-    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
-    for (map_marker *mark : env.markers.get_all(type))
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
     {
-        if (mark->get_type() != type)
+        if (mark->get_type() != MAT_CORRUPTION_NEXUS)
+        {
             continue;
-
-        _apply_corruption_effect(mark, duration);
+        }
+        map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(mark);
+        if (cmark->megabyss == megabyss)
+        {
+            _apply_corruption_effect(mark, duration);
+        }
     }
 }
 
@@ -1978,10 +1981,15 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 static void _corrupt_level_features(const corrupt_env &cenv, bool megabyss)
 {
     vector<coord_def> corrupt_seeds;
-    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
 
-    for (const map_marker *mark : env.markers.get_all(type))
-        corrupt_seeds.push_back(mark->pos);
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+    {
+        map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(mark);
+        if (cmark->megabyss == megabyss)
+        {
+            corrupt_seeds.push_back(mark->pos);
+        }
+    }
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
@@ -2005,12 +2013,20 @@ static void _corrupt_level_features(const corrupt_env &cenv, bool megabyss)
 
 static bool _is_level_corrupted(bool megabyss)
 {
-    map_marker_type type = megabyss ? MAT_CORRUPTION_NEXUS_MEGABYSS : MAT_CORRUPTION_NEXUS;
-
     if (player_in_branch(BRANCH_ABYSS))
+    {
         return true;
+    }
 
-    return !!env.markers.find(type);
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+    {
+        map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(mark);
+        if (cmark->megabyss == megabyss)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool is_level_incorruptible(bool quiet, bool megabyss)
@@ -2069,11 +2085,14 @@ bool lugonu_corrupt_level(int power, bool megabyss)
     corrupt_env cenv;
     _corrupt_choose_colours(&cenv);
     _corrupt_level_features(cenv, megabyss);
-    run_corruption_effects(300, megabyss);
+    run_corruption_effects(megabyss ? 5 : 300, megabyss);
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
-    scaled_delay(1000);
+    if (!megabyss)
+    {
+        scaled_delay(1000);
+    }
 #endif
 
     return true;

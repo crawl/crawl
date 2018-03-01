@@ -1758,7 +1758,8 @@ void run_environment_effects()
         }
     }
 
-    run_corruption_effects(you.time_taken);
+    run_corruption_effects(you.time_taken, false);
+    run_corruption_effects(you.time_taken, true);
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
     timeout_tombs(you.time_taken);

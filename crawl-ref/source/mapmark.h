@@ -99,8 +99,8 @@ public:
 class map_corruption_marker : public map_marker
 {
 public:
-    map_corruption_marker(map_marker_type type = MAT_CORRUPTION_NEXUS, const coord_def &pos = coord_def(0, 0),
-                          int dur = 0);
+    map_corruption_marker(const coord_def &pos = coord_def(0, 0),
+                          int dur = 0, bool megabyss = false);
 
     void write(writer &) const override;
     void read(reader &) override;
@@ -111,6 +111,7 @@ public:
 
 public:
     int duration;
+    bool megabyss;
 };
 
 class map_tomb_marker : public map_marker

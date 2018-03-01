@@ -20,5 +20,4 @@ enum map_marker_type
     MAT_CLOUD_SPREADER,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
-    MAT_CORRUPTION_NEXUS_MEGABYSS,
 };
