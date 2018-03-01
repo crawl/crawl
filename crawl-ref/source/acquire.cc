@@ -673,6 +673,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?  0 : 17)},
         {MISC_FAN_OF_GALES,
             (you.seen_misc[MISC_FAN_OF_GALES] ?     0 : 17)},
+        {MISC_STONE_OF_TREMORS,
+            (you.seen_misc[MISC_STONE_OF_TREMORS] ? 0 : 17)},
         {MISC_SHARD_OF_ZOT,
             (you.seen_misc[MISC_SHARD_OF_ZOT] ?     0 : 17)},
         {MISC_HARP_OF_HEALING,

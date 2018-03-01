@@ -92,7 +92,7 @@ function crypt_loot_plus(e)
           book .. "death's_door / " .. book .. "haunt / " ..
           book .. "borgnjor's_revivification / " .. book .. "infestation")
   e.kitem("j = lamp of fire w:15 / phial of floods w:15 / " ..
-          "fan of gales w:15 / crystal ball of energy / " ..
+          "fan of gales w:15 / stone of tremors w:15 / crystal ball of energy / " ..
           "staff of energy ident:type, staff of death / staff of power / " ..
           "staff of wizardry / any magical staff w:5")
   e.subst("d = d:20 ef g:20")

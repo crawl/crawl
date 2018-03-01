@@ -35,6 +35,7 @@ ae += [^n]identified.*spellbook
 :  if string.find(itname, "lamp of fire")
 :  or string.find(itname, "phial of floods")
 :  or string.find(itname, "fan of gales")
+:  or string.find(itname, "stone of tremors")
 :  or string.find(itname, "lightning rod")
 :  or string.find(itname, "shard of Zot")
 :  or string.find(itname, "harp of healing")

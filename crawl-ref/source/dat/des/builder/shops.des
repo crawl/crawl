@@ -335,6 +335,7 @@ ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | w:7 crystal ball of energy | \
+         w:4 stone of tremors | \
          w:8 wand of digging | w:5 randbook disc:earth | \
          w:2 book of the earth | w:2 book of geomancy | w:4 staff of earth | \
          w:1 crystal plate armour
@@ -467,6 +468,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    large rock ego:exploding | javelin ego:exploding | wand of acid | \
    tomahawk ego:exploding | fan of gales | lightning rod | lamp of fire | \
    phial of floods | scroll of immolation | book of flames | book of fire | \
+   stone of tremors | \
    book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
@@ -494,9 +496,8 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
 {{
--- No earth-themed evoker, so just include another wand type.
   local evocables = {"lamp of fire","phial of floods",
-                     "fan of gales","wand of scattershot"}
+                     "fan of gales","stone_of_tremors"}
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
