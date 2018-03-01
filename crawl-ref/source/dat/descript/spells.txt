@@ -532,7 +532,7 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
-Fires a bolt of highly destructive energy.
+Fires a beam of highly destructive energy. It can blow rock into pieces.
 %%%%
 Enslavement spell
 
