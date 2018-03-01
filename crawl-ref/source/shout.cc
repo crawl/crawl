@@ -257,8 +257,9 @@ void monster_shout(monster* mons, int shout)
         }
     }
 
+    noise_flag_type noise_flags = NF_NONE;
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
+    const bool heard       = noisy(noise_level, mons->pos(), mons->mid, noise_flags);
 
     if (crawl_state.game_is_hints() && (heard || you.can_see(*mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
@@ -780,7 +781,8 @@ void apply_noises()
 // noisy() has a messaging service for giving messages to the player
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
-           const char *msg, mid_t who, bool fake_noise)
+           const char *msg, mid_t who, noise_flag_type flags,
+           bool fake_noise)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -816,7 +818,7 @@ bool noisy(int original_loudness, const coord_def& where,
     // sound of loudness 1 will hear the sound.
     const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
-        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who, flags));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -836,15 +838,16 @@ bool noisy(int original_loudness, const coord_def& where,
     return false;
 }
 
-bool noisy(int loudness, const coord_def& where, mid_t who)
+bool noisy(int loudness, const coord_def& where, mid_t who,
+           noise_flag_type flags)
 {
-    return noisy(loudness, where, nullptr, who);
+    return noisy(loudness, where, nullptr, who, flags);
 }
 
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, nullptr, MID_NOBODY, true);
+    return noisy(loudness, where, nullptr, MID_NOBODY, NF_NONE, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
@@ -1378,10 +1381,16 @@ static void _actor_apply_noise(actor *act,
     {
         const int loudness = div_rand_round(noise_intensity_millis, 1000);
         act->check_awaken(loudness);
+        if (!(noise.noise_flags & NF_SIREN))
+        {
+            you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
+            you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
+        }
     }
     else
     {
         monster *mons = act->as_monster();
+        
         // If the perceived noise came from within the player's LOS, any
         // monster that hears it will have a chance to guess that the
         // noise was triggered by the player, depending on how close it was to
@@ -1396,7 +1405,14 @@ static void _actor_apply_noise(actor *act,
         const int player_distance = grid_distance(apparent_source, you.pos());
         const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);
 
-        if (x_chance_in_y(alert_prob, 100))
+        if ((noise.noise_flags & NF_SIREN)
+                 && mons_secondary_habitat(*mons) == HT_WATER
+                 && !mons->friendly())
+        {
+            // Sirens/merfolk avatar call (hostile) aquatic monsters.
+            behaviour_event(mons, ME_ALERT, 0, apparent_source);
+        }
+        else if (x_chance_in_y(alert_prob, 100))
             behaviour_event(mons, ME_ALERT, &you, apparent_source); // shout + set you as foe
         else
             behaviour_event(mons, ME_DISTURB, 0, apparent_source); // wake

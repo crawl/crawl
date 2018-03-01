@@ -630,7 +630,7 @@ void trap_def::trigger(actor& triggerer)
             mid_t source = !m ? MID_PLAYER :
                             mons_intel(*m) >= I_HUMAN ? m->mid : MID_NOBODY;
 
-            noisy(40, pos, msg.c_str(), source);
+            noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
         }
 
         if (you_trigger)

@@ -23,6 +23,13 @@ static inline int noise_is_audible(int noise_intensity_millis)
     return noise_intensity_millis >= LOWEST_AUDIBLE_NOISE_INTENSITY_MILLIS;
 }
 
+enum noise_flag_type
+{
+    NF_NONE    = 0,
+    NF_SIREN   = 0x1,
+    NF_MESSAGE_IF_UNSEEN = 0x2,
+};
+
 struct noise_t
 {
     coord_def noise_source;
@@ -36,6 +43,8 @@ struct noise_t
     int16_t noise_id;
 
     mid_t noise_producer_mid;
+    
+    uint16_t noise_flags;
 
     noise_t(coord_def _noise_source = coord_def(),
             string _noise_player_msg = "",
@@ -46,7 +55,8 @@ struct noise_t
           noise_player_msg(_noise_player_msg),
           noise_intensity_millis(_noise_intensity_millis),
           noise_id(-1),
-          noise_producer_mid(_noise_producer_mid)
+          noise_producer_mid(_noise_producer_mid),
+          noise_flags(_flags)
     {
     }
 

@@ -7391,6 +7391,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags)
 {
     bool force_silent = false;
+    noise_flag_type noise_flags = NF_NONE;
 
     if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
@@ -7419,7 +7420,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         if (silent)
             return;
 
-        noisy(noise, mons->pos(), mons->mid);
+        noisy(noise, mons->pos(), mons->mid, noise_flags);
         return;
     }
 
@@ -7455,7 +7456,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
-    else if (noisy(noise, mons->pos(), mons->mid) || !unseen)
+    else if (noisy(noise, mons->pos(), mons->mid, noise_flags) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
@@ -7801,7 +7802,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(*mons);
 
-    noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid);
+    noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid, NF_SIREN);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
