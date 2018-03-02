@@ -192,7 +192,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_CHARMS,
     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY | SPFLAG_SELFENCH
         | SPFLAG_UTILITY,
-    6,
+    9,
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
