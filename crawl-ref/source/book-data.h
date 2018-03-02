@@ -79,6 +79,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PHASE_SHIFT,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
+    SPELL_HASTE,
     SPELL_DISCORD,
 },
 
