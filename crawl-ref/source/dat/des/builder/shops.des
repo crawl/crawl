@@ -497,7 +497,7 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             size = 1, walk_dist = 0, start_clouds = 1 }
 {{
   local evocables = {"lamp of fire","phial of floods",
-                     "fan of gales","stone_of_tremors"}
+                     "fan of gales","stone of tremors"}
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
