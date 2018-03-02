@@ -740,8 +740,11 @@ void full_describe_view()
     // (Maybe that should be reversed in the case of monsters.)
     // For ASCII, the 'x' information may include short database descriptions.
 
-    desc_menu.on_single_selection = [&desc_menu](const MenuEntry& sel)
+    coord_def target(-1, -1);
+
+    desc_menu.on_single_selection = [&desc_menu, &target](const MenuEntry& sel)
     {
+        target = coord_def(-1, -1);
         // HACK: quantity == 1: monsters, quantity == 2: items
         const int quant = sel.quantity;
         if (quant == 1)
@@ -766,7 +769,7 @@ void full_describe_view()
                 clear_messages();
             }
             else // ACT_EXECUTE -> view/travel
-                do_look_around(m->pos);
+                target = m->pos;
         }
         else if (quant == 2)
         {
@@ -775,7 +778,7 @@ void full_describe_view()
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
             else // ACT_EXECUTE -> view/travel
-                do_look_around(i->pos);
+                target = i->pos;
         }
         else
         {
@@ -787,12 +790,17 @@ void full_describe_view()
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_feature_wide(c);
             else // ACT_EXECUTE -> view/travel
-                do_look_around(c);
+                target = c;
         }
         return desc_menu.menu_action == InvMenu::ACT_EXAMINE;
     };
     desc_menu.show();
     redraw_screen();
+
+    // need to do this after the menu has been closed on console,
+    // since do_look_around() runs its own loop
+    if (target != coord_def(-1, -1))
+        do_look_around(target);
 
 #ifndef USE_TILE_LOCAL
     if (!list_items.empty())
