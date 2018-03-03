@@ -238,7 +238,7 @@ static const mutation_def mut_data[] =
   "slow metabolism",
 
   {"You have a slow metabolism.",
-   "You need consume almost no food.",
+   "You need to consume almost no food.",
    ""},
 
   {"Your metabolism slows.",
