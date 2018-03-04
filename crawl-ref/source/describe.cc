@@ -3733,23 +3733,22 @@ static string _monster_stat_description(const monster_info& mi)
     if (mon_size)
         result << uppercase_first(pronoun) << " is " << mon_size << ".\n";
 
-    if (in_good_standing(GOD_ZIN, 0))
+    if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
+        recite_counts retval;
+        monster *m = monster_at(mi.pos);
+        auto eligibility = zin_check_recite_to_single_monster(m, retval);
+        if (eligibility == RE_INELIGIBLE)
+            result << "Reciting Zin's laws will not affect " << pronoun << ".";
+        else if (eligibility == RE_TOO_STRONG)
         {
-            result << uppercase_first(pronoun) << " is too strong to be"
-                                                  " recited to.";
+            result << uppercase_first(pronoun) <<
+                    " is too strong to be affected by reciting Zin's laws.";
         }
-        else if (check >= -5)
+        else // RE_ELIGIBLE || RE_RECITE_TIMER
         {
-            result << uppercase_first(pronoun) << " may be too strong to be"
-                                                  " recited to.";
-        }
-        else
-        {
-            result << uppercase_first(pronoun) << " is weak enough to be"
-                                                  " recited to.";
+            result << uppercase_first(pronoun) <<
+                            " can be affected by reciting Zin's laws to it.";
         }
 
         if (you.wizard)

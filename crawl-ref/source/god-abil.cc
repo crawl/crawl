@@ -620,7 +620,7 @@ static int _heretic_recite_weakness(const monster *mon)
         && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(*mon)))
     {
         // In the eyes of Zin, everyone is a sinner until proven otherwise!
-            degree++;
+        degree++;
 
         // Any priest is a heretic...
         if (mon->is_priest())
