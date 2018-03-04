@@ -1827,7 +1827,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
-static void _get_book(const item_def& it, bool quiet)
+static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
 {
     vector<string> spellnames;
     if (!quiet)
@@ -1840,6 +1840,8 @@ static void _get_book(const item_def& it, bool quiet)
             if (you_can_memorise(st))
                 spellnames.push_back(spell_title(st));
             else
+                you.hidden_spells.set(st, true);
+            if (Options.auto_hide_spells && allow_auto_hide)
                 you.hidden_spells.set(st, true);
         }
     }
@@ -1866,7 +1868,7 @@ void add_held_books_to_library()
     {
         if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
         {
-            _get_book(it, true);
+            _get_book(it, true, false);
             destroy_item(it);
         }
     }
@@ -2176,7 +2178,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
     if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
     {
-        _get_book(it, quiet);
+        _get_book(it, quiet, true);
         return true;
     }
     // Runes are also massless.
