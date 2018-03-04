@@ -156,6 +156,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
+        new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),

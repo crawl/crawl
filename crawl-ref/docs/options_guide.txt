@@ -24,7 +24,8 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot, pickup_menu_limit, drop_filter
+                pickup_thrown, assign_item_slot, pickup_menu_limit,
+                drop_filter, auto_hide_spells,
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -566,6 +567,10 @@ drop_filter += <regex>, <regex>, ...
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
         expression(s).
+
+auto_hide_spells = false
+        When set to true, spells added to the library will automatically be
+        hidden.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
