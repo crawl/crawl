@@ -1688,12 +1688,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    // TODO: just call game_ended?
-    if (crawl_should_restart(game_exit::save) && !crawl_state.seen_hups)
-        throw game_ended_condition(game_exit::save);
-
-    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-        farewellmsg? farewellmsg : you.your_name.c_str());
+    game_ended(game_exit::save, farewellmsg ? farewellmsg
+                                : "See you soon, " + you.your_name + "!");
 }
 
 // Saves the game without exiting.
@@ -1944,21 +1940,29 @@ static bool _restore_game(const string& filename)
             you.save = 0;
             return false;
         }
-        fail("Cannot load an incompatible save from version %s",
-             you.prev_save_version.c_str());
+        crawl_state.default_startup_name = you.your_name; // for main menu
+        you.save->abort();
+        delete you.save;
+        you.save = 0;
+        game_ended(game_exit::abort,
+            you.your_name + " is from an incompatible version and can't be loaded.");
     }
+
+    crawl_state.default_startup_name = you.your_name; // for main menu
 
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno("This game comes from a previous release of Crawl. If you "
-                   "load it now, you won't be able to go back. Continue?",
-                   true, 'n'))
+        if (!yesno(("This game comes from a previous release of Crawl (" +
+                    you.prev_save_version + "). If you load it now,"
+                    " you won't be able to go back. Continue?").c_str(),
+                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            end(0, false, "Please reinstall the stable version then.\n");
+            game_ended(game_exit::abort, "Please use version " +
+                you.prev_save_version + " to load " + you.your_name + " then.");
         }
     }
 
@@ -2152,7 +2156,9 @@ static bool _convert_obsolete_species()
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            end(0, false, "Please load the save in an earlier version if you want to keep it as a Lava Orc.\n");
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to keep it as a Lava Orc.");
         }
         change_species_to(SP_HILL_ORC);
         // No need for conservation
@@ -2172,7 +2178,9 @@ static bool _convert_obsolete_species()
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            end(0, false, "Please load the save in an earlier version if you want to keep it as a Djinni.\n");
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to keep it as a Djinni.");
         }
         change_species_to(SP_VINE_STALKER);
         you.magic_contamination = 0;
