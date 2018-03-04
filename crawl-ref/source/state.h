@@ -9,6 +9,7 @@
 
 #include "command-type.h"
 #include "disable-type.h"
+#include "end.h"
 #include "game-exit-type.h"
 #include "player.h"
 
@@ -61,7 +62,7 @@ struct game_state
 
     game_type type;
     game_type last_type;
-    game_exit last_game_exit;
+    game_ended_condition last_game_exit;
     bool marked_as_won;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
@@ -127,6 +128,8 @@ struct game_state
     // Git version of the character save. This will be empty unless the
     // character has been loaded from a previous save.
     std::string save_rcs_version;
+
+    string default_startup_name;
 
 protected:
     void reset_cmd_repeat();

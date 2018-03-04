@@ -4473,7 +4473,7 @@ MenuItem* MenuScroller::_find_item_by_direction(int start_index,
 }
 
 MenuDescriptor::MenuDescriptor(PrecisionMenu* parent): m_parent(parent),
-    m_active_item(nullptr)
+    m_active_item(nullptr), override_text("")
 {
     ASSERT(m_parent != nullptr);
 }
@@ -4525,13 +4525,29 @@ void MenuDescriptor::render()
     m_desc_item.render();
 }
 
+/**
+ * This allows an arbitrary string to show up in the descriptor, temporarily
+ * overriding whatever is there. The override will last until the descriptor
+ * next changes. Empty strings are not used.
+ *
+ * @param t a string to show in the MenuDescriptor. The empty string will clear
+ *          any existing override.
+ */
+void MenuDescriptor::override_description(const string &t)
+{
+    override_text = t;
+    render();
+}
+
+
 void MenuDescriptor::_place_items()
 {
     MenuItem* tmp = m_parent->get_active_item();
     if (tmp != m_active_item)
     {
-        // update
+        // the active item has changed -- update
         m_active_item = tmp;
+        override_text = "";
 #ifndef USE_TILE_LOCAL
         textcolour(BLACK);
         textbackground(BLACK);
@@ -4550,6 +4566,8 @@ void MenuDescriptor::_place_items()
         else
             m_desc_item.set_text(m_active_item->get_description_text());
     }
+    else if (override_text.size() > 0)
+        m_desc_item.set_text(override_text);
 }
 
 BoxMenuHighlighter::BoxMenuHighlighter(PrecisionMenu *parent): m_parent(parent),

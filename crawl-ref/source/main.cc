@@ -331,7 +331,10 @@ int main(int argc, char *argv[])
 #endif
 
     _launch_game_loop();
-    end(0);
+    if (crawl_state.last_game_exit.message.size())
+        end(0, false, "%s\n", crawl_state.last_game_exit.message.c_str());
+    else
+        end(0);
 
     return 0;
 }
@@ -377,7 +380,7 @@ static void _launch_game_loop()
         catch (game_ended_condition &ge)
         {
             game_ended = true;
-            crawl_state.last_game_exit = ge.exit_reason;
+            crawl_state.last_game_exit = ge;
             _reset_game();
 
             // Don't re-enter the Sprint menu with restart_after_save, as
@@ -393,7 +396,7 @@ static void _launch_game_loop()
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
-    } while (crawl_should_restart(crawl_state.last_game_exit)
+    } while (crawl_should_restart(crawl_state.last_game_exit.exit_reason)
              && game_ended
              && !crawl_state.seen_hups);
 }

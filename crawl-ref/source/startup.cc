@@ -574,6 +574,10 @@ static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;
 
+// TODO: should be game_type. Also, does this really need to be static?
+// maybe part of crawl_state?
+static int startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+
 /**
  * Saves game mode and player name to ng_choice.
  */
@@ -581,7 +585,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
                                const newgame_def& defaults)
 {
     // Initialise before the loop so that ? doesn't forget the typed name.
-    string input_string = defaults.name;
+    string input_string = crawl_state.default_startup_name;
 
 again:
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
@@ -590,7 +594,6 @@ again:
     vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
     const int num_modes = NUM_GAME_TYPE;
-    static int type = GAME_TYPE_UNSPECIFIED;
 
 #ifdef USE_TILE_LOCAL
     const int max_col    = tiles.get_crt()->mx;
@@ -709,10 +712,15 @@ again:
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (type != GAME_TYPE_UNSPECIFIED)
+    // don't use non-enum game_type values across restarts, as the list of
+    // saves may have changed on restart.
+    if (startup_menu_game_type >= NUM_GAME_TYPE)
+        startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+
+    if (startup_menu_game_type != GAME_TYPE_UNSPECIFIED)
     {
         menu.set_active_object(game_modes);
-        game_modes->set_active_item(type);
+        game_modes->set_active_item(startup_menu_game_type);
     }
     else if (save != -1)
     {
@@ -735,6 +743,9 @@ again:
         menu.set_active_object(game_modes);
         game_modes->activate_first_item();
     }
+
+    descriptor->render();
+    descriptor->override_description(crawl_state.last_game_exit.message);
 
     while (true)
     {
@@ -768,7 +779,7 @@ again:
             // will continue to be selected when we restart the menu.
             MenuItem *active = menu.get_active_item();
             if (active && active->get_id() >= NUM_GAME_TYPE)
-                type = GAME_TYPE_UNSPECIFIED;
+                startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
 
             // restart because help messes up CRTRegion
             goto again;
@@ -805,9 +816,6 @@ again:
                     full_name = false;
                 }
             }
-            // clear the "That's a silly name line"
-            cgotoxy(SCROLLER_MARGIN_X, GAME_MODES_START_Y - 1);
-            clear_to_end_of_line();
 
             // Depending on whether the current name occurs
             // in the saved games, update the active object.
@@ -829,8 +837,10 @@ again:
             else
             {
                 // Menu might have changed selection -- sync name.
-                type = menu.get_active_item()->get_id();
-                switch (type)
+                // TODO: the mapping from menu item to game_type is alarmingly
+                // brittle here
+                startup_menu_game_type = menu.get_active_item()->get_id();
+                switch (startup_menu_game_type)
                 {
                 case GAME_TYPE_ARENA:
                     input_string = "";
@@ -852,7 +862,7 @@ again:
                     break;
 
                 default:
-                    int save_number = type - NUM_GAME_TYPE;
+                    int save_number = startup_menu_game_type - NUM_GAME_TYPE;
                     if (save_number < num_saves)
                         input_string = chars.at(save_number).name;
                     else // new game
@@ -887,10 +897,7 @@ again:
             else
             {
                 // bad name
-                cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
-                clear_to_end_of_line();
-                textcolour(RED);
-                cprintf("That's a silly name");
+                descriptor->override_description("That's a silly name.");
                 // Don't make the next key re-enter the game.
                 menu.clear_selections();
             }
@@ -987,6 +994,8 @@ bool startup_step()
     crawl_state.type = choice.type;
 
     newgame_def defaults = read_startup_prefs();
+    if (crawl_state.default_startup_name.size() == 0)
+        crawl_state.default_startup_name = defaults.name;
 
     // Set the crawl_state gametype to the requested game type. This must
     // be done before looking for the savegame or the startup prefs file.
@@ -1008,7 +1017,7 @@ bool startup_step()
     // These conditions are ignored for tutorial or sprint, which always trigger
     // the relevant submenu. Arena never triggers a menu.
     const bool can_bypass_menu =
-            _exit_type_allows_menu_bypass(crawl_state.last_game_exit)
+            _exit_type_allows_menu_bypass(crawl_state.last_game_exit.exit_reason)
          && crawl_state.last_type != GAME_TYPE_ARENA
          && Options.name_bypasses_menu
          && is_good_name(choice.name, false, false);

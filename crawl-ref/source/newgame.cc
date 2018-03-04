@@ -1839,7 +1839,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         // Is this item our default map?
         else if (defaults.map == maps[i]->name)
         {
-            if (crawl_state.last_game_exit == game_exit::win)
+            if (crawl_state.last_game_exit.exit_reason == game_exit::win)
                 activate_next = true;
             else
                 menu->set_active_item(tmp);

@@ -995,6 +995,8 @@ public:
     virtual void allow_focus(bool toggle) override {}
     virtual bool can_be_focused() override { return false; }
 
+    void override_description(const string &t);
+
 protected:
     virtual void _place_items() override;
     virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) override
@@ -1011,6 +1013,7 @@ protected:
     PrecisionMenu* m_parent;
     MenuItem* m_active_item;
     NoSelectTextItem m_desc_item;
+    string override_text;
 };
 
 /**
