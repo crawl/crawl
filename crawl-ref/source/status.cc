@@ -483,6 +483,17 @@ bool fill_status_info(int status, status_info* inf)
     case DUR_NO_MORE_DISASTER:
     inf->light_text = "-Disaster";
          break;
+         
+    case STATUS_TIME_STOP:
+        if (you.attribute[ATTR_TIME_STOP] > 0)
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text
+               = make_stringf("TimeStop (%u)",
+                              you.attribute[ATTR_TIME_STOP]);
+            inf->short_text = "time stop";
+            inf->long_text = "Time is stopped.";
+        }
 
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())

@@ -42,7 +42,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
 
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
-
+    
+    end_time_stop();    
     stop_delay(true);
 
     const coord_def origin = pos();

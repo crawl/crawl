@@ -1519,6 +1519,12 @@ Calls on the powers of darkness to cause agonising injury to any living thing
 in the caster's vicinity, cutting their resilience in half. This damage is
 never directly lethal.
 %%%%
+Time Stop spell
+
+Freezes time for everything but the caster for a spellpower-dependent number
+of turns. This spell is exhausting to cast, and blinking or teleporting
+will immediately end the effect.
+%%%%
 Teleport Other spell
 
 Randomly translocates a targeted creature.

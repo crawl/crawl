@@ -1018,6 +1018,8 @@ static void _input()
     _prep_input();
 
     update_monsters_in_view();
+    
+    check_time_stop();
 
     // Monster update can cause a weapon swap.
     if (you.turn_is_over)
@@ -1046,6 +1048,7 @@ static void _input()
     if (need_to_autopickup())
     {
         autopickup();
+        check_time_stop();
         if (you.turn_is_over)
         {
             world_reacts();
@@ -1064,6 +1067,8 @@ static void _input()
         if (you.attribute[ATTR_PLAYING_HARP])
             end_playing_harp(false);
         handle_delay();
+        
+        check_time_stop();
 
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
@@ -1175,6 +1180,8 @@ static void _input()
         you.turn_is_over = false;
 #endif
 
+    check_time_stop();
+
     if (you.turn_is_over)
     {
         if (you.apply_berserk_penalty)
@@ -1200,6 +1207,24 @@ static void _input()
 
     crawl_state.clear_god_acting();
 
+}
+
+void check_time_stop()
+{
+    if (you.attribute[ATTR_TIME_STOP] == 0 || !you.turn_is_over)
+       return;
+
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    you.attribute[ATTR_SERPENTS_LASH] -= 1;
+    you.redraw_status_lights = true;
+    update_turn_count();
+
+    if (you.attribute[ATTR_TIME_STOP] == 0)
+    {
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        mpr("Time begins to flow once more.");
+    }
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,

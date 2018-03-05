@@ -50,6 +50,7 @@ mass_confusion MASS_CONFUSION
 slow SLOW
 song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
+time_stop TIME_STOP
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
 

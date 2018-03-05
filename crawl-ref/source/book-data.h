@@ -337,6 +337,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SILENCE,
     SPELL_DARKNESS,
     SPELL_SHADOW_CREATURES,
+    SPELL_TIME_STOP,
 },
 
 {   // Book of Alchemy

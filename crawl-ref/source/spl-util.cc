@@ -1305,6 +1305,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         return "you couldn't be more disastrous!";
     if (temp && you.duration[DUR_NO_MORE_DISASTER])
         return "your disaster has temporarily ended!";
+    case SPELL_TIME_STOP:
+    if (temp && you.attribute[ATTR_SERPENTS_LASH])
+        return "Your muscles are too tense to stop time.";
+    if (temp && you.attribute[ATTR_TIME STOP])
+        return "stopping time while time is already stopped sounds like"
+               "a great way to be frozen in stasis forever. You relent.";
+    if (temp && you.duration[DUR_EXHAUSTED])
+        return "you're too exhausted to mess around with time right now.";
 
     default:
         break;

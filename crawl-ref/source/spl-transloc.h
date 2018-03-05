@@ -9,6 +9,7 @@ spret_type cast_blink(bool fail = false);
 spret_type cast_controlled_blink(bool fail = false, bool safe = true);
 void uncontrolled_blink(bool override_stasis = false);
 spret_type controlled_blink(bool fail, bool safe_cancel = true);
+void end_time_stop();
 spret_type frog_hop(bool fail);
 void wizard_blink();
 

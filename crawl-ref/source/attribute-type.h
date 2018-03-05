@@ -95,5 +95,6 @@ enum attribute_type
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
     ATTR_PLAYING_HARP,         // Playing the harp of healing
+    ATTR_TIME_STOP,            // How many turns of Time Stop are left.
     NUM_ATTRIBUTES
 };

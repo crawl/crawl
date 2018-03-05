@@ -3007,6 +3007,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("You are already lashing out.");
             return SPRET_ABORT;
         }
+        if (you.attribute[ATTR_TIME_STOP])
+        {
+            mpr("Time is too frozen to tense your muscles.");
+            return SPRET_ABORT;
+        }
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You are too exhausted to lash out.");

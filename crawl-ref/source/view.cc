@@ -860,7 +860,7 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
+    return _layers & LAYERS_ALL && (you.berserk() ? RED : (you.attribute[ATTR_TIME_STOP] ? MAGENTA : BLACK));
 }
 
 // Updates one square of the view area. Should only be called for square

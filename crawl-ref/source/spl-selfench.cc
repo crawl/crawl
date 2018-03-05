@@ -371,3 +371,13 @@ spret_type cast_blade_of_disaster(int pow, bool fail)
         you.set_duration(DUR_BLADE_OF_DISASTER, 5);
         return SPRET_SUCCESS;
 }
+
+spret_type cast_time_stop(int pow, bool fail)
+{
+    fail_check();
+    
+    mpr("You bring the flow of time to a stop.");
+        //You'll lose one turn to casting Time Stop, so it's really 1+sp/50 free turns
+        you.attribute[ATTR_TIME_STOP] = 2+div_rand_round(pow, 50);
+        return SPRET_SUCCESS;
+}

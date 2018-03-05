@@ -139,9 +139,19 @@ void uncontrolled_blink(bool override_stasis)
         return;
 
     canned_msg(MSG_YOU_BLINK);
+    end_time_stop();
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
+}
+
+void end_time_stop()
+{
+    if (you.attribute[ATTR_TIME_STOP])
+    {
+        you.attribute[ATTR_TIME_STOP] = 0;
+        mpr("Being yanked through space has disrupted your control over time.");
+    }
 }
 
 /**
@@ -682,7 +692,8 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
             mpr("Your surroundings suddenly seem different.");
             large_change = true;
         }
-
+        
+        end_time_stop();
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 
