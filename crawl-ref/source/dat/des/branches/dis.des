@@ -828,8 +828,8 @@ MONS:    patrolling Dispater, Hell Sentinel, iron dragon / iron giant w:5
 MONS:    rust devil / iron imp w:20
 MONS:    iron troll, quicksilver dragon, cacodemon
 SHUFFLE: AP / BQ / CR / DS / ET
-SUBST:   A = 1, B = 2, C = 2, D = 7, E = 7
-SUBST:   P = O, Q = ., R = ., S = ., T = .
+SUBST:   A = 1, BC = 2, DE = 7
+SUBST:   P = O, QRST = .
 NSUBST:  G = 4:8 / *:G
 TILE:    G = dngn_statue_iron_golem
 COLOUR:  G = cyan
