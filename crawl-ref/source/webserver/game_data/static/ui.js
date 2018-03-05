@@ -239,6 +239,16 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
             $popup.children(".footer").html(msg.prompt).addClass("fg3");
     }
 
+    function describe_monster(desc)
+    {
+        var $popup = $(".templates > .describe-generic").clone();
+        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > canvas").remove();
+        $popup.find(".body").html(fmt_body_txt(desc.body));
+        scroller($popup.find(".body")[0]);
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -247,6 +257,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         "describe-cards" : describe_cards,
         "mutations" : mutations,
         "describe-god" : describe_god,
+        "describe-monster" : describe_monster,
     };
 
     function register_ui_handlers(dict)

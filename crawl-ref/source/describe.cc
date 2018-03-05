@@ -4607,13 +4607,22 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_write_string("title", inf.title);
+    tiles.json_write_string("body", desc.to_colour_string());
+    tiles.push_ui_layout("describe-monster", 0);
 #endif
 
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
     return lastch;
 }
 
