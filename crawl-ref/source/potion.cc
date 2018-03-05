@@ -1271,7 +1271,7 @@ public:
     }
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("That potion was far past its expiry date.");
+        mpr("That liquid was far past its expiry date.");
         return true;
     }
 };

@@ -2044,6 +2044,104 @@ static void _vampire_corpse_help()
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
+static bool _drink_fountain()
+{
+    const dungeon_feature_type feat = grd(you.pos());
+
+    ASSERT(feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN);
+
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return true;
+    }
+
+    potion_type fountain_effect = NUM_POTIONS;
+    if (feat == DNGN_DRY_FOUNTAIN)
+        return mpr("This fountain has no liquid!"), false;
+    if (feat == DNGN_FOUNTAIN_BLUE)
+        return mpr("This fountain contains nothing but water."), false;
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
+    {
+        if (!yesno("Drink from the fountain of blood?", true, 'n'))
+            return false;
+
+        mpr("You drink the blood.");
+        fountain_effect = POT_BLOOD;
+    }
+    else
+    {
+        if (!yesno("Drink from the sparkling fountain?", true, 'n'))
+            return false;
+
+        mpr("You drink the sparkling water.");
+
+        fountain_effect =
+            random_choose_weighted(400, NUM_POTIONS,
+								   40, POT_MUTATION,
+								   40, POT_CURING,
+								   40, POT_HEAL_WOUNDS,
+								   40, POT_HASTE,
+								   40, POT_MIGHT,
+								   40, POT_BRILLIANCE,
+								   40, POT_AGILITY,
+								   32, POT_DEGENERATION,
+								   27, POT_FLIGHT,
+								   27, POT_CANCELLATION,
+								   27, POT_AMBROSIA,
+								   27, POT_INVISIBILITY,
+								   20, POT_MAGIC,
+								   20, POT_RESTORE_ABILITIES,
+								   20, POT_RESISTANCE,
+								   20, POT_LIGNIFY);
+    }
+
+    if (fountain_effect != NUM_POTIONS && fountain_effect != POT_BLOOD)
+	{
+        xom_is_stimulated(50);
+	}
+
+	get_potion_effect(fountain_effect)->quaff(feat != DNGN_FOUNTAIN_SPARKLING);
+	
+    bool gone_dry = false;
+    if (feat == DNGN_FOUNTAIN_BLUE)
+    {
+        if (one_chance_in(20))
+            gone_dry = true;
+    }
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
+    {
+        // High chance of drying up, to prevent abuse.
+        if (one_chance_in(3))
+            gone_dry = true;
+    }
+    else   // sparkling fountain
+    {
+        if (one_chance_in(10))
+            gone_dry = true;
+        else if (random2(50) > 40)
+        {
+            // Turn fountain into a normal fountain without any message
+            // but the glyph colour gives it away (lightblue vs. blue).
+            grd(you.pos()) = DNGN_FOUNTAIN_BLUE;
+            set_terrain_changed(you.pos());
+        }
+    }
+
+    if (gone_dry)
+    {
+        mpr("The fountain dries up!");
+
+        grd(you.pos()) = DNGN_DRY_FOUNTAIN;
+        set_terrain_changed(you.pos());
+
+        crawl_state.cancel_cmd_repeat();
+    }
+
+    you.turn_is_over = true;
+    return true;
+}
+
 void drink(item_def* potion)
 {
     if (you_foodless())
@@ -2066,6 +2164,11 @@ void drink(item_def* potion)
 
     if (!potion)
     {
+		const dungeon_feature_type feat = grd(you.pos());
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN)
+            if (_drink_fountain())
+                return;
+	
         potion = use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
 
         if (!potion)
