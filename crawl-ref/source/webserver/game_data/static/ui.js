@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "ui", "./enums", "./cell_renderer",
-    "./util", "./scroller", "./tileinfo-main"],
-function ($, comm, client, ui, enums, cr, util, scroller, main) {
+    "./util", "./scroller", "./tileinfo-main", "./tileinfo-gui"],
+function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
     "use strict";
 
     function fmt_body_txt(txt)
@@ -249,6 +249,24 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         return $popup;
     }
 
+    function version(desc)
+    {
+        var $popup = $(".templates > .describe-generic").clone();
+        $popup.find(".header > span").html(desc.information);
+        var $body = $popup.find(".body");
+        $body.html(fmt_body_txt(desc.features) + fmt_body_txt(desc.changes));
+        scroller($body[0]);
+
+        var t = gui.STARTUP_STONESOUP, tex = enums.texture.GUI;
+        var $canvas = $popup.find(".header > canvas");
+        var renderer = new cr.DungeonCellRenderer();
+        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+        renderer.init($canvas[0]);
+        renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
+
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -258,6 +276,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         "mutations" : mutations,
         "describe-god" : describe_god,
         "describe-monster" : describe_monster,
+        "version" : version,
     };
 
     function register_ui_handlers(dict)
