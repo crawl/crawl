@@ -1200,7 +1200,6 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     wind_beam.is_tracer       = true;
 
     map<actor *, coord_def> collisions;
-    vector<pair<actor *, coord_def>> moved_actors;
 
     bool player_affected = false;
     counted_monster_list affected_monsters;
@@ -1223,7 +1222,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                     && act->can_pass_through(newpos)
                     && act->is_habitable(newpos))
                 {
-                    moved_actors.emplace_back(pair<actor *, coord_def>(act, newpos));
+                    act->move_to_pos(newpos);
+                    if (act->is_player())
+                        stop_delay(true);
                     --push;
                     pushed = true;
                 }
@@ -1239,7 +1240,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                             && act->can_pass_through(*di)
                             && act->is_habitable(*di))
                         {
-                            moved_actors.emplace_back(pair<actor *, coord_def>(act, newpos));
+                            act->move_to_pos(*di);
+                            if (act->is_player())
+                                stop_delay(true);
+
                             --push;
                             pushed = true;
 
@@ -1360,16 +1364,6 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             mpr(message);
         else
             mpr("The monsters around you are blown away!");
-    }
-
-    for (auto it : moved_actors)
-    {
-        actor *act = it.first;
-        coord_def oldpos = act->pos(), newpos = it.second;
-        act->move_to_pos(newpos);
-        act->apply_location_effects(oldpos);
-        if (act->is_player())
-            stop_delay(true);
     }
 
     for (auto it : collisions)
