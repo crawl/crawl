@@ -413,6 +413,17 @@ void blink_close(monster* mon)
 #endif
 }
 
+void end_time_stop()
+{
+    if (you.attribute[ATTR_TIME_STOP])
+    {
+        you.attribute[ATTR_TIME_STOP] = 0;
+        mpr("Being yanked through space has disrupted your control over time.");
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        mpr("Time begins to flow once more.");
+    }
+}
+
 // This only checks the contents of the tile - nothing in between.
 // Could compact most of this into a big boolean if you wanted to trade
 // readability for dubious speed improvements.

@@ -145,15 +145,6 @@ void uncontrolled_blink(bool override_stasis)
     _place_tloc_cloud(origin);
 }
 
-void end_time_stop()
-{
-    if (you.attribute[ATTR_TIME_STOP])
-    {
-        you.attribute[ATTR_TIME_STOP] = 0;
-        mpr("Being yanked through space has disrupted your control over time.");
-    }
-}
-
 /**
  * Let the player choose a destination for their controlled blink or similar
  * effect.

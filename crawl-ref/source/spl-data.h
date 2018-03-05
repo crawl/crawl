@@ -3974,7 +3974,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_TIME_STOP, "Time Stop",
-    SPTYP_HEXES
+    SPTYP_HEXES,
     SPFLAG_HELPFUL | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
     9,
     200,

@@ -232,6 +232,8 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
 
+static bool check_time_stop();
+
 static void _startup_asserts()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -1018,8 +1020,6 @@ static void _input()
     _prep_input();
 
     update_monsters_in_view();
-    
-    check_time_stop();
 
     // Monster update can cause a weapon swap.
     if (you.turn_is_over)
@@ -1048,7 +1048,6 @@ static void _input()
     if (need_to_autopickup())
     {
         autopickup();
-        check_time_stop();
         if (you.turn_is_over)
         {
             world_reacts();
@@ -1067,8 +1066,6 @@ static void _input()
         if (you.attribute[ATTR_PLAYING_HARP])
             end_playing_harp(false);
         handle_delay();
-        
-        check_time_stop();
 
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
@@ -1180,8 +1177,6 @@ static void _input()
         you.turn_is_over = false;
 #endif
 
-    check_time_stop();
-
     if (you.turn_is_over)
     {
         if (you.apply_berserk_penalty)
@@ -1207,24 +1202,6 @@ static void _input()
 
     crawl_state.clear_god_acting();
 
-}
-
-void check_time_stop()
-{
-    if (you.attribute[ATTR_TIME_STOP] == 0 || !you.turn_is_over)
-       return;
-
-    you.turn_is_over = false;
-    you.elapsed_time_at_last_input = you.elapsed_time;
-    you.attribute[ATTR_SERPENTS_LASH] -= 1;
-    you.redraw_status_lights = true;
-    update_turn_count();
-
-    if (you.attribute[ATTR_TIME_STOP] == 0)
-    {
-        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
-        mpr("Time begins to flow once more.");
-    }
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
@@ -2226,6 +2203,8 @@ static void _update_still_winds()
 
 void world_reacts()
 {
+    if (check_time_stop()) return;
+    
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
@@ -2349,6 +2328,26 @@ void world_reacts()
     // the loudest noise tracking for the next world_reacts cycle.
     you.los_noise_last_turn = you.los_noise_level;
     you.los_noise_level = 0;
+}
+
+bool check_time_stop()
+{
+    if (you.attribute[ATTR_TIME_STOP] == 0 || !you.turn_is_over)
+       return false;
+
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    you.attribute[ATTR_TIME_STOP] -= 1;
+    you.redraw_status_lights = true;
+    update_turn_count();
+
+    if (you.attribute[ATTR_TIME_STOP] == 0)
+    {
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        mpr("Time begins to flow once more.");
+    }
+    
+    return true;
 }
 
 static command_type _get_next_cmd()

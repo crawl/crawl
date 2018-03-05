@@ -1308,8 +1308,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_TIME_STOP:
     if (temp && you.attribute[ATTR_SERPENTS_LASH])
         return "Your muscles are too tense to stop time.";
-    if (temp && you.attribute[ATTR_TIME STOP])
-        return "stopping time while time is already stopped sounds like"
+    if (temp && you.attribute[ATTR_TIME_STOP])
+        return "stopping time while time is already stopped sounds like "
                "a great way to be frozen in stasis forever. You relent.";
     if (temp && you.duration[DUR_EXHAUSTED])
         return "you're too exhausted to mess around with time right now.";

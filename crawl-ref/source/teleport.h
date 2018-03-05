@@ -13,6 +13,7 @@ bool monster_blink(monster* mons, bool quiet = false);
 bool monster_space_valid(const monster* mons, coord_def target,
                          bool forbid_sanctuary);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
+void end_time_stop();
 
 bool valid_blink_destination(const actor* moved, const coord_def& target,
                              bool forbid_sanctuary = false,

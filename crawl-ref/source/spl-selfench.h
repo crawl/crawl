@@ -30,3 +30,4 @@ spret_type cast_liquefaction(int pow, bool fail);
 spret_type cast_shroud_of_golubria(int pow, bool fail);
 spret_type cast_transform(int pow, transformation which_trans, bool fail);
 spret_type cast_blade_of_disaster(int pow, bool fail);
+spret_type cast_time_stop(int pow, bool fail);
