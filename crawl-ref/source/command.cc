@@ -39,6 +39,10 @@
 
 using namespace ui;
 
+#ifdef USE_TILE
+ #include "tiledef-gui.h"
+#endif
+
 static const char *features[] =
 {
 #ifdef CLUA_BINDINGS
@@ -80,7 +84,7 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    return string("This is <w>" CRAWL " ") + Version::Long + "</w>\n";
+    return string("This is <w>" CRAWL " ") + Version::Long + "</w>";
 }
 
 static string _get_version_features()
@@ -163,26 +167,70 @@ static string _get_version_changes()
                   "directory.";
     }
 
-    result += "\n\n";
-
     return result;
 }
 
 //#define DEBUG_FILES
 static void _print_version()
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    const string info = _get_version_information(),
+          feats = _get_version_features(),
+          changes = _get_version_changes();
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+
+#ifdef USE_TILE_LOCAL
+    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
 #endif
-    formatted_scroller cmd_version(FS_EASY_EXIT);
-    cmd_version.set_tag("version");
-    cmd_version.set_more();
 
-    cmd_version.add_text(_get_version_information(), true);
-    cmd_version.add_text(_get_version_features(), true);
-    cmd_version.add_text(_get_version_changes(), true);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    auto icon = make_shared<Image>();
+    icon->set_tile(tile_def(TILEG_STARTUP_STONESOUP, TEX_GUI));
+    title_hbox->add_child(move(icon));
+#endif
 
-    cmd_version.show();
+    auto title = make_shared<Text>(info);
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 10});
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto content = formatted_string::parse_string(feats + "\n\n" + changes);
+    auto text = make_shared<Text>(move(content));
+    text->wrap_text = true;
+    scroller->set_child(move(text));
+    vbox->add_child(scroller);
+
+    auto popup = make_shared<ui::Popup>(vbox);
+
+    bool done = false;
+    popup->on(Widget::slots.event, [&done, &vbox](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        done = !vbox->on_event(ev);
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_write_string("information", info);
+    tiles.json_write_string("features", feats);
+    tiles.json_write_string("changes", changes);
+    tiles.push_ui_layout("version", 0);
+#endif
+
+    ui::run_layout(move(popup), done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 void list_armour()
