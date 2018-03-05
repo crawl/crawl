@@ -511,7 +511,7 @@ ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian"
     enum, name, vaultname,\
     DCHAR_FOUNTAIN, NUM_DCHAR_TYPES,\
     COLOUR_IS(colour),\
-    FFT_NONE, MF_FLOOR,\
+    FFT_NONE, MF_FEATURE,\
 }
 FOUNTAIN(DNGN_FOUNTAIN_BLUE, "fountain of clear blue water", "fountain_blue", BLUE),
 FOUNTAIN(DNGN_FOUNTAIN_SPARKLING, "fountain of sparkling water", "fountain_sparkling", LIGHTBLUE),
