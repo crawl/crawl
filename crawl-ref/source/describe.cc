@@ -3748,7 +3748,7 @@ static string _monster_stat_description(const monster_info& mi)
         else // RE_ELIGIBLE || RE_RECITE_TIMER
         {
             result << uppercase_first(pronoun) <<
-                            " can be affected by reciting Zin's laws to it.";
+                            " can be affected by reciting Zin's laws.";
         }
 
         if (you.wizard)
