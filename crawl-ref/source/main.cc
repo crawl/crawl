@@ -2332,7 +2332,8 @@ void world_reacts()
 
 bool check_time_stop()
 {
-    if (you.attribute[ATTR_TIME_STOP] == 0 || !you.turn_is_over)
+	//need to do it this way, since delays don't set 'you.turn_is_over'
+    if (you.attribute[ATTR_TIME_STOP] == 0 || you.time_taken <= 0)
        return false;
 
     you.turn_is_over = false;

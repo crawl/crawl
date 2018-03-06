@@ -412,6 +412,13 @@ stab_type find_stab_type(const actor *attacker,
     {
         return STAB_DISTRACTED;
     }
+    
+    // stopped time makes everything a little stabbable
+    // realistically it should be stab denominator 1 not 4, but that might be too broken?
+    if (you.attribute[ATTR_TIME_STOP])
+    {
+        return STAB_TIME_STOP;
+    }
 
     return STAB_NO_STAB;
 }

@@ -23,6 +23,7 @@ enum stab_type
     STAB_PARALYSED,
     STAB_SLEEPING,
     STAB_ALLY,
+    STAB_TIME_STOP,
     NUM_STABS
 };
 

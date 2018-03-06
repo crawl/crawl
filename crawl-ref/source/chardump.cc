@@ -1127,6 +1127,7 @@ static const char* _stab_names[] =
     "Paralysed",
     "Sleeping",
     "Betrayed ally",
+    "Time stopped",
 };
 
 static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
