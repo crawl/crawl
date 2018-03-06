@@ -572,7 +572,6 @@ auto_hide_spells = false
         When set to true, spells added to the library will automatically be
         hidden.
 
-
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
