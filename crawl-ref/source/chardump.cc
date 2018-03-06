@@ -1629,17 +1629,11 @@ void display_notes()
         for (unsigned int j = 1; j < parts.size(); ++j)
             scr.add_raw_text(string(prefix.length()-2, ' ') + string("| ") + parts[j] + "\n");
     }
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
     scr.show();
 }
 
 void display_char_dump()
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
     formatted_scroller scr(FS_PREWRAPPED_TEXT);
     scr.add_raw_text(_get_dump().text, false);
     scr.set_more();

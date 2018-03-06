@@ -542,9 +542,6 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
     for (unsigned i = 0; i < lines.size(); ++i)
         cmd_help.add_formatted_string(lines[i], true);
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
     cmd_help.show();
 
     return cmd_help.get_lastch();

@@ -2004,11 +2004,6 @@ void replay_messages()
                 hist.add_formatted_string(line, true);
             }
         }
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
-
     hist.show();
 }
 
