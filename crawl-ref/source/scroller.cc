@@ -84,9 +84,24 @@ int formatted_scroller::show()
         return done;
     });
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_write_string("text", contents.to_colour_string());
+    tiles.json_write_string("more", m_more.to_colour_string());
+    tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
+    tiles.push_ui_layout("formatted-scroller", 0);
+#endif
+
+    // this needs to match the value in ui.js
     if (m_flags & FS_START_AT_END)
-        m_scroller->set_scroll(INT_MAX);
+        m_scroller->set_scroll(numeric_limits<uint32_t>::max());
+
     ui::run_layout(move(popup), done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     return m_lastch;
 }
