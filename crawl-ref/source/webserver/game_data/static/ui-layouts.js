@@ -270,6 +270,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         return $popup;
     }
 
+    function formatted_scroller(desc)
+    {
+        var $popup = $(".templates > .formatted-scroller").clone();
+        var $body = $popup.children(".body");
+        var $more = $popup.children(".more");
+        $body.html(util.formatted_string_to_html(desc.text));
+        $more.html(util.formatted_string_to_html(desc.more));
+        var scroll_elem = scroller($body[0]).scrollElement;
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -280,6 +291,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         "describe-god" : describe_god,
         "describe-monster" : describe_monster,
         "version" : version,
+        "formatted-scroller" : formatted_scroller,
     };
 
     function register_ui_handlers(dict)
