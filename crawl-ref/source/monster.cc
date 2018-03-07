@@ -54,6 +54,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "spl-monench.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
@@ -4540,6 +4541,22 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             monster_die(*this, KILL_YOU, NON_MONSTER);
         else
             monster_die(*this, KILL_MON, agent->mindex());
+    }
+    
+    if (you.attribute[ATTR_TIME_STOP] && amount > 0)
+    {
+        if (props.exists(STASIS_DAM))
+        {
+            props[STASIS_DAM].get_int() += amount;
+        }
+        else
+        {
+            props[STASIS_DAM].get_int() = amount;
+        }
+        //As a default, all damage during time stop originates from the player character's direction.
+        //Specific ways of dealing damage can override this to get other directions.
+        props[STASIS_VX].get_float() = pos().x - you.pos().x;
+        props[STASIS_VY].get_float() = pos().y - you.pos().y;
     }
 
     return amount;

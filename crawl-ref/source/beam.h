@@ -62,6 +62,7 @@ struct bolt
     item_def*   item = nullptr;        // item to drop
     coord_def   source = {0,0};           // beam origin
     coord_def   target = {0,0};           // intended target
+    coord_def   explosion_source = {0,0}; // explosion origin
     dice_def    damage = dice_def(0,0);
     int         ench_power = 0, hit = 0;
     killer_type thrower = KILL_MISC;   // what kind of thing threw this?

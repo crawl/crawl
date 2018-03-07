@@ -40,6 +40,7 @@
 #include "prompt.h"
 #include "shout.h"
 #include "spl-util.h"
+#include "spl-selfench.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
@@ -139,7 +140,7 @@ void uncontrolled_blink(bool override_stasis)
         return;
 
     canned_msg(MSG_YOU_BLINK);
-    end_time_stop();
+    end_time_stop(true);
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
@@ -407,6 +408,7 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
     move_player_to_grid(target, false);
     // Controlling teleport contaminates the player. -- bwr
     contaminate_player(750 + random2(500), true);
+    end_time_stop(true);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -684,12 +686,12 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
             large_change = true;
         }
         
-        end_time_stop();
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 
         move_player_to_grid(newpos, false);
         stop_delay(true);
+        end_time_stop(true);
     }
 
     _handle_teleport_update(large_change, old_pos);
@@ -758,7 +760,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     bool large_change = you.see_cell(where);
 
     move_player_to_grid(where, false);
-
+    end_time_stop(true);
     _handle_teleport_update(large_change, old_pos);
     return true;
 }

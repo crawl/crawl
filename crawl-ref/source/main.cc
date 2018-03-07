@@ -132,6 +132,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -2356,8 +2357,7 @@ bool check_time_stop()
 
     if (you.attribute[ATTR_TIME_STOP] == 0)
     {
-        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
-        mpr("Time begins to flow once more.");
+        end_time_stop(false);
     }
     
     return totally_stopped;

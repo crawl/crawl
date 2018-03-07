@@ -4,6 +4,10 @@
 #include "spl-cast.h"
 #include "transformation.h"
 
+#define STASIS_DAM "stasis_dam"
+#define STASIS_VX "stasis_vx"
+#define STASIS_VY "stasis_vy"
+
 int allowed_deaths_door_hp();
 spret_type cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
@@ -31,3 +35,4 @@ spret_type cast_shroud_of_golubria(int pow, bool fail);
 spret_type cast_transform(int pow, transformation which_trans, bool fail);
 spret_type cast_blade_of_disaster(int pow, bool fail);
 spret_type cast_time_stop(int pow, bool fail);
+void end_time_stop(bool due_to_teleport = false);

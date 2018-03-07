@@ -22,6 +22,7 @@
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "random.h"
+#include "spl-selfench.h"
 #include "terrain.h"
 #include "view.h"
 
@@ -43,7 +44,6 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
     
-    end_time_stop();    
     stop_delay(true);
 
     const coord_def origin = pos();
@@ -52,6 +52,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (!cell_is_solid(origin))
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
 
+    end_time_stop(true);  
+        
     return true;
 }
 
@@ -411,17 +413,6 @@ void blink_close(monster* mon)
 #ifndef ASSERTS
     UNUSED(success);
 #endif
-}
-
-void end_time_stop()
-{
-    if (you.attribute[ATTR_TIME_STOP])
-    {
-        you.attribute[ATTR_TIME_STOP] = 0;
-        mpr("Being yanked through space has disrupted your control over time.");
-        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
-        mpr("Time begins to flow once more.");
-    }
 }
 
 // This only checks the contents of the tile - nothing in between.

@@ -60,6 +60,7 @@
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-other.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -5026,6 +5027,19 @@ void bolt::affect_monster(monster* mon)
         }
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
+        if (you.attribute[ATTR_TIME_STOP] && final > 0)
+        {
+            if (is_explosion && in_explosion_phase)
+            {
+                mon->props[STASIS_VX].get_float() = mon->pos().x - explosion_source.x;
+                mon->props[STASIS_VY].get_float() = mon->pos().y - explosion_source.y;
+            }
+            else
+            {
+                mon->props[STASIS_VX].get_float() = ray.r.dir.x;
+                mon->props[STASIS_VY].get_float() = ray.r.dir.y;
+            }
+        }
     }
 
     if (mon->alive())
@@ -6131,14 +6145,14 @@ void bolt::explosion_affect_cell(const coord_def& p)
 {
     // pos() = target during an explosion, so restore it after affecting
     // the cell.
-    const coord_def orig_pos = target;
+    explosion_source = target;
 
     fake_flavour();
     target = p;
     affect_cell();
     flavour = real_flavour;
 
-    target = orig_pos;
+    target = explosion_source;
 }
 
 // Uses DFS

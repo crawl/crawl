@@ -1524,6 +1524,9 @@ Time Stop spell
 Freezes time for everything but the caster for a spellpower-dependent amount
 of time. This spell is exhausting to cast, and blinking or teleporting
 will immediately end the effect. Time stopped enemies are helpless.
+Momentum is stored up during Time Stop. When Time Stop ends, enemies will be
+sent flying back based on the direction of their last hit, and the total
+damage they took.
 %%%%
 Teleport Other spell
 

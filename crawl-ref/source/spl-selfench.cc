@@ -9,6 +9,7 @@
 
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "butcher.h" // butcher_corpse
@@ -20,11 +21,13 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "monster.h"
 #include "output.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "terrain.h"
 #include "transform.h"
 #include "tilepick.h"
 #include "view.h"
@@ -380,4 +383,119 @@ spret_type cast_time_stop(int pow, bool fail)
         //You'll lose 10 auts to casting Time Stop, so it's really 10+sp/5 free auts
         you.attribute[ATTR_TIME_STOP] = 20+div_rand_round(pow, 5);
         return SPRET_SUCCESS;
+    
+    //stasis iterator here
+    //Patashu: There's a small possibility for an exploit where you time stop,
+    //hit something then swap floors before time stop runs out. The stored damage
+    //and momentum never get unleashed! Could be fixed by adding similar code to
+    //run whenever you transition to a new level.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->alive())
+        {
+            mi->props[STASIS_DAM].get_int() = 0;
+            mi->props[STASIS_VX].get_float() = 0;
+            mi->props[STASIS_VY].get_float() = 0;
+        }
+    }
 }
+
+static void stasis_launch(monster *mon, int dam, float vx, float vy);
+
+void stasis_launch(monster *mon, int dam, float vx, float vy)
+{
+    coord_def destination = coord_def(mon->pos().x + round(vx*8), mon->pos().y + round(vy*8));
+    unsigned int distance = max(0, (int)floor(log(mon->props[STASIS_DAM].get_float())/log(2.5)));
+    const coord_def oldpos = mon->pos();
+    coord_def newpos = oldpos;
+    
+    bolt beam;
+    beam.range           = INFINITE_DISTANCE;
+    beam.hit             = AUTOMATIC_HIT;
+    beam.pierce          = true;
+    beam.affects_nothing = true;
+    beam.source          = mon->pos();
+    beam.target          = destination;
+    beam.aimed_at_spot   = false;
+    beam.is_tracer       = true;
+    beam.choose_ray();
+    if (beam.ray.r.dir.x == 0 && beam.ray.r.dir.y == 0) return;
+    
+    for (unsigned int j = 0; j < distance; ++j)
+    {
+        beam.ray.advance();
+        newpos = beam.ray.pos();
+        if (newpos == mon->pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !mon->can_pass_through(newpos)
+            || !mon->is_habitable(newpos))
+        {
+            break;
+        }
+        mon->move_to_pos(newpos);  
+    }
+    
+    if (newpos == oldpos)
+        return;
+    
+    if (you.can_see(*mon))
+    {
+        mprf("%s %s knocked back by the momentum.",
+                 mon->name(DESC_THE).c_str(),
+                 mon->conj_verb("are").c_str());
+    }
+    
+    if (mon->pos() != newpos)
+        mon->collide(newpos, &you, 17);
+        
+    mon->apply_location_effects(oldpos, KILL_YOU,
+                                actor_to_death_source(&you));
+}
+
+void end_time_stop(bool due_to_teleport)
+{
+    if (due_to_teleport)
+    {
+        if (you.attribute[ATTR_TIME_STOP] > 0)
+        {
+            mpr("Being yanked through space has disrupted your control over time.");
+        }
+        else
+        {
+            return;
+        }
+    }
+    you.attribute[ATTR_TIME_STOP] = 0;
+    you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+    mpr("Time begins to flow once more.");
+    
+    //stasis iterator here
+    
+    bool launched_a_monster = false;
+    
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->alive() && !mons_class_is_stationary(mi->type))
+        {
+            int dam = mi->props[STASIS_DAM].get_int();
+            if (dam >= 1)
+            {
+                if (!launched_a_monster)
+                {
+                    mpr("The stored up momentum is unleashed!");
+                    launched_a_monster = true;
+                }
+                
+                float vx = mi->props[STASIS_VX].get_float();
+                float vy = mi->props[STASIS_VY].get_float();
+                stasis_launch(*mi, dam, vx, vy);
+            }
+        }
+        
+        mi->props[STASIS_DAM].get_int() = 0;
+        mi->props[STASIS_VX].get_float() = 0;
+        mi->props[STASIS_VY].get_float() = 0;
+    }
+}
+
