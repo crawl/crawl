@@ -1842,6 +1842,8 @@ static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
                 spellnames.push_back(spell_title(st));
             if (!memorise || (Options.auto_hide_spells && allow_auto_hide))
                 you.hidden_spells.set(st, true);
+            if (Options.auto_hide_spells && allow_auto_hide)
+                you.hidden_spells.set(st, true);
         }
     }
     if (!quiet)
