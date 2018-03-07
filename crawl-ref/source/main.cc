@@ -2332,15 +2332,27 @@ void world_reacts()
 
 bool check_time_stop()
 {
-	//need to do it this way, since delays don't set 'you.turn_is_over'
+    //need to do it this way, since delays don't set 'you.turn_is_over'
     if (you.attribute[ATTR_TIME_STOP] == 0 || you.time_taken <= 0)
        return false;
-
-    you.turn_is_over = false;
-    you.elapsed_time_at_last_input = you.elapsed_time;
-    you.attribute[ATTR_TIME_STOP] -= 1;
+    
+    bool totally_stopped = false;
+    
+    if (you.time_taken >= you.attribute[ATTR_TIME_STOP])
+    {
+        you.time_taken -= you.attribute[ATTR_TIME_STOP];
+        you.attribute[ATTR_TIME_STOP] = 0;
+    }
+    else
+    {
+        you.attribute[ATTR_TIME_STOP] -= you.time_taken;
+        you.turn_is_over = false;
+        you.time_taken = 0;
+        you.elapsed_time_at_last_input = you.elapsed_time;
+        totally_stopped = true;
+        update_turn_count();
+    }
     you.redraw_status_lights = true;
-    update_turn_count();
 
     if (you.attribute[ATTR_TIME_STOP] == 0)
     {
@@ -2348,7 +2360,7 @@ bool check_time_stop()
         mpr("Time begins to flow once more.");
     }
     
-    return true;
+    return totally_stopped;
 }
 
 static command_type _get_next_cmd()

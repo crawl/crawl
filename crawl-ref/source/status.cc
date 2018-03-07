@@ -488,9 +488,12 @@ bool fill_status_info(int status, status_info* inf)
         if (you.attribute[ATTR_TIME_STOP] > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
+            int auts = you.attribute[ATTR_TIME_STOP];
+            int turns = auts/10;
+            int subturns = auts%10;
             inf->light_text
-               = make_stringf("TimeStop (%u)",
-                              you.attribute[ATTR_TIME_STOP]);
+               = make_stringf("TimeStop (%u.%u)",
+                              turns, subturns);
             inf->short_text = "time stop";
             inf->long_text = "Time is stopped.";
         }

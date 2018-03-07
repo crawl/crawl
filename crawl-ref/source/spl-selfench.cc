@@ -377,7 +377,7 @@ spret_type cast_time_stop(int pow, bool fail)
     fail_check();
     
     mpr("You bring the flow of time to a stop.");
-        //You'll lose one turn to casting Time Stop, so it's really 1+sp/50 free turns
-        you.attribute[ATTR_TIME_STOP] = 2+div_rand_round(pow, 50);
+        //You'll lose 10 auts to casting Time Stop, so it's really 10+sp/5 free auts
+        you.attribute[ATTR_TIME_STOP] = 20+div_rand_round(pow, 5);
         return SPRET_SUCCESS;
 }
