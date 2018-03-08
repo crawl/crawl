@@ -264,14 +264,14 @@ void manage_fire_shield(int delay)
     // Melt ice armour entirely.
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
 
-    // Remove fire clouds on top of you
-    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
+    // Remove clouds on top of you
+    if (cloud_at(you.pos()))
         delete_cloud(you.pos());
 
-    // Place fire clouds all around you
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!cell_is_solid(*ai) && !cloud_at(*ai))
-            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
+    // Place fire clouds all around you, radius 2
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
+        if (!cell_is_solid(*ri) && *ri != you.pos())
+            place_cloud(CLOUD_FIRE, *ri, 1 + random2(6), &you);
 }
 
 spret_type cast_corpse_rot(bool fail)

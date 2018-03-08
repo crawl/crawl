@@ -1396,7 +1396,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc++;
 
         if (you.duration[DUR_FIRE_SHIELD])
-            rc -= 2;
+            rc--;
 
         if (you.duration[DUR_QAZLAL_COLD_RES])
             rc++;
