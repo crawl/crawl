@@ -422,3 +422,70 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     return SPRET_SUCCESS;
 }
+
+static coord_def find_distortion_location(const actor* caster)
+{
+    vector<coord_def> points;
+    
+    for (coord_def delta : Compass)
+    {
+        coord_def test = coord_def(-1, -1);
+
+        test = caster->pos() + delta;
+        if (!in_bounds(test) || cell_is_solid(test))
+        {
+            continue;
+        }
+        cloud_struct* cloud = cloud_at(test);
+        if (cloud && cloud->type == CLOUD_DISTORTION)
+        {
+            continue;
+        }
+        actor* victim = actor_at(test);
+        if (victim)
+        {
+            continue;
+        }
+
+        points.push_back(test);
+    }
+
+    if (points.empty())
+        return coord_def(0, 0);
+
+    return points[random2(points.size())];
+}
+
+
+spret_type conjure_distortion(const actor *agent, int pow, bool fail)
+{
+    coord_def point = find_distortion_location(agent);
+    bool success = (point != coord_def(0, 0));
+    
+    bool is_player = (agent->is_player());
+
+    if (success)
+    {
+        const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
+        place_cloud(CLOUD_DISTORTION, point, durat, agent);
+        if (you.see_cell(point))
+        {
+            if (agent->is_player())
+                mpr("A spatial distortion forms next to you!");
+            else
+                mpr("A spatial distortion forms!");
+        }
+        noisy(spell_effect_noise(SPELL_CONJURE_DISTORTION), point);
+        
+        return SPRET_ABORT;
+    }
+    else
+    {
+        if (is_player)
+        {
+            mpr("There is no place adjacent to you for a distortion cloud!");
+        }
+    }
+    
+    return SPRET_ABORT;
+}

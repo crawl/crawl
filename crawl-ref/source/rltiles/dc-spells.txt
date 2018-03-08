@@ -153,6 +153,7 @@ teleport_other TELEPORT_OTHER
 shroud_of_golubria SHROUD_OF_GOLUBRIA
 singularity SINGULARITY
 gravitas GRAVITAS
+conjure_distortion CONJURE_DISTORTION
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS

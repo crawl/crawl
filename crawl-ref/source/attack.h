@@ -12,6 +12,13 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
+// Exact copies of their melee_attack predecessors
+string actor_name(const actor *a, description_level_type desc,
+                      bool actor_visible);
+string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
+string anon_name(description_level_type desc);
+string anon_pronoun(pronoun_type ptyp);
+
 class attack
 {
 // Public Properties
@@ -99,13 +106,6 @@ public:
 
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool random);
-
-    // Exact copies of their melee_attack predecessors
-    string actor_name(const actor *a, description_level_type desc,
-                      bool actor_visible);
-    string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
-    string anon_name(description_level_type desc);
-    string anon_pronoun(pronoun_type ptyp);
 
     // TODO: Definitely want to get rid of this, which we can't really do
     // until we refactor the whole pronoun / desc usage from these lowly

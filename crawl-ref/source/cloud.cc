@@ -13,10 +13,12 @@
 
 #include "areas.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "colour.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "english.h"
+#include "fineff.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "level-state-type.h"
@@ -289,10 +291,17 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
+    // CLOUD_DISTORTION,
+    { "distortion",  nullptr,                     // terse, verbose name
+      LIGHTMAGENTA,                               // colour
+      { TILE_CLOUD_DISTORTION, CTVARY_DUR },      // tile
+      BEAM_NONE, NORMAL_CLOUD_DAM,                // fake damage - used only for monster pathing
+      true,                                       // opacity
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
-static int _actor_cloud_damage(const actor *act, const cloud_struct &cloud,
+static int _actor_cloud_damage(actor *act, const cloud_struct &cloud,
                                bool maximum_damage);
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
@@ -809,6 +818,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_DISTORTION:
         return true;
     default:
         return false;
@@ -1150,7 +1160,7 @@ static int _cloud_damage_output(const actor *actor,
  * @param cloud             The cloud in question.
  * @param maximum_damage    Whether to return the maximum possible damage.
  */
-static int _actor_cloud_damage(const actor *act,
+static int _actor_cloud_damage(actor *act,
                                const cloud_struct &cloud,
                                bool maximum_damage)
 {
@@ -1186,7 +1196,7 @@ static int _actor_cloud_damage(const actor *act,
 
         // if this isn't just a test run, and no time passed, don't trigger
         // lightning. (just rain.)
-        if (!maximum_damage && !(you.turn_is_over && you.time_taken > 0))
+        if (!maximum_damage && you.time_taken <= 0)
             return rain_damage;
 
         // only announce ourselves if this isn't a test run.
@@ -1237,6 +1247,79 @@ static int _actor_cloud_damage(const actor *act,
 
         return lightning_dam;
 
+    }
+    case CLOUD_DISTORTION:
+    {
+        //Patashu: I played around with 20, then 15, and they felt unreliable.
+        const int aut_per_distortion = 10;
+        
+        if (!maximum_damage && you.time_taken <= 0)
+            return 0;
+            
+        if (!maximum_damage && !x_chance_in_y(you.time_taken,
+                                              aut_per_distortion))
+        {
+            return 0;
+        }
+    
+        if (maximum_damage)
+        {
+            const int avg_dam = ((3 + 24)*10)/aut_per_distortion;
+            return avg_dam;
+        }
+        
+        enum disto_effect
+        {
+            SMALL_DMG,
+            BIG_DMG,
+            BLINK,
+            TELE_INSTANT,
+            TELE_DELAYED,
+            NONE
+        };
+        
+        bool actor_visible = act->is_player() || you.can_see(*act);
+
+        const disto_effect choice = random_choose_weighted(33, SMALL_DMG,
+                                                           22, BIG_DMG,
+                                                           15, BLINK,
+                                                           10, TELE_INSTANT,
+                                                           10, TELE_DELAYED,
+                                                           10,  NONE);
+
+        switch (choice)
+        {
+        case SMALL_DMG:
+            mpr(make_stringf("Space bends around %s.",
+                                                  actor_name(act, DESC_THE, actor_visible).c_str()));
+            return 1 + random2avg(7, 2);
+        case BIG_DMG:
+            mpr(make_stringf("Space warps horribly around %s!",
+                                                  actor_name(act, DESC_THE, actor_visible).c_str()));
+            return 3 + random2avg(24, 2);
+        case BLINK:
+            if (!act->no_tele(true, false))
+                blink_fineff::schedule(act);
+            return 0;
+        case TELE_INSTANT:
+        case TELE_DELAYED:
+            if (crawl_state.game_is_sprint() && act->is_player()
+                || act->no_tele())
+            {
+                if (act->is_player())
+                    canned_msg(MSG_STRANGE_STASIS);
+                return 0;
+            }
+
+            if (choice == TELE_INSTANT)
+                teleport_fineff::schedule(act);
+            else
+                act->teleport();
+            return 0;
+        case NONE:
+            // Do nothing
+            return 0;
+        }
     }
     default:
         break;

@@ -69,6 +69,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BECKONING,
     SPELL_GRAVITAS,
     SPELL_TELEPORT_OTHER,
+    SPELL_CONJURE_DISTORTION,
     SPELL_GOLUBRIAS_PASSAGE,
 },
 

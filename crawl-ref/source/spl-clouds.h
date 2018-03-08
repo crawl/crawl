@@ -26,3 +26,5 @@ void holy_flames(monster* caster, actor* defender);
 
 spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail = false);
+
+spret_type conjure_distortion(const actor *agent, int pow, bool fail);

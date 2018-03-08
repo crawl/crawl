@@ -335,6 +335,13 @@ Conjure Flame spell
 
 Creates a blazing column of flame in a targeted empty location.
 %%%%
+Conjure Distortion spell
+
+Creates a cloud of distortion in a random adjacent empty (no monster AND no
+cloud of distortion) location.
+Clouds of distortion produce all distortion effects except for banishment -
+damaging, blinking and teleporting any being standing in them.
+%%%%
 Control Undead spell
 
 Enslaves any undead in the vicinity of the caster.

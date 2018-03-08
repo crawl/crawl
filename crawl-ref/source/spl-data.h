@@ -3962,6 +3962,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CONJURE_DISTORTION, "Conjure Distortion",
+    SPTYP_TRANSLOCATION | SPTYP_CONJURATION,
+    SPFLAG_NEUTRAL | SPFLAG_UTILITY,
+    3,
+    100,
+    -1, -1,
+    5, 5,
+    TILEG_CONJURE_DISTORTION,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

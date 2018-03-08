@@ -209,6 +209,10 @@ cloud_gold_dust1
 cloud_gold_dust2
 cloud_gold_dust3
 
+cloud_distortion0 CLOUD_DISTORTION
+cloud_distortion1
+cloud_distortion2
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

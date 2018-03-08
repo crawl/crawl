@@ -288,7 +288,7 @@ int attack::calc_to_hit(bool random)
  * Takes into account actor visibility/invisibility and the type of description
  * to be used (capitalization, possessiveness, etc.)
  */
-string attack::actor_name(const actor *a, description_level_type desc,
+string actor_name(const actor *a, description_level_type desc,
                           bool actor_visible)
 {
     return actor_visible ? a->name(desc) : anon_name(desc);
@@ -298,7 +298,7 @@ string attack::actor_name(const actor *a, description_level_type desc,
  *
  * Takes into account actor visibility
  */
-string attack::actor_pronoun(const actor *a, pronoun_type pron,
+string actor_pronoun(const actor *a, pronoun_type pron,
                              bool actor_visible)
 {
     return actor_visible ? a->pronoun(pron) : anon_pronoun(pron);
@@ -309,7 +309,7 @@ string attack::actor_pronoun(const actor *a, pronoun_type pron,
  * Given the actor visible or invisible, returns the
  * appropriate possessive pronoun.
  */
-string attack::anon_name(description_level_type desc)
+string anon_name(description_level_type desc)
 {
     switch (desc)
     {
@@ -331,7 +331,7 @@ string attack::anon_name(description_level_type desc)
  * Given invisibility (whether out of LOS or just invisible), returns the
  * appropriate possessive, inflexive, capitalised pronoun.
  */
-string attack::anon_pronoun(pronoun_type pron)
+string anon_pronoun(pronoun_type pron)
 {
     return decline_pronoun(GENDER_NEUTER, pron);
 }
