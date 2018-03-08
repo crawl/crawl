@@ -316,6 +316,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
+    pow = (pow*11)/10;
     mpr("You attempt to intoxicate your foes!");
     int count = apply_area_visible([pow] (coord_def where) {
         return _intoxicate_monsters(where, pow);
