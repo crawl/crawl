@@ -3373,7 +3373,7 @@ static coord_def _mons_singularity_pos(const monster &mons)
 {
     const monster *mon = &mons; // TODO: rewriteme
     const int pow = _mons_spellpower(SPELL_SINGULARITY, *mon);
-    const int rad = gravitas_range(pow);
+    const int rad = gravitas_range(pow, true);
     int max_strength = 0, max_count = 0;
     coord_def retval;
 

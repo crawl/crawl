@@ -1170,7 +1170,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_SINGULARITY:
-        return make_unique<targeter_smite>(&you, range, gravitas_range(pow, 2), gravitas_range(pow));
+        return make_unique<targeter_smite>(&you, range, gravitas_range(pow, true, 2), gravitas_range(pow, true));
     case SPELL_DAZZLING_SPRAY:
         return make_unique<targeter_spray>(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_GLACIATE:
@@ -1183,8 +1183,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                              range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
-                                           gravitas_range(pow, 2),
-                                           gravitas_range(pow));
+                                           gravitas_range(pow, false, 2),
+                                           gravitas_range(pow, false));
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
     case SPELL_RANDOM_BOLT:

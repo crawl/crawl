@@ -1007,8 +1007,12 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int gravitas_range(int pow, int strength)
+int gravitas_range(int pow, bool singularity, int strength)
 {
+    if (!singularity)
+    {
+        pow = pow*11/10;
+    }
     return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
 }
 
@@ -1257,6 +1261,7 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
                                                          DESC_THE, false)
                                                          .c_str()
                                    : "empty space");
+    pow = pow*11/10;
     fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
 }
