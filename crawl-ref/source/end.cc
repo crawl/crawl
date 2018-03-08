@@ -449,16 +449,17 @@ NORETURN void game_ended(game_exit exit, const string &message)
         // used in tutorials
         exit = game_exit::win;
     }
-#ifdef USE_TILE_WEB
-    if (message.size() > 0 && exit == game_exit::crash)
-        tiles.send_exit_reason("error", message);
-#endif
     if (crawl_state.seen_hups ||
         (exit == game_exit::crash && !crawl_should_restart(game_exit::crash)))
     {
         const int retval = exit == game_exit::crash ? 1 : 0;
         if (message.size() > 0)
+        {
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("error", message);
+#endif
             end(retval, false, "%s\n", message.c_str());
+        }
         else
             end(retval);
     }
