@@ -786,13 +786,6 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     case GOD_JIYVA:
         have_any = true;
-        if (have_passive(passive_t::resist_corrosion))
-            desc.textcolour(god_colour(which_god));
-        else
-            desc.textcolour(DARKGREY);
-        desc.cprintf("%s shields you from corrosive effects.\n",
-                uppercase_first(god_name(which_god)).c_str());
-
         if (have_passive(passive_t::slime_feed))
             desc.textcolour(god_colour(which_god));
         else
@@ -927,7 +920,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         else
             desc.textcolour(DARKGREY);
 
-        string buf = power.gain;
+        string buf = power.general;
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
         const int desc_len = buf.size();

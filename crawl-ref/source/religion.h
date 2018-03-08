@@ -177,17 +177,35 @@ struct god_power
     // 7 means it is a capstone.
     int rank;
     ability_type abil;
+
+    // These strings can be one of two types:
+    //   - a full sentence, starting with a capital letter and ending with a
+    //     a period, that will be used for the relevant description; or
+    //   - part of a sentence, starting with a lowercase letter, to which the
+    //     following strings will be prepended, depending on which variable is
+    //     being used, and "." will be appended, before it is used for a
+    //     description:
+    //         "You can now "       for `gain`
+    //         "You can no longer " for `loss`
+    //         "You can "           for `general`.
+
+    // Printed to message log when the piety threshold for the power is reached
     const char* gain;
+    // Printed to message log when piety falls below the threshold for the power
     const char* loss;
+    // Shown on the god powers (^) screen
+    const char* general;
 
     god_power(int rank_, ability_type abil_, const char* gain_,
-              const char* loss_ = "") :
+              const char* loss_ = "", const char* general_ = "") :
               rank{rank_}, abil{abil_}, gain{gain_},
-              loss{*loss_ ? loss_ : gain_}
+              loss{*loss_ ? loss_ : gain_},
+              general{*general_ ? general_ : gain_}
     { }
 
-    god_power(int rank_, const char* gain_, const char* loss_ = "") :
-              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_)
+    god_power(int rank_, const char* gain_, const char* loss_ = "",
+              const char* general_ = "") :
+              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_, general_)
     { }
 
     void display(bool gaining, const char* fmt) const;
