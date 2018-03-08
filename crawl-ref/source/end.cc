@@ -450,7 +450,7 @@ NORETURN void game_ended(game_exit exit, const string &message)
         exit = game_exit::win;
     }
 #ifdef USE_TILE_WEB
-    if (message.size() > 0)
+    if (message.size() > 0 && exit == game_exit::crash)
         tiles.send_exit_reason("error", message);
 #endif
     if (crawl_state.seen_hups ||
