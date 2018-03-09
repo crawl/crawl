@@ -1905,7 +1905,7 @@ int player_movement_speed()
 
     // moving on liquefied ground takes longer
     if (you.liquefied_ground())
-        mv += 3;
+        mv += 2;
 
     // armour
     if (you.run())
