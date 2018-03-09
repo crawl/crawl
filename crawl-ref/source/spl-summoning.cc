@@ -978,7 +978,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     mgen_data golem = _pal_data(MONS_GUARDIAN_GOLEM, 3, god,
                                 SPELL_SUMMON_GUARDIAN_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
-    golem.hd = 4 + div_rand_round(pow, 16);
+    golem.hd = 4 + div_rand_round(pow, 14);
 
     monster* mons = (create_monster(golem));
 
