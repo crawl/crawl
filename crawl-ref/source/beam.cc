@@ -998,6 +998,17 @@ void bolt::affect_cell()
     bool hit_player = found_player();
     if (hit_player && can_affect_actor(&you))
     {
+        //When a player fires a bouncing spell and they would hit themselves with the
+        //last tile of range, prevent it. Otherwise it could actually be -bad-
+        //for such a spell to increase in range by 1 - previous setups that would
+        //doublehit an enemy start hitting you as well!
+        if (bounces >= 1 && range_used() >= range && agent() && agent()->is_player())
+        {
+            ray.regress();
+            path_taken.pop_back();
+            finish_beam();
+            return;
+        }
         const int prev_reflections = reflections;
         affect_player();
         if (reflections != prev_reflections)
