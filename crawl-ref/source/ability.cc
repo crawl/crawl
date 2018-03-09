@@ -1288,13 +1288,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    if ((abil.ability == ABIL_EVOKE_BERSERK || abil.ability == ABIL_TROG_BERSERK)
+    if ((abil.ability == ABIL_EVOKE_BERSERK
+         || abil.ability == ABIL_TROG_BERSERK)
         && !you.can_go_berserk(true, false, quiet))
     {
         return false;
     }
 
-    if ((abil.ability == ABIL_EVOKE_FLIGHT || abil.ability == ABIL_TRAN_BAT || abil.ability == ABIL_FLY)
+    if ((abil.ability == ABIL_EVOKE_FLIGHT
+         || abil.ability == ABIL_TRAN_BAT
+         || abil.ability == ABIL_FLY)
         && !flight_allowed())
     {
         return false;
@@ -1645,13 +1648,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 }
 
-static bool _check_ability_dangerous(const ability_type ability, bool quiet = false)
+static bool _check_ability_dangerous(const ability_type ability,
+                                     bool quiet = false)
 {
     if (ability == ABIL_TRAN_BAT)
         return !check_form_stat_safety(transformation::bat, quiet);
     else if (ability == ABIL_END_TRANSFORMATION
-        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+             && !feat_dangerous_for_form(transformation::none,
+                                         env.grid(you.pos())))
+    {
         return !check_form_stat_safety(transformation::bat, quiet);
+    }
     else
         return false;
 }
