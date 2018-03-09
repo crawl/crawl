@@ -1289,8 +1289,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 
     if ((abil.ability == ABIL_EVOKE_BERSERK || abil.ability == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true))
+        && !you.can_go_berserk(true, false, quiet))
+    {
         return false;
+    }
 
     if ((abil.ability == ABIL_EVOKE_FLIGHT || abil.ability == ABIL_TRAN_BAT || abil.ability == ABIL_FLY)
         && !flight_allowed())
