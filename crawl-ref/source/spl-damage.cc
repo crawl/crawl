@@ -1855,6 +1855,37 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_inner_flame(int powc, monster* mon, actor* agent, bool fail)
+{
+    fail_check();
+
+    if (!mon)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_SUCCESS;
+    }
+    
+    if (agent->can_see(*mon) && mon->has_ench(ENCH_INNER_FLAME))
+    {
+        mpr("That already has an inner flame.");
+        return SPRET_ABORT;
+    }
+    else if (agent->can_see(*mon) && mon->is_summoned())
+    {
+        mpr("You cannot affect that.");
+        return SPRET_ABORT;
+    }
+    
+    bolt beam;
+    beam.source = mon->pos();
+    beam.target = mon->pos();
+    beam.set_agent(agent);
+    zapping(ZAP_INNER_FLAME, powc, beam);
+
+    return SPRET_SUCCESS;
+}
+
+
 int discharge_monsters(coord_def where, int pow, actor *agent)
 {
     actor* victim = actor_at(where);

@@ -3970,6 +3970,7 @@ static const spell_type smitey_spells[] = {
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,
     SPELL_ENTROPIC_WEAVE,
+    SPELL_INNER_FLAME,
 };
 
 /**

@@ -4925,7 +4925,8 @@ bool bolt::ignores_monster(const monster* mon) const
 
 bool bolt::has_saving_throw() const
 {
-    if (aimed_at_feet)
+    //If we aim at ourselves, we bypass MR.
+    if (agent() && agent()->pos() == target)
         return false;
 
     switch (flavour)
@@ -5113,7 +5114,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             }
         }
     }
-
+    
     return apply_enchantment_to_monster(mon);
 }
 

@@ -1199,7 +1199,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
-
+    case SPELL_INNER_FLAME:
+        return make_unique<targeter_smite>(&you, range, 0, 0);
     default:
         break;
     }
@@ -1351,7 +1352,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         // Add success chance to targeted spells checking monster MR
         const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
-                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
+                              && (testbits(flags, SPFLAG_DIR_OR_TARGET) || testbits(flags, SPFLAG_TARGET))
                               && !testbits(flags, SPFLAG_HELPFUL);
         desc_filter additional_desc = nullptr;
         if (mr_check)
@@ -1641,6 +1642,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_gravitas(powc, beam.target, fail);
 
     // other effects
+    case SPELL_INNER_FLAME:
+        return cast_inner_flame(powc, monster_at(target), &you);
+    
     case SPELL_DISCHARGE:
         return cast_discharge(powc, fail);
 
