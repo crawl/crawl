@@ -894,6 +894,9 @@ void UIScroller::_render()
     {
         ui_push_scissor(m_region);
         m_child->render();
+#ifdef USE_TILE_LOCAL
+        m_shade_buf.draw();
+#endif
         ui_pop_scissor();
     }
 }
@@ -914,6 +917,27 @@ void UIScroller::_allocate_region()
     m_scroll = max(0, min(m_scroll, sr.nat-m_region[3]));
     i4 ch_reg = {m_region[0], m_region[1]-m_scroll, m_region[2], sr.nat};
     m_child->allocate_region(ch_reg);
+
+#ifdef USE_TILE_LOCAL
+    int shade_height = 32, ds = 4;
+    int shade_top = min({m_scroll/ds, shade_height, m_region[3]/2});
+    int shade_bot = min({(sr.nat-m_region[3]-m_scroll)/ds, shade_height, m_region[3]/2});
+    VColour col_a(0,0,0,0), col_b(0,0,0,200);
+
+    m_shade_buf.clear();
+    {
+        GLWPrim rect(m_region[0], m_region[1]+shade_top-shade_height,
+                m_region[0]+m_region[2], m_region[1]+shade_top);
+        rect.set_col(col_b, col_a);
+        m_shade_buf.add_primitive(rect);
+    }
+    {
+        GLWPrim rect(m_region[0], m_region[1]+m_region[3]-shade_bot,
+                m_region[0]+m_region[2], m_region[1]+m_region[3]-shade_bot+shade_height);
+        rect.set_col(col_a, col_b);
+        m_shade_buf.add_primitive(rect);
+    }
+#endif
 }
 
 bool UIScroller::on_event(wm_event event)

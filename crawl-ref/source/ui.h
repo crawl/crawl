@@ -444,6 +444,9 @@ public:
     virtual bool on_event(wm_event event) override;
 protected:
     int m_scroll = 0;
+#ifdef USE_TILE_LOCAL
+    VertBuffer m_shade_buf = VertBuffer(false, true);
+#endif
 };
 
 class UIPopup : public UIBin
