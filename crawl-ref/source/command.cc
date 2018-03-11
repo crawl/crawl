@@ -1147,7 +1147,7 @@ static formatted_string _col_conv(void (*func)(column_composer &))
     return contents;
 }
 
-static bool _get_help_section(int section, formatted_string &header_out, formatted_string &text_out, int &scroll_out)
+static int _get_help_section(int section, formatted_string &header_out, formatted_string &text_out, int &scroll_out)
 {
     static map<int, int> hotkeys;
     static map<int, formatted_string> page_text;
@@ -1198,88 +1198,69 @@ static bool _get_help_section(int section, formatted_string &header_out, formatt
                 text_out = _col_conv(_add_formatted_hints_help);
             else
                 text_out = _col_conv(_add_formatted_keyhelp);
-            return true;
+            return page;
         case CK_HOME:
             text_out = _col_conv(_add_formatted_help_menu);
-            return true;
+            return page;
         default:
             if (hotkeys.count(section))
                 scroll_out = hotkeys[section];
             if (page_text.count(page))
             {
                 text_out = page_text[page];
-                return true;
+                return page;
             }
             break;
     }
-    return false;
+    return 0;
 }
 
-void show_help(int section, string highlight_string)
+class help_popup : public formatted_scroller
 {
-    // XXX: handle initial page and highlight
-    auto vbox = make_shared<Box>(Box::VERT);
-
-    shared_ptr<Text> title = make_shared<Text>();
-    title->set_margin_for_crt({0, 0, 1, 0});
-    title->set_margin_for_sdl({0, 0, 20, 0});
-#ifdef USE_TILE_LOCAL
-    title->align_self = Widget::CENTER;
-#endif
-    vbox->add_child(title);
-
-    auto scroller = make_shared<Scroller>();
-    auto text = make_shared<Text>();
-    text->wrap_text = false;
-    scroller->set_child(text);
-    vbox->add_child(scroller);
-
-    auto popup = make_shared<ui::Popup>(vbox);
+public:
+    help_popup(int key) : formatted_scroller(FS_PREWRAPPED_TEXT) {
+        process_key(key);
+    };
+private:
+    bool process_key(int ch) override
+    {
+        int key = toalower(ch);
 
 #ifdef USE_TILE_LOCAL
-    const int line_height = tiles.get_crt_font()->char_height();
+        const int line_height = tiles.get_crt_font()->char_height();
 #else
-    const int line_height = 1;
+        const int line_height = 1;
 #endif
 
-    bool done = false;
-    int key;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
-        key = tolower(ev.key.keysym.sym);
-
-        int scroll;
+        int scroll, page;
         formatted_string header_text, help_text;
         switch (key)
         {
             case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v':
-                done = true;
-                break;
+                return false;
             default:
-                if (!_get_help_section(key, header_text, help_text, scroll))
+                if (!(page = _get_help_section(key, header_text, help_text, scroll)))
                     break;
+                if (page != prev_page)
+                {
+                    contents = help_text;
+                    m_contents_dirty = true;
+                    prev_page = page;
+                }
                 scroll = scroll ? (scroll-2)*line_height : 0;
-                title->set_text(header_text);
-                text->set_text(help_text);
-                scroller->set_scroll(scroll);
+                set_scroll(scroll);
                 return true;
         }
-        return false;
-    });
 
-    // Send a fake key to switch to the initial page
-    wm_event ev = {0};
-    ev.type = WME_KEYDOWN;
-    ev.key.keysym.sym = section;
-    popup->on_event(ev);
+        return formatted_scroller::process_key(ch);
+    };
+    int prev_page;
+};
 
-    {
-#ifdef USE_TILE_WEB
-        tiles_crt_control show_as_menu(CRT_MENU);
-#endif
-        ui::run_layout(move(popup), done);
-    }
+void show_help(int section, string highlight_string)
+{
+    help_popup help(section);
+    int key = toalower(help.show());
 
     switch (key)
     {
