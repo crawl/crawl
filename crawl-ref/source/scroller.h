@@ -39,6 +39,10 @@ public:
     void set_title() { m_title.clear(); };
     void set_title(formatted_string title) { m_title = move(title); };
 
+    void set_scroll(int y);
+
+    const formatted_string& get_contents() { return contents; };
+
 protected:
 
     formatted_string contents;
@@ -47,7 +51,12 @@ protected:
     formatted_string m_more;
     int m_lastch;
     int m_flags;
+    int m_scroll;
+
+    bool m_contents_dirty, m_scroll_dirty;
 
     virtual bool process_key(int keyin);
     shared_ptr<UIScroller> m_scroller;
 };
+
+void recv_formatted_scroller_scroll(int line);

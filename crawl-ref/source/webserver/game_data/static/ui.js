@@ -267,6 +267,31 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         return $popup;
     }
 
+    var update_server_scroll_timeout = null;
+
+    function update_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+        var $popup = top_popup();
+        if (!$popup.hasClass("formatted-scroller"))
+            return;
+        var $scroller = $(scroller($popup.find(".body")).scrollElement);
+        var line_height = 21;
+        comm.send_message("formatted_scroller_scroll", {
+            scroll: $scroller.scrollTop() / line_height,
+        });
+    }
+
+    function formatted_scroller_onscroll()
+    {
+        if (!update_server_scroll_timeout)
+            update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
+    }
+
     function formatted_scroller(desc)
     {
         var $popup = $(".templates > .formatted-scroller").clone();
@@ -274,8 +299,27 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         var $more = $popup.children(".more");
         $body.html(util.formatted_string_to_html(desc.text));
         $more.html(util.formatted_string_to_html(desc.more));
-        scroller($body[0]);
+        scroller($body[0]).scrollElement
+            .addEventListener("scroll", formatted_scroller_onscroll);
         return $popup;
+    }
+
+    function formatted_scroller_update(msg)
+    {
+        var $popup = top_popup();
+        if (!$popup.hasClass("formatted-scroller"))
+            return;
+        if (msg.text !== undefined)
+        {
+            var $body = $(scroller($popup.find(".body")[0]).contentElement);
+            $body.html(util.formatted_string_to_html(msg.text));
+        }
+        if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
+        {
+            var $scroller = $(scroller($popup.find(".body")[0]).scrollElement);
+            var line_height = 21;
+            $scroller.scrollTop(msg.scroll*line_height);
+        }
     }
 
     var ui_handlers = {
@@ -321,6 +365,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         var ui_handlers = {
             "mutations" : mutations_update,
             "describe-god" : describe_god_update,
+            "formatted-scroller" : formatted_scroller_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)
@@ -360,11 +405,22 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
             ev.stopImmediatePropagation();
     }
 
+    function ui_cleanup()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+    }
+
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {
         $(document).off("game_keydown.ui game_keypress.ui")
             .on("game_keydown.ui", ui_key_handler)
             .on("game_keypress.ui", ui_key_handler);
+        $(document).off("game_cleanup.ui")
+                   .on("game_cleanup.ui", ui_cleanup);
     });
 
     return {

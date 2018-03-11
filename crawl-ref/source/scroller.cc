@@ -8,11 +8,24 @@
 #include "scroller.h"
 #include "stringutil.h"
 
+static vector<formatted_scroller*> open_scrollers;
+static bool from_webtiles;
+
+static int _line_height()
+{
+#ifdef USE_TILE_LOCAL
+    return tiles.get_crt_font()->char_height();
+#else
+    return 1;
+#endif
+}
+
 void formatted_scroller::add_formatted_string(const formatted_string& fs, bool new_line)
 {
     contents += fs;
     if (new_line)
         contents.cprintf("\n");
+    m_contents_dirty = true;
 }
 
 void formatted_scroller::add_text(const string& s, bool new_line)
@@ -23,7 +36,27 @@ void formatted_scroller::add_text(const string& s, bool new_line)
 void formatted_scroller::add_raw_text(const string& s, bool new_line)
 {
     contents.cprintf("%s%s", s.c_str(), new_line ? "\n" : "");
+    m_contents_dirty = true;
 }
+
+class UIHookedScroller : public UIScroller
+{
+public:
+    UIHookedScroller(formatted_scroller &_fs) : UIScroller(), fs(_fs) {};
+    virtual void set_scroll(int y) override {
+        if (y == m_scroll)
+            return;
+#ifdef USE_TILE_WEB
+        tiles.json_open_object();
+        tiles.json_write_bool("from_webtiles", from_webtiles);
+        tiles.json_write_int("scroll", y / _line_height());
+        tiles.ui_state_change("formatted-scroller", 1);
+#endif
+        UIScroller::set_scroll(y);
+    };
+protected:
+    formatted_scroller &fs;
+};
 
 int formatted_scroller::show()
 {
@@ -46,7 +79,7 @@ int formatted_scroller::show()
         vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
 #endif
 
-    m_scroller = make_shared<UIScroller>();
+    m_scroller = make_shared<UIHookedScroller>(*this);
 #ifndef USE_TILE_LOCAL // ensure CRT scroller uses full height
     m_scroller->expand_v = true;
 #endif
@@ -54,7 +87,7 @@ int formatted_scroller::show()
     formatted_string c = formatted_string::parse_string(contents.to_colour_string());
     text->set_text(c);
     text->wrap_text = !(m_flags & FS_PREWRAPPED_TEXT);
-    m_scroller->set_child(move(text));
+    m_scroller->set_child(text);
     vbox->add_child(m_scroller);
 
     if (!m_more.empty())
@@ -69,12 +102,30 @@ int formatted_scroller::show()
 
     auto popup = make_shared<UIPopup>(vbox);
 
+    m_contents_dirty = false;
+    m_scroll_dirty = false;
     bool done = false;
-    popup->on(UI::slots.event, [&done, &vbox, this](wm_event ev) {
+    popup->on(UI::slots.event, [&done, &vbox, &text, this](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false; // allow default event handling
         m_lastch = ev.key.keysym.sym;
-        if ((done = !process_key(m_lastch)))
+        done = !process_key(m_lastch);
+        if (m_contents_dirty)
+        {
+            m_contents_dirty = false;
+            text->set_text(contents);
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("text", contents.to_colour_string());
+            tiles.ui_state_change("formatted-scroller", 0);
+#endif
+        }
+        if (m_scroll_dirty)
+        {
+            m_scroll_dirty = false;
+            m_scroller->set_scroll(m_scroll);
+        }
+        if (done)
             return true;
         if (vbox->on_event(ev))
             return true;
@@ -88,15 +139,17 @@ int formatted_scroller::show()
     tiles.json_write_string("text", contents.to_colour_string());
     tiles.json_write_string("more", m_more.to_colour_string());
     tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
-    tiles.push_ui_layout("formatted-scroller", 0);
+    tiles.push_ui_layout("formatted-scroller", 2);
 #endif
 
+    open_scrollers.push_back(this);
     ui_push_layout(move(popup));
     if (m_flags & FS_START_AT_END)
         m_scroller->set_scroll(INT_MAX);
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+    open_scrollers.pop_back();
 
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
@@ -115,4 +168,26 @@ bool formatted_scroller::process_key(int ch)
         default:
             return true;
     }
+}
+
+void formatted_scroller::set_scroll(int y)
+{
+    if (from_webtiles)
+        m_scroller->set_scroll(y);
+    else
+    {
+        m_scroll = y;
+        m_scroll_dirty = true;
+    }
+}
+
+void recv_formatted_scroller_scroll(int line)
+{
+    if (open_scrollers.size() == 0)
+        return;
+    formatted_scroller *scroller = open_scrollers.back();
+    from_webtiles = true;
+    scroller->set_scroll(line*_line_height());
+    from_webtiles = false;
+    ui_pump_events(0);
 }
