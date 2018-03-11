@@ -782,6 +782,9 @@ static void _describe_cards(vector<card_type> cards)
 {
     ASSERT(!cards.empty());
 
+    auto scroller = make_shared<UIScroller>();
+    auto vbox = make_shared<UIBox>(UI::VERT);
+
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_open_array("cards");
@@ -798,17 +801,30 @@ static void _describe_cards(vector<card_type> cards)
         string name = card_name(card);
         string desc = getLongDescription(name + " card");
         if (desc.empty())
-            desc = "No description found.";
+            desc = "No description found.\n";
         string decks = which_decks(card);
 
         name = uppercase_first(name);
-        if (first)
-            first = false;
-        else
-            data << "\n";
-        data << "<w>" << name << "</w>\n"
-             << desc
-             << "\n" << decks << "\n";
+        desc = desc + decks;
+
+    auto title_hbox = make_shared<UIBox>(UI::HORZ);
+#ifdef USE_TILE
+        auto icon = make_shared<UIImage>();
+        icon->set_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+        title_hbox->add_child(move(icon));
+#endif
+        auto title = make_shared<UIText>("<w>"+name+"</w>");
+        title->set_margin_for_crt({0, 0, 0, 0});
+        title->set_margin_for_sdl({0, 0, 0, 10});
+        title_hbox->add_child(move(title));
+        title_hbox->align_items = UI::CENTER;
+        title_hbox->set_margin_for_crt({first ? 0 : 1, 0, 1, 0});
+        title_hbox->set_margin_for_sdl({first ? 0 : 20, 0, 20, 0});
+        vbox->add_child(move(title_hbox));
+
+        auto text = make_shared<UIText>(desc);
+        text->wrap_text = true;
+        vbox->add_child(move(text));
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
@@ -816,14 +832,34 @@ static void _describe_cards(vector<card_type> cards)
         tiles.json_write_string("desc", desc);
         tiles.json_close_object();
 #endif
+        first = false;
     }
-    formatted_scroller fs(0, data.str());
+
+#ifdef USE_TILE_LOCAL
+    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
+
+    scroller->set_child(move(vbox));
+    auto popup = make_shared<UIPopup>(scroller);
+
+    bool done = false;
+    popup->on(UI::slots.event, [&done, &scroller](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        done = !scroller->on_event(ev);
+        return true;
+    });
 
 #ifdef USE_TILE_WEB
     tiles.json_close_array();
     tiles.push_ui_layout("describe-cards", 0);
 #endif
-    fs.show();
+
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
+
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
 #endif
