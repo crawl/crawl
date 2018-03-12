@@ -671,6 +671,10 @@ A strange substance, produced by ghost moths. Consuming it causes regeneration
 of health and magic, along with total befuddlement. The two effects are
 fundamentally linked – the regeneration ends the moment the confusion does.
 %%%%
+potion of beneficial mutation
+
+A potion which grants a supposedly good mutation.
+%%%%
 potion of berserk rage
 
 A potion which can send one into an incoherent rage.
@@ -688,6 +692,10 @@ potion of cancellation
 
 A potion which ends most magical effects, good or bad, affecting one who drinks
 it. It also reduces magical contamination.
+%%%%
+potion of cure mutation
+
+A potion which removes a number of mutations when consumed.
 %%%%
 potion of curing
 

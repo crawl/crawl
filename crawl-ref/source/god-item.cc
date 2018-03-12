@@ -261,6 +261,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION
                             && !have_passive(passive_t::cleanse_mut_potions))
+                 || item.sub_type == POT_BENEFICIAL_MUTATION
                  || item.sub_type == POT_LIGNIFY;
         break;
     case OBJ_BOOKS:
