@@ -2151,7 +2151,7 @@ formatted_string ShoppingListMenu::calc_title()
     fs.textcolour(title->colour);
     fs.cprintf("%d %s%s, total %d gold",
                 title->quantity, title->text.c_str(),
-                title->quantity > 1? "s" : "",
+                title->quantity > 1 ? "s" : "",
                 total_cost);
 
     string s = "<lightgrey>  [<w>a-z</w>] ";
@@ -2240,9 +2240,10 @@ void ShoppingList::display()
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = Menu::ACT_EXECUTE;
     shopmenu.action_cycle = Menu::CYCLE_CYCLE;
-    string title          = "thing";
+    string title          = "item";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
 
     string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
@@ -2253,7 +2254,8 @@ void ShoppingList::display()
 
     fill_out_menu(shopmenu);
 
-    shopmenu.on_single_selection = [this, &shopmenu](const MenuEntry& sel)
+    shopmenu.on_single_selection =
+        [this, &shopmenu, &mtitle](const MenuEntry& sel)
     {
         const CrawlHashTable* thing =
             static_cast<const CrawlHashTable *>(sel.data);
@@ -2309,6 +2311,9 @@ void ShoppingList::display()
             }
 
             del_thing_at_index(index);
+            mtitle->quantity = list->size();
+            shopmenu.set_title(mtitle);
+
             if (list->empty())
             {
                 mpr("Your shopping list is now empty.");
