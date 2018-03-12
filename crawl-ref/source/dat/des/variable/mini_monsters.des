@@ -1402,7 +1402,7 @@ KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
                                              trident ego:draining . robe
-KITEM:  1 = acquire any
+KITEM:  1 = superb_item no_pickup
 MARKER: ! = lua:fog_machine { \
                 cloud_type = "foul pestilence", \
                 pow_min = 100, pow_max = 100, delay = 10, \
