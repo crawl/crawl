@@ -68,7 +68,7 @@ public:
     UIMenu(Menu *menu) : m_menu(menu), vis_item_first(0), vis_item_last(0), title_height(0), more_height(0)
 
 #ifdef USE_TILE_LOCAL
-    , m_num_columns(1), m_max_height(INT_MAX), m_mouse_idx(-1), m_font_entry(tiles.get_crt_font()), m_font_buf(m_font_entry)
+    , m_num_columns(1), m_max_height(INT_MAX), m_mouse_idx(-1), m_font_entry(tiles.get_crt_font()), m_font_buf(m_font_entry), m_shade_buf(false, true)
 #endif
     {
 #ifdef USE_TILE_LOCAL
@@ -120,7 +120,7 @@ protected:
             return title_height - item_info[vis_item_first].y;
     };
 
-    int m_nat_column_width, m_height; // set by do_layout()
+    int m_nat_column_width, m_height, m_inner_height; // set by do_layout()
 
     struct MenuItemInfo {
         int x, y, h, column;
@@ -150,6 +150,7 @@ protected:
     LineBuffer m_line_buf, m_div_line_buf;
     FontBuffer m_font_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
+    VertBuffer m_shade_buf;
 
     static constexpr int pad_right = 10;
 #endif
@@ -457,6 +458,7 @@ void UIMenu::do_layout(int mw, int mh)
         }
     }
 
+    m_inner_height = height;
     m_height = min({mh-title_height, max_height, height});
 
     m_show_more = height > m_height || m_menu->is_set(MF_ALWAYS_SHOW_MORE);
@@ -472,7 +474,6 @@ void UIMenu::_render()
 #ifdef USE_TILE_LOCAL
     GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
-
     m_shape_buf.draw();
     m_div_line_buf.draw();
     for (int i = 0; i < TEX_MAX; i++)
@@ -480,6 +481,11 @@ void UIMenu::_render()
     m_font_buf.draw();
     m_line_buf.draw();
 
+    i4 items_region = m_region;
+    items_region[1] += title_height; items_region[3] -= title_height + more_height;
+    ui_push_scissor(items_region);
+    m_shade_buf.draw();
+    ui_pop_scissor();
     glmanager->reset_transform();
 #else
     // pad title to take up the full line length (see bf862027bc)
@@ -746,6 +752,30 @@ void UIMenu::pack_buffers()
                                   entry_x+col_width+1,
                                   entry.y+entry.h+1+scroll_y,
                                   mouse_colour);
+        }
+    }
+
+    if (vis_item_first < vis_item_last)
+    {
+        int shade_height = 32, ds = 4;
+        int scroll = -(scroll_y-title_height);
+        int viewport_height = m_region[3] - title_height - (m_show_more ? more_height : 0);
+        int shade_top = min({scroll/ds, shade_height});
+        int shade_bot = min({(m_inner_height-viewport_height-scroll)/ds, shade_height});
+        VColour col_a(0,0,0,0), col_b(0,0,0,235);
+        int off_top = title_height + shade_top;
+        int off_bot = m_region[3] - (m_show_more ? more_height : 0) - shade_bot;
+
+        m_shade_buf.clear();
+        {
+            GLWPrim rect(0, off_top-shade_height, m_region[2], off_top);
+            rect.set_col(col_b, col_a);
+            m_shade_buf.add_primitive(rect);
+        }
+        {
+            GLWPrim rect(0, off_bot, m_region[2], off_bot+shade_height);
+            rect.set_col(col_a, col_b);
+            m_shade_buf.add_primitive(rect);
         }
     }
 }
