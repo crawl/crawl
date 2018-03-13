@@ -68,7 +68,7 @@ public:
     UIMenu(Menu *menu) : m_menu(menu), vis_item_first(0), vis_item_last(0), title_height(0), more_height(0)
 
 #ifdef USE_TILE_LOCAL
-    , m_num_columns(1), m_max_height(INT_MAX), m_mouse_idx(-1), m_font_entry(tiles.get_crt_font()), m_font_buf(m_font_entry), m_shade_buf(false, true)
+    , m_num_columns(1), m_max_height(INT_MAX), m_mouse_idx(-1), m_font_entry(tiles.get_crt_font()), m_item_text_buf(m_font_entry), m_hdr_text_buf(m_font_entry), m_shade_buf(false, true)
 #endif
     {
 #ifdef USE_TILE_LOCAL
@@ -148,7 +148,7 @@ protected:
 
     ShapeBuffer m_shape_buf;
     LineBuffer m_line_buf, m_div_line_buf;
-    FontBuffer m_font_buf;
+    FontBuffer m_item_text_buf, m_hdr_text_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
     VertBuffer m_shade_buf;
 
@@ -474,18 +474,24 @@ void UIMenu::_render()
 #ifdef USE_TILE_LOCAL
     GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
-    m_shape_buf.draw();
-    m_div_line_buf.draw();
-    for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw();
-    m_font_buf.draw();
-    m_line_buf.draw();
+
+    m_hdr_text_buf.draw();
 
     i4 items_region = m_region;
     items_region[1] += title_height; items_region[3] -= title_height + more_height;
     ui_push_scissor(items_region);
+
+    m_shape_buf.draw();
+    m_div_line_buf.draw();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].draw();
+    m_item_text_buf.draw();
     m_shade_buf.draw();
+
     ui_pop_scissor();
+
+    m_line_buf.draw();
+
     glmanager->reset_transform();
 #else
     // pad title to take up the full line length (see bf862027bc)
@@ -663,15 +669,16 @@ void UIMenu::pack_buffers()
     m_div_line_buf.clear();
     for (int i = 0; i < TEX_MAX; i++)
         m_tile_buf[i].clear();
-    m_font_buf.clear();
+    m_item_text_buf.clear();
+    m_hdr_text_buf.clear();
     m_line_buf.clear();
 
     const VColour selected_colour(50, 50, 10, 255);
     const VColour header_div_colour(64, 64, 64, 200);
 
-    m_font_buf.add(title, 0, 0);
+    m_hdr_text_buf.add(title, 0, 0);
     if (m_show_more)
-        m_font_buf.add(m_menu->more, 0, m_region[3] - more_height);
+        m_hdr_text_buf.add(m_menu->more, 0, m_region[3] - more_height);
 
     if (!item_info.size())
         return;
@@ -679,7 +686,9 @@ void UIMenu::pack_buffers()
     const int scroll_y = get_scroll_y();
     const int col_width = m_region[2] / m_num_columns;
 
-    for (int i = vis_item_first; i < vis_item_last; ++i)
+    const int last_drawn = min(vis_item_last + m_num_columns, (int)item_info.size());
+
+    for (int i = vis_item_first; i < last_drawn; ++i)
     {
         const auto& entry = item_info[i];
         const auto me = m_menu->items[i];
@@ -696,7 +705,7 @@ void UIMenu::pack_buffers()
                 m_div_line_buf.add(entry.x, line_y,
                         entry.x+m_num_columns*col_width, line_y, header_div_colour);
             }
-            m_font_buf.add(split, entry.x, line_y+3);
+            m_item_text_buf.add(split, entry.x, line_y+3);
         }
         else
         {
@@ -719,7 +728,7 @@ void UIMenu::pack_buffers()
             if (_has_hotkey_prefix(entry.text.tostring()))
             {
                 formatted_string header = entry.text.chop(5);
-                m_font_buf.add(header, text_sx, text_sy+scroll_y);
+                m_item_text_buf.add(header, text_sx, text_sy+scroll_y);
                 text_sx += m_font_entry->string_width(header);
                 text = entry.text;
                 // remove hotkeys. As Enne said above, this is a monstrosity.
@@ -737,7 +746,7 @@ void UIMenu::pack_buffers()
             if (string_height == entry.h)
                 text_sy = entry.y;
 
-            m_font_buf.add(split, text_sx, text_sy+scroll_y);
+            m_item_text_buf.add(split, text_sx, text_sy+scroll_y);
         }
         if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
         {
