@@ -248,9 +248,8 @@ static void _orbageddon_explosion(const monster &mon, const coord_def &pos)
     const actor *caster = actor_by_mid(mon.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = &mon;  // friendliness is correct)
-    zappy(ZAP_ISKENDERUNS_MYSTIC_BLAST, mon.props[IOOD_POW].get_short(), !caster->is_player(), beam);
-    beam.name           = "orb of destruction";
-    beam.flavour        = BEAM_DEVASTATION;
+    int pow = mon.props[IOOD_POW].get_short();
+    zappy(ZAP_ORBAGEDDON_EXPLOSION, pow, !caster->is_player(), beam);
     beam.attitude       = mon.attitude;
     beam.set_agent(caster);
     if (mon.props.exists(IOOD_REFLECTOR))
@@ -268,14 +267,9 @@ static void _orbageddon_explosion(const monster &mon, const coord_def &pos)
             beam.reflector = rmon ? refl_mid : caster->mid;
         }
     }
-    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range          = 3;
-    beam.hit            = AUTOMATIC_HIT;
-    beam.colour         = MAGENTA;
     beam.obvious_effect = true;
-    beam.pierce         = false;
-    beam.is_explosion   = false;
-    beam.origin_spell   = SPELL_NO_SPELL;
+    beam.pierce         = true;
     beam.source_name    = mon.props[IOOD_CASTER].get_string();
     beam.passed_target  = true;
     beam.aimed_at_spot  = true;
@@ -297,8 +291,8 @@ static void _orbageddon_explosion(const monster &mon, const coord_def &pos)
         }
         beam.friend_info.reset();
         beam.foe_info.reset();
-        beam.friend_info.dont_stop = true;//parent->friend_info.dont_stop;
-        beam.foe_info.dont_stop = true;//parent->foe_info.dont_stop;
+        beam.friend_info.dont_stop = true;
+        beam.foe_info.dont_stop = true;
         //Don't hit the caster with the explosion.
         beam.target = pos + (*ai - pos) * 1;
         if (beam.target != caster->pos())
@@ -314,8 +308,6 @@ static void _orbageddon_explosion(const monster &mon, const coord_def &pos)
             beam.target = pos + (*ai - pos) * 1;
         }
         beam.fire();
-        //parent->friend_info += beam.friend_info;
-        //parent->foe_info    += beam.foe_info;
     }
 }
 
