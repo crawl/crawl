@@ -977,6 +977,12 @@ Orb of Electricity spell
 Hurls a crackling orb of electrical energy, creating a huge explosion on
 impact. Its damage partially bypasses armour.
 %%%%
+Orbageddon spell
+
+Fires Orbs of Destruction in all 8 directions. In addition to homing in on
+their target, they will explode (as per Iskenderun's Mystic Blast) when they
+hit something. The Orbs can hit and damage you, but the explosions will not.
+%%%%
 Ozocubu's Armour spell
 
 Envelops the caster's body in a protective layer of thick ice. This will slow

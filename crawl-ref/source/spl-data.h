@@ -3984,6 +3984,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ORBAGEDDON, "Orbageddon",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+    9,
+    200,
+    8, 8,
+    7, 0,
+    TILEG_ORBAGEDDON,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

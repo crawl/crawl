@@ -20,6 +20,7 @@ dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 searing_ray SEARING_RAY
+orbageddon ORBAGEDDON
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT

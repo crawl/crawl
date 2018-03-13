@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "item-prop.h"
@@ -31,7 +32,7 @@
 static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
-                     int foe, bool fail)
+                     int foe, bool fail, bool orbageddon)
 {
     const bool is_player = caster->is_player();
     if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
@@ -94,6 +95,8 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     {
         mon->props[IOOD_FLAWED].get_byte() = true;
     }
+    
+    mon->props[IOOD_ORBAGEDDON].get_byte() = orbageddon;
 
     // Move away from the caster's square.
     iood_act(*mon, true);
@@ -191,14 +194,14 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
     return foe;
 }
 
-void cast_iood_burst(int pow, coord_def target)
+void cast_iood_burst(int pow, coord_def target, bool orbageddon)
 {
     const monster* mons = monster_at(target);
     const int preferred_foe = mons && you.can_see(*mons) ?
                               mons->mindex() :
                               MHITNOT;
 
-    const int n_orbs = random_range(3, 7);
+    const int n_orbs = orbageddon ? 8 : random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
     const double angle0 = random2(2097152) * PI * 2 / 2097152;
 
@@ -206,8 +209,21 @@ void cast_iood_burst(int pow, coord_def target)
     {
         const double angle = angle0 + i * PI * 2 / n_orbs;
         const int foe = _burst_iood_target(angle, preferred_foe);
-        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
+        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe, false, orbageddon);
     }
+}
+
+spret_type cast_orbageddon(actor *caster, int pow, bolt *beam, bool fail)
+{
+    const bool is_player = caster->is_player();
+    if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
+        return SPRET_ABORT;
+
+    fail_check();
+    
+    cast_iood_burst(pow, beam->target, true);
+    
+    return SPRET_SUCCESS;
 }
 
 static void _normalize(float &x, float &y)
@@ -223,6 +239,84 @@ static void _normalize(float &x, float &y)
 static bool _in_front(float vx, float vy, float dx, float dy, float angle)
 {
     return (dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle);
+}
+
+static void _orbageddon_explosion(const monster &mon, const coord_def &pos)
+{
+    if (mon.props[IOOD_ORBAGEDDON].get_byte() == false) { return; }
+    bolt beam;
+    const actor *caster = actor_by_mid(mon.summoner);
+    if (!caster)        // caster is dead/gone, blame the orb itself (as its
+        caster = &mon;  // friendliness is correct)
+    zappy(ZAP_ISKENDERUNS_MYSTIC_BLAST, mon.props[IOOD_POW].get_short(), !caster->is_player(), beam);
+    beam.name           = "orb of destruction";
+    beam.flavour        = BEAM_DEVASTATION;
+    beam.attitude       = mon.attitude;
+    beam.set_agent(caster);
+    if (mon.props.exists(IOOD_REFLECTOR))
+    {
+        beam.reflections = 1;
+
+        const mid_t refl_mid = mon.props[IOOD_REFLECTOR].get_int64();
+
+        if (refl_mid == MID_PLAYER)
+            beam.reflector = MID_PLAYER;
+        else
+        {
+            // If the reflecting monster has died, credit the original caster.
+            const monster * const rmon = monster_by_mid(refl_mid);
+            beam.reflector = rmon ? refl_mid : caster->mid;
+        }
+    }
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.range          = 3;
+    beam.hit            = AUTOMATIC_HIT;
+    beam.colour         = MAGENTA;
+    beam.obvious_effect = true;
+    beam.pierce         = false;
+    beam.is_explosion   = false;
+    beam.origin_spell   = SPELL_NO_SPELL;
+    beam.source_name    = mon.props[IOOD_CASTER].get_string();
+    beam.passed_target  = true;
+    beam.aimed_at_spot  = true;
+    if (you.see_cell(pos))
+        beam.seen       = true;
+    beam.source         = pos;
+    beam.target         = pos;
+
+    bool first = true;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (first && !beam.is_tracer)
+        {
+            if (you.see_cell(pos))
+                mpr("The orb of destruction explodes!");
+            noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
+                  pos);
+            first = false;
+        }
+        beam.friend_info.reset();
+        beam.foe_info.reset();
+        beam.friend_info.dont_stop = true;//parent->friend_info.dont_stop;
+        beam.foe_info.dont_stop = true;//parent->foe_info.dont_stop;
+        //Don't hit the caster with the explosion.
+        beam.target = pos + (*ai - pos) * 1;
+        if (beam.target != caster->pos())
+        {
+            beam.target = pos + (*ai - pos) * 2;
+        }
+        else
+        {
+            continue;
+        }
+        if (beam.target == caster->pos())
+        {
+            beam.target = pos + (*ai - pos) * 1;
+        }
+        beam.fire();
+        //parent->friend_info += beam.friend_info;
+        //parent->foe_info    += beam.foe_info;
+    }
 }
 
 static void _iood_stop(monster& mon, bool msg = true)
@@ -242,6 +336,10 @@ static void _iood_stop(monster& mon, bool msg = true)
     if (msg)
         simple_monster_message(mon, " dissipates.");
     dprf("iood: dissipating");
+    
+    const coord_def pos(mon.pos().x, mon.pos().y);
+    _orbageddon_explosion(mon, pos);
+    
     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 }
 
@@ -352,6 +450,8 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
         beam.hit_verb = "weakly hits";
     beam.ex_size = 1;
     beam.loudness = 7;
+    
+    _orbageddon_explosion(mon, pos);
 
     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 
