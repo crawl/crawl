@@ -117,7 +117,7 @@ protected:
         if (!item_info.size())
             return 0;
         else
-            return title_height - item_info[vis_item_first].y;
+            return title_height + hdr_pad - item_info[vis_item_first].y;
     };
 
     int m_nat_column_width, m_height, m_inner_height; // set by do_layout()
@@ -152,6 +152,7 @@ protected:
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
     VertBuffer m_shade_buf;
 
+    static constexpr int hdr_pad = 10;
     static constexpr int pad_right = 10;
 #endif
 
@@ -459,11 +460,12 @@ void UIMenu::do_layout(int mw, int mh)
     }
 
     m_inner_height = height;
-    m_height = min({mh-title_height, max_height, height});
+    m_height = min({mh-title_height-hdr_pad, max_height, height});
 
-    m_show_more = height > m_height || m_menu->is_set(MF_ALWAYS_SHOW_MORE);
+    m_show_more = more_height > 0
+        && (height > m_height || m_menu->is_set(MF_ALWAYS_SHOW_MORE));
     if (m_show_more)
-        m_height = min(m_height, mh-title_height-more_height);
+        m_height = min(m_height, mh-title_height-more_height-2*hdr_pad);
 
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
 }
@@ -478,7 +480,14 @@ void UIMenu::_render()
     m_hdr_text_buf.draw();
 
     i4 items_region = m_region;
-    items_region[1] += title_height; items_region[3] -= title_height + more_height;
+    // contract to show only the items
+    items_region[1] += title_height + hdr_pad;
+    items_region[3] -= title_height + hdr_pad + (m_show_more ? more_height + hdr_pad : 0);
+    // expand so the hover outline isn't clipped
+    items_region[0] -= 2;
+    items_region[2] += 3;
+    items_region[1] -= 1;
+    items_region[3] += 1;
     ui_push_scissor(items_region);
 
     m_shape_buf.draw();
@@ -487,11 +496,9 @@ void UIMenu::_render()
         m_tile_buf[i].draw();
     m_item_text_buf.draw();
     m_shade_buf.draw();
-
-    ui_pop_scissor();
-
     m_line_buf.draw();
 
+    ui_pop_scissor();
     glmanager->reset_transform();
 #else
     // pad title to take up the full line length (see bf862027bc)
@@ -547,7 +554,10 @@ UISizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
     else
     {
         do_layout(prosp_width, m_max_height);
-        int size = m_height + title_height + (m_show_more ? more_height : 0);
+        // the extra 1px is necessary to prevent the hover outline of the
+        // last box from being clipped
+        int size = m_height + title_height + hdr_pad
+            + (m_show_more ? more_height + hdr_pad : 0) + 1;
         if (m_num_columns == 1)
             m_single_col_height = size;
         return {0, size};
@@ -767,8 +777,8 @@ void UIMenu::pack_buffers()
     if (vis_item_first < vis_item_last)
     {
         int shade_height = 32, ds = 4;
-        int scroll = -(scroll_y-title_height);
-        int viewport_height = m_region[3] - title_height - (m_show_more ? more_height : 0);
+        int scroll = -((scroll_y-hdr_pad)-title_height);
+        int viewport_height = m_region[3] - title_height - hdr_pad - (m_show_more ? more_height + hdr_pad : 0);
         int shade_top = min({scroll/ds, shade_height});
         int shade_bot = min({(m_inner_height-viewport_height-scroll)/ds, shade_height});
         VColour col_a(0,0,0,0), col_b(0,0,0,235);
