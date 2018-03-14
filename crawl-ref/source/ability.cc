@@ -1252,6 +1252,15 @@ bool activate_ability()
     return activate_talent(talents[selected]);
 }
 
+static bool _can_hop(bool quiet)
+{
+    if (!you.duration[DUR_NO_HOP])
+        return true;
+    if (!quiet)
+        mpr("Your legs are too worn out to hop.");
+    return false;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1565,6 +1574,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_SHAFT_SELF:
+        return you.can_do_shaft_ability(quiet);
+
+    case ABIL_HOP:
+        return _can_hop(quiet);
+
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
     {
@@ -1819,12 +1834,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_HOP:
-        if (you.duration[DUR_NO_HOP])
-        {
-            mpr("Your legs are too worn out to hop.");
+        if (_can_hop(false))
+            return frog_hop(fail);
+        else
             return SPRET_ABORT;
-        }
-        return frog_hop(fail);
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
