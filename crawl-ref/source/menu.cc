@@ -676,6 +676,29 @@ void menu_filter_line_reader::print_segment(int s, int o) {}
 void menu_filter_line_reader::cursorto(int newcpos) {}
 #endif
 
+bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+{
+    bool validline;
+#ifdef USE_TILE_LOCAL
+    m_filter_text = linebuf; draw_title();
+    menu_filter_line_reader reader(this, linebuf, bufsz, bufsz);
+    reader.set_location(coord_def(0, 0));
+    validline = reader.read_line() != CK_ESCAPE;
+    m_filter_text = nullptr;
+    draw_title();
+#else
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    cgotoxy(1,1);
+    clear_to_end_of_line();
+    textcolour(WHITE);
+    cprintf("%s", prompt);
+    textcolour(LIGHTGREY);
+    line_reader reader(linebuf, bufsz, get_number_of_cols());
+    validline = !reader.read_line("");
+#endif
+    return validline;
+}
+
 bool Menu::process_key(int keyin)
 {
     if (items.empty())
