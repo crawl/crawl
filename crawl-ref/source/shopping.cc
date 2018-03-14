@@ -1103,7 +1103,12 @@ void ShopMenu::update_help()
                          you.gold - total_cost,
                          (you.gold - total_cost != 1) ? "s" : "");
     }
-    top_line += "</yellow>\n";
+    top_line += "</yellow>";
+
+    // Ensure length >= 80ch, which prevents the local tiles menu from resizing
+    // as the player selects/deselects entries. Blegh..
+    int top_line_width = strwidth(formatted_string::parse_string(top_line).tostring());
+    top_line += string(max(0, 80 - top_line_width), ' ') + '\n';
 
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //You have 0 gold pieces.
