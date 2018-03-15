@@ -1,0 +1,60 @@
+enum: SP_FORMICID
+monster: MONS_FORMICID
+name: "Formicid"
+genus: "Ant"
+difficulty: Advanced
+difficulty_priority: 70
+aptitudes:
+  xp: 1
+  hp: 0
+  mp_mod: 0
+  mr: 4
+  fighting: 1
+  slings: 1
+  bows: -2
+  armour: 1
+  dodging: -1
+  stealth: -3
+  shields: 2
+  conjurations: -1
+  hexes: 2
+  translocations: -1
+  transmutations: 1
+  air_magic: -2
+  earth_magic: 2
+  poison_magic: 3
+  invocations: 2
+  evocations: 1
+str: 12
+int: 7
+dex: 6
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
+mutations:
+  1:
+    MUT_ANTENNAE: 3
+fake_mutations:
+  - long: You cannot be hasted, slowed, berserked, paralysed or teleported.
+    short: permanent stasis
+  - long: You can dig through walls and to a lower floor.
+    short: dig shafts and tunnels
+  - long: Your four strong arms can wield two-handed weapons with a shield.
+    short: four strong arms
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_HUNTER
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_ARCANE_MARKSMAN
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_AXES
+  - SK_POLEARMS
+  - SK_LONG_BLADES
+  - SK_STAVES
+  - SK_CROSSBOWS
+  - SK_SLINGS
+create_enum: false

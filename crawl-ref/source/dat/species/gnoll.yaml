@@ -1,0 +1,57 @@
+enum: SP_GNOLL
+monster: MONS_GNOLL
+name: "Gnoll"
+difficulty_priority: 10
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  mr: 3
+  fighting: 8
+  short_blades: 8
+  long_blades: 8
+  axes: 8
+  maces_and_flails: 8
+  polearms: 8
+  staves: 8
+  slings: 8
+  bows: 8
+  crossbows: 8
+  throwing: 8
+  armour: 8
+  dodging: 8
+  stealth: 8
+  shields: 8
+  unarmed_combat: 8
+  spellcasting: 8
+  conjurations: 6
+  hexes: 6
+  charms: 6
+  summoning: 6
+  necromancy: 6
+  translocations: 6
+  transmutations: 6
+  fire_magic: 6
+  ice_magic: 6
+  air_magic: 6
+  earth_magic: 6
+  poison_magic: 6
+  invocations: 9
+  evocations: 8
+str: 10
+int: 10
+dex: 10
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_STRONG_NOSE: 1
+    MUT_FANGS: 1
+fake_mutations:
+  - long: Your experience applies equally to all skills.
+    short: distributed training
+recommended_jobs:
+  - JOB_SKALD
+  - JOB_WARPER
+  - JOB_ARCANE_MARKSMAN
+  - JOB_TRANSMUTER
+  - JOB_WANDERER

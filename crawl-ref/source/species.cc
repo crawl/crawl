@@ -88,19 +88,8 @@ string species_name(species_type speci, species_name_type spname_type)
  */
 string species_walking_verb(species_type sp)
 {
-    switch (sp)
-    {
-    case SP_NAGA:
-        return "Slid";
-    case SP_TENGU:
-        return "Glid";
-    case SP_OCTOPODE:
-        return "Wriggl";
-    case SP_VINE_STALKER:
-        return "Stalk";
-    default:
-        return "Walk";
-    }
+    auto verb = get_species_def(sp).walking_verb;
+    return verb ? verb : "Walk";
 }
 
 /**
@@ -213,18 +202,8 @@ const vector<string>& fake_mutations(species_type species, bool terse)
  */
 string species_prayer_action(species_type species)
 {
-    switch (species)
-    {
-        case SP_NAGA:
-            return "coil in front of";
-        case SP_OCTOPODE:
-            return "curl up in front of";
-        case SP_FELID:
-            // < TGWi> you curl up on the altar and go to sleep
-            return "sit before";
-        default:
-            return "kneel at";
-    }
+  auto action = get_species_def(species).altar_action;
+  return action ? action : "kneel at";
 }
 
 const char* scale_type(species_type species)

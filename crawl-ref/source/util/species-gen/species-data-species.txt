@@ -1,0 +1,25 @@
+{tag_major_version_opener}
+{{ {enum}, {{
+    "{short_name}",
+    "{name}", {adjective}, {genus},
+    {species_flags},
+    {xp}, {hp}, {mp}, {mr},
+    {monster_name},
+    {habitat}, {undead}, {size},
+    {str}, {int}, {dex},
+    {{ {levelup_stats} }}, {levelup_stat_frequency},
+    {{
+        {mutations}
+    }},
+    {{
+        {fake_mutations_long}
+    }},
+    {{
+        {fake_mutations_short}
+    }},
+    {{ {recommended_jobs} }},
+    {{ {recommended_weapons} }},
+    {walking_verb},
+    {altar_action},
+}} }},
+{tag_major_version_closer}

@@ -1,0 +1,69 @@
+enum: SP_VAMPIRE
+monster: MONS_VAMPIRE
+name: Vampire
+short_name: Vp
+adjective: Vampiric
+difficulty: Advanced
+difficulty_priority: 90
+aptitudes:
+  xp: -1
+  hp: 0
+  mp_mod: 0
+  mr: 4
+  fighting: -1
+  short_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -2
+  slings: -2
+  bows: -2
+  crossbows: -2
+  throwing: -2
+  armour: -2
+  dodging: 1
+  stealth: 5
+  shields: -1
+  unarmed_combat: 1
+  spellcasting: -1
+  conjurations: -3
+  hexes: 4
+  charms: 1
+  necromancy: 1
+  translocations: -2
+  transmutations: 1
+  fire_magic: -2
+  poison_magic: -1
+  invocations: -1
+  evocations: -1
+str: 7
+int: 10
+dex: 9
+levelup_stat_frequency: 5
+levelup_stats:
+  - int
+  - dex
+mutations:
+  1:
+    MUT_FANGS: 3
+    MUT_ACUTE_VISION: 1
+    MUT_UNBREATHING: 1
+fake_mutations:
+  - long: Your body is rotting away.
+    short: rotting body
+  - long: You thrive on raw meat.
+recommended_jobs:
+  - JOB_GLADIATOR
+  - JOB_ASSASSIN
+  - JOB_ENCHANTER
+  - JOB_NECROMANCER
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_AXES
+  - SK_LONG_BLADES
+  - SK_BOWS
+  - SK_CROSSBOWS
+  - SK_SLINGS
+create_enum: false

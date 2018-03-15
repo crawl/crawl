@@ -1,0 +1,62 @@
+enum: SP_DEEP_ELF
+monster: MONS_ELF
+name: "Deep Elf"
+short_name: "DE"
+adjective: "Elven"
+genus: "Elf"
+difficulty_priority: 40
+species_flags:
+  - elven
+aptitudes:
+  xp: -1
+  hp: -2
+  mp_mod: 2
+  mr: 4
+  fighting: -2
+  long_blades: -1
+  axes: -2
+  maces_and_flails: -3
+  polearms: -3
+  slings: -1
+  bows: 1
+  crossbows: -1
+  armour: -2
+  dodging: 2
+  stealth: 3
+  shields: -2
+  unarmed_combat: -2
+  spellcasting: 3
+  conjurations: 1
+  hexes: 3
+  charms: 4
+  summoning: 1
+  necromancy: 2
+  translocations: 1
+  transmutations: 1
+  fire_magic: 1
+  ice_magic: 1
+  earth_magic: 1
+  poison_magic: 1
+  invocations: 1
+  evocations: 1
+str: 5
+int: 12
+dex: 10
+levelup_stat_frequency: 4
+levelup_stats:
+  - int
+recommended_jobs:
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_SUMMONER
+  - JOB_NECROMANCER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_STAVES
+  - SK_BOWS
+create_enum: false

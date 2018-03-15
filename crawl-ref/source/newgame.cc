@@ -26,6 +26,7 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "prompt.h"
+#include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE_LOCAL
@@ -184,43 +185,28 @@ void choose_tutorial_character(newgame_def& ng_choice)
     ng_choice.weapon = WPN_FLAIL;
 }
 
-// March 2008: change order of species and jobs on character selection
-// screen as suggested by Markus Maier.
-// We have subsequently added a few new categories.
-// Replacing this with named groups, but leaving because a bunch of code
-// still depends on it and I don't want to unwind that now. -2/24/2017 CBH
-static const species_type species_order[] =
-{
-    // comparatively human-like looks
-    SP_HUMAN,          SP_DEEP_ELF,
-    SP_DEEP_DWARF,     SP_HILL_ORC,
-    // small species
-    SP_HALFLING,       SP_KOBOLD,
-    SP_SPRIGGAN,
-    // large species
-    SP_OGRE,           SP_TROLL,
-    // significantly different body type from human ("monstrous")
-    SP_NAGA,           SP_CENTAUR,
-    SP_MERFOLK,        SP_MINOTAUR,
-    SP_TENGU,          SP_BASE_DRACONIAN,
-    SP_GARGOYLE,       SP_FORMICID,
-    SP_BARACHI,        SP_GNOLL,
-    // mostly human shape but made of a strange substance
-    SP_VINE_STALKER,
-    // celestial species
-    SP_DEMIGOD,        SP_DEMONSPAWN,
-    // undead species
-    SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE,
-    // not humanoid at all
-    SP_FELID,          SP_OCTOPODE,
-};
-COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
-
 bool is_starting_species(species_type species)
 {
-    return find(species_order, species_order + ARRAYSZ(species_order),
-                species) != species_order + ARRAYSZ(species_order);
+    // All species except nonbase draconians are starting species
+    return !bool(get_species_def(species).flags & SPF_DRACONIAN)
+        || species == SP_BASE_DRACONIAN;
+}
+
+static species_type random_starting_species()
+{
+    species_type temp;
+    species_type selected;
+    int choices = 0;
+    for (int sp = 0; sp < NUM_SPECIES; ++sp)
+    {
+        temp = static_cast<species_type>(sp);
+        if (is_starting_species(temp)
+            && one_chance_in(++choices))
+        {
+            selected = temp;
+        }
+    }
+    return selected;
 }
 
 static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
@@ -237,41 +223,24 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
 
     case SP_VIABLE:
     {
-        int good_choices = 0;
-        for (const species_type sp : species_order)
+        do
         {
-            if (is_good_combination(sp, ng.job, false, true)
-                && one_chance_in(++good_choices))
-            {
-                ng.species = sp;
-            }
-        }
-        if (good_choices)
-            return;
+            ng.species = random_starting_species();
+        } while (!is_good_combination(ng.species, ng.job, false, true));
     }
         // intentional fall-through
     case SP_RANDOM:
         // any valid species will do
         if (ng.job == JOB_UNKNOWN)
         {
-            do {
-                ng.species = RANDOM_ELEMENT(species_order);
-            } while (!is_starting_species(ng.species));
+            ng.species = random_starting_species();
         }
         else
         {
-            // Pick a random legal character.
-            int good_choices = 0;
-            for (const species_type sp : species_order)
+            do
             {
-                if (is_good_combination(sp, ng.job, false, false)
-                    && one_chance_in(++good_choices))
-                {
-                    ng.species = sp;
-                }
-            }
-            if (!good_choices)
-                end(1, false, "Failed to find legal species.");
+                ng.species = random_starting_species();
+            } while (!is_good_combination(ng.species, ng.job, false, false));
         }
         return;
 
@@ -374,9 +343,13 @@ static string _highlight_pattern(const newgame_def& ng)
         return "";
 
     string ret;
-    for (const species_type species : species_order)
-        if (is_good_combination(species, ng.job, false, true))
-            ret += species_name(species) + "  |";
+    species_type temp;
+    for (int sp = 0; sp < NUM_SPECIES; ++sp)
+    {
+        temp = static_cast<species_type>(sp);
+        if (is_good_combination(temp, ng.job, false, true))
+            ret += species_name(temp) + "  |";
+    }
 
     if (!ret.empty())
         ret.resize(ret.size() - 1);
@@ -1043,58 +1016,6 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         ++letter;
     }
 }
-
-static species_group species_groups[] =
-{
-    {
-        "Simple",
-        coord_def(0, 0),
-        20,
-        {
-            SP_HILL_ORC,
-            SP_MINOTAUR,
-            SP_MERFOLK,
-            SP_GARGOYLE,
-            SP_BASE_DRACONIAN,
-            SP_HALFLING,
-            SP_TROLL,
-            SP_GHOUL,
-        }
-    },
-    {
-        "Intermediate",
-        coord_def(25, 0),
-        20,
-        {
-            SP_HUMAN,
-            SP_KOBOLD,
-            SP_DEMONSPAWN,
-            SP_CENTAUR,
-            SP_SPRIGGAN,
-            SP_TENGU,
-            SP_DEEP_ELF,
-            SP_OGRE,
-            SP_DEEP_DWARF,
-            SP_GNOLL,
-        }
-    },
-    {
-        "Advanced",
-        coord_def(50, 0),
-        20,
-        {
-            SP_VINE_STALKER,
-            SP_VAMPIRE,
-            SP_DEMIGOD,
-            SP_FORMICID,
-            SP_NAGA,
-            SP_OCTOPODE,
-            SP_FELID,
-            SP_BARACHI,
-            SP_MUMMY,
-        }
-    },
-};
 
 static void _construct_species_menu(const newgame_def& ng,
                                     const newgame_def& defaults,

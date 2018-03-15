@@ -1,0 +1,64 @@
+enum: SP_VINE_STALKER
+monster: MONS_VINE_STALKER
+name: Vine Stalker
+short_name: VS
+difficulty: Advanced
+difficulty_priority: 100
+aptitudes:
+  xp: 0
+  hp: -3
+  mp_mod: 1
+  mr: 5
+  fighting: -1
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: -2
+  dodging: -2
+  stealth: 3
+  evocations: -1
+str: 10
+int: 8
+dex: 9
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - dex
+mutations:
+  1:
+    MUT_FANGS: 2
+    MUT_MANA_SHIELD: 1
+    MUT_ANTIMAGIC_BITE: 1
+    MUT_NO_POTION_HEAL: 3
+    MUT_ROT_IMMUNITY: 1
+  4:
+    MUT_REGENERATION: 1
+  8:
+    MUT_FANGS: 1
+  12:
+    MUT_REGENERATION: 1
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_ASSASSIN
+  - JOB_BERSERKER
+  - JOB_ENCHANTER
+  - JOB_CONJURER
+  - JOB_NECROMANCER
+  - JOB_ICE_ELEMENTALIST
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_AXES
+  - SK_POLEARMS
+  - SK_LONG_BLADES
+  - SK_STAVES
+  - SK_BOWS
+  - SK_CROSSBOWS
+create_enum: false
+walking_verb: Stalk
