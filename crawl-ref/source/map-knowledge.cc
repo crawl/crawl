@@ -28,8 +28,7 @@ void set_terrain_mapped(const coord_def gc)
     // This may have changed the explore horizon, so update adjacent minimap
     // squares as well.
     for (adjacent_iterator ai(gc, false); ai; ++ai)
-        if (in_bounds(*ai))
-            tiles.update_minimap(*ai);
+        tiles.update_minimap(*ai);
 #endif
 }
 
@@ -146,8 +145,7 @@ void set_terrain_seen(const coord_def pos)
     // This may have changed the explore horizon, so update adjacent minimap
     // squares as well.
     for (adjacent_iterator ai(pos, false); ai; ++ai)
-        if (in_bounds(*ai))
-            tiles.update_minimap(*ai);
+        tiles.update_minimap(*ai);
 #endif
 }
 
