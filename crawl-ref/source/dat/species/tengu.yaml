@@ -1,0 +1,66 @@
+enum: SP_TENGU
+monster: MONS_TENGU
+name: Tengu
+difficulty_priority: 50
+species_flags:
+  - hairless
+aptitudes:
+  xp: 0
+  hp: -2
+  mp_mod: 1
+  mr: 3
+  short_blades: 1
+  long_blades: 1
+  axes: 1
+  maces_and_flails: 1
+  polearms: 1
+  staves: 1
+  bows: 1
+  crossbows: 1
+  armour: 1
+  dodging: 1
+  stealth: 1
+  unarmed_combat: 1
+  spellcasting: -1
+  conjurations: 3
+  hexes: -3
+  charms: -2
+  summoning: 2
+  necromancy: 1
+  translocations: -2
+  transmutations: -2
+  fire_magic: 1
+  ice_magic: -1
+  air_magic: 3
+  earth_magic: -3
+  invocations: -1
+str: 8
+int: 8
+dex: 9
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_BEAK: 1
+    MUT_TALONS: 3
+  5:
+    MUT_TENGU_FLIGHT: 1
+  14:
+    MUT_TENGU_FLIGHT: 1
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_SUMMONER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_AXES
+  - SK_POLEARMS
+  - SK_LONG_BLADES
+  - SK_STAVES
+  - SK_BOWS
+  - SK_CROSSBOWS
+create_enum: false
+walking_verb: Glid

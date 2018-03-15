@@ -1,0 +1,76 @@
+enum: SP_DEEP_DWARF
+monster: MONS_DEEP_DWARF
+name: "Deep Dwarf"
+short_name: "DD"
+adjective: "Dwarven"
+genus: "Dwarf"
+difficulty_priority: 20
+aptitudes:
+  xp: -1
+  hp: 2
+  mp_mod: 0
+  mr: 6
+  fighting: -1
+  short_blades: -1
+  axes: 1
+  polearms: -1
+  staves: -1
+  slings: 1
+  bows: -3
+  crossbows: 1
+  throwing: -1
+  armour: 1
+  dodging: 1
+  stealth: 3
+  shields: 1
+  unarmed_combat: -1
+  spellcasting: -2
+  conjurations: -1
+  hexes: -2
+  charms: -1
+  summoning: -1
+  necromancy: 1
+  translocations: -1
+  transmutations: -1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -3
+  earth_magic: 3
+  poison_magic: -2
+  invocations: 3
+  evocations: 3
+str: 11
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
+mutations:
+  1:
+    MUT_NO_REGENERATION: 1
+    MUT_PASSIVE_MAPPING: 1
+  9:
+    MUT_PASSIVE_MAPPING: 1
+  14:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+  18:
+    MUT_PASSIVE_MAPPING: 1
+fake_mutations:
+  - long: You are resistant to damage.
+    short: damage resistance
+  - long: You can heal yourself by infusing magical energy.
+    short: heal wounds
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_HUNTER
+  - JOB_BERSERKER
+  - JOB_NECROMANCER
+  - JOB_EARTH_ELEMENTALIST
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_AXES
+  - SK_LONG_BLADES
+  - SK_CROSSBOWS
+  - SK_SLINGS
+create_enum: false

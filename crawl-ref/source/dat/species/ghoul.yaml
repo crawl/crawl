@@ -1,0 +1,74 @@
+enum: SP_GHOUL
+monster: MONS_GHOUL
+name: Ghoul
+adjective: Ghoulish
+difficulty: Simple
+difficulty_priority: 30
+species_flags:
+  - hairless
+aptitudes:
+  xp: 0
+  hp: 1
+  mp_mod: -1
+  mr: 3
+  fighting: 1
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: -1
+  dodging: -1
+  stealth: 2
+  shields: -1
+  unarmed_combat: 1
+  spellcasting: -2
+  conjurations: -2
+  hexes: -2
+  charms: -1
+  summoning: -1
+  translocations: -1
+  transmutations: -1
+  fire_magic: -2
+  ice_magic: 1
+  air_magic: -2
+  earth_magic: 1
+  invocations: 1
+  evocations: -1
+str: 11
+int: 3
+dex: 4
+levelup_stat_frequency: 5
+levelup_stats:
+  - str
+mutations:
+  1:
+    MUT_CARNIVOROUS: 1
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_TORMENT_RESISTANCE: 1
+    MUT_INHIBITED_REGENERATION: 1
+    MUT_COLD_RESISTANCE: 1
+    MUT_CLAWS: 1
+    MUT_UNBREATHING: 1
+fake_mutations:
+  - long: Your body is rotting away.
+    short: rotting body
+  - long: You thrive on raw meat.
+recommended_jobs:
+  - JOB_WARPER
+  - JOB_GLADIATOR
+  - JOB_MONK
+  - JOB_NECROMANCER
+  - JOB_ICE_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+recommended_weapons:
+  - SK_UNARMED_COMBAT
+  - SK_BOWS
+  - SK_CROSSBOWS
+  - SK_SLINGS
+create_enum: false

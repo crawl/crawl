@@ -1,0 +1,49 @@
+enum: SP_DEMONSPAWN
+monster: MONS_DEMONSPAWN
+name: "Demonspawn"
+short_name: "Ds"
+adjective: "Demonic"
+difficulty_priority: 80
+aptitudes:
+  xp: -1
+  hp: 0
+  mp_mod: 0
+  mr: 3
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: -1
+  dodging: -1
+  shields: -1
+  unarmed_combat: -1
+  spellcasting: -1
+  charms: -1
+  necromancy: 1
+  translocations: -1
+  transmutations: -1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  invocations: 3
+str: 8
+int: 9
+dex: 8
+levelup_stat_frequency: 4
+recommended_jobs:
+  - JOB_GLADIATOR
+  - JOB_BERSERKER
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_WIZARD
+  - JOB_NECROMANCER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+  - JOB_VENOM_MAGE
+create_enum: false

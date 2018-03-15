@@ -1,0 +1,38 @@
+enum: SP_PURPLE_DRACONIAN
+monster: MONS_PURPLE_DRACONIAN
+name: "Purple Draconian"
+short_name: "Dr"
+adjective: "Draconian"
+genus: "Draconian"
+difficulty: False
+species_flags:
+  - draconian
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: False
+  dodging: -1
+  invocations: 1
+  # Purple Draconian specific
+  spellcasting: 1
+  hexes: 1
+  charms: 1
+  evocations: 1
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_COLD_BLOODED: 1
+fake_mutations:
+  - long: You can breathe bolts of dispelling energy.
+    short: breathe power
+create_enum: false

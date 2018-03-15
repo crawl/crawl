@@ -1,0 +1,56 @@
+enum: SP_HILL_ORC
+monster: MONS_ORC
+name: Hill Orc
+short_name: HO
+difficulty: Simple
+difficulty_priority: 100
+species_flags:
+  - orcish
+aptitudes:
+  xp: 1
+  hp: -1
+  mp_mod: 0
+  mr: 3
+  fighting: 2
+  long_blades: 1
+  axes: 3
+  maces_and_flails: 1
+  polearms: 1
+  staves: -1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: 1
+  dodging: -2
+  stealth: -1
+  shields: 1
+  unarmed_combat: 1
+  spellcasting: -3
+  charms: -1
+  translocations: -2
+  transmutations: -3
+  fire_magic: 1
+  ice_magic: -1
+  air_magic: -2
+  poison_magic: -1
+  invocations: 3
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 5
+levelup_stats:
+  - str
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_MONK
+  - JOB_BERSERKER
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_NECROMANCER
+  - JOB_FIRE_ELEMENTALIST
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_LONG_BLADES
+  - SK_AXES
+  - SK_POLEARMS
+create_enum: false

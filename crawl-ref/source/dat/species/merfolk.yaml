@@ -1,0 +1,62 @@
+enum: SP_MERFOLK
+monster: MONS_MERFOLK
+name: Merfolk
+short_name: Mf
+adjective: Merfolkian
+difficulty: Simple
+difficulty_priority: 80
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  short_blades: 2
+  long_blades: 1
+  axes: -2
+  maces_and_flails: -2
+  polearms: 4
+  staves: 4
+  slings: -2
+  bows: -2
+  crossbows: -2
+  armour: -3
+  dodging: 3
+  stealth: 2
+  unarmed_combat: 1
+  spellcasting: -1
+  conjurations: -2
+  charms: 1
+  necromancy: -2
+  translocations: -2
+  transmutations: -3
+  fire_magic: -3
+  ice_magic: 1
+  air_magic: -2
+  earth_magic: -2
+  poison_magic: 1
+  invocations: 1
+can_swim: true
+str: 8
+int: 7
+dex: 9
+levelup_stat_frequency: 5
+fake_mutations:
+  - long: You revert to your normal form in water
+    short: change form in water
+  - long: You are very nimble and swift while swimming.
+    short: swift swim
+  - long: You are very stealthy in the water. (Stealth+)
+    short: stealthy swim
+recommended_jobs:
+  - JOB_GLADIATOR
+  - JOB_BERSERKER
+  - JOB_SKALD
+  - JOB_TRANSMUTER
+  - JOB_SUMMONER
+  - JOB_ICE_ELEMENTALIST
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_POLEARMS
+  - SK_LONG_BLADES
+create_enum: false
