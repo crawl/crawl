@@ -867,8 +867,7 @@ void tile_forget_map(const coord_def &gc)
     // This may have changed the explore horizon, so update adjacent minimap
     // squares as well.
     for (adjacent_iterator ai(gc, false); ai; ++ai)
-        if (in_bounds(*ai))
-            tiles.update_minimap(*ai);
+        tiles.update_minimap(*ai);
 }
 
 static void _tile_place_item(const coord_def &gc, const item_info &item,
