@@ -1,0 +1,23 @@
+enum: SP_HUMAN
+monster: MONS_HUMAN
+name: Human
+difficulty_priority: 100
+aptitudes:
+  xp: 1
+  hp: 0
+  mp_mod: 0
+  mr: 3
+  stealth: 1
+  spellcasting: -1
+  invocations: 1
+str: 8
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_CONJURER
+  - JOB_NECROMANCER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+create_enum: false

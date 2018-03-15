@@ -1,0 +1,80 @@
+enum: SP_FELID
+monster: MONS_FELID
+name: "Felid"
+adjective: "Feline"
+genus: "Cat"
+difficulty: Advanced
+difficulty_priority: 40
+aptitudes:
+  xp: -1
+  hp: -4
+  mp_mod: 1
+  mr: 6
+  short_blades: False
+  long_blades: False
+  axes: False
+  maces_and_flails: False
+  polearms: False
+  staves: False
+  slings: False
+  bows: False
+  crossbows: False
+  throwing: False
+  armour: False
+  dodging: 3
+  stealth: 4
+  shields: False
+  spellcasting: -1
+  conjurations: -1
+  hexes: 4
+  charms: 2
+  translocations: 4
+  transmutations: 1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  poison_magic: -1
+  evocations: -1
+size: little
+str: 4
+int: 9
+dex: 11
+levelup_stat_frequency: 4
+levelup_stats:
+  - int
+  - dex
+mutations:
+  1:
+    MUT_CARNIVOROUS: 1
+    MUT_FAST: 1
+    MUT_FANGS: 3
+    MUT_SHAGGY_FUR: 1
+    MUT_ACUTE_VISION: 1
+    MUT_PAWS: 1
+    MUT_SLOW_METABOLISM: 1
+    MUT_CLAWS: 1
+  6:
+    MUT_SHAGGY_FUR: 1
+  12:
+    MUT_SHAGGY_FUR: 1
+fake_mutations:
+  - long: You cannot wear armour.
+    short: no armour
+  - long: You are incapable of wielding weapons or throwing items.
+    short: no weapons or thrown items
+  - long: Your paws allow you to move quietly. (Stealth)
+    short: stealth
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_ENCHANTER
+  - JOB_TRANSMUTER
+  - JOB_ICE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+  - JOB_CONJURER
+  - JOB_SUMMONER
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_UNARMED_COMBAT
+create_enum: false
+altar_action: sit before

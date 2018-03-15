@@ -1,0 +1,68 @@
+enum: SP_TROLL
+monster: MONS_TROLL
+name: Troll
+adjective: Trollish
+difficulty: Simple
+difficulty_priority: 40
+aptitudes:
+  xp: -1
+  hp: 3
+  mp_mod: -1
+  mr: 3
+  fighting: -2
+  short_blades: -2
+  long_blades: -2
+  axes: -2
+  maces_and_flails: -2
+  polearms: -2
+  staves: -2
+  slings: -4
+  bows: -4
+  crossbows: -4
+  throwing: -1
+  armour: -2
+  dodging: -2
+  stealth: -5
+  shields: -2
+  spellcasting: -5
+  conjurations: -3
+  hexes: -4
+  charms: -4
+  summoning: -3
+  necromancy: -2
+  translocations: -3
+  transmutations: -3
+  fire_magic: -3
+  ice_magic: -3
+  air_magic: -4
+  earth_magic: -1
+  poison_magic: -3
+  invocations: -1
+  evocations: -3
+size: large
+str: 15
+int: 4
+dex: 5
+levelup_stat_frequency: 3
+levelup_stats:
+  - str
+mutations:
+  1:
+    MUT_TOUGH_SKIN: 3
+    MUT_REGENERATION: 1
+    MUT_CLAWS: 3
+    MUT_GOURMAND: 1
+    MUT_FAST_METABOLISM: 3
+    MUT_SHAGGY_FUR: 1
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_MONK
+  - JOB_HUNTER
+  - JOB_BERSERKER
+  - JOB_WARPER
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_WIZARD
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_UNARMED_COMBAT
+create_enum: false

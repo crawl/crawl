@@ -1133,10 +1133,12 @@ RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
-GENERATED_HEADERS := art-enum.h config.h mon-mst.h #the rest are private
+# Headers that need to exist before attempting to compile cc files
+GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h
+# All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   cmd-name.h
+                   cmd-name.h species-data.h aptitudes.h species-groups.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
@@ -1598,6 +1600,23 @@ dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 
 mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
+
+# species-gen.py creates multiple files at once. Ensure Make doesn't run it once
+# per target file. https://stackoverflow.com/q/2973445
+species-data.h: dat/species/* util/species-gen.py util/species-gen/*
+	$(QUIET_GEN)util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
+
+# no-op
+aptitudes.h: species-data.h
+	$(QUIET_GEN)
+
+# no-op
+species-groups.h: aptitudes.h
+	$(QUIET_GEN)
+
+# no-op
+species-type.h: species-groups.h
+	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 

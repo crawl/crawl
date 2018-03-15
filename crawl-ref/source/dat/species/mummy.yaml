@@ -1,0 +1,67 @@
+enum: SP_MUMMY
+monster: MONS_MUMMY
+name: Mummy
+difficulty: Advanced
+difficulty_priority: 20
+aptitudes:
+  xp: -1
+  hp: 0
+  mp_mod: 0
+  mr: 5
+  short_blades: -2
+  long_blades: -2
+  axes: -2
+  maces_and_flails: -2
+  polearms: -2
+  staves: -2
+  slings: -2
+  bows: -2
+  crossbows: -2
+  throwing: -2
+  armour: -2
+  dodging: -2
+  stealth: -1
+  shields: -2
+  unarmed_combat: -2
+  spellcasting: 2
+  conjurations: -2
+  hexes: -1
+  charms: -2
+  summoning: -2
+  translocations: -2
+  transmutations: -2
+  fire_magic: -2
+  ice_magic: -2
+  air_magic: -2
+  earth_magic: -2
+  poison_magic: -2
+  invocations: -1
+  evocations: -2
+undead: US_UNDEAD
+str: 11
+int: 7
+dex: 7
+levelup_stat_frequency: 5
+mutations:
+  1:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_COLD_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 1
+    MUT_UNBREATHING: 1
+  13:
+    MUT_NECRO_ENHANCER: 1
+  26:
+    MUT_NECRO_ENHANCER: 1
+fake_mutations:
+  - long: You do not eat or drink.
+    short: no food or potions
+  - long: Your flesh is vulnerable to fire.
+    short: fire vulnerability
+recommended_jobs:
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_NECROMANCER
+  - JOB_ICE_ELEMENTALIST
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_SUMMONER
+create_enum: false

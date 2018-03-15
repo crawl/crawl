@@ -1,0 +1,61 @@
+enum: SP_MINOTAUR
+monster: MONS_MINOTAUR
+name: Minotaur
+difficulty: Simple
+difficulty_priority: 90
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: -1
+  mr: 3
+  fighting: 2
+  short_blades: 1
+  long_blades: 2
+  axes: 2
+  maces_and_flails: 2
+  polearms: 2
+  staves: 2
+  slings: 1
+  bows: 1
+  crossbows: 1
+  throwing: 0
+  armour: 2
+  dodging: 1
+  stealth: -1
+  shields: 2
+  unarmed_combat: 1
+  spellcasting: -4
+  conjurations: -3
+  hexes: -4
+  charms: -4
+  summoning: -3
+  necromancy: -3
+  translocations: -3
+  transmutations: -3
+  fire_magic: -3
+  ice_magic: -3
+  air_magic: -3
+  earth_magic: -2
+  poison_magic: -3
+  evocations: -1
+str: 12
+int: 5
+dex: 5
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - dex
+mutations:
+  1:
+    MUT_HORNS: 2
+fake_mutations:
+  - long: You reflexively headbutt those who attack you in melee.
+    short: retaliatory headbutt
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_GLADIATOR
+  - JOB_MONK
+  - JOB_HUNTER
+  - JOB_BERSERKER
+  - JOB_ABYSSAL_KNIGHT
+create_enum: false

@@ -1,0 +1,63 @@
+enum: SP_SPRIGGAN
+monster: MONS_SPRIGGAN
+name: Spriggan
+difficulty_priority: 60
+aptitudes:
+  xp: -1
+  hp: -3
+  mp_mod: 1
+  mr: 7
+  fighting: -2
+  short_blades: 1
+  long_blades: -2
+  axes: -2
+  maces_and_flails: -3
+  polearms: -3
+  staves: -3
+  slings: 2
+  bows: 2
+  armour: -3
+  dodging: 4
+  stealth: 5
+  shields: -3
+  unarmed_combat: -2
+  spellcasting: 2
+  conjurations: -3
+  hexes: 2
+  charms: 4
+  summoning: -2
+  necromancy: -1
+  translocations: 4
+  transmutations: 3
+  fire_magic: -3
+  ice_magic: -2
+  air_magic: -1
+  earth_magic: -1
+  evocations: 3
+size: little
+str: 4
+int: 9
+dex: 11
+levelup_stat_frequency: 5
+levelup_stats:
+  - int
+  - dex
+mutations:
+  1:
+    MUT_FAST: 3
+    MUT_HERBIVOROUS: 1
+    MUT_ACUTE_VISION: 1
+    MUT_SLOW_METABOLISM: 2
+recommended_jobs:
+  - JOB_ASSASSIN
+  - JOB_ARTIFICER
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_WARPER
+  - JOB_ENCHANTER
+  - JOB_CONJURER
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_SLINGS
+create_enum: false

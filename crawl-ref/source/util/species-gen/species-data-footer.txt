@@ -1,0 +1,17 @@
+// Ideally this wouldn't be necessary...
+{ SP_UNKNOWN, { // Line 1: enum
+    "??", // Line 2: abbrev
+    "Yak", nullptr, nullptr, // Line 3: name, genus name, adjectival name
+    SPF_NONE, // Line 4: flags
+    0, 0, 0, 0, // Line 5: XP, HP, MP, MR (gen-apt.pl needs them here!)
+    MONS_PROGRAM_BUG, // Line 6: equivalent monster type
+    HT_LAND, US_ALIVE, SIZE_MEDIUM, // Line 7: habitat, life, size
+    0, 0, 0, // Line 8: str, int, dex
+    set<stat_type>(), 28, // Line 9: str gain, int gain, dex gain, frequency
+    {}, // Line 10: Mutations
+    {}, // Line 11: Fake mutations
+    {}, // Line 12: Fake mutations
+    {}, // Line 13: Recommended jobs
+    {}, // Line 14: Recommended weapons
+} }
+};

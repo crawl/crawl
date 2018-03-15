@@ -115,8 +115,8 @@ On Debian-based systems (Ubuntu, Mint, ...), you can get all dependencies by
 typing the following as root/sudo:
 
     apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
-      libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
-      libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
+      libsqlite3-dev libz-dev pkg-config python3-yaml libsdl2-image-dev \
+      libsdl2-mixer-dev libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
 
 (the last six are needed only for tiles builds). This is the complete set,
 with it you don't have a need for the bundled "contribs".
@@ -134,8 +134,8 @@ On Fedora, and possibly other RPM-based systems, you can get the dependencies
 by running the following as root:
 
     dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
-      sqlite-devel zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel \
-      freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
+      sqlite-devel zlib-devel pkgconfig python3-yaml SDL-devel SDL_image-devel \
+      libpng-devel freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
 
 (the last six are needed only for tile builds). As with Debian, this package
 list avoids the need for the bundled "contribs".
@@ -150,8 +150,8 @@ Prerequisites (Void):
 On Void Linux you can get all dependencies by running the following as root:
 
     xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
-      sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
-      SDL2_mixer-devel SDL2_image-devel freetype-devel
+      sqlite-devel zlib-devel python3-yaml pngcrush dejavu-fonts-ttf \
+      SDL2-devel SDL2_mixer-devel SDL2_image-devel freetype-devel
 
 (the last six are needed only for tile builds).
 
@@ -164,6 +164,8 @@ Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
 headers for ncurses - they may not be installed by default on some Unixes.
+
+Python 3 and PyYAML is required to parse some data files.
 
 For tile builds, you need FreeDesktop's pkg-config, X11 and opengl headers.
 The latter are likely to come from mesa sources.

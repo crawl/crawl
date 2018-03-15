@@ -1,0 +1,47 @@
+enum: SP_KOBOLD
+monster: MONS_KOBOLD
+name: Kobold
+difficulty_priority: 90
+aptitudes:
+  xp: 1
+  hp: -2
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  short_blades: 3
+  long_blades: -2
+  axes: -2
+  maces_and_flails: -1
+  polearms: -2
+  staves: -1
+  crossbows: 2
+  throwing: 1
+  armour: -2
+  dodging: 2
+  stealth: 4
+  shields: -2
+  charms: -2
+  invocations: 1
+  evocations: 2
+
+size: small
+str: 5
+int: 9
+dex: 10
+levelup_stat_frequency: 5
+mutations:
+  1:
+    MUT_CARNIVOROUS: 1
+recommended_jobs:
+  - JOB_HUNTER
+  - JOB_BERSERKER
+  - JOB_ARCANE_MARKSMAN
+  - JOB_ENCHANTER
+  - JOB_CONJURER
+  - JOB_SUMMONER
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_MACES_FLAILS
+  - SK_STAVES
+  - SK_CROSSBOWS
+create_enum: false
