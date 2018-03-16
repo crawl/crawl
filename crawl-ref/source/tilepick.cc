@@ -946,6 +946,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_TROLL:
     case TILEP_MONS_ZOMBIE_JUGGERNAUT:
+    case TILEP_MONS_ZOMBIE_UGLY_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
     case TILEP_MONS_ZOMBIE_RAT:
@@ -954,13 +955,18 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_HOUND:
     case TILEP_MONS_ZOMBIE_CRAB:
     case TILEP_MONS_ZOMBIE_TURTLE:
+    case TILEP_MONS_ZOMBIE_BEAR:
         return TILEP_MONS_SPECTRAL_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_ELEPHANT:
+    case TILEP_MONS_ZOMBIE_YAK:
+    case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SPECTRAL_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_FROG:
         return TILEP_MONS_SPECTRAL_FROG;
     case TILEP_MONS_ZOMBIE_BAT:
+    case TILEP_MONS_ZOMBIE_BIRD: /* no bird spectral tile */
+    case TILEP_MONS_ZOMBIE_HARPY:
         return TILEP_MONS_SPECTRAL_BAT;
     case TILEP_MONS_ZOMBIE_BEE:
         return TILEP_MONS_SPECTRAL_BEE;
@@ -1031,8 +1037,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_TROLL:
     case TILEP_MONS_ZOMBIE_JUGGERNAUT:
+    case TILEP_MONS_ZOMBIE_UGLY_THING:
         return TILEP_MONS_SIMULACRUM_LARGE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
+    case TILEP_MONS_ZOMBIE_BEAR:
     case TILEP_MONS_ZOMBIE_RAT:
     case TILEP_MONS_ZOMBIE_QUOKKA:
     case TILEP_MONS_ZOMBIE_JACKAL:
@@ -1043,8 +1051,12 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_FROG:
     case TILEP_MONS_ZOMBIE_ELEPHANT:
+    case TILEP_MONS_ZOMBIE_YAK:
+    case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_BAT:
+    case TILEP_MONS_ZOMBIE_BIRD: /* no bird simulacrum tile */
+    case TILEP_MONS_ZOMBIE_HARPY:
         return TILEP_MONS_SIMULACRUM_BAT;
     case TILEP_MONS_ZOMBIE_BEE:
         return TILEP_MONS_SIMULACRUM_BEE;
