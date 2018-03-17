@@ -113,9 +113,8 @@ to find artefacts that have the property.
 You can search by some additional item properties: <w>artefact</w> or <w>artifact</w> will
 find identified artefacts, <w>ego</w> or <w>branded</w> will find non-artefacts with a
 brand and unidentified items which may be branded, <w>throwable</w> will find things
-you can throw, <w>stick</w> will find items that can be used with Sticks to Snakes,
-<w>dropped</w> will find items you have dropped, <w>in_shop</w> will find items in
-shops, and (if the autopickup_search option is enabled) <w>autopickup</w> will find
+you can throw, <w>dropped</w> will find items you have dropped, <w>in_shop</w> will find
+items in shops, and (if the autopickup_search option is enabled) <w>autopickup</w> will find
 items that would be automatically picked up.
 
 Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
