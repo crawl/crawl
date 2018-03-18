@@ -138,12 +138,16 @@ static JsonNode *_species_metadata_array()
         json_append_element(species, _species_metadata(sp));
         if (sp == SP_BASE_DRACONIAN)
         {
-            for (int drac = SP_FIRST_NONBASE_DRACONIAN;
-                 drac <= SP_LAST_NONBASE_DRACONIAN; ++drac)
+            for (int drac = 0;
+                 drac <= static_cast<int>(NUM_SPECIES); ++drac)
             {
-                json_append_element(species,
-                                    _species_metadata(species_type(drac),
-                                                      SP_BASE_DRACONIAN));
+                if (species_is_draconian(static_cast<species_type>(drac))
+                    && drac != SP_BASE_DRACONIAN)
+                {
+                    json_append_element(species,
+                                        _species_metadata(species_type(drac),
+                                                          SP_BASE_DRACONIAN));
+                }
             }
         }
     }
