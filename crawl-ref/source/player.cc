@@ -62,6 +62,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "species.h" // random_species
 #include "spl-damage.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -2868,21 +2869,17 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-#if TAG_MAJOR_VERSION == 34
-                    // Hack to evade mottled draconians.
                     do
                     {
-                        you.species = static_cast<species_type>(
-                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
-                                                    SP_LAST_NONBASE_DRACONIAN));
+                        you.species = random_species();
                     }
-                    while (you.species == SP_MOTTLED_DRACONIAN);
+                    while (!species_is_draconian(you.species)
+                           || you.species == SP_BASE_DRACONIAN
+#if TAG_MAJOR_VERSION == 34
+                           // Hack to evade mottled draconians.
+                           || you.species == SP_MOTTLED_DRACONIAN
 #endif
-#if TAG_MAJOR_VERSION > 34
-                    you.species = static_cast<species_type>(
-                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
-                                                    SP_LAST_NONBASE_DRACONIAN));
-#endif
+                           );
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
