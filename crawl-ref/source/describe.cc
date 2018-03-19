@@ -4606,6 +4606,41 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles.json_open_object();
     tiles.json_write_string("title", inf.title);
     tiles.json_write_string("body", desc.to_colour_string());
+    {
+        tileidx_t t    = tileidx_monster(mi);
+        tileidx_t t0   = t & TILE_FLAG_MASK;
+        tileidx_t flag = t & (~TILE_FLAG_MASK);
+
+        if (!mons_class_is_stationary(mi.type) || mi.type == MONS_TRAINING_DUMMY)
+        {
+            tileidx_t mcache_idx = mcache.register_monster(mi);
+            t = flag | (mcache_idx ? mcache_idx : t0);
+            t0 = t & TILE_FLAG_MASK;
+        }
+
+        tiles.json_write_int("fg_idx", t0);
+        tiles.json_write_name("flag");
+        tiles.write_tileidx(flag);
+
+        if (t0 >= TILEP_MCACHE_START)
+        {
+            mcache_entry *entry = mcache.get(t0);
+            if (entry)
+                tiles.send_mcache(entry, false);
+            else
+            {
+                tiles.json_write_comma();
+                tiles.write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                tiles.json_write_null("mcache");
+            }
+        }
+        else if (t0 >= TILE_MAIN_MAX)
+        {
+            tiles.json_write_comma();
+            tiles.write_message("\"doll\":[[%u,%d]]", (unsigned int) t0, TILE_Y);
+            tiles.json_write_null("mcache");
+        }
+    }
     tiles.push_ui_layout("describe-monster", 0);
 #endif
 
