@@ -18,6 +18,7 @@
 #include "status.h"
 #include "text-tag-type.h"
 #include "tiledoll.h"
+#include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
 
@@ -211,6 +212,10 @@ public:
 
     void dump();
     void update_input_mode(mouse_mode mode);
+
+    void send_mcache(mcache_entry *entry, bool submerged,
+                     bool send_doll = true);
+    void write_tileidx(tileidx_t t);
 
 protected:
     int m_sock;
