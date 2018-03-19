@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "ui", "./enums", "./cell_renderer",
-    "./util", "./scroller", "./tileinfo-main", "./tileinfo-gui"],
-function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
+    "./util", "./scroller", "./tileinfo-main", "./tileinfo-gui", "./tileinfo-player"],
+function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     "use strict";
 
     function fmt_body_txt(txt)
@@ -243,8 +243,48 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
     {
         var $popup = $(".templates > .describe-generic").clone();
         $popup.find(".header > span").html(desc.title);
-        $popup.find(".header > canvas").remove();
         $popup.find(".body").html(fmt_body_txt(desc.body));
+
+        var $canvas = $popup.find(".header > canvas");
+        var renderer = new cr.DungeonCellRenderer();
+        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+        renderer.init($canvas[0]);
+
+        if ((desc.fg_idx >= player.MCACHE_START) && desc.mcache)
+        {
+            $.each(desc.mcache, function (i, mcache_part) {
+                if (mcache_part) {
+                    renderer.draw_player(mcache_part[0],
+                            0, 0, mcache_part[1], mcache_part[2]);
+                }
+            });
+        }
+        else if ((desc.fg_idx >= main.MAIN_MAX) && desc.doll)
+        {
+            var mcache_map = {};
+            if (desc.mcache)
+            {
+                for (var i = 0; i < desc.mcache.length; ++i)
+                    mcache_map[desc.mcache[i][0]] = i;
+            }
+            var yofs = Math.max(0, player.get_tile_info(desc.doll[0][0]).h - 32);
+            $.each(desc.doll, function (i, doll_part) {
+                var xofs = 0;
+                if (mcache_map[doll_part[0]] !== undefined)
+                {
+                    var mind = mcache_map[doll_part[0]];
+                    xofs = desc.mcache[mind][1];
+                    yofs += desc.mcache[mind][2];
+                }
+                renderer.draw_player(doll_part[0],
+                        0, 0, xofs, yofs, doll_part[1]);
+            });
+        }
+        renderer.draw_foreground(0, 0, { t: {
+            fg: enums.prepare_fg_flags(desc.flag),
+            bg: 0,
+        }});
+
         scroller($popup.find(".body")[0]);
         return $popup;
     }

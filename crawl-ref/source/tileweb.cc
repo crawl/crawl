@@ -45,7 +45,6 @@
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
-#include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
@@ -1065,8 +1064,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
     tiles.json_close_array();
 }
 
-static void _send_mcache(mcache_entry *entry, bool submerged,
-                         bool send_doll = true)
+void TilesFramework::send_mcache(mcache_entry *entry, bool submerged, bool send_doll)
 {
     bool trans = entry->transparent();
     if (trans && send_doll)
@@ -1129,7 +1127,7 @@ static inline unsigned _get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 
-static inline void _write_tileidx(tileidx_t t)
+void TilesFramework::write_tileidx(tileidx_t t)
 {
     // JS can only handle signed ints
     const int lo = t & 0xFFFFFFFF;
@@ -1190,7 +1188,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             fg_changed = true;
 
             json_write_name("fg");
-            _write_tileidx(next_pc.fg);
+            write_tileidx(next_pc.fg);
             if (fg_idx && fg_idx <= TILE_MAIN_MAX)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
         }
@@ -1198,13 +1196,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.bg != current_pc.bg)
         {
             json_write_name("bg");
-            _write_tileidx(next_pc.bg);
+            write_tileidx(next_pc.bg);
         }
 
         if (next_pc.cloud != current_pc.cloud)
         {
             json_write_name("cloud");
-            _write_tileidx(next_pc.cloud);
+            write_tileidx(next_pc.cloud);
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)
@@ -1271,7 +1269,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    _send_mcache(entry, in_water);
+                    send_mcache(entry, in_water);
                 else
                 {
                     json_write_comma();
@@ -1312,7 +1310,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
-                        _send_mcache(entry, in_water, false);
+                        send_mcache(entry, in_water, false);
                     else
                         json_write_null("mcache");
                 }
