@@ -950,7 +950,7 @@ static void _describe_airborne(status_info& inf)
     const bool perm      = you.permanent_flight();
     const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
     const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
-    const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
+    const string desc    = you.tengu_flight() ? " quickly and evasively" : "";
 
     inf.light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf.light_text   = "Fly";

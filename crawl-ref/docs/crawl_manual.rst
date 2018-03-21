@@ -1758,6 +1758,21 @@ Gnolls
   dexterity to take advantage of every resource they find in the Dungeon. They
   also have powerful noses adapted to the Dungeon's scents, allowing them to
   easily locate where treasures lay hidden.
+  
+Faerie Dragons
+  Faerie Dragons are a small species of magically-attuned dragonkin with so
+  few living members remaining that many believe them extinct. They are very
+  intelligent, but are known to be brash and often overconfident when
+  confronted with  danger. Their shimmering scales and bright wings are
+  attractive, but have proven to be more bane than boon by drawing the
+  attention of the Dungeon's denizens.
+  
+  Most Faerie Dragons welcome confrontation and favour the use of destructive
+  spells to deal with enemies who challenge them. Their natural attunement to
+  magic reduces the MP cost of spells and negates any hunger generation. Their
+  scales shimmer with energy that repels incoming attacks and their bright
+  wings enable continuous flight. Faerie Dragons are small and evasive, but
+  they're frail and cannot wear any form of body armour.
 
 Hermit Crabs
   Hermit Crabs are a sub-species of crab that have traded their evolutionary
