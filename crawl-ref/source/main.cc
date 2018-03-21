@@ -3239,6 +3239,14 @@ static void _move_player(coord_def move)
                 you.duration[DUR_BARBS] += you.time_taken;
         }
 
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
+                                 "you move.");
+            you.duration[DUR_ICY_ARMOUR] = 0;
+            you.redraw_armour_class = true;
+        }
+
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
