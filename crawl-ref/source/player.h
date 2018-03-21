@@ -514,6 +514,9 @@ public:
     bool is_skeletal() const override;
 
     bool tengu_flight() const;
+
+    bool faerie_dragon_flight() const;
+
     int heads() const override;
 
     bool spellcasting_unholy() const;
@@ -1119,6 +1122,7 @@ bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
+void float_once();
 bool land_player(bool quiet = false);
 void player_open_door(coord_def doorpos);
 void player_close_door(coord_def doorpos);

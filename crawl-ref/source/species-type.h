@@ -53,6 +53,7 @@ enum species_type
     SP_VINE_STALKER,
     SP_BARACHI,
     SP_GNOLL,
+    SP_FAERIE_DRAGON,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

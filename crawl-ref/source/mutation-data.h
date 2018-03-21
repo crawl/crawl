@@ -1910,6 +1910,23 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
 },
+
+{ MUT_SHIMMERING_SCALES, 0, 1, mutflag::good, true,
+  "magical scales",
+
+  {"Your scales shimmer with magical energies. (AC +6, SH +6)", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_FAERIE_DRAGON_FLIGHT, 0, 1, mutflag::good, true,
+  "able to fly",
+
+  {"You can fly continuously.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =
