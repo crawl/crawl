@@ -383,7 +383,7 @@ void gozag_set_bribe(monster* traitor)
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
 
-    if (bribability <= 0 || traitor->friendly())
+    if (bribability <= 0 || traitor->friendly() || traitor->is_summoned())
         return;
 
     const monster* leader =
