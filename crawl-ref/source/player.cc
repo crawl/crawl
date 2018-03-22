@@ -3180,8 +3180,11 @@ int player_stealth()
     }
 
     //Faerie Dragons' bright wings reduce stealth.
-    if (you.species == SP_FAERIE_DRAGON && (you.form == transformation::none
-        || you.form == transformation::appendage))
+    if (you.species == SP_FAERIE_DRAGON
+        && (you.form == transformation::none
+            || you.form == transformation::appendage
+            || you.form == transformation::blade_hands
+            || you.form == transformation::dragon))
     {
         stealth -= STEALTH_PIP;
     }
@@ -5901,7 +5904,7 @@ int player::racial_ac(bool temp) const
     // drac scales suppressed in all serious forms, except dragon
     if (species_is_draconian(species)
         && (!player_is_shapechanged() || form == transformation::dragon
-        || !temp))
+            || !temp))
     {
         int AC = 400 + 100 * (experience_level / 3);  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath

@@ -701,7 +701,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-        if (you.species == SP_FAERIE_DRAGON && slot == EQ_BODY_ARMOUR)
+    if (you.species == SP_FAERIE_DRAGON && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
         {
