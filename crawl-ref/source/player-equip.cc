@@ -773,7 +773,7 @@ static void _spirit_shield_message(bool unmeld)
     }
     else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel the presence of a powerless spirit.");
-    else // unmeld or already spirit-shielded
+    else if (!you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel spirits watching over you.");
 }
 
