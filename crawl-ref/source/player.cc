@@ -1940,10 +1940,6 @@ int player_movement_speed()
     if (you.tengu_flight())
         mv--;
 
-    // Faerie Dragons can move slightly faster when flying.
-    if (you.faerie_dragon_flight())
-        mv--;
-
     if (you.duration[DUR_FROZEN])
         mv += 3;
 
@@ -2164,10 +2160,10 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         return prescaled_ev + ev_bonus;
     }
 
-        // Flying Faerie Dragons get a 20% evasion bonus.
+    // Flying Faerie Dragons get a 10% evasion bonus.
     if (you.faerie_dragon_flight())
     {
-        const int ev_bonus = max(1 * scale, prescaled_ev / 5);
+        const int ev_bonus = max(1 * scale, prescaled_ev / 10);
         return prescaled_ev + ev_bonus;
     }
 

@@ -36,7 +36,7 @@ a colour.
 Faerie Dragon
 
 Faerie Dragons are naturally attuned to magic and have shimmering scales that
-repel attacks. They have bright wings and can fly, but are very frail.
+repel attacks. They have bright wings and can fly, but are frail.
 %%%%
 Formicid
 
