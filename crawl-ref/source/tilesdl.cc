@@ -1546,7 +1546,7 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (!m_region_map)
+    if (!m_region_map || !map_bounds(gc))
         return;
 
     map_feature mf;
