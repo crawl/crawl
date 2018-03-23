@@ -13,6 +13,39 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             .split("\n").join("<br>");
     }
 
+    function _fmt_spells_list(root, spellset)
+    {
+        var $container = root.find("#spellset_placeholder");
+        $container.attr("id", "").addClass("menu_contents spellset");
+        $.each(spellset, function (i, book) {
+            $container.append(book.label);
+            var $list = $("<ol>");
+            $.each(book.spells, function (i, spell) {
+                var $item = $("<li class=selectable>"), $canvas = $("<canvas>");
+                var letter = spell.letter;
+
+                var renderer = new cr.DungeonCellRenderer();
+                util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+                renderer.init($canvas[0]);
+                renderer.draw_from_texture(spell.tile, 0, 0, enums.texture.GUI, 0, 0, 0, false);
+                $item.append($canvas);
+
+                var label = " " + letter + " - "+spell.title;
+                $item.append("<span>" + label + "</span>");
+
+                if (spell.hex_chance !== undefined)
+                    $item.append("<span>("+spell.hex_chance+"%) </span>");
+
+                $list.append($item);
+                $item.addClass("fg"+spell.colour);
+                $item.on("click", function () {
+                    comm.send_message("input", { text: letter });
+                });
+            });
+            $container.append($list);
+        });
+    }
+
     function paneset_cycle($el, next)
     {
         var $panes = $el.children(".pane");
@@ -72,8 +105,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .describe-item").clone();
         $popup.find(".header > span").html(desc.title);
-        $popup.find(".body").html(fmt_body_txt(desc.body));
-        scroller($popup.find(".body")[0]);
+        var desc_html = fmt_body_txt(desc.body);
+        var $body = $popup.find(".body");
+        $body.html(desc_html);
+        _fmt_spells_list($body, desc.spellset);
+        scroller($body[0]);
         if (desc.actions !== "")
             $popup.find(".actions").html(desc.actions);
         else
@@ -244,6 +280,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = $(".templates > .describe-generic").clone();
         $popup.find(".header > span").html(desc.title);
         $popup.find(".body").html(fmt_body_txt(desc.body));
+        _fmt_spells_list($popup.find(".body"), desc.spellset);
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
