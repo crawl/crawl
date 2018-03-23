@@ -31,4 +31,7 @@ void describe_spellset(const spellset &spells,
                        const item_def* const source_item,
                        formatted_string &description,
                        const monster_info *mon_owner = nullptr);
+void write_spellset(const spellset &spells,
+                       const item_def* const source_item,
+                       const monster_info *mon_owner = nullptr);
 string describe_item_spells(const item_def &item);

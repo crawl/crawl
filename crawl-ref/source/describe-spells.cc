@@ -24,7 +24,11 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "state.h"
+#include "tileweb.h"
 #include "unicode.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 
 /**
  * Returns a spellset containing the spells for the given item.
@@ -573,6 +577,61 @@ void describe_spellset(const spellset &spells,
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
 }
+
+#ifdef USE_TILE_WEB
+static void _write_book(const spellbook_contents &book,
+                           vector<pair<spell_type,char>> &spell_map,
+                           const item_def* const source_item,
+                           const monster_info *mon_owner)
+{
+    tiles.json_open_object();
+    tiles.json_write_string("label", book.label);
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
+    tiles.json_open_array("spells");
+    for (auto spell : book.spells)
+    {
+        tiles.json_open_object();
+        tiles.json_write_string("title", spell_title(spell));
+        tiles.json_write_int("colour", _spell_colour(spell, source_item));
+        tiles.json_write_name("tile");
+        tiles.write_tileidx(tileidx_spell(spell));
+
+        // don't crash if we have more spells than letters.
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
+        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
+        tiles.json_write_string("letter", string(1, spell_letter));
+
+        if (hd > 0 && crawl_state.need_save
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        {
+            tiles.json_write_int("hex_chance", hex_chance(spell, hd));
+        }
+
+        string schools = (source_item && source_item->base_type == OBJ_RODS) ?
+                "Evocations" : _spell_schools(spell);
+        tiles.json_write_string("schools", schools);
+        tiles.json_write_int("level", spell_difficulty(spell));
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.json_close_object();
+}
+
+void write_spellset(const spellset &spells,
+                       const item_def* const source_item,
+                       const monster_info *mon_owner)
+{
+    auto spell_map = map_chars_to_spells(spells, source_item);
+    tiles.json_open_array("spellset");
+    for (auto book : spells)
+        _write_book(book, spell_map, source_item, mon_owner);
+    tiles.json_close_array();
+}
+#endif
 
 /**
  * Return a description of the spells in the given item.

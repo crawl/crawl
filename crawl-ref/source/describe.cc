@@ -2750,7 +2750,12 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     formatted_string fs_desc = formatted_string::parse_string(desc);
 
     spellset spells = item_spellset(item);
-    describe_spellset(spells, &item, fs_desc, nullptr);
+    formatted_string spells_desc;
+    describe_spellset(spells, &item, spells_desc, nullptr);
+#ifdef USE_TILE_WEB
+    string desc_without_spells = fs_desc.to_colour_string();
+#endif
+    fs_desc += spells_desc;
 
     const bool do_actions = in_inventory(item) // Dead men use no items.
             && !(you.pending_revival || crawl_state.updating_scores);
@@ -2841,7 +2846,11 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("title", name);
-    tiles.json_write_string("body", trimmed_string(fs_desc.to_colour_string()));
+    desc_without_spells += "SPELLSET_PLACEHOLDER";
+    trim_string(desc_without_spells);
+    tiles.json_write_string("body", desc_without_spells);
+    write_spellset(spells, &item, nullptr);
+
     tiles.json_write_string("actions", footer_text.tostring());
     tiles.json_open_array("tiles");
     for (const auto &tile : item_tiles)
@@ -4605,7 +4614,17 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("title", inf.title);
-    tiles.json_write_string("body", desc.to_colour_string());
+    formatted_string needle;
+    describe_spellset(spells, nullptr, needle, &mi);
+    string desc_without_spells = desc.to_colour_string();
+    if (!needle.empty())
+    {
+        desc_without_spells = replace_all(desc_without_spells,
+                needle, "SPELLSET_PLACEHOLDER");
+    }
+    tiles.json_write_string("body", desc_without_spells);
+    write_spellset(spells, nullptr, &mi);
+
     {
         tileidx_t t    = tileidx_monster(mi);
         tileidx_t t0   = t & TILE_FLAG_MASK;
