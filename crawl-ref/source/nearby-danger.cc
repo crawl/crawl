@@ -62,8 +62,17 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     if (mon->travel_target == MTRAV_FOE)
         return true;
 
-    if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE)
+    // use MTRAV_KNOWN_UNREACHABLE as a cache, but only for monsters
+    // that aren't visible. This forces a pathfinding check whenever previously
+    // known unreachable monsters come into (or are in) view. It may be a bit
+    // inefficient for certain vaults, but it is necessary to check for things
+    // like sensed monsters via ash (which will get set as known unreachable
+    // on detection).
+    if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE
+                                        && !you.see_cell_no_trans(mon->pos()))
+    {
         return false;
+    }
 
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
