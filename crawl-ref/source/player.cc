@@ -4902,14 +4902,13 @@ void float_player()
 // Faerie Dragons start the game flying.
 void float_once()
 {
-        if (you.species != SP_FAERIE_DRAGON)
-        {
-            return;
-        }
+    if (you.species != SP_FAERIE_DRAGON)
+    {
+        return;
+    }
 
-        you.attribute[ATTR_PERM_FLIGHT] = 1;
-        float_player();
-
+    you.attribute[ATTR_PERM_FLIGHT] = 1;
+    float_player();
 }
 
 void fly_player(int pow, bool already_flying)

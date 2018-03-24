@@ -782,7 +782,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     int cost = spell_mana(spell);
     int sifcast_amount = 0;
-
     if (!enough_mp(cost, true))
     {
         if (you.attribute[ATTR_DIVINE_ENERGY])
