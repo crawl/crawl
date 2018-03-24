@@ -3488,9 +3488,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.get_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (you.magic_points < wand_mp_cost() && temp)
-            return true;
-
 #if TAG_MAJOR_VERSION == 34
         if (is_known_empty_wand(item))
             return true;
