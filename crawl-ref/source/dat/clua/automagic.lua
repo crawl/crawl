@@ -240,18 +240,15 @@ end
 
 local function mp_is_low()
   local mp, mmp = you.mp()
-  return (100*mp <= AUTOMAGIC_STOP*mmp)
+  local fd = 0
+  if you.race() == ("Faerie Dragon") then
+    fd = 1
+  end
+  return (100*mp + 100*fd <= AUTOMAGIC_STOP*mmp)
 end
 
 function mag_attack(allow_movement)
   local x, y, info = get_target()
-<<<<<<< HEAD
-  local z = 0
-  if you.race() == "Faerie Dragon" then
-    z = 1
-	end
-=======
->>>>>>> parent of dc4015cba1... Fixed automagic bug when playing as FD
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
   elseif you.confused() then

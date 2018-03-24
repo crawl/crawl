@@ -784,10 +784,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
     int sifcast_amount = 0;
 
     //Faerie Dragon spell MP costs are reduced by 1.
-    if (you.species == SP_FAERIE_DRAGON)
-    {
-        cost = cost - 1;
-    }
+    //if (you.species == SP_FAERIE_DRAGON)
+    //{
+        //cost = cost - 1;
+    //}
 
     if (!enough_mp(cost, true))
     {
