@@ -410,9 +410,7 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = wand_mp_cost();
-    if (!enough_mp(mp_cost, false))
-        return;
+    const int mp_cost = min(you.magic_points, wand_mp_cost());
 
     int item_slot;
     if (slot != -1)
@@ -449,8 +447,7 @@ void zap_wand(int slot)
         return;
     }
 
-    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2)
-                * (you.get_mutation_level(MUT_MP_WANDS) + 3) / 3;
+    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -469,7 +466,13 @@ void zap_wand(int slot)
     }
 
     // Spend MP.
-    dec_mp(mp_cost, false);
+    if (mp_cost)
+    {
+        dec_mp(mp_cost, false);
+        mprf("You feel a %ssurge of power%s",
+             mp_cost < 3 ? "slight " : "",
+             mp_cost < 3 ? "."       : "!");
+    }
 
     // Take off a charge.
     wand.charges--;
