@@ -270,7 +270,6 @@ bool form_can_swim(transformation form = you.form);
 bool form_likes_water(transformation form = you.form);
 bool form_changed_physiology(transformation form = you.form);
 bool form_can_bleed(transformation form = you.form);
-bool form_can_use_wand(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);
 

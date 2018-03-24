@@ -379,12 +379,6 @@ int wand_mp_cost()
 
 void zap_wand(int slot)
 {
-    if (!form_can_use_wand())
-    {
-        mpr("You have no means to grasp a wand firmly enough.");
-        return;
-    }
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
