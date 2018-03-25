@@ -745,6 +745,11 @@ void show_skill_menu_help()
     show_specific_help("skill-menu");
 }
 
+void show_spell_library_help()
+{
+    show_specific_help("spell-library");
+}
+
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
                          const string &desc,
