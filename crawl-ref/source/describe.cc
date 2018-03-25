@@ -75,6 +75,7 @@
  #include "tiledef-dngn.h"
 #endif
 #ifdef USE_TILE
+ #include "tiledef-feat.h"
  #include "tilepick.h"
  #include "tileview.h"
  #include "tile-flags.h"
@@ -177,13 +178,34 @@ int show_description(const describe_info &inf, const tile_def *tile)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles.json_open_object();
+    if (tile)
+    {
+        tiles.json_open_object("tile");
+        tiles.json_write_int("t", tile->tile);
+        tiles.json_write_int("tex", tile->tex);
+        if (tile->ymax != TILE_Y)
+            tiles.json_write_int("ymax", tile->ymax);
+        tiles.json_close_object();
+    }
+    tiles.json_write_string("title", inf.title);
+    tiles.json_write_string("prefix", inf.prefix);
+    tiles.json_write_string("suffix", inf.suffix);
+    tiles.json_write_string("footer", inf.footer);
+    tiles.json_write_string("quote", inf.quote);
+    tiles.json_write_string("body", inf.body.str());
+    tiles.push_ui_layout("describe-generic", 0);
 #endif
 
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
     return lastch;
 }
 
@@ -2352,7 +2374,7 @@ void describe_feature_wide(const coord_def& pos)
         feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
         f.title = inf.title;
         f.body = trimmed_string(inf.body.str());
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
         apply_variations(env.tile_flv(pos), &tile, pos);
         f.tile = tile_def(tile, get_dngn_tex(tile));
@@ -2365,7 +2387,7 @@ void describe_feature_wide(const coord_def& pos)
         feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
         f.title = desc.first;
         f.body = trimmed_string(desc.second);
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         if (desc.first == "A halo.")
             f.tile = tile_def(TILE_HALO_RANGE, TEX_FEAT);
         else if (desc.first == "An umbra.")
@@ -2440,13 +2462,34 @@ void describe_feature_wide(const coord_def& pos)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_open_array("feats");
+    for (const auto &feat : feats)
+    {
+        tiles.json_open_object();
+        tiles.json_write_string("title", feat.title);
+        tiles.json_write_string("body", feat.body);
+        tiles.json_open_object("tile");
+        tiles.json_write_int("t", feat.tile.tile);
+        tiles.json_write_int("tex", feat.tile.tex);
+        if (feat.tile.ymax != TILE_Y)
+            tiles.json_write_int("ymax", feat.tile.ymax);
+        tiles.json_close_object();
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.push_ui_layout("describe-feature-wide", 0);
 #endif
 
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 void describe_feature_type(dungeon_feature_type feat)
@@ -2755,9 +2798,9 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     scroller->set_child(text);
     vbox->add_child(scroller);
 
+    formatted_string footer_text("", CYAN);
     if (!actions.empty())
     {
-        formatted_string footer_text("", CYAN);
         if (!spells.empty())
             footer_text.cprintf("Select a spell, or ");
         footer_text += formatted_string(_actions_desc(actions, item));
@@ -2799,13 +2842,33 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles_crt_control disable_crt(false);
+    tiles.json_open_object();
+    tiles.json_write_string("title", name);
+    tiles.json_write_string("body", trimmed_string(fs_desc.to_colour_string()));
+    tiles.json_write_string("actions", footer_text.tostring());
+    tiles.json_open_array("tiles");
+    for (const auto &tile : item_tiles)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("t", tile.tile);
+        tiles.json_write_int("tex", tile.tex);
+        if (tile.ymax != TILE_Y)
+            tiles.json_write_int("ymax", tile.ymax);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.push_ui_layout("describe-item", 0);
 #endif
 
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     if (action != CMD_NO_CMD)
         return _do_action(item, actions, lastch);
@@ -3193,8 +3256,11 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     title_hbox->add_child(move(spell_icon));
 #endif
 
+    string spl_title = spell_title(spell);
+    trim_string(desc);
+
     auto title = make_shared<UIText>();
-    title->set_text(formatted_string(spell_title(spell)));
+    title->set_text(formatted_string(spl_title));
     title->set_margin_for_crt({0, 0, 0, 0});
     title->set_margin_for_sdl({0, 0, 0, 10});
     title_hbox->add_child(move(title));
@@ -3206,7 +3272,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     auto scroller = make_shared<UIScroller>();
     auto text = make_shared<UIText>();
-    text->set_text(formatted_string::parse_string(trimmed_string(desc)));
+    text->set_text(formatted_string::parse_string(desc));
     text->wrap_text = true;
     scroller->set_child(move(text));
     vbox->add_child(scroller);
@@ -3233,13 +3299,28 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles.json_open_object();
+    auto tile = tile_def(tileidx_spell(spell), TEX_GUI);
+    tiles.json_open_object("tile");
+    tiles.json_write_int("t", tile.tile);
+    tiles.json_write_int("tex", tile.tex);
+    if (tile.ymax != TILE_Y)
+        tiles.json_write_int("ymax", tile.ymax);
+    tiles.json_close_object();
+    tiles.json_write_string("title", spl_title);
+    tiles.json_write_string("desc", desc);
+    tiles.json_write_bool("can_mem", can_mem);
+    tiles.push_ui_layout("describe-spell", 0);
 #endif
 
     ui_push_layout(move(popup));
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     if (toupper(lastch) == 'M')
     {
