@@ -783,7 +783,8 @@ static void _describe_cards(vector<card_type> cards)
     ASSERT(!cards.empty());
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles.json_open_object();
+    tiles.json_open_array("cards");
 #endif
     bool seen[NUM_CARDS] = {0};
     ostringstream data;
@@ -798,6 +799,7 @@ static void _describe_cards(vector<card_type> cards)
         string desc = getLongDescription(name + " card");
         if (desc.empty())
             desc = "No description found.";
+        string decks = which_decks(card);
 
         name = uppercase_first(name);
         if (first)
@@ -806,10 +808,25 @@ static void _describe_cards(vector<card_type> cards)
             data << "\n";
         data << "<w>" << name << "</w>\n"
              << desc
-             << "\n" << which_decks(card) << "\n";
+             << "\n" << decks << "\n";
+
+#ifdef USE_TILE_WEB
+        tiles.json_open_object();
+        tiles.json_write_string("name", name);
+        tiles.json_write_string("desc", desc);
+        tiles.json_close_object();
+#endif
     }
     formatted_scroller fs(0, data.str());
+
+#ifdef USE_TILE_WEB
+    tiles.json_close_array();
+    tiles.push_ui_layout("describe-cards", 0);
+#endif
     fs.show();
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 // Stack a deck: look at the next five cards, put them back in any
