@@ -56,6 +56,14 @@ function ($, comm, client) {
         }
     }
 
+    function top_popup()
+    {
+        var $popup = $("#ui-stack").children().last();
+        if ($popup.length === 0)
+            return;
+        return $popup.find(".ui-popup-inner").children().eq(0);
+    }
+
     function hide_all_popups()
     {
         while ($ui_stack.children().length > 0)
@@ -65,6 +73,7 @@ function ($, comm, client) {
     return {
         show_popup: show_popup,
         hide_popup: hide_popup,
+        top_popup: top_popup,
         hide_all_popups: hide_all_popups,
     };
 });
