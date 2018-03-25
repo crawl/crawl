@@ -770,6 +770,11 @@ body {
     flex-direction: column;
     white-space: pre;
 }
+.formatted-scroller > .body .highlight {
+    background: rgba(255,255,0,0.196);
+    width: 100%;
+    display: block;
+}
 
 .spellset ol {
     display: -webkit-box;
