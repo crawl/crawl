@@ -2550,7 +2550,7 @@ DEPTH:  D, Depths
 KMASK:  W = no_monster_gen
 SUBST:  W : Wm
 FTILE:  D = floor_limestone
-COLOUR: D = yellow
+COLOUR: D = brown
 MAP
 ....    ....
 .DD......DD.
