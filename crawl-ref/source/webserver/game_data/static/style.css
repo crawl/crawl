@@ -688,6 +688,78 @@ body {
     padding-bottom: 5px;
 }
 
+.describe-god {
+    width: 80ch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+.describe-god > .header {
+    margin-bottom: 15px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.describe-god > .header > canvas {
+    margin-right: 10px;
+}
+.describe-god > .body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+.describe-god > .footer {
+    margin-top: 15px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.describe-god td {
+    padding: 0;
+}
+.describe-god .god-favour td:nth-child(2) {
+    white-space: pre;
+}
+.describe-god .god-powers > .power {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.describe-god .god-powers > .power > :first-child {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+.describe-god .god-powers > .power > :last-child {
+    white-space: pre;
+}
+.describe-god .desc, .describe-god .god-favour, .describe-god .god-powers {
+    margin: 1em 0;
+}
+.describe-god > body, .describe-god .pane {
+    width: 80ch; /* for IE11 */
+}
+
 /* Use crisp (nearest-neighbor) upscaling on HiDPI screens to avoid blurriness. */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     canvas {

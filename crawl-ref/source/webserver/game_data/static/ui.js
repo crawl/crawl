@@ -70,6 +70,31 @@ function ($, comm, client) {
             hide_popup(false);
     }
 
+    function ui_key_handler (ev)
+    {
+        if (client.is_watching())
+            return;
+        var $popup = top_popup();
+        if ($popup === undefined)
+            return;
+
+        var new_ev = $.extend({}, ev);
+        new_ev.type = ev.type.replace(/^game_/, "");
+        $popup.triggerHandler(new_ev);
+
+        if (new_ev.default_prevented)
+            ev.preventDefault();
+        if (new_ev.propagation_stopped)
+            ev.stopImmediatePropagation();
+    }
+
+    $(document).off("game_init.ui")
+        .on("game_init.ui", function () {
+        $(document).off("game_keydown.ui game_keypress.ui")
+            .on("game_keydown.ui", ui_key_handler)
+            .on("game_keypress.ui", ui_key_handler);
+    });
+
     return {
         show_popup: show_popup,
         hide_popup: hide_popup,
