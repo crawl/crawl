@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "ui", "./enums", "./cell_renderer",
-        "./util", "./options"],
-function ($, comm, client, ui, enums, cr, util, options) {
+        "./util", "./options", "./scroller"],
+function ($, comm, client, ui, enums, cr, util, options, scroller) {
     "use strict";
 
     var chunk_size = 50;
@@ -123,10 +123,11 @@ function ($, comm, client, ui, enums, cr, util, options) {
                             true, container);
         update_item_range(menu.chunk_start, chunk);
 
+        menu.scroller = scroller(content_div[0]);
+        menu.scroller.scrollElement.addEventListener('scroll', menu_scroll_handler);
+
         menu_div.append("<div class='menu_more'>" + util.formatted_string_to_html(menu.more)
                         + "</div>");
-
-        content_div.scroll(menu_scroll_handler);
 
         menu.server_scroll = true;
 
@@ -298,7 +299,7 @@ function ($, comm, client, ui, enums, cr, util, options) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = menu.elem.find(".menu_contents")
+        var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top - baseline);
@@ -319,7 +320,7 @@ function ($, comm, client, ui, enums, cr, util, options) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = menu.elem.find(".menu_contents")
+        var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top + item.elem.height()
@@ -381,6 +382,7 @@ function ($, comm, client, ui, enums, cr, util, options) {
 
         if (!menu) return;
 
+        update_visible_indices();
         comm.send_message("menu_scroll", {
             first: menu.first_visible,
             last: menu.last_visible
@@ -538,7 +540,7 @@ function ($, comm, client, ui, enums, cr, util, options) {
         if (menu.type != "crt" && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
         {
             var contents_height = menu.elem.find(".menu_contents_inner").height();
-            var contents = menu.elem.find(".menu_contents");
+            var contents = $(menu.scroller.scrollElement);
             var more = menu.elem.find(".menu_more");
             var avail_height = contents.height() + more.height();
             more[0].classList.toggle("hidden", contents_height <= avail_height);
