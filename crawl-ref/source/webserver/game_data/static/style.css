@@ -306,6 +306,39 @@ body {
     float: right;
 }
 
+/* scroller */
+.scroller-shade {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    pointer-events: none;
+}
+.scroller-shade.top {
+    top: 0;
+    background: -webkit-gradient(linear, left top, left bottom, from(black), to(rgba(0, 0, 0, 0.001)));
+    background: -webkit-linear-gradient(black, rgba(0, 0, 0, 0.001));
+    background: -o-linear-gradient(black, rgba(0, 0, 0, 0.001));
+    background: linear-gradient(black, rgba(0, 0, 0, 0.001));
+}
+.scroller-shade.bot {
+    bottom: 0;
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.001)), to(black));
+    background: -webkit-linear-gradient(rgba(0, 0, 0, 0.001), black);
+    background: -o-linear-gradient(rgba(0, 0, 0, 0.001), black);
+    background: linear-gradient(rgba(0, 0, 0, 0.001), black);
+}
+.simplebar-scroll-content {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+}
+.simplebar-content > :first-child {
+    margin-top: 0 !important;
+}
+.simplebar-content > :last-child {
+    margin-bottom: 0 !important;
+}
+
 /* menus */
 .menu {
     line-height: 1.2em;
