@@ -13,6 +13,15 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
             .split("\n").join("<br>");
     }
 
+    function paneset_cycle($el, next)
+    {
+        var $panes = $el.children(".pane");
+        var $current = $panes.filter(".current").removeClass("current");
+        if (next === undefined)
+            next = $panes.index($current) + 1;
+        $panes.eq(next % $panes.length).addClass("current");
+    }
+
     function describe_generic(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
