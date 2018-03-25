@@ -179,6 +179,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         "ui-state": recv_ui_state,
     });
 
+    function top_popup()
+    {
+        var $popup = $("#ui-stack").children().last();
+        if ($popup.length === 0)
+            return;
+        return $popup.find(".ui-popup-inner").children().eq(0);
+    }
+
     return {
         register_handlers: register_ui_handlers,
     };
