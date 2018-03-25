@@ -23,6 +23,7 @@ void show_interlevel_travel_depth_help();
 void show_stash_search_help();
 void show_butchering_help();
 void show_skill_menu_help();
+void show_spell_library_help();
 
 void list_commands(int hotkey = 0, string highlight_string = "");
 

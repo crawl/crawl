@@ -17,6 +17,7 @@
 
 #include "artefact.h"
 #include "colour.h"
+#include "command.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
@@ -474,17 +475,6 @@ public:
 protected:
     virtual formatted_string calc_title() override
     {
-#ifdef USE_TILE_LOCAL
-        return formatted_string::parse_string(
-                    make_stringf("<w> Your Spells - [%s] (toggle with '!')",
-                        current_action == action::memorise ?
-                            "<blue>Memorise</blue><w>|Describe|Hide|Show" :
-                        current_action == action::describe ?
-                            "Memorise|<blue>Describe</blue><w>|Hide|Show" :
-                        current_action == action::hide ?
-                            "Memorise|Describe|<blue>Hide</blue><w>|Show" :
-                            "Memorise|Describe|Hide|<blue>Show</blue><w>"));
-#else
         return formatted_string::parse_string(
                     make_stringf("<w> Spells %s                 Type                          Failure  Level",
                         current_action == action::memorise ?
@@ -494,7 +484,6 @@ protected:
                         current_action == action::hide ?
                             "(Hide)    " :
                             "(Show)    "));
-#endif
     }
 
 private:
@@ -509,13 +498,12 @@ private:
             if (you.hidden_spells.get(spell))
                 hidden++;
 
-        string hidden_str = make_stringf("   %d spell%s hidden",
+        string hidden_str = make_stringf("  %d spell%s hidden",
                                          hidden,
                                          hidden > 1 ? "s" : "");
 
         set_more(formatted_string::parse_string(more_str
-#ifndef USE_TILE_LOCAL
-                  + make_stringf("   [<w>!</w>/<w>?</w>]: %s%s",
+                  + make_stringf("  <w>!</w>: %s%s  <w>?</w>: help",
                         current_action == action::memorise ?
                             "<w>Memorise</w>|Describe|Hide|Show" :
                         current_action == action::describe ?
@@ -524,14 +512,13 @@ private:
                             "Memorise|Describe|<w>Hide</w>|Show" :
                             "Memorise|Describe|Hide|<w>Show</w>",
                         hidden ? hidden_str.c_str() : "")
-#endif
                 ));
     }
 
     virtual bool process_key(int keyin) override
     {
         bool entries_changed = false;
-        if (keyin == '!' || keyin == '?'
+        if (keyin == '!'
 #ifdef TOUCH_UI
             || keyin == CK_TOUCH_DUMMY
 #endif
@@ -553,9 +540,7 @@ private:
                     entries_changed = true;
                     break;
             }
-#ifndef USE_TILE_LOCAL
             update_more();
-#endif
         }
         else if (keyin == CONTROL('F'))
         {
@@ -569,6 +554,8 @@ private:
                 search_text = "";
             entries_changed = old_search != search_text;
         }
+        else if (keyin == '?')
+            show_spell_library_help();
         else
             return Menu::process_key(keyin);
 
@@ -583,16 +570,6 @@ private:
     void update_entries()
     {
         deleteAll(items);
-#ifdef USE_TILE_LOCAL
-        // [enne] Hack. Use a separate title, so the column headers are aligned.
-        MenuEntry* subtitle =
-            new MenuEntry(" Spells                            Type          "
-                          "                Failure  Level",
-                MEL_ITEM);
-        subtitle->colour = BLUE;
-        subtitle->add_tile(tile_def(0, TEX_GUI)); // invisible tile
-        add_entry(subtitle);
-#endif
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
