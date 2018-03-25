@@ -1055,6 +1055,37 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<UIPopup>& popup,
     popup = make_shared<UIPopup>(vbox);
 }
 
+#ifdef USE_TILE_WEB
+static void _send_god_ui(god_type god)
+{
+    tiles.json_open_object();
+
+    const tileidx_t idx = tileidx_feature_base(altar_for_god(god));
+    tiles.json_open_object("tile");
+    tiles.json_write_int("t", idx);
+    tiles.json_write_int("tex", get_dngn_tex(idx));
+    tiles.json_close_object();
+
+    tiles.json_write_int("colour", god_colour(god));
+    tiles.json_write_string("name", god_name(god, true));
+
+    tiles.json_write_string("description", getLongDescription(god_name(god)));
+    if (you_worship(god))
+        tiles.json_write_string("title", god_title(god, you.species, you.piety));
+    tiles.json_write_string("favour", you_worship(god) ?
+            _describe_favour(god) : _god_penance_message(god));
+    tiles.json_write_string("powers_list", _describe_god_powers(god));
+
+    tiles.json_write_string("overview",
+            _god_overview_description(god).to_colour_string());
+    tiles.json_write_string("powers",
+            _detailed_god_description(god).to_colour_string());
+    tiles.json_write_string("wrath",
+            _god_wrath_description(god).to_colour_string());
+    tiles.push_ui_layout("describe-god", 1);
+}
+#endif
+
 void describe_god(god_type which_god)
 {
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
@@ -1075,21 +1106,31 @@ void describe_god(god_type which_god)
         int key = ev.key.keysym.sym;
         if (key == '!' || key == CK_MOUSE_CMD || key == '^')
         {
-            int c = desc_sw->current();
-            desc_sw->current() = more_sw->current() = (c + 1) % 3;
+            int n = (desc_sw->current() + 1) % 3;
+            desc_sw->current() = more_sw->current() = n;
+#ifdef USE_TILE_WEB
+                tiles.json_open_object();
+                tiles.json_write_int("pane", n);
+                tiles.ui_state_change("describe-god", 0);
+#endif
             return true;
         }
         return done = !popup->get_child()->on_event(ev);
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles_crt_control disable_crt(false);
+    _send_god_ui(which_god);
 #endif
 
     ui_push_layout(popup);
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 bool describe_god_with_join(god_type which_god)
@@ -1167,6 +1208,11 @@ bool describe_god_with_join(god_type which_god)
         {
             int n = (desc_sw->current() + 1) % num_panes;
             desc_sw->current() = n;
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_int("pane", n);
+            tiles.ui_state_change("describe-god", 0);
+#endif
             if (step == SHOW)
                 more_sw->current() = n;
             else
@@ -1205,18 +1251,30 @@ bool describe_god_with_join(god_type which_god)
         step = static_cast<join_step_type>(step + 1);
 
 update_ui:
+#ifdef USE_TILE_WEB
+        tiles.json_open_object();
+        string prompt = prompts[step] + (yesno_only ? " [Y]es or [n]o only, please." : "");
+        tiles.json_write_string("prompt", prompt);
+        tiles.json_write_int("pane", desc_sw->current());
+        tiles.ui_state_change("describe-god", 0);
+#endif
         more_sw->current() = num_panes + step*2 + yesno_only;
         return true;
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
+    tiles_crt_control disable_crt(false);
+    _send_god_ui(which_god);
 #endif
 
     ui_push_layout(popup);
     while (!done)
         ui_pump_events();
     ui_pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     return join;
 }

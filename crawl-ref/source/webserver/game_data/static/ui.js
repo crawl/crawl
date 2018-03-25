@@ -177,6 +177,68 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         }
     }
 
+    function describe_god(desc)
+    {
+        var $popup = $(".templates > .describe-god").clone();
+        $popup.find(".header > span").addClass("fg"+desc.colour).html(desc.name);
+
+        var canvas = $popup.find(".header > canvas")[0];
+        var renderer = new cr.DungeonCellRenderer();
+        util.init_canvas(canvas, renderer.cell_width, renderer.cell_height);
+        renderer.init(canvas);
+        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, 0, false);
+
+        var $body = $popup.children(".body");
+        var $footer = $popup.find(".footer > .paneset");
+        var $panes = $body.children(".pane");
+
+        $panes.eq(0).find(".desc").html(desc.description);
+        $panes.eq(0).find(".god-favour td.title").addClass("fg"+desc.colour).html(desc.title);
+        $panes.eq(0).find(".god-favour td.favour").addClass("fg"+desc.colour).html(desc.favour);
+        var powers_list = desc.powers_list.split("\n").slice(3, -1);
+        var $powers = $panes.eq(0).find(".god-powers");
+        var re = /^(.*\.) *( \(.*\))?$/;
+        for (var i = 0; i < powers_list.length; i++)
+        {
+            var matches = powers_list[i].match(re);
+            var power = matches[1], cost = matches[2] || "";
+            $powers.append("<div class=power><div>"+power+"</div><div>"+cost+"</div></div>");
+        }
+
+        $panes.eq(1).html(fmt_body_txt(util.formatted_string_to_html(desc.powers)));
+        $panes.eq(2).html(fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
+        for (var i = 0; i < 3; i++)
+            scroller($panes.eq(i)[0]);
+
+        $popup.on("keydown", function (event) {
+            if (event.key === "!" || event.key === "^")
+            {
+                paneset_cycle($body);
+                paneset_cycle($footer);
+            }
+        });
+        paneset_cycle($body);
+        paneset_cycle($footer);
+
+        return $popup;
+    }
+
+    function describe_god_update(msg)
+    {
+        var $popup = top_popup();
+        if (!$popup.hasClass("describe-god"))
+            return;
+        if (msg.pane !== undefined && client.is_watching())
+        {
+            paneset_cycle($popup.children(".body"), msg.pane);
+            var $footer = $popup.find(".footer > .paneset");
+            if ($footer.length > 0)
+                paneset_cycle($footer, msg.pane);
+        }
+        if (msg.prompt !== undefined)
+            $popup.children(".footer").html(msg.prompt).addClass("fg3");
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -184,6 +246,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
         "describe-spell" : describe_spell,
         "describe-cards" : describe_cards,
         "mutations" : mutations,
+        "describe-god" : describe_god,
     };
 
     function register_ui_handlers(dict)
@@ -215,6 +278,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
     {
         var ui_handlers = {
             "mutations" : mutations_update,
+            "describe-god" : describe_god_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)
@@ -235,6 +299,31 @@ function ($, comm, client, ui, enums, cr, util, scroller, main) {
             return;
         return $popup.find(".ui-popup-inner").children().eq(0);
     }
+
+    function ui_key_handler (ev)
+    {
+        if (client.is_watching())
+            return;
+        var $popup = top_popup();
+        if ($popup === undefined)
+            return;
+
+        var new_ev = $.extend({}, ev);
+        new_ev.type = ev.type.replace(/^game_/, "");
+        $popup.triggerHandler(new_ev);
+
+        if (new_ev.default_prevented)
+            ev.preventDefault();
+        if (new_ev.propagation_stopped)
+            ev.stopImmediatePropagation();
+    }
+
+    $(document).off("game_init.ui")
+        .on("game_init.ui", function () {
+        $(document).off("game_keydown.ui game_keypress.ui")
+            .on("game_keydown.ui", ui_key_handler)
+            .on("game_keypress.ui", ui_key_handler);
+    });
 
     return {
         register_handlers: register_ui_handlers,
