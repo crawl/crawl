@@ -339,6 +339,23 @@ body {
     margin-bottom: 0 !important;
 }
 
+/* paneset */
+.paneset {
+    display: -ms-inline-grid;
+    display: inline-grid;
+    overflow: hidden;
+}
+.paneset > .pane {
+    -ms-grid-row: 1;
+    grid-row: 1;
+    -ms-grid-column: 1;
+    grid-column: 1;
+    visibility: hidden;
+}
+.paneset > .pane.current {
+    visibility: visible;
+}
+
 /* menus */
 .menu {
     line-height: 1.2em;
