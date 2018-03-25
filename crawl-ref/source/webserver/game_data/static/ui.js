@@ -374,7 +374,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = $(".templates > .formatted-scroller").clone();
         var $body = $popup.children(".body");
         var $more = $popup.children(".more");
-        $body.html(util.formatted_string_to_html(desc.text));
+        var body_html = util.formatted_string_to_html(desc.text);
+        if (desc.highlight !== "")
+        {
+            var rexp = '[^\n]*'+desc.highlight+'[^\n]*\n?';
+            var re = new RegExp(rexp, 'g');
+            console.log(rexp);
+            body_html = body_html.replace(re, function (line) {
+                console.log(line)
+                return "<span class=highlight>" + line + "</span>";
+            });
+        }
+        $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
         scroller($body[0]).scrollElement
             .addEventListener("scroll", formatted_scroller_onscroll);

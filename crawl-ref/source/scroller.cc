@@ -118,6 +118,7 @@ int formatted_scroller::show()
 #ifdef USE_TILE_WEB
             tiles.json_open_object();
             tiles.json_write_string("text", contents.to_colour_string());
+            tiles.json_write_string("highlight", highlight);
             tiles.ui_state_change("formatted-scroller", 0);
 #endif
         }
@@ -138,6 +139,7 @@ int formatted_scroller::show()
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("text", contents.to_colour_string());
+    tiles.json_write_string("highlight", highlight);
     tiles.json_write_string("more", m_more.to_colour_string());
     tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
     tiles.push_ui_layout("formatted-scroller", 2);
