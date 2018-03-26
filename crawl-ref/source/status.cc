@@ -931,9 +931,13 @@ static void _describe_airborne(status_info* inf)
     const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
     string desc          = "";
 
-    if (you.tengu_flight() || you.faerie_dragon_flight())
+    if (you.tengu_flight())
     {
         desc = " quickly and evasively";
+    }
+    else if (you.faerie_dragon_flight())
+    {
+        desc = " evasively";
     }
 
     inf->light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
