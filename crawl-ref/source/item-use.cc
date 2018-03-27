@@ -489,8 +489,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     else if (item_slot == you.equip[EQ_WEAPON])
     {
-        mpr("You are already wielding that!");
-        return true;
+        if (Options.equip_unequip)
+            item_slot = SLOT_BARE_HANDS;
+        else
+        {
+            mpr("You are already wielding that!");
+            return true;
+        }
     }
 
     // Reset the warning counter.
