@@ -178,6 +178,11 @@ GotoRegion get_cursor_region()
     return tiles.get_cursor_region();
 }
 
+void set_cursor_region(GotoRegion region)
+{
+    tiles.set_cursor_region(region);
+}
+
 void delay(unsigned int ms)
 {
     if (crawl_state.disables[DIS_DELAY])
