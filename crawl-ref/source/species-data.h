@@ -868,7 +868,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
       JOB_FIRE_ELEMENTALIST, JOB_SORCERER },
-    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_AXES },
 } },
 
 { SP_OCTOPODE, {

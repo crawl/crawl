@@ -371,8 +371,7 @@ static void _tile_exclude_gmap_update(const coord_def &p)
         for (int y = -8; y <= 8; y++)
         {
             const coord_def pc(p.x + x, p.y + y);
-            if (in_bounds(pc))
-                tiles.update_minimap(pc);
+            tiles.update_minimap(pc);
         }
 }
 #endif
@@ -428,7 +427,7 @@ void clear_excludes()
 static void _exclude_gate(const coord_def &p, bool del = false)
 {
     set<coord_def> all_doors;
-    find_connected_identical(p, all_doors);
+    find_connected_identical(p, all_doors, true);
     for (const auto &dc : all_doors)
     {
         if (del)
@@ -444,7 +443,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(grd(p)))
+        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;

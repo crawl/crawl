@@ -441,7 +441,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     game_ended(exit_reason);
 }
 
-NORETURN void game_ended(game_exit exit)
+NORETURN void game_ended(game_exit exit, const string &message)
 {
     if (crawl_state.marked_as_won &&
         (exit == game_exit::death || exit == game_exit::leave))
@@ -449,35 +449,25 @@ NORETURN void game_ended(game_exit exit)
         // used in tutorials
         exit = game_exit::win;
     }
-    if (!crawl_state.seen_hups)
-        throw game_ended_condition(exit);
-    else
-        end(0);
-}
-
-NORETURN void game_ended_with_error(const string &message)
-{
-    if (crawl_state.seen_hups)
-        end(1);
-
-#ifdef USE_TILE_WEB
-    tiles.send_exit_reason("error", message);
-#endif
-
-    if (crawl_should_restart(game_exit::crash))
+    if (crawl_state.seen_hups ||
+        (exit == game_exit::crash && !crawl_should_restart(game_exit::crash)))
     {
-        if (crawl_state.io_inited)
+        const int retval = exit == game_exit::crash ? 1 : 0;
+        if (message.size() > 0)
         {
-            mprf(MSGCH_ERROR, "%s", message.c_str());
-            more();
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("error", message);
+#endif
+            end(retval, false, "%s\n", message.c_str());
         }
         else
-        {
-            fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
-            getchar();
-        }
-        game_ended(game_exit::crash);
+            end(retval);
     }
-    else
-        end(1, false, "%s", message.c_str());
+    throw game_ended_condition(exit, message);
+}
+
+// note: this *will not* print a crash dump, and so should probably be avoided.
+NORETURN void game_ended_with_error(const string &message)
+{
+    game_ended(game_exit::crash, message);
 }

@@ -738,7 +738,6 @@ const set<pair<object_class_type, int> > removed_items =
 #if TAG_MAJOR_VERSION == 34
     { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
     { OBJ_JEWELLERY, AMU_CONSERVATION },
-    { OBJ_JEWELLERY, AMU_DISMISSAL },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
@@ -2728,10 +2727,12 @@ bool gives_ability(const item_def &item)
         if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
 
-#if TAG_MAJOR_VERSION == 34
-    if (artefact_property(item, ARTP_FOG))
+    // Unrands that grant an evokable ability.
+    if (is_unrandom_artefact(item, UNRAND_THIEF)
+        || is_unrandom_artefact(item, UNRAND_RATSKIN_CLOAK))
+    {
         return true;
-#endif
+    }
 
     return false;
 }

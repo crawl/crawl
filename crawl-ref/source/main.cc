@@ -330,7 +330,10 @@ int main(int argc, char *argv[])
 #endif
 
     _launch_game_loop();
-    end(0);
+    if (crawl_state.last_game_exit.message.size())
+        end(0, false, "%s\n", crawl_state.last_game_exit.message.c_str());
+    else
+        end(0);
 
     return 0;
 }
@@ -376,7 +379,7 @@ static void _launch_game_loop()
         catch (game_ended_condition &ge)
         {
             game_ended = true;
-            crawl_state.last_game_exit = ge.exit_reason;
+            crawl_state.last_game_exit = ge;
             _reset_game();
 
             // Don't re-enter the Sprint menu with restart_after_save, as
@@ -392,7 +395,7 @@ static void _launch_game_loop()
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
-    } while (crawl_should_restart(crawl_state.last_game_exit)
+    } while (crawl_should_restart(crawl_state.last_game_exit.exit_reason)
              && game_ended
              && !crawl_state.seen_hups);
 }
@@ -1113,6 +1116,13 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
+        // Clear "last action was a move or rest" flag.
+        if (you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
+        {
+            you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = false;
+            you.redraw_evasion = true;
+        }
+
 #ifdef USE_TILE_LOCAL
         cursor_control con(false);
 #endif
@@ -1199,7 +1209,13 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // Up and down both work for shops, portals, and altars.
     if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
-        if (you.berserk())
+        if (crawl_state.doing_prev_cmd_again)
+        {
+            mprf("You can't repeat %s actions.",
+                ftype == DNGN_ENTER_SHOP ? "shop" : "altar");
+            crawl_state.cancel_cmd_all();
+        }
+        else if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
         else if (ftype == DNGN_ENTER_SHOP) // don't convert to capitalism
             shop();
@@ -1599,7 +1615,7 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (you.hunger_state <= HS_STARVING && !you_min_hunger())
+    if (apply_starvation_penalties())
     {
         mpr("You're too hungry to rest.");
         return;
@@ -1685,6 +1701,7 @@ static void _do_list_gold()
 void process_command(command_type cmd)
 {
     you.apply_berserk_penalty = true;
+
     switch (cmd)
     {
 #ifdef USE_TILE
@@ -1759,7 +1776,7 @@ void process_command(command_type cmd)
         break;
     }
 #endif
-    case CMD_REST:            _do_rest(); break;
+    case CMD_REST:           _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:
     case CMD_GO_DOWNSTAIRS:
@@ -1825,9 +1842,8 @@ void process_command(command_type cmd)
             break;
         // else fall-through
     case CMD_WAIT:
+        update_acrobat_status();
         you.turn_is_over = true;
-        extract_manticore_spikes("You carefully extract the barbed spikes "
-                                 "from your body.");
         break;
 
     case CMD_PICKUP:
@@ -1886,7 +1902,7 @@ void process_command(command_type cmd)
 
         // Informational commands.
     case CMD_DISPLAY_CHARACTER_STATUS: display_char_status();          break;
-    case CMD_DISPLAY_COMMANDS:         list_commands(0, true);         break;
+    case CMD_DISPLAY_COMMANDS:         list_commands(0); clrscr(); redraw_screen(); break;
     case CMD_DISPLAY_INVENTORY:        display_inventory();            break;
     case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
@@ -3020,7 +3036,7 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (you.hunger_state <= HS_STARVING && you.undead_state() == US_ALIVE)
+        if (apply_starvation_penalties())
         {
             you.digging = false;
             canned_msg(MSG_TOO_HUNGRY);
@@ -3229,13 +3245,26 @@ static void _move_player(coord_def move)
             // Sometimes decrease duration even when we move.
             if (one_chance_in(3))
                 extract_manticore_spikes("The barbed spikes snap loose.");
+            // But if that failed to end the effect, duration stays the same.
+            if (you.duration[DUR_BARBS])
+                you.duration[DUR_BARBS] += you.time_taken;
+        }
+
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
+                                 "you move.");
+            you.duration[DUR_ICY_ARMOUR] = 0;
+            you.redraw_armour_class = true;
         }
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        // Serpent's Lash = 1 means half of the wall jump time is refunded, so the modifier is 2 * 1/2 = 1;
-        int wall_jump_modifier = (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
+        // Serpent's Lash = 1 means half of the wall jump time is refunded, so
+        // the modifier is 2 * 1/2 = 1;
+        int wall_jump_modifier =
+            (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
 
         you.time_taken *= wall_jump_modifier * player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
@@ -3332,8 +3361,13 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
+    bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking)
-        wu_jian_post_move_effects(did_wall_jump, you.turn_is_over, initial_position);
+        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump, initial_position);
+
+    // If you actually moved you are eligible for amulet of the acrobat.
+    if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
+        update_acrobat_status();
 }
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)

@@ -93,7 +93,7 @@ static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
 
 static void _labyrinth_place_items(const coord_def &end)
 {
-    int num_items = 8 + random2avg(12, 2);
+    int num_items = 7 + random2avg(10, 2);
     for (int i = 0; i < num_items; i++)
     {
         const object_class_type glopop = random_choose_weighted(

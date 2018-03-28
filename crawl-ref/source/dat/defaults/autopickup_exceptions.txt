@@ -21,14 +21,6 @@ ae += forbidden
 # Ignore books that you have already seen
 ae += [^n]identified.*spellbook
 
-: add_autopickup_func(function (it, name)
-:         if you.god() == "Trog" then
-:             if it.class(true) == "book" and not it.name():find("manual") then
-:                 return true
-:             end
-:         end
-: end)
-
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
 :  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
@@ -82,7 +74,7 @@ ae += [^n]identified.*spellbook
 # that means you already have one of it.). Some items may already be excluded
 # as bad_item, e.g. inaccuracy.
 ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
-ae += amulet of (rage|guardian spirit|faith|magic regeneration)
+ae += amulet of (rage|guardian spirit|faith|magic regeneration|the acrobat)
 
 # Likewise for some rings.
 ae += ring of (see invisible|flight|poison resistance|resist corrosion)

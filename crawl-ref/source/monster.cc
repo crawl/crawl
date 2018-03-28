@@ -2693,9 +2693,11 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    clear_direct_constrictions_far_from(c);
-
     set_position(c);
+
+    // Do constriction invalidation after to the move, so that all LOS checking
+    // is available.
+    clear_invalid_constrictions(true);
 }
 
 bool monster::fumbles_attack()
@@ -3980,9 +3982,11 @@ bool monster::res_torment() const
            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
-bool monster::res_wind() const
+bool monster::res_tornado() const
 {
-    return has_ench(ENCH_TORNADO) || get_mons_resist(*this, MR_RES_WIND) > 0;
+    return has_ench(ENCH_TORNADO)
+           || has_ench(ENCH_VORTEX)
+           || get_mons_resist(*this, MR_RES_TORNADO) > 0;
 }
 
 bool monster::res_petrify(bool /*temp*/) const

@@ -1149,11 +1149,6 @@ bool form_can_bleed(transformation form)
     return get_form(form)->can_bleed != FC_FORBID;
 }
 
-bool form_can_use_wand(transformation form)
-{
-    return form_can_wield(form) || form == transformation::dragon;
-}
-
 // Used to mark forms which keep most form-based mutations.
 bool form_keeps_mutations(transformation form)
 {
@@ -1494,9 +1489,10 @@ static bool _transformation_is_safe(transformation which_trans,
  * May prompt the player.
  *
  * @param new_form  The form to check the safety of.
+ * @param quiet     Whether to prompt the player.
  * @return          Whether it's okay to go ahead with the transformation.
  */
-bool check_form_stat_safety(transformation new_form)
+bool check_form_stat_safety(transformation new_form, bool quiet)
 {
     const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
     const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
@@ -1505,6 +1501,8 @@ bool check_form_stat_safety(transformation new_form)
     const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
     if (!bad_str && !bad_dex)
         return true;
+    if (quiet)
+        return false;
 
     string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
                                  new_form == transformation::none

@@ -303,7 +303,7 @@ public:
     virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
-    virtual bool res_wind() const = 0;
+    virtual bool res_tornado() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int res_magic(bool calc_unid = true) const = 0;
@@ -428,11 +428,8 @@ public:
     void stop_being_constricted(bool quiet = false);
 
     bool can_constrict(const actor* defender, bool direct) const;
-    bool has_invalid_direct_constrictor(const coord_def &where) const;
-    void clear_direct_constrictions_far_from(const coord_def &where);
-    bool has_invalid_indirect_constrictor() const;
-    void clear_invalid_indirect_constrictions();
-    void clear_invalid_constrictions();
+    bool has_invalid_constrictor(bool move = false) const;
+    void clear_invalid_constrictions(bool move = false);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;

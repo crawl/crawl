@@ -556,7 +556,7 @@ i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 bread_ration FOOD_RATION UNSEEN_FOOD FOOD_RATION_FIRST FOOD_RATION_INVENTORY
 meat_ration
 cheese
-honeycomb
+honeycomb FOOD_HONEYCOMB
 sausage
 pizza FOOD_PIZZA
 beef_jerky
@@ -783,7 +783,7 @@ sun
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
 i-harm AMU_HARM
-i-dismissal AMU_DISMISSAL
+i-acrobat AMU_ACROBAT
 i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
 i-rage AMU_REMOVEME1

@@ -402,6 +402,37 @@ int debug_cap_stat(int stat)
                        : stat;
 }
 
+void debug_list_vacant_keys()
+{
+    // Excluding / and * as they are prefix keys
+    const char *base_keys = "`~[{]}\\|-_=+;:'\",<.>?!@#$%^&()1234567890";
+    string message = "Available keys:";
+    function<void(char, string)> check = [&message](char k, const string name)
+            {
+                command_type cmd = key_to_command(k, KMC_DEFAULT);
+                if (cmd == CMD_NO_CMD)
+                {
+                    message += ' ';
+                    message += name;
+                }
+            };
+    for (const char *k = base_keys; *k; k++)
+        check(*k, string(1, *k));
+
+    for (char base = 'A'; base <= 'Z'; base++)
+    {
+        check(base, string(1, base));
+
+        char lower = tolower(base);
+        check(lower, string(1, lower));
+
+        char ctrl = CONTROL(base);
+        check(ctrl, string{'^', base});
+    }
+
+    mpr(message);
+}
+
 #ifdef DEBUG
 static FILE *debugf = 0;
 

@@ -498,13 +498,8 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _VARIABILITY_world_reacts(item_def *item)
 {
-    if (x_chance_in_y(2, 5))
-        item->plus += random_choose(+1, -1);
-
-    if (item->plus < -4)
-        item->plus = -4;
-    else if (item->plus > 16)
-        item->plus = 16;
+    item->plus += random_choose(0, 0, 0, +1, -1);
+    item->plus = max((short)-4, min((short)16, item->plus));
 }
 
 ///////////////////////////////////////////////////

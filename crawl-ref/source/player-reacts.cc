@@ -818,6 +818,8 @@ static void _decrement_durations()
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
+    extract_manticore_spikes("You carefully extract the barbed spikes from "
+                             "your body.");
 
     if (!env.sunlight.empty())
         process_sunlights();
@@ -950,7 +952,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    update_regen_amulet_attunement();
+    update_amulet_attunement_by_health();
 
     // MP Regeneration
     if (!player_regenerates_mp())

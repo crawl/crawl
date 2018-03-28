@@ -170,10 +170,10 @@ to Elyvilon or Zin while keeping some piety.
 Trog
 
 Trog is an ancient god of anger and violence. Followers are expected to kill in
-Trog's name, and especially to slay wizards and burn their spellbooks. In
-return, worshippers of Trog gain the ability to go berserk at will in combat,
-and will be granted assistance in the form of powerful weapons and mighty
-allies. Followers are absolutely forbidden the use of spell magic.
+Trog's name, and especially to slay wizards. In return, worshippers of Trog
+gain the ability to go berserk at will in combat, and will be granted
+assistance in the form of powerful weapons and mighty allies. Followers are
+absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
@@ -315,19 +315,19 @@ below. They will also be taught to move at unfathomable speeds for short
 distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
 
-  .......       ....... (-) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
   ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
   .......       .......
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
   ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one turn.
+  .......       ....... motion pins monsters in place for one action.
 
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault towards enemies, striking all
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. enemies adjacent to the landing spot. Triggered by
-  ..#....       ..#.... moving into the wall, or via the (a)bility menu. Set
-                        rc option <lightred>wall_jump_move = false</lightred> to disable movement-
-                        activated wall jump.
+  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault off it and
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
+  ..#....       ..#.... takes two turns. Can also be activated via the
+                        (a)bility menu. Set the config option <lightred>wall_jump_move =
+                        false</lightred> to disable movement-activated wall jump.
 
 %%%%
 Kikubaaqudgha powers
@@ -345,11 +345,11 @@ Followers of Lugonu gain powers to depart the Abyss at will, to bend space
 around themselves, and to banish monsters to the Abyss. Later they will be able
 to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
 through, and to gate themselves directly into this realm of chaos. Lugonu will
-eventually offer to corrupt a follower's weapon, imbuing it with the distorting
-energies of the Abyss, and will protect the follower from the normally harmful
-effects of unwielding such a weapon. Lugonu expects followers to spread
-unceasing chaos in the overworld, and as such does not grant piety to
-worshippers while they remain in the Abyss itself.
+protect followers from the normally harmful effects of weapons imbued with the
+distorting energies of the Abyss, and eventually will offer to corrupt a
+follower's weapon in that way. Lugonu expects followers to spread unceasing
+chaos in the overworld, and as such does not grant piety to worshippers while
+they remain in the Abyss itself.
 %%%%
 Makhleb powers
 
@@ -361,10 +361,11 @@ grant followers renewed health in return for killing beings of all kinds.
 Nemelex Xobeh powers
 
 The Trickster's followers gain various ways to influence fate when playing
-their cards. The effects of the cards will be more powerful with higher piety.
-Later, followers will gain powerful abilities to manipulate the cards, allowing
-them to choose one of three drawn cards, to gain the effects of multiple cards
-at once, and finally to stack decks and re-order their contents.
+their cards. The effects of the cards will be more powerful with higher piety
+and with greater Invocations skill. Later, followers will gain powerful
+abilities to manipulate the cards, allowing them to choose one of three drawn
+cards, to gain the effects of multiple cards at once, and finally to stack
+decks and re-order their contents.
 %%%%
 Okawaru powers
 

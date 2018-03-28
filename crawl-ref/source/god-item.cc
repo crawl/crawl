@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "food.h"
+#include "god-conduct.h"
 #include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -53,7 +54,7 @@ static bool _is_book_type(const item_def& item,
     return true;
 }
 
-bool is_holy_item(const item_def& item)
+bool is_holy_item(const item_def& item, bool calc_unid)
 {
     bool retval = false;
 
@@ -65,12 +66,19 @@ bool is_holy_item(const item_def& item)
             return true;
     }
 
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        if (is_blessed(item))
+            return true;
+        if (calc_unid || item_brand_known(item))
+            return get_weapon_brand(item) == SPWPN_HOLY_WRATH;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        retval = (is_blessed(item)
-                  || get_weapon_brand(item) == SPWPN_HOLY_WRATH);
-        break;
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_HOLY_WORD);
         break;
@@ -81,17 +89,20 @@ bool is_holy_item(const item_def& item)
     return retval;
 }
 
-bool is_potentially_evil_item(const item_def& item)
+bool is_potentially_evil_item(const item_def& item, bool calc_unid)
 {
+    if (item.base_type == OBJ_WEAPONS
+        && item_brand_known(item)
+        && get_weapon_brand(item) == SPWPN_CHAOS)
+    {
+        return true;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_CHAOS)
-            return true;
-        }
-        break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
@@ -114,7 +125,7 @@ bool is_potentially_evil_item(const item_def& item)
 }
 
 // This is a subset of is_evil_item().
-bool is_corpse_violating_item(const item_def& item)
+bool is_corpse_violating_item(const item_def& item, bool calc_unid)
 {
     bool retval = false;
 
@@ -126,14 +137,18 @@ bool is_corpse_violating_item(const item_def& item)
             return true;
     }
 
+    if (item.base_type == OBJ_WEAPONS
+        && (calc_unid || item_brand_known(item))
+        && get_weapon_brand(item) == SPWPN_REAPING)
+    {
+        return true;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-    {
-        const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_REAPING);
-        break;
-    }
     case OBJ_BOOKS:
         retval = _is_book_type(item, is_corpse_violating_spell);
         break;
@@ -148,9 +163,10 @@ bool is_corpse_violating_item(const item_def& item)
  * Do good gods always hate use of this item?
  *
  * @param item      The item in question.
+ * @param calc_unid Whether to take into account facts the player does not know.
  * @return          Whether the Good Gods will always frown on this item's use.
  */
-bool is_evil_item(const item_def& item)
+bool is_evil_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item))
     {
@@ -160,19 +176,25 @@ bool is_evil_item(const item_def& item)
             return true;
     }
 
-    switch (item.base_type)
+    if (item.base_type == OBJ_WEAPONS)
     {
-    case OBJ_WEAPONS:
         if (is_demonic(item))
             return true;
+        if (calc_unid || item_brand_known(item))
         {
-        const int item_brand = get_weapon_brand(item);
-        return item_brand == SPWPN_DRAINING
-               || item_brand == SPWPN_PAIN
-               || item_brand == SPWPN_VAMPIRISM
-               || item_brand == SPWPN_REAPING;
+            const int item_brand = get_weapon_brand(item);
+            return item_brand == SPWPN_DRAINING
+                   || item_brand == SPWPN_PAIN
+                   || item_brand == SPWPN_VAMPIRISM
+                   || item_brand == SPWPN_REAPING;
         }
-        break;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
+    switch (item.base_type)
+    {
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
@@ -188,7 +210,7 @@ bool is_evil_item(const item_def& item)
     }
 }
 
-bool is_unclean_item(const item_def& item)
+bool is_unclean_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item))
     {
@@ -198,13 +220,13 @@ bool is_unclean_item(const item_def& item)
             return true;
     }
 
-    if (item.has_spells())
+    if (item.has_spells() && (item_type_known(item) || calc_unid))
         return _is_book_type(item, is_unclean_spell);
 
     return false;
 }
 
-bool is_chaotic_item(const item_def& item)
+bool is_chaotic_item(const item_def& item, bool calc_unid)
 {
     bool retval = false;
 
@@ -216,14 +238,17 @@ bool is_chaotic_item(const item_def& item)
             return true;
     }
 
+    if (item.base_type == OBJ_WEAPONS
+        && (calc_unid || item_brand_known(item)))
+    {
+        return get_weapon_brand(item) == SPWPN_CHAOS;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_CHAOS);
-        }
-        break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
@@ -253,15 +278,18 @@ bool is_chaotic_item(const item_def& item)
 
 static bool _is_potentially_hasty_item(const item_def& item)
 {
+    if (item.base_type == OBJ_WEAPONS
+        && item_brand_known(item)
+        && get_weapon_brand(item) == SPWPN_CHAOS)
+    {
+        return true;
+    }
+
+    if (!item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_CHAOS)
-            return true;
-        }
-        break;
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
@@ -280,19 +308,23 @@ static bool _is_potentially_hasty_item(const item_def& item)
     return false;
 }
 
-bool is_hasty_item(const item_def& item)
+bool is_hasty_item(const item_def& item, bool calc_unid)
 {
     bool retval = false;
 
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        if (item.sub_type == WPN_QUICK_BLADE)
+            return true;
+        if (calc_unid || item_brand_known(item))
+            return get_weapon_brand(item) == SPWPN_SPEED;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_SPEED
-                  || item.sub_type == WPN_QUICK_BLADE);
-        }
-        break;
     case OBJ_ARMOUR:
         {
         const int item_brand = get_armour_ego_type(item);
@@ -318,15 +350,18 @@ bool is_hasty_item(const item_def& item)
 
 static bool _is_potentially_fiery_item(const item_def& item)
 {
+    if (item.base_type == OBJ_WEAPONS
+        && item_brand_known(item)
+        && get_weapon_brand(item) == SPWPN_CHAOS)
+    {
+        return true;
+    }
+
+    if (!item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_CHAOS)
-            return true;
-        }
-        break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_RANDOM_EFFECTS
             || item.sub_type == WAND_CLOUDS)
@@ -341,8 +376,18 @@ static bool _is_potentially_fiery_item(const item_def& item)
     return false;
 }
 
-bool is_fiery_item(const item_def& item)
+bool is_fiery_item(const item_def& item, bool calc_unid)
 {
+    if (item.base_type == OBJ_WEAPONS
+        && (calc_unid || item_brand_known(item))
+        && get_weapon_brand(item) == SPWPN_FLAMING)
+    {
+        return true;
+    }
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -387,10 +432,13 @@ bool is_fiery_item(const item_def& item)
     return false;
 }
 
-bool is_channeling_item(const item_def& item)
+bool is_channeling_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
         return true;
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
 
     return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY
            || item.base_type == OBJ_MISCELLANY
@@ -449,119 +497,54 @@ bool is_fiery_spell(spell_type spell)
     return bool(disciplines & SPTYP_FIRE);
 }
 
-static bool _your_god_hates_spell(spell_type spell)
-{
-    return god_hates_spell(spell, you.religion);
-}
-
 /**
- * Do the good gods dislike players using this item? If so, why?
+ * What conducts can one violate using this item?
+ * This should only be based on the player's knowledge.
  *
  * @param item  The item in question.
- * @return      Whether using the item counts as DID_EVIL.
+ * @return      List of conducts that can be violated with this; empty if none.
  */
-static bool item_handling_is_evil(const item_def &item)
+vector<conduct_type> item_conducts(const item_def &item)
 {
-    if (is_demonic(item))
-        return true;
+    vector<conduct_type> conducts;
 
-    if ((item_type_known(item) || is_unrandom_artefact(item))
-        && is_evil_item(item))
+    if (is_evil_item(item, false))
+        conducts.push_back(DID_EVIL);
+
+    if (is_unclean_item(item, false))
+        conducts.push_back(DID_UNCLEAN);
+
+    if (is_chaotic_item(item, false))
+        conducts.push_back(DID_CHAOS);
+
+    if (is_holy_item(item, false))
+        conducts.push_back(DID_HOLY);
+
+    if (item_is_spellbook(item))
+        conducts.push_back(DID_SPELL_MEMORISE);
+
+    if (item.sub_type == BOOK_MANUAL && item_type_known(item)
+        && is_magic_skill((skill_type)item.plus))
     {
-        return true;
+        conducts.push_back(DID_SPELL_PRACTISE);
     }
 
-    return false;
-}
+    if (is_corpse_violating_item(item, false))
+        conducts.push_back(DID_CORPSE_VIOLATION);
 
-/**
- * Does the player's god hate them using the given item? If so, why?
- *
- * XXX: We should really be returning a list of all possible conducts for the
- * item and potentially letting callers filter them by the current god; this
- * is duplicating god-conduct.cc otherwise.
- *
- * @param item  The item in question.
- * @return      Why the player's god hates the item, e.g. DID_HOLY for holy
- *              wrath items under Yredremnul; else DID_NOTHING.
- */
-conduct_type god_hates_item_handling(const item_def &item)
-{
-    if (is_good_god(you.religion) && item_handling_is_evil(item))
-        return DID_EVIL;
+    if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
+        conducts.push_back(DID_HASTY);
 
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        if (!item_type_known(item))
-            return DID_NOTHING;
+    if (_is_potentially_fiery_item(item) || is_fiery_item(item, false))
+        conducts.push_back(DID_FIRE);
 
-        if (is_unclean_item(item))
-            return DID_UNCLEAN;
+    if (is_channeling_item(item, false))
+        conducts.push_back(DID_CHANNEL);
 
-        if (is_chaotic_item(item))
-            return DID_CHAOS;
-        break;
+    if (is_potentially_evil_item(item, false))
+        conducts.push_back(DID_EVIL);
 
-    case GOD_YREDELEMNUL:
-        if (item_type_known(item) && is_holy_item(item))
-            return DID_HOLY;
-        break;
-
-    case GOD_TROG:
-        if (item_is_spellbook(item))
-            return DID_SPELL_MEMORISE;
-        if (item.sub_type == BOOK_MANUAL && item_type_known(item)
-            && is_harmful_skill((skill_type)item.plus))
-        {
-            return DID_SPELL_PRACTISE;
-        }
-        break;
-
-    case GOD_FEDHAS:
-        if (item_type_known(item) && is_corpse_violating_item(item))
-            return DID_CORPSE_VIOLATION;
-        break;
-
-    case GOD_CHEIBRIADOS:
-        if (item_type_known(item) && (_is_potentially_hasty_item(item)
-                                      || is_hasty_item(item))
-            // Don't need item_type_known for quick blades.
-            || item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
-        {
-            return DID_HASTY;
-        }
-        break;
-
-    case GOD_DITHMENOS:
-        if (item_type_known(item)
-            && (_is_potentially_fiery_item(item) || is_fiery_item(item)))
-        {
-            return DID_FIRE;
-        }
-        break;
-
-    case GOD_PAKELLAS:
-        if (item_type_known(item) && is_channeling_item(item))
-            return DID_CHANNEL;
-        break;
-
-    default:
-        break;
-    }
-
-    if (item_type_known(item) && is_potentially_evil_item(item)
-        && is_good_god(you.religion))
-    {
-        return DID_EVIL;
-    }
-
-    if (item_type_known(item) && _is_book_type(item, _your_god_hates_spell))
-    {
-        return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
-    }                          // will ever be needed for spellbooks.
-
-    return DID_NOTHING;
+    return conducts;
 }
 
 bool god_hates_item(const item_def &item)

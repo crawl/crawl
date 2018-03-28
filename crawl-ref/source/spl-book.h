@@ -22,8 +22,6 @@ bool is_rare_book(book_type type);
 void init_spell_rarities();
 bool is_player_spell(spell_type which_spell);
 
-void mark_had_book(const item_def &book);
-void mark_had_book(book_type booktype);
 bool book_has_title(const item_def &book);
 
 void read_book(item_def &item);
@@ -31,7 +29,6 @@ void read_book(item_def &item);
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
-void learn_spell_from(const item_def &book);
 bool learn_spell(spell_type spell, bool wizard = false);
 
 string desc_cannot_memorise_reason(spell_type spell);

@@ -378,12 +378,6 @@ int wand_mp_cost()
 
 void zap_wand(int slot)
 {
-    if (!form_can_use_wand())
-    {
-        mpr("You have no means to grasp a wand firmly enough.");
-        return;
-    }
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -415,9 +409,7 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = wand_mp_cost();
-    if (!enough_mp(mp_cost, false))
-        return;
+    const int mp_cost = min(you.magic_points, wand_mp_cost());
 
     int item_slot;
     if (slot != -1)
@@ -454,8 +446,7 @@ void zap_wand(int slot)
         return;
     }
 
-    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2)
-                * (you.get_mutation_level(MUT_MP_WANDS) + 3) / 3;
+    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -472,10 +463,16 @@ void zap_wand(int slot)
     }
 
     // Spend MP.
-    if(you.species == SP_OBSIDIAN_DWARF)
-        dec_hp(mp_cost, false);
-    else
-        dec_mp(mp_cost, false);
+    if (mp_cost)
+    {
+        mprf("You feel a %ssurge of power%s",
+             mp_cost < 3 ? "slight " : "",
+             mp_cost < 3 ? "."       : "!");
+        if(you.species == SP_OBSIDIAN_DWARF)
+            dec_hp(mp_cost, false);
+        else
+            dec_mp(mp_cost, false);
+    }
 
     // Take off a charge.
     wand.charges--;
@@ -1559,8 +1556,7 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        if (you.undead_state() == US_ALIVE && !you_foodless()
-            && you.hunger_state <= HS_STARVING)
+        if (apply_starvation_penalties())
         {
             canned_msg(MSG_TOO_HUNGRY);
             return false;

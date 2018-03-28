@@ -1120,9 +1120,6 @@ string get_god_likes(god_type which_god)
     // Unique/unusual piety gain methods first.
     switch (which_god)
     {
-    case GOD_TROG:
-        likes.emplace_back("you destroy spellbooks via the <w>a</w> command");
-        break;
     case GOD_JIYVA:
         likes.emplace_back("you sacrifice items by allowing slimes to consume "
                            "them");
@@ -1183,6 +1180,14 @@ string get_god_likes(god_type which_god)
 bool god_hates_cannibalism(god_type god)
 {
     return divine_peeves[god].count(DID_CANNIBALISM);
+}
+
+conduct_type god_hates_item_handling(const item_def& item)
+{
+    for (conduct_type conduct : item_conducts(item))
+        if (divine_peeves[you.religion].count(conduct))
+            return conduct;
+    return DID_NOTHING;
 }
 
 /**

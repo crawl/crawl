@@ -82,6 +82,7 @@
 #include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
+static string _spell_failure_rate_description(spell_type spell);
 
 void surge_power(const int enhanced)
 {
@@ -120,11 +121,9 @@ static string _spell_base_description(spell_type spell, bool viewing)
     desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
-    highlight = failure_rate_colour(spell);
-    desc << "<" << colour_to_str(highlight) << ">";
-    const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    desc << chop_string(failure, 12);
-    desc << "</" << colour_to_str(highlight) << ">";
+    const string failure_rate = spell_failure_rate_string(spell);
+    const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
+    desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
 
     return desc.str();
@@ -163,15 +162,8 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
-#ifdef USE_TILE_LOCAL
-    const bool text_only = false;
-#else
-    const bool text_only = true;
-#endif
-
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                              text_only);
+                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
 #ifdef USE_TILE_LOCAL
     {
@@ -266,24 +258,26 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         spell_menu.add_entry(me);
     }
 
-    while (true)
+    int choice = 0;
+    spell_menu.on_single_selection = [&choice, &spell_menu](const MenuEntry& item)
     {
-        vector<MenuEntry*> sel = spell_menu.show();
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-        if (sel.empty())
-            return 0;
-
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
+        ASSERT(item.hotkeys.size() == 1);
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
-            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]), nullptr);
-            redraw_screen();
+            describe_spell(get_spell_by_letter(item.hotkeys[0]), nullptr);
+            return true;
         }
         else
-            return sel[0]->hotkeys[0];
-    }
+        {
+            choice = item.hotkeys[0];
+            return false;
+        }
+    };
+
+    spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    return choice;
 }
 
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
@@ -653,8 +647,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (!you.undead_state() && !you_foodless()
-        && you.hunger_state <= HS_STARVING)
+    if (apply_starvation_penalties())
     {
         if (!quiet)
             canned_msg(MSG_NO_ENERGY);
@@ -736,9 +729,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
-                         spell_title(you.last_cast_spell));
-                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press ? or * to list all spells.");
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>",
+                                       spell_title(you.last_cast_spell),
+                                       _spell_failure_rate_description(you.last_cast_spell).c_str());
+                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
+                                       "? or * to list all spells.");
                 }
 
                 keyin = get_ch();
@@ -1072,21 +1067,6 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
-static void _maybe_cancel_repeat(spell_type spell)
-{
-#if TAG_MAJOR_VERSION == 34
-    switch (spell)
-    {
-    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
-                                                 spell_title(spell)));
-        break;
-
-    default:
-        break;
-    }
-#endif
-}
-
 static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail);
 
@@ -1142,16 +1122,26 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     }
 
     const int severity = fail_severity(spell);
+    const string failure_rate = spell_failure_rate_string(spell);
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
         && !fake_spell)
     {
-        string prompt = make_stringf("The spell is %s to cast%s "
-                                     "Continue anyway?",
+        if (failure_rate_to_int(raw_spell_fail(spell)) == 100)
+        {
+            mprf(MSGCH_WARN, "It is impossible to cast this spell "
+                    "(100%% risk of failure)!");
+            return true;
+        }
+
+        string prompt = make_stringf("The spell is %s to cast "
+                                     "(%s risk of failure)%s",
                                      fail_severity_adjs[severity],
+                                     failure_rate.c_str(),
                                      severity > 1 ? "!" : ".");
 
+        prompt = make_stringf("%s Continue anyway?", prompt.c_str());
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -1389,9 +1379,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
                                    eff_pow, evoked_item, hitfunc.get());
         }
 
-        string title = "Aiming: <white>";
-        title += spell_title(spell);
-        title += "</white>";
+        string title = make_stringf("Aiming: <w>%s</w>", spell_title(spell));
+        if (allow_fail)
+        {
+            title += make_stringf(" <lightgrey>(%s)</lightgrey>",
+                _spell_failure_rate_description(spell).c_str());
+        }
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
@@ -1504,9 +1497,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
     }
 
     dprf("Spell #%d, power=%d", spell, powc);
-
-    if (crawl_state.prev_cmd == CMD_CAST_SPELL && god == GOD_NO_GOD)
-        _maybe_cancel_repeat(spell);
 
     // Have to set aim first, in case the spellcast kills its first target
     if (you.props.exists("battlesphere") && allow_fail)
@@ -1638,11 +1628,6 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     // Demonspawn ability, no failure.
     case SPELL_CALL_DOWN_DAMNATION:
         return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DELAYED_FIREBALL:
-        return cast_delayed_fireball(fail);
-#endif
 
     // LOS spells
 
@@ -2098,6 +2083,25 @@ string spell_hunger_string(spell_type spell)
     return hunger_cost_string(spell_hunger(spell));
 }
 
+string spell_failure_rate_string(spell_type spell)
+{
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const string colour = colour_to_str(failure_rate_colour(spell));
+    return make_stringf("<%s>%s</%s>",
+            colour.c_str(), failure.c_str(), colour.c_str());
+}
+
+static string _spell_failure_rate_description(spell_type spell)
+{
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const char *severity_adj = fail_severity_adjs[fail_severity(spell)];
+    const string colour = colour_to_str(failure_rate_colour(spell));
+    const char *col = colour.c_str();
+
+    return make_stringf("<%s>%s</%s>; <%s>%s</%s> risk of failure",
+            col, severity_adj, col, col, failure.c_str(), col);
+}
+
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
@@ -2295,6 +2299,7 @@ const set<spell_type> removed_spells =
     SPELL_CURE_POISON,
     SPELL_CONTROL_UNDEAD,
     SPELL_CIGOTUVIS_EMBRACE,
+    SPELL_DELAYED_FIREBALL,
 #endif
 };
 

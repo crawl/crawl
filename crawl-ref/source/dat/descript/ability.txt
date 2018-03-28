@@ -103,6 +103,9 @@ Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
 moving into a wall will start tunneling. Doing so makes some noise and causes
 hunger, and is a little slower than walking.
+
+Once active, activating the ability again or making any non-digging movement
+action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
@@ -321,13 +324,6 @@ Forget Spell ability
 Removes a known spell from memory, so as to free memory to learn others.
 %%%%
 # Trog
-Burn Spellbooks ability
-
-Sets all spellbooks within your field of vision on fire. The fire is fuelled by
-Trog's hatred, and it burns hotter than mere parchment would — which can be
-useful if you throw the book under someone's feet first. Trog greatly
-appreciates the burning of spellbooks.
-%%%%
 Berserk ability
 
 Sends the user into a berserk rage. Going berserk temporarily increases health,
@@ -850,13 +846,18 @@ undone.
 Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
-gender. This does not take any time.
+gender.
+%%%%
+Wall Jump ability
+
+Vaults off an adjacent wall towards enemies, striking all enemies adjacent to
+the landing spot and taking two turns to complete the motion.
 %%%%
 Serpent's Lash ability
 
-Allows you to move at supernatural speeds for a short distance, travelling
-a length of two tiles instantly. Martial attacks performed under the
-effect of Serpent's Lash are more damaging and never miss.
+Allows you to move at supernatural speeds, making any movements up to a
+distance of two tiles instantly. Martial attacks performed under the effect of
+Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability
 

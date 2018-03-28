@@ -140,8 +140,8 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_HARM:                return "Harm";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
+    case AMU_ACROBAT:             return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
-    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
@@ -386,9 +386,9 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
+    case AMU_ACROBAT:
+        return "It helps you evade while moving and waiting.";
 #if TAG_MAJOR_VERSION == 34
-    case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
@@ -2136,7 +2136,7 @@ string get_item_description(const item_def &item, bool verbose,
         }
     }
 
-    if (god_hates_item_handling(item))
+    if (god_hates_item(item))
     {
         description << "\n\n" << uppercase_first(god_name(you.religion))
                     << " disapproves of the use of such an item.";
@@ -2552,6 +2552,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
                                      || crawl_state.updating_scores);
         vector<command_type> actions;
         formatted_scroller menu;
+        menu.set_flags(MF_SINGLESELECT);
         menu.add_text(desc, false, get_number_of_cols());
         if (do_actions)
         {
@@ -2847,7 +2848,9 @@ static bool _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+    if (item && item->base_type == OBJ_BOOKS
+        && (in_inventory(*item)
+            || item->pos == you.pos() && !is_shop_item(*item))
         && !you.has_spell(spell) && you_can_memorise(spell))
     {
         description += "\n(M)emorise this spell.\n";
@@ -3058,8 +3061,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "negative energy";
     case MR_RES_DAMNATION:
         return "damnation";
-    case MR_RES_WIND:
-        return "wind";
+    case MR_RES_TORNADO:
+        return "tornadoes";
     default:
         return "buggy resistance";
     }
@@ -3512,7 +3515,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_ROTTING, MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_WIND,
+        MR_RES_TORNADO,
     };
 
     vector<string> extreme_resists;
@@ -3527,7 +3530,7 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_WIND)
+            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_TORNADO)
                 level = 3; // one level is immunity
             level = max(level, -1);
             level = min(level,  3);
@@ -3731,23 +3734,22 @@ static string _monster_stat_description(const monster_info& mi)
     if (mon_size)
         result << uppercase_first(pronoun) << " is " << mon_size << ".\n";
 
-    if (in_good_standing(GOD_ZIN, 0))
+    if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
+        recite_counts retval;
+        monster *m = monster_at(mi.pos);
+        auto eligibility = zin_check_recite_to_single_monster(m, retval);
+        if (eligibility == RE_INELIGIBLE)
+            result << "Reciting Zin's laws will not affect " << pronoun << ".";
+        else if (eligibility == RE_TOO_STRONG)
         {
-            result << uppercase_first(pronoun) << " is too strong to be"
-                                                  " recited to.";
+            result << uppercase_first(pronoun) <<
+                    " is too strong to be affected by reciting Zin's laws.";
         }
-        else if (check >= -5)
+        else // RE_ELIGIBLE || RE_RECITE_TIMER
         {
-            result << uppercase_first(pronoun) << " may be too strong to be"
-                                                  " recited to.";
-        }
-        else
-        {
-            result << uppercase_first(pronoun) << " is weak enough to be"
-                                                  " recited to.";
+            result << uppercase_first(pronoun) <<
+                            " can be affected by reciting Zin's laws.";
         }
 
         if (you.wizard)
@@ -3764,19 +3766,26 @@ static string _monster_stat_description(const monster_info& mi)
     return result.str();
 }
 
-string serpent_of_hell_flavour(monster_type m)
+branch_type serpent_of_hell_branch(monster_type m)
 {
     switch (m)
     {
     case MONS_SERPENT_OF_HELL_COCYTUS:
-        return "cocytus";
+        return BRANCH_COCYTUS;
     case MONS_SERPENT_OF_HELL_DIS:
-        return "dis";
+        return BRANCH_DIS;
     case MONS_SERPENT_OF_HELL_TARTARUS:
-        return "tartarus";
+        return BRANCH_TARTARUS;
+    case MONS_SERPENT_OF_HELL:
+        return BRANCH_GEHENNA;
     default:
-        return "gehenna";
+        die("bad serpent of hell monster_type");
     }
+}
+
+string serpent_of_hell_flavour(monster_type m)
+{
+    return lowercase_string(branches[serpent_of_hell_branch(m)].shortname);
 }
 
 // Fetches the monster's database description and reads it into inf.

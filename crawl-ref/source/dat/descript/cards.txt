@@ -14,6 +14,9 @@ The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
 
 Drawing this card entombs its user in protective, temporary walls of solid rock.
 At lower power levels or with adjacent creatures, the tomb may be imperfect.
+
+The tomb is sustained by the presence of its creator within it, and moving from
+the centre of the tomb will cause its walls to crumble away.
 %%%%
 Exile card
 

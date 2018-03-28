@@ -727,12 +727,8 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return 0;
 
 #ifdef TOUCH_UI
-    if (event.event == MouseEvent::PRESS
-        && (event.mod & TILES_MOD_CTRL)
-        && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
-    {
+    if (event.event == MouseEvent::WHEEL && (event.mod & TILES_MOD_CTRL))
         zoom(event.button == MouseEvent::SCROLL_UP);
-    }
 #endif
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
@@ -749,8 +745,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return CK_MOUSE_CLICK;
     }
 
-    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
-        || mouse_control::current_mode() == MOUSE_MODE_MACRO
+    if (mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE
         || mouse_control::current_mode() == MOUSE_MODE_PROMPT
         || mouse_control::current_mode() == MOUSE_MODE_YESNO)
@@ -788,6 +783,9 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         if (!desc.empty())
             tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
     }
+
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL)
+        return 0;
 
     if (!on_map)
         return 0;

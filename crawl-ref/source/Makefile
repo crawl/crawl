@@ -699,10 +699,10 @@ endif # pkg-config
 
 ifndef GLES
 ifneq ($(uname_S),Darwin)
-ifeq (,$(findstring MINGW,$(uname_S)))
-LIBS += -lGL -lGLU
-else
+ifeq ($(msys),Yes)
 LIBS += -lopengl32 -lglu32
+else
+LIBS += -lGL -lGLU
 endif
 endif
 endif
@@ -865,7 +865,7 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
+	FONTDIR = $(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/

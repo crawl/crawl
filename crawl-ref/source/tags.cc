@@ -1417,6 +1417,9 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
 
+    marshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+    marshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
+
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
@@ -1635,9 +1638,8 @@ static void tag_construct_you(writer &th)
     for (mid_t recallee : you.recall_list)
         _marshall_as_int(th, recallee);
 
-    marshallUByte(th, NUM_SEEDS);
-    for (int i = 0; i < NUM_SEEDS; i++)
-        marshallInt(th, you.game_seeds[i]);
+    marshallUByte(th, 1); // number of seeds: always 1
+    marshallInt(th, you.game_seed);
 
     CANARY;
 
@@ -1693,14 +1695,6 @@ static void tag_construct_you_items(writer &th)
     marshallUByte(th, MAX_UNRANDARTS);
     for (int j = 0; j < MAX_UNRANDARTS; ++j)
         marshallByte(th,you.unique_items[j]);
-
-    marshallByte(th, NUM_FIXED_BOOKS);
-    for (int j = 0; j < NUM_FIXED_BOOKS; ++j)
-        marshallByte(th,you.had_book[j]);
-
-    marshallShort(th, NUM_SPELLS);
-    for (int j = 0; j < NUM_SPELLS; ++j)
-        marshallByte(th,you.seen_spell[j]);
 
     marshallShort(th, NUM_WEAPONS);
     for (int j = 0; j < NUM_WEAPONS; ++j)
@@ -2479,6 +2473,15 @@ static void tag_read_you(reader &th)
         unmarshallShort(th);
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_BOOKS)
+    {
+#endif
+    unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+    unmarshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
     // how many spells?
     you.spell_no = 0;
     count = unmarshallUByte(th);
@@ -2722,6 +2725,9 @@ static void tag_read_you(reader &th)
     }
     if (you.attribute[ATTR_SEARING_RAY] > 3)
         you.attribute[ATTR_SEARING_RAY] = 0;
+
+    if (you.attribute[ATTR_DELAYED_FIREBALL])
+        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
     {
@@ -3609,11 +3615,9 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUByte(th);
-    ASSERT(count <= NUM_SEEDS);
-    for (int i = 0; i < count; i++)
-        you.game_seeds[i] = unmarshallInt(th);
-    for (int i = count; i < NUM_SEEDS; i++)
-        you.game_seeds[i] = get_uint32();
+    you.game_seed = count > 0 ? unmarshallInt(th) : get_uint32();
+    for (int i = 1; i < count; i++)
+        unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
@@ -3819,25 +3823,26 @@ static void tag_read_you_items(reader &th)
     for (int j = NUM_UNRANDARTS; j < count; j++)
         unmarshallByte(th);
 
-    // how many books?
-    count = unmarshallUByte(th);
-    COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
-    for (int j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
-        you.had_book.set(j, unmarshallByte(th));
-    for (int j = count; j < NUM_FIXED_BOOKS; ++j)
-        you.had_book.set(j, false);
-    for (int j = NUM_FIXED_BOOKS; j < count; ++j)
-        unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
+    {
+        // how many books?
+        count = unmarshallUByte(th);
+        COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
+        for (int j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
+            unmarshallByte(th);
+        for (int j = NUM_FIXED_BOOKS; j < count; ++j)
+            unmarshallByte(th);
 
-    // how many spells?
-    count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    for (int j = 0; j < count && j < NUM_SPELLS; ++j)
-        you.seen_spell.set(j, unmarshallByte(th));
-    for (int j = count; j < NUM_SPELLS; ++j)
-        you.seen_spell.set(j, false);
-    for (int j = NUM_SPELLS; j < count; ++j)
-        unmarshallByte(th);
+        // how many spells?
+        count = unmarshallShort(th);
+        ASSERT(count >= 0);
+        for (int j = 0; j < count && j < NUM_SPELLS; ++j)
+            unmarshallByte(th);
+        for (int j = NUM_SPELLS; j < count; ++j)
+            unmarshallByte(th);
+    }
+#endif
 
     count = unmarshallShort(th);
     ASSERT(count >= 0);
@@ -3910,6 +3915,10 @@ static void tag_read_you_items(reader &th)
     // Reset training arrays for transfered gnolls that didn't train all skills.
     if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX)
         reset_training();
+
+    // Move any books from inventory into the player's library.
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
+        add_held_books_to_library();
 #endif
 }
 

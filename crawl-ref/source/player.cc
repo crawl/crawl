@@ -1161,13 +1161,16 @@ int player_mp_regen()
     return regen_amount;
 }
 
-// Amulet of regeneration needs to be worn while at full health before it begins
-// to function.
-void update_regen_amulet_attunement()
+// Some amulets need to be worn while at full health before they begin to
+// function.
+void update_amulet_attunement_by_health()
 {
+    // amulet of regeneration
+    // You must be wearing the amulet and able to regenerate to get benefits.
     if (you.wearing(EQ_AMULET, AMU_REGENERATION)
         && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
     {
+        // If you hit max HP, turn on the amulet.
         if (you.hp == you.hp_max
             && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
         {
@@ -1178,6 +1181,20 @@ void update_regen_amulet_attunement()
     }
     else
         you.props[REGEN_AMULET_ACTIVE] = 0;
+
+    // amulet of the acrobat
+    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+    {
+        if (you.hp == you.hp_max
+            && you.props[ACROBAT_AMULET_ACTIVE].get_int() == 0)
+        {
+            you.props[ACROBAT_AMULET_ACTIVE] = 1;
+            mpr("Your amulet attunes itself to your body. You feel like "
+                "doing cartwheels.");
+        }
+    }
+    else
+        you.props[ACROBAT_AMULET_ACTIVE] = 0;
 }
 
 // Amulet of magic regeneration needs to be worn while at full magic before it
@@ -1983,9 +2000,6 @@ int player_movement_speed()
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 3;
 
-    if (you.duration[DUR_ICY_ARMOUR])
-        ++mv; // as ponderous
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
@@ -2103,6 +2117,16 @@ bool player_is_shapechanged()
     return true;
 }
 
+void update_acrobat_status()
+{
+    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() != 1)
+        return;
+
+    you.duration[DUR_ACROBAT] = you.time_taken;
+    you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = true;
+    you.redraw_evasion = true;
+}
+
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
 static int _player_evasion_size_factor(bool base = false)
@@ -2119,6 +2143,7 @@ int player_shield_racial_factor()
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
                                                   : _player_evasion_size_factor(true)));
 }
+
 
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
@@ -2171,6 +2196,12 @@ static int _player_evasion_bonuses()
     {
         evbonus += 5 + you.experience_level / 3;
     }
+
+    // If you have an active amulet of the acrobat and just moved, get massive
+    // EV bonus. We also display this bonus if the duration isn't in effect but
+    // it was during the last move. It's a little hacky.
+    if (you.duration[DUR_ACROBAT] || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
+        evbonus += 15;
 
     return evbonus;
 }
@@ -4972,8 +5003,12 @@ void fly_player(int pow, bool already_flying)
 
 void enable_emergency_flight()
 {
-    mpr("You can't land here! You focus on prolonging your flight, but the "
-        "process is draining.");
+    mprf("You can't survive in this terrain! You fly above the %s, but the "
+         "process is draining.",
+         (grd(you.pos()) == DNGN_LAVA)       ? "lava" :
+         (grd(you.pos()) == DNGN_DEEP_WATER) ? "water"
+                                             : "buggy terrain");
+
     you.props[EMERGENCY_FLIGHT_KEY] = true;
 }
 
@@ -5152,6 +5187,7 @@ player::player()
     runes.reset();
     obtainable_runes = 15;
 
+    spell_library.reset();
     spells.init(SPELL_NO_SPELL);
     old_vehumet_gifts.clear();
     spell_no        = 0;
@@ -5229,8 +5265,6 @@ player::player()
 
     magic_contamination = 0;
 
-    had_book.reset();
-    seen_spell.reset();
     seen_weapon.init(0);
     seen_armour.init(0);
     seen_misc.reset();
@@ -5319,8 +5353,7 @@ player::player()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
-    for (int i = 0; i < NUM_SEEDS; i++)
-        game_seeds[i] = get_uint32();
+    game_seed = get_uint32();
 
     old_hunger          = hunger;
 
@@ -6161,7 +6194,15 @@ bool player::heal(int amount)
  */
 mon_holy_type player::holiness(bool temp) const
 {
-    mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
+    mon_holy_type holi;
+
+    // Lich form takes precedence over a species' base holiness
+    if (undead_state(temp))
+        holi = MH_UNDEAD;
+    else if (species == SP_GARGOYLE)
+        holi = MH_NONLIVING;
+    else
+        holi = MH_NATURAL;
 
     if (species == SP_GARGOYLE || species == SP_GOLEM || species == SP_ROBOT ||
         temp && (form == transformation::statue
@@ -6322,7 +6363,7 @@ bool player::res_torment() const
     return player_res_torment();
 }
 
-bool player::res_wind() const
+bool player::res_tornado() const
 {
     // Full control of the winds around you can negate a hostile tornado.
     return duration[DUR_TORNADO] ? 1 : 0;

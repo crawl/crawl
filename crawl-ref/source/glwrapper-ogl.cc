@@ -200,13 +200,28 @@ void OGLStateManager::set(const GLState& state)
     m_current_state = state;
 }
 
+struct {
+    GLW_3VF trans, scale;
+} current_transform;
+
 void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
 {
     glLoadIdentity();
     glTranslatef(trans.x, trans.y, trans.z);
     glScalef(scale.x, scale.y, scale.z);
+    current_transform = { trans, scale };
 }
 
+void OGLStateManager::reset_transform()
+{
+    set_transform({0,0,0}, {1,1,1});
+}
+
+void OGLStateManager::get_transform(GLW_3VF *trans, GLW_3VF *scale)
+{
+    if (trans) *trans = current_transform.trans;
+    if (scale) *scale = current_transform.scale;
+}
 
 int OGLStateManager::logical_to_device(int n) const
 {
@@ -250,13 +265,6 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 #endif
     glDebug("glOrthof");
-}
-
-void OGLStateManager::reset_transform()
-{
-    glLoadIdentity();
-    glTranslatef(0,0,0);
-    glScalef(1,1,1);
 }
 
 void OGLStateManager::pixelstore_unpack_alignment(unsigned int bpp)

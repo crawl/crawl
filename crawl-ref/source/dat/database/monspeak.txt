@@ -3755,7 +3755,7 @@ You hear a distant wail of despair.
 %%%%
 Dowan_Duvessa_dies_bytwin
 
-@The_monster@ screams in horror.
+@Duvessa_Dowan_dies_bytwin@
 %%%%
 Dowan_Duvessa_dies_invisible_bytwin
 

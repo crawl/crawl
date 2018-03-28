@@ -106,21 +106,9 @@ static string _butcher_menu_title(const Menu *menu, const string &oldt)
 }
 #endif
 
-static int _corpse_quality(const item_def &item, bool bottle_blood)
+static int _corpse_quality(const item_def &item)
 {
-    const corpse_effect_type ce = determine_chunk_effect(item);
-    // Being almost rotten away has 480 badness.
-    int badness = 3 * item.freshness;
-    if (ce == CE_NOXIOUS)
-        badness += 1000;
-
-    // Bottleable corpses first, unless forbidden
-    if (bottle_blood && !can_bottle_blood_from_corpse(item.mon_type))
-        badness += 4000;
-
-    if (is_forbidden_food(item))
-        badness += 10000;
-    return -badness;
+    return 3 * item.freshness;
 }
 
 /**
@@ -139,38 +127,90 @@ void butchery(item_def* specific_corpse)
     }
 
     const bool bottle_blood = you.species == SP_VAMPIRE;
-    typedef pair<item_def *, int> corpse_quality;
-    vector<corpse_quality> corpses;
+    const char * butcher_verb = bottle_blood ? "bottle" : "butcher";
 
-    // First determine which things there are to butcher.
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (!si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            continue;
+    vector<item_def *> all_corpses;
 
-        corpses.emplace_back(&*si, _corpse_quality(*si, bottle_blood));
-    }
-
-    // If the pre-chosen corpse exists, pretend it was the only one.
     if (specific_corpse)
-        corpses = { { specific_corpse, 0 } };
+        all_corpses.push_back(specific_corpse); // doesn't check position
+    else
+        for (stack_iterator si(you.pos(), true); si; ++si)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                all_corpses.push_back(&*si);
 
-    if (corpses.empty())
+    if (all_corpses.empty())
     {
-        mprf("There isn't anything to %sbutcher here.",
-             bottle_blood ? "bottle or " : "");
+        mprf("There isn't anything to %s here.", butcher_verb);
+        return;
+    }
+    if (you_foodless(false))
+    {
+        mprf("You can't eat.");
+        return;
+    }
+    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
+    {
+        mprf("Sorry, you're a herbivore.");
         return;
     }
 
-    stable_sort(begin(corpses), end(corpses), greater_second<corpse_quality>());
+    vector<item_def *> edible_corpses;
+
+    // First determine the edible corpses.
+    for (item_def * c : all_corpses)
+        if (!is_inedible(*c, false))
+            edible_corpses.push_back(c);
+
+    const bool seen_inedible = (edible_corpses.size() != all_corpses.size());
+    if (edible_corpses.empty())
+    {
+        if (all_corpses.size() == 1)
+        {
+            mprf("%s %s.", all_corpses[0]->name(DESC_THE).c_str(),
+                bottle_blood ? "doesn't have any blood" : "isn't edible");
+        }
+        else
+        {
+            mprf("There isn't anything %s to %s here.",
+                bottle_blood ? "with blood" : "edible", butcher_verb);
+        }
+        return;
+    }
+
+    typedef pair<item_def *, int> corpse_quality;
+    vector<corpse_quality> corpse_qualities;
+
+    for (item_def *c : edible_corpses)
+        if (!is_forbidden_food(*c))
+            corpse_qualities.emplace_back(c, _corpse_quality(*c));
+
+    if (corpse_qualities.empty())
+    {
+        if (edible_corpses.size() == 1)
+        {
+            mprf("It would be a sin to %s the %s!", butcher_verb,
+                                edible_corpses[0]->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("It would be a sin to %s any of the %scorpses here!",
+                butcher_verb,
+                (seen_inedible ? (bottle_blood ? "bloody " : "edible ") : ""));
+        }
+        return;
+    }
+
+    stable_sort(begin(corpse_qualities), end(corpse_qualities),
+                                            greater_second<corpse_quality>());
 
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     if (specific_corpse
-        || corpses.size() == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
+        || corpse_qualities.size() == 1
+                                && Options.confirm_butcher != CONFIRM_ALWAYS
         || Options.confirm_butcher == CONFIRM_NEVER)
     {
         //XXX: this assumes that we're not being called from a delay ourselves.
-        if (_start_butchering(*corpses[0].first))
+        if (_start_butchering(*corpse_qualities[0].first))
             handle_delay();
         return;
     }
@@ -180,11 +220,11 @@ void butchery(item_def* specific_corpse)
     bool butchered_any = false;
 #ifdef TOUCH_UI
     vector<const item_def*> meat;
-    for (const corpse_quality &entry : corpses)
+    for (const corpse_quality &entry : corpse_qualities)
         meat.push_back(entry.first);
 
     vector<SelItem> selected =
-        select_items(meat, bottle_blood ? "Choose a corpse to bottle or butcher"
+        select_items(meat, bottle_blood ? "Choose a corpse to bottle"
                                         : "Choose a corpse to butcher",
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
@@ -194,21 +234,14 @@ void butchery(item_def* specific_corpse)
 #else
     item_def* to_eat = nullptr;
     bool butcher_all    = false;
-    bool butcher_edible = false;
-    for (auto &entry : corpses)
+    bool all_done = false;
+    for (auto &entry : corpse_qualities)
     {
         item_def * const it = entry.first;
         to_eat = nullptr;
 
         if (butcher_all)
             to_eat = it;
-        else if (butcher_edible)
-        {
-            if (is_bad_food(*it))
-                continue;
-
-            to_eat = it;
-        }
         else
         {
             string corpse_name = it->name(DESC_A);
@@ -227,7 +260,7 @@ void butchery(item_def* specific_corpse)
                 const bool can_bottle =
                     can_bottle_blood_from_corpse(it->mon_type);
                 mprf(MSGCH_PROMPT,
-                     "%s %s? [(y)es/(c)hoosy/(n)o/(a)ll/(e)dible/(q)uit/?]",
+                     "%s %s? [(y)es/(n)o/(a)ll/(q)uit/?]",
                      can_bottle ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -235,35 +268,20 @@ void butchery(item_def* specific_corpse)
                 switch (toalower(getchm(KMC_CONFIRM)))
                 {
                 case 'a':
+                case 'c': // legacy
+                case 'e': // legacy
                     butcher_all = true;
                 // fallthrough
                 case 'y':
-                case 'd':
-                    to_eat = it;
-                    break;
-
-                case 'c':
-                    // Since corpses are sorted by quality, we assume any
-                    // subequent ones will be bad, and quit immediately.
-                    if (is_bad_food(*it))
-                    {
-                        canned_msg(MSG_OK);
-                        goto done;
-                    }
-                    to_eat = it;
-                    break;
-
-                case 'e':
-                    butcher_edible = true;
-                    if (is_bad_food(*it))
-                        continue;
+                case 'd': // ??
                     to_eat = it;
                     break;
 
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    goto done;
+                    all_done = true;
+                    break;
 
                 case '?':
                     show_butchering_help();
@@ -276,28 +294,23 @@ void butchery(item_def* specific_corpse)
                     break;
                 }
             }
-            while (repeat_prompt);
+            while (repeat_prompt && !all_done);
         }
 
         if (to_eat && _start_butchering(*to_eat))
             butchered_any = true;
+        if (all_done)
+            break;
     }
 
     // No point in displaying this if the player pressed 'a' above.
-    if (!to_eat && !butcher_all)
-    {
-        mprf("There isn't anything %s to %sbutcher here.",
-             butcher_edible ? "edible" : "else",
-             bottle_blood ? "bottle or " : "");
-    }
+    if (!to_eat && !butcher_all && !all_done)
+        mprf("There isn't anything else to %s here.", butcher_verb);
 #endif
 
     //XXX: this assumes that we're not being called from a delay ourselves.
     // It's not a problem in the case of macros, though, because
     // delay.cc:_push_delay should handle them OK.
-#ifndef TOUCH_UI
-done:
-#endif
     if (butchered_any)
         handle_delay();
 

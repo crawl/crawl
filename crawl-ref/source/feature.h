@@ -24,8 +24,8 @@ struct feature_def
     dungeon_char_type    dchar;            // the symbol
     dungeon_char_type    magic_dchar;      // the symbol shown when magic mapped
     colour_t             dcolour;          // normal in LoS colour
-    colour_t             map_dcolour;      // colour when out of LoS on display
-    colour_t             seen_dcolour;     // map_colour when env.map_knowledge().seen()
+    colour_t             unseen_dcolour;   // colour when out of LoS and not yet seen
+    colour_t             seen_dcolour;     // colour when out of LoS when env.map_knowledge().seen()
     colour_t             em_dcolour;       // Emphasised colour when in LoS.
     colour_t             seen_em_dcolour;  // Emphasised colour when out of LoS
     unsigned             flags;
@@ -36,12 +36,12 @@ struct feature_def
         const char *name_ = "", const char *vaultname_ = "",
         dungeon_char_type dchar_ = NUM_DCHAR_TYPES,
         dungeon_char_type magic_dchar_ = NUM_DCHAR_TYPES,
-        colour_t dcolour_ = BLACK, colour_t map_dcolour_ = DARKGREY,
+        colour_t dcolour_ = BLACK, colour_t unseen_dcolour_ = DARKGREY,
         colour_t seen_dcolour_ = BLACK, colour_t em_dcolour_ = BLACK,
         colour_t seen_em_dcolour_ = BLACK, unsigned flags_ = FFT_NONE,
         map_feature minimap_ = MF_UNSEEN) :
         feat{feat_}, name{name_}, vaultname{vaultname_}, dchar{dchar_},
-        magic_dchar{magic_dchar_}, dcolour{dcolour_}, map_dcolour{map_dcolour_},
+        magic_dchar{magic_dchar_}, dcolour{dcolour_}, unseen_dcolour{unseen_dcolour_},
         seen_dcolour{seen_dcolour_}, em_dcolour{em_dcolour_},
         seen_em_dcolour{seen_em_dcolour_}, flags{flags_}, minimap{minimap_}
     {}
@@ -50,7 +50,7 @@ struct feature_def
     char32_t symbol() const;
     char32_t magic_symbol() const;
     colour_t colour() const;
-    colour_t map_colour() const;
+    colour_t unseen_colour() const;
     colour_t seen_colour() const;
     colour_t em_colour() const;
     colour_t seen_em_colour() const;

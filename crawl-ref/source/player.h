@@ -29,7 +29,6 @@
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
-#include "seed-type.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"
@@ -47,9 +46,11 @@
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
+#define ACROBAT_AMULET_ACTIVE "acrobat_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
+#define LAST_ACTION_WAS_MOVE_OR_REST_KEY "last_action_was_move_or_rest"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -175,6 +176,8 @@ public:
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
 
+    FixedBitVector<NUM_SPELLS> spell_library;
+    FixedBitVector<NUM_SPELLS> hidden_spells;
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
@@ -277,8 +280,6 @@ public:
 
     int magic_contamination;
 
-    FixedBitVector<NUM_FIXED_BOOKS> had_book;
-    FixedBitVector<NUM_SPELLS>      seen_spell;
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
@@ -357,8 +358,8 @@ public:
     // A list of allies awaiting an active recall
     vector<mid_t> recall_list;
 
-    // Hash seeds for deterministic stuff.
-    FixedVector<uint32_t, NUM_SEEDS> game_seeds;
+    // Hash seed for deterministic stuff.
+    uint32_t game_seed;
 
     // -------------------
     // Non-saved UI state:
@@ -750,7 +751,7 @@ public:
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    bool res_wind() const override;
+    bool res_tornado() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
     int res_magic(bool /*calc_unid*/ = true) const override;
@@ -935,6 +936,8 @@ bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged();
 
+void update_acrobat_status();
+
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
@@ -960,7 +963,7 @@ int player_prot_life(bool calc_unid = true, bool temp = true,
 bool regeneration_is_inhibited();
 int player_regen();
 int player_mp_regen();
-void update_regen_amulet_attunement();
+void update_amulet_attunement_by_health();
 void update_mana_regen_amulet_attunement();
 
 int player_res_cold(bool calc_unid = true, bool temp = true,

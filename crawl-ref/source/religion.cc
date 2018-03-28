@@ -69,7 +69,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
-#include "version.h"
 #include "view.h"
 
 #ifdef DEBUG_RELIGION
@@ -182,12 +181,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Trog
     {
       { 1, ABIL_TROG_BERSERK, "go berserk at will" },
-      { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and protection "
-                               "from hostile enchantments" },
+      { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and magic resistance" },
       { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
       { 5, "Trog will gift you weapons as you gain piety.",
            "Trog will no longer gift you weapons." },
-      {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
     },
 
     // Nemelex
@@ -426,10 +423,6 @@ static bool _is_disabled_god(god_type god)
     // Disabled, pending a rework.
     case GOD_PAKELLAS:
         return true;
-
-    // Trunk-only until we finish the god.
-    case GOD_WU_JIAN:
-        return Version::ReleaseType != VER_ALPHA;
 
     default:
         return false;
@@ -1093,7 +1086,6 @@ void vehumet_accept_gift(spell_type spell)
     if (vehumet_is_offering(spell))
     {
         you.vehumet_gifts.erase(spell);
-        you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
     }
 }
@@ -1138,11 +1130,12 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
 
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
+            && !you.spell_library[spell]
             && is_player_spell(spell)
             && spell_difficulty(spell) <= max_level
             && spell_difficulty(spell) >= min_level)
         {
-            if (!you.seen_spell[spell] && !_is_old_gift(spell))
+            if (!_is_old_gift(spell))
                 eligible_spells.insert(spell);
             else
                 backup_spells.insert(spell);
@@ -1511,11 +1504,6 @@ static bool _gift_sif_kiku_gift(bool forced)
         }
         if (thing_created == NON_ITEM)
             return false;
-
-        // Mark the book type as known to avoid duplicate
-        // gifts if players don't read their gifts for some
-        // reason.
-        mark_had_book(gift);
 
         move_item_to_grid(&thing_created, you.pos(), true);
 
@@ -2186,6 +2174,7 @@ void god_speaks(god_type god, const char *mesg)
 
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
+    fake_mon.mid        = MID_NOBODY;
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
     fake_mon.set_position(you.pos());
@@ -4020,10 +4009,7 @@ bool god_hates_ability(ability_type ability, god_type god)
     switch (ability)
     {
         case ABIL_BREATHE_FIRE:
-#if TAG_MAJOR_VERSION == 34
-        case ABIL_DELAYED_FIREBALL:
             return god == GOD_DITHMENOS;
-#endif
         case ABIL_EVOKE_BERSERK:
             return god == GOD_CHEIBRIADOS;
         default:

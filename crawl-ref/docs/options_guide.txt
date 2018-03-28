@@ -24,7 +24,8 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot, pickup_menu_limit, drop_filter
+                pickup_thrown, assign_item_slot, pickup_menu_limit,
+                drop_filter, auto_hide_spells,
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -130,8 +131,8 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, fake_lang,
-                read_persist_options
+                use_fake_player_cursor, show_player_species, language,
+                fake_lang, read_persist_options
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -181,6 +182,16 @@ lua) can also be conveniently hidden this way. Finally, there are some
 additional option files in the settings/ directory; these allow setting
 some options and monster glyphs to their defaults from older versions.
 See the header of the default init.txt for more details.
+
+The following files are automatically included with Crawl for easy usage, and
+can be included without any further setup:
+
+* advanced_optioneering.txt
+* dvorak_command_keys.txt
+* colemak_command_keys.txt
+* neo_command_keys.txt
+* no_vi_command_keys.txt
+* safe_move_shift.txt
 
 0-b     Options on the command line.
 ------------------------------------
@@ -556,6 +567,10 @@ drop_filter += <regex>, <regex>, ...
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
         expression(s).
+
+auto_hide_spells = false
+        When set to true, spells added to the library will automatically be
+        hidden.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
@@ -955,9 +970,9 @@ easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
 
 equip_unequip = false
-        If this is true, 'W'ear will also allow you to 'T'ake off worn
-        armour, and vice versa, and the same is true for 'P'utting on/
-        'R'emoving jewellery.
+        If this is true, selecting an already-equipped piece of equipment via
+        the 'w', 'W' or 'P' menus (for weapons, armour or jewellery
+        respectively) will unequip that item.
 
 jewellery_prompt = false
         If this is true, equipping rings will always prompt for the slot to
@@ -2543,6 +2558,34 @@ show_player_species = false
 
 use_modifier_prefix_keys = true
         When true, '*' behaves as a CTRL keypress, and '/' as SHIFT.
+
+language = <two-letter language code>
+        Displays some text in the given language. Not all text in Dungeon Crawl
+        has translations in every supported language, but volunteer translators
+        have offered translations of particularly wordy text such as god and
+        monster descriptions. Text with no known translation will be displayed
+        in English. Some languages may require changing the font.
+
+        Partially supported language codes:
+        cs: Czech
+        da: Danish
+        de: German
+        el: Greek
+        es: Spanish
+        fi: Finnish
+        fr: French
+        hu: Hungarian
+        it: Italian
+        ja: Japanese
+        ko: Korean
+        lt: Lithuanian
+        lv: Latvian
+        nl: Dutch
+        pl: Polish
+        pt: Portuguese
+        ru: Russian
+        sv: Swedish
+        zh: Chinese
 
 fake_lang = <lang1>[,<lang2>[,...]]
         Set one or more fake languages, applied in the order provided (order

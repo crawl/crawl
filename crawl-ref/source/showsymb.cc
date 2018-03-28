@@ -47,6 +47,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         if (cell.flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour();
+        else if (cell.flags & MAP_MAGIC_MAPPED_FLAG)
+            colour = fdef.unseen_colour();
         else
             colour = fdef.seen_colour();
 

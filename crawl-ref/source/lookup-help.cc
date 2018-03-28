@@ -68,10 +68,8 @@ enum class lookup_type
     db_suffix       = 1<<0,
     /// whether the sorting functionality should be turned off
     disable_sort    = 1<<1,
-    /// whether the display menu for this supports tiles
-    support_tiles   = 1<<2,
     /// whether the display menu for this has toggleable sorting
-    toggleable_sort = 1<<3,
+    toggleable_sort = 1<<2,
 };
 DEF_BITFIELD(lookup_type_flags, lookup_type);
 
@@ -142,7 +140,8 @@ private:
     /// a function taking a single character & returning a list of keys
     /// corresponding to that glyph
     keys_by_glyph glyph_fetch;
-    /// no idea, sorry :(
+    /// take the list of keys that were automatically found and fix them
+    /// up if necessary
     db_keys_recap recap;
     /// take a letter & a key, return a corresponding new menu entry
     menu_entry_generator menu_gen;
@@ -159,26 +158,39 @@ private:
  * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
  * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
  */
-static monster_type _soh_type(string soh_name)
+static monster_type _soh_type(string &soh_name)
 {
-    // trying to minimize code duplication...
-    static const vector<monster_type> soh_types = {
-        MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL_DIS,
-        MONS_SERPENT_OF_HELL_COCYTUS, MONS_SERPENT_OF_HELL_TARTARUS,
-    };
+    const string flavour = lowercase_string(soh_name.substr(soh_name.find_last_of(' ')+1));
 
-    // grab 'cocytus' etc
-    const string flavour_name
-        = soh_name.substr(lowercase(soh_name).find("hell") + 5);
-    for (monster_type mtype : soh_types)
-        if (serpent_of_hell_flavour(mtype) == flavour_name)
-            return mtype;
-    return MONS_PROGRAM_BUG;
+    branch_type branch = NUM_BRANCHES;
+    for (int b = BRANCH_FIRST_HELL; b <= BRANCH_LAST_HELL; ++b)
+        if (ends_with(flavour, lowercase_string(branches[b].shortname)))
+            branch = (branch_type)b;
+
+    switch (branch)
+    {
+        case BRANCH_COCYTUS:
+            return MONS_SERPENT_OF_HELL_COCYTUS;
+        case BRANCH_DIS:
+            return MONS_SERPENT_OF_HELL_DIS;
+        case BRANCH_TARTARUS:
+            return MONS_SERPENT_OF_HELL_TARTARUS;
+        case BRANCH_GEHENNA:
+            return MONS_SERPENT_OF_HELL;
+        default:
+            die("bad serpent of hell name");
+    }
 }
 
 static bool _is_soh(string name)
 {
     return starts_with(lowercase(name), "the serpent of hell");
+}
+
+static string _soh_name(monster_type m_type)
+{
+    branch_type b = serpent_of_hell_branch(m_type);
+    return string("The Serpent of Hell (") + branches[b].longname + ")";
 }
 
 static monster_type _mon_by_name(string name)
@@ -224,8 +236,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 class DescMenu : public Menu
 {
 public:
-    DescMenu(int _flags, bool _toggleable_sort, bool _text_only)
-    : Menu(_flags, "", _text_only), sort_alpha(true),
+    DescMenu(int _flags, bool _toggleable_sort) : Menu(_flags, ""), sort_alpha(true),
     toggleable_sort(_toggleable_sort)
     {
         set_highlighter(nullptr);
@@ -265,7 +276,7 @@ public:
 
         for (unsigned int i = 0, size = items.size(); i < size; i++)
         {
-            const char letter = index_to_letter(i);
+            const char letter = index_to_letter(i % 52);
 
             items[i]->hotkeys.clear();
             items[i]->add_hotkey(letter);
@@ -413,6 +424,8 @@ static bool _spell_filter(string key, string body)
 
     if (spell == SPELL_NO_SPELL)
         return true;
+    if (spell_removed(spell))
+        return true;
 
     if (get_spell_flags(spell) & SPFLAG_TESTING)
         return !you.wizard;
@@ -557,12 +570,16 @@ static string _spell_sources(const spell_type spell)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+    {
+        if (item_type_removed(OBJ_BOOKS, i))
+            continue;
         for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
             if (sp == spell)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
             }
+    }
 
     if (books.empty())
         return "\n\nThis spell is not found in any books.";
@@ -607,13 +624,13 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // Create and store fake monsters, so the menu code will
     // have something valid to refer to.
     monster_type m_type = _mon_by_name(str);
-    const string name = _is_soh(str) ? "The Serpent of Hell" : str;
+    const string name = _is_soh(str) ? _soh_name(m_type) : str;
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
     if (mons_class_is_zombified(m_type))
         base_type = MONS_GOBLIN;
-    // FIXME: This doesn't generate proper draconian monsters.
+
     monster_info fake_mon(m_type, base_type);
     fake_mon.props["fake"] = true;
 
@@ -668,11 +685,11 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    const dungeon_feature_type feat = feat_by_desc(str);
-    MenuEntry* me = new FeatureMenuEntry(str, feat, letter);
+    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
     me->data = &key;
 
 #ifdef USE_TILE
+    const dungeon_feature_type feat = feat_by_desc(str);
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
@@ -760,8 +777,10 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
-#ifdef USE_TILE
     const branch_type branch = branch_by_shortname(str);
+    int hotkey = branches[branch].travel_shortcut;
+    me->hotkeys = {hotkey, tolower(hotkey)};
+#ifdef USE_TILE
     me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
 #endif
 
@@ -861,24 +880,16 @@ static string _mons_desc_key(monster_type type)
  */
 void LookupType::display_keys(vector<string> &key_list) const
 {
-    // For tiles builds use a tiles menu to display monsters.
-    const bool text_only =
-#ifdef USE_TILE_LOCAL
-    !(flags & lookup_type::support_tiles);
-#else
-    true;
-#endif
-
-    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
-                       toggleable_sort(), text_only);
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+            | MF_USE_TWO_COLUMNS , toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
     const bool doing_mons = type == "monster";
-    monster_info monster_list[52];
+    vector<monster_info> monster_list(key_list.size());
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char letter = index_to_letter(i);
+        const char letter = index_to_letter(i % 52);
         string &key = key_list[i];
         // XXX: double ugh
         if (doing_mons)
@@ -892,34 +903,31 @@ void LookupType::display_keys(vector<string> &key_list) const
 
     desc_menu.sort();
 
-    while (true)
+    desc_menu.on_single_selection = [this, doing_mons](const MenuEntry& item)
     {
-        vector<MenuEntry*> sel = desc_menu.show();
-        redraw_screen();
-        if (sel.empty())
+        ASSERT(item.hotkeys.size() >= 1);
+
+        string key;
+
+        if (doing_mons)
         {
-            if (toggleable_sort() && desc_menu.getkey() == CONTROL('S'))
-                desc_menu.toggle_sorting();
-            else
-                return; // only exit from this function
+            monster_info* mon = (monster_info*) item.data;
+            key = _mons_desc_key(mon->type);
         }
         else
-        {
-            ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() >= 1);
+            key = *((string*) item.data);
 
-            string key;
+        describe(key);
+        return true;
+    };
 
-            if (doing_mons)
-            {
-                monster_info* mon = (monster_info*) sel[0]->data;
-                key = _mons_desc_key(mon->type);
-            }
-            else
-                key = *((string*) sel[0]->data);
-
-            describe(key);
-        }
+    while (true)
+    {
+        desc_menu.show();
+        if (toggleable_sort() && desc_menu.getkey() == CONTROL('S'))
+            desc_menu.toggle_sorting();
+        else
+            break;
     }
 }
 
@@ -1033,7 +1041,14 @@ static int _describe_monster(const string &key, const string &suffix,
     if (mons_is_ghost_demon(mon_num) || mons_class_is_zombified(mon_num))
         return _describe_generic(key, suffix, footer);
 
-    monster_info mi(mon_num);
+    monster_type base_type = MONS_NO_MONSTER;
+    // Might be better to show all possible combinations rather than picking
+    // one at random as this does?
+    if (mons_is_draconian_job(mon_num))
+        base_type = random_draconian_monster_species();
+    else if (mons_is_demonspawn_job(mon_num))
+        base_type = random_demonspawn_monster_species();
+    monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
@@ -1128,23 +1143,19 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    string stats;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
-        || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
-        || get_item_by_name(&item, key.c_str(), OBJ_MISSILES)
-        || get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+    if (!get_item_by_exact_name(item, key.c_str()))
+        die("Unable to get item %s by name", key.c_str());
+    if (item.base_type == OBJ_BOOKS)
     {
-        // don't request description since _describe_key handles that
-        stats = get_item_description(item, true, false, true);
-    }
-    // spellbooks are interactive & so require special handling
-    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS))
-    {
+        // spellbooks are interactive & so require special handling
         item_colour(item);
         return _describe_spellbook(item);
     }
-
-    return _describe_key(key, suffix, footer, stats);
+    else
+    {
+        string stats = get_item_description(item, true, false, true);
+        return _describe_key(key, suffix, footer, stats);
+    }
 }
 
 /**
@@ -1282,48 +1293,37 @@ static int _describe_branch(const string &key, const string &suffix,
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
-               _describe_monster,
-               lookup_type::support_tiles | lookup_type::toggleable_sort),
+               _describe_monster, lookup_type::toggleable_sort),
     LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
-               _describe_spell,
-               lookup_type::db_suffix | lookup_type::support_tiles),
+               _describe_spell, lookup_type::db_suffix),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
-               _describe_generic,
-               lookup_type::support_tiles),
+               _describe_generic, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
-               _describe_generic,
-               lookup_type::db_suffix | lookup_type::support_tiles),
+               _describe_generic, lookup_type::db_suffix),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
-               _describe_card,
-               lookup_type::db_suffix | lookup_type::support_tiles),
+               _describe_card, lookup_type::db_suffix),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
-               _describe_item,
-               lookup_type::none | lookup_type::support_tiles),
+               _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
-               _describe_generic,
-               lookup_type::support_tiles),
+               _describe_generic, lookup_type::none),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
-               _describe_god,
-               lookup_type::support_tiles),
+               _describe_god, lookup_type::none),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _branch_menu_gen,
-               _describe_branch,
-               lookup_type::disable_sort | lookup_type::support_tiles),
+               _describe_branch, lookup_type::disable_sort),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
-               _describe_cloud,
-               lookup_type::db_suffix | lookup_type::support_tiles),
+               _describe_cloud, lookup_type::db_suffix),
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
-               _describe_generic,
-               lookup_type::db_suffix),
+               _describe_generic, lookup_type::db_suffix),
 };
 
 /**
@@ -1408,18 +1408,6 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
         if (by_symbol)
             return "No " + plur_type + " with symbol '" + regex + "'.";
         return "No matching " + plur_type + ".";
-    }
-
-    if (key_list.size() > 52)
-    {
-        if (by_symbol)
-        {
-            return "Too many " + plur_type + " with symbol '" + regex +
-                    "' to display.";
-        }
-
-        return make_stringf("Too many matching %s (%d) to display.",
-                            plur_type.c_str(), (int) key_list.size());
     }
 
     // we're good!

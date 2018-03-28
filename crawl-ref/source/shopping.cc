@@ -664,6 +664,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_THE_GOURMAND:
                 case AMU_HARM:
                 case AMU_MANA_REGENERATION:
+                case AMU_ACROBAT:
                     valued += 300;
                     break;
 
@@ -964,7 +965,6 @@ class ShopMenu : public InvMenu
     friend class ShopEntry;
 
     shop_struct& shop;
-    bool looking = false;
     shopping_order order = ORDER_DEFAULT;
     level_pos pos;
     bool can_purchase;
@@ -977,11 +977,6 @@ class ShopMenu : public InvMenu
     void purchase_selected();
 
     virtual bool process_key(int keyin) override;
-    virtual void draw_menu() override;
-    // Selecting one item may remove another from the shopping list, or change
-    // the colour others need to have, so we can't be lazy with redrawing
-    // elements.
-    virtual bool always_redraw() const override { return true; }
 
 public:
     bool bought_something = false;
@@ -1054,8 +1049,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
       pos(_pos),
       can_purchase(_can_purchase)
 {
-    if (!can_purchase)
-        looking = true;
+    menu_action = can_purchase ? ACT_EXECUTE : ACT_EXAMINE;
 
     set_tag("shop");
 
@@ -1077,25 +1071,6 @@ void ShopMenu::init_entries()
         newentry->add_hotkey(ckey++);
         add_entry(move(newentry));
     }
-}
-
-void ShopMenu::draw_menu()
-{
-    // Unlike other menus, selecting one item in the shopping menu may change
-    // other ones (because of the colour scheme). Keypresses also need to
-    // update the more, which is hijacked for use as help text.
-#ifdef USE_TILE_WEB
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "update_menu");
-    tiles.json_write_string("more", more.to_colour_string());
-    tiles.json_write_int("total_items", items.size());
-    tiles.json_close_object();
-    tiles.finish_message();
-    if (items.size() > 0)
-        webtiles_update_items(0, items.size() - 1);
-#endif
-
-    InvMenu::draw_menu();
 }
 
 int ShopMenu::selected_cost() const
@@ -1143,10 +1118,10 @@ void ShopMenu::update_help()
         "%s  [%s] %s\n"
         "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
-        looking       ? "[<w>!</w>] buy|<w>examine</w> items" :
-                        "[<w>!</w>] <w>buy</w>|examine items",
+        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
+                                     "[<w>!</w>] buy|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
-        looking ? "examine item" : "select item for purchase",
+        menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
@@ -1186,7 +1161,7 @@ void ShopMenu::purchase_selected()
                    col.c_str(),
                    col.c_str()));
         more += old_more;
-        draw_menu();
+        draw_more();
         return;
     }
     more = formatted_string::parse_string(make_stringf(
@@ -1196,11 +1171,11 @@ void ShopMenu::purchase_selected()
                cost,
                col.c_str()));
     more += old_more;
-    draw_menu();
+    draw_more();
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         more = old_more;
-        draw_menu();
+        draw_more();
         return;
     }
     sort(begin(selected), end(selected),
@@ -1262,7 +1237,7 @@ void ShopMenu::purchase_selected()
     else
         update_help();
 
-    draw_menu();
+    draw_menu(true);
 }
 
 // Doesn't handle redrawing itself.
@@ -1321,9 +1296,12 @@ bool ShopMenu::process_key(int keyin)
     case '?':
         if (can_purchase)
         {
-            looking = !looking;
+            if (menu_action == ACT_EXECUTE)
+                menu_action = ACT_EXAMINE;
+            else
+                menu_action = ACT_EXECUTE;
             update_help();
-            draw_menu();
+            draw_more();
         }
         return true;
     case ' ':
@@ -1352,20 +1330,21 @@ bool ShopMenu::process_key(int keyin)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
-        draw_menu();
+        draw_menu(true);
         return true;
     }
     case '/':
         ++order;
         resort();
         update_help();
-        draw_menu();
+        draw_menu(true);
         return true;
     default:
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size() && looking)
+    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
+        && menu_action == ACT_EXAMINE)
     {
         item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
             items[letter_to_index(keyin)])->item));
@@ -1398,8 +1377,7 @@ bool ShopMenu::process_key(int keyin)
             shopping_list.del_thing(item, &pos);
         else
             shopping_list.add_thing(item, item_price(item, shop), &pos);
-        // not draw_item since other items may enter/leave shopping list
-        draw_menu();
+        draw_menu(true);
         return true;
     }
 
@@ -1409,7 +1387,7 @@ bool ShopMenu::process_key(int keyin)
     {
         // Update the footer to display the new $$$ info.
         update_help();
-        draw_menu();
+        draw_menu(true);
     }
     return ret;
 }
@@ -2158,54 +2136,41 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu()
-#ifdef USE_TILE_LOCAL
-        : Menu(MF_MULTISELECT,"",false)
-#else
-        : Menu()
-#endif
-    { }
+    ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
 
 protected:
-    void draw_title();
+    virtual formatted_string calc_title() override;
 };
 
-void ShoppingListMenu::draw_title()
+formatted_string ShoppingListMenu::calc_title()
 {
-    if (title)
+    formatted_string fs;
+    const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
+
+    fs.textcolour(title->colour);
+    fs.cprintf("%d %s%s, total %d gold",
+                title->quantity, title->text.c_str(),
+                title->quantity > 1 ? "s" : "",
+                total_cost);
+
+    string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    switch (menu_action)
     {
-        const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
-
-        cgotoxy(1, 1);
-        formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total %d gold",
-                   title->quantity, title->text.c_str(),
-                   title->quantity > 1? "s" : "",
-                   total_cost);
-        fs.display();
-
-#ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
-#endif
-        string s = "<lightgrey>  [<w>a-z</w>] ";
-
-        switch (menu_action)
-        {
-        case ACT_EXECUTE:
-            s += "<w>travel</w>|examine|delete";
-            break;
-        case ACT_EXAMINE:
-            s += "travel|<w>examine</w>|delete";
-            break;
-        default:
-            s += "travel|examine|<w>delete</w>";
-            break;
-        }
-
-        s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
-
-        draw_title_suffix(formatted_string::parse_string(s), false);
+    case ACT_EXECUTE:
+        s += "<w>travel</w>|examine|delete";
+        break;
+    case ACT_EXAMINE:
+        s += "travel|<w>examine</w>|delete";
+        break;
+    default:
+        s += "travel|examine|<w>delete</w>";
+        break;
     }
+
+    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
+    fs += formatted_string::parse_string(s);
+    return fs;
 }
 
 /**
@@ -2274,17 +2239,11 @@ void ShoppingList::display()
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = Menu::ACT_EXECUTE;
     shopmenu.action_cycle = Menu::CYCLE_CYCLE;
-    string title          = "thing";
+    string title          = "item";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
-
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list->size() > 52
-        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
-    {
-        shopmenu.set_maxpagesize(52);
-    }
 
     string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
@@ -2294,20 +2253,11 @@ void ShoppingList::display()
 
     fill_out_menu(shopmenu);
 
-    vector<MenuEntry*> sel;
-    while (true)
+    shopmenu.on_single_selection =
+        [this, &shopmenu, &mtitle](const MenuEntry& sel)
     {
-        // Abuse of the quantity field.
-        mtitle->quantity = list->size();
-
-        redraw_screen();
-        sel = shopmenu.show();
-
-        if (sel.empty())
-            break;
-
         const CrawlHashTable* thing =
-            static_cast<const CrawlHashTable *>(sel[0]->data);
+            static_cast<const CrawlHashTable *>(sel.data);
 
         const bool is_item = thing_is_item(*thing);
 
@@ -2323,16 +2273,15 @@ void ShoppingList::display()
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
                 if (!yesno(prompt.c_str(), true, 'n'))
-                    continue;
+                    return true;
             }
 
             const level_pos lp(thing_pos(*thing));
             start_translevel_travel(lp);
-            break;
+            return false;
         }
         else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
         {
-            clrscr();
             if (is_item)
             {
                 const item_def &item = get_thing_item(*thing);
@@ -2352,19 +2301,22 @@ void ShoppingList::display()
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
-            const int index = shopmenu.get_entry_index(sel[0]);
+            const int index = shopmenu.get_entry_index(&sel);
             if (index == -1)
             {
                 mprf(MSGCH_ERROR, "ERROR: Unable to delete thing from shopping list!");
                 more();
-                continue;
+                return true;
             }
 
             del_thing_at_index(index);
+            mtitle->quantity = list->size();
+            shopmenu.set_title(mtitle);
+
             if (list->empty())
             {
                 mpr("Your shopping list is now empty.");
-                break;
+                return false;
             }
 
             shopmenu.clear();
@@ -2372,7 +2324,10 @@ void ShoppingList::display()
         }
         else
             die("Invalid menu action type");
-    }
+        return true;
+    };
+
+    shopmenu.show();
     redraw_screen();
 }
 

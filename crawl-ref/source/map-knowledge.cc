@@ -25,7 +25,10 @@ void set_terrain_mapped(const coord_def gc)
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_MAGIC_MAPPED_FLAG;
 #ifdef USE_TILE
-    tiles.update_minimap(gc);
+    // This may have changed the explore horizon, so update adjacent minimap
+    // squares as well.
+    for (adjacent_iterator ai(gc, false); ai; ++ai)
+        tiles.update_minimap(*ai);
 #endif
 }
 
@@ -139,7 +142,10 @@ void set_terrain_seen(const coord_def pos)
     cell->flags |= MAP_SEEN_FLAG;
 
 #ifdef USE_TILE
-    tiles.update_minimap(pos);
+    // This may have changed the explore horizon, so update adjacent minimap
+    // squares as well.
+    for (adjacent_iterator ai(pos, false); ai; ++ai)
+        tiles.update_minimap(*ai);
 #endif
 }
 
@@ -177,12 +183,47 @@ static bool _floor_mf(map_feature mf)
            || mf == MF_LAVA;
 }
 
+bool is_explore_horizon(const coord_def& c)
+{
+    // Not useful when there's maprot destroying your exploration anyway.
+    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
+        return false;
+
+    if (env.map_knowledge(c).feat() != DNGN_UNSEEN)
+        return false;
+
+    // Note: c might be on map edge, walkable squares not really.
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (in_bounds(*ai))
+        {
+            const auto& cell = env.map_knowledge(*ai);
+            dungeon_feature_type feat = cell.feat();
+            if (feat != DNGN_UNSEEN
+                && !feat_is_solid(feat)
+                && !feat_is_door(feat)
+                && !(cell.flags & MAP_MAGIC_MAPPED_FLAG))
+            {
+                return true;
+            }
+        }
+
+    return false;
+}
+
 /**
- * What map feature is present in the given map cell, for minimap purposes?
+ * What map feature is present in the given coordinate, for minimap purposes?
  *
- * @param cell  The cell in question.
- * @return      The most important feature in the given cell.
+ * @param gc    The grid coordinate in question.
+ * @return      The most important feature in the given coordinate.
  */
+map_feature get_cell_map_feature(const coord_def& gc)
+{
+    if (is_explore_horizon(gc))
+        return MF_EXPLORE_HORIZON;
+
+    return get_cell_map_feature(env.map_knowledge(gc));
+}
+
 map_feature get_cell_map_feature(const map_cell& cell)
 {
     // known but not seen monster
@@ -237,6 +278,7 @@ map_feature get_cell_map_feature(const map_cell& cell)
 
     if (base_feature == MF_SKIP) // can this happen?
         return MF_UNSEEN;
+
     return base_feature;
 }
 

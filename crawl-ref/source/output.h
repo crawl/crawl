@@ -17,7 +17,7 @@ void print_stats();
 void print_stats_level();
 void draw_border();
 
-void redraw_screen();
+void redraw_screen(bool show_updates = true);
 
 string mpr_monster_list(bool past = false);
 int update_monster_pane();

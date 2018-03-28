@@ -1433,6 +1433,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             break;
 
         case MONS_MERFOLK_JAVELINEER:
+        case MONS_MINOTAUR:
             weap_type  = MI_JAVELIN;
             qty        = random_range(9, 23, 2);
             if (one_chance_in(3))
@@ -1841,6 +1842,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_ANCIENT_CHAMPION:
+    case MONS_MINOTAUR:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;

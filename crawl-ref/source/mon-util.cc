@@ -2168,9 +2168,9 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_wind(monster_type mc)
+bool mons_class_res_tornado(monster_type mc)
 {
-    return get_resist(get_mons_class_resists(mc), MR_RES_WIND);
+    return get_resist(get_mons_class_resists(mc), MR_RES_TORNADO);
 }
 
 /**
@@ -5728,7 +5728,8 @@ static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
 bool apply_monsters_around_square(monster_func f, const coord_def& where,
                                   int radius)
 {
-    return _apply_to_monsters(f, radius_iterator(where, radius, C_SQUARE, true));
+    return _apply_to_monsters(f, radius_iterator(where, radius, C_SQUARE,
+                                                 LOS_NO_TRANS, true));
 }
 
 bool apply_visible_monsters(monster_func f, const coord_def& where, los_type los)

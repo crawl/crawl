@@ -18,7 +18,7 @@ trove = {}
 function trove.get_trove_item(e, value, base_item)
   -- This function should return a table with the following values:
   --  quantity=0 (number of items, 1 unless consumables)
-  --  base_type="armour" (armour, weapon, potion, scroll, jewellery, book, or miscellaneous)
+  --  base_type="armour" (armour, weapon, potion, scroll, jewellery, or miscellaneous)
   --  sub_type="robe" (short sword, etc)
   --  ego_type="resistance" (or false)
   --  plus1=4 (or false)
@@ -64,7 +64,7 @@ function trove.get_trove_item(e, value, base_item)
                           "ring of dexterity", "ring of slaying",
                           "amulet of reflection"}
     local bt = shop_item.base_type
-    if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
+    if bt == "armour" or bt == "weapon" or bt == "jewellery" then
       if shop_item.identified() then
         item.quantity = shop_item.quantity
         item.base_type = shop_item.base_type
@@ -82,8 +82,6 @@ function trove.get_trove_item(e, value, base_item)
           if util.contains(jwith_pluses, item.sub_type) then
             item.plus1 = shop_plus1
           end
-        elseif item.base_type == "book" and string.find(item.sub_type, "manual") then
-            item.plus1 = shop_plus1
         else
           item.plus1 = false
         end

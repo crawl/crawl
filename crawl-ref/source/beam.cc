@@ -1614,16 +1614,9 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_AIR:
-        if (mons->res_wind())
-            hurted = 0;
-        else if (mons->airborne())
+        if (mons->airborne())
             hurted += hurted / 2;
-        if (!hurted)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(*mons, " is harmlessly tossed around.");
-        }
-        else if (original < hurted)
+        if (original < hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(*mons, " gets badly buffeted.");
@@ -3811,9 +3804,11 @@ void bolt::affect_player()
     }
 
     // need to trigger qaz resists after reducing damage from ac/resists.
-    //    for some reason, strength 2 is the standard. This leads to qaz's resists triggering 2 in 5 times at max piety.
+    //    for some reason, strength 2 is the standard. This leads to qaz's
+    //    resists triggering 2 in 5 times at max piety.
     //    perhaps this should scale with damage?
-    // what to do for hybrid damage?  E.g. bolt of magma, icicle, poison arrow?  Right now just ignore the physical component.
+    // what to do for hybrid damage?  E.g. bolt of magma, icicle, poison arrow?
+    // Right now just ignore the physical component.
     // what about acid?
     you.expose_to_element(flavour, 2, false);
 
@@ -3823,12 +3818,15 @@ void bolt::affect_player()
     {
         mpr("The barbed spikes become lodged in your body.");
         if (!you.duration[DUR_BARBS])
-            you.set_duration(DUR_BARBS,  random_range(3, 6));
+            you.set_duration(DUR_BARBS, random_range(4, 8));
         else
             you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
 
         if (you.attribute[ATTR_BARBS_POW])
-            you.attribute[ATTR_BARBS_POW] = min(6, you.attribute[ATTR_BARBS_POW]++);
+        {
+            you.attribute[ATTR_BARBS_POW] =
+                min(6, you.attribute[ATTR_BARBS_POW]++);
+        }
         else
             you.attribute[ATTR_BARBS_POW] = 4;
     }
@@ -4105,8 +4103,15 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         }
         else
         {
-            friend_info.power
-                += 2 * final * mon->get_experience_level() / preac;
+            // Discourage summoned monsters firing on their summoner.
+            const monster* mon_source = agent()->as_monster();
+            if (mon_source && mon_source->summoner == mon->mid)
+                friend_info.power = 100;
+            else
+            {
+                friend_info.power
+                    += 2 * final * mon->get_experience_level() / preac;
+            }
             friend_info.count++;
         }
     }
@@ -4925,7 +4930,6 @@ bool bolt::has_saving_throw() const
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
-    case BEAM_ENSLAVE_SOUL:
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_BECKONING:
@@ -4968,17 +4972,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_POLYMORPH:
         rc = mon->can_polymorph();
-        break;
-
-    case BEAM_ENSLAVE_SOUL:
-        rc = (mon->holiness() & MH_NATURAL
-              || mon->holiness() & MH_DEMONIC
-              || mon->holiness() & MH_HOLY)
-             && !mon->is_summoned()
-             && !mons_enslaved_body_and_soul(*mon)
-             && mon->attitude != ATT_FRIENDLY
-             && mons_intel(*mon) >= I_HUMAN
-             && mon->type != MONS_PANDEMONIUM_LORD;
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -5182,19 +5175,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         mon->hurt(agent(), damage.roll());
         return MON_AFFECTED;
-
-    case BEAM_ENSLAVE_SOUL:
-    {
-        if (!ench_flavour_affects_monster(flavour, mon))
-            return MON_UNAFFECTED;
-
-        obvious_effect = true;
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
-        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(),
-                                  duration * BASELINE_DELAY));
-        simple_monster_message(*mon, "'s soul is now ripe for the taking.");
-        return MON_AFFECTED;
-    }
 
     case BEAM_PAIN:
     {
@@ -6074,7 +6054,6 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_BECKONING:
             // Friendly and good neutral monsters don't mind being teleported.
             return !mon->wont_attack();
-        case BEAM_ENSLAVE_SOUL:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
         case BEAM_SLOW:
@@ -6214,6 +6193,12 @@ actor* bolt::agent(bool ignore_reflection) const
             return &menv[YOU_FAULTLESS];
         nominal_source = reflector;
     }
+
+    // Check for whether this is actually a dith shadow, not you
+    if (monster* shadow = monster_at(you.pos()))
+        if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
+            return shadow;
+
     if (YOU_KILL(nominal_ktype))
         return &you;
     else
@@ -6315,7 +6300,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";
-    case BEAM_ENSLAVE_SOUL:          return "enslave soul";
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";
     case BEAM_DISPEL_UNDEAD:         return "dispel undead";

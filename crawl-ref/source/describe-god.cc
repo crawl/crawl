@@ -634,8 +634,8 @@ static string _get_god_misc_info(god_type which_god)
         case SK_INVOCATIONS:
             break;
         case SK_NONE:
-            if (which_god == GOD_GOZAG || which_god == GOD_WU_JIAN) 
-                break; // XXX: No piety, but there's no space for details
+            if (which_god == GOD_GOZAG || which_god == GOD_WU_JIAN)
+                break; // XXX: no space for details
             info += uppercase_first(apostrophise(god_name(which_god))) +
                     " powers are based on piety instead of Invocations skill.";
             break;
@@ -951,7 +951,7 @@ static void _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        if (!you_foodless_normally())
+        if (!you_foodless(false))
         {
             if (have_passive(passive_t::bottle_mp))
                 textcolour(god_colour(which_god));
@@ -964,6 +964,11 @@ static void _describe_god_powers(god_type which_god)
         }
         break;
     }
+
+    case GOD_LUGONU:
+        have_any = true;
+        cprintf("You are protected from the effects of unwielding distortion weapons.\n");
+        break;
 
     default:
         break;

@@ -84,6 +84,7 @@ protected:
 
     int find_index_before_width(const char *str, int max_width);
 
+    unsigned int map_unicode(char *ch);
     unsigned int map_unicode(char32_t uchar, bool update);
     unsigned int map_unicode(char32_t uchar);
     void load_glyph(unsigned int c, char32_t uchar);
@@ -108,20 +109,17 @@ protected:
 
         // does glyph have any pixels?
         bool renderable;
+        bool valid;
+    };
+    vector<GlyphInfo> m_glyphs;
+    GlyphInfo& get_glyph_info(char32_t ch);
 
-        // index of prev/next glyphs in LRU
-        unsigned int prev; unsigned int next;
-        // charcode of glyph
+    struct FontAtlasEntry
+    {
         char32_t uchar;
     };
-    GlyphInfo *m_glyphs;
-    map<char32_t, unsigned int> m_glyphmap;
-    // index of least recently used glyph
-    char32_t m_glyphs_lru;
-    // index of most recently used glyph
-    char32_t m_glyphs_mru;
-    // index of last populated glyph until m_glyphs[] is full
-    char32_t m_glyphs_top;
+    FontAtlasEntry *m_atlas;
+    vector<char32_t> m_atlas_lru;
 
     // count of glyph loads in the current text block
     int n_subst;

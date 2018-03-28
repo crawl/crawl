@@ -394,18 +394,6 @@ bool fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
-#if TAG_MAJOR_VERSION == 34
-    case STATUS_FIREBALL:
-        if (you.attribute[ATTR_DELAYED_FIREBALL])
-        {
-            inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "Fball";
-            inf->short_text   = "delayed fireball";
-            inf->long_text    = "You have a stored fireball ready to release.";
-        }
-        break;
-#endif
-
     case STATUS_BONE_ARMOUR:
         if (you.attribute[ATTR_BONE_ARMOUR] > 0)
         {
@@ -417,8 +405,13 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {
+            // Our constrictor isn't, valid so don't report this status.
+            if (you.has_invalid_constrictor())
+                return false;
+
             const monster * const cstr = monster_by_mid(you.constricted_by);
             ASSERT(cstr);
+
             const bool damage =
                 cstr->constriction_does_damage(you.is_directly_constricted());
 

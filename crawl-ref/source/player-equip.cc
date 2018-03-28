@@ -781,7 +781,7 @@ static void _spirit_shield_message(bool unmeld)
     }
     else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel the presence of a powerless spirit.");
-    else // unmeld or already spirit-shielded
+    else if (!you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel spirits watching over you.");
 }
 
@@ -1147,6 +1147,20 @@ static void _equip_amulet_of_regeneration()
     }
 }
 
+static void _equip_amulet_of_the_acrobat()
+{
+    if (you.hp == you.hp_max)
+    {
+        you.props[ACROBAT_AMULET_ACTIVE] = 1;
+        mpr("You feel ready to tumble and roll out of harm's way.");
+    }
+    else
+    {
+        mpr("Your injuries prevent the amulet from attuning itself.");
+        you.props[ACROBAT_AMULET_ACTIVE] = 0;
+    }
+}
+
 static void _equip_amulet_of_mana_regeneration()
 {
     if (!player_regenerates_mp())
@@ -1249,6 +1263,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_REGENERATION:
         if (!unmeld)
             _equip_amulet_of_regeneration();
+        break;
+
+    case AMU_ACROBAT:
+        if (!unmeld)
+            _equip_amulet_of_the_acrobat();
         break;
 
     case AMU_MANA_REGENERATION:

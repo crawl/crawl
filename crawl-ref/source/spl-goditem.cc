@@ -329,10 +329,6 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
     // attributes
     static const attribute_type dispellable_attributes[] = {
-#if TAG_MAJOR_VERSION == 34
-        ATTR_DELAYED_FIREBALL,
-#endif
-        ATTR_REPEL_MISSILES,
         ATTR_DEFLECT_MISSILES,
     };
 
@@ -841,18 +837,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             veto_spots.push_back(newpos);
         }
 
-        // Make sure we have a legitimate tile.
-        proceed = false;
-        if (!zin && !monster_at(*ai))
-        {
-            if (feat_is_trap(grd(*ai), true) || feat_is_stone_stair(grd(*ai))
-                || safe_tiles.count(grd(*ai)))
-            {
-                proceed = true;
-            }
-        }
-        else if (zin && !cell_is_solid(*ai))
-            proceed = true;
+        // closed doors are solid, but we don't want a behaviour difference
+        // between open and closed doors
+        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        if (!zin && monster_at(*ai))
+            proceed = false;
 
         if (proceed)
         {

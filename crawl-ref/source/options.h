@@ -233,6 +233,7 @@ public:
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
+    bool        auto_hide_spells; // hide new spells
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;   // take note when skills reach new max
@@ -486,29 +487,31 @@ public:
     bool        tile_menu_icons; // display icons in menus?
 
     // minimap colours
-    VColour     tile_player_col;
-    VColour     tile_monster_col;
-    VColour     tile_plant_col;
-    VColour     tile_item_col;
     VColour     tile_unseen_col;
     VColour     tile_floor_col;
     VColour     tile_wall_col;
     VColour     tile_mapped_floor_col;
     VColour     tile_mapped_wall_col;
     VColour     tile_door_col;
-    VColour     tile_downstairs_col;
+    VColour     tile_item_col;
+    VColour     tile_monster_col;
+    VColour     tile_plant_col;
     VColour     tile_upstairs_col;
+    VColour     tile_downstairs_col;
+    VColour     tile_branchstairs_col;
+    VColour     tile_feature_col;
+    VColour     tile_water_col;
+    VColour     tile_lava_col;
+    VColour     tile_trap_col;
+    VColour     tile_excl_centre_col;
+    VColour     tile_excluded_col;
+    VColour     tile_player_col;
+    VColour     tile_deep_water_col;
+    VColour     tile_portal_col;
     VColour     tile_transporter_col;
     VColour     tile_transporter_landing_col;
-    VColour     tile_branchstairs_col;
-    VColour     tile_portal_col;
-    VColour     tile_feature_col;
-    VColour     tile_trap_col;
-    VColour     tile_water_col;
-    VColour     tile_deep_water_col;
-    VColour     tile_lava_col;
-    VColour     tile_excluded_col;
-    VColour     tile_excl_centre_col;
+    VColour     tile_explore_horizon_col;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     // font settings

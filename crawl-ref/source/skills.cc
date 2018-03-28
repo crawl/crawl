@@ -1487,7 +1487,7 @@ int get_skill_percentage(const skill_type x)
  */
 int player::get_training_target(const skill_type sk) const
 {
-    ASSERT_RANGE(training_targets[sk], 0, 271);
+    ASSERT_LESS(training_targets[sk], 271);
     return training_targets[sk];
 }
 

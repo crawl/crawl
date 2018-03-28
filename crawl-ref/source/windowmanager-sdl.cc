@@ -127,16 +127,6 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
     }
 }
 
-// Suppress the SDL_TEXTINPUT event from this keypress. XXX: hacks
-static void _suppress_textinput()
-{
-    if (SDL_IsTextInputActive())
-    {
-        SDL_StopTextInput();
-        SDL_StartTextInput();
-    }
-}
-
 static int _translate_keysym(SDL_Keysym &keysym)
 {
     // This function returns the key that was hit. Returning zero implies that
@@ -328,7 +318,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
                                    MouseEvent &tile_event)
 {
     tile_event.held  = MouseEvent::NONE;
-    tile_event.event = MouseEvent::PRESS; // XXX
+    tile_event.event = MouseEvent::WHEEL;
     tile_event.button = (sdl_event.y > 0) ? MouseEvent::SCROLL_DOWN
                                           : MouseEvent::SCROLL_UP;
     tile_event.px = sdl_event.x;
@@ -336,7 +326,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 }
 
 SDLWrapper::SDLWrapper():
-    m_window(nullptr), m_context(nullptr)
+    m_window(nullptr), m_context(nullptr), prev_keycode(0)
 {
 }
 
@@ -657,11 +647,97 @@ void SDLWrapper::set_mod_state(tiles_key_mod mod)
     SDL_SetModState(set_to);
 }
 
+static char32_t _key_suppresses_textinput(int keycode)
+{
+    char result_char = 0;
+    char32_t result = 0;
+    switch (keycode)
+    {
+    case SDLK_KP_5:
+    case SDLK_CLEAR:
+        result_char = '5';
+        break;
+    case SDLK_KP_8:
+    case SDLK_UP:
+        result_char = '8';
+        break;
+    case SDLK_KP_2:
+    case SDLK_DOWN:
+        result_char = '2';
+        break;
+    case SDLK_KP_4:
+    case SDLK_LEFT:
+        result_char = '4';
+        break;
+    case SDLK_KP_6:
+    case SDLK_RIGHT:
+        result_char = '6';
+        break;
+    case SDLK_KP_0:
+    case SDLK_INSERT:
+        result_char = '0';
+        break;
+    case SDLK_KP_7:
+    case SDLK_HOME:
+        result_char = '7';
+        break;
+    case SDLK_KP_1:
+    case SDLK_END:
+        result_char = '1';
+        break;
+    case SDLK_KP_9:
+    case SDLK_PAGEUP:
+        result_char = '9';
+        break;
+    case SDLK_KP_3:
+    case SDLK_PAGEDOWN:
+        result_char = '3';
+        break;
+    }
+    if (result_char)
+        utf8towc(&result, &result_char);
+    return result;
+}
+
+int SDLWrapper::send_textinput(wm_event *event)
+{
+    event->type = WME_KEYPRESS;
+    do
+    {
+        // pop a key off the input queue
+        char32_t wc;
+        int wc_bytelen = utf8towc(&wc, m_textinput_queue.c_str());
+        m_textinput_queue.erase(0, wc_bytelen);
+
+        if (prev_keycode && _key_suppresses_textinput(prev_keycode) == wc)
+        {
+            // this needs to return something, or the event loop in
+            // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
+            // is handled in macro.cc:_getch_mul.
+            prev_keycode = 0;
+            if (!m_textinput_queue.empty())
+                continue;
+            event->key.keysym.sym = CK_NO_KEY;
+            return 1;
+        }
+        event->key.keysym.sym = wc;
+    }
+    while (false);
+    return 1;
+}
+
 int SDLWrapper::wait_event(wm_event *event)
 {
     SDL_Event sdlevent;
+
+    if (!m_textinput_queue.empty())
+        return send_textinput(event);
+
     if (!SDL_WaitEvent(&sdlevent))
         return 0;
+
+    if (sdlevent.type != SDL_TEXTINPUT)
+        prev_keycode = 0;
 
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
@@ -684,9 +760,9 @@ int SDLWrapper::wait_event(wm_event *event)
             return 0;
 
         // If we're going to accept this keydown, don't generate subsequent
-        // textinput events for the same key.
-        if (event->key.keysym.sym)
-            _suppress_textinput();
+        // textinput events for the same key. This mechanism assumes that a
+        // fake textinput will arrive as the immediately following SDL event.
+        prev_keycode = sdlevent.key.keysym.sym;
 
 /*
  * LShift = scancode 0x30; tiles_key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
@@ -705,12 +781,9 @@ int SDLWrapper::wait_event(wm_event *event)
         break;
     case SDL_TEXTINPUT:
     {
-        event->type = WME_KEYPRESS;
-        // XXX: handle multiple keys?
-        char32_t wc;
-        utf8towc(&wc, sdlevent.text.text);
-        event->key.keysym.sym = wc;
-        break;
+        ASSERT(m_textinput_queue.empty());
+        m_textinput_queue = string(sdlevent.text.text);
+        return send_textinput(event);
     }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
@@ -725,7 +798,7 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_event(sdlevent.button, event->mouse_event);
         break;
     case SDL_MOUSEWHEEL:
-        event->type = WME_MOUSEBUTTONDOWN; // XXX
+        event->type = WME_MOUSEWHEEL;
         _translate_wheel_event(sdlevent.wheel, event->mouse_event);
         break;
     case SDL_QUIT:
@@ -777,6 +850,11 @@ void SDLWrapper::delay(unsigned int ms)
 
 unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
+    // check for enqueued characters from a multi-char textinput event
+    // count is floored to 1 for consistency with other event types
+    if (type == WME_KEYPRESS && m_textinput_queue.size() > 0)
+        return 1;
+
     // Look for the presence of any keyboard events in the queue.
     Uint32 event;
     switch (type)
@@ -810,6 +888,10 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     case WME_MOUSEBUTTONDOWN:
         event = SDL_MOUSEBUTTONDOWN;
+        break;
+
+    case WME_MOUSEWHEEL:
+        event = SDL_MOUSEWHEEL;
         break;
 
     case WME_QUIT:

@@ -1,27 +1,7 @@
 # Serial vaults
 #
-# Sometimes, we want flavour (or also other) vaults to be placed several times,
-# so as to make the level feel more coherent. The lua calls for such serial
-# vaults are in the files in this folder (dat/des/serial/). Each serial vault
-# has its own file.
+# A serial vault is a series of (usually) small related vaults that can be
+# placed multiple times on the same level. Each serial vault goes in one file
+# in this folder.
 #
-# The vaults eventually could be just copies of one map, or (much better) come
-# from a list of thematically linked maps. This is mostly for flavour, although
-# it may be interesting to created serial vaults around threats.
-#
-# In general, we don't want more than one serial vault on a level. Use the
-# TAGS: luniq_serial
-# in the serial vault's header map for this.
-#
-# Often, it will be fine to allow the individual maps comprising a serial vault
-# to be chosen by the level builder as usual minivaults. If you want to do that,
-# there are two ways to proceed:
-#   A default-depth line before all maps.
-#   Or non-empty DEPTH statements in each map definition. (You can still do
-#   this even if there is a default-depth. It allows you tweak the depths for
-#   specific maps.)
-# If you want to disable all or some the maps for a reason from normal minivault
-# placement, you can:
-#   Give them no DEPTH line when you have no preceding default-depth.
-#   Explicitly remove them with an empty depth line like this:
-#   DEPTH:
+# See doc/devel/levels/guidelines.md for guidelines on creating serial vaults.

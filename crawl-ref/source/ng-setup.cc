@@ -486,10 +486,6 @@ static void _give_basic_knowledge()
 {
     identify_inventory();
 
-    for (const item_def& i : you.inv)
-        if (i.base_type == OBJ_BOOKS)
-            mark_had_book(i);
-
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
 
@@ -628,6 +624,9 @@ static void _setup_generic(const newgame_def& ng)
         _setup_tutorial_miscs();
 
     _give_basic_knowledge();
+
+    // Must be after _give_basic_knowledge
+    add_held_books_to_library();
 
     initialise_item_descriptions();
 

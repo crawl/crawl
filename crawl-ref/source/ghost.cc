@@ -37,7 +37,6 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_SHATTER,
     SPELL_FREEZING_CLOUD,
     SPELL_POISONOUS_CLOUD,
     SPELL_METAL_SPLINTERS,
@@ -652,10 +651,6 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     {
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DELAYED_FIREBALL:
-        return SPELL_FIREBALL;
-#endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:

@@ -284,7 +284,17 @@ from within the MSYS2 Shell.
 
   pacman -S mingw-w64-x86_64-toolchain
 
-  After the packages install, you're ready to build crawl!
+  At this point you may need to add the newly installed toolchain to your path.
+  You can do this with the following line, either at the command line (for that
+  shell instance only) or in the file `~/.bashrc` to make it permanent:
+
+  export PATH=$PATH:/mingw64/bin
+
+  To test that this worked, run:
+
+  gcc -v
+
+  After the packages are installed and gcc runs, you're ready to build crawl!
 
 * To get the Crawl source, you can follow the steps in the Source Code Checkout
   section above to clone Crawl into your MSYS2 home directory. If you've
@@ -323,11 +333,8 @@ Building on Windows (Cygwin)
 
 * Follow the Linux build instructions to build Crawl.
 
-Building on Windows 10 (Linux Subsystem) (console and webtiles only)
+Building on Windows 10 (Linux Subsystem)
 --------------------------------------------------------------------
-
-Local tiles (built with TILES=y) does not currently work with this method, but
-webtiles (bult with WEBTILES=y) does, as does console (built with just 'make').
 
 * Follow the instructions on Microsoft's website at
   https://docs.microsoft.com/en-us/windows/wsl/install-win10 to set up the
@@ -337,6 +344,14 @@ webtiles (bult with WEBTILES=y) does, as does console (built with just 'make').
   lists, if using Ubuntu.
 
 * Follow the Linux instructions to build Crawl.
+
+* Console and Webtiles will work without any further configuration. To get SDL
+  tiles to work, you need an X server running on Windows; Xming is an option
+  that has worked in the past. If you run into an error about not finding a
+  matching GLX visual, try running:
+
+  export SDL_VIDEO_X11_VISUALID=
+
 
 Building on Windows (MSVC)
 --------------------------

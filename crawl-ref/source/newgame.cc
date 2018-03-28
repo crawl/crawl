@@ -213,10 +213,6 @@ COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
 bool is_starting_species(species_type species)
 {
-    // Trunk-only until we finish the species.
-    if (species == SP_GNOLL && Version::ReleaseType != VER_ALPHA)
-        return false;
-
     return find(species_order, species_order + ARRAYSZ(species_order),
                 species) != species_order + ARRAYSZ(species_order);
 }
@@ -1327,7 +1323,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%', false, _highlight_pattern(ng));
+                list_commands('%', _highlight_pattern(ng));
                 return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_VIABLE:
                 if (choice_type == C_JOB)
@@ -1662,7 +1658,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_HELP:
             list_commands('?');
@@ -1889,7 +1885,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         // Is this item our default map?
         else if (defaults.map == maps[i]->name)
         {
-            if (crawl_state.last_game_exit == game_exit::win)
+            if (crawl_state.last_game_exit.exit_reason == game_exit::win)
                 activate_next = true;
             else
                 menu->set_active_item(tmp);
@@ -2086,7 +2082,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             // TODO: fix
             return;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');

@@ -20,6 +20,7 @@ public:
                                        const coord_def &m_drawablesz) override;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) override;
     virtual void reset_transform() override;
+    virtual void get_transform(GLW_3VF *trans, GLW_3VF *scale) override;
     virtual void set_scissor(int x, int y, unsigned int w, unsigned int h) override;
     virtual void reset_scissor() override;
 #ifdef __ANDROID__

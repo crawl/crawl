@@ -952,7 +952,6 @@ static bool _id_floor_item(item_def &item)
         if (item_needs_autopickup(item))
             item.props["needs_autopickup"] = true;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        mark_had_book(item);
         return true;
     }
     else if (item.base_type == OBJ_WANDS)
@@ -1828,6 +1827,52 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
+static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
+{
+    vector<string> spellnames;
+    if (!quiet)
+        mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+    for (spell_type st : spells_in_book(it))
+    {
+        if (!you.spell_library[st])
+        {
+            you.spell_library.set(st, true);
+            bool memorise = you_can_memorise(st);
+            if (memorise)
+                spellnames.push_back(spell_title(st));
+            if (!memorise || (Options.auto_hide_spells && allow_auto_hide))
+                you.hidden_spells.set(st, true);
+        }
+    }
+    if (!quiet)
+    {
+        if (!spellnames.empty())
+        {
+            mprf("You add the spell%s %s to your library.",
+                 spellnames.size() > 1 ? "s" : "",
+                 comma_separated_line(spellnames.begin(),
+                                      spellnames.end()).c_str());
+        }
+        else
+            mpr("Unfortunately, it added no spells to the library.");
+    }
+}
+
+// Adds all books in the player's inventory to library.
+// Declared here for use by tags to load old saves.
+// Outside of loading old saves, only used at character creation.
+void add_held_books_to_library()
+{
+    for (item_def& it : you.inv)
+    {
+        if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+        {
+            _get_book(it, true, false);
+            destroy_item(it);
+        }
+    }
+}
+
 /**
  * Place a rune into the player's inventory.
  *
@@ -2064,10 +2109,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
-    {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        mark_had_book(item);
-    }
 
     // Normalize ration tile in inventory
     if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_RATION)
@@ -2133,7 +2175,11 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         get_gold(it, quant_got, quiet);
         return true;
     }
-
+    if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+    {
+        _get_book(it, quiet, true);
+        return true;
+    }
     // Runes are also massless.
     if (it.base_type == OBJ_RUNES)
     {
@@ -4554,6 +4600,47 @@ bool get_item_by_name(item_def *item, const char* specs,
     item_set_appearance(*item);
 
     return true;
+}
+
+bool get_item_by_exact_name(item_def &item, const char* name)
+{
+    item.clear();
+    item.quantity = 1;
+    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
+    item.flags |= ISFLAG_IDENT_MASK;
+
+    string name_lc = lowercase_string(string(name));
+
+    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    {
+        if (i == OBJ_RUNES) // runes aren't shown in ?/I
+            continue;
+
+        item.base_type = static_cast<object_class_type>(i);
+        item.sub_type = 0;
+
+        // _deck_from_specs doesn't use exact matches, but it's close enough
+        if (item.base_type == OBJ_MISCELLANY && starts_with(name_lc, "deck of"))
+        {
+            _deck_from_specs(name, item, false);
+
+            // deck creation cancelled, clean up item.
+            if (item.base_type == OBJ_UNASSIGNED)
+                return false;
+            return item.sub_type != 0;
+        }
+
+        if (!item.sub_type)
+        {
+            for (int j = 0; j < get_max_subtype(item.base_type); ++j)
+            {
+                item.sub_type = j;
+                if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
+                    return true;
+            }
+        }
+    }
+    return false;
 }
 
 void move_items(const coord_def r, const coord_def p)

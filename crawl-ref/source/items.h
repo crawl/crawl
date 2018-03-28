@@ -64,6 +64,8 @@ int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
 
+void add_held_books_to_library();
+
 void link_items();
 
 void fix_item_coordinates();
@@ -149,6 +151,8 @@ void item_was_destroyed(const item_def &item);
 bool get_item_by_name(item_def *item, const char* specs,
                       object_class_type class_wanted,
                       bool create_for_real = false);
+
+bool get_item_by_exact_name(item_def &item, const char* name);
 
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();

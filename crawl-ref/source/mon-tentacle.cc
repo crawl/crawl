@@ -45,6 +45,8 @@ static mgen_data _segment_data(const monster& head, coord_def pos,
                                monster_type type)
 {
     mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE);
+    if (mons_is_zombified(head))
+        mg.base_type = head.type;
     mg.set_summoned(&head, 0, 0, head.god)
       .set_col(head.colour);
     return mg;

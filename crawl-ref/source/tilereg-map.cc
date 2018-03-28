@@ -56,15 +56,18 @@ void MapRegion::init_colours()
     m_colours[MF_STAIR_UP]      = Options.tile_upstairs_col;
     m_colours[MF_STAIR_DOWN]    = Options.tile_downstairs_col;
     m_colours[MF_STAIR_BRANCH]  = Options.tile_branchstairs_col;
-    m_colours[MF_PORTAL]        = Options.tile_portal_col;
     m_colours[MF_FEATURE]       = Options.tile_feature_col;
     m_colours[MF_WATER]         = Options.tile_water_col;
-    m_colours[MF_DEEP_WATER]    = Options.tile_deep_water_col;
     m_colours[MF_LAVA]          = Options.tile_lava_col;
     m_colours[MF_TRAP]          = Options.tile_trap_col;
     m_colours[MF_EXCL_ROOT]     = Options.tile_excl_centre_col;
     m_colours[MF_EXCL]          = Options.tile_excluded_col;
     m_colours[MF_PLAYER]        = Options.tile_player_col;
+    m_colours[MF_DEEP_WATER]    = Options.tile_deep_water_col;
+    m_colours[MF_PORTAL]        = Options.tile_portal_col;
+    m_colours[MF_TRANSPORTER]   = Options.tile_transporter_col;
+    m_colours[MF_TRANSPORTER_LANDING] = Options.tile_transporter_landing_col;
+    m_colours[MF_EXPLORE_HORIZON] = Options.tile_explore_horizon_col;
 }
 
 MapRegion::~MapRegion()
@@ -233,15 +236,16 @@ int MapRegion::handle_mouse(MouseEvent &event)
         if (m_far_view)
             tiles.load_dungeon(gc);
         return 0;
-    case MouseEvent::PRESS:
 #ifdef TOUCH_UI
+    case MouseEvent::WHEEL:
         // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
-        if ( (event.mod & TILES_MOD_CTRL)
-        && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
+        if (event.mod & TILES_MOD_CTRL)
         {
             tiles.zoom_dungeon(event.button == MouseEvent::SCROLL_UP);
             return CK_NO_KEY; // prevents this being handled by the dungeon underneath too(!)
         }
+        return 0;
+    case MouseEvent::PRESS:
         if (event.button == MouseEvent::LEFT)
         {
             m_far_view = true;
@@ -259,6 +263,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             m_far_view = false;
         return 0;
 #else
+    case MouseEvent::PRESS:
         if (event.button == MouseEvent::LEFT)
         {
             if (event.mod & TILES_MOD_SHIFT)

@@ -3187,7 +3187,7 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
 
 static bool _tornado_vulnerable(actor* victim)
 {
-    return !victim->res_wind();
+    return !victim->res_tornado();
 }
 
 static bool _torment_vulnerable(actor* victim)
@@ -7883,13 +7883,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
+    case SPELL_AIRSTRIKE:
         return !foe;
 
     case SPELL_HOLY_FLAMES:
         return !foe || no_clouds;
-
-    case SPELL_AIRSTRIKE:
-        return !foe || foe->res_wind();
 
     case SPELL_FREEZE:
         return !foe || !adjacent(mon->pos(), foe->pos());

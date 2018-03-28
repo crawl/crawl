@@ -5,6 +5,7 @@
 #include "colour.h"
 #include "libutil.h"
 #include "options.h"
+#include "player.h"
 #include "viewchar.h"
 
 #include "feature-data.h"
@@ -61,16 +62,16 @@ colour_t feature_def::colour() const
 
 /** What colour should be used for this feature when out of LOS?
  *
- *  @returns The map_colour from the feature option if given, otherwise
- *           the normal map_colour.
+ *  @returns The unseen_colour from the feature option if given, otherwise
+ *           the normal unseen_colour.
  */
-colour_t feature_def::map_colour() const
+colour_t feature_def::unseen_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && ofeat->map_dcolour)
-        return ofeat->map_dcolour;
+    if (ofeat && ofeat->unseen_dcolour)
+        return ofeat->unseen_dcolour;
 
-    return map_dcolour;
+    return unseen_dcolour;
 }
 
 /** What colour should be used for this feature when we have knowledge of it?
@@ -122,7 +123,7 @@ colour_t feature_def::em_colour() const
 static void _create_colours(feature_def &f)
 {
     if (f.seen_dcolour == BLACK)
-        f.seen_dcolour = f.map_dcolour;
+        f.seen_dcolour = f.unseen_dcolour;
 
     if (f.seen_em_dcolour == BLACK)
         f.seen_em_dcolour = f.seen_dcolour;
@@ -235,6 +236,17 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
  */
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
 {
+    switch (feat)
+    {
+        case DNGN_ENDLESS_SALT:
+            return DNGN_FLOOR;
+        case DNGN_OPEN_SEA:
+        case DNGN_LAVA_SEA:
+            return DNGN_SHALLOW_WATER;
+        default:
+            break;
+    }
+
     const feature_def& fdef = get_feature_def(feat);
     switch (fdef.dchar)
     {
@@ -250,7 +262,12 @@ dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
     case DCHAR_FOUNTAIN:
         return DNGN_FOUNTAIN_BLUE;
     case DCHAR_WALL:
-        return DNGN_ROCK_WALL;
+        // special-case vaults walls because the vast majority of vaults walls
+        // are stone, and the rock walls look totally different
+        if (you.where_are_you == BRANCH_VAULTS)
+            return DNGN_STONE_WALL;
+        else
+            return DNGN_ROCK_WALL;
     case DCHAR_ALTAR:
         return DNGN_UNKNOWN_ALTAR;
     default:

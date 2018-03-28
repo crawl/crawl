@@ -52,7 +52,6 @@
 
 typedef vector<spell_type>                     spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
-static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
 static const map<wand_type, spell_type> _wand_spells =
 {
@@ -275,27 +274,6 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-void mark_had_book(const item_def &book)
-{
-    ASSERT(book.base_type == OBJ_BOOKS);
-
-    if (!item_is_spellbook(book))
-        return;
-
-    for (spell_type stype : spells_in_book(book))
-        you.seen_spell.set(stype);
-
-    if (!book.props.exists(SPELL_LIST_KEY))
-        mark_had_book(static_cast<book_type>(book.sub_type));
-}
-
-void mark_had_book(book_type booktype)
-{
-    ASSERT_RANGE(booktype, 0, MAX_FIXED_BOOK + 1);
-
-    you.had_book.set(booktype);
-}
-
 void read_book(item_def &book)
 {
     clrscr();
@@ -335,104 +313,45 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
 
-static void _mark_book_known(item_def& book)
-{
-    // XXX: revise and check how much of this is needed (if any)
-    mark_had_book(book);
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-}
-
-/**
- * List all spells in the given book.
- *
- * @param book      The book to be read.
- * @param spells    The list of spells to populate. Doesn't have to be empty.
- * @return          Whether the given book is invalid (empty).
- */
-static bool _get_book_spells(const item_def& book, spell_set &spells)
-{
-    int num_spells = 0;
-    for (spell_type spell : spells_in_book(book))
-    {
-        num_spells++;
-        spells.insert(spell);
-    }
-
-    if (num_spells == 0)
-    {
-        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
-             "file a bug report.", book.name(DESC_PLAIN).c_str());
-        return true;
-    }
-
-    return false;
-}
-
 /**
  * Populate the given list with all spells the player can currently memorize,
- * from books in inventory, on the ground, or offered by Vehumet. Does not
- * filter by currently known spells, spell levels, etc.
+ * from library or Vehumet. Does not filter by currently known spells, spell
+ * levels, etc.
  *
  * @param available_spells  A list to be populated with available spells.
- * @return                  Whether there were errors while looking for spells.
  */
-static bool _list_available_spells(spell_set &available_spells)
+static void _list_available_spells(spell_set &available_spells)
 {
-
-    bool          book_errors = false;
-
-    // Collect the list of all spells in all available spellbooks.
-    for (auto &book : you.inv)
+    for (spell_type st = SPELL_NO_SPELL; st < NUM_SPELLS; st++)
     {
-        if (!book.defined() || !item_is_spellbook(book))
-            continue;
-
-        _mark_book_known(book);
-        book_errors = _get_book_spells(book, available_spells) || book_errors;
-    }
-
-    // We also check the ground
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
-
-    for (const item_def *bptr : items)
-    {
-        item_def book(*bptr); // Copy
-        if (!item_is_spellbook(book))
-            continue;
-
-        _mark_book_known(book);
-        book_errors = _get_book_spells(book, available_spells) || book_errors;
+        if (you.spell_library[st])
+            available_spells.insert(st);
     }
 
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
         available_spells.insert(gift);
-
-    return book_errors;
 }
 
-/**
- * Take a list of spells and filter them to only those that the player can
- * currently memorize.
- *
- * @param available_spells      The list of spells to be filtered.
- * @param mem_spells[out]       The list of memorizeable spells to populate.
- * @param num_misc[out]         How many spells are unmemorizable for 'misc
- *                              reasons' (e.g. player species)
- * @param return                The reason the player can't currently memorize
- *                              any spells, if they can't. Otherwise, "".
- */
-static string _filter_memorizable_spells(const spell_set &available_spells,
-                                         spell_list &mem_spells,
-                                         unsigned int &num_misc)
+static void _get_mem_list(spell_list &mem_spells,
+                          bool just_check = false)
 {
-    unsigned int num_known      = 0;
-                 num_misc       = 0;
-    unsigned int num_restricted = 0;
-    unsigned int num_low_xl     = 0;
-    unsigned int num_low_levels = 0;
-    unsigned int num_memable    = 0;
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+
+    if (available_spells.empty())
+    {
+        if (!just_check)
+            mprf(MSGCH_PROMPT, "Your library has no spells.");
+        return;
+    }
+
+    int num_known      = 0;
+    int num_misc       = 0;
+    int num_restricted = 0;
+    int num_low_xl     = 0;
+    int num_low_levels = 0;
+    int num_memable    = 0;
 
     for (const spell_type spell : available_spells)
     {
@@ -463,93 +382,41 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
         }
     }
 
+    const int total = num_known + num_misc + num_low_xl + num_low_levels
+                      + num_restricted;
+
+    const char* unavail_reason;
+
     if (num_memable || num_low_levels > 0 || num_low_xl > 0)
-        return "";
-
-    unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
-                         + num_restricted;
-
-    if (num_known == total)
-        return "You already know all available spells.";
-    if (num_restricted == total || num_restricted + num_known == total)
+        unavail_reason = "";
+    else if (num_known == total)
+        unavail_reason = "You already know all available spells.";
+    else if (num_restricted == total || num_restricted + num_known == total)
     {
-        return "You cannot currently memorise any of the available spells "
-               "because you cannot use those schools of magic.";
+        unavail_reason = "You cannot currently memorise any of the available "
+                         "spells because you cannot use those schools of "
+                         "magic.";
     }
-    if (num_misc == total || (num_known + num_misc) == total
-        || num_misc + num_known + num_restricted == total)
+    else if (num_misc == total || (num_known + num_misc) == total
+             || num_misc + num_known + num_restricted == total)
     {
-        return "You cannot memorise any of the available spells.";
+        unavail_reason = "You cannot memorise any of the available spells.";
     }
-
-    return "You can't memorise any new spells for an unknown reason; please "
-           "file a bug report.";
-}
-
-
-static void _get_mem_list(spell_list &mem_spells,
-                          unsigned int &num_misc,
-                          bool just_check = false)
-{
-    spell_set     available_spells;
-    bool          book_errors      = _list_available_spells(available_spells);
-
-    if (book_errors)
-        more();
-
-    if (available_spells.empty())
-    {
-        if (!just_check)
-        {
-            if (book_errors)
-                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
-            else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
-        }
-        return;
-    }
-
-    const string unavail_reason = _filter_memorizable_spells(available_spells,
-                                                             mem_spells,
-                                                             num_misc);
-    if (!just_check && !unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
-}
-
-/// Give the player a memorization prompt for the spells from the given book.
-void learn_spell_from(const item_def &book)
-{
-    spell_set available_spells;
-    const bool book_error = _get_book_spells(book, available_spells);
-    if (book_error)
-        more();
-    if (available_spells.empty())
-        return;
-
-    spell_list mem_spells;
-    unsigned int num_misc;
-    const string unavail_reason = _filter_memorizable_spells(available_spells,
-                                                             mem_spells,
-                                                             num_misc);
-    if (!unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
-    if (mem_spells.empty())
-        return;
-
-    const spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
-
-    if (specspell == SPELL_NO_SPELL)
-        canned_msg(MSG_OK);
     else
-        learn_spell(specspell);
+    {
+        unavail_reason = "You can't memorise any new spells for an unknown "
+                         "reason; please file a bug report.";
+    }
+
+    if (!just_check && *unavail_reason)
+        mprf(MSGCH_PROMPT, "%s", unavail_reason);
 }
 
 bool has_spells_to_memorise(bool silent)
 {
     spell_list      mem_spells;
-    unsigned int    num_misc;
 
-    _get_mem_list(mem_spells, num_misc, silent);
+    _get_mem_list(mem_spells, silent);
     return !mem_spells.empty();
 }
 
@@ -589,8 +456,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 vector<spell_type> get_mem_spell_list()
 {
     spell_list      mem_spells;
-    unsigned int    num_misc;
-    _get_mem_list(mem_spells, num_misc);
+    _get_mem_list(mem_spells);
 
     if (mem_spells.empty())
         return spell_list();
@@ -600,150 +466,265 @@ vector<spell_type> get_mem_spell_list()
     return mem_spells;
 }
 
-static spell_type _choose_mem_spell(spell_list &spells,
-                                    unsigned int num_misc)
+class MemoriseMenu : public Menu
 {
-    sort(spells.begin(), spells.end(), _sort_mem_spells);
+public:
+    enum class action { memorise, describe, hide, unhide } current_action;
 
-#ifdef USE_TILE_LOCAL
-    const bool text_only = false;
-#else
-    const bool text_only = true;
-#endif
-
-    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                    text_only);
-#ifdef USE_TILE_LOCAL
-    // [enne] Hack. Use a separate title, so the column headers are aligned.
-    spell_menu.set_title(
-        new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
-            MEL_TITLE));
-
-    spell_menu.set_title(
-        new MenuEntry(" Your Spells - Descriptions  (toggle to memorisation with '!')",
-            MEL_TITLE), false);
-
+protected:
+    virtual formatted_string calc_title() override
     {
-        MenuEntry* me =
-            new MenuEntry("     Spells                        Type          "
+#ifdef USE_TILE_LOCAL
+        return formatted_string::parse_string(
+                    make_stringf("<w> Your Spells - [%s] (toggle with '!')",
+                        current_action == action::memorise ?
+                            "<blue>Memorise</blue><w>|Describe|Hide|Show" :
+                        current_action == action::describe ?
+                            "Memorise|<blue>Describe</blue><w>|Hide|Show" :
+                        current_action == action::hide ?
+                            "Memorise|Describe|<blue>Hide</blue><w>|Show" :
+                            "Memorise|Describe|Hide|<blue>Show</blue><w>"));
+#else
+        return formatted_string::parse_string(
+                    make_stringf("<w> Spells %s                 Type                          Failure  Level",
+                        current_action == action::memorise ?
+                            "(Memorise)" :
+                        current_action == action::describe ?
+                            "(Describe)" :
+                        current_action == action::hide ?
+                            "(Hide)    " :
+                            "(Show)    "));
+#endif
+    }
+
+private:
+    spell_list& spells;
+    string more_str;
+    string search_text;
+
+    void update_more()
+    {
+        int hidden = 0;
+        for (spell_type& spell : spells)
+            if (you.hidden_spells.get(spell))
+                hidden++;
+
+        string hidden_str = make_stringf("   %d spell%s hidden",
+                                         hidden,
+                                         hidden > 1 ? "s" : "");
+
+        set_more(formatted_string::parse_string(more_str
+#ifndef USE_TILE_LOCAL
+                  + make_stringf("   [<w>!</w>/<w>?</w>]: %s%s",
+                        current_action == action::memorise ?
+                            "<w>Memorise</w>|Describe|Hide|Show" :
+                        current_action == action::describe ?
+                            "Memorise|<w>Describe</w>|Hide|Show" :
+                        current_action == action::hide ?
+                            "Memorise|Describe|<w>Hide</w>|Show" :
+                            "Memorise|Describe|Hide|<w>Show</w>",
+                        hidden ? hidden_str.c_str() : "")
+#endif
+                ));
+    }
+
+    virtual bool process_key(int keyin) override
+    {
+        bool entries_changed = false;
+        if (keyin == '!' || keyin == '?'
+#ifdef TOUCH_UI
+            || keyin == CK_TOUCH_DUMMY
+#endif
+           )
+        {
+            switch (current_action)
+            {
+                case action::memorise:
+                    current_action = action::describe;
+                    entries_changed = true; // need to add hotkeys
+                    break;
+                case action::describe: current_action = action::hide; break;
+                case action::hide:
+                    current_action = action::unhide;
+                    entries_changed = true;
+                    break;
+                case action::unhide:
+                    current_action = action::memorise;
+                    entries_changed = true;
+                    break;
+            }
+#ifndef USE_TILE_LOCAL
+            update_more();
+#endif
+        }
+        else if (keyin == CONTROL('F'))
+        {
+            char linebuf[80] = "";
+            const bool validline = title_prompt(linebuf, sizeof linebuf,
+                                                "Search for what? (regex) ");
+            string old_search = search_text;
+            if (validline)
+                search_text = linebuf;
+            else
+                search_text = "";
+            entries_changed = old_search != search_text;
+        }
+        else
+            return Menu::process_key(keyin);
+
+        if (entries_changed)
+            update_entries();
+        draw_menu(entries_changed);
+        return true;
+    }
+
+    // Update the list of spells. If show_hidden is true, show only hidden
+    // ones; otherwise, show only non-hidden ones.
+    void update_entries()
+    {
+        deleteAll(items);
+#ifdef USE_TILE_LOCAL
+        // [enne] Hack. Use a separate title, so the column headers are aligned.
+        MenuEntry* subtitle =
+            new MenuEntry(" Spells                            Type          "
                           "                Failure  Level",
                 MEL_ITEM);
-        me->colour = BLUE;
-        spell_menu.add_entry(me);
-    }
-#else
-    spell_menu.set_title(
-        new MenuEntry("     Spells (Memorisation)         Type          "
-                      "                Failure  Level",
-            MEL_TITLE));
+        subtitle->colour = BLUE;
+        subtitle->add_tile(tile_def(0, TEX_GUI)); // invisible tile
+        add_entry(subtitle);
+#endif
+        const bool show_hidden = current_action == action::unhide;
+        menu_letter hotkey;
+        text_pattern pat(search_text, true);
+        for (spell_type& spell : spells)
+        {
+            if (you.hidden_spells.get(spell) != show_hidden)
+                continue;
 
-    spell_menu.set_title(
-        new MenuEntry("     Spells (Description)          Type          "
-                      "                Failure  Level",
-            MEL_TITLE), false);
+            if (!search_text.empty()
+                && !pat.matches(spell_title(spell))
+                && !pat.matches(spell_schools_string(spell)))
+            {
+                continue;
+            }
+
+            ostringstream desc;
+
+            int colour = LIGHTGRAY;
+            if (vehumet_is_offering(spell))
+                colour = LIGHTBLUE;
+            else
+            {
+                bool transient = false;
+                bool memcheck = true;
+                colour = spell_highlight_by_utility(spell, COL_UNKNOWN, transient, memcheck);
+            }
+
+
+            desc << "<" << colour_to_str(colour) << ">";
+
+            desc << left;
+            desc << chop_string(spell_title(spell), 30);
+            desc << spell_schools_string(spell);
+
+            int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
+            if (so_far < 60)
+                desc << string(60 - so_far, ' ');
+            desc << "</" << colour_to_str(colour) << ">";
+
+            colour = failure_rate_colour(spell);
+            desc << "<" << colour_to_str(colour) << ">";
+            desc << chop_string(failure_rate_to_string(raw_spell_fail(spell)), 12);
+            desc << "</" << colour_to_str(colour) << ">";
+            desc << spell_difficulty(spell);
+
+            MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
+            // don't add a hotkey if you can't memorise it
+                    (current_action == action::memorise && !you_can_memorise(spell)) ?
+                    ' ' : char(hotkey));
+            // But do increment hotkeys anyway, to keep the memorise and
+            // describe hotkeys consistent.
+            ++hotkey;
+
+#ifdef USE_TILE
+            me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 
-    spell_menu.set_highlighter(nullptr);
-    spell_menu.set_tag("spell");
+            me->data = &spell;
+            add_entry(me);
+        }
+    }
 
-    spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
-    spell_menu.menu_action  = Menu::ACT_EXECUTE;
+public:
+    MemoriseMenu(spell_list& list, string more_str_)
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
+               // To have the ctrl-f menu show up in webtiles
+               | MF_ALLOW_FILTER, "spell"),
+        current_action(action::memorise),
+        spells(list),
+        more_str(more_str_)
+    {
+        set_highlighter(nullptr);
+        set_title(new MenuEntry("")); // Actual text handled by calc_title
+
+        set_more(formatted_string::parse_string(more_str));
+
+        update_more();
+        update_entries();
+        on_single_selection = [this](const MenuEntry& item)
+        {
+            const spell_type spell = *static_cast<spell_type*>(item.data);
+            ASSERT(is_valid_spell(spell));
+
+            switch (current_action)
+            {
+            case action::memorise:
+                return false;
+            case action::describe:
+                describe_spell(spell, nullptr);
+                break;
+            case action::hide:
+            case action::unhide:
+                you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
+                update_entries();
+                draw_menu(true);
+                update_more();
+                break;
+            }
+            return true;
+        };
+    }
+};
+
+static spell_type _choose_mem_spell()
+{
+    // If we've gotten this far, we know that at least one spell here is
+    // memorisable, which is enough.
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+    spell_list spells;
+    for (spell_type spell : available_spells)
+        if (!you.has_spell(spell))
+            spells.push_back(spell);
+    sort(spells.begin(), spells.end(), _sort_mem_spells);
 
     string more_str = make_stringf("<lightgreen>%d spell level%s left"
-                                   "<lightgreen>",
+                                   "</lightgreen>",
                                    player_spell_levels(),
                                    (player_spell_levels() > 1
                                     || player_spell_levels() == 0) ? "s" : "");
 
-    if (num_misc > 0)
-    {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
-                                 "</lightred>",
-                                 num_misc,
-                                 num_misc > 1 ? "s" : "");
-    }
+    MemoriseMenu spell_menu(spells, more_str);
 
-#ifndef USE_TILE_LOCAL
-    // Tiles menus get this information in the title.
-    more_str += "   Toggle display with '<w>!</w>'";
-#endif
-
-    spell_menu.set_more(formatted_string::parse_string(more_str));
-
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (spells.size() > 52
-        && (spell_menu.maxpagesize() > 52 || spell_menu.maxpagesize() == 0))
-    {
-        spell_menu.set_maxpagesize(52);
-    }
-
-    for (unsigned int i = 0; i < spells.size(); i++)
-    {
-        const spell_type spell = spells[i];
-
-        ostringstream desc;
-
-        int colour = LIGHTGRAY;
-        if (vehumet_is_offering(spell))
-            colour = LIGHTBLUE;
-        else
-        {
-            bool transient = false;
-            bool memcheck = true;
-            colour = spell_highlight_by_utility(spell, COL_UNKNOWN, transient, memcheck);
-        }
-
-
-        desc << "<" << colour_to_str(colour) << ">";
-
-        desc << left;
-        desc << chop_string(spell_title(spell), 30);
-        desc << spell_schools_string(spell);
-
-        int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
-        if (so_far < 60)
-            desc << string(60 - so_far, ' ');
-        desc << "</" << colour_to_str(colour) << ">";
-
-        colour = failure_rate_colour(spell);
-        desc << "<" << colour_to_str(colour) << ">";
-        desc << chop_string(failure_rate_to_string(raw_spell_fail(spell)), 12);
-        desc << "</" << colour_to_str(colour) << ">";
-        desc << spell_difficulty(spell);
-
-        MenuEntry* me =
-            new MenuEntry(desc.str(), MEL_ITEM, 1,
-                          index_to_letter(i % 52));
-
-#ifdef USE_TILE
-        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
-#endif
-
-        me->data = &spells[i];
-        spell_menu.add_entry(me);
-    }
-
-    while (true)
-    {
-        vector<MenuEntry*> sel = spell_menu.show();
-
-        if (!crawl_state.doing_prev_cmd_again)
-            redraw_screen();
-
-        if (sel.empty())
-            return SPELL_NO_SPELL;
-
-        ASSERT(sel.size() == 1);
-
-        const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
-        ASSERT(is_valid_spell(spell));
-
-        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
-            describe_spell(spell, nullptr);
-        else
-            return spell;
-    }
+    const vector<MenuEntry*> sel = spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    if (sel.empty())
+        return SPELL_NO_SPELL;
+    const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
+    ASSERT(is_valid_spell(spell));
+    return spell;
 }
 
 bool can_learn_spell(bool silent)
@@ -778,13 +759,12 @@ bool learn_spell()
         return false;
 
     spell_list      mem_spells;
-    unsigned int num_misc;
-    _get_mem_list(mem_spells, num_misc);
+    _get_mem_list(mem_spells);
 
     if (mem_spells.empty())
         return false;
 
-    spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
+    spell_type specspell = _choose_mem_spell();
 
     if (specspell == SPELL_NO_SPELL)
     {
