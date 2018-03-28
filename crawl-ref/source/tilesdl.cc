@@ -1477,6 +1477,25 @@ int TilesFramework::get_number_of_cols()
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
+    set_cursor_region(region);
+    TextRegion::cgotoxy(x, y);
+}
+
+GotoRegion TilesFramework::get_cursor_region() const
+{
+    if (TextRegion::text_mode == m_region_crt)
+        return GOTO_CRT;
+    if (TextRegion::text_mode == m_region_msg)
+        return GOTO_MSG;
+    if (TextRegion::text_mode == m_region_stat)
+        return GOTO_STAT;
+
+    die("Bogus region");
+    return GOTO_CRT;
+}
+
+void TilesFramework::set_cursor_region(GotoRegion region)
+{
     switch (region)
     {
     case GOTO_CRT:
@@ -1495,21 +1514,6 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         die("invalid cgotoxy region in tiles: %d", region);
         break;
     }
-
-    TextRegion::cgotoxy(x, y);
-}
-
-GotoRegion TilesFramework::get_cursor_region() const
-{
-    if (TextRegion::text_mode == m_region_crt)
-        return GOTO_CRT;
-    if (TextRegion::text_mode == m_region_msg)
-        return GOTO_MSG;
-    if (TextRegion::text_mode == m_region_stat)
-        return GOTO_STAT;
-
-    die("Bogus region");
-    return GOTO_CRT;
 }
 
 // #define DEBUG_TILES_REDRAW

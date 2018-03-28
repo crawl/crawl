@@ -44,3 +44,4 @@ struct coord_def;
 coord_def cgetpos(GotoRegion region = GOTO_CRT);
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
+void set_cursor_region(GotoRegion region);
