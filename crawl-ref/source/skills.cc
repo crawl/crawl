@@ -708,7 +708,7 @@ void init_training()
 
 // Make sure at least one skill is selected.
 // If not, go to the skill menu and return true.
-bool check_selected_skills()
+bool check_selected_skills(bool do_lua_callback)
 {
     bool trainable_skill = false;
     bool could_train = false;
@@ -735,9 +735,11 @@ bool check_selected_skills()
     {
         // Calling a user lua function here to allow enabling skills without user
         // prompt (much like the callback auto_experience for the case of potion of experience).
-        if (clua.callbooleanfn(false, "skill_training_needed", nullptr))
+        // If the callback does not set skill training, we nevertheless show the skill menu.
+        if (do_lua_callback)
         {
-            return true;
+            clua.callmaybefn("skill_training_needed", nullptr);
+            return check_selected_skills(false);
         }
 
         mpr("You need to enable at least one skill for training.");

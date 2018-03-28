@@ -54,7 +54,7 @@ void check_skill_cost_change();
 
 bool training_restricted(skill_type sk);
 void reassess_starting_skills();
-bool check_selected_skills();
+bool check_selected_skills(bool do_lua_callback = true);
 void init_train();
 void init_can_train();
 void init_training();
