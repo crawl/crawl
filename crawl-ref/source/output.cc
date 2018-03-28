@@ -1526,6 +1526,8 @@ void redraw_screen(bool show_updates)
         viewwindow(show_updates);
         display_message_window();
     }
+    // normalize the cursor region independent of messages_at_top
+    set_cursor_region(GOTO_MSG);
 
     update_screen();
 }
