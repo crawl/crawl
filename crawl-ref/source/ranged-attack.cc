@@ -729,10 +729,12 @@ bool ranged_attack::apply_missile_brand()
             }
         }
         break;
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SILVER:
         special_damage = silver_damages_victim(defender, damage_done,
                                                special_damage_message);
         break;
+#endif
     case SPMSL_PARALYSIS:
         if (!blowgun_check(brand))
             break;

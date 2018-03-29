@@ -1386,10 +1386,6 @@ static string _describe_ammo(const item_def &item)
                            "hits into a mindless rage, attacking friend and "
                            "foe alike.";
             break;
-        case SPMSL_RETURNING:
-            description += "A skilled user can throw it in such a way that it "
-                           "will return to its owner.";
-            break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
                            "potentially hitting all targets in its path until "
@@ -1408,12 +1404,14 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_STEEL:
             description += "It deals increased damage compared to normal ammo.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:
             description += "It deals substantially increased damage to chaotic "
                            "and magically transformed beings. It also inflicts "
                            "extra damage against mutated beings, according to "
                            "how mutated they are.";
             break;
+#endif
         }
     }
 
