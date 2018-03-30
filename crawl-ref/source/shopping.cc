@@ -2181,9 +2181,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
 
-        if (cost > you.gold)
-            me->colour = DARKGREY;
-        else if (thing_is_item(thing))
+        if (thing_is_item(thing))
         {
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
@@ -2192,9 +2190,18 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
+#ifdef USE_TILE
+            vector<tile_def> item_tiles;
+            get_tiles_for_item(item, item_tiles, true);
+            for (const auto &tile : item_tiles)
+                me->add_tile(tile);
+#endif
+
             if (col != -1)
                 me->colour = col;
         }
+        if (cost > you.gold)
+            me->colour = DARKGREY;
 
         shopmenu.add_entry(me);
         ++hotkey;

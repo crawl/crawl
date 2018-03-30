@@ -112,10 +112,8 @@ static tileidx_t _tileidx_trap(trap_type type)
     }
 }
 
-static tileidx_t _tileidx_shop(coord_def where)
+tileidx_t tileidx_shop(const shop_struct *shop)
 {
-    const shop_struct *shop = shop_at(where);
-
     if (!shop)
         return TILE_DNGN_ERROR;
 
@@ -578,7 +576,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         return TILE_DNGN_TRAP_WEB;
     }
     case DNGN_ENTER_SHOP:
-        return _tileidx_shop(gc);
+        return tileidx_shop(shop_at(gc));
+
     case DNGN_DEEP_WATER:
         if (env.map_knowledge(gc).feat_colour() == GREEN
             || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)

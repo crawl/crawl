@@ -24,6 +24,7 @@ bool is_door_tile(tileidx_t tile);
 
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
+tileidx_t tileidx_shop(const shop_struct *shop);
 tileidx_t tileidx_feature_base(dungeon_feature_type feat);
 tileidx_t tileidx_out_of_bounds(int branch);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc);
