@@ -319,7 +319,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 {
     tile_event.held  = MouseEvent::NONE;
     tile_event.event = MouseEvent::WHEEL;
-    tile_event.button = (sdl_event.y > 0) ? MouseEvent::SCROLL_DOWN
+    tile_event.button = (sdl_event.y < 0) ? MouseEvent::SCROLL_DOWN
                                           : MouseEvent::SCROLL_UP;
     tile_event.px = sdl_event.x;
     tile_event.py = sdl_event.y;
