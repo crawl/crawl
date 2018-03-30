@@ -3,10 +3,13 @@
 #ifdef USE_TILE_LOCAL
 #ifdef USE_SDL
 
+#include <array>
+
 #include "windowmanager.h"
 
 struct SDL_Surface;
 struct SDL_Window;
+struct SDL_Cursor;
 typedef void* SDL_GLContext;
 
 class SDLWrapper : public WindowManager
@@ -27,6 +30,7 @@ public:
 #endif
     virtual tiles_key_mod get_mod_state() const override;
     virtual void set_mod_state(tiles_key_mod mod) override;
+    virtual void set_mouse_cursor(mouse_cursor_type id) override;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
@@ -72,6 +76,7 @@ private:
 
     int prev_keycode;
     string m_textinput_queue;
+    array<SDL_Cursor*, NUM_MOUSE_CURSORS> m_cursors;
 };
 
 #endif // USE_SDL

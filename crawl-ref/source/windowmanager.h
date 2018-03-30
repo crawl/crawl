@@ -120,6 +120,13 @@ struct wm_event
 
 #ifdef USE_TILE_LOCAL
 
+enum mouse_cursor_type
+{
+    MOUSE_CURSOR_ARROW = 0,
+    MOUSE_CURSOR_POINTER,
+    NUM_MOUSE_CURSORS,
+};
+
 // custom timer callback function
 typedef unsigned int (*wm_timer_callback)(unsigned int interval, void* param);
 
@@ -143,6 +150,7 @@ public:
     virtual bool set_window_icon(const char* icon_name) = 0;
     virtual tiles_key_mod get_mod_state() const = 0;
     virtual void set_mod_state(tiles_key_mod mod) = 0;
+    virtual void set_mouse_cursor(mouse_cursor_type id) = 0;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,

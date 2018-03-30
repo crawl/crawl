@@ -328,10 +328,14 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 SDLWrapper::SDLWrapper():
     m_window(nullptr), m_context(nullptr), prev_keycode(0)
 {
+    m_cursors.fill(nullptr);
 }
 
 SDLWrapper::~SDLWrapper()
 {
+    for (const auto& cursor : m_cursors)
+        if (cursor)
+            SDL_FreeCursor(cursor);
     if (m_context)
         SDL_GL_DeleteContext(m_context);
     if (m_window)
@@ -645,6 +649,35 @@ void SDLWrapper::set_mod_state(tiles_key_mod mod)
     }
 
     SDL_SetModState(set_to);
+}
+
+void SDLWrapper::set_mouse_cursor(mouse_cursor_type type)
+{
+    SDL_Cursor *cursor = m_cursors[type];
+
+    if (!cursor)
+    {
+        SDL_SystemCursor sdl_cursor_id;
+        switch (type)
+        {
+            case MOUSE_CURSOR_ARROW:
+                sdl_cursor_id = SDL_SYSTEM_CURSOR_ARROW;
+                break;
+            case MOUSE_CURSOR_POINTER:
+                sdl_cursor_id = SDL_SYSTEM_CURSOR_HAND;
+                break;
+            default:
+                die("bad mouse cursor type");
+        }
+        cursor = m_cursors[type] = SDL_CreateSystemCursor(sdl_cursor_id);
+        if (!cursor)
+        {
+            printf("Failed to create cursor: %s\n", SDL_GetError());
+            return;
+        }
+    }
+
+    SDL_SetCursor(cursor);
 }
 
 static char32_t _key_suppresses_textinput(int keycode)
