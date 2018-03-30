@@ -1649,11 +1649,6 @@ ShoppingList::ShoppingList()
         pos = level_pos::current(); \
     ASSERT(pos.is_valid());
 
-#define SETUP_THING()                             \
-    CrawlHashTable *thing = new CrawlHashTable();  \
-    (*thing)[SHOPPING_THING_COST_KEY] = cost; \
-    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
-
 bool ShoppingList::add_thing(const item_def &item, int cost,
                              const level_pos* _pos)
 {
@@ -1669,40 +1664,15 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
         return false;
     }
 
-    SETUP_THING();
+    CrawlHashTable *thing = new CrawlHashTable();
+    (*thing)[SHOPPING_THING_COST_KEY] = cost;
+    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
     (*thing)[SHOPPING_THING_ITEM_KEY] = item;
     list->push_back(*thing);
     refresh();
 
     return true;
 }
-
-bool ShoppingList::add_thing(string desc, string buy_verb, int cost,
-                             const level_pos* _pos)
-{
-    ASSERT(!desc.empty());
-    ASSERT(!buy_verb.empty());
-    ASSERT(cost > 0);
-
-    SETUP_POS();
-
-    if (find_thing(desc, pos) != -1)
-    {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             desc.c_str());
-        return false;
-    }
-
-    SETUP_THING();
-    (*thing)[SHOPPING_THING_DESC_KEY] = desc;
-    (*thing)[SHOPPING_THING_VERB_KEY] = buy_verb;
-    list->push_back(*thing);
-    refresh();
-
-    return true;
-}
-
-#undef SETUP_THING
 
 bool ShoppingList::is_on_list(const item_def &item, const level_pos* _pos) const
 {
