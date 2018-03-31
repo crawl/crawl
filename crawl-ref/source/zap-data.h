@@ -1207,6 +1207,24 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     0
 },
 
+{
+    ZAP_HARPOON_SHOT,
+    "harpoon shot",
+    50,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 7, 1, 20>,
+    new tohit_calculator<17, 1, 25>,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    true,
+    false,
+    false,
+    1
+},
+
 _mon_hex_zap(ZAP_DIMENSION_ANCHOR, BEAM_DIMENSION_ANCHOR),
 _mon_hex_zap(ZAP_VULNERABILITY, BEAM_VULNERABILITY),
 _mon_hex_zap(ZAP_SENTINEL_MARK, BEAM_SENTINEL_MARK),
