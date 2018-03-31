@@ -1152,6 +1152,7 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
+werewolf_form TRAN_WEREWOLF
 %rim 1
 
 %sdir misc
