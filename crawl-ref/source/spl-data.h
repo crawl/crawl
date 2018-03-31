@@ -3946,6 +3946,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HARPOON_SHOT, "Harpoon Shot",
+    SPTYP_CONJURATION | SPTYP_EARTH,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    4,
+    200,
+    6, 6,
+    4, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

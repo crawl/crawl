@@ -3874,6 +3874,7 @@ void bolt::affect_player()
     extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, hurted);
+    pull_actor(&you, hurted);
 
     if (origin_spell == SPELL_FLASH_FREEZE
         || name == "blast of ice"
@@ -4483,6 +4484,57 @@ void bolt::knockback_actor(actor *act, int dam)
     // knocked back at all
     if (act->is_monster())
         act->as_monster()->speed_increment -= random2(6) + 4;
+
+    act->apply_location_effects(oldpos, killer(),
+                                actor_to_death_source(agent()));
+}
+
+void bolt::pull_actor(actor *act, int dam)
+{
+    if (!act || !can_pull(*act, dam))
+        return;
+
+    // How far we'll try to pull the actor to make them adjacent to the source.
+    const int distance = (act->pos() - source).rdist() - 1;
+    ASSERT(distance > 0);
+
+    const coord_def oldpos = act->pos();
+    ASSERT(ray.pos() == oldpos);
+
+    coord_def newpos = oldpos;
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
+    {
+        const ray_def oldray(ray);
+
+        ray.regress();
+
+        newpos = ray.pos();
+        if (newpos == oldray.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
+        {
+            ray = oldray;
+            break;
+        }
+
+        act->move_to_pos(newpos);
+        if (act->is_player())
+            stop_delay(true);
+    }
+
+    if (newpos == oldpos)
+        return;
+
+    if (you.can_see(*act))
+    {
+        mprf("%s %s yanked forward by the %s.", act->name(DESC_THE).c_str(),
+             act->conj_verb("are").c_str(), name.c_str());
+    }
+
+    if (act->pos() != newpos)
+        act->collide(newpos, agent(), ench_power);
 
     act->apply_location_effects(oldpos, killer(),
                                 actor_to_death_source(agent()));
@@ -6378,6 +6430,25 @@ bool bolt::can_knockback(const actor &act, int dam) const
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
            || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
            || origin_spell == SPELL_FORCE_LANCE && dam;
+}
+
+/**
+ * Can this bolt pull an actor?
+ *
+ * If a bolt is capable of pulling actors and the given actor can be pulled,
+ * return true.
+ *
+ * @param act The target actor. Check if the actor is non-stationary and not
+ *            already adjacent.
+ * @param dam The damage dealt. Check that dam > 0.
+ * @return True if the bolt could pull the actor, false otherwise.
+*/
+bool bolt::can_pull(const actor &act, int dam) const
+{
+    if (act.is_stationary() || adjacent(source, act.pos()))
+        return false;
+
+    return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
 
 void clear_zap_info_on_exit()

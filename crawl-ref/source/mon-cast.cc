@@ -1298,6 +1298,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STEAM_BALL:
     case SPELL_TELEPORT_OTHER:
     case SPELL_SANDBLAST:
+    case SPELL_HARPOON_SHOT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -7958,6 +7959,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_THROW_BARBS:
+    case SPELL_HARPOON_SHOT:
         // Don't fire barbs in melee range.
         return !foe || adjacent(mon->pos(), foe->pos());
 
