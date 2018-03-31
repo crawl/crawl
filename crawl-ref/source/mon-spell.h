@@ -704,6 +704,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_SWAMP_WORM,
+      {
+        { SPELL_HARPOON_SHOT, 80, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('x') Lesser abominations and tentacled things.
     {  MST_WORLDBINDER,
       {
