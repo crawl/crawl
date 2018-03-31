@@ -4420,7 +4420,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
 void bolt::knockback_actor(actor *act, int dam)
 {
-    if (!can_knockback(act, dam))
+    if (!act || !can_knockback(*act, dam))
         return;
 
     const int distance =
@@ -6375,20 +6375,22 @@ string bolt::get_source_name() const
 /**
  * Can this bolt knock back an actor?
  *
- * The bolts that knockback flying actors or actors only when damage
- * is dealt will return when.
+ * The bolts that knockback flying actors or actors only when damage is dealt
+ * will return true when conditions are met.
  *
- * @param act The target actor. If not-nullptr, check if the actor is flying for
- *            bolts that knockback flying actors.
+ * @param act The target actor. Check if the actor is flying for bolts that
+ *            knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
  *             like force bolt that only push back upon damage.
  * @return True if the bolt could knockback the actor, false otherwise.
 */
-bool bolt::can_knockback(const actor *act, int dam) const
+bool bolt::can_knockback(const actor &act, int dam) const
 {
+    if (act.is_stationary())
+        return false;
+
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH
-              && (!act || act->airborne())
+           || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
            || origin_spell == SPELL_FORCE_LANCE && dam;
 }
 
