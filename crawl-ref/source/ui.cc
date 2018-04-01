@@ -241,6 +241,11 @@ void Widget::_queue_allocation(bool immediate)
         ui_root.queue_layout();
 }
 
+void Widget::_expose()
+{
+    ui_root.expose_region(m_region);
+}
+
 void Box::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
@@ -399,7 +404,7 @@ void Text::set_text(const formatted_string &fs)
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();
-    ui_root.expose_region(m_region);
+    _expose();
     m_wrapped_size = { -1, -1 };
     _queue_allocation();
 }
@@ -408,7 +413,7 @@ void Text::set_highlight_pattern(string pattern, bool line)
 {
     hl_pat = pattern;
     hl_line = line;
-    ui_root.expose_region(m_region);
+    _expose();
 }
 
 void Text::wrap_text_to_size(int width, int height)
@@ -822,7 +827,7 @@ void Switcher::add_child(shared_ptr<Widget> child)
 
 int& Switcher::current()
 {
-    ui_root.expose_region(m_region);
+    _expose();
     return m_current;
 }
 

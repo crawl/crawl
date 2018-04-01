@@ -137,7 +137,7 @@ public:
     SkillMenu();
 
     void clear_flag(int flag);
-    void init(int flag);
+    void init(int flag, int region_height);
     void clear() override;
     bool is_set(int flag) const;
     void set_flag(int flag);
