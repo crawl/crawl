@@ -46,7 +46,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewmap.h"
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 # include "tilepick.h"
 #endif
 
