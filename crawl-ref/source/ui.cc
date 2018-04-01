@@ -226,6 +226,11 @@ void UI::_queue_allocation(bool immediate)
         ui_root.queue_layout();
 }
 
+void UI::_expose()
+{
+    ui_root.expose_region(m_region);
+}
+
 void UIBox::add_child(shared_ptr<UI> child)
 {
     child->_set_parent(this);
@@ -384,7 +389,7 @@ void UIText::set_text(const formatted_string &fs)
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();
-    ui_root.expose_region(m_region);
+    _expose();
     m_wrapped_size = { -1, -1 };
     _queue_allocation();
 }
@@ -393,7 +398,7 @@ void UIText::set_highlight_pattern(string pattern, bool line)
 {
     hl_pat = pattern;
     hl_line = line;
-    ui_root.expose_region(m_region);
+    _expose();
 }
 
 void UIText::wrap_text_to_size(int width, int height)
@@ -807,7 +812,7 @@ void UISwitcher::add_child(shared_ptr<UI> child)
 
 int& UISwitcher::current()
 {
-    ui_root.expose_region(m_region);
+    _expose();
     return m_current;
 }
 

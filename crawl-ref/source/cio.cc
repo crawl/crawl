@@ -25,6 +25,7 @@
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 #endif
+#include "ui.h"
 
 static keycode_type _numpad2vi(keycode_type key)
 {
@@ -915,6 +916,11 @@ fontbuf_line_reader::fontbuf_line_reader(char *buf, size_t buf_size,
             FontBuffer& font_buf, int wrap_col) :
     line_reader(buf, buf_size, wrap_col), m_font_buf(font_buf)
 {
+}
+
+int fontbuf_line_reader::getkey()
+{
+    return ui_getch();
 }
 
 int fontbuf_line_reader::read_line(bool clear_previous, bool reset_cursor)

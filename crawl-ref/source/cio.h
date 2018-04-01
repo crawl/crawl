@@ -339,6 +339,7 @@ public:
 protected:
     void print_segment(int start_point=0, int overprint=0);
     void cursorto(int newcpos);
+    int getkey();
 
     FontBuffer& m_font_buf;
 };
