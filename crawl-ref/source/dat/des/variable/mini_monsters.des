@@ -292,26 +292,34 @@ ENDMAP
 
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen no_pool_fixup
-DEPTH: D:8-13, Lair, Spider
-KMONS: 1 = worm
-KMONS: 2| = swamp worm
-KMONS: P = plant
+DEPTH: D:8-13, Lair, Spider, Swamp
 KITEM: | = |, *, %
-KFEAT: 12P| = W
-: if you.absdepth() > 13 then
-SUBST: 1 = 112
+KMONS: 1 = swamp worm
+KMONS: 2 = tyrant leech
+KMONS: P = plant
+KFEAT: 123P| = W
+: if you.absdepth() < 12 then
+KMONS: | = swamp worm
+SUBST: D = 1W, 1 = 1WWW, 2 = 1
+: elseif you.absdepth() < 15 then
+KMONS: | = torpor snail
+SUBST: D = 12W, 1 = 112WWW
 : else
-SUBST: 1 = 1112
+# Not a worm, but torpor is also from Spider, and the two work well together.
+KMONS: |3 = torpor snail
+KMONS: 4 = moth of wrath
+SUBST: 2 = 4, D = 12
+NSUBST: 1 = 3=2234 / 122
 : end
 MAP
    WWWWWWW
- WWWWw1wWWWW
+ WWWWwDwWWWW
 WWwxxxxxxxwWW
 WWxx11111xPWW
-W1x|21111PPWW
+WDx|21111PPWW
 WWxx11111xPWW
 WWwxxxxxxxwWW
- WWWWw1wWWWW
+ WWWWwDwWWWW
    WWWWWWW
 ENDMAP
 
