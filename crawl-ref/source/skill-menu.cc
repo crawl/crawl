@@ -28,6 +28,9 @@
  #include "tilepick.h"
  #include "tilereg-crt.h"
 #endif
+#include "ui.h"
+
+using namespace ui;
 
 menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;
@@ -770,7 +773,7 @@ SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
 {
 }
 
-void SkillMenu::init(int flag)
+void SkillMenu::init(int flag, int region_height)
 {
     m_flags = flag;
     init_flags();
@@ -796,7 +799,7 @@ void SkillMenu::init(int flag)
     const int char_height = tiles.get_crt_font()->char_height();
     if (Options.tile_menu_icons)
     {
-        line_height = min((tiles.get_crt()->wy - char_height * 5) / SK_ARR_LN,
+        line_height = min((region_height - char_height * 6) / SK_ARR_LN,
                           Options.tile_cell_pixels);
         set_flag(SKMF_SKILL_ICONS);
     }
@@ -812,14 +815,14 @@ void SkillMenu::init(int flag)
     m_max_coord.x = MIN_COLS + 1;
 
 #ifdef USE_TILE_LOCAL
-    m_max_coord.y = get_number_of_lines();
+    m_max_coord.y = region_height / char_height;
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_ff->set_height(line_height);
         m_max_coord.x += 2 * TILES_COL;
     }
 #else
-    m_max_coord.y = get_number_of_lines() + 1;
+    m_max_coord.y = region_height + 1;
 #endif
 
     m_ff->init(m_min_coord, m_max_coord, "freeform");
@@ -863,9 +866,6 @@ void SkillMenu::init(int flag)
     if (is_set(SKMF_EXPERIENCE))
         refresh_display();
 
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(this);
-#endif
     m_highlighter = new BoxMenuHighlighter(this);
     m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
     attach_object(m_highlighter);
@@ -1125,13 +1125,7 @@ void SkillMenu::help()
     else
     {
         if (!is_set(SKMF_SIMPLE))
-        {
             show_skill_menu_help();
-            clrscr();
-#ifdef USE_TILE_LOCAL
-            tiles.get_crt()->attach_menu(this);
-#endif
-        }
         set_default_help();
     }
     toggle_flag(SKMF_HELP);
@@ -1699,6 +1693,95 @@ void SkillMenu::set_links()
     }
 }
 
+class UISkillMenu : public Widget
+{
+public:
+    UISkillMenu(int _flag) : flag(_flag) {};
+    ~UISkillMenu() {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+#ifdef USE_TILE_LOCAL
+    virtual bool on_event(const wm_event& ev) override;
+#endif
+
+protected:
+    int flag;
+};
+
+SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
+{
+#ifdef USE_TILE_LOCAL
+    SizeReq ret;
+    if (!dim)
+        ret = { 90, 90 };
+    else
+        ret = { 25, 38 };
+
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+
+    return ret;
+#else
+    if (!dim)
+        return { 80, 80 };
+    else
+        return { 24, 24 };
+#endif
+}
+
+void UISkillMenu::_allocate_region()
+{
+    skm.exit();
+    int height = m_region[3];
+    skm.init(flag, height);
+}
+
+void UISkillMenu::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    skm.draw_menu();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
+}
+
+#ifdef USE_TILE_LOCAL
+bool UISkillMenu::on_event(const wm_event& ev)
+{
+    if (ev.type != WME_MOUSEMOTION
+     && ev.type != WME_MOUSEBUTTONDOWN
+     && ev.type != WME_MOUSEWHEEL)
+    {
+        return Widget::on_event(ev);
+    }
+
+    MouseEvent mouse_ev = ev.mouse_event;
+    mouse_ev.px -= m_region[0];
+    mouse_ev.py -= m_region[1];
+
+    int key = skm.handle_mouse(mouse_ev);
+    if (key && key != CK_NO_KEY)
+    {
+        wm_event fake_key = {0};
+        fake_key.type = WME_KEYDOWN;
+        fake_key.key.keysym.sym = key;
+        Widget::on_event(fake_key);
+    }
+
+    if (ev.type == WME_MOUSEMOTION)
+        _expose();
+
+    return true;
+}
+#endif
+
 void skill_menu(int flag, int exp)
 {
     // experience potion; you may elect to put experience in normally
@@ -1716,14 +1799,6 @@ void skill_menu(int flag, int exp)
 
     you.exp_available += exp;
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "skills");
-#endif
-
-    clrscr();
-    skm.init(flag);
-    int keyn;
-
     // Calling a user lua function here to let players automatically accept
     // the given skill distribution for a potion of experience.
     if (skm.is_set(SKMF_EXPERIENCE)
@@ -1733,19 +1808,20 @@ void skill_menu(int flag, int exp)
         return;
     }
 
-    while (true)
-    {
-        skm.draw_menu();
-        keyn = getch_ck();
+    bool done = false;
+    auto skill_menu_ui = make_shared<UISkillMenu>(flag);
+
+    skill_menu_ui->on(Widget::slots.event, [&done, &skill_menu_ui](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int keyn = ev.key.keysym.sym;
+
+        skill_menu_ui->_expose();
 
         if (!skm.process_key(keyn))
         {
             switch (keyn)
             {
-            case CK_REDRAW:
-                skm.exit();
-                skm.init(flag);
-                continue;
             case CK_UP:
             case CK_DOWN:
             case CK_LEFT:
@@ -1754,32 +1830,32 @@ void skill_menu(int flag, int exp)
             case 1002:
             case 1008:
             case 1006:
-                continue;
+                return true;
             case CK_ENTER:
                 if (!skm.is_set(SKMF_EXPERIENCE))
-                    continue;
+                    return true;
             // Fallthrough. In experience mode, you can exit with enter.
             case CK_ESCAPE:
                 // Escape cancels help if it is being displayed.
                 if (skm.is_set(SKMF_HELP))
                 {
                     skm.cancel_help();
-                    continue;
+                    return true;
                 }
                 else if (skm.is_set(SKMF_SET_TARGET))
                 {
                     skm.cancel_set_target();
-                    continue;
+                    return true;
                 }
             // Fallthrough
             case ' ':
                 // Space and escape exit in any mode.
                 if (skm.exit())
-                    return;
+                    return done = true;
             default:
                 // Don't exit from !experience on random keys.
                 if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit())
-                    return;
+                    return done = true;
             }
         }
         else
@@ -1788,7 +1864,7 @@ void skill_menu(int flag, int exp)
             skm.clear_selections();
             // There should only be one selection, otherwise something broke
             if (selection.size() != 1)
-                continue;
+                return true;
             int sel_id = selection.at(0)->get_id();
             if (sel_id == SKM_HELP)
                 skm.help();
@@ -1808,12 +1884,28 @@ void skill_menu(int flag, int exp)
                 skill_type sk = static_cast<skill_type>(sel_id);
                 ASSERT(!is_invalid_skill(sk));
                 skm.select(sk, keyn);
+                skill_menu_ui->_expose();
                 if (skm.is_set(SKMF_RESKILLING))
                 {
                     skm.clear();
-                    return;
+                    return done = true;
                 }
             }
         }
-    }
+
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "skills");
+#endif
+    auto popup = make_shared<ui::Popup>(skill_menu_ui);
+    // XXX: this is, in theory, an arbitrary initial height. In practice,
+    // there's a bug where an item in the MenuFreeform stays at its original
+    // position even after skm.init is called again, crashing when the screen
+    // size is actually too small; ideally, the skill menu will get rewritten
+    // to use the new ui framework; until then, this fixes the crash.
+    skm.init(flag, MIN_LINES);
+
+    ui::run_layout(move(popup), done);
 }

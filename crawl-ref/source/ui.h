@@ -109,6 +109,7 @@ public:
     void _set_parent(Widget* p);
     void _invalidate_sizereq(bool immediate = true);
     void _queue_allocation(bool immediate = true);
+    void _expose();
 
     // Wrapper functions which handle common behavior
     // - margins
