@@ -7,19 +7,6 @@ thread.
 indicative of likelihood to implement feature, but may be an indicator as to how
  much time it will take to implement it.
 -------------------
-more crabs +1000
-
-*Takes time and vague, create a specific implementation
--------------------
-New muts???
-
-*Will take work to implement, so work on designs until one has a specific design to
-  be voted upon and I will look into putting it in depending on how complex it gets.
--------------------
-Feature Request: Donald
-
-*But he's still in the game. Do you mean Wiglaf?
--------------------
 Jester class
 
 *I would need to find the April Fool's fork it is located in to see how much work it
@@ -28,13 +15,6 @@ Jester class
 Multi-same slot equips for species
 
 *I would need to look into how Octopodes do it, and it probably won't be easy to adapt.
--------------------
-New spells
-
-*Need to flesh out specific designs before implementing, and anything that uses an
-  effect not already within the game will take more effort to create. Will likely 
-  need to set up an open "Design" section on wiki to map out a non-existing spell for 
-  design before suggesting for feature implementation.
 -------------------
 Bring back Hive
 
@@ -46,20 +26,6 @@ Re-Add Repel Missiles spell
 
 *Should be simple
 -------------------
-Add new unique monsters
-
-*Need to have an exact design (stats, dungeon range, abilities, etc.) to have a 
-  concise idea for voting/implementing.
--------------------
-Change the rare wands (if brought back) into uncommon evocables instead of wands
-
-*Would need to work out a design for each if doing this, and they would probably be 
-  more effort to implement than reverting a previously existing wand+zap effect.
--------------------
-Wand of Teleport to Wand of Teleport Other
-
-*Should be fairly easy to port over from the spell
--------------------
 Jiyva Zealot
 
 *Would need to work out what stat boosts/skill distribution/starting equipment it 
@@ -69,12 +35,6 @@ Guaranteed Wizlab/other portals
 
 *where should they be guaranteed? should random ones still occur if a permanent one
   is placed? can probably copy over static placement from perma-bazaars
--------------------
-Goldify spellbooks
-
-*I forget if Hellcrawl already did this, I think it did. Would have to investigate 
-  how reliant it is on Hellcrawl specific code, and interactions with book amnesia 
-  if re-implemented.
 -------------------
 Achievements
 
@@ -87,12 +47,6 @@ Jiyva altar guaranteed outside Slime entrance
 *I guess this can be discussed regardless of whether or not it passes getting added
   to Temple lists. It's pretty easy to modify all Slime entrance vaults to add a 
   Jiyva altar, so no issue implementing.
--------------------
-Poison Magic rework/new spells/acid spells/removal
-
-*Needs lots of design. Either what new direction should be, what new spells to add 
-  and what they do, or where to relocate existing spells if removal of the spell 
-  school occurs. Will probably take a lot of effort.
 -------------------
 Archaeologist/Skill locked chests
 
@@ -133,10 +87,6 @@ Playable boulder beetles
 *This looks like a fuckton of work, especially making a player based boulder ability.
   I'll put it on the list anyway.
 -------------------
-Add Floodkiller as a unique
-
-*If everyone wants it, I don't mind. Needs level spawn ranges, stats, abilities, etc.
--------------------
 Remove XP penalty for summons
 
 *May or may not be difficult, depending on how much any supporting systems have changed
@@ -154,21 +104,14 @@ Felid mummies for Tomb
 
 *Maybe make a tile variant for one of the types of mummies?  I don't have art skills for this, though.
 -------------------
-Brands for unarmed attacks
-
-*Need to figure out the approach for doing so, will likely be difficult regardless.
--------------------
 Guarantee a magic (or better) sling for Joseph
 
 *Pretty easy, some uniques already have a chance/guarantee to copy the code from
 -------------------
-Replace large rocks with cannonballs
-
-*Easy rename/reflavoring, but needs a good tile or what's the point
--------------------
 Replace wand of polymorph with a scroll that hits everything on screen
 
-*I have to figure out if polymorph is a valid mass enchantment type. If it is, super easy; if it isn't, might take a bit of work but probably not too bad.
+*I have to figure out if polymorph is a valid mass enchantment type. If it is, 
+ super easy; if it isn't, might take a bit of work but probably not too bad.
 -------------------
 Put Battlesphere back in Cj starter book
 
@@ -180,11 +123,8 @@ Give Deep Dwarves back their recharging ability
 -------------------
 Bring back cTele
 
-*I don't know how much the backend has changed in relation to cTele, which might throw things off. Might still be simple, though.
--------------------
-Re-add old unrands
-
-*Mention the specific ones and I'll put it to a vote.
+*I don't know how much the backend has changed in relation to cTele, which might throw things off. 
+ Might still be simple, though.
 -------------------
 Racial armor
 
@@ -196,11 +136,13 @@ Add shops/bazaars to Pan
 -------------------
 Add trowel card effects to Abyss:5
 
-*Depends on if the trowel effect still exists and works in modern Crawl. Otherwise, might be a pain.
+*Depends on if the trowel effect still exists and works in modern Crawl. 
+ Otherwise, might be a pain.
 -------------------
 Old corrosion effects (permanently degrade weapon and armor enchantment)
 
-*Probably not very popular, but putting it on the list anyway. I think this would be pretty easy to put back in.
+*Probably not very popular, but putting it on the list anyway. I think this 
+ would be pretty easy to put back in.
 -------------------
 Re-add contaminated/poisonous chunks
 
@@ -208,7 +150,8 @@ Re-add contaminated/poisonous chunks
 -------------------
 Re-implement weight system
 
-*This is not popular and also likely a big pain in the ass at this point, because many new things never had mass.
+*Probably not popular and also likely a big pain in the ass at this point, 
+ because many new things never had mass.
 -------------------
 Wielded item + spell combos
 
@@ -242,22 +185,17 @@ Clouds working beyond LoS
 
 *I think the change was recent, so it should be easy to revert
 -------------------
-Rename barachians to hopkins
-
-*Very simple
--------------------
-Change Oka weapon gifting
-
-*Depending on implementation request, simple to tough
--------------------
 Summonable 'bomber' monsters
 
 *Might be easier to rework Inner Flame to be more flexible than adding a new summon. Otherwise, Summon Flaming Sheep might work?
 -------------------
-Bring back lightning discussed
+Let Roxanne teleport into/near far away player or let her follow player out of LOS
 
-*Might be simple, might be tough. Need to look into it.
+*Don't know about difficulty
 -------------------
+Goldify Food
 
+*I don't know how difficult this would be.
+-------------------
 
 Post angrily at me if I missed something.
