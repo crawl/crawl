@@ -917,20 +917,20 @@ ENDMAP
 NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-KMONS:   0 = swamp worm
-MONS:    tyrant leech, worm
-KFEAT:   0 = shallow_water
+KMONS:   1 = swamp worm / tyrant leech w:5 / nothing w:5
+KMONS:   2 = tyrant leech
+KFEAT:   12 = shallow_water
 SHUFFLE: })
 SUBST:   } = }>, ) = <)>, } = }:20 >, ) = ):25 <>, 4 = 23
 MAP
       @tttttt
      WttwWwwtt
- ...tttW2..w0tt
- tw0tt4wWt.Wwtt
-ttW.tt}3)tW.0tt
-t0.WtW4wtt.Wtt
-tww..2Wwtt0Wt
-tt0wWwwtt....
+ ...tttW2..w1tt
+ tw1tt.wWt.Wwtt
+ttW.tt}.)tW.1tt
+t1.WtW.wtt.Wtt
+tww..2Wwtt1Wt
+tt1wWwwtt....
  ttttttt@
 ENDMAP
 
