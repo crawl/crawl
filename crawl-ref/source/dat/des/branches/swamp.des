@@ -937,9 +937,7 @@ ENDMAP
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body
-MONS:    necrophage
-MONS:    ghoul
+MONS:    bog body, necrophage, ghoul
 SUBST:   jl = t
 KFEAT:   % = shallow_water / .
 SHUFFLE: jJ / lL, })
@@ -1002,20 +1000,26 @@ KMONS:   1 = green draconian
 KMONS:   a = death drake
 KMONS:   A = tentacled monstrosity / green death
 # No burning down the trees or making them look burnt.
-KMONS:   b = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
-             white draconian stormcaller w:1 / purple draconian stormcaller w:1
-KMONS:   B = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
-             white draconian stormcaller w:1 / purple draconian stormcaller w:1
+KMONS:   b = green draconian stormcaller w:15 \
+             / yellow draconian stormcaller w:1 \
+             / white draconian stormcaller w:1 \
+             / purple draconian stormcaller w:1
+KMONS:   B = green draconian stormcaller w:15 \
+             / yellow draconian stormcaller w:1 \
+             / white draconian stormcaller w:1 \
+             / purple draconian stormcaller w:1
 KMONS:   % = ugly thing / orange demon
-KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
+KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 \
+              / eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
 SHUFFLE: AB%| / abd*
 : end
 SUBST:   < : <:1 .:9
 NSUBST:  < = 1:{ / 1:}
 SHUFFLE: {} / {[ / {[ / }] / }]
-MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", pow_max = 2, \
-                 delay_min = 100, delay_max = 150, size = 1, walk_dist = 1 }
+MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
+                               pow_max = 2, delay_min = 100, delay_max = 150, \
+                               size = 1, walk_dist = 1 }
 MAP
          xxxxx
         @xWxWxxxx
