@@ -195,7 +195,7 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
-    case STATUS_DIVINE_ENERGY:
+    case STATUS_DIVINE_FOCUS:
         if (you.duration[DUR_NO_CAST])
         {
             inf->light_colour = RED;
@@ -203,13 +203,15 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text   = "no casting";
             inf->long_text    = "You are unable to cast spells.";
         }
-        else if (you.attribute[ATTR_DIVINE_ENERGY])
+        else if (you.attribute[ATTR_DIVINE_FOCUS] > 0)
         {
             inf->light_colour = WHITE;
-            inf->light_text   = "+Cast";
-            inf->short_text   = "divine energy";
+            inf->light_text
+               = make_stringf("Focus (%u)",
+                              you.attribute[ATTR_DIVINE_FOCUS]);
+            inf->short_text   = "divine focus";
             inf->long_text    = "You are calling on Sif Muna for divine "
-                                "energy.";
+                                "focus.";
         }
         break;
 

@@ -166,16 +166,14 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Sif Muna
-    { { 1, ABIL_SIF_MUNA_DIVINE_ENERGY, "request divine energy to cast spells "
-                                        "with insufficient magic",
-           "request divine energy" },
-      { 2, "Sif Muna is protecting you from the effects of miscast magic.",
-           "Sif Muna no longer protects you from the effects of miscast magic." },
-      { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
+    { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
+      { 2, "Sif Muna may restore magic points lost when you miscast magic.",
+           "Sif Muna will no longer restore magic points lost when you miscast magic." },
+      { 3, "Sif Muna will gift you books as you gain piety.",
+           "Sif Muna will no longer gift you books." },
       { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
           "forget spells at will" },
-      { 5, "Sif Muna will gift you books as you gain piety.",
-           "Sif Muna will no longer gift you books." },
+      { 5, ABIL_SIF_MUNA_DIVINE_FOCUS, "cast spells instantaneously" },
     },
 
     // Trog
@@ -788,8 +786,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_CHANNEL_ENERGY])
                 you.duration[DUR_CHANNEL_ENERGY] = 0;
-            if (you.attribute[ATTR_DIVINE_ENERGY])
-                you.attribute[ATTR_DIVINE_ENERGY] = 0;
+            if (you.attribute[ATTR_DIVINE_FOCUS])
+                you.attribute[ATTR_DIVINE_FOCUS] = 0;
         }
 
         if (you_worship(god))
@@ -1483,8 +1481,8 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-    else if (forced || you.piety >= piety_breakpoint(4)
-                       && random2(you.piety) > 100)
+    else if (forced || (you.piety >= piety_breakpoint(2)
+                    && random2(you.piety) > 70 && one_chance_in(3)))
     {
         // Sif Muna special: Keep quiet if acquirement fails
         // because the player already has seen all spells.
@@ -2538,8 +2536,9 @@ void lose_piety(int pgn)
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
                 }
                 // Deactivate the toggle
-                if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
-                    you.attribute[ATTR_DIVINE_ENERGY] = 0;
+                // TEMP FIXME Disable old Divine Energy -- Realz
+                //if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
+                //    you.attribute[ATTR_DIVINE_ENERGY] = 0;
             }
         }
 #ifdef USE_TILE_LOCAL
@@ -2806,8 +2805,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_SIF_MUNA:
         if (you.duration[DUR_CHANNEL_ENERGY])
             you.duration[DUR_CHANNEL_ENERGY] = 0;
-        if (you.attribute[ATTR_DIVINE_ENERGY])
-            you.attribute[ATTR_DIVINE_ENERGY] = 0;
+        if (you.attribute[ATTR_DIVINE_FOCUS])
+            you.attribute[ATTR_DIVINE_FOCUS] = 0;
         break;
 
     case GOD_NEMELEX_XOBEH:

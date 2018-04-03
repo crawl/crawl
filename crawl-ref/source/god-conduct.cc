@@ -783,28 +783,28 @@ static like_map divine_likes[] =
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
-                denom *= 3;
+                denom *= 2;
             }
         ) },
         { DID_KILL_UNDEAD, _on_kill("you destroy the undead", MH_UNDEAD, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
-                denom *= 3;
+                denom *= 2;
             }
         ) },
         { DID_KILL_DEMON, _on_kill("you kill demons", MH_DEMONIC, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
-                denom *= 3;
+                denom *= 2;
             }
         ) },
         { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
-                denom *= 3;
+                denom *= 2;
             }
         ) },
         { DID_KILL_NONLIVING, _on_kill("you destroy nonliving beings",
@@ -812,7 +812,7 @@ static like_map divine_likes[] =
                                        [](int &piety, int &denom,
                                           const monster* victim)
             {
-                denom *= 3;
+                denom *= 2;
             }
         ) },
         { DID_SPELL_PRACTISE, {
@@ -821,7 +821,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                denom = 6;
+                denom = 5;
             }
         } },
     },
