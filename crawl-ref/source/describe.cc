@@ -2829,7 +2829,9 @@ static bool _get_spell_description(const spell_type spell,
         && (in_inventory(*item)
             || item->pos == you.pos() && !is_shop_item(*item))
         && !you.has_spell(spell) && you_can_memorise(spell))
+    {
         return true;
+    }
 
     return false;
 }
