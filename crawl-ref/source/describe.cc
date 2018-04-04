@@ -2831,7 +2831,9 @@ static bool _get_spell_description(const spell_type spell,
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
         && !you.has_spell(spell) && you_can_memorise(spell))
+    {
         return true;
+    }
 
     return false;
 }
