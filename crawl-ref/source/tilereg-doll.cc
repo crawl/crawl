@@ -6,10 +6,14 @@
 
 #include "macro.h"
 #include "player.h"
+#include "state.h"
 #include "stringutil.h"
 #include "tiledef-player.h"
 #include "tilefont.h"
 #include "tilepick-p.h"
+#include "ui.h"
+
+using namespace ui;
 
 DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),
@@ -92,10 +96,10 @@ void DollEditRegion::render()
     const int max_show = 9;
 
     // Layout options (units are in 32x32 squares)
-    const int left_gutter    = 2;
-    const int item_line      = 2;
-    const int edit_doll_line = 5;
-    const int doll_line      = 8;
+    const int left_gutter    = 0;
+    const int item_line      = 0;
+    const int edit_doll_line = 2;
+    const int doll_line      = 6;
     const int info_offset = left_gutter + max(max_show, (int)NUM_MAX_DOLLS) + 1;
 
     const int center_x = left_gutter + max_show / 2;
@@ -171,7 +175,7 @@ void DollEditRegion::render()
     m_tile_buf.draw();
 
     {
-        GLW_3VF trans(32 * left_gutter, 32 * edit_doll_line, 0);
+        GLW_3VF trans(sx + 32 * left_gutter, sy + 32 * edit_doll_line, 0);
         GLW_3VF scale(64, 64, 1);
         glmanager->set_transform(trans, scale);
     }
@@ -198,7 +202,7 @@ void DollEditRegion::render()
     }
 
     {
-        GLW_3VF trans(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
+        GLW_3VF trans(sx + 32 * (left_gutter + 3), sy + 32 * edit_doll_line, 0);
         GLW_3VF scale(32, 32, 1);
         glmanager->set_transform(trans, scale);
     }
@@ -212,7 +216,11 @@ void DollEditRegion::render()
     else if (m_part_idx)
         part_name = tile_player_name(m_part_idx);
 
-    glmanager->reset_transform();
+    {
+        GLW_3VF trans(sx, sy);
+        GLW_3VF scale(1, 1, 1);
+        glmanager->set_transform(trans, scale);
+    }
 
     string item_str = part_name;
     float item_name_x = left_gutter * 32.0f;
@@ -259,7 +267,7 @@ void DollEditRegion::render()
     // Add current doll information:
     string info_str;
     float info_x = info_offset * 32.0f;
-    float info_y = 0.0f + m_font->char_height();
+    float info_y = 0.0f;
 
     for (int i = 0 ; i < TILEP_PART_MAX; i++)
     {
@@ -285,9 +293,8 @@ void DollEditRegion::render()
     // self-explanatory.)
     {
         const int height = m_font->char_height();
-        const int width  = m_font->char_width();
         const float start_y = doll_name_y + height * 3;
-        const float start_x = width * 6;
+        const float start_x = 0;
         m_font_buf.add(
             "Change parts       left/right              Confirm choice      Enter",
             VColour::white, start_x, start_y);
@@ -309,11 +316,44 @@ void DollEditRegion::render()
     }
 
     m_font_buf.draw();
+    glmanager->reset_transform();
 }
 
 int DollEditRegion::handle_mouse(MouseEvent &event)
 {
     return 0;
+}
+
+class UIDollEditor : public Widget
+{
+public:
+    UIDollEditor(DollEditRegion *_reg) : reg(_reg) {};
+    ~UIDollEditor() {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+private:
+    DollEditRegion *reg;
+};
+
+SizeReq UIDollEditor::_get_preferred_size(Direction dim, int prosp_width)
+{
+    if (!dim)
+        return { 552, 552 };
+    else
+        return { 411, 411 };
+}
+
+void UIDollEditor::_render()
+{
+    reg->render();
+}
+
+void UIDollEditor::_allocate_region()
+{
+    reg->sx = m_region[0];
+    reg->sy = m_region[1];
 }
 
 void DollEditRegion::run()
@@ -343,24 +383,27 @@ void DollEditRegion::run()
 
     bool update_part_idx = true;
 
-    command_type cmd;
-    do
-    {
-        if (update_part_idx)
-        {
-            m_part_idx = m_dolls[m_doll_idx].parts[m_cat_idx];
-            if (m_part_idx == TILEP_SHOW_EQUIP)
-                m_part_idx = 0;
-            update_part_idx = false;
-        }
+    bool done = false;
+    auto doll_ui = make_shared<UIDollEditor>(this);
 
-        int key = getchm(KMC_DOLL);
-        cmd = key_to_command(key, KMC_DOLL);
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title = make_shared<Text>(formatted_string("Doll Editor", YELLOW));
+    title->align_self = Widget::CENTER;
+    title->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title));
+    vbox->add_child(doll_ui);
+    auto popup = make_shared<ui::Popup>(move(vbox));
+
+    popup->on(Widget::slots.event, [this, &done, &doll_ui, &update_part_idx](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+        command_type cmd = key_to_command(key, KMC_DOLL);
 
         switch (cmd)
         {
         case CMD_DOLL_QUIT:
-            return;
+            return done = true;
         case CMD_DOLL_RANDOMIZE:
             create_random_doll(m_dolls[m_doll_idx]);
             break;
@@ -456,8 +499,24 @@ void DollEditRegion::run()
             ASSERT(m_doll_idx < NUM_MAX_DOLLS);
             break;
         }
+        done = cmd == CMD_DOLL_SAVE;
+        doll_ui->_expose();
+        return true;
+    });
+
+    ui::push_layout(move(popup), KMC_DOLL);
+    while (!done && !crawl_state.seen_hups)
+    {
+        if (update_part_idx)
+        {
+            m_part_idx = m_dolls[m_doll_idx].parts[m_cat_idx];
+            if (m_part_idx == TILEP_SHOW_EQUIP)
+                m_part_idx = 0;
+            update_part_idx = false;
+        }
+        ui::pump_events();
     }
-    while (cmd != CMD_DOLL_SAVE);
+    ui::pop_layout();
 
     save_doll_data(m_mode, m_doll_idx, &m_dolls[0]);
 

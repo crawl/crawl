@@ -335,10 +335,8 @@ void TilesFramework::hide_title()
 
 void TilesFramework::draw_doll_edit()
 {
-    DollEditRegion* reg = new DollEditRegion(m_image,
-                                             m_fonts[m_msg_font].font);
-    use_control_region(reg);
-    delete reg;
+    DollEditRegion reg(m_image, m_fonts[m_msg_font].font);
+    reg.run();
 }
 
 void TilesFramework::set_map_display(const bool display)
@@ -357,19 +355,6 @@ void TilesFramework::do_map_display()
 {
     m_map_mode_enabled = true;
     m_region_tab->activate_tab(TAB_NAVIGATION);
-}
-
-void TilesFramework::use_control_region(ControlRegion *reg,
-                                        bool use_control_layer)
-{
-    LayerID new_layer = use_control_layer ? LAYER_TILE_CONTROL : m_active_layer;
-    LayerID old_layer = m_active_layer;
-    m_layers[new_layer].m_regions.push_back(reg);
-    m_active_layer = new_layer;
-    set_need_redraw();
-    reg->run();
-    m_layers[new_layer].m_regions.pop_back();
-    m_active_layer = old_layer;
 }
 
 void TilesFramework::calculate_default_options()

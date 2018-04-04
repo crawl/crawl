@@ -161,7 +161,6 @@ protected:
                   bool default_on_fail);
     int handle_mouse(MouseEvent &event);
 
-    void use_control_region(ControlRegion *region, bool use_control_layer = true);
     bool m_map_mode_enabled;
 
     // screen pixel dimensions
