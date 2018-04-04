@@ -387,23 +387,69 @@ static void _show_morgue(scorefile_entry& se)
     morgue_file.show();
 }
 
-void show_hiscore_table()
+class UIHiscoresMenu : public UI
 {
-    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
-    const int max_line   = get_number_of_lines() - 1;
-    const int max_col    = get_number_of_cols() - 1;
+public:
+    UIHiscoresMenu() : done(false) {
+        expand_v = true;
+    };
 
-    const int scores_col_start = 4;
-    const int descriptor_col_start = 4;
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(wm_event event) override;
+
+    bool done;
+private:
+    PrecisionMenu menu;
+};
+
+void UIHiscoresMenu::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    menu.draw_menu();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
+}
+
+UISizeReq UIHiscoresMenu::_get_preferred_size(Direction dim, int prosp_width)
+{
+    UISizeReq ret;
+    if (!dim)
+        ret = { 80, 100 };
+    else
+        ret = { 10, 10 };
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+#endif
+    return ret;
+}
+
+void UIHiscoresMenu::_allocate_region()
+{
+    menu.clear();
+
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int max_col = m_region[2]/font->char_width();
+    const int max_line = m_region[3]/font->char_height();
+#else
+    const int max_col = m_region[2] - 1, max_line = m_region[3] - 1;
+#endif
+
+    const int scores_col_start = 0;
+    const int descriptor_col_start = 0;
     const int scores_row_start = 10;
     const int scores_col_end = max_col;
-    const int scores_row_end = max_line - 1;
+    const int scores_row_end = max_line+1;
 
-    bool smart_cursor_enabled = is_smart_cursor_enabled();
-
-    clrscr();
-
-    PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
 
     MenuScroller* score_entries = new MenuScroller();
@@ -415,7 +461,7 @@ void show_hiscore_table()
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(descriptor_col_start, 1),
-            coord_def(get_number_of_cols(), scores_row_start - 1),
+            coord_def(max_col+1, scores_row_start - 1),
             "descriptor");
 
 #ifdef USE_TILE_LOCAL
@@ -431,19 +477,6 @@ void show_hiscore_table()
     freeform->allow_focus(false);
     freeform->set_visible(true);
 
-    NoSelectTextItem* tmp = new NoSelectTextItem();
-    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc or R-click "
-        "exits.  ]";
-    tmp->set_text(text);
-    tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
-    tmp->set_fg_colour(CYAN);
-    freeform->attach_item(tmp);
-    tmp->set_visible(true);
-
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
     score_entries->set_visible(true);
     descriptor->set_visible(true);
     highlighter->set_visible(true);
@@ -458,32 +491,73 @@ void show_hiscore_table()
     score_entries->activate_first_item();
 
     enable_smart_cursor(false);
-    while (true)
-    {
-        menu.draw_menu();
-        textcolour(WHITE);
-        const int keyn = getch_ck();
+}
 
-        if (keyn == CK_REDRAW)
-            continue;
-
-        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
-        {
-            // Go back to the menu and return the smart cursor to its previous state
-            enable_smart_cursor(smart_cursor_enabled);
-            return;
-        }
-
-        if (menu.process_key(keyn))
-        {
-            menu.clear_selections();
-            _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
-            clrscr();
+bool UIHiscoresMenu::on_event(wm_event ev)
+{
 #ifdef USE_TILE_LOCAL
-            tiles.get_crt()->attach_menu(&menu);
-#endif
+    if (ev.type == WME_MOUSEMOTION
+     || ev.type == WME_MOUSEBUTTONDOWN
+     || ev.type == WME_MOUSEWHEEL)
+    {
+        MouseEvent mouse_ev = ev.mouse_event;
+        mouse_ev.px -= m_region[0];
+        mouse_ev.py -= m_region[1];
+
+        int key = menu.handle_mouse(mouse_ev);
+        if (key && key != CK_NO_KEY)
+        {
+            wm_event fake_key = {0};
+            fake_key.type = WME_KEYDOWN;
+            fake_key.key.keysym.sym = key;
+            on_event(fake_key);
         }
+
+        if (ev.type == WME_MOUSEMOTION)
+            _expose();
+        return true;
     }
+#endif
+
+    if (ev.type != WME_KEYDOWN)
+        return false;
+    int keyn = ev.key.keysym.sym;
+
+    if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
+        return done = true;
+
+    if (menu.process_key(keyn))
+    {
+        menu.clear_selections();
+        _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+    }
+    _expose();
+
+    return true;
+}
+
+void show_hiscore_table()
+{
+    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
+
+    auto vbox = make_shared<UIBox>(UI::VERT);
+    auto title = make_shared<UIText>("<yellow>Dungeon Crawl Stone Soup: High Scores</yellow>");
+    title->align_self = UI::CENTER;
+    title->set_margin_for_sdl({0, 0, 20, 0});
+    auto hiscore_ui = make_shared<UIHiscoresMenu>();
+    vbox->add_child(move(title));
+    vbox->add_child(hiscore_ui);
+    auto popup = make_shared<UIPopup>(move(vbox));
+
+    bool smart_cursor_enabled = is_smart_cursor_enabled();
+
+    ui_push_layout(move(popup));
+    while (!hiscore_ui->done)
+        ui_pump_events();
+    ui_pop_layout();
+
+    // Go back to the menu and return the smart cursor to its previous state
+    enable_smart_cursor(smart_cursor_enabled);
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
