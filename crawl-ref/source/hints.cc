@@ -45,6 +45,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
+#include "ui.h"
 
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
@@ -134,7 +135,7 @@ void init_hints()
     Hints.hints_seen_invisible = 0;
 }
 
-static void _print_hints_menu(hints_types type)
+static string _print_hints_menu(hints_types type)
 {
     char letter = 'a' + type;
     char desc[100];
@@ -155,7 +156,7 @@ static void _print_hints_menu(hints_types type)
         break;
     }
 
-    cprintf("%c - %s %s %s\n",
+    return make_stringf("%c - %s %s %s\n",
             letter, species_name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
@@ -163,31 +164,23 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def& choice)
 {
-again:
-    clrscr();
-
-    cgotoxy(1,1);
-    formatted_string::parse_string(
-        "<white>You must be new here indeed!</white>"
+    string prompt = "<white>You must be new here indeed!</white>"
         "\n\n"
         "<cyan>You can be:</cyan>"
-        "\n").display();
-
-    textcolour(LIGHTGREY);
-
+        "\n";
     for (int i = 0; i < HINT_TYPES_NUM; i++)
-        _print_hints_menu((hints_types)i);
-
-    formatted_string::parse_string(
-        "<brown>\nEsc - Quit"
+        prompt += _print_hints_menu((hints_types)i);
+    prompt += "<brown>\nEsc - Quit"
         "\n* - Random hints mode character"
-        "</brown>\n").display();
+        "</brown>";
+    auto prompt_ui = make_shared<UIText>(prompt);
 
-    while (true)
-    {
-        int keyn = getch_ck();
-        if (keyn == CK_REDRAW)
-            goto again;
+    bool done = false;
+    int keyn;
+    prompt_ui->on(UI::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        keyn = ev.key.keysym.sym;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -203,24 +196,38 @@ again:
             choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
                                                      : WPN_HAND_AXE;
 
-            return;
+            return done = true;
         }
 
         switch (keyn)
         {
-        CASE_ESCAPE
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            game_ended(game_exit::abort);
-        case 'X':
-            cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            end(0);
-            return;
+            case 'X': CASE_ESCAPE
+                return done = true;
+            default:
+                return true;
         }
+    });
+
+    auto popup = make_shared<UIPopup>(prompt_ui);
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
+
+    switch (keyn)
+    {
+    CASE_ESCAPE
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        game_ended(game_exit::abort);
+    case 'X':
+        cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        end(0);
+        return;
     }
 }
 
@@ -339,29 +346,29 @@ static void _replace_static_tags(string &text)
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
-    cgotoxy(1, 1);
-    clrscr();
-
-    int width = _get_hints_cols();
-#ifdef USE_TILE_LOCAL
-    // Use a more sensible screen width.
-    if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
-        width = crawl_view.msgsz.x + crawl_view.hudsz.x;
-    if (width > 80)
-        width = 80;
-#endif
-
     string text = getHintString("welcome");
     _replace_static_tags(text);
+    trim_string(text);
 
-    linebreak_string(text, width);
-    display_tagged_block(text);
+    auto prompt_ui = make_shared<UIText>(text);
+    prompt_ui->wrap_text = true;
+#ifdef USE_TILE_LOCAL
+    prompt_ui->max_size()[0] = 800;
+#else
+    prompt_ui->max_size()[0] = 80;
+#endif
 
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        getchm();
-    }
-    redraw_screen();
+    bool done = false;
+    prompt_ui->on(UI::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<UIPopup>(prompt_ui);
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
 }
 
 // Called each turn from _input. Better name welcome.

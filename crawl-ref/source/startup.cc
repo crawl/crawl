@@ -976,7 +976,7 @@ bool UIStartupMenu::on_event(wm_event ev)
     case GAME_TYPE_SPRINT:
     case GAME_TYPE_HINTS:
         trim_string(input_string);
-        if (is_good_name(input_string, true, false))
+        if (is_good_name(input_string, true))
         {
             ng_choice.type = static_cast<game_type>(id);
             ng_choice.name = input_string;
@@ -1128,7 +1128,7 @@ bool startup_step()
             _exit_type_allows_menu_bypass(crawl_state.last_game_exit.exit_reason)
          && crawl_state.last_type != GAME_TYPE_ARENA
          && Options.name_bypasses_menu
-         && is_good_name(choice.name, false, false);
+         && is_good_name(choice.name, false);
 
     if (crawl_state.last_type == GAME_TYPE_TUTORIAL
         || crawl_state.last_type == GAME_TYPE_SPRINT)
