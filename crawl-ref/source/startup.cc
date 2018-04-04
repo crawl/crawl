@@ -55,15 +55,13 @@
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
-#ifdef USE_TILE_LOCAL
- #include "tilereg-crt.h"
-#endif
 #include "tileview.h"
 #include "viewchar.h"
 #include "view.h"
 #ifdef USE_TILE_LOCAL
  #include "windowmanager.h"
 #endif
+#include "ui.h"
 
 static void _cio_init();
 
@@ -578,29 +576,92 @@ static const int NUM_MISC_LINES     = 5;
 // maybe part of crawl_state?
 static int startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
 
-/**
- * Saves game mode and player name to ng_choice.
- */
-static void _show_startup_menu(newgame_def& ng_choice,
-                               const newgame_def& defaults)
+class UIStartupMenu : public UI
 {
-    // Initialise before the loop so that ? doesn't forget the typed name.
-    string input_string = crawl_state.default_startup_name;
+public:
+    UIStartupMenu(newgame_def& _ng_choice, const newgame_def &_defaults) : done(false), end_game(false), ng_choice(_ng_choice), defaults(_defaults) {
+        chars = find_all_saved_characters();
+        num_saves = chars.size();
+        input_string = crawl_state.default_startup_name;
+    };
 
-again:
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
+    virtual void _render() override;
+    virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(wm_event event) override;
+
+    PrecisionMenu menu;
+    bool done;
+    bool end_game;
+private:
+    newgame_def& ng_choice;
+    const newgame_def &defaults;
+    string input_string;
+    bool full_name;
+    TextItem *input_text;
+    vector<player_save_info> chars;
+    int num_saves;
+    MenuScroller *game_modes, *save_games;
+    MenuDescriptor *descriptor;
+};
+
+UISizeReq UIStartupMenu::_get_preferred_size(Direction dim, int prosp_width)
+{
+#ifdef USE_TILE_LOCAL
+    UISizeReq ret;
+    if (!dim)
+        ret = { 80, 90 }; // seems to work well empirically
+    else
+    {
+        // duplicate of calculations below in _allocate_region()
+        const int save_lines = num_saves + (num_saves ? 1 : 0); // add 1 for New Game
+        const int help_start = GAME_MODES_START_Y + num_to_lines(save_lines + NUM_GAME_TYPE) + 2;
+        const int help_end   = help_start + NUM_HELP_LINES + 1;
+        ret = { 20, help_end };
+    }
+
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+
+    return ret;
+#else
+    if (!dim)
+        return { 80, 80 };
+    else
+        return { 24, 24 };
 #endif
-    vector<player_save_info> chars = find_all_saved_characters();
-    const int num_saves = chars.size();
-    const int num_modes = NUM_GAME_TYPE;
+}
+
+void UIStartupMenu::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    ui_push_scissor(m_region);
+    menu.draw_menu();
+    ui_pop_scissor();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
+}
+
+void UIStartupMenu::_allocate_region()
+{
+    menu.clear();
 
 #ifdef USE_TILE_LOCAL
-    const int max_col    = tiles.get_crt()->mx;
+    const FontWrapper* font = tiles.get_crt_font();
+    const int max_col = m_region[2]/font->char_width();
+    const int max_line = m_region[3]/font->char_height();
 #else
-    const int max_col    = get_number_of_cols();
+    const int max_col = m_region[2], max_line = m_region[3];
 #endif
-    const int max_line   = get_number_of_lines();
+
+    const int num_modes = NUM_GAME_TYPE;
+
     int save_lines = num_saves + (num_saves ? 1 : 0); // add 1 for New Game
     const int help_start = min(GAME_MODES_START_Y + num_to_lines(save_lines + num_modes) + 2,
                                max_line - NUM_MISC_LINES + 1);
@@ -610,19 +671,17 @@ again:
     const int game_save_top = help_start - 2 - num_to_lines(min(2, save_lines));
     const int save_games_start_y = min<int>(game_mode_bottom, game_save_top);
 
-    clrscr();
-    PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
     freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
     // This freeform will only containt unfocusable texts
     freeform->allow_focus(false);
-    MenuScroller* game_modes = new MenuScroller();
+    game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
                      coord_def(GAME_MODES_WIDTH, save_games_start_y),
                      "game modes");
 
-    MenuScroller* save_games = new MenuScroller();
+    save_games = new MenuScroller();
     save_games->init(coord_def(SCROLLER_MARGIN_X, save_games_start_y),
                      coord_def(max_col, help_start - 1),
                      "save games");
@@ -679,7 +738,7 @@ again:
     menu.attach_object(game_modes);
     menu.attach_object(save_games);
 
-    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(1, help_end), coord_def(max_col, help_end + 1),
                      "descriptor");
     menu.attach_object(descriptor);
@@ -693,10 +752,6 @@ again:
     highlighter->init(coord_def(-1, -1), coord_def(-1, -1), "highlighter");
     menu.attach_object(highlighter);
 
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
     freeform->set_visible(true);
     game_modes->set_visible(true);
     save_games->set_visible(true);
@@ -704,12 +759,24 @@ again:
     highlighter->set_visible(true);
 
     // Draw legal info etc
-    opening_screen();
+    auto intro_text = new FormattedTextItem();
+    intro_text->set_text(opening_screen());
+    intro_text->set_bounds(coord_def(1, 1), coord_def(max_col, 5));
+    intro_text->set_visible(true);
+    freeform->attach_item(intro_text);
+
+    input_text = new TextItem();
+    input_text->set_text(input_string);
+    input_text->set_fg_colour(WHITE);
+    input_text->set_bounds(coord_def(SCROLLER_MARGIN_X, NAME_START_Y),
+            coord_def(max_col, NAME_START_Y+1));
+    input_text->set_visible(true);
+    freeform->attach_item(input_text);
 
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
     // to the current one.
-    bool full_name = !input_string.empty();
+    full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
     // don't use non-enum game_type values across restarts, as the list of
@@ -747,194 +814,235 @@ again:
     descriptor->render();
     descriptor->override_description(crawl_state.last_game_exit.message);
 
-    while (true)
+}
+
+bool UIStartupMenu::on_event(wm_event ev)
+{
+#ifdef USE_TILE_LOCAL
+    if (ev.type == WME_MOUSEMOTION
+     || ev.type == WME_MOUSEBUTTONDOWN
+     || ev.type == WME_MOUSEWHEEL)
     {
-        menu.draw_menu();
-        textcolour(WHITE);
-        cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
-        clear_to_end_of_line();
-        cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
-        cprintf("%s", input_string.c_str());
+        MouseEvent mouse_ev = ev.mouse_event;
+        mouse_ev.px -= m_region[0];
+        mouse_ev.py -= m_region[1];
 
-        const int keyn = getch_ck();
-
-        if (keyn == CK_REDRAW)
-            goto again;
-
-        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
+        int key = menu.handle_mouse(mouse_ev);
+        if (key && key != CK_NO_KEY)
         {
-            // End the game
-            end(0);
-        }
-        else if (keyn == '\t' && _game_defined(defaults))
-        {
-            ng_choice = defaults;
-            return;
-        }
-        else if (keyn == '?')
-        {
-            show_help();
-
-            // If we had a save selected, reset type so that the save
-            // will continue to be selected when we restart the menu.
-            MenuItem *active = menu.get_active_item();
-            if (active && active->get_id() >= NUM_GAME_TYPE)
-                startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
-
-            // restart because help messes up CRTRegion
-            goto again;
+            wm_event fake_key = {0};
+            fake_key.type = WME_KEYDOWN;
+            fake_key.key.keysym.sym = key;
+            on_event(fake_key);
         }
 
-        if (!menu.process_key(keyn))
+        if (ev.type == WME_MOUSEMOTION)
+            _expose();
+        return true;
+    }
+#endif
+
+    if (ev.type != WME_KEYDOWN)
+        return false;
+    int keyn = ev.key.keysym.sym;
+
+    _expose();
+
+    if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
+    {
+        // End the game
+        return done = end_game = true;
+    }
+    else if (keyn == '\t' && _game_defined(defaults))
+    {
+        ng_choice = defaults;
+        return done = true;
+    }
+    else if (keyn == '?')
+    {
+        show_help();
+
+        // If we had a save selected, reset type so that the save
+        // will continue to be selected when we restart the menu.
+        MenuItem *active = menu.get_active_item();
+        if (active && active->get_id() >= NUM_GAME_TYPE)
+            startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+
+        return true;
+    }
+
+    if (!menu.process_key(keyn))
+    {
+        // handle the non-action keys by hand to poll input
+        // Only consider alphanumeric keys and -_ .
+        bool changed_name = false;
+        if (iswalnum(keyn) || keyn == '-' || keyn == '.'
+            || keyn == '_' || keyn == ' ')
         {
-            // handle the non-action keys by hand to poll input
-            // Only consider alphanumeric keys and -_ .
-            bool changed_name = false;
-            if (iswalnum(keyn) || keyn == '-' || keyn == '.'
-                || keyn == '_' || keyn == ' ')
+            if (full_name)
+            {
+                full_name = false;
+                input_string = "";
+            }
+            if (strwidth(input_string) < MAX_NAME_LENGTH)
+            {
+                input_string += stringize_glyph(keyn);
+                changed_name = true;
+            }
+        }
+        else if (keyn == CK_BKSP)
+        {
+            if (!input_string.empty())
             {
                 if (full_name)
-                {
-                    full_name = false;
                     input_string = "";
-                }
-                if (strwidth(input_string) < MAX_NAME_LENGTH)
-                {
-                    input_string += stringize_glyph(keyn);
-                    changed_name = true;
-                }
-            }
-            else if (keyn == CK_BKSP)
-            {
-                if (!input_string.empty())
-                {
-                    if (full_name)
-                        input_string = "";
-                    else
-                        input_string.erase(input_string.size() - 1);
-                    changed_name = true;
-                    full_name = false;
-                }
-            }
-
-            // Depending on whether the current name occurs
-            // in the saved games, update the active object.
-            // We want enter to start a new game if no character
-            // with the given name exists, or load the corresponding
-            // game.
-            if (changed_name)
-            {
-                int i = _find_save(chars, input_string);
-                if (i == -1)
-                    menu.set_active_object(game_modes);
                 else
-                {
-                    menu.set_active_object(save_games);
-                    // save game ID is offset by NUM_GAME_TYPE
-                    save_games->set_active_item(NUM_GAME_TYPE + i);
-                }
+                    input_string.erase(input_string.size() - 1);
+                changed_name = true;
+                full_name = false;
             }
+        }
+
+        // Depending on whether the current name occurs
+        // in the saved games, update the active object.
+        // We want enter to start a new game if no character
+        // with the given name exists, or load the corresponding
+        // game.
+        if (changed_name)
+        {
+            int i = _find_save(chars, input_string);
+            if (i == -1)
+                menu.set_active_object(game_modes);
             else
             {
-                // Menu might have changed selection -- sync name.
-                // TODO: the mapping from menu item to game_type is alarmingly
-                // brittle here
-                startup_menu_game_type = menu.get_active_item()->get_id();
-                switch (startup_menu_game_type)
-                {
-                case GAME_TYPE_ARENA:
+                menu.set_active_object(save_games);
+                // save game ID is offset by NUM_GAME_TYPE
+                save_games->set_active_item(NUM_GAME_TYPE + i);
+            }
+        }
+        else
+        {
+            // Menu might have changed selection -- sync name.
+            // TODO: the mapping from menu item to game_type is alarmingly
+            // brittle here
+            startup_menu_game_type = menu.get_active_item()->get_id();
+            switch (startup_menu_game_type)
+            {
+            case GAME_TYPE_ARENA:
+                input_string = "";
+                break;
+            case GAME_TYPE_NORMAL:
+            case GAME_TYPE_TUTORIAL:
+            case GAME_TYPE_SPRINT:
+            case GAME_TYPE_HINTS:
+                // If a game type is chosen, the user expects
+                // to start a new game. Just blanking the name
+                // it it clashes for now.
+                if (_find_save(chars, input_string) != -1)
                     input_string = "";
-                    break;
-                case GAME_TYPE_NORMAL:
-                case GAME_TYPE_TUTORIAL:
-                case GAME_TYPE_SPRINT:
-                case GAME_TYPE_HINTS:
-                    // If a game type is chosen, the user expects
-                    // to start a new game. Just blanking the name
-                    // it it clashes for now.
-                    if (_find_save(chars, input_string) != -1)
-                        input_string = "";
-                    break;
-                case GAME_TYPE_HIGH_SCORES:
-                    break;
+                break;
+            case GAME_TYPE_HIGH_SCORES:
+                break;
 
-                case GAME_TYPE_INSTRUCTIONS:
-                    break;
+            case GAME_TYPE_INSTRUCTIONS:
+                break;
 
-                default:
-                    int save_number = startup_menu_game_type - NUM_GAME_TYPE;
-                    if (save_number < num_saves)
-                        input_string = chars.at(save_number).name;
-                    else // new game
-                        input_string = "";
-                    full_name = true;
-                    break;
-                }
+            default:
+                int save_number = startup_menu_game_type - NUM_GAME_TYPE;
+                if (save_number < num_saves)
+                    input_string = chars.at(save_number).name;
+                else // new game
+                    input_string = "";
+                full_name = true;
+                break;
             }
         }
-        // we had a significant action!
-        vector<MenuItem*> selected = menu.get_selected_items();
-        if (selected.empty())
-        {
-            // Uninteresting action, poll a new key
-            continue;
-        }
-
-        int id = selected.at(0)->get_id();
-        switch (id)
-        {
-        case GAME_TYPE_NORMAL:
-        case GAME_TYPE_TUTORIAL:
-        case GAME_TYPE_SPRINT:
-        case GAME_TYPE_HINTS:
-            trim_string(input_string);
-            if (is_good_name(input_string, true, false))
-            {
-                ng_choice.type = static_cast<game_type>(id);
-                ng_choice.name = input_string;
-                return;
-            }
-            else
-            {
-                // bad name
-                descriptor->override_description("That's a silly name.");
-                // Don't make the next key re-enter the game.
-                menu.clear_selections();
-            }
-            continue;
-
-        case GAME_TYPE_ARENA:
-            ng_choice.type = GAME_TYPE_ARENA;
-            return;
-
-        case GAME_TYPE_INSTRUCTIONS:
-            show_help();
-            // restart because help messes up CRTRegion
-            goto again;
-
-        case GAME_TYPE_HIGH_SCORES:
-            show_hiscore_table();
-            goto again;
-
-        default:
-            // It was a savegame instead
-            const int save_number = id - NUM_GAME_TYPE;
-            if (save_number < num_saves) // actual save
-            {
-                // Save the savegame character name
-                ng_choice.name = chars.at(save_number).name;
-                ng_choice.type = chars.at(save_number).saved_game_type;
-                ng_choice.filename = chars.at(save_number).filename;
-            }
-            else // "new game"
-            {
-                ng_choice.name = "";
-                ng_choice.type = GAME_TYPE_NORMAL;
-                ng_choice.filename = ""; // ?
-            }
-            return;
-        }
+        input_text->set_text(input_string);
     }
+    // we had a significant action!
+    vector<MenuItem*> selected = menu.get_selected_items();
+    if (selected.empty())
+    {
+        // Uninteresting action, poll a new key
+        return true;
+    }
+    menu.clear_selections();
+
+    int id = selected.at(0)->get_id();
+    switch (id)
+    {
+    case GAME_TYPE_NORMAL:
+    case GAME_TYPE_TUTORIAL:
+    case GAME_TYPE_SPRINT:
+    case GAME_TYPE_HINTS:
+        trim_string(input_string);
+        if (is_good_name(input_string, true, false))
+        {
+            ng_choice.type = static_cast<game_type>(id);
+            ng_choice.name = input_string;
+            return done = true;
+        }
+        else
+        {
+            // bad name
+            descriptor->override_description("That's a silly name.");
+            // Don't make the next key re-enter the game.
+            menu.clear_selections();
+        }
+        return true;
+
+    case GAME_TYPE_ARENA:
+        ng_choice.type = GAME_TYPE_ARENA;
+        return done = true;
+
+    case GAME_TYPE_INSTRUCTIONS:
+        show_help();
+        return true;
+
+    case GAME_TYPE_HIGH_SCORES:
+        show_hiscore_table();
+        return true;
+
+    default:
+        // It was a savegame instead
+        const int save_number = id - NUM_GAME_TYPE;
+        if (save_number < num_saves) // actual save
+        {
+            // Save the savegame character name
+            ng_choice.name = chars.at(save_number).name;
+            ng_choice.type = chars.at(save_number).saved_game_type;
+            ng_choice.filename = chars.at(save_number).filename;
+        }
+        else // "new game"
+        {
+            ng_choice.name = "";
+            ng_choice.type = GAME_TYPE_NORMAL;
+            ng_choice.filename = ""; // ?
+        }
+        return done = true;
+    }
+}
+
+/**
+ * Saves game mode and player name to ng_choice.
+ */
+static void _show_startup_menu(newgame_def& ng_choice,
+                               const newgame_def& defaults)
+{
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    wm->show_keyboard();
+#endif
+
+    auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
+    auto popup = make_shared<UIPopup>(startup_ui);
+
+    ui_push_layout(move(popup));
+    while (!startup_ui->done)
+        ui_pump_events();
+    ui_pop_layout();
+
+    if (startup_ui->end_game)
+        end(0);
 }
 #endif
 
