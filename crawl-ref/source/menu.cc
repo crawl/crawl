@@ -2387,10 +2387,6 @@ PrecisionMenu::PrecisionMenu() : m_active_object(nullptr),
 PrecisionMenu::~PrecisionMenu()
 {
     clear();
-#ifdef USE_TILE_LOCAL
-    if (tiles.get_crt())
-        tiles.get_crt()->detach_menu();
-#endif
 }
 
 void PrecisionMenu::set_select_type(SelectType flag)
