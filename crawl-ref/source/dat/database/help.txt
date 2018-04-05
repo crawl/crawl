@@ -304,5 +304,7 @@ spells are hidden by default.
 
 <w>Ctrl-F</w> can be used to filter the list of spells. Any filter set in this way will
 persist until the spell library is closed and reopened, or until a new filter is
-set with <w>Ctrl-F</w>. You can filter spells by name and by spell school.
+set with <w>Ctrl-F</w>. If <w>Enter</w> is pressed at the prompt without entering any text,
+that will reset the filter to none.
+You can filter spells by name and by spell school.
 %%%%
