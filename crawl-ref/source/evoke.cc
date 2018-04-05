@@ -1012,7 +1012,6 @@ static bool _lamp_of_fire()
 
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);
-        did_god_conduct(DID_FIRE, 6 + random2(3));
 
         mpr("The flames dance!");
 
