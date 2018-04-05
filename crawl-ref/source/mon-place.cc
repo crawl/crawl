@@ -2840,9 +2840,6 @@ conduct_type player_will_anger_monster(const monster &mon)
     if (god_hates_spellcasting(you.religion) && mon.is_actual_spellcaster())
         return DID_SPELL_CASTING;
 
-    if (you_worship(GOD_DITHMENOS) && mons_is_fiery(mon))
-        return DID_FIRE;
-
     return DID_NOTHING;
 }
 
@@ -2879,9 +2876,6 @@ bool player_angers_monster(monster* mon)
                 break;
             case DID_SPELL_CASTING:
                 mprf("%s is enraged by your magic-hating god!", mname.c_str());
-                break;
-            case DID_FIRE:
-                mprf("%s is enraged by your darkness!", mname.c_str());
                 break;
             case DID_SACRIFICE_LOVE:
                 mprf("%s can only feel hate for you!", mname.c_str());
