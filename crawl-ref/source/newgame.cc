@@ -29,6 +29,8 @@
 #include "stringutil.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
+#include "tilepick.h"
+#include "tilefont.h"
 #endif
 #include "version.h"
 
@@ -1339,14 +1341,17 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-static const int WEAPON_COLUMN_WIDTH = 36;
+static const int WEAPON_COLUMN_WIDTH = 40;
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
+#ifdef USE_TILE_LOCAL
+    static const int ITEMS_START_Y = 4;
+#else
     static const int ITEMS_START_Y = 5;
-    TextItem* tmp = nullptr;
+#endif
     string text;
     const char *thrown_name = nullptr;
     coord_def min_coord(0,0);
@@ -1356,7 +1361,11 @@ static void _construct_weapon_menu(const newgame_def& ng,
     {
         weapon_type wpn_type = weapons[i].first;
         char_choice_restriction wpn_restriction = weapons[i].second;
-        tmp = new TextItem();
+#ifdef USE_TILE_LOCAL
+        TextTileItem *tmp = new TextTileItem();
+#else
+        TextItem *tmp = new TextItem();
+#endif
         text.clear();
 
         if (wpn_restriction == CC_UNRESTRICTED)
@@ -1373,27 +1382,53 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tmp->add_hotkey(letter);
         tmp->set_id(wpn_type);
 
-        text += letter;
-        text += " - ";
+        text += make_stringf(" %c - ", letter);
         switch (wpn_type)
         {
         case WPN_UNARMED:
             text += species_has_claws(ng.species) ? "claws" : "unarmed";
+#ifdef USE_TILE_LOCAL
+            tmp->add_tile(tile_def(DNGN_UNSEEN, TEX_DEFAULT));
+#endif
             break;
         case WPN_THROWN:
             // We don't support choosing among multiple thrown weapons.
             ASSERT(!thrown_name);
+#ifdef USE_TILE_LOCAL
+            tmp->add_tile(tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT));
+#endif
             if (species_can_throw_large_rocks(ng.species))
+            {
                 thrown_name = "large rocks";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_LARGE_ROCK, TEX_DEFAULT));
+#endif
+            }
             else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
+            {
                 thrown_name = "tomahawks";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_TOMAHAWK, TEX_DEFAULT));
+#endif
+            }
             else
+            {
                 thrown_name = "javelins";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_JAVELIN, TEX_DEFAULT));
+#endif
+            }
             text += thrown_name;
             text += " and throwing nets";
             break;
         default:
             text += weapon_base_name(wpn_type);
+#ifdef USE_TILE_LOCAL
+            item_def dummy;
+            dummy.base_type = OBJ_WEAPONS;
+            dummy.sub_type = wpn_type;
+            tmp->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+#endif
             if (is_ranged_weapon_type(wpn_type))
             {
                 text += " and ";
@@ -1410,6 +1445,10 @@ static void _construct_weapon_menu(const newgame_def& ng,
         min_coord.x = X_MARGIN;
         min_coord.y = ITEMS_START_Y + i;
         max_coord.x = min_coord.x + text.size();
+#ifdef USE_TILE_LOCAL
+        const int cw = tiles.get_crt_font()->char_width();
+        max_coord.x += (TILE_Y+cw-1)/cw;
+#endif
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
 
@@ -1420,7 +1459,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
             menu->set_active_item(tmp);
     }
     // Add all the special button entries
-    tmp = new TextItem();
+    TextItem *tmp = new TextItem();
     tmp->set_text("+ - Viable random choice");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y;
