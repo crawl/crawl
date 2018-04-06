@@ -609,7 +609,6 @@ bool unnotice_feature(const level_pos &pos)
 
 void display_overview()
 {
-    clrscr();
     string disp = overview_description_string(true);
     linebreak_string(disp, get_number_of_cols());
     int flags = MF_ANYPRINTABLE | MF_NOSELECT;

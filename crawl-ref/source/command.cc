@@ -429,9 +429,6 @@ static help_file help_files[] =
 // a selectable menu and prints the corresponding answer for a chosen question.
 static bool _handle_FAQ()
 {
-    clrscr();
-    viewwindow();
-
     vector<string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
     {
@@ -479,7 +476,6 @@ static bool _handle_FAQ()
     while (true)
     {
         vector<MenuEntry*> sel = FAQmenu.show();
-        redraw_screen();
         if (sel.empty())
             return false;
         else
