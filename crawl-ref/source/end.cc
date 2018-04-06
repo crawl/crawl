@@ -30,6 +30,7 @@
 #include "stringutil.h"
 #include "view.h"
 #include "xom.h"
+#include "ui.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -236,12 +237,18 @@ NORETURN void screen_end_game(string text)
 
     if (!text.empty())
     {
-        clrscr();
-        linebreak_string(text, get_number_of_cols());
-        display_tagged_block(text);
+        auto prompt_ui = make_shared<UIText>(text);
+        bool done = false;
+        prompt_ui->on(UI::slots.event, [&](wm_event ev)  {
+            return done = ev.type == WME_KEYDOWN;
+        });
 
-        if (!crawl_state.seen_hups)
-            get_ch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<UIPopup>(prompt_ui);
+        ui_push_layout(move(popup));
+        while (!done)
+            ui_pump_events();
+        ui_pop_layout();
     }
 
     game_ended(game_exit::abort); // TODO: is this the right exit condition?
