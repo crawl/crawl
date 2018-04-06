@@ -30,10 +30,13 @@
 #include "stringutil.h"
 #include "view.h"
 #include "xom.h"
+#include "ui.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
+
+using namespace ui;
 
 /**
  * Should crawl restart on game end, depending on restart options and options
@@ -236,12 +239,15 @@ NORETURN void screen_end_game(string text)
 
     if (!text.empty())
     {
-        clrscr();
-        linebreak_string(text, get_number_of_cols());
-        display_tagged_block(text);
+        auto prompt_ui = make_shared<Text>(text);
+        bool done = false;
+        prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+            return done = ev.type == WME_KEYDOWN;
+        });
 
-        if (!crawl_state.seen_hups)
-            get_ch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
     }
 
     game_ended(game_exit::abort); // TODO: is this the right exit condition?
