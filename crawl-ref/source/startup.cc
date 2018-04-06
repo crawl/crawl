@@ -1049,24 +1049,51 @@ static void _choose_arena_teams(newgame_def& choice,
 {
     if (!choice.arena_teams.empty())
         return;
-
     clear_message_store();
-    clrscr();
-
-    cprintf("Enter your choice of teams:\n");
-
-    cgotoxy(1, 4);
-    if (!defaults.arena_teams.empty())
-        cprintf("Enter - %s\n", defaults.arena_teams.c_str());
-    cprintf("\n");
-    cprintf("Examples:\n");
-    cprintf("  Sigmund v Jessica\n");
-    cprintf("  99 orc v the Royal Jelly\n");
-    cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming\n");
-    cgotoxy(1, 2);
 
     char buf[80];
-    if (cancellable_get_line(buf, sizeof(buf)))
+    resumable_line_reader reader(buf, sizeof(buf));
+    bool done = false, cancel;
+    auto prompt_ui = make_shared<Text>();
+
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+        key = reader.putkey(key);
+        if (key == -1)
+            return true;
+        cancel = !!key;
+        return done = true;
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::push_layout(move(popup));
+    while (!done && !crawl_state.seen_hups)
+    {
+        string hlbuf = formatted_string(buf).to_colour_string();
+        if (hlbuf.find(" v ") != string::npos)
+            hlbuf = "<w>" + replace_all(hlbuf, " v ", "</w> v <w>") + "</w>";
+
+        formatted_string prompt;
+        prompt.cprintf("Enter your choice of teams:\n\n  ");
+        prompt += formatted_string::parse_string(hlbuf);
+
+        prompt.cprintf("\n\n");
+        if (!defaults.arena_teams.empty())
+            prompt.cprintf("Enter - %s\n", defaults.arena_teams.c_str());
+        prompt.cprintf("\n");
+        prompt.cprintf("Examples:\n");
+        prompt.cprintf("  Sigmund v Jessica\n");
+        prompt.cprintf("  99 orc v the Royal Jelly\n");
+        prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
+        prompt_ui->set_text(prompt);
+
+        ui::pump_events();
+    }
+    ui::pop_layout();
+
+    if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);
     choice.arena_teams = buf;
     if (choice.arena_teams.empty())
