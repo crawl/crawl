@@ -973,7 +973,7 @@ class vault_chance_roll_iterator
 {
 public:
     vault_chance_roll_iterator(const mapref_vector &_maps)
-        : maps(_maps), place(level_id::current()),
+        : place(level_id::current()),
           current(_maps.begin()), end(_maps.end())
     {
         find_valid();
@@ -1005,7 +1005,6 @@ private:
     }
 
 private:
-    const vector<const map_def *> &maps;
     level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;

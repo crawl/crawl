@@ -305,9 +305,6 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
     TextItem* tmp = nullptr;
     tmp = new TextItem();
 
-    coord_def min_coord(1,1);
-    coord_def max_coord(1,2);
-
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
 

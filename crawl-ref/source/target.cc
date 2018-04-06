@@ -559,7 +559,6 @@ bool targeter_fragment::set_aim(coord_def a)
         return false;
     }
 
-    coord_def centre(9,9);
     bolt beam;
     beam.target = a;
     beam.use_target_as_pos = true;
@@ -1010,7 +1009,6 @@ targeter_shadow_step::targeter_shadow_step(const actor* act, int r) :
 
 bool targeter_shadow_step::valid_aim(coord_def a)
 {
-    coord_def c, shadow_step_pos;
     ray_def ray;
 
     if (origin == a)
