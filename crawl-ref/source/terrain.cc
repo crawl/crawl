@@ -1302,7 +1302,6 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
 
     const bool notable_seen1 = is_notable_terrain(feat1) && you.see_cell(pos1);
     const bool notable_seen2 = is_notable_terrain(feat2) && you.see_cell(pos2);
-    coord_def orig_pos, dest_pos;
 
     if (notable_seen1 && notable_seen2)
     {
