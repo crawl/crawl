@@ -249,20 +249,21 @@ void hiscores_print_all(int display_count, int format)
 
 // Displays high scores using curses. For output to the console, use
 // hiscores_print_all.
-void hiscores_print_list(int display_count, int format, int newest_entry)
+string hiscores_print_list(int display_count, int format, int newest_entry)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
+    string ret;
 
     FILE *scores;
     int i, total_entries;
 
     if (display_count <= 0)
-        return;
+        return "";
 
     // open highscore file (reading)
     scores = _hs_open("r", _score_file_name());
     if (scores == nullptr)
-        return;
+        return "";
 
     // read highscore file
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
@@ -275,8 +276,6 @@ void hiscores_print_list(int display_count, int format, int newest_entry)
 
     // close off
     _hs_close(scores, _score_file_name());
-
-    textcolour(LIGHTGREY);
 
     int start = newest_entry - display_count / 2;
 
@@ -292,13 +291,17 @@ void hiscores_print_list(int display_count, int format, int newest_entry)
     {
         // check for recently added entry
         if (i == newest_entry)
-            textcolour(YELLOW);
+            ret += "<yellow>";
 
-        _hiscores_print_entry(*hs_list[i], i, format, cprintf);
+        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char *fmt, const char *s){
+            ret += string(s);
+        });
 
         if (i == newest_entry)
-            textcolour(LIGHTGREY);
+            ret += "<lightgrey>";
     }
+
+    return ret;
 }
 
 static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)

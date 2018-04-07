@@ -413,31 +413,44 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     tiles_crt_control show_as_menu(CRT_MENU);
 #endif
 
-    clrscr();
-    cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf("\n\n    "); // Space padding where # would go in list format
+    string goodbye_msg;
+    goodbye_msg += make_stringf("Goodbye, %s.", you.your_name.c_str());
+    goodbye_msg += "\n\n    "; // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, "\n") + 1;
 
-    cprintf("%s", hiscore.c_str());
+    goodbye_msg += hiscore;
 
-    cprintf("\nBest Crawlers - %s\n",
+    goodbye_msg += make_stringf("\nBest Crawlers - %s\n",
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+    goodbye_msg += hiscores_print_list(24 - lines - 5, SCORE_TERSE,
                         hiscore_index);
 
 #ifndef DGAMELAUNCH
-    cprintf("\nYou can find your morgue file in the '%s' directory.",
+    goodbye_msg += make_stringf("\nYou can find your morgue file in the '%s' directory.",
             morgue_directory().c_str());
 #endif
 
-    // just to pause, actual value returned does not matter {dlb}
+    auto prompt_ui = make_shared<UIText>(goodbye_msg);
+    bool done = false;
+    prompt_ui->on(UI::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<UIPopup>(prompt_ui);
+
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
-        get_ch();
+    {
+        ui_push_layout(move(popup));
+        while (!done)
+            ui_pump_events();
+        ui_pop_layout();
+    }
 
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);
