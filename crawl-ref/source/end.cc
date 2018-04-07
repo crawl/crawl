@@ -107,22 +107,21 @@ static bool _print_error_screen(const char *message, ...)
     // NOTE: This assumes that the error message doesn't contain
     //       any formatting!
     error_msg = replace_all(error_msg, "<", "<<");
+    error_msg += "\n\nHit any key to exit...";
 
-    error_msg += "\n\n\nHit any key to exit...\n";
+    auto prompt_ui = make_shared<UIText>(error_msg);
+    bool done = false;
+    prompt_ui->on(UI::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
 
-    // Break message into correctly sized lines.
-    int width = 80;
-#ifdef USE_TILE_LOCAL
-    width = crawl_view.msgsz.x;
-#else
-    width = min(80, get_number_of_cols());
-#endif
-    linebreak_string(error_msg, width);
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<UIPopup>(prompt_ui);
+    ui_push_layout(move(popup));
+    while (!done)
+        ui_pump_events();
+    ui_pop_layout();
 
-    // And finally output the message.
-    clrscr();
-    formatted_string::parse_string(error_msg).display();
-    getchm();
     return true;
 }
 #endif
