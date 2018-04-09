@@ -169,35 +169,72 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
     local x, y
+        -- These are the three types of derived undead to be spawned
+    local list_undead_types = { " zombie", " simulacrum", "spectral " }
+        -- These are the base monsters for the derived undead
+        -- where each line represents a new wave
+    local list_deriv_undead_base_mons = { 
+        "troll", "ogre", "crocodile", "yak", "centaur warrior",
+        "death yak", "two-headed ogre", "orc knight", "vault guard", "yaktaur captain",
+        "stone giant", "ettin", "iron troll", "juggernaut", "titan"
+    }
+
+    local undead_type
+    local undead_base_mon
+    local monster
     for _, gmarker in ipairs(graves) do
+        undead_type = crawl.random2(3) + 1
+        undead_base_mon = crawl.random2(5) + 1
         x, y = gmarker:pos()
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
             crawl.one_chance_in(8) then
             if data.count < 9 or data.count < 15 and crawl.one_chance_in(5) then
                 if data.vpcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake troll zombie")
+                    if undead_type == 3 then
+                        monster = (list_undead_types[undead_type] 
+                                   .. list_deriv_undead_base_mons[undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[undead_base_mon] 
+                                   .. list_undead_types[undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake vampire")
+                    monster = "vampire"
                     data.vpcount = data.vpcount + 1
                 end
             elseif data.count < 18 or data.count < 24 and crawl.one_chance_in(4) then
                 if data.swcount > 4 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
+                    undead_base_mon = undead_base_mon + 5
+                    if undead_type == 3 then
+                        monster = (list_undead_types[undead_type] 
+                                   .. list_deriv_undead_base_mons[undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[undead_base_mon] 
+                                   .. list_undead_types[undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake skeletal warrior")
+                    monster = "skeletal warrior"
                     data.swcount = data.swcount + 1
                 end
             elseif data.count < 26 or data.account > 2 or crawl.x_chance_in_y(6, 7) then
                 if data.ghcount > 3 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake ettin zombie")
+                    undead_base_mon = undead_base_mon + 10
+                    if undead_type == 3 then
+                        monster = (list_undead_types[undead_type] 
+                                   .. list_deriv_undead_base_mons[undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[undead_base_mon] 
+                                   .. list_undead_types[undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake ghoul")
+                    monster = "ghoul"
                     data.ghcount = data.ghcount + 1
                 end
             else
-                spawn_zombie(x, y, "generate_awake ancient champion")
+                monster = "ancient champion"
                 data.account = data.account + 1
             end
+            monster = "generate_awake " .. monster
+            spawn_zombie(x, y, monster)
             data.count = data.count + 1
             gmarker:remove()
         end
