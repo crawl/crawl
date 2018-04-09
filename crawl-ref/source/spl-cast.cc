@@ -894,7 +894,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (you.attribute[ATTR_DIVINE_FOCUS] == 0)
         {
             mpr("You temporarily lose access to your magic!");
-            you.set_duration(DUR_NO_CAST, (random2avg((36 - you.skills[SK_INVOCATIONS]) / 2, 2)));
+            you.set_duration(DUR_NO_CAST, (2 + (random2avg((27 - you.skills[SK_INVOCATIONS]) / 2, 2))));
         }
         return true;
     }
