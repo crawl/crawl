@@ -161,7 +161,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                          marker, ev)
     -- Save compat bit.
     if data.count == nil then
-        data.count = 0; data.swcount = 0; data.vpcount = 0; data.account = 0
+        data.count = 0; data.swcount = 0; data.vpcount = 0; 
+        data.account = 0; data.ghcount = 0
     end
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
@@ -172,25 +173,26 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
         x, y = gmarker:pos()
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
             crawl.one_chance_in(8) then
-            if data.count < 9 or data.count < 18 and crawl.one_chance_in(5) then
-                if crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake ogre zombie")
-                else
-                    spawn_zombie(x, y, "generate_awake wight")
-                end
-            elseif data.count < 21 or data.count < 26 and crawl.one_chance_in(4) then
-                if data.vpcount > 3 or crawl.coinflip() then
+            if data.count < 9 or data.count < 15 and crawl.one_chance_in(5) then
+                if data.vpcount > 5 or crawl.coinflip() then
                     spawn_zombie(x, y, "generate_awake troll zombie")
                 else
                     spawn_zombie(x, y, "generate_awake vampire")
                     data.vpcount = data.vpcount + 1
                 end
-            elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
-                if data.swcount > 5 or crawl.coinflip() then
+            elseif data.count < 18 or data.count < 24 and crawl.one_chance_in(4) then
+                if data.swcount > 4 or crawl.coinflip() then
                     spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
                 else
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
-                data.swcount = data.swcount + 1
+                    data.swcount = data.swcount + 1
+                end
+            elseif data.count < 26 or data.account > 2 or crawl.x_chance_in_y(6, 7) then
+                if data.ghcount > 3 or crawl.coinflip() then
+                    spawn_zombie(x, y, "generate_awake ettin zombie")
+                else
+                    spawn_zombie(x, y, "generate_awake ghoul")
+                    data.ghcount = data.ghcount + 1
                 end
             else
                 spawn_zombie(x, y, "generate_awake ancient champion")
@@ -241,11 +243,19 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
         return
     end
 
-    local pos = dgn.find_marker_positions_by_prop("wizard_grave", 1)[1]
-    local lich = dgn.create_monster(pos.x, pos.y, "generate_awake ancient lich "
+    -- Place the antique lich
+    local alichpos = dgn.find_marker_positions_by_prop("wizard_grave", 1)[1]
+    local alich = dgn.create_monster(alichpos.x, alichpos.y, "generate_awake ancient lich "
                  .."col:brown name:antique_lich name_replace name_descriptor "
                  .."tile:mons_zonguldrok_lich")
-    if lich then
+
+    -- Place the two other liches
+    local lichposa = dgn.find_marker_positions_by_prop("lich_grave_a", 1)[1]
+    dgn.create_monster(lichposa.x, lichposa.y, "generate_awake lich")
+    local lichposb = dgn.find_marker_positions_by_prop("lich_grave_b", 1)[1]
+    dgn.create_monster(lichposb.x, lichposb.y, "generate_awake lich")
+
+    if alich then
         data.awoke = true
     end
 end
@@ -1073,6 +1083,7 @@ SUBST:      ? = txxx
 SUBST:      ! = t..
 NSUBST:     Z = Z / '
 MONS:       patrolling skeletal warrior, patrolling ancient champion
+MONS:       patrolling vampire knight
 COLOUR:     t = darkgrey / lightgrey
 TILE:       t = dngn_tree_dead
 LFLOORCOL:  darkgrey
@@ -1087,13 +1098,15 @@ graves = 28 + crawl.random2(4) + crawl.random2(4)
 nsubst("G = " .. graves .. ":G / *:.")
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("Z", portal_desc { wizard_grave = 1})
+lua_marker("S", portal_desc { lich_grave_a = 1})
+lua_marker("T", portal_desc { lich_grave_b = 1})
 lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
         veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
 
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
     repeated = true,
-    data = {count = 0, vpcount = 0, swcount = 0, account = 0}
+    data = {count = 0, vpcount = 0, swcount = 0, account = 0, ghcount = 0}
 }
 
 local zombies_killed_marker = TriggerableFunction:new {
@@ -1160,12 +1173,12 @@ x?!G.Gcccddcc+ccddcccG.G!?x
 x?!.G.c'dd'cLLLc'dd'c.G.!?x
 x?!G.Gc$'ccc'''ccc'$cG.G!?x
 x?!.G.c$$c''ZZZ''c$$c.G.!?x
-x?!G.Gcccc''ZWZ''ccccG.G!?x
+x?!G.Gcccc'TZWZS'ccccG.G!?x
 x?!.G.c''+''ZZZ''+''c.G.!?x
-x?!G.Gc'2ccc'''ccc1'cG.G!?x
+x?!G.Gc'2ccc'''ccc3'cG.G!?x
 x?!.G.c''1'c'''c'1''c.G.!?x
-x?!G.Gccc''ccccc1'cccG.G!?x
-x?!.G.G.cc'''c'''cc.G.G.!?x
+x?!G.Gccc''ccccc''cccG.G!?x
+x?!.G.G.cc''1c1''cc.G.G.!?x
 x?!G.G.G.c'''c'''c.G.G.G!?x
 x?!.G.G.GccccDccccG.G.G.!?x
 x?!!.G.G.G.GV.VG.G.G.G.!!?x
@@ -1694,9 +1707,9 @@ KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / any randart jewellery w:5 / cloak good_item w:5 \
                 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
-NSUBST:     d = e / d, ' = 4:1 / 3=12...., " = 4:1 / 3=12....
-NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....
-NSUBST:     3 = 1:3 / 1, ~ = 2:1 / 3:2 / 4 / 9=12.... / ., f = 1:g / f
+NSUBST:     d = e / d, ' = 2:1 / 2:2 / 3=12...., " = 2:1 / 2:2 / 3=12....
+NSUBST:     ` = 2:1 / 3:2 / 3=12...., ; = 2:1 / 3:2 / 3=12....
+NSUBST:     3 = 1:3 / 2, ~ = 2:1 / 4:2 / 4 / 9=12.... / ., f = 1:g / f
 {{
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
                      cacodemon / green death / hell beast / hellion / \
