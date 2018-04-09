@@ -433,19 +433,17 @@ ENDMAP
 NAME:   chequers_ecumenical_altar_grove
 DEPTH:  D:2-3
 TAGS:   uniq_ecumenical_altar chance_ecumenical_altar
-# Disconnected regions can spawn in the trees
 CHANCE: 10%
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
 KMASK:  - = no_item_gen
 KMASK:  - = no_monster_gen
+KPROP:  - = no_tele_into
 SUBST:  - = tt.
-: if crawl.coinflip() then
+: if crawl.one_chance_in(4) then
 : set_feature_name("tree", "dead tree")
 TILE:    t = dngn_tree_dead
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
-: else
-SUBST: t : bt x:5
 : end
 MAP
  ......
@@ -455,10 +453,10 @@ MAP
 .-t-...t.---.
 .tt.-tt.-t--.
 -t--.-t--t-.
-  tt-.ttt-t-.
--t.t.-.-t-t.
- -tt_tttt-@.
--ttttt--tt.
+ ttt-.ttttt-.
+ t.t.-.-t-t.
+ -t._tttt-@.
+ ttttt--tt.
 -ttt--.---.
 ...........
 ENDMAP

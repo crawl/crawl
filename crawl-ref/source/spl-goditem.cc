@@ -794,7 +794,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             // don't try to shove the orb of zot into lava and/or crash
             if (igrd(*ai) != NON_ITEM)
             {
-                coord_def newpos;
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
                     success = false;

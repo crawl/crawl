@@ -1640,10 +1640,6 @@ void SkillMenu::shift_bottom_down()
 void SkillMenu::show_description(skill_type sk)
 {
     describe_skill(sk);
-    clrscr();
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(this);
-#endif
 }
 
 TextItem* SkillMenu::find_closest_selectable(int start_ln, int col)

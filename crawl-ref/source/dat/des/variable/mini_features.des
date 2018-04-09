@@ -2544,6 +2544,28 @@ MAP
 ..............
 ENDMAP
 
+NAME:   skrybe_limestone_x
+TAGS:   decor extra transparent
+DEPTH:  D, Depths
+KMASK:  W = no_monster_gen
+SUBST:  W : Wm
+FTILE:  D = floor_limestone
+COLOUR: D = brown
+MAP
+....    ....
+.DD......DD.
+.DDDD..DDDD.
+..DWD..DWD..
+ .DDDDDDDD.
+ ...DWWD...
+ ...DWWD...
+ .DDDDDDDD.
+..DWD..DWD..
+.DDDD..DDDD.
+.DD......DD.
+....    ....
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

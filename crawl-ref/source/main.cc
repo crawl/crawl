@@ -1910,10 +1910,6 @@ void process_command(command_type cmd)
 
     case CMD_DISPLAY_RELIGION:
     {
-#ifdef USE_TILE_WEB
-        if (!you_worship(GOD_NO_GOD))
-            tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
-#endif
         describe_god(you.religion, true);
         redraw_screen();
         break;
@@ -3237,6 +3233,14 @@ static void _move_player(coord_def move)
             // But if that failed to end the effect, duration stays the same.
             if (you.duration[DUR_BARBS])
                 you.duration[DUR_BARBS] += you.time_taken;
+        }
+
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
+                                 "you move.");
+            you.duration[DUR_ICY_ARMOUR] = 0;
+            you.redraw_armour_class = true;
         }
 
         if (you_are_delayed() && current_delay()->is_run())

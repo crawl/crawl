@@ -4056,19 +4056,19 @@ MAP
  ccccccccccccccccccccccccc
  ccc.3c'c'c'c'c'c'c3..$Rcc
  ccG4...............b4$*cc
- ccT..bb2bb2bb2.....bb..cc
+ ccT..bb2bb2bb2..2..bb..cc
  ccG4..........bbb.....Gcc
- cccc3.Gc'c2Tbbb...2.b3.cc
- cccc+ccccccbb...bbbbb..cc
+ cccc3.Gc...bbbb...2.b3.cc
+ cccc+cccc+ccT...bbbbb..cc
 ...nnedUnG..c.....G.G.$tcc
 @SPnnfd_nQ..+........4|Ucc
 ...nngdUnG..c.....G.G.$tcc
- cccc+ccccccbb...bbbbb..cc
- cccc3.Gc'c2Tbbb...2.b3.cc
+ cccc+cccc+ccT...bbbbb..cc
+ cccc3.Gc...bbbb...2.b3.cc
  ccG4..........bbb.....Gcc
- ccT..bb2bb2bb2.....bb..cc
+ ccT..bb2bb2bb2..2..bb..cc
  ccG4...............b4$*cc
- cc..3c'c'c'c'c'c'c3..$Rcc
+ ccc.3c'c'c'c'c'c'c3..$Rcc
  ccccccccccccccccccccccccc
  ccccccccccccccccccccccccc
 ENDMAP
@@ -4342,7 +4342,7 @@ ENDMAP
 
 NAME:  gammafunk_mikee_crab_dinner
 TAGS:  no_monster_gen no_trap_gen patrolling
-DEPTH: D:13-, Depths, Lair:3-, Swamp, Zot
+DEPTH: D:10-, Depths, Lair:3-, Swamp, Zot
 ORIENT: float
 KMONS: F = apocalypse crab
 KITEM: F = |
@@ -4351,7 +4351,7 @@ MONS:  fire crab, ghost crab, entropy weaver
 : elseif you.in_branch("Depths") then
 MONS:  apocalypse crab
 KMONS: 2 = apocalypse crab
-KMONS: 3 = titan
+KMONS: 3 = flayed ghost
 KITEM: 2 = *
 SUBST: = = +, E = D
 : elseif you.in_branch("Lair") then
@@ -4363,7 +4363,7 @@ SUBST: c = xxxt
 : elseif you.in_branch("Zot") then
 MONS:  apocalypse crab
 KMONS: 2 = apocalypse crab
-KMONS: 3 = killer klown / draconian stormcaller / draconian scorcher
+KMONS: 3 = curse toe
 KITEM: 2 = *
 SUBST: = = +, E = D
 : end

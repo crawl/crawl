@@ -5,11 +5,12 @@
 #include "tilereg-skl.h"
 
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "options.h"
 #include "output.h"
-#include "process-desc.h"
 #include "skills.h"
+#include "stringutil.h"
 #include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
@@ -164,10 +165,7 @@ bool SkillRegion::update_alt_text(string &alt)
     // TODO: Nicer display for level, aptitude and crosstraining.
     inf.body << get_skill_description(skill, true);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 

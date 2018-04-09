@@ -975,8 +975,6 @@ dream sheep
 A drowsy, fluffy ovine whose coat sparkles with motes of dream dust. It gathers
 in herds and fills the air with dream dust, overwhelming its victims and
 putting them to sleep.
-
-Its wool looks quite flammable.
 %%%%
 drowned soul
 
@@ -1780,8 +1778,8 @@ orb of destruction
 
 A conjured globe of pure magic that homes onto a designated target, albeit with
 massive inertia. A smart and agile person may move out of its path, causing it
-to miss its target or damage its surroundings. It cannot be avoided by Dodging
-skill, and is able to make sharp turns to hit adjacent targets.
+to miss its target. It cannot be avoided by Dodging skill, and is able to make
+sharp turns to hit adjacent targets.
 %%%%
 orb of fire
 

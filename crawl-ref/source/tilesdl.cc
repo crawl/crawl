@@ -792,13 +792,6 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = UINT_MAX;
                 break;
 
-            case WME_KEYPRESS:
-                key = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
-
-                m_last_tick_moved = UINT_MAX;
-                break;
-
             case WME_MOUSEMOTION:
                 {
                     // For consecutive mouse events, ignore all but the last,
@@ -1477,6 +1470,25 @@ int TilesFramework::get_number_of_cols()
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
+    set_cursor_region(region);
+    TextRegion::cgotoxy(x, y);
+}
+
+GotoRegion TilesFramework::get_cursor_region() const
+{
+    if (TextRegion::text_mode == m_region_crt)
+        return GOTO_CRT;
+    if (TextRegion::text_mode == m_region_msg)
+        return GOTO_MSG;
+    if (TextRegion::text_mode == m_region_stat)
+        return GOTO_STAT;
+
+    die("Bogus region");
+    return GOTO_CRT;
+}
+
+void TilesFramework::set_cursor_region(GotoRegion region)
+{
     switch (region)
     {
     case GOTO_CRT:
@@ -1495,21 +1507,6 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         die("invalid cgotoxy region in tiles: %d", region);
         break;
     }
-
-    TextRegion::cgotoxy(x, y);
-}
-
-GotoRegion TilesFramework::get_cursor_region() const
-{
-    if (TextRegion::text_mode == m_region_crt)
-        return GOTO_CRT;
-    if (TextRegion::text_mode == m_region_msg)
-        return GOTO_MSG;
-    if (TextRegion::text_mode == m_region_stat)
-        return GOTO_STAT;
-
-    die("Bogus region");
-    return GOTO_CRT;
 }
 
 // #define DEBUG_TILES_REDRAW
@@ -1546,7 +1543,7 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (!m_region_map)
+    if (!m_region_map || !map_bounds(gc))
         return;
 
     map_feature mf;

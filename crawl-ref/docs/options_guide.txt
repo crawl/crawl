@@ -24,7 +24,8 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot, pickup_menu_limit, drop_filter
+                pickup_thrown, assign_item_slot, pickup_menu_limit,
+                drop_filter, auto_hide_spells,
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -567,6 +568,10 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
+auto_hide_spells = false
+        When set to true, spells added to the library will automatically be
+        hidden.
+
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
@@ -965,9 +970,9 @@ easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
 
 equip_unequip = false
-        If this is true, 'W'ear will also allow you to 'T'ake off worn
-        armour, and vice versa, and the same is true for 'P'utting on/
-        'R'emoving jewellery.
+        If this is true, selecting an already-equipped piece of equipment via
+        the 'w', 'W' or 'P' menus (for weapons, armour or jewellery
+        respectively) will unequip that item.
 
 jewellery_prompt = false
         If this is true, equipping rings will always prompt for the slot to

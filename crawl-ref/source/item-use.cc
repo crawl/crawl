@@ -487,8 +487,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     else if (item_slot == you.equip[EQ_WEAPON])
     {
-        mpr("You are already wielding that!");
-        return true;
+        if (Options.equip_unequip)
+            item_slot = SLOT_BARE_HANDS;
+        else
+        {
+            mpr("You are already wielding that!");
+            return true;
+        }
     }
 
     // Reset the warning counter.
@@ -2949,9 +2954,6 @@ void read_scroll(item_def& scroll)
 
     case SCR_IMMOLATION:
     {
-        // Dithmenos hates trying to play with fire, even if it does nothing.
-        did_god_conduct(DID_FIRE, 2 + random2(3), item_type_known(scroll));
-
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {

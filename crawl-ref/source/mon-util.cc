@@ -5728,7 +5728,8 @@ static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
 bool apply_monsters_around_square(monster_func f, const coord_def& where,
                                   int radius)
 {
-    return _apply_to_monsters(f, radius_iterator(where, radius, C_SQUARE, true));
+    return _apply_to_monsters(f, radius_iterator(where, radius, C_SQUARE,
+                                                 LOS_NO_TRANS, true));
 }
 
 bool apply_visible_monsters(monster_func f, const coord_def& where, los_type los)

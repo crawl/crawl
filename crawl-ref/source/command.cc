@@ -429,9 +429,6 @@ static help_file help_files[] =
 // a selectable menu and prints the corresponding answer for a chosen question.
 static bool _handle_FAQ()
 {
-    clrscr();
-    viewwindow();
-
     vector<string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
     {
@@ -442,6 +439,11 @@ static bool _handle_FAQ()
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
+
+#ifdef USE_TILE_LOCAL
+    // Ensure we get the full screen size when calling get_number_of_cols()
+    cgotoxy(1, 1);
+#endif
     const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
@@ -474,7 +476,6 @@ static bool _handle_FAQ()
     while (true)
     {
         vector<MenuEntry*> sel = FAQmenu.show();
-        redraw_screen();
         if (sel.empty())
             return false;
         else
@@ -490,14 +491,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string(answer, width - 1, true);
-            {
-#ifdef USE_TILE_WEB
-                tiles_crt_control show_as_menu(CRT_MENU, "faq_entry");
-#endif
-                print_description(answer);
-                getchm();
-            }
+            show_description(answer);
         }
     }
 
@@ -749,6 +743,11 @@ void show_butchering_help()
 void show_skill_menu_help()
 {
     show_specific_help("skill-menu");
+}
+
+void show_spell_library_help()
+{
+    show_specific_help("spell-library");
 }
 
 static void _add_command(column_composer &cols, const int column,

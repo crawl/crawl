@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "command.h"
 #include "coord.h"
+#include "describe.h"
 #include "directn.h"
 #include "dgn-height.h"
 #include "env.h"
@@ -24,13 +25,13 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
-#include "process-desc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-zap.h"
 #include "stash.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
@@ -1286,10 +1287,7 @@ bool DungeonRegion::update_alt_text(string &alt)
             inf.body << "\n" << stash;
     }
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
+    alt = process_description(inf);
 
     // Suppress floor description
     if (alt == "Floor.")

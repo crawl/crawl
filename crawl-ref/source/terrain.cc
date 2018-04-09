@@ -695,9 +695,10 @@ int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_featu
 // For internal use by find_connected_identical only.
 static void _find_connected_identical(const coord_def &d,
                                       dungeon_feature_type ft,
-                                      set<coord_def>& out)
+                                      set<coord_def>& out,
+                                      bool known_only)
 {
-    if (grd(d) != ft)
+    if (grd(d) != ft || (known_only && !env.map_knowledge(d).known()))
         return;
 
     string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
@@ -711,22 +712,22 @@ static void _find_connected_identical(const coord_def &d,
 
     if (out.insert(d).second)
     {
-        _find_connected_identical(coord_def(d.x+1, d.y), ft, out);
-        _find_connected_identical(coord_def(d.x-1, d.y), ft, out);
-        _find_connected_identical(coord_def(d.x, d.y+1), ft, out);
-        _find_connected_identical(coord_def(d.x, d.y-1), ft, out);
+        _find_connected_identical(coord_def(d.x+1, d.y), ft, out, known_only);
+        _find_connected_identical(coord_def(d.x-1, d.y), ft, out, known_only);
+        _find_connected_identical(coord_def(d.x, d.y+1), ft, out, known_only);
+        _find_connected_identical(coord_def(d.x, d.y-1), ft, out, known_only);
     }
 }
 
 // Find all connected cells containing ft, starting at d.
-void find_connected_identical(const coord_def &d, set<coord_def>& out)
+void find_connected_identical(const coord_def &d, set<coord_def>& out, bool known_only)
 {
     string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
         out.insert(d);
     else
-        _find_connected_identical(d, grd(d), out);
+        _find_connected_identical(d, grd(d), out, known_only);
 }
 
 void get_door_description(int door_size, const char** adjective, const char** noun)
@@ -1301,7 +1302,6 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
 
     const bool notable_seen1 = is_notable_terrain(feat1) && you.see_cell(pos1);
     const bool notable_seen2 = is_notable_terrain(feat2) && you.see_cell(pos2);
-    coord_def orig_pos, dest_pos;
 
     if (notable_seen1 && notable_seen2)
     {

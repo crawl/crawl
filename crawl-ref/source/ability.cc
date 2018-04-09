@@ -1127,15 +1127,7 @@ string get_ability_desc(const ability_type ability)
 
 static void _print_talent_description(const talent& tal)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_ability");
-#endif
-    clrscr();
-
-    print_description(get_ability_desc(tal.which));
-
-    getchm();
-    clrscr();
+    show_description(get_ability_desc(tal.which));
 }
 
 void no_ability_msg()
@@ -1250,6 +1242,15 @@ bool activate_ability()
     return activate_talent(talents[selected]);
 }
 
+static bool _can_hop(bool quiet)
+{
+    if (!you.duration[DUR_NO_HOP])
+        return true;
+    if (!quiet)
+        mpr("Your legs are too worn out to hop.");
+    return false;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1288,13 +1289,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    if ((abil.ability == ABIL_EVOKE_BERSERK || abil.ability == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true))
+    if ((abil.ability == ABIL_EVOKE_BERSERK
+         || abil.ability == ABIL_TROG_BERSERK)
+        && !you.can_go_berserk(true, false, quiet))
     {
         return false;
     }
 
-    if ((abil.ability == ABIL_EVOKE_FLIGHT || abil.ability == ABIL_TRAN_BAT || abil.ability == ABIL_FLY)
+    if ((abil.ability == ABIL_EVOKE_FLIGHT
+         || abil.ability == ABIL_TRAN_BAT
+         || abil.ability == ABIL_FLY)
         && !flight_allowed())
     {
         return false;
@@ -1564,6 +1568,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_SHAFT_SELF:
+        return you.can_do_shaft_ability(quiet);
+
+    case ABIL_HOP:
+        return _can_hop(quiet);
+
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
     {
@@ -1645,13 +1655,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 }
 
-static bool _check_ability_dangerous(const ability_type ability, bool quiet = false)
+static bool _check_ability_dangerous(const ability_type ability,
+                                     bool quiet = false)
 {
     if (ability == ABIL_TRAN_BAT)
         return !check_form_stat_safety(transformation::bat, quiet);
     else if (ability == ABIL_END_TRANSFORMATION
-        && !feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+             && !feat_dangerous_for_form(transformation::none,
+                                         env.grid(you.pos())))
+    {
         return !check_form_stat_safety(transformation::bat, quiet);
+    }
     else
         return false;
 }
@@ -1814,12 +1828,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_HOP:
-        if (you.duration[DUR_NO_HOP])
-        {
-            mpr("Your legs are too worn out to hop.");
+        if (_can_hop(false))
+            return frog_hop(fail);
+        else
             return SPRET_ABORT;
-        }
-        return frog_hop(fail);
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {

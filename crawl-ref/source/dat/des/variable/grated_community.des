@@ -40,6 +40,7 @@ KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
 : dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 kobold chunk')
 KFEAT:  = = floor
+KPROP:  4 = no_tele_into
 FTILE:  =E79 = floor_grass
 COLOUR: =E7 = green
 SUBST:  E = e
@@ -138,6 +139,7 @@ KFEAT:   ! = fountain_blood
 SHUFFLE: _!
 SHUFFLE: 234
 KPROP:   . = bloody / w:4 nothing
+KPROP:   1 = no_tele_into
 MARKER:  + = lua:restrict_door()
 KFEAT:   = = floor
 TILE:    c = wall_stone_dark

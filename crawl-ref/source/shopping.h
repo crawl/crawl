@@ -50,8 +50,6 @@ public:
 
     bool add_thing(const item_def &item, int cost,
                    const level_pos* pos = nullptr);
-    bool add_thing(string desc, string buy_verb, int cost,
-                   const level_pos* pos = nullptr);
 
     bool is_on_list(const item_def &item, const level_pos* pos = nullptr) const;
     bool is_on_list(string desc, const level_pos* pos = nullptr) const;

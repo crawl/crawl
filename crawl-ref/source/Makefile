@@ -865,7 +865,7 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
+	FONTDIR = $(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/

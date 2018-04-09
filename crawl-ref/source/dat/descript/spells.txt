@@ -633,6 +633,11 @@ Haste Other spell
 
 Speeds the actions of a nearby ally.
 %%%%
+Harpoon Shot spell
+
+Fires a long and flexible barbed mass. The ensnared victim will either be
+pulled adjacent to the caster or collide with anything blocking the way.
+%%%%
 Haste spell
 
 Speeds the actions of a targeted creature.
@@ -941,9 +946,10 @@ impact. Its damage partially bypasses armour.
 %%%%
 Ozocubu's Armour spell
 
-Envelops the caster's body in a protective layer of thick ice. This will slow
-the caster's movement slightly, and provides no special protection against cold.
-The spell will not function for casters already wearing heavy armour (any body
+Envelops the caster's body in a protective layer of thick ice, granting a
+substantial bonus to armour as long as they remain in their current location.
+The ice will crack and fall away if the caster moves to a new position. The
+spell will not function for casters already wearing heavy armour (any body
 armour with an encumbrance rating of 5 or more).
 %%%%
 Ozocubu's Refrigeration spell
