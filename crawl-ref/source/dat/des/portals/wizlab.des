@@ -161,35 +161,52 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                          marker, ev)
     -- Save compat bit.
     if data.count == nil then
-        data.count = 0; data.swcount = 0; data.vpcount = 0; 
-        data.account = 0; data.ghcount = 0
+        data.count = 0; data.onecount = 0; data.twocount = 0; 
+        data.threecount = 0; data.fourcount = 0
     end
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
-    local x, y
-        -- These are the three types of derived undead to be spawned
+
+    -- These are the three types of derived undead to be spawned
     local list_undead_types = { " zombie", " simulacrum", "spectral " }
-        -- These are the base monsters for the derived undead
-        -- where each line represents a new wave
+
+    -- These are the base monsters for the derived undead
     local list_deriv_undead_base_mons = { 
-        "troll", "ogre", "crocodile", "yak", "centaur warrior",
-        "death yak", "two-headed ogre", "orc knight", "vault guard", "yaktaur captain",
-        "stone giant", "ettin", "iron troll", "juggernaut", "titan"
+        "crocodile", "komodo dragon", "orc knight",            -- tier 1
+        "yak", "two-headed ogre", "elephant",                  -- tier 1
+        "cyclops", "deep troll", "death yak",                  -- tier 2
+        "vault warden", "dire elephant", "storm dragon",       -- tier 2
+        "grey draconian monk", "ettin", "iron troll",          -- tier 3
+        "juggernaut", "titan", "golden dragon"                 -- tier 3
+    }
+
+    -- These are the regular undead to be spawned
+    local list_regular_undead = {
+        "wight", "vampire", "wraith",                                -- tier 1
+        "skeletal warrior", "phantasmal warrior", "freezing wraith", -- tier 2
+        "ghoul", "vampire mage", "shadow wraith",                    -- tier 3
+        "jiangshi", "ancient champion", "vampire knight"             -- tier 4
     }
 
     local undead_type
     local undead_base_mon
+    local regular_undead
     local monster
+    local x, y
+
     for _, gmarker in ipairs(graves) do
         undead_type = crawl.random2(3) + 1
-        undead_base_mon = crawl.random2(5) + 1
+        undead_base_mon = crawl.random2(6) + 1
+        regular_undead = crawl.random2(3) + 1
         x, y = gmarker:pos()
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
             crawl.one_chance_in(8) then
+
+            -- tier 1 spawns
             if data.count < 9 or data.count < 15 and crawl.one_chance_in(5) then
-                if data.vpcount > 5 or crawl.coinflip() then
+                if data.onecount > 5 or crawl.coinflip() then
                     if undead_type == 3 then
                         monster = (list_undead_types[undead_type] 
                                    .. list_deriv_undead_base_mons[undead_base_mon])
@@ -198,12 +215,14 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[undead_type])
                     end
                 else
-                    monster = "vampire"
-                    data.vpcount = data.vpcount + 1
+                    monster = list_regular_undead[regular_undead]
+                    data.onecount = data.onecount + 1
                 end
+ 
+            -- tier 2 spawns
             elseif data.count < 18 or data.count < 24 and crawl.one_chance_in(4) then
-                if data.swcount > 4 or crawl.coinflip() then
-                    undead_base_mon = undead_base_mon + 5
+                if data.twocount > 5 or crawl.coinflip() then
+                    undead_base_mon = undead_base_mon + 6
                     if undead_type == 3 then
                         monster = (list_undead_types[undead_type] 
                                    .. list_deriv_undead_base_mons[undead_base_mon])
@@ -212,12 +231,15 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[undead_type])
                     end
                 else
-                    monster = "skeletal warrior"
-                    data.swcount = data.swcount + 1
+                    regular_undead = regular_undead + 3
+                    monster = list_regular_undead[regular_undead]
+                    data.twocount = data.twocount + 1
                 end
-            elseif data.count < 26 or data.account > 2 or crawl.x_chance_in_y(6, 7) then
-                if data.ghcount > 3 or crawl.coinflip() then
-                    undead_base_mon = undead_base_mon + 10
+
+            -- tier 3 spawns
+            elseif data.count < 26 or data.fourcount > 3 or crawl.x_chance_in_y(5, 7) then
+                if data.threecount > 4 or crawl.coinflip() then
+                    undead_base_mon = undead_base_mon + 12
                     if undead_type == 3 then
                         monster = (list_undead_types[undead_type] 
                                    .. list_deriv_undead_base_mons[undead_base_mon])
@@ -226,12 +248,16 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[undead_type])
                     end
                 else
-                    monster = "ghoul"
-                    data.ghcount = data.ghcount + 1
+                    regular_undead = regular_undead + 6
+                    monster = list_regular_undead[regular_undead]
+                    data.threecount = data.threecount + 1
                 end
+
+            -- tier 4 spawns
             else
-                monster = "ancient champion"
-                data.account = data.account + 1
+                regular_undead = regular_undead + 9
+                monster = list_regular_undead[regular_undead]
+                data.account = data.fourcount + 1
             end
             monster = "generate_awake " .. monster
             spawn_zombie(x, y, monster)
@@ -1143,7 +1169,7 @@ lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
     repeated = true,
-    data = {count = 0, vpcount = 0, swcount = 0, account = 0, ghcount = 0}
+    data = {count = 0, onecount = 0, twocount = 0, threecount = 0, fourcount = 0}
 }
 
 local zombies_killed_marker = TriggerableFunction:new {
