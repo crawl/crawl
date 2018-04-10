@@ -167,35 +167,82 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
         return
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
+
+    -- These are the three types of derived undead to be spawned
+    local list_undead_types = { " zombie", " simulacrum", "spectral " }
+
+
+    -- These are the base monsters for the derived undead
+    local list_deriv_undead_base_mon = { 
+        "cyclops", "two-headed ogre", "komodo dragon",         -- tier 1
+        "stone giant", "deep troll", "storm dragon",           -- tier 2
+        "juggernaut", "ettin", "golden dragon"                 -- tier 3
+    }
+    
+    local pick_undead_type
+    local pick_undead_base_mon
     local x, y
     for _, gmarker in ipairs(graves) do
+        pick_undead_type = crawl.random2(3) + 1
+        pick_undead_base_mon = crawl.random2(3) + 1
         x, y = gmarker:pos()
+
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
             crawl.one_chance_in(8) then
+
+            -- tier 1 spawns
             if data.count < 9 or data.count < 18 and crawl.one_chance_in(5) then
                 if crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake ogre zombie")
+                    if pick_undead_type == 3 then
+                        monster = (list_undead_types[pick_undead_type] 
+                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon] 
+                                   .. list_undead_types[pick_undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake wight")
+                    monster = "wight"
                 end
+
+            -- tier 2 spawns
             elseif data.count < 21 or data.count < 26 and crawl.one_chance_in(4) then
                 if data.vpcount > 3 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake troll zombie")
+                    pick_undead_base_mon = pick_undead_base_mon + 3
+                    if pick_undead_type == 3 then
+                        monster = (list_undead_types[pick_undead_type] 
+                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon] 
+                                   .. list_undead_types[pick_undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake vampire")
+                    monster = "vampire"
                     data.vpcount = data.vpcount + 1
                 end
+
+            -- tier 3 spawns
             elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
                 if data.swcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
+                    pick_undead_base_mon = pick_undead_base_mon + 6
+                    if pick_undead_type == 3 then
+                        monster = (list_undead_types[pick_undead_type] 
+                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
+                    else
+                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon] 
+                                   .. list_undead_types[pick_undead_type])
+                    end
                 else
-                    spawn_zombie(x, y, "generate_awake skeletal warrior")
+                    monster = "skeletal warrior"
                 data.swcount = data.swcount + 1
                 end
+
+            -- tier 4 spawns
             else
-                spawn_zombie(x, y, "generate_awake ancient champion")
+                monster = "ancient champion"
                 data.account = data.account + 1
             end
+            monster = "generate_awake " .. monster
+            spawn_zombie(x, y, monster)
             data.count = data.count + 1
             gmarker:remove()
         end
