@@ -1306,6 +1306,18 @@ BRAND:    SPWPN_FLAMING
 FIRE:     -1
 COLD:     -1
 
+ENUM:     RIFT
+NAME:     trident "Rift"
+OBJ:      OBJ_WEAPONS/WPN_TRIDENT
+INSCRIP:  reach++
+PLUS:     +7
+COLOUR:   ETC_WARP
+#TILE:     urand_rift
+#TILE_EQ:  rift
+BRAND:    SPWPN_DISTORTION
+BOOL:     blink, rmsl
+
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
