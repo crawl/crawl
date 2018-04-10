@@ -174,7 +174,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
 
     -- These are the base monsters for the derived undead
     local list_deriv_undead_base_mon = { 
-        "cyclops", "two-headed ogre", "komodo dragon",         -- tier 1
+        "cyclops", "two-headed ogre", "swamp dragon",          -- tier 1
         "stone giant", "deep troll", "storm dragon",           -- tier 2
         "juggernaut", "ettin", "golden dragon"                 -- tier 3
     }
