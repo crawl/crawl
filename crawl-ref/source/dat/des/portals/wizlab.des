@@ -179,12 +179,21 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
         "juggernaut", "ettin", "golden dragon"                 -- tier 3
     }
     
+    -- These are the non-derived undead to be spawned (tier 4 is always an ancient champion)
+    local list_regular_undead = {
+        "shadow", "vampire", "wraith", "necrophage"                                  -- tier 1
+        "skeletal warrior", "vampire mage", "freezing wraith", "phantasmal warrior", -- tier 2
+        "ghoul", "vampire knight", "jiangshi", "shadow wraith"                       -- tier 3
+    }
+
     local pick_undead_type
     local pick_undead_base_mon
+    local pick_regular_undead
     local x, y
     for _, gmarker in ipairs(graves) do
         pick_undead_type = crawl.random2(3) + 1
         pick_undead_base_mon = crawl.random2(3) + 1
+        pick_regular_undead = crawl.random2(4) + 1
         x, y = gmarker:pos()
 
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
@@ -201,7 +210,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[pick_undead_type])
                     end
                 else
-                    monster = "wight"
+                    monster = list_regular_undead[pick_regular_undead] 
                 end
 
             -- tier 2 spawns
@@ -216,8 +225,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[pick_undead_type])
                     end
                 else
-                    monster = "vampire"
-                    data.vpcount = data.vpcount + 1
+                    pick_regular_undead = pick_regular_undead + 4
+                    monster = list_regular_undead[pick_regular_undead] 
                 end
 
             -- tier 3 spawns
@@ -232,10 +241,11 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                    .. list_undead_types[pick_undead_type])
                     end
                 else
-                    monster = "skeletal warrior"
+                    pick_regular_undead = pick_regular_undead + 4
+                    monster = list_regular_undead[pick_regular_undead] 
                 end
 
-            -- tier 4 spawns
+            -- tier 4 spawns: always spawn an ancient champion here
             else
                 monster = "ancient champion"
                 data.account = data.account + 1
