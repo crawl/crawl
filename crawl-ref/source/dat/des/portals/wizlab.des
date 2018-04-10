@@ -161,7 +161,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                          marker, ev)
     -- Save compat bit.
     if data.count == nil then
-        data.count = 0; data.swcount = 0; data.vpcount = 0; data.account = 0
+        data.count = 0
     end
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
@@ -191,7 +191,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             crawl.one_chance_in(8) then
 
             -- tier 1 spawns
-            if data.count < 9 or data.count < 18 and crawl.one_chance_in(5) then
+            if data.count < 9 or data.count < 15 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
                     if pick_undead_type == 3 then
                         monster = (list_undead_types[pick_undead_type] 
@@ -205,8 +205,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 2 spawns
-            elseif data.count < 21 or data.count < 26 and crawl.one_chance_in(4) then
-                if data.vpcount > 3 or crawl.coinflip() then
+            elseif data.count < 18 or data.count < 23 and crawl.one_chance_in(4) then
+                if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
                     if pick_undead_type == 3 then
                         monster = (list_undead_types[pick_undead_type] 
@@ -221,8 +221,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 3 spawns
-            elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
-                if data.swcount > 5 or crawl.coinflip() then
+            elseif data.count < 25 or crawl.x_chance_in_y(11, 14) then
+                if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
                     if pick_undead_type == 3 then
                         monster = (list_undead_types[pick_undead_type] 
@@ -233,7 +233,6 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                     end
                 else
                     monster = "skeletal warrior"
-                data.swcount = data.swcount + 1
                 end
 
             -- tier 4 spawns
@@ -1150,7 +1149,7 @@ lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
     repeated = true,
-    data = {count = 0, vpcount = 0, swcount = 0, account = 0}
+    data = {count = 0}
 }
 
 local zombies_killed_marker = TriggerableFunction:new {
