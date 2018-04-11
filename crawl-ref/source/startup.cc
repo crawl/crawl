@@ -29,6 +29,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "loading-screen.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -116,8 +117,8 @@ static void _initialize()
     // screen while this happens.
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
     {
-        tiles.draw_title();
-        tiles.update_title_msg("Loading databases...");
+        loading_screen_open();
+        loading_screen_update_msg("Loading databases...");
     }
 #endif
 
@@ -125,7 +126,7 @@ static void _initialize()
     databaseSystemInit();
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        tiles.update_title_msg("Loading spells and features...");
+        loading_screen_update_msg("Loading spells and features...");
 #endif
 
     init_feat_desc_cache();
@@ -133,7 +134,7 @@ static void _initialize()
     init_spell_rarities();
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        tiles.update_title_msg("Loading maps...");
+        loading_screen_update_msg("Loading maps...");
 #endif
 
     // Read special levels and vaults.
@@ -144,13 +145,8 @@ static void _initialize()
         end(0);
 
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled
-        && crawl_state.title_screen)
-    {
-        if (!Options.tile_skip_title)
-            tiles.update_title_msg("Loading complete, press any key to start.");
-        tiles.hide_title();
-    }
+    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
+        loading_screen_close();
 #endif
 
     if (Options.seed)

@@ -38,7 +38,6 @@ class ActorRegion;
 class TabbedRegion;
 class MapRegion;
 class ControlRegion;
-class TitleRegion;
 class DollEditRegion;
 class StatRegion;
 class MessageRegion;
@@ -138,10 +137,6 @@ public:
 
     void add_overlay(const coord_def &gc, tileidx_t idx);
     void clear_overlays();
-
-    void draw_title();
-    void update_title_msg(string load_msg);
-    void hide_title();
 
     void draw_doll_edit();
 

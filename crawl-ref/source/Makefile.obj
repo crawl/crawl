@@ -125,6 +125,7 @@ l-you.o \
 lang-fake.o \
 lev-pand.o \
 libutil.o \
+loading-screen.o \
 lookup-help.o \
 los.o \
 los-def.o \
@@ -292,7 +293,6 @@ tilereg-spl.o \
 tilereg-stat.o \
 tilereg-tab.o \
 tilereg-text.o \
-tilereg-title.o \
 tilesdl.o \
 tiletex.o \
 windowmanager-sdl.o \
