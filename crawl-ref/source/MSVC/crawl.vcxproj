@@ -402,6 +402,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\loading-screen.cc" />
     <ClCompile Include="..\los.cc" />
     <ClCompile Include="..\los-def.cc" />
     <ClCompile Include="..\losparam.cc" />
@@ -787,6 +788,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\libunix.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
+    <ClInclude Include="..\loading-screen.h" />
     <ClInclude Include="..\lookup-help.h" />
     <ClInclude Include="..\los-def.h" />
     <ClInclude Include="..\los-type.h" />
