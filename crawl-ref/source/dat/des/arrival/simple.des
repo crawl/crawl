@@ -1606,23 +1606,6 @@ xxx.{.xx.x
   xxx++xxx
 ENDMAP
 
-NAME:   saegor_arrival_simple_f
-TAGS:   arrival
-ORIENT: float
-MAP
-  xxx
-  x.@
-  x.xxxxxxx
-  x.x.....x
-  x....xx@x
-x@x..{..x
-x.xx....x
-x.....x.x
-xxxxxxx.x
-      @.x
-      xxx
-ENDMAP
-
 ##############################################################################
 
 NAME:   scummos_arrival_simple_fountains
