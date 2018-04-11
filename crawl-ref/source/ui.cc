@@ -1243,7 +1243,7 @@ static void remap_key(wm_event &event)
     ASSERT(event.key.keysym.sym != -1);
 }
 
-void ui_pump_events()
+void ui_pump_events(int wait_event_timeout)
 {
     int macro_key = macro_buf_get();
 
@@ -1276,8 +1276,11 @@ void ui_pump_events()
             break;
         }
 
-        if (!wm->wait_event(&event))
-            continue;
+        if (!wm->wait_event(&event, wait_event_timeout))
+            if (wait_event_timeout == INT_MAX)
+                continue;
+            else
+                return;
         if (event.type == WME_MOUSEMOTION)
         {
             // For consecutive mouse events, ignore all but the last,
