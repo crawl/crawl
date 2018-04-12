@@ -181,7 +181,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     
     -- These are the non-derived undead to be spawned (tier 4 is always an ancient champion)
     local list_regular_undead = {
-        "shadow", "vampire", "wraith", "necrophage"                                  -- tier 1
+        "shadow", "vampire", "wraith", "necrophage",                                  -- tier 1
         "skeletal warrior", "vampire mage", "freezing wraith", "phantasmal warrior", -- tier 2
         "ghoul", "vampire knight", "jiangshi", "shadow wraith"                       -- tier 3
     }
@@ -1216,7 +1216,7 @@ set_random_mon_list(
     .. [[ ettin zombie           / ettin simulacrum           / spectral ettin           ]]
     .. [[ juggernaut zombie      / juggernaut simulacrum      / spectral juggernaut      ]]
     .. [[ golden dragon zombie   / golden dragon simulacrum   / spectral golden dragon   ]]
-    -- non-derived undead have total weight 270
+    -- non-derived undead have total weight 280
     .. [[ vampire w:20 / necrophage w:20 / shadow w:20 / wraith w:20 ]]
     .. [[ vampire mage w:20 / phantasmal warrior w:20 / skeletal warrior w:20 / freezing wraith w:20 ]]
     .. [[ vampire knight w:20 / ghoul w:20 / jiangshi w:20 / shadow wraith w:20 ]]
