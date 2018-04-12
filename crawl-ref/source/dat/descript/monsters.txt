@@ -914,9 +914,10 @@ deep troll shaman
 
 A deep troll blessed with divine power to strengthen and hasten its kin.
 %%%%
-demigod
+promethean
 
-A human-like figure with an aura of power betraying its divine ancestry.
+A human-like figure that appears to be pieced together from multiple different
+creatures.
 %%%%
 demonic crawler
 

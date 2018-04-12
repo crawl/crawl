@@ -107,7 +107,7 @@ bool attribute_increase()
 {
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
-                                                  you.species == SP_DEMIGOD ?
+                                                  you.species == SP_PROMETHEAN ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
@@ -142,7 +142,7 @@ bool attribute_increase()
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
+    const int statgain = 1;
 
     bool tried_lua = false;
     int keyin;

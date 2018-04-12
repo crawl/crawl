@@ -29,7 +29,7 @@ static bool _banned_combination(job_type job, species_type species)
             return true;
         }
         break;
-    case SP_DEMIGOD:
+    case SP_PROMETHEAN:
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT

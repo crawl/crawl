@@ -238,7 +238,7 @@ enum monster_type                      // menv[].type
     MONS_HALFLING,              // recolouring + single vault.
     MONS_FELID,                 // recolouring + single vault. Miaow!
     MONS_VAMPIRE_BAT,           // recolouring + vaults
-    MONS_DEMIGOD,               // recolouring + single vault
+    MONS_PROMETHEAN,            // recolouring + single vault
     MONS_DEMONSPAWN,
 #if TAG_MAJOR_VERSION > 34
     MONS_FIRST_DEMONSPAWN = MONS_DEMONSPAWN,

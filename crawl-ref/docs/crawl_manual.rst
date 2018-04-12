@@ -1570,31 +1570,33 @@ Tengu
   Tengu do not appreciate any form of servitude, and so are poor at using
   invocations. Their light avian bodies cannot sustain a great deal of injury.
 
-Demigods
-  Demigods are mortals with some divine or angelic ancestry, however distant;
-  they can be created by a number of processes, including magical experiments
-  and the time-honoured practice of interplanar miscegenation.
+Prometheans
+  Prometheans are mortals who have been created and given life and soul through
+  unnatural means. They can be created by a number of processes, including magical
+  experiments and advanced necromantic rituals. In most circumstances, they are
+  made from the parts of multiple different species to enhance their capabilities.
 
-  Demigods look more or less like members of their mortal part's species, but
-  have excellent attributes (Str, Int, Dex) and are extremely robust; they can
-  also draw on great supplies of magical energy. On the downside, they advance
-  more slowly in experience than any other race, gain skills slightly less
-  quickly than Humans and, due to their status, cannot worship the various gods
-  and powers available to other races.
+  Prometheans look more or less like humanoid-esque creatures, but have excellent
+  attributes (Str, Int, Dex) and are extremely robust; they can also draw on great 
+  supplies of magical energy. Due to the nature of how they are brought into being
+  and the inability to distinguish whose worshipper makes up the majority of a 
+  promethean, the gods have agreed as a whole to refuse to answer any of their prayers.
+  Additionally, they gain experience slowly and gain skills slightly less quickly than
+  Humans.
 
 Demonspawn
-  Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
-  of the Demigods. Demonspawn can be created in any number of ways: magical
-  experiments, breeding, unholy pacts, etc. Although many Demonspawn may
-  initially be indistinguishable from those of pure mortal stock, they will
-  inevitably grow horns, scales or other unusual features. Powerful members of
-  this class of beings also develop a range of unholy abilities, which are
-  listed as mutations.
+  Demonspawn are horrible half-mortal, half-infernal creatures.
+  Demonspawn can be created in any number of ways: magical experiments,
+  breeding, unholy pacts, etc. Although many Demonspawn may initially
+  be indistinguishable from those of pure mortal stock, they will inevitably
+  grow horns, scales or other unusual features. Powerful members of this class
+  of beings also develop a range of unholy abilities, which are listed as
+  mutations.
 
   Demonspawn advance slowly in experience and learn most skills at about the
-  same rate as do Demigods. However, they are a little better at fighting
+  same rate as Prometheans. However, they are a little better at fighting
   and conjurations and much better at necromancy and invocations. Note that
-  unlike Demigods, they can take on gods, although not all will accept them.
+  unlike Prometheans, they can take on gods, although not all will accept them.
 
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface

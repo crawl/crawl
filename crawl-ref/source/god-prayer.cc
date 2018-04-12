@@ -60,7 +60,7 @@ string god_prayer_reaction()
  * Determine the god this game's ecumenical altar is for.
  * Replaces the ecumenical altar with the God's real altar.
  * Assumes you can worship at least one god (ie are not a
- * demigod), and that you're standing on the altar.
+ * promethean), and that you're standing on the altar.
  *
  * @return The god this altar is for.
  */
@@ -119,9 +119,9 @@ void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_PROMETHEAN)
     {
-        mpr("A being of your status worships no god.");
+        mpr("The gods refuse to answer you.");
         return;
     }
 

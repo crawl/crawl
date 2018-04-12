@@ -114,8 +114,8 @@ function species_mock(e)
     e.kmons("1 = jackal")
   elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
-  elseif you.race() == "Demigod" then
-    e.kmons("1 = titan simulacrum")
+  elseif you.race() == "Promethean" then
+    e.kmons("1 = small abomination")
   elseif you.race() == "Demonspawn" then
     e.kmons("1 = hell beast")
   elseif you.race():find("Draconian") then

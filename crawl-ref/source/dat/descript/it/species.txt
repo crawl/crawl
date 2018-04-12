@@ -15,7 +15,7 @@ Deep Elf
 Gli elfi delle profondità sono la specie più affine alla magia, ma anche la più
 fragile.
 %%%%
-Demigod
+Promethean
 
 I semidei non possono adorare una divinità, ma hanno attributi ultraterreni e
 godono di una salute ugualmente straordinaria.

@@ -14,7 +14,7 @@ Deep Elf
 
 L'elfe le plus doué pour la magie, mais aussi le plus fragile.
 %%%%
-Demigod
+Promethean
 
 Ils ne serviront jamais un dieu, mais les Demi-Dieux compensent avec une santé
 et des caractéristiques divines.

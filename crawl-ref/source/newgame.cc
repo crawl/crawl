@@ -179,6 +179,7 @@ static const species_type species_order[] =
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_DEEP_DWARF,
     SP_HILL_ORC,       SP_SLUDGE_ELF,
+    SP_PROMETHEAN,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -193,7 +194,7 @@ static const species_type species_order[] =
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
-    SP_DEMIGOD,        SP_DEMONSPAWN,
+    SP_DEMONSPAWN,
     // undead species
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
@@ -980,7 +981,7 @@ static species_group species_groups[] =
         {
             SP_VINE_STALKER,
             SP_VAMPIRE,
-            SP_DEMIGOD,
+            SP_PROMETHEAN,
             SP_FORMICID,
             SP_NAGA,
             SP_OCTOPODE,

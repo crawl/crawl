@@ -4052,7 +4052,7 @@ function plan_simple_go_down()
 end
 
 function want_altar()
-  return (you.god() ~= "Trog" and you.god() ~= "Makhleb" and you.race() ~= "Demigod")
+  return (you.god() ~= "Trog" and you.god() ~= "Makhleb" and you.race() ~= "Promethean")
 end
 
 function plan_go_to_temple()

@@ -720,7 +720,7 @@ deep troll shaman
 Un troll des profondeurs ayant des pouvoir divins pour renforcer et accélérer
 ses semblables.
 %%%%
-demigod
+promethean
 
 L'aura de puissance qui émane de cet être ressemblant à un humain trahit son
 ascendance divine. Et vu les dieux qui sont connus (du moins officiellement)
