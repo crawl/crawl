@@ -24,6 +24,9 @@ string debug_coord_str(const coord_def &pos);
 string debug_constriction_string(const actor *act);
 void debug_dump_constriction(const actor *act);
 void debug_dump_mon(const monster* mon, bool recurse);
+void debug_dump_item(const char *name, int num, const item_def &item,
+                       PRINTF(3, ));
+
 
 string debug_mon_str(const monster* mon);
 

@@ -41,6 +41,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "dbg-util.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
@@ -5922,9 +5923,15 @@ static void tag_read_level_items(reader &th)
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
-    for (auto &item : mitm)
-        if (item.pos.origin())
-            item.clear();
+    for (int i = 0; i < item_count; ++i)
+    {
+        if (mitm[i].defined() && mitm[i].pos.origin())
+        {
+            debug_dump_item(mitm[i].name(DESC_PLAIN).c_str(), i, mitm[i],
+                                        "Fixing up unlinked temporary item:");
+            mitm[i].clear();
+        }
+    }
 #endif
 }
 

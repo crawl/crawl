@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "item-name.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -349,6 +350,39 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "Target:\n");
         debug_dump_mon(&menv[target], false);
     }
+}
+
+void debug_dump_item(const char *name, int num, const item_def &item,
+                       const char *format, ...)
+{
+#ifdef DEBUG_FATAL
+    const msg_channel_type chan = MSGCH_WARN;
+#else
+    const msg_channel_type chan = MSGCH_ERROR;
+#endif
+
+    va_list args;
+    va_start(args, format);
+    string msg = vmake_stringf(format, args);
+    va_end(args);
+
+    mprf(chan, "%s", msg.c_str());
+    mprf(chan, "%s", name);
+
+    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
+         num, item.base_type, item.sub_type,
+         item.plus, item.plus2, item.special);
+
+    mprf("    quant: %d; ident: 0x%08" PRIx32"; ident_type: %d",
+         item.quantity, item.flags, get_ident_type(item));
+
+    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
+
+#ifdef DEBUG_FATAL
+    if (!crawl_state.game_crashed)
+        die("%s %s", msg.c_str(), name);
+#endif
+    crawl_state.cancel_cmd_repeat();
 }
 
 skill_type debug_prompt_for_skill(const char *prompt)
