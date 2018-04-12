@@ -1207,20 +1207,20 @@ TILE:       c = wall_stone_gray
 {{
 set_random_mon_list(    
     -- zombies have total weight 270
-       [[ two-headed ogre zombie / two-headed ogre simulacrum / spectral two-headed ogre ]]
-    .. [[ cyclops zombie         / cyclops simulacrum         / spectral cyclops         ]]  
-    .. [[ swamp dragon zombie    / swamp dragon simulacrum    / spectral swamp dragon    ]]
-    .. [[ deep troll zombie      / deep troll simulacrum      / spectral deep troll      ]]
-    .. [[ stone giant zombie     / stone giant simulacrum     / spectral stone giant     ]]
-    .. [[ titan zombie           / titan simulacrum           / spectral titan           ]]
-    .. [[ ettin zombie           / ettin simulacrum           / spectral ettin           ]]
-    .. [[ juggernaut zombie      / juggernaut simulacrum      / spectral juggernaut      ]]
-    .. [[ golden dragon zombie   / golden dragon simulacrum   / spectral golden dragon   ]]
+       [[ two-headed ogre zombie / two-headed ogre simulacrum / spectral two-headed ogre / ]]
+    .. [[ cyclops zombie         / cyclops simulacrum         / spectral cyclops         / ]]  
+    .. [[ swamp dragon zombie    / swamp dragon simulacrum    / spectral swamp dragon    / ]]
+    .. [[ deep troll zombie      / deep troll simulacrum      / spectral deep troll      / ]]
+    .. [[ stone giant zombie     / stone giant simulacrum     / spectral stone giant     / ]]
+    .. [[ titan zombie           / titan simulacrum           / spectral titan           / ]]
+    .. [[ ettin zombie           / ettin simulacrum           / spectral ettin           / ]]
+    .. [[ juggernaut zombie      / juggernaut simulacrum      / spectral juggernaut      / ]]
+    .. [[ golden dragon zombie   / golden dragon simulacrum   / spectral golden dragon   / ]]
     -- non-derived undead have total weight 280
-    .. [[ vampire w:20 / necrophage w:20 / shadow w:20 / wraith w:20 ]]
-    .. [[ vampire mage w:20 / phantasmal warrior w:20 / skeletal warrior w:20 / freezing wraith w:20 ]]
-    .. [[ vampire knight w:20 / ghoul w:20 / jiangshi w:20 / shadow wraith w:20 ]]
-    .. [[ ancient champion w:30 / lich ]]
+    .. [[ vampire w:20 / necrophage w:20 / shadow w:20 / wraith w:20 / ]]
+    .. [[ vampire mage w:20 / phantasmal warrior w:20 / skeletal warrior w:20 / freezing wraith w:20 / ]]
+    .. [[ vampire knight w:20 / ghoul w:20 / jiangshi w:20 / shadow wraith w:20 / ]]
+    .. [[ ancient champion w:30 / lich / ]]
 ) 
 }}
 epilogue{{
