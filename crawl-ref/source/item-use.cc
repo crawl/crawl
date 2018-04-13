@@ -1709,7 +1709,8 @@ static bool _puton_item(int item_slot, bool prompt_slot,
 
     // It looks to be possible to equip this item. Before going any further,
     // we should prompt the user with any warnings that come with trying to
-    // put it on.
+    // put it on, except when they have already been prompted with them
+    // from switching rings.
     if (check_for_inscriptions)
     {
         if (!check_warning_inscriptions(item, OPER_PUTON))
