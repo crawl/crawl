@@ -268,7 +268,8 @@ private:
                                 bool& filter_useless,
                                 bool& default_execute,
                                 base_pattern* search,
-                                bool nohl);
+                                bool nohl,
+                                size_t num_alt_matches);
     string stash_search_prompt();
 
 private:

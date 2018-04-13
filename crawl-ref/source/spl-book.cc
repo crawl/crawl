@@ -474,7 +474,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          Failure  Level",
+                    make_stringf("<w>Spells %s                 Type                          Failure  Level ",
                         current_action == action::memorise ?
                             "(Memorise)" :
                         current_action == action::describe ?
@@ -645,6 +645,11 @@ public:
         set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
 
         set_more(formatted_string::parse_string(more_str));
+#ifdef USE_TILE_LOCAL
+        FontWrapper *font = tiles.get_crt_font();
+        int title_width = font->string_width(calc_title());
+        m_ui.vbox->min_size() = {38 + title_width + 10, 0};
+#endif
 
         update_more();
         update_entries();
