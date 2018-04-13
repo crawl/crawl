@@ -3117,7 +3117,7 @@ int choose_ability_menu(const vector<talent>& talents)
                                     "Cost                          Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
-        abil_menu.add_entry(me);
+        abil_menu.set_title(me, true, true);
     }
 #else
     abil_menu.set_title(
