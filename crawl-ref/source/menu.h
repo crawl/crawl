@@ -315,7 +315,7 @@ public:
     const formatted_string &get_more() const { return more; }
 
     void set_highlighter(MenuHighlighter *h);
-    void set_title(MenuEntry *e, bool first = true);
+    void set_title(MenuEntry *e, bool first = true, bool indent = false);
     void add_entry(MenuEntry *entry);
     void add_entry(unique_ptr<MenuEntry> entry)
     {
@@ -364,6 +364,7 @@ public:
 protected:
     MenuEntry *title;
     MenuEntry *title2;
+    bool m_indent_title;
 
     int flags;
     string tag;
