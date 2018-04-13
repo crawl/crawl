@@ -642,7 +642,7 @@ public:
         more_str(more_str_)
     {
         set_highlighter(nullptr);
-        set_title(new MenuEntry("")); // Actual text handled by calc_title
+        set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
 
         set_more(formatted_string::parse_string(more_str));
 
