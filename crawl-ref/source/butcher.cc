@@ -188,7 +188,7 @@ void butchery(item_def* specific_corpse)
     {
         if (edible_corpses.size() == 1)
         {
-            mprf("It would be a sin to %s the %s!", butcher_verb,
+            mprf("It would be a sin to %s %s!", butcher_verb,
                                 edible_corpses[0]->name(DESC_THE).c_str());
         }
         else
