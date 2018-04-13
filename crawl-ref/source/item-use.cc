@@ -1695,7 +1695,8 @@ static bool _can_puton_jewellery(int item_slot)
 }
 
 // Put on a particular ring or amulet
-static bool _puton_item(int item_slot, bool prompt_slot)
+static bool _puton_item(int item_slot, bool prompt_slot,
+                        bool check_for_inscriptions)
 {
     item_def& item = you.inv[item_slot];
 
@@ -1719,8 +1720,9 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 
     // It looks to be possible to equip this item. Before going any further,
     // we should prompt the user with any warnings that come with trying to
-    // put it on.
-    if (!check_warning_inscriptions(item, OPER_PUTON))
+    // put it on, except when they have already been prompted with them
+    // from switching rings.
+    if (check_for_inscriptions && !check_warning_inscriptions(item, OPER_PUTON))
     {
         canned_msg(MSG_OK);
         return false;
@@ -1828,7 +1830,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 }
 
 // Put on a ring or amulet. (If slot is -1, first prompt for which item to put on)
-bool puton_ring(int slot, bool allow_prompt)
+bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
 {
     int item_slot;
 
@@ -1858,7 +1860,7 @@ bool puton_ring(int slot, bool allow_prompt)
 
     bool prompt = allow_prompt ? Options.jewellery_prompt : false;
 
-    return _puton_item(item_slot, prompt);
+    return _puton_item(item_slot, prompt, check_for_inscriptions);
 }
 
 // Remove the amulet/ring at given inventory slot (or, if slot is -1, prompt
