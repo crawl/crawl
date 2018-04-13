@@ -632,10 +632,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
     // Fragile artefacts may be destroyed, so make a copy
     item_def item = real_item;
-
-    // Call this first, so that the unrandart func can set showMsgs to
-    // false if it does its own message handling.
-    if (is_artefact(item))
+    // If item is an unrand, call this first, so that the unrandart func
+    // can set showMsgs to false if it does its own message handling.
+    if (is_unrandom_artefact(item))
         _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON);
 
     if (item.base_type == OBJ_WEAPONS)
@@ -745,6 +744,11 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
         calc_mp();
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    // We need to call randart effects last to make sure the message order
+    // makes sense for Fragile artefacts
+    if (is_random_artefact(item))
+        _unequip_artefact_effect(real_item, nullptr, meld, EQ_WEAPON);    
 
     // Unwielding dismisses an active spectral weapon
     monster *spectral_weapon = find_spectral_weapon(&you);
