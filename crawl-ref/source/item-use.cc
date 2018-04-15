@@ -1711,14 +1711,12 @@ static bool _puton_item(int item_slot, bool prompt_slot,
     // we should prompt the user with any warnings that come with trying to
     // put it on, except when they have already been prompted with them
     // from switching rings.
-    if (check_for_inscriptions)
+    if (check_for_inscriptions && !check_warning_inscriptions(item, OPER_PUTON))
     {
-        if (!check_warning_inscriptions(item, OPER_PUTON))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
+        canned_msg(MSG_OK);
+        return false;
     }
+
     const bool is_amulet = jewellery_is_amulet(item);
 
     const vector<equipment_type> ring_types = _current_ring_types();
@@ -1850,6 +1848,7 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
         return false;
 
     bool prompt = allow_prompt ? Options.jewellery_prompt : false; 
+
     return _puton_item(item_slot, prompt, check_for_inscriptions);
 }
 
