@@ -2884,7 +2884,7 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
     string desc;
     const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
                                                      item);
-    print_description(desc);
+    show_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
     char ch;

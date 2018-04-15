@@ -676,7 +676,7 @@ void menu_filter_line_reader::print_segment(int s, int o) {}
 void menu_filter_line_reader::cursorto(int newcpos) {}
 #endif
 
-bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+/*bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
 {
     bool validline;
 #ifdef USE_TILE_LOCAL
@@ -697,7 +697,7 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
     validline = !reader.read_line("");
 #endif
     return validline;
-}
+}*/
 
 bool Menu::process_key(int keyin)
 {
