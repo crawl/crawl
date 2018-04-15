@@ -2921,13 +2921,8 @@ static void _move_player(coord_def move)
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
             // shouldn't. Just force confused trees to use ctrl.
-#ifdef USE_TILE_WEB
             mpr("You cannot move. (Use ctrl+direction or * direction to "
                 "attack without moving.)");
-#else
-            mpr("You cannot move. (Use ctrl+direction to attack without "
-                "moving.)");
-#endif
             return;
         }
 
@@ -3091,13 +3086,8 @@ static void _move_player(coord_def move)
         else if (targ_monst->temp_attitude() == ATT_NEUTRAL && !you.confused()
                  && targ_monst->visible_to(&you))
         {
-#ifdef USE_TILE_WEB
             simple_monster_message(*targ_monst, " refuses to make way for you. "
                               "(Use ctrl+direction or * direction to attack.)");
-#else
-            simple_monster_message(*targ_monst, " refuses to make way for you. "
-                                             "(Use ctrl+direction to attack.)"); 
-#endif           
             you.turn_is_over = false;
             return;
         }
