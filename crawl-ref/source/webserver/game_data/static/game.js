@@ -170,7 +170,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         {
             msg_height = data.message_pane.height
                          + (data.message_pane.small_more ? 0 : -1);
+            messages.message_pane_height = msg_height;
         }
+        else
+            msg_height = messages.message_pane_height;
 
         if (layout_parameters == null)
             layout({});
