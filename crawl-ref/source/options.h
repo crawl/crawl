@@ -185,6 +185,7 @@ public:
     int         mlist_min_height;
     int         msg_min_height;
     int         msg_max_height;
+    int         msg_webtiles_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
     bool        msg_condense_repeats;

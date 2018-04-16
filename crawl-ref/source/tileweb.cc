@@ -510,7 +510,8 @@ void TilesFramework::_send_layout()
     tiles.json_open_object();
     tiles.json_write_string("msg", "layout");
     tiles.json_open_object("message_pane");
-    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_int("height",
+                        max(Options.msg_webtiles_height, crawl_view.msgsz.y));
     tiles.json_write_bool("small_more", Options.small_more);
     tiles.json_close_object();
     tiles.json_close_object();
