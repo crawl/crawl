@@ -1766,12 +1766,10 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
-        {
             _got_item(you.inv[inv_slot]);
-            _check_note_item(you.inv[inv_slot]);
-        }
-        else
-            _check_note_item(it);
+        else if (it.base_type == OBJ_BOOKS)
+            _got_item(it);
+        _check_note_item(inv_slot == -1 ? it : you.inv[inv_slot]);
         return true;
     }
 
