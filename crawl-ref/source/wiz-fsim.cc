@@ -45,22 +45,40 @@
 
 #ifdef WIZARD
 
-fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0, 0.0};
 typedef map<skill_type, int8_t> skill_map;
 
 static const char* _title_line =
-    "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvSpeed | AvEffDam"; // 64 columns
-static const char* _csv_title_line =
-    "AvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam";
+    "Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam"; // 69 columns
+static const char* _tsv_title_line =
+    "Damage source\tAvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam";
 
-static string _fight_string(fight_data fdata, bool csv)
+string fight_damage_stats::summary(const string prefix, bool tsv)
 {
-    return make_stringf(csv ? "%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
-                            : "   %5.1f |    %3d |     %3d%% |"
+    if (hits == 0 && !tsv)
+        return make_stringf("%s%6s | No hits", prefix.c_str(), attacker.c_str());
+    return make_stringf(tsv ? "%s%s\t%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
+                            : "%s%6s |    %5.1f |    %3d | %3d%% |"
                               " %5.1f |   %3d  | %5.2f |    %5.1f",
-                        fdata.av_hit_dam, fdata.max_dam, fdata.accuracy,
-                        fdata.av_dam, fdata.av_time, fdata.av_speed,
-                        fdata.av_eff_dam);
+                        prefix.c_str(), attacker.c_str(),
+                        av_hit_dam, max_dam, accuracy,
+                        av_dam, av_time, av_speed,
+                        av_eff_dam);
+}
+
+string fight_data::header(bool tsv)
+{
+    if (tsv)
+        return _tsv_title_line;
+    else
+        return _title_line;
+}
+
+string fight_data::summary(const string prefix, bool tsv)
+{
+    string s = "";
+    s += player.summary(prefix, tsv) + "\n";
+    s += monster.summary(prefix, tsv);
+    return s;
 }
 
 static skill_type _equipped_skill()
@@ -326,23 +344,98 @@ static void _uninit_fsim(monster *mon)
     reset_training();
 }
 
-static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
+
+static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 {
-    const monster orig = mon;
-    unsigned int cumulative_damage = 0;
-    unsigned int time_taken = 0;
-    int hits = 0;
-    fight_data fdata;
-    fdata.max_dam = 0;
+    you.stop_constricting_all(true, true);
+    mon.stop_constricting_all(true, true);
+
+    // Re-place the combatants if they e.g. blinked away or were
+    // trampled.
+
+    const coord_def start_pos = mon.pos();
+    const coord_def you_start_pos = you.pos();
+
+    unwind_var<int> mon_hp(mon.hit_points, mon.max_hit_points);
+    // 999 is arbitrary
+    unwind_var<int> max_hp_override(you.hp_max, 999);
+    unwind_var<int> hp_override(you.hp, you.hp_max);
+    unwind_var<int> hunger(you.hunger, you.hunger);
+    bool did_hit = false;
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
     const int missile = you.m_quiver.get_fire_item();
 
+    mon.shield_blocks = 0;
+    you.shield_blocks = 0;
+    you.time_taken = player_speed();
+
+    if (!defend)
+    {
+        // first, ranged weapons. note: this includes
+        // being empty-handed but having a missile quivered
+        if ((iweap && iweap->base_type == OBJ_WEAPONS &&
+                    is_range_weapon(*iweap))
+            || (!iweap && missile != -1))
+        {
+            ranged_attack attk(&you, &mon, &you.inv[missile], false);
+            attk.simu = true;
+            attk.attack();
+            if (attk.ev_margin >= 0)
+            {
+                did_hit = true;
+                fd.player.hits++;
+            }
+            you.time_taken = you.attack_delay(&you.inv[missile]).roll();
+        }
+        else // otherwise, melee combat
+        {
+            fight_melee(&you, &mon, &did_hit, true);
+            if (did_hit)
+                fd.player.hits++;
+        }
+        fd.player.time_taken += you.time_taken * 10;
+        fd.monster.time_taken += you.time_taken * 10;
+        // did monster do some kind of retaliatory damage?
+        // TODO check for damage-less hits
+        if (you.hp < you.hp_max)
+            fd.monster.hits++;
+    }
+    else
+    {
+        fight_melee(&mon, &you, &did_hit, true);
+        int time_taken = 1000 / (mon.speed ? mon.speed : 10);
+        fd.monster.time_taken += time_taken;
+        fd.player.time_taken += time_taken;
+        if (did_hit)
+            fd.monster.hits++;
+        // did player succesfully do some kind of retaliatory damage?
+        // TODO check for damage-less hits
+        if (mon.max_hit_points > mon.hit_points)
+            fd.player.hits++;
+    }
+
+    fd.player.damage(mon.max_hit_points - mon.hit_points);
+    fd.monster.damage(you.hp_max - you.hp);
+
+    // clear all constrictions that happened on this round. Is this the right
+    // thing to do? Old fsim code was a bit more selective.
+    you.stop_constricting_all(true, true);
+    mon.stop_constricting_all(true, true);
+
+    mon.move_to_pos(start_pos);
+    you.move_to_pos(you_start_pos);
+}
+
+static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
+{
+    const monster orig = mon;
+    fight_data fdata;
+    fdata.monster.iterations = fdata.player.iterations = iter_limit;
+
     // now make sure the player is ready
-    you.exp_available = 0;
-    const int yhp  = you.hp;
-    const int ymhp = you.hp_max;
+    unwind_var<int> exp_available(you.exp_available, 0);
 
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
@@ -352,93 +445,34 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     crawl_state.disables.set(DIS_DELAY);
     crawl_state.disables.set(DIS_AFFLICTIONS);
 
-    no_messages mx;
-    const int hunger = you.hunger;
-
-    const coord_def start_pos = mon.pos();
-    const coord_def you_start_pos = you.pos();
-
-    if (!defend) // you're the attacker
     {
+        no_messages mx;
+
         for (int i = 0; i < iter_limit; i++)
-        {
-            // Don't reset the monster while it is constricted.
-            you.stop_constricting(mon.mid, false, true);
-            // This sets mgrid(mons.pos()) to NON_MONSTER
-            mon = orig;
-            // Re-place the combatants if they e.g. blinked away or were
-            // trampled.
-            mon.move_to_pos(start_pos);
-            you.move_to_pos(you_start_pos);
-            mon.hit_points = mon.max_hit_points;
-            mon.shield_blocks = 0;
-            you.time_taken = player_speed();
-
-            // first, ranged weapons. note: this includes
-            // being empty-handed but having a missile quivered
-            if ((iweap && iweap->base_type == OBJ_WEAPONS &&
-                        is_range_weapon(*iweap))
-                || (!iweap && missile != -1))
-            {
-                ranged_attack attk(&you, &mon, &you.inv[missile], false);
-                attk.simu = true;
-                attk.attack();
-                if (attk.ev_margin >= 0)
-                    hits++;
-                you.time_taken = you.attack_delay(&you.inv[missile]).roll();
-            }
-            else // otherwise, melee combat
-            {
-                bool did_hit = false;
-                fight_melee(&you, &mon, &did_hit, true);
-                if (did_hit)
-                    hits++;
-            }
-            you.hunger = hunger;
-            time_taken += you.time_taken * 10;
-
-            int damage = (mon.max_hit_points - mon.hit_points);
-            cumulative_damage += damage;
-            if (damage > fdata.max_dam)
-                fdata.max_dam = damage;
-        }
-    }
-    else // you're defending
-    {
-        for (int i = 0; i < iter_limit; i++)
-        {
-            you.hp = you.hp_max = 999; // again, arbitrary
-            mon.hit_points = mon.max_hit_points;
-            bool did_hit = false;
-            you.shield_blocks = 0; // no blocks this round
-            fight_melee(&mon, &you, &did_hit, true);
-
-            time_taken += 1000 / (mon.speed ? mon.speed : 10);
-
-            int damage = you.hp_max - you.hp;
-            if (did_hit)
-                hits++;
-            cumulative_damage += damage;
-            if (damage > fdata.max_dam)
-                fdata.max_dam = damage;
-
-            // Re-place the combatants if they e.g. blinked away or were
-            // trampled.
-            mon.move_to_pos(start_pos);
-            you.move_to_pos(you_start_pos);
-        }
-        you.hp = yhp;
-        you.hp_max = ymhp;
+            _do_one_fsim_round(mon, fdata, defend);
     }
 
-    fdata.av_hit_dam = hits ? double(cumulative_damage) / hits : 0.0;
-    fdata.accuracy = 100 * hits / iter_limit;
-    fdata.av_dam = double(cumulative_damage) / iter_limit;
-    fdata.av_time = double(time_taken) / iter_limit + 0.5; // round to nearest
-    fdata.av_speed = double(iter_limit) * 100 / time_taken;
-    fdata.av_eff_dam = fdata.av_dam * 100 / fdata.av_time;
+    fdata.player.calc_output_stats();
+    fdata.monster.calc_output_stats();
 
     return fdata;
+}
+
+void fight_damage_stats::damage(int amount)
+{
+    cumulative_damage += amount;
+    if (amount > max_dam)
+        max_dam = amount;
+}
+
+void fight_damage_stats::calc_output_stats()
+{
+    av_hit_dam = hits ? double(cumulative_damage) / hits : 0.0;
+    accuracy = 100 * hits / iterations;
+    av_dam = double(cumulative_damage) / iterations;
+    av_time = double(time_taken) / iterations + 0.5; // round to nearest
+    av_speed = double(iterations) * 100 / time_taken;
+    av_eff_dam = av_dam * 100 / av_time;
 }
 
 fight_data wizard_quick_fsim_raw(bool defend)
@@ -465,11 +499,11 @@ void wizard_quick_fsim()
 
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
-    mprf("           %s\nAttacking: %s", _title_line,
-         _fight_string(fdata, false).c_str());
+    mprf("%8s%s", "", fdata.header(false).c_str());
+    mpr(fdata.summary("Attack: ", false));
 
     fdata = _get_fight_data(*mon, iter_limit, true);
-    mprf("Defending: %s", _fight_string(fdata, false).c_str());
+    mpr(fdata.summary("Defend: ", false));
 
     _uninit_fsim(mon);
     return;
@@ -538,15 +572,17 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         col_name = _init_scale(scale, xl_mode);
 
-    const string title = make_stringf("%10.10s | %s", col_name.c_str(),
-                                      _title_line);
-    if (Options.fsim_csv)
-        fprintf(o, "%s\t%s\n", col_name.c_str(), _csv_title_line);
-    else
-        fprintf(o, "%s\n", title.c_str());
+    const string text_title = make_stringf("%s\n   | %s", col_name.c_str(),
+                                      fight_data::header(false).c_str());
+    const string file_title = Options.fsim_csv ?
+            make_stringf("%s\t%s\n", col_name.c_str(),
+                            fight_data::header(true).c_str()) :
+            text_title;
 
-    mpr(title);
+    fprintf(o, "%s\n", file_title.c_str());
+    mpr(text_title);
 
+    vector<pair<int, fight_data>> results;
     const int iter_limit = Options.fsim_rounds;
     for (int i = xl_mode ? 1 : 0; i <= 27; i++)
     {
@@ -561,13 +597,14 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         }
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
-        const string line = make_stringf("        %2d | %s", i,
-                                         _fight_string(fdata, false).c_str());
+        results.emplace_back(i, fdata);
+        fight_damage_stats &fstats = defense ? fdata.monster : fdata.player;
+        const string line = fstats.summary(make_stringf("%2d | ", i), false);
+        const string file_line = Options.fsim_csv ?
+                fstats.summary(make_stringf("%d\t", i), true) :
+                line;
         mpr(line);
-        if (Options.fsim_csv)
-            fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true).c_str());
-        else
-            fprintf(o, "%s\n", line.c_str());
+        fprintf(o, "%s\n", file_line.c_str());
         fflush(o);
 
         // kill the loop if the user hits escape
@@ -576,6 +613,24 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
             mpr("Cancelling simulation.\n");
             fprintf(o, "Simulation cancelled!\n\n");
             break;
+        }
+    }
+    // if there was any retaliatory damage, report that. Don't report a row if
+    // there were no hits; for attacking most monsters would have all 0s here.
+    for (auto &fdata : results)
+    {
+        int i = fdata.first;
+        fight_damage_stats &fstats = defense ? fdata.second.player :
+                                               fdata.second.monster;
+        if (fstats.hits)
+        {
+            const string line = fstats.summary(make_stringf("%2d | ", i), false);
+            const string file_line = Options.fsim_csv ?
+                    fstats.summary(make_stringf("%d\t", i), true) :
+                    line;
+            mpr(line);
+            fprintf(o, "%s\n", file_line.c_str());
+            fflush(o);
         }
     }
 }
@@ -611,9 +666,10 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             set_skill_level(skx, x);
             set_skill_level(sky, y);
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
+            fight_damage_stats &fstats = defense ? fdata.monster : fdata.player;
             mprf("%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,
-                 int(fdata.av_eff_dam));
-            fprintf(o,Options.fsim_csv ? "%.1f\t" : "%5.1f", fdata.av_eff_dam);
+                 int(fstats.av_eff_dam));
+            fprintf(o,Options.fsim_csv ? "%.1f\t" : "%5.1f", fstats.av_eff_dam);
             fflush(o);
 
             // kill the loop if the user hits escape
@@ -635,6 +691,7 @@ void wizard_fight_sim(bool double_scale)
         return;
 
     bool defense = false;
+    // TODO: why is this a .csv file? It's not a CSV.
     const char * fightstat = Options.fsim_csv ? "fsim.csv" : "fsim.txt";
 
     FILE * o = fopen(fightstat, "a");
