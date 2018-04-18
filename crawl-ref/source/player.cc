@@ -4176,6 +4176,9 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (crawl_state.disables[DIS_AFFLICTIONS])
+        return false;
+
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from poison!");
