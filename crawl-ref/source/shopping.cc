@@ -1966,6 +1966,36 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     refresh();
 }
 
+void ShoppingList::spells_added_to_library(const vector<spell_type>& spells, bool quiet)
+{
+    if (!list) /* let's not make book starts crash instantly... */
+        return;
+
+    vector<CrawlHashTable*> to_del;
+    for (CrawlHashTable &thing : *list)
+    {
+        if (!thing_is_item(thing)) // ???
+            continue;
+        const item_def& book = get_thing_item(thing);
+        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
+            continue;
+
+        const auto item_spells = spells_in_book(book);
+        if (any_of(item_spells.begin(), item_spells.end(), [&spells](const spell_type st) {
+                    return find(spells.begin(), spells.end(), st) != spells.end();
+                }) && is_useless_item(book, false))
+            to_del.push_back(&thing);
+    }
+    for (auto thing : to_del)
+    {
+        if (!quiet)
+            mprf("Shopping list: removing %s",
+                describe_thing(*thing, DESC_A).c_str());
+        level_pos pos = thing_pos(*thing);
+        del_thing(get_thing_item(*thing), &pos);
+    }
+}
+
 void ShoppingList::remove_dead_shops()
 {
     // Only restore the excursion at the very end.

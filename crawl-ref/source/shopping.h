@@ -60,6 +60,7 @@ public:
     void del_things_from(const level_id &lid);
 
     void item_type_identified(object_class_type base_type, int sub_type);
+    void spells_added_to_library(const vector<spell_type>& spells, bool quiet);
     bool cull_identical_items(const item_def& item, int cost = -1);
     void remove_dead_shops();
 
