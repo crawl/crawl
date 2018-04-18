@@ -437,9 +437,6 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     }
 
     power += you.skill(SK_SPELLCASTING, 50);
-
-    if (apply_intel)
-        power = (power * you.intel()) / 10;
  
     if (!fail_rate_check)
     {
@@ -447,6 +444,9 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // spell school levels).
         if (you.duration[DUR_BRILLIANCE])
             power += 600;
+
+        if (apply_intel)
+            power = (power * you.intel()) / 10;
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
