@@ -1141,6 +1141,7 @@ void game_options::reset_options()
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
         new_dump_fields("xp_by_level");
+    new_dump_fields("options");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -1632,7 +1633,8 @@ void read_init_file(bool runscript)
 
     if (f.error())
         return;
-    Options.read_options(f, runscript);
+    string option_file_contents = Options.read_options(f, runscript);
+    Options.file_contents = option_file_contents;
 
     if (Options.read_persist_options)
     {
@@ -1748,7 +1750,7 @@ void save_player_name()
 void read_options(const string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
-    Options.read_options(st, runscript, clear_aliases);
+    string test = Options.read_options(st, runscript, clear_aliases);
 }
 
 game_options::game_options()
@@ -1762,7 +1764,7 @@ game_options::~game_options()
     deleteAll(option_behaviour);
 }
 
-void game_options::read_options(LineInput &il, bool runscript,
+string game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -1778,7 +1780,7 @@ void game_options::read_options(LineInput &il, bool runscript,
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);
-
+    string content = "";
     while (!il.eof())
     {
         line_num++;
@@ -1787,6 +1789,9 @@ void game_options::read_options(LineInput &il, bool runscript,
         line++;
 
         trim_string(str);
+
+        content += str;
+        content += "\n";
 
         // This is to make some efficient comments
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
@@ -1931,6 +1936,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
+    return content;
 }
 
 void game_options::fixup_options()

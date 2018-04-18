@@ -130,7 +130,7 @@ public:
     void reset_options();
 
     void read_option_line(const string &s, bool runscripts = false);
-    void read_options(LineInput &, bool runscripts,
+    string read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
     void include(const string &file, bool resolve, bool runscript);
@@ -151,6 +151,8 @@ public:
     string      filename;     // The name of the file containing options.
     string      basefilename; // Base (pathless) file name
     int         line_num;     // Current line number being processed.
+
+    string      file_contents; // The raw text of the options file.
 
     // View options
     map<dungeon_feature_type, feature_def> feature_colour_overrides;
