@@ -1829,7 +1829,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
 
 static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
 {
-    vector<string> spellnames;
+    vector<spell_type> spells;
     if (!quiet)
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
     for (spell_type st : spells_in_book(it))
@@ -1839,15 +1839,17 @@ static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
             you.spell_library.set(st, true);
             bool memorise = you_can_memorise(st);
             if (memorise)
-                spellnames.push_back(spell_title(st));
+                spells.push_back(st);
             if (!memorise || (Options.auto_hide_spells && allow_auto_hide))
                 you.hidden_spells.set(st, true);
         }
     }
     if (!quiet)
     {
-        if (!spellnames.empty())
+        if (!spells.empty())
         {
+            vector<string> spellnames(spells.size());
+            transform(spells.begin(), spells.end(), spellnames.begin(), spell_title);
             mprf("You add the spell%s %s to your library.",
                  spellnames.size() > 1 ? "s" : "",
                  comma_separated_line(spellnames.begin(),
@@ -1856,6 +1858,7 @@ static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
         else
             mpr("Unfortunately, it added no spells to the library.");
     }
+    shopping_list.spells_added_to_library(spells, quiet);
 }
 
 // Adds all books in the player's inventory to library.
