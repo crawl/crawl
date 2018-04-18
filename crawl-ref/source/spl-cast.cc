@@ -438,7 +438,14 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     power += you.skill(SK_SPELLCASTING, 50);
  
-    if (!fail_rate_check)
+    if (fail_rate_check)
+    {
+        // Scale appropriately.
+        // The stepdown performs this step in the else block.
+        power *= scale;
+        power /= 100;
+    }
+    else
     {
         // Brilliance boosts spell power a bit (equivalent to three
         // spell school levels).
