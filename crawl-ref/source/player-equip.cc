@@ -295,9 +295,25 @@ static void _unequip_invis()
     }
 }
 
+static void _unequip_fragile_artefact(item_def& item, bool meld)
+{
+    ASSERT(is_artefact(item));
+
+    artefact_properties_t proprt;
+    artefact_known_props_t known;
+    artefact_properties(item, proprt, known);
+
+    if (proprt[ARTP_FRAGILE] && !meld)
+    {
+        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
+        dec_inv_item_quantity(item.link, 1);
+    }
+}
+
 static void _unequip_artefact_effect(item_def &item,
                                      bool *show_msgs, bool meld,
-                                     equipment_type slot)
+                                     equipment_type slot,
+                                     bool weapon)
 {
     ASSERT(is_artefact(item));
 
@@ -361,12 +377,10 @@ static void _unequip_artefact_effect(item_def &item,
             you.unrand_reacts.set(slot, false);
     }
 
-    // this must be last!
-    if (proprt[ARTP_FRAGILE] && !meld)
-    {
-        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
-        dec_inv_item_quantity(item.link, 1);
-    }
+    // If the item is a weapon, then we call it from unequip_weapon_effect
+    // separately, to make sure the message order makes sense.
+    if (!weapon)
+        _unequip_fragile_artefact(item, meld);
 }
 
 static void _equip_use_warning(const item_def& item)
@@ -636,7 +650,8 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
-        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON);
+        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
+                                 true);
 
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -745,6 +760,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
         calc_mp();
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    if (is_artefact(item))
+        _unequip_fragile_artefact(item, meld);
 
     // Unwielding dismisses an active spectral weapon
     monster *spectral_weapon = find_spectral_weapon(&you);
@@ -1074,7 +1092,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, nullptr, meld, slot);
+        _unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1391,7 +1409,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld, slot);
+        _unequip_artefact_effect(item, &mesg, meld, slot, false);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
