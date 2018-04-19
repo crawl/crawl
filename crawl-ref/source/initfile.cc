@@ -1591,7 +1591,6 @@ void read_init_file(bool runscript)
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
     Options.line_num     = 0;
-
     for (const string &extra : SysEnv.extra_opts_first)
     {
         Options.file_contents += extra + "\n";  // Add extra options to dump
@@ -1639,7 +1638,7 @@ void read_init_file(bool runscript)
     if (f.error())
         return;
     string option_file_contents = Options.read_options(f, runscript);
-    Options.file_contents += option_file_contents;
+    Options.file_contents += "\n" + option_file_contents + "\n\n";
 
     if (Options.read_persist_options)
     {
