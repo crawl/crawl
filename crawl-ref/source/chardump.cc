@@ -1402,14 +1402,19 @@ static void _sdump_mutations(dump_params &par)
 
 static void _sdump_rc_file(dump_params &par)
 {
-    par.text += "Options file contents\n";
-    par.text += "---------------------\n\n";
+    if (Options.dump_options)
+    {
+        par.text += "\n";
+        par.text += "---------------------\n";
+        par.text += "Options file contents\n";
+        par.text += "---------------------\n\n";
 
-    par.text += Options.file_contents;
+        par.text += Options.file_contents;
 
-    par.text += "-------------------\n";
-    par.text += "End of options file\n";
-    par.text += "-------------------\n\n";
+        par.text += "-------------------\n";
+        par.text += "End of options file\n";
+        par.text += "-------------------\n\n";
+    }
 }
 
 // Must match the order of hunger_state_t enums
