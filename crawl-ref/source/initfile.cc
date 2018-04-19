@@ -1751,7 +1751,7 @@ void save_player_name()
 void read_options(const string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
-    string test = Options.read_options(st, runscript, clear_aliases);
+    Options.read_options(st, runscript, clear_aliases);
 }
 
 game_options::game_options()
@@ -1791,8 +1791,7 @@ string game_options::read_options(LineInput &il, bool runscript,
 
         trim_string(str);
 
-        content += str;
-        content += "\n";
+        content += str + "\n";
 
         // This is to make some efficient comments
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
