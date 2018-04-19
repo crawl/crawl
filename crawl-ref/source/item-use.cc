@@ -1274,6 +1274,12 @@ static int _prompt_ring_to_remove(int new_ring)
         slot_chars.push_back(index_to_letter(rings.back()->link));
     }
 
+    if (slot_chars.size() + 2 > msgwin_lines())
+    {
+        // force a menu rather than a more().
+        return EQ_NONE;
+    }
+
     clear_messages();
 
     mprf(MSGCH_PROMPT,
@@ -1553,8 +1559,18 @@ static bool _swap_rings(int ring_slot)
         if (!all_same || Options.jewellery_prompt)
             unwanted = _prompt_ring_to_remove(ring_slot);
 
+        if (unwanted == EQ_NONE)
+        {
+            // do this here rather than in remove_ring so that the custom
+            // message is visible. TODO: show only worn rings
+            unwanted = prompt_invent_item(
+                    "You're wearing all the rings you can. Remove which one?",
+                    MT_INVLIST, OBJ_JEWELLERY, OPER_REMOVE,
+                    invprompt_flag::no_warning | invprompt_flag::hide_known);
+        }
+
         // Cancelled:
-        if (unwanted < -1)
+        if (unwanted < 0)
         {
             canned_msg(MSG_OK);
             return false;
