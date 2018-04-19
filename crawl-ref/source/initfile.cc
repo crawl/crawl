@@ -1584,13 +1584,17 @@ void read_init_file(bool runscript)
     UNUSED(lua_builtins);
     UNUSED(config_defaults);
 #endif
+    // Clear Options.file_contents here to avoid duplication in dump
+    Options.file_contents.clear();
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
     Options.line_num     = 0;
+
     for (const string &extra : SysEnv.extra_opts_first)
     {
+        Options.file_contents += extra + "\n";  // Add extra options to dump
         Options.line_num++;
         Options.read_option_line(extra, true);
     }
@@ -1635,7 +1639,7 @@ void read_init_file(bool runscript)
     if (f.error())
         return;
     string option_file_contents = Options.read_options(f, runscript);
-    Options.file_contents = option_file_contents;
+    Options.file_contents += option_file_contents;
 
     if (Options.read_persist_options)
     {
@@ -1653,6 +1657,7 @@ void read_init_file(bool runscript)
     Options.line_num     = 0;
     for (const string &extra : SysEnv.extra_opts_last)
     {
+        Options.file_contents += extra + "\n";  // Add extra options to dump
         Options.line_num++;
         Options.read_option_line(extra, true);
     }
