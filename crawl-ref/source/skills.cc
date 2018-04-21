@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "clua.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "exercise.h"
@@ -707,7 +708,7 @@ void init_training()
 
 // Make sure at least one skill is selected.
 // If not, go to the skill menu and return true.
-bool check_selected_skills()
+bool check_selected_skills(bool do_lua_callback)
 {
     bool trainable_skill = false;
     bool could_train = false;
@@ -732,6 +733,15 @@ bool check_selected_skills()
 
     if (trainable_skill)
     {
+        // Calling a user lua function here to allow enabling skills without user
+        // prompt (much like the callback auto_experience for the case of potion of experience).
+        // If the callback does not set skill training, we nevertheless show the skill menu.
+        if (do_lua_callback)
+        {
+            clua.callmaybefn("skill_training_needed", nullptr);
+            return check_selected_skills(false);
+        }
+
         mpr("You need to enable at least one skill for training.");
         // Training will be fixed up on load if this ASSERT triggers.
         ASSERT(you.species != SP_GNOLL);
