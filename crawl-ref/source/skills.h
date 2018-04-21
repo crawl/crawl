@@ -99,7 +99,9 @@ void init_skill_order();
 bool is_removed_skill(skill_type skill);
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
-bool all_skills_maxed(bool really_all = false);
+bool can_enable_skill(skill_type sk, bool override = false);
+bool trainable_skills(bool check_all = false);
+bool skills_being_trained();
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
@@ -122,7 +124,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu, bool boost = false);
 int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
-bool can_enable_skill(skill_type sk);
 
 bool target_met(skill_type sk);
 bool check_training_target(skill_type sk);
