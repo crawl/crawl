@@ -318,6 +318,8 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
+    case CLOUD_PURPLE_SMOKE:
+    case CLOUD_BLUE_SMOKE:
     case CLOUD_FLUFFY:
         return 22;
     case CLOUD_RAIN:
