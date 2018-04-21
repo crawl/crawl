@@ -491,6 +491,7 @@ void ui_push_layout(shared_ptr<UI> root, KeymapContext km = KMC_DEFAULT);
 void ui_pop_layout();
 void ui_pump_events(int wait_event_timeout = INT_MAX);
 int ui_getch(KeymapContext km = KMC_DEFAULT);
+void ui_delay(unsigned int ms);
 
 void ui_push_scissor(i4 scissor);
 void ui_pop_scissor();

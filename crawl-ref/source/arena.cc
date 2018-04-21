@@ -40,6 +40,7 @@
 #include "unicode.h"
 #include "version.h"
 #include "view.h"
+#include "ui.h"
 
 #define ARENA_VERBOSE
 
@@ -685,7 +686,6 @@ namespace arena
         if (key_is_escape(ch) || toalower(ch) == 'q')
         {
             contest_cancelled = true;
-            mpr("Canceled contest at user request");
             return;
         }
 
@@ -788,18 +788,8 @@ namespace arena
         clear_messages(true);
         {
             cursor_control coff(false);
-            while (fight_is_on())
+            while (fight_is_on() && !contest_cancelled)
             {
-                if (kbhit())
-                {
-                    const int ch = getchm();
-                    handle_keypress(ch);
-                    ASSERT(crawl_state.game_is_arena());
-                    ASSERT(!crawl_state.arena_suspended);
-                    if (contest_cancelled)
-                        return;
-                }
-
 #ifdef ARENA_VERBOSE
                 mprf("---- Turn #%d ----", turns);
 #endif
@@ -808,7 +798,6 @@ namespace arena
                 if ((turns++ % 100) == 0)
                     count_foes();
 
-                viewwindow();
                 you.time_taken = 10;
                 // Make sure we don't starve.
                 you.hunger = HUNGER_MAXIMUM;
@@ -818,12 +807,20 @@ namespace arena
                 do_respawn(faction_a);
                 do_respawn(faction_b);
                 balance_spawners();
-                delay(Options.view_delay);
+                ui_delay(Options.view_delay);
                 clear_messages();
                 dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow();
+        }
+
+        if (contest_cancelled)
+        {
+            mpr("Canceled contest at user request");
+            clear_messages();
+            dump_messages();
+            return;
         }
 
         clear_messages();
@@ -987,6 +984,32 @@ namespace arena
     static void simulate()
     {
         init_level_connectivity();
+
+        class UIArena : public UIBox
+        {
+        public:
+            UIArena() : UIBox(UI::VERT) {
+                expand_h = expand_v = true;
+            };
+            virtual void _render() override {
+                show_fight_banner();
+                viewwindow();
+                display_message_window();
+            };
+            virtual void _allocate_region() override {};
+            virtual bool on_event(wm_event ev) override {
+                if (ev.type != WME_KEYDOWN)
+                    return false;
+                handle_keypress(ev.key.keysym.sym);
+                ASSERT(crawl_state.game_is_arena());
+                ASSERT(!crawl_state.arena_suspended);
+                return true;
+            };
+        };
+
+        auto ui = make_shared<UIArena>();
+        ui_push_layout(ui);
+
         do
         {
             try
@@ -1001,7 +1024,7 @@ namespace arena
             do_fight();
 
             if (trials_done < total_trials)
-                delay(Options.view_delay * 5);
+                ui_delay(Options.view_delay * 5);
         }
         while (!contest_cancelled && trials_done < total_trials);
 
@@ -1012,7 +1035,8 @@ namespace arena
                  faction_b.desc.c_str(), trials_done - team_a_wins - ties,
                  ties);
         }
-        delay(Options.view_delay * 5);
+        ui_delay(Options.view_delay * 5);
+        ui_pop_layout();
 
         write_results();
     }
