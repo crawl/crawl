@@ -1504,7 +1504,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        if (all_skills_maxed(true))
+        if (!trainable_skills(true))
         {
             if (!quiet)
                 mpr("You have nothing more to learn.");
