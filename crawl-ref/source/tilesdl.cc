@@ -1455,7 +1455,7 @@ void TilesFramework::redraw()
 void TilesFramework::render_current_regions()
 {
     // need to call with show_updates=false, which is passed to viewwindow
-    if (m_active_layer == LAYER_NORMAL)
+    if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
         redraw_screen(false);
 
     for (Region *region : m_layers[m_active_layer].m_regions)
