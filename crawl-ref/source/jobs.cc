@@ -168,3 +168,21 @@ bool job_recommends_species(job_type job, species_type species)
                 _job_def(job).recommended_species.end(),
                 species) != _job_def(job).recommended_species.end();
 }
+
+// A random valid (selectable on the new game screen) job.
+job_type random_job()
+{
+    job_type job;
+    do {
+        job = static_cast<job_type>(random_range(0, NUM_JOBS - 1));
+    } while (!is_starting_job(job));
+    return job;
+}
+
+// Ensure the job isn't JOB_RANDOM/JOB_VIABLE and it has recommended species
+// (old disabled jobs have none).
+bool is_starting_job(job_type job)
+{
+    return job < NUM_JOBS
+        && !_job_def(job).recommended_species.empty();
+}
