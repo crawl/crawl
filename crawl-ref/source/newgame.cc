@@ -171,30 +171,6 @@ void choose_tutorial_character(newgame_def& ng_choice)
     ng_choice.weapon = WPN_FLAIL;
 }
 
-bool is_starting_species(species_type species)
-{
-    // All species except nonbase draconians are starting species
-    return !bool(get_species_def(species).flags & SPF_DRACONIAN)
-        || species == SP_BASE_DRACONIAN;
-}
-
-static species_type random_starting_species()
-{
-    species_type temp;
-    species_type selected;
-    int choices = 0;
-    for (int sp = 0; sp < NUM_SPECIES; ++sp)
-    {
-        temp = static_cast<species_type>(sp);
-        if (is_starting_species(temp)
-            && one_chance_in(++choices))
-        {
-            selected = temp;
-        }
-    }
-    return selected;
-}
-
 static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
 {
     // Don't overwrite existing species.
@@ -208,25 +184,31 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case SP_VIABLE:
-    {
-        do
-        {
-            ng.species = random_starting_species();
-        } while (!is_good_combination(ng.species, ng.job, false, true));
-    }
-        // intentional fall-through
-    case SP_RANDOM:
-        // any valid species will do
-        if (ng.job == JOB_UNKNOWN)
-        {
-            ng.species = random_starting_species();
-        }
-        else
+        // If we have a job already picked out, pick a species which recommends
+        // it. Otherwise, pick a random species.
+        if (is_starting_job(ng.job))
         {
             do
             {
-                ng.species = random_starting_species();
-            } while (!is_good_combination(ng.species, ng.job, false, false));
+                ng.species = random_species();
+            } while (!job_recommends_species(ng.job, ng.species));
+        }
+        else
+            ng.species = random_species();
+        return;
+
+    case SP_RANDOM:
+        // If we have a job already picked out, pick a species which isn't
+        // banned by the job. Otherwise, pick a random species.
+        if (is_starting_job(ng.job))
+        {
+            do {
+                ng.species = random_species();
+            } while(species_allowed(ng.job, ng.species) == CC_BANNED);
+        }
+        else
+        {
+            ng.species = random_species();
         }
         return;
 
@@ -248,48 +230,30 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case JOB_VIABLE:
-    {
-        int good_choices = 0;
-        for (int i = 0; i < NUM_JOBS; i++)
+        // If we have a species already picked out, pick a job which recommends
+        // it. Otherwise, pick a random job.
+        if (is_starting_species(ng.species))
         {
-            job_type job = job_type(i);
-            if (is_good_combination(ng.species, job, true, true)
-                && one_chance_in(++good_choices))
-            {
-                ng.job = job;
-            }
-        }
-        if (good_choices)
-            return;
-    }
-        // intentional fall-through
-    case JOB_RANDOM:
-        if (ng.species == SP_UNKNOWN)
-        {
-            // any valid job will do
             do
             {
-                ng.job = job_type(random2(NUM_JOBS));
-            }
-            while (!is_starting_job(ng.job));
+                ng.job = random_job();
+            } while (!species_recommends_job(ng.species, ng.job));
         }
         else
+            ng.job = random_job();
+        return;
+
+    case JOB_RANDOM:
+        // If we have a species already picked out, pick a job which isn't
+        // banned by the species. Otherwise, pick a random job.
+        if (is_starting_species(ng.species))
         {
-            // Pick a random legal character.
-            int good_choices = 0;
-            for (int i = 0; i < NUM_JOBS; i++)
-            {
-                job_type job = job_type(i);
-                if (is_good_combination(ng.species, job, true, false)
-                    && one_chance_in(++good_choices))
-                {
-                    ASSERT(is_starting_job(job));
-                    ng.job = job;
-                }
-            }
-            if (!good_choices)
-                end(1, false, "Failed to find legal background.");
+            do {
+                ng.job = random_job();
+            } while(job_allowed(ng.species, ng.job) == CC_BANNED);
         }
+        else
+            ng.job = random_job();
         return;
 
     default:
@@ -1015,15 +979,6 @@ static job_group jobs_order[] =
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
     }
 };
-
-bool is_starting_job(job_type job)
-{
-    for (const job_group& group : jobs_order)
-        for (const job_type job_ : group.jobs)
-            if (job == job_)
-                return true;
-    return false;
-}
 
 /**
  * Helper for _choose_job

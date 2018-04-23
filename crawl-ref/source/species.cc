@@ -494,3 +494,21 @@ void change_species_to(species_type sp)
 #endif
     redraw_screen();
 }
+
+// A random valid (selectable on the new game screen) species.
+species_type random_species()
+{
+  species_type species;
+  do {
+      species = static_cast<species_type>(random_range(0, NUM_SPECIES - 1));
+  } while (!is_starting_species(species));
+  return species;
+}
+
+// Ensure the species isn't SP_RANDOM/SP_VIABLE and it has recommended jobs
+// (old disabled species have none).
+bool is_starting_species(species_type species)
+{
+    return species < NUM_SPECIES
+        && !get_species_def(species).recommended_jobs.empty();
+}
