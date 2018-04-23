@@ -64,6 +64,8 @@ using namespace ui;
 
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
+static int hs_list_size = 0;
+static bool hs_list_initalized = false;
 
 static FILE *_hs_open(const char *mode, const string &filename);
 static void  _hs_close(FILE *handle, const string &filename);
@@ -99,7 +101,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     unwind_bool score_update(crawl_state.updating_scores, true);
 
     FILE *scores;
-    int i, total_entries;
+    int i;
     bool inserted = false;
     int newest_entry = -1;
 
@@ -149,14 +151,15 @@ int hiscores_new_entry(const scorefile_entry &ne)
         i++;
     }
 
+    hs_list_size = i;
+    hs_list_initalized = true;
+
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
     {
         _hs_close(scores, _score_file_name());
         return -1;
     }
-
-    total_entries = i;
 
     // The old code closed and reopened the score file, leading to a
     // race condition where one Crawl process could overwrite the
@@ -168,10 +171,13 @@ int hiscores_new_entry(const scorefile_entry &ne)
     rewind(scores);
 
     // write scorefile entries.
-    for (i = 0; i < total_entries; i++)
+    for (i = 0; i < hs_list_size; i++)
     {
         _hs_write(scores, *hs_list[i]);
-        hs_list[i].reset(nullptr);
+
+        // Leave in memory.  Does this anyway if !inserted.  
+        // Can write cleanup function if nessicary??
+        // hs_list[i].reset(nullptr);
     }
 
     // close scorefile.
@@ -221,6 +227,32 @@ static void _hiscores_print_entry(const scorefile_entry &se,
     pf("%s", entry.c_str());
 }
 
+// Reads hiscores file to memory
+void hiscores_read_to_memory()
+{
+    FILE *scores;
+    int i;
+
+    // open highscore file (reading)
+    scores = _hs_open("r", _score_file_name());
+    if (scores == nullptr)
+        return;
+
+    // read highscore file
+    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
+    {
+        hs_list[i].reset(new scorefile_entry);
+        if (_hs_read(scores, *hs_list[i]) == false)
+            break;
+    }
+
+    hs_list_size = i;
+    hs_list_initalized = true;
+
+    //close off
+    _hs_close(scores, _score_file_name());
+}
+
 // Writes all entries in the scorefile to stdout in human-readable form.
 void hiscores_print_all(int display_count, int format)
 {
@@ -256,28 +288,17 @@ string hiscores_print_list(int display_count, int format, int newest_entry)
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
     string ret;
 
-    FILE *scores;
+    // Additional check to preserve previous functionality
+    if(!hs_list_initalized) {
+        hiscores_read_to_memory();
+    }
+
     int i, total_entries;
 
     if (display_count <= 0)
         return "";
 
-    // open highscore file (reading)
-    scores = _hs_open("r", _score_file_name());
-    if (scores == nullptr)
-        return "";
-
-    // read highscore file
-    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
-    {
-        hs_list[i].reset(new scorefile_entry);
-        if (_hs_read(scores, *hs_list[i]) == false)
-            break;
-    }
-    total_entries = i;
-
-    // close off
-    _hs_close(scores, _score_file_name());
+    total_entries = hs_list_size;
 
     int start = newest_entry - display_count / 2;
 
@@ -299,6 +320,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry)
             ret += string(s);
         });
 
+        // return to normal color for next entry
         if (i == newest_entry)
             ret += "<lightgrey>";
     }

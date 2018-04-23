@@ -12,7 +12,7 @@
 bool crawl_should_restart(game_exit exit);
 
 NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = nullptr));
-NORETURN void end_game(scorefile_entry &se, int hiscore_index = -1);
+NORETURN void end_game(scorefile_entry &se);
 NORETURN void game_ended(game_exit exit, const string &message = "");
 NORETURN void game_ended_with_error(const string &message);
 NORETURN void screen_end_game(string text);
