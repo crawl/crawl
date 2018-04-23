@@ -1625,8 +1625,6 @@ void read_init_file(bool runscript)
     }
 #endif
 
-    FileLineInput f(init_file_name.c_str());
-
     Options.filename = init_file_name;
     Options.line_num = 0;
 #ifdef UNIX
@@ -1635,10 +1633,18 @@ void read_init_file(bool runscript)
     Options.basefilename = "init.txt";
 #endif
 
-    if (f.error())
-        return;
-    string option_file_contents = Options.read_options(f, runscript);
-    Options.file_contents += "\n" + option_file_contents + "\n\n";
+    // Read in the options file
+    FILE *f = fopen_u(init_file_name.c_str(), "r");
+
+    unsigned long size = file_size(f);
+
+    char *options_contents = new char[size];
+
+    fread(options_contents, 1, size, f);
+    fclose(f);
+
+    read_options(options_contents, runscript);
+    Options.file_contents += options_contents;
 
     if (Options.read_persist_options)
     {
@@ -1769,7 +1775,7 @@ game_options::~game_options()
     deleteAll(option_behaviour);
 }
 
-string game_options::read_options(LineInput &il, bool runscript,
+void game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -1785,7 +1791,6 @@ string game_options::read_options(LineInput &il, bool runscript,
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);
-    string content = "";
     while (!il.eof())
     {
         line_num++;
@@ -1794,8 +1799,6 @@ string game_options::read_options(LineInput &il, bool runscript,
         line++;
 
         trim_string(str);
-
-        content += str + "\n";
 
         // This is to make some efficient comments
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
@@ -1940,7 +1943,6 @@ string game_options::read_options(LineInput &il, bool runscript,
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
-    return content;
 }
 
 void game_options::fixup_options()
