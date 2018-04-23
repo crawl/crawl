@@ -1091,6 +1091,9 @@ public:
         if (you.has_usable_claws())
             return base_dam + roll_dice(you.has_claws(), 3);
 
+        if (you.has_usable_crab_claws())
+            return base_dam + roll_dice(you.has_crab_claws(), 4);
+
         return base_dam;
     }
 
@@ -1100,6 +1103,9 @@ public:
             return "slash";
 
         if (you.has_usable_claws())
+            return "claw";
+
+        if (you.has_usable_crab_claws())
             return "claw";
 
         if (you.has_usable_tentacles())

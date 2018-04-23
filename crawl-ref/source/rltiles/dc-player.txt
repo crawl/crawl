@@ -11,6 +11,7 @@ misc/cursor CURSOR
 ###BASE
 %parts_ctg BASE
 %sdir player/base
+crab HERMIT_CRAB
 human_f HUMAN
 human_m
 human2_f

@@ -1561,5 +1561,44 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GNOLL,           SK_POISON_MAGIC,    6),
     APT(SP_GNOLL,           SK_INVOCATIONS,     9),
     APT(SP_GNOLL,           SK_EVOCATIONS,      8),
+
+    // SP_HERMIT_CRAB
+    APT(SP_HERMIT_CRAB,           SK_FIGHTING,        0),
+    APT(SP_HERMIT_CRAB,           SK_SHORT_BLADES,    -2),
+    APT(SP_HERMIT_CRAB,           SK_LONG_BLADES,     -2),
+    APT(SP_HERMIT_CRAB,           SK_AXES,            -2),
+    APT(SP_HERMIT_CRAB,           SK_MACES_FLAILS,    -2),
+    APT(SP_HERMIT_CRAB,           SK_POLEARMS,        -2),
+    APT(SP_HERMIT_CRAB,           SK_STAVES,          -2),
+    APT(SP_HERMIT_CRAB,           SK_SLINGS,          -2),
+    APT(SP_HERMIT_CRAB,           SK_BOWS,            -2),
+    APT(SP_HERMIT_CRAB,           SK_CROSSBOWS,       -2),
+    APT(SP_HERMIT_CRAB,           SK_THROWING,        -2),
+    APT(SP_HERMIT_CRAB,           SK_ARMOUR,          2),
+    APT(SP_HERMIT_CRAB,           SK_DODGING,         1),
+    APT(SP_HERMIT_CRAB,           SK_STEALTH,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_HERMIT_CRAB,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_HERMIT_CRAB,           SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_HERMIT_CRAB,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_HERMIT_CRAB,           SK_UNARMED_COMBAT,  0),
+    APT(SP_HERMIT_CRAB,           SK_SPELLCASTING,    0),
+    APT(SP_HERMIT_CRAB,           SK_CONJURATIONS,    1),
+    APT(SP_HERMIT_CRAB,           SK_HEXES,           1),
+    APT(SP_HERMIT_CRAB,           SK_CHARMS,          1),
+    APT(SP_HERMIT_CRAB,           SK_SUMMONINGS,      1),
+    APT(SP_HERMIT_CRAB,           SK_NECROMANCY,      1),
+    APT(SP_HERMIT_CRAB,           SK_TRANSLOCATIONS,  1),
+    APT(SP_HERMIT_CRAB,           SK_TRANSMUTATIONS,  0),
+    APT(SP_HERMIT_CRAB,           SK_FIRE_MAGIC,      1),
+    APT(SP_HERMIT_CRAB,           SK_ICE_MAGIC,       1),
+    APT(SP_HERMIT_CRAB,           SK_AIR_MAGIC,       1),
+    APT(SP_HERMIT_CRAB,           SK_EARTH_MAGIC,     1),
+    APT(SP_HERMIT_CRAB,           SK_POISON_MAGIC,    1),
+    APT(SP_HERMIT_CRAB,           SK_INVOCATIONS,     -1),
+    APT(SP_HERMIT_CRAB,           SK_EVOCATIONS,      -1),
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);

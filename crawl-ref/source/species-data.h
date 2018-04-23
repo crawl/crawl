@@ -416,6 +416,22 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
 } },
 
+{ SP_HERMIT_CRAB, {
+    "HC",
+    "Hermit Crab", "Decapodian", "Crab",
+    SPF_NO_HAIR,
+    0, 0, 1, 4,
+    MONS_FIRE_CRAB,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    8, 10, 6, // 24
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_STURDY_FRAME, 3, 1 },  { MUT_CRAB_CLAWS, 1, 1 }, { MUT_NO_TRANSMUTATION_MAGIC, 1, 1 }, },
+    { "Your physical structure is perfection and can not be permanently altered." },
+    { "no body muts" },
+    { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE, JOB_WANDERER },
+    { SK_UNARMED_COMBAT },
+} },
+
 { SP_HIGH_ELF, {
     "HE",
     "High Elf", "Elven", "Elf",

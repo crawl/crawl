@@ -98,6 +98,8 @@ string species_walking_verb(species_type sp)
         return "Wriggl";
     case SP_VINE_STALKER:
         return "Stalk";
+    case SP_HERMIT_CRAB:
+        return "Scuttle";
     default:
         return "Walk";
     }
@@ -219,6 +221,8 @@ string species_prayer_action(species_type species)
             return "coil in front of";
         case SP_OCTOPODE:
             return "curl up in front of";
+        case SP_HERMIT_CRAB:
+            return "side step up to";
         case SP_FELID:
             // < TGWi> you curl up on the altar and go to sleep
             return "sit before";

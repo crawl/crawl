@@ -154,6 +154,14 @@ static const int conflict[][3] =
     { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY,  -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+    { MUT_CRAB_CLAWS,          MUT_FANGS,                  -1},
+    { MUT_CRAB_CLAWS,          MUT_BEAK,                   -1},
+    { MUT_CRAB_CLAWS,          MUT_ANTENNAE,               -1},
+    { MUT_CRAB_CLAWS,          MUT_HORNS,                  -1},
+    { MUT_CRAB_CLAWS,          MUT_HOOVES,                 -1},
+    { MUT_CRAB_CLAWS,          MUT_TALONS,                 -1},
+    { MUT_CRAB_CLAWS,          MUT_CLAWS,                  -1},
+
 };
 
 equipment_type beastly_slot(int mut)

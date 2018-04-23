@@ -63,6 +63,10 @@ Halfling
 Small but hardy, Halflings excel with slings. They have an increased resistance
 to mutagenic effects.
 %%%%
+Hermit Crab
+
+Live solitary lives devoted to developing their attunement to magic, and scavenging ever better shells to don. Got some crab claws on 'em too. Menacing but not quite adept at weapon handling.
+%%%%
 High Elf
 
 High Elves are adept with blades and with many schools of magic, and have high

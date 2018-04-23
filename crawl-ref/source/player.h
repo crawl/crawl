@@ -616,6 +616,9 @@ public:
     int       has_usable_pseudopods(bool allow_tran = true) const;
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
+    int       has_crab_claws(bool allow_tran = true) const;
+    bool      has_usable_crab_claws(bool allow_tran = true) const;
+
 
     // Information about player mutations. Implemented in mutation.cc
     int       get_base_mutation_level(mutation_type mut, bool innate=true, bool temp=true, bool normal=true) const;

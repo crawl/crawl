@@ -13,6 +13,7 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
     MUT_TENTACLE_SPIKE, // Octopode only.
+    MUT_CRAB_CLAWS,     // Hermit Crab only.
 
     // scales
     MUT_DISTORTION_FIELD,

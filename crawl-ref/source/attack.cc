@@ -186,6 +186,16 @@ int attack::calc_to_hit(bool random)
                                      random);
         }
 
+        {
+            // Crab Claws give a slight bonus to accuracy when active
+            mhit += (you.get_mutation_level(MUT_CRAB_CLAWS) > 0
+                     && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
+
+            mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
+                                     random);
+        }
+
+
         // weapon bonus contribution
         if (using_weapon())
         {
@@ -1231,6 +1241,9 @@ int attack::calc_base_unarmed_damage()
     // Claw damage only applies for bare hands.
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
+
+    if (you.has_usable_crab_claws())
+        damage += you.has_crab_claws() * 2;
 
     if (you.form_uses_xl())
         damage += div_rand_round(you.experience_level, 3);
