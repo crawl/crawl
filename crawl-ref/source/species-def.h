@@ -45,7 +45,9 @@ struct species_def
     vector<level_up_mutation> level_up_mutations; ///< Mutations on level-up
     vector<string> verbose_fake_mutations; ///< Additional information on 'A'
     vector<string> terse_fake_mutations; ///< Additional information on '%'
-    vector<job_type> recommended_jobs; ///< Which jobs are "good" for it
+    /// Which jobs are "good" for the species.
+    /// No recommended jobs = species is disabled.
+    vector<job_type> recommended_jobs;
     vector<skill_type> recommended_weapons; ///< Which weapons types are "good"
     const char* walking_verb; ///<a "word" to which "-er" or "-ing" can be
                               /// appended. If null, use "Walk"
