@@ -563,6 +563,10 @@ void TilesFramework::close_all_menus()
 {
     while (m_menu_stack.size())
         pop_menu();
+    // This is a bit of a hack, in case the client-side menu stack ever gets
+    // out of sync with m_menu_stack. (This can maybe happen for reasons that I
+    // don't fully understand, on spectator join.)
+    send_message("{\"msg\":\"close_all_menus\"}");
 }
 
 static void _send_text_cursor(bool enabled)

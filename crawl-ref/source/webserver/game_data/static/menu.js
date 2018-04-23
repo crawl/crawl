@@ -496,6 +496,12 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         }
     }
 
+    function close_all_menus()
+    {
+        while (menu_stack.length > 0)
+            close_menu();
+    }
+
     function update_menu(data)
     {
         $.extend(menu, data);
@@ -552,6 +558,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     comm.register_handlers({
         "menu": open_menu,
         "close_menu": close_menu,
+        "close_all_menus": close_all_menus,
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
