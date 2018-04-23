@@ -2012,7 +2012,7 @@ tile_cell_pixels = 32
         the screen.
 
 tile_filter_scaling = false
-        Used in conjunction with tile_cell_pixels. Setting it to true filter
+        Used in conjunction with tile_cell_pixels. Setting it to true filters
         the textures resulting in a smoother but blurrier image.
 
 tile_force_overlay = false
