@@ -2953,7 +2953,12 @@ void define_monster(monster& mons)
         ghost_demon ghost;
         ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
         if (mcls == MONS_PLAYER_GHOST)
+        {
+            // still don't allow undead ghosts, even mirrored
+            if (you.undead_state(false) != US_ALIVE)
+                ghost.species = SP_HUMAN;
             mons.props[MIRRORED_GHOST_KEY] = true;
+        }
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));
         break;
