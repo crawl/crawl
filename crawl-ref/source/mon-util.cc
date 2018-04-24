@@ -1935,7 +1935,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (mons_is_ghost_demon(mc))
     {
-        if (attk_number == 0)
+        if (attk_number == 0 && mon.ghost)
         {
             return { mon.ghost->att_type, mon.ghost->att_flav,
                      mon.ghost->damage };
