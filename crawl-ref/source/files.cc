@@ -94,6 +94,29 @@
 #define F_OK 0
 #endif
 
+#define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS))
+
+#ifdef BONES_DIAGNOSTICS
+/// show diagnostics following a wizard command, even if not a debug build
+static void _ghost_dprf(const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+
+    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
+    if (wiz_cmd)
+        do_message_print(MSGCH_ERROR, 0, true, false, format, argp);
+#ifdef DEBUG_DIAGNOSTICS
+    else
+        do_message_print(MSGCH_DIAGNOSTICS, 0, false, false, format, argp);
+#endif
+
+    va_end(argp);
+}
+#else
+# define _ghost_dprf(...) ((void)0)
+#endif
+
 static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
@@ -1705,8 +1728,6 @@ static string _make_ghost_filename(bool store=false)
            + replace_all(level_id::current().describe(), ":", "-");
 }
 
-#define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
-
 static string _bones_permastore_file()
 {
     return _get_bonefile_directory() + _make_ghost_filename(true);
@@ -1737,13 +1758,13 @@ static vector<string> _list_bones()
         if (starts_with(filename, underscored_filename))
         {
             bonefiles.push_back(bonefile_dir + filename);
-            dprf("bonesfile %s", (bonefile_dir + filename).c_str());
+            _ghost_dprf("bonesfile %s", (bonefile_dir + filename).c_str());
         }
 
     string old_bonefile = _get_old_bonefile_directory() + base_filename;
     if (access(old_bonefile.c_str(), F_OK) == 0)
     {
-        dprf("Found old bonefile %s", old_bonefile.c_str());
+        _ghost_dprf("Found old bonefile %s", old_bonefile.c_str());
         bonefiles.push_back(old_bonefile);
     }
 
@@ -1763,22 +1784,17 @@ static string _find_ghost_file()
     return bonefiles[ui_random(bonefiles.size())];
 }
 
-static vector<ghost_demon> _load_bones_file(string ghost_filename, bool wiz_cmd)
+static vector<ghost_demon> _load_bones_file(string ghost_filename)
 {
     vector<ghost_demon> result;
 
     if (ghost_filename.empty())
-    {
-        if (wiz_cmd)
-            mprf(MSGCH_PROMPT, "No ephemeral ghost files for this level.");
         return result; // no such ghost.
-    }
 
     reader inf(ghost_filename);
     if (!inf.valid())
     {
-        if (wiz_cmd)
-            mprf(MSGCH_PROMPT, "Ghost file '%s' invalidated before read.", ghost_filename.c_str());
+        _ghost_dprf("Ghost file '%s' invalid before read.", ghost_filename.c_str());
         return result;
     }
 
@@ -1809,21 +1825,20 @@ static vector<ghost_demon> _load_bones_file(string ghost_filename, bool wiz_cmd)
     return result;
 }
 
-static vector<ghost_demon> _load_ephemeral_ghosts(bool wiz_cmd)
+static vector<ghost_demon> _load_ephemeral_ghosts()
 {
     vector<ghost_demon> results;
 
     string ghost_filename = _find_ghost_file();
     if (ghost_filename.empty())
     {
-        if (wiz_cmd)
-            mprf(MSGCH_PROMPT, "No ghost files for this level.");
+        _ghost_dprf("%s", "No ghost files for this level.");
         return results; // no such ghost.
     }
 
     try
     {
-        results = _load_bones_file(ghost_filename, wiz_cmd);
+        results = _load_bones_file(ghost_filename);
     }
     catch (corrupted_save &err)
     {
@@ -1838,13 +1853,13 @@ static vector<ghost_demon> _load_ephemeral_ghosts(bool wiz_cmd)
     return results;
 }
 
-static vector<ghost_demon> _load_permastore_ghosts(bool wiz_cmd)
+static vector<ghost_demon> _load_permastore_ghosts()
 {
     string ghost_filename = _bones_permastore_file();
     vector<ghost_demon> results;
     try
     {
-        results = _load_bones_file(ghost_filename, wiz_cmd);
+        results = _load_bones_file(ghost_filename);
     }
     catch (corrupted_save &err)
     {
@@ -1871,20 +1886,19 @@ static vector<ghost_demon> _load_permastore_ghosts(bool wiz_cmd)
  */
 bool define_ghost_from_bones(monster& mons)
 {
-    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
     bool used_permastore = false;
 
-    vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts(wiz_cmd);
+    vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts();
     if (loaded_ghosts.empty())
     {
-        loaded_ghosts = _load_permastore_ghosts(wiz_cmd);
+        loaded_ghosts = _load_permastore_ghosts();
         if (loaded_ghosts.empty())
             return false;
         used_permastore = true;
     }
 
     int place_i = random2(loaded_ghosts.size());
-    dprf("Loaded ghost file with %u ghost(s), placing %s",
+    _ghost_dprf("Loaded ghost file with %u ghost(s), placing %s",
          (unsigned int)loaded_ghosts.size(), loaded_ghosts[place_i].name.c_str());
     bool  ghost_errors    = false;
 
@@ -1924,43 +1938,28 @@ bool define_ghost_from_bones(monster& mons)
  */
 bool load_ghosts(int max_ghosts, bool creating_level)
 {
-    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
-
     ASSERT(you.transit_stair == DNGN_UNSEEN || creating_level);
     ASSERT(!you.entering_level || creating_level);
     ASSERT(!creating_level
            || (you.entering_level && you.transit_stair != DNGN_UNSEEN));
     // Only way to load a ghost without creating a level is via a wizard
     // command.
-    ASSERT(creating_level || wiz_cmd);
+    ASSERT(creating_level || (crawl_state.prev_cmd == CMD_WIZARD));
 
-#if !defined(DEBUG) && !defined(WIZARD)
-    UNUSED(creating_level);
+#ifdef BONES_DIAGNOSTICS
+    // this is pretty hacky, but arguably cleaner than what it is replacing.
+    // The effect is to show bones diagnostic messages on wizmode builds during
+    // level building
+    unwind_var<command_type> last_cmd(crawl_state.prev_cmd, creating_level ?
+        CMD_WIZARD : crawl_state.prev_cmd);
 #endif
 
-#ifdef BONES_DIAGNOSTICS
-    const bool do_diagnostics =
-#  if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
-        true
-#  elif defined(WIZARD)
-        !creating_level
-#  else // Can't happen currently
-        false
-#  endif
-        ;
-#endif // BONES_DIAGNOSTICS
+    vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts();
 
-    vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts(wiz_cmd);
-
-#ifdef BONES_DIAGNOSTICS
-    if (do_diagnostics)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s), will attempt to place %d of them",
+    _ghost_dprf("Loaded ghost file with %u ghost(s), will attempt to place %d of them",
              (unsigned int)loaded_ghosts.size(), max_ghosts);
-    }
 
-    bool          ghost_errors    = false;
-#endif
+    bool ghost_errors = false;
 
     max_ghosts = max_ghosts <= 0 ? loaded_ghosts.size()
                                  : min(max_ghosts, (int) loaded_ghosts.size());
@@ -1981,35 +1980,29 @@ bool load_ghosts(int max_ghosts, bool creating_level)
         loaded_ghosts.erase(loaded_ghosts.begin());
         placed_ghosts++;
 
-#ifdef BONES_DIAGNOSTICS
-        if (do_diagnostics)
+        if (!mons->alive())
         {
-            if (!mons->alive())
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Placed ghost is not alive.");
-                ghost_errors = true;
-            }
-            else if (mons->type != MONS_PLAYER_GHOST)
-            {
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Placed ghost is not MONS_PLAYER_GHOST, but %s",
-                     mons->name(DESC_PLAIN, true).c_str());
-                ghost_errors = true;
-            }
+            _ghost_dprf("Placed ghost is not alive.");
+            ghost_errors = true;
         }
-#endif
+        else if (mons->type != MONS_PLAYER_GHOST)
+        {
+            _ghost_dprf("Placed ghost is not MONS_PLAYER_GHOST, but %s",
+                 mons->name(DESC_PLAIN, true).c_str());
+            ghost_errors = true;
+        }
     }
 
-#ifdef BONES_DIAGNOSTICS
-    if (do_diagnostics && placed_ghosts < max_ghosts)
+    if (placed_ghosts < max_ghosts)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
-             max_ghosts - placed_ghosts);
+        _ghost_dprf("Unable to place %u ghost(s)", max_ghosts - placed_ghosts);
         ghost_errors = true;
     }
+#ifdef BONES_DIAGNOSTICS
     if (ghost_errors)
         more();
 #endif
+
     // resave any unused ghosts
     if (!loaded_ghosts.empty())
         save_ghosts(loaded_ghosts);
@@ -2502,13 +2495,13 @@ static FILE* _make_bones_file(string * return_gfilename)
 #define GHOST_PERMASTORE_SIZE 10
 #define GHOST_PERMASTORE_REPLACE_CHANCE 5
 
-static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
+static bool _update_permastore(const vector<ghost_demon> &ghosts)
 {
     if (ghosts.empty())
         return false;
 
     // this read is not locked...
-    vector<ghost_demon> permastore = _load_permastore_ghosts(wiz_cmd);
+    vector<ghost_demon> permastore = _load_permastore_ghosts();
 
     bool rewrite = false;
     int i = 0;
@@ -2525,7 +2518,7 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
         rewrite = true;
     }
     if (i > 0)
-        dprf("Permastoring %d ghosts", i);
+        _ghost_dprf("Permastoring %d ghosts", i);
     if (!rewrite && x_chance_in_y(GHOST_PERMASTORE_REPLACE_CHANCE, 100))
     {
         int rewrite_i = random2(permastore.size());
@@ -2545,12 +2538,12 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
         {
             // this will fail silently if the lock fails, seems safest
             // TODO: better lock system for servers?
-            dprf("Could not open ghost permastore: %s",
+            _ghost_dprf("Could not open ghost permastore: %s",
                                                     permastore_file.c_str());
             return false;
         }
 
-        dprf("Rewriting ghost permastore %s with %u ghosts",
+        _ghost_dprf("Rewriting ghost permastore %s with %u ghosts",
                     permastore_file.c_str(), (unsigned int) permastore.size());
         writer outw(permastore_file, ghost_file);
         _write_ghost_version(outw);
@@ -2573,22 +2566,29 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts, bool wiz_cmd)
 
 void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 {
+    // n.b. this is not called in the normal course of events for wizmode
+    // chars, so for debugging anything to do with deaths in wizmode, you will
+    // need to edit a conditional at the end of ouch.cc:ouch.
+    _ghost_dprf("Trying to save ghosts.");
     if (ghosts.empty())
     {
-        dprf("Could not find any ghosts for this level.");
+        _ghost_dprf("Could not find any ghosts for this level to save.");
         return;
     }
 
     if (!force && !ghost_demon::ghost_eligible())
+    {
+        _ghost_dprf("No eligible ghosts.");
         return;
+    }
 
     // TODO: fill temp store with ghosts unused by this
-    if (_update_permastore(ghosts, force))
+    if (_update_permastore(ghosts))
         return;
 
     if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
     {
-        dprf("Too many ghosts for this level already!");
+        _ghost_dprf("Too many ghosts for this level already!");
         return;
     }
 
@@ -2597,7 +2597,7 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 
     if (!ghost_file)
     {
-        dprf("Could not open file to save ghosts.");
+        _ghost_dprf("Could not open file to save ghosts.");
         return;
     }
 
@@ -2608,7 +2608,7 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 
     lk_close(ghost_file, g_file_name);
 
-    dprf("Saved ghosts (%s).", g_file_name.c_str());
+    _ghost_dprf("Saved ghosts (%s).", g_file_name.c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////
