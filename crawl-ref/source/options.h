@@ -130,7 +130,7 @@ public:
     void reset_options();
 
     void read_option_line(const string &s, bool runscripts = false);
-    void read_options(LineInput &, bool runscripts,
+    string read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
     void include(const string &file, bool resolve, bool runscript);
