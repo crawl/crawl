@@ -4827,38 +4827,12 @@ item_info get_item_info(const item_def& item)
 
         if (is_deck(item))
         {
+            // All cards are passed through, whether seen or not, as
+            // _describe_deck() needs to check card flags anyway.
             ii.deck_rarity = item.deck_rarity;
-
-            const int num_cards = cards_in_deck(item);
-            CrawlVector info_cards (SV_BYTE);
-            CrawlVector info_card_flags (SV_BYTE);
-
-            // TODO: this leaks both whether the seen cards are still there
-            // and their order: the representation needs to be fixed
-
-            // The above comment seems obsolete now that Mark Four is gone.
-
-            // I don't think so... Stack Five has a quite similar effect
-            // if you abanadon Nemelex and get the card shuffled.
-            for (int i = 0; i < num_cards; ++i)
-            {
-                uint8_t flags;
-                const card_type card = get_card_and_flags(item, -i-1, flags);
-                if (flags & CFLAG_SEEN)
-                {
-                    info_cards.push_back((char)card);
-                    info_card_flags.push_back((char)flags);
-                }
-            }
-
-            if (info_cards.empty())
-            {
-                // An empty deck would display as BUGGY, so fake a card.
-                info_cards.push_back((char) 0);
-                info_card_flags.push_back((char) 0);
-            }
-            ii.props[CARD_KEY] = info_cards;
-            ii.props[CARD_FLAG_KEY] = info_card_flags;
+            ii.props[CARD_KEY] = item.props[CARD_KEY];
+            ii.props[CARD_FLAG_KEY] = item.props[CARD_FLAG_KEY];
+            ii.used_count = item.used_count;
         }
         break;
     case OBJ_GOLD:
