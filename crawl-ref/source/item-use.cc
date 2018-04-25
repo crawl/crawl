@@ -2151,13 +2151,6 @@ bool god_hates_brand(const int brand)
         return true;
     }
 
-    if (you_worship(GOD_DITHMENOS)
-        && (brand == SPWPN_FLAMING
-            || brand == SPWPN_CHAOS))
-    {
-        return true;
-    }
-
     if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
         return true;
 
