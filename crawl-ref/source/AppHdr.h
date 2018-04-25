@@ -316,6 +316,9 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define DEBUG_BONES
 #endif
 
+// on by default (and has been for ~10 years)
+#define DEBUG_ITEM_SCAN
+
 #ifdef _DEBUG       // this is how MSVC signals a debug build
     #ifndef DEBUG
     #define DEBUG

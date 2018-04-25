@@ -1467,7 +1467,8 @@ mlist_allow_alternate_layout = false
 
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
-        minimum value is 5.
+        minimum value is 5. In console, if this value is large enough
+        that the map won't fit, crawl will not start.
 
 msg_max_height = 10
         In console, if there is extra space available after the monster list
@@ -1475,6 +1476,14 @@ msg_max_height = 10
         The monster list will get the rest.
         In tiles, control the maximum size of the message area. The viewport
         will get the rest.
+
+msg_webtiles_height = -1
+        This will set the height of the messages pane in (only) webtiles,
+        scaling the map accordingly. Values less than `msg_min_height` will
+        have no impact; in this case the height of the message pane is
+        inherited from console (and so will typically be 7). One of these
+        lines may be reserved for `more` messages depending on other
+        settings.
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
@@ -2003,7 +2012,7 @@ tile_cell_pixels = 32
         the screen.
 
 tile_filter_scaling = false
-        Used in conjunction with tile_cell_pixels. Setting it to true filter
+        Used in conjunction with tile_cell_pixels. Setting it to true filters
         the textures resulting in a smoother but blurrier image.
 
 tile_force_overlay = false
