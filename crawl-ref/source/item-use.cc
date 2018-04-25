@@ -2140,9 +2140,6 @@ bool god_hates_brand(const int brand)
         return true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
-        return true;
-
     if (you_worship(GOD_CHEIBRIADOS) && (brand == SPWPN_CHAOS
                                          || brand == SPWPN_SPEED))
     {
