@@ -569,21 +569,22 @@ void full_describe_view()
             list_features.push_back(*ri);
         }
 
-        const int oid = you.visible_igrd(*ri);
-        if (oid == NON_ITEM)
-            continue;
+        int oid = you.visible_igrd(*ri);
 
-        const vector<item_def> items = item_list_in_stash(*ri);
+        while(oid != NON_ITEM){
+            item_info ii = mitm[oid];
+            list_items.push_back(ii);
+            oid = ii.link;
+        }
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (items.empty())
+        if (list_items.empty() && oid != NON_ITEM)
         {
             mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
                  mitm[oid].name(DESC_PLAIN).c_str());
             more();
         }
 #endif
-        list_items.insert(list_items.end(), items.begin(), items.end());
     }
 
     // Get monsters via the monster_info, sorted by difficulty.
