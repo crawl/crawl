@@ -1,6 +1,7 @@
 enum: SP_HUMAN
 monster: MONS_HUMAN
 name: Human
+difficulty: Intermediate
 difficulty_priority: 100
 aptitudes:
   xp: 1

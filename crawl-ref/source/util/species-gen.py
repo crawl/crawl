@@ -26,7 +26,7 @@ class Species(dict):
                 raise ValueError('TAG_MAJOR_VERSION must be an integer')
         if not isinstance(s.get('fake_mutations', []), list):
             raise ValueError('fake_mutations must be a list')
-        starting_species = s.get('difficulty', 'Intermediate') != False
+        starting_species = s.get('difficulty') != False
         has_recommended_jobs = bool(s.get('recommended_jobs'))
         if starting_species != has_recommended_jobs:
             raise ValueError('recommended_jobs must not be empty (or difficulty must be False)')
@@ -57,7 +57,7 @@ class Species(dict):
         species['fake_mutations_short'] = fake_mutations_short(s.get('fake_mutations', []))
         species['recommended_jobs'] = recommended_jobs(s.get('recommended_jobs', []))
         species['recommended_weapons'] = recommended_weapons(s.get('recommended_weapons', []))
-        species['difficulty'] = difficulty(s.get('difficulty', 'Intermediate'))
+        species['difficulty'] = difficulty(s.get('difficulty'))
         species['difficulty_priority'] = validate_int_range(difficulty_priority(s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
         species['create_enum'] = validate_bool(s.get('create_enum', True), 'create_enum')
         species['walking_verb'] = quote(s['walking_verb']) if 'walking_verb' in s else 'nullptr'
