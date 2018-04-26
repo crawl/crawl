@@ -4,6 +4,7 @@ name: "Deep Dwarf"
 short_name: "DD"
 adjective: "Dwarven"
 genus: "Dwarf"
+difficulty: Intermediate
 difficulty_priority: 20
 aptitudes:
   xp: -1

@@ -1,6 +1,7 @@
 enum: SP_CENTAUR
 monster: MONS_CENTAUR
 name: "Centaur"
+difficulty: Intermediate
 difficulty_priority: 70
 species_flags:
   - small_torso
