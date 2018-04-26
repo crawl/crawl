@@ -1,6 +1,7 @@
 enum: SP_GNOLL
 monster: MONS_GNOLL
 name: "Gnoll"
+difficulty: Intermediate
 difficulty_priority: 10
 aptitudes:
   xp: 0

@@ -4,6 +4,7 @@ name: "Deep Elf"
 short_name: "DE"
 adjective: "Elven"
 genus: "Elf"
+difficulty: Intermediate
 difficulty_priority: 40
 species_flags:
   - elven

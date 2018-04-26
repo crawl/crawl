@@ -1,6 +1,7 @@
 enum: SP_KOBOLD
 monster: MONS_KOBOLD
 name: Kobold
+difficulty: Intermediate
 difficulty_priority: 90
 aptitudes:
   xp: 1
