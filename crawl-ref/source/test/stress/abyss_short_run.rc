@@ -49,11 +49,10 @@ function ready()
     crawl.sendkeys("&tga2" .. eol .. esc)
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
-    crawl.sendkeys("ah") -- flight
     --# re-enable monsters
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)
-    --# exit the Abyss then go back, so it's not the special starting Abyss
+    --# go to the abyss
     crawl.sendkeys("&" .. string.char(2))
   end
   if you.turns() ~= last_turn then
