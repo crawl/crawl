@@ -53,7 +53,9 @@ game_state::game_state()
       title_screen(true),
       invisible_targeting(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
-      minor_version(-1), save_rcs_version(), mon_act(nullptr)
+      minor_version(-1), save_rcs_version(),
+      nonempty_buffer_flush_errors(false),
+      mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();

@@ -816,6 +816,13 @@ void flush_input_buffer(int reason)
         || reason == FLUSH_REPLAY_SETUP_FAILURE
         || reason == FLUSH_REPEAT_SETUP_DONE)
     {
+        if (crawl_state.nonempty_buffer_flush_errors)
+        {
+            if (you.wizard) // crash -- intended for tests
+                ASSERT(Buffer.empty());
+            else if (!Buffer.empty())
+                mprf(MSGCH_ERROR, "Flushing non-empty key buffer");
+        }
         while (!Buffer.empty())
         {
             const int key = Buffer.front();
