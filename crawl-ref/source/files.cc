@@ -1724,8 +1724,22 @@ void save_game_state()
 
 static string _make_ghost_filename(bool store=false)
 {
-    return string("bones.") + (store ? "store." : "")
-           + replace_all(level_id::current().describe(), ":", "-");
+    // Only use level-numbered bones files for places where players die a lot.
+    // For the permastore, go even coarser (just D and Lair use level numbers).
+    // n.b. some branches here may not currently generate ghosts.
+    // TODO: further adjustments? Make Zot coarser?
+    const bool with_number = store ? player_in_branch(BRANCH_DUNGEON) ||
+                                     player_in_branch(BRANCH_LAIR)
+                                   : !(player_in_branch(BRANCH_ZIGGURAT) ||
+                                       player_in_branch(BRANCH_CRYPT) ||
+                                       player_in_branch(BRANCH_TOMB) ||
+                                       player_in_branch(BRANCH_ABYSS) ||
+                                       player_in_branch(BRANCH_SLIME));
+    // Players die so rarely in hell in practice that it doesn't even make
+    // sense to have per-hell bones. (Maybe vestibule should be separate?)
+    const string level_desc = player_in_hell() ? "Hells" :
+        replace_all(level_id::current().describe(false, with_number), ":", "-");
+    return string("bones.") + (store ? "store." : "") + level_desc;
 }
 
 static string _bones_permastore_file()
