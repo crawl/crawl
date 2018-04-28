@@ -1584,8 +1584,8 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 #if TAG_MAJOR_VERSION == 34
     APT(SP_HERMIT_CRAB,           SK_TRAPS,         UNUSABLE_SKILL),
 #endif
-    APT(SP_HERMIT_CRAB,           SK_UNARMED_COMBAT,  0),
-    APT(SP_HERMIT_CRAB,           SK_SPELLCASTING,    0),
+    APT(SP_HERMIT_CRAB,           SK_UNARMED_COMBAT,  -1),
+    APT(SP_HERMIT_CRAB,           SK_SPELLCASTING,    2),
     APT(SP_HERMIT_CRAB,           SK_CONJURATIONS,    1),
     APT(SP_HERMIT_CRAB,           SK_HEXES,           1),
     APT(SP_HERMIT_CRAB,           SK_CHARMS,          1),

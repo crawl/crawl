@@ -957,6 +957,7 @@ static species_group species_groups[] =
             SP_HALFLING,
             SP_TROLL,
             SP_GHOUL,
+            SP_HERMIT_CRAB,
         }
     },
     {
@@ -992,14 +993,6 @@ static species_group species_groups[] =
             SP_BARACHI,
             SP_MUMMY,
         }
-    },
-    {
-        "Crab",
-        coord_def(75, 0),
-        20,
-        {
-            SP_HERMIT_CRAB,
-        }    
     },
 };
 

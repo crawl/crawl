@@ -6753,7 +6753,7 @@ void player::slow_down(actor *foe, int str)
     ::slow_player(str);
 }
 
-int player::has_crab_claws(bool allow_tran) const
+int player::has_pincers(bool allow_tran) const
 {
     if (allow_tran)
     {
@@ -6766,7 +6766,7 @@ int player::has_crab_claws(bool allow_tran) const
             return 0;
     }
 
-    return get_mutation_level(MUT_CRAB_CLAWS, allow_tran);
+    return get_mutation_level(MUT_PINCERS, allow_tran);
 }
 
 int player::has_claws(bool allow_tran) const
@@ -6785,9 +6785,9 @@ int player::has_claws(bool allow_tran) const
     return get_mutation_level(MUT_CLAWS, allow_tran);
 }
 
-bool player::has_usable_crab_claws(bool allow_tran) const
+bool player::has_usable_pincers(bool allow_tran) const
 {
-    return !slot_item(EQ_GLOVES) && has_crab_claws(allow_tran);
+    return !slot_item(EQ_GLOVES) && has_pincers(allow_tran);
 }
 
 bool player::has_usable_claws(bool allow_tran) const

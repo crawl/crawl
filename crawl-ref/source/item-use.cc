@@ -701,6 +701,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
+    if (you.species == SP_HERMIT_CRAB && slot != EQ_BODY_ARMOUR && slot != EQ_CLOAK && slot != EQ_SHIELD)
+    {
+        if (verbose)
+            mpr("You can't wear that!");
+        return false;
+    }
+
     if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
     {
         if (verbose)

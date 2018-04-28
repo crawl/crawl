@@ -616,8 +616,8 @@ public:
     int       has_usable_pseudopods(bool allow_tran = true) const;
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
-    int       has_crab_claws(bool allow_tran = true) const;
-    bool      has_usable_crab_claws(bool allow_tran = true) const;
+    int       has_pincers(bool allow_tran = false) const;
+    bool      has_usable_pincers(bool allow_tran = false) const;
 
 
     // Information about player mutations. Implemented in mutation.cc
