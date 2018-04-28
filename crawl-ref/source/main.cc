@@ -109,6 +109,7 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "movement.h"
 #include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
@@ -132,6 +133,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -1481,6 +1483,7 @@ static void _take_stairs(bool down)
                              && ygrd != DNGN_UNDISCOVERED_TRAP);
 
     if (!(_can_take_stairs(ygrd, down, shaft)
+          && !cancel_barbed_move()
           && _prompt_stairs(ygrd, down, shaft)
           && you.attempt_escape())) // false means constricted and don't escape
     {
@@ -2431,24 +2434,6 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-static bool _cancel_barbed_move()
-{
-    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
-    {
-        string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return true;
-        }
-
-        you.props[BARBS_MOVE_KEY] = true;
-    }
-
-    return false;
-}
-
 static bool _cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -2889,6 +2874,7 @@ static void _entered_malign_portal(actor* act)
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
+// TODO: Move player movement code to its own file
 static void _move_player(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
@@ -2927,7 +2913,7 @@ static void _move_player(coord_def move)
         if (_cancel_confused_move(false))
             return;
 
-        if (_cancel_barbed_move())
+        if (cancel_barbed_move())
             return;
 
         if (!one_chance_in(3))
@@ -3146,7 +3132,7 @@ static void _move_player(coord_def move)
 
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
-        if (!you.confused() && _cancel_barbed_move())
+        if (!you.confused() && cancel_barbed_move())
             return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
@@ -3212,28 +3198,8 @@ static void _move_player(coord_def move)
         if (swap)
             targ_monst->apply_location_effects(targ);
 
-        if (you.duration[DUR_BARBS])
-        {
-            mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
-                             "as you move.");
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
-            bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
-
-            // Sometimes decrease duration even when we move.
-            if (one_chance_in(3))
-                extract_manticore_spikes("The barbed spikes snap loose.");
-            // But if that failed to end the effect, duration stays the same.
-            if (you.duration[DUR_BARBS])
-                you.duration[DUR_BARBS] += you.time_taken;
-        }
-
-        if (you.duration[DUR_ICY_ARMOUR])
-        {
-            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
-                                 "you move.");
-            you.duration[DUR_ICY_ARMOUR] = 0;
-            you.redraw_armour_class = true;
-        }
+        apply_barbs_damage();
+        remove_ice_armour_movement();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
@@ -3340,7 +3306,10 @@ static void _move_player(coord_def move)
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking)
-        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump, initial_position);
+    {
+        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump,
+                                                       initial_position);
+    }
 
     // If you actually moved you are eligible for amulet of the acrobat.
     if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
