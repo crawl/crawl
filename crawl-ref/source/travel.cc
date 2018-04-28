@@ -1815,16 +1815,6 @@ static void _find_parent_branch(branch_type br, int depth,
 {
     *pb = parent_branch(br);   // Check depth before using *pb.
 
-    // If that doesn't work, find where the exit stairs would take us
-    if (*pb == NUM_BRANCHES)
-    {
-        auto p = stair_destination(branches[br].exit_stairs, "", false);
-        *pb = p.branch;
-        // XXX: conditional prevents an infinite loop in_get_nearest_level_depth
-        *pd = br == BRANCH_DUNGEON ? 0 : p.depth;
-        return;
-    }
-
     if (auto levels = map_find(stair_level, br))
     {
         if (levels->size() > 0)
@@ -2016,13 +2006,14 @@ bool is_known_branch_id(branch_type branch)
     if (player_in_branch(branch))
         return true;
 
+    // The Vestibule is special: there are no stairs to it, just a
+    // portal.
+    if (branch == BRANCH_VESTIBULE)
+        return overview_knows_portal(branch);
+
     // Guaranteed portal vault, don't show in interlevel travel.
     if (branch == BRANCH_ZIGGURAT)
         return false;
-
-    // Other portals that haven't timed out yet (includes vestibule)
-    if (overview_knows_portal(branch))
-        return true;
 
     // If the overview knows the stairs to this branch, we know the branch.
     return stair_level.find(static_cast<branch_type>(branch))
@@ -2225,9 +2216,6 @@ level_id find_up_level(level_id curr, bool up_branch)
         return level_id();
     }
 
-    if (curr.branch == BRANCH_ABYSS || is_hell_subbranch(curr.branch))
-        return stair_destination(branches[curr.branch].exit_stairs, "", false);
-
     return curr;
 }
 
@@ -2406,8 +2394,8 @@ static level_pos _prompt_travel_depth(const level_id &id)
 {
     level_pos target = level_pos(id);
 
-    // Handle abyss and one-level branches by not prompting.
-    if (single_level_branch(target.id.branch) || target.id.branch == BRANCH_ABYSS)
+    // Handle one-level branches by not prompting.
+    if (single_level_branch(target.id.branch))
         return level_pos(level_id(target.id.branch, 1));
 
     target.id.depth = _get_nearest_level_depth(target.id.branch);
@@ -2494,8 +2482,7 @@ static void _start_translevel_travel()
     travel_cache.get_level_info(level_id::current()).update();
 
     if (level_id::current() == level_target.id
-        && (level_target.pos.x == -1 || level_target.pos == you.pos())
-        && level_target.id.branch != BRANCH_PANDEMONIUM)
+        && (level_target.pos.x == -1 || level_target.pos == you.pos()))
     {
         mpr("You're already here!");
         return ;
@@ -2635,7 +2622,7 @@ static int _find_transtravel_stair(const level_id &cur,
     LevelInfo &li = travel_cache.get_level_info(cur);
 
     // Have we reached the target level?
-    if (cur == target.id && cur.branch != BRANCH_PANDEMONIUM)
+    if (cur == target.id)
     {
         // Are we in an exclude? If so, bail out. Unless it is just a stair exclusion.
         if (is_excluded(stair, li.get_excludes()) && !is_stair_exclusion(stair))
@@ -2854,10 +2841,9 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     // either off-level, or traversable and on-level
     // TODO: actually check this when the square is off-level? The current
     // behavior is that it will go to the level and then fail.
-    const bool maybe_traversable = target.id != current
-            || current.branch == BRANCH_PANDEMONIUM
-            || (in_bounds(target.pos)
-                && feat_is_traversable_now(env.map_knowledge(target.pos).feat()));
+    const bool maybe_traversable = (target.id != current
+                                    || (in_bounds(target.pos)
+                                        && feat_is_traversable_now(env.map_knowledge(target.pos).feat())));
 
     if (maybe_traversable)
     {
@@ -2917,7 +2903,6 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     if (verbose)
     {
         if (target.id != current
-            || current.branch == BRANCH_PANDEMONIUM
             || target.pos.x != -1 && target.pos != you.pos())
         {
             if (!maybe_traversable)
@@ -3579,7 +3564,7 @@ void LevelInfo::get_stairs(vector<coord_def> &st)
         const dungeon_feature_type feat = grd(*ri);
 
         if ((*ri == you.pos() || env.map_knowledge(*ri).known())
-            && (feat_is_travelable_stair(feat) || feat_is_gate(feat))
+            && feat_is_travelable_stair(feat)
             && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri)))
         {
             st.push_back(*ri);
@@ -4071,12 +4056,13 @@ vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return can_travel_interlevel() || id == level_id::current();
+    return is_connected_branch(id) && can_travel_interlevel()
+           || id == level_id::current();
 }
 
 bool can_travel_interlevel()
 {
-    return true;
+    return player_in_connected_branch();
 }
 
 /////////////////////////////////////////////////////////////////////////////
