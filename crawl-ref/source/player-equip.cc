@@ -650,8 +650,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
+    {
         _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
                                  true);
+    }
 
     if (item.base_type == OBJ_WEAPONS)
     {

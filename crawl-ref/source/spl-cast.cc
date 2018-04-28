@@ -437,7 +437,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     }
 
     power += you.skill(SK_SPELLCASTING, 50);
- 
+
     if (fail_rate_check)
     {
         // Scale appropriately.
@@ -466,14 +466,14 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Augmentation boosts spell power at high HP.
         power *= 10 + 4 * augmentation_amount();
         power /= 10;
-    
+
         // Each level of horror reduces spellpower by 10%
         if (you.duration[DUR_HORROR])
         {
             power *= 10;
             power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
         }
-     
+
         // at this point, `power` is assumed to be basically in centis.
         // apply a stepdown, and scale.
         power = stepdown_spellpower(power, scale);

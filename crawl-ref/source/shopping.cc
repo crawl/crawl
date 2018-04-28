@@ -1984,13 +1984,17 @@ void ShoppingList::spells_added_to_library(const vector<spell_type>& spells, boo
         if (any_of(item_spells.begin(), item_spells.end(), [&spells](const spell_type st) {
                     return find(spells.begin(), spells.end(), st) != spells.end();
                 }) && is_useless_item(book, false))
+        {
             to_del.push_back(&thing);
+        }
     }
     for (auto thing : to_del)
     {
         if (!quiet)
+        {
             mprf("Shopping list: removing %s",
                 describe_thing(*thing, DESC_A).c_str());
+        }
         level_pos pos = thing_pos(*thing);
         del_thing(get_thing_item(*thing), &pos);
     }
