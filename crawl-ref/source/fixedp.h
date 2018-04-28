@@ -8,11 +8,11 @@
 #include <type_traits>
 
 /**
- * Header-only fixed point library for DCSS.
+ * Header-only decimal fixed point library for DCSS.
  *
  * This class is a minimalist wrapper around the way that DCSS already
  * approaches fixed point calculations, namely by using an integer value
- * multiplied by some scale parameter. It's not a "real" general-purpose
+ * multiplied by some scale parameter. It's not a general-purpose
  * fixed-point library; see e.g. https://github.com/johnmcfarlane/fixed_point
  * and https://github.com/johnmcfarlane/cnl. Unfortunately the fixed point
  * ecosystem is in something of a state of flux, and I decided that none of
@@ -20,12 +20,12 @@
  * hence this one. This differs from the code it is replacing in one qualitative
  * way: it allows rounding, rather than truncation behavior in division and
  * multiplication. The fact that dcss has traditionally used decimal scales
- * also impacts this class: a more normal fixed point library would use a
+ * also impacts this class: a more general fixed point library would use a
  * binary point. This class loses out on the various optimizations that you can
  * do easily with binary fixed point arithmetic (efficient rounding, shift for
  * divide, etc.).
  *
- * Down the line, hopefully that CNL class (or something else) will develop into
+ * Down the line, perhaps that CNL class (or something else) will develop into
  * a C++ standard and this can be replaced.
  *
  * This implements most operators you would want, as well as many cmath-style
@@ -48,8 +48,8 @@
  * can toggle this behavior with `set_rounding`.
  *
  * Warning: this has no overflow protection/detection, so if you use a big Scale
- * parameter, or multiply by large numbers, be careful of how much space you
- * have. fixedp should work with any integral type so in a pinch you can use
+ * parameter, or multiply/divide by large numbers, be careful of how much space
+ * you have. fixedp should work with any integral type so in a pinch you can use
  * bigger types.
  *
  * @tparam BaseType the base type to use for storing numbers. Must be integral.
@@ -64,14 +64,14 @@
  *
  * > return 2 + fixedp<>(experience_level) * 2 / 5 + (max(0, fixedp<>(experience_level) - 7) * 2 / 5);
  * A more elaborate example with implicit constructors, in this case for
- * calculating gargoyle AC at a given XL. Makes use of min.
+ * calculating gargoyle AC at a given XL. Makes use of max.
  *
  * See fixedp::test_cases for further examples.
  *
  * Using a Scale that is a power of 2 is the most efficient use of precision,
  * but using a Scale that is a power of 10 is much more transparent. This class
- * contains no particular optimization for the power of 2 case, but that's
- * something you'd get in a "real" fixed point library.
+ * contains no particular optimization for the power of 2 case, and is mainly
+ * intended for use with a decimal point.
  */
 template <typename BaseType=int, int Scale=100> class fixedp
 {
@@ -220,8 +220,8 @@ public:
         // This needs to use a somewhat more complicated version of abs in
         // order to work with unsigned types.
         return (!calc_signed || content >= 0)
-                ? _safe_abs<BaseType>(content) % static_cast<BaseType>(Scale)
-                : -(_safe_abs<BaseType>(content) % static_cast<BaseType>(Scale));
+            ? _safe_abs<BaseType>(content) % static_cast<BaseType>(Scale)
+            : -(_safe_abs<BaseType>(content) % static_cast<BaseType>(Scale));
     }
 
     /**
@@ -686,12 +686,17 @@ public:
         // these need the double parens because assert gets confused with too
         // many commas.
         assert((fixedp<int, 100>::from_fixedp<10>(fixedp<int, 10>(10)) == 10));
-        assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(10)) == 10));
-        assert((fixedp<int, 100>::from_fixedp<10>(fixedp<int, 10>(11) / 10) == 1.1));
-        assert((fixedp<int, 100>::from_fixedp<10>(fixedp<int, 10>(-11) / 10) == -1.1));
-        assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1111) / 1000) == 1.11));
+        assert((fixedp<int, 100>::from_fixedp<1000>(
+                                    fixedp<int, 1000>(10)) == 10));
+        assert((fixedp<int, 100>::from_fixedp<10>(
+                                    fixedp<int, 10>(11) / 10) == 1.1));
+        assert((fixedp<int, 100>::from_fixedp<10>(
+                                    fixedp<int, 10>(-11) / 10) == -1.1));
+        assert((fixedp<int, 100>::from_fixedp<1000>(
+                                    fixedp<int, 1000>(1111) / 1000) == 1.11));
         // test truncation behavior
-        assert((fixedp<int, 100>::from_fixedp<1000>(fixedp<int, 1000>(1116) / 1000) == 1.12));
+        assert((fixedp<int, 100>::from_fixedp<1000>(
+                                    fixedp<int, 1000>(1116) / 1000) == 1.12));
 
         assert((fixedp<int, 100>(fixedp<int, 10>(10)) == 10));
         assert((fixedp<int, 100>(fixedp<int, 1000>(10)) == 10));
@@ -716,4 +721,5 @@ public:
 };
 
 // round by default
-template <typename BaseType, int Scale> bool fixedp<BaseType, Scale>::rounding = true;
+template <typename BaseType, int Scale> bool
+                                    fixedp<BaseType, Scale>::rounding = true;
