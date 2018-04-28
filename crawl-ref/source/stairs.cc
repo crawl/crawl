@@ -30,6 +30,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-death.h"
+#include "movement.h"
 #include "notes.h"
 #include "orb-type.h"
 #include "output.h"
@@ -568,6 +569,12 @@ void floor_transition(dungeon_feature_type how,
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
+
+    // Break Ice Armour
+    remove_ice_armour_movement();
+
+    //Check for barbs and apply
+    apply_barbs_damage();
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
