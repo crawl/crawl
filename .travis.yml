@@ -28,8 +28,13 @@ notifications:
         on_failure: always
 #        recipients:
 #          - crawl-ref-commits@lists.sourceforge.net
+# the IRC channel name (chat.freenode.net##crawl-dev) is encrypted so that
+# forks won't spam ##crawl-dev.
+# See: https://github.com/travis-ci/travis-ci/issues/1094
+# and https://docs.travis-ci.com/user/encryption-keys/
     irc:
-        channels: "chat.freenode.net##crawl-dev"
+        channels:
+           - secure: "bZx+ynE2xu+XAuMDSxMfk9WrWpGuetYmJ7bYZfyEePCo2RZNMla1ehFof/srnFuC+KyK6E2gNpUsU4HAyySb7n20AdZxcXFaHQmQvnSU6pUEyLRifgBy7Rsn6DbI3mrsEDhiOECFIxYj2f63nsO5dkRJBQLYQwf/czAQH/0aylw="
         on_success: change
         on_failure: always
         use_notice: true
