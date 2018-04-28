@@ -3008,6 +3008,8 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     if (gridc == DNGN_ENTER_PORTAL_VAULT)
         return stair_destination(pos);
 #endif
+    if (gridc == DNGN_EXIT_THROUGH_ABYSS)
+        return level_id(BRANCH_ABYSS, 1);
 
     for (branch_iterator it; it; ++it)
     {
@@ -3023,6 +3025,7 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     {
     case DNGN_STONE_STAIRS_DOWN_I:   case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III: case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ABYSSAL_STAIR:
         id.depth++;
         break;
     case DNGN_STONE_STAIRS_UP_I:     case DNGN_STONE_STAIRS_UP_II:
