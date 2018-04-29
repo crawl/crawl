@@ -338,18 +338,14 @@ Engulf status
 {{
     local desc = "You are engulfed in water"
 
-    if you.race():match("Octopode|Merfolk|Barachi|Mummy|Ghoul|Vampire"
-                        .. "|Grey Draconian|Gargoyle")
-       or you.transform():match("ice|hydra") then
-        desc = desc .. "."
-    else
+    if not you.res_drowning() then
         desc = desc .. [[ and are unable to breathe. You will take increasing]]
                        .. [[ damage from asphyxiation every turn until you]]
                        .. [[ escape. This makes reading scrolls, casting spells]]
-                       .. [[, and invoking divine abilities impossible.]]
+                       .. [[, and invoking divine abilities impossible]]
     end
 
-    return desc
+    return desc .. "."
 }}
 %%%%
 Stealth status
