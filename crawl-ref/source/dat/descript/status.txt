@@ -338,19 +338,15 @@ Engulf status
 {{
     local desc = "You are engulfed in water"
 
-    if you.race():match("Octopode|Merfolk|Barachi")
+    if you.race():match("Octopode|Merfolk|Barachi|Mummy|Ghoul|Vampire"
+                        .. "|Grey Draconian|Gargoyle")
        or you.transform():match("ice|hydra") then
         desc = desc .. "."
-    elseif you.race():match("Ghoul|Mummy|Vampire|Gargoyle|Grey Draconian") then
-        desc = desc .. [[. It will take longer to move and escape the water]]
-                       .. [[ elemental engulfing you.]]
     else
         desc = desc .. [[ and are unable to breathe. You will take increasing]]
                        .. [[ damage from asphyxiation every turn until you]]
                        .. [[ escape. This makes reading scrolls, casting spells]]
-                       .. [[, and reciting Zin's laws impossible, and it will]]
-                       .. [[ take longer to move and escape the water]]
-                       .. [[ elemental engulfing you.]]
+                       .. [[, and invoking divine abilities impossible.]]
     end
 
     return desc
