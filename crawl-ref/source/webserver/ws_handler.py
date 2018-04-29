@@ -134,6 +134,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.subprotocol = None
 
+        self.chat_hidden = False
+
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg
 
@@ -526,7 +528,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   = 'You need to log in to send messages!')
                 return
 
-            if not receiver.handle_chat_command(self.username, text):
+            if not receiver.handle_chat_command(self, text):
                 receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
