@@ -1051,7 +1051,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
             int x;
             for (x = 0; x < img->w; x++)
             {
-                unsigned int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels)[src+x];
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
@@ -1067,6 +1067,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                 pixels[dest*4 + 3] = 0;
                 dest++;
             }
+            src += img->pitch;
         }
         while (dest < new_width * new_height)
         {
