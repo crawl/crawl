@@ -147,6 +147,28 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.send_message(msg, **data)
 
+    def chat_help_message(self, source, command, desc):
+        if len(command) == 0:
+            self.handle_notification_raw(source,
+                        "&nbsp;" * 8 + "<span>%s</span>" % (xhtml_escape(desc)))
+        else:
+            self.handle_notification_raw(source,
+                        "&nbsp;" * 4 + "<span>%s: %s</span>" %
+                                (xhtml_escape(command), xhtml_escape(desc)))
+
+    def chat_command_help(self, source):
+        # TODO: generalize
+        # the chat window is basically fixed width, and these are calibrated
+        # to not do a linewrap
+        self.handle_notification(source, "The following chat commands are available:")
+        self.chat_help_message(source, "/help", "show chat command help.")
+        if self.is_player(source):
+            self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
+            self.chat_help_message(source, "", "Must be present in channel.")
+            self.chat_help_message(source, "/mutelist", "show your entire mute list.")
+            self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
+            self.chat_help_message(source, "/unmute *", "clear your mute list.")
+
     def handle_chat_command(self, source, text):
         text = text.strip()
         if len(text) == 0 or text[0] != '/':
@@ -165,6 +187,8 @@ class CrawlProcessHandlerBase(object):
             self.unmute(source, remainder)
         elif command == "/mutelist":
             self.show_mute_list(source)
+        elif command == "/help":
+            self.chat_command_help(source)
         else:
             return False
         return True
@@ -200,9 +224,14 @@ class CrawlProcessHandlerBase(object):
         for receiver in self.get_receivers_by_username(username):
             receiver.send_message(msg, **data)
 
-    def handle_notification(self, username, text):
-        msg = ("<span class='chat_msg'>%s</span>" % xhtml_escape(text))
+    # obviously, don't use this for player/spectator-accessible data. But, it
+    # is still partially sanitized in chat.js.
+    def handle_notification_raw(self, username, text):
+        msg = ("<span class='chat_msg'>%s</span>" % text)
         self.send_to_user(username, "chat", content=msg)
+
+    def handle_notification(self, username, text):
+        self.handle_notification_raw(username, xhtml_escape(text))
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -290,11 +319,20 @@ class CrawlProcessHandlerBase(object):
             self.handle_notification(source,
                                     "You can't unmute (or mute) yourself!")
             return False
-        player_name, watchers = self.get_watchers()
-        watchers = set(watchers)
+        if target == "*":
+            if (len(self.muted) == 0):
+                self.handle_notification(source, "No one is muted!")
+                return False
+            self.logger.info("Player '%s' has cleared their mute list." % (source))
+            self.handle_notification(source, "You have cleared your mute list.")
+            self.muted = set()
+            self.save_mutelist(source)
+            return True
+
         if not target in self.muted:
             self.handle_notification(source, "Unmute who??")
             return False
+
         self.logger.info("Player '%s' has unmuted '%s'" % (source, target))
         self.handle_notification(source, "You have unmuted '%s'." % target)
         self.muted -= {target}
