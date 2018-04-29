@@ -182,7 +182,7 @@ function (exports, $, key_conversion, chat, comm) {
         });
         current_layer = layer;
 
-        $("#chat").toggle(in_game());
+        chat.reset_visibility(in_game());
     }
 
     function register_layer(name)
@@ -432,6 +432,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_link").hide();
         $("#logout_link").show();
 
+        chat.reset_visibility(true);
         $("#chat_input").show();
         $("#chat_login_text").hide();
 
@@ -697,7 +698,7 @@ function (exports, $, key_conversion, chat, comm) {
         var msg = data.reason;
         set_layer("crt");
         hide_dialog();
-        $("#chat").hide();
+        chat.reset_visibility(false);
         $("#crt").html(msg + "<br><br>");
         showing_close_message = true;
         return true;
