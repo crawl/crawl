@@ -333,6 +333,29 @@ You are silenced. This makes reading scrolls, casting spells, invoking divine
 abilities, or shouting impossible. The oppressive, unnatural effect greatly
 hampers your stealth.
 %%%%
+Engulf status
+
+{{
+    local desc = "You are engulfed in water"
+
+    if you.race():match("Octopode|Merfolk|Barachi")
+       or you.transform():match("ice|hydra") then
+        desc = desc .. "."
+    elseif you.race():match("Ghoul|Mummy|Vampire|Gargoyle|Grey Draconian") then
+        desc = desc .. [[. It will take longer to move and escape the water]]
+                       .. [[ elemental engulfing you.]]
+    else
+        desc = desc .. [[ and are unable to breathe. You will take increasing]]
+                       .. [[ damage from asphyxiation every turn until you]]
+                       .. [[ escape. This makes reading scrolls, casting spells]]
+                       .. [[, and reciting Zin's laws impossible, and it will]]
+                       .. [[ take longer to move and escape the water]]
+                       .. [[ elemental engulfing you.]]
+    end
+
+    return desc
+}}
+%%%%
 Stealth status
 
 Your stealth is greatly increased.

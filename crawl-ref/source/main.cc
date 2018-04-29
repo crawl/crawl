@@ -3160,7 +3160,7 @@ static void _move_player(coord_def move)
                 mpr("You deftly slip free of the water engulfing you.");
             else //Unless you're a natural swimmer, this takes longer than normal
             {
-                mpr("With effort, you pull free of the water engulfing you.");
+                mpr("You slowly pull free of the water engulfing you.");
                 you.time_taken = you.time_taken * 3 / 2;
             }
             you.duration[DUR_WATER_HOLD] = 1;
