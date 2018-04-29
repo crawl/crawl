@@ -162,6 +162,7 @@ class CrawlProcessHandlerBase(object):
         # to not do a linewrap
         self.handle_notification(source, "The following chat commands are available:")
         self.chat_help_message(source, "/help", "show chat command help.")
+        self.chat_help_message(source, "/hide", "hide the chat window.")
         if self.is_player(source):
             self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
             self.chat_help_message(source, "", "Must be present in channel.")
@@ -169,7 +170,8 @@ class CrawlProcessHandlerBase(object):
             self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
             self.chat_help_message(source, "/unmute *", "clear your mute list.")
 
-    def handle_chat_command(self, source, text):
+    def handle_chat_command(self, source_ws, text):
+        source = source_ws.username
         text = text.strip()
         if len(text) == 0 or text[0] != '/':
             return False
@@ -189,6 +191,8 @@ class CrawlProcessHandlerBase(object):
             self.show_mute_list(source)
         elif command == "/help":
             self.chat_command_help(source)
+        elif command == "/hide":
+            self.hide_chat(source_ws, remainder.strip())
         else:
             return False
         return True
@@ -250,14 +254,16 @@ class CrawlProcessHandlerBase(object):
         if self.end_callback:
             self.end_callback()
 
-    def get_watchers(self):
+    def get_watchers(self, chatting_only=False):
         # TODO: I don't understand why this code didn't just use self.username,
         # when will this be different than player_name? Maybe for a console
         # player?
         player_name = None
         watchers = list()
         for w in self._receivers:
-            if not w.username:
+            if not w.username: # anon
+                continue
+            if chatting_only and w.chat_hidden:
                 continue
             if not w.watched_game:
                 player_name = w.username
@@ -271,6 +277,14 @@ class CrawlProcessHandlerBase(object):
         # TODO: let admin accounts mute as well?
         player_name, watchers = self.get_watchers()
         return (username == player_name)
+
+    def hide_chat(self, receiver, param):
+        if param == "forever":
+            receiver.send_message("super_hide_chat")
+            receiver.chat_hidden = True # currently only for super hidden chat
+            self.update_watcher_description()
+        else:
+            receiver.send_message("toggle_chat")
 
     def restore_mutelist(self, source, l):
         if not self.is_player(source) or l is None:
@@ -351,6 +365,9 @@ class CrawlProcessHandlerBase(object):
                                                             ", ".join(names))
         return True
 
+    def get_anon(self):
+        return [w for w in self._receivers if not w.username]
+
     def update_watcher_description(self):
         try:
             player_url = config.player_url
@@ -368,14 +385,14 @@ class CrawlProcessHandlerBase(object):
             username = username.replace('%s', watcher.lower())
             return username
 
-        player_name, watchers = self.get_watchers()
+        player_name, watchers = self.get_watchers(True)
 
         watcher_names = []
         if player_name is not None:
             watcher_names.append(wrap_name(player_name, True))
         watcher_names += [wrap_name(w) for w in watchers]
 
-        anon_count = len(self._receivers) - len(watcher_names)
+        anon_count = len(self.get_anon())
         s = ", ".join(watcher_names)
         if len(watcher_names) > 0 and anon_count > 0:
             s = s + " and %i Anon" % anon_count
