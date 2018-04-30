@@ -3157,13 +3157,7 @@ static void _move_player(coord_def move)
 
         if (you.duration[DUR_WATER_HOLD])
         {
-            if (you.can_swim())
-                mpr("You deftly slip free of the water engulfing you.");
-            else //Unless you're a natural swimmer, this takes longer than normal
-            {
-                mpr("With effort, you pull free of the water engulfing you.");
-                you.time_taken = you.time_taken * 3 / 2;
-            }
+            mpr("You slip free of the water engulfing you.");
             you.duration[DUR_WATER_HOLD] = 1;
             you.props.erase("water_holder");
         }

@@ -501,10 +501,7 @@ bool fill_status_info(int status, status_info* inf)
         {
             inf->short_text   = "engulfed";
             inf->long_text    = "You are engulfed in water.";
-            if (you.can_swim())
-                inf->light_colour = DARKGREY;
-            else
-                inf->light_colour = YELLOW;
+            inf->light_colour = DARKGREY;
         }
         else
         {
