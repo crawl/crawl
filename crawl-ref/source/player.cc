@@ -55,6 +55,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-equip.h"
 #include "player-save-info.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -2146,9 +2147,8 @@ static int _player_evasion_bonuses()
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
     // If you have an active amulet of the acrobat and just moved, get massive
-    // EV bonus. We also display this bonus if the duration isn't in effect but
-    // it was during the last move. It's a little hacky.
-    if (you.duration[DUR_ACROBAT] || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
+    // EV bonus.
+    if (acrobat_boost_visible())
         evbonus += 15;
 
     return evbonus;

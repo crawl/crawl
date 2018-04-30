@@ -32,6 +32,7 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
@@ -662,6 +663,13 @@ static bool _update_statuses(player_info& c)
                 continue;
             inf.short_text = "icemail depleted";
         }
+
+        else if (status == DUR_ACROBAT)
+        {
+            if (acrobat_boost_visible())
+                inf.short_text = "acrobat";
+        }
+
         else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
 

@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "notes.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
@@ -505,9 +506,7 @@ static bool _boosted_ev()
 {
     return you.duration[DUR_AGILITY]
            || you.duration[DUR_PHASE_SHIFT]
-           || (you.wearing(EQ_AMULET, AMU_ACROBAT)
-                && (you.duration[DUR_ACROBAT]
-                   || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool()));
+           || acrobat_boost_visible();
 }
 
 static bool _boosted_sh()
