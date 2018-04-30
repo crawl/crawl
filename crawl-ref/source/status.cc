@@ -17,6 +17,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
+#include "player-equip.h"
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
