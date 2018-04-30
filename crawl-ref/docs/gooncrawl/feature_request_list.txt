@@ -9,3 +9,121 @@ indicative of likelihood to implement feature, but may be an indicator as to how
 -------------------
 
 Post angrily at me if I missed something.
+
+---
+
+"my city now"
+       - tolly
+      
+jokes aside, current feature requests from crawl thread as of apr 30. current list is not in proper chronological order in any way, but is sorted by rough topics
+
+
+gods
+
+- beogh rework (directly send warbands of disciples, cap number of kinds of disciples (infighting removes extra ones), buff caster orc survivability, automatically arm fighter orcs w polearms)
+- sif muna rework (either the tavern one and/or https://forums.somethingawful.com/showthread.php?threadid=3845579&userid=0&perpage=40&pagenumber=56#post483399788 and/or some ability to cast spells directly from the library)
+- hunter god trio proposal (stealth/ranged/light armour-focused magic-agnostic god)
+- non-undead hepliaqlkana ancestors/dungeon ghosts (rename to memories or some shit)
+- allow hep ancestors to be fired through and to fire through you
+- tune ru’s sacrifice artifice piety gain up 
+- allow conversion to gozag in shops
+- faded altar guaranteed on d1
+- make norris a follower of chei who surfs to cheat the speed conduct
+
+species
+
+- implement yeti species (stealthy ogre-sized species w wild magic/sinv/fur 3)
+- implement slow mage snail species w/ no slots save jewelry/hat/scarf (no evasion skill)
+- implement snailtaur species (trample, no evasion skill)
+- implement fiddler crab species (shield/offhand slot is taken up by innate mutation that acts as penaltyless shield)
+- turn sludge elves into swamp hags
+- merge deep elves and high elves
+- demigod species proposals (angelic species?, artefact generation, semirandom skill boosts, altar desecration, better at worshipping gods?)
+- mummy felid species
+
+- ogre-size species can 1 hand the lighter 2-handers
+- give trolls/ogres semi-usable apts for crossbows
+- give felids pounce again
+- to more accurately describe the killing power of an angry/terrified cornered cat, give felids cleave at level 9 and riposte at level 18
+- unfuck vampire blood level micromanagement
+- give vampires a horned lizard eye blood attack to cause confusion and negative energy damage
+- nerf gargoyles to having rpois + potential flight mutation
+- make gargoyles eat rocks (with or without special effects)
+- make deep dwarves undead and also have them regain hp on killing things
+- give formicids two glove slots
+- let spriggans wear gloves as hats
+- have ghouls auto-eat chunks before they rot when safe
+- mummies curse living things that hit them in melee
+- even out the skill apts curve a little on species w one obvious weapon skill choice
+
+monsters
+
+- bat-type creature that hits for no damage but inflicts corona debuff
+- bring back ballistomycetes and giant spores except spores cant reproduce
+- bring back giant eyes in early-ish dungeon but with petrification
+
+spells
+
+- charms/poison combat buff/self-mesmerization spell
+- charms/poison spell that provides regen based on number of poisoned enemies
+- “summoning slots” (separate concept from spell slots)
+- nerf lightning spire health
+- guardian spirit charms spell (to replace shroud of golubria?)
+- lesser beckoned monsters are debuffed w more damage taken for a short while?
+- earth/poison spell that produces calcifying clouds
+- make hydraform a poison/tmut spell
+- revert ignite poison to make poisonous monsters burst into flame (did we go over this already?)
+- make a counterpart to ignite poison that turns fire into poison
+- implement beastly appendage hooves/claws (w mutation levels adjusted for similar power levels to horns/talons
+- reimplement delayed fireball/rework into a delayed conjuration spell
+- increase access to irradiate
+- increase access to blades of disaster
+- rename blades of disaster maxwell’s silver hammer
+- change ozo’s downside (ongoing noise? damage over time? 3x3 area of effect player must stay within?)
+- reimplement stoneskin, give it ozo’s former movement penalty
+
+weapons/items
+
+- turn shield armour slot into offhand item slot, implement various offhands (parrying daggers, staves, knuckledusters, lantern of shadows, smoke censer artefact, books?)
+- combine long+short blades into one school (remove riposte and daggers, move riposte to new offhand daggers)
+- roll bardings into new caparison item (light/heavy variations?)(possibly doubles as -stealth cape for ogre-sized species?)
+- barding-rarity ogre-sized species-only chest armour (5-6 base armour 20 er-ish)
+- bring back regularly spawning hammers/ankuses/etc
+
+- give large shields a lower block penalty than other shields get for already having blocked an attack that turn
+- rework stabbing to be more usable w nonblade schools
+- bring back clubstabbing
+- ranged reform (regenerating ammo quivers, quivers of same kind share spent-ammo value preventing hoarding; alternatively ammo just automulchs and theres a bunch more)
+- needles used w/o blowgun at melee range
+- bring back needlestabs
+- reimplement branded bullets/bolts/arrows
+- weaken *corrode property
+
+- scrolls of brand armour/jewelry or scroll of bless equipment
+- roll berserk potions and might potions together, make equally high risk-high reward versions of brilliance and agility
+- rename potion of cancellation to potion of refreshment
+
+- nerf healing harp evocable
+- implement sympathetic effigy magic evocable
+- unique evocations consumable generates friendly merc
+- implement helmets of magical power / helmets of headbutt
+- rename cloud immunity scarf to breathtaking scarf and let wearers travel through deep water
+- unrandart short blade that has cleave (and can stab on cleaves) and is called occam's razor
+- unrandart scimitar named grayswandir (nethack reference?)
+- unrandart armour that causes enemies who hit you in melee to suffer distortion effects/carries monsters with you when you teleport/blink
+- unrandart great sword called cleaver, has cleave instead of riposte
+- unrandart amulet of magical backlash, gives user minor miscast effects and spell targets major effects when casting
+- unrandart mammoth mask, gives user evocable might + trample
+- unrandart crown w negative defense modifiers but it gives you an effect similar to zin or ru that fucks up monsters good
+- unrandart plate armour that gives rElec, rNeg, MR+, prevents user from being moved by monster effects
+- unrandart cloak that gives a shitload of stealth and causes 67% of god wrath stuff to fail while lowering penance as usual
+- unrandart boots of dancing that slow your movement by an aut but give you a strong evasion boost
+
+misc
+
+- supertab, to instantly annihilate utterly harmless things without holding down tab
+- shop theft
+- convert paralysis into petrification and -tele
+- re-implement aux attack special effects (ministun, ignores ac, etc)
+- give gourmand an aux bite attack
+- make waterbreathing available via mutation
