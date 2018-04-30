@@ -491,13 +491,16 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     }
 
     move_item_to_grid(&o, pos);
-    if (you.see_cell(pos) && !silent)
+
+    // Don't display this message if the scales were dropped over
+    // lava/deep water, because then they are hardly intact.
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(grd(pos)))
     {
         // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
              item.name(DESC_THE).c_str(),
              mons_genus(mtyp) == MONS_DRAGON ? "are"  // scales are
-                                             : "is"); // hide is
+                                             : "is"); // troll armour is
                                                       // XXX: refactor
     }
 
