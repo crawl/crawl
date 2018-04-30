@@ -158,12 +158,7 @@ static void _escape_water_hold(monster& mons)
 {
     if (mons.has_ench(ENCH_WATER_HOLD))
     {
-        if (mons_habitat(mons) != HT_AMPHIBIOUS
-            && mons_habitat(mons) != HT_WATER)
-        {
-            mons.speed_increment -= 5;
-        }
-        simple_monster_message(mons, " pulls free of the water.");
+        simple_monster_message(mons, " slips free of the water.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
