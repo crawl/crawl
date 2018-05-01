@@ -995,7 +995,7 @@ static string _describe_portal(const coord_def &gc)
             "<console>another <w>"
           + stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
           + "</w> - but NOT the ancient stone arch you'll start "
-            "out on!</console>.";
+            "out on!</console>";
 
     return text;
 }
@@ -3087,7 +3087,7 @@ string hints_describe_item(const item_def &item)
                         "them off again with <w>%</w>"
 #ifdef USE_TILE
                         ", or, alternatively, simply click on their tiles to "
-                        "perform either action."
+                        "perform either action"
 #endif
                         ".";
                 cmd.push_back(CMD_WEAR_ARMOUR);
