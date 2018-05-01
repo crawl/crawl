@@ -154,7 +154,7 @@ You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
 dissection reminder
 
 Don't forget that you can butcher corpses with <input>$cmd[CMD_BUTCHER]</input>
-<localtiles>, or by clicking on corspes in the floor part of your inventory
+<localtiles>, or by clicking on corpses in the floor part of your inventory
 with the <input>left mouse button</input></localtiles>.
 %%%%
 HINT_CONVERT Xom
