@@ -628,7 +628,7 @@ static void _hints_healing_reminder()
                         "health in the first place. To use your abilities type "
                         "<w>a</w>.";
             }
-            mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
@@ -996,7 +996,7 @@ static string _describe_portal(const coord_def &gc)
             "<console>another <w>"
           + stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
           + "</w> - but NOT the ancient stone arch you'll start "
-            "out on!</console>.";
+            "out on!</console>";
 
     return text;
 }
@@ -1205,7 +1205,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
              << "</w>') </console>"
-                "you've picked up. Missiles like tomahwaks and throwing nets "
+                "you've picked up. Missiles like tomahawks and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
                 "really effective. "
@@ -2904,9 +2904,18 @@ static string _hints_throw_stuff(const item_def &item)
 {
     string result;
 
-    result  = "To do this, type <w>%</w> to fire, then <w>";
-    result += item.slot;
-    result += "</w> for ";
+    result  = "To do this, type <w>%</w> to fire, then ";
+    if (!item.slot)
+    {
+        result += "<w>";
+        result += item.slot;
+        result += "</w> for";
+    }
+    else
+    {
+        // you don't have this/these stuff(s) at present
+        result += "select ";
+    }
     result += (item.quantity > 1 ? "these" : "this");
     result += " ";
     result += item_base_name(item);
@@ -3142,7 +3151,7 @@ string hints_describe_item(const item_def &item)
                         "them off again with <w>%</w>"
 #ifdef USE_TILE
                         ", or, alternatively, simply click on their tiles to "
-                        "perform either action."
+                        "perform either action"
 #endif
                         ".";
                 cmd.push_back(CMD_WEAR_ARMOUR);
