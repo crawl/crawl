@@ -124,7 +124,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     }
 
     monster* mons = monster_at(beam.target);
-    if (!mons || mons->submerged())
+    if (mons->submerged())
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
