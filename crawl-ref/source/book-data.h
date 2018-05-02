@@ -47,7 +47,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Fire
-    SPELL_IGNITE_POISON,
     SPELL_FIREBALL,
     SPELL_BOLT_OF_FIRE,
     SPELL_RING_OF_FLAMES,
@@ -82,8 +81,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
+    SPELL_IGNITE_POISON,
     SPELL_POISONOUS_VAPOURS,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_VENOM_BOLT,
 },
@@ -131,8 +130,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Fen Folio
     SPELL_CORPSE_ROT,
-    SPELL_STONE_ARROW,
     SPELL_LEDAS_LIQUEFACTION,
+    SPELL_VENOM_BOLT,
     SPELL_SUMMON_FOREST,
     SPELL_HYDRA_FORM,
     SPELL_SUMMON_HYDRA,
@@ -262,9 +261,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
-    SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
+    SPELL_POISON_ARROW,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },

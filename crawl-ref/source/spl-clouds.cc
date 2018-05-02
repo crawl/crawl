@@ -131,13 +131,6 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
-    {
-        mprf("But poisonous vapours would do no harm to %s!",
-             mons->name(DESC_THE).c_str());
-        return SPRET_ABORT;
-    }
-
     if (stop_attack_prompt(mons, false, you.pos()))
         return SPRET_ABORT;
 
@@ -151,7 +144,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     fail_check();
 
-    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
+    const int cloud_duration = 5*div_rand_round(pow, 10) + 2; // in dekaauts
     if (cloud)
     {
         // Reinforce the cloud.
