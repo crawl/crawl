@@ -95,6 +95,8 @@ string keyseq_to_str(const keyseq &seq);
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
 
+KeymapContext context_for_command(command_type cmd);
+
 void bind_command_to_key(command_type cmd, int key);
 
 string command_to_string(command_type cmd, bool tutorial = false);
