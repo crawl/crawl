@@ -124,15 +124,18 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     }
 
     monster* mons = monster_at(beam.target);
-    if (mons->submerged())
-    {
-        fail_check();
-        canned_msg(MSG_SPELL_FIZZLES);
-        return SPRET_SUCCESS; // still losing a turn
-    }
 
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return SPRET_ABORT;
+	if(mons)
+	{
+		if (mons->submerged())
+		{
+			fail_check();
+			canned_msg(MSG_SPELL_FIZZLES);
+			return SPRET_SUCCESS; // still losing a turn
+		}
+		if (stop_attack_prompt(mons, false, you.pos()))
+			return SPRET_ABORT;
+	}
 
     cloud_struct* cloud = cloud_at(beam.target);
     if (cloud && cloud->type != CLOUD_POISON)
@@ -155,10 +158,11 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     else
     {
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
+        mpr("Poisonous vapours appear!");
     }
 
-    behaviour_event(mons, ME_WHACK, &you);
+	if(mons)
+        behaviour_event(mons, ME_WHACK, &you);
 
     return SPRET_SUCCESS;
 }
