@@ -1311,7 +1311,7 @@ OBJ:      OBJ_ARMOUR/ARM_GLOVES
 TYPE:     hand wraps
 COLOUR:   BLUE
 TILE:     urand_fists_of_thunder
-TILE_EQ:  fists_of_thunder
+TILE_EQ:  glove_white
 SLAY:     2
 BOOL:     elec
 
