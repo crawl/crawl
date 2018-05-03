@@ -424,6 +424,19 @@ static void _macro_inject_sent_keys()
 }
 
 /*
+ * Safely add a command to the end of the sendkeys keybuffer.
+ */
+void macro_sendkeys_end_add_cmd(command_type cmd)
+{
+    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
+
+    // There should be plenty of room between the synthetic keys
+    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
+    // command_type to fit (currently 1000 through 2069).
+    macro_sendkeys_end_add_expanded(-((int) cmd));
+}
+
+/*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
  */
