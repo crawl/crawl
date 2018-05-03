@@ -458,7 +458,7 @@ static int crawl_do_commands(lua_State *ls)
             first = false;
         }
         else
-            macro_buf_add_cmd(cmd);
+            macro_sendkeys_end_add_cmd(cmd);
     }
 
     process_command(firstcmd);
