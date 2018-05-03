@@ -127,12 +127,6 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     if(mons)
     {
-        if (mons->submerged())
-        {
-            fail_check();
-            canned_msg(MSG_SPELL_FIZZLES);
-            return SPRET_SUCCESS; // still losing a turn
-        }
         if (stop_attack_prompt(mons, false, you.pos()))
             return SPRET_ABORT;
     }
