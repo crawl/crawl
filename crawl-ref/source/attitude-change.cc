@@ -486,3 +486,26 @@ void gozag_break_bribe(monster* victim)
         if (mi->can_see(*victim))
             gozag_break_bribe(*mi);
 }
+
+void orbrun_convert(monster* mons)
+{
+    ASSERT(mons);
+    if (player_has_orb()
+    && mons->type == MONS_CRAZY_YIUF //add other uniques here if you like. But don't add Donald! He hates that.
+    && !mons->friendly()
+    && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+    && mons->foe == MHITYOU
+    && you.visible_to(mons) && !mons->asleep()
+    && !mons_is_confused(*mons) && !mons->paralysed())
+    {
+        behaviour_event(mons, ME_ALERT);
+        if (you.can_see(*mons))
+        {
+            mprf(MSGCH_GOD, "%s notices you have the Orb, and starts following you.",
+                mons->name(DESC_THE).c_str());
+        }
+        mons->attitude = ATT_FRIENDLY;
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+        mons_att_changed(mons);
+    }
+}

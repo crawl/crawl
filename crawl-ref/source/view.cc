@@ -152,6 +152,7 @@ void seen_monsters_react(int stealth)
         beogh_follower_convert(*mi);
         gozag_check_bribe(*mi);
         slime_convert(*mi);
+        orbrun_convert(*mi);
 
         if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
         {
