@@ -7350,6 +7350,22 @@ DUMMY(MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord", TILEP_MONS_PROGRAM_BUG)
     {TILEP_MONS_TEST_SPAWNER}, TILE_ERROR
 },
 
+// tons of hp, just sits there doing nothing except being a target.
+{
+    MONS_TEST_STATUE, 'X', WHITE, "test statue",
+    M_STATIONARY | M_NO_POLY_TO
+        | M_FAST_REGEN,
+    MR_NO_FLAGS,
+    15, MONS_TEST_STATUE, MONS_TEST_STATUE, MH_NONLIVING, 20,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    1000, 10000000,
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_BRAINLESS, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC,
+    {TILEP_MONS_TEST_SPAWNER}, TILE_ERROR
+},
+
+
 // an unspecified monster
 {
     MONS_SENSED, '{', RED, "sensed monster",

@@ -865,6 +865,9 @@ enum monster_type                      // menv[].type
     MONS_ANCESTOR_HEXER,
 #endif
     MONS_TEST_SPAWNER,
+#if TAG_MAJOR_VERSION > 34
+    MONS_TEST_STATUE,
+#endif
 
     // Add new monsters here:
 #if TAG_MAJOR_VERSION == 34
@@ -1044,6 +1047,7 @@ enum monster_type                      // menv[].type
     MONS_FROG,
     MONS_BARACHI,
     MONS_BULTUNGIN,             // remove this someday
+    MONS_TEST_STATUE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

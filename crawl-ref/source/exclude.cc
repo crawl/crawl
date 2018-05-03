@@ -35,8 +35,11 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // These include the base monster's name in their name, but we don't
     // want things in the auto_exclude option to match them.
-    if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE)
+    if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE
+        || mon->type == MONS_TEST_STATUE)
+    {
         return false;
+    }
 
     if (mon->is_stationary())
         return !sleepy;
