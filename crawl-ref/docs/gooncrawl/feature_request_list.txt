@@ -52,7 +52,8 @@ species
 - merge deep elves and high elves
 - demigod species proposals (angelic species?, artefact generation, semirandom skill boosts, altar desecration, better at worshipping gods?)
 - mummy felid species
-- ogre-size species can 1 hand the lighter 2-handers
+
+- ogre-size species can 1 hand the lighter 2-handers (including arbalest?)
 - give trolls/ogres semi-usable apts for crossbows
 - give felids pounce again
 - to more accurately describe the killing power of an angry/terrified cornered cat, give felids cleave at level 9 and riposte at level 18
@@ -117,7 +118,6 @@ weapons/items
 - give ranged weapons large to-hit penalties if hostile monsters are adjacent
 - give weapons unique combinations of abilities, including bringing back throwable melee weapons
 - weapon chance-to-hit/damage comparison tool
-
 
 - scrolls of brand armour/jewelry or scroll of bless equipment
 - roll berserk potions and might potions together, make equally high risk-high reward versions of brilliance and agility
