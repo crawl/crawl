@@ -375,7 +375,7 @@ static void _add_targeting_commands(const coord_def& pos)
 {
     // Force targeting cursor back onto center to start off on a clean
     // slate.
-    macro_buf_add_cmd(CMD_TARGET_FIND_YOU);
+    macro_sendkeys_end_add_cmd(CMD_TARGET_FIND_YOU);
 
     const coord_def delta = pos - you.pos();
 
@@ -387,7 +387,7 @@ static void _add_targeting_commands(const coord_def& pos)
         cmd = CMD_TARGET_RIGHT;
 
     for (int i = 0; i < abs(delta.x); i++)
-        macro_buf_add_cmd(cmd);
+        macro_sendkeys_end_add_cmd(cmd);
 
     if (delta.y < 0)
         cmd = CMD_TARGET_UP;
@@ -395,9 +395,9 @@ static void _add_targeting_commands(const coord_def& pos)
         cmd = CMD_TARGET_DOWN;
 
     for (int i = 0; i < abs(delta.y); i++)
-        macro_buf_add_cmd(cmd);
+        macro_sendkeys_end_add_cmd(cmd);
 
-    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
+    macro_sendkeys_end_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static bool _is_appropriate_spell(spell_type spell, const actor* target)
@@ -517,7 +517,7 @@ static bool _evoke_item_on_target(actor* target)
     }
 #endif
 
-    macro_buf_add_cmd(CMD_EVOKE);
+    macro_sendkeys_end_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
     _add_targeting_commands(target->pos());
     return true;
@@ -600,7 +600,7 @@ static bool _cast_spell_on_target(actor* target)
         return true;
     }
 
-    macro_buf_add_cmd(CMD_FORCE_CAST_SPELL);
+    macro_sendkeys_end_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
 
     if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
@@ -644,7 +644,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
         && (shift || weapon && is_range_weapon(*weapon)
                      && !mon->wont_attack()))
     {
-        macro_buf_add_cmd(CMD_FIRE);
+        macro_sendkeys_end_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
         return true;
     }
@@ -660,7 +660,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
 
         if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
         {
-            macro_buf_add_cmd(CMD_EVOKE_WIELDED);
+            macro_sendkeys_end_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
             return true;
         }
