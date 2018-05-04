@@ -103,7 +103,6 @@ weapons/items
 - roll bardings into new caparison item (light/heavy variations?)(possibly doubles as -stealth cape for ogre-sized species?)
 - barding-rarity ogre-sized species-only chest armour (5-6 base armour 20 er-ish)
 - bring back regularly spawning hammers/ankuses/etc
-
 - give large shields a lower block penalty than other shields get for already having blocked an attack that turn
 - rework stabbing to be more usable w nonblade schools
 - bring back clubstabbing
@@ -116,17 +115,16 @@ weapons/items
 - give ranged weapons being their own slot, no weapon switching involved
 - variations of the above: shields still block 2h ranged weapons on non-formicids, firing weapon sets SH to 0 for 1 or more turns, 
 - give ranged weapons large to-hit penalties if hostile monsters are adjacent
-- give weapons unique combinations of abilities, including bringing back throwable melee weapons
+- give weapons unique combinations of weapon abilities
 - weapon chance-to-hit/damage comparison tool
 
 - scrolls of brand armour/jewelry or scroll of bless equipment
 - roll berserk potions and might potions together, make equally high risk-high reward versions of brilliance and agility
 - rename potion of cancellation to potion of refreshment
-
 - nerf healing harp evocable
 
 - implement sympathetic effigy magic evocable
-- unique evocations consumable generates friendly merc
+- unique(?) evocations consumable generates friendly merc
 - implement helmets of magical power / helmets of headbutt
 - rename cloud immunity scarf to breathtaking scarf and let wearers travel through deep water
 - unrandart short blade that has cleave (and can stab on cleaves) and is called occam's razor
