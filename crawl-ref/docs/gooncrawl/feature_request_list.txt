@@ -15,8 +15,20 @@ Post angrily at me if I missed something.
 "my city now"
        - tolly
       
-jokes aside, current feature requests from crawl thread as of apr 30. current list is not in proper chronological order in any way, but is sorted by rough topics
+jokes aside, current feature requests from crawl thread as of may 04. current list is not in proper chronological order in any way, but is sorted by rough topics
 
+
+general/miscellaneous
+
+- some kind of nightly build
+- hive proposals: infinite bee generation, wizlab (olgreb’s?), beekeeper unique,
+- supertab, to instantly annihilate utterly harmless things without holding down tab
+- shop theft
+- convert paralysis effect into petrification and -tele
+- re-implement aux attack special effects (ministun, ignores ac, etc)
+- give gourmand an aux bite attack
+- make waterbreathing available via mutation
+- crazy yiuf is secret sixteenth rune
 
 gods
 
@@ -40,7 +52,6 @@ species
 - merge deep elves and high elves
 - demigod species proposals (angelic species?, artefact generation, semirandom skill boosts, altar desecration, better at worshipping gods?)
 - mummy felid species
-
 - ogre-size species can 1 hand the lighter 2-handers
 - give trolls/ogres semi-usable apts for crossbows
 - give felids pounce again
@@ -81,6 +92,8 @@ spells
 - rename blades of disaster maxwell’s silver hammer
 - change ozo’s downside (ongoing noise? damage over time? 3x3 area of effect player must stay within?)
 - reimplement stoneskin, give it ozo’s former movement penalty
+- remove spell hunger
+- singularity nerf proposals: it shouldnt affect things out of los, it should have a chance of being clogged any time it kills an enemy
 
 weapons/items
 
@@ -98,12 +111,20 @@ weapons/items
 - bring back needlestabs
 - reimplement branded bullets/bolts/arrows
 - weaken *corrode property
+- add shield bashing aux attack
+- give ranged weapons being their own slot, no weapon switching involved
+- variations of the above: shields still block 2h ranged weapons on non-formicids, firing weapon sets SH to 0 for 1 or more turns, 
+- give ranged weapons large to-hit penalties if hostile monsters are adjacent
+- give weapons unique combinations of abilities, including bringing back throwable melee weapons
+- weapon chance-to-hit/damage comparison tool
+
 
 - scrolls of brand armour/jewelry or scroll of bless equipment
 - roll berserk potions and might potions together, make equally high risk-high reward versions of brilliance and agility
 - rename potion of cancellation to potion of refreshment
 
 - nerf healing harp evocable
+
 - implement sympathetic effigy magic evocable
 - unique evocations consumable generates friendly merc
 - implement helmets of magical power / helmets of headbutt
@@ -118,12 +139,7 @@ weapons/items
 - unrandart plate armour that gives rElec, rNeg, MR+, prevents user from being moved by monster effects
 - unrandart cloak that gives a shitload of stealth and causes 67% of god wrath stuff to fail while lowering penance as usual
 - unrandart boots of dancing that slow your movement by an aut but give you a strong evasion boost
+- unrandart javelin of returning (alternatively penetration/electrocution) that never mulches
+- helmet with an arbalest attached
+- notched stationary crossbow shield
 
-misc
-
-- supertab, to instantly annihilate utterly harmless things without holding down tab
-- shop theft
-- convert paralysis into petrification and -tele
-- re-implement aux attack special effects (ministun, ignores ac, etc)
-- give gourmand an aux bite attack
-- make waterbreathing available via mutation
