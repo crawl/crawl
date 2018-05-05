@@ -14,7 +14,6 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
-local LOS_RADIUS = 8
 
 AUTOFIGHT_STOP = 50
 AUTOFIGHT_HUNGER_STOP = 0
@@ -104,13 +103,14 @@ local function can_move_now(dx, dy)
 end
 
 local function choose_move_towards(ax, ay, bx, by, square_func)
+  local los_radius = you.los()
   local move = nil
   local dx = bx - ax
   local dy = by - ay
   local function try_move(mx, my)
     if mx == 0 and my == 0 then
       return nil
-    elseif abs(ax+mx) > LOS_RADIUS or abs(ay+my) > LOS_RADIUS then
+    elseif abs(ax+mx) > los_radius or abs(ay+my) > los_radius then
       return nil
     elseif square_func(ax+mx, ay+my) then
       return {mx,my}
@@ -248,12 +248,13 @@ local function is_candidate_for_attack(x,y)
 end
 
 local function get_target(no_move)
+  local los_radius = you.los()
   local x, y, bestx, besty, best_info, new_info
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -LOS_RADIUS,LOS_RADIUS do
-    for y = -LOS_RADIUS,LOS_RADIUS do
+  for x = -los_radius,los_radius do
+    for y = -los_radius,los_radius do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then
