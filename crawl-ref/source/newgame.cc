@@ -198,32 +198,37 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case SP_VIABLE:
-        // If we have a job already picked out, pick a species which recommends
-        // it. Otherwise, pick a random species.
+        // If we have already picked a job, find a species that recommends it
         if (is_starting_job(ng.job))
         {
-            do
-            {
-                ng.species = random_species();
-            } while (!job_recommends_species(ng.job, ng.species));
+            auto species_recommended_by_job =
+                filter_enum(species_type, [&](species_type species) {
+                    return job_recommends_species(ng.job, species);
+                });
+            // Note: we know the array has at least one element because all
+            // starting jobs must recommend at least one opposite species.
+            ng.species = species_recommended_by_job[
+                random2(species_recommended_by_job.size())];
         }
         else
             ng.species = random_species();
         return;
 
     case SP_RANDOM:
-        // If we have a job already picked out, pick a species which isn't
-        // banned by the job. Otherwise, pick a random species.
+        // If we have already picked a job, find a species that allows it
         if (is_starting_job(ng.job))
         {
-            do {
-                ng.species = random_species();
-            } while(species_allowed(ng.job, ng.species) == CC_BANNED);
+            auto species_allowed_by_job =
+                filter_enum(species_type, [&](species_type species) {
+                    return character_is_allowed(species, ng.job);
+                });
+            if (species_allowed_by_job.size() == 0)
+                die("Selected job allows no species?!");
+            ng.species = species_allowed_by_job[
+                random2(species_allowed_by_job.size())];
         }
         else
-        {
             ng.species = random_species();
-        }
         return;
 
     default:
@@ -244,27 +249,34 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case JOB_VIABLE:
-        // If we have a species already picked out, pick a job which recommends
-        // it. Otherwise, pick a random job.
+        // If we have already picked a species, find a job that recommends it
         if (is_starting_species(ng.species))
         {
-            do
-            {
-                ng.job = random_job();
-            } while (!species_recommends_job(ng.species, ng.job));
+            auto job_recommended_by_species =
+                filter_enum(job_type, [&](job_type job) {
+                    return species_recommends_job(job, ng.species);
+                });
+            // Note: we know the array has at least one element because all
+            // starting species must recommend at least one opposite job.
+            ng.job = job_recommended_by_species[
+                random2(job_recommended_by_species.size())];
         }
         else
             ng.job = random_job();
         return;
 
     case JOB_RANDOM:
-        // If we have a species already picked out, pick a job which isn't
-        // banned by the species. Otherwise, pick a random job.
+        // If we have already picked a species, find a job that allows it
         if (is_starting_species(ng.species))
         {
-            do {
-                ng.job = random_job();
-            } while(job_allowed(ng.species, ng.job) == CC_BANNED);
+            auto jobs_allowed_by_species =
+                filter_enum(job_type, [&](job_type job) {
+                    return character_is_allowed(ng.species, job);
+                });
+            if (jobs_allowed_by_species.size() == 0)
+                die("Selected species allows no job?!");
+            ng.job = jobs_allowed_by_species[
+                random2(jobs_allowed_by_species.size())];
         }
         else
             ng.job = random_job();
