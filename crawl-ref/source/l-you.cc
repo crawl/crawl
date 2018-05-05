@@ -191,6 +191,7 @@ LUARET1(you_has_claws, number, you.has_claws(false))
 LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
 LUARET1(you_mutation_overview, string, mutation_overview().c_str())
 
+LUARET1(you_los, number, get_los_radius())
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
@@ -702,6 +703,7 @@ static const struct luaL_reg you_clib[] =
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
 
+    { "los",               you_los },
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
     { "see_cell_solid",    you_see_cell_solid_rel },
