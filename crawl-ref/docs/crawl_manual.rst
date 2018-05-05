@@ -1102,11 +1102,9 @@ You can also become mutated by overusing certain powerful spells, particularly
 A single use of those effects will never cause dangerous levels of magical
 contamination, but multiple uses in short succession, or usage with existing
 contamination from other sources (e.g. from miscasting spells) can cause trouble.
-Mutations from magical contamination are almost always harmful.
-
-Mutations can also be caused by specific potions, very rare trap effects, or
-spells cast by powerful enemies found deep in the dungeon. A few types of monsters
-have mutagenic corpses; these will appear in magenta by default.
+Mutations from magical contamination are almost always harmful. Mutations can
+also be caused by specific potions or by spells cast by powerful enemies found
+deep in the dungeon.
 
 It is more difficult to get rid of bad mutations than to get one. Using potions
 of mutations will remove a number of your current mutations, but will give you
