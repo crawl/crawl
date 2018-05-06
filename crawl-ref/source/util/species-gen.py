@@ -228,19 +228,27 @@ def undead_type(type):
 def levelup_stats(stats):
     if not stats:
         stats = ALL_STATS
+    elif stats == "none":
+        return "    set<stat_type>()"
     else:
+        # this is pretty loose type checking because we don't want to make
+        # any assumptions about how yaml parser handles sequences.
+        if isinstance(stats, str):
+            raise ValueError(
+                "Expected `none` or list for levelup_stats, not `%s`" % stats)
         for s in stats:
             if s not in ALL_STATS:
                 raise ValueError('Unknown stat %s' % s)
-    return ', '.join("STAT_%s" % s.upper() for s in stats)
+    return make_list(', '.join("STAT_%s" % s.upper() for s in stats))
 
-LIST_TEMPLATE = """    {{
-        {list}
-    }}"""
+global LIST_TEMPLATE
+LIST_TEMPLATE = """    {{ {list} }}"""
 
 def make_list(list_str):
+    global LIST_TEMPLATE
+    #TODO: add linebreaks + indents to obey 80 chars?
     if len(list_str.strip()) == 0:
-        return "    { }"
+        return "    {}"
     else:
         return LIST_TEMPLATE.format(list=list_str)
 
