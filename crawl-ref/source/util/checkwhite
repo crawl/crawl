@@ -134,4 +134,8 @@ for (@files)
     }
 }
 
-exit 1 if ($dry_run and $any_bad);
+if ($dry_run and $any_bad) {
+    print "Found unnecessary whitespace in the above files.\n";
+    print "Re-run this command (without -n) to automatically remove it.\n";
+    exit 1;
+}
