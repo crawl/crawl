@@ -1104,10 +1104,17 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
 
 bool Menu::process_key(int keyin)
 {
+    if (process_item_swap_key(keyin))
+        return true;
+
     if (items.empty())
     {
         lastch = keyin;
         return false;
+    }
+
+    if (swap_mode)
+    { /* don't cycle actions in swap mode */
     }
 #ifdef TOUCH_UI
     else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'
@@ -1147,6 +1154,7 @@ bool Menu::process_key(int keyin)
     const int old_vis_first = get_first_visible();
 #endif
 
+    bool movement_key = true;
     switch (keyin)
     {
     case CK_REDRAW:
@@ -1182,6 +1190,17 @@ bool Menu::process_key(int keyin)
     case CK_END:
         menu_ui->scroll_to_item(INT_MAX);
         break;
+    default:
+        movement_key = false;
+        break;
+    }
+
+    // this is really ugly..
+    if (swap_mode)
+        return true;
+    if (!movement_key)
+    switch (keyin)
+    {
     case CONTROL('F'):
         if ((flags & MF_ALLOW_FILTER))
         {
@@ -1319,6 +1338,79 @@ bool Menu::process_key(int keyin)
 #endif
 
     return true;
+}
+
+bool Menu::process_item_swap_key(int key)
+{
+    if (!on_entry_swap)
+        return false;
+    if (swap_mode && (key == '=' || key_is_escape(key)))
+    {
+        stop_swapping_entries();
+        return true;
+    }
+    if (key == '=')
+    {
+        swap_mode = true;
+        deselect_all();
+        for (auto item : items)
+            item->preselected = false;
+        update_title();
+        return true;
+    }
+    if (!swap_mode)
+        return false;
+    if (!isaalpha(key))
+        return false;
+
+    auto item = find_if(items.begin(), items.end(), [=](MenuEntry*& i) {
+            return i->hotkeys.size() > 0 && i->hotkeys[0] == key;
+        });
+    if (!first_swap_item && item == items.end())
+        return false;
+    const int item_index = item - items.begin();
+
+    if (!first_swap_item)
+    {
+        first_swap_item = *item;
+        select_item_index(item_index, 1, false);
+    }
+    else if (key == first_swap_item->hotkeys[0])
+    {
+        first_swap_item = nullptr;
+        select_item_index(item_index, 0, false);
+    }
+    else
+    {
+        MenuEntry *swap_second = item != items.end() ? *item : nullptr;
+        if (!on_entry_swap(*first_swap_item, swap_second, key))
+            return false;
+
+        if (swap_second)
+        {
+            swap(first_swap_item->hotkeys[0], swap_second->hotkeys[0]);
+            menu_ui->update_item(item_index);
+        }
+        else
+            first_swap_item->hotkeys[0] = key;
+
+        stop_swapping_entries();
+    }
+    update_title();
+    return true;
+}
+
+void Menu::stop_swapping_entries()
+{
+    if (first_swap_item)
+    {
+        const int first_index = find(items.begin(), items.end(),
+                first_swap_item) - items.begin();
+        select_item_index(first_index, 0, false);
+        first_swap_item = nullptr;
+    }
+    swap_mode = false;
+    update_title();
 }
 
 string Menu::get_select_count_string(int count) const
@@ -1900,7 +1992,16 @@ void Menu::update_title()
     {
         fs.textcolour(WHITE);
         fs.cprintf("Select what? (regex) %s", m_filter->get_text().c_str());
-    } else
+    }
+    else if (swap_mode)
+    {
+        fs.textcolour(WHITE);
+        if (!first_swap_item)
+            fs.cprintf("Adjust which %s?", swap_mode_prompt_noun.c_str());
+        else
+            fs.cprintf("Adjust to which letter?");
+    }
+    else
         fs = calc_title();
 
     if (fs.empty())

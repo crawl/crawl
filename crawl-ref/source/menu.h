@@ -16,6 +16,7 @@
 #include "tiles-build-specific.h"
 #include "cio.h"
 #include "format.h"
+#include "prompt.h"
 #ifdef USE_TILE
  #include "tiledoll.h"
 #endif
@@ -151,8 +152,16 @@ public:
         if (level == MEL_ITEM && hotkeys.size())
         {
             char buf[300];
+            char sel_glyph;
+            if (hotkeys.empty() || !selected_qty)
+                sel_glyph = preselected ? '+' : '-';
+            else if (selected_qty < quantity)
+                sel_glyph = '#';
+            else
+                sel_glyph = '+';
+
             snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
+                    " %c %c %s", hotkeys[0], sel_glyph,
                                  text.c_str());
             return string(buf);
         }
@@ -352,6 +361,9 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
+    function<bool(MenuEntry&, MenuEntry*, int)> on_entry_swap;
+
+    string swap_mode_prompt_noun;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
@@ -399,6 +411,11 @@ protected:
                                   string &line, bool check_eol);
     void do_menu();
     virtual string get_select_count_string(int count) const;
+
+    bool swap_mode = false;
+    MenuEntry *first_swap_item = nullptr;
+    bool process_item_swap_key(int key);
+    void stop_swapping_entries();
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);

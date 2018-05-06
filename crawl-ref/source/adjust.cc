@@ -119,7 +119,6 @@ static void _adjust_spell()
             keyin = list_spells(true, false, false, "Adjust to which letter?");
     }
 
-    const int input_2 = keyin;
     const int index_2 = letter_to_index(keyin);
 
     if (index_1 == index_2)
@@ -127,6 +126,14 @@ static void _adjust_spell()
         canned_msg(MSG_OK);
         return;
     }
+
+    swap_spell_slots(index_1, index_2);
+}
+
+void swap_spell_slots(int index_1, int index_2)
+{
+    const int input_1 = index_to_letter(index_1);
+    const int input_2 = index_to_letter(index_2);
 
     // swap references in the letter table:
     const int tmp = you.spell_letter_table[index_2];
@@ -137,7 +144,7 @@ static void _adjust_spell()
     mprf_nocap("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
-    spell = get_spell_by_letter(input_1);
+    spell_type spell = get_spell_by_letter(input_1);
 
     if (spell != SPELL_NO_SPELL)
         mprf_nocap("%c - %s", input_1, spell_title(spell));
