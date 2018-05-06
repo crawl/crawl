@@ -44,6 +44,7 @@ str: 11
 int: 12
 dex: 11
 # No natural stat gain (double chosen instead)
+levelup_stats: none
 levelup_stat_frequency: 28
 mutations:
   1:
