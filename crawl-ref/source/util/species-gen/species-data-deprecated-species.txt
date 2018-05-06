@@ -13,6 +13,8 @@
     {},
     {}, // not a starting race
     {}, // not a starting race
+    nullptr,
+    nullptr
 } },
 
 { SP_LAVA_ORC, {
@@ -29,6 +31,8 @@
     {},
     {}, // not a starting race
     {}, // not a starting race
+    nullptr,
+    nullptr
 } },
 
 { SP_DJINNI, {
@@ -45,6 +49,8 @@
     {},
     {}, // not a starting race
     {}, // not a starting race
+    nullptr,
+    nullptr
 } },
 
 { SP_HIGH_ELF, {
@@ -62,5 +68,7 @@
     { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
+    nullptr,
+    nullptr
 } },
 #endif

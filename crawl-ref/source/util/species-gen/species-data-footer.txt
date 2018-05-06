@@ -13,5 +13,7 @@
     {}, // Line 12: Fake mutations
     {}, // Line 13: Recommended jobs
     {}, // Line 14: Recommended weapons
+    nullptr, // Line 15: walk verb
+    nullptr, // Line 16: pray verb
 } }
 };
