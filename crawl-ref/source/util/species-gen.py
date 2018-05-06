@@ -9,6 +9,11 @@ import re
 
 import yaml  # pip install pyyaml
 
+def quote_or_nullptr(key, d):
+    if key in d:
+        return quote(d[key])
+    else:
+        return 'nullptr'
 
 class Species(dict):
     """Parser for YAML definition files.
@@ -16,8 +21,8 @@ class Species(dict):
     If any YAML content is invalid, the relevant parser function below should
     raise ValueError.
     """
-    @staticmethod
-    def from_yaml(s):
+    @classmethod
+    def from_yaml(cls, s):
         species = Species()
 
         # Pre-validation
@@ -29,19 +34,22 @@ class Species(dict):
         starting_species = s.get('difficulty') != False
         has_recommended_jobs = bool(s.get('recommended_jobs'))
         if starting_species != has_recommended_jobs:
-            raise ValueError('recommended_jobs must not be empty (or difficulty must be False)')
+            raise ValueError('recommended_jobs must not be empty (or'
+                                                ' difficultymust be False)')
 
         # Set attributes
         species['enum'] = validate_string(s['enum'], 'enum', 'SP_[A-Z_]+$')
-        species['monster_name'] = validate_string(s['monster'], 'monster', 'MONS_[A-Z_]+$')
+        species['monster_name'] = validate_string(s['monster'], 'monster',
+                                                'MONS_[A-Z_]+$')
         species['name'] = validate_string(s['name'], 'name', '..+')
         species['short_name'] = s.get('short_name', s['name'][:2])
-        species['adjective'] = quote(s['adjective']) if 'adjective' in s else 'nullptr'
-        species['genus'] = quote(s['genus']) if 'genus' in s else 'nullptr'
+        species['adjective'] = quote_or_nullptr('adjective', s)
+        species['genus'] = quote_or_nullptr('genus', s)
         species['species_flags'] = species_flags(s.get('species_flags', []))
         species['xp'] = validate_int_range(s['aptitudes']['xp'], 'xp', -10, 10)
         species['hp'] = validate_int_range(s['aptitudes']['hp'], 'hp', -10, 10)
-        species['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod', -5, 20)
+        species['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod',
+                                                                        -5, 20)
         species['mr'] = validate_int_range(s['aptitudes']['mr'], 'mr', 0, 20)
         species['aptitudes'] = aptitudes(s['aptitudes'])
         species['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
@@ -51,24 +59,38 @@ class Species(dict):
         species['int'] = validate_int_range(s['int'], 'int', 1, 100)
         species['dex'] = validate_int_range(s['dex'], 'dex', 1, 100)
         species['levelup_stats'] = levelup_stats(s.get('levelup_stats', []))
-        species['levelup_stat_frequency'] = validate_int_range(s['levelup_stat_frequency'], 'levelup_stat_frequency', 0, 28)
+        species['levelup_stat_frequency'] = validate_int_range(
+                s['levelup_stat_frequency'], 'levelup_stat_frequency', 0, 28)
         species['mutations'] = mutations(s.get('mutations', {}))
-        species['fake_mutations_long'] = fake_mutations_long(s.get('fake_mutations', []))
-        species['fake_mutations_short'] = fake_mutations_short(s.get('fake_mutations', []))
-        species['recommended_jobs'] = recommended_jobs(s.get('recommended_jobs', []))
-        species['recommended_weapons'] = recommended_weapons(s.get('recommended_weapons', []))
+        species['fake_mutations_long'] = fake_mutations_long(
+                                            s.get('fake_mutations', []))
+        species['fake_mutations_short'] = fake_mutations_short(
+                                            s.get('fake_mutations', []))
+        species['recommended_jobs'] = recommended_jobs(
+                                            s.get('recommended_jobs', []))
+        species['recommended_weapons'] = recommended_weapons(
+                                            s.get('recommended_weapons', []))
         species['difficulty'] = difficulty(s.get('difficulty'))
-        species['difficulty_priority'] = validate_int_range(difficulty_priority(s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
-        species['create_enum'] = validate_bool(s.get('create_enum', True), 'create_enum')
-        species['walking_verb'] = quote(s['walking_verb']) if 'walking_verb' in s else 'nullptr'
-        species['altar_action'] = quote(s['altar_action']) if 'altar_action' in s else 'nullptr'
-        species['tag_major_version_opener'] = '' if 'TAG_MAJOR_VERSION' not in s else "#if TAG_MAJOR_VERSION == %s" % s['TAG_MAJOR_VERSION']
-        species['tag_major_version_closer'] = '' if 'TAG_MAJOR_VERSION' not in s else "#endif"
+        species['difficulty_priority'] = validate_int_range(difficulty_priority(
+            s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
+        species['create_enum'] = validate_bool(
+                                    s.get('create_enum', True), 'create_enum')
+        species['walking_verb'] = quote_or_nullptr('walking_verb', s)
+        species['altar_action'] = quote_or_nullptr('altar_action', s)
+
+        if 'TAG_MAJOR_VERSION' in s:
+            species['tag_major_version_opener'] = (
+                        "#if TAG_MAJOR_VERSION == %s" % s['TAG_MAJOR_VERSION'])
+            species['tag_major_version_closer'] = "#endif"
+        else:
+            species['tag_major_version_opener'] = ''
+            species['tag_major_version_closer'] = ''
         return species
 
-
-SpeciesGroup = collections.namedtuple('SpeciesGroup', ['position', 'width', 'species'])
-SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry', ['priority', 'enum'])
+SpeciesGroup = collections.namedtuple('SpeciesGroup',
+                                            ['position', 'width', 'species'])
+SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
+                                            ['priority', 'enum'])
 SPECIES_GROUPS_TEMPLATE = {
     'Simple': SpeciesGroup('coord_def(0, 0)', '20', []),
     'Intermediate': SpeciesGroup('coord_def(25, 0)', '20', []),
@@ -96,7 +118,6 @@ ALL_STATS = ('str', 'int', 'dex')
 ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',
     'SK_CROSSBOWS', 'SK_UNARMED_COMBAT')
-
 
 def recommended_jobs(jobs):
     return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
@@ -137,7 +158,8 @@ def validate_int_range(val, name, min, max):
 def size(size):
     val = "SIZE_%s" % size.upper()
     if val not in SIZES:
-        raise ValueError('Size %s is invalid, pick one of tiny, little, small, medium, large, big, or giant')
+        raise ValueError('Size %s is invalid, pick one of tiny, little, '
+                                    'small, medium, large, big, or giant')
     return val
 
 
@@ -191,7 +213,8 @@ def mutations(mut_def):
     for xl, muts in sorted(mut_def.items()):
         validate_int_range(xl, 'Mutation Level', 1, 27)
         if not isinstance(muts, dict):
-            raise ValueError('Mutation key %s doesn\'t seem to have a valid map of {name: amount} entries' % xl)
+            raise ValueError('Mutation key %s doesn\'t seem to have a valid '
+                                        'map of {name: amount} entries' % xl)
         for mut_name, amt in sorted(muts.items()):
             validate_string(mut_name, 'Mutation Name', 'MUT_[A-Z_]+')
             validate_int_range(amt, 'Mutation Amount', -3, 3)
@@ -216,7 +239,8 @@ def recommended_weapons(weapons):
         weapons = list(ALL_WEAPON_SKILLS)
         weapons.remove('SK_SHORT_BLADES')
         weapons.remove('SK_UNARMED_COMBAT')
-    return ', '.join(validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+') for weap in weapons)
+    return ', '.join(
+        validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+') for weap in weapons)
 
 
 def aptitudes(apts):
@@ -237,7 +261,8 @@ def difficulty_priority(prio):
     try:
         return int(prio)
     except ValueError:
-        raise ValueError('difficulty_priority value "%s" is not an integer' % prio)
+        raise ValueError('difficulty_priority value "%s" is not an integer' %
+                                prio)
 
 
 def generate_aptitudes_data(s, template):
@@ -277,7 +302,8 @@ def generate_species_groups(sg):
             name = name,
             position = group.position,
             width = group.width,
-            species = ', '.join(e.enum for e in reversed(sorted(group.species))),
+            species = ', '.join(
+                e.enum for e in reversed(sorted(group.species))),
         )
     return out
 
@@ -296,10 +322,12 @@ def load_template(templatedir, name):
 def main():
     parser = argparse.ArgumentParser(description='Generate species-data.h')
     parser.add_argument('datadir', help='dat/species source dir')
-    parser.add_argument('templatedir', help='util/species-gen template source dir')
+    parser.add_argument('templatedir',
+                    help='util/species-gen template source dir')
     parser.add_argument('species_data', help='species-data.h output file path')
     parser.add_argument('aptitudes', help='aptitudes.h output file path')
-    parser.add_argument('species_groups', help='species-groups.h output file path')
+    parser.add_argument('species_groups',
+                    help='species-groups.h output file path')
     parser.add_argument('species_type', help='species-type.h output file path')
     args = parser.parse_args()
 
@@ -332,41 +360,52 @@ def main():
         all_species.append(species)
 
     # Generate code
-    species_data_out_text = load_template(args.templatedir, 'species-data-header.txt')
+    species_data_out_text = load_template(args.templatedir,
+                                                'species-data-header.txt')
     aptitudes_out_text = load_template(args.templatedir, 'aptitudes-header.txt')
-    species_type_out_text = load_template(args.templatedir, 'species-type-header.txt')
+    species_type_out_text = load_template(args.templatedir,
+                                                'species-type-header.txt')
 
-    species_data_template = load_template(args.templatedir, 'species-data-species.txt')
+    species_data_template = load_template(args.templatedir,
+                                                'species-data-species.txt')
     aptitude_template = load_template(args.templatedir, 'aptitude-species.txt')
     species_groups = SPECIES_GROUPS_TEMPLATE
     for species in all_species:
         # species-data.h
         species_data_out_text += species_data_template.format(**species)
         # aptitudes.h
-        aptitudes_out_text += generate_aptitudes_data(species, aptitude_template)
+        aptitudes_out_text += generate_aptitudes_data(species,
+                                                            aptitude_template)
         # species-type.h
         species_type_out_text += generate_species_type_data(species)
         # species-groups.h
         species_groups = update_species_group(species_groups, species)
 
-    species_data_out_text += load_template(args.templatedir, 'species-data-deprecated-species.txt')
-    species_data_out_text += load_template(args.templatedir, 'species-data-footer.txt')
+    species_data_out_text += load_template(args.templatedir,
+                                        'species-data-deprecated-species.txt')
+    species_data_out_text += load_template(args.templatedir,
+                                        'species-data-footer.txt')
     with open(args.species_data, 'w') as f:
         f.write(species_data_out_text)
 
-    aptitudes_out_text += load_template(args.templatedir, 'aptitudes-deprecated-species.txt')
-    aptitudes_out_text += load_template(args.templatedir, 'aptitudes-footer.txt')
+    aptitudes_out_text += load_template(args.templatedir,
+                                        'aptitudes-deprecated-species.txt')
+    aptitudes_out_text += load_template(args.templatedir,
+                                        'aptitudes-footer.txt')
     with open(args.aptitudes, 'w') as f:
         f.write(aptitudes_out_text)
 
-    species_type_out_text += load_template(args.templatedir, 'species-type-footer.txt')
+    species_type_out_text += load_template(args.templatedir,
+                                        'species-type-footer.txt')
     with open(args.species_type, 'w') as f:
         f.write(species_type_out_text)
 
     species_groups_out_text = ''
-    species_groups_out_text += load_template(args.templatedir, 'species-groups-header.txt')
+    species_groups_out_text += load_template(args.templatedir,
+                                        'species-groups-header.txt')
     species_groups_out_text += generate_species_groups(species_groups)
-    species_groups_out_text += load_template(args.templatedir, 'species-groups-footer.txt')
+    species_groups_out_text += load_template(args.templatedir,
+                                        'species-groups-footer.txt')
     with open(args.species_groups, 'w') as f:
         f.write(species_groups_out_text)
 
