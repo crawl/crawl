@@ -223,6 +223,15 @@ def levelup_stats(stats):
                 raise ValueError('Unknown stat %s' % s)
     return ', '.join("STAT_%s" % s.upper() for s in stats)
 
+LIST_TEMPLATE = """    {{
+        {list}
+    }}"""
+
+def make_list(list_str):
+    if len(list_str.strip()) == 0:
+        return "    { }"
+    else:
+        return LIST_TEMPLATE.format(list=list_str)
 
 def mutations(mut_def):
     out = []
@@ -239,16 +248,15 @@ def mutations(mut_def):
                 xl=xl,
                 amt=amt,
             ))
-    return ', '.join(out)
-
+    return make_list(', '.join(out))
 
 def fake_mutations_long(fmut_def):
-    return ', '.join(quote(m.get('long')) for m in fmut_def if m.get('long'))
-
+    return make_list(', '.join(quote(m.get('long'))
+                                    for m in fmut_def if m.get('long')))
 
 def fake_mutations_short(fmut_def):
-    return ', '.join(quote(m.get('short')) for m in fmut_def if m.get('short'))
-
+    return make_list(', '.join(quote(m.get('short'))
+                                    for m in fmut_def if m.get('short')))
 
 def recommended_weapons(weapons):
     if not weapons:

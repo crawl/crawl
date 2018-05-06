@@ -8,15 +8,9 @@
     {habitat}, {undead}, {size},
     {str}, {int}, {dex},
     {{ {levelup_stats} }}, {levelup_stat_frequency},
-    {{
-        {mutations}
-    }},
-    {{
-        {fake_mutations_long}
-    }},
-    {{
-        {fake_mutations_short}
-    }},
+{mutations},
+{fake_mutations_long},
+{fake_mutations_short},
     {{ {recommended_jobs} }},
     {{ {recommended_weapons} }},
     {walking_verb},
