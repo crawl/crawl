@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 
+from __future__ import print_function
+
 import argparse
 import os
 import sys
@@ -21,6 +23,15 @@ class Species(collections.MutableMapping):
     If any YAML content is invalid, the relevant parser function below should
     raise ValueError.
     """
+
+    # TODO: unify with processing in from_yaml
+    YAML_MAIN_FIELDS = {'TAG_MAJOR_VERSION', 'fake_mutations', 'difficulty',
+            'recommended_jobs', 'enum', 'monster', 'name', 'short_name',
+            'adjective', 'genus', 'species_flags', 'aptitudes', 'can_swim',
+            'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
+            'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
+            'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
+            'altar_action', 'mutations'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -52,6 +63,12 @@ class Species(collections.MutableMapping):
         self.backing_dict['recommended_weapons'] = ', '.join(
                         validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+')
                                                         for weap in weapons)
+
+    def print_unknown_warnings(self, s):
+        for key in s:
+            if key not in self.YAML_MAIN_FIELDS:
+                print("species_gen.py warning: Unknown field '%s' in species %s"
+                                    % (key, self['enum']), file=sys.stderr)
 
     def from_yaml(self, s):
         # Pre-validation
@@ -113,6 +130,7 @@ class Species(collections.MutableMapping):
         else:
             self['tag_major_version_opener'] = ''
             self['tag_major_version_closer'] = ''
+        self.print_unknown_warnings(s)
 
 SpeciesGroup = collections.namedtuple('SpeciesGroup',
                                             ['position', 'width', 'species'])
