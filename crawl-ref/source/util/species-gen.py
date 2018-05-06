@@ -15,16 +15,33 @@ def quote_or_nullptr(key, d):
     else:
         return 'nullptr'
 
-class Species(dict):
+class Species(collections.MutableMapping):
     """Parser for YAML definition files.
 
     If any YAML content is invalid, the relevant parser function below should
     raise ValueError.
     """
-    @classmethod
-    def from_yaml(cls, s):
-        species = Species()
 
+    def __init__(self, yaml_dict):
+        self.backing_dict = dict()
+        self.from_yaml(yaml_dict)
+
+    def __getitem__(self, key):
+        return self.backing_dict[key]
+
+    def __setitem__(self, key, val):
+        self.backing_dict[key] = val
+
+    def __delitem__(self, key):
+        del self.backing_dict[key]
+
+    def __iter__(self):
+        return iter(self.backing_dict)
+
+    def __len__(self):
+        return len(self.store)
+
+    def from_yaml(self, s):
         # Pre-validation
         if s.get('TAG_MAJOR_VERSION', None) is not None:
             if not isinstance(s['TAG_MAJOR_VERSION'], int):
@@ -38,54 +55,53 @@ class Species(dict):
                                                 ' difficultymust be False)')
 
         # Set attributes
-        species['enum'] = validate_string(s['enum'], 'enum', 'SP_[A-Z_]+$')
-        species['monster_name'] = validate_string(s['monster'], 'monster',
+        self['enum'] = validate_string(s['enum'], 'enum', 'SP_[A-Z_]+$')
+        self['monster_name'] = validate_string(s['monster'], 'monster',
                                                 'MONS_[A-Z_]+$')
-        species['name'] = validate_string(s['name'], 'name', '..+')
-        species['short_name'] = s.get('short_name', s['name'][:2])
-        species['adjective'] = quote_or_nullptr('adjective', s)
-        species['genus'] = quote_or_nullptr('genus', s)
-        species['species_flags'] = species_flags(s.get('species_flags', []))
-        species['xp'] = validate_int_range(s['aptitudes']['xp'], 'xp', -10, 10)
-        species['hp'] = validate_int_range(s['aptitudes']['hp'], 'hp', -10, 10)
-        species['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod',
+        self['name'] = validate_string(s['name'], 'name', '..+')
+        self['short_name'] = s.get('short_name', s['name'][:2])
+        self['adjective'] = quote_or_nullptr('adjective', s)
+        self['genus'] = quote_or_nullptr('genus', s)
+        self['species_flags'] = species_flags(s.get('species_flags', []))
+        self['xp'] = validate_int_range(s['aptitudes']['xp'], 'xp', -10, 10)
+        self['hp'] = validate_int_range(s['aptitudes']['hp'], 'hp', -10, 10)
+        self['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod',
                                                                         -5, 20)
-        species['mr'] = validate_int_range(s['aptitudes']['mr'], 'mr', 0, 20)
-        species['aptitudes'] = aptitudes(s['aptitudes'])
-        species['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
-        species['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
-        species['size'] = size(s.get('size', 'medium'))
-        species['str'] = validate_int_range(s['str'], 'str', 1, 100)
-        species['int'] = validate_int_range(s['int'], 'int', 1, 100)
-        species['dex'] = validate_int_range(s['dex'], 'dex', 1, 100)
-        species['levelup_stats'] = levelup_stats(s.get('levelup_stats', []))
-        species['levelup_stat_frequency'] = validate_int_range(
+        self['mr'] = validate_int_range(s['aptitudes']['mr'], 'mr', 0, 20)
+        self['aptitudes'] = aptitudes(s['aptitudes'])
+        self['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
+        self['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
+        self['size'] = size(s.get('size', 'medium'))
+        self['str'] = validate_int_range(s['str'], 'str', 1, 100)
+        self['int'] = validate_int_range(s['int'], 'int', 1, 100)
+        self['dex'] = validate_int_range(s['dex'], 'dex', 1, 100)
+        self['levelup_stats'] = levelup_stats(s.get('levelup_stats', []))
+        self['levelup_stat_frequency'] = validate_int_range(
                 s['levelup_stat_frequency'], 'levelup_stat_frequency', 0, 28)
-        species['mutations'] = mutations(s.get('mutations', {}))
-        species['fake_mutations_long'] = fake_mutations_long(
+        self['mutations'] = mutations(s.get('mutations', {}))
+        self['fake_mutations_long'] = fake_mutations_long(
                                             s.get('fake_mutations', []))
-        species['fake_mutations_short'] = fake_mutations_short(
+        self['fake_mutations_short'] = fake_mutations_short(
                                             s.get('fake_mutations', []))
-        species['recommended_jobs'] = recommended_jobs(
+        self['recommended_jobs'] = recommended_jobs(
                                             s.get('recommended_jobs', []))
-        species['recommended_weapons'] = recommended_weapons(
+        self['recommended_weapons'] = recommended_weapons(
                                             s.get('recommended_weapons', []))
-        species['difficulty'] = difficulty(s.get('difficulty'))
-        species['difficulty_priority'] = validate_int_range(difficulty_priority(
+        self['difficulty'] = difficulty(s.get('difficulty'))
+        self['difficulty_priority'] = validate_int_range(difficulty_priority(
             s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
-        species['create_enum'] = validate_bool(
+        self['create_enum'] = validate_bool(
                                     s.get('create_enum', True), 'create_enum')
-        species['walking_verb'] = quote_or_nullptr('walking_verb', s)
-        species['altar_action'] = quote_or_nullptr('altar_action', s)
+        self['walking_verb'] = quote_or_nullptr('walking_verb', s)
+        self['altar_action'] = quote_or_nullptr('altar_action', s)
 
         if 'TAG_MAJOR_VERSION' in s:
-            species['tag_major_version_opener'] = (
+            self['tag_major_version_opener'] = (
                         "#if TAG_MAJOR_VERSION == %s" % s['TAG_MAJOR_VERSION'])
-            species['tag_major_version_closer'] = "#endif"
+            self['tag_major_version_closer'] = "#endif"
         else:
-            species['tag_major_version_opener'] = ''
-            species['tag_major_version_closer'] = ''
-        return species
+            self['tag_major_version_opener'] = ''
+            self['tag_major_version_closer'] = ''
 
 SpeciesGroup = collections.namedtuple('SpeciesGroup',
                                             ['position', 'width', 'species'])
@@ -352,7 +368,7 @@ def main():
             sys.exit(1)
 
         try:
-            species = Species.from_yaml(species_spec)
+            species = Species(species_spec)
         except (ValueError, KeyError) as e:
             print("Failed to load %s" % f_name)
             traceback.print_exc()
