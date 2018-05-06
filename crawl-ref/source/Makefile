@@ -1603,7 +1603,7 @@ mi-enum.h: mon-info.h util/gen-mi-enum
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
 # per target file. https://stackoverflow.com/q/2973445
-species-data.h: dat/species/* util/species-gen.py util/species-gen/*
+species-data.h: dat/species/*.yaml util/species-gen.py util/species-gen/*.txt
 	$(QUIET_GEN)util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
 
 # no-op
