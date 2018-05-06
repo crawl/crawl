@@ -67,5 +67,5 @@ void change_species_to(species_type sp);
 
 const species_def& get_species_def(species_type species);
 
-species_type random_species();
+species_type random_starting_species();
 bool is_starting_species(species_type species);

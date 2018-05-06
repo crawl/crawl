@@ -19,5 +19,5 @@ void give_job_skills(job_type job);
 void job_stat_init(job_type job);
 
 void debug_jobdata();
-job_type random_job();
+job_type random_starting_job();
 bool is_starting_job(job_type job);

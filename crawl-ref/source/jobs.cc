@@ -170,7 +170,7 @@ bool job_recommends_species(job_type job, species_type species)
 }
 
 // A random valid (selectable on the new game screen) job.
-job_type random_job()
+job_type random_starting_job()
 {
     job_type job;
     do {
