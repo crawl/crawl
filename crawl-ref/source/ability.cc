@@ -3125,7 +3125,7 @@ int choose_ability_menu(const vector<talent>& talents)
                                 "Cost                          Failure",
                                 "Ability - describe what?            "
                                 "Cost                          Failure",
-                                MEL_TITLE));
+                                MEL_TITLE), true, true);
 #endif
     abil_menu.set_tag("ability");
     abil_menu.add_toggle_key('!');
@@ -3217,6 +3217,13 @@ int choose_ability_menu(const vector<talent>& talents)
             }
         }
     }
+
+    abil_menu.on_entry_swap = [](MenuEntry &first, MenuEntry *second, int key)
+    {
+        swap_ability_slots(letter_to_index(first.hotkeys[0]), letter_to_index(key), true);
+        return true;
+    };
+    abil_menu.swap_mode_prompt_noun = "ability";
 
     int ret = -1;
     abil_menu.on_single_selection = [&abil_menu, &talents, &ret](const MenuEntry& sel)

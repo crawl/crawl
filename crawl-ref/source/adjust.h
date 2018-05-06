@@ -7,4 +7,5 @@
 
 void adjust();
 void adjust_item(int from_slot = -1);
+void swap_spell_slots(int index1, int index2);
 void swap_inv_slots(int slot1, int slot2, bool verbose);

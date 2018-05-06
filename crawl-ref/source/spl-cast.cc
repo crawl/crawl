@@ -11,6 +11,7 @@
 #include <sstream>
 #include <cmath>
 
+#include "adjust.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
@@ -265,6 +266,14 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             return false;
         }
     };
+
+    spell_menu.on_entry_swap = [](MenuEntry &first, MenuEntry *second, int key)
+    {
+        no_messages mx;
+        swap_spell_slots(letter_to_index(first.hotkeys[0]), letter_to_index(key));
+        return true;
+    };
+    spell_menu.swap_mode_prompt_noun = "spell";
 
     spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
