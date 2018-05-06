@@ -175,4 +175,8 @@ for my $f (@files)
     }
 }
 
-exit 1 if ($dry_run and $any_bad);
+if ($dry_run and $any_bad) {
+    print "Found unnecessary braces/brackets in the above files.\n";
+    print "Re-run this command (without -n) to automatically remove them.\n";
+    exit 1;
+}
