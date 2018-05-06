@@ -41,6 +41,18 @@ class Species(collections.MutableMapping):
     def __len__(self):
         return len(self.store)
 
+    def set_recommended_weapons(self, weapons):
+        if not self.starting_species:
+            self.backing_dict['recommended_weapons'] = ""
+            return
+        if not weapons:
+            weapons = list(ALL_WEAPON_SKILLS)
+            weapons.remove('SK_SHORT_BLADES')
+            weapons.remove('SK_UNARMED_COMBAT')
+        self.backing_dict['recommended_weapons'] = ', '.join(
+                        validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+')
+                                                        for weap in weapons)
+
     def from_yaml(self, s):
         # Pre-validation
         if s.get('TAG_MAJOR_VERSION', None) is not None:
@@ -48,11 +60,11 @@ class Species(collections.MutableMapping):
                 raise ValueError('TAG_MAJOR_VERSION must be an integer')
         if not isinstance(s.get('fake_mutations', []), list):
             raise ValueError('fake_mutations must be a list')
-        starting_species = s.get('difficulty') != False
+        self.starting_species = s.get('difficulty') != False
         has_recommended_jobs = bool(s.get('recommended_jobs'))
-        if starting_species != has_recommended_jobs:
+        if self.starting_species != has_recommended_jobs:
             raise ValueError('recommended_jobs must not be empty (or'
-                                                ' difficultymust be False)')
+                                                ' difficulty must be False)')
 
         # Set attributes
         self['enum'] = validate_string(s['enum'], 'enum', 'SP_[A-Z_]+$')
@@ -85,8 +97,7 @@ class Species(collections.MutableMapping):
                                             s.get('fake_mutations', []))
         self['recommended_jobs'] = recommended_jobs(
                                             s.get('recommended_jobs', []))
-        self['recommended_weapons'] = recommended_weapons(
-                                            s.get('recommended_weapons', []))
+        self.set_recommended_weapons(s.get('recommended_weapons', []))
         self['difficulty'] = difficulty(s.get('difficulty'))
         self['difficulty_priority'] = validate_int_range(difficulty_priority(
             s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
@@ -257,15 +268,6 @@ def fake_mutations_long(fmut_def):
 def fake_mutations_short(fmut_def):
     return make_list(', '.join(quote(m.get('short'))
                                     for m in fmut_def if m.get('short')))
-
-def recommended_weapons(weapons):
-    if not weapons:
-        weapons = list(ALL_WEAPON_SKILLS)
-        weapons.remove('SK_SHORT_BLADES')
-        weapons.remove('SK_UNARMED_COMBAT')
-    return ', '.join(
-        validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+') for weap in weapons)
-
 
 def aptitudes(apts):
     for apt, val in apts.items():
