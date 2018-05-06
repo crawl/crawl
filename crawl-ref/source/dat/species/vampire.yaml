@@ -36,6 +36,7 @@ aptitudes:
   poison_magic: -1
   invocations: -1
   evocations: -1
+undead_type: US_SEMI_UNDEAD
 str: 7
 int: 10
 dex: 9
