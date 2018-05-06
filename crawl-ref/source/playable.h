@@ -18,9 +18,6 @@ struct combo_type
     string abbr() const;
 };
 
-template <typename Enum, typename Predicate>
-vector<Enum> filter_enum(Enum max, Predicate filter);
-
 vector<job_type> playable_jobs();
 vector<species_type> playable_species();
 vector<combo_type> playable_combos();

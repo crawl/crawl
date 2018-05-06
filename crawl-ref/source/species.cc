@@ -496,7 +496,7 @@ void change_species_to(species_type sp)
 }
 
 // A random valid (selectable on the new game screen) species.
-species_type random_species()
+species_type random_starting_species()
 {
   species_type species;
   do {

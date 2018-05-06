@@ -62,7 +62,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "species.h" // random_species
+#include "species.h" // random_starting_species
 #include "spl-damage.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -2888,7 +2888,7 @@ void level_change(bool skip_attribute_increase)
                 {
                     do
                     {
-                        you.species = random_species();
+                        you.species = random_starting_species();
                     }
                     while (!species_is_draconian(you.species)
                            || you.species == SP_BASE_DRACONIAN
