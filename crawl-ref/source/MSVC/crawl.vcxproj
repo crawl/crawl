@@ -723,6 +723,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\feature.h" />
     <ClInclude Include="..\fight.h" />
     <ClInclude Include="..\files.h" />
+    <ClInclude Include="..\filter-enum.h" />
     <ClInclude Include="..\fineff.h" />
     <ClInclude Include="..\fixedarray.h" />
     <ClInclude Include="..\fixedvector.h" />
