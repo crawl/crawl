@@ -25,6 +25,7 @@
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"
+#include "playable.h" // filter_enum
 #include "prompt.h"
 #include "species-groups.h"
 #include "state.h"
@@ -200,25 +201,31 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
     case SP_VIABLE:
     case SP_RANDOM:
     {
-        species_type[] candidate_species;
+        vector<species_type> candidate_species;
         if (is_starting_job(ng.job))
         {
             switch (ng_choice.species)
             {
             case SP_VIABLE:
-                // Note: we know the array has at least one element because all
-                // starting jobs must recommend at least one species.
                 candidate_species =
-                    filter_enum(species_type, [&](species_type species) {
+                    filter_enum(NUM_SPECIES, [&](species_type species) {
                         return job_recommends_species(ng.job, species);
                     });
+                // Note: we know the array has at least one element because all
+                // starting jobs must recommend at least one species.
+                ASSERT(candidate_species.size() > 0);
+                break;
             case SP_RANDOM:
                 candidate_species =
-                    filter_enum(species_type, [&](species_type species) {
+                    filter_enum(NUM_SPECIES, [&](species_type species) {
                         return character_is_allowed(species, ng.job);
                     });
                 if (candidate_species.size() == 0)
                     die("Selected job allows no species?!");
+                break;
+
+            default:
+                die("How did we get here?");
             }
             ng.species = candidate_species[random2(candidate_species.size())];
         }
@@ -247,26 +254,33 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
     case JOB_VIABLE:
     case JOB_RANDOM:
     {
-        job_type[] candidate_jobs;
+        vector<job_type> candidate_jobs;
         if (is_starting_species(ng.species))
         {
             switch (ng_choice.job)
             {
             case JOB_VIABLE:
+                candidate_jobs =
+                    filter_enum(NUM_JOBS, [&](job_type job) {
+                        return species_recommends_job(ng.species, job);
+                    });
                 // Note: we know the array has at least one element because all
                 // starting species must recommend at least one job.
-                candidate_jobs =
-                    filter_enum(job_type, [&](job_type job) {
-                        return species_recommends_job(job, ng.species);
-                    });
+                ASSERT(candidate_jobs.size() > 0);
+                break;
             case JOB_RANDOM:
                 candidate_jobs =
-                    filter_enum(job_type, [&](job_type job) {
+                    filter_enum(NUM_JOBS, [&](job_type job) {
                         return character_is_allowed(ng.species, job);
                     });
-                if (candidate_species.size() == 0)
+                if (candidate_jobs.size() == 0)
                     die("Selected species allows no jobs?!");
+                break;
+
+            default:
+                die("How did we get here?");
             }
+
             ng.job = candidate_jobs[random2(candidate_jobs.size())];
         }
         else
