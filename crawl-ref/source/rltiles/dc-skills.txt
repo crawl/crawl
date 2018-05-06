@@ -21,6 +21,7 @@ unarmed_combat UNARMED_COMBAT_ON
 unarmed_combat_paw UNARMED_COMBAT_PAW_ON
 unarmed_combat_claw UNARMED_COMBAT_CLAW_ON
 unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_ON
+unarmed_combat_pincers UNARMED_COMBAT_PINCERS_ON
 spellcasting SPELLCASTING_ON
 conjurations CONJURATIONS_ON
 hexes HEXES_ON
@@ -77,6 +78,7 @@ unarmed_combat UNARMED_COMBAT_FOCUS
 unarmed_combat_paw UNARMED_COMBAT_PAW_FOCUS
 unarmed_combat_claw UNARMED_COMBAT_CLAW_FOCUS
 unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_FOCUS
+unarmed_combat_pincers UNARMED_COMBAT_PINCERS_FOCUS
 spellcasting SPELLCASTING_FOCUS
 conjurations CONJURATIONS_FOCUS
 hexes HEXES_FOCUS
@@ -133,6 +135,7 @@ unarmed_combat UNARMED_COMBAT_OFF
 unarmed_combat_paw UNARMED_COMBAT_PAW_OFF
 unarmed_combat_claw UNARMED_COMBAT_CLAW_OFF
 unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_OFF
+unarmed_combat_pincers UNARMED_COMBAT_PINCERS_OFF
 spellcasting SPELLCASTING_OFF
 conjurations CONJURATIONS_OFF
 hexes HEXES_OFF
@@ -189,6 +192,7 @@ unarmed_combat UNARMED_COMBAT_INACTIVE
 unarmed_combat_paw UNARMED_COMBAT_PAW_INACTIVE
 unarmed_combat_claw UNARMED_COMBAT_CLAW_INACTIVE
 unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_INACTIVE
+unarmed_combat_pincers UNARMED_COMBAT_PINCERS_INACTIVE
 spellcasting SPELLCASTING_INACTIVE
 conjurations CONJURATIONS_INACTIVE
 hexes HEXES_INACTIVE
@@ -245,6 +249,7 @@ unarmed_combat UNARMED_COMBAT_MAX
 unarmed_combat_paw UNARMED_COMBAT_PAW_MAX
 unarmed_combat_claw UNARMED_COMBAT_CLAW_MAX
 unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_MAX
+unarmed_combat_pincers UNARMED_COMBAT_PINCERS_MAX
 spellcasting SPELLCASTING_MAX
 conjurations CONJURATIONS_MAX
 hexes HEXES_MAX

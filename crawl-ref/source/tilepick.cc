@@ -3118,6 +3118,8 @@ tileidx_t tileidx_skill(skill_type skill, int train)
                 ch = TILEG_UNARMED_COMBAT_PAW_ON;
             else if (hand == "tentacle")
                 ch = TILEG_UNARMED_COMBAT_TENTACLE_ON;
+            else if (hand == "pincers")
+                ch = TILEG_UNARMED_COMBAT_PINCERS_ON;
             else
                 ch = TILEG_UNARMED_COMBAT_CLAW_ON;
         }

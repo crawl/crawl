@@ -1592,7 +1592,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HERMIT_CRAB,           SK_SUMMONINGS,      1),
     APT(SP_HERMIT_CRAB,           SK_NECROMANCY,      1),
     APT(SP_HERMIT_CRAB,           SK_TRANSLOCATIONS,  1),
-    APT(SP_HERMIT_CRAB,           SK_TRANSMUTATIONS,  0),
+    APT(SP_HERMIT_CRAB,           SK_TRANSMUTATIONS,  -1),
     APT(SP_HERMIT_CRAB,           SK_FIRE_MAGIC,      1),
     APT(SP_HERMIT_CRAB,           SK_ICE_MAGIC,       1),
     APT(SP_HERMIT_CRAB,           SK_AIR_MAGIC,       1),
