@@ -40,6 +40,7 @@ aptitudes:
   earth_magic: 1
   invocations: 1
   evocations: -1
+undead_type: US_HUNGRY_DEAD
 str: 11
 int: 3
 dex: 4
