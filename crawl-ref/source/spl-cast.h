@@ -79,7 +79,8 @@ typedef bool (*spell_selector)(spell_type spell);
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "Your Spells",
-                spell_selector selector = nullptr);
+                spell_selector selector = nullptr,
+                bool swap_mode = false);
 int raw_spell_fail(spell_type spell);
 int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,

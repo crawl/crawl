@@ -159,13 +159,14 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &title, spell_selector selector)
+                const string &title, spell_selector selector, bool swap_mode)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
-    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+    const int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALWAYS_SHOW_MORE
+            | MF_ALLOW_FORMATTING | (swap_mode ? MF_SWAP_MODE : 0);
+    ToggleableMenu spell_menu(flags);
     string titlestring = make_stringf("%-25.25s", title.c_str());
     {
         ToggleableMenuEntry* me =

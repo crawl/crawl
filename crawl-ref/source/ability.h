@@ -28,7 +28,7 @@ talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();
 string get_ability_desc(const ability_type ability, bool need_title = true);
-int choose_ability_menu(const vector<talent>& talents);
+int choose_ability_menu(const vector<talent>& talents, bool swap_mode = false);
 string describe_talent(const talent& tal);
 skill_type abil_skill(ability_type abil);
 int abil_skill_weight(ability_type abil);
