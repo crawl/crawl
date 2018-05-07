@@ -16,9 +16,6 @@
 #include "prompt.h"
 #include "spl-util.h"
 
-static void _adjust_spell();
-static void _adjust_ability();
-
 void adjust()
 {
     mprf(MSGCH_PROMPT, "Adjust (i)tems, (s)pells, or (a)bilities? ");
@@ -26,11 +23,14 @@ void adjust()
     const int keyin = toalower(get_ch());
 
     if (keyin == 'i')
-        adjust_item();
+        display_inventory(true);
     else if (keyin == 's')
-        _adjust_spell();
+        list_spells(false, true, false, "", nullptr, true);
     else if (keyin == 'a')
-        _adjust_ability();
+    {
+        vector<talent> talents = your_talents(false, true);
+        choose_ability_menu(talents, true);
+    }
     else if (key_is_escape(keyin))
         canned_msg(MSG_OK);
     else
@@ -71,65 +71,6 @@ void adjust_item(int from_slot)
     you.redraw_quiver = true;
 }
 
-static void _adjust_spell()
-{
-    if (!you.spell_no)
-    {
-        canned_msg(MSG_NO_SPELLS);
-        return;
-    }
-
-    // Select starting slot
-    mprf(MSGCH_PROMPT, "Adjust which spell? ");
-    int keyin = list_spells(false, false, false, "Adjust which spell?");
-
-    if (!isaalpha(keyin))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    const int input_1 = keyin;
-    const int index_1 = letter_to_index(input_1);
-    spell_type spell  = get_spell_by_letter(input_1);
-
-    if (spell == SPELL_NO_SPELL)
-    {
-        mpr("You don't know that spell.");
-        return;
-    }
-
-    // Print targeted spell.
-    mprf_nocap("%c - %s", keyin, spell_title(spell));
-
-    // Select target slot.
-    keyin = 0;
-    while (!isaalpha(keyin))
-    {
-        mprf(MSGCH_PROMPT, "Adjust to which letter? ");
-        keyin = get_ch();
-        if (key_is_escape(keyin))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        // FIXME: It would be nice if the user really could select letters
-        // without spells from this menu.
-        if (keyin == '?' || keyin == '*')
-            keyin = list_spells(true, false, false, "Adjust to which letter?");
-    }
-
-    const int index_2 = letter_to_index(keyin);
-
-    if (index_1 == index_2)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    swap_spell_slots(index_1, index_2);
-}
-
 void swap_spell_slots(int index_1, int index_2)
 {
     const int input_1 = index_to_letter(index_1);
@@ -148,45 +89,6 @@ void swap_spell_slots(int index_1, int index_2)
 
     if (spell != SPELL_NO_SPELL)
         mprf_nocap("%c - %s", input_1, spell_title(spell));
-}
-
-static void _adjust_ability()
-{
-    const vector<talent> talents = your_talents(false);
-
-    if (talents.empty())
-    {
-        mpr("You don't currently have any abilities.");
-        return;
-    }
-
-    mprf(MSGCH_PROMPT, "Adjust which ability? ");
-    int selected = choose_ability_menu(talents);
-
-    // If we couldn't find anything, cancel out.
-    if (selected == -1)
-    {
-        mpr("No such ability.");
-        return;
-    }
-
-    char old_key = static_cast<char>(talents[selected].hotkey);
-
-    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which));
-
-    const int index1 = letter_to_index(old_key);
-
-    mprf(MSGCH_PROMPT, "Adjust to which letter?");
-
-    const int keyin = get_ch();
-
-    if (!isaalpha(keyin))
-    {
-        canned_msg(MSG_HUH);
-        return;
-    }
-
-    swap_ability_slots(index1, letter_to_index(keyin));
 }
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)

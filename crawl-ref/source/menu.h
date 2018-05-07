@@ -275,7 +275,7 @@ enum MenuFlag
                                     ///< select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
     MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
-    //                    0x0800,
+    MF_SWAP_MODE        = 0x0800,   ///< Swaps items once, then exits.
     MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
     MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
     MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.

@@ -3101,10 +3101,11 @@ static void _pay_ability_costs(const ability_def& abil)
         lose_piety(piety_cost);
 }
 
-int choose_ability_menu(const vector<talent>& talents)
+int choose_ability_menu(const vector<talent>& talents, bool swap_mode)
 {
-    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                             | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+    const int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_TOGGLE_ACTION
+            | MF_ALWAYS_SHOW_MORE | (swap_mode ? MF_SWAP_MODE : 0);
+    ToggleableMenu abil_menu(flags);
 
     abil_menu.set_highlighter(nullptr);
 #ifdef USE_TILE_LOCAL

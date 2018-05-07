@@ -1176,9 +1176,10 @@ static unsigned char _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
-void display_inventory()
+void display_inventory(bool swap_mode)
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
+    const int swap_mode_flag = swap_mode ? MF_SWAP_MODE : 0;
+    InvMenu menu(swap_mode_flag | MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(MT_INVLIST);
 
