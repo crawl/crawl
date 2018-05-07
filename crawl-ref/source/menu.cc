@@ -885,8 +885,6 @@ void Menu::clear()
 void Menu::set_flags(int new_flags, bool use_options)
 {
     flags = new_flags;
-    if (use_options && Options.easy_exit_menu)
-        flags |= MF_EASY_EXIT;
 
 #ifdef DEBUG
     int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
@@ -1148,7 +1146,6 @@ bool Menu::process_key(int keyin)
 #ifdef USE_TILE_WEB
     const int old_vis_first = get_first_visible();
 #endif
-    bool scrolled_off_end = false;
 
     switch (keyin)
     {
@@ -1167,24 +1164,23 @@ bool Menu::process_key(int keyin)
     case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
-        scrolled_off_end = !page_down();
-        if (scrolled_off_end && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
-            scrolled_off_end = !menu_ui->scroll_to_item(0);
+        if (!page_down() && !is_set(MF_NOWRAP))
+            menu_ui->scroll_to_item(0);
         break;
     case CK_PGUP: case '<': case ';':
-        scrolled_off_end = !page_up();
+        page_up();
         break;
     case CK_UP:
-        scrolled_off_end = !line_up();
+        line_up();
         break;
     case CK_DOWN:
-        scrolled_off_end = !line_down();
+        line_down();
         break;
     case CK_HOME:
-        scrolled_off_end = !menu_ui->scroll_to_item(0);
+        menu_ui->scroll_to_item(0);
         break;
     case CK_END:
-        scrolled_off_end = !menu_ui->scroll_to_item(INT_MAX);
+        menu_ui->scroll_to_item(INT_MAX);
         break;
     case CONTROL('F'):
         if ((flags & MF_ALLOW_FILTER))
@@ -1322,15 +1318,7 @@ bool Menu::process_key(int keyin)
         webtiles_update_scroll_pos();
 #endif
 
-    if (scrolled_off_end && allow_easy_exit() && is_set(MF_EASY_EXIT))
-        return false;
     return true;
-}
-
-// Easy exit should not kill the menu if there are selected items.
-bool Menu::allow_easy_exit() const
-{
-    return sel.empty();
 }
 
 string Menu::get_select_count_string(int count) const

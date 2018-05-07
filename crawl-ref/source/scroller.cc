@@ -133,8 +133,7 @@ int formatted_scroller::show()
             return true;
         if (vbox->on_event(ev))
             return true;
-        done = m_flags & FS_EASY_EXIT;
-        return done;
+        return false;
     });
 
 #ifdef USE_TILE_WEB

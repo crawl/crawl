@@ -266,7 +266,7 @@ enum MenuFlag
                                     ///< select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
     MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
-    MF_EASY_EXIT        = 0x0800,   ///< Exit when scrolling off the end
+    //                    0x0800,
     MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
     MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
     MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.
@@ -439,8 +439,6 @@ protected:
     bool title_prompt(char linebuf[], int bufsz, const char* prompt);
 
     virtual bool process_key(int keyin);
-
-    virtual bool allow_easy_exit() const;
 
     virtual string help_key() const { return ""; }
 
