@@ -287,10 +287,6 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
 
         break;            
-            
-            
-            
-            
 
     case JOB_WANDERER:
         create_wanderer();

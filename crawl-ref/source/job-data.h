@@ -215,7 +215,7 @@ static const map<job_type, job_def> job_data =
 } },
  
  { JOB_SLIME_KNIGHT, {
-    "SK", "Slime Knight",
+    "Sl", "Slime Knight",
     4, 4, 4,
     { SP_HILL_ORC, SP_TROLL, SP_CENTAUR, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
