@@ -474,7 +474,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w> Spells %s                 Type                          Failure  Level",
+                    make_stringf("<w>Spells %s                 Type                          Failure  Level",
                         current_action == action::memorise ?
                             "(Memorise)" :
                         current_action == action::describe ?
