@@ -2760,7 +2760,7 @@ void melee_attack::mons_apply_attack_flavour()
             drain_defender();
         break;
 
-    case AF_POISON_PARALYSE:
+    case AF_POISON_SLOW:
     {
         // Doesn't affect the poison-immune.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
@@ -2779,15 +2779,13 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        // Try to apply either paralysis or slowing, with the normal 2/3
+        // Try to apply slowing 2/3 of the time, with the normal 2/3
         // chance to resist with rPois.
-        if (one_chance_in(6))
+        if (!one_chance_in(3))
         {
             if (defender->res_poison() <= 0 || one_chance_in(3))
-                defender->paralyse(attacker, roll_dice(1, 3));
+                defender->slow_down(attacker, roll_dice(1, 3));
         }
-        else if (defender->res_poison() <= 0 || one_chance_in(3))
-            defender->slow_down(attacker, roll_dice(1, 3));
 
         break;
     }
