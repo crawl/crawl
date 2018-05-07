@@ -125,6 +125,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
     desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
+    desc << "  ";
 
     return desc.str();
 }
@@ -168,9 +169,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " " + titlestring + "         Type          "
+                titlestring + "         Type          "
                 "                Failure  Level",
-                " " + titlestring + "         Power        "
+                titlestring + "         Power        "
                 "Range    " + "Hunger  " + "Noise          ",
                 MEL_TITLE);
 #ifdef USE_TILE_LOCAL

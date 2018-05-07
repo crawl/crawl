@@ -1924,6 +1924,13 @@ void Menu::update_title()
     if (!is_set(MF_QUIET_SELECT) && is_set(MF_MULTISELECT))
         fs.cprintf("%s", get_select_count_string(sel.size()).c_str());
 
+    if (m_indent_title)
+    {
+        formatted_string indented(" ");
+        indented += fs;
+        fs = indented;
+    }
+
     menu_ui->update_title(fs);
 #ifdef USE_TILE_WEB
     webtiles_set_title(fs);
