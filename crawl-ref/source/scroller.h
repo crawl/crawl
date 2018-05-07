@@ -11,7 +11,6 @@
 enum FSFlag {
     FS_START_AT_END = 0x01,
     FS_PREWRAPPED_TEXT = 0x02,
-    FS_EASY_EXIT = 0x04,
 };
 
 class formatted_scroller

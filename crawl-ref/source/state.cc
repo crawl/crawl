@@ -89,7 +89,7 @@ void game_state::add_startup_error(const string &err)
 
 void game_state::show_startup_errors()
 {
-    formatted_scroller error_menu(FS_EASY_EXIT);
+    formatted_scroller error_menu;
     error_menu.set_more( formatted_string::parse_string(
         "<cyan>Press Esc or Enter to continue."));
     error_menu.set_title(formatted_string::parse_string(

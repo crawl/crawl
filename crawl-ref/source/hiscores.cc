@@ -348,8 +348,6 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 static void _show_morgue(scorefile_entry& se)
 {
     int flags = FS_PREWRAPPED_TEXT;
-    if (Options.easy_exit_menu)
-        flags |= FS_EASY_EXIT;
     formatted_scroller morgue_file(flags);
 
     morgue_file.set_tag("morgue");

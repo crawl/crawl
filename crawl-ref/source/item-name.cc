@@ -2273,11 +2273,6 @@ protected:
         return "known-menu";
     }
 
-    bool allow_easy_exit() const override
-    {
-        return true;
-    }
-
     bool process_key(int key) override
     {
         bool resetting = (lastch == CONTROL('D'));

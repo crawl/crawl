@@ -613,8 +613,6 @@ void display_overview()
     string disp = overview_description_string(true);
     linebreak_string(disp, 80);
     int flags = FS_PREWRAPPED_TEXT; // TODO: add ANYPRINTABLE
-    if (Options.easy_exit_menu)
-        flags |= FS_EASY_EXIT;
     formatted_scroller(flags, disp).show();
 }
 
