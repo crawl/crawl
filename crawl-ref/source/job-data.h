@@ -214,17 +214,6 @@ static const map<job_type, job_def> job_data =
       { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
 } },
  
- { JOB_SLIME_KNIGHT, {
-    "Sl", "Slime Knight",
-    4, 4, 4,
-    { SP_HILL_ORC, SP_TROLL, SP_CENTAUR, SP_MERFOLK, SP_MINOTAUR,
-      SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
-    { "leather armour plus:2" },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
-      { SK_WEAPON, 3 } },
-} },   
-    
  { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
