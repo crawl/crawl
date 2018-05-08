@@ -114,17 +114,17 @@ static bool _char_defined(const newgame_def& ng)
 static string _char_description(const newgame_def& ng)
 {
     if (_is_random_viable_choice(ng))
-        return "Viable character";
+        return "Recommended character";
     else if (_is_random_choice(ng))
         return "Random character";
     else if (_is_random_job(ng.job))
     {
-        const string j = (ng.job == JOB_RANDOM ? "Random " : "Viable ");
+        const string j = (ng.job == JOB_RANDOM ? "Random " : "Recommended ");
         return j + species_name(ng.species);
     }
     else if (_is_random_species(ng.species))
     {
-        const string s = (ng.species == SP_RANDOM ? "Random " : "Viable ");
+        const string s = (ng.species == SP_RANDOM ? "Random " : "Recommended ");
         return s + get_job_name(ng.job);
     }
     else
@@ -668,7 +668,7 @@ static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
  * Helper function for _choose_species
  * Constructs the menu screen
  */
-static const int COLUMN_WIDTH = 25;
+static const int COLUMN_WIDTH = 35;
 static const int X_MARGIN = 4;
 static const int CHAR_DESC_START_Y = 16;
 static const int CHAR_DESC_HEIGHT = 3;
@@ -686,9 +686,9 @@ static void _add_choice_menu_options(int choice_type,
     // Add all the special button entries
     TextItem* tmp = new TextItem();
     if (choice_type == C_SPECIES)
-        tmp->set_text("+ - Viable species");
+        tmp->set_text("+ - Recommended species");
     else
-        tmp->set_text("+ - Viable background");
+        tmp->set_text("+ - Recommended background");
     coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
     coord_def max_coord = coord_def(min_coord.x + tmp->get_text().size(),
                                     min_coord.y + 1);
@@ -704,12 +704,12 @@ static void _add_choice_menu_options(int choice_type,
     else
         tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random viable " + other_choice_name + " based on your current " + choice_name + " choice.");
+    tmp->set_description_text("Picks a random recommended " + other_choice_name + " based on your current " + choice_name + " choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("# - Viable character");
+    tmp->set_text("# - Recommended character");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -719,7 +719,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Shuffles through random viable character combinations "
+    tmp->set_description_text("Shuffles through random recommended character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1462,7 +1462,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     }
     // Add all the special button entries
     TextItem *tmp = new TextItem();
-    tmp->set_text("+ - Viable random choice");
+    tmp->set_text("+ - Recommended random choice");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1472,7 +1472,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->add_hotkey('+');
     tmp->set_id(M_VIABLE);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random viable weapon");
+    tmp->set_description_text("Picks a random recommended weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1544,7 +1544,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
         ASSERT(defweapon != WPN_THROWN || thrown_name);
         text += defweapon == WPN_RANDOM  ? "Random" :
-                defweapon == WPN_VIABLE  ? "Viable" :
+                defweapon == WPN_VIABLE  ? "Recommended" :
                 defweapon == WPN_UNARMED ? "unarmed" :
                 defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
