@@ -5916,6 +5916,9 @@ int player::base_ac(int scale) const
     if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
         AC += 300;
 
+    if (wearing(EQ_STAFF, STAFF_EARTH))
+        AC += 300;
+
     AC += scan_artefacts(ARTP_AC) * 100;
 
     AC += get_form()->get_ac_bonus();
