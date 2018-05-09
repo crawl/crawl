@@ -1961,25 +1961,23 @@ ENDMAP
 # then wait. It creates an agreeable sense of tension. -LP
 #
 NAME:    lemuel_ice_spiral_2
-ORIENT:  float
+TAGS:    uniq_spiral layout_rooms layout_city
+TAGS:    no_item_gen no_monster_gen no_tele_into
 DEPTH:   D:5-
-TAGS:    no_item_gen no_monster_gen uniq_spiral layout_rooms layout_city
-MONS:    nothing
-ITEM:    nothing, nothing
-SUBST:   M=. , m=n, B=.
+ORIENT:  float
 SUBST:   * : *$
-MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+MARKER:  D = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
               size = 2, walk_dist = 0, spread_rate= 0 }
-MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
+MARKER:  E = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
               size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
-mG+Gmmmmmmmmmmmmmmmmm
-mBBB111B111BeeeeeeeBm
-mmmmmmmmmmmmmmmmmmmBm
-m*****eeeeeee111B111m
-mmmmmmmmmmmmmmmmmmmmm
+nn+nnnnnnnnnnnnnnnnnn
+n...DDD.DDD.EEEEEEE.n
+nnnnnnnnnnnnnnnnnnn.n
+n*****EEEEEEEDDD.DDDn
+nnnnnnnnnnnnnnnnnnnnn
 ENDMAP
 
 ##############################################################################
