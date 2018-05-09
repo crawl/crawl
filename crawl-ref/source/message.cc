@@ -47,6 +47,8 @@ void mpr_nojoin(msg_channel_type channel, string text)
 
 static bool _ends_in_punctuation(const string& text)
 {
+    if (text.size() == 0)
+        return false;
     switch (text[text.size() - 1])
     {
     case '.':
