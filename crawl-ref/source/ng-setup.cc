@@ -459,6 +459,10 @@ static void _setup_generic(const newgame_def& ng)
     you.props[REMOVED_DEAD_SHOPS_KEY] = true;
 #endif
 
+    // Needs to happen before we give the player items, so that it's safe to
+    // check whether those items need to be removed from their shopping list.
+    shopping_list.refresh();
+
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;

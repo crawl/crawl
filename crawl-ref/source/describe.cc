@@ -167,6 +167,12 @@ int show_description(const describe_info &inf, const tile_def *tile)
     bool done = false;
     int lastch;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
@@ -2455,6 +2461,12 @@ void describe_feature_wide(const coord_def& pos)
 
     bool done = false;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         done = !scroller->on_event(ev);
@@ -2826,6 +2838,12 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     command_type action;
     int lastch;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
@@ -3300,6 +3318,12 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     bool done = false;
     int lastch;
     popup->on(UI::slots.event, [&done, &lastch](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
@@ -4596,6 +4620,12 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     bool show_quote = false;
     int lastch;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;

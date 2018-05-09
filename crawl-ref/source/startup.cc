@@ -1055,6 +1055,12 @@ static void _choose_arena_teams(newgame_def& choice,
     auto prompt_ui = make_shared<UIText>();
 
     prompt_ui->on(UI::slots.event, [&](wm_event ev)  {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;

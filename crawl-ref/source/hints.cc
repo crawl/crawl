@@ -178,6 +178,12 @@ void pick_hints(newgame_def& choice)
     bool done = false;
     int keyn;
     prompt_ui->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         keyn = ev.key.keysym.sym;

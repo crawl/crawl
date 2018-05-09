@@ -900,6 +900,12 @@ void display_mutations()
     bool done = false;
     int lastch;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;

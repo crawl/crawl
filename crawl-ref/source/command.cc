@@ -208,6 +208,12 @@ static void _print_version()
 
     bool done = false;
     popup->on(UI::slots.event, [&done, &vbox](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         done = !vbox->on_event(ev);

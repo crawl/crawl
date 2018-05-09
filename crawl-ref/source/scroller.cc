@@ -107,6 +107,12 @@ int formatted_scroller::show()
     m_scroll_dirty = false;
     bool done = false;
     popup->on(UI::slots.event, [&done, &vbox, &text, this](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false; // allow default event handling
         m_lastch = ev.key.keysym.sym;
