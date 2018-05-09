@@ -10,12 +10,12 @@
 
 #include "ui.h"
 #include "cio.h"
+# include "state.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
 # include "tilebuf.h"
 #else
-# include "state.h"
 # include "output.h"
 # include "view.h"
 # include "stringutil.h"
@@ -1242,6 +1242,14 @@ void pump_events()
         ui_root.on_event(ev);
     }
 #endif
+}
+
+void run_layout(shared_ptr<Widget> root, const bool& done)
+{
+    push_layout(root);
+    while (!done && !crawl_state.seen_hups)
+        pump_events();
+    pop_layout();
 }
 
 }
