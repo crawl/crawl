@@ -534,6 +534,7 @@ protected:
 void push_layout(shared_ptr<Widget> root);
 void pop_layout();
 void pump_events();
+void run_layout(shared_ptr<Widget> root, const bool& done);
 
 void push_scissor(i4 scissor);
 void pop_scissor();
