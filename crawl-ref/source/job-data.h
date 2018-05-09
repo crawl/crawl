@@ -66,7 +66,7 @@ static const map<job_type, job_def> job_data =
 } },
 
 { JOB_ASSASSIN, {
-    "As", "Assassin",
+    "Rg", "Rogue",
     3, 3, 6,
     { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
       SP_VINE_STALKER, },
