@@ -1500,12 +1500,32 @@ void pump_events(int wait_event_timeout)
 
     switch (event.type)
     {
+        case WME_ACTIVEEVENT:
+            // When game gains focus back then set mod state clean
+            // to get rid of stupid Windows/SDL bug with Alt-Tab.
+            if (event.active.gain != 0)
+            {
+                wm->set_mod_state(TILES_MOD_NONE);
+                ui_root.needs_paint = true;
+            }
+            break;
+
+        case WME_QUIT:
+            crawl_state.seen_hups++;
+            break;
+
         case WME_RESIZE:
         {
             ui_root.resize(event.resize.w, event.resize.h);
             tiles.resize_event(event.resize.w, event.resize.h);
             break;
         }
+
+        case WME_MOVE:
+            if (tiles.update_dpi())
+                ui_root.resize(wm->screen_width(), wm->screen_height());
+            ui_root.needs_paint = true;
+            break;
 
         case WME_EXPOSE:
             ui_root.needs_paint = true;
