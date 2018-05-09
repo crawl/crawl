@@ -384,6 +384,12 @@ void DollEditRegion::run()
     auto doll_ui = make_shared<UIDollEditor>(this);
 
     doll_ui->on(UI::slots.event, [this, &done, &doll_ui, &update_part_idx](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;

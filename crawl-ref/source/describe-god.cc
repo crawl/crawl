@@ -1101,6 +1101,12 @@ void describe_god(god_type which_god)
 
     bool done = false;
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
@@ -1197,6 +1203,12 @@ bool describe_god_with_join(god_type which_god)
 
     // The join-god UI state machine transition function
     popup->on(UI::slots.event, [&](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         int keyin = ev.key.keysym.sym;

@@ -1810,6 +1810,12 @@ void skill_menu(int flag, int exp)
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
 
     skill_menu_ui->on(UI::slots.event, [&done, &skill_menu_ui](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+        
         if (ev.type != WME_KEYDOWN)
             return false;
         int keyn = ev.key.keysym.sym;

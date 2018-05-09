@@ -96,7 +96,8 @@ struct UI::slots UI::slots = {};
 
 bool UI::on_event(wm_event event)
 {
-    if (event.type == WME_KEYDOWN || event.type == WME_KEYUP)
+    if (event.type == WME_KEYDOWN || event.type == WME_KEYUP ||
+        event.type == WME_QUIT)
         return UI::slots.event.emit(this, event);
     else
         return false;
@@ -1462,10 +1463,19 @@ void ui_pump_events(int wait_event_timeout)
         }
 
         if (!wm->wait_event(&event, wait_event_timeout))
+        {
             if (wait_event_timeout == INT_MAX)
                 continue;
             else
                 return;
+        }
+
+        if(event.type == WME_QUIT){
+            crawl_state.seen_hups++;
+            ui_root.on_event(event);
+            return;
+        }
+
         if (event.type == WME_MOUSEMOTION)
         {
             // For consecutive mouse events, ignore all but the last,
@@ -1476,11 +1486,11 @@ void ui_pump_events(int wait_event_timeout)
             if (wm->get_event_count(WME_MOUSEMOTION) > 0)
                 continue;
         }
-        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
+        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)          
             continue;
 
         // translate any key events with the current keymap
-        if (event.type == WME_KEYDOWN)
+        if (event.type == WME_KEYDOWN)          
             remap_key(event);
         break;
     }
@@ -1554,6 +1564,12 @@ int ui_getch(KeymapContext km)
     int key;
     bool done = false;
     event_filter = [&](wm_event event) {
+        if(event.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (event.type != WME_KEYDOWN)
             return false;
         key = event.key.keysym.sym;

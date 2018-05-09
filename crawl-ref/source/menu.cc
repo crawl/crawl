@@ -965,6 +965,12 @@ void Menu::do_menu()
     auto popup_ui = make_shared<UIPopup>(menu_ui);
 
     menu_ui->on(UI::slots.event, [this, &done](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         done = !process_key(ev.key.keysym.sym);
@@ -980,7 +986,7 @@ void Menu::do_menu()
 #endif
 
     alive = true;
-    while (alive && !done)
+    while (alive && !done && !crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
         if (_webtiles_title_changed)
@@ -1069,7 +1075,7 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
     {
         ui_pump_events();
     }
-    while (m_filter);
+    while (m_filter && !crawl_state.seen_hups);
     validline = linebuf[0];
 #endif
 

@@ -844,6 +844,12 @@ static void _describe_cards(vector<card_type> cards)
 
     bool done = false;
     popup->on(UI::slots.event, [&done, &scroller](wm_event ev) {
+        if(ev.type == WME_QUIT)
+        {
+            done = true;
+            return true;
+        }
+
         if (ev.type != WME_KEYDOWN)
             return false;
         done = !scroller->on_event(ev);
