@@ -391,7 +391,6 @@ static int _banished_depth(const int power)
 void banished(const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
-    push_features_to_abyss();
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
