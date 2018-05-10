@@ -3340,6 +3340,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_STOP_RECALL;
     case ABIL_CANCEL_PPROJ:
         return TILEG_ABILITY_CANCEL_PPROJ;
+    case ABIL_CANCEL_PIERCE:
+        return TILEG_ABILITY_CANCEL_PIERCE;
 
     // Species-specific abilities.
     // Demonspawn-only
