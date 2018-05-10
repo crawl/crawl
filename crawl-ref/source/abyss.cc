@@ -1662,10 +1662,31 @@ void abyss_morph()
     los_changed();
 }
 
+bool _abyss_force_descent()
+{
+    // Force the player deeper in the abyss during an abyss
+    // teleport with probability
+    // ( max(0, XL - Depth - 13) / 27 )^2
+    // Consequences of this formula:
+    // - Characters at xl 13 + depth or below do not go deeper
+    // - Characters at xl 27 have a 169/729 ~ .23 chance of being pulled
+    //   down from A:1, and a 100/729 ~ .13 chance of A:4 -> A:5
+    int fraction = max(0, you.experience_level
+                          - level_id::current().depth - 13);
+    return x_chance_in_y(fraction * fraction, 729);
+}
+
 void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
+    if (level_id::current().depth < brdepth[BRANCH_ABYSS]
+        && _abyss_force_descent())
+    {
+        down_stairs(DNGN_ABYSSAL_STAIR);
+        more();
+        return;
+    }
     mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
