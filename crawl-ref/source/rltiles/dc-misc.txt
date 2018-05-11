@@ -100,6 +100,15 @@ irradiate1
 irradiate2
 irradiate3
 
+harpoon_shot0 BOLT_HARPOON_SHOT
+harpoon_shot1
+harpoon_shot2
+harpoon_shot3
+harpoon_shot4
+harpoon_shot5
+harpoon_shot6
+harpoon_shot7
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

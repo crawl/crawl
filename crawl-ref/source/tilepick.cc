@@ -3024,6 +3024,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case CYAN:
         if (bolt.name == "slug dart")
             return TILE_BOLT_STONE_ARROW + dir;
+        else if (bolt.name == "harpoon shot")
+            return TILE_BOLT_HARPOON_SHOT + dir;
         break;
 
     case ETC_MUTAGENIC:
