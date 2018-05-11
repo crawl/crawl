@@ -842,7 +842,7 @@ static void _sdump_spells(dump_params &par)
     {
         verb = par.se? "didn't" : "don't";
 
-        text += "You " + verb + " know any spells.\n\n";
+        text += "You " + verb + " know any spells.\n";
     }
     else
     {
@@ -863,6 +863,72 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += letter;
                 spell_line += " - ";
+                spell_line += spell_title(spell);
+
+                spell_line = chop_string(spell_line, 24);
+                spell_line += "  ";
+
+                bool already = false;
+
+                for (const auto bit : spschools_type::range())
+                {
+                    if (spell_typematch(spell, bit))
+                    {
+                        spell_line += spell_type_shortname(bit, already);
+                        already = true;
+                    }
+                }
+
+                spell_line = chop_string(spell_line, 41);
+
+                spell_line += spell_power_string(spell);
+
+                spell_line = chop_string(spell_line, 54);
+
+                spell_line += failure_rate_to_string(raw_spell_fail(spell));
+
+                spell_line = chop_string(spell_line, 66);
+
+                spell_line += make_stringf("%-5d", spell_difficulty(spell));
+
+                spell_line += spell_hunger_string(spell);
+                spell_line += "\n";
+
+                text += spell_line;
+            }
+        }
+        text += "\n";
+    }
+
+    if (!you.spell_library.count())
+    {
+        verb = par.se ? "was" : "is";
+        text += "Your spell library " + verb + " empty.\n\n";
+    }
+    else
+    {
+        verb = par.se? "contained" : "contains";
+        text += "Your spell library " + verb + " the following spells:\n\n";
+        text += " Spells                   Type           Power        Failure   Level  Hunger" "\n";
+
+        FixedBitVector<NUM_SPELLS> memorizable = you.spell_library;
+
+        for (int j = 0; j < 52; j++)
+        {
+            const spell_type spell  = get_spell_by_letter(index_to_letter(j));
+            if (spell != SPELL_NO_SPELL)
+                memorizable.set(spell, false);
+        }
+
+        for (int j = 0; j < NUM_SPELLS; j++)
+        {
+            const spell_type spell  = static_cast<spell_type>(j);
+
+            if (memorizable.get(spell))
+            {
+                string spell_line;
+
+                spell_line += ' ';
                 spell_line += spell_title(spell);
 
                 spell_line = chop_string(spell_line, 24);
