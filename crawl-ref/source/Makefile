@@ -725,7 +725,7 @@ CFWARN_L  += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/d
 # where the same enum is assigned a signed underlying type.
 CFWARN_L  += $(shell w=-Wno-tautological-unsigned-enum-zero-compare;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
-CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
+CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic -Wp,-D_GLIBCXX_ASSERTIONS
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
