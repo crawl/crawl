@@ -407,6 +407,8 @@ bool iood_act(monster& mon, bool no_trail)
     }
 
 move_again:
+    coord_def starting_pos = (mon.pos() == coord_def()) ?
+                                                coord_def(x, y) : mon.pos();
 
     x += vx;
     y += vy;
@@ -437,14 +439,14 @@ move_again:
         return false;
 
     if (!no_trail)
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(), 2 + random2(3), &mon);
+        place_cloud(CLOUD_MAGIC_TRAIL, starting_pos, 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
     {
         if (cell_is_solid(pos)
             && you.see_cell(pos)
-            && you.see_cell(mon.pos()))
+            && you.see_cell(starting_pos))
         {
             mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                  feature_description_at(pos, false, DESC_A).c_str());
