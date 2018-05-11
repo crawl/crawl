@@ -2057,7 +2057,7 @@ static bool _restore_game(const string& filename)
         && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno(("This game comes from a previous release of Crawl (" +
-                    you.prev_save_version + "). If you load it now,"
+                    you.prev_save_version + ").\n\nIf you load it now,"
                     " you won't be able to go back. Continue?").c_str(),
                     true, 'n'))
         {
