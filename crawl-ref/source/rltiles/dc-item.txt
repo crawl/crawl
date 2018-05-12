@@ -388,6 +388,7 @@ shadow_dragon_scale_mail ARM_SHADOW_DRAGON_ARMOUR
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
+iron_dragon_armour   ARM_IRON_DRAGON_ARMOUR
 
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER

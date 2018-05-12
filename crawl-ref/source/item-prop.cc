@@ -174,6 +174,9 @@ static const armour_def Armour_prop[] =
         ard(ARMF_STEALTH, 4)),
     DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
+    DRAGON_ARMOUR(IRON,        "iron",                   16, -270,  800,
+	ARMF_NO_FLAGS),
+        
 
 #undef DRAGON_ARMOUR
 };
@@ -1317,6 +1320,7 @@ static map<monster_type, armour_type> _monster_hides = {
     { MONS_PEARL_DRAGON,        ARM_PEARL_DRAGON_ARMOUR },
     { MONS_SHADOW_DRAGON,       ARM_SHADOW_DRAGON_ARMOUR },
     { MONS_QUICKSILVER_DRAGON,  ARM_QUICKSILVER_DRAGON_ARMOUR },
+    { MONS_IRON_DRAGON,         ARM_IRON_DRAGON_ARMOUR }
 };
 
 /**

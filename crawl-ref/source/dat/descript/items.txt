@@ -522,6 +522,10 @@ inedible chunk of flesh
 
 <chunk of flesh>
 %%%%
+iron dragon scales
+
+The scales of a mighty iron dragon. It provides unparalleled protection against physical attacks.
+%%%%
 javelin
 
 A lightweight spear, designed for throwing.
