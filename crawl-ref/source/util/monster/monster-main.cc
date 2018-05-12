@@ -1007,8 +1007,8 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
-                case AF_POISON_PARALYSE:
-                    monsterattacks += colour(LIGHTRED, "(paralyse)");
+                case AF_POISON_SLOW:
+                    monsterattacks += colour(YELLOW, "(slow)");
                     break;
                 case AF_POISON:
                     monsterattacks += colour(

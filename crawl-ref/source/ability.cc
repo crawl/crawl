@@ -321,6 +321,9 @@ static const ability_def Ability_List[] =
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
       0, 0, 0, 0, {}, abflag::instant },
 
+    { ABIL_CANCEL_PIERCE, "Cancel Piercing Shot",
+      0, 0, 0, 0, {}, abflag::instant },
+
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::instant },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::delay },
 
@@ -1146,7 +1149,8 @@ void no_ability_msg()
         }
     }
     else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
-             || you.get_mutation_level(MUT_BIG_WINGS))
+             || you.get_mutation_level(MUT_BIG_WINGS)
+             || you.get_mutation_level(MUT_FAIRY_FLIGHT))
     {
         if (you.airborne())
             mpr("You're already flying!");
@@ -1342,6 +1346,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 #endif
         case ABIL_END_TRANSFORMATION:
         case ABIL_CANCEL_PPROJ:
+        case ABIL_CANCEL_PIERCE:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
@@ -2007,7 +2012,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FLY:
         fail_check();
-        // high level Te or Dr/Gr wings
+        // FD, high level Te, or Dr/Gr wings
         if (you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -2105,6 +2110,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.duration[DUR_PORTAL_PROJECTILE] = 0;
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
         mpr("You are no longer teleporting projectiles to their destination.");
+        break;
+
+    case ABIL_CANCEL_PIERCE:
+        fail_check();
+        you.duration[DUR_PIERCING_SHOT] = 0;
+        mpr("Your projectiles no longer penetrate their targets.");
         break;
 
     case ABIL_STOP_FLYING:
@@ -3384,6 +3395,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_PORTAL_PROJECTILE])
         _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
+
+    if (you.duration[DUR_PIERCING_SHOT])
+        _add_talent(talents, ABIL_CANCEL_PIERCE, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)

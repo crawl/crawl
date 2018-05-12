@@ -671,6 +671,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_FAIRY_FLIGHT, 0, 1, mutflag::good, true,
+  "able to fly",
+
+  {"You can fly continuously.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
   "hurl damnation",
 
@@ -1910,6 +1918,7 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
 },
+
 };
 
 static const mutation_category_def category_mut_data[] =

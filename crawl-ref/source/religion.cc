@@ -3083,10 +3083,10 @@ bool player_can_join_god(god_type which_god)
 
     if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
         return false;
-
+    
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
-
+    
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
@@ -4580,9 +4580,7 @@ static bool _is_temple_god(god_type god)
     switch (god)
     {
     case GOD_NO_GOD:
-    case GOD_LUGONU:
-    case GOD_BEOGH:
-    case GOD_JIYVA:
+     case GOD_BEOGH:
         return false;
 
     default:

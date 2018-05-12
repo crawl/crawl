@@ -1132,6 +1132,7 @@ statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
+statue_form_faerie_dragon TRAN_STATUE_FAERIE_DRAGON
 dragon_form TRAN_DRAGON
 dragon_form_red TRAN_DRAGON_RED
 dragon_form_white TRAN_DRAGON_WHITE
@@ -1141,6 +1142,7 @@ dragon_form_grey TRAN_DRAGON_GREY
 dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
+dragon_form_faerie TRAN_DRAGON_FAERIE
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_centaur TRAN_LICH_CENTAUR
@@ -1148,6 +1150,7 @@ lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
+lich_form_faerie_dragon TRAN_LICH_FAERIE_DRAGON
 tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM

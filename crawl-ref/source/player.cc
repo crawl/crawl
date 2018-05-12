@@ -2135,7 +2135,7 @@ static int _player_evasion_bonuses()
     return evbonus;
 }
 
-// Player EV scaling for being flying tengu or swimming merfolk.
+// Player EV scaling for being flying tengu, flying fairy, or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
@@ -2154,6 +2154,13 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     if (you.tengu_flight())
     {
         const int ev_bonus = max(1 * scale, prescaled_ev / 5);
+        return prescaled_ev + ev_bonus;
+    }
+
+    // Flying Fairy get a 10% evasion bonus.
+    if (you.fairy_flight())
+    {
+        const int ev_bonus = max(1 * scale, prescaled_ev / 10);
         return prescaled_ev + ev_bonus;
     }
 
@@ -2319,6 +2326,10 @@ int player_shield_class()
     shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
+
+    // Fairies get bonus SH from shimmering scales
+    if (you.species == SP_FAIRY)
+        shield += 600 + 200 * you.experience_level / 3;
 
     return (shield + 50) / 100;
 }
@@ -2853,9 +2864,17 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_FAIRY:
+                if (!(you.experience_level % 3))
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel stronger.");
+                }
+                break;
+
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
+
 #if TAG_MAJOR_VERSION == 34
                     // Hack to evade mottled draconians.
                     do
@@ -3163,6 +3182,11 @@ int player_stealth()
         else if (you.hunger_state <= HS_HUNGRY)
             stealth += STEALTH_PIP;
     }
+
+    //Fairies' bright wings reduce stealth.
+    if (you.species == SP_FAIRY
+        && !(player_is_shapechanged() && you.form == transformation::dragon))
+        stealth -= STEALTH_PIP;
 
     if (!you.airborne())
     {
@@ -4869,11 +4893,25 @@ void float_player()
     }
     else if (you.tengu_flight())
         mpr("You swoop lightly up into the air.");
+
+    else if (you.fairy_flight())
+        mpr("You flutter up into the air.");
+
     else
         mpr("You fly up into the air.");
 
-    if (you.species == SP_TENGU)
+    if (you.species == SP_TENGU || you.species == SP_FAIRY)
+
         you.redraw_evasion = true;
+}
+
+// Fairies start the game flying.
+void float_once()
+{
+    ASSERT(you.species == SP_FAIRY);
+
+    you.attribute[ATTR_PERM_FLIGHT] = 1;
+    float_player();
 }
 
 void fly_player(int pow, bool already_flying)
@@ -4923,7 +4961,7 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.species == SP_TENGU)
+    if (you.species == SP_TENGU || you.species == SP_FAIRY)
         you.redraw_evasion = true;
 
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -5613,6 +5651,7 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
+           || you.species == SP_FAIRY
            || duration[DUR_DIVINE_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
@@ -5880,6 +5919,8 @@ int player::racial_ac(bool temp) const
             return 200 + 100 * experience_level * 2 / 5     // max 20
                        + 100 * max(0, experience_level - 7) * 2 / 5;
         }
+        else if (species == SP_FAIRY)
+	        return 300 + 100 * experience_level / 3;
     }
 
     return 0;
@@ -5914,6 +5955,9 @@ int player::base_ac(int scale) const
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
     if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
+        AC += 300;
+
+    if (wearing(EQ_STAFF, STAFF_EARTH))
         AC += 300;
 
     AC += scan_artefacts(ARTP_AC) * 100;
@@ -6430,13 +6474,19 @@ bool player::permanent_flight() const
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
-        || get_mutation_level(MUT_BIG_WINGS);
+        || get_mutation_level(MUT_BIG_WINGS)
+        || get_mutation_level(MUT_FAIRY_FLIGHT);
 }
 
+ // Only Tengu and Fairies get perks for flying.
 bool player::tengu_flight() const
 {
-    // Only Tengu get perks for flying.
     return species == SP_TENGU && airborne();
+}
+
+bool player::fairy_flight() const
+{
+    return species == SP_FAIRY && airborne();
 }
 
 /**

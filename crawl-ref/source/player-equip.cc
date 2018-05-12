@@ -443,6 +443,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             canned_msg(MSG_MANA_INCREASE);
             calc_mp();
         }
+        else if (item.sub_type == STAFF_EARTH)
+            you.redraw_armour_class = true;
 
         _wield_cursed(item, known_cursed, unmeld);
         break;
@@ -655,7 +657,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                                  true);
     }
 
-    if (item.base_type == OBJ_WEAPONS)
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
     {
         const int brand = get_weapon_brand(item);
 
@@ -756,11 +760,21 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 end_weapon_brand(real_item, true);
             }
         }
+        break;
     }
-    else if (item.is_type(OBJ_STAVES, STAFF_POWER))
+    case OBJ_STAVES:
     {
-        calc_mp();
-        canned_msg(MSG_MANA_DECREASE);
+        if (item.sub_type == STAFF_POWER)
+        {
+            calc_mp();
+            canned_msg(MSG_MANA_DECREASE);
+        }
+        else if (item.sub_type == STAFF_EARTH)
+            you.redraw_armour_class = true;
+        break;
+    }
+    default:
+        break;
     }
 
     if (is_artefact(item))

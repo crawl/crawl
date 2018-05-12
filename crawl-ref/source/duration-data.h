@@ -566,6 +566,10 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_PIERCING_SHOT, LIGHTBLUE, "Pierce",
+      "piercing shot", "",
+      "Your projectiles penetrate their targets.", D_DISPELLABLE,
+      {{ "Your projectiles no longer penetrate their targets." }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

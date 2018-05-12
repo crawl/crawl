@@ -33,6 +33,11 @@ Draconian
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
 a colour.
 %%%%
+Fairy
+
+Fairies have become attuned to magic over time and have shimmering scales that
+repel attacks. They have bright wings and can fly, but are frail.
+%%%%
 Formicid
 
 Formicids are humanoid ants adept at digging. Their limbs are exceptionally

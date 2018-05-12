@@ -157,15 +157,15 @@ DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   hornet / worm w:5 / worker ant
-MONS:   hornet w:7 / soldier ant w:13
+MONS:   worm w:5 / worker ant
+MONS:   soldier ant
 ITEM:   ration q:1 w:40 / ration q:2 w:10
 MAP
 .xxxxxxx
-@xx.x.xcccc
- ..x1x2cddc
-@xx.x.x+ddc
-.x1x.x2cccc
+@xx1x.xcccc
+ .1x.x2cddc
+@xx.x2x+ddc
+.x1x1x2cccc
  xxxxxxx
 ENDMAP
 

@@ -693,6 +693,13 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_PIERCING_SHOT:
+    {
+        if (!is_pierce_active())
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
     case DUR_INFUSION:
     {
         if (!enough_mp(1, true, false))
@@ -928,7 +935,12 @@ static void _describe_airborne(status_info* inf)
     const bool perm      = you.permanent_flight();
     const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
     const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
-    const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
+    string desc          = "";
+
+    if (you.tengu_flight())
+        desc += " quickly and evasively";
+    else if (you.fairy_flight())
+        desc += " evasively";
 
     inf->light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf->light_text   = "Fly";

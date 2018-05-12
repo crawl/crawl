@@ -3319,6 +3319,11 @@ int monster::armour_class(bool calc_unid) const
     // check for protection-brand weapons
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 
+    // check for staff of earth
+    const item_def *weap = primary_weapon();
+    if (weap && weap->is_type(OBJ_STAVES, STAFF_EARTH))
+        ac += 3;
+
     // armour from ac
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour)
