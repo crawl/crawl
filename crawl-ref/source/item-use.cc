@@ -709,9 +709,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (you.species == SP_FAIRY && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
-        {
             mprf("Your wings are too delicate to wear that!");
-        }
         return false;
     }
 
@@ -965,7 +963,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (you.species == SP_OCTOPODE || you.species == SP_FAIRY)
+            if (you.species == SP_OCTOPODE)
             {
                 if (verbose)
                     mpr("You can't wear that!");

@@ -3185,13 +3185,8 @@ int player_stealth()
 
     //Fairies' bright wings reduce stealth.
     if (you.species == SP_FAIRY
-        && (you.form == transformation::none
-            || you.form == transformation::appendage
-            || you.form == transformation::blade_hands
-            || you.form == transformation::dragon))
-    {
+        && !(player_is_shapechanged() && you.form == transformation::dragon))
         stealth -= STEALTH_PIP;
-    }
 
     if (!you.airborne())
     {
@@ -4913,10 +4908,7 @@ void float_player()
 // Fairies start the game flying.
 void float_once()
 {
-    if (you.species != SP_FAIRY)
-    {
-        return;
-    }
+    ASSERT(you.species == SP_FAIRY);
 
     you.attribute[ATTR_PERM_FLIGHT] = 1;
     float_player();

@@ -992,9 +992,7 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FAERIE_DRAGON))
-    {
         flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
-    }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER))
     {
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;

@@ -1738,14 +1738,14 @@ Gnolls
   dexterity to take advantage of every resource they find in the Dungeon. They
   also have powerful noses adapted to the Dungeon's scents, allowing them to
   easily locate where treasures lay hidden.
-  
+
 Fairies
   Fairies are a small, magically-attuned species believed to be distant relatives
   of the fabled faerie dragons. They are incredibly intelligent, so much so that
   they have learned how to cast spells with less of a cost than other species.
   Their shimmering scales and bright wings are attractive, but have proven to
   be more bane than boon by drawing the attention of the Dungeon's denizens.
-  
+
   Most Fairies welcome confrontation and favour the use of destructive
   spells to dispatch those who would challenge them. They have learned over
   time how to reduce the MP cost of spells and how to avoid becoming hungry
