@@ -436,6 +436,7 @@ dragonarm_blue DRAGONARM_BLUE
 dragonarm_shadow DRAGONARM_SHADOW
 dragonarm_gold DRAGONARM_GOLD
 dragonarm_pearl DRAGONARM_PEARL
+dragonarm_iron DRAGONARM_IRON
 
 aragorn ARAGORN
 aragorn2 ARAGORN2

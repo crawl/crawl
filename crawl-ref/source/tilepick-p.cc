@@ -336,7 +336,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_GOLD_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GOLD; break;
     case ARM_SWAMP_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BROWN; break;
     case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
-
+    case ARM_IRON_DRAGON_ARMOUR :   tile = TILEP_BODY_DRAGONARM_IRON; break; 
     case ARM_ANIMAL_SKIN:           tile = TILEP_BODY_ANIMAL_SKIN; break;
     case ARM_TROLL_LEATHER_ARMOUR:  tile = TILEP_BODY_TROLL_LEATHER; break;
 
