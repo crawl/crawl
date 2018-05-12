@@ -2641,7 +2641,9 @@ string mutation_overview()
         }
     }
 
-    if (you.racial_ac(false))
+    if (you.species == SP_FAIRY)
+        mutations.push_back("AC/SH +" + to_string(3 + you.experience_level / 3));
+    else if (you.racial_ac(false))
         mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
 
     if (mutations.empty())

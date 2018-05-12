@@ -286,11 +286,12 @@ void fill_doll_equipment(dolls_data &result)
         tileidx_t ch;
         switch (you.species)
         {
-        case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
-        case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
-        case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
-        case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
-        default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
+        case SP_CENTAUR:       ch = TILEP_TRAN_STATUE_CENTAUR;       break;
+        case SP_NAGA:          ch = TILEP_TRAN_STATUE_NAGA;          break;
+        case SP_FELID:         ch = TILEP_TRAN_STATUE_FELID;         break;
+        case SP_OCTOPODE:      ch = TILEP_TRAN_STATUE_OCTOPODE;      break;
+        case SP_FAIRY:         ch = TILEP_TRAN_STATUE_FAERIE_DRAGON; break;
+        default:               ch = TILEP_TRAN_STATUE_HUMANOID;      break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_DRCHEAD] = 0;
@@ -300,11 +301,12 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::lich:
         switch (you.species)
         {
-        case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
-        case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
-        case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
-        case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
-        default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
+        case SP_CENTAUR:       ch = TILEP_TRAN_LICH_CENTAUR;       break;
+        case SP_NAGA:          ch = TILEP_TRAN_LICH_NAGA;          break;
+        case SP_FELID:         ch = TILEP_TRAN_LICH_FELID;         break;
+        case SP_OCTOPODE:      ch = TILEP_TRAN_LICH_OCTOPODE;      break;
+        case SP_FAIRY:         ch = TILEP_TRAN_LICH_FAERIE_DRAGON; break;
+        default:               ch = TILEP_TRAN_LICH_HUMANOID;      break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_DRCHEAD] = 0;

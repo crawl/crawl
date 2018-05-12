@@ -1253,6 +1253,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_INVOCATIONS,     3),
     APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
 
+    // SP_FAIRY
+    APT(SP_FAIRY,           SK_FIGHTING,       -1),
+    APT(SP_FAIRY,           SK_SHORT_BLADES,   -2),
+    APT(SP_FAIRY,           SK_LONG_BLADES,    -2),
+    APT(SP_FAIRY,           SK_AXES,           -2),
+    APT(SP_FAIRY,           SK_MACES_FLAILS,   -1),
+    APT(SP_FAIRY,           SK_POLEARMS,       -2),
+    APT(SP_FAIRY,           SK_STAVES,         -1),
+    APT(SP_FAIRY,           SK_SLINGS,         -2),
+    APT(SP_FAIRY,           SK_BOWS,           -2),
+    APT(SP_FAIRY,           SK_CROSSBOWS,      -2),
+    APT(SP_FAIRY,           SK_THROWING,       -1),
+    APT(SP_FAIRY,           SK_ARMOUR,        UNUSABLE_SKILL),
+    APT(SP_FAIRY,           SK_DODGING,         3),
+    APT(SP_FAIRY,           SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FAIRY,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_FAIRY,           SK_SHIELDS,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_FAIRY,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_FAIRY,           SK_UNARMED_COMBAT,  0),
+    APT(SP_FAIRY,           SK_SPELLCASTING,    2),
+    APT(SP_FAIRY,           SK_CONJURATIONS,    2),
+    APT(SP_FAIRY,           SK_HEXES,          -1),
+    APT(SP_FAIRY,           SK_CHARMS,          0),
+    APT(SP_FAIRY,           SK_SUMMONINGS,      1),
+    APT(SP_FAIRY,           SK_NECROMANCY,      1),
+    APT(SP_FAIRY,           SK_TRANSLOCATIONS,  0),
+    APT(SP_FAIRY,           SK_TRANSMUTATIONS,  0),
+    APT(SP_FAIRY,           SK_FIRE_MAGIC,      2),
+    APT(SP_FAIRY,           SK_ICE_MAGIC,       2),
+    APT(SP_FAIRY,           SK_AIR_MAGIC,       2),
+    APT(SP_FAIRY,           SK_EARTH_MAGIC,     2),
+    APT(SP_FAIRY,           SK_POISON_MAGIC,    2),
+    APT(SP_FAIRY,           SK_INVOCATIONS,     0),
+    APT(SP_FAIRY,           SK_EVOCATIONS,      1),
+
     // SP_FELID
     APT(SP_FELID,           SK_FIGHTING,        0),
     APT(SP_FELID,           SK_SHORT_BLADES,  UNUSABLE_SKILL),

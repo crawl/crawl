@@ -239,7 +239,11 @@ end
 
 local function mp_is_low()
   local mp, mmp = you.mp()
-  return (100*mp <= AUTOMAGIC_STOP*mmp)
+  local fd = 0
+  if you.race() == ("Fairy") then
+    fd = 1
+  end
+  return (100*mp + 100*fd <= AUTOMAGIC_STOP*mmp)
 end
 
 function mag_attack(allow_movement)
@@ -250,6 +254,7 @@ function mag_attack(allow_movement)
     crawl.mpr("You are too confused!")
   elseif info == nil then
     crawl.mpr("No target in view!")
+  elseif (false) then
   elseif spells.mana_cost(you.spell_table()[AUTOMAGIC_SPELL_SLOT]) > you.mp() then
     -- If you want to resort to melee, set AUTOMAGIC_FIGHT to true in rc
     -- First check for enough magic points, then check if below threshold

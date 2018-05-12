@@ -37,6 +37,26 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_FAIRY, {
+    "Fr",
+    "Fairy", nullptr, nullptr,
+    SPF_NO_HAIR,
+    0, -1, 2, 4,
+    MONS_ACID_DRAGON,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    6, 11, 7, // 24
+    { STAT_INT, STAT_DEX }, 4,
+    { { MUT_FAIRY_FLIGHT, 1, 1 }, },
+    { "Your spells do not cause hunger and MP costs are reduced by 1.",
+      "Your bright wings attract enemies. (Stealth-)",
+      "You cannot fit into any form of body armour." },
+    { "magic attunement", "unstealthy", "unfitting armour" },
+    { JOB_AIR_ELEMENTALIST, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+      JOB_CONJURER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE, JOB_WIZARD,
+      JOB_NECROMANCER },
+    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_SLINGS },
+} },
+
 { SP_GNOLL, {
     "Gn",
     "Gnoll", nullptr, nullptr,
