@@ -4243,7 +4243,10 @@ static bool _dazzle_monster(monster* mons, actor* act)
     if (!mons_can_be_dazzled(mons->type))
         return false;
 
-    if (x_chance_in_y(95 - mons->get_hit_dice() * 5 , 100))
+    // Fixed 2.5% chance for HD>18
+    if (x_chance_in_y(95 - mons->get_hit_dice() * 5 , 100)
+        || mons->get_hit_dice() > 18
+           && one_chance_in(40))
     {
         simple_monster_message(*mons, " is dazzled.");
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act,
