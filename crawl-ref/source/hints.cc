@@ -2849,9 +2849,18 @@ static string _hints_throw_stuff(const item_def &item)
 {
     string result;
 
-    result  = "To do this, type <w>%</w> to fire, then <w>";
-    result += item.slot;
-    result += "</w> for ";
+    result  = "To do this, type <w>%</w> to fire, then ";
+    if (!item.slot)
+    {
+        result += "<w>";
+        result += item.slot;
+        result += "</w> for";
+    }
+    else
+    {
+        // you don't have this/these stuff(s) at present
+        result += "select ";
+    }
     result += (item.quantity > 1 ? "these" : "this");
     result += " ";
     result += item_base_name(item);
