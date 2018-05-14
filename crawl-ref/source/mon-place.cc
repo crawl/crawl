@@ -32,6 +32,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-gear.h"
@@ -1483,7 +1484,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (!crawl_state.generating_level && !dont_place && you.can_see(*mon))
     {
         if (mg.flags & MG_DONT_COME)
-            mon->seen_context = SC_JUST_SEEN;
+            mons_set_just_seen(mon);
     }
 
     // Area effects can produce additional messages, and thus need to be
