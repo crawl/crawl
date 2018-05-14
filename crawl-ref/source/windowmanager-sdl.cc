@@ -680,6 +680,19 @@ void SDLWrapper::set_mouse_cursor(mouse_cursor_type type)
     SDL_SetCursor(cursor);
 }
 
+unsigned short SDLWrapper::get_mouse_state(int *x, int *y) const
+{
+    Uint32 state = SDL_GetMouseState(x, y);
+    unsigned short ret = 0;
+    if (state & SDL_BUTTON(SDL_BUTTON_LEFT))
+        ret |= MouseEvent::LEFT;
+    if (state & SDL_BUTTON(SDL_BUTTON_RIGHT))
+        ret |= MouseEvent::RIGHT;
+    if (state & SDL_BUTTON(SDL_BUTTON_MIDDLE))
+        ret |= MouseEvent::MIDDLE;
+    return ret;
+}
+
 static char32_t _key_suppresses_textinput(int keycode)
 {
     char result_char = 0;
