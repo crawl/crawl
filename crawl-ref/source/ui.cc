@@ -44,7 +44,6 @@ static i4 aabb_union(i4 a, i4 b)
 }
 
 
-#ifdef USE_TILE_LOCAL
 static inline bool pos_in_rect(i2 pos, i4 rect)
 {
     if (pos[0] < rect[0] || pos[0] >= rect[0]+rect[2])
@@ -53,7 +52,6 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
         return false;
     return true;
 }
-#endif
 
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(i4 region);
@@ -80,6 +78,7 @@ public:
             m_dirty_region = aabb_union(m_dirty_region, r);
         needs_paint = true;
     };
+    void send_mouse_enter_leave_events(int mx, int my);
 
     bool needs_paint;
     vector<KeymapContext> keymap_stack;
@@ -91,6 +90,8 @@ protected:
     Stack m_root;
     bool m_needs_layout{false};
 } ui_root;
+
+static vector<Widget*> prev_hover_path;
 
 static stack<i4> scissor_stack;
 
@@ -107,7 +108,12 @@ bool Widget::on_event(const wm_event& event)
 static inline bool _maybe_propagate_event(wm_event event, shared_ptr<Widget> &child)
 {
 #ifdef USE_TILE_LOCAL
-    if (event.type == WME_MOUSEMOTION)
+    /* WME_MOUSELEAVE is conspicuously absent because it is emitted
+     * only on widgets that the cursor just left */
+    if (event.type == WME_MOUSEMOTION
+     || event.type == WME_MOUSEENTER
+     || event.type == WME_MOUSEBUTTONDOWN
+     || event.type == WME_MOUSEBUTTONUP)
     {
         i2 pos = {(int)event.mouse_event.px, (int)event.mouse_event.py};
         if (!pos_in_rect(pos, child->get_region()))
@@ -115,6 +121,19 @@ static inline bool _maybe_propagate_event(wm_event event, shared_ptr<Widget> &ch
     }
 #endif
     return child->on_event(event);
+}
+
+shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
+{
+    for (shared_ptr<Widget>& child : m_children)
+    {
+        const i4 region = child->get_region();
+        bool inside = (x >= region[0] && x < region[0] + region[2])
+            && (y >= region[1] && y < region[1] + region[3]);
+        if (inside)
+            return child;
+    }
+    return nullptr;
 }
 
 bool Container::on_event(const wm_event& event)
@@ -134,6 +153,13 @@ bool Bin::on_event(const wm_event& event)
     if (_maybe_propagate_event(event, m_child))
         return true;
     return false;
+}
+
+shared_ptr<Widget> Bin::get_child_at_offset(int x, int y)
+{
+    bool inside = (x > m_region[0] && x < m_region[0] + m_region[2])
+        && (y > m_region[1] && y < m_region[1] + m_region[3]);
+    return inside ? m_child : nullptr;
 }
 
 void Bin::set_child(shared_ptr<Widget> child)
@@ -223,6 +249,15 @@ void Widget::_allocate_region()
 
 void Widget::_set_parent(Widget* p)
 {
+    if (!p)
+    {
+        for (size_t i = 0; i < prev_hover_path.size(); i++)
+            if (prev_hover_path[i] == this)
+            {
+                prev_hover_path.resize(i);
+                break;
+            }
+    }
     m_parent = p;
 }
 
@@ -778,6 +813,16 @@ void Stack::pop_child()
     _queue_allocation();
 }
 
+shared_ptr<Widget> Stack::get_child_at_offset(int x, int y)
+{
+    if (m_children.size() == 0)
+        return nullptr;
+    const i4 region = m_children.back()->get_region();
+    bool inside = (x > region[0] && x < region[0] + region[2])
+        && (y > region[1] && y < region[1] + region[3]);
+    return inside ? m_children.back() : nullptr;
+}
+
 void Stack::_render()
 {
     for (auto const& child : m_children)
@@ -873,6 +918,41 @@ bool Switcher::on_event(const wm_event& event)
     if (m_children.size() > 0 &&_maybe_propagate_event(event, m_children[m_current]))
         return true;
     return false;
+}
+
+shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
+{
+    int lx = x - m_region[0];
+    int ly = y - m_region[1];
+    int row = -1, col = -1;
+    for (int i = 0; i < (int)m_col_info.size(); i++)
+    {
+        const auto& tr = m_col_info[i];
+        if (lx >= tr.offset && lx < tr.offset + tr.size)
+        {
+            col = i;
+            break;
+        }
+    }
+    for (int i = 0; i < (int)m_row_info.size(); i++)
+    {
+        const auto& tr = m_row_info[i];
+        if (ly >= tr.offset && ly < tr.offset + tr.size)
+        {
+            row = i;
+            break;
+        }
+    }
+    if (row == -1 || col == -1)
+        return nullptr;
+    for (auto& child : m_child_info)
+    {
+        if (child.pos[0] <= col && col < child.pos[0] + child.span[0])
+        if (child.pos[1] <= row && row < child.pos[1] + child.span[1])
+        if (pos_in_rect({x, y}, child.widget->get_region()))
+            return child.widget;
+    }
+    return nullptr;
 }
 
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
@@ -1313,6 +1393,12 @@ void UIRoot::layout()
         m_region = {0, 0, m_w, m_h};
 #endif
         m_root.allocate_region({0, 0, width, height});
+
+#ifdef USE_TILE_LOCAL
+        int x, y;
+        wm->get_mouse_state(&x, &y);
+        ui_root.send_mouse_enter_leave_events(x, y);
+#endif
     }
 }
 
@@ -1356,6 +1442,49 @@ void UIRoot::render()
 }
 
 static function<bool(const wm_event&)> event_filter;
+
+void UIRoot::send_mouse_enter_leave_events(int mx, int my)
+{
+    /* Find current hover path */
+    vector<Widget*> hover_path;
+    shared_ptr<Widget> current = m_root.get_child_at_offset(mx, my);
+    while (current)
+    {
+        hover_path.emplace_back(current.get());
+        current = current->get_child_at_offset(mx, my);
+    }
+
+    size_t sz = max(prev_hover_path.size(), hover_path.size());
+    prev_hover_path.resize(sz, nullptr);
+    hover_path.resize(sz, nullptr);
+
+    size_t diff;
+    for (diff = 0; diff < sz; diff++)
+        if (hover_path[diff] != prev_hover_path[diff])
+            break;
+
+    /* send events */
+    if (diff < sz)
+    {
+        wm_event ev = {0};
+        ev.mouse_event.px = mx;
+        ev.mouse_event.py = my;
+        if (prev_hover_path[diff])
+        {
+            ev.type = WME_MOUSELEAVE;
+            if (!event_filter || !event_filter(ev))
+                prev_hover_path[diff]->on_event(ev);
+        }
+        if (hover_path[diff])
+        {
+            ev.type = WME_MOUSEENTER;
+            if (!event_filter || !event_filter(ev))
+                hover_path[diff]->on_event(ev);
+        }
+    }
+
+    prev_hover_path = move(hover_path);
+}
 
 bool UIRoot::on_event(const wm_event& event)
 {
@@ -1419,6 +1548,11 @@ void push_layout(shared_ptr<Widget> root, KeymapContext km)
 void pop_layout()
 {
     ui_root.pop_child();
+#ifdef USE_TILE_LOCAL
+    int x, y;
+    wm->get_mouse_state(&x, &y);
+    ui_root.send_mouse_enter_leave_events(x, y);
+#endif
 }
 
 void resize(int w, int h)
@@ -1530,6 +1664,11 @@ void pump_events(int wait_event_timeout)
         case WME_EXPOSE:
             ui_root.needs_paint = true;
             break;
+
+        case WME_MOUSEMOTION:
+            ui_root.send_mouse_enter_leave_events(event.mouse_event.px,
+                    event.mouse_event.py);
+            ui_root.on_event(event);
 
         default:
             if (!ui_root.on_event(event) && event.type == WME_MOUSEBUTTONDOWN)
