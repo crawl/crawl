@@ -514,6 +514,7 @@ direction_chooser::direction_chooser(dist& moves_,
     show_floor_desc(args.show_floor_desc),
     hitfunc(args.hitfunc),
     default_place(args.default_place),
+    unrestricted(args.unrestricted),
     needs_path(args.needs_path)
 {
     if (!behaviour)
@@ -521,8 +522,9 @@ direction_chooser::direction_chooser(dist& moves_,
 
     behaviour->just_looking = just_looking;
     behaviour->get_desc_func = args.get_desc_func;
-
-    if (hitfunc)
+    if (unrestricted)
+        needs_path = false;
+    else if (hitfunc)
         needs_path = true;
 
     show_beam = !just_looking && needs_path;
@@ -874,6 +876,8 @@ monster_view_annotator::~monster_view_annotator()
 
 bool direction_chooser::move_is_ok() const
 {
+    if (unrestricted)
+        return true;
     if (!moves.isCancel && moves.isTarget)
     {
         if (!cell_see_cell(you.pos(), target(), LOS_NO_TRANS))

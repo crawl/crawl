@@ -88,6 +88,7 @@ struct direction_chooser_args
     int range;
     bool just_looking;
     bool needs_path;
+    bool unrestricted; // for wizmode
     confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
@@ -103,6 +104,7 @@ struct direction_chooser_args
         range(-1),
         just_looking(false),
         needs_path(true),
+        unrestricted(false),
         self(CONFIRM_PROMPT),
         target_prefix(nullptr),
         behaviour(nullptr),
@@ -269,6 +271,8 @@ private:
 
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
+
+    bool unrestricted;
 
 public:
     // TODO: fix the weird behavior that led to this hack
