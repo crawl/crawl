@@ -1157,8 +1157,19 @@ bool show_map(level_pos &lpos,
                 {
                     if (you.travel_x > 0 && you.travel_y > 0)
                     {
-                        move_x = you.travel_x - lpos.pos.x;
-                        move_y = you.travel_y - lpos.pos.y;
+                        if (you.travel_z == level_id::current())
+                        {
+                            move_x = you.travel_x - lpos.pos.x;
+                            move_y = you.travel_y - lpos.pos.y;
+                        }
+                        else if (allow_offlevel && you.travel_z.is_valid()
+                                        && is_existing_level(you.travel_z))
+                        {
+                            // previous travel target is offlevel
+                            lpos = level_pos(you.travel_z,
+                                        coord_def(you.travel_x, you.travel_y));
+                            los_changed();
+                        }
                     }
                 }
                 else
