@@ -634,7 +634,7 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\\ or |   staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
+\\ or |   staves        (use 'w'ield)
 \+ or :   spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
 }        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (use 'g' to pick up)
@@ -891,15 +891,6 @@ used in melee combat, although with mediocre effectiveness unless you can
 harness their special power, using a combination of the Evocations skill and the
 skill specific to the staff's type. Staves which do not enhance a destructive
 magic school tend to have no combat powers at all.
-
-\| Rods
-========================================
-
-Rods ('|') hold unique spells that you can evoke while wielding the rod,
-using the 'v' command. The effectiveness of these spells is increased by
-Evocations skill. They have a pool of magical energy which regenerates
-according to the rod's enchantment (which can be increased using scrolls of
-recharging) and your Evocations skill.
 
 : Books
 ========================================
@@ -2516,9 +2507,6 @@ will deselect it (except for ',' and '-', obviously).
 
 \|
   Select all staves.
-
-\\
-  Select all rods.
 
 !
   Select all potions.
