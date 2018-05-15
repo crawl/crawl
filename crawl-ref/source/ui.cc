@@ -1150,6 +1150,9 @@ void Scroller::_render()
         m_shade_buf.draw();
 #endif
         pop_scissor();
+#ifdef USE_TILE_LOCAL
+        m_scrollbar_buf.draw();
+#endif
     }
 }
 
@@ -1177,6 +1180,7 @@ void Scroller::_allocate_region()
     VColour col_a(4,2,4,0), col_b(4,2,4,200);
 
     m_shade_buf.clear();
+    m_scrollbar_buf.clear();
     {
         GLWPrim rect(m_region[0], m_region[1]+shade_top-shade_height,
                 m_region[0]+m_region[2], m_region[1]+shade_top);
@@ -1188,6 +1192,16 @@ void Scroller::_allocate_region()
                 m_region[0]+m_region[2], m_region[1]+m_region[3]-shade_bot+shade_height);
         rect.set_col(col_a, col_b);
         m_shade_buf.add_primitive(rect);
+    }
+    if (ch_reg[3] > m_region[3]) {
+        const int x = m_region[0]+m_region[2];
+        const float h_percent = m_region[3] / (float)ch_reg[3];
+        const int h = m_region[3]*min(max(0.05f, h_percent), 1.0f);
+        const float scroll_percent = m_scroll/(float)(ch_reg[3]-m_region[3]);
+        const int y = m_region[1] + (m_region[3]-h)*scroll_percent;
+        GLWPrim rect(x+6, y, x+8, y+h);
+        rect.set_col(VColour(158,124,75,200));
+        m_scrollbar_buf.add_primitive(rect);
     }
 #endif
 }

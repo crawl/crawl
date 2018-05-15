@@ -533,6 +533,7 @@ protected:
     int m_scroll = 0;
 #ifdef USE_TILE_LOCAL
     VertBuffer m_shade_buf = VertBuffer(false, true);
+    ShapeBuffer m_scrollbar_buf;
 #endif
 };
 
