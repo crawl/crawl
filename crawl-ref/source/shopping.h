@@ -82,6 +82,7 @@ public:
                                const item_def& item_b);
 
 private:
+    // An alias for you.props[SHOPPING_LIST_KEY], kept in sync by refresh()
     CrawlVector* list;
 
     int min_unbuyable_cost;
