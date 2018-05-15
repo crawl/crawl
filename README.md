@@ -4,6 +4,10 @@
 
 ## Deviations from Vanilla Crawl : 
  
+ ### Branches
+  - Vaults does not require any runes to enter
+ ### Items
+  - Iron Dragons may drop 'Iron Dragon Scales' on death. They have a base AC of 16, and an ER of 27.
  #### Species
  - Fairy species with great magic aptitudes, -1 MP costs on all spells, inability to wear armour, and scaling defence with XL
  - Ogres have a +2 Maces & Flails Aptitude
@@ -12,8 +16,9 @@
  ### Backgrounds
  - The Necromancer starting spellbook contains 'Bolt of Draining'
  - 'Assassin' has been renamed to 'Rogue'
- ### Miscellaneous
+ ### Gods
  - Jiyva & Lugonu generate in the Temple
+ ### Miscellaneous
  - Hornets don't paralyse anymore
  - Staves of Earth have a +3 AC Bonus
  
