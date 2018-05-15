@@ -42,7 +42,6 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -1239,7 +1238,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         {
             yell(mon);
         }
-        mons_set_just_seen(mon);
+        mon->seen_context = SC_JUST_SEEN;
     }
 
     if (crawl_state.game_is_hints())
