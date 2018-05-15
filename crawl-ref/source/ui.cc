@@ -263,7 +263,7 @@ void Widget::_set_parent(Widget* p)
 
 void Widget::_invalidate_sizereq(bool immediate)
 {
-    for (auto w = this; w && !w->alloc_queued; w = w->m_parent)
+    for (auto w = this; w; w = w->m_parent)
         fill(begin(w->cached_sr_valid), end(w->cached_sr_valid), false);
     if (immediate)
         ui_root.queue_layout();
@@ -1326,6 +1326,20 @@ void Popup::_allocate_region()
     m_root->allocate_region(m_region);
 }
 
+i2 Popup::get_max_child_size()
+{
+#ifdef USE_TILE_LOCAL
+    const auto td = tile_def(TILEG_SKIN_BOX, TEX_GUI);
+    const tile_info &ti = tiles.get_image_manager()->tile_def_info(td);
+    return {
+        (m_region[2] - 2*ti.width - 15*2) & ~0x1,
+        (m_region[3] - 2*ti.height - 15*2) & ~0x1,
+    };
+#else
+    return { m_region[2], m_region[3] };
+#endif
+}
+
 #ifdef USE_TILE_LOCAL
 void Dungeon::_render()
 {
@@ -1406,7 +1420,13 @@ void UIRoot::layout()
 #else
         m_region = {0, 0, m_w, m_h};
 #endif
-        m_root.allocate_region({0, 0, width, height});
+        try
+        {
+            m_root.allocate_region({0, 0, width, height});
+        }
+        catch (const RestartAllocation &ex)
+        {
+        }
 
 #ifdef USE_TILE_LOCAL
         int x, y;
