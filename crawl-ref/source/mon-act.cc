@@ -3241,6 +3241,8 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     if (!in_bounds(f))
         return false;
 
+    ASSERT(!invalid_monster(&mons));
+
     if (f == you.pos())
     {
         fight_melee(&mons, &you);
