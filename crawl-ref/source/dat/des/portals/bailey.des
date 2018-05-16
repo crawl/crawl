@@ -67,15 +67,15 @@ end
 
 -- Axes.
 function axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3 / \
-          generate_awake hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                                     tomahawk ego:returning ident:type q:3")
+  e.mons("generate_awake kobold ; tomahawk ident:type q:80 | \
+                                  tomahawk ident:type q:60 / \
+          generate_awake hobgoblin ; tomahawk ident:type q:80 | \
+                                     tomahawk ident:type q:60")
 end
 
 function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3")
+  e.mons("generate_awake kobold ; tomahawk ident:type q:80 | \
+                                  tomahawk ident:type q:60")
 end
 
 function easy_axe_fighter(e)
