@@ -139,7 +139,8 @@ Portals to the Abyss are found abundantly in the Depths.
 The Abyss consists of five infinite levels. The abyssal rune of Zot can be
 found from the third level onwards, and is more common at greater depths.
 Portals back to the dungeon are scattered throughout the Abyss, and are found
-more commonly at greater depths or while carrying the abyssal rune. Killing
+more commonly at greater depths or while carrying the abyssal rune. Adventurers
+who linger in the Abyss will find themselves drawn irresistibly deeper. Killing
 monsters will warp the substance of the Abyss, eventually generating a gateway
 out. Further persistence will wear holes in the Abyss, allowing descent into
 deeper layers.
