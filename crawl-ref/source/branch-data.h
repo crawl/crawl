@@ -60,7 +60,7 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'L', {}, BRANCH_NOISE_NORMAL },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SWAMP, BRANCH_LAIR, 2, 4, 3, 15,
       BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP, NUM_FEATURES,
       "Swamp", "the Swamp", "Swamp",
@@ -68,7 +68,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'S', { RUNE_SWAMP }, BRANCH_NOISE_NORMAL },
 
-    { BRANCH_SHOALS, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SHOALS, BRANCH_LAIR, 2, 4, 3, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS, NUM_FEATURES,
       "Shoals", "the Shoals", "Shoals",
@@ -76,7 +76,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'A', { RUNE_SHOALS }, BRANCH_NOISE_LOUD },
 
-    { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 3, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE, NUM_FEATURES,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -84,7 +84,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREEN, YELLOW,
       'P', { RUNE_SNAKE }, BRANCH_NOISE_NORMAL },
 
-    { BRANCH_SPIDER, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SPIDER, BRANCH_LAIR, 2, 4, 3, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER, NUM_FEATURES,
       "Spider Nest", "the Spider Nest", "Spider",
