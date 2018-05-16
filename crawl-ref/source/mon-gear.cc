@@ -1336,14 +1336,14 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
 
-                mitm[thing_created].quantity = random_range(4, 10);
+                mitm[thing_created].quantity = random_range(24, 60);
             }
             else if (mon->type == MONS_SPRIGGAN_RIDER)
             {
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
 
-                mitm[thing_created].quantity = random_range(2, 4);
+                mitm[thing_created].quantity = random_range(12, 24);
             }
             else
             {
@@ -1352,7 +1352,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                                                          : SPMSL_POISONED);
 
                 if (get_ammo_brand(mitm[thing_created]) == SPMSL_CURARE)
-                    mitm[thing_created].quantity = random_range(2, 8);
+                    mitm[thing_created].quantity = random_range(12, 48);
             }
         }
         else
@@ -1375,7 +1375,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 break;
 
             case MONS_JOSEPH:
-                mitm[thing_created].quantity += 2 + random2(7);
+                mitm[thing_created].quantity += 16 + random2(49);
                 break;
 
             default:
@@ -1405,7 +1405,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                     player_in_branch(BRANCH_ORC)? 9 : 20))
             {
                 weap_type = MI_TOMAHAWK;
-                qty       = random_range(4, 8);
+                qty       = random_range(80, 160);
             }
             break;
 
@@ -1413,13 +1413,13 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             if (one_chance_in(20))
             {
                 weap_type = MI_TOMAHAWK;
-                qty       = random_range(2, 5);
+                qty       = random_range(40, 100);
             }
             break;
 
         case MONS_URUG:
             weap_type  = MI_JAVELIN;
-            qty = random_range(4, 7);
+            qty = random_range(80, 140);
             break;
 
         case MONS_CHUCK:
@@ -1429,13 +1429,13 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_POLYPHEMUS:
             weap_type  = MI_LARGE_ROCK;
-            qty        = random_range(8, 12);
+            qty        = random_range(16, 24);
             break;
 
         case MONS_MERFOLK_JAVELINEER:
         case MONS_MINOTAUR:
             weap_type  = MI_JAVELIN;
-            qty        = random_range(9, 23, 2);
+            qty        = random_range(180, 460, 2);
             if (one_chance_in(3))
                 level = ISPEC_GOOD_ITEM;
             break;
@@ -1445,7 +1445,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
                 weap_type  = MI_TOMAHAWK;
-                qty        = random_range(4, 8);
+                qty        = random_range(80, 160);
                 if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                     break;
             }

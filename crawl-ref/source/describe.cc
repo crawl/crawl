@@ -1395,9 +1395,7 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with a substance that causes "
                            "asphyxiation, dealing direct damage as well as "
-                           "poisoning and slowing those it strikes.\n"
-                           "It is twice as likely to be destroyed on impact as "
-                           "other needles.";
+                           "poisoning and slowing those it strikes.";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";
@@ -1476,10 +1474,8 @@ static string _describe_ammo(const item_def &item)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
-    if (ammo_always_destroyed(item))
+    if (!ammo_never_destroyed(item))
         description += "\n\nIt will always be destroyed on impact.";
-    else if (!ammo_never_destroyed(item))
-        description += "\n\nIt may be destroyed on impact.";
 
     return description;
 }

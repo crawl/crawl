@@ -544,8 +544,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
-        rc = random_choose_weighted(30, SPMSL_RETURNING,
-                                    32, SPMSL_PENETRATION,
+        rc = random_choose_weighted(32, SPMSL_PENETRATION,
                                     32, SPMSL_POISONED,
                                     21, SPMSL_STEEL,
                                     20, SPMSL_SILVER,
@@ -556,7 +555,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     10, SPMSL_SILVER,
                                     10, SPMSL_STEEL,
                                     12, SPMSL_DISPERSAL,
-                                    28, SPMSL_RETURNING,
                                     15, SPMSL_EXPLODING,
                                     nw, SPMSL_NORMAL);
         break;
@@ -635,8 +633,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     {
     case SPMSL_POISONED:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    case SPMSL_RETURNING:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
         return type == MI_TOMAHAWK || type == MI_JAVELIN;
     case SPMSL_PENETRATION:
@@ -683,12 +679,16 @@ static void _generate_missile_item(item_def& item, int force_type,
     // No fancy rocks -- break out before we get to special stuff.
     if (item.sub_type == MI_LARGE_ROCK)
     {
-        item.quantity = 2 + random2avg(5,2);
+        // Vanilla gives 2...6 with 1/25 mulch rate.
+        // This seems absurdly generous so I'm only doubling it.
+        item.quantity = 4 + random2avg(9,2);
         return;
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1 + random2(7) + random2(10) + random2(12) + random2(10);
+        // Vanilla: 1 + 0...6 + 0...9 + 0...11 + 0...9
+        // On average is 1 + 3 + 4.5 + 5.5 + 4.5 = 18.5 with 1/8 mulch rate.
+        item.quantity = 1 + random2avg(280,4);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -703,17 +703,37 @@ static void _generate_missile_item(item_def& item, int force_type,
                            _determine_missile_brand(item, item_level));
     }
 
-    // Reduced quantity if special.
-    if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
-        || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
-        || get_ammo_brand(item) == SPMSL_RETURNING)
+    if (item.sub_type == MI_NEEDLE && get_ammo_brand(item) == SPMSL_CURARE)
     {
-        item.quantity = random_range(2, 8);
+        // Vanilla curare is 2...8 with 1/6 mulch rate.
+        item.quantity = random_range(12, 48);
+    }
+    else if (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
+    {
+        // Vanilla special needles are 2...8 with 1/12 mulch rate.
+        item.quantity = random_range(24, 96);
+    }
+    else if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK)
+    {
+        // All tomahawks and javelins.
+        // Vanilla gives 2...8 with 1/20 mulch rate.
+        item.quantity = random_range(40, 160);
     }
     else if (get_ammo_brand(item) != SPMSL_NORMAL)
-        item.quantity = 1 + random2(7) + random2(10) + random2(10);
+    {
+        // This only catches basic (poisoned) needles now.
+        // In past versions, it also caught variant bolts, arrows, bullets.
+        // Vanilla gives 1 + 0...6 + 0...9 + 0...9.
+        // Average is 1 + 3 + 4.5 + 4.5 = 13 with 1/12 mulch rate.
+        item.quantity = 1 + random2avg(156, 3);
+    }
     else
-        item.quantity = 1 + random2(7) + random2(10) + random2(10) + random2(12);
+    {
+        // Normal arrows, bolts, bullets.
+        // Vanilla gives 1 + 0...6 + 0...9 + 0...9 + 0...11.
+        // Average is 1 + 3 + 4.5 + 4.5 + 5.5 = 18.5 with 1/8 mulch rate.
+        item.quantity = 1 + random2avg(280, 4);
+    }
 }
 
 static bool _armour_disallows_randart(int sub_type)

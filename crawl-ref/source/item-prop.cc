@@ -2128,22 +2128,6 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
     return is_throwable(actor, missile) ? launch_retval::THROWN : launch_retval::FUMBLED;
 }
 
-
-/**
- * Returns whether a given missile will always destroyed on impact.
- *
- * @param missile      The missile in question.
- * @return             Whether the missile should always be destroyed on
- *                     impact.
- */
-bool ammo_always_destroyed(const item_def &missile)
-{
-    const int brand = get_ammo_brand(missile);
-    return brand == SPMSL_CHAOS
-           || brand == SPMSL_DISPERSAL
-           || brand == SPMSL_EXPLODING;
-}
-
 /**
  * Returns whether a given missile will never destroyed on impact.
  *
@@ -2153,17 +2137,6 @@ bool ammo_always_destroyed(const item_def &missile)
 bool ammo_never_destroyed(const item_def &missile)
 {
     return missile.sub_type == MI_THROWING_NET;
-}
-
-/**
- * Returns the one_chance_in for a missile type for be destroyed on impact.
- *
- * @param missile_type      The missile type to get the mulch chance for.
- * @return                  The inverse of the missile type's mulch chance.
- */
-int ammo_type_destroy_chance(int missile_type)
-{
-    return Missile_prop[ Missile_index[missile_type] ].mulch_rate;
 }
 
 /**
