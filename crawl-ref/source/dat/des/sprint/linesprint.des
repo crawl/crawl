@@ -481,7 +481,7 @@ ENDMAP
 NAME:     swamp_1
 TAGS:     swamp_1
 KMONS:    1 = place:Swamp:1
-KMONS:    2 = place:Swamp:4
+KMONS:    2 = place:Swamp:$
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -497,7 +497,7 @@ ENDMAP
 NAME:     shoals_1
 TAGS:     shoals_1
 KMONS:    1 = place:Shoals:1
-KMONS:    2 = place:Shoals:4
+KMONS:    2 = place:Shoals:$
 COLOUR:   12 = brown
 : line_setup(_G)
 : general_item_setup(_G)
@@ -514,7 +514,7 @@ ENDMAP
 NAME:     spider_1
 TAGS:     spider_1
 KMONS:    1 = place:Spider:1
-KMONS:    2 = place:Spider:4
+KMONS:    2 = place:Spider:$
 COLOUR:   12 = brown
 : line_setup(_G)
 : general_item_setup(_G)
@@ -531,7 +531,7 @@ ENDMAP
 NAME:     snake_1
 TAGS:     snake_1
 KMONS:    1 = place:Snake:1
-KMONS:    2 = place:Snake:4
+KMONS:    2 = place:Snake:$
 COLOUR:   12 = lightgreen
 COLOUR:   # = yellow
 : line_setup(_G)
