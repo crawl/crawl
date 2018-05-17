@@ -332,8 +332,14 @@ item_def *player::weapon(int /* which_attack */) const
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
+
+    const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type
+                         : OBJ_STAVES == item.base_type ? WPN_STAFF
+                                                        : WPN_UNKNOWN;
+    // All weapons except gc and gsc are one-handed for Fo
     if (species == SP_FORMICID)
-        return HANDS_ONE;
+        return wpn_type == WPN_GIANT_CLUB || wpn_type == WPN_GIANT_SPIKED_CLUB
+               ? HANDS_TWO : HANDS_ONE;
     else
         return actor::hands_reqd(item, base);
 }
@@ -404,7 +410,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
-    if (!is_weapon_wieldable(item, bsize))
+    if (species != SP_FORMICID && !is_weapon_wieldable(item, bsize))
     {
         if (!quiet)
             mpr("That's too large for you to wield.");
