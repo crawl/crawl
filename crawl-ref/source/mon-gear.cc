@@ -1336,14 +1336,21 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
 
-                mitm[thing_created].quantity = random_range(24, 60);
+                // This is one third of the expected value, so that
+                // Sonja can still sometimes run out of ammo. This is
+                // a very significant buff to Sonja otherwise. -- NP7
+                mitm[thing_created].quantity = random_range(8, 20);
             }
             else if (mon->type == MONS_SPRIGGAN_RIDER)
             {
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
 
-                mitm[thing_created].quantity = random_range(12, 24);
+                // Don't have spriggan riders placed in Lair vaults have
+                // really high amounts of ammo, so as to not make them OP.
+                mitm[thing_created].quantity = player_in_branch(BRANCH_LAIR)
+                                               ? random_range(3, 6)
+                                               : random_range(12, 24);
             }
             else
             {
@@ -1375,7 +1382,9 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 break;
 
             case MONS_JOSEPH:
-                mitm[thing_created].quantity += 16 + random2(49);
+                // This is half the expected value, to nerf Joseph slightly, in a
+                // similar vein to Sonja.
+                mitm[thing_created].quantity += 8 + random2(24);
                 break;
 
             default:

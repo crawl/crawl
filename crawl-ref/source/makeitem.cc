@@ -680,15 +680,16 @@ static void _generate_missile_item(item_def& item, int force_type,
     if (item.sub_type == MI_LARGE_ROCK)
     {
         // Vanilla gives 2...6 with 1/25 mulch rate.
-        // This seems absurdly generous so I'm only doubling it.
-        item.quantity = 4 + random2avg(9,2);
+        // This is the vanilla value multiplied by 12,
+        // so large rocks are approx 2x scarcer than in vanilla.
+        item.quantity = 24 + random2avg(60, 2);
         return;
     }
     else if (item.sub_type == MI_STONE)
     {
         // Vanilla: 1 + 0...6 + 0...9 + 0...11 + 0...9
         // On average is 1 + 3 + 4.5 + 5.5 + 4.5 = 18.5 with 1/8 mulch rate.
-        item.quantity = 1 + random2avg(280,4);
+        item.quantity = 1 + random2avg(280, 4);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -725,7 +726,7 @@ static void _generate_missile_item(item_def& item, int force_type,
         // In past versions, it also caught variant bolts, arrows, bullets.
         // Vanilla gives 1 + 0...6 + 0...9 + 0...9.
         // Average is 1 + 3 + 4.5 + 4.5 = 13 with 1/12 mulch rate.
-        item.quantity = 1 + random2avg(156, 3);
+        item.quantity = 1 + random2avg(312, 3);
     }
     else
     {
