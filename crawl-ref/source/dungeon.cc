@@ -3210,6 +3210,14 @@ static bool _shaft_known(int depth)
 
 static void _place_traps()
 {
+    // Never place traps on the first three floors
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth < 4)
+    {
+        dprf("placing no traps because player at too low depth, "
+             "depth %d", you.depth);
+        return;
+    }
+
     const int num_traps = num_traps_for_place();
     int level_number = env.absdepth0;
 
