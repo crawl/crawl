@@ -82,6 +82,11 @@ Tengu
 Tengu are bird-people who love to fight, both with weapons and spells. They are
 quite fragile, but they learn to fly swiftly later on.
 %%%%
+Twilight Dwarf
+
+Twilight Dwarves were cursed long ago for an ancient crime. They hide in the
+shadows to avoid the wrathful gaze of the gods.
+%%%%
 Kobold
 
 Kobolds are small, mischievous and a little fragile, but multi-talented.
