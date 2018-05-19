@@ -284,6 +284,7 @@ static const pop_entry pop_swamp[] =
   {  0,  3,   25, RISE, MONS_TENTACLED_MONSTROSITY },
   {  0,  3,  435, RISE, MONS_THORN_HUNTER },
   {  0,  3,  385, RISE, MONS_GHOST_CRAB },
+  {  0,  3,  180, RISE, MONS_DEATH_DRAKE },
   {  0,  4,  425, SEMI, MONS_SHAMBLING_MANGROVE },
   {  0,  6,  115, PEAK, MONS_BLINK_FROG },
   {  0,  6,   52, SEMI, MONS_VERY_UGLY_THING },
