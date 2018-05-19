@@ -1306,6 +1306,16 @@ BRAND:    SPWPN_FLAMING
 FIRE:     -1
 COLD:     -1
 
+ENUM:     XTAHUA
+NAME:     fire dragon scales of Xtahua
+OBJ:      OBJ_ARMOUR/ARM_FIRE_DRAGON_ARMOUR
+PLUS:     +8
+COLOUR:   LIGHTRED
+TILE:     urand_xtahua_scales
+TILE_EQ:  xtahua_scales
+MAGIC:    1
+FIRE:     1
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

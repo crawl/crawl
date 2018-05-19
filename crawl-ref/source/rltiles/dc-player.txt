@@ -463,6 +463,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+xtahua_scales XTAHUA_SCALES
 %end_ctg
 
 ### Arms
