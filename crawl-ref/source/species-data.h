@@ -660,6 +660,24 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT, SK_MACES_FLAILS },
 } },
 
+{ SP_TWILIGHT_DWARF, {
+    "TD",
+    "Twilight Dwarf", "Dwarven", "Dwarf",
+    SPF_NONE,
+    -1, -1, 0, 6,
+    MONS_DWARF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    10, 8, 8, // 26
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    {{ MUT_NIGHTSTALKER, 1, 1},{ MUT_SUBDUED_MAGIC,1,1},
+     { MUT_NIGHTSTALKER, 1, 13},{ MUT_NIGHTSTALKER, 1, 26}},
+    {},
+    {},
+    { JOB_VENOM_MAGE, JOB_GLADIATOR, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_ASSASSIN, JOB_ARTIFICER },
+    { SK_STAVES, SK_AXES, SK_SLINGS, SK_CROSSBOWS},
+} },
+
 { SP_VAMPIRE, {
     "Vp",
     "Vampire", "Vampiric", nullptr,
