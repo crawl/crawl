@@ -1451,11 +1451,67 @@ void msgwin_got_input()
 int msgwin_get_line(string prompt, char *buf, int len,
                     input_history *mh, const string &fill)
 {
-    if (!prompt.empty())
-        msgwin_prompt(prompt);
+#ifdef TOUCH_UI
+    bool use_popup = true;
+#else
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+#endif
 
-    int ret = cancellable_get_line(buf, len, mh, nullptr, fill);
-    msgwin_reply(buf);
+    int ret;
+    if (use_popup)
+    {
+        mouse_control mc(MOUSE_MODE_PROMPT);
+        resumable_line_reader reader(buf, len);
+        reader.set_input_history(mh);
+        reader.read_line(fill);
+        reader.putkey(CK_END);
+
+        msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
+        const string colour_prompt = colour_string(prompt, colour_msg(colour));
+
+        bool done = false;
+        auto text = make_shared<ui::Text>();
+        auto popup = make_shared<ui::Popup>(text);
+        auto update_text = [&]() {
+            formatted_string p = formatted_string::parse_string(colour_prompt);
+            p.cprintf("\n\n%s", reader.get_text().c_str());
+            text->set_text(p);
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("text", reader.get_text().c_str());
+            tiles.ui_state_change("msgwin-get-line", 0);
+#endif
+        };
+        popup->on(ui::Widget::slots.event, [&](wm_event ev) {
+            if (ev.type != WME_KEYDOWN)
+                return false;
+            ret = reader.putkey(ev.key.keysym.sym);
+            if (ret != -1)
+                done = true;
+            update_text();
+            return true;
+        });
+
+#ifdef USE_TILE_WEB
+        tiles.json_open_object();
+        tiles.json_write_string("prompt", colour_prompt);
+        tiles.json_write_string("text", fill);
+        tiles.push_ui_layout("msgwin-get-line", 1);
+#endif
+        update_text();
+        ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+    }
+    else
+    {
+        if (!prompt.empty())
+            msgwin_prompt(prompt);
+        ret = cancellable_get_line(buf, len, mh, nullptr, fill);
+        msgwin_reply(buf);
+    }
+
     return ret;
 }
 
