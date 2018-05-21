@@ -33,10 +33,10 @@ Draconian
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
 a colour.
 %%%%
-Duskwalker
+Dusk walker
 
-Duskwalkers were cursed long ago for an ancient crime. They hide in the shadows
-to avoid the wrathful gaze of the gods. 
+Dusk walkers are ravenous predators who were cursed long ago for an ancient crime. 
+They hide in the shadows to avoid the wrathful gaze of the gods.
 %%%%
 Fairy
 
