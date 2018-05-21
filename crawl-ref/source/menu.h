@@ -1070,6 +1070,7 @@ protected:
 
 #ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
+    ShapeBuffer m_shape_buf;
 #else
     COLOURS m_old_bg_colour;
 #endif

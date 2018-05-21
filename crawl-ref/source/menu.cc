@@ -3388,9 +3388,9 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
     m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
-    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels + 4;
     m_min_coord.y = (min_coord.y - 1) * m_unit_height_pixels;
-    m_max_coord.y = (max_coord.y - 1) * m_unit_height_pixels;
+    m_max_coord.y = (max_coord.y - 1) * m_unit_height_pixels + 4;
 }
 
 void TextTileItem::render()
@@ -3407,16 +3407,16 @@ void TextTileItem::render()
         {
             int tile      = tdef.tile;
             TextureID tex = tdef.tex;
-            m_tile_buf[tex].add_unscaled(tile, m_min_coord.x, m_min_coord.y,
+            m_tile_buf[tex].add_unscaled(tile, m_min_coord.x + 2, m_min_coord.y + 2,
                                          tdef.ymax,
                                          (float)m_unit_height_pixels / TILE_Y);
         }
         // center the text
         // TODO wrap / chop the text
-        const int tile_offset = m_tiles.empty() ? 0 : m_unit_height_pixels;
+        const int tile_offset = m_tiles.empty() ? 0 : (m_unit_height_pixels + 6);
         m_font_buf.add(m_text, term_colours[m_fg_colour],
-                       m_min_coord.x + tile_offset,
-                       m_min_coord.y + get_vertical_offset());
+                       m_min_coord.x + 2 + tile_offset,
+                       m_min_coord.y + 2 + get_vertical_offset());
 
         m_dirty = false;
     }
@@ -4735,6 +4735,7 @@ void BoxMenuHighlighter::render()
     _place_items();
 #ifdef USE_TILE_LOCAL
     m_line_buf.draw();
+    m_shape_buf.draw();
 #else
     if (m_active_item != nullptr)
         m_active_item->render();
@@ -4749,11 +4750,16 @@ void BoxMenuHighlighter::_place_items()
 
 #ifdef USE_TILE_LOCAL
     m_line_buf.clear();
+    m_shape_buf.clear();
     if (tmp != nullptr)
     {
-        m_line_buf.add_square(tmp->get_min_coord().x, tmp->get_min_coord().y,
-                              tmp->get_max_coord().x, tmp->get_max_coord().y,
-                              term_colours[tmp->get_highlight_colour()]);
+        const VColour& c = term_colours[tmp->get_highlight_colour()];
+        const VColour bg_colour(c.r, c.b, c.g, 17);
+        const VColour line_colour(c.r, c.b, c.g, 71);
+        const coord_def tl = tmp->get_min_coord() + coord_def(1, 1);
+        const coord_def br = tmp->get_max_coord();
+        m_line_buf.add_square(tl.x, tl.y, br.x, br.y, line_colour);
+        m_shape_buf.add(tl.x, tl.y, br.x, br.y, bg_colour);
     }
 #else
     // we had an active item before
