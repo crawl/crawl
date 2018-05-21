@@ -662,7 +662,7 @@ static const map<species_type, species_def> species_data =
 
 { SP_DUSK_WALKER, {
     "Du",
-    "Duskwalker", nullptr, nullptr,
+    "Dusk Walker", nullptr, nullptr,
     SPF_NONE,
     -1, -1, 0, 6,
     MONS_SHADOW,
