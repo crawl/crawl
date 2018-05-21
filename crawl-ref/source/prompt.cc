@@ -67,7 +67,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
 #ifdef TOUCH_UI
     bool use_popup = true;
 #else
-    bool use_popup = !crawl_state.need_save;
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+    use_popup = use_popup && str;
 #endif
 
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
