@@ -457,6 +457,21 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
     }
 
+    function msgwin_get_line(msg)
+    {
+        var $popup = $(".templates > .msgwin-get-line").clone();
+        $popup.children(".header").html(util.formatted_string_to_html(msg.prompt));
+        $popup.children(".body")[0].textContent = msg.text;
+        return $popup;
+    }
+    function msgwin_get_line_update(msg)
+    {
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("msgwin-get-line"))
+            return;
+        $popup.children(".body")[0].textContent = msg.text;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -468,6 +483,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "describe-monster" : describe_monster,
         "version" : version,
         "formatted-scroller" : formatted_scroller,
+        "msgwin-get-line" : msgwin_get_line,
     };
 
     function register_ui_handlers(dict)
@@ -501,6 +517,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "mutations" : mutations_update,
             "describe-god" : describe_god_update,
             "formatted-scroller" : formatted_scroller_update,
+            "msgwin-get-line" : msgwin_get_line_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)
