@@ -82,6 +82,7 @@ formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
 faerie_dragon FAERIE_DRAGON
+dusk_walker DUSK_WALKER
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

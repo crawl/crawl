@@ -1253,6 +1253,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_INVOCATIONS,     3),
     APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
 
+    // SP_DUSK_WALKER
+    APT(SP_DUSK_WALKER,      SK_FIGHTING,        0),
+    APT(SP_DUSK_WALKER,      SK_SHORT_BLADES,    2),
+    APT(SP_DUSK_WALKER,      SK_LONG_BLADES,     1),
+    APT(SP_DUSK_WALKER,      SK_AXES,           -1),
+    APT(SP_DUSK_WALKER,      SK_MACES_FLAILS,   -1),
+    APT(SP_DUSK_WALKER,      SK_POLEARMS,       -1),
+    APT(SP_DUSK_WALKER,      SK_STAVES,          3),
+    APT(SP_DUSK_WALKER,      SK_SLINGS,          0),
+    APT(SP_DUSK_WALKER,      SK_BOWS,           -3),
+    APT(SP_DUSK_WALKER,      SK_CROSSBOWS,      -1),
+    APT(SP_DUSK_WALKER,      SK_THROWING,       -2),
+    APT(SP_DUSK_WALKER,      SK_ARMOUR,          0),
+    APT(SP_DUSK_WALKER,      SK_DODGING,         2),
+    APT(SP_DUSK_WALKER,      SK_STEALTH,         5),
+    #if TAG_MAJOR_VERSION == 34
+    APT(SP_DUSK_WALKER,      SK_STABBING,      UNUSABLE_SKILL),
+    #endif
+    APT(SP_DUSK_WALKER,      SK_SHIELDS,         0),
+    #if TAG_MAJOR_VERSION == 34
+    APT(SP_DUSK_WALKER,      SK_TRAPS,         UNUSABLE_SKILL),
+    #endif
+    APT(SP_DUSK_WALKER,      SK_UNARMED_COMBAT,  0),
+    APT(SP_DUSK_WALKER,      SK_SPELLCASTING,   -1),
+    APT(SP_DUSK_WALKER,      SK_CONJURATIONS,   -1),
+    APT(SP_DUSK_WALKER,      SK_HEXES,          -3),
+    APT(SP_DUSK_WALKER,      SK_CHARMS,          0),
+    APT(SP_DUSK_WALKER,      SK_SUMMONINGS,     -2),
+    APT(SP_DUSK_WALKER,      SK_NECROMANCY,     -1),
+    APT(SP_DUSK_WALKER,      SK_TRANSLOCATIONS, -1),
+    APT(SP_DUSK_WALKER,      SK_TRANSMUTATIONS, -1),
+    APT(SP_DUSK_WALKER,      SK_FIRE_MAGIC,     -2),
+    APT(SP_DUSK_WALKER,      SK_ICE_MAGIC,       2),
+    APT(SP_DUSK_WALKER,      SK_AIR_MAGIC,      -1),
+    APT(SP_DUSK_WALKER,      SK_EARTH_MAGIC,    -1),
+    APT(SP_DUSK_WALKER,      SK_POISON_MAGIC,    2),
+    APT(SP_DUSK_WALKER,      SK_INVOCATIONS,    -1),
+    APT(SP_DUSK_WALKER,      SK_EVOCATIONS,      0),
+
     // SP_FAIRY
     APT(SP_FAIRY,           SK_FIGHTING,       -1),
     APT(SP_FAIRY,           SK_SHORT_BLADES,   -2),

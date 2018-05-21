@@ -660,6 +660,24 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT, SK_MACES_FLAILS },
 } },
 
+{ SP_DUSK_WALKER, {
+    "Du",
+    "Duskwalker", nullptr, nullptr,
+    SPF_NONE,
+    -1, -1, 0, 6,
+    MONS_SHADOW,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    12, 8, 8, // 28
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    {{ MUT_NIGHTSTALKER, 1, 4}, {MUT_DRAIN_BITE, 1 ,1}, { MUT_FANGS, 2, 1 },
+      { MUT_FANGS, 1, 8 }, { MUT_NIGHTSTALKER, 1, 12}, { MUT_NIGHTSTALKER, 1, 20}},
+    {"You devour your enemies"},
+    {"devour"},
+    { JOB_VENOM_MAGE, JOB_GLADIATOR, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_ASSASSIN, JOB_ARTIFICER },
+    { SK_STAVES, SK_AXES, SK_SLINGS, SK_CROSSBOWS},
+} },
+
 { SP_VAMPIRE, {
     "Vp",
     "Vampire", "Vampiric", nullptr,

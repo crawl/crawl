@@ -1919,6 +1919,14 @@ static const mutation_def mut_data[] =
   {"Your sense of smell gets weaker.", "", ""},
 },
 
+{ MUT_DRAIN_BITE, 0, 1, mutflag::good, true,
+  "draining bite",
+
+  {"Your bite drains your enemy's life force.", "", ""},
+  {"You feel a sudden thirst for living beings", "", ""},
+  {"Your thirst for living beings wanes.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

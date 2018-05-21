@@ -935,6 +935,24 @@ void attack::drain_defender()
     }
 }
 
+void attack::bite_drain_defender()
+{
+    if (defender->is_monster() && coinflip())
+        return;
+
+    if (!(defender->holiness() & MH_NATURAL))
+        return;
+
+    special_damage = resist_adjust_damage(defender, BEAM_NEG,
+                                          (1 + random2(damage_done)) / 2);
+
+    if (defender->drain_exp(attacker, true, 20 + min(35, damage_done))
+        && defender_visible)
+    {
+        mprf("Your bite drains %s!", defender_name(true).c_str());
+    }
+}
+
 void attack::drain_defender_speed()
 {
     if (needs_message)
