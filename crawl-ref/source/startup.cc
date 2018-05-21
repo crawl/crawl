@@ -675,7 +675,7 @@ void UIStartupMenu::_allocate_region()
     freeform->allow_focus(false);
     game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
-                     coord_def(GAME_MODES_WIDTH, save_games_start_y),
+                     coord_def(max_col, save_games_start_y),
                      "game modes");
 
     save_games = new MenuScroller();
