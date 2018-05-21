@@ -467,11 +467,7 @@ void UIHiscoresMenu::_allocate_region()
             coord_def(max_col+1, scores_row_start - 1),
             "descriptor");
 
-#ifdef USE_TILE_LOCAL
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-#else
-    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
-#endif
     highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
 
     MenuFreeform* freeform = new MenuFreeform();

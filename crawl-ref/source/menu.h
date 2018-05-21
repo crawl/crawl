@@ -1075,24 +1075,6 @@ protected:
 #endif
 };
 
-class BlackWhiteHighlighter : public BoxMenuHighlighter
-{
-public:
-    BlackWhiteHighlighter(PrecisionMenu* parent);
-    virtual ~BlackWhiteHighlighter();
-
-    virtual void render() override;
-protected:
-    virtual void _place_items() override;
-
-#ifdef USE_TILE_LOCAL
-    // Tiles does not seem to support background colors
-    ShapeBuffer m_shape_buf;
-#endif
-    COLOURS m_old_bg_colour;
-    COLOURS m_old_fg_colour;
-};
-
 /**
  * Inheritable root node of a menu that holds MenuObjects.
  * It is always full screen.
