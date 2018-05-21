@@ -243,8 +243,6 @@ protected:
     ImageManager *m_image;
 
     // Mouse state.
-    unsigned short m_buttons_held;
-    unsigned char m_key_mod;
     coord_def m_mouse;
     unsigned int m_last_tick_moved;
     unsigned int m_last_tick_redraw;

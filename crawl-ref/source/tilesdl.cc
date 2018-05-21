@@ -164,8 +164,6 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
-    m_buttons_held(0),
-    m_key_mod(0),
     m_mouse(-1, -1),
     m_last_tick_moved(0),
     m_last_tick_redraw(0)
@@ -694,7 +692,6 @@ int TilesFramework::getch_ck()
 #endif
                 break;
             case WME_KEYDOWN:
-                m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
@@ -704,7 +701,6 @@ int TilesFramework::getch_ck()
                 break;
 
             case WME_KEYUP:
-                m_key_mod &= ~event.key.keysym.key_mod;
                 m_last_tick_moved = UINT_MAX;
                 break;
 
@@ -729,8 +725,8 @@ int TilesFramework::getch_ck()
                     m_mouse.x = event.mouse_event.px;
                     m_mouse.y = event.mouse_event.py;
 
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
+                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
+                    event.mouse_event.mod  = wm->get_mod_state();
 
                     // Find the new mouse location
                     m_cur_loc.reg = nullptr;
@@ -770,9 +766,8 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONUP:
                 {
-                    m_buttons_held  &= ~(event.mouse_event.button);
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
+                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
+                    event.mouse_event.mod  = wm->get_mod_state();
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
@@ -780,9 +775,8 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONDOWN:
                 {
-                    m_buttons_held  |= event.mouse_event.button;
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
+                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
+                    event.mouse_event.mod  = wm->get_mod_state();
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
