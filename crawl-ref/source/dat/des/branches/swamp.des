@@ -166,14 +166,14 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_entry_splash_gauntlet
-TAGS: swamp_entry
+TAGS: swamp_entry patrolling
 KFEAT: O = enter_swamp
 MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
    size = 2, walk_dist = 1, spread_rate = 33 }
 SUBST: D = twww
 NSUBST: E = tt. / ., F = tt. / ., H = tt. / ., J = tt. / ., K = tt. / .
 NSUBST: L = tt. / .
-KMONS: 1 = swamp worm / nothing w:5
+KMONS: 1 = swamp worm / bog body / nothing
 KMONS: 2 = electric eel
 KFEAT: 12 = w
 MAP
