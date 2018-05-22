@@ -322,7 +322,6 @@ ANGRY:   5
 BOOL:    berserk
 STEALTH: -1
 
-# TAG_MAJOR_VERSION == 34
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 INSCRIP: sticky flame,
@@ -333,7 +332,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison, skip_ego, nogen
+BOOL:    poison, skip_ego
 MAGIC:   1
 
 # TAG_MAJOR_VERSION == 34
@@ -360,7 +359,6 @@ AC:      -3
 EV:      -3
 LIFE:     1
 
-# TAG_MAJOR_VERSION == 34
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 INSCRIP: flash freeze,
@@ -372,7 +370,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison, skip_ego, nogen
+BOOL:    poison, skip_ego
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
