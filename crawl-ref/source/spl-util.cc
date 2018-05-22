@@ -1175,7 +1175,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.undead_state(temp) == US_UNDEAD)
             return "you're too dead to regenerate.";
         break;
-
+#if TAG_MAJOR_VERSION == 34
     case SPELL_EXCRUCIATING_WOUNDS:
         if (temp
             && (!you.weapon()
@@ -1185,6 +1185,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you aren't wielding a brandable weapon.";
         }
         // intentional fallthrough
+#endif
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)

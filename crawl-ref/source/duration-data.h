@@ -4,12 +4,14 @@
 
 #include "god-passive.h"
 
+#if TAG_MAJOR_VERSION == 34
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
     ASSERT(you.weapon());
     end_weapon_brand(*you.weapon(), true);
 }
+#endif
 
 static void _end_invis()
 {
@@ -588,8 +590,10 @@ static const duration_def duration_data[] =
       {{ "Your skin stops crawling." },
           { "Your skin is crawling a little less now.", 1}}, 6},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/, {}, 10},
+#if TAG_MAJOR_VERSION == 34
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "excruciating wounds", "", D_DISPELLABLE,
       {{ "", _end_weapon_brand }}},
+#endif
     { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS, {{""}}},
     { DUR_POWERED_BY_DEATH, 0, "", "", "pbd", "", D_NO_FLAGS},
     { DUR_GOURMAND, 0, "", "", "gourmand", "", D_NO_FLAGS},

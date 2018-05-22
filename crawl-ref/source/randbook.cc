@@ -994,28 +994,47 @@ void make_book_kiku_gift(item_def &book, bool first)
     else
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
+
+#if TAG_MAJOR_VERSION == 34
         chosen_spells[1] = (you.species == SP_FELID || coinflip())
             ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_AGONY,
                                          SPELL_DEATH_CHANNEL);
+#else
+        chosen_spells[1] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                         SPELL_AGONY,
+                                         SPELL_DEATH_CHANNEL,
+                                         SPELL_BORGNJORS_VILE_CLUTCH);
+        do
+        {  // Pick another spell from the above list, but don't duplicate spells
+            chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                             SPELL_AGONY,
+                                             SPELL_DEATH_CHANNEL,
+                                             SPELL_BORGNJORS_VILE_CLUTCH);
+        }
+        while chosen_spells[2] == chosen_spells[1];
+#endif
 
         spell_type extra_spell;
         do
-        {
+        {  // Pick another random spell from the above lists
             extra_spell = random_choose(SPELL_ANIMATE_DEAD,
                                         SPELL_AGONY,
                                         SPELL_BORGNJORS_VILE_CLUTCH,
+#if TAG_MAJOR_VERSION == 34
                                         SPELL_EXCRUCIATING_WOUNDS,
+#endif
                                         SPELL_BOLT_OF_DRAINING,
                                         SPELL_SIMULACRUM,
                                         SPELL_DEATH_CHANNEL);
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_FELID
                 && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
             {
                 extra_spell = SPELL_NO_SPELL;
             }
-
+#endif
             for (int i = 0; i < 3; i++)
                 if (extra_spell == chosen_spells[i])
                     extra_spell = SPELL_NO_SPELL;

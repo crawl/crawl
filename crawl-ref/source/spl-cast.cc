@@ -1785,9 +1785,10 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_AURA_OF_ABJURATION:
         return cast_aura_of_abjuration(powc, fail);
-
+#if TAG_MAJOR_VERSION == 34
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
+#endif
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:

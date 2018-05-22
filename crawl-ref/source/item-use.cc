@@ -2172,8 +2172,10 @@ bool god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
+#if TAG_MAJOR_VERSION == 34
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
+#endif
     const brand_type old_brand = get_weapon_brand(wpn);
     brand_type new_brand = old_brand;
 

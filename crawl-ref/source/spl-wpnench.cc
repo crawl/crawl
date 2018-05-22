@@ -50,6 +50,7 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 /**
  * Temporarily brand a weapon with pain.
  *
@@ -121,6 +122,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
 
     return SPRET_SUCCESS;
 }
+#endif
 
 spret_type cast_confusing_touch(int power, bool fail)
 {

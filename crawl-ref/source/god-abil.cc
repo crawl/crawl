@@ -163,13 +163,13 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         canned_msg(MSG_OK);
         return false;
     }
-
+#if TAG_MAJOR_VERSION == 34
     if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
     {
         ASSERT(you.weapon());
         end_weapon_brand(*you.weapon());
     }
-
+#endif
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);

@@ -1622,6 +1622,7 @@ static const struct spell_desc spelldata[] =
     TILEG_CHAIN_LIGHTNING,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
     SPTYP_CHARMS | SPTYP_NECROMANCY,
@@ -1632,6 +1633,7 @@ static const struct spell_desc spelldata[] =
     4, 15,
     TILEG_EXCRUCIATING_WOUNDS,
 },
+#endif
 
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
