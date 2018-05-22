@@ -277,16 +277,34 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         mpr("This rock feels extremely deep.");
     else
     {
-        string msg;
-        if (grd(dest) == DNGN_DEEP_WATER)
-            msg = "You sense a large body of water on the other side of the rock.";
-        else if (grd(dest) == DNGN_LAVA)
-            msg = "You sense an intense heat on the other side of the rock.";
-
-        if (check_moveto(dest, "passwall", msg))
+        // check every intermediate position so that exclusions on unseen walls
+        // don't leak information.
+        bool abort = false;
+        bool prompted = false;
+        for (coord_def p = you.pos() + delta;
+             p != dest && !abort && !prompted;
+             p += delta)
         {
-            // Passwall delay is reduced, and the delay cannot be interrupted.
-            start_delay<PasswallDelay>(1 + walls, dest);
+            if (env.map_knowledge(p).feat() == DNGN_UNSEEN)
+                abort = !check_moveto_exclusion(p, "passwall", &prompted);
+        }
+
+        if (!abort)
+        {
+            string msg;
+            if (grd(dest) == DNGN_DEEP_WATER)
+                msg = "You sense a large body of water on the other side of the rock.";
+            else if (grd(dest) == DNGN_LAVA)
+                msg = "You sense an intense heat on the other side of the rock.";
+
+            if (check_moveto_terrain(dest, "passwall", msg)
+                && check_moveto_cloud(dest, "passwall")
+                && check_moveto_trap(dest, "passwall")
+                && (prompted || check_moveto_exclusion(dest, "passwall")))
+            {
+                // Passwall delay is reduced, and the delay cannot be interrupted.
+                start_delay<PasswallDelay>(1 + walls, dest);
+            }
         }
     }
     return SPRET_SUCCESS;
