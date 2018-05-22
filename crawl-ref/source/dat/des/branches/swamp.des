@@ -128,7 +128,7 @@ ENDMAP
 NAME:   minmay_swamp_entry_worms
 TAGS:   swamp_entry
 SUBST:  T = tww
-KMONS:  w = swamp worm / tyrant leech / nothing w:89
+KMONS:  w = patrolling swamp worm / tyrant leech / nothing w:89
 KFEAT:  w = w / W
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
@@ -173,7 +173,7 @@ MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
 SUBST: D = twww
 NSUBST: E = tt. / ., F = tt. / ., H = tt. / ., J = tt. / ., K = tt. / .
 NSUBST: L = tt. / .
-KMONS: 1 = swamp worm / nothing w:5
+KMONS: 1 = patrolling swamp worm / nothing w:5
 KMONS: 2 = electric eel
 KFEAT: 12 = w
 MAP
