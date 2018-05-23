@@ -284,6 +284,8 @@ static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
     tile_event.button = MouseEvent::NONE;
     tile_event.px     = sdl_event.x;
     tile_event.py     = sdl_event.y;
+    tile_event.held   = wm->get_mouse_state(nullptr, nullptr);
+    tile_event.mod    = wm->get_mod_state();
 
     // TODO: enne - do we want the relative motion?
 }
@@ -312,6 +314,8 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     }
     tile_event.px = sdl_event.x;
     tile_event.py = sdl_event.y;
+    tile_event.held = wm->get_mouse_state(nullptr, nullptr);
+    tile_event.mod = wm->get_mod_state();
 }
 
 static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
