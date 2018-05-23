@@ -709,7 +709,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
       { MUT_NO_POTION_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
-      { MUT_REGENERATION, 1, 4 }, { MUT_REGENERATION, 1, 12 }, },
+      { MUT_REGENERATION, 1, 1 }, { MUT_REGENERATION, 1, 12 }, },
     {},
     {},
     { JOB_FIGHTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ENCHANTER, JOB_CONJURER,
