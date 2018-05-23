@@ -1006,7 +1006,7 @@ void make_book_kiku_gift(item_def &book, bool first)
                                              SPELL_DEATH_CHANNEL,
                                              SPELL_BORGNJORS_VILE_CLUTCH);
         }
-        while chosen_spells[2] == chosen_spells[1];
+        while (chosen_spells[2] == chosen_spells[1]);
 
         spell_type extra_spell;
         do
