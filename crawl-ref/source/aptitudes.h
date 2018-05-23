@@ -161,7 +161,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SLUDGE_ELF,      SK_POISON_MAGIC,    1),
     APT(SP_SLUDGE_ELF,      SK_INVOCATIONS,     1),
     APT(SP_SLUDGE_ELF,      SK_EVOCATIONS,      0),
-#endif
 
     // SP_HALFLING
     APT(SP_HALFLING,        SK_FIGHTING,       -1),
@@ -178,13 +177,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_ARMOUR,          1),
     APT(SP_HALFLING,        SK_DODGING,         1),
     APT(SP_HALFLING,        SK_STEALTH,         2),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_HALFLING,        SK_STABBING,      UNUSABLE_SKILL),
-#endif
     APT(SP_HALFLING,        SK_SHIELDS,         1),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_HALFLING,        SK_TRAPS,         UNUSABLE_SKILL),
-#endif
     APT(SP_HALFLING,        SK_UNARMED_COMBAT, -2),
     APT(SP_HALFLING,        SK_SPELLCASTING,   -3),
     APT(SP_HALFLING,        SK_CONJURATIONS,   -2),
@@ -201,6 +196,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_POISON_MAGIC,    0),
     APT(SP_HALFLING,        SK_INVOCATIONS,     1),
     APT(SP_HALFLING,        SK_EVOCATIONS,      0),
+#endif
 
     // SP_HILL_ORC
     APT(SP_HILL_ORC,        SK_FIGHTING,        2),
@@ -242,36 +238,36 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_EVOCATIONS,      0),
 
     // SP_KOBOLD
-    APT(SP_KOBOLD,          SK_FIGHTING,        1),
+    APT(SP_KOBOLD,          SK_FIGHTING,       -1),
     APT(SP_KOBOLD,          SK_SHORT_BLADES,    3),
-    APT(SP_KOBOLD,          SK_LONG_BLADES,    -2),
-    APT(SP_KOBOLD,          SK_AXES,           -2),
+    APT(SP_KOBOLD,          SK_LONG_BLADES,     0),
+    APT(SP_KOBOLD,          SK_AXES,           -1),
     APT(SP_KOBOLD,          SK_MACES_FLAILS,   -1),
     APT(SP_KOBOLD,          SK_POLEARMS,       -2),
-    APT(SP_KOBOLD,          SK_STAVES,         -1),
-    APT(SP_KOBOLD,          SK_SLINGS,          0),
+    APT(SP_KOBOLD,          SK_STAVES,         -2),
+    APT(SP_KOBOLD,          SK_SLINGS,          2),
     APT(SP_KOBOLD,          SK_BOWS,            0),
     APT(SP_KOBOLD,          SK_CROSSBOWS,       2),
-    APT(SP_KOBOLD,          SK_THROWING,        1),
-    APT(SP_KOBOLD,          SK_ARMOUR,         -2),
+    APT(SP_KOBOLD,          SK_THROWING,        2),
+    APT(SP_KOBOLD,          SK_ARMOUR,          0),
     APT(SP_KOBOLD,          SK_DODGING,         2),
     APT(SP_KOBOLD,          SK_STEALTH,         4),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_KOBOLD,          SK_STABBING,      UNUSABLE_SKILL),
 #endif
-    APT(SP_KOBOLD,          SK_SHIELDS,        -2),
+    APT(SP_KOBOLD,          SK_SHIELDS,         1),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_KOBOLD,          SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_KOBOLD,          SK_UNARMED_COMBAT,  0),
     APT(SP_KOBOLD,          SK_SPELLCASTING,    0),
-    APT(SP_KOBOLD,          SK_CONJURATIONS,    0),
-    APT(SP_KOBOLD,          SK_HEXES,           0),
-    APT(SP_KOBOLD,          SK_CHARMS,         -2),
-    APT(SP_KOBOLD,          SK_SUMMONINGS,      0),
-    APT(SP_KOBOLD,          SK_NECROMANCY,      0),
-    APT(SP_KOBOLD,          SK_TRANSLOCATIONS,  0),
-    APT(SP_KOBOLD,          SK_TRANSMUTATIONS,  0),
+    APT(SP_KOBOLD,          SK_CONJURATIONS,   -1),
+    APT(SP_KOBOLD,          SK_HEXES,          -1),
+    APT(SP_KOBOLD,          SK_CHARMS,          0),
+    APT(SP_KOBOLD,          SK_SUMMONINGS,     -1),
+    APT(SP_KOBOLD,          SK_NECROMANCY,     -1),
+    APT(SP_KOBOLD,          SK_TRANSLOCATIONS,  1),
+    APT(SP_KOBOLD,          SK_TRANSMUTATIONS, -3),
     APT(SP_KOBOLD,          SK_FIRE_MAGIC,      0),
     APT(SP_KOBOLD,          SK_ICE_MAGIC,       0),
     APT(SP_KOBOLD,          SK_AIR_MAGIC,       0),

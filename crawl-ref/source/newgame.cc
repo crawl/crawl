@@ -182,7 +182,7 @@ static const species_type species_order[] =
     SP_DEEP_DWARF,     SP_HILL_ORC,
     SP_DUSK_WALKER,
     // small species
-    SP_HALFLING,       SP_KOBOLD,
+    SP_KOBOLD,
     SP_SPRIGGAN,       SP_FAIRY,
     // large species
     SP_OGRE,           SP_TROLL,
@@ -951,7 +951,7 @@ static species_group species_groups[] =
             SP_MERFOLK,
             SP_GARGOYLE,
             SP_BASE_DRACONIAN,
-            SP_HALFLING,
+            SP_KOBOLD,
             SP_TROLL,
             SP_GHOUL,
             SP_FAIRY,
@@ -963,7 +963,6 @@ static species_group species_groups[] =
         20,
         {
             SP_HUMAN,
-            SP_KOBOLD,
             SP_DEMONSPAWN,
             SP_CENTAUR,
             SP_SPRIGGAN,

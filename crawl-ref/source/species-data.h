@@ -420,22 +420,6 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_HALFLING, {
-    "Ha",
-    "Halfling", nullptr, nullptr,
-    SPF_NONE,
-    1, -1, 0, 3,
-    MONS_HALFLING,
-    HT_LAND, US_ALIVE, SIZE_SMALL,
-    9, 6, 9, // 24
-    { STAT_DEX }, 5,
-    { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
-    {},
-    {},
-    { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
-} },
-
 { SP_HILL_ORC, {
     "HO",
     "Hill Orc", "Orcish", "Orc",
@@ -475,17 +459,17 @@ static const map<species_type, species_def> species_data =
     "Ko",
     "Kobold", nullptr, nullptr,
     SPF_NONE,
-    1, -2, 0, 3,
+    1, -1, 0, 3,
     MONS_KOBOLD,
     HT_LAND, US_ALIVE, SIZE_SMALL,
     5, 9, 10, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
-    { { MUT_CARNIVOROUS, 1, 1 }, },
+    { { MUT_CARNIVOROUS, 1, 1 }, { MUT_MUTATION_RESISTANCE, 1, 1 } },
     {},
     {},
-    { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_ENCHANTER,
-      JOB_CONJURER, JOB_SUMMONER },
-    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_STAVES, SK_CROSSBOWS },
+    { JOB_HUNTER, JOB_BERSERKER, JOB_SKALD, JOB_ENCHANTER,
+      JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_SLINGS, SK_CROSSBOWS,  },
 } },
 
 { SP_MERFOLK, {
@@ -781,6 +765,22 @@ static const map<species_type, species_def> species_data =
     { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
+} },
+
+{ SP_HALFLING, {
+    "Ha",
+    "Halfling", nullptr, nullptr,
+    SPF_NONE,
+    1, -1, 0, 3,
+    MONS_HALFLING,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    9, 6, 9, // 24
+    { STAT_DEX }, 5,
+    { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
+    {},
+    {},
+    { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
 } },
 #endif
 // Ideally this wouldn't be necessary...
