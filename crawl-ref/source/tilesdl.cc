@@ -725,9 +725,6 @@ int TilesFramework::getch_ck()
                     m_mouse.x = event.mouse_event.px;
                     m_mouse.y = event.mouse_event.py;
 
-                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
-                    event.mouse_event.mod  = wm->get_mod_state();
-
                     // Find the new mouse location
                     m_cur_loc.reg = nullptr;
                     for (Region *reg : m_layers[m_active_layer].m_regions)
@@ -766,8 +763,6 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONUP:
                 {
-                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
-                    event.mouse_event.mod  = wm->get_mod_state();
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
@@ -775,8 +770,6 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONDOWN:
                 {
-                    event.mouse_event.held = wm->get_mouse_state(nullptr, nullptr);
-                    event.mouse_event.mod  = wm->get_mod_state();
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
