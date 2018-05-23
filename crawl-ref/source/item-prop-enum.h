@@ -307,6 +307,10 @@ enum misc_item_type
     MISC_XOMS_CHESSBOARD,
 #endif
 
+    // Archaeologist
+    MISC_ANCIENT_CRATE,
+    MISC_DUSTY_TOME,
+
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
 };
@@ -340,8 +344,10 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
-    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET
+    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
 #endif
+    MISC_ANCIENT_CRATE,
+    MISC_DUSTY_TOME
 };
 
 enum missile_type

@@ -36,6 +36,7 @@ enum job_type
     JOB_DEATH_KNIGHT,
 #endif
     JOB_ABYSSAL_KNIGHT,
+    JOB_ARCHAEOLOGIST,
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif

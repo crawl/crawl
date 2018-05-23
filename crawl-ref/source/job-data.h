@@ -54,6 +54,15 @@ static const map<job_type, job_def> job_data =
       { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
 
+{ JOB_ARCHAEOLOGIST, {
+    "Ac", "Archaeologist",
+    3, 6, 3,
+    { SP_HUMAN, SP_TENGU, SP_DEEP_ELF, SP_DEEP_DWARF, SP_DEMONSPAWN},
+    { "robe plus:1", "hat plus:1", "pair of boots plus:1", "pair of gloves plus:1", "dusty tome", "ancient crate" },
+    WCHOICE_NONE,
+    { { SK_STEALTH, 1}, },
+} },
+
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
     4, 3, 5,
