@@ -1340,7 +1340,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PASSWALL, "Passwall",
     SPTYP_TRANSMUTATION | SPTYP_EARTH,
-    SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
+    SPFLAG_TARGET | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
     2,
     200,
     1, 9,

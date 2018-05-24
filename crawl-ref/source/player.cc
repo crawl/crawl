@@ -264,28 +264,40 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
     return true;
 }
 
+bool check_moveto_exclusions(const vector<coord_def> &areas,
+                             const string &move_verb,
+                             bool *prompted)
+{
+    if (is_excluded(you.pos()) || crawl_state.disables[DIS_CONFIRMATIONS])
+        return true;
+
+    int count = 0;
+    for (auto p : areas)
+    {
+        if (is_excluded(p) && !is_stair_exclusion(p))
+            count++;
+    }
+    if (count == 0)
+        return true;
+    const string prompt = make_stringf((count == areas.size() ?
+                    "Really %s into a travel-excluded area?" :
+                    "You might %s into a travel-excluded area, are you sure?"),
+                              move_verb.c_str());
+
+    if (prompted)
+        *prompted = true;
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    return true;
+}
+
 bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
                             bool *prompted)
 {
-    string prompt;
-
-    if (is_excluded(p)
-        && !is_stair_exclusion(p)
-        && !is_excluded(you.pos())
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        if (prompted)
-            *prompted = true;
-        prompt = make_stringf("Really %s into a travel-excluded area?",
-                              move_verb.c_str());
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    return true;
+    return check_moveto_exclusions({p}, move_verb, prompted);
 }
 
 bool check_moveto(const coord_def& p, const string &move_verb, const string &msg)

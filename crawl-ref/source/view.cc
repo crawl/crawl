@@ -1102,7 +1102,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 #endif
 }
 
-static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
+static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
+                                    const coord_def &ep)
 {
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
@@ -1110,6 +1111,10 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
+    // this is just for out-of-los rays, but I don't see a more efficient way..
+    if (in_bounds(ep))
+        cell->tile.bg = env.tile_bg(ep);
+
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #endif
 }
@@ -1479,7 +1484,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     if (!map_bounds(gc))
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, coord_def());
     else if (gc == you.pos() && you.on_current_level
              && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
@@ -1490,7 +1495,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     else if (you.see_cell(gc) && you.on_current_level)
         _draw_los(cell, gc, ep, anim_updates);
     else
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
     cell->flash_colour = BLACK;
 

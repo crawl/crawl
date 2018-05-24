@@ -249,63 +249,179 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     }
 }
 
-spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
+passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_range)
+    : start(act.pos()), delta(dir.sgn()),
+      range(max_range),
+      dest_found(false)
 {
-    coord_def dest;
-    for (dest = you.pos() + delta;
-         in_bounds(dest) && _feat_is_passwallable(grd(dest));
-         dest += delta)
-    {}
-
-    int walls = (dest - you.pos()).rdist() - 1;
-    if (walls == 0)
+    if (delta.zero())
+        return;
+    ASSERT(range > 0);
+    coord_def pos;
+    // TODO: something better than sgn for delta?
+    for (pos = start + delta;
+         (pos - start).rdist() - 1 <= range;
+         pos += delta)
     {
-        mpr("That's not a passable wall.");
+        path.emplace_back(pos);
+        if (in_bounds(pos))
+        {
+            if (!_feat_is_passwallable(grd(pos)))
+            {
+                if (!dest_found)
+                {
+                    actual_dest = pos;
+                    dest_found = true;
+                }
+                if (env.map_knowledge(pos).feat() != DNGN_UNSEEN)
+                    break;
+            }
+        }
+        else if (!dest_found) // no destination in bounds
+        {
+            actual_dest = pos;
+            dest_found = true;
+            break; // can't render oob rays anyways, so no point in considering
+                   // more than one of them
+        }
+    }
+    // if dest_found is false, actual_dest is guaranteed to be out of bounds
+}
+
+/// max walls that there could be, given the player's knowledge and map bounds
+int passwall_path::max_walls() const
+{
+    if (path.size() == 0)
+        return 0;
+    // the in_bounds check is in case the player is standing next to bounds
+    return max((int) path.size() - 1, in_bounds(path.back()) ? 0 : 1);
+}
+
+/// actual walls (or max walls, if actual_dest is out of bounds)
+int passwall_path::actual_walls() const
+{
+    return !in_bounds(actual_dest) ?
+            max_walls() :
+            (actual_dest - start).rdist() - 1;
+}
+
+bool passwall_path::spell_succeeds() const
+{
+    // this isn't really the full story -- since moveto needs to be checked
+    // also.
+    return actual_walls() > 0;
+}
+
+bool passwall_path::is_valid(string *fail_msg) const
+{
+    // does not check moveto cases, incl lava/deep water, since these prompt.
+    if (delta.zero())
+    {
+        if (fail_msg)
+            *fail_msg = "Please select a wall.";
+        return false;
+    }
+    if (actual_walls() == 0)
+    {
+        if (fail_msg)
+            *fail_msg = "That's not a passable wall.";
+        return false;
+    }
+    if (!dest_found)
+    {
+        if (fail_msg)
+            *fail_msg = "This rock feels extremely deep.";
+        return false;
+    }
+    if (!in_bounds(actual_dest))
+    {
+        if (fail_msg)
+            *fail_msg = "You sense an overwhelming volume of rock.";
+        return false;
+    }
+    const monster *mon = monster_at(actual_dest);
+    if (cell_is_solid(actual_dest) || (mon && mon->is_stationary()))
+    {
+        if (fail_msg)
+            *fail_msg = "Something is blocking your path through the rock.";
+        return false;
+    }
+    return true;
+}
+
+/// find possible destinations, given the player's map knowledge
+vector <coord_def> passwall_path::possible_dests() const
+{
+    vector<coord_def> dests;
+    for (auto p : path)
+        if (!in_bounds(p) ||
+            (env.map_knowledge(p).feat() == DNGN_UNSEEN || !cell_is_solid(p)))
+        {
+            dests.push_back(p);
+        }
+    return dests;
+}
+
+bool passwall_path::check_moveto() const
+{
+    // assumes is_valid()
+
+    string terrain_msg;
+    if (grd(actual_dest) == DNGN_DEEP_WATER)
+        terrain_msg = "You sense a deep body of water on the other side of the rock.";
+    else if (grd(actual_dest) == DNGN_LAVA)
+        terrain_msg = "You sense an intense heat on the other side of the rock.";
+
+    // Pre-confirm exclusions in unseen squares as well as the actual dest
+    // even if seen, so that this doesn't leak information.
+
+    // TODO: handle uncertainty in messaging for things other than exclusions
+
+    return check_moveto_terrain(actual_dest, "passwall", terrain_msg)
+        && check_moveto_exclusions(possible_dests(), "passwall")
+        && check_moveto_cloud(actual_dest, "passwall")
+        && check_moveto_trap(actual_dest, "passwall");
+
+}
+
+spret_type cast_passwall(const coord_def& c, int pow, bool fail)
+{
+    coord_def delta = c - you.pos();
+    passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
+    string fail_msg;
+    bool valid = p.is_valid(&fail_msg);
+    if (!p.spell_succeeds())
+    {
+        if (fail_msg.size())
+            mpr(fail_msg);
         return SPRET_ABORT;
     }
 
     fail_check();
 
-    // Below here, failing to cast yields information to the
-    // player, so we don't make the spell abort (return SPRET_SUCCESS).
-    const monster *mon = monster_at(dest);
-    if (!in_bounds(dest))
-        mpr("You sense an overwhelming volume of rock.");
-    else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
-        mpr("Something is blocking your path through the rock.");
-    else if (walls > spell_range(SPELL_PASSWALL, pow))
-        mpr("This rock feels extremely deep.");
-    else
+    if (!valid)
     {
-        // check every intermediate position so that exclusions on unseen walls
-        // don't leak information.
-        bool abort = false;
-        bool prompted = false;
-        for (coord_def p = you.pos() + delta;
-             p != dest && !abort && !prompted;
-             p += delta)
-        {
-            if (env.map_knowledge(p).feat() == DNGN_UNSEEN)
-                abort = !check_moveto_exclusion(p, "passwall", &prompted);
-        }
+        if (fail_msg.size())
+            mpr(fail_msg);
+    }
+    else if (p.check_moveto())
+    {
+        start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
+        return SPRET_SUCCESS;
+    }
 
-        if (!abort)
-        {
-            string msg;
-            if (grd(dest) == DNGN_DEEP_WATER)
-                msg = "You sense a large body of water on the other side of the rock.";
-            else if (grd(dest) == DNGN_LAVA)
-                msg = "You sense an intense heat on the other side of the rock.";
-
-            if (check_moveto_terrain(dest, "passwall", msg)
-                && check_moveto_cloud(dest, "passwall")
-                && check_moveto_trap(dest, "passwall")
-                && (prompted || check_moveto_exclusion(dest, "passwall")))
-            {
-                // Passwall delay is reduced, and the delay cannot be interrupted.
-                start_delay<PasswallDelay>(1 + walls, dest);
-            }
-        }
+    // at this point, the spell failed or was cancelled. Does it cost MP?
+    vector<coord_def> dests = p.possible_dests();
+    if (dests.size() == 0 ||
+        (dests.size() == 1 && (!in_bounds(dests[0]) ||
+        env.map_knowledge(dests[0]).feat() != DNGN_UNSEEN)))
+    {
+        // if there are no possible destinations, or only 1 that has been seen,
+        // the player already had full knowledge. The !in_bounds case is if they
+        // are standing next to the map edge, which is a leak of sorts, but
+        // already apparent from the targeting (and we leak this info all over
+        // the place, really).
+        return SPRET_ABORT;
     }
     return SPRET_SUCCESS;
 }
