@@ -18,6 +18,7 @@
 #include "mon-tentacle.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-other.h"
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -40,6 +41,11 @@ bool targeter::set_aim(coord_def a)
 }
 
 bool targeter::can_affect_outside_range()
+{
+    return false;
+}
+
+bool targeter::can_affect_unseen()
 {
     return false;
 }
@@ -489,6 +495,55 @@ aff_type targeter_walljump::is_affected(coord_def loc)
         return AFF_YES;
 
     return AFF_NO;
+}
+
+targeter_passwall::targeter_passwall(int range) :
+    targeter_smite(&you, LOS_RADIUS, 1, 1, true, nullptr), max_range(range)
+{
+}
+
+bool targeter_passwall::valid_aim(coord_def a)
+{
+    passwall_path tmp_path(you, a - you.pos(), max_range);
+    string failmsg;
+    tmp_path.is_valid(&failmsg);
+    if (!tmp_path.spell_succeeds())
+    {
+        return notify_fail(failmsg);
+    }
+    return true;
+}
+
+bool targeter_passwall::set_aim(coord_def a)
+{
+    cur_path = make_unique<passwall_path>(you, a - you.pos(), max_range);
+    return true;
+}
+
+aff_type targeter_passwall::is_affected(coord_def loc)
+{
+    if (!cur_path)
+        return AFF_NO;
+    // not very efficient...
+    for (auto p : cur_path->path)
+        if (p == loc)
+            return AFF_YES;
+    return AFF_NO;
+}
+
+bool targeter_passwall::can_affect_outside_range()
+{
+    return true;
+}
+
+bool targeter_passwall::can_affect_unseen()
+{
+    return true;
+}
+
+bool targeter_passwall::affects_monster(const monster_info& mon)
+{
+    return false;
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :

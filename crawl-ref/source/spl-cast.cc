@@ -1197,6 +1197,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
+    case SPELL_PASSWALL:
+        return make_unique<targeter_passwall>(range);
 
     default:
         break;
@@ -1867,7 +1869,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return conjure_flame(&you, powc, beam.target, fail);
 
     case SPELL_PASSWALL:
-        return cast_passwall(spd.delta, powc, fail);
+        return cast_passwall(beam.target, powc, fail);
 
     case SPELL_APPORTATION:
         return cast_apportation(powc, beam, fail);
