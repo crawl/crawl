@@ -4,6 +4,8 @@
 #include "los-type.h"
 #include "reach-type.h"
 
+struct passwall_path;
+
 enum aff_type // sign and non-zeroness matters
 {
     AFF_TRACER = -1,
@@ -33,6 +35,7 @@ public:
     virtual bool can_affect_outside_range();
 
     virtual aff_type is_affected(coord_def loc) = 0;
+    virtual bool can_affect_unseen();
     virtual bool has_additional_sites(coord_def a);
     virtual bool affects_monster(const monster_info& mon);
 protected:
@@ -291,4 +294,20 @@ public:
     aff_type is_affected(coord_def loc);
 private:
     explosion_map exp_map;
+};
+
+class targeter_passwall : public targeter_smite
+{
+public:
+    targeter_passwall(int range);
+    bool set_aim(coord_def a) override;
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+    bool can_affect_outside_range() override;
+    bool can_affect_unseen() override;
+    bool affects_monster(const monster_info& mon) override;
+
+private:
+    int max_range;
+    unique_ptr<passwall_path> cur_path;
 };

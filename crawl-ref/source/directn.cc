@@ -882,6 +882,8 @@ bool direction_chooser::move_is_ok() const
     {
         if (!cell_see_cell(you.pos(), target(), LOS_NO_TRANS))
         {
+            if (hitfunc && hitfunc->can_affect_unseen())
+                return true; // is this too broad?
             if (you.see_cell(target()))
                 mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
             else
@@ -1092,6 +1094,31 @@ void direction_chooser::set_target(const coord_def& new_target)
     moves.target = new_target;
 }
 
+static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
+{
+ #ifdef USE_TILE
+    tile_place_ray(p, aff);
+#endif
+#ifndef USE_TILE_LOCAL
+    int bcol = BLACK;
+    if (aff < 0)
+        bcol = DARKGREY;
+    else if (aff < AFF_YES)
+        bcol = (p == target) ? RED : MAGENTA;
+    else if (aff == AFF_YES)
+        bcol = (p == target) ? LIGHTRED : LIGHTMAGENTA;
+    else if (aff == AFF_LANDING)
+        bcol = (p == target) ? LIGHTGREEN : GREEN;
+    else if (aff == AFF_MULTIPLE)
+        bcol = (p == target) ? LIGHTCYAN : CYAN;
+    else
+        die("unhandled aff %d", aff);
+
+    int mbcol = (p == target) ? bcol : bcol | COLFLAG_REVERSE;
+    _draw_ray_glyph(p, bcol, '*', mbcol);
+#endif
+}
+
 void direction_chooser::draw_beam_if_needed()
 {
     if (!need_beam_redraw)
@@ -1122,31 +1149,12 @@ void direction_chooser::draw_beam_if_needed()
 #endif
             return;
         }
-        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+        const los_type los = hitfunc->can_affect_unseen()
+                                            ? LOS_NONE : LOS_DEFAULT;
+        for (radius_iterator ri(you.pos(), los); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
-            {
-#ifdef USE_TILE
-                tile_place_ray(*ri, aff);
-#endif
-#ifndef USE_TILE_LOCAL
-                int bcol = BLACK;
-                if (aff < 0)
-                    bcol = DARKGREY;
-                else if (aff < AFF_YES)
-                    bcol = (*ri == target()) ? RED : MAGENTA;
-                else if (aff == AFF_YES)
-                    bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
-                else if (aff == AFF_LANDING)
-                    bcol = (*ri == target()) ? LIGHTGREEN : GREEN;
-                else if (aff == AFF_MULTIPLE)
-                    bcol = (*ri == target()) ? LIGHTCYAN : CYAN;
-                else
-                    die("unhandled aff %d", aff);
+                _draw_ray_cell(*ri, target(), aff);
 
-                int mbcol = (*ri == target()) ? bcol : bcol | COLFLAG_REVERSE;
-                _draw_ray_glyph(*ri, bcol, '*', mbcol);
-#endif
-            }
 #ifdef USE_TILE
         viewwindow(true, true);
 #endif
