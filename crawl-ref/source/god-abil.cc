@@ -7289,6 +7289,11 @@ bool wu_jian_wall_jump_ability()
         crawl_state.cancel_cmd_repeat();
         return false;
     }
+    if (you.digging)
+    {
+        you.digging = false;
+        mpr("You retract your mandibles.");
+    }
     string wj_error;
     bool has_targets = false;
 
