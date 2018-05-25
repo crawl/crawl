@@ -527,7 +527,7 @@ ENDMAP
 NAME:   kennysheep_water_balloons
 TAGS:   no_pool_fixup
 ORIENT: northwest
-DEPTH:  D:14-, Depths
+DEPTH:  D:12-, Depths
 NSUBST: % = 5:|
 SUBST:  % : %$
 MAP
@@ -1612,7 +1612,7 @@ ENDMAP
 NAME:   kennysheep_large_spiral
 TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
-DEPTH:  D:14-, Depths, !Depths:$
+DEPTH:  D:12-, Depths, !Depths:$
 : ks_random_setup(_G, true)
 SUBST:  X = x
 MAP

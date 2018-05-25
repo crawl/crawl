@@ -172,7 +172,7 @@ DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
 
 NAME:   uniq_louise
-DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
+DEPTH:  D:12-, Elf, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Louise")
 
 NAME:   uniq_maurice
@@ -225,7 +225,7 @@ DEPTH:  D:2-4
 : place_unique(_G, "Robin band")
 
 NAME:   uniq_roxanne
-DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
+DEPTH:  D:12-, Elf, Swamp, Snake, Shoals, Spider
 TAGS:   place_unique transparent
 MONS:   Roxanne
 MAP
@@ -259,7 +259,7 @@ DEPTH:  D:10-, Orc, !Orc:$, Lair:2-5
 : place_unique(_G, "Urug")
 
 NAME:   uniq_agnes
-DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
+DEPTH:  D:12-, Elf, !Elf:$, Snake, Spider
 : place_unique(_G, "Agnes")
 
 ################################################################################

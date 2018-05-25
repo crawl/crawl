@@ -2,7 +2,7 @@
 
 NAME:    dungeon_decor
 TAGS:    no_dump extra allow_dup nolayout_encompass luniq
-DEPTH:   D:14-, Depths
+DEPTH:   D:12-, Depths
 CHANCE:  80%
 {{
   local c = 1

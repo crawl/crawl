@@ -6,7 +6,7 @@
 # Number of monsters (and amount of ood) depends on depth and randomness. Ranges
 # from 8 to 24 monsters. Very random, middle part is all subvaults.
 #
-# Currently set to never appear earlier than D:14, meaning this is always
+# Currently set to never appear earlier than D:12, meaning this is always
 # post-lair.
 
 NAME:     evilmike_ambush

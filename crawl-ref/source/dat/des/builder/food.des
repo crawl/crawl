@@ -2,10 +2,10 @@
 # Helper function to weight the secondary food vaults properly.
 # We want each level in the range to have a roughly even chance of placing
 # the vault.
-# The uppermost level we place it on is D:7, and the lowermost is D:14;
+# The uppermost level we place it on is D:7, and the lowermost is D:12;
 # thus the first level, D:7, has a 1 in 8 chance of placing it. If it
 # doesn't place on D:7, D:8 has a 1 in 7 chance of placing it; D:9 has a
-# 1 in 6 chance, etc. up until D:14 has a 100% chance.
+# 1 in 6 chance, etc. up until D:12 has a 100% chance.
 # If the levels are traversed in order, there is therefore an even
 # distribution of where the food vault is placed.
 ##########################################################################

@@ -2717,7 +2717,7 @@ ENDMAP
 
 NAME:   ragdoll_tomb_raider
 TAGS:   no_item_gen no_monster_gen patrolling
-DEPTH:  D:14-, Depths, Crypt, !Crypt:$
+DEPTH:  D:12-, Depths, Crypt, !Crypt:$
 ORIENT: float
 KITEM:  $ = amulet_of_vitality / acquire any
 KITEM:  12345d = gold / any / nothing
@@ -3372,7 +3372,7 @@ ENDMAP
 
 NAME:    minmay_guarded_unrand_sword_of_power
 ORIENT:  float
-DEPTH:   D:13-
+DEPTH:   D:11-
 MONS:    vault guard
 : if you.unrands("sword_of_power") then
 ITEM:    any weapon good_item randart no_pickup
@@ -3677,7 +3677,7 @@ NAME: cheibrodos_grave_circle
 DEPTH: D:7-11
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-MONS: place:D:14 skeleton w:5 / place:D:14 zombie, shadow imp, hellwing
+MONS: place:D:12 skeleton w:5 / place:D:12 zombie, shadow imp, hellwing
 NSUBST: . = 5:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 4=$%.
 SUBST: . = .....--__tG
 KMONS: t = withered plant
@@ -4420,7 +4420,7 @@ NSUBST: 1 = 1 / 2 / 1- / 1---- / -
 :   elseif you.depth() <= 9 then
 :     cloud_types = {"flame", "freezing vapour", "poison gas", "acidic fog"}
 MONS: fire bat, fire elemental / hell hound
-MONS: ice beast, simulacrum place:D:15
+MONS: ice beast, simulacrum place:D:12
 MONS: water moccasin
 KMONS: 6 = ogre zombie ; giant club ego:venom | giant spiked club ego:venom \
            / orc warrior zombie ; hand axe ego:venom | war axe ego:venom \
@@ -7335,7 +7335,7 @@ ENDMAP
 
 NAME:   cheibrodos_leafed_vault
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  D:14-, Depths:1-5
+DEPTH:  D:12-, Depths:1-5
 ORIENT: float
 NSUBST: - = 4 = 8 / 8 = 9 / 90 = . / * = .:45 0
 SUBST:  " = $:5 * |:3
@@ -7631,7 +7631,7 @@ ENDMAP
 
 NAME:   kennysheep_cluttered_fort
 ORIENT: float
-DEPTH:  D:14-, Depths, !Depths:$
+DEPTH:  D:12-, Depths, !Depths:$
 NSUBST: % : 1:|
 SUBST:  % = *
 SUBST:  9 = 9900.
@@ -7663,7 +7663,7 @@ ENDMAP
 NAME:   kennysheep_bubble_arena
 TAGS:   no_item_gen no_trap_gen
 ORIENT: float
-DEPTH:  D:14-, Depths, !Depths:$
+DEPTH:  D:12-, Depths, !Depths:$
 NSUBST: % = 5:|
 SUBST:  % : %$
 : ks_random_setup(_G, true)
@@ -8921,7 +8921,7 @@ ENDMAP
 NAME: gammafunk_dig_for_victory
 TAGS: no_monster_gen no_item_gen no_trap_gen
 # Must not place on a branch end so it can place downhatch
-DEPTH: Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
+DEPTH: Crypt, !Crypt:$, D:11-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
 ORIENT: float
 # DTEM can use LRD, so include stone tiles in no_tele_into to be safe
 KPROP: 1DEFHJKR|*$ecmn = no_tele_into
@@ -8983,7 +8983,7 @@ ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
 TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
-DEPTH:   D:13-, Depths
+DEPTH:   D:11-, Depths
 ORIENT:  float
 : if not you.unrands("necklace_of_bloodlust") then
 KITEM:   _ = necklace of bloodlust no_pickup

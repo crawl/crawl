@@ -824,7 +824,7 @@ ENDMAP
 
 NAME:    hangedman_aviary
 TAGS:    no_rotate no_hmirror
-DEPTH:   D:13-, Depths
+DEPTH:   D:11-, Depths
 MONS:    tengu warrior, harpy, tengu reaver
 : if you.absdepth() < 18 then
 SUBST:   3 = 2
@@ -1388,7 +1388,7 @@ ENDMAP
 # evil one here?
 NAME:   mikee_hates_you
 TAGS:   no_monster_gen
-DEPTH:  D:13-
+DEPTH:  D:11-
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
@@ -2221,7 +2221,7 @@ ENDMAP
 ##### Demonic crawlers (s) and mosquitos.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling
-DEPTH: D:13-, Elf, Spider
+DEPTH: D:11-, Elf, Spider
 MONS:  demonic crawler
 MONS:  vampire mosquito w:15 / demonic crawler w:5 / nothing
 MAP
@@ -3140,7 +3140,7 @@ ENDMAP
 # tree of life.
 NAME:    pf_eden
 TAGS:    no_monster_gen
-DEPTH:   D:13-
+DEPTH:   D:11-
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
 ITEM:    ration tile:food_apple
@@ -5359,7 +5359,7 @@ cccc+cccc
 ENDMAP
 
 NAME:   kennysheep_inner_square
-DEPTH:  D:14-, Depths, !Depths:$
+DEPTH:  D:12-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *
@@ -5409,7 +5409,7 @@ cccccccc++cccccccc
 ENDMAP
 
 NAME:   kennysheep_two_boxes
-DEPTH:  D:14-, Depths, !Depths:$
+DEPTH:  D:12-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *
@@ -6271,7 +6271,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_guarded_unrand_wrath_of_trog
-DEPTH:   D:14-, Depths
+DEPTH:   D:12-, Depths
 MONS:    spriggan berserker
 NSUBST:  1 = 3:1 / 9=1...... / .
 : if you.unrands("wrath_of_trog") then

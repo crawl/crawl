@@ -281,7 +281,7 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
                 -- Hive, Crypt, Pan, Tomb
-                "place:D:11 w:15 / place:D:14 w:15 / w:2 erica / w:2 harold /\
+                "place:D:11 w:15 / place:D:12 w:15 / w:2 erica / w:2 harold /\
                     w:1 rupert",
                 "w:20 place:Orc:$ / orc wizard / orc warrior / orc knight /\
                     orc priest / orc high priest w:3 / orc sorcerer w:2 /\

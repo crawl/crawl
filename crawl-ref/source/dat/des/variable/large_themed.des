@@ -1381,7 +1381,7 @@ SUBST:   BDFHJLNPR = .
 
   kmons("0 = " .. monslist(you.absdepth()))
   kmons("9 = " .. monslist(ninedepth))
-  kmons("8 = " .. monslist(31)) -- this cap's always hit at D:14-
+  kmons("8 = " .. monslist(31)) -- this cap's always hit at D:12-
 }}
 KFEAT: 123456 = .
 validate {{
@@ -1663,7 +1663,7 @@ ENDMAP
 NAME:   kennysheep_tiny_hell
 TAGS:   no_monster_gen
 ORIENT: centre
-DEPTH:  D:13-14
+DEPTH:  D:11-12
 WEIGHT: 5
 FTILE:  *|c.12${} = floor_infernal_blank
 TILE:   c = dngn_stone_dark
@@ -1788,7 +1788,7 @@ xxxwxxxx......xxxw.xx..xxx..xxx
 ENDMAP
 
 NAME:    kennysheep_kobold_grotto
-DEPTH:   D:13-, !D:$
+DEPTH:   D:11-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
 MONS:    big kobold, patrolling kobold demonologist, kobold, plant
@@ -2246,7 +2246,7 @@ ENDMAP
 
 NAME:    doesnt_quadruple_sword
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:13-
+DEPTH:   D:11-
 ORIENT:  north
 MONS:    dancing weapon ; long sword
 ITEM:    double sword, triple sword
