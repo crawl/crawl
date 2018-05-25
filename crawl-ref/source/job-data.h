@@ -60,7 +60,7 @@ static const map<job_type, job_def> job_data =
     { SP_HUMAN, SP_TENGU, SP_DEEP_ELF, SP_DEEP_DWARF, SP_DEMONSPAWN},
     { "robe plus:1", "hat plus:1", "pair of boots plus:1", "pair of gloves plus:1", "dusty tome", "ancient crate" },
     WCHOICE_NONE,
-    { { SK_STEALTH, 1}, },
+    { { SK_STEALTH, 3}, { SK_DODGING, 3}, { SK_FIGHTING, 1} },
 } },
 
 { JOB_ARTIFICER, {
@@ -225,7 +225,7 @@ static const map<job_type, job_def> job_data =
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
 } },
- 
+
  { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
