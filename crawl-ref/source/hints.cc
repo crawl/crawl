@@ -625,7 +625,7 @@ static void _hints_healing_reminder()
                         "health in the first place. To use your abilities type "
                         "<w>a</w>.";
             }
-            mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
