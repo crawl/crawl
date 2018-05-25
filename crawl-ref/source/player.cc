@@ -277,7 +277,7 @@ bool check_moveto_exclusions(const vector<coord_def> &areas,
     }
     if (count == 0)
         return true;
-    const string prompt = make_stringf((count == areas.size() ?
+    const string prompt = make_stringf((count == (int) areas.size() ?
                     "Really %s into a travel-excluded area?" :
                     "You might %s into a travel-excluded area, are you sure?"),
                               move_verb.c_str());
