@@ -497,14 +497,14 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_passwall::targeter_passwall(int range) :
-    targeter_smite(&you, LOS_RADIUS, 1, 1, true, nullptr), max_range(range)
+targeter_passwall::targeter_passwall(int max_range) :
+    targeter_smite(&you, max_range, 1, 1, true, nullptr)
 {
 }
 
 bool targeter_passwall::valid_aim(coord_def a)
 {
-    passwall_path tmp_path(you, a - you.pos(), max_range);
+    passwall_path tmp_path(you, a - you.pos(), range);
     string failmsg;
     tmp_path.is_valid(&failmsg);
     if (!tmp_path.spell_succeeds())
@@ -516,7 +516,7 @@ bool targeter_passwall::valid_aim(coord_def a)
 
 bool targeter_passwall::set_aim(coord_def a)
 {
-    cur_path = make_unique<passwall_path>(you, a - you.pos(), max_range);
+    cur_path = make_unique<passwall_path>(you, a - you.pos(), range);
     return true;
 }
 
