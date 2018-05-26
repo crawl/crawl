@@ -703,6 +703,7 @@ void do_crash_dump()
 
     // Dumping the player state and crawl state is next least likely to cause
     // another crash, so do that next.
+    fprintf(file, "\nVersion history:\n%s\n", Version::history().c_str());
     crawl_state.dump();
     _dump_player(file);
 
