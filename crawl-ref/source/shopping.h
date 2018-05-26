@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <unordered_set>
+
 int artefact_value(const item_def &item);
 
 // ident == true overrides the item ident level and gives the price
@@ -91,9 +93,11 @@ private:
     int max_buyable_idx;
 
 private:
-    int find_thing(const item_def &item, const level_pos &pos) const;
-    int find_thing(const string &desc, const level_pos &pos) const;
+    unordered_set<int> find_thing(const item_def &item, const level_pos &pos) const;
+    unordered_set<int> find_thing(const string &desc, const level_pos &pos) const;
     void del_thing_at_index(int idx);
+    template <typename C> void del_thing_at_indices(C const &idxs);
+
 
     void fill_out_menu(Menu& shopmenu);
 
