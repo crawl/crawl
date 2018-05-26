@@ -508,9 +508,7 @@ bool targeter_passwall::valid_aim(coord_def a)
     string failmsg;
     tmp_path.is_valid(&failmsg);
     if (!tmp_path.spell_succeeds())
-    {
         return notify_fail(failmsg);
-    }
     return true;
 }
 
