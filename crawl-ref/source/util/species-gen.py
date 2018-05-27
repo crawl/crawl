@@ -266,7 +266,7 @@ def levelup_stats(stats):
         # any assumptions about how yaml parser handles sequences.
         if isinstance(stats, str):
             raise ValueError(
-                "Expected `` or list for levelup_stats, not `%s`" % stats)
+                "Expected `default` or list for levelup_stats, not `%s`" % stats)
         for s in stats:
             if s not in ALL_STATS:
                 raise ValueError('Unknown stat %s' % s)
