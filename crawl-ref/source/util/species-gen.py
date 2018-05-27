@@ -70,6 +70,23 @@ class Species(collections.MutableMapping):
                 print("species_gen.py warning: Unknown field '%s' in species %s"
                                     % (key, self['enum']), file=sys.stderr)
 
+    def levelup_stats_from_yaml(self, s):
+        self['levelup_stats'] = levelup_stats(s.get('levelup_stats', "default"))
+        self['levelup_stat_frequency'] = validate_int_range(
+                s['levelup_stat_frequency'], 'levelup_stat_frequency', 0, 28)
+
+        if (self['levelup_stats'] == empty_set("stat_type")
+                                    and self['levelup_stat_frequency'] < 28):
+            print("species_gen.py warning: species %s has empty levelup_stats"
+                  " but a <28 levelup_stat_frequency."
+                  % (self['enum']), file=sys.stderr)
+
+        if (self['levelup_stats'] != empty_set("stat_type")
+                                    and self['levelup_stat_frequency'] > 27):
+            print("species_gen.py warning: species %s has non-empty"
+                  " levelup_stats but a levelup_stat_frequency that is > 27."
+                  % (self['enum']), file=sys.stderr)
+
     def from_yaml(self, s):
         # Pre-validation
         if s.get('TAG_MAJOR_VERSION', None) is not None:
@@ -104,9 +121,7 @@ class Species(collections.MutableMapping):
         self['str'] = validate_int_range(s['str'], 'str', 1, 100)
         self['int'] = validate_int_range(s['int'], 'int', 1, 100)
         self['dex'] = validate_int_range(s['dex'], 'dex', 1, 100)
-        self['levelup_stats'] = levelup_stats(s.get('levelup_stats', []))
-        self['levelup_stat_frequency'] = validate_int_range(
-                s['levelup_stat_frequency'], 'levelup_stat_frequency', 0, 28)
+        self.levelup_stats_from_yaml(s)
         self['mutations'] = mutations(s.get('mutations', {}))
         self['fake_mutations_long'] = fake_mutations_long(
                                             s.get('fake_mutations', []))
@@ -244,23 +259,27 @@ def undead_type(type):
 
 
 def levelup_stats(stats):
-    if not stats:
+    if stats == "default":
         stats = ALL_STATS
-    elif stats == "none":
-        return "    set<stat_type>()"
     else:
         # this is pretty loose type checking because we don't want to make
         # any assumptions about how yaml parser handles sequences.
         if isinstance(stats, str):
             raise ValueError(
-                "Expected `none` or list for levelup_stats, not `%s`" % stats)
+                "Expected `` or list for levelup_stats, not `%s`" % stats)
         for s in stats:
             if s not in ALL_STATS:
                 raise ValueError('Unknown stat %s' % s)
-    return make_list(', '.join("STAT_%s" % s.upper() for s in stats))
+    if len(stats) == 0:
+        return empty_set("stat_type")
+    else:
+        return make_list(', '.join("STAT_%s" % s.upper() for s in stats))
 
 global LIST_TEMPLATE
 LIST_TEMPLATE = """    {{ {list} }}"""
+
+def empty_set(typ):
+    return "    set<%s>()" % typ
 
 def make_list(list_str):
     global LIST_TEMPLATE
