@@ -71,18 +71,6 @@ function ice_cave_difficulty()
   return true
 end
 
--- Remove this function when TAG_MAJOR > 34
--- Find the slave of the teleporter and move to it.
-function callback.ice_cave_statue_garden_teleporter(data, triggerable,
-                                                     triggerer, marker, ev)
-  local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-    data.teleport_spot)
-
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different!")
-end
-
 -- For destination (not entry) vaults, use the following line after all
 -- substitutions have been performed:
 -- : ice_cave_appearance(_G)
