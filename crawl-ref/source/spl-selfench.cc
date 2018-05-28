@@ -11,7 +11,6 @@
 
 #include "areas.h"
 #include "art-enum.h"
-#include "butcher.h" // butcher_corpse
 #include "coordit.h" // radius_iterator
 #include "god-conduct.h"
 #include "god-passive.h"
