@@ -759,8 +759,8 @@ Accepting a sacrifice will reset the timer to the standard length.
 Stomp ability
 
 Stomps down in time with the rhythm of the dance, sending a shockwave through
-all adjacent creatures. The shockwave damages each creature by a percentage of
-its maximum health, with the percentage increasing with Invocations skill.
+all adjacent creatures. The shockwave damages each creature by a fraction of
+its current health, plus damage increasing with Invocations skill.
 %%%%
 Line Pass ability
 
