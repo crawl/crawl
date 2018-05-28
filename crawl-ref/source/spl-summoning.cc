@@ -1863,7 +1863,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_skeleton(si->mon_type)
             && mons_class_can_be_zombified(si->mon_type))
         {
-            butcher_corpse(*si, MB_TRUE);
+            butcher_corpse(*si, true);
             mpr("Before your eyes, flesh is ripped from the corpse!");
             request_autopickup();
             // Only convert the top one.
@@ -1957,7 +1957,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
                  how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
             if (!turn_corpse_into_skeleton(corpse))
-                butcher_corpse(corpse, MB_FALSE, false);
+                butcher_corpse(corpse, false, false);
             return SPRET_SUCCESS;
         }
         mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
@@ -1976,7 +1976,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (!turn_corpse_into_skeleton(corpse))
-        butcher_corpse(corpse, MB_FALSE, false);
+        butcher_corpse(corpse, false, false);
 
     return SPRET_SUCCESS;
 }
