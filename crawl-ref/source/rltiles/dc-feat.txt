@@ -191,7 +191,7 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
-## an icy teleporter
+# Remove this entry when TAG_MAJOR_VERSION == 34 is false.
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 
 ## golden statues for the holy Pan level
@@ -492,8 +492,9 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
-# Remove teleporter line when TAG_MAJOR_VERSION > 34
+# Remove this entry when TAG_MAJOR_VERSION == 34 is false.
 teleporter DNGN_TELEPORTER
+
 transporter DNGN_TRANSPORTER
 transporter_landing_site DNGN_TRANSPORTER_LANDING
 
