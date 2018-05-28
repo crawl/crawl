@@ -407,20 +407,6 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
   dgn.persist.wucad_mu_died = true
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
 end
-
--- Remove this function when TAG_MAJOR > 34
-function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
-  local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                                data.teleport_spot)
-
-  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
-    crawl.mpr("Your surroundings suddenly seem different!")
-  else
-    crawl.mpr("There is a strange hissing noise.")
-  end
-end
-
 }}
 
 default-depth: Depths, Elf, Crypt, Vaults:1-4

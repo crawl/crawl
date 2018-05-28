@@ -1,4 +1,5 @@
-# Please remove the following code when the next line is false.
+# DES-related lua only needed for save compatability.
+# Please remove the code in this file when the next line is false.
 # TAG_MAJOR_VERSION == 34
 {{
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
@@ -246,5 +247,41 @@ function callback.grunt_nemelex_gamble_expire(data,triggerable,triggerer,marker,
     if (you.see_cell(slave[1].x, slave[1].y)) then
         crawl.mpr("<white>The teleporter glows with a rainbow of weird colours and disappears.</white>")
     end
+end
+
+-- Find the slave of the teleporter and move to it.
+function teleporter_vault_action_fn(data, triggerable, triggerer, marker, ev)
+    local position = dgn.point(marker:pos())
+    my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                  data.teleport_spot)
+
+    if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+        crawl.mpr("Your surroundings suddenly seem different!")
+    else
+        crawl.mpr("There is a strange hissing noise.")
+    end
+end
+
+-- Find the slave of the teleporter and move to it.
+function callback.ice_cave_statue_garden_teleporter(data, triggerable,
+                                                     triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+    data.teleport_spot)
+
+  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different!")
+end
+
+function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
 end
 }}
