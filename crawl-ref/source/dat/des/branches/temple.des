@@ -580,20 +580,6 @@ v.v.v...v.v.v
  ....vvv....
 ENDMAP
 
-NAME:   minmay_temple_entry_oklob
-WEIGHT: 1
-MONS:   plant, oklob sapling
-: temple_entry(_G)
-MAP
-....1..
-1.111.1
-.11.11.
-.1.O211
-11.1111
-.111.1.
-1..11..
-ENDMAP
-
 NAME:   minmay_temple_entry_crystal_x
 WEIGHT: 5
 : temple_entry(_G)
