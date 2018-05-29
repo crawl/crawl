@@ -310,6 +310,20 @@ from within the MSYS2 Shell.
 
   After the packages are installed and gcc runs, you're ready to build crawl!
 
+* To install PyYAML, you must build it from source (there are no compatible
+  versions available in Pip/the PyPA).
+
+  wget https://github.com/yaml/pyyaml/archive/3.12.tar.gz
+  tar xf 3.12.tar.gz
+  cd pyyaml-3.12
+  python setup.py install
+
+  You may need to open a new MSYS2 terminal window at this point.
+
+  You can verify PyYAML is installed by running `python -m yaml`, which should
+  give an error like "'yaml' is a package and cannot be directly imported"
+  (rather than "No module named yaml").
+
 * To get the Crawl source, follow the steps in the Source Code Checkout
   section above to clone Crawl into your MSYS2 home directory. We recommend
   using the MSYS2-installed version of git for these steps. In brief:
