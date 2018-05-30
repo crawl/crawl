@@ -424,9 +424,7 @@ static const ability_def Ability_List[] =
 
     // Sif Muna
     { ABIL_SIF_MUNA_DIVINE_FOCUS, "Divine Focus",
-      3, 0, 200, 10, {fail_basis::invo, 80, 4, 25}, abflag::instant },
-    { ABIL_SIF_MUNA_STOP_DIVINE_ENERGY, "Stop Divine Energy",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::instant },
+      3, 0, 200, 8, {fail_basis::invo, 80, 4, 25}, abflag::instant },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       0, 0, 0, 8, {fail_basis::invo}, abflag::none },
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -980,9 +978,6 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     case ABIL_SIF_MUNA_DIVINE_FOCUS:
-        // TEMP FIXME Disable 'stop', testing new Divine Energy -- Realz
-        //if (you.attribute[ATTR_DIVINE_ENERGY])
-        //    return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
 
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
@@ -1350,9 +1345,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
         case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
-        // TEMP FIXME Disable hunger check -- Realz
-		//case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        //case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
         case ABIL_WU_JIAN_WALLJUMP:
         case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
             hungerCheck = false;
@@ -2500,12 +2492,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.attribute[ATTR_DIVINE_FOCUS] = 3;
         you.redraw_status_lights = true;
         break;
-
-    // TEMP FIXME Disable 'stop', testing new Divine Energy -- Realz
-    //case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-    //    simple_god_message(" stops granting you divine energy.");
-    //    you.attribute[ATTR_DIVINE_ENERGY] = 0;
-    //    break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         fail_check();

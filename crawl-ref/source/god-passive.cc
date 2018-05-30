@@ -222,7 +222,7 @@ static const vector<god_passive> god_passives[] =
     // Sif Muna
     {
         {  2, passive_t::miscast_protection,
-              "GOD NOW restores MP from miscasts" },
+              "GOD NOW protects you from miscasts" },
     },
 
     // Trog

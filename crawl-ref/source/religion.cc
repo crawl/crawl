@@ -167,8 +167,8 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Sif Muna
     { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
-      { 2, "Sif Muna may restore magic points lost when you miscast magic.",
-           "Sif Muna will no longer restore magic points lost when you miscast magic." },
+      { 2, "Sif Muna is protecting you from the effects of miscast magic.",
+           "Sif Muna no longer protects you from the effects of miscast magic." },
       { 3, "Sif Muna will gift you books as you gain piety.",
            "Sif Muna will no longer gift you books." },
       { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
@@ -1482,7 +1482,7 @@ static bool _gift_sif_kiku_gift(bool forced)
         }
     }
     else if (forced || (you.piety >= piety_breakpoint(2)
-                    && random2(you.piety) > 70 && one_chance_in(6)))
+                        && random2(you.piety) > 60 && one_chance_in(5)))
     {
         // Sif Muna special: Keep quiet if acquirement fails
         // because the player already has seen all spells.
@@ -2535,10 +2535,6 @@ void lose_piety(int pgn)
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
                 }
-                // Deactivate the toggle
-                // TEMP FIXME Disable old Divine Energy -- Realz
-                //if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
-                //    you.attribute[ATTR_DIVINE_ENERGY] = 0;
             }
         }
 #ifdef USE_TILE_LOCAL

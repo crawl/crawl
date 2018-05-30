@@ -784,21 +784,12 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     int cost = spell_mana(spell);
-    // TEMP FIXME Disable old Divine Energy -- Realz
-    //int sifcast_amount = 0;
+
     if (!enough_mp(cost, true))
     {
-        //if (you.attribute[ATTR_DIVINE_ENERGY])
-        //{
-        //    sifcast_amount = cost - you.magic_points;
-        //    cost = you.magic_points;
-        //}
-        //else
-        //{
-            mpr("You don't have enough magic to cast that spell.");
-            crawl_state.zero_turns_taken();
-            return false;
-        //}
+        mpr("You don't have enough magic to cast that spell.");
+        crawl_state.zero_turns_taken();
+        return false;
     }
 
     if (check_range && spell_no_hostile_in_range(spell))
@@ -880,13 +871,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
-    // TEMP FIXME Disable old Divine Energy -- Realz
-    //if (sifcast_amount)
-    //{
-    //    simple_god_message(" grants you divine energy.");
-    //    mpr("You briefly lose access to your magic!");
-    //    you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
-    //}
     if (you.attribute[ATTR_DIVINE_FOCUS] >= 1)
     {
         you.turn_is_over = false;
@@ -897,7 +881,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (you.attribute[ATTR_DIVINE_FOCUS] == 0)
         {
             mpr("You temporarily lose access to your magic!");
-            you.set_duration(DUR_NO_CAST, (2 + (random2avg((27 - you.skills[SK_INVOCATIONS]) / 2, 2))));
+            you.set_duration(DUR_NO_CAST,
+                (3 + (random2avg((28 - you.skills[SK_INVOCATIONS]) / 2, 2))));
         }
         return true;
     }
@@ -1229,16 +1214,15 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     return nullptr;
 }
 
-// TEMP, FIXME Disable Miscast Prot -- Realz
-// static double _chance_miscast_prot()
-//{
-//    double miscast_prot = 0;
-//
-//    if (have_passive(passive_t::miscast_protection))
-//        miscast_prot = (double) you.piety/piety_breakpoint(5);
-//
-//    return min(1.0, miscast_prot);
-//}
+static double _chance_miscast_prot()
+{
+    double miscast_prot = 0;
+
+    if (have_passive(passive_t::miscast_protection))
+        miscast_prot = (double) you.piety/piety_breakpoint(5);
+
+    return min(1.0, miscast_prot);
+}
 
 // Returns the nth triangular number.
 static int _triangular_number(int n)
@@ -1540,12 +1524,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        // TEMP FIXME Disable Miscast Protection -- Realz
-        //if (decimal_chance(_chance_miscast_prot()))
-        //{
-        //    simple_god_message(" protects you from the effects of your miscast!");
-        //    return SPRET_FAIL;
-        //}
+        if (decimal_chance(_chance_miscast_prot()))
+        {
+            simple_god_message(" protects you from the effects of your miscast!");
+            you.magic_points += (spell_mana(spell) - (spell_mana(spell) / 2));
+            return SPRET_FAIL;
+        }
 
         // All spell failures give a bit of magical radiation.
         // Failure is a function of power squared multiplied by how
@@ -1554,7 +1538,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         // contamination!
         int nastiness = spell_difficulty(spell) * spell_difficulty(spell)
                         * fail + 250;
-        int MP_refund = spell_mana(spell);
+
         const int cont_points = 2 * nastiness;
 
         // miscasts are uncontrolled
@@ -1562,13 +1546,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         MiscastEffect(&you, nullptr, SPELL_MISCAST, spell,
                       spell_difficulty(spell), fail);
-					  
-        if (have_passive(passive_t::miscast_protection)
-            && x_chance_in_y(you.piety + 50, piety_breakpoint(5)))
-		{
-            simple_god_message(" restores magic lost from your miscast!");
-            you.magic_points += MP_refund;
-        }
 
         return SPRET_FAIL;
     }
@@ -2027,14 +2004,13 @@ double get_miscast_chance(spell_type spell, int severity)
     return chance;
 }
 
-// TEMP FIXME Disable Miscast Protection -- Realz
 static double _get_miscast_chance_with_miscast_prot(spell_type spell)
 {
     double raw_chance = get_miscast_chance(spell);
-//    double miscast_prot = _chance_miscast_prot();
-//    double chance = raw_chance * (1 - miscast_prot);
-//
-    return raw_chance;
+    double miscast_prot = _chance_miscast_prot();
+    double chance = chance * (1 - miscast_prot);
+
+    return chance;
 }
 
 const char *fail_severity_adjs[] =
