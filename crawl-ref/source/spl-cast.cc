@@ -2008,7 +2008,7 @@ static double _get_miscast_chance_with_miscast_prot(spell_type spell)
 {
     double raw_chance = get_miscast_chance(spell);
     double miscast_prot = _chance_miscast_prot();
-    double chance = chance * (1 - miscast_prot);
+    double chance = raw_chance * (1 - miscast_prot);
 
     return chance;
 }
