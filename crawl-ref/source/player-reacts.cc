@@ -848,28 +848,6 @@ static void _decrement_durations()
             _decrement_simple_duration((duration_type) i, delay);
 }
 
-
-// For worn items; weapons do this on melee attacks.
-static void _check_equipment_conducts()
-{
-    if (you_worship(GOD_DITHMENOS) && one_chance_in(10))
-    {
-        bool fiery = false;
-        const item_def* item;
-        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
-        {
-            item = you.slot_item(static_cast<equipment_type>(i));
-            if (item && is_fiery_item(*item))
-            {
-                fiery = true;
-                break;
-            }
-        }
-        if (fiery)
-            did_god_conduct(DID_FIRE, 1, true);
-    }
-}
-
 /**
  * Handles player ghoul rotting over time.
  */
@@ -881,7 +859,6 @@ static void _rot_ghoul_players()
     int resilience = 400;
     if (have_passive(passive_t::slow_metabolism))
         resilience = resilience * 3 / 2;
-
 
     // Faster rotting when hungry.
     if (you.hunger_state < HS_SATIATED)
@@ -984,8 +961,6 @@ void player_reacts()
 
     if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
-
-    _check_equipment_conducts();
 
     if (you.unrand_reacts.any())
         unrand_reacts();

@@ -50,6 +50,9 @@ namespace Version
      * Indicates whether it's a devel or a stable version.
      */
     extern const rel_type ReleaseType;
+
+    void record(string prev);
+    string history();
 }
 
 extern const char* compilation_info;

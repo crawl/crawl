@@ -144,7 +144,7 @@ public:
 
     bool is_primary_hotkey(int key) const
     {
-        return hotkeys.size()? hotkeys[0] == key : false;
+        return hotkeys.size() && hotkeys[0] == key;
     }
 
     virtual string get_text(const bool unused = false) const

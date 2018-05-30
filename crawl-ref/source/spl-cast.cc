@@ -344,7 +344,7 @@ int raw_spell_fail(spell_type spell)
 
         200,
         260,
-        330,
+        340,
     };
     const int spell_level = spell_difficulty(spell);
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
@@ -438,43 +438,46 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     power += you.skill(SK_SPELLCASTING, 50);
 
-    // Brilliance boosts spell power a bit (equivalent to three
-    // spell school levels).
-    if (!fail_rate_check && you.duration[DUR_BRILLIANCE])
-        power += 600;
+    if (fail_rate_check)
+    {
+        // Scale appropriately.
+        // The stepdown performs this step in the else block.
+        power *= scale;
+        power /= 100;
+    }
+    else
+    {
+        // Brilliance boosts spell power a bit (equivalent to three
+        // spell school levels).
+        if (you.duration[DUR_BRILLIANCE])
+            power += 600;
 
-    if (apply_intel)
-        power = (power * you.intel()) / 10;
+        if (apply_intel)
+            power = (power * you.intel()) / 10;
 
-    // [dshaligram] Enhancers don't affect fail rates any more, only spell
-    // power. Note that this does not affect Vehumet's boost in castability.
-    if (!fail_rate_check)
+        // [dshaligram] Enhancers don't affect fail rates any more, only spell
+        // power. Note that this does not affect Vehumet's boost in castability.
         power = apply_enhancement(power, _spell_enhancement(spell));
 
-    // Wild magic boosts spell power but decreases success rate.
-    if (!fail_rate_check)
-    {
+        // Wild magic boosts spell power but decreases success rate.
         power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
         power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-    }
 
-    // Augmentation boosts spell power at high HP.
-    if (!fail_rate_check)
-    {
+        // Augmentation boosts spell power at high HP.
         power *= 10 + 4 * augmentation_amount();
         power /= 10;
-    }
 
-    // Each level of horror reduces spellpower by 10%
-    if (you.duration[DUR_HORROR] && !fail_rate_check)
-    {
-        power *= 10;
-        power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
-    }
+        // Each level of horror reduces spellpower by 10%
+        if (you.duration[DUR_HORROR])
+        {
+            power *= 10;
+            power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+        }
 
-    // at this point, `power` is assumed to be basically in centis.
-    // apply a stepdown, and scale.
-    power = stepdown_spellpower(power, scale);
+        // at this point, `power` is assumed to be basically in centis.
+        // apply a stepdown, and scale.
+        power = stepdown_spellpower(power, scale);
+    }
 
     const int cap = spell_power_cap(spell);
     if (cap > 0 && cap_power)
@@ -931,11 +934,6 @@ static void _spellcasting_god_conduct(spell_type spell)
     if (is_corpse_violating_spell(spell))
         did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
 
-    // not is_fiery_spell since the other ones handle the conduct themselves.
-    // need to handle ignite poison separately since it's not handled elsewhere.
-    if (spell == SPELL_IGNITE_POISON)
-        did_god_conduct(DID_FIRE, conduct_level);
-
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)
         did_god_conduct(DID_HASTY, conduct_level);
@@ -1215,6 +1213,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
+    case SPELL_PASSWALL:
+        return make_unique<targeter_passwall>(range);
 
     default:
         break;
@@ -1890,7 +1890,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return conjure_flame(&you, powc, beam.target, fail);
 
     case SPELL_PASSWALL:
-        return cast_passwall(spd.delta, powc, fail);
+        return cast_passwall(beam.target, powc, fail);
 
     case SPELL_APPORTATION:
         return cast_apportation(powc, beam, fail);

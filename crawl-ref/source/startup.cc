@@ -308,10 +308,9 @@ static void _post_init(bool newc)
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
-    string yname = you.your_name; // XXX: what's this for?
+
     read_init_file(true);
     Options.fixup_options();
-    you.your_name = yname;
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
@@ -1072,7 +1071,9 @@ bool startup_step()
     {
         setup_game(ng);
         newchar = true;
+        write_newgame_options_file(choice);
     }
+    crawl_state.default_startup_name = you.your_name;
 
     _post_init(newchar);
 

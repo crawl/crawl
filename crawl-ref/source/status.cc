@@ -17,6 +17,7 @@
 #include "mutation.h"
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
+#include "player-equip.h"
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
@@ -502,15 +503,13 @@ bool fill_status_info(int status, status_info* inf)
         {
             inf->short_text   = "engulfed";
             inf->long_text    = "You are engulfed in water.";
-            if (you.can_swim())
-                inf->light_colour = DARKGREY;
-            else
-                inf->light_colour = YELLOW;
+            inf->light_colour = DARKGREY;
         }
         else
         {
             inf->short_text   = "engulfed (cannot breathe)";
-            inf->long_text    = "You are engulfed in water and unable to breathe.";
+            inf->long_text    = "You are engulfed in water and unable to "
+                                "breathe.";
             inf->light_colour = RED;
         }
         break;

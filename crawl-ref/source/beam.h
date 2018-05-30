@@ -182,7 +182,8 @@ public:
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p) const;
     bool ignores_monster(const monster* mon) const;
-    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
+    bool can_knockback(const actor &act, int dam = -1) const;
+    bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
@@ -279,6 +280,7 @@ private:
     void internal_ouch(int dam);
     // for both
     void knockback_actor(actor *act, int dam);
+    void pull_actor(actor *act, int dam);
 
     // tracers
     void tracer_affect_player();

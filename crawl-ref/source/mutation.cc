@@ -372,15 +372,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     {
         return mutation_activity_type::INACTIVE;
     }
-
-    if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
-        return mutation_activity_type::INACTIVE;
-
+#if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
          && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
     {
         return mutation_activity_type::INACTIVE;
     }
+#endif
 
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return mutation_activity_type::INACTIVE;

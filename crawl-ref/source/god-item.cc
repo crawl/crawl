@@ -348,90 +348,6 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     return retval;
 }
 
-static bool _is_potentially_fiery_item(const item_def& item)
-{
-    if (item.base_type == OBJ_WEAPONS
-        && item_brand_known(item)
-        && get_weapon_brand(item) == SPWPN_CHAOS)
-    {
-        return true;
-    }
-
-    if (!item_type_known(item))
-        return false;
-
-    switch (item.base_type)
-    {
-    case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS
-            || item.sub_type == WAND_CLOUDS)
-        {
-            return true;
-        }
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
-bool is_fiery_item(const item_def& item, bool calc_unid)
-{
-    if (item.base_type == OBJ_WEAPONS
-        && (calc_unid || item_brand_known(item))
-        && get_weapon_brand(item) == SPWPN_FLAMING)
-    {
-        return true;
-    }
-
-    if (!calc_unid && !item_type_known(item))
-        return false;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_FLAMING)
-            return true;
-        }
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_FLAME)
-            return true;
-        }
-        break;
-#endif
-    case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME)
-            return true;
-        break;
-    case OBJ_SCROLLS:
-        if (item.sub_type == SCR_IMMOLATION)
-            return true;
-        break;
-    case OBJ_BOOKS:
-        return _is_book_type(item, is_fiery_spell);
-        break;
-    case OBJ_STAVES:
-        if (item.sub_type == STAFF_FIRE)
-            return true;
-        break;
-    case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_LAMP_OF_FIRE)
-            return true;
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 bool is_channeling_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
@@ -490,13 +406,6 @@ bool is_hasty_spell(spell_type spell)
     return bool(flags & SPFLAG_HASTY);
 }
 
-bool is_fiery_spell(spell_type spell)
-{
-    const spschools_type disciplines = get_spell_disciplines(spell);
-
-    return bool(disciplines & SPTYP_FIRE);
-}
-
 /**
  * What conducts can one violate using this item?
  * This should only be based on the player's knowledge.
@@ -534,9 +443,6 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
         conducts.push_back(DID_HASTY);
-
-    if (_is_potentially_fiery_item(item) || is_fiery_item(item, false))
-        conducts.push_back(DID_FIRE);
 
     if (is_channeling_item(item, false))
         conducts.push_back(DID_CHANNEL);

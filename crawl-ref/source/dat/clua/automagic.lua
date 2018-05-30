@@ -13,8 +13,6 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
-local LOS_RADIUS = 7
-
 if not AUTOMAGIC_SPELL_SLOT then
   initial_slot = true
   AUTOMAGIC_SPELL_SLOT = "a"
@@ -175,12 +173,13 @@ local function is_candidate_for_attack(x,y)
 end
 
 local function get_target()
+  local los_radius = you.los()
   local x, y, bestx, besty, best_info, new_info
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -LOS_RADIUS,LOS_RADIUS do
-    for y = -LOS_RADIUS,LOS_RADIUS do
+  for x = -los_radius,los_radius do
+    for y = -los_radius,los_radius do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y)
         if (not best_info) or compare_monster_info(new_info, best_info) then

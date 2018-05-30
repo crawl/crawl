@@ -1,6 +1,6 @@
-define(["jquery", "comm", "client", "./enums", "./dungeon_renderer",
-        "./cell_renderer", "./util", "./options"],
-function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
+define(["jquery", "comm", "client", "./enums", "./cell_renderer",
+        "./util", "./options"],
+function ($, comm, client, enums, cr, util, options) {
     "use strict";
 
     var chunk_size = 50;
@@ -27,7 +27,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         if (!options.get("tile_menu_icons")
             || !(menu.tag === "ability" || menu.tag === "spell"))
             return 0;
-        return dungeon_renderer.cell_width + 2; // menu <ol> has a 2px margin
+        return 32 + 2; // menu <ol> has a 2px margin
     }
 
     function set_item_contents(item, elem)
@@ -53,8 +53,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         {
             var renderer = new cr.DungeonCellRenderer();
             var canvas = $("<canvas>");
-            renderer.set_cell_size(dungeon_renderer.cell_width,
-                                   dungeon_renderer.cell_height);
             util.init_canvas(canvas[0], renderer.cell_width,
                                         renderer.cell_height);
             canvas.css("vertical-align", "middle");
@@ -502,6 +500,12 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         }
     }
 
+    function close_all_menus()
+    {
+        while (menu_stack.length > 0)
+            close_menu();
+    }
+
     function update_menu(data)
     {
         $.extend(menu, data);
@@ -560,6 +564,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     comm.register_handlers({
         "menu": open_menu,
         "close_menu": close_menu,
+        "close_all_menus": close_all_menus,
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,

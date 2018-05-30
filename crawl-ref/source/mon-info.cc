@@ -1099,10 +1099,15 @@ bool monster_info::less_than_wrapper(const monster_info& m1,
 bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                              bool zombified, bool fullname)
 {
-    if (mons_is_hepliaklqana_ancestor(m1.type))
-        return true;
-    else if (mons_is_hepliaklqana_ancestor(m2.type))
+    // This awkward ordering (checking m2 before m1) is required to satisfy
+    // std::sort's contract. Specifically, if m1 and m2 are both ancestors
+    // (e.g. through phantom mirror), we want them to compare equal. To signify
+    // "equal", we must say that neither is less than the other, rather than
+    // saying that both are less than each other.
+    if (mons_is_hepliaklqana_ancestor(m2.type))
         return false;
+    else if (mons_is_hepliaklqana_ancestor(m1.type))
+        return true;
 
     if (m1.attitude < m2.attitude)
         return true;

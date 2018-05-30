@@ -491,13 +491,16 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     }
 
     move_item_to_grid(&o, pos);
-    if (you.see_cell(pos) && !silent)
+
+    // Don't display this message if the scales were dropped over
+    // lava/deep water, because then they are hardly intact.
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(grd(pos)))
     {
         // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
              item.name(DESC_THE).c_str(),
              mons_genus(mtyp) == MONS_DRAGON ? "are"  // scales are
-                                             : "is"); // hide is
+                                             : "is"); // troll armour is
                                                       // XXX: refactor
     }
 
@@ -1823,12 +1826,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_move())
         did_kill_conduct(DID_KILL_FAST, mons);
-
-    // Dithmenos hates sources of fire.
-    // (This is *after* the holy so that the right order of
-    //  messages appears.)
-    if (mons_is_fiery(mons))
-        did_kill_conduct(DID_KILL_FIERY, mons);
 }
 
 item_def* monster_die(monster& mons, const actor *killer, bool silent,

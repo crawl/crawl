@@ -413,13 +413,7 @@ NORETURN static void _launch_game()
 
     _set_removed_types_as_identified();
 
-    if (!game_start && you.prev_save_version != Version::Long)
-    {
-        const string note = make_stringf("Upgraded the game from %s to %s",
-                                         you.prev_save_version.c_str(),
-                                         Version::Long);
-        take_note(Note(NOTE_MESSAGE, 0, 0, note));
-    }
+    Version::record(you.prev_save_version);
 
     if (!crawl_state.game_is_tutorial())
     {
@@ -1116,17 +1110,18 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
+#ifdef USE_TILE_LOCAL
+        cursor_control con(false);
+#endif
+        const command_type cmd = you.turn_is_over ? CMD_NO_CMD : _get_next_cmd();
+
         // Clear "last action was a move or rest" flag.
+        // This needs to be after _get_next_cmd, which triggers a tiles redraw.
         if (you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
         {
             you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = false;
             you.redraw_evasion = true;
         }
-
-#ifdef USE_TILE_LOCAL
-        cursor_control con(false);
-#endif
-        const command_type cmd = you.turn_is_over ? CMD_NO_CMD : _get_next_cmd();
 
         if (crawl_state.seen_hups)
             save_game(true, "Game saved, see you later!");
@@ -1910,10 +1905,6 @@ void process_command(command_type cmd)
 
     case CMD_DISPLAY_RELIGION:
     {
-#ifdef USE_TILE_WEB
-        if (!you_worship(GOD_NO_GOD))
-            tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
-#endif
         describe_god(you.religion, true);
         redraw_screen();
         break;
@@ -3160,13 +3151,7 @@ static void _move_player(coord_def move)
 
         if (you.duration[DUR_WATER_HOLD])
         {
-            if (you.can_swim())
-                mpr("You deftly slip free of the water engulfing you.");
-            else //Unless you're a natural swimmer, this takes longer than normal
-            {
-                mpr("With effort, you pull free of the water engulfing you.");
-                you.time_taken = you.time_taken * 3 / 2;
-            }
+            mpr("You slip free of the water engulfing you.");
             you.duration[DUR_WATER_HOLD] = 1;
             you.props.erase("water_holder");
         }

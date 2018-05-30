@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "clua.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "exercise.h"
@@ -705,52 +706,53 @@ void init_training()
     reset_training();
 }
 
-// Make sure at least one skill is selected.
-// If not, go to the skill menu and return true.
-bool check_selected_skills()
+bool skills_being_trained()
 {
-    bool trainable_skill = false;
-    bool could_train = false;
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
         if (skill_trained(sk))
-            return false;
-        if (is_useless_skill(sk) || is_harmful_skill(sk)
-            || you.skill_points[sk] >= skill_exp_needed(MAX_SKILL_LEVEL, sk))
-        {
-            continue;
-        }
-        if (!you.can_train[sk])
-        {
-            could_train = true;
-            continue;
-        }
-        else
-            trainable_skill = true;
+            return true;
     }
-
-    if (trainable_skill)
-    {
-        mpr("You need to enable at least one skill for training.");
-        // Training will be fixed up on load if this ASSERT triggers.
-        ASSERT(you.species != SP_GNOLL);
-        more();
-        reset_training();
-        skill_menu();
-        redraw_screen();
-        return true;
-    }
-
-    if (could_train && !you.received_noskill_warning)
-    {
-        you.received_noskill_warning = true;
-        mpr("You cannot train any new skill.");
-    }
-
     return false;
-    // It's possible to have no selectable skills, if they are all untrainable
-    // or level 27, so we don't assert.
+}
+
+// Make sure at least one skill is selected.
+// If not, go to the skill menu and return true.
+bool check_selected_skills()
+{
+    if (skills_being_trained())
+        return false;
+    if (!trainable_skills())
+    {
+        if (!you.received_noskill_warning)
+        {
+            you.received_noskill_warning = true;
+            mpr("You cannot train any new skills!");
+        }
+        // It's possible to have no selectable skills, if they are all
+        // untrainable or level 27, so we don't assert.
+        return false;
+    }
+
+    // Calling a user lua function here to allow enabling skills without user
+    // prompt (much like the callback auto_experience for the case of potion of
+    // experience).
+    if (clua.callbooleanfn(false, "skill_training_needed", nullptr))
+    {
+        // did the callback do anything?
+        if (skills_being_trained())
+            return true;
+    }
+
+    mpr("You need to enable at least one skill for training.");
+    // Training will be fixed up on load if this ASSERT triggers.
+    ASSERT(you.species != SP_GNOLL);
+    more();
+    reset_training();
+    skill_menu();
+    redraw_screen();
+    return true;
 }
 
 /**
@@ -1857,23 +1859,22 @@ bool is_harmful_skill(skill_type skill)
 }
 
 /**
- * Has the player maxed out all skills?
+ * Does the player have trainable skills?
  *
- * @param really_all If true, also consider skills that are harmful and/or
+ * @param check_all If true, also consider skills that are harmful and/or
  *        currently untrainable. Useless skills are never considered.
+ *        Defaults to false.
  */
-bool all_skills_maxed(bool really_all)
+bool trainable_skills(bool check_all)
 {
     for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] < MAX_SKILL_LEVEL && !is_useless_skill(i)
-            && (really_all || you.can_train[i] && !is_harmful_skill(i)))
-        {
-            return false;
-        }
+        skill_type sk = static_cast<skill_type>(i);
+        if (can_enable_skill(sk, check_all))
+            return true;
     }
 
-    return true;
+    return false;
 }
 
 int skill_bump(skill_type skill, int scale)
@@ -2256,9 +2257,15 @@ void fixup_skills()
 /** Can the player enable training for this skill?
  *
  * @param sk The skill to check.
+ * @param override if true, don't consider whether the skill is currently
+ *                 untrainable / harmful.
  * @returns True if the skill can be enabled for training, false otherwise.
  */
-bool can_enable_skill(skill_type sk)
+bool can_enable_skill(skill_type sk, bool override)
 {
-    return you.species != SP_GNOLL && you.can_train[sk];
+    // TODO: should this check you.skill_points or you.skills?
+    return you.species != SP_GNOLL
+       && you.skills[sk] < MAX_SKILL_LEVEL
+       && !is_useless_skill(sk)
+       && (override || (you.can_train[sk] && !is_harmful_skill(sk)));
 }

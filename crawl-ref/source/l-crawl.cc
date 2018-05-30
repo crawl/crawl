@@ -401,6 +401,16 @@ static int crawl_process_keys(lua_State *ls)
     return 0;
 }
 
+static int crawl_set_sendkeys_errors(lua_State *ls)
+{
+    // enable or disable crashing on flushing an incomplete sendkeys buffer.
+    // used for tests, not generally useful in real life. Crashing only happens
+    // in wizmode.
+    const bool errors = lua_toboolean(ls, 1);
+    crawl_state.nonempty_buffer_flush_errors = errors;
+    return 0;
+}
+
 static int crawl_do_commands(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
@@ -448,7 +458,7 @@ static int crawl_do_commands(lua_State *ls)
             first = false;
         }
         else
-            macro_sendkeys_end_add_expanded(command_to_key(cmd));
+            macro_sendkeys_end_add_cmd(cmd);
     }
 
     process_command(firstcmd);
@@ -1137,6 +1147,7 @@ static const struct luaL_reg crawl_clib[] =
     { "sendkeys",           crawl_sendkeys },
     { "process_command",    crawl_process_command },
     { "process_keys",       crawl_process_keys },
+    { "set_sendkeys_errors", crawl_set_sendkeys_errors },
     { "do_commands",        crawl_do_commands },
 #ifdef USE_SOUND
     { "playsound",          crawl_playsound },

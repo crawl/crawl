@@ -32,6 +32,7 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
@@ -510,7 +511,8 @@ void TilesFramework::_send_layout()
     tiles.json_open_object();
     tiles.json_write_string("msg", "layout");
     tiles.json_open_object("message_pane");
-    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_int("height",
+                        max(Options.msg_webtiles_height, crawl_view.msgsz.y));
     tiles.json_write_bool("small_more", Options.small_more);
     tiles.json_close_object();
     tiles.json_close_object();
@@ -563,6 +565,10 @@ void TilesFramework::close_all_menus()
 {
     while (m_menu_stack.size())
         pop_menu();
+    // This is a bit of a hack, in case the client-side menu stack ever gets
+    // out of sync with m_menu_stack. (This can maybe happen for reasons that I
+    // don't fully understand, on spectator join.)
+    send_message("{\"msg\":\"close_all_menus\"}");
 }
 
 static void _send_text_cursor(bool enabled)
@@ -654,6 +660,11 @@ static bool _update_statuses(player_info& c)
             if (you.duration[status] <= ICEMAIL_TIME / ICEMAIL_MAX)
                 continue;
             inf.short_text = "icemail depleted";
+        }
+        else if (status == DUR_ACROBAT)
+        {
+            if (acrobat_boost_visible())
+                inf.short_text = "acrobat";
         }
         else if (!fill_status_info(status, &inf))
             continue;

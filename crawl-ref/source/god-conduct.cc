@@ -56,19 +56,17 @@ god_conduct_trigger::~god_conduct_trigger()
 static const char *conducts[] =
 {
     "",
-    "Evil", "Holy", "Attack Holy", "Attack Neutral",
-    "Attack Friend", "Friend Died",
-    "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
-    "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
-    "Kill Holy", "Kill Fast", "Banishment",
-    "Spell Memorise", "Spell Cast", "Spell Practise",
-    "Cannibalism", "Eat Souled Being",
-    "Deliberate Mutation", "Cause Glowing", "Use Unclean",
-    "Use Chaos", "Desecrate Orcish Remains",
-    "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
-    "Carrion Rot", "Souled Friend Died", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love", "Channel", "Hurt Foe",
+    "Evil", "Holy", "Attack Holy", "Attack Neutral", "Attack Friend",
+    "Friend Died", "Kill Living", "Kill Undead", "Kill Demon",
+    "Kill Natural Evil", "Kill Unclean", "Kill Chaotic", "Kill Wizard",
+    "Kill Priest", "Kill Holy", "Kill Fast", "Banishment", "Spell Memorise",
+    "Spell Cast", "Spell Practise", "Cannibalism", "Eat Souled Being",
+    "Deliberate Mutation", "Cause Glowing", "Use Unclean", "Use Chaos",
+    "Desecrate Orcish Remains", "Kill Slime", "Kill Plant", "Was Hasty",
+    "Corpse Violation", "Carrion Rot", "Souled Friend Died",
+    "Attack In Sanctuary", "Kill Artificial", "Exploration",
+    "Desecrate Holy Remains", "Seen Monster", "Sacrificed Love", "Channel",
+    "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -444,13 +442,7 @@ static peeve_map divine_peeves[] =
     // GOD_ASHENZARI,
     peeve_map(),
     // GOD_DITHMENOS,
-    {
-        { DID_FIRE, {
-            "you use fiery magic or items", false,
-            1, 1, " forgives your accidental fire-starting, just this once.",
-            " does not appreciate your starting fires!", nullptr, -5
-        } },
-    },
+    peeve_map(),
     // GOD_GOZAG,
     peeve_map(),
     // GOD_QAZLAL,
@@ -930,10 +922,6 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
-        { DID_KILL_FIERY, {
-            "you kill beings that bring fire to the dungeon", true,
-            -6, 10, 0, " appreciates your extinguishing a source of fire."
-        } },
     },
     // GOD_GOZAG,
     like_map(),

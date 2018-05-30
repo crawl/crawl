@@ -319,7 +319,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 {
     tile_event.held  = MouseEvent::NONE;
     tile_event.event = MouseEvent::WHEEL;
-    tile_event.button = (sdl_event.y > 0) ? MouseEvent::SCROLL_DOWN
+    tile_event.button = (sdl_event.y < 0) ? MouseEvent::SCROLL_DOWN
                                           : MouseEvent::SCROLL_UP;
     tile_event.px = sdl_event.x;
     tile_event.py = sdl_event.y;
@@ -701,7 +701,7 @@ static char32_t _key_suppresses_textinput(int keycode)
 
 int SDLWrapper::send_textinput(wm_event *event)
 {
-    event->type = WME_KEYPRESS;
+    event->type = WME_KEYDOWN;
     do
     {
         // pop a key off the input queue
@@ -852,7 +852,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
     // check for enqueued characters from a multi-char textinput event
     // count is floored to 1 for consistency with other event types
-    if (type == WME_KEYPRESS && m_textinput_queue.size() > 0)
+    if (type == WME_KEYDOWN && m_textinput_queue.size() > 0)
         return 1;
 
     // Look for the presence of any keyboard events in the queue.
@@ -872,10 +872,6 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     case WME_KEYUP:
         event = SDL_KEYUP;
-        break;
-
-    case WME_KEYPRESS:
-        event = SDL_TEXTINPUT;
         break;
 
     case WME_MOUSEMOTION:
@@ -912,6 +908,8 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     // Note: this returns -1 for error.
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, event, event);
+    if (type == WME_KEYDOWN)
+        count += SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT);
     ASSERT(count >= 0);
 
     return max(count, 0);
@@ -1053,7 +1051,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
             int x;
             for (x = 0; x < img->w; x++)
             {
-                unsigned int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels)[src+x];
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
@@ -1069,6 +1067,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                 pixels[dest*4 + 3] = 0;
                 dest++;
             }
+            src += img->pitch;
         }
         while (dest < new_width * new_height)
         {

@@ -18,6 +18,7 @@
 #include "mon-tentacle.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-other.h"
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -40,6 +41,11 @@ bool targeter::set_aim(coord_def a)
 }
 
 bool targeter::can_affect_outside_range()
+{
+    return false;
+}
+
+bool targeter::can_affect_unseen()
 {
     return false;
 }
@@ -491,6 +497,53 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targeter_passwall::targeter_passwall(int max_range) :
+    targeter_smite(&you, max_range, 1, 1, true, nullptr)
+{
+}
+
+bool targeter_passwall::valid_aim(coord_def a)
+{
+    passwall_path tmp_path(you, a - you.pos(), range);
+    string failmsg;
+    tmp_path.is_valid(&failmsg);
+    if (!tmp_path.spell_succeeds())
+        return notify_fail(failmsg);
+    return true;
+}
+
+bool targeter_passwall::set_aim(coord_def a)
+{
+    cur_path = make_unique<passwall_path>(you, a - you.pos(), range);
+    return true;
+}
+
+aff_type targeter_passwall::is_affected(coord_def loc)
+{
+    if (!cur_path)
+        return AFF_NO;
+    // not very efficient...
+    for (auto p : cur_path->path)
+        if (p == loc)
+            return AFF_YES;
+    return AFF_NO;
+}
+
+bool targeter_passwall::can_affect_outside_range()
+{
+    return true;
+}
+
+bool targeter_passwall::can_affect_unseen()
+{
+    return true;
+}
+
+bool targeter_passwall::affects_monster(const monster_info& mon)
+{
+    return false;
+}
+
 targeter_transference::targeter_transference(const actor* act, int aoe) :
     targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
 {
@@ -559,7 +612,6 @@ bool targeter_fragment::set_aim(coord_def a)
         return false;
     }
 
-    coord_def centre(9,9);
     bolt beam;
     beam.target = a;
     beam.use_target_as_pos = true;
@@ -1010,7 +1062,6 @@ targeter_shadow_step::targeter_shadow_step(const actor* act, int r) :
 
 bool targeter_shadow_step::valid_aim(coord_def a)
 {
-    coord_def c, shadow_step_pos;
     ray_def ray;
 
     if (origin == a)

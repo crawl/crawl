@@ -309,6 +309,8 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
+    case CLOUD_PURPLE_SMOKE:
+    case CLOUD_BLUE_SMOKE:
     case CLOUD_FLUFFY:
         return 22;
     case CLOUD_RAIN:
@@ -448,10 +450,7 @@ static void _spread_fire(const cloud_struct &cloud)
         env.cloud[*ai].pos = *ai;
         env.cloud[*ai].decay = random2(30) + 25;
         if (cloud.whose == KC_YOU)
-        {
             did_god_conduct(DID_KILL_PLANT, 1);
-            did_god_conduct(DID_FIRE, 6);
-        }
         else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
             did_god_conduct(DID_KILL_PLANT, 1);
 

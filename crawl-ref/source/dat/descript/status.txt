@@ -333,6 +333,23 @@ You are silenced. This makes reading scrolls, casting spells, invoking divine
 abilities, or shouting impossible. The oppressive, unnatural effect greatly
 hampers your stealth.
 %%%%
+Engulf status
+
+{{
+    local desc = "You are engulfed in water"
+
+    if not you.res_drowning() then
+        desc = desc .. " and are unable to breathe. You will take increasing"
+                       .. " damage from asphyxiation every turn until you"
+                       .. " escape. This makes reading scrolls, casting"
+                       .. " spells, and invoking divine abilities impossible"
+    else
+        desc = desc .. " but suffer no negative effects"
+    end
+
+    return desc .. "."
+}}
+%%%%
 Stealth status
 
 Your stealth is greatly increased.

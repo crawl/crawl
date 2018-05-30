@@ -1342,10 +1342,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PASSWALL, "Passwall",
     SPTYP_TRANSMUTATION | SPTYP_EARTH,
-    SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
+    SPFLAG_TARGET | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
     2,
-    200,
-    1, 9,
+    120,
+    1, 7,
     0, 0, // make silent to keep passwall a viable stabbing spell [rob]
     TILEG_PASSWALL,
 },
@@ -3943,6 +3943,17 @@ static const struct spell_desc spelldata[] =
     5, 5,
     5, 4,
     TILEG_BORGNJORS_VILE_CLUTCH,
+},
+
+{
+    SPELL_HARPOON_SHOT, "Harpoon Shot",
+    SPTYP_CONJURATION | SPTYP_EARTH,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    4,
+    200,
+    6, 6,
+    4, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {

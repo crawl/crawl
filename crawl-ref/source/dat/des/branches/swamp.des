@@ -170,19 +170,19 @@ TAGS: swamp_entry
 KFEAT: O = enter_swamp
 MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
    size = 2, walk_dist = 1, spread_rate = 33 }
-NSUBST: A = ttttw / w, B = ttttw / w, C = ttttw / w, D = ttttw / w
-NSUBST: E = T / ., F = T / ., G = T / ., H = T / ., I = T / ., J = T / .
-SUBST: T = tt.
-KMONS: 1 = swamp worm
+SUBST: D = twww
+NSUBST: E = tt. / ., F = tt. / ., H = tt. / ., J = tt. / ., K = tt. / .
+NSUBST: L = tt. / .
+KMONS: 1 = swamp worm / nothing w:5
 KMONS: 2 = electric eel
 KFEAT: 12 = w
 MAP
     ......tttttttt
   ...ttttttttttttttttt
- ..tttw1wAAAw1wCCCw1wtt
-@.T...E.F.G.H.I.J...2tt
-@.T...E.F.G.H.I.J..Owtt
- ..tttw1wBBBww1DDDw1wtt
+ ..tttw1wDDDw1wDDDw1wtt
+@.T...E.F.H.J.K.L...2tt
+@.T...E.F.H.J.K.L..Owtt
+ ..tttw1wDDDww1DDDw1wtt
   ...ttttttttttttttttt
     ......tttttttt
 ENDMAP
@@ -917,29 +917,27 @@ ENDMAP
 NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-KMONS:   0 = swamp worm
-MONS:    tyrant leech, worm
-KFEAT:   0 = shallow_water
+KMONS:   1 = swamp worm / tyrant leech w:5 / nothing w:5
+KMONS:   2 = tyrant leech
+KFEAT:   12 = shallow_water
 SHUFFLE: })
 SUBST:   } = }>, ) = <)>, } = }:20 >, ) = ):25 <>, 4 = 23
 MAP
       @tttttt
      WttwWwwtt
- ...tttW2..w0tt
- tw0tt4wWt.Wwtt
-ttW.tt}3)tW.0tt
-t0.WtW4wtt.Wtt
-tww..2Wwtt0Wt
-tt0wWwwtt....
+ ...tttW2..w1tt
+ tw1tt.wWt.Wwtt
+ttW.tt}.)tW.1tt
+t1.WtW.wtt.Wtt
+tww..2Wwtt1Wt
+tt1wWwwtt....
  ttttttt@
 ENDMAP
 
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body
-MONS:    necrophage
-MONS:    ghoul
+MONS:    bog body, necrophage, ghoul
 SUBST:   jl = t
 KFEAT:   % = shallow_water / .
 SHUFFLE: jJ / lL, })
@@ -1002,20 +1000,26 @@ KMONS:   1 = green draconian
 KMONS:   a = death drake
 KMONS:   A = tentacled monstrosity / green death
 # No burning down the trees or making them look burnt.
-KMONS:   b = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
-             white draconian stormcaller w:1 / purple draconian stormcaller w:1
-KMONS:   B = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
-             white draconian stormcaller w:1 / purple draconian stormcaller w:1
+KMONS:   b = green draconian stormcaller w:15 \
+             / yellow draconian stormcaller w:1 \
+             / white draconian stormcaller w:1 \
+             / purple draconian stormcaller w:1
+KMONS:   B = green draconian stormcaller w:15 \
+             / yellow draconian stormcaller w:1 \
+             / white draconian stormcaller w:1 \
+             / purple draconian stormcaller w:1
 KMONS:   % = ugly thing / orange demon
-KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
+KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 \
+              / eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
 SHUFFLE: AB%| / abd*
 : end
 SUBST:   < : <:1 .:9
 NSUBST:  < = 1:{ / 1:}
 SHUFFLE: {} / {[ / {[ / }] / }]
-MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", pow_max = 2, \
-                 delay_min = 100, delay_max = 150, size = 1, walk_dist = 1 }
+MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
+                               pow_max = 2, delay_min = 100, delay_max = 150, \
+                               size = 1, walk_dist = 1 }
 MAP
          xxxxx
         @xWxWxxxx

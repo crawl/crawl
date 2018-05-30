@@ -284,3 +284,27 @@ can always be trained. For the rest:
   - Necromancy can also be trained when worshipping Kikubaaqudgha.
   - Invocations requires worshipping a god whose abilities require it.
 %%%%
+spell-library
+<h>Spell Library</h>
+<w>!</w>        : Cycle between <w>Memorise</w>, <w>Describe</w>, <w>Hide</w>, and <w>Show</w> pages.
+<w>Ctrl-F</w>   : Filter the list of spells shown with a regex.
+<w>?</w>        : Show this help.
+
+By default, the spell library opens to the <w>Memorise</w> page; to begin memorising a
+spell, just press its letter. To read a spell's description, first switch to
+the <w>Describe</w> page by pressing <w>!</w>, then press the spell's letter.
+
+Most characters will not be interested in memorising the majority of spells that
+accumulate in their spell library; this is where the <w>Show</w> and <w>Hide</w> pages come in
+handy. To hide a spell from the <w>Memorise</w> and <w>Describe</w> pages, press its spell
+letter from the <w>Hide</w> page. Hidden spells can be shown again from the <w>Show</w> page.
+
+The <w>auto_hide_spells</w> option can be useful; when enabled, all newly discovered
+spells are hidden by default.
+
+<w>Ctrl-F</w> can be used to filter the list of spells. Any filter set in this way will
+persist until the spell library is closed and reopened, or until a new filter is
+set with <w>Ctrl-F</w>. If <w>Enter</w> is pressed at the prompt without entering any text,
+that will reset the filter to none.
+You can filter spells by name and by spell school.
+%%%%

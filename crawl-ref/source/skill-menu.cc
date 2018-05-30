@@ -993,13 +993,10 @@ void SkillMenu::cancel_help()
  */
 bool SkillMenu::do_skill_enabled_check()
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
-        if (skill_trained(i))
-            return true;
-    }
+    if (skills_being_trained())
+        return true;
 
-    if (!all_skills_maxed())
+    if (trainable_skills())
     {
         // Shouldn't happen, but crash rather than locking the player in the
         // menu. Training will be fixed up on load.
@@ -1640,10 +1637,6 @@ void SkillMenu::shift_bottom_down()
 void SkillMenu::show_description(skill_type sk)
 {
     describe_skill(sk);
-    clrscr();
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(this);
-#endif
 }
 
 TextItem* SkillMenu::find_closest_selectable(int start_ln, int col)
@@ -1708,8 +1701,11 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
-    // experience potion; you may elect to sin against Trog
-    if (flag & SKMF_EXPERIENCE && all_skills_maxed(true))
+    // experience potion; you may elect to put experience in normally
+    // untrainable skills (skills where you aren't carrying the right item,
+    // or skills that your god hates). The only case where we abort is if all
+    // in-principle trainable skills are maxed.
+    if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
     {
         mpr("You feel omnipotent.");
         return;

@@ -560,10 +560,12 @@ bool mons_is_notable(const monster& mon);
 
 int max_mons_charge(monster_type m);
 
-void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
-                       set<int> avoid_facets);
-void radiate_pain_bond(const monster& mon, int damage, const monster* original_target);
+void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets);
+
+void radiate_pain_bond(const monster& mon, int damage,
+                       const monster* original_target);
 void throw_monster_bits(const monster& mon);
+
 void set_ancestor_spells(monster &ancestor, bool notify = false);
 
 typedef function<bool (monster& mon)> monster_func;

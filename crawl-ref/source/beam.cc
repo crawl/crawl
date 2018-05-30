@@ -694,15 +694,6 @@ void bolt::apply_beam_conducts()
         case BEAM_DAMNATION:
             did_god_conduct(DID_EVIL, 2 + random2(3), god_cares());
             break;
-        case BEAM_FIRE:
-        case BEAM_STICKY_FLAME:
-        case BEAM_LAVA:
-        case BEAM_INNER_FLAME:
-            did_god_conduct(DID_FIRE,
-                            pierce || is_explosion ? 6 + random2(3)
-                                                   : 2 + random2(3),
-                            god_cares());
-            break;
         default:
             break;
         }
@@ -887,10 +878,7 @@ void bolt::burn_wall_effect()
     else if (you.can_smell())
         emit_message("You smell burning wood.");
     if (whose_kill() == KC_YOU)
-    {
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
-        did_god_conduct(DID_FIRE, 6, god_cares()); // guaranteed penance
-    }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
 
@@ -3874,6 +3862,7 @@ void bolt::affect_player()
     extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, hurted);
+    pull_actor(&you, hurted);
 
     if (origin_spell == SPELL_FLASH_FREEZE
         || name == "blast of ice"
@@ -4407,7 +4396,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
 void bolt::knockback_actor(actor *act, int dam)
 {
-    if (!can_knockback(act, dam))
+    if (!act || !can_knockback(*act, dam))
         return;
 
     const int distance =
@@ -4483,6 +4472,57 @@ void bolt::knockback_actor(actor *act, int dam)
     // knocked back at all
     if (act->is_monster())
         act->as_monster()->speed_increment -= random2(6) + 4;
+
+    act->apply_location_effects(oldpos, killer(),
+                                actor_to_death_source(agent()));
+}
+
+void bolt::pull_actor(actor *act, int dam)
+{
+    if (!act || !can_pull(*act, dam))
+        return;
+
+    // How far we'll try to pull the actor to make them adjacent to the source.
+    const int distance = (act->pos() - source).rdist() - 1;
+    ASSERT(distance > 0);
+
+    const coord_def oldpos = act->pos();
+    ASSERT(ray.pos() == oldpos);
+
+    coord_def newpos = oldpos;
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
+    {
+        const ray_def oldray(ray);
+
+        ray.regress();
+
+        newpos = ray.pos();
+        if (newpos == oldray.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
+        {
+            ray = oldray;
+            break;
+        }
+
+        act->move_to_pos(newpos);
+        if (act->is_player())
+            stop_delay(true);
+    }
+
+    if (newpos == oldpos)
+        return;
+
+    if (you.can_see(*act))
+    {
+        mprf("%s %s yanked forward by the %s.", act->name(DESC_THE).c_str(),
+             act->conj_verb("are").c_str(), name.c_str());
+    }
+
+    if (act->pos() != newpos)
+        act->collide(newpos, agent(), ench_power);
 
     act->apply_location_effects(oldpos, killer(),
                                 actor_to_death_source(agent()));
@@ -6361,21 +6401,42 @@ string bolt::get_source_name() const
 /**
  * Can this bolt knock back an actor?
  *
- * The bolts that knockback flying actors or actors only when damage
- * is dealt will return when.
+ * The bolts that knockback flying actors or actors only when damage is dealt
+ * will return true when conditions are met.
  *
- * @param act The target actor. If not-nullptr, check if the actor is flying for
- *            bolts that knockback flying actors.
+ * @param act The target actor. Check if the actor is flying for bolts that
+ *            knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
  *             like force bolt that only push back upon damage.
  * @return True if the bolt could knockback the actor, false otherwise.
 */
-bool bolt::can_knockback(const actor *act, int dam) const
+bool bolt::can_knockback(const actor &act, int dam) const
 {
+    if (act.is_stationary())
+        return false;
+
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH
-              && (!act || act->airborne())
+           || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
            || origin_spell == SPELL_FORCE_LANCE && dam;
+}
+
+/**
+ * Can this bolt pull an actor?
+ *
+ * If a bolt is capable of pulling actors and the given actor can be pulled,
+ * return true.
+ *
+ * @param act The target actor. Check if the actor is non-stationary and not
+ *            already adjacent.
+ * @param dam The damage dealt. Check that dam > 0.
+ * @return True if the bolt could pull the actor, false otherwise.
+*/
+bool bolt::can_pull(const actor &act, int dam) const
+{
+    if (act.is_stationary() || adjacent(source, act.pos()))
+        return false;
+
+    return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
 
 void clear_zap_info_on_exit()
