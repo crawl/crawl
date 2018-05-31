@@ -428,15 +428,21 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     const spschools_type disciplines = get_spell_disciplines(spell);
 
     int skillcount = count_bits(disciplines);
-    if (skillcount)
-    {
-        for (const auto bit : spschools_type::range())
-            if (disciplines & bit)
-                power += you.skill(spell_type2skill(bit), 200);
-        power /= skillcount;
-    }
 
-    power += you.skill(SK_SPELLCASTING, 50);
+    if (skillcount > 0)
+    {
+        if (you.species == SP_ONI)
+            power += you.skill(SK_SPELLCASTING, 220 + 60 / skillcount);
+        else
+        {
+            for (const auto bit : spschools_type::range())
+                if (disciplines & bit)
+                    power += you.skill(spell_type2skill(bit), 200);
+            power /= skillcount;
+
+            power += you.skill(SK_SPELLCASTING, 50);
+        }
+    }
 
     if (fail_rate_check)
     {

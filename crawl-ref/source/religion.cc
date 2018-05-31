@@ -1529,6 +1529,9 @@ static bool _gift_sif_kiku_gift(bool forced)
 
 static bool _handle_veh_gift(bool forced)
 {
+    if (you.species == SP_ONI)
+        return false;
+
     bool success = false;
     const int gifts = you.num_total_gifts[you.religion];
     if (forced || !you.duration[DUR_VEHUMET_GIFT]
