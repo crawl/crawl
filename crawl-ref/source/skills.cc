@@ -221,7 +221,6 @@ void reassess_starting_skills()
     for (skill_type next = NUM_SKILLS; next > SK_FIRST_SKILL; )
     {
         skill_type sk = --next;
-        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
 
         // Grant the amount of skill points required for a human.
         you.skill_points[sk] = you.skills[sk] ?
@@ -265,6 +264,14 @@ void reassess_starting_skills()
             you.skill_points[sk] = skill_exp_needed(1, sk);
             you.skills[sk] = 1;
         }
+    }
+
+    // Zero useless skills, just to be safe.
+    for (skill_type next = NUM_SKILLS; next > SK_FIRST_SKILL; )
+    {
+        skill_type sk = --next;
+        if(is_useless_skill(sk))
+            you.skills[sk] = 0;
     }
 }
 

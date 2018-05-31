@@ -62,6 +62,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -2995,6 +2996,49 @@ void level_change(bool skip_attribute_increase)
                 _felid_extra_life();
                 break;
 
+            case SP_OGRE:
+                if (!(you.experience_level % 2) && you.experience_level <= 20)
+                {
+                    const int level = (you.experience_level - 2) / 2;
+
+                    vector<spell_type> possible_spells;
+                    for (int s = 0; s < NUM_SPELLS; ++s)
+                    {
+                        const spell_type spell = static_cast<spell_type>(s);
+
+                        if (!is_player_spell(spell))
+                            continue;
+
+                        const int difficulty = spell_difficulty(spell);
+                        if (difficulty >= level - 1 && difficulty <= level + 1)
+                            possible_spells.push_back(spell);
+                        if (difficulty == level)
+                            possible_spells.push_back(spell);
+                    }
+
+                    shuffle_array(possible_spells);
+
+                    while (possible_spells.size())
+                    {
+                        const spell_type spell = possible_spells.back();
+                        possible_spells.pop_back();
+
+                        if (you.spell_library[spell])
+                            continue;
+
+                        you.spell_library.set(spell, true);
+
+                        mprf(MSGCH_INTRINSIC_GAIN,
+                             "You have discovered the spell %s.", spell_title(spell));
+
+                        goto finish;
+                    }
+
+                    mprf(MSGCH_INTRINSIC_GAIN, "You were unable to discover any spells.");
+                    break;
+                }
+
+            finish:
             default:
                 break;
             }
