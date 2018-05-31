@@ -329,15 +329,20 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
 {
     item_def unrand;
     unrand_type type;
-    do {
+    do
+    {
         unrand = item_def();
         type = _archa_unrands[random2(_archa_num_unrands)];
         if (!make_item_unrandart(unrand, type))
             continue;
 
-    } while ((!you.could_wield(unrand) && !can_wear_armour(unrand, false, true)) ||  !can_generate(unrand));
+    }
+    while (!you.could_wield(unrand) && !can_wear_armour(unrand, false, true)
+           || !can_generate(unrand));
 
-    dprf("Initializing archaeologist crate with %s", unrand.name(DESC_A).c_str());
+    dprf("Initializing archaeologist crate with %s",
+         unrand.name(DESC_A).c_str());
+
     crate.props[ARCHAEOLOGIST_CRATE_ITEM] = type;
 
     // Handle items unlocked through interesting skills.
@@ -390,11 +395,15 @@ static void _setup_archaeologist()
 
     skill_type manual_skill = SK_NONE;
     for (uint8_t i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+        if (you.inv[i].defined()
+            && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+
             manual_skill = _setup_archaeologist_crate(you.inv[i]);
 
     for (uint8_t i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
+        if (you.inv[i].defined()
+            && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
+
             you.inv[i].props[ARCHAEOLOGIST_TOME_SKILL] = manual_skill;
 }
 

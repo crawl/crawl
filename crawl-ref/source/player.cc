@@ -3046,11 +3046,12 @@ void level_change(bool skip_attribute_increase)
             if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
                 tome_index = i;
 
-        if (tome_index != -1) 
+        if (tome_index != -1)
             archaeologist_read_tome(you.inv[tome_index]);
         else if(!you.props.exists(ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP))
-            mprf("You suddenly remember the dusty tome you brought into the dungeon! You feel able"
-                 " to decipher it now. If only you could remember where you put it..."); 
+            mpr("You suddenly remember the dusty tome you brought into the dungeon! "
+                 "You feel able to decipher it now. "
+                 "If only you could remember where you put it...");
 
         you.props[ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP] = true;
     }

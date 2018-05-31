@@ -104,6 +104,8 @@ force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
 force_more_message += You don't have the energy to cast that spell
 force_more_message += This is a scroll of acquirement
+force_more_message += You have an epiphany
+force_more_message += The crate's locking mechanism finally gives in, revealing
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += Careful!
