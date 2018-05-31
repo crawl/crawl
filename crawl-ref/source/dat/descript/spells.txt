@@ -1539,12 +1539,6 @@ the ground shortly thereafter.
 Ranged weapons and certain powerful named artefacts cannot be affected, and
 any abilities that require evocation skill to trigger will not be active.
 %%%%
-Twisted Resurrection spell
-
-Causes nearby corpses to begin crawling together, merging into horrible
-agglomerations of flesh. More and larger corpses result in more powerful
-creations.
-%%%%
 Upheaval spell
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,

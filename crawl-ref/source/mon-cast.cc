@@ -1740,9 +1740,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_ANIMATE_DEAD:
-#endif
     case SPELL_TWISTED_RESURRECTION:
-#if TAG_MAJOR_VERSION == 34
     case SPELL_CIGOTUVIS_EMBRACE:
     case SPELL_SIMULACRUM:
 #endif
@@ -6004,12 +6002,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_TWISTED_RESURRECTION:
         // Double efficiency compared to maxed out player spell: one
         // elf corpse gives 4.5 HD.
         twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
                              mons->foe, god);
         return;
+#endif
 
     case SPELL_CALL_IMP:
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
@@ -7977,6 +7977,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SEAL_DOORS:
         return friendly || !_seal_doors_and_stairs(mon, true);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_TWISTED_RESURRECTION:
         if (friendly && !_animate_dead_okay(monspell))
             return true;
@@ -7986,6 +7987,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
         return !twisted_resurrection(mon, 500, SAME_ATTITUDE(mon), mon->foe,
                                      mon->god, false);
+#endif
 
     //XXX: unify with the other SPELL_FOO_OTHER spells?
     case SPELL_BERSERK_OTHER:
