@@ -166,8 +166,12 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 
     if (selected_skill == NUM_SKILLS)
     {
-        ASSERT(you.species == SP_FELID);
-        selected_skill = SK_UNARMED_COMBAT;
+        if (you.species == SP_FELID)
+            selected_skill = SK_UNARMED_COMBAT;
+        else if(you.species == SP_OGRE)
+            selected_skill = SK_SPELLCASTING;
+        else
+            ASSERT(false);
     }
 
     return selected_skill;
