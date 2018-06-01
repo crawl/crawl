@@ -148,7 +148,7 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    if (is_useless_item(item))
+    if (item.base_type != OBJ_BOOKS && is_useless_item(item))
     {
         item = item_def();
         return nullptr;
