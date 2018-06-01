@@ -651,28 +651,34 @@ static bool _update_statuses(player_info& c)
     {
         if (status == DUR_DIVINE_SHIELD)
         {
+            inf = status_info();
             if (!you.duration[status])
                 continue;
             inf.short_text = "divine shield";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
+            inf = status_info();
             if (you.duration[status] <= ICEMAIL_TIME / ICEMAIL_MAX)
                 continue;
             inf.short_text = "icemail depleted";
         }
         else if (status == DUR_ACROBAT)
         {
-            if (acrobat_boost_visible())
-                inf.short_text = "acrobat";
+            inf = status_info();
+            if (!acrobat_boost_visible())
+                continue;
+            inf.short_text = "acrobat";
         }
-        else if (!fill_status_info(status, &inf))
+        else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
 
         if (!inf.light_text.empty() || !inf.short_text.empty())
         {
             if (!changed)
             {
+                // up until now, c.status has not changed. Does this dur differ
+                // from the counter-th element in c.status?
                 if (counter >= c.status.size()
                     || inf.light_text != c.status[counter].light_text
                     || inf.light_colour != c.status[counter].light_colour
@@ -684,6 +690,8 @@ static bool _update_statuses(player_info& c)
 
             if (changed)
             {
+                // c.status has changed at some point before counter, so all
+                // bets are off for any future statuses.
                 c.status.resize(counter + 1);
                 c.status[counter] = inf;
             }
@@ -693,6 +701,7 @@ static bool _update_statuses(player_info& c)
     }
     if (c.status.size() != counter)
     {
+        // the only thing that has happened is that some durations are removed
         ASSERT(!changed);
         changed = true;
         c.status.resize(counter);
