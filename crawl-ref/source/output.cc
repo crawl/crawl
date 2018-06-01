@@ -993,7 +993,7 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 {
     status_info inf;
 
-    if (fill_status_info(i, &inf) && !inf.light_text.empty())
+    if (fill_status_info(i, inf) && !inf.light_text.empty())
     {
         status_light sl(inf.light_colour, inf.light_text);
         out.push_back(sl);
@@ -2667,7 +2667,7 @@ string _status_mut_rune_list(int sw)
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, inf) && !inf.short_text.empty())
             status.emplace_back(inf.short_text);
     }
 
