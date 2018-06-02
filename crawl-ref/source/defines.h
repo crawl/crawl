@@ -333,3 +333,7 @@ const int DEFAULT_VIEW_DELAY = 600;
 #ifdef __ANDROID__
 #define ANDROID_ASSETS "ANDROID_ASSETS"
 #endif
+
+// Temporary define for testing purposes.
+#define NOT_PUBBY_MAGIC (you.species != SP_OGRE && you.species != SP_HILL_ORC && you.species != SP_TROLL)
+#define PUBBY_MAGIC (you.species == SP_OGRE || you.species == SP_HILL_ORC || you.species == SP_TROLL)

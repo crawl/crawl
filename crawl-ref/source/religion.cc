@@ -3103,8 +3103,8 @@ bool player_can_join_god(god_type which_god)
       return false;
     }
 
-    // Sif hates ogres because they don't read books.
-    if (which_god == GOD_SIF_MUNA && you.species == SP_OGRE)
+    // Sif hates those who don't read books.
+    if (which_god == GOD_SIF_MUNA && PUBBY_MAGIC)
         return false;
 
     return _transformed_player_can_join_god(which_god);

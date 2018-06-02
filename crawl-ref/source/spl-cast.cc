@@ -431,7 +431,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     if (skillcount > 0)
     {
-        if (you.species == SP_OGRE)
+        if (PUBBY_MAGIC)
             power += you.skill(SK_SPELLCASTING, 140 + 60 / skillcount);
         else
         {

@@ -2548,7 +2548,7 @@ void random_uselessness()
 
 static void _handle_read_book(item_def& book)
 {
-    if (you.species == SP_OGRE)
+    if (PUBBY_MAGIC)
     {
         mpr("You don't believe in learning magic that way.");
         return;

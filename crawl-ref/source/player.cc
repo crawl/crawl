@@ -2997,6 +2997,10 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_OGRE:
+            case SP_HILL_ORC:
+            case SP_TROLL:
+                ASSERT(PUBBY_MAGIC);
+
                 if (!(you.experience_level % 2) && you.experience_level <= 20)
                 {
                     const int level = (you.experience_level - 2) / 2;

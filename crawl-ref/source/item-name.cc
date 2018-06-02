@@ -3734,7 +3734,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (you.species == SP_OGRE && item.sub_type != BOOK_MANUAL)
+        if (PUBBY_MAGIC && item.sub_type != BOOK_MANUAL)
             return true;
         if (!item_type_known(item))
             return false;
