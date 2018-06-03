@@ -90,6 +90,7 @@
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
 # * nospell:  Prevents wearer from casting spells.
+# * notac:    Not generated for the Archaeologist background.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
 # * rcorr:    Grants corrosion resistance.
@@ -280,7 +281,7 @@ COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 BRAND:   SPWPN_FLAMING
-BOOL:    evil, nogen
+BOOL:    evil, nogen, notac
 
 NAME:    staff of Dispater
 APPEAR:  golden staff
@@ -289,7 +290,7 @@ PLUS:    +4
 COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
-BOOL:    evil, nogen
+BOOL:    evil, nogen, notac
 
 NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -298,7 +299,7 @@ PLUS:    +7
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
-BOOL:    evil, nogen
+BOOL:    evil, nogen, notac
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -309,7 +310,7 @@ PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
-BOOL:    nogen, unided, no_upgrade
+BOOL:    nogen, unided, no_upgrade, notac
 
 NAME:    demon blade "Bloodbane"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -346,7 +347,7 @@ BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
 LIFE:    1
-BOOL:    nogen
+BOOL:    nogen, notac
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -460,7 +461,7 @@ TILE:    urand_doom_knight
 TILE_EQ: doom_knight
 BRAND:   SPWPN_PAIN
 MAGIC:   1
-BOOL:    nospell, nogen
+BOOL:    nospell, nogen, notac
 
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
@@ -487,7 +488,7 @@ TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
 HP:       -6
 LIFE:     1
-BOOL:     poison, nogen
+BOOL:     poison, nogen, notac
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
@@ -551,7 +552,7 @@ COLOUR:  ETC_DEATH
 TILE:    urand_blowgun
 TILE_EQ: blowgun
 STEALTH: 2
-BOOL:    inv, tilerim, nogen
+BOOL:    inv, tilerim, nogen, notac
 
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
@@ -616,7 +617,7 @@ PLUS:     +27
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
-BOOL:     tilerim, nogen
+BOOL:     tilerim, nogen, notac
 
 # TAG_MAJOR_VERSION == 34
 # A play on the spell of the same name. Colour taken from crystal walls.
@@ -628,7 +629,7 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BOOL:     nogen
+BOOL:     nogen, notac
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
@@ -687,7 +688,7 @@ COLOUR:  RED
 TILE:    urand_bullseye
 TILE_EQ: shield_bullseye
 EV:      -5
-BOOL:    nogen
+BOOL:    nogen, notac
 
 NAME:    crown of Dyrovepreva
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -717,7 +718,7 @@ TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -5
 STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse
+BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse, notac
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -727,7 +728,7 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     fly, nogen
+BOOL:     fly, nogen, notac
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
@@ -915,7 +916,7 @@ TILE:    urand_cekugob
 AC:      1
 EV:      1
 LIFE:    2
-BOOL:    elec, poison, notelep, nogen
+BOOL:    elec, poison, notelep, nogen, notac
 
 NAME:    amulet of the Four Winds
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
@@ -1051,7 +1052,7 @@ TILE:     urand_dragonskin
 TILE_EQ:  dragonskin
 PLUS:     +4
 COLOUR:   ETC_HEAL
-BOOL:     nogen
+BOOL:     nogen, notac
 
 ENUM:     OCTOPUS_KING_RING
 NAME:     ring of the Octopus King
@@ -1063,7 +1064,7 @@ EV:       1
 STR:      1
 INT:      1
 DEX:      1
-BOOL:     unided, no_upgrade
+BOOL:     unided, no_upgrade, notac
 
 # Meatsprint only. The type is adjusted to the biggest two-handed axe the
 # player's species can wield (exec or broad).
@@ -1093,6 +1094,7 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
 VALUE:    400
+BOOL:     notac
 
 # TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1104,7 +1106,7 @@ PLUS:     +3
 BRAND:    SPARM_JUMPING
 COLOUR:   LIGHTMAGENTA
 STEALTH:  1
-BOOL:     nogen
+BOOL:     nogen, notac
 
 NAME:     dark maul
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
@@ -1129,7 +1131,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
-BOOL:    nogen
+BOOL:    nogen, notac
 
 NAME:     arc blade
 INSCRIP:  discharge,
@@ -1290,7 +1292,7 @@ NAME:     amulet of invisibility
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
 TILE:     urand_cekugob
-BOOL:     inv, nogen
+BOOL:     inv, nogen, notac
 
 ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
@@ -1313,6 +1315,7 @@ TILE:     urand_xtahua_scales
 TILE_EQ:  xtahua_scales
 MAGIC:    1
 FIRE:     1
+BOOL:     notac
 
 # This entry must always be last.
 ENUM:   DUMMY2

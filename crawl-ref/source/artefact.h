@@ -33,6 +33,7 @@ enum unrand_flag_type
     UNRAND_FLAG_RANDAPP          =0x100,
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
+    UNRAND_FLAG_NOTAC            =0x800,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
@@ -150,3 +151,5 @@ bool artp_potentially_bad(artefact_prop_type prop);
 int get_unrandart_num(const char *name);
 
 void unrand_reacts();
+
+const vector<int> archaeologist_unrands();

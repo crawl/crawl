@@ -237,105 +237,18 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
-static const uint8_t _archa_num_unrands = 83;
-static const unrand_type _archa_unrands[_archa_num_unrands]
-{
-    UNRAND_SINGING_SWORD,               // Singing Sword
-    UNRAND_TROG,                        // Wrath of Trog
-    UNRAND_VARIABILITY,                 // mace of Variability
-    UNRAND_PRUNE,                       // glaive of Prune
-    UNRAND_POWER,                       // sword of Power
-    UNRAND_OLGREB,                      // staff of Olgreb
-    UNRAND_WUCAD_MU,                    // staff of Wucad Mu
-    UNRAND_VAMPIRES_TOOTH,              // Vampire's Tooth
-    UNRAND_CURSES,                      // scythe of Curses
-    UNRAND_TORMENT,                     // sceptre of Torment
-    UNRAND_ZONGULDROK,                  // sword of Zonguldrok
-    UNRAND_FAERIE,                      // faerie dragon scales
-    UNRAND_BLOODBANE,                   // demon blade "Bloodbane"
-    UNRAND_FLAMING_DEATH,               // scimitar of Flaming Death
-    UNRAND_LEECH,                       // demon blade "Leech"
-    UNRAND_CHILLY_DEATH,                // dagger of Chilly Death
-    UNRAND_MORG,                        // dagger "Morg"
-    UNRAND_FINISHER,                    // scythe "Finisher"
-    UNRAND_PUNK,                        // sling "Punk"
-    UNRAND_ZEPHYR,                     // Longbow "Zephyr"
-    UNRAND_SKULLCRUSHER,                // giant club "Skullcrusher"
-    UNRAND_GUARD,                       // glaive of the Guard
-    UNRAND_ZEALOT_SWORD,                 // Zealot Sword
-    UNRAND_DAMNATION,                   // arbalest "Damnation"
-    UNRAND_DOOM_KNIGHT,                 // sword of the Doom Knight
-    UNRAND_EOS,                         // morningstar "Eos"
-    UNRAND_BOTONO,                      // spear of the Botono
-    UNRAND_OCTOPUS_KING,                // trident of the Octopus King
-    UNRAND_ARGA,                        // mithril axe "Arga"
-    UNRAND_ELEMENTAL_STAFF,             // Elemental Staff
-    UNRAND_SNIPER,                      // heavy crossbow "Sniper"
-    UNRAND_PIERCER,                     // longbow "Piercer"
-    UNRAND_WYRMBANE,                    // lance "Wyrmbane"
-    UNRAND_SPRIGGANS_KNIFE,             // Spriggan's Knife
-    UNRAND_PLUTONIUM_SWORD,             // plutonium sword
-    UNRAND_UNDEADHUNTER,                // great mace "Undeadhunter"
-    UNRAND_SNAKEBITE,                   // whip "Snakebite"
-    UNRAND_CAPTAIN,                     // captain's cutlass
-    UNRAND_STORM_BOW,                   // storm bow
-    UNRAND_AUGMENTATION,                // robe of Augmentation
-    UNRAND_THIEF,                       // cloak of the Thief
-    UNRAND_DYROVEPREVA,                 // crown of Dyrovepreva
-    UNRAND_BEAR_SPIRIT,                 // hat of the Bear Spirit
-    UNRAND_BOOTS_ASSASSIN,              // boots of the Assassin
-    UNRAND_LEAR,                        // Lear's hauberk
-    UNRAND_ZHOR,                        // skin of Zhor
-    UNRAND_SALAMANDER,                  // salamander hide armour
-    UNRAND_WAR,                         // gauntlets of War
-    UNRAND_RESISTANCE,                  // shield of Resistance
-    UNRAND_FOLLY,                       // robe of Folly
-    UNRAND_MAXWELL,                     // Maxwell's patent armour
-    UNRAND_DRAGONMASK,                  // mask of the Dragon
-    UNRAND_NIGHT,                       // robe of Night
-    UNRAND_DRAGON_KING,                 // armour of the Dragon King
-    UNRAND_ALCHEMIST,                   // hat of the Alchemist
-    UNRAND_FENCERS,                     // fencer's gloves
-    UNRAND_STARLIGHT,                   // cloak of Starlight
-    UNRAND_GONG,                        // shield of the Gong
-    UNRAND_RCLOUDS,                     // robe of Clouds
-    UNRAND_PONDERING,                   // hat of Pondering
-    UNRAND_DEMON_AXE,                   // obsidian axe
-    UNRAND_LIGHTNING_SCALES,            // lightning scales
-    UNRAND_BLACK_KNIGHT_HORSE,          // Black Knight's horse barding
-    UNRAND_AUTUMN_KATANA,               // autumn katana
-    UNRAND_DEVASTATOR,                  // shillelagh "Devastator"
-    UNRAND_WOE,                         // Axe of Woe
-    UNRAND_MOON_TROLL_LEATHER_ARMOUR,   // moon troll leather armour
-    UNRAND_DARK_MAUL,                   // dark maul
-    UNRAND_HIGH_COUNCIL,                // hat of the High Council
-    UNRAND_ARC_BLADE,                   // arc blade
-    UNRAND_SPELLBINDER,                 // demon whip "Spellbinder"
-    UNRAND_ORDER,                       // lajatang of Order
-    UNRAND_FIRESTARTER,                 // great mace "Firestarter"
-    UNRAND_ORANGE_CRYSTAL_PLATE_ARMOUR, // orange crystal plate armour
-    UNRAND_MAJIN,                       // Majin-Bo
-    UNRAND_GYRE,                        // pair of quick blades "Gyre" and "Gimble"
-    UNRAND_ETHERIC_CAGE,                // Maxwell's etheric cage
-    UNRAND_ETERNAL_TORMENT,             // crown of Eternal Torment
-    UNRAND_VINES,                       // robe of Vines
-    UNRAND_KRYIAS,                      // Kryia's mail coat
-    UNRAND_FROSTBITE,                   // frozen axe "Frostbite"
-    UNRAND_TALOS,                       // armour of Talos
-    UNRAND_WARLOCK_MIRROR,              // warlock's mirror
-};
-
 static skill_type _setup_archaeologist_crate(item_def& crate)
 {
     item_def unrand;
-    unrand_type type;
+    int type;
+    const vector<int> unrands = archaeologist_unrands();
+
     do
     {
         unrand = item_def();
-        type = _archa_unrands[random2(_archa_num_unrands)];
+        type = unrands[random2(unrands.size())];
         if (!make_item_unrandart(unrand, type))
             continue;
-
     }
     while (!you.could_wield(unrand) && !can_wear_armour(unrand, false, true)
            || !can_generate(unrand));
@@ -346,11 +259,10 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     crate.props[ARCHAEOLOGIST_CRATE_ITEM] = type;
 
     // Handle items unlocked through interesting skills.
+    // Jewellery only happens on felids.
     switch (type)
     {
     case UNRAND_PONDERING:
-    case UNRAND_FOLLY:
-    case UNRAND_HIGH_COUNCIL:
     case UNRAND_MAJIN:
     case UNRAND_WUCAD_MU:
     case UNRAND_ETHERIC_CAGE:
@@ -358,24 +270,36 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     case UNRAND_DRAGONMASK:
     case UNRAND_WAR:
     case UNRAND_BEAR_SPIRIT:
+    case UNRAND_BLOODLUST:
+    case UNRAND_ROBUSTNESS:
+    case UNRAND_SHIELDING:
+    case UNRAND_VITALITY:
         return SK_FIGHTING;
+    case UNRAND_PHASING:
     case UNRAND_FENCERS:
         return SK_DODGING;
     case UNRAND_THIEF:
     case UNRAND_BOOTS_ASSASSIN:
     case UNRAND_NIGHT:
+    case UNRAND_SHADOWS:
         return SK_STEALTH;
+    case UNRAND_ELEMENTAL_STAFF:
+    case UNRAND_OLGREB:
+        return SK_EVOCATIONS;
     default:
         break;
     }
 
-    if (unrand.base_type == OBJ_WEAPONS)
+    if (unrand.base_type == OBJ_JEWELLERY)
+        return SK_SPELLCASTING;
+    else if (unrand.base_type == OBJ_WEAPONS)
         return item_attack_skill(unrand);
     else if (is_shield(unrand))
         return SK_SHIELDS;
-    else if (unrand.sub_type == ARM_ROBE)
+    else if (unrand.sub_type == ARM_ROBE || unrand.sub_type == ARM_ANIMAL_SKIN)
         return coinflip() ? SK_SPELLCASTING : SK_DODGING;
-    else return SK_ARMOUR;
+    else
+        return SK_ARMOUR;
 }
 
 static void _setup_archaeologist()
