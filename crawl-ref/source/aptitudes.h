@@ -1267,7 +1267,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FAERIE_DRAGON,   SK_THROWING,       -1),
     APT(SP_FAERIE_DRAGON,   SK_ARMOUR,        UNUSABLE_SKILL),
     APT(SP_FAERIE_DRAGON,   SK_DODGING,         1),
-    APT(SP_FAERIE_DRAGON,   SK_STEALTH,        -3),
+    APT(SP_FAERIE_DRAGON,   SK_STEALTH,        -5),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_FAERIE_DRAGON,   SK_STABBING,      UNUSABLE_SKILL),
 #endif
@@ -1275,7 +1275,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 #if TAG_MAJOR_VERSION == 34
     APT(SP_FAERIE_DRAGON,   SK_TRAPS,         UNUSABLE_SKILL),
 #endif
-    APT(SP_FAERIE_DRAGON,   SK_UNARMED_COMBAT,  0),
+    APT(SP_FAERIE_DRAGON,   SK_UNARMED_COMBAT, -1),
     APT(SP_FAERIE_DRAGON,   SK_SPELLCASTING,    1),
     APT(SP_FAERIE_DRAGON,   SK_CONJURATIONS,    2),
     APT(SP_FAERIE_DRAGON,   SK_HEXES,           0),

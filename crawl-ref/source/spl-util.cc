@@ -402,7 +402,7 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell)
 {
-    if (player_energy() || you.species == SP_FAERIE_DRAGON)
+    if (player_energy() || you.get_mutation_level(MUT_MAGIC_ATTUNEMENT))
         return 0;
 
     const int level = spell_difficulty(which_spell);
@@ -462,10 +462,7 @@ bool spell_harms_area(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    if (you.species == SP_FAERIE_DRAGON)
-        return _seekspell(which_spell)->level - 1;
-    else
-        return _seekspell(which_spell)->level;
+    return _seekspell(which_spell)->level - you.get_mutation_level(MUT_MAGIC_ATTUNEMENT);
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)

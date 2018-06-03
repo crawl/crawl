@@ -241,10 +241,7 @@ end
 local function mp_is_low()
   local mp, mmp = you.mp()
   local fd = 0
-  if you.race() == ("Faerie Dragon") then
-    fd = 1
-  end
-  return (100*mp + 100*fd <= AUTOMAGIC_STOP*mmp)
+  return (100*mp <= AUTOMAGIC_STOP*mmp)
 end
 
 function mag_attack(allow_movement)

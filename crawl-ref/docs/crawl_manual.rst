@@ -1750,12 +1750,11 @@ Faerie Dragons
   attention of the Dungeon's denizens.
   
   Most Faerie Dragons welcome confrontation and favour the use of destructive
-  spells to dispatch those who would challenge them. Their natural attunement
-  to magic reduces the MP cost of spells and negates any hunger generation.
-  Their scales to shimmer with energy that repels incoming attacks. They are
-  capable of continuous flight and gain a bonus to evasion while doing so.
-  Their small size furthers their ability to be evasive, but they're frail
-  and cannot wear any form of body armour.
+  spells to deal with enemies who challenge them. Their natural attunement to
+  magic reduces the MP cost of spells and negates any hunger generation. Their
+  scales shimmer with energy that repels incoming attacks and their bright
+  wings enable continuous flight. Faerie Dragons are small and evasive, but
+  they're frail and cannot wear any form of body armour.
 
 The Undead
 ========================================
