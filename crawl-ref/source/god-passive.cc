@@ -372,7 +372,7 @@ static const vector<god_passive> god_passives[] =
 
     // Qazlal
     {
-        {  0, passive_t::cloud_immunity, "are ADV immune to clouds" },
+        {  0, passive_t::cloud_immunity, "and your allies are ADV immune to clouds" },
         {  1, passive_t::storm_shield,
               "generate elemental clouds to protect yourself" },
         {  4, passive_t::upgraded_storm_shield,

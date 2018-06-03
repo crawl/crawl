@@ -918,6 +918,12 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
+    if (!player && have_passive(passive_t::cloud_immunity)
+        && (act.as_monster()->friendly() || act.as_monster()->neutral()))
+	{
+        return true;
+    }
+
     return false;
 }
 
