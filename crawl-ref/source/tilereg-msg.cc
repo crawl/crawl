@@ -12,8 +12,8 @@
 #include "tiles-build-specific.h"
 #include "stringutil.h"
 
-MessageRegion::MessageRegion(FontWrapper *font) :
-    TextRegion(font),
+MessageRegion::MessageRegion(FontWrapper *font_arg) :
+    TextRegion(font_arg),
     m_overlay(false)
 {
 }
