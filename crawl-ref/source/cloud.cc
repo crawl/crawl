@@ -919,6 +919,14 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
+    int summon_type = 0;
+    act.is_summoned(nullptr, &summon_type);
+    if (!player && have_passive(passive_t::cloud_immunity)
+        && (act.as_monster()->friendly() && summon_type == MON_SUMM_AID))
+    {
+        return true;
+    }
+
     return false;
 }
 
