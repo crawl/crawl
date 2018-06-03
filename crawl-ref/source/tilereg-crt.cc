@@ -9,7 +9,7 @@
 #include "tilefont.h"
 #include "viewgeom.h"
 
-CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(nullptr)
+CRTRegion::CRTRegion(FontWrapper *font_arg) : TextRegion(font_arg), m_attached_menu(nullptr)
 {
 }
 
