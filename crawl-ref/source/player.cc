@@ -3002,8 +3002,8 @@ void level_change(bool skip_attribute_increase)
             {
                 ASSERT(PUBBY_MAGIC); // TODO: remove
 
-                int const min_difficulty[] = { 1, 2, 2, 3, 3, 4, 5, 6, 6, 6, 7, 8, 9 };
-                int const max_difficulty[] = { 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 8, 9, 9 };
+                int const min_lev[] = {1,2,2,3,3,4,5,6,6,6,7,8,9};
+                int const max_lev[] = {1,2,3,4,4,5,6,7,7,8,8,9,9};
 
                 if (!(you.experience_level % 2))
                 {
@@ -3014,11 +3014,11 @@ void level_change(bool skip_attribute_increase)
                     {
                         const spell_type spell = static_cast<spell_type>(s);
 
-                        if (!is_player_spell(spell))
+                        if (!is_player_spell(spell) || you.has_spell(spell))
                             continue;
 
-                        const int difficulty = spell_difficulty(spell);
-                        if (difficulty >= min_difficulty[g] && difficulty <= max_difficulty[g])
+                        const int lev = spell_difficulty(spell);
+                        if (lev >= min_lev[g] && lev <= max_lev[g])
                             possible_spells.push_back(spell);
                     }
 
