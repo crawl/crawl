@@ -213,7 +213,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_SLINGS,         -1),
     APT(SP_HILL_ORC,        SK_BOWS,           -1),
     APT(SP_HILL_ORC,        SK_CROSSBOWS,      -1),
-    APT(SP_HILL_ORC,        SK_THROWING,       -2),
+    APT(SP_HILL_ORC,        SK_THROWING,       -1),
     APT(SP_HILL_ORC,        SK_ARMOUR,          1),
     APT(SP_HILL_ORC,        SK_DODGING,        -2),
     APT(SP_HILL_ORC,        SK_STEALTH,        -1),
@@ -225,7 +225,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_HILL_ORC,        SK_UNARMED_COMBAT,  1),
-    APT(SP_HILL_ORC,        SK_SPELLCASTING,    0),
+    APT(SP_HILL_ORC,        SK_SPELLCASTING,   -4),
     APT(SP_HILL_ORC,        SK_CONJURATIONS,  UNUSABLE_SKILL),
     APT(SP_HILL_ORC,        SK_HEXES,         UNUSABLE_SKILL),
     APT(SP_HILL_ORC,        SK_CHARMS,        UNUSABLE_SKILL),
@@ -239,7 +239,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_EARTH_MAGIC,   UNUSABLE_SKILL),
     APT(SP_HILL_ORC,        SK_POISON_MAGIC,  UNUSABLE_SKILL),
     APT(SP_HILL_ORC,        SK_INVOCATIONS,     3),
-    APT(SP_HILL_ORC,        SK_EVOCATIONS,     -3),
+    APT(SP_HILL_ORC,        SK_EVOCATIONS,     -2),
 
     // SP_KOBOLD
     APT(SP_KOBOLD,          SK_FIGHTING,        1),
@@ -381,7 +381,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OGRE,            SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_OGRE,            SK_UNARMED_COMBAT,  0),
-    APT(SP_OGRE,            SK_SPELLCASTING,    0),
+    APT(SP_OGRE,            SK_SPELLCASTING,   -4),
     APT(SP_OGRE,            SK_CONJURATIONS,  UNUSABLE_SKILL),
     APT(SP_OGRE,            SK_HEXES,         UNUSABLE_SKILL),
     APT(SP_OGRE,            SK_CHARMS,        UNUSABLE_SKILL),
@@ -420,7 +420,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_TROLL,           SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_TROLL,           SK_UNARMED_COMBAT,  0),
-    APT(SP_TROLL,           SK_SPELLCASTING,   -1),
+    APT(SP_TROLL,           SK_SPELLCASTING,   -4),
     APT(SP_TROLL,           SK_CONJURATIONS,  UNUSABLE_SKILL),
     APT(SP_TROLL,           SK_HEXES,         UNUSABLE_SKILL),
     APT(SP_TROLL,           SK_CHARMS,        UNUSABLE_SKILL),

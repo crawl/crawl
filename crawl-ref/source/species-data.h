@@ -425,7 +425,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     { STAT_STR }, 5,
-    { { MUT_TOUGH_SKIN, 1, 1 }, },
+    {},
     { "You learn magic by experience, not books, and ignore schools of magic." },
     { "shaman" },
     { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,

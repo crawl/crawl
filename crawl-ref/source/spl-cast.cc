@@ -432,7 +432,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (skillcount > 0)
     {
         if (PUBBY_MAGIC)
-            power += you.skill(SK_SPELLCASTING, 140 + 60 / skillcount);
+            power += you.skill(SK_SPELLCASTING, 220 + 60 / skillcount);
         else
         {
             for (const auto bit : spschools_type::range())

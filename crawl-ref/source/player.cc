@@ -2999,11 +2999,15 @@ void level_change(bool skip_attribute_increase)
             case SP_OGRE:
             case SP_HILL_ORC:
             case SP_TROLL:
-                ASSERT(PUBBY_MAGIC);
+            {
+                ASSERT(PUBBY_MAGIC); // TODO: remove
 
-                if (!(you.experience_level % 2) && you.experience_level <= 20)
+                int const min_difficulty[] = { 1, 2, 2, 3, 3, 4, 5, 6, 6, 6, 7, 8, 9 };
+                int const max_difficulty[] = { 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 8, 9, 9 };
+
+                if (!(you.experience_level % 2))
                 {
-                    const int level = (you.experience_level - 2) / 2;
+                    int const g = (you.experience_level / 2) - 1;
 
                     vector<spell_type> possible_spells;
                     for (int s = 0; s < NUM_SPELLS; ++s)
@@ -3014,9 +3018,7 @@ void level_change(bool skip_attribute_increase)
                             continue;
 
                         const int difficulty = spell_difficulty(spell);
-                        if (difficulty >= level - 1 && difficulty <= level + 1)
-                            possible_spells.push_back(spell);
-                        if (difficulty == level)
+                        if (difficulty >= min_difficulty[g] && difficulty <= max_difficulty[g])
                             possible_spells.push_back(spell);
                     }
 
@@ -3041,6 +3043,7 @@ void level_change(bool skip_attribute_increase)
                     mprf(MSGCH_INTRINSIC_GAIN, "You were unable to discover any spells.");
                     break;
                 }
+            }
 
             finish:
             default:
