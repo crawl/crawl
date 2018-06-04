@@ -566,7 +566,7 @@ LUAFN(you_status)
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, inf) && !inf.short_text.empty())
         {
             if (which)
             {
