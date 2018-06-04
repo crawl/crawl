@@ -19,11 +19,6 @@ Artificer
 Artificers start with a few magical devices and are competent at using such
 tools.
 %%%%
-Assassin
-
-Assassins carry a blowgun with poisoned needles, as well as a small number of
-nasty curare needles.
-%%%%
 Berserker
 
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
@@ -82,6 +77,11 @@ Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
+%%%%
+Rogue
+
+Rogues carry a blowgun with poisoned needles, as well as a small number of
+nasty curare needles.
 %%%%
 Skald
 

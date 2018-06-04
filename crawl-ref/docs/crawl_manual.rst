@@ -1906,8 +1906,8 @@ Warpers
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking.
 
-Assassins
-  An Assassin is a stealthy character who is especially good at killing, using
+Rogues
+  A Rogue is a stealthy character who is especially good at killing, using
   daggers or blowguns. They start with some deadly curare needles.
 
 Hunters
