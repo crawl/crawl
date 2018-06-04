@@ -6,7 +6,7 @@
 class MessageRegion : public TextRegion
 {
 public:
-    MessageRegion(FontWrapper *font);
+    MessageRegion(FontWrapper *font_arg);
 
     void set_overlay(bool is_overlay);
 

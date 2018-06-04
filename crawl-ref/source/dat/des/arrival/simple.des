@@ -2150,3 +2150,59 @@ ttt...ss.............ss...ttt
  tt.......................tt
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   ebering_hopf_link
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+.........
+.xxxxxxx.
+.x.....x.
+.x..........
+.x..xxxxxxx.
+.x..x.....x.
+.x....{x..x.
+.xxxxxxx..x.
+..........x.
+   .x.....x.
+   .xxxxxxx.
+   .........
+ENDMAP
+
+NAME:   ebering_trefoil_3fold
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+         .@.
+        ..x..
+       ..x.x..
+       .x...x.
+       .x...x.
+     .......x...
+    ..xxxxx.x.x.
+  ...x....{.x..x...
+...xx....x......xx..
+..x.......xxxx....x..
+...xxxxx......xxxx...
+@...................@
+ENDMAP
+
+NAME:   ebering_trefoil_twist
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+............
+.xxxxxxxxxx.
+.x........x....
+.x.....xx.x.xx.
+.x.....x.{x..x.
+.x..xx.x.xx..x.
+.x..x>.x.....x.
+.xx.x.xx.....x.
+....x........x.
+   .xxxxxxxxxx.
+   ............
+ENDMAP

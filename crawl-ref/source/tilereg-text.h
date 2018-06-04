@@ -6,7 +6,7 @@
 class TextRegion : public Region
 {
 public:
-    TextRegion(FontWrapper *font);
+    TextRegion(FontWrapper *font_arg);
     virtual ~TextRegion();
 
     virtual void render() override;

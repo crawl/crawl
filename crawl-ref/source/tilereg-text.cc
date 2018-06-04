@@ -17,14 +17,14 @@ int TextRegion::cursor_flag = 0;
 int TextRegion::cursor_x;
 int TextRegion::cursor_y;
 
-TextRegion::TextRegion(FontWrapper *font) :
+TextRegion::TextRegion(FontWrapper *font_arg) :
     cbuf(nullptr),
     abuf(nullptr),
     cx_ofs(0),
     cy_ofs(0),
-    m_font(font)
+    m_font(font_arg)
 {
-    ASSERT(font);
+    ASSERT(font_arg);
 
     // warning: dx and dy are not guaranteed to be accurate for TextRegion
     // because on high-dpi displays, glyphs may have fractional widths relative
