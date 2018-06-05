@@ -688,7 +688,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_PIERCING_SHOT:
     {
         if (!is_pierce_active())
-            inf->light_colour = DARKGREY;
+            inf.light_colour = DARKGREY;
         break;
     }
 
