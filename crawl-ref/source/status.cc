@@ -198,12 +198,12 @@ bool fill_status_info(int status, status_info& inf)
         }
         else if (you.attribute[ATTR_DIVINE_FOCUS] > 0)
         {
-            inf->light_colour = WHITE;
-            inf->light_text
+            inf.light_colour = WHITE;
+            inf.light_text
                 = make_stringf("Focus (%u)",
                                 you.attribute[ATTR_DIVINE_FOCUS]);
-            inf->short_text   = "divine focus";
-            inf->long_text    = "You are calling on Sif Muna for divine "
+            inf.short_text   = "divine focus";
+            inf.long_text    = "You are calling on Sif Muna for divine "
                                 "focus.";
         }
         break;
