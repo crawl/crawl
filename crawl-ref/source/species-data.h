@@ -645,7 +645,7 @@ static const map<species_type, species_def> species_data =
 } },
 
 { SP_DUSK_WALKER, {
-    "Du",
+    "DW",
     "Dusk Walker", nullptr, nullptr,
     SPF_NONE,
     -1, -1, 0, 6,
@@ -653,13 +653,13 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     12, 8, 8, // 28
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    {{ MUT_NIGHTSTALKER, 1, 4}, {MUT_DRAIN_BITE, 1 ,1}, { MUT_FANGS, 2, 1 },
-      { MUT_FANGS, 1, 8 }, { MUT_NIGHTSTALKER, 1, 12}, { MUT_NIGHTSTALKER, 1, 20}},
-    {"You devour your enemies"},
-    {"devour"},
+    {{ MUT_NIGHTSTALKER, 1, 4}, { MUT_FANGS, 2, 1 },
+    { MUT_FANGS, 1, 8 }, { MUT_NIGHTSTALKER, 1, 12}, { MUT_NIGHTSTALKER, 1, 20}},
+    {"Your attacks drain your enemies"},
+    {"draining touch"},
     { JOB_VENOM_MAGE, JOB_GLADIATOR, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
-      JOB_ASSASSIN, JOB_ARTIFICER },
-    { SK_STAVES, SK_AXES, SK_SLINGS, SK_CROSSBOWS},
+      JOB_ASSASSIN, JOB_EARTH_ELEMENTALIST },
+    { SK_STAVES, SK_SHORT_BLADES},
 } },
 
 { SP_VAMPIRE, {

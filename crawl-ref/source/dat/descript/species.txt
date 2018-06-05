@@ -35,7 +35,7 @@ a colour.
 %%%%
 Dusk walker
 
-Dusk walkers are ravenous predators who were cursed long ago for an ancient crime. 
+Dusk walkers are stealthy predators who were cursed long ago for an ancient crime.
 They hide in the shadows to avoid the wrathful gaze of the gods.
 %%%%
 Fairy

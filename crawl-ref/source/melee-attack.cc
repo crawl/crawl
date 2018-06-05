@@ -386,6 +386,12 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
+    if (attacker->is_player()
+        && you.species == SP_DUSK_WALKER)
+    {
+        drain_defender();
+    }
+
     if (attacker->is_player() && you.duration[DUR_INFUSION])
     {
         if (enough_mp(1, true, false))
@@ -688,8 +694,7 @@ static void _hydra_consider_devouring(monster &defender)
 bool melee_attack::handle_phase_killed()
 {
     if (attacker->is_player()
-       && ( you.species == SP_DUSK_WALKER && one_chance_in(3)      
-            || you.form == transformation::hydra)
+        && (you.form == transformation::hydra)
         && defender->is_monster() // better safe than sorry
         && defender->type != MONS_NO_MONSTER) // already reset
     {

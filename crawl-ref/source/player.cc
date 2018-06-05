@@ -3144,8 +3144,11 @@ int player_stealth()
         // Now 2 * EP^2 / 3 after EP rescaling.
         const int evp = you.unadjusted_body_armour_penalty();
         const int penalty = evp * evp * 2 / 3;
-        stealth -= penalty;
-
+        if(you.species == SP_DUSK_WALKER)
+        {
+        stealth -= (penalty / 2);
+        }
+        else stealth -= penalty;
         const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
         stealth += pips * STEALTH_PIP;
     }
