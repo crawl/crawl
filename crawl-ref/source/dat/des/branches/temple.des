@@ -114,10 +114,10 @@ ENDMAP
 # Vault compression here randomly lops off one entrance.
 NAME:    temple_doors_ab
 WEIGHT:  2
-SHUFFLE: Y'"C& / ZD~~~
-NSUBST:  XY = 1:+ / * = m+
-SUBST:   Z = m, cD : cxxx
-SUBST:   ? : ?:40 T:30 U, ? = T:30 U
+SHUFFLE: Y'"E& / ZD~~~
+NSUBST:  XY = + / m+
+SUBST:   Z = m, cCD : cxxx
+SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
@@ -133,9 +133,9 @@ ENDMAP
 NAME:    temple_doors_cd
 WEIGHT:  2
 SHUFFLE: Y'"C& / ZD~~~
-NSUBST:  XY = 1:+ / * = m+
+NSUBST:  XY = + / m+
 SUBST:   Z = m, cCD : cxxx
-SUBST:   ? : ?:40 T:30 U, ? = T:30 U
+SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
