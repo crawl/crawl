@@ -322,6 +322,7 @@ class CrawlProcessHandlerBase(object):
                             "Spectator '%s' has now been muted." % target)
         self.muted |= {target}
         self.save_mutelist(source)
+        self.update_watcher_description()
         return True
 
     def unmute(self, source, target):
@@ -341,6 +342,7 @@ class CrawlProcessHandlerBase(object):
             self.handle_notification(source, "You have cleared your mute list.")
             self.muted = set()
             self.save_mutelist(source)
+            self.update_watcher_description()
             return True
 
         if not target in self.muted:
@@ -351,6 +353,7 @@ class CrawlProcessHandlerBase(object):
         self.handle_notification(source, "You have unmuted '%s'." % target)
         self.muted -= {target}
         self.save_mutelist(source)
+        self.update_watcher_description()
         return True
 
     def show_mute_list(self, source):
@@ -378,11 +381,12 @@ class CrawlProcessHandlerBase(object):
                 class_type = 'player'
             else:
                 class_type = 'watcher'
+            n = watcher
+            if (watcher in self.muted):
+                n += " (muted)"
             if player_url is None:
-                return "<span class='{0}'>{1}</span>".format(class_type,
-                                                             watcher)
-            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, watcher)
-            username = username.replace('%s', watcher.lower())
+                return "<span class='{0}'>{1}</span>".format(class_type, n)
+            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, n)
             return username
 
         player_name, watchers = self.get_watchers(True)
