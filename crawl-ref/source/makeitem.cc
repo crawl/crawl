@@ -2072,7 +2072,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return false;
 
-    if (visibly_branded || is_artefact(item) || item.plus > 0)
+    if (visibly_branded || is_artefact(item) || item.plus != 0)
         return true;
 
     if (item.is_mundane())
