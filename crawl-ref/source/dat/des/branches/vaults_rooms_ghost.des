@@ -1,0 +1,51 @@
+################################################################################
+# vaults_rooms_ghost.des: Ghost subvaults for the Vaults.
+#
+# Content: These are the subvaults that place a player ghost. All vaults here
+# should call the function ghost_vault_setup(). Until the Vaults layout can be
+# adapted to specially place these vaults, we tag them all with vaults_room so
+# they they can have a common rate of placement. Set a different WEIGHT to make
+# a specific vault more or less common
+################################################################################
+
+: require("dlua/ghost.lua")
+
+NAME:   advil_vaults_ghost_guards
+TAGS:   vaults_room
+KITEM:  12 = superb_item / star_item
+KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+            vault warden
+KMONS:  2 = vault warden
+KMONS:  3 = player ghost
+SHUFFLE: 13
+: ghost_vault_setup(_G)
+MAP
+........
+........
+..nnnn..
+..n31n..
+..n12n..
+..n==n..
+........
+........
+ENDMAP
+
+# based on st_lines
+NAME:   advil_vaults_ghost_lines
+TAGS:   vaults_hard
+KITEM:  123 = superb_item / star_item
+KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+            vault warden
+KMONS:  2 = vault warden
+KMONS:  3 = player ghost
+SHUFFLE: 1239
+SUBST: 9 = 98
+: ghost_vault_setup(_G)
+MAP
+........
+nnn==nnn
+..=92=..
+..=31=..
+nnn==nnn
+........
+ENDMAP
