@@ -729,8 +729,8 @@ effect when the caster's magic is depleted.
 %%%%
 Injury Bond spell
 
-Binds the caster to a nearby ally, redirecting half of any damage the target
-suffers to the caster.
+Binds the caster to nearby allies, redirecting half of any damage they suffer
+to the caster.
 %%%%
 Injury Mirror spell
 
