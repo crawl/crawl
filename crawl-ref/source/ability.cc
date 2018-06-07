@@ -113,6 +113,7 @@ enum class abflag
     gold                = 0x00100000, // costs gold
     sacrifice           = 0x00200000, // sacrifice (Ru)
     hostile             = 0x00400000, // failure summons a hostile (Makhleb)
+    starve_ok           = 0x00800000, // can use even if starving
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -308,20 +309,21 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
     { ABIL_BREATHE_STEAM, "Breathe Steam",
       0, 0, 75, 0, {fail_basis::xl, 20, 1}, abflag::breath },
-    { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+    { ABIL_TRAN_BAT, "Bat Form",
+      2, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::starve_ok },
 
     { ABIL_BREATHE_ACID, "Breathe Acid",
       0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, {fail_basis::xl, 42, 3}, abflag::none },
-    { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 200, 0, {fail_basis::xl, 50, 1}, abflag::none },
 
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
-      0, 0, 0, 0, {}, abflag::instant },
+      0, 0, 0, 0, {}, abflag::instant | abflag::starve_ok },
 
-    { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::instant },
+    { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::instant | abflag::starve_ok },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::delay },
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
@@ -345,7 +347,7 @@ static const ability_def Ability_List[] =
       2, 0, 250, 0, {fail_basis::evo, 60, 2}, abflag::none },
 #if TAG_MAJOR_VERSION == 34
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::starve_ok },
 #endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 100, 0, {fail_basis::evo, 40, 2}, abflag::none },
@@ -355,7 +357,7 @@ static const ability_def Ability_List[] =
       3, 0, 200, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::starve_ok },
 
     // INVOCATIONS:
     // Zin
@@ -424,9 +426,9 @@ static const ability_def Ability_List[] =
 
     // Sif Muna
     { ABIL_SIF_MUNA_DIVINE_ENERGY, "Divine Energy",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::instant },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
     { ABIL_SIF_MUNA_STOP_DIVINE_ENERGY, "Stop Divine Energy",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::instant },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       0, 0, 0, 8, {fail_basis::invo}, abflag::none },
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -527,7 +529,7 @@ static const ability_def Ability_List[] =
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
       0, 0, 0, 10, {fail_basis::invo}, abflag::none },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
@@ -623,29 +625,29 @@ static const ability_def Ability_List[] =
         abflag::none },
 
     { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
-        0, 0, 0, 0, {fail_basis::invo},abflag::none },
+        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
     { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
-        0, 0, 0, 0, {fail_basis::invo},abflag::none },
+        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
     { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
-        0, 0, 0, 0, {fail_basis::invo},abflag::none },
+        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
 
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
-        0, 0, 0, 0, {fail_basis::invo}, abflag::instant },
+        0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
 
     // Wu Jian
     { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
         0, 0, 0, 2, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
     { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
-    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::none },
-    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::none },
-    { ABIL_WU_JIAN_WALLJUMP, "Wall Jump", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_WU_JIAN_WALLJUMP, "Wall Jump", 0, 0, 0, 0, {}, abflag::starve_ok },
 
-    { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
 };
 
 static const ability_def& get_ability_def(ability_type abil)
@@ -1330,36 +1332,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    // Some abilities don't need a hunger check.
-    bool hungerCheck = true;
-    switch (abil.ability)
-    {
-        case ABIL_RENOUNCE_RELIGION:
-        case ABIL_CONVERT_TO_BEOGH:
-        case ABIL_STOP_FLYING:
-#if TAG_MAJOR_VERSION == 34
-        case ABIL_EVOKE_TURN_VISIBLE:
-#endif
-        case ABIL_END_TRANSFORMATION:
-        case ABIL_CANCEL_PPROJ:
-        case ABIL_STOP_RECALL:
-        case ABIL_TRAN_BAT:
-        case ABIL_ASHENZARI_END_TRANSFER:
-        case ABIL_HEPLIAKLQANA_IDENTITY:
-        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
-        case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
-        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
-        case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-        case ABIL_WU_JIAN_WALLJUMP:
-        case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
-            hungerCheck = false;
-            break;
-        default:
-            break;
-    }
-
-    if (hungerCheck && apply_starvation_penalties())
+    if (!testbits(abil.flags, abflag::starve_ok)
+        && apply_starvation_penalties())
     {
         if (!quiet)
             canned_msg(MSG_TOO_HUNGRY);
@@ -1368,7 +1342,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     // Don't insta-starve the player.
     // (Losing consciousness possible from 400 downward.)
-    if (hungerCheck && !you.undead_state())
+    if (!testbits(abil.flags, abflag::starve_ok) && !you.undead_state())
     {
         const hunger_state_t state =
             static_cast<hunger_state_t>(max(0, you.hunger_state - 1));
