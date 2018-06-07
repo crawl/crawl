@@ -52,3 +52,46 @@ nnn==nnn
 nnn==nnn
 ........
 ENDMAP
+
+NAME:  gammafunk_vaults_ghost_grave
+TAGS:  vaults_orient_w
+KITEM: O = superb_item / star_item
+KMONS: p = withered plant
+KMONS: O = player ghost
+SUBST: de = |*, t : tp
+TILE:  G = dngn_gravestone
+TILE:  t = dngn_tree_dead
+: set_feature_name("granite_statue", "a gravestone")
+FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
+: vaults_ghost_setup(_G)
+MAP
+..x.....
+..x.....
+..n.dt..
+..=.OGt.
+..n.et..
+..x.....
+..x.....
+ENDMAP
+
+NAME:  gammafunk_vaults_ghost_split
+KMONS: O = player ghost
+SUBST:  defg = |*
+NSUBST: D = 2=0 / 2=0. / 9 / 2=9. / 8 / 8. / .
+SUBST: c : bcv, p : b., q : b., b : bcv
+: vaults_ghost_setup(_G)
+MAP
+.............
+.............
+..xxxnnnxxx..
+..nD..D..Dx..
+..n..qpq..x..
+..=.Dpqpe.n..
+..=...OgdDn..
+..=.Dpqpf.n..
+..n..qpq..x..
+..nD..D..Dx..
+..xxxnnnxxx..
+.............
+.............
+ENDMAP
