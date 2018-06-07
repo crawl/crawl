@@ -95,3 +95,45 @@ MAP
 .............
 .............
 ENDMAP
+
+NAME:   gammafunk_vaults_ghost_necromancy
+TAGS:   vaults_orient_w
+KMONS:  O = player ghost
+MONS:   simulacrum place:Vaults:5 / spectre place:Vaults:5, lich
+SUBST:  defg = |*, h = *, i = %$, j = -
+NSUBST: 1 = 12 / 1, - = 3=1 / 6=1- / -
+FTILE:  -|*%$O12G = floor_pebble_brown / floor_pebble_darkgray
+: vaults_ghost_setup(_G)
+MAP
+..xxxxxxx
+..n1x1x1x
+..n---igx
+..=---exx
+..=---dOx
+..=---fxx
+..n---jhx
+..n1x1x1x
+..xxxxxxx
+ENDMAP
+
+NAME:   gammafunk_vaults_ghost_spectres
+TAGS:   vaults_orient_w
+KMONS:  O = player ghost
+MONS:   wraith / shadow
+MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
+MONS:   eidolon, revenant / curse skull
+SUBST:  defg = |*, h = *, i = %$
+NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
+FTILE:  -|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
+: vaults_ghost_setup(_G)
+MAP
+..xxxxxxx
+..nDxDxDx
+..n----gx
+..=---exx
+..=--idOx
+..=---fxx
+..n----hx
+..nDxDxDx
+..xxxxxxx
+ENDMAP

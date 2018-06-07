@@ -207,3 +207,267 @@ ENDMAP
 #
 #
 ###############################################################################
+
+NAME:   gammafunk_ghost_necromancy
+# Omit Elf since that branch has few good monsters for derived undead.
+DEPTH:  D:3-, Lair, Orc, Shoals, Snake, Spider, Swamp, Crypt, Depths, Zot
+ORIENT: float
+KMONS:  O = player ghost
+# Progressive depth/numbers of zombies and type/amount of loot.
+# First handle Dungeon.
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+MONS:   skeleton place:D:6 / zombie place:D:6
+SUBST:  d = *%, e = %$, fghij = -
+NSUBST: 1 = 2=1 / 1---
+:     elseif you.depth() < 9 then
+MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 / \
+        simulacrum place:D:9
+SUBST:  d = *, e = *%, f = %$--, ghij = -
+NSUBST: 1 = 2=1 / 1-
+:     elseif you.depth() < 12 then
+MONS:   w:5 zombie place:D:12 / spectre place:D:12 / simulacrum place:D:12
+SUBST:  d = |*, e = *, f = %$, ghij = -
+NSUBST: 1 = 3=1 / 1-, - = 1- / -
+:     elseif you.depth() < 15 then
+MONS:   w:5 zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - = 4=1- / -
+:     else
+MONS:   place:Depths:1 zombie / place:Depths:1 spectre / \
+        place:Depths:1 simulacrum
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - = 1 / 4=1- / -
+:     end
+# Set up derived undead from branch end for non-Dungeon branches.
+: else
+{{
+  undead_place = "place:" .. you.branch() .. ":" .. dgn.br_depth(you.branch())
+  mons(undead_place .. " spectre / " .. undead_place .. " simulacrum")
+}}
+# Handle loot/monsters for non-Dungeon branches.
+:     if you.in_branch("Lair") then
+SUBST:  de = |*, f = *%, g = %$--, hij = -
+NSUBST: 1 = 4=1 / 1-, - = 2=1- / -
+:     elseif you.in_branch("Orc") then
+SUBST:  de = |*, f = *, g = %$, hij = -
+NSUBST: 1 = 5=1 / 1-, - = 3=1- / -
+:     elseif you.in_branch("Crypt") then
+MONS: revenant / curse skull
+SUBST:  defg = |*, h = *, i = %$, j = -
+NSUBST: 1 = 12 / 1, - = 3=1 / 6=1- / -
+:     elseif you.in_branch("Depths") then
+MONS: ancient lich
+SUBST:  defgh = |*, i = *%, j = %$--
+NSUBST: 1 = 2=12 / 1, - = 3=1 / 8=1- / -
+:     elseif you.in_branch("Zot") then
+MONS: ancient lich, curse toe
+SUBST:  defghij = |*
+NSUBST: 1 = 12 / 123 / 1, - = 4=1 / 8=1- / -
+# Lair branches
+:     else
+SUBST:  def = |*, g = *, h = %$, ij = -
+NSUBST: - = 2=1 / 4=1- / -
+:     end
+: end
+FTILE:  -|*%$O12G = floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+ ccccccc
+.n1c1c1c
+.n---igc
+.=---ecc
+@=---dOc
+.=---fcc
+.n---jhc
+.n1c1c1c
+ ccccccc
+ENDMAP
+
+NAME:   gammafunk_ghost_spectres
+DEPTH:  D:8-, Crypt
+ORIENT: float
+KMONS:  O = player ghost
+# Dungeon levels
+: if you.absdepth() < 10 then
+MONS:   wraith, shadow / freezing wraith
+SUBST:  d = *, e = *%, f = %$--,  ghi = -
+NSUBST: D = 2=1 / 4=1- / -
+: elseif you.absdepth() < 12 then
+MONS:   wraith, shadow / freezing wraith
+SUBST:  d = |*, e = *, f = %$,  ghi = -
+NSUBST: D = 3=1 / 2=1- / 2-, - = 1- / -
+: elseif you.absdepth() < 14 then
+MONS:  wraith, shadow / freezing wraith
+MONS:  shadow wraith / flayed ghost / phantasmal warrior
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: D = 4=1 / 1222 / 23--, - = 1- / -
+: elseif you.absdepth() < 16 then
+MONS:   wraith, shadow / freezing wraith
+MONS:   shadow wraith / flayed ghost / phantasmal warrior
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: D = 2=1 / 12 / 2=2- / 3-, - = 1 / 3=1- / -
+# Crypt
+: else
+MONS:   wraith / shadow
+MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
+MONS:   eidolon, revenant / curse skull
+SUBST:  defg = |*, h = *, i = %$
+NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
+: end
+FTILE:  -|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+ ccccccc
+.nDcDcDc
+.n----gc
+.=---eGc
+@=--idOc
+.=---fGc
+.n----hc
+.nDcDcDc
+ ccccccc
+ENDMAP
+
+NAME:   gammafunk_ghost_ooze
+DEPTH:  D:8, Lair, Depths
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   jelly, slime creature, death ooze
+: if you.in_branch("D") then
+:     if you.depth() < 10 then
+SUBST:  d = *, e = *%, f = %$--,  ghi = -
+NSUBST: - = 2=1 / 4=1. / 2 / 2=2. / .
+:     elseif you.depth() < 12 then
+SUBST:  d = |*, e = *, f = %$,  ghi = -
+NSUBST: - = 2=1 / 4=1. / 2=2 / 2=2. / .
+:     elseif you.depth() < 14 then
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - =  2=1 / 3=1. / 2=2 / 4=2. / 3. / .
+:     else
+SUBST:  defg = |*, h = *, i = %$, j = -
+NSUBST: - =  2=1 / 2=1. / 2=2 / 5=2. / 3 / 3. / .
+:     end
+: elseif you.in_branch("Lair") then
+:     if you.depth() < 5 then
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - =  2=1 / 3=1. / 2=2 / 4=2. / 3. / .
+:     else
+SUBST:  defg = |*, h = *, i = %$, j = -
+NSUBST: - =  2=1 / 2=1. / 2=2 / 5=2. / 3 / 3. / .
+:     end
+# Depths
+: else
+SUBST:  defgh = |*, i = *%, j = %$--
+NSUBST: - = 6=2 / 7=2. / 4=3 / 8=3. / .
+: end
+KFEAT:  _ = altar_jiyva
+COLOUR: c = green
+COLOUR: n = lightgreen
+FTILE:  -|*%$O01289G = floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+  ccccc
+ cc---cn.
+cci----n.
+ceg----=.
+c_dO---=@
+cfh----=.
+ccj----n.
+ cc---cn.
+  ccccc
+ENDMAP
+
+NAME:   gammafunk_ghost_mausoleum
+DEPTH:  D:3-, Swamp, Crypt, Depths, Zot
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+KMONS:  O = player ghost
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+MONS:   skeleton place:D:6 / zombie place:D:6
+MONS:   mummy / shadow imp / wight / necrophage / phantom / hungry ghost
+SUBST:  d = *%, e = %$, f = %$--, ghij = -
+NSUBST: D = 2=1 / 2=1- / 2- / -
+:     elseif you.depth() < 9 then
+MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 / \
+        simulacrum place:D:9 / mummy / shadow imp / wight / necrophage / \
+        phantom / hungry ghost
+MONS:   wraith / vampire
+SUBST:  d = *, e = *%, f = %$,  ghi = -
+NSUBST: D = 2=1 / 3=1- / 2- / 2--- / -
+:     elseif you.depth() < 12 then
+MONS:   mummy / wight / zombie place:D:12 / spectre place:D:12 / \
+        simulacrum place:D:12 / phantom / hungry ghost / wraith / vampire
+MONS:   vampire mosquito band / shadow / death knight / skeletal warrior / \
+        freezing wraith w:5
+SUBST:  d = |*, e = *, f = *%,  g = %$--, hi = -
+NSUBST: D = 2=1 / 4=1- / 2=2- / -
+:     elseif you.depth() < 15 then
+MONS:   zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15 / \
+        vampire mosquito band / death knight / skeletal warrior
+MONS:   freezing wraith / necromancer / shadow wraith / vampire knight / \
+        phantasmal warrior / flayed ghost
+SUBST:  def = |*, g = *, h = %$, ij = -
+NSUBST: D = 3=1 / 5=1- / 2 / 222- / -
+:     else
+MONS:   zombie place:Depths:1 / spectre place:Depths:1 / \
+        simulacrum place:Depths:1 / \
+        vampire mosquito band / death knight / skeletal warrior / \
+        freezing wraith
+MONS:   necromancer / shadow wraith / vampire knight / phantasmal warrior / \
+        flayed ghost
+SUBST:  def = |*, g = *, h = %$, ij = -
+NSUBST: D = 4=1 / 4=1- / 2 / 2=2- / -
+:     end
+: elseif you.in_branch("Swamp") then
+MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / shadow / \
+        bog body / vampire mosquito band / tyrant leech
+MONS:   ghost crab / hydra spectre / hydra simulacrum
+SUBST:  defg = |*, h = *%, i = %$--, j = -
+NSUBST: D = 4=1 / 5=1- / 2 / 2=2- / 2--- / -
+: elseif you.in_branch("Crypt") then
+SUBST:  defgh = |*, i = *%, j = %$..
+NSUBST: D = 5=0 / 5=0- / 98 / 3=98-- / 98------ / -
+: elseif you.in_branch("Depths") then
+MONS:   spectre place:Depths:5 / simulacrum place:Depths:5 / \
+        necromancer / vampire knight / vampire mage / sphinx / flayed ghost w:5
+MONS:   lich / deep elf death mage / juggernaut simulacrum / \
+        juggernaut spectre / caustic shrike simulacrum / caustic shrike spectre
+MONS:   ancient lich
+SUBST:  defgh = |*, i = *, j = %$
+NSUBST: D = 5=0 / 6=0- / 2 / 4=2- / 3- / -
+: elseif you.in_branch("Zot") then
+MONS:   simulacrum place:Zot:5 / spectre place:Zot:5 / shadow dragon / \
+        death cob
+MONS:   golden dragon simulacrum / golden dragon spectre / \
+        quicksilver dragon simulacrum / quicksilver dragon spectre / \
+        killer klown simulacrum / killer klown spectre / ancient lich
+MONS:   curse toe
+SUBST:  defghij = |*, 2 = 12
+NSUBST: D = 5=0 / 7=0- / 2=2 / 2=2- / 3- / -
+: end
+NSUBST: R = R / -
+MARKER: P = lua:transp_loc("ghost_mausoleum_entry")
+MARKER: Q = lua:transp_dest_loc("ghost_mausoleum_entry")
+MARKER: R = lua:transp_loc("ghost_mausoleum_exit")
+MARKER: S = lua:transp_dest_loc("ghost_mausoleum_exit")
+FTILE:  -|*%$O01289G = floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+ ...............
+ .nnnnnnnnnnnnn.
+ .nR--D---D--Rn.
+ .n-D---D---D-n.
+ .n--ccc-ccc-in.
+ .n-DcGcDcGcDgn.
+..n----------en..
+@PnOD-D-Q-D-DdnS@
+..n----------fn..
+ .n-DcGcDcGcDhn.
+ .n--ccc-ccc-jn.
+ .n-D---D---D-n.
+ .nR--D---D--Rn.
+ .nnnnnnnnnnnnn.
+ ...............
+ENDMAP
