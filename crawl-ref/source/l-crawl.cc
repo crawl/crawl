@@ -356,6 +356,17 @@ static bool _check_can_do_command(lua_State *ls)
         return false;
     }
 
+    // if there's pending input, all of the code that uses this check will
+    // separate the first key/command from the rest of the sequence, so don't
+    // allow the sequence to start. TODO: an alternative might be to just push
+    // everything at the end? The current version seems safer, though.
+    if (has_pending_input())
+    {
+        luaL_error(ls,
+                "Cannot currently process new keys (there is pending input)");
+        return false;
+    }
+
     if (you.turn_is_over)
     {
         luaL_error(ls, "Cannot currently process new keys (turn is over)");
