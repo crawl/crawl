@@ -27,6 +27,7 @@
  - 'Poison Arrow' may now show up in the Book of Power
  - 'Excruciating Wounds' has been removed
  ### Backgrounds
+ - 'Archaeologist' Background - Starts off with a crate and a dusty tome. The tome reveals itself to be a random skill manual at XL 3, and when the manual is finished, the crate unlocks and gives the player a fixed randart item.
  - The Necromancer starting spellbook contains 'Bolt of Draining'
  - 'Assassin' has been renamed to 'Rogue'
  ### Gods
