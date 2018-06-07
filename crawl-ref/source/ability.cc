@@ -589,7 +589,7 @@ static const ability_def Ability_List[] =
     { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
       0, 0, 0, 0, {fail_basis::invo}, abflag::gold },
     { ABIL_GOZAG_CALL_MERCHANT, "Call Merchant",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::gold },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::gold|abflag::starve_ok },
     { ABIL_GOZAG_BRIBE_BRANCH, "Bribe Branch",
       0, 0, 0, 0, {fail_basis::invo}, abflag::gold },
 
