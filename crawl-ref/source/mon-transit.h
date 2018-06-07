@@ -3,8 +3,7 @@
  * @brief Tracking monsters in transit between levels.
 **/
 
-#ifndef MON_TRANSIT_H
-#define MON_TRANSIT_H
+#pragma once
 
 #include <list>
 #include <map>
@@ -15,10 +14,13 @@ struct follower
 {
     monster mons;
     FixedVector<item_def, NUM_MONSTER_SLOTS> items;
+    int transit_start_time;
 
     follower() : mons(), items() { }
     follower(const monster& m);
-    bool place(bool near_player = false);
+
+    // if placement was successful, returns a pointer to the placed monster
+    monster* place(bool near_player = false);
     void load_mons_items();
     void restore_mons_items(monster& m);
 };
@@ -29,30 +31,29 @@ typedef list<follower> m_transit_list;
 typedef map<level_id, m_transit_list> monsters_in_transit;
 
 // This one too.
+#if TAG_MAJOR_VERSION == 34
 typedef list<item_def> i_transit_list;
 typedef map<level_id, i_transit_list> items_in_transit;
+#endif
 
 extern monsters_in_transit the_lost_ones;
-extern items_in_transit    transiting_items;
 
 void transit_lists_clear();
 
 m_transit_list *get_transit_list(const level_id &where);
 void add_monster_to_transit(const level_id &dest, const monster& m);
-void add_item_to_transit(const level_id &dest, const item_def &i);
 
 void remove_monster_from_transit(const level_id &lid, mid_t mid);
 
 // Places (some of the) monsters eligible to be placed on this level.
 void place_transiting_monsters();
 void place_followers();
-
-void place_transiting_items();
-
+void handle_followers(const coord_def &from,
+                      bool (*handler)(const coord_def &pos,
+                                      const coord_def &from, bool &real));
 void tag_followers();
 void untag_followers();
+void transport_followers_from(const coord_def &from);
 
 void apply_daction_to_transit(daction_type act);
 int count_daction_in_transit(daction_type act);
-
-#endif

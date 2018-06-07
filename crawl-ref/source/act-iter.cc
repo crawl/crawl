@@ -76,6 +76,7 @@ monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
 {
     if (!valid(&menv[0]))
         advance();
+    begin_point = i;
 }
 
 monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
@@ -83,6 +84,7 @@ monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
 {
     if (!valid(&menv[0]))
         advance();
+    begin_point = i;
 }
 
 monster_near_iterator::operator bool() const
@@ -109,10 +111,34 @@ monster_near_iterator& monster_near_iterator::operator++()
     return *this;
 }
 
+bool monster_near_iterator::operator==(const monster_near_iterator &other)
+{
+    return i == other.i;
+}
+
+bool monster_near_iterator::operator!=(const monster_near_iterator &other)
+{
+    return !(operator==(other));
+}
+
 monster_near_iterator monster_near_iterator::operator++(int)
 {
     monster_near_iterator copy = *this;
     ++(*this);
+    return copy;
+}
+
+monster_near_iterator monster_near_iterator::begin()
+{
+    monster_near_iterator copy = *this;
+    copy.i = begin_point;
+    return copy;
+}
+
+monster_near_iterator monster_near_iterator::end()
+{
+    monster_near_iterator copy = *this;
+    copy.i = MAX_MONSTERS;
     return copy;
 }
 

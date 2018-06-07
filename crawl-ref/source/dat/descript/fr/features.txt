@@ -405,10 +405,6 @@ A stone wall
 Un obstacle plus solide que les simples parois de roche. Seule la plus
 puissante des magie peut briser ces murs de pierre.
 %%%%
-A short-range portal
-
-Passer par ce portail vous enverra dans une autre salle.
-%%%%
 A teleport trap
 
 Ce piège magique peut déplacer quiconque d'assez malchanceux pour marcher

@@ -1,6 +1,6 @@
-define(["jquery", "comm", "client", "./enums", "./dungeon_renderer",
-        "./cell_renderer", "./util", "./options"],
-function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
+define(["jquery", "comm", "client", "./enums", "./cell_renderer",
+        "./util", "./options"],
+function ($, comm, client, enums, cr, util, options) {
     "use strict";
 
     var chunk_size = 50;
@@ -22,6 +22,14 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         return item.colour || 7;
     }
 
+    function menu_title_indent()
+    {
+        if (!options.get("tile_menu_icons")
+            || !(menu.tag === "ability" || menu.tag === "spell"))
+            return 0;
+        return 32 + 2; // menu <ol> has a 2px margin
+    }
+
     function set_item_contents(item, elem)
     {
         elem.html(util.formatted_string_to_html(item_text(item)));
@@ -29,6 +37,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         elem.removeClass();
         elem.addClass("level" + item.level);
         elem.addClass("fg" + col);
+
+        if (item.level < 2)
+            elem.css("padding-left", menu_title_indent()+"px");
 
         if (item_selectable(item))
         {
@@ -42,15 +53,13 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         {
             var renderer = new cr.DungeonCellRenderer();
             var canvas = $("<canvas>");
-            renderer.set_cell_size(dungeon_renderer.cell_width,
-                                   dungeon_renderer.cell_height);
             util.init_canvas(canvas[0], renderer.cell_width,
                                         renderer.cell_height);
             canvas.css("vertical-align", "middle");
             renderer.init(canvas[0]);
 
             $.each(item.tiles, function () {
-                renderer.draw_from_texture(this.t, 0, 0, this.tex, 0, 0, this.ymax);
+                renderer.draw_from_texture(this.t, 0, 0, this.tex, 0, 0, this.ymax, false);
             });
 
             elem.prepend(canvas);
@@ -155,7 +164,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         else if (menu.jump_to)
         {
             scroll_to_item(menu.jump_to, true);
-        } else {
+        } else if (menu.items.length > 0) {
             scroll_to_item(0, true);
         }
     }
@@ -415,12 +424,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     function update_title()
     {
         $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
-
-        if (menu.title.suffix)
-        {
-            $("#menu_title").append(" <span id='menu_suffix'>"
-                + util.formatted_string_to_html(menu.title.suffix) + "</span>");
-        }
+        $("#menu_title").css("padding-left", menu_title_indent()+"px");
     }
 
     function pattern_select()
@@ -451,7 +455,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
                 var ctrlf = String.fromCharCode(6);
                 var enter = String.fromCharCode(13);
                 var text = ctrlf + input.val() + enter;
-                comm.send_message("input", { text: text + "\n" });
+                comm.send_message("input", { text: text });
 
                 restore();
                 ev.preventDefault();
@@ -496,18 +500,26 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         }
     }
 
+    function close_all_menus()
+    {
+        while (menu_stack.length > 0)
+            close_menu();
+    }
+
     function update_menu(data)
     {
         $.extend(menu, data);
 
-        if (menu.total_items < menu.items.length)
+        var old_length = menu.items.length;
+        menu.items.length = menu.total_items;
+        if (menu.total_items < old_length)
         {
-            for (var i = menu.items.length; i >= menu.total_items; --i)
+            for (var i = old_length; i >= menu.total_items; --i)
                 delete menu.items[i];
-            menu.items.length = menu.total_items;
             var container = $("ol");
             container.empty();
             $.each(menu.items, function(i, item) {
+                item.elem.data("item", item);
                 container.append(item.elem);
             });
         }
@@ -552,6 +564,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     comm.register_handlers({
         "menu": open_menu,
         "close_menu": close_menu,
+        "close_all_menus": close_all_menus,
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
@@ -571,7 +584,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         client.center_element($("#menu"));
         if (menu.anchor_last)
             scroll_bottom_to_item(menu.last_visible, true);
-        else
+        else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
         // scrolling might not call this, but still need to show/hide more
         menu_scroll_handler();

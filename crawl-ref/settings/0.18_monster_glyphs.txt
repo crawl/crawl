@@ -1,0 +1,8 @@
+# For any monster glyphs that have changed in 0.19 compared to 0.18, use these
+# settings to restore the 0.18 monster glyphs.
+
+###########################
+# monsters
+###########################
+
+mon_glyph += hornet : red y

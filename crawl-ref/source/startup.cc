@@ -21,12 +21,12 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -42,6 +42,7 @@
 #include "ng-setup.h"
 #include "notes.h"
 #include "output.h"
+#include "player-save-info.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -103,7 +104,7 @@ static void _initialize()
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
 
     you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);
@@ -146,10 +147,10 @@ static void _initialize()
 
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled
-        && !Options.tile_skip_title
         && crawl_state.title_screen)
     {
-        tiles.update_title_msg("Loading complete, press any key to start.");
+        if (!Options.tile_skip_title)
+            tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
     }
 #endif
@@ -223,7 +224,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || !mons_is_threatening(mon))
+        if (mon == nullptr || !mons_is_threatening(*mon))
             continue;
 
         dprf("Dismissing %s",
@@ -233,7 +234,7 @@ static void _zap_los_monsters(bool items_also)
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
         // player sees nothing.
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 
@@ -248,13 +249,13 @@ static void _post_init(bool newc)
 
     crawl_state.need_save = true;
     crawl_state.last_type = crawl_state.type;
-    crawl_state.last_game_won = false;
+    crawl_state.marked_as_won = false;
 
     destroy_abyss();
 
     calc_hp();
     calc_mp();
-    if (you.form != TRAN_LICH)
+    if (you.form != transformation::lich)
         food_change(true);
     shopping_list.refresh();
 
@@ -299,10 +300,6 @@ static void _post_init(bool newc)
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        you.redraw_temperature = true;
-#endif
     you.redraw_quiver       = true;
     you.wield_change        = true;
 
@@ -311,10 +308,9 @@ static void _post_init(bool newc)
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
-    string yname = you.your_name; // XXX: what's this for?
+
     read_init_file(true);
     Options.fixup_options();
-    you.your_name = yname;
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
@@ -577,6 +573,10 @@ static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;
 
+// TODO: should be game_type. Also, does this really need to be static?
+// maybe part of crawl_state?
+static int startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+
 /**
  * Saves game mode and player name to ng_choice.
  */
@@ -584,7 +584,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
                                const newgame_def& defaults)
 {
     // Initialise before the loop so that ? doesn't forget the typed name.
-    string input_string = defaults.name;
+    string input_string = crawl_state.default_startup_name;
 
 again:
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
@@ -593,7 +593,6 @@ again:
     vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
     const int num_modes = NUM_GAME_TYPE;
-    static int type = GAME_TYPE_UNSPECIFIED;
 
 #ifdef USE_TILE_LOCAL
     const int max_col    = tiles.get_crt()->mx;
@@ -712,10 +711,15 @@ again:
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (type != GAME_TYPE_UNSPECIFIED)
+    // don't use non-enum game_type values across restarts, as the list of
+    // saves may have changed on restart.
+    if (startup_menu_game_type >= NUM_GAME_TYPE)
+        startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+
+    if (startup_menu_game_type != GAME_TYPE_UNSPECIFIED)
     {
         menu.set_active_object(game_modes);
-        game_modes->set_active_item(type);
+        game_modes->set_active_item(startup_menu_game_type);
     }
     else if (save != -1)
     {
@@ -738,6 +742,9 @@ again:
         menu.set_active_object(game_modes);
         game_modes->activate_first_item();
     }
+
+    descriptor->render();
+    descriptor->override_description(crawl_state.last_game_exit.message);
 
     while (true)
     {
@@ -771,7 +778,7 @@ again:
             // will continue to be selected when we restart the menu.
             MenuItem *active = menu.get_active_item();
             if (active && active->get_id() >= NUM_GAME_TYPE)
-                type = GAME_TYPE_UNSPECIFIED;
+                startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
 
             // restart because help messes up CRTRegion
             goto again;
@@ -808,9 +815,6 @@ again:
                     full_name = false;
                 }
             }
-            // clear the "That's a silly name line"
-            cgotoxy(SCROLLER_MARGIN_X, GAME_MODES_START_Y - 1);
-            clear_to_end_of_line();
 
             // Depending on whether the current name occurs
             // in the saved games, update the active object.
@@ -832,8 +836,10 @@ again:
             else
             {
                 // Menu might have changed selection -- sync name.
-                type = menu.get_active_item()->get_id();
-                switch (type)
+                // TODO: the mapping from menu item to game_type is alarmingly
+                // brittle here
+                startup_menu_game_type = menu.get_active_item()->get_id();
+                switch (startup_menu_game_type)
                 {
                 case GAME_TYPE_ARENA:
                     input_string = "";
@@ -855,7 +861,7 @@ again:
                     break;
 
                 default:
-                    int save_number = type - NUM_GAME_TYPE;
+                    int save_number = startup_menu_game_type - NUM_GAME_TYPE;
                     if (save_number < num_saves)
                         input_string = chars.at(save_number).name;
                     else // new game
@@ -890,10 +896,7 @@ again:
             else
             {
                 // bad name
-                cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
-                clear_to_end_of_line();
-                textcolour(RED);
-                cprintf("That's a silly name");
+                descriptor->override_description("That's a silly name.");
                 // Don't make the next key re-enter the game.
                 menu.clear_selections();
             }
@@ -957,11 +960,27 @@ static void _choose_arena_teams(newgame_def& choice,
 
     char buf[80];
     if (cancellable_get_line(buf, sizeof(buf)))
-        game_ended();
+        game_ended(game_exit::abort);
     choice.arena_teams = buf;
     if (choice.arena_teams.empty())
         choice.arena_teams = defaults.arena_teams;
 }
+
+#ifndef DGAMELAUNCH
+static bool _exit_type_allows_menu_bypass(game_exit exit)
+{
+    // restart with last game saved, crashed, or aborted: don't bypass
+    // restart with last game died, won, or left: bypass if other settings allow
+    // it. If quit, bypass only if the relevant option is set.
+    // unknown corresponds to no previous game in this crawl
+    // session.
+    return exit == game_exit::death
+        || exit == game_exit::win
+        || exit == game_exit::unknown
+        || exit == game_exit::leave
+        || (exit == game_exit::quit && Options.newgame_after_quit);
+}
+#endif
 
 bool startup_step()
 {
@@ -974,6 +993,8 @@ bool startup_step()
     crawl_state.type = choice.type;
 
     newgame_def defaults = read_startup_prefs();
+    if (crawl_state.default_startup_name.size() == 0)
+        crawl_state.default_startup_name = defaults.name;
 
     // Set the crawl_state gametype to the requested game type. This must
     // be done before looking for the savegame or the startup prefs file.
@@ -987,10 +1008,24 @@ bool startup_step()
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
 
+
 #ifndef DGAMELAUNCH
+
+    // startup
+
+    // These conditions are ignored for tutorial or sprint, which always trigger
+    // the relevant submenu. Arena never triggers a menu.
+    const bool can_bypass_menu =
+            _exit_type_allows_menu_bypass(crawl_state.last_game_exit.exit_reason)
+         && crawl_state.last_type != GAME_TYPE_ARENA
+         && Options.name_bypasses_menu
+         && is_good_name(choice.name, false, false);
+
     if (crawl_state.last_type == GAME_TYPE_TUTORIAL
         || crawl_state.last_type == GAME_TYPE_SPRINT)
     {
+        // this counts as showing the startup menu
+        crawl_state.bypassed_startup_menu = false;
         choice.type = crawl_state.last_type;
         crawl_state.type = crawl_state.last_type;
         crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
@@ -998,17 +1033,16 @@ bool startup_step()
         if (choice.type == GAME_TYPE_TUTORIAL)
             choose_tutorial_character(choice);
     }
-    // We could also check whether game type has been set here,
-    // but it's probably not necessary to choose non-default game
-    // types while specifying a name externally.
-    else if (!is_good_name(choice.name, false, false)
-        && choice.type != GAME_TYPE_ARENA)
+    else if (!can_bypass_menu && choice.type != GAME_TYPE_ARENA)
     {
+        crawl_state.bypassed_startup_menu = false;
         _show_startup_menu(choice, defaults);
         // [ds] Must set game type here, or we won't be able to load
         // Sprint saves.
         crawl_state.type = choice.type;
     }
+    else
+        crawl_state.bypassed_startup_menu = true;
 #endif
 
     // TODO: integrate arena better with
@@ -1017,8 +1051,8 @@ bool startup_step()
     {
         _choose_arena_teams(choice, defaults);
         write_newgame_options_file(choice);
-        run_arena(choice.arena_teams);
-        end(0, false);
+        crawl_state.last_type = GAME_TYPE_ARENA;
+        run_arena(choice.arena_teams); // this is NORETURN
     }
 
     bool newchar = false;
@@ -1037,7 +1071,9 @@ bool startup_step()
     {
         setup_game(ng);
         newchar = true;
+        write_newgame_options_file(choice);
     }
+    crawl_state.default_startup_name = you.your_name;
 
     _post_init(newchar);
 

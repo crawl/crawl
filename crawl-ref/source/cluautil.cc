@@ -3,7 +3,7 @@
 #include "cluautil.h"
 
 #include "delay.h"
-#include "l_libs.h"
+#include "l-libs.h"
 
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {

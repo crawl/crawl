@@ -1,13 +1,5 @@
-Date: Mon, 9 Nov 2009 14:17:28 -0800
-From: Stefan O'Rear <stefanor@cox.net>
-To: crawl-ref-discuss@lists.sourceforge.net
-Message-ID: <20091109221728.GA7668@localhost.localdomain>
-Subject: [Crawl-ref-discuss] Savefile compatibility: how and why
-
-Robert asked me to write something for the list on the subject of
-savefile compatibility, so here goes.
-
-1. WHY
+1. Why
+------
 
 Having a savefile compatibility procedure is crucial in the stable
 branches, as it allows applying bug fix releases in mid-game. It's
@@ -19,15 +11,58 @@ If it is impossible to upgrade in the middle of a game, then all bugs
 for late-game features will be reported against old versions, need-
 lessly complicating the bug fixing process.
 
-The situation is exacerbated by the public beta server (Marc Thoben's
-crawl.develz.org), since it can only be updated site-wide; it cannot
-be updated between games as there are almost always saved games on
-the server, so it is simply updated (with loss of saves) rarely. And
-rarely is bad.
+The situation is exacerbated by public servers that support trunk
+games, since compatibility-breaking changes prevent players from
+upgrading to receive future bugfixes, and result in bug reports
+against obsolete versions.
 
-2. HOW
 
-[note added by galehar]
+2. Save compatibility architecture
+----------------------------------
+
+For save compatibility purposes, the actual version number (for example, 0.12.2
+or 0.13-a0-2578-ged92a99) makes almost no difference. Instead, there are three
+version numbers (which we call “tags” for historic reasons) associated with
+each save and with each version of crawl: the character format, major version,
+and minor version.
+
+The character format tag is stored in the “character info” section of the save:
+the basic information such as species and level that is displayed in the save
+browser. If this section is changed in an incompatible way, the character
+format version would be incremented. However, Crawl would not even see the old
+saves; this would be rather bad (they might accidentally be overwritten, for
+example), so we have never made such a change: the format is still version 0.
+Appending new information to this section requires only incrementing the minor
+tag (see below), which is much safer.
+
+The major version tag is stored in each section of the save (each level,
+character, transiting monsters, and so on). Changing this version indicates
+that Crawl is no longer compatible with the old save: the save will be coloured
+red in the save browser and cannot be loaded. The major tag is never
+incremented within a release (e.g. between 0.12.0 and 0.12.1), only in trunk.
+We try to avoid doing this when we can, because it means trunk players will be
+unable to transfer their saves to newer versions to get bug fixes; it
+furthermore means that local players will have to keep the previous stable
+release installed until they have finished their games.
+
+The minor version tag is also stored in each section of the save, and is used
+to indicate changes that require special handling for loading old saves. The
+save-loading code if full of checks that say “only do this if the save’s minor
+tag is greater than N” or “initialize this new field if the minor tag is less
+than N”. Older versions of Crawl will refuse to load a save with a too-new
+minor tag (that is, we do not provide forward compatibility between versions),
+but newer versions will see the old tag and apply the appropriate fixups on
+load (which makes the save incompatible with the old version of crawl).
+
+The minor tag is reset to zero whenever the major tag changes. A major bump
+provides an opportunity to clean up the old save-compatibility code, since the
+old saves won’t be loadable anyway; and to remove or rearrange enumeration
+values that could not change without breaking compatibility.
+
+
+3. Maintaining save compatibility
+---------------------------------
+
 First, if you're adding a property to one of the actor, player or monster
 class, consider storing it in the props hash (declared in actor.h). Especially
 if the property is temporary or not applied to all monsters. Also, it won't
@@ -109,13 +144,9 @@ When TAG_MAJOR_VERSION is incremented, all existing TAG_MINOR_ checks
 are no longer necessary and can be removed, along with deleting the
 values of TAG_MINOR_ and restarting minor numbering from 1.
 
-Thank you for listening, I hope this was useful.
 
-Stefan
-
-
-A few comments on Tiles
------------------------
+4. A few comments on tiles
+--------------------------
 Whenever an old tile is removed without replacement, a new tile is added,
 or the order of tiles changes, saved games can look wonky when loaded.
 This happens because the tiles for floor and wall tiles get rolled once on
@@ -133,11 +164,9 @@ If we expect that we might have to add new tiles in a stable branch later
 on, we should add placeholder tiles before the official release, that can
 later be replaced without affecting saved games.
 
-Johanna
 
-
-A few comments on map caches and Lua markers
---------------------------------------------
+5. A few comments on map caches and Lua markers
+-----------------------------------------------
 Map and vault definitions are read from the relevant .des files and are stored
 in a binary format to prevent slow-down every time crawl starts. If new
 attributes or properties are added to vault definitions, save-compatibility
@@ -160,11 +189,9 @@ never get to a stage of being able to look for it.
 All Lua markers will need to be checked for minor-version checks when updating
 the major version.
 
-due
 
-
-Scheduling compatibility code for removal
------------------------------------------
+6. Scheduling compatibility code for removal
+--------------------------------------------
 In order to increase long-term maintainability, it is customary to wrap
 save compatibility code in #if blocks that check for the current value
 of TAG_MAJOR_VERSION:
@@ -243,11 +270,9 @@ required:
     if (major == 34 && (minor >= 121 && minor < 130))
         you.explore = unmarshallBoolean(th);
 
-neil
 
-
-Merges
-------
+7. Git merges
+-------------
 
 Whenever you do a merge or rebase of a branch that introduces new monsters,
 items, etc., it is very important to pay attention to enums. Unfortunately, git
@@ -267,5 +292,3 @@ trunk. You can look at the overall changes, with intervening history squashed,
 using a command like:
 
     ~$ git diff master..HEAD enum.h
-
-neil

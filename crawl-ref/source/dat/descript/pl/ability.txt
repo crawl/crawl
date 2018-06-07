@@ -70,10 +70,6 @@ Evoke Invisibility ability
 Stajesz się niewidzialny na pewien okres czasu. Włączenie niewidzialności
 zwiększa twoje magiczne zanieczyszczenie i może spowodować świecenie.
 %%%%
-Turn Visible ability
-
-Powróć do bycia widocznym.
-%%%%
 Stop Flying ability
 
 Przestań latać

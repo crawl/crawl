@@ -48,10 +48,6 @@ Halfling
 Malí, zato však houževnatí. Půlčíci jsou výbornymi střelci z praku a mají
 zvýšnou odolnost vůči mutagenním vlivům.
 %%%%
-High Elf
-
-Hrdí elfové, kteří dovedou sesílat kouzla stejně dobře jako bojovat s mečem.
-%%%%
 Hill Orc
 
 Orkové jsou zruční v boji zblízka a často také fušují do útočné magie. Jsou

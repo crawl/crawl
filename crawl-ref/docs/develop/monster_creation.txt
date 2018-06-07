@@ -1,0 +1,116 @@
+A checklist for adding new monsters
+===================================
+
+This assumes you've already done (or are in the process of finishing) the design
+work for creating a monster. These are the files that you will need to edit to
+implement the new monster.
+
+When adding entries, when possible add them in alphabetical order and near other
+monsters of similar type. Bolt yaks should be added after yaks and before death
+yaks, for example. Certain files list their entries in strictly alphabetical
+order. Whenever possible follow present convention.
+
+enum.h is a VERY important file! Many things you create will need to be declared
+there or your build will not compile.
+
+====
+
+Basic files to edit. These are the necessary files that need to be edited to
+have the monster exist and spawn. If your monster is as complex as an iguana,
+then this is all you need to do!
+
+
+- /source/enum.h
+        - Defines monster type enumeration (an ID for the monster)
+        - In monster_type, find similar monsters and add a new entry there.
+                - To preserve save compatability, you need to wrap that entry
+                in #if TAG_MAJOR_VERSION > 34 #endif.
+        - In the '// Add new monsters here:' block, at the end of that block
+        add another entry for the monster. This entry should come right above
+        the 'num_monsters' line.
+- /source/mon-data.h
+        - Define the base statistics and flags for the monster. HD, speed, etc.
+        - Follow the conventions in the large comment block at the head of the file.
+        - Add an entry here near other similar monsters.
+- /source/mon-pick-data.h
+        - Determines where and how often monster will spawn.
+        - See random-pick.h to understand the variables.
+        - Add entries for each branch of the Dungeon the monster will spawn in.
+- /source/dat/descript/monsters.txt
+        - Describe what the monster looks like and what it does.
+
+Optional:
+        - /source/mgen-enum.h
+                - If the monster will spawn in bands, add entries here.
+        - /source/mon-place.cc
+                - Define how many and with which monsters the banded monsters will spawn.
+
+====
+
+Implementation now becomes more complicated. Edit these files for
+any special abilities, spells, or unique behavior that the monster will have.
+
+
+- /source/mon-cast.cc
+        - Define what the spells *do* here, if you created a new spell.
+- /source/spl-data.h
+        - Define spell data and flags here.
+- /source/mon-spell.h
+        - Give the monster its spellbook here.
+
+        - /source/dat/database/monspell.txt
+                - Add an action line for when the monster casts a spell.
+        - /source/dat/descript/spells.txt
+                - Add descriptions of any spells the monster has for xv.
+        - /source/enum.h
+                - Declare the spell here if you created a new spell.
+                - You will also need to declare the spell and some parameters in the
+                appropriate spl-(school).cc file.
+        - /source/rltiles/gui/
+                - Add spell icons here if any are applicable.
+        - /source/rltiles/dc-spells.txt
+                - Declare enum for spell icons.
+
+
+- /source/mon-abil.cc
+        - Define any special abilities here.
+
+        If the ability involves status effects or flags -on the monster itself-, you
+        will need to edit:
+        - /source/enum.h
+                - Declare the effect here.
+        - /source/mon-info.cc
+                - Add under trivial_ench_mb_mappings
+        - /source/mon-info.h
+                - Add under monster_info_flags
+        - /source/mon-ench.cc
+                - You need to add entries to enchant_names[] and to apply_enchantments().
+        - /source/timed-effects.cc
+
+
+====
+
+These files handle the monster's visuals and other fluff. Become pretty today!
+
+
+- /source/rltiles/mon/
+        - Add the tile for the monster.
+        - Place it in an appropriate subdirectory.
+        - If you can't think of an appropriate subdir, leave it in /mon/ and it'll
+        eventually be sorted.
+- /source/rltiles/dc-corpse.txt
+        - Add an entry so the game will generate a squashed & bloody version
+        of the monster's tile for corpses.
+        - Relevant only for monsters that are their own species: if you add, for
+        example, orcish warg riders, you do not need to add a new corpse entry.
+        - Group it with other monsters sharing its glyph.
+        - Name of the monster in lowercase, then 'CORPSE_MONSTERNAME'.
+
+Optional:
+        - /source/tilemcache.cc
+                - Add entries here to set offsets for your monster
+                - For if your monster uses weapons and/or shields.
+        - /source/mon-speak.txt
+                - Add speech lines if the monster can speak. Optional.
+        - /source/dat/descript/quotes.txt
+                - Add a quote: pithy, edifying, or otherwise. Optional.

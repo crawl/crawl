@@ -1,12 +1,12 @@
 // In the default case, these translations hold:
-// map_colour -> seen_colour
+// unseen_colour -> seen_colour
 // seen_colour -> seen_em_colour
 // colour -> em_colour
 // So use a macro:
 #define COLOURS(colour, map) colour, map, map, colour, map
 // And with the default (darkgrey) map colour:
 #define COLOUR_IS(colour) COLOURS(colour, DARKGREY)
-// And for when colour and map_colour are equal:
+// And for when colour and unseen_colour are equal:
 #define COLOUR_AND_MAP(colour) COLOURS(colour, colour)
 static feature_def feat_defs[] =
 {
@@ -16,7 +16,7 @@ static feature_def feat_defs[] =
     DNGN_UNSEEN, "", "unseen",
     // dchar, magic_dchar
     NUM_DCHAR_TYPES, NUM_DCHAR_TYPES,
-    // colour, map_colour, seen_colour, em_colour, seen_em_colour
+    // colour, unseen_colour, seen_colour, em_colour, seen_em_colour
     BLACK, DARKGREY, DARKGREY, BLACK, DARKGREY,
     // flags, minimap
     FFT_OPAQUE | FFT_SOLID, MF_UNSEEN,
@@ -139,6 +139,13 @@ static feature_def feat_defs[] =
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(RED),
     FFT_SOLID, MF_LAVA,
+},
+
+{
+    DNGN_ENDLESS_SALT, "endless expanse of salt", "endless_salt",
+    DCHAR_WALL, NUM_DCHAR_TYPES,
+    COLOUR_IS(WHITE),
+    FFT_SOLID, MF_FLOOR,
 },
 
 {
@@ -369,8 +376,8 @@ PORTAL_ENTRANCE(DNGN_ENTER_BAILEY, "flagged portal", "enter_bailey", LIGHTRED),
 PORTAL_ENTRANCE(DNGN_ENTER_ICE_CAVE, "frozen archway", "enter_ice_cave", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_VOLCANO, "dark tunnel", "enter_volcano", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER_BLUE),
+PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "ruined gateway", "enter_desolation", WHITE),
 #if TAG_MAJOR_VERSION == 34
-PORTAL_ENTRANCE(DNGN_UNUSED_ENTER_PORTAL_1, "", "enter_unused", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit_portal_vault", ETC_SHIMMER_BLUE),
 #endif
 PORTAL_EXIT(DNGN_EXIT_ZIGGURAT, "gate leading back out of this place", "exit_ziggurat", ETC_SHIMMER_BLUE),
@@ -382,9 +389,7 @@ PORTAL_EXIT(DNGN_EXIT_BAILEY, "gate leading back out of this place", "exit_baile
 PORTAL_EXIT(DNGN_EXIT_ICE_CAVE, "ice covered gate leading back out of this place", "exit_ice_cave", WHITE),
 PORTAL_EXIT(DNGN_EXIT_VOLCANO, "rocky tunnel leading out of this place", "exit_volcano", RED),
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),
-#if TAG_MAJOR_VERSION == 34
-PORTAL_EXIT(DNGN_UNUSED_EXIT_PORTAL_1, "", "exit_unused", ETC_SHIMMER_BLUE),
-#endif
+PORTAL_EXIT(DNGN_EXIT_DESOLATION, "gate leading back out of this place", "exit_desolation", WHITE),
 
 #define BRANCH_ENTRANCE(enum, name, vaultname)\
 {\
@@ -499,6 +504,7 @@ ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar of an unknown god", "altar_ecumenical"
 ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", ETC_PAKELLAS),
 ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
 ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
+ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian", ETC_WU_JIAN),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\
@@ -517,11 +523,26 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_SPARKLING, "dry fountain", "non-fountain_sparkling", 
 FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGREY),
 #endif
 
+#if TAG_MAJOR_VERSION == 34
 {
     DNGN_TELEPORTER, "short-range portal", "teleporter",
     DCHAR_TELEPORTER, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(YELLOW),
     FFT_NONE, MF_FEATURE,
+},
+#endif
+{
+    DNGN_TRANSPORTER, "transporter", "transporter",
+    DCHAR_TRANSPORTER, NUM_DCHAR_TYPES,
+    RED, RED, RED, WHITE, WHITE,
+    FFT_NOTABLE, MF_TRANSPORTER,
+},
+
+{
+    DNGN_TRANSPORTER_LANDING, "transporter landing site", "transporter_landing",
+    DCHAR_TRANSPORTER_LANDING, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(DARKGREY),
+    FFT_NONE, MF_TRANSPORTER_LANDING,
 },
 
 {

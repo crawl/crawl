@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_INV_H
-#define TILEREG_INV_H
+#pragma once
 
 #include "tilereg-grid.h"
 
@@ -28,5 +27,4 @@ private:
     int _real_item_count();
 };
 
-#endif
 #endif

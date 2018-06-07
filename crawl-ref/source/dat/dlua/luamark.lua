@@ -28,7 +28,9 @@ require('dlua/lm_monst.lua')
 require('dlua/lm_trove.lua')
 require('dlua/lm_door.lua')
 require('dlua/lm_items.lua')
+require('dlua/lm_named_hatch.lua')
 require('dlua/fnwrap.lua')
+require('dlua/lm_trans.lua')
 
 function dlua_marker_reader_name(table)
   -- Check that the reader is actually registered for this table.

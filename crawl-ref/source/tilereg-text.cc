@@ -17,17 +17,27 @@ int TextRegion::cursor_flag = 0;
 int TextRegion::cursor_x;
 int TextRegion::cursor_y;
 
-TextRegion::TextRegion(FontWrapper *font) :
+TextRegion::TextRegion(FontWrapper *font_arg) :
     cbuf(nullptr),
     abuf(nullptr),
     cx_ofs(0),
     cy_ofs(0),
-    m_font(font)
+    m_font(font_arg)
 {
-    ASSERT(font);
+    ASSERT(font_arg);
 
+    // warning: dx and dy are not guaranteed to be accurate for TextRegion
+    // because on high-dpi displays, glyphs may have fractional widths relative
+    // to logical pixels. Use `grid_width_to_pixels` etc instead, or use the
+    // functions on font().
     dx = m_font->char_width();
     dy = m_font->char_height();
+}
+
+FontWrapper &TextRegion::font() const
+{
+    ASSERT(m_font);
+    return *m_font;
 }
 
 void TextRegion::on_resize()
@@ -36,7 +46,7 @@ void TextRegion::on_resize()
     delete[] abuf;
 
     int size = mx * my;
-    cbuf = new ucs_t[size];
+    cbuf = new char32_t[size];
     abuf = new uint8_t[size];
 
     for (int i = 0; i < size; i++)
@@ -52,14 +62,9 @@ TextRegion::~TextRegion()
     delete[] abuf;
 }
 
-void TextRegion::adjust_region(int *x1, int *x2, int y)
-{
-    *x2 = *x2 + 1;
-}
-
 void TextRegion::addstr(const char *buffer)
 {
-    ucs_t buf2[1024], c;
+    char32_t buf2[1024], c;
 
     int j = 0;
 
@@ -103,16 +108,13 @@ void TextRegion::addstr(const char *buffer)
         cgotoxy(print_x+1, print_y+1);
 }
 
-void TextRegion::addstr_aux(const ucs_t *buffer, int len)
+void TextRegion::addstr_aux(const char32_t *buffer, int len)
 {
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
     int adrs = y * mx;
-    int head = x;
-    int tail = x + len - 1;
 
-    // XXX: What does this even do?
-    adjust_region(&head, &tail, y);
+    ASSERT(y < my);
 
     for (int i = 0; i < len && x + i < mx; i++)
     {
@@ -137,7 +139,7 @@ void TextRegion::clear_to_end_of_line()
     }
 }
 
-void TextRegion::putwch(ucs_t ch)
+void TextRegion::putwch(char32_t ch)
 {
     // special case: check for '0' char: map to space
     if (ch == 0)
@@ -162,14 +164,6 @@ void TextRegion::cgotoxy(int x, int y)
     print_x = x-1;
     print_y = y-1;
 
-#if 0
-    if (cursor_region != nullptr && cursor_flag)
-    {
-        cursor_x = -1;
-        cursor_y = -1;
-        cursor_region = nullptr;
-    }
-#endif
     if (cursor_flag)
     {
         cursor_x = print_x;
@@ -186,6 +180,24 @@ int TextRegion::wherex()
 int TextRegion::wherey()
 {
     return print_y + 1;
+}
+
+const int TextRegion::grid_width_to_pixels(int x) const
+{
+    return font().max_width(x);
+}
+
+const int TextRegion::grid_height_to_pixels(int y) const
+{
+    return font().max_height(y);
+}
+
+void TextRegion::calculate_grid_size(int inner_x, int inner_y)
+{
+    // This can't be calculated perfectly using just dx, because on hidpi
+    // displays, font rendering may involve sub-logical-pixel advances.
+    mx = glmanager->logical_to_device(inner_x) / font().char_width(false);
+    my = glmanager->logical_to_device(inner_y) / font().char_height(false);
 }
 
 void TextRegion::_setcursortype(int curstype)
@@ -214,8 +226,8 @@ void TextRegion::render()
     {
         int idx = cursor_x + mx * cursor_y;
 
-        ucs_t   char_back = cbuf[idx];
-        uint8_t col_back  = abuf[idx];
+        char32_t char_back = cbuf[idx];
+        uint8_t col_back = abuf[idx];
 
         cbuf[idx] = '_';
         abuf[idx] = WHITE;

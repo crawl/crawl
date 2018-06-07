@@ -15,7 +15,7 @@
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -29,7 +29,10 @@
 #include "stringutil.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
+#include "tilepick.h"
+#include "tilefont.h"
 #endif
+#include "version.h"
 
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
@@ -68,6 +71,19 @@ enum MenuOptions
     M_DEFAULT_CHOICE = -9,
 };
 
+enum MenuChoices
+{
+    C_SPECIES = 0,
+    C_JOB = 1,
+};
+
+enum MenuItemStatuses
+{
+    ITEM_STATUS_UNKNOWN,
+    ITEM_STATUS_RESTRICTED,
+    ITEM_STATUS_ALLOWED
+};
+
 static bool _is_random_species(species_type sp)
 {
     return sp == SP_RANDOM || sp == SP_VIABLE;
@@ -98,17 +114,17 @@ static bool _char_defined(const newgame_def& ng)
 static string _char_description(const newgame_def& ng)
 {
     if (_is_random_viable_choice(ng))
-        return "Viable character";
+        return "Recommended character";
     else if (_is_random_choice(ng))
         return "Random character";
     else if (_is_random_job(ng.job))
     {
-        const string j = (ng.job == JOB_RANDOM ? "Random " : "Viable ");
+        const string j = (ng.job == JOB_RANDOM ? "Random " : "Recommended ");
         return j + species_name(ng.species);
     }
     else if (_is_random_species(ng.species))
     {
-        const string s = (ng.species == SP_RANDOM ? "Random " : "Viable ");
+        const string s = (ng.species == SP_RANDOM ? "Random " : "Recommended ");
         return s + get_job_name(ng.job);
     }
     else
@@ -149,7 +165,7 @@ static void _print_character_info(const newgame_def& ng)
 
 void choose_tutorial_character(newgame_def& ng_choice)
 {
-    ng_choice.species = SP_HIGH_ELF;
+    ng_choice.species = SP_HUMAN;
     ng_choice.job = JOB_FIGHTER;
     ng_choice.weapon = WPN_FLAIL;
 }
@@ -157,12 +173,13 @@ void choose_tutorial_character(newgame_def& ng_choice)
 // March 2008: change order of species and jobs on character selection
 // screen as suggested by Markus Maier.
 // We have subsequently added a few new categories.
+// Replacing this with named groups, but leaving because a bunch of code
+// still depends on it and I don't want to unwind that now. -2/24/2017 CBH
 static const species_type species_order[] =
 {
     // comparatively human-like looks
-    SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,       SP_DEEP_DWARF,
-    SP_HILL_ORC,
+    SP_HUMAN,          SP_DEEP_ELF,
+    SP_DEEP_DWARF,     SP_HILL_ORC,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -173,6 +190,7 @@ static const species_type species_order[] =
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
+    SP_BARACHI,        SP_GNOLL,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
@@ -221,7 +239,11 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
     case SP_RANDOM:
         // any valid species will do
         if (ng.job == JOB_UNKNOWN)
-            ng.species = RANDOM_ELEMENT(species_order);
+        {
+            do {
+                ng.species = RANDOM_ELEMENT(species_order);
+            } while (!is_starting_species(ng.species));
+        }
         else
         {
             // Pick a random legal character.
@@ -342,14 +364,12 @@ static string _highlight_pattern(const newgame_def& ng)
         if (is_good_combination(species, ng.job, false, true))
             ret += species_name(species) + "  |";
 
-    if (ret != "")
+    if (!ret.empty())
         ret.resize(ret.size() - 1);
     return ret;
 }
 
-static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
-                            const newgame_def& defaults);
-static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
+static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults);
 
 static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
@@ -360,14 +380,14 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
     while (ng_choice.species == SP_UNKNOWN || ng_choice.job == JOB_UNKNOWN)
     {
         // Slightly non-obvious behaviour here is due to the fact that
-        // both _prompt_species and _prompt_job can ask for an entirely
+        // both types of _prompt_choice can ask for an entirely
         // random character to be rolled. They will reset relevant fields
         // in ng for this purpose.
         if (ng_choice.species == SP_UNKNOWN)
-            _prompt_species(ng, ng_choice, defaults);
+            _prompt_choice(C_SPECIES, ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
         if (ng_choice.job == JOB_UNKNOWN)
-            _prompt_job(ng, ng_choice, defaults);
+            _prompt_choice(C_JOB, ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
     }
 
@@ -375,8 +395,8 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
     {
         // Either an invalid combination was passed in through options,
         // or we messed up.
-        end(1, false,
-            "Incompatible species and background specified in options file.");
+        end(1, false, "Incompatible species and background (%s) selected.",
+                                _char_description(ng).c_str());
     }
 }
 
@@ -399,7 +419,7 @@ static bool _reroll_random(newgame_def& ng)
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
 #endif
-        game_ended();
+        game_ended(game_exit::abort);
     }
     return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
@@ -434,7 +454,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 #ifdef USE_TILE_WEB
             tiles.send_exit_reason("cancel");
 #endif
-            game_ended();
+            game_ended(game_exit::abort);
         }
     }
 #endif
@@ -640,101 +660,53 @@ static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
     }
 }
 
+
 /**
  * Helper function for _choose_species
  * Constructs the menu screen
  */
-static const int COLUMN_WIDTH = 25;
+static const int COLUMN_WIDTH = 35;
 static const int X_MARGIN = 4;
 static const int CHAR_DESC_START_Y = 16;
 static const int CHAR_DESC_HEIGHT = 3;
 static const int SPECIAL_KEYS_START_Y = CHAR_DESC_START_Y
                                         + CHAR_DESC_HEIGHT + 1;
 
-static void _construct_species_menu(const newgame_def& ng,
-                                    const newgame_def& defaults,
-                                    MenuFreeform* menu)
+static void _add_choice_menu_options(int choice_type,
+                                     const newgame_def& ng,
+                                     const newgame_def& defaults,
+                                     MenuFreeform* menu)
 {
-    ASSERT(menu != nullptr);
-    int items_in_column = ARRAYSZ(species_order);
-    items_in_column = (items_in_column + 2) / 3;
-    // Construct the menu, 3 columns
-    TextItem* tmp = nullptr;
-    string text;
-    coord_def min_coord(0,0);
-    coord_def max_coord(0,0);
-    int pos = 0;
-
-    for (const species_type species : species_order)
-    {
-        if (ng.job != JOB_UNKNOWN
-            && species_allowed(ng.job, species) == CC_BANNED)
-        {
-            continue;
-        }
-
-        tmp = new TextItem();
-        text.clear();
-
-        if (ng.job == JOB_UNKNOWN)
-        {
-            tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
-        else if (species_allowed(ng.job, species) == CC_RESTRICTED)
-        {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
-        else
-        {
-            tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
-        }
-        text = index_to_letter(pos);
-        text += " - ";
-        text += species_name(species);
-        tmp->set_text(text);
-        ASSERT(pos < items_in_column * 3);
-        min_coord.x = X_MARGIN + (pos / items_in_column) * COLUMN_WIDTH;
-        min_coord.y = 3 + pos % items_in_column;
-        max_coord.x = min_coord.x + text.size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-
-        tmp->add_hotkey(index_to_letter(pos));
-        tmp->set_id(species);
-        tmp->set_description_text(unwrap_desc(getGameStartDescription(species_name(species))));
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        if (defaults.species == species)
-            menu->set_active_item(tmp);
-
-        ++pos;
-    }
+    string choice_name = choice_type == C_JOB ? "background" : "species";
+    string other_choice_name = choice_type == C_JOB ? "species" : "background";
 
     // Add all the special button entries
-    tmp = new TextItem();
-    tmp->set_text("+ - Viable species");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
+    TextItem* tmp = new TextItem();
+    if (choice_type == C_SPECIES)
+        tmp->set_text("+ - Recommended species");
+    else
+        tmp->set_text("+ - Recommended background");
+    coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
+    coord_def max_coord = coord_def(min_coord.x + tmp->get_text().size(),
+                                    min_coord.y + 1);
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
-    // If the player has a job chosen, use VIABLE, otherwise use RANDOM
-    if (ng.job != JOB_UNKNOWN)
+    // If the player has species chosen, use VIABLE, otherwise use RANDOM
+    if ((choice_type == C_SPECIES && ng.job != JOB_UNKNOWN)
+       || (choice_type == C_JOB && ng.species != SP_UNKNOWN))
+    {
         tmp->set_id(M_VIABLE);
+    }
     else
         tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random viable species based on your current job choice.");
+    tmp->set_description_text("Picks a random recommended " + other_choice_name + " based on your current " + choice_name + " choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("# - Viable character");
+    tmp->set_text("# - Recommended character");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -744,7 +716,7 @@ static void _construct_species_menu(const newgame_def& ng,
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Shuffles through random viable character combinations "
+    tmp->set_description_text("Shuffles through random recommended character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -759,8 +731,8 @@ static void _construct_species_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
     tmp->set_highlight_colour(BLUE);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -780,7 +752,7 @@ static void _construct_species_menu(const newgame_def& ng,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("* - Random species");
+    tmp->set_text("* - Random " + choice_name);
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -790,7 +762,7 @@ static void _construct_species_menu(const newgame_def& ng,
     tmp->add_hotkey('*');
     tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random species.");
+    tmp->set_description_text("Picks a random " + choice_name + ".");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -810,18 +782,21 @@ static void _construct_species_menu(const newgame_def& ng,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    // Adjust the end marker to align the - because Space text is longer by 4
     tmp = new TextItem();
-    if (ng.job != JOB_UNKNOWN)
+    if ((choice_type == C_JOB && ng.species != SP_UNKNOWN)
+        || (choice_type == C_SPECIES && ng.job != JOB_UNKNOWN))
     {
-        tmp->set_text("Space - Change background");
-        tmp->set_description_text("Lets you change your background choice.");
+        tmp->set_text("Space - Change " + other_choice_name);
+        tmp->set_description_text("Lets you change your " + other_choice_name +
+            " choice.");
     }
     else
     {
-        tmp->set_text("Space - Pick background first");
-        tmp->set_description_text("Lets you pick your background first.");
+        tmp->set_text("Space - Pick " + other_choice_name + " first");
+        tmp->set_description_text("Lets you pick your " + other_choice_name +
+            " first.");
     }
+    // Adjust the end marker to align the - because Space text is longer by 4
     min_coord.x = X_MARGIN + COLUMN_WIDTH - 4;
     min_coord.y = SPECIAL_KEYS_START_Y + 2;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -836,12 +811,9 @@ static void _construct_species_menu(const newgame_def& ng,
 
     if (_char_defined(defaults))
     {
-        string tmp_string = "Tab - ";
-        tmp_string += _char_description(defaults);
-        // Adjust the end marker to aling the - because
-        // Tab text is longer by 2
         tmp = new TextItem();
-        tmp->set_text(tmp_string);
+        tmp->set_text("Tab - " + _char_description(defaults));
+        // Adjust the end marker to align the - because Tab text is longer by 2
         min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
         min_coord.y = SPECIAL_KEYS_START_Y + 3;
         max_coord.x = min_coord.x + tmp->get_text().size();
@@ -857,157 +829,10 @@ static void _construct_species_menu(const newgame_def& ng,
     }
 }
 
-// Prompt the player for a choice of species.
-// ng should be const, but we need to reset it for _resolve_species_job
-// to work correctly in view of fully random characters.
-static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
-                            const newgame_def& defaults)
-{
-    PrecisionMenu menu;
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-    MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
-    menu.attach_object(freeform);
-    menu.set_active_object(freeform);
-
-    int keyn;
-
-    clrscr();
-
-    // TODO: attach these to the menu in a NoSelectTextItem
-    textcolour(BROWN);
-    cprintf("%s", _welcome(ng).c_str());
-
-    textcolour(YELLOW);
-    cprintf(" Please select your species.");
-
-    _construct_species_menu(ng, defaults, freeform);
-    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y
-                                                     + CHAR_DESC_HEIGHT),
-                     "descriptor");
-    menu.attach_object(descriptor);
-
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
-    menu.attach_object(highlighter);
-
-    // Did we have a previous species?
-    if (menu.get_active_item() == nullptr)
-        freeform->activate_first_item();
-
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
-    freeform->set_visible(true);
-    descriptor->set_visible(true);
-    highlighter->set_visible(true);
-
-    textcolour(LIGHTGREY);
-    // Poll input until we have a conclusive escape or pick
-    while (true)
-    {
-        menu.draw_menu();
-
-        keyn = getch_ck();
-
-        // First process all the menu entries available
-        if (!menu.process_key(keyn))
-        {
-            // Process all the other keys that are not assigned to the menu
-            switch (keyn)
-            {
-            case 'X':
-            case CONTROL('Q'):
-                cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                end(0);
-                return;
-            CASE_ESCAPE
-            case CK_MOUSE_CMD:
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                game_ended();
-            case CK_BKSP:
-                ng_choice.species = SP_UNKNOWN;
-                return;
-            default:
-                // if we get this far, we did not get a significant selection
-                // from the menu, nor did we get an escape character
-                // continue the while loop from the beginning and poll a new key
-                continue;
-            }
-        }
-        // We have had a significant input key event
-        // construct the return vector
-        vector<MenuItem*> selection = menu.get_selected_items();
-        if (!selection.empty())
-        {
-            // we have a selection!
-            // we only care about the first selection (there should be only one)
-            int selection_key = selection.at(0)->get_id();
-
-            bool viable = false;
-            switch (selection_key)
-            {
-            case M_VIABLE_CHAR:
-                viable = true;
-                // intentional fall-through
-            case M_RANDOM_CHAR:
-                _mark_fully_random(ng, ng_choice, viable);
-                return;
-            case M_DEFAULT_CHOICE:
-                if (_char_defined(defaults))
-                {
-                    _set_default_choice(ng, ng_choice, defaults);
-                    return;
-                }
-                else
-                {
-                    // ignore Tab because we don't have previous start options
-                    continue;
-                }
-            case M_ABORT:
-                ng.species = ng_choice.species = SP_UNKNOWN;
-                ng.job     = ng_choice.job     = JOB_UNKNOWN;
-                return;
-            case M_HELP:
-                 // access to the help files
-                list_commands('1');
-                return _prompt_species(ng, ng_choice, defaults);
-            case M_APTITUDES:
-                list_commands('%', false, _highlight_pattern(ng));
-                return _prompt_species(ng, ng_choice, defaults);
-            case M_VIABLE:
-                ng_choice.species = SP_VIABLE;
-                return;
-            case M_RANDOM:
-                ng_choice.species = SP_RANDOM;
-                return;
-            default:
-                // we have a species selection
-                species_type species = static_cast<species_type> (selection_key);
-                if (ng.job == JOB_UNKNOWN
-                    || species_allowed(ng.job, species) != CC_BANNED)
-                {
-                    ng_choice.species = species;
-                    return;
-                }
-                else
-                    continue;
-            }
-        }
-    }
-}
-
-void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
-                       MenuFreeform* menu, menu_letter &letter)
+static void _add_group_title(MenuFreeform* menu,
+                             const char* name,
+                             coord_def position,
+                             int width)
 {
     TextItem* tmp = new NoSelectTextItem();
     string text;
@@ -1018,6 +843,185 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
     tmp->set_bounds(min_coord, max_coord);
     menu->attach_item(tmp);
     tmp->set_visible(true);
+}
+
+static void _attach_group_item(MenuFreeform* menu,
+                               menu_letter &letter,
+                               int id,
+                               int item_status,
+                               string item_name,
+                               bool is_active_item,
+                               coord_def min_coord,
+                               coord_def max_coord)
+
+{
+    TextItem* tmp = new TextItem();
+
+    if (item_status == ITEM_STATUS_UNKNOWN)
+    {
+        tmp->set_fg_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(BLUE);
+    }
+    else if (item_status == ITEM_STATUS_RESTRICTED)
+    {
+        tmp->set_fg_colour(DARKGRAY);
+        tmp->set_highlight_colour(BLUE);
+    }
+    else
+    {
+        tmp->set_fg_colour(WHITE);
+        tmp->set_highlight_colour(GREEN);
+    }
+
+    string text;
+    text += letter;
+    text += " - ";
+    text += item_name;
+    tmp->set_text(text);
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->add_hotkey(letter);
+    tmp->set_id(id);
+    tmp->set_description_text(unwrap_desc(getGameStartDescription(item_name)));
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+    if (is_active_item)
+        menu->set_active_item(tmp);
+}
+
+void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
+                       MenuFreeform* menu, menu_letter &letter)
+{
+    _add_group_title(menu, name, position, width);
+
+    coord_def min_coord(2 + position.x, 3 + position.y);
+    coord_def max_coord(min_coord.x + width, min_coord.y + 1);
+
+    for (species_type &this_species : species_list)
+    {
+        if (this_species == SP_UNKNOWN)
+            break;
+
+        if (ng.job == JOB_UNKNOWN && !is_starting_species(this_species))
+            continue;
+
+        if (ng.job != JOB_UNKNOWN
+            && species_allowed(ng.job, this_species) == CC_BANNED)
+        {
+            continue;
+        }
+
+        int item_status;
+        if (ng.job == JOB_UNKNOWN)
+            item_status = ITEM_STATUS_UNKNOWN;
+        else if (species_allowed(ng.job, this_species) == CC_RESTRICTED)
+            item_status = ITEM_STATUS_RESTRICTED;
+        else
+            item_status = ITEM_STATUS_ALLOWED;
+
+        const bool is_active_item = defaults.species == this_species;
+
+        ++min_coord.y;
+        ++max_coord.y;
+
+        _attach_group_item(
+            menu,
+            letter,
+            this_species,
+            item_status,
+            species_name(this_species),
+            is_active_item,
+            min_coord,
+            max_coord
+        );
+
+        ++letter;
+    }
+}
+
+static species_group species_groups[] =
+{
+    {
+        "Simple",
+        coord_def(0, 0),
+        20,
+        {
+            SP_HILL_ORC,
+            SP_MINOTAUR,
+            SP_MERFOLK,
+            SP_GARGOYLE,
+            SP_BASE_DRACONIAN,
+            SP_HALFLING,
+            SP_TROLL,
+            SP_GHOUL,
+        }
+    },
+    {
+        "Intermediate",
+        coord_def(25, 0),
+        20,
+        {
+            SP_HUMAN,
+            SP_KOBOLD,
+            SP_DEMONSPAWN,
+            SP_CENTAUR,
+            SP_SPRIGGAN,
+            SP_TENGU,
+            SP_DEEP_ELF,
+            SP_OGRE,
+            SP_DEEP_DWARF,
+            SP_GNOLL,
+        }
+    },
+    {
+        "Advanced",
+        coord_def(50, 0),
+        20,
+        {
+            SP_VINE_STALKER,
+            SP_VAMPIRE,
+            SP_DEMIGOD,
+            SP_FORMICID,
+            SP_NAGA,
+            SP_OCTOPODE,
+            SP_FELID,
+            SP_BARACHI,
+            SP_MUMMY,
+        }
+    },
+};
+
+static void _construct_species_menu(const newgame_def& ng,
+                                    const newgame_def& defaults,
+                                    MenuFreeform* menu)
+{
+    ASSERT(menu != nullptr);
+
+    menu_letter letter = 'a';
+    // Add entries for any species groups with at least one playable species.
+    for (species_group& group : species_groups)
+    {
+        if (ng.job == JOB_UNKNOWN
+            ||  any_of(begin(group.species_list),
+                      end(group.species_list),
+                      [&ng](species_type species)
+                      { return species_allowed(ng.job, species) != CC_BANNED; }
+                )
+        )
+        {
+            group.attach(ng, defaults, menu, letter);
+        }
+    }
+
+    _add_choice_menu_options(C_SPECIES, ng, defaults, menu);
+}
+
+void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
+                       MenuFreeform* menu, menu_letter &letter)
+{
+    _add_group_title(menu, name, position, width);
+
+    coord_def min_coord(2 + position.x, 3 + position.y);
+    coord_def max_coord(min_coord.x + width, min_coord.y + 1);
 
     for (job_type &job : jobs)
     {
@@ -1030,37 +1034,32 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             continue;
         }
 
-        tmp = new TextItem();
+        int item_status;
         if (ng.species == SP_UNKNOWN)
-        {
-            tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
+            item_status = ITEM_STATUS_UNKNOWN;
         else if (job_allowed(ng.species, job) == CC_RESTRICTED)
-        {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
+            item_status = ITEM_STATUS_RESTRICTED;
         else
-        {
-            tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
-        }
+            item_status = ITEM_STATUS_ALLOWED;
 
-        text = letter;
-        text += " - ";
-        text += get_job_name(job);
-        tmp->set_text(text);
+        string job_name = get_job_name(job);
+        const bool is_active_item = defaults.job == job;
+
         ++min_coord.y;
         ++max_coord.y;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->add_hotkey(letter++);
-        tmp->set_id(job);
-        tmp->set_description_text(unwrap_desc(getGameStartDescription(get_job_name(job))));
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        if (defaults.job == job)
-            menu->set_active_item(tmp);
+
+        _attach_group_item(
+            menu,
+            letter,
+            job,
+            item_status,
+            job_name,
+            is_active_item,
+            min_coord,
+            max_coord
+        );
+
+        ++letter;
     }
 }
 
@@ -1125,156 +1124,17 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
         }
     }
 
-    // Add all the special button entries
-    TextItem* tmp = new TextItem();
-    tmp->set_text("+ - Viable background");
-    coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
-    coord_def max_coord = coord_def(min_coord.x + tmp->get_text().size(),
-                                    min_coord.y + 1);
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('+');
-    // If the player has species chosen, use VIABLE, otherwise use RANDOM
-    if (ng.species != SP_UNKNOWN)
-        tmp->set_id(M_VIABLE);
-    else
-        tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random viable background based on your current species choice.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("# - Viable character");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('#');
-    tmp->set_id(M_VIABLE_CHAR);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Shuffles through random viable character combinations "
-                              "until you accept one.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('%');
-    tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("? - Help");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 3;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('?');
-    tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Opens the help screen.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("* - Random background");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('*');
-    tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random background.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("! - Random character");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('!');
-    tmp->set_id(M_RANDOM_CHAR);
-    tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Shuffles through random character combinations "
-                              "until you accept one.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    // Adjust the end marker to align the - because Space text is longer by 4
-    tmp = new TextItem();
-    if (ng.species != SP_UNKNOWN)
-    {
-        tmp->set_text("Space - Change species");
-        tmp->set_description_text("Lets you change your species choice.");
-    }
-    else
-    {
-        tmp->set_text("Space - Pick species first");
-        tmp->set_description_text("Lets you pick your species first.");
-
-    }
-    min_coord.x = X_MARGIN + COLUMN_WIDTH - 4;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey(' ');
-    tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(BLUE);
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    if (_char_defined(defaults))
-    {
-        // Adjust the end marker to align the - because
-        // Tab text is longer by 2
-        tmp = new TextItem();
-        tmp->set_text("Tab - " + _char_description(defaults));
-        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
-        min_coord.y = SPECIAL_KEYS_START_Y + 3;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('\t');
-        tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(BLUE);
-        tmp->set_description_text("Play a new game with your previous choice.");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-    }
+    _add_choice_menu_options(C_JOB, ng, defaults, menu);
 }
 
 /**
- * _prompt_job menu
+ * Prompt for job or species menu
  * Saves the choice to ng_choice, doesn't resolve random choices.
  *
  * ng should be const, but we need to reset it for _resolve_species_job
  * to work correctly in view of fully random characters.
  */
-static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
+static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults)
 {
     PrecisionMenu menu;
@@ -1294,13 +1154,25 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
     cprintf("%s", _welcome(ng).c_str());
 
     textcolour(YELLOW);
-    cprintf(" Please select your background.");
 
-    _construct_backgrounds_menu(ng, defaults, freeform);
+    if (choice_type == C_JOB)
+    {
+        cprintf(" Please select your background.");
+        _construct_backgrounds_menu(ng, defaults, freeform);
+    }
+    else
+    {
+        cprintf(" Please select your species.");
+        _construct_species_menu(ng, defaults, freeform);
+    }
+
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 3),
-                     "descriptor");
+    descriptor->init(
+        coord_def(X_MARGIN, CHAR_DESC_START_Y),
+        coord_def(get_number_of_cols(),
+        CHAR_DESC_START_Y + CHAR_DESC_HEIGHT),
+        "descriptor"
+    );
     menu.attach_object(descriptor);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
@@ -1347,9 +1219,12 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
-                game_ended();
+                game_ended(game_exit::abort);
             case CK_BKSP:
-                ng_choice.job = JOB_UNKNOWN;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_UNKNOWN;
+                else
+                    ng_choice.species = SP_UNKNOWN;
                 return;
             default:
                 // if we get this far, we did not get a significant selection
@@ -1393,30 +1268,55 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
                 return;
             case M_HELP:
                  // access to the help files
-                list_commands('2');
-                return _prompt_job(ng, ng_choice, defaults);
+                if (choice_type == C_JOB)
+                    list_commands('2');
+                else
+                    list_commands('1');
+
+                return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_APTITUDES:
-                list_commands('%', false, _highlight_pattern(ng));
-                return _prompt_job(ng, ng_choice, defaults);
+                list_commands('%', _highlight_pattern(ng));
+                return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_VIABLE:
-                ng_choice.job = JOB_VIABLE;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_VIABLE;
+                else
+                    ng_choice.species = SP_VIABLE;
                 return;
             case M_RANDOM:
-                ng_choice.job = JOB_RANDOM;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_RANDOM;
+                else
+                    ng_choice.species = SP_RANDOM;
                 return;
             default:
-                // we have a job selection
-                job_type job = static_cast<job_type> (selection_key);
-                if (ng.species == SP_UNKNOWN
-                    || job_allowed(ng.species, job) != CC_BANNED)
+                // we have a selection
+                if (choice_type == C_JOB)
                 {
-                    ng_choice.job = job;
-                    return;
+                    job_type job = static_cast<job_type> (selection_key);
+                    if (ng.species == SP_UNKNOWN
+                        || job_allowed(ng.species, job) != CC_BANNED)
+                    {
+                        ng_choice.job = job;
+                        return;
+                    }
+                    else
+                    {
+                        selection.at(0)->select(false);
+                        continue;
+                    }
                 }
                 else
                 {
-                    selection.at(0)->select(false);
-                    continue;
+                    species_type species = static_cast<species_type> (selection_key);
+                    if (ng.job == JOB_UNKNOWN
+                        || species_allowed(ng.job, species) != CC_BANNED)
+                    {
+                        ng_choice.species = species;
+                        return;
+                    }
+                    else
+                        continue;
                 }
             }
         }
@@ -1436,14 +1336,17 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-static const int WEAPON_COLUMN_WIDTH = 36;
+static const int WEAPON_COLUMN_WIDTH = 40;
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
+#ifdef USE_TILE_LOCAL
+    static const int ITEMS_START_Y = 4;
+#else
     static const int ITEMS_START_Y = 5;
-    TextItem* tmp = nullptr;
+#endif
     string text;
     const char *thrown_name = nullptr;
     coord_def min_coord(0,0);
@@ -1453,7 +1356,11 @@ static void _construct_weapon_menu(const newgame_def& ng,
     {
         weapon_type wpn_type = weapons[i].first;
         char_choice_restriction wpn_restriction = weapons[i].second;
-        tmp = new TextItem();
+#ifdef USE_TILE_LOCAL
+        TextTileItem *tmp = new TextTileItem();
+#else
+        TextItem *tmp = new TextItem();
+#endif
         text.clear();
 
         if (wpn_restriction == CC_UNRESTRICTED)
@@ -1470,27 +1377,53 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tmp->add_hotkey(letter);
         tmp->set_id(wpn_type);
 
-        text += letter;
-        text += " - ";
+        text += make_stringf(" %c - ", letter);
         switch (wpn_type)
         {
         case WPN_UNARMED:
             text += species_has_claws(ng.species) ? "claws" : "unarmed";
+#ifdef USE_TILE_LOCAL
+            tmp->add_tile(tile_def(DNGN_UNSEEN, TEX_DEFAULT));
+#endif
             break;
         case WPN_THROWN:
             // We don't support choosing among multiple thrown weapons.
             ASSERT(!thrown_name);
+#ifdef USE_TILE_LOCAL
+            tmp->add_tile(tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT));
+#endif
             if (species_can_throw_large_rocks(ng.species))
+            {
                 thrown_name = "large rocks";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_LARGE_ROCK, TEX_DEFAULT));
+#endif
+            }
             else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
+            {
                 thrown_name = "tomahawks";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_TOMAHAWK, TEX_DEFAULT));
+#endif
+            }
             else
+            {
                 thrown_name = "javelins";
+#ifdef USE_TILE_LOCAL
+                tmp->add_tile(tile_def(TILE_MI_JAVELIN, TEX_DEFAULT));
+#endif
+            }
             text += thrown_name;
             text += " and throwing nets";
             break;
         default:
             text += weapon_base_name(wpn_type);
+#ifdef USE_TILE_LOCAL
+            item_def dummy;
+            dummy.base_type = OBJ_WEAPONS;
+            dummy.sub_type = wpn_type;
+            tmp->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+#endif
             if (is_ranged_weapon_type(wpn_type))
             {
                 text += " and ";
@@ -1507,6 +1440,10 @@ static void _construct_weapon_menu(const newgame_def& ng,
         min_coord.x = X_MARGIN;
         min_coord.y = ITEMS_START_Y + i;
         max_coord.x = min_coord.x + text.size();
+#ifdef USE_TILE_LOCAL
+        const int cw = tiles.get_crt_font()->char_width();
+        max_coord.x += (TILE_Y+cw-1)/cw;
+#endif
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
 
@@ -1517,8 +1454,8 @@ static void _construct_weapon_menu(const newgame_def& ng,
             menu->set_active_item(tmp);
     }
     // Add all the special button entries
-    tmp = new TextItem();
-    tmp->set_text("+ - Viable random choice");
+    TextItem *tmp = new TextItem();
+    tmp->set_text("+ - Recommended random choice");
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1528,7 +1465,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->add_hotkey('+');
     tmp->set_id(M_VIABLE);
     tmp->set_highlight_colour(BLUE);
-    tmp->set_description_text("Picks a random viable weapon");
+    tmp->set_description_text("Picks a random recommended weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1600,7 +1537,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
         ASSERT(defweapon != WPN_THROWN || thrown_name);
         text += defweapon == WPN_RANDOM  ? "Random" :
-                defweapon == WPN_VIABLE  ? "Viable" :
+                defweapon == WPN_VIABLE  ? "Recommended" :
                 defweapon == WPN_UNARMED ? "unarmed" :
                 defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
@@ -1710,7 +1647,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         case M_ABORT:
             return false;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
         case M_HELP:
             list_commands('?');
@@ -1754,14 +1691,12 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
     case WPN_MACE:
         return WPN_FLAIL;
     case WPN_HAND_AXE:
-        // Little fighters can't use war axes with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_WAR_AXE;
+        return WPN_WAR_AXE;
     case WPN_SPEAR:
         // Small fighters can't use tridents with a shield.
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
-        // Little fighters can't use long swords with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_LONG_SWORD;
+        return WPN_LONG_SWORD;
     default:
         return wp;
     }
@@ -1787,9 +1722,9 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
     }
     else
     {
-        weapon_type startwep[7] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                    WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
-                                    WPN_QUARTERSTAFF};
+        weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
+                                    WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
+                                    WPN_UNARMED };
         for (int i = 0; i < 7; ++i)
         {
             weapon_choice wp;
@@ -1939,7 +1874,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         // Is this item our default map?
         else if (defaults.map == maps[i]->name)
         {
-            if (crawl_state.last_game_won)
+            if (crawl_state.last_game_exit.exit_reason == game_exit::win)
                 activate_next = true;
             else
                 menu->set_active_item(tmp);
@@ -2107,7 +2042,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
-                game_ended();
+                game_ended(game_exit::abort);
                 break;
             case ' ':
                 return;
@@ -2136,7 +2071,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             // TODO: fix
             return;
         case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
+            list_commands('%', _highlight_pattern(ng));
             return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');

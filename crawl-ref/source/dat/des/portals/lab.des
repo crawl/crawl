@@ -237,16 +237,16 @@ dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe, randbook, '
 
  -- Spriggan stabber. 4 items.
 dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
-   .. 'quick blade w:1, bread ration, cloak, randbook disc:hexes / any book' )
+   .. 'quick blade w:1, ration, cloak, randbook disc:hexes / any book' )
 
  -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
 dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
-   .. 'arrow good_item, fruit w:50 / nothing, '
+   .. 'arrow good_item, ration / nothing, '
    .. 'helmet / centaur barding / pair of gloves' )
 
  -- Dwarven artificer. 3 items.
 dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
-   .. 'any wand / any misc / any rod' )
+   .. 'any wand / any misc w:20' )
 
  -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
 dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
@@ -256,8 +256,8 @@ dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
 
  -- Merfolk skald. 3 items.
 dgn.delayed_decay_extra(_G, 'H', 'merfolk skeleton', 'leather armour good_item w:30 / '
-   .. 'swamp dragon armour w:2 / fire dragon armour w:2 / '
-   .. 'ice dragon armour w:2, trident / demon trident / glaive / bardiche, '
+   .. 'swamp dragon scales w:2 / fire dragon scales w:2 / '
+   .. 'ice dragon scales w:2, trident / demon trident / glaive / bardiche, '
    .. 'randbook disc:charms / any book' )
 
  -- Human wanderer. 3-5 items.
@@ -283,7 +283,7 @@ dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / 
 
  -- Ogre, maybe an ogre mage of some kind. 4-5 items.
 dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '
-   .. 'giant spiked club good_item, robe, large rock, meat ration, '
+   .. 'giant spiked club good_item, robe, large rock, ration, '
    .. 'any book / nothing' )
 }}
 MAP
@@ -738,15 +738,13 @@ ENDMAP
 
 NAME: nicolae_lab_stuck
 TAGS: extra
-: dgn.delayed_decay(_G, 'v', 'human skeleton')
-KITEM: w = wand of digging charges:0 ident:all /\
-           wand of teleportation charges:0 ident:all
-KPROP: w'v = no_tele_into
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+KPROP: 'd = no_tele_into
 MAP
 ......
 .mmmm.
-.mv'm.
-.m'wm.
+.md'm.
+.m''m.
 .mmmm.
 ......
 ENDMAP

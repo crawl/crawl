@@ -1,4 +1,4 @@
-# Xom sends flaming sheep into four corners of the world.
+# Xom sends flaming dream sheep into four corners of the world.
 
 {{
 function callback.kb_xom_exploding_sheep(data, triggerable,
@@ -8,20 +8,20 @@ function callback.kb_xom_exploding_sheep(data, triggerable,
 
   local x, y = marker:pos()
 
-  crawl.mpr("Walls come down!")
+  crawl.mpr("The walls suddenly crumble!")
   for p in iter.slave_iterator("feat_remove", 1) do
-    dgn.terrain_changed(p.x, p.y, "floor", false, false)
+    dgn.terrain_changed(p.x, p.y, "floor", false)
   end
 
   -- The logic here is a bit obtuse; the idea is to get the
-  -- "5 sheep come into view" message to display before anything
+  -- "5 dream sheep come into view" message to display before anything
   -- else.
   local nsheep = 0
   local sheeparray = {}
   local visarray = {}
   local flee = mons.behaviour("flee")
   for p in iter.slave_iterator("sheep_place", 1) do
-    local sheep = dgn.create_monster(p.x, p.y, 'generate_awake sheep')
+    local sheep = dgn.create_monster(p.x, p.y, 'generate_awake dream sheep')
     if sheep then
       nsheep = nsheep + 1
       sheeparray[nsheep] = sheep
@@ -36,8 +36,8 @@ function callback.kb_xom_exploding_sheep(data, triggerable,
     sheep.add_ench("fear", 1, 30000)
     sheep.beh = flee
     if visarray[i] then
-      crawl.mpr("A sheep catches fire!", "warning")
-      sheep.speak("sheep flee")
+      crawl.mpr("A dream sheep catches fire!", "warning")
+      sheep.speak("dream sheep flee")
     end
   end
   crawl.god_speaks("Xom", "You hear mad divine giggling.")

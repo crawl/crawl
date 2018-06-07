@@ -72,7 +72,7 @@ indenting.
 
     case ABIL_MAPPING:          // Sense surroundings mutation
         if (abil.ability == ABIL_MAPPING
-            && player_mutation_level(MUT_MAPPING) < 3
+            && you.get_mutation_level(MUT_MAPPING) < 3
             && (you.level_type == LEVEL_PANDEMONIUM
                 || !player_in_mappable_area()))
         {

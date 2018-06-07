@@ -2,7 +2,7 @@ struct sacrifice_def
 {
     ability_type  sacrifice;        // The ability that executes the sacrifice.
     mutation_type mutation;         // The mutation that will be inflicted.
-                                    // See also godabil.cc:sacrifice_vector_map.
+                                    // See also god-abil.cc:sacrifice_vector_map.
     const char*   sacrifice_text;   // Format: "sacrifice your hand"
                                     // in case of variable sacrifices or sac
                                     // hand, this will be extended later
@@ -69,7 +69,7 @@ static const sacrifice_def sac_data[] =
   "corrupt yourself such that",
   "sacrificed health",
 
-  20,
+  25,
   SK_NONE,
   HEALTH_SAC_KEY,
   nullptr,
@@ -89,7 +89,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice all use of magical tools",
   "sacrificed evocations",
 
-  70,
+  55,
   SK_EVOCATIONS,
   nullptr,
   nullptr,
@@ -99,7 +99,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  25,
+  35,
   SK_NONE,
   nullptr,
   nullptr,
@@ -149,7 +149,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice one of your ",
   "sacrificed a hand",
 
-  70,
+  65,
   SK_SHIELDS,
   nullptr,
   nullptr,
@@ -159,7 +159,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  35,
+  50,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
@@ -189,7 +189,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your resistance to extreme temperatures",
   "sacrificed resistance",
 
-  70,
+  60,
   SK_NONE,
   nullptr,
   nullptr,

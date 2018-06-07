@@ -14,7 +14,7 @@
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# handle_monster_shouts() in view.cc detects buggy behavior,
+# monster_shout() in shout.cc detects buggy behavior,
 # so showing this line would itself be a bug.
 SOUND:You hear doubly buggy behavior!
 %%%%
@@ -150,6 +150,14 @@ __HISS seen
 
 SOUND:@The_monster@ hisses angrily.
 %%%%
+__SQUEAL unseen
+
+SOUND:You hear an angry squeal.
+%%%%
+__SQUEAL seen
+
+SOUND:@The_monster@ squeals angrily.
+%%%%
 __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
@@ -174,13 +182,13 @@ SOUND:You hear a roar.
 
 SOUND:You hear a low.
 %%%%
-__RUMBLE seen
+__LOUD_ROAR unseen
 
-SOUND:@The_monster@ rumbles deeply!
+SOUND:You hear a deafening roar!
 %%%%
-__RUMBLE unseen
+__LOUD_ROAR seen
 
-SOUND:You hear a deep rumbling!
+SOUND:@The_monster@ roars deafeningly!
 %%%%
 ############################################
 # End of default shouts
@@ -290,10 +298,6 @@ Wanderer player ghost
 
 VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
-'cap-B'
-
-VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
-%%%%
 'cap-G'
 
 VISUAL:@The_monster@ turns @possessive@ gaze towards you.
@@ -312,9 +316,13 @@ VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 # Shouts for specific monsters
 ########################################
 %%%%
-giant spore
+ballistomycete spore
 
 VISUAL:@The_monster@ waves @possessive@ rhizomes.
+%%%%
+glowing orange brain
+
+VISUAL:@The_monster@ turns @possessive@ attention towards you.
 %%%%
 # Iron imps, shadow imps and white imps copy imps.
 imp

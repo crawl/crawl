@@ -3,18 +3,21 @@
  * @brief Functions used when picking squares.
 **/
 
-#ifndef DIRECT_H
-#define DIRECT_H
+#pragma once
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
+#include "targ-mode-type.h"
+#include "targeting-type.h"
+#include "trap-type.h"
 
 struct describe_info;
 
 class range_view_annotator
 {
 public:
-    range_view_annotator(targetter *range);
+    range_view_annotator(targeter *range);
     virtual ~range_view_annotator();
 };
 
@@ -79,13 +82,13 @@ public:
 
 struct direction_chooser_args
 {
-    targetter *hitfunc;
+    targeter *hitfunc;
     targeting_type restricts;
     targ_mode_type mode;
     int range;
     bool just_looking;
     bool needs_path;
-    bool may_target_monster;
+    bool unrestricted; // for wizmode
     confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
@@ -101,7 +104,7 @@ struct direction_chooser_args
         range(-1),
         just_looking(false),
         needs_path(true),
-        may_target_monster(true),
+        unrestricted(false),
         self(CONFIRM_PROMPT),
         target_prefix(nullptr),
         behaviour(nullptr),
@@ -240,14 +243,12 @@ private:
     targ_mode_type mode;        // Hostiles or friendlies?
     int range;                  // Max range to consider
     bool just_looking;
-    bool needs_path;            // Determine a ray while we're at it?
-    bool may_target_monster;
     confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be nullptr for default
     bool show_floor_desc;       // Describe the floor of the current target
-    targetter *hitfunc;         // Determine what would be hit.
+    targeter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
 
     // Internal data.
@@ -267,15 +268,15 @@ private:
     bool need_all_redraw;       // All of the above.
 
     bool show_items_once;       // Should we show items this time?
-#ifndef USE_TILE_LOCAL
-    void update_mlist(bool enable);
-
-    bool mlist_full_info;
-    vector<monster_info> mlist;
-#endif
 
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
+
+    bool unrestricted;
+
+public:
+    // TODO: fix the weird behavior that led to this hack
+    bool needs_path;            // Determine a ray while we're at it?
 };
 
 // Monster equipment description level.
@@ -287,15 +288,11 @@ enum mons_equip_desc_level_type
     DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
-#ifndef USE_TILE_LOCAL
-char mlist_index_to_letter(int index);
-#endif
-
 void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-void full_describe_square(const coord_def &c);
+void full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();
@@ -321,5 +318,3 @@ void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 
 extern const struct coord_def Compass[9];
-
-#endif

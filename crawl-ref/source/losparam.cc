@@ -60,6 +60,15 @@ opacity_type opacity_immob::operator()(const coord_def& p) const
     return (mons && mons->is_stationary()) ? OPC_OPAQUE : opc_no_trans(p);
 }
 
+opacity_type opacity_mons_immob::operator()(const coord_def& p) const
+{
+    const monster* other_mons = monster_at(p);
+    const bool impassable = other_mons
+                            && other_mons->is_stationary()
+                            && mons_aligned(mon, other_mons);
+    return impassable ? OPC_OPAQUE : opc_no_trans(p);
+}
+
 opacity_type opacity_solid::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = env.grid(p);

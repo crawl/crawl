@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_CRT_H
-#define TILEREG_CRT_H
+#pragma once
 
 #include "tilereg-text.h"
 
@@ -21,7 +20,7 @@ class CRTRegion : public TextRegion
 {
 public:
 
-    CRTRegion(FontWrapper *font);
+    CRTRegion(FontWrapper *font_arg);
     virtual ~CRTRegion();
 
     virtual void render() override;
@@ -49,5 +48,4 @@ public:
     virtual int handle_mouse(MouseEvent& event) override;
 };
 
-#endif
 #endif

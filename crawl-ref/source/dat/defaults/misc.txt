@@ -3,13 +3,13 @@ drop_filter += useless_item
 auto_exclude += oklob,statue,roxanne,hyperactive,lightning spire
 
 # Interrupting run and rest compound commands:
-runrest_safe_poison  = 80:100
 runrest_ignore_monster += ^butterfly$:1
 runrest_ignore_monster += ^wandering mushroom$:1
+delay_safe_poison = 80:100
 
 sort_menus += inv: true : equipped, charged
 
-note_items    += rod of, acquirement, running, of Zot
+note_items    += acquirement, running, of Zot
 note_messages += Your scales start
 note_messages += protects you from harm
 note_messages += You (fall through|are sucked into) a shaft

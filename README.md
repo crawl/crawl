@@ -17,7 +17,7 @@ If you'd like to dive in immediately, we suggest one of:
 
 * Start a game and pick a tutorial (select tutorial in the game menu),
 * Read [quickstart.txt](crawl-ref/docs/quickstart.txt) (in the [docs/](crawl-ref/docs/) directory), or
-* For the studious, [read Crawl's full manual](crawl-ref/docs/crawl_manual.reST).
+* For the studious, [read Crawl's full manual](crawl-ref/docs/crawl_manual.rst).
 
 There is also an ingame list of frequently asked questions which you can access by typing
 `?Q`.

@@ -3,8 +3,7 @@
  * @brief Stuff needed for hints mode
 **/
 
-#ifndef HINTS_H
-#define HINTS_H
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -144,7 +143,9 @@ enum hints_event_type
 #endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_ROD,
+#endif
     HINT_EVENTS_NUM
 };
 
@@ -179,7 +180,7 @@ void check_item_hint(const item_def &item, unsigned int num_old_talents);
 string hints_describe_item(const item_def &item);
 void hints_inscription_info(string prompt);
 bool hints_pos_interesting(int x, int y);
-void hints_describe_pos(int x, int y);
+string hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monster* mons);
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc);
 
@@ -205,4 +206,3 @@ struct hints_state
 extern hints_state Hints;
 
 void tutorial_msg(const char *text, bool end = false);
-#endif

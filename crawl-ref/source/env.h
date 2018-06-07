@@ -1,15 +1,15 @@
-#ifndef ENV_H
-#define ENV_H
+#pragma once
 
 #include <set>
 #include <memory> // unique_ptr
 
-#include "map_knowledge.h"
+#include "coord.h"
+#include "fprop.h"
+#include "map-cell.h"
 #include "monster.h"
-#include "trap_def.h"
+#include "trap-def.h"
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
-typedef uint32_t terrain_property_t;
 
 typedef set<string> string_set;
 
@@ -56,14 +56,14 @@ struct crawl_environment
     vector<coord_def>                        travel_trail;
 
     // indexed by grid coords
-#ifdef USE_TILE
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_cloud;
 #endif
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
-#ifdef USE_TILE
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_cloud;
@@ -151,4 +151,24 @@ static const struct menv_range_proxy
     monster *end()   const { return &menv[MAX_MONSTERS]; }
 } menv_real;
 
-#endif
+/**
+ * Look up a property of a coordinate in the player's map_knowledge grid.
+ *
+ * @tparam T The type of the property being queried.
+ * @tparam F A callable type taking const map_cell& and returning T.
+ *
+ * @param default_value The value to return if pos is out of bounds.
+ * @param pos The position to query.
+ * @param f A function that will be passed a map_cell& representing what the
+ *     player knows about the map at the given position. Will only be called
+ *     if pos is in-bounds.
+ *
+ * @return Either the default value, or the result of f(env.map_knowledge(pos)).
+ */
+template<typename T, typename F>
+T query_map_knowledge(T default_value, const coord_def& pos, F f)
+{
+    if (!map_bounds(pos))
+        return default_value;
+    return f(env.map_knowledge(pos));
+}

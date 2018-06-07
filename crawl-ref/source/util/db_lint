@@ -1,4 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+
+use warnings;
 
 my $lang;
 my @files;
@@ -186,10 +188,10 @@ sub at_at_replaces($$)
 
 my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 
-my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh",
-            qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet Gozag Qazlal
-               Okawaru Makhleb Trog Elyvilon Lugonu Dithmenos
-               Beogh Jiyva Fedhas Cheibriados Ashenzari Ru));
+my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh", "Wu Jian", qw(
+            Ashenzari Beogh Cheibriados Dithmenos Elyvilon Fedhas Gozag
+            Hepliaklqana Jiyva Kikubaaqudgha Lugonu Makhleb Okawaru Pakellas
+            Qazlal Ru Trog Uskayaw Vehumet Xom Yredelemnul Zin));
 
 sub godspeak_keys()
 {
@@ -208,9 +210,7 @@ sub godspeak_keys()
         $keys{"$_ penance"}=1;
         $keys{"$_ prayer"}=1;
     }
-    $keys{"Beogh idol $_"}=1 for qw(follower orc other);
-    $keys{$_}=1 for ("the Shining One holy evil", "the Shining One holy other",
-                     "Elyvilon holy", "recite_closure");
+    $keys{$_}=1 for ("Pakellas death", "recite_closure");
     return keys %keys;
 }
 __________________________________________________________________________();
@@ -237,6 +237,11 @@ if (read_file("descript/features"))
 {
     $entries{"A gate leading to a distant place"} = 1;
     check_desc_needed("feature", grep {!/explore horizon$/} `util/gather_features -a`);
+}
+
+if (read_file("descript/clouds"))
+{
+    check_desc_needed("cloud", `util/gather_clouds`);
 }
 
 if (read_file("descript/unrand"))
@@ -294,7 +299,7 @@ if ($lang)
     my $real_lang = $lang;
     undef $lang;
     read_file("descript/$_") for qw(features items unident unrand monsters spells
-        gods branches skills ability cards commands);
+        gods branches skills ability cards commands clouds);
     $described{$_} = 1 for keys %entries;
     $lang = $real_lang;
 }

@@ -108,7 +108,7 @@ void clear_rays_on_exit()
 }
 
 // LOS radius.
-int los_radius = LOS_RADIUS;
+int los_radius = LOS_DEFAULT_RANGE;
 
 static void _handle_los_change();
 
@@ -118,6 +118,11 @@ void set_los_radius(int r)
     los_radius = r;
     invalidate_los();
     _handle_los_change();
+}
+
+int get_los_radius()
+{
+    return los_radius;
 }
 
 bool double_is_zero(const double x)
@@ -246,11 +251,11 @@ static bool _is_better(const cellray& a, const cellray& b)
         return a.first_diag && !b.first_diag;
 }
 
-enum compare_type
+enum class compare_type
 {
-    C_SUBRAY,
-    C_SUPERRAY,
-    C_NEITHER,
+    neither,
+    subray,
+    superray,
 };
 
 // Check whether one of the passed cellrays is a subray of the
@@ -258,7 +263,7 @@ enum compare_type
 static compare_type _compare_cellrays(const cellray& a, const cellray& b)
 {
     if (a.target() != b.target())
-        return C_NEITHER;
+        return compare_type::neither;
 
     int cura = a.ray.start;
     int curb = b.ray.start;
@@ -291,11 +296,11 @@ static compare_type _compare_cellrays(const cellray& a, const cellray& b)
     maybe_super = maybe_super && curb == endb;
 
     if (maybe_sub)
-        return C_SUBRAY;    // includes equality
+        return compare_type::subray;    // includes equality
     else if (maybe_super)
-        return C_SUPERRAY;
+        return compare_type::superray;
     else
-        return C_NEITHER;
+        return compare_type::neither;
 }
 
 // Determine all minimal cellrays.
@@ -321,16 +326,16 @@ static vector<int> _find_minimal_cellrays()
             {
                 switch (_compare_cellrays(*min_it, c))
                 {
-                case C_SUBRAY:
+                case compare_type::subray:
                     dup = true;
                     break;
-                case C_SUPERRAY:
+                case compare_type::superray:
                     min_it = min.erase(min_it);
                     erased = true;
                     // clear this should be added, but might have
                     // to erase more
                     break;
-                case C_NEITHER:
+                case compare_type::neither:
                 default:
                     break;
                 }

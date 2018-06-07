@@ -25,7 +25,7 @@
  **/
 
 #include "domino.h"
-#include "domino_data.h"
+#include "domino-data.h"
 
 #include <algorithm>
 #include <iostream>

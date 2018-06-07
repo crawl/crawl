@@ -31,7 +31,8 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
@@ -61,10 +62,6 @@
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
-// hackish: scorefile position of newest entry. Will be highlit during
-// highscore printing (always -1 when run from command line).
-static int newest_entry = -1;
-
 static FILE *_hs_open(const char *mode, const string &filename);
 static void  _hs_close(FILE *handle, const string &filename);
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
@@ -83,7 +80,7 @@ static string _score_file_name()
         ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
-    if (crawl_state.game_is_sprint() && crawl_state.map != "")
+    if (crawl_state.game_is_sprint() && !crawl_state.map.empty())
         ret += "-" + crawl_state.map;
 
     return ret;
@@ -94,13 +91,14 @@ static string _log_file_name()
     return Options.shared_dir + "logfile" + crawl_state.game_type_qualifier();
 }
 
-void hiscores_new_entry(const scorefile_entry &ne)
+int hiscores_new_entry(const scorefile_entry &ne)
 {
     unwind_bool score_update(crawl_state.updating_scores, true);
 
     FILE *scores;
     int i, total_entries;
     bool inserted = false;
+    int newest_entry = -1;
 
     // open highscore file (reading) -- nullptr is fatal!
     //
@@ -151,9 +149,8 @@ void hiscores_new_entry(const scorefile_entry &ne)
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
     {
-        newest_entry = -1; // This might not be the first game
         _hs_close(scores, _score_file_name());
-        return;
+        return -1;
     }
 
     total_entries = i;
@@ -176,6 +173,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
 
     // close scorefile.
     _hs_close(scores, _score_file_name());
+    return newest_entry;
 }
 
 void logfile_new_entry(const scorefile_entry &ne)
@@ -250,7 +248,7 @@ void hiscores_print_all(int display_count, int format)
 
 // Displays high scores using curses. For output to the console, use
 // hiscores_print_all.
-void hiscores_print_list(int display_count, int format)
+void hiscores_print_list(int display_count, int format, int newest_entry)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
 
@@ -306,9 +304,6 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
 {
     TextItem* tmp = nullptr;
     tmp = new TextItem();
-
-    coord_def min_coord(1,1);
-    coord_def max_coord(1,2);
 
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -975,7 +970,7 @@ void scorefile_entry::init_with_fields()
     lvl     = fields->int_field("xl");
     race_class_name = fields->str_field("char");
 
-    best_skill     = str_to_skill(fields->str_field("sk"));
+    best_skill     = str_to_skill_safe(fields->str_field("sk"));
     best_skill_lvl = fields->int_field("sklev");
     title          = fields->str_field("title");
 
@@ -1335,9 +1330,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         death_source_name = mons->name(desc, death);
 
         if (death || you.can_see(*mons))
-            death_source_name = mons->full_name(desc, true);
+            death_source_name = mons->full_name(desc);
 
-        if (mons_is_player_shadow(mons))
+        if (mons_is_player_shadow(*mons))
             death_source_name = "their own shadow"; // heh
 
         if (mons->mid == MID_YOU_FAULTLESS)
@@ -1640,7 +1635,7 @@ void scorefile_entry::init(time_t dt)
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";
@@ -1707,7 +1702,6 @@ void scorefile_entry::init(time_t dt)
     zigmax     = you.zig_max;
 
     scrolls_used = 0;
-    dprf("checking %d", caction_compound(OBJ_SCROLLS));
     pair<caction_type, int> p(CACT_USE, caction_compound(OBJ_SCROLLS));
 
     const int maxlev = min<int>(you.max_level, 27);
@@ -1721,7 +1715,7 @@ void scorefile_entry::init(time_t dt)
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
 
-    wiz_mode = (you.wizard ? 1 : 0);
+    wiz_mode = (you.wizard || you.suppress_wizard ? 1 : 0);
     explore_mode = (you.explore ? 1 : 0);
 }
 
@@ -2528,7 +2522,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BARBS:
-        desc += terse ? "barbs" : "Succumbed to a manticore's barbed spikes";
+        desc += terse ? "barbs" : "Succumbed to barbed spike wounds";
         break;
 
     case KILLED_BY_BEING_THROWN:
@@ -2891,7 +2885,7 @@ void mark_milestone(const string &type, const string &milestone,
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
         // Don't mark normal milestones in wizmode or explore mode
-        || (type != "crash" && (you.wizard || you.explore))
+        || (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
 #endif
         )
     {

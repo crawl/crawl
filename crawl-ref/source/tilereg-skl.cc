@@ -5,13 +5,16 @@
 #include "tilereg-skl.h"
 
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
 #include "skills.h"
+#include "stringutil.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "viewgeom.h"
 #ifdef WIZARD
 #include "wiz-you.h"
@@ -60,9 +63,9 @@ int SkillRegion::handle_mouse(MouseEvent &event)
     const skill_type skill = (skill_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
-        // TODO: Handle skill transferral using MOD_SHIFT.
+        // TODO: Handle skill transferral using TILES_MOD_SHIFT.
 #ifdef WIZARD
-        if (you.wizard && (event.mod & MOD_CTRL))
+        if (you.wizard && (event.mod & TILES_MOD_CTRL))
         {
             wizard_set_skill_level(skill);
             return CK_MOUSE_CMD;
@@ -71,6 +74,8 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         m_last_clicked_item = item_idx;
         if (!you.can_train[skill])
             mpr("You cannot train this skill.");
+        else if (you.species == SP_GNOLL)
+            mpr("Gnolls can't change their training allocations!");
         else if (you.skills[skill] >= 27)
             mpr("There's no point to toggling this skill anymore.");
         else
@@ -117,7 +122,7 @@ bool SkillRegion::update_tip_text(string& tip)
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot train this skill now.";
-    else
+    else if (you.species != SP_GNOLL)
     {
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
@@ -160,10 +165,7 @@ bool SkillRegion::update_alt_text(string &alt)
     // TODO: Nicer display for level, aptitude and crosstraining.
     inf.body << get_skill_description(skill, true);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 

@@ -50,10 +50,6 @@ bardiche
 
 En lang stage med et enormt, kløvende blad i den ene ende.
 %%%%
-beef jerky
-
-Et stykke konserveret, død ko.
-%%%%
 blessed double sword
 
 Et langt, stort sværd, som er bestyrket af Den Strålendes kraft.
@@ -224,10 +220,6 @@ Denne æske indeholder en forkvaklet troldmands magiske eksperimenters bizarre
 rester. Hvis den åbnes, kan den slippe en venlig kimære løs: en mytisk hybrid
 som består af dele fra tre separate væsener.
 %%%%
-bread ration
-
-Et stort, mættende måltid af tørt brød.
-%%%%
 buckler
 
 Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
@@ -281,9 +273,9 @@ deck of punishment
 
 Et spil magiske kort som hærger brugeren.
 %%%%
-deck of war
+deck of summoning
 
-Et spil magiske kort som er nyttige før og under en kamp.
+Et spil magiske kort som afbilder en lang række sære og underfulde væsener.
 %%%%
 demon blade
 
@@ -302,12 +294,6 @@ dire flail
 
 En stridsplejl med lange pigge og et tungere hoved.
 %%%%
-disc of storms
-
-Denne ekstremt kraftulde genstand kan udløse en altødelæggende storm af
-elektricitet. Dens effektivitet er langt større i hænderne på en, som er dygtig
-med magiske anordninger.
-%%%%
 eudemon blade
 
 En hellig klinge, som er frembragt af Himmelens smedjer og beboet af en god
@@ -325,7 +311,7 @@ En fortryllet vifte som er beboet af venligtsindede luftånder. Hvis man svinger
 viften slipper man et voldsomt vindstød og ånderne fri til at feje bærerens
 fjender bort.
 %%%%
-fire dragon armour
+fire dragon scales
 
 En magisk rustning, som er lavet af en ildsprudende drages skæl. Den beskytter
 fremragende mod ild, men gør bæreren mere modtagelig over for effekterne af
@@ -345,7 +331,7 @@ glaive
 
 En stage med en stor, tung klinge i den ene ende.
 %%%%
-gold dragon armour
+gold dragon scales
 
 En magisk rustning, som er lavet af en gulddrages skæl. Den er meget tungere
 end de fleste drageskæls-rustninger og beskytter bæreren mod gift, ild og
@@ -443,11 +429,7 @@ lychee
 
 En tropisk frugt.
 %%%%
-meat ration
-
-En mættende ration af tørret og konserveret kød.
-%%%%
-mottled dragon armour
+mottled dragon scales
 
 Denne rustning er lavet af skællene fra en spættet drage. Selvom den i
 modsætning til rustning, som er lavet af skællene fra visse større drager, ikke
@@ -471,7 +453,7 @@ pair of gloves
 
 Et par handsker.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 En rustning, som er lavet af de perlemorsfarvede skæl fra en perledrage. Den
 giver bæreren modstandskraft over for negativ energi.
@@ -617,10 +599,6 @@ ring of strength
 Denne ring øger eller mindsker sin bærers fysiske styrke, alt efter hvor
 fortryllet den er.
 %%%%
-ring of sustain attributes
-
-Denne ring beskytter sin bærer mod tab af styrke, behændighed og intelligens.
-%%%%
 ring of teleportation
 
 Denne ring translokerer lejlighedsvis bæreren til et tilfældigt sted og kan
@@ -640,11 +618,6 @@ Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
 forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
 den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
 grundlæggende effektivitet med våbnet.
-%%%%
-royal jelly
-
-En særligt fed og gylden geléagtig tingest. Hvis du indtager den, giver den,
-udover næring, dig dine tabte evner tilbage.
 %%%%
 rune of zot
 
@@ -768,12 +741,6 @@ scroll of random uselessness
 Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
 lykkes overhovedet at få den til at virke.
 %%%%
-scroll of recharging
-
-Denne skriftrulle genopfylder en valgfri, magisk vånd eller stoks ladninger.
-Når den bruges på en stok, øger den også stokkens kraftlager og den fart, den
-genvinder kraft med.
-%%%%
 scroll of remove curse
 
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
@@ -827,10 +794,6 @@ langsommere.
 short sword
 
 En lille, tveægget klinge med et kort greb.
-%%%%
-slice of pizza
-
-Et stykke pizza: et fladbrød med tomatsauce, mozzarella di bufala og basilikum.
 %%%%
 sling
 
@@ -914,7 +877,7 @@ staff of wizardry
 
 Denne stav øger brugerens evne til at bruge magiske besværgelser.
 %%%%
-steam dragon armour
+steam dragon scales
 
 En rustning, som er lavet af skællene fra en drage, der ånder damp. Selvom den
 i modsætning til rustninger, der er lavet af skællene fra visse større drager,
@@ -930,7 +893,7 @@ stone
 En lille klump kompakt, men ellers ikke opsigtsvækkende naturligt forekommende
 mineraler. Den kan kastes med hænderne eller affyres med en slynge.
 %%%%
-storm dragon armour
+storm dragon scales
 
 En rustning, som er lavet af skællene fra en drage med lynånde. Den er tungere
 end de fleste rustninger af drageskæl og giver bæreren stor modstandskraft over
@@ -951,7 +914,7 @@ sultana
 
 En ydmyg rosin.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 En rustning, som er lavet af skællene fra sumpdrage. Den giver bæreren
 modstandskraft mod gift.
@@ -991,10 +954,6 @@ wand of cold
 
 En magisk anordning, som kan kaste kolossale kuldekiler.
 %%%%
-wand of confusion
-
-En magisk enhed, som fremkalder forvirring og desorientering i målet.
-%%%%
 wand of digging
 
 En magisk anordning, som graver tunneller gennem uforarbejdet klippe.
@@ -1016,22 +975,9 @@ wand of fireball
 
 En magisk anordning, som kaster eksplosive ildkugler.
 %%%%
-wand of hasting
-
-En magisk anordning, som kaster fortryllelser, der får målet til at bevæge sig
-og handle hurtigere.
-%%%%
-wand of heal wounds
-
-En magisk anordning, som kan helbrede et væsens sår.
-%%%%
 wand of invisibility
 
 En magisk anordning, som kan skjule et væsen for andres øjne.
-%%%%
-wand of lightning
-
-En magisk enhed, som kaster kolossale lynkiler.
 %%%%
 wand of magic darts
 
@@ -1046,15 +992,6 @@ effektiv mod formskiftende væsener.
 wand of random effects
 
 En magisk anordning, som kan producere en lang række effekter.
-%%%%
-wand of slowing
-
-En magisk anordning, som kaster fortryllelser, der gør et væsens handlinger
-langsommere.
-%%%%
-wand of teleportation
-
-En magisk anordning, som translokerer et væsen til et tilfældigt sted.
 %%%%
 whip
 

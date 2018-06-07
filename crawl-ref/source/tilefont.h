@@ -1,10 +1,9 @@
-#ifndef TILEFONT_H
-#define TILEFONT_H
+#pragma once
 
 #include "defines.h"
 #include "glwrapper.h"
 
-extern const VColour term_colours[MAX_TERM_COLOUR];
+extern const VColour term_colours[NUM_TERM_COLOURS];
 
 class FontBuffer;
 class formatted_string;
@@ -21,12 +20,12 @@ public:
     virtual ~FontWrapper() {}
 
     // font loading
-    virtual bool load_font(const char *font_name, unsigned int font_size,
-                           bool outline, int scale_num, int scale_den) = 0;
+    virtual bool load_font(const char *font_name, unsigned int font_size) = 0;
+    virtual bool configure_font() = 0;
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
-                                  ucs_t *chars, uint8_t *colours,
+                                  char32_t *chars, uint8_t *colours,
                                   unsigned int width, unsigned int height,
                                   bool drop_shadow = false) = 0;
 
@@ -46,16 +45,20 @@ public:
                        const string &s, const VColour &c) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) = 0;
-    virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
+    virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
                        const VColour &col) = 0;
+    virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
+                       const VColour &fg_col, const VColour &bg_col) = 0;
 
-    virtual unsigned int char_width() const = 0;
-    virtual unsigned int char_height() const = 0;
+    virtual unsigned int char_width(bool logical=true) const = 0;
+    virtual unsigned int char_height(bool logical=true) const = 0;
+    virtual unsigned int max_width(int length, bool logical=true) const = 0;
+    virtual unsigned int max_height(int length, bool logical=true) const = 0;
 
-    virtual unsigned int string_width(const char *text)  = 0;
-    virtual unsigned int string_width(const formatted_string &str)  = 0;
-    virtual unsigned int string_height(const char *text) const = 0;
-    virtual unsigned int string_height(const formatted_string &str) const = 0;
+    virtual unsigned int string_width(const char *text, bool logical=true)  = 0;
+    virtual unsigned int string_width(const formatted_string &str, bool logical=true)  = 0;
+    virtual unsigned int string_height(const char *text, bool logical=true) const = 0;
+    virtual unsigned int string_height(const formatted_string &str, bool logical=true) const = 0;
 
     // Try to split this string to fit in w x h pixel area.
     virtual formatted_string split(const formatted_string &str,
@@ -64,5 +67,3 @@ public:
 
    virtual const GenericTexture *font_tex() const = 0;
 };
-
-#endif

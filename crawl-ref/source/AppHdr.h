@@ -13,8 +13,7 @@
 **/
 
 
-#ifndef APPHDR_H
-#define APPHDR_H
+#pragma once
 
 /* Fix annoying precompiled header compile errors caused by unused Objective-C variant. */
 #if !defined(__OBJC__)
@@ -30,7 +29,7 @@ using namespace std;
 #endif
 
 // Define COMPILE_CHECK before including any of our headers, so even things
-// like externs.h can use it.  platform.h a few lines up is standalone, so
+// like externs.h can use it. platform.h a few lines up is standalone, so
 // doesn't count.
 #ifndef _lint
 # define COMPILE_CHECK(expr) static_assert((expr), #expr)
@@ -123,9 +122,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define USE_UNIX_SIGNALS
 
     #define FILE_SEPARATOR '/'
-#ifndef USE_TILE_LOCAL
-    #define USE_CURSES
-#endif
 
     // More sophisticated character handling
     #define CURSES_USE_KEYPAD
@@ -148,12 +144,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // uncomment the line below and add -lpcre to your makefile.
     // #define REGEX_PCRE
 
-    // Uncomment (and edit as appropriate) to play sounds.
-    //
-    // WARNING: Filenames passed to this command *are not validated in any way*.
-    //
-    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
-
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)
@@ -161,19 +151,12 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
         #define USE_UNIX_SIGNALS
     #endif
 
-    #ifdef USE_TILE_WEB
-        #error Webtiles are not supported on Windows.
-    #endif
-    #ifndef USE_TILE_LOCAL
-        #include "libw32c.h"
-    #endif
+    // TODO: libw32c.h still contains an #ifdef USE_TILE_WEB
+    #include "libw32c.h"
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
     #define ALT_FILE_SEPARATOR '\\'
-
-    // Uncomment to play sounds. winmm must be linked in if this is uncommented.
-    // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in. Required in the absence of POSIX regexes.
@@ -333,6 +316,9 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define DEBUG_BONES
 #endif
 
+// on by default (and has been for ~10 years)
+#define DEBUG_ITEM_SCAN
+
 #ifdef _DEBUG       // this is how MSVC signals a debug build
     #ifndef DEBUG
     #define DEBUG
@@ -373,6 +359,9 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //  Game Play Defines
 // =========================================================================
 
+// Current TAG_MAJOR_VERSION
+#include "tag-version.h"
+
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
@@ -406,15 +395,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
-
-#ifdef USE_TILE_LOCAL
-# ifndef PROPORTIONAL_FONT
-#  error PROPORTIONAL_FONT not defined
-# endif
-# ifndef MONOSPACED_FONT
-#  error MONOSPACED_FONT not defined
-# endif
-#endif
 
 #ifdef __cplusplus
 
@@ -468,12 +448,9 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #ifdef __cplusplus
-# ifdef USE_TILE
-#  include "libgui.h"
-# endif
 # include "tiles.h"
 #endif
 
-#endif // !defined __OBJC__
+#include "libconsole.h"
 
-#endif // APPHDR_H
+#endif // !defined __OBJC__

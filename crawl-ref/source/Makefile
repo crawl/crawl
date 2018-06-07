@@ -18,7 +18,8 @@
 # Typical parameters:
 #    TILES         -- set to anything to enable tiles build
 #
-#    SOUND         -- set to anything to enable sound
+#    SOUND         -- set to anything to enable sound; note that you will need to
+#                     uncomment some lines in sound.h if not building tiles
 #
 #    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
 #
@@ -82,7 +83,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api android FORCE monster
+        build-windows package-windows docs greet api android FORCE monster
 
 include Makefile.obj
 
@@ -132,7 +133,7 @@ CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
-ADVPNG = advpng -z -4
+ADVPNG = advpng -z -2
 PKGCONFIG = pkg-config
 DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
@@ -227,7 +228,7 @@ ifeq ($(uname_S),Darwin)
 	BUILD_SQLITE = YesPlease
 	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDL2main.a
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo contrib/install/$(ARCH)/lib/libSDL2main.a
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
@@ -285,7 +286,13 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	SQLITE_INCLUDE_DIR := /usr/include
+	# FreeBSD keeps all of its userland includes in /usr/local so
+	# look there
+	ifeq ($(uname_S),FreeBSD)
+		SQLITE_INCLUDE_DIR := /usr/local/include
+	else
+		SQLITE_INCLUDE_DIR := /usr/include
+	endif
 else
 	# This is totally wrong, works only with some old-style setups, and
 	# on some architectures of Debian/new FHS multiarch -- excluding, for
@@ -323,10 +330,10 @@ endif
 #
 # Check for an Apple-released compiler.
 #
-ifndef NO_APPLE_GCC
+ifndef NO_APPLE_PLATFORM
 ifeq ($(uname_S),Darwin)
 ifneq ($(shell gcc -v 2>&1 | grep Apple),)
-APPLE_GCC = YesPlease
+APPLE_PLATFORM = YesPlease
 endif
 endif
 endif
@@ -370,9 +377,6 @@ MCHMOD_LOGS := 664
 INSTALL_UGRP := games:games
 endif
 
-chroot_prefix :=
-prefix        :=
-
 ifeq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
 FHS := yes
 endif
@@ -405,73 +409,7 @@ endif
 
 INCLUDES_L += -Iutil -I.
 
-ifdef APPLE_GCC
-
-MARCH := $(uname_M)
-
-
-ifndef NO_AUTO_SDK
-
-# The SDK locations were moved in 10.8; this snippet tries to find them
-# there first, then reverts to the original location.
-XCODE_SDK_SUFFIX := Platforms/MacOSX.platform/Developer
-# Try to use xcode-select -p to find the current user-configured Xcode.app.
-XCODE_SELECT_PATH := $(shell xcode-select -p 2>/dev/null | sed 's/\/$$//')
-ifeq ($(shell test -e "$(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# Otherwise, try /Applications/Xcode.app.
-XCODE_DEFAULT_PATH := /Applications/Xcode.app/Contents/Developer
-ifeq ($(shell test -e "$(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# If all else fails, maybe it's in /Developer.
-DEVELOPER_PATH := /Developer
-endif
-endif
-
-# Find the oldest SDK available, in attempt to make this build as
-# backward-compatible as we possibly can.
-SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
-
-ifeq ($(SDK_VER),10.4u)
-SDK_VER := 10.4
-endif
-
-ifndef SDK_VER
-$(error You do not seem to have any Mac OS X SDKs installed! This build is doomed to fail)
-endif
-
-endif
-
-ifndef SDK_VER
-ifeq ($(MARCH),ppc)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),i386)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),x86_64)
-ifdef TILES
-SDK_VER := 10.6
-else
-SDK_VER := 10.5
-endif
-endif
-endif
-
-# Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
-# else is much easier to predict the name of.
-ifeq ($(SDK_VER),10.4)
-GCC_VER := 4.0
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
-else
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
-endif
-
-ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
-$(error The Mac OS X $(SDK_VER) SDK seems missing)
-endif
+ifdef APPLE_PLATFORM
 
 ifdef BUILD_UNIVERSAL
 # [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
@@ -479,13 +417,14 @@ CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
 NO_INLINE_DEPGEN := YesPlease
 else
-CFLAGS_ARCH := -arch $(MARCH)
+CFLAGS_ARCH := -arch $(uname_M)
 endif
 
-CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+MACOSX_MIN_VERSION=10.7
+CC = $(GCC) $(CFLAGS_ARCH) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
@@ -631,30 +570,38 @@ ifndef BUILD_LUA
     BUILD_LUA = yes
   endif
 endif
-ifndef BUILD_LUA
-  ifneq ($(USE_LUAJIT),)
-    ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
-      LUA_PACKAGE = luajit
-    else
-      BUILD_LUA = yes
-    endif
-  else
-    ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-      ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
-        ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-          BUILD_LUA = yes
-        else
-          ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
-            LUA_PACKAGE = lua
-          else
-            BUILD_LUA = yes
-          endif
-        endif
+# You can override the Lua package search with "make LUA_PACKAGE=lua-5-1".
+# pkg-config is still required.
+ifndef LUA_PACKAGE
+  ifndef BUILD_LUA
+    ifneq ($(USE_LUAJIT),)
+      ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
+        LUA_PACKAGE = luajit
       else
-        LUA_PACKAGE = lua-5.1
+        BUILD_LUA = yes
       endif
     else
-      LUA_PACKAGE = lua5.1
+      ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+        ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
+          ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
+            ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+              BUILD_LUA = yes
+            else
+              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+                LUA_PACKAGE = lua
+              else
+                BUILD_LUA = yes
+              endif
+            endif
+          else
+            LUA_PACKAGE = lua51
+          endif
+        else
+          LUA_PACKAGE = lua-5.1
+        endif
+      else
+        LUA_PACKAGE = lua5.1
+      endif
     endif
   endif
 endif
@@ -761,10 +708,10 @@ endif # pkg-config
 
 ifndef GLES
 ifneq ($(uname_S),Darwin)
-ifeq (,$(findstring MINGW,$(uname_S)))
-LIBS += -lGL -lGLU
-else
+ifeq ($(msys),Yes)
 LIBS += -lopengl32 -lglu32
+else
+LIBS += -lGL -lGLU
 endif
 endif
 endif
@@ -779,10 +726,16 @@ DEFINES_L += -DUSE_SOUND
 endif
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
-CFWARN_L += $(shell w=-Wno-format-zero-length;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+# For `no-` options, gcc will only emit an error if there are other errors, so
+# we need to check positive forms (applies to array-bounds, format-zero-length,
+# and tautological-unsigned-enum-zero-compare.)
+CFWARN_L += $(shell w=array-bounds;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
+CFWARN_L += $(shell w=format-zero-length;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
 CFWARN_L += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 CFWARN_L  += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+# Avoid warnings about safety checks that might be necessary on other compilers
+# where the same enum is assigned a signed underlying type.
+CFWARN_L  += $(shell w=tautological-unsigned-enum-zero-compare;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
 
 CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
@@ -924,7 +877,7 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
+	FONTDIR = $(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
@@ -963,12 +916,7 @@ ifdef PROPORTIONAL_FONT
     INSTALL_FONTS += "$(PROPORTIONAL_FONT)"
   endif
 else
-  SYS_PROPORTIONAL_FONT = $(shell { name=$(OUR_PROPORTIONAL_FONT);\
-    {\
-      fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
-      for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
-      do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % -type f -iname $$name -print | head -n1; } 2>/dev/null)
+  SYS_PROPORTIONAL_FONT = $(shell util/find_font "$(OUR_PROPORTIONAL_FONT)")
   ifneq (,$(SYS_PROPORTIONAL_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
@@ -988,12 +936,7 @@ ifdef MONOSPACED_FONT
     INSTALL_FONTS += "$(MONOSPACED_FONT)"
   endif
 else
-  SYS_MONOSPACED_FONT = $(shell { name=$(OUR_MONOSPACED_FONT);\
-    {\
-      fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
-      for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
-      do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % -type f -iname $$name -print | head -n1; } 2>/dev/null)
+  SYS_MONOSPACED_FONT = $(shell util/find_font "$(OUR_MONOSPACED_FONT)")
   ifneq (,$(SYS_MONOSPACED_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
@@ -1090,7 +1033,7 @@ ifeq ($(strip $(YACC)),)
 NO_YACC = YesPlease
 endif
 
-ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifneq ($(findstring s,$(MAKEFLAGS)),s)
 ifndef V
         QUIET_CC       = @echo '   ' CC $@;
         QUIET_CXX      = @echo '   ' CXX $@;
@@ -1201,7 +1144,7 @@ RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
-GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h config.h mon-mst.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
@@ -1213,6 +1156,10 @@ SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat ut
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
 
 export SRC_VERSION
+
+# Update .ver file if SRC_VERSION has changed
+.ver: FORCE
+	@echo '$(SRC_VERSION)' | cmp -s - $@ || echo '$(SRC_VERSION)' > $@
 
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
@@ -1295,11 +1242,8 @@ else
 webserver:
 endif
 
-ifeq (,$(filter monster,$(MAKECMDGOALS)))
-OBJECTS += main.o
-else
-OBJECTS += util/monster/monster-main.o
-endif
+GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
+MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1374,10 +1318,10 @@ endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl .cflags
+compflag.h: $(OBJECTS:.o=.cc) main.cc util/gen-cflg.pl .cflags
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
-build.h: $(OBJECTS:.o=.cc) util/gen_ver.pl
+build.h: $(OBJECTS:.o=.cc) main.cc util/gen_ver.pl .ver
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.o: build.h compflag.h
@@ -1389,14 +1333,14 @@ $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt species-data.h aptitude
 						   util/gen-apt.pl
 	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
+$(DOC_BASE)/aptitudes-wide.txt: $(DOC_TEMPLATES)/apt-tmpl-wide.txt species-data.h \
+						   aptitudes.h util/gen-apt.pl
+	$(QUIET_GEN)./util/gen-apt.pl $@ $^
+
 $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 	$(QUIET_GEN)./util/FAQ2html.pl $< $@
 
-rest:
-	wget -O - https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest \
-	| sed -f util/undoku.sed | tr -d '\r' > $(DOC_BASE)/crawl_manual.reST
-
-$(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
+$(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
 
 CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
@@ -1477,7 +1421,7 @@ endif
 	$(COPY_R) dat/dlua/* $(datadir_fp)/dat/dlua/
 	echo "-- Autogenerated list of maps to load and compile:" \
 	    >$(datadir_fp)/dat/dlua/loadmaps.lua
-	find dat -name '*.des'|sed s:dat/::| \
+	find dat -name '*.des'|LC_ALL=C sort|sed s:dat/::| \
 	while read x; \
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
@@ -1493,7 +1437,7 @@ endif
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
 	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
-	$(COPY) ../settings/* $(datadir_fp)/settings/
+	$(COPY_R) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
 	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
 endif
@@ -1570,17 +1514,16 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
+$(GAME): $(GAME_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME) $(LIBS)
 
 util/monster/vault_monster_data.h: dat/des util/gather_mons
 	util/gather_mons -v > $@
 
 util/monster/monster-main.o: util/monster/vault_monster_data.h
 
-util/monster/monster: $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) \
-	 -o $@ $(LIBS)
+util/monster/monster: $(MONSTER_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(MONSTER_OBJS) -o $@ $(LIBS)
 
 monster: util/monster/monster
 
@@ -1633,7 +1576,7 @@ endif
 # Plain old compilation
 #
 
-$(OBJECTS:%.o=%.cc): $(CONTRIB_LIBS)
+$(OBJECTS:%.o=%.cc) main.cc: $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
@@ -1703,7 +1646,7 @@ $(RLTILES)/dc-unrand.txt: art-data.h
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
-l_moninf.o: mi-enum.h
+l-moninf.o: mi-enum.h
 macro.o: cmd-name.h
 
 #############################################################################

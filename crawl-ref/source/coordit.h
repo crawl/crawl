@@ -1,7 +1,7 @@
-#ifndef COORDIT_H
-#define COORDIT_H
+#pragma once
 
 #include "coord-circle.h"
+#include "los-type.h"
 
 class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {
@@ -60,9 +60,9 @@ private:
 class radius_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
-    radius_iterator(const coord_def center, int param, circle_type ctype,
+    radius_iterator(const coord_def center, int radius, circle_type ctype,
                     bool exclude_center = false);
-    radius_iterator(const coord_def center, int param, circle_type ctype,
+    radius_iterator(const coord_def center, int radius, circle_type ctype,
                     los_type los, bool exclude_center = false);
     radius_iterator(const coord_def center, los_type los,
                     bool exclude_center = false);
@@ -154,4 +154,3 @@ public:
 # ifdef DEBUG_TESTS
 void coordit_tests();
 # endif
-#endif

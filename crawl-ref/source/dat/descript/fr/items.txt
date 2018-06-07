@@ -90,10 +90,6 @@ battleaxe
 Une grande hache de guerre à deux main munie d'une redoutable tête à double
 tranchant.
 %%%%
-beef jerky
-
-Une tranche séchée de vache ou de bœuf mort.
-%%%%
 blessed double sword
 
 Une épée longue et large, améliorée par l'Étincelant.
@@ -356,10 +352,6 @@ Une boîte remplie avec les étranges restes d'expérimentations magiques d'un
 sorcier dépravé. L'ouvrir libérera une chimère amicale : créature mythique
 hybridant des parties de trois bêtes différentes.
 %%%%
-bread ration
-
-Un pain peut être un peu rassis, mais très nourrissant.
-%%%%
 buckler
 
 Une petite pièce de bois et de métal faite pour se défendre en l'attachant à un
@@ -415,9 +407,10 @@ deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
 %%%%
-deck of war
+deck of summoning
 
-Un paquet de cartes magiques, utile avant et pendant la bataille.
+Un paquet de cartes magiques, représentant un éventail de créatures étranges et
+merveilleux.
 %%%%
 demon blade
 
@@ -435,12 +428,6 @@ dire flail
 
 Un fléau d'arme avec des pointes plus longues, et une tête plus lourde.
 %%%%
-disc of storms
-
-Cet objet, extrêmement puissant, peut déchaîner des tempêtes d'électricité
-destructrices. Son efficacité augmente entre les main d'une personne habituée à
-manipuler les dispositifs magiques.
-%%%%
 eudemon blade
 
 Une lame sacrée tout droit sortie des forges du paradis, et habitée par une
@@ -457,7 +444,7 @@ Un éventail enchanté habité par des esprits de l'air bienveillants. Agiter
 l'éventail déclenche un violent coup de vent autour du porteur et libère les
 esprits pour balayer ses ennemies.
 %%%%
-fire dragon armour
+fire dragon scales
 
 Une armure magique faite des écailles d'un dragon cracheur de feu. Elle offre
 une grande protection contre le feu, mais rend son porteur plus sensibles aux
@@ -482,7 +469,7 @@ glaive
 
 Une hampe avec une grande et lourde lame au bout.
 %%%%
-gold dragon armour
+gold dragon scales
 
 Une armure magique faite des écailles d'un dragon d'or. C'est la plus lourdes
 des armures draconiques, mais elle protège son porteur du poison, du feu, et du
@@ -594,11 +581,7 @@ mace
 
 Un cours gourdin avec une tête en métal.
 %%%%
-meat ration
-
-Une ration de viande séchée.
-%%%%
-mottled dragon armour
+mottled dragon scales
 
 Une armure magique faite à partir des écailles d'un dragon marbré. Bien qu'elle
 ne fournisse pas à son porteur de protection magique particulière,
@@ -629,7 +612,7 @@ pair of gloves
 
 Une paire de gants
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 Une armure magique composée à partir des écailles nacrées d'un dragon de perle.
 Elle octroi à son porteur une résistance aux énergies négatives.
@@ -788,10 +771,6 @@ ring of strength
 Cet anneau augmente ou diminue la force physique de son porteur, en fonction de
 son degré d'enchantement.
 %%%%
-ring of sustain attributes
-
-Cet anneau protège son porteur des pertes de force, dextérité, ou intelligence.
-%%%%
 ring of teleportation
 
 Cet anneau déclenche son pouvoir de temps en temps en téléportant son porteur à
@@ -815,11 +794,6 @@ mais de façon très imprécise.
 rod of shadows
 
 Ce sceptre tire des créatures des ombres et de l’éther.
-%%%%
-royal jelly
-
-Une gelée dorée et particulièrement nourrissante. La consommer restaure les
-caractéristiques en plus de la satiété qu'elle apporte.
 %%%%
 rune of zot
 
@@ -948,10 +922,6 @@ Une planche de bois avec du métal que l'on attache au bras pour se défendre. I
 est un peu encombrant à porter, et il peut réduire la vitesse de frappe des
 guerriers inexpérimentés.
 %%%%
-slice of pizza
-
-Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
-%%%%
 sling
 
 Un morceau de tissu et du cuir utilisé pour lancer des pierres, qui font peu de
@@ -996,7 +966,7 @@ stone
 Un petit morceau d'un minéral naturel dense.. Elle peut être jetée à la main ou
 lancée avec une fronde.
 %%%%
-storm dragon armour
+storm dragon scales
 
 Une armure magique faite d'écailles d'un dragon cracheur d'éclairs. Elle est
 plus lourde que la plupart des armures d'écailles de dragon et accorde à son
@@ -1017,7 +987,7 @@ sultana
 
 Une grappe de raisins.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 Une armure magique composée d'écailles de dragon des marais. Elle offre une
 résistance au poison à son porteur.
@@ -1059,10 +1029,6 @@ wand of cold
 
 Un instrument magique permettant de tirer de puissants missiles de froid.
 %%%%
-wand of confusion
-
-Un instrument magique qui provoque la confusion chez la créature ciblée.
-%%%%
 wand of digging
 
 Un instrument magique qui creuse des tunnels a travers la roche brute.
@@ -1085,22 +1051,9 @@ wand of fireball
 
 Un instrument magique qui tire des salves de flammes explosives.
 %%%%
-wand of hasting
-
-Un instrument magique qui lance un enchantement accélérant la vitesse
-d'exécution des actions de la créature ciblée.
-%%%%
-wand of heal wounds
-
-Un instrument magique qui peut guérir les blessures d'une créature.
-%%%%
 wand of invisibility
 
 Un instrument magique qui cache une créature à la vue des autres.
-%%%%
-wand of lightning
-
-Un instrument magique qui tire de puissants missiles d'électricité.
 %%%%
 wand of magic darts
 
@@ -1115,15 +1068,6 @@ créature. Ceci est particulièrement efficace contre les changeurs de forme.
 wand of random effects
 
 Un instrument magique qui peut produire une grande variété d'effets.
-%%%%
-wand of slowing
-
-Un instrument magique qui ralenti, par enchantement, les actions d'une créature
-ciblée.
-%%%%
-wand of teleportation
-
-Un instrument magique qui téléporte aléatoirement une créature ciblée.
 %%%%
 whip
 

@@ -3,10 +3,6 @@ Hellfire ability
 
 Düşmanlarını cehennem ateşiyle kavur.
 %%%%
-Turn Visible ability
-
-Tekrar görünür ol
-%%%%
 Stop Flying ability
 
 Uçmayı bırak

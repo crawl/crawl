@@ -271,6 +271,17 @@ swamp1
 swamp2
 swamp3
 
+salt0 FLOOR_SALT
+%weight 2
+salt1
+salt2
+%weight 10
+salt3
+salt4
+%weight 5
+salt5
+%weight 10
+
 %weight 20
 spider00 FLOOR_SPIDER
 spider01
@@ -1018,6 +1029,11 @@ mosaic13
 mosaic14
 mosaic15
 
+endless_salt0 DNGN_ENDLESS_SALT
+endless_salt1
+endless_salt2
+endless_salt3
+
 %sdir dngn/floor
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn
@@ -1037,6 +1053,23 @@ lava04
 lava05
 lava06
 lava07
+
+lava_sea0000 DNGN_LAVA_SEA
+lava_sea0001
+lava_sea0002
+lava_sea0003
+lava_sea0004
+lava_sea0005
+lava_sea0006
+lava_sea0007
+lava_sea0008
+lava_sea0009
+lava_sea0010
+lava_sea0011
+lava_sea0012
+lava_sea0013
+lava_sea0014
+lava_sea0015
 
 ## water
 %sdir dngn/water

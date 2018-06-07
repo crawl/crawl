@@ -1,0 +1,2026 @@
+# temple_compat.des
+#
+# When cc390b852004c86 updated / revised / combined / renamed
+# a great deal of map variations, this screwed with save compatability:
+# Crawl decides what temple map to use at the beginning of the game,
+# and most of the maps were made inaccessible by name. While Crawl can
+# still recover from this, it still quite easily means a dearth of gods
+# guaranteed in early D and produces player-visible errors. Thus, this file
+# keeps around Temple maps from before that commit so games made before
+# that transfer that didn't make it to Temple can still have a map as
+# the game expected.
+#
+# If other temple maps are removed in future commits, they should also
+# go here. This file can be cut when TAG_MAJOR_VERSION > 34.
+
+{{
+function get_altar_count(e, default)
+  local params = dgn.map_parameters()
+  local count = "";
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_altars_ is 14 characters
+      count = string.sub(tag, 15)
+    end
+  end
+  if count == nil or count == "" then
+     count = default
+  end
+  return count
+end
+
+function temple_compat_setup(e)
+  e.place("Temple")
+  e.orient("encompass")
+  e.weight("0")
+end
+}}
+
+NAME:   circular_temple_12
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..............B..............ccc
+   cc.........B.............B.........cc
+  cc...................................cc
+ cc.....................................cc
+ c........B.....................B........c
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c.......B.......T....{....T.......B.......c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
+ c........B.....................B........c
+ cc.....................................cc
+  cc...................................cc
+   cc.........B.............B.........cc
+    ccc..............B..............ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:    circular_temple_6
+TAGS:    no_rotate
+SHUFFLE: BG
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..............B..............ccc
+   cc.........G.............G.........cc
+  cc...................................cc
+ cc.....................................cc
+ c........B.....................B........c
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c.......G.......T....{....T.......G.......c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
+ c........B.....................B........c
+ cc.....................................cc
+  cc...................................cc
+   cc.........G.............G.........cc
+    ccc..............B..............ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:    circular_temple_13
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+         ccccccccccccc
+      cccc...........cccc
+    ccc........{........ccc
+   cc.....................cc
+  cc.....B...........B.....cc
+ cc.........................cc
+ c.............B.............c
+cc...........................cc
+c........B...........B........c
+c.............................c
+c..B...........B...........B..c
+c.............................c
+c........B...........B........c
+cc...........................cc
+ c.............B.............c
+ cc.........................cc
+  cc.....B...........B.....cc
+   cc.....................cc
+    ccc........T........ccc
+      cccc...........cccc
+         ccccccccccccc
+ENDMAP
+
+NAME:    circular_temple_pool_12
+TAGS:    no_rotate no_pool_fixup
+SHUFFLE: AC
+SUBST:   A = B
+NSUBST:  C = 1:{ / *:.
+KPROP: wW = no_tele_into
+#
+: local arnd = crawl.random2(6)
+: if arnd == 0 then
+SUBST:   W : mvbG
+: elseif arnd < 3 then
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
+NSUBST:  w = 6:1 / *:w
+KFEAT:   1 = w
+KMONS:   1 = electric eel
+: else
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............A............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....C........mmmmmmm........C.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....A.....mwwwwWwwwwwwwwwWwwwwm.....A....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....C........mmmmmmm........C.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:    circular_temple_pool_8
+TAGS:    no_rotate no_pool_fixup
+NSUBST:  A = 1:{ / *:.
+KPROP: wW = no_tele_into
+#
+: local arnd = crawl.random2(6)
+: if arnd == 0 then
+SUBST:   W : mvbG
+: elseif arnd < 3 then
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
+NSUBST:  w = 6:1 / *:w
+KFEAT:   1 = w
+KMONS:   1 = electric eel
+: else
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............T............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....A........mmmmmmm........A.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....T.....mwwwwWwwwwwwwwwWwwwwm.....T....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....T........mmmmmmm........T.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:   grunt_circular_temple_18
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..........B...B...B..........ccc
+   cc........B...............B........cc
+  cc...................................cc
+ cc.......B.....................B.......cc
+ c.......................................c
+cc.................T...T.................cc
+c.......B.........................B.......c
+c.........................................c
+c...............T....{....T...............c
+c.........................................c
+c.......B.........................B.......c
+cc.................T...T.................cc
+ c.......................................c
+ cc.......B.....................B.......cc
+  cc...................................cc
+   cc........B...............B........cc
+    ccc..........B...B...B..........ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:   dpeg_circular_temple_20
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc.........B.........cccc
+      ccc........B.......B........ccc
+    ccc......B...............B......ccc
+   cc.................................cc
+  cc......B.....................B......cc
+ cc.....................................cc
+ c.......................................c
+cc......B..........T...T..........B......cc
+c.........................................c
+c.........................................c
+c......B........T....{....T........B......c
+c.........................................c
+c.........................................c
+cc......B..........T...T..........B......cc
+ c.......................................c
+ cc.....................................cc
+  cc......B.....................B......cc
+   cc.................................cc
+    ccc......B...............B......ccc
+      ccc........B.......B........ccc
+        cccc.........B.........cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+NAME:    kilobyte_greek_temple_18
+TAGS:    no_rotate
+NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
+SUBST:   ' = .
+COLOUR:  " : darkgrey w:3 / white w:1 / none
+SUBST:   " = .
+MONS:    plant, bush
+: temple_compat_setup(_G)
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
+tttttttt.........1111....tttttttttttt.........tttttttttttttt
+tttt.......................1tttttt.......t.........ttttttttt
+tt.........2........t..........''''''...............2222tttt
+tt.....{..21...t...............''ccccccccccccccccc...22.tttt
+ttt...........ttt.......t......''G'c"""""""""""""c..t..ttttt
+tttt......2....................''''c"B"B"B"B"B"B"ctt....tttt
+tttttt.....................t...''G'c"""""""""""""cttt...tttt
+ttttttttt..1.....2...t.........''''+"B"B"B"B"B"B"ctt..t...tt
+tttttttt.......................''G'c"""""""""""""c...tt..ttt
+ttttttttt...................1..''''c"B"B"B"B"B"B"c..ttt.tttt
+ttttttttttttttt....2....t......''G'c"""""""""""""c...t..tttt
+ttttttttttttttttt..............''ccccccccccccccccc......2ttt
+tttttttttttttttttt..........t.........t......ttt......2ttttt
+ttttttttttttttttttttt...............................22tttttt
+ttttttttttttttttttttttt............t..........t....ttttttttt
+tttttttttttttttttttttttttttt...........t.........ttttttttttt
+ttttttttttttttttttttttttttttttt..............ttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:    jpeg_temple_alley_garden_8
+TAGS:    no_rotate
+COLOUR:  ' : darkgrey w:3 / white w:1 / none
+COLOUR:  . = green, " = brown
+FTILE:   .t = floor_grass, 'ABGT = floor_vault, D" = floor_dirt
+SUBST:   D = G
+NSUBST:  . = 12:1 / 7:2 / *:.
+SUBST:   "' = .
+MONS:    bush, plant
+: temple_compat_setup(_G)
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tt''''''''''....................................................tt
+tt'G'''''G''.............................t............t.........tt
+tt''''''''''......................t.............................tt
+tt''''''''''....................................t...............tt
+tt''''''''''...............................................t....tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''''''''................c''''''''''''''''''''''c....t.......tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c.........t..tt
+tt''''{'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c......t.....tt
+tt''''''''''................c''''''''''''''''''''''c............tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''''''''..........................................t.........tt
+tt''''''''''..................t.................................tt
+tt''''''''''.................................t..................tt
+tt'G'''''G''.........................t.......................t..tt
+tt''''''''''....................................................tt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:    jpeg_temple_clearing_12
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SHUFFLE: '"
+FTILE:   ' = floor_dirt, ."tABX = floor_grass
+SUBST:   ' = ., " = t
+KFEAT:   X : G / U / T
+COLOUR:  . = green / brown w:2
+: temple_compat_setup(_G)
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''...........''ttttttttt
+   tttttttt''tt.....{.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt.........tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt...........tttttt"""tttttt...........tt
+ttt..B......t"""tt""w""tt"""t......B..ttt
+ttttt.....tttttt"""www"""tttttt.....ttttt
+ttttt'tttttttttttt""w""tttttttttttt'ttttt
+tttttt'tttttttttttt"""tttttttttttt'tttttt
+ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
+ ttttttt......B..ttttttt..B......ttttttt
+ tttttt.B.........ttttt.........B.tttttt
+  ttttt.....X.....ttttt.....X.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......B..ttttttt..B......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
+ENDMAP
+
+NAME:    jpeg_temple_clearing_9
+TAGS:    no_rotate
+SUBST:   ' : t"
+FTILE:   "{ = floor_dirt, tBTX. = floor_grass
+SUBST:   " = .
+SHUFFLE: TX
+KFEAT:   X : G / U
+COLOUR:  . = green / brown w:2
+: temple_compat_setup(_G)
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''..X.....X..''ttttttttt
+   tttttttt''tt.....B.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt....X....tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt..........."tttttt"tttttt"...........tt
+ttt..B......tt""ttt"""ttt""tt......B..ttt
+ttttt.....tttttt""""{""""tttttt.....ttttt
+ttttt'tttttttttttt"""""tttttttttttt'ttttt
+tttttt'ttttttttt""ttttt""ttttttttt'tttttt
+ttttttt'tt....."ttttttttt".....tt'ttttttt
+ ttttttt......T..ttttttt..T......ttttttt
+ tttttt.T.........ttttt.........T.tttttt
+  ttttt.....B.....ttttt.....B.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......T..ttttttt..T......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
+ENDMAP
+
+NAME:       minmay_temple_forest_path_12
+PLACE:      Temple
+ORIENT:     encompass
+# No plants in corners (confuses autoexplore),
+# only fringe the edge of the paths with either (no teleport closets).
+KMONS:      P = plant / bush w:1 / fungus w:1
+SUBST:      T = t:18 P:1 .:1, U = t:19 .:1
+LFLOORCOL:  green
+LFLOORTILE: floor_moss
+: temple_compat_setup(_G)
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ttUTTTUttttttttttttttttttttttttttttttttttttttttttt
+tUT...TTTUtttttttttUTTTUttttttttttttttttttUTTTUttt
+tT.......TTTUttUTTTT...TUttttttttttttttttUT.{.TUtt
+tT..B..T....TUUT........TttttttttttttttttT.....Ttt
+tT.....TTTTT.TT..TT..B..TttttttttttttttttT.....Ttt
+tUT...TUtttT....TUT.....TtttttttttUTTTUttT.....Ttt
+ttT.TTUttttUT.TTUUT....TUttttttttUT...TUtUT...TUtt
+ttUT.TtttttT..TttT.TTTTUttttttttUT.....TttUT.TUttt
+tttT.TUtttUT.TTttT.TttttttttttttT...B..TtttT.Ttttt
+tttUT.TttUT...TUUT.TttttttttttttUT.....TttUT.Ttttt
+tttUT.TttT.....TT..TtttttttttttttUTT..TUUTT.TUtttt
+tttT..TttT..B..TT.TUttttUTTTUtttttT..TUUT..TUttttt
+tttT.TUttT.....TT..TTUtUT...TTTTUUT.TUUT.TTUtttttt
+tttT.TUttUT...TTT....TTT........TT...TT.TUtUTTTUtt
+tttT..TtttUTTTUUT.TTT.....B..TTT...TT.T.TtUT...TUt
+tttUT.TTUtttttTT.TUtUTTT.....TtUTTTUUT.TUtT.....Tt
+tttUT...TUtUTTT.TUtttttT....TUtttttttT.TUtT..B..Tt
+tttT.....TTT...TUttttttT.TTTUttttttttUT.TTT.....Tt
+tttT..B.....TT.TtttttttT.TTTTUttUTTTUtT.T......TUt
+tttT.....TTTTT.TttttttUT.....TTTT...TUUT..TTTTTUtt
+tttT....TUtT..TUTTTTTTT..TTTT........TTT.TUttttttt
+tttT.TTTUttT.TUUT...T...TUttUTTT..B.....TUtttttttt
+tttUT..TUtUT.TtT......TTUttttttT......TTUttttttttt
+ttttUT..TTT..TtT..B..TTUtUTTUttUT...TTUttttttttttt
+tttttUT.....TTtT.......TTT..TUttUTT..Ttttttttttttt
+ttttttUTTTTTTttUT...TTT...TT.TTTUtUT.TUtttUTTTUttt
+ttttttttttttttttT.TTUtUTTTUUT...TUtUT.TTTUT...TUtt
+tttttUTTTTTTTTTTT.TtttttttttUTTT.TUTT....T.....Ttt
+ttttUT...TT....T..TttttttttttttUT.T..TTT....B..Ttt
+ttttT.......TT...TUttttttUTTTTTTT...TUtUTT.....Ttt
+ttttT..B..TTTTTTTUttttttUT...T....TTUttttUT...TUtt
+ttttT.....TtttttttttttttT......TTTUtttttttUTTTUttt
+ttttUT...TUtttttttttttttT..B..TUtttttttttttttttttt
+tttttUTTTUttttttttttttttT.....Tttttttttttttttttttt
+ttttttttttttttttttttttttUT...TUttttttttttttttttttt
+tttttttttttttttttttttttttTTTTTtttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:    cyrus_temple_forest_13
+TAGS:    no_rotate
+NSUBST:  . = 10:X / 34:Y / *:.
+SUBST:   X : tXY.
+SUBST:   X = t.
+SUBST:   Y : Y.
+SUBST:   Y = 1112..
+SUBST:   _ = .
+SUBST:   " : """.
+COLOUR:  .12 = green
+COLOUR:  " : darkgrey
+COLOUR:  ' : white / lightgrey
+FTILE:   BT.t12 = floor_grass
+FTILE:   " = floor_dirt
+FTILE:   G' = floor_vault
+MONS:    plant, bush
+: temple_compat_setup(_G)
+MAP
+                 ttttttttttttttttttttttttttt
+                 ttttttttttttttttttttttttttt
+                 tt.......................tt
+                 tt.."""............."""..tt
+                 tt.."B"....."""....."B"..tt
+                 tt.."""....."B"....."""..tt
+ccccccccccccccccccc.........."""..........tt
+c'''G''G''G''G''G'c.......................tt
+c'''''''''''''''''+__.."""..."""..."""....tt
+c{''''''''''''''''+__.."B"..."T"..."B"....tt
+c'''''''''''''''''+__.."""..."""..."""....tt
+c'''G''G''G''G''G'c.......................tt
+ccccccccccccccccccc.........."""..........tt
+                 tt.."""....."B"....."""..tt
+                 tt.."B"....."""....."B"..tt
+                 tt.."""............."""..tt
+                 tt.......................tt
+                 ttttttttttttttttttttttttttt
+                 ttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:   oiseaux_autumnal_temple_12
+TAGS:   no_rotate no_pool_fixup
+MARKER: A = lua:fog_machine { cloud_type = "thin mist", pow_min = 2, \
+        pow_max = 6, delay = 4, start_clouds = 1, size_min = 2, \
+        size_max = 6, spread_rate = 2 }
+SUBST:  A : w
+SUBST:  c : cd"""""""
+SUBST:  " = cd
+FTILE:  B{[( = FLOOR_PEBBLE_BROWN
+FTILE:  t. = FLOOR_SWAMP
+TILE:   d = FLOOR_PEBBLE
+TILE:   c = WALL_STONE_SMOOTH
+TILE:   ' = FLOOR_PEBBLE_BROWN
+TILE:   t = DNGN_TREE_YELLOW w:5 / DNGN_TREE_LIGHTRED w:5 / DNGN_TREE_RED / DNGN_TREE_DEAD: 3
+COLOUR: . = brown
+COLOUR: t = red w:5 / yellow w:5 / brown
+COLOUR: ' = darkgrey
+SUBST:  'd = .
+: temple_compat_setup(_G)
+MAP
+tttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttt
+ttttttttttAwwwtttttttttttttttttttttttttt
+tttttttttttttwwwtttttttttttttttttttttttt
+tttttttttttttttwwwtttttttttttttttttttttt
+tttttttttttttttttwwwtttttttttttttttttttt
+tttttttttttttttttttwwttttttttttttttttttt
+ttttttttttttttttttttwwtttttttttttttttttt
+ttttttttttttttttttttwwtttttttttttttttttt
+tttttttttttt..tttttwwtttttttcccctttttttt
+ttttttttt.''.ddtttWwwtttttttc''''ttttttt
+tttttttt..c'''c..tWwwWttttttc'B'tttttttt
+tttttt....d'B'c...WwwW..ttt.d.''''.ttttt
+ttttt......'''c..WwwW'dd..t.c.'''..ttttt
+tttt........''..Wwwc'''c'......'....tttt
+tt...ccdcd...'tWwwWc'B''.....''....ttttt
+ttt..c'''c.....WwW.d''.......'''..tttttt
+ttt..c'B'''.'..WwwWt....t...d'B'd..ttttt
+tttt.c''.c......Wwwtt........''.cttttttt
+ttttttt......t..ttwttt....'.'..ttttttttt
+ttttttttttt...ttttwwttt..t.......ttttttt
+tttttttttttt..tttttwttttt..dcc'...tttttt
+ttttttttttt'.ttttttwwtttt..''c.....ttttt
+ttttttt.ccc''...ttttwwwttt'B'c......tttt
+tttttt..d'''''.ttcttttwwtt'''d.....ttttt
+ttt.....c''B''c..c'Btttwwt.....'.dd.tttt
+tttt....c'''''c..c'''ttWwwW.....''c..ttt
+ttt.......'''....dcc'cttWwW.dd.'B't...tt
+tt..dd.....''......'''.tWwwWdd..''c..ttt
+tt..c''.....'t.....'''''tWwwddW..cc...tt
+tt..t'B'.....'.........'.tWwddwW.....ttt
+ttt..'''.........t.........WddwwW...tttt
+tt...c...t............t....'ddWwwW...ttt
+ttttt...'...t....''....t....ddtWwwW..ttt
+tttttttt..'ttt..''''.tttt.....ttWwwWtttt
+ttttttttt'.tttttd'B''.ttttt..'ttttwttttt
+tttttttt''ttttttc'''.ttttttt'.ttttwwtttt
+ttttttt''tttttttcccdttttttttt''ttttwwttt
+ttttttcd'ttttttttttttttttttt''tttttwwttt
+ttttttc'''ctttttttttttttttttt''''tttwwtt
+ttttttc'B'cttttttttttttttttt''''''tttwtt
+ttttttc'''c.ttttttttttttttt'''{'''tttAtt
+ttttttdcccc.tttttttttttttttt''''''tttttt
+ttttttt.....tttttttttttttttttt''tttttttt
+tttttttttt.ttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:    eino_temple_water_12
+TAGS:    no_pool_fixup no_rotate
+: set_border_fill_type("open_sea")
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww...wwwwwwwwwwwwwww
+wwwwwwwwwwwwww..B..wwwwwwwwwwwwww
+wwwwwwwwwwww.........wwwwwwwwwwww
+wwwwwwwwwww..B.....B..wwwwwwwwwww
+wwwwwwwwwwww.........wwwwwwwwwwww
+wwwwwwwwwwww...www...wwwwwwwwwwww
+wwwwwwwwwww...wwwww...wwwwwwwwwww
+wwwwwwwwww...ww...ww...wwwwwwwwww
+wwwwwwwwww......B......wwwwwwwwww
+wwwwwwwww..B.........B..wwwwwwwww
+wwwwwwwwww...www.......wwwwwwwwww
+wwwwwwwwwwwwwwwww...wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww...wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww...wwwwwwwwwww
+wwwwwwwwwwwwwwwwwww...wwwwwwwwwww
+wwwwwwwwwwwwwwwwww...wwwwwwwwwwww
+wwwwwwwwwwwwwwwww...wwwwwwwwwwwww
+wwwwwwwwwww...........wwwwwwwwwww
+wwwwwwwwww..G...{...G..wwwwwwwwww
+wwwwwwwwwww...........wwwwwwwwwww
+wwwwwwwwwwwww...wwwwwwwwwwwwwwwww
+wwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwww...wwwwwwwwwwwwwwwwwww
+wwwwwwwwwww...wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwww...wwwwwwwwwwwwwwwww
+wwwwwwwwww.......www...wwwwwwwwww
+wwwwwwwww..B.........B..wwwwwwwww
+wwwwwwwwww......B......wwwwwwwwww
+wwwwwwwwww...ww...ww...wwwwwwwwww
+wwwwwwwwwww...wwwww...wwwwwwwwwww
+wwwwwwwwwwww...www...wwwwwwwwwwww
+wwwwwwwwwwww.........wwwwwwwwwwww
+wwwwwwwwwww..B.....B..wwwwwwwwwww
+wwwwwwwwwwww.........wwwwwwwwwwww
+wwwwwwwwwwwwww..B..wwwwwwwwwwwwww
+wwwwwwwwwwwwwww...wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:    temple_island_7
+TAGS:    no_rotate
+SUBST:   W = W:30 w
+SUBST:   ~ = ':20 W
+COLOUR:  ' = green / brown w:2
+FTILE:   'A = floor_grass, .BT = floor_vault
+NSUBST:  ' = 5:t / 7:1 / 4:2 / .
+NSUBST:  A = 1:{ / *:'
+MONS:    bush, plant
+: set_border_fill_type("open_sea")
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwww
+wwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwww
+wwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwww
+wwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwww
+wwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwww
+wwwwwwwWW~''''''''ccccccc''''A'''~WWwwwwwww
+wwwwwwWW~'''''''ccc.....ccc'''''''~WWwwwwww
+wwwwwWW~''''''ccc....B....ccc''''''~WWwwwww
+wwwwwW~''''''cc...B.....B...cc''''''~Wwwwww
+wwwwwW~''''''+...............c''''''~Wwwwww
+wwwwwW~''A'''+.......T...B...c''''''~Wwwwww
+wwwwwW~''''''+...............c''''''~Wwwwww
+wwwwwW~''''''cc...B.....B...cc''''''~Wwwwww
+wwwwwWW~''''''ccc....B....ccc''''''~WWwwwww
+wwwwwwWW~'''''''ccc.....ccc'''''''~WWwwwwww
+wwwwwwwWW~''''''''ccccccc''''A'''~WWwwwwwww
+wwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwww
+wwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwww
+wwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwww
+wwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwww
+wwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:  minmay_temple_bridge_a_8
+TAGS:  no_pool_fixup
+SUBST: A : TUV
+: if crawl.one_chance_in(10) then
+SUBST: w = l
+:   set_border_fill_type("endless_lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..A..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww......wwwwwwwwwwww......wwwwwwww
+wwwwwwww.....................B..wwwwwwww
+wwwwwwww..{.....................wwwwwwww
+wwwwwwww.....................B..wwwwwwww
+wwwwwwww......wwwwwwwwwwww......wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..A..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:  minmay_temple_bridge_b_8
+TAGS:  no_pool_fixup
+SUBST: A : TUV
+: if crawl.one_chance_in(10) then
+SUBST: w = l
+:   set_border_fill_type("endless_lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww..A..www.wbbbbw.www.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww......wwww.ww.wwww......wwwwwwww
+wwwwwwww...........ww........B..wwwwwwww
+wwwwwwww..{........ww...........wwwwwwww
+wwwwwwww...........ww........B..wwwwwwww
+wwwwwwww......wwww.ww.wwww......wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww..A..www.wbbbbw.www.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:  minmay_temple_bridge_c_8
+TAGS:  no_pool_fixup
+SUBST: A : TUV
+: if crawl.one_chance_in(10) then
+SUBST: w = l
+:   set_border_fill_type("endless_lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..A..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww......www.wwww.www......wwwwwwww
+wwwwwwww.......w.wwbbww.w....B..wwwwwwww
+wwwwwwww..{.....wwbbbbww........wwwwwwww
+wwwwwwww.......w.wwbbww.w....B..wwwwwwww
+wwwwwwww......www.wwww.www......wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww..A..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:  minmay_temple_bridge_d_8
+TAGS:  no_pool_fixup
+SUBST: A : TUV
+: if crawl.one_chance_in(10) then
+SUBST:  w = l
+:   set_border_fill_type("endless_lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+: temple_compat_setup(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...www...wwwwwwwwww...wwwwwwwww
+wwwwwwww.....w.www.wwwwwwww..B..wwwwwwww
+wwwwwwww..A..w.wbw.wwww..ww.....wwwwwwww
+wwwwwwww.....w.www.www.ww.w..B..wwwwwwww
+wwwwwwww.....ww.w.www.www.w.....wwwwwwww
+wwwwwwww.....ww.w.ww.ww..ww..B..wwwwwwww
+wwwwwwww......w.w.ww.w.www......wwwwwwww
+wwwwwwww........w.w.ww.w.....B..wwwwwwww
+wwwwwwww..{.....w.w..w.w........wwwwwwww
+wwwwwwww........w.ww.w.w.....B..wwwwwwww
+wwwwwwww......www.w.ww.w.w......wwwwwwww
+wwwwwwww.....ww..ww.ww.w.ww..B..wwwwwwww
+wwwwwwww.....w.www.www.w.ww.....wwwwwwww
+wwwwwwww.....w.ww.www.www.w..B..wwwwwwww
+wwwwwwww..A..ww..wwww.wbw.w.....wwwwwwww
+wwwwwwww.....wwwwwwww.www.w..B..wwwwwwww
+wwwwwwwww...wwwwwwwwww...www...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME:   triangle_lava_temple_12
+TAGS:   no_rotate
+SUBST:  A : TUVt...
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll.............B.............lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll.................................llllllllllllllx
+xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....A.........B.............B.........A....lllllllllx
+xllllllll......................B.....................lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   triangle_lava_temple_15
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll.....B.....lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll.....B.......B.....lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll............B............llllllllllllllllllx
+xlllllllllllllllll.....B...............B.....lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll................{................llllllllllllllx
+xlllllllllllll.....B.......................B.....lllllllllllllx
+xllllllllllll.............B.........B.............llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....B.................................B....lllllllllx
+xllllllll.............B.................B............lllllllllx
+xllllllll......................B.....................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   triangle_lava_temple_19
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xllllllllllllllllllllllllllll.....llllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll..B...B..llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll...B.........B...llllllllllllllllllllllx
+xlllllllllllllllllllll...................lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll...........B...........lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll...........................lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...........B.......B...........lllllllllllllllx
+xllllllllllllll...B.........................B...llllllllllllllx
+xlllllllllllll...................................lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.............B.....{.....B.............lllllllllllx
+xllllllllll...B.................................B...llllllllllx
+xlllllllll...........................................lllllllllx
+xllllllll..........B.......................B.........lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll.................B.......B................llllllllllx
+xllllllllllll....................................lllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   triangle_lava_temple_10
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll.............B.............lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll.................................llllllllllllllx
+xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....T.........B.............B.........T....lllllllllx
+xllllllll......................T.....................lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    temple_eino_lava_12
+TAGS:    no_rotate
+COLOUR:  c = red
+: temple_compat_setup(_G)
+MAP
+       cccc    ccc
+      cclccccccclcc
+   ccccl.lcclccl.lcccc
+  cclll...c...c...lllcc
+  clll..B.G...G.B..lllc
+  cll.......B.......llc
+ ccl.................lcc
+ccl...................lcc
+cl..B...............B..lc
+ccl...................lcc
+ cccG...............Gccc
+ cc...................cc
+ cl..B......{......B..lc
+ cc...................cc
+ cccG...............Gccc
+ccl...................lcc
+cl..B...............B..lc
+ccl...................lcc
+ ccl.................lcc
+  cll.......B.......llc
+  clll..B.G...G.B..lllc
+  cclll...c...c...lllcc
+   ccccl.lcclccl.lcccc
+      cclccccccclcc
+       ccc     ccc
+ENDMAP
+
+NAME:    temple_eino_lava_8
+TAGS:    no_rotate
+COLOUR:  c = red
+: temple_compat_setup(_G)
+MAP
+      ccc     ccc
+     cclccccccclcc
+  ccccl.lcclccl.lcccc
+ cclll...c...c...lllcc
+ clll..B.G...G.B..lllc
+ cll.......B.......llc
+ cl.................lc
+ ccG...............Gccc
+cc...................cc
+cl..B......{......B..lc
+cc...................cc
+ ccG...............Gcc
+ cl.................lc
+ cll.......B.......llc
+ clll..B.G...G.B..lllc
+ cclll...c...c...lllcc
+  ccccl.lcclccl.lcccc
+     cclccccccclcc
+      ccc     ccc
+ENDMAP
+
+NAME:    dpeg_five_rooms_temple_12
+TAGS:    no_rotate
+KFEAT:   X : G / U / T
+: temple_compat_setup(_G)
+MAP
+                   xxxxxxxxx
+              xxxxxx.......xxxxxx
+         xxxxxx........x........xxxxxx
+      xxxx........xxxxx+xxxxx........xxxx
+     xx.....xxxxxxxxx.....xxxxxxxxx.....xx
+    xx...xxxxxxxxxx.........xxxxxxxxxx...xx
+   xx..xxxxxxxxxxx...........xxxxxxxxxxx..xx
+  xx..xxxxxxxxxxxx.....{.....xxxxxxxxxxxx..xx
+  x..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..x
+ xx..xxx.....xxxxxx.........xxxxxx.....xxx..xx
+ x..+x..B......xxxxxx.....xxxxxx......B..x+..x
+xx..x...........xxxxxxxxxxxxxxx...........x..xx
+x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
+x..xx...........xxxxxxxxxxxxxxx...........xx..x
+x..xxx..B......xxxxxxxxxxxxxxxxx......B..xxx..x
+x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
+xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
+ x..xxxxxx.B.........xxxxx.........B.xxxxxx..x
+ xx..xxxxx.....X.....xxxxx.....X.....xxxxx..xx
+  x..xxxxx...........xxxxx...........xxxxx..x
+  xx..xxxxx......B..xxxxxxx..B......xxxxx..xx
+   xx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xx
+    xx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xx
+     xxx....xxxxxxxxxxxxxxxxxxxxxxx....xxx
+       xxx........xxxxxxxxxxx........xxx
+         xxxxxx........x........xxxxxx
+              xxxxxx.......xxxxxx
+                   xxxxxxxxx
+ENDMAP
+
+NAME:    minmay_temple_curvy_14
+SHUFFLE: GT
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxx
+xx...xxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxx...xx
+x.....x........xxxxxxxxxxxxxxxxxxxxxxxxx........x.....x
+x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
+x.....x.............xxxxxx...xxxxxx.............x.....x
+xx...xxx.............xxxx.....xxxx.............xxx...xx
+xxxxxxxxx+xxxx.......xxxx..B..xxxx.......xxxx+xxxxxxxxx
+xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx......{......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
+xxxxxxxxx+xxxx.......xxxx..B..xxxx.......xxxx+xxxxxxxxx
+xx...xxx.............xxxx.....xxxx.............xxx...xx
+x.....x.............xxxxxx...xxxxxx.............x.....x
+x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
+x.....x........xxxxxxxxxxxxxxxxxxxxxxxxx........x.....x
+xx...xxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxx...xx
+xxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_temple_curvy_8
+TAGS:    no_rotate
+MONS:    plant
+SUBST:   y = Ww, Y = W., 1 : 1G.
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx...xxxxxxxxxxxxxxxxxxxxwwwxxxx
+xxx.....xxxxxxxxxxxxxxxxxxwwwwwxxx
+xxx..{..xxxxxxxxxxxxxxxxxxWywwwxxx
+xx.......xx...xxxxxx...xxWWWWWwwxx
+xx.......x.....xxxx.....xWY.YWywxx
+x1.......+..B..xxxx..B..+....WWyxx
+xx.......x.....xxxx.....x.....WWxx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+xx.......xx...xxxxxx...xx.......xx
+xxx.......xxxxxxxxxxxxxx.......xxx
+xxx..........xxxxxxxx..........xxx
+xxx............xxxx............xxx
+xxxx............xx............xxxx
+xxxx..........................xxxx
+xxxxx...........xx...........xxxxx
+xxxxxxx........xxxx........xxxxxxx
+xxxxxxxxxx...xxxxxxxx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   chambers_temple_10
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..........................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvvvvv...v
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................vvvv.vvv
+  v..vvvv.............................vvvv..v
+  v.vvvvv...T..........{..........T...vvvvv.v
+  v..vvvv.............................vvvv..v
+ vvv.vvvv.............................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.........................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   chambers_temple_12
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..................................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...v
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.....................................vvvv.vvv
+  v..vvvv.....................................vvvv..v
+  v.vvvvv......T...........{...........T......vvvvv.v
+  v..vvvv.....................................vvvv..v
+ vvv.vvvv.....................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.................................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   chambers_temple_14
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..........................................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................................vvvv.vvv
+  v..vvvv.............................................vvvv..v
+  v.vvvvv........T.............{.............T........vvvvv.v
+  v..vvvv.............................................vvvv..v
+ vvv.vvvv.............................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.........................................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# This map always had fourteen altars, not twelve!
+NAME:   water_room_temple_a_12
+TAGS:   no_pool_fixup no_rotate
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwww...................B...................wwwwwc
+cwww......B.............................B......wwwc
+cwww.............B...............B.............wwwc
+cww.............................................wwc
+cww.............................................wwc
+cww...B......B...........{...........B......B...wwc
+cww.............................................wwc
+cww.............................................wwc
+cwww.............B...............B.............wwwc
+cwww......B.............................B......wwwc
+cwwwww...................B...................wwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   water_room_temple_b_12
+TAGS:   no_pool_fixup no_rotate
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwww...................G...................wwwwwc
+cwww......B.............................B......wwwc
+cwww.............B...............B.............wwwc
+cww.............................................wwc
+cww.............................................wwc
+cww...B......B...........{...........B......B...wwc
+cww.............................................wwc
+cww.............................................wwc
+cwww.............B...............B.............wwwc
+cwww......B.............................B......wwwc
+cwwwww...................G...................wwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME: nicolae_temple_x_marks_the_god_16
+TAGS: no_pool_fixup
+SUBST: C : ccccwl, c : ccccvb
+: temple_compat_setup(_G)
+MAP
+     ccccccccccccccccc
+   ccc...CCCCCCCCC...ccc
+  cc.....CCCCCCCCC.....cc
+ cc.......CCCCCCC.......cc
+ c..B.....CCCCCCC.....B..c
+cc.........CCCCC.........cc
+c.....B....CCCCC....B.....c
+c...........CCC...........c
+c.......B...CCC...B.......c
+cCC..........C..........CCc
+cCCCC.....B..C..B.....CCCCc
+cCCCCCC.............CCCCCCc
+cCCCCCCCC.........CCCCCCCCc
+cCCCCCCCCCC..{..CCCCCCCCCCc
+cCCCCCCCC.........CCCCCCCCc
+cCCCCCC.............CCCCCCc
+cCCCC.....B..C..B.....CCCCc
+cCC..........C..........CCc
+c.......B...CCC...B.......c
+c...........CCC...........c
+c.....B....CCCCC....B.....c
+cc.........CCCCC.........cc
+ c..B.....CCCCCCC.....B..c
+ cc.......CCCCCCC.......cc
+  cc.....CCCCCCCCC.....cc
+   ccc...CCCCCCCCC...ccc
+     ccccccccccccccccc
+ENDMAP
+
+# 5 gods
+NAME: nicolae_temple_hex_pool_5
+TAGS: no_pool_fixup
+NSUBST: B = { / B
+SHUFFLE: JK
+SUBST: JP : GTt., KQ : GTt.
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccc
+cccccccccccccc.P.cccccccccccccc
+ccccccccccccQ.....Qcccccccccccc
+cccccccccccc.......cccccccccccc
+ccccccccccc.........ccccccccccc
+ccccccccccc....B....ccccccccccc
+ccccccccccc.........ccccccccccc
+cccc.K.cc.............cc.K.cccc
+ccJ.......ww.......ww.......Jcc
+cc.......wwwww...wwwww.......cc
+c.........wwwwwwwwwww.........c
+cK...B....wwwwwwwwwww....B...Kc
+c.........wwwwwwwwwww.........c
+cc.......wwwwwwwwwwwww.......cc
+cc.......wwwwwwwwwwwww.......cc
+cccc...wwwwwwwwwwwwwwwww...cccc
+ccccc.wwwwwwwwwwwwwwwwwww.ccccc
+cccc...wwwwwwwwwwwwwwwww...cccc
+cc.......wwwwwwwwwwwww.......cc
+cc.......wwwwwwwwwwwww.......cc
+c.........wwwwwwwwwww.........c
+cQ...B....wwwwwwwwwww....B...Qc
+c.........wwwwwwwwwww.........c
+cc.......wwwww...wwwww.......cc
+ccP.......ww.......ww.......Pcc
+cccc.Q.cc.............cc.Q.cccc
+ccccccccccc.........ccccccccccc
+ccccccccccc....B....ccccccccccc
+ccccccccccc.........ccccccccccc
+cccccccccccc.......cccccccccccc
+ccccccccccccK.....Kcccccccccccc
+cccccccccccccc.J.cccccccccccccc
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:    zaba_magenta_temple_12
+TAGS:    no_rotate
+COLOUR:  c = magenta
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+cccc.......ccccccc.......ccccccc.......cccc
+cc...B...B...ccc...B...B...ccc...B...B...cc
+c.............c.............c.............c
+cc...........ccc...........ccc...........cc
+cccc.................{..................ccc
+cc...........ccc...........ccc...........cc
+c.............c.............c.............c
+cc...B...B...ccc...B...B...ccc...B...B...cc
+cccc.......ccccccc.......ccccccc.......cccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:    zaba_magenta_temple_8
+TAGS:    no_rotate
+COLOUR:  c = magenta
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+cccc.......ccccccc.......ccccccc.......cccc
+cc...B...B...ccc...T...T...ccc...B...B...cc
+c.............c.............c.............c
+cc...........ccc...........ccc...........cc
+cccc.................{..................ccc
+cc...........ccc...........ccc...........cc
+c.............c.............c.............c
+cc...B...B...ccc...T...T...ccc...B...B...cc
+cccc.......ccccccc.......ccccccc.......cccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:       temple_of_Zot_ovaries
+TAGS:       no_rotate
+LFLOORCOL:  magenta
+LROCKCOL:   lightmagenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_magenta
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx......xxxxxx.......xxxxxx......xxxxx
+xxxx........xxxx.........xxxx........xxxx
+xxx..........xxx.........xxx..........xxx
+xxx.................B.................xxx
+xxxx...B.....xxx.........xxx.....B...xxxx
+xxx..........xxx.........xxx..........xxx
+xxx..........xxxx.......xxxx..........xxx
+xxxx........xxxxxxxxxxxxxxxxx........xxxx
+xxxxx......xxxxxxxxxxxxxxxxxxx......xxxxx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxx.......xxxxxxxxxxxxxxxxx.......xxxxx
+xxxx..............xxxxx..............xxxx
+xxx...........xxx...x...xxx...........xxx
+xxx...........xxxx.....xxxx...........xxx
+xxx.....B.....xxxx.....xxxx.....B.....xxx
+xxx...........xxx...B...xxx...........xxx
+xxxx.........xxxx.......xxxx.........xxxx
+xxxxx.......xxxx.........xxxx.......xxxxx
+xxxxxx.....xxx.............xxx.....xxxxxx
+xxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxx
+                   xxx
+ENDMAP
+
+NAME:       temple_of_Zot_orb
+TAGS:       no_rotate
+LFLOORCOL:  magenta
+LROCKCOL:   lightmagenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_magenta
+: temple_compat_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx......xxxxxx.......xxxxxx......xxxxx
+xxxx........xxxx....B....xxxx........xxxx
+xxx..........xxx.B.....B.xxx..........xxx
+xxx.................B.................xxx
+xxxx.........xxx.B.....B.xxx.........xxxx
+xxx..........xxx....B....xxx..........xxx
+xxx..........xxxx.......xxxx..........xxx
+xxxx........xxxxxxxxxxxxxxxxx........xxxx
+xxxxx......xxxxxxxxxxxxxxxxxxx......xxxxx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxx.......xxxxxxxxxxxxxxxxx.......xxxxx
+xxxx..............xxxxx..............xxxx
+xxx...........xxx...x...xxx...........xxx
+xxx...........xxxx.....xxxx...........xxx
+xxx...........xxxx.....xxxx...........xxx
+xxx...........xxx.......xxx...........xxx
+xxxx.........xxxx.......xxxx.........xxxx
+xxxxx.......xxxx.........xxxx.......xxxxx
+xxxxxx.....xxx.............xxx.....xxxxxx
+xxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxx
+                   xxx
+ENDMAP
+
+NAME:   dpeg_three_leaves_temple_18
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.........B...bbb...B.........bb
+bb....B..........b..........B....bb
+bb........B....B...B....B........bb
+ bbbbbbbb........{........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb.B.bb
+             bb.....bb
+            bb..B.B..bb
+           bb.........bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
+ENDMAP
+
+NAME:   dpeg_three_leaves_temple_9
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.............bbb.............bb
+bb....B....T.....b.....T....B....bb
+bb...............................bb
+ bbbbbbbb........{........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb...bb
+             bb.....bb
+            bb.......bb
+           bb....T....bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
+ENDMAP
+
+NAME:    eino_narrow_crystal_temple_a_12
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+            bbbbb
+      bbbbbbb...bbbbbbb
+      b...b..bbb..b...b
+      b.B..bbbbbbb..B.b
+      b...bbbbbbbbb...b
+      bbbb.bbbbbbb.bbbb
+         bb.bbbbb.bb
+ bbbbb    bb.bbb.bb    bbbbb
+ b...b     bb...bb     b...b
+ b.B.b      b.B.b      b.B.b
+ b...bb     b...b     bb...b
+ bb.b.bb    bb.bb    bb.b.bb
+ bb.bb.bb   bb.bb   bb.bb.bb
+ b.bbbb.bb  b...b  bb.bbbb.b
+bb.bbbbb.bbbb...bbbb.bbbbb.bb
+b.bbbbbbb...b...b...bbbbbbb.b
+b.bbbbbbb.B...{...B.bbbbbbb.b
+b.bbbbbbb...b...b...bbbbbbb.b
+bb.bbbbb.bbbb...bbbb.bbbbb.bb
+ b.bbbb.bb  b...b  bb.bbbb.b
+ bb.bb.bb   bb.bb   bb.bb.bb
+ bb.b.bb    bb.bb    bb.b.bb
+ b...bb     b...b     bb...b
+ b.B.b      b.B.b      b.B.b
+ b...b     bb...bb     b...b
+ bbbbb    bb.bbb.bb    bbbbb
+         bb.bbbbb.bb
+      bbbb.bbbbbbb.bbbb
+      b...bbbbbbbbb...b
+      b.B..bbbbbbb..B.b
+      b...b..bbb..b...b
+      bbbbbbb...bbbbbbb
+            bbbbb
+ENDMAP
+
+NAME:    eino_narrow_crystal_temple_b_12
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+              bbbbb
+              b...b
+              b.B.b
+             bb...bb
+            bb.b.b.bb
+           bb.bb.bb.bb
+          bb.bbb.bbb.bb
+       bbbb.bbbb.bbbb.bbbb
+       b...bbbbb.bbbbb...b
+       b.B.bbbbb.bbbbb.B.b
+      bb...bbbb...bbbb...bb
+     bb.bbb.bbb.B.bbb.bbb.bb
+    bb.bbbbb.bb...bb.bbbbb.bb
+   bb.bbbbbbb.bb.bb.bbbbbbb.bb
+bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
+b...bbbbbb...bb...bb...bbbbbb...b
+b.B........B....{....B........B.b
+b...bbbbbb...bb...bb...bbbbbb...b
+bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
+   bb.bbbbbbb.bb.bb.bbbbbbb.bb
+    bb.bbbbb.bb...bb.bbbbb.bb
+     bb.bbb.bbb.B.bbb.bbb.bb
+      bb...bbbb...bbbb...bb
+       b.B.bbbbb.bbbbb.B.b
+       b...bbbbb.bbbbb...b
+       bbbb.bbbb.bbbb.bbbb
+          bb.bbb.bbb.bb
+           bb..b.bb.bb
+            bb.b.b.bb
+             bb...bb
+              b.B.b
+              b...b
+              bbbbb
+ENDMAP
+
+NAME:    eino_wide_crystal_templ_10
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+            bbbbb
+          bbb...bbb
+          b...{...b
+    bbbbbbb.b...b.bbbbbbb
+    b...b...........b...b
+bbbbb.T.....b.T.b.....T.bbbbb
+b...b.....B.......B.....b...b
+b.B....bb...b...b...bb....B.b
+b...b...b.....B.....b...b...b
+bbbbb.B....bb...bb....B.bbbbb
+    b...b...b...b...b...b
+    bbbbb.B.......B.bbbbb
+        b...b...b...b
+        bbbbb.B.bbbbb
+            b...b
+            bbbbb
+ENDMAP
+
+NAME:    eino_wide_crystal_templ_15
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+            bbbbb
+            b...b
+            b.{.b
+        bbbbb...bbbbb
+        b...bb.bb...b
+        b.B.......B.b
+    bbbbb...b...b...bbbbb
+    b...bb.bb.B.bbbbb...b
+bbbbb.B.b...b...b.....B.bbbbb
+b...b...b.B.bbbbb.B.b...b...b
+b.B....bb...........bb....B.b
+b...b...bbbbb.B.bbbbb...b...b
+bbbbb.B....bb...bb....B.bbbbb
+    b...b...bbbbb...b...b
+    bbbbb.B.......B.bbbbb
+        b...b...b...b
+        bbbbb.B.bbbbb
+            b...b
+            bbbbb
+ENDMAP
+
+NAME:    grunt_wide_crystal_templ_18
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+                bbbbb
+                b...b
+            bbbbb.B.bbbbb
+            b...........b
+        bbbbb.B.bb.bb.B.bbbbb
+        b...................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+b...................................b
+b.B.bb.bb.B.bb.bb.{.bb.bb.B.bb.bb.B.b
+b...................................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+        b...................b
+        bbbbb.B.bb.bb.B.bbbbb
+            b...........b
+            bbbbb.B.bbbbb
+                b...b
+                bbbbb
+ENDMAP
+
+NAME:    minmay_crystal_snake_temple_18
+TAGS:    no_rotate
+NSUBST:  T = 1:{ / 1:B / *:T
+: temple_compat_setup(_G)
+MAP
+        bbb   bbb   bbb
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..B.....B.....T..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+  bbb   b.b   bbb   b.b
+ bb.bb bb.bb       bb.bb
+bb...bbb...bb     bb...bb
+b..B.....B..b     b..B..b
+bb...bbb...bb     bb...bb
+ bb.bb bb.bb       bb.bb        bbb
+  b.b   bbb   bbb   b.b        bb.bb
+ bb.bb       bb.bb bb.bb      bb...bb
+bb...bb     bb...bbb...bb     b..B..b
+b..B..b     b..B.....B..b     bb...bb
+bb...bb     bb...bbb...bb      bb.bb
+ bb.bb       bb.bb bb.bb        b.b
+  bbb   bbb   b.b   bbb   bbb   b.b
+       bb.bb bb.bb       bb.bb bb.bb
+      bb...bbb...bb     bb...bbb...bb
+      b..T.....B..b     b..B.....B..b
+      bb...bbb...bb     bb...bbb...bb
+       bb.bb bb.bb       bb.bb bb.bb
+        b.b   bbb   bbb   b.b   bbb
+       bb.bb       bb.bb bb.bb
+      bb...bb     bb...bbb...bb
+      b..B..b     b..T.....B..b
+      bb...bb     bb...bbb...bb
+       bb.bb       bb.bb bb.bb
+        b.b   bbb   b.b   bbb
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..T.....B.....B..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+        bbb   bbb   bbb
+ENDMAP
+
+NAME:    minmay_crystal_spiral_temple_12
+TAGS:    no_rotate
+: temple_compat_setup(_G)
+MAP
+                        bbbbbbb
+                        b.....b
+                        b.....b
+                        b..B..b
+                       bb.....bb
+                      bb.......bb
+                  bbbbb...bbb...bbbbb
+                  b......bb bb......b
+                  b.....bb   bb.....b
+                  b..B..b     b..B..b
+                 bb.....b     b.....bb
+                bb......b     b......bb
+bbbbbbb     bbbbb...bbbbbbbbbbbbbbb...bbbbb
+b.....b     b......bb   b.....b   bb......b
+b.....b     b.....bb    b.....b    bb.....b
+b..{..b     b..B..b     b..B..b     b..B..b
+b.....bb    b.....bb   bb.....b    bb.....b
+b......bb   b......bb bb......b   bb......b
+bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
+    bb......b   bb.......bb   b......bb
+     bb.....b    bb.....bb    b.....bb
+      b..B..b     b..B..b     b..B..b
+      b.....bb    b.....b    bb.....b
+      b......bb   b.....b   bb......b
+      bbbbb...bbbbbbbbbbbbbbb...bbbbb
+          bb......b     b......bb
+           bb.....b     b.....bb
+            b..B..b     b..B..b
+            b.....bb   bb.....b
+            b......bb bb......b
+            bbbbb...bbb...bbbbb
+                bb.......bb
+                 bb.....bb
+                  b..B..b
+                  b.....b
+                  b.....b
+                  bbbbbbb
+ENDMAP
+
+NAME:    minmay_freezing_vapour_temple_12
+TAGS:    no_rotate
+COLOUR:  c = white
+MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 5, delay = 5, start_clouds = 3, \
+             size = 2, spread_rate = 0, excl_rad = 0 }
+: temple_compat_setup(_G)
+MAP
+ccccccccccccccc
+c.............c
+c.d.d.d.d.d.d.c
+c.............c
+c.d.B.B.B.B.d.c
+c.............c
+c.d.B.....B.d.c
+c......{......c
+c.d.B.....B.d.c
+c.............c
+c.d.B.B.B.B.d.c
+c.............c
+c.d.d.d.d.d.d.c
+c.............c
+ccccccccccccccc
+ENDMAP
+
+NAME:     corrupted_temple
+TAGS:     temple_variable
+TAGS:     temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+PLACE:    Temple
+ORIENT:   encompass
+{{
+local altar_count = get_altar_count(_G, 6)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
+KFEAT:    O = altar_lugonu
+MONS:     demonic plant
+SUBST:    . = . x:1 w:1 l:1
+SUBST:    x = xxxcv
+SUBST:    ' = .
+: local brnd = crawl.random2(4)
+: if brnd == 0 then
+LROCKCOL: magenta
+: elseif brnd == 1 then
+LROCKCOL: lightblue
+: elseif brnd == 2 then
+LROCKCOL: lightcyan
+: else
+LROCKCOL: lightred
+: end
+MAP
+       xxxxx
+      xx.O.xx
+      x.'...x
+      xO.V.Ox
+      x.'.'.x
+      xx.O.xx
+ xxxxx x'..x xxxxx
+xx.O.xxx.'.xxx.O.xx
+x...'''''.'.'..'..x
+xO.V.O.....'.O'V.Ox
+x.'.......'.....'.x
+xx.O.xxx.'.xxx.O.xx
+ xxxxx x..'x xxxxx
+       x.'.x
+       x..'x
+       x..'x
+       x.'.x
+       x'..x
+       x1{1x
+       xxxxx
+ENDMAP
+
+NAME:   grunt_temple_mini_profane_8
+TAGS:   no_rotate
+: temple_compat_setup(_G)
+MAP
+    ccc      ccccccc      ccc
+   cc.c      c.....c      c.cc
+  cc..cccccccc..G..cccccccc..cc
+ cc{..+......+.....+......+...cc
+cc....+......+.....+......+....cc
+c....Gcccccccc.....ccccccccG....c
+ccc++cc ccc..+..B..+..ccc cc++ccc
+  c..cccc....+c...c+....cccc..c
+  c..cc.....ccccccccc.....cc..c
+  c..c...cc++...G...++cc...c..c
+  c..c..ccc+.........+ccc..c..c
+ccc++c++ccc...cc+cc...ccc++c++ccc
+c......cccc..cc...cc..cccc......c
+c.......ccc..c..B..c..ccc.......c
+c.G...B.cccG.+.B.B.+.Gccc.B...G.c
+c.......ccc..c..B..c..ccc.......c
+c......cccc..cc...cc..cccc......c
+ccc++c++ccc...cc+cc...ccc++c++ccc
+  c..c..ccc+.........+ccc..c..c
+  c..c...cc++...G...++cc...c..c
+  c..cc.....ccccccccc.....cc..c
+  c..cccc....+c...c+....cccc..c
+ccc++cc ccc..+..B..+..ccc cc++ccc
+c....Gcccccccc.....ccccccccG....c
+cc....+......+.....+......+....cc
+ cc...+......+.....+......+...cc
+  cc..cccccccc..G..cccccccc..cc
+   cc.c      c.....c      c.cc
+    ccc      ccccccc      ccc
+ENDMAP
+
+# 6 gods
+NAME:    hc_temple_tempest_star_small
+TAGS:    no_rotate no_pool_fixup no_cloud_gen
+SUBST:   c:cWwl
+: temple_compat_setup(_G)
+MAP
+                    c
+                   ccc
+                  ccccc
+                 ccc.ccc
+                ccc...ccc
+               ccc..B..ccc
+              ccc.......ccc
+cccccccccccccccc......ccccccccccccccccccc
+ ccc........ccc.....ccccccccc.........cc
+  ccc..B...cccc....ccccc.........B...cc
+   ccc......ccc....c................cc
+    ccc......ccc........cccccc.....cc
+     cccc......ccc.........cccccc.cc
+      cccccc........{........cccccc
+     cc.cccccc.........ccc......cccc
+    cc.....cccccc........ccc......ccc
+   cc................c....ccc......ccc
+  cc...B.........ccccc....cccc...B..ccc
+ cc.........ccccccccc.....ccc........ccc
+ccccccccccccccccccc......cccccccccccccccc
+              ccc.......ccc
+               ccc..B..ccc
+                ccc...ccc
+                 ccc.ccc
+                  ccccc
+                   ccc
+                    c
+ENDMAP

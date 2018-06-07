@@ -33,6 +33,7 @@
 #endif
 
 #include "options.h"
+#include "tilesdl.h"
 
 #ifdef __ANDROID__
 # include <android/log.h>
@@ -78,6 +79,7 @@ OGLStateManager::OGLStateManager()
 #ifdef __ANDROID__
     m_last_tex = 0;
 #endif
+    m_window_height = 0;
 }
 
 void OGLStateManager::set(const GLState& state)
@@ -198,17 +200,56 @@ void OGLStateManager::set(const GLState& state)
     m_current_state = state;
 }
 
+struct {
+    GLW_3VF trans, scale;
+} current_transform;
+
 void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
 {
     glLoadIdentity();
     glTranslatef(trans.x, trans.y, trans.z);
     glScalef(scale.x, scale.y, scale.z);
+    current_transform = { trans, scale };
+}
+
+void OGLStateManager::reset_transform()
+{
+    set_transform({0,0,0}, {1,1,1});
+}
+
+void OGLStateManager::get_transform(GLW_3VF *trans, GLW_3VF *scale)
+{
+    if (trans) *trans = current_transform.trans;
+    if (scale) *scale = current_transform.scale;
+}
+
+int OGLStateManager::logical_to_device(int n) const
+{
+    return display_density.logical_to_device(n);
+}
+
+int OGLStateManager::device_to_logical(int n, bool round) const
+{
+    return display_density.device_to_logical(n, round);
+}
+
+void OGLStateManager::set_scissor(int x, int y, unsigned int w, unsigned int h)
+{
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(logical_to_device(x), logical_to_device(m_window_height-y-h),
+                logical_to_device(w), logical_to_device(h));
+}
+
+void OGLStateManager::reset_scissor()
+{
+    glDisable(GL_SCISSOR_TEST);
 }
 
 void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
                                             const coord_def &m_drawablesz)
 {
     glViewport(0, 0, m_drawablesz.x, m_drawablesz.y);
+    m_window_height = m_windowsz.y;
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -224,13 +265,6 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 #endif
     glDebug("glOrthof");
-}
-
-void OGLStateManager::reset_transform()
-{
-    glLoadIdentity();
-    glTranslatef(0,0,0);
-    glScalef(1,1,1);
 }
 
 void OGLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
@@ -560,9 +594,6 @@ void OGLShapeBuffer::add_line(const GLWPrim &rect)
 }
 
 // Draw the buffer
-#if 0
-void OGLShapeBuffer::draw(const GLState &state, const GLW_3VF *pt, const GLW_3VF *ps)
-#endif
 void OGLShapeBuffer::draw(const GLState &state)
 {
     if (m_position_buffer.empty())

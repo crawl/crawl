@@ -1,15 +1,17 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+
+use warnings;
 
 # Use -d if you want only newgame ones (ie, without coloured dracs).
 my $db = grep /^-d$/, @ARGV;
 
 undef $/;
-open IN, "util/cpp_version enum.h|" or die "Can't read enum.h\n";
+open IN, "util/cpp_version species-type.h|" or die "Can't read species-type.h\n";
 $_ = <IN>;
 close IN;
 
 s/.*enum species_type.*\{(.*?)NUM_SPECIES.*/$1/s
-    or die "Can't find species_type in enum.h\n";
+    or die "Can't find species_type in species-type.h\n";
 
 for (/SP_([A-Z_]+)/g)
 {

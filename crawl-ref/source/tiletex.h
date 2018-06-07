@@ -3,8 +3,7 @@
  * @brief PNG and texture loading functionality
 **/
 
-#ifndef TILETEX_H
-#define TILETEX_H
+#pragma once
 
 enum MipMapOptions
 {
@@ -128,5 +127,3 @@ public:
 
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
-
-#endif

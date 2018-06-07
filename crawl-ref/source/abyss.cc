@@ -24,10 +24,10 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
-#include "godcompanions.h" // hep stuff
-#include "godpassive.h" // passive_t::slow_abyss
+#include "god-companions.h" // hep stuff
+#include "god-passive.h" // passive_t::slow_abyss
 #include "hiscores.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -51,7 +51,7 @@
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -115,8 +115,7 @@ static dungeon_feature_type _abyss_proto_feature()
                                    600, DNGN_ROCK_WALL,
                                    300, DNGN_STONE_WALL,
                                    100, DNGN_METAL_WALL,
-                                     1, DNGN_CLOSED_DOOR,
-                                     0);
+                                     1, DNGN_CLOSED_DOOR);
 }
 
 static void _write_abyssal_features()
@@ -392,7 +391,6 @@ static int _banished_depth(const int power)
 void banished(const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
-    push_features_to_abyss();
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
@@ -628,7 +626,7 @@ static void _place_displaced_monsters()
             maybe_bloodify_square(mon->pos());
             if (you.can_see(*mon))
             {
-                simple_monster_message(mon, " is pulled into the Abyss.",
+                simple_monster_message(*mon, " is pulled into the Abyss.",
                         MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
@@ -715,7 +713,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     // Delete cloud.
     delete_cloud(p);
 
-    env.pgrid(p)        = 0;
+    env.pgrid(p)        = terrain_property_t{};
     env.grid_colours(p) = 0;
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
@@ -734,6 +732,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     if (env.map_forgotten.get())
         (*env.map_forgotten.get())(p).clear();
     env.map_seen.set(p, false);
+#ifdef USE_TILE
+    tile_forget_map(p);
+#endif
     StashTrack.update_stash(p);
 }
 
@@ -775,6 +776,43 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
     }
 }
 
+/**
+ * Updates the destination of a transporter that has been shifted to a new
+ * center. Assumes that the transporter itself and its position marker have
+ * already been moved.
+ *
+ * @param pos            Transporter's new (and current) location.
+ * @param source_center  Center of where the transporter's vault area was
+ *                       shifted from.
+ * @param target_center  Center of where the transporter's vault area is being
+ *                       shifted to.
+ * @param shift_area     A map_bitmask of the entire area being shifted.
+
+ */
+static void _abyss_update_transporter(const coord_def &pos,
+                                      const coord_def &source_centre,
+                                      const coord_def &target_centre,
+                                      const map_bitmask &shift_area)
+{
+    if (grd(pos) != DNGN_TRANSPORTER)
+        return;
+
+    // Get the marker, since we will need to modify it.
+    map_position_marker *marker =
+        get_position_marker_at(pos, DNGN_TRANSPORTER);
+    if (!marker || marker->dest == INVALID_COORD)
+        return;
+
+    // Original destination is not being preserved, so disable the transporter.
+    if (!shift_area.get(marker->dest))
+    {
+        marker->dest = INVALID_COORD;
+        return;
+    }
+
+    marker->dest = marker->dest - source_centre + target_centre;
+}
+
 // Moves the player, monsters, terrain and items in the square (circle
 // in movement distance) around the player with the given radius to
 // the square centred on target_centre.
@@ -788,6 +826,7 @@ static void _abyss_move_entities(coord_def target_centre,
 {
     const coord_def source_centre = you.pos();
     const coord_def delta = (target_centre - source_centre).sgn();
+    const map_bitmask original_area_mask = *shift_area_mask;
 
     // When moving a region, walk backward to handle overlapping
     // ranges correctly.
@@ -825,6 +864,8 @@ static void _abyss_move_entities(coord_def target_centre,
                 // Wipe the dstination clean before dropping things on it.
                 _abyss_wipe_square_at(dst);
                 _abyss_move_entities_at(src, dst);
+                _abyss_update_transporter(dst, source_centre, target_centre,
+                                          original_area_mask);
             }
             else
             {
@@ -1104,7 +1145,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_SLIMY_WALL:
         case DNGN_STONE_WALL:
         case DNGN_PERMAROCK_WALL:
-            return coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE;
+            return random_choose(CLOUD_BLUE_SMOKE, CLOUD_PURPLE_SMOKE);
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
         case DNGN_CLEAR_PERMAROCK_WALL:
@@ -1438,7 +1479,6 @@ static void abyss_area_shift()
 
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
-    place_transiting_items();
 
     check_map_validity();
 }
@@ -1456,7 +1496,7 @@ void destroy_abyss()
 
 static colour_t _roll_abyss_floor_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          108, BLUE,
          632, GREEN,
          // no CYAN (silence)
@@ -1472,13 +1512,12 @@ static colour_t _roll_abyss_floor_colour()
          313, LIGHTMAGENTA,
          // no YELLOW (halo)
          890, WHITE,
-          50, ETC_FIRE,
-    0);
+          50, ETC_FIRE);
 }
 
 static colour_t _roll_abyss_rock_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          130, BLUE,
          409, GREEN,
          // no CYAN (metal)
@@ -1494,8 +1533,7 @@ static colour_t _roll_abyss_rock_colour()
          377, LIGHTMAGENTA,
          105, YELLOW,
          101, WHITE,
-          60, ETC_FIRE,
-    0);
+          60, ETC_FIRE);
 }
 
 static void _abyss_generate_new_area()
@@ -1524,7 +1562,6 @@ static void _abyss_generate_new_area()
 
     los_changed();
     place_transiting_monsters();
-    place_transiting_items();
 }
 
 // Check if there is a path between the abyss centre and an exit location.
@@ -1633,6 +1670,7 @@ void abyss_teleport()
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    stop_delay(true);
     forget_map(false);
     clear_excludes();
     more();
@@ -1694,15 +1732,8 @@ static bool _incorruptible(monster_type mt)
 // more monsters can fit in.
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
-    const beh_type beh =
-        x_chance_in_y(100,
-                      player_adjust_invoc_power(
-                          200 + you.skill(SK_INVOCATIONS, 25)))
-        ? BEH_HOSTILE : BEH_NEUTRAL;
-
-    // [ds] No longer summon hostiles -- don't create the monster if
-    // it would be hostile.
-    if (beh == BEH_HOSTILE)
+    // Chance to fail to place a monster (but allow continued attempts).
+    if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
         return true;
 
     // Thirty tries for a place.
@@ -1710,8 +1741,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     {
         const int offsetX = random2avg(4, 3) + random2(3);
         const int offsetY = random2avg(4, 3) + random2(3);
-        const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
-                          pos.y + (coinflip()? offsetY : -offsetY));
+        const coord_def p(pos.x + random_choose(offsetX, -offsetX),
+                          pos.y + random_choose(offsetY, -offsetY));
         if (!in_bounds(p) || actor_at(p))
             continue;
 
@@ -1719,8 +1750,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         ASSERT(mons);
         if (!monster_habitable_grid(mons, grd(p)))
             continue;
-        mgen_data mg(mons, beh, 0, 5, 0, p);
-        mg.non_actor_summoner = "Lugonu's corruption";
+        mgen_data mg(mons, BEH_NEUTRAL, p);
+        mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
     }
@@ -1778,6 +1809,7 @@ static bool _is_grid_corruptible(const coord_def &c)
     case DNGN_CLEAR_PERMAROCK_WALL:
     case DNGN_OPEN_SEA:
     case DNGN_LAVA_SEA:
+    case DNGN_TRANSPORTER_LANDING: // entry already taken care of as stairs
         return false;
 
     case DNGN_METAL_WALL:
@@ -1878,15 +1910,9 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     actor* act = actor_at(c);
     if (feat_is_solid(feat) && (igrd(c) != NON_ITEM || act))
     {
-        coord_def newpos;
-        get_push_space(c, newpos, act, true);
-        if (!newpos.origin())
-        {
-            move_items(c, newpos);
-            if (act)
-                actor_at(c)->move_to_pos(newpos);
-        }
-        else
+        push_items_from(c, nullptr);
+        push_actor_from(c, nullptr, true);
+        if (actor_at(c) || igrd(c) != NON_ITEM)
             feat = DNGN_FLOOR;
     }
 

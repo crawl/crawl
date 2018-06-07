@@ -53,6 +53,8 @@ Superiority
 Magnificence
 
 Hubris
+
+Big Damage
 %%%%
 _conflict_name_
 
@@ -72,15 +74,21 @@ Contention
 
 Dissent
 
-Quarrel
-
 Resumed Hostilities
 
-Fighting Over It
+Brawling
 
-a Spat
+Melee
 %%%%
 _anger_name_
+
+@_anger_quality_@
+
+w:3
+@_anger_possessive_@
+
+%%%%
+_anger_quality_
 
 Anger
 
@@ -105,8 +113,12 @@ Outrage
 Scorn
 
 Disproportionate Response
+%%%%
+_anger_possessive_
 
-No More Talking
+the Extremely Mad
+
+the Absolute Madman
 %%%%
 _battle_or_war_
 
@@ -134,12 +146,10 @@ Iconoclasm
 
 Regicide
 
-# Lemuel's Suggestions
 the Warrior
 
 the Doomed Warrior
 
-# akrasiac patch
 the Pyrrhic Victory
 
 #killing
@@ -153,18 +163,19 @@ Wounding
 
 Blood
 
+Diet Blood
+
 Fear
 
 Massacring
 
-# was Pain, clashing with the brand
+# Don't use "Pain", it's easily confused with the brand
 Insufficient Pleasure
 
 Agony
 
 Trauma
 
-# Lemuel's suggestion
 Hacking and Slashing
 
 # related to cutting
@@ -466,6 +477,8 @@ Eel
 
 Salmon
 
+Big Fish
+
 # birds
 Penguin
 
@@ -484,6 +497,8 @@ Owl
 Stork
 
 Vulture
+
+Shrike
 
 # mammals
 w:5
@@ -538,13 +553,15 @@ Whelk
 #fungus and similar
 Mushroom
 
+w:5
+Magic Mushroom
+
 Toadstool
 
 Puffball
 
 Slime-mould
 %%%%
-# undead and evil beings
 _evil_stuff_
 
 Hell's Wrath
@@ -605,7 +622,6 @@ the Unspeakable One
 
 the Wraith
 %%%%
-# catastrophes etc.
 _catastrophe_name_
 
 the Inferno
@@ -620,7 +636,7 @@ Floods
 
 Ruination
 
-# the Apocalypse
+# Apocalyptic events
 the Apocalypse
 
 Armageddon
@@ -844,10 +860,8 @@ Royalism
 
 the Silent Majority
 
-# akrasiac patch
 Impeachment
 
-# umm, quoi?
 Freehold
 
 Attainder
@@ -1339,11 +1353,28 @@ Hard Scrabble
 
 Red Wine
 
+Vodka
+
+Gin and Tonic
+
 Undoing
 
 the Unkillable
 
-# akrasiac patch
+Checkmate
+
+Traps
+
+Doors
+
+Butchery
+
+the Real Monster
+
+False Hope
+
+the Pharaoh's Fist
+
 Irrepressible Laughter
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
@@ -1480,14 +1511,13 @@ Leviticus
 
 Grim
 
-# Lemuel's suggestions
 Eviscerator
 
 Undertaker
 
 Embalmer
 
-Trog's @_anger_name_@
+Trog's @_anger_quality_@
 
 Hellblazer
 
@@ -1556,12 +1586,13 @@ Bung
 
 Bingo
 
-# from the crawl.akrasiac.org patch
 Cookie Cutter
 
 ETAOIN SHRDLU
 
 Lorem Ipsum
+
+No More Talking
 
 # These three are from old Crawl code.
 Plojy

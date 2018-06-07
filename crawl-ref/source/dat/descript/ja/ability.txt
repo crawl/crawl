@@ -113,10 +113,6 @@ Evoke Invisibility ability
 限られた時間あなた自身を透明化することができる。
 透明化はあなたの魔力による汚染を増大させ、最終的に発光を引き起こす可能性がある。
 %%%%
-Turn Visible ability
-
-再び可視状態に戻る。
-%%%%
 Stop Flying ability
 
 飛行を停止する。

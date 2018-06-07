@@ -1,6 +1,5 @@
 #ifdef USE_TILE
-#ifndef TILECELL_H
-#define TILECELL_H
+#pragma once
 
 enum halo_type
 {
@@ -30,6 +29,7 @@ struct packed_cell
     bool is_sanctuary;
     bool is_liquefied;
     bool mangrove_water;
+    bool awakened_forest;
     uint8_t orb_glow;
     char blood_rotation;
     bool old_blood;
@@ -46,9 +46,9 @@ struct packed_cell
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_moldy(false),
                     glowing_mold(false), is_sanctuary(false), is_liquefied(false),
-                    mangrove_water(false), orb_glow(0), blood_rotation(0),
-                    old_blood(false), travel_trail(0), quad_glow(false),
-                    disjunct(false)
+                    mangrove_water(false), awakened_forest(false), orb_glow(0),
+                    blood_rotation(0), old_blood(false), travel_trail(0),
+                    quad_glow(false), disjunct(false)
 #if TAG_MAJOR_VERSION == 34
                     , heat_aura(false)
 #endif
@@ -65,6 +65,7 @@ struct packed_cell
                                         is_sanctuary(c->is_sanctuary),
                                         is_liquefied(c->is_liquefied),
                                         mangrove_water(c->mangrove_water),
+                                        awakened_forest(c->awakened_forest),
                                         orb_glow(c->orb_glow),
                                         blood_rotation(c->blood_rotation),
                                         old_blood(c->old_blood),
@@ -84,4 +85,3 @@ struct packed_cell
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
 
 #endif // TILECELL_H
-#endif // USE_TILE

@@ -9,13 +9,13 @@
 #include "end.h"
 #include "files.h"
 #include "food.h"
-#include "godcompanions.h"
+#include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "mutation.h"
 #include "ng-init.h"
@@ -180,8 +180,11 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
     {
         spell_type which_spell = spells_in_book(item)[0];
-        if (!spell_is_useless(which_spell, false, true))
+        if (!spell_is_useless(which_spell, false, true)
+            && spell_difficulty(which_spell) <= 1)
+        {
             add_spell_to_memory(which_spell);
+        }
     }
 
     return &item;
@@ -297,10 +300,6 @@ static void _give_items_skills(const newgame_def& ng)
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    // Deep Dwarves get a wand of heal wounds (5).
-    if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
-
     if (you.species == SP_FELID)
     {
         you.skills[SK_THROWING] = 0;
@@ -323,18 +322,16 @@ static void _give_starting_food()
         return;
 
     object_class_type base_type = OBJ_FOOD;
-    int sub_type = FOOD_BREAD_RATION;
+    int sub_type = FOOD_RATION;
     int quantity = 1;
     if (you.species == SP_VAMPIRE)
     {
         base_type = OBJ_POTIONS;
         sub_type  = POT_BLOOD;
     }
-    else if (player_mutation_level(MUT_CARNIVOROUS))
-        sub_type = FOOD_MEAT_RATION;
 
     // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
+    if (you.get_mutation_level(MUT_FAST_METABOLISM))
         quantity = 2;
 
     newgame_make_item(base_type, sub_type, quantity);
@@ -365,10 +362,6 @@ static void _setup_tutorial_miscs()
 static void _give_basic_knowledge()
 {
     identify_inventory();
-
-    for (const item_def& i : you.inv)
-        if (i.base_type == OBJ_BOOKS)
-            mark_had_book(i);
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
@@ -466,6 +459,10 @@ static void _setup_generic(const newgame_def& ng)
     you.props[REMOVED_DEAD_SHOPS_KEY] = true;
 #endif
 
+    // Needs to happen before we give the player items, so that it's safe to
+    // check whether those items need to be removed from their shopping list.
+    shopping_list.refresh();
+
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;
@@ -475,7 +472,7 @@ static void _setup_generic(const newgame_def& ng)
     species_stat_init(you.species);     // must be down here {dlb}
 
     // Before we get into the inventory init, set light radius based
-    // on species vision. Currently, all species see out to 8 squares.
+    // on species vision.
     update_vision_range();
 
     job_stat_init(you.char_class);
@@ -508,6 +505,9 @@ static void _setup_generic(const newgame_def& ng)
         _setup_tutorial_miscs();
 
     _give_basic_knowledge();
+
+    // Must be after _give_basic_knowledge
+    add_held_books_to_library();
 
     initialise_item_descriptions();
 

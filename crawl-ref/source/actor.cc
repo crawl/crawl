@@ -11,10 +11,11 @@
 #include "chardump.h"
 #include "directn.h"
 #include "env.h"
+#include "fight.h" // apply_chunked_ac
 #include "fprop.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "los.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
@@ -48,11 +49,7 @@ level_id actor::shaft_dest(bool known = false) const
  */
 bool actor::ground_level() const
 {
-    return !airborne() && !is_wall_clinging()
-#if TAG_MAJOR_VERSION == 34
-        && mons_species() != MONS_DJINNI
-#endif
-        ;
+    return !airborne() && !is_wall_clinging();
 }
 
 bool actor::stand_on_solid_ground() const
@@ -124,27 +121,13 @@ int actor::check_res_magic(int power)
     if (mrs == MAG_IMMUNE)
         return 100;
 
-    // Evil, evil hack to make weak one hd monsters easier for first level
-    // characters who have resistable 1st level spells. Six is a very special
-    // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
-    // level monsters have been adjusted so that the "3" is typically a 1.
-    // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking mons->hit_dice. The
-    // goal here is to make the first level easier for these classes and give
-    // them a better shot at getting to level two or three and spells that can
-    // help them out (or building a level or two of their base skill so they
-    // aren't resisted as often). - bwr
-    // If you change this, also change desc_success_chance() to match.
-    if (is_monster() && mrs < 6 && coinflip())
-        return -1;
+    const int adj_pow = ench_power_stepdown(power);
 
-    power = ench_power_stepdown(power);
-
-    const int mrchance = (100 + mrs) - power;
+    const int mrchance = (100 + mrs) - adj_pow;
     const int mrch2 = random2(100) + random2(101);
 
-    dprf("Power: %d, MR: %d, target: %d, roll: %d",
-         power, mrs, mrchance, mrch2);
+    dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
+         adj_pow, power, mrs, mrchance, mrch2);
 
     return mrchance - mrch2;
 }
@@ -168,7 +151,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
     {
         // The monster is cold-resistant and can't be hibernated.
         if (intrinsic_only && is_monster()
-                ? get_mons_resist(as_monster(), MR_RES_COLD) > 0
+                ? get_mons_resist(*as_monster(), MR_RES_COLD) > 0
                 : res_cold() > 0)
         {
             return false;
@@ -192,7 +175,7 @@ bool actor::can_sleep(bool holi_only) const
         return false;
 
     if (!holi_only)
-        return !(berserk() || asleep());
+        return !(berserk() || clarity() || asleep());
 
     return true;
 }
@@ -227,7 +210,18 @@ bool actor::gourmand(bool calc_unid, bool items) const
 bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
+                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
+}
+
+bool actor::cloud_immune(bool calc_unid, bool items) const
+{
+    return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));
+}
+
+bool actor::holy_wrath_susceptible() const
+{
+    return res_holy_energy() < 0;
 }
 
 // This is a bit confusing. This is not the function that determines whether or
@@ -237,11 +231,6 @@ bool actor::res_corr(bool calc_unid, bool items) const
 bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
-}
-
-bool actor::stasis(bool calc_unid, bool items) const
-{
-    return false;
 }
 
 // permaswift effects like boots of running and lightning scales
@@ -265,11 +254,6 @@ bool actor::faith(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
-bool actor::dismissal(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
-}
-
 int actor::archmagi(bool calc_unid, bool items) const
 {
     if (!items)
@@ -286,18 +270,6 @@ int actor::archmagi(bool calc_unid, bool items) const
  * @return The number of levels of evocations enhancement this actor has.
  */
 int actor::spec_evoke(bool calc_unid, bool items) const
-{
-    return 0;
-}
-
-/**
- * Indicates if the actor has an active invocations enhancer.
- *
- * @param calc_unid Whether to identify unknown items that enhance invocations.
- * @param items Whether to count item powers.
- * @return The number of levels of invocations enhancement this actor has.
- */
-int actor::spec_invoc(bool calc_unid, bool items) const
 {
     return 0;
 }
@@ -328,10 +300,10 @@ bool actor::evokable_berserk(bool calc_unid) const
            || scan_artefacts(ARTP_BERSERK, calc_unid);
 }
 
-bool actor::evokable_invis(bool calc_unid) const
+int actor::evokable_invis(bool calc_unid) const
 {
     return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
-           || scan_artefacts(ARTP_INVISIBLE, calc_unid);
+           + scan_artefacts(ARTP_INVISIBLE, calc_unid);
 }
 
 // Return an int so we know whether an item is the sole source.
@@ -356,7 +328,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     }
 
     if (is_player())
-        ss += player_mutation_level(MUT_MANA_SHIELD);
+        ss += you.get_mutation_level(MUT_MANA_SHIELD);
 
     return ss;
 }
@@ -389,7 +361,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
         ac *= 3;
         // apply GDR only twice rather than thrice, that's probably still waaay
-        // too good.  50% gives 75% rather than 100%, too.
+        // too good. 50% gives 75% rather than 100%, too.
         gdr = 100 - gdr * gdr / 100;
         break;
     default:
@@ -411,9 +383,9 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return
-       act->is_player() && you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA]
-       || act->res_acid() == 3;
+    return act->is_player() && have_passive(passive_t::slime_wall_immune)
+        || act->res_acid() == 3
+        || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 
 /**
@@ -483,7 +455,6 @@ void actor::clear_clinging()
 void actor::clear_constricted()
 {
     constricted_by = 0;
-    held = HELD_NONE;
     escape_attempts = 0;
 }
 
@@ -498,15 +469,35 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
 
     constrictee->clear_constricted();
 
+    monster * const mons = monster_by_mid(whom);
+    bool vile_clutch = mons && mons->has_ench(ENCH_VILE_CLUTCH);
+
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
+        string attacker_desc;
+        string attacker_pronoun;
+
+        if (vile_clutch)
+        {
+            attacker_desc = "The zombie hands";
+            attacker_pronoun = "their";
+        }
+        else
+        {
+            attacker_desc = name(DESC_THE);
+            attacker_pronoun = pronoun(PRONOUN_POSSESSIVE);
+        }
+
         mprf("%s %s %s grip on %s.",
-                name(DESC_THE).c_str(),
-                conj_verb(intentional ? "release" : "lose").c_str(),
-                pronoun(PRONOUN_POSSESSIVE).c_str(),
-                constrictee->name(DESC_THE).c_str());
+             attacker_desc.c_str(),
+             conj_verb(intentional ? "release" : "lose").c_str(),
+             attacker_pronoun.c_str(),
+             constrictee->name(DESC_THE).c_str());
     }
+
+    if (vile_clutch)
+        mons->del_ench(ENCH_VILE_CLUTCH);
 
     if (constrictee->is_player())
         you.redraw_evasion = true;
@@ -527,11 +518,18 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
         if (constricting->empty())
         {
             delete constricting;
-            constricting = 0;
+            constricting = nullptr;
         }
     }
 }
 
+/**
+ * Stop constricting all defenders, regardless of type of constriction.
+ *
+ * @param intentional True if this was intentional, which affects the language
+ *                    in any message.
+ * @param quiet       If True, don't display a message.
+ */
 void actor::stop_constricting_all(bool intentional, bool quiet)
 {
     if (!constricting)
@@ -541,7 +539,48 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
         end_constriction(entry.first, intentional, quiet);
 
     delete constricting;
-    constricting = 0;
+    constricting = nullptr;
+}
+
+static bool _invalid_constricting_map_entry(const actor *constrictee)
+{
+    return !constrictee || !constrictee->is_constricted();
+}
+
+/**
+ * Stop directly constricting all defenders.
+ *
+ * @param intentional True if this was intentional, which affects the language
+ *                    in any message.
+ * @param quiet       If True, don't display a message.
+ */
+void actor::stop_directly_constricting_all(bool intentional, bool quiet)
+{
+    if (!constricting)
+        return;
+
+    vector<mid_t> need_cleared;
+    for (const auto &entry : *constricting)
+    {
+        const actor * const constrictee = actor_by_mid(entry.first);
+        if (_invalid_constricting_map_entry(constrictee)
+            || constrictee->is_directly_constricted())
+        {
+            need_cleared.push_back(entry.first);
+        }
+    }
+
+    for (auto whom : need_cleared)
+    {
+        end_constriction(whom, intentional, quiet);
+        constricting->erase(whom);
+    }
+
+    if (constricting->empty())
+    {
+        delete constricting;
+        constricting = nullptr;
+    }
 }
 
 void actor::stop_being_constricted(bool quiet)
@@ -556,17 +595,45 @@ void actor::stop_being_constricted(bool quiet)
     clear_constricted();
 }
 
-void actor::clear_far_constrictions()
+/**
+ * Does the actor have an constrictor that's now invalid? Checks validity based
+ * on the type of constriction being done to the actor.
+ *
+ * @param move True if we are checking after the actor has moved.
+ * @returns    True if the constrictor is defined yet invalid, false
+ *             otherwise.
+ */
+bool actor::has_invalid_constrictor(bool move) const
 {
-    clear_constrictions_far_from(pos());
+    if (!is_constricted())
+        return false;
+
+    const actor* const attacker = actor_by_mid(constricted_by);
+    if (!attacker)
+        return true;
+
+    // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
+    // must happen between adjacent squares.
+    if (is_directly_constricted())
+        return !adjacent(attacker->pos(), pos());
+
+    // Indirect constriction requires the defender not to move.
+    return move
+        // Indirect constriction requires reachable ground.
+        || !feat_has_solid_floor(grd(pos()))
+        // Constriction doesn't work out of LOS.
+        || !attacker->see_cell(pos());
 }
 
-void actor::clear_constrictions_far_from(const coord_def &where)
+/**
+ * Clear any constrictions that are no longer valid.
+ *
+ * @param movement True if we are clearing invalid constrictions after
+ *                 the actor has moved, false otherwise.
+ */
+void actor::clear_invalid_constrictions(bool move)
 {
-    clear_far_engulf();
-    actor* const constrictor = actor_by_mid(constricted_by);
-
-    if (!constrictor || !adjacent(where, constrictor->pos()))
+    if (has_invalid_constrictor(move))
         stop_being_constricted();
 
     if (!constricting)
@@ -575,12 +642,15 @@ void actor::clear_constrictions_far_from(const coord_def &where)
     vector<mid_t> need_cleared;
     for (const auto &entry : *constricting)
     {
-        actor* const constrictee = actor_by_mid(entry.first);
-        if (!constrictee || !adjacent(where, constrictee->pos()))
+        const actor * const constrictee = actor_by_mid(entry.first);
+        if (_invalid_constricting_map_entry(constrictee)
+            || constrictee->has_invalid_constrictor())
+        {
             need_cleared.push_back(entry.first);
+        }
     }
 
-    for (mid_t whom : need_cleared)
+    for (auto whom : need_cleared)
         stop_constricting(whom, false, false);
 }
 
@@ -593,7 +663,6 @@ void actor::start_constricting(actor &whom, int dur)
 
     (*constricting)[whom.mid] = dur;
     whom.constricted_by = mid;
-    whom.held = constriction_damage() ? HELD_CONSTRICTED : HELD_MONSTER;
 
     if (whom.is_player())
         you.redraw_evasion = true;
@@ -614,6 +683,13 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
+bool actor::is_directly_constricted() const
+{
+    return is_constricted()
+        && (is_player()
+            || !as_monster()->has_ench(ENCH_VILE_CLUTCH));
+}
+
 void actor::accum_has_constricted()
 {
     if (!constricting)
@@ -623,16 +699,26 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender) const
+bool actor::can_constrict(const actor* defender, bool direct) const
 {
     ASSERT(defender); // XXX: change to actor &defender
-    return (!is_constricting() || has_usable_tentacle())
-           && !defender->is_constricted()
-           && can_see(*defender)
-           && !confused()
-           && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
-           && defender->res_constrict() < 3
-           && adjacent(pos(), defender->pos());
+
+    if (direct)
+    {
+        return (!is_constricting() || has_usable_tentacle())
+               && !defender->is_constricted()
+               && can_see(*defender)
+               && !confused()
+               && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
+               && defender->res_constrict() < 3
+               && adjacent(pos(), defender->pos());
+    }
+
+    return can_see(*defender)
+        && !defender->is_constricted()
+        && defender->res_constrict() < 3
+        // All current indrect forms of constriction require reachable ground.
+        && feat_has_solid_floor(grd(defender->pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -640,6 +726,101 @@ bool actor::can_constrict(const actor* defender) const
 #else
 # define DIAG_ONLY(x) (void)0
 #endif
+
+/*
+ * Damage the defender with constriction damage. Longer duration gives more
+ * damage, but with a 50 aut step-down. Direct constriction uses strength-based
+ * base damage that is modified by XL, whereas indirect, spell-based
+ * constriction uses spellpower.
+ *
+ * @param defender The defender being constricted.
+ * @param duration How long the defender has been constricted in AUT.
+ */
+void actor::constriction_damage_defender(actor &defender, int duration)
+{
+    const bool direct = defender.is_directly_constricted();
+    int damage = constriction_damage(direct);
+
+    DIAG_ONLY(const int basedam = damage);
+    damage += div_rand_round(damage * stepdown((float)duration, 50.0),
+                             BASELINE_DELAY * 5);
+    if (is_player() && direct)
+        damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
+
+    DIAG_ONLY(const int durdam = damage);
+    damage -= random2(1 + (defender.armour_class() / 2));
+    DIAG_ONLY(const int acdam = damage);
+    damage = timescale_damage(this, damage);
+    DIAG_ONLY(const int timescale_dam = damage);
+
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
+                           "", false);
+    DIAG_ONLY(const int infdam = damage);
+
+    string exclamations;
+    if (damage <= 0 && is_player()
+        && you.can_see(defender))
+    {
+        exclamations = ", but do no damage.";
+    }
+    else if (damage < HIT_WEAK)
+        exclamations = ".";
+    else if (damage < HIT_MED)
+        exclamations = "!";
+    else if (damage < HIT_STRONG)
+        exclamations = "!!";
+    else
+    {
+        int tmpdamage = damage;
+        exclamations = "!!!";
+        while (tmpdamage >= 2 * HIT_STRONG)
+        {
+            exclamations += "!";
+            tmpdamage >>= 1;
+        }
+    }
+
+    if (is_player() || you.can_see(*this))
+    {
+        string attacker_desc;
+        if (!direct)
+            attacker_desc = "The zombie hands";
+        else if (is_player())
+            attacker_desc = "You";
+        else
+            attacker_desc = name(DESC_THE);
+
+        mprf("%s %s %s%s%s", attacker_desc.c_str(),
+             conj_verb("constrict").c_str(),
+             defender.name(DESC_THE).c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+             make_stringf(" for %d", damage).c_str(),
+#else
+             "",
+#endif
+             exclamations.c_str());
+    }
+    else if (you.can_see(defender) || defender.is_player())
+    {
+        mprf("%s %s constricted%s%s",
+             defender.name(DESC_THE).c_str(),
+             defender.conj_verb("are").c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+             make_stringf(" for %d", damage).c_str(),
+#else
+             "",
+#endif
+             exclamations.c_str());
+    }
+
+    dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+         name(DESC_PLAIN, true).c_str(),
+         defender.name(DESC_PLAIN, true).c_str(),
+         basedam, durdam, acdam, timescale_dam, infdam);
+
+    if (defender.is_monster() && defender.as_monster()->hit_points < 1)
+        monster_die(*defender.as_monster(), this);
+}
 
 // Deal damage over time
 void actor::handle_constriction()
@@ -650,101 +831,23 @@ void actor::handle_constriction()
     // Constriction should have stopped the moment the actors became
     // non-adjacent; but disabling constriction by hand in every single place
     // is too error-prone.
-    clear_far_constrictions();
+    clear_invalid_constrictions();
 
-    if (!constricting || !constriction_damage())
+    if (!constricting)
         return;
 
-    auto i = constricting->begin();
-    // monster_die() can cause constricting() to go away.
-    while (constricting && i != constricting->end())
+    // need to make a copy, since constriction_damage_defender can
+    // unpredictably invalidate constricting
+    constricting_t tmp_constricting = *constricting;
+    for (auto &i : tmp_constricting)
     {
-        actor* const defender = actor_by_mid(i->first);
-        int duration = i->second;
-        ASSERT(defender);
-
-        // Must increment before potentially killing the constrictee and
-        // thus invalidating the old i.
-        ++i;
-
-        int damage = constriction_damage();
-
-        DIAG_ONLY(const int basedam = damage);
-        damage += div_rand_round(damage * stepdown((float)duration, 50.0),
-                                 BASELINE_DELAY * 5);
-        if (is_player())
-            damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-        DIAG_ONLY(const int durdam = damage);
-        damage -= random2(1 + (defender->armour_class() / 2));
-        DIAG_ONLY(const int acdam = damage);
-        damage = timescale_damage(this, damage);
-        DIAG_ONLY(const int timescale_dam = damage);
-
-        damage = defender->hurt(this, damage, BEAM_MISSILE,
-                                KILLED_BY_MONSTER, "", "", false);
-        DIAG_ONLY(const int infdam = damage);
-
-        string exclamations;
-        if (damage <= 0 && is_player()
-            && you.can_see(*defender))
-        {
-            exclamations = ", but do no damage.";
-        }
-        else if (damage < HIT_WEAK)
-            exclamations = ".";
-        else if (damage < HIT_MED)
-            exclamations = "!";
-        else if (damage < HIT_STRONG)
-            exclamations = "!!";
-        else
-        {
-            int tmpdamage = damage;
-            exclamations = "!!!";
-            while (tmpdamage >= 2*HIT_STRONG)
-            {
-                exclamations += "!";
-                tmpdamage >>= 1;
-            }
-        }
-
-        if (is_player() || you.can_see(*this))
-        {
-            mprf("%s %s %s%s%s",
-                 (is_player() ? "You"
-                              : name(DESC_THE).c_str()),
-                 conj_verb("constrict").c_str(),
-                 defender->name(DESC_THE).c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclamations.c_str());
-        }
-        else if (you.can_see(*defender) || defender->is_player())
-        {
-            mprf("%s %s constricted%s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("are").c_str(),
-#ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
-#else
-                 "",
-#endif
-                 exclamations.c_str());
-        }
-
-        dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
-             name(DESC_PLAIN, true).c_str(),
-             defender->name(DESC_PLAIN, true).c_str(),
-             basedam, durdam, acdam, timescale_dam, infdam);
-
-        if (defender->is_monster()
-            && defender->as_monster()->hit_points < 1)
-        {
-            monster_die(defender->as_monster(), this);
-        }
+        actor* const defender = actor_by_mid(i.first);
+        const int duration = i.second;
+        if (defender)
+            constriction_damage_defender(*defender, duration);
     }
+
+    clear_invalid_constrictions();
 }
 
 string actor::describe_props() const
@@ -813,8 +916,7 @@ bool actor::torpor_slowed() const
 {
     if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
         || is_stationary()
-        || (is_monster() && as_monster()->check_stasis(true))
-        || (!is_monster() && stasis()))
+        || stasis())
     {
         return false;
     }
@@ -917,4 +1019,41 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
+}
+
+/// Is this creature despised by the so-called 'good gods'?
+bool actor::evil() const
+{
+    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
+}
+
+/**
+ * Ensures that `act` is valid if possible. If this isn't possible,
+ * return nullptr. This will convert YOU_FAULTLESS into `you`.
+ *
+ * @param act the actor to validate.
+ *
+ * @return an actor that is either the player or passes `!invalid_monster`, or
+ *         otherwise `nullptr`.
+ */
+/* static */ const actor *actor::ensure_valid_actor(const actor *act)
+{
+    if (!act)
+        return nullptr;
+    if (act->is_player())
+        return act;
+    const monster *mon = act->as_monster();
+    if (mon->mid == MID_YOU_FAULTLESS)
+        return &you;
+    if (invalid_monster(mon))
+        return nullptr;
+    return mon;
+}
+
+/// @copydoc actor::ensure_valid_actor(const actor *act)
+/* static */ actor *actor::ensure_valid_actor(actor *act)
+{
+    // Defer to the other function. Since it returns only act, nullptr, or you,
+    // none of which points to a const object, the const_cast here is safe.
+    return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
 }

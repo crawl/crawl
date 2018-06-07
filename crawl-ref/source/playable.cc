@@ -110,7 +110,6 @@ static JsonNode *_species_modifiers(species_type sp)
     json_append_member(modifiers, "xp", json_mknumber(species_exp_modifier(sp)));
     json_append_member(modifiers, "hp", json_mknumber(species_hp_modifier(sp)));
     json_append_member(modifiers, "mp", json_mknumber(species_mp_modifier(sp)));
-    json_append_member(modifiers, "stealth", json_mknumber(species_stealth_modifier(sp)));
     json_append_member(modifiers, "mr", json_mknumber(species_mr_modifier(sp)));
     return modifiers;
 }
@@ -201,7 +200,7 @@ static JsonNode *_combo_array()
  * @code
  *   { "<modifier-name>": <modifier> }
  * @endcode
- * where <modifier-name>: hp, mp, exp, stealth, mr.
+ * where <modifier-name>: hp, mp, exp, mr.
  */
 string playable_metadata_json()
 {

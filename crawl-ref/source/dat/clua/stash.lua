@@ -14,7 +14,6 @@
 --               <armourtype> armour
 -- { <ego> } - short item ego description: rC+, rPois, SInv, freeze etc.
 -- {god gift} for god gifts
--- {fruit} for fruit
 --
 -- Item annotations are always prefixed to the item name. For instance:
 -- {artefact} the Staff of Wucad Mu
@@ -50,10 +49,6 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{god gift} "
   end
 
-  if food.isfruit(it) then
-    annot = annot .. "{fruit} "
-  end
-
   local skill = it.weap_skill
   if skill then
     annot = annot .. "{" .. skill .. "} "
@@ -71,10 +66,8 @@ function ch_stash_search_annotate_item(it)
          or it.ego_type_terse == "EV" or it.ego_type_terse == "AC" then
         if it.plus == nil then
           annot = annot .. "+"
-        elseif it.plus < 0 then
-          annot = annot .. "-" .. it.plus
         else
-          annot = annot .. "+" .. it.plus
+          annot = annot .. string.format("%+d", it.plus)
         end
       end
       annot = annot .. "} "
@@ -92,7 +85,6 @@ function ch_stash_search_annotate_item(it)
       ["fire"] = "rF+",
       ["poison"] = "rPois",
       ["power"] = "MP+",
-      ["summoning"] = "Ward",
       ["wizardry"] = "Wiz"
     }
     if props[it.subtype()] then
@@ -104,7 +96,7 @@ function ch_stash_search_annotate_item(it)
     local props = {
       ["troll"] = "Regen+",
       ["steam"] = "rSteam",
-      ["mottled"] = "rNapalm",
+      ["acid"] = "rCorr",
       ["quicksilver"] = "MR+",
       ["swamp"] = "rPois",
       ["fire"] = "rF++ rC-",

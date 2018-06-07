@@ -1,5 +1,4 @@
-#ifndef TELEPORT_H
-#define TELEPORT_H
+#pragma once
 
 class actor;
 class monster;
@@ -23,5 +22,3 @@ bool random_near_space(const actor* victim,
                        bool allow_adjacent = false,
                        bool forbid_sanctuary = false,
                        bool forbid_unhabitable = true);
-
-#endif

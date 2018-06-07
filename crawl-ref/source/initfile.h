@@ -3,14 +3,15 @@
  * @brief Simple reading of init file.
 **/
 
-#ifndef INITFILE_H
-#define INITFILE_H
+#pragma once
 
 #include <cstdio>
 #include <string>
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "game-type.h"
+#include "item-prop-enum.h"
+#include "job-type.h"
 #include "unicode.h"
 
 int str_to_summon_type(const string &str);
@@ -105,5 +106,3 @@ private:
     const string &str;
     string::size_type pos;
 };
-
-#endif

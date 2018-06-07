@@ -9,7 +9,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "domino.h"
-#include "domino_data.h"
+#include "domino-data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -21,10 +21,12 @@
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
+#include "tile-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -53,10 +55,14 @@ void tile_new_level(bool first_time, bool init_unseen)
         for (unsigned int y = 0; y < GYM; y++)
         {
             unsigned int tile = env.tile_bk_bg[x][y];
-            if (!(tile & TILE_FLAG_NEW_STAIR))
-                continue;
-            if (!is_unknown_stair(coord_def(x,y)))
+            if ((tile & TILE_FLAG_NEW_STAIR)
+                && !is_unknown_stair(coord_def(x,y)))
+            {
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+            }
+            else if ((tile & TILE_FLAG_NEW_TRANSPORTER)
+                     && !is_unknown_transporter(coord_def(x,y)))
+                env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_TRANSPORTER;
         }
 
     tiles.clear_minimap();
@@ -271,7 +277,13 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_DESOLATION:
+        flv.floor = TILE_FLOOR_SALT;
+        flv.wall = TILE_WALL_DESOLATION;
+        return;
+
     case NUM_BRANCHES:
+    case GLOBAL_BRANCH_INFO:
         break;
     }
 }
@@ -300,7 +312,8 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        uint64_t seed[] = { static_cast<uint64_t>(you.where_are_you ^ you.game_seed),
+            static_cast<uint64_t>(you.depth) };
         PcgRNG rng(seed, ARRAYSZ(seed));
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
@@ -349,12 +362,13 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
+static int _find_variants(tileidx_t idx, int variant, vector<int> &out)
 {
     const int count = tile_dngn_count(idx);
+    out.reserve(count);
     if (count == 1)
     {
-        out[idx] = 1;
+        out.push_back(1);
         return 1;
     }
 
@@ -368,17 +382,17 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
         {
             int weight = curr_prob - last_prob;
             total += weight;
-            out[idx + i] = weight;
+            out.push_back(weight);
         }
+        else
+            out.push_back(0);
     }
-    if (out.empty())
+    if (!total)
     {
-        out[idx] = tile_dngn_probs(idx);
+        out.clear();
+        out.push_back(tile_dngn_probs(idx));
         for (int i = 1; i < count; ++i)
-        {
-            out[idx + i] = tile_dngn_probs(idx + i)
-                           - tile_dngn_probs(idx + i - 1);
-        }
+            out.push_back(tile_dngn_probs(idx + i) - tile_dngn_probs(idx + i - 1));
         return tile_dngn_probs(idx + count - 1);
     }
     return total;
@@ -387,17 +401,18 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 {
     ASSERT_LESS(idx, TILE_DNGN_MAX);
-    map<tileidx_t, int> choices;
-    int total = _find_variants(idx, domino, choices);
-    if (choices.size() == 1)
-        return choices.begin()->first;
-    int rand  = value % total;
+    static vector<int> weights;
+    weights.clear();
 
-    for (const auto& elem : choices)
+    int total = _find_variants(idx, domino, weights);
+    if (weights.size() == 1)
+        return idx;
+    int rand = value % total;
+
+    for (size_t i = 0; i < weights.size(); ++i)
     {
-        rand -= elem.second;
-        if (rand < 0)
-            return elem.first;
+        rand -= weights[i];
+        if (rand < 0) return idx + i;
     }
 
     return idx;
@@ -497,6 +512,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
         const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
         env.tile_flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
                                    : TILE_DNGN_SHOALS_STAIRS_DOWN;
+    }
+
+    if (feat_is_escape_hatch(grd(gc)) && player_in_branch(BRANCH_TOMB))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
+                                   : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
     }
 
     if (feat_is_door(grd(gc)))
@@ -806,6 +828,8 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
+        else if (is_unknown_transporter(gc))
+            bg |= TILE_FLAG_NEW_TRANSPORTER;
     }
 
     return bg;
@@ -840,7 +864,10 @@ void tile_forget_map(const coord_def &gc)
     env.tile_bk_fg(gc) = 0;
     env.tile_bk_bg(gc) = 0;
     env.tile_bk_cloud(gc) = 0;
-    tiles.update_minimap(gc);
+    // This may have changed the explore horizon, so update adjacent minimap
+    // squares as well.
+    for (adjacent_iterator ai(gc, false); ai; ++ai)
+        tiles.update_minimap(*ai);
 }
 
 static void _tile_place_item(const coord_def &gc, const item_info &item,
@@ -922,8 +949,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if ((mons_class_is_stationary(mon.type)
-         || mon.is(MB_WITHDRAWN))
+    if (mons_class_is_stationary(mon.type)
         && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
@@ -1402,7 +1428,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
-            cell.old_blood = env.pgrid(gc) & FPROP_OLD_BLOOD;
+            cell.old_blood = bool(env.pgrid(gc) & FPROP_OLD_BLOOD);
         }
     }
 
@@ -1418,6 +1444,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
+    cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;

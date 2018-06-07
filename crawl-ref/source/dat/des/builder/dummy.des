@@ -12,11 +12,9 @@
 # Zot has a 2/3 chance now, to try to make it more interesting. ~Grunt
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Depths:2-, !Pan
+DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Desolation, !Depths:2-, !Pan
 ORIENT: float
-CHANCE: 0 : 8333
-CHANCE: 0 : 6666 (Zot)
-CHANCE: 0 : 10000 (Vaults)
+CHANCE: 8333, 6666 (Zot), 10000 (Vaults)
 MAP
 x
 ENDMAP
@@ -27,7 +25,7 @@ ENDMAP
 NAME: primary_mini_dummy
 TAGS: dummy
 DEPTH: 1-100, Pan, !Depths:1, !Abyss, !Lab
-CHANCE: 0 : 10000 (Vaults), 0 : 5000
+CHANCE: 10000 (Vaults), 5000
 MAP
 x
 ENDMAP

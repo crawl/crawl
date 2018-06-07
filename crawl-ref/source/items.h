@@ -3,8 +3,11 @@
  * @brief Misc (mostly) inventory related functions.
 **/
 
-#ifndef ITEMS_H
-#define ITEMS_H
+#pragma once
+
+#include "equipment-type.h"
+#include "god-type.h"
+#include "mon-inv-type.h"
 
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.
@@ -61,6 +64,8 @@ int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
 
+void add_held_books_to_library();
+
 void link_items();
 
 void fix_item_coordinates();
@@ -74,6 +79,7 @@ void lose_item_stack(const coord_def& where);
 
 void item_check();
 void request_autopickup(bool do_pickup = true);
+void id_floor_items();
 
 bool player_on_single_stack();
 void pickup_menu(int item_link);
@@ -146,6 +152,8 @@ bool get_item_by_name(item_def *item, const char* specs,
                       object_class_type class_wanted,
                       bool create_for_real = false);
 
+bool get_item_by_exact_name(item_def &item, const char* name);
+
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
 
@@ -193,4 +201,3 @@ private:
     monster& mon;
     mon_inv_type type;
 };
-#endif

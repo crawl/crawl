@@ -388,13 +388,14 @@ static bool _may_overwrite_feature(const coord_def p,
     return true;
 }
 
+static bool _marker_is_portal(map_marker* marker)
+{
+    return marker && !marker->property("portal").empty();
+}
+
 static bool _is_portal_place(const coord_def &c)
 {
-    map_marker* marker = env.markers.find(c, MAT_LUA_MARKER);
-    if (!marker)
-        return false;
-
-    return marker->property("portal") != "";
+    return _marker_is_portal(env.markers.find(c, MAT_LUA_MARKER));
 }
 
 static bool _map_safe_vault_place(const map_def &map,
@@ -505,7 +506,7 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
     vector<coord_def> candidates;
     for (auto marker : env.markers.get_all(MAT_LUA_MARKER))
     {
-        if (marker->property("portal") != "")
+        if (_marker_is_portal(marker))
         {
             coord_def v1(marker->pos);
             if ((!check_place
@@ -860,7 +861,7 @@ bool map_selector::accept(const map_def &mapdef) const
         const map_chance chance(mapdef.chance(place));
         return mapdef.is_minivault() == mini
                && _is_extra_compatible(extra, mapdef.has_tag("extra"))
-               && (!chance.valid() || chance.dummy_chance())
+               && (!chance.valid() || mapdef.has_tag("dummy"))
                && depth_selectable(mapdef)
                && !mapdef.map_already_used();
     }
@@ -870,7 +871,7 @@ bool map_selector::accept(const map_def &mapdef) const
         const map_chance chance(mapdef.chance(place));
         // Only vaults with valid chance
         return chance.valid()
-               && !chance.dummy_chance()
+               && !mapdef.has_tag("dummy")
                && depth_selectable(mapdef)
                && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && !mapdef.map_already_used();
@@ -956,8 +957,7 @@ static bool _vault_chance_new(const map_def &map,
         // vault that want to be governed by one common
         // CHANCE. In this case each vault will use a
         // CHANCE, and a common chance_xxx tag. Pick the
-        // first such vault for the chance roll. Note that
-        // at this point we ignore chance_priority.
+        // first such vault for the chance roll.
         const string tag = vault_chance_tag(map);
         if (!chance_tags.count(tag))
         {
@@ -973,7 +973,7 @@ class vault_chance_roll_iterator
 {
 public:
     vault_chance_roll_iterator(const mapref_vector &_maps)
-        : maps(_maps), place(level_id::current()),
+        : place(level_id::current()),
           current(_maps.begin()), end(_maps.end())
     {
         find_valid();
@@ -1005,7 +1005,6 @@ private:
     }
 
 private:
-    const vector<const map_def *> &maps;
     level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;
@@ -1291,8 +1290,8 @@ static bool _load_map_index(const string& cache, const string &base,
     }
 
 #if TAG_MAJOR_VERSION == 34
-    // Throw out pre-ORDER: indices entirely.
-    if (minor < TAG_MINOR_MAP_ORDER)
+    // Throw out indices that could have CHANCE priority entirely.
+    if (minor < TAG_MINOR_NO_PRIORITY)
         return false;
 #endif
 

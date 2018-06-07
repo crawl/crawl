@@ -25,6 +25,7 @@
 #endif
 #include "options.h"
 #include "player.h"
+#include "player-save-info.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE
@@ -34,6 +35,8 @@
  #include "tilebuf.h"
 #endif
 #ifdef USE_TILE
+ #include "tile-flags.h"
+ #include "tile-player-flag-cut.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"
@@ -54,10 +57,19 @@
  #include "travel.h"
 #endif
 #include "unicode.h"
+#include "unwind.h"
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+#include "windowmanager.h"
+#endif
 
 #ifdef USE_TILE_LOCAL
 Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
 {
+}
+
+Popup::~Popup()
+{
+    deleteAll(m_entries);
 }
 
 void Popup::set_prompt(string prompt)
@@ -88,19 +100,190 @@ int Popup::pop()
 }
 #endif
 
-MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
+class MenuDisplay
 {
-    m_menu->set_maxpagesize(get_number_of_lines());
+public:
+    MenuDisplay(Menu *menu) : m_menu(menu) {};
+    virtual ~MenuDisplay() {}
+    virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
+    virtual void draw_items() = 0;
+    virtual bool item_in_page(int index) = 0;
+    virtual void set_offset(int lines) = 0;
+    virtual void draw_title(formatted_string &fs) = 0;
+    virtual void draw_more() = 0;
+    virtual void set_num_columns(int columns) = 0;
+    virtual bool scroll_page(int delta) = 0;
+    virtual bool scroll_line(int delta) = 0;
+    virtual bool scroll_to_item(int index) = 0;
+    virtual void get_visible_items_range(int &first, int &last) = 0;
+protected:
+    Menu *m_menu;
+};
+
+class MenuDisplayText : public MenuDisplay
+{
+public:
+    MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_first_entry(0) {};
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void draw_items() override;
+    virtual bool item_in_page(int index) override;
+    virtual void draw_title(formatted_string &fs) override;
+    virtual void draw_more() override;
+    virtual void set_offset(int lines) override { m_offset = lines; }
+    virtual void set_num_columns(int columns) override {}
+    virtual bool scroll_page(int delta) override;
+    virtual bool scroll_line(int delta) override;
+    virtual bool scroll_to_item(int index) override;
+    virtual void get_visible_items_range(int &first, int &last) override;
+
+    bool jump_to_item(int index);
+    void cgotoxy_for_index(int index);
+protected:
+    int m_pagesize;
+    int m_offset;
+    int m_first_entry;
+    int m_last_entry;
+
+    int recalculate_page_size();
+};
+
+class MenuDisplayTile : public MenuDisplay
+{
+public:
+    MenuDisplayTile(Menu *menu) : MenuDisplay(menu) {};
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void draw_items() override;
+    virtual bool item_in_page(int index) override;
+    virtual void set_offset(int lines) override;
+    virtual void draw_title(formatted_string &fs) override;
+    virtual void draw_more() override;
+    virtual void set_num_columns(int columns) override;
+    virtual bool scroll_page(int delta) override;
+    virtual bool scroll_line(int delta) override;
+    virtual bool scroll_to_item(int index) override;
+    virtual void get_visible_items_range(int &first, int &last) override;
+};
+
+static bool menu_entries_have_dup_hotkeys(vector<MenuEntry*>& items)
+{
+    bool used_hotkeys[52] = {0};
+    for (MenuEntry *entry : items)
+    {
+        if (entry->level != MEL_ITEM)
+            continue;
+        for (int key : entry->hotkeys)
+        {
+            if (!(key >= 'A' && key <= 'Z') && !(key >= 'a' && key <= 'z'))
+                continue;
+            int idx = key - (key >= 'a' ? ('a'-26) : 'A');
+            ASSERT_RANGE(idx, 0, 52);
+            if (used_hotkeys[idx])
+                return true;
+            used_hotkeys[idx] = true;
+        }
+    }
+    return false;
 }
 
-MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
+int MenuDisplayText::recalculate_page_size()
 {
+    m_pagesize = get_number_of_lines() - m_menu->title_height() - 1;
+    if (menu_entries_have_dup_hotkeys(m_menu->items))
+        m_pagesize = min(52, m_pagesize);
+
+    int end = min(m_first_entry + m_pagesize, (int)m_menu->items.size());
+    int i;
+    for (i = m_first_entry; i < end; ++i)
+    {
+        if (m_menu->items[i]->level == MEL_END_OF_SECTION)
+            break;
+    }
+    m_last_entry = i-1;
+
+    return m_pagesize;
+}
+
+void MenuDisplayText::draw_items()
+{
+    recalculate_page_size();
+
+    for (int i = m_first_entry; i <= m_last_entry; ++i)
+        m_menu->draw_item(i);
+
+    // Update the paging info so we can set the title correctly
+    m_menu->num_pages = m_menu->items.empty() ? 1 : ((m_menu->items.size()-1) / m_pagesize + 1);
+    m_menu->cur_page = m_first_entry / m_pagesize + 1;
+}
+
+bool MenuDisplayText::item_in_page(int index)
+{
+    return index >= m_first_entry && index < m_first_entry + m_pagesize;
+}
+
+bool MenuDisplayText::scroll_page(int delta)
+{
+    return scroll_to_item(m_first_entry + m_pagesize*delta);
+}
+
+bool MenuDisplayText::scroll_line(int delta)
+{
+    return scroll_to_item(m_first_entry + delta);
+}
+
+// XXX: This is a nasty but at least localized hack...
+void MenuDisplayText::cgotoxy_for_index(int index)
+{
+    cgotoxy(1, m_offset + index - m_first_entry);
+}
+
+bool MenuDisplayText::scroll_to_item(int index)
+{
+    // XXX: why was this needed
+    if (m_menu->items.empty())
+        return false;
+
+    int old_first = m_first_entry;
+    recalculate_page_size();
+
+    int dir = index < m_first_entry ? -1 : 1;
+
+    // Find leading edge of page area, and check for MEL_END_OF_SECTIONs
+    for (int i = dir == -1 ? m_first_entry : m_last_entry; ; i += dir, m_first_entry += dir)
+    {
+        if (m_first_entry == index)
+            break;
+        if (i+dir < 0 || i+dir >= (int)m_menu->items.size())
+            break;
+        if (m_menu->items[i+dir]->level == MEL_END_OF_SECTION)
+            break;
+    }
+
+    return old_first != m_first_entry;
+}
+
+bool MenuDisplayText::jump_to_item(int index)
+{
+    int old_first = m_first_entry;
+    recalculate_page_size();
+
+    const int breakpoint = m_menu->items.size() - m_pagesize;
+    m_first_entry = max(0, min(index, breakpoint));
+
+    return old_first != m_first_entry;
+}
+
+void MenuDisplayText::get_visible_items_range(int &first, int &last)
+{
+    first = m_first_entry;
+    last = m_last_entry;
 }
 
 void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
+
+    cgotoxy(1, m_offset + index - m_first_entry);
 
     const int col = m_menu->item_colour(index, me);
     textcolour(col);
@@ -121,18 +304,67 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     }
 }
 
+void MenuDisplayText::draw_title(formatted_string &fs)
+{
+    const int x = wherex(), y = wherey();
+    cgotoxy(1, 1);
+    // pad title to take up the full line length (see bf862027bc)
+    fs.cprintf("%-*s", get_number_of_cols() - (int)fs.tostring().length(), "");
+    fs.display();
+    cgotoxy(x, y);
+}
+
 void MenuDisplayText::draw_more()
 {
-    cgotoxy(1, m_menu->get_y_offset() + m_menu->get_pagesize() -
+    cgotoxy(1, m_offset + m_pagesize -
             count_linebreaks(m_menu->get_more()));
     textcolour(LIGHTGREY);
     m_menu->get_more().display();
 }
 
 #ifdef USE_TILE_LOCAL
-MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
+void MenuDisplayTile::draw_items()
 {
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
+    for (unsigned int i = 0; i < m_menu->items.size(); ++i)
+    {
+        // Only formatted_scrollers have these, and they use the text renderer
+        ASSERT(m_menu->items[i]->level != MEL_END_OF_SECTION);
+        draw_stock_item(i, m_menu->items[i]);
+    }
+
+    tiles.get_menu()->set_menu_display(this);
+    tiles.get_menu()->place_entries();
+    tiles.get_menu()->get_page_info(m_menu->cur_page, m_menu->num_pages);
+}
+
+bool MenuDisplayTile::scroll_page(int delta)
+{
+    return tiles.get_menu()->scroll_page(delta);
+}
+
+bool MenuDisplayTile::scroll_line(int delta)
+{
+    return tiles.get_menu()->scroll_line(delta);
+}
+
+bool MenuDisplayTile::item_in_page(int index)
+{
+    int a, b;
+    get_visible_items_range(a, b);
+    return a <= index && index <= b;
+}
+
+bool MenuDisplayTile::scroll_to_item(int index)
+{
+    return tiles.get_menu()->scroll_to_item(index);
+}
+
+void MenuDisplayTile::get_visible_items_range(int &first, int &last)
+{
+    tiles.get_menu()->get_visible_items_range(first, last);
 }
 
 void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
@@ -144,42 +376,38 @@ void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
     tiles.get_menu()->set_entry(index, text, colour, me, !m_menu->is_set(MF_QUIET_SELECT));
 }
 
-void MenuDisplayTile::set_offset(int lines)
+void MenuDisplayTile::set_offset(int lines) {}
+
+void MenuDisplayTile::draw_title(formatted_string &fs)
 {
-    tiles.get_menu()->set_offset(lines);
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
+    tiles.get_menu()->set_title(fs);
 }
 
 void MenuDisplayTile::draw_more()
 {
     tiles.get_menu()->set_more(m_menu->get_more());
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 
 void MenuDisplayTile::set_num_columns(int columns)
 {
     tiles.get_menu()->set_num_columns(columns);
-    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 #endif
 
-Menu::Menu(int _flags, const string& tagname, bool text_only)
-  : f_selitem(nullptr), f_drawitem(nullptr), f_keyfilter(nullptr),
+Menu::Menu(int _flags, const string& tagname)
+  : f_selitem(nullptr), f_keyfilter(nullptr),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
-    title2(nullptr), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
-    pagesize(0), max_pagesize(0), more("-more-", true), items(), sel(),
+    title2(nullptr), flags(_flags), tag(tagname),
+    cur_page(1), more("-more-", true), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
     alive(false), last_selected(-1)
 {
 #ifdef USE_TILE_LOCAL
-    if (text_only)
-        mdisplay = new MenuDisplayText(this);
-    else
-        mdisplay = new MenuDisplayTile(this);
+    mdisplay = new MenuDisplayTile(this);
+    m_filter_text = nullptr;
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
-    mdisplay->set_num_columns(1);
     set_flags(flags);
 
 #ifdef USE_TILE_WEB
@@ -241,16 +469,18 @@ void Menu::clear()
     last_selected = -1;
 }
 
-void Menu::set_maxpagesize(int max)
-{
-    max_pagesize = max;
-}
-
 void Menu::set_flags(int new_flags, bool use_options)
 {
     flags = new_flags;
     if (use_options && Options.easy_exit_menu)
         flags |= MF_EASY_EXIT;
+
+    mdisplay->set_num_columns((flags & MF_USE_TWO_COLUMNS) ? 2 : 1);
+
+#ifdef DEBUG
+    int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
+    ASSERT(sel_flag == MF_NOSELECT || sel_flag == MF_SINGLESELECT || sel_flag == MF_MULTISELECT);
+#endif
 }
 
 void Menu::set_more(const formatted_string &fs)
@@ -305,7 +535,7 @@ void Menu::add_entry(MenuEntry *entry)
 
 void Menu::reset()
 {
-    first_entry = 0;
+    mdisplay->scroll_to_item(0);
 }
 
 vector<MenuEntry *> Menu::show(bool reuse_selections)
@@ -318,25 +548,25 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (reuse_selections)
         get_selected(&sel);
     else
-    {
         deselect_all(false);
-        sel.clear();
-    }
 
+#ifdef USE_TILE_LOCAL
+    // XXX: reset any title from the previously shown menu that's stored
+    // in the MenuRegion
+    formatted_string fs;
+    mdisplay->draw_title(fs);
+#endif
     // Reset offset to default.
     mdisplay->set_offset(1 + title_height());
 
-    // Lose lines for the title + room for -more- line.
-#ifdef USE_TILE_LOCAL
-    pagesize = max_pagesize - title_height() - 1;
-#else
-    pagesize = get_number_of_lines() - title_height() - 1;
-    if (max_pagesize > 0 && pagesize > max_pagesize)
-        pagesize = max_pagesize;
-#endif
-
     if (is_set(MF_START_AT_END))
-        first_entry = max((int)items.size() - pagesize, 0);
+    {
+#ifdef USE_TILE_LOCAL
+        // XXX: needed so that scroll_to_item knows the visible set of items
+        mdisplay->draw_items();
+#endif
+        mdisplay->scroll_to_item(INT_MAX);
+    }
 
     do_menu();
 
@@ -406,6 +636,66 @@ int Menu::post_process(int k)
     return k;
 }
 
+#ifdef USE_TILE_LOCAL
+class menu_filter_line_reader : public line_reader
+{
+public:
+    menu_filter_line_reader(Menu *menu, char *buf, size_t buf_sz,
+            int wrap_col = get_number_of_cols()) : line_reader(buf, buf_sz, wrap_col), m_menu(menu) {}
+    int read_line(bool clear_previous = true, bool reset_cursor = false) override;
+protected:
+    Menu *m_menu;
+    int process_key(int ch) override;
+    void print_segment(int start_point=0, int overprint=0) override;
+    void cursorto(int newcpos) override;
+};
+
+int menu_filter_line_reader::read_line(bool clear_previous, bool reset_cursor)
+{
+    UNUSED(clear_previous);
+    UNUSED(reset_cursor);
+#if defined(TOUCH_UI)
+    if (wm)
+        wm->show_keyboard();
+#endif
+    cursor_control con(true);
+    return line_reader::read_line_core(true);
+}
+
+int menu_filter_line_reader::process_key(int ch)
+{
+    int ret = (ch == CK_REDRAW) ? -1 : line_reader::process_key(ch);
+    m_menu->draw_title();
+    return ret;
+}
+
+void menu_filter_line_reader::print_segment(int s, int o) {}
+void menu_filter_line_reader::cursorto(int newcpos) {}
+#endif
+
+bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+{
+    bool validline;
+#ifdef USE_TILE_LOCAL
+    m_filter_text = linebuf; draw_title();
+    menu_filter_line_reader reader(this, linebuf, bufsz, bufsz);
+    reader.set_location(coord_def(0, 0));
+    validline = reader.read_line() != CK_ESCAPE;
+    m_filter_text = nullptr;
+    draw_title();
+#else
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    cgotoxy(1,1);
+    clear_to_end_of_line();
+    textcolour(WHITE);
+    cprintf("%s", prompt);
+    textcolour(LIGHTGREY);
+    line_reader reader(linebuf, bufsz, get_number_of_cols());
+    validline = !reader.read_line("");
+#endif
+    return validline;
+}
+
 bool Menu::process_key(int keyin)
 {
     if (items.empty())
@@ -427,7 +717,7 @@ bool Menu::process_key(int keyin)
             menu_action = ACT_EXECUTE;
 
         sel.clear();
-        update_title();
+        draw_title();
         return true;
     }
 #ifdef TOUCH_UI
@@ -439,7 +729,7 @@ bool Menu::process_key(int keyin)
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
-        update_title();
+        draw_title();
         return true;
     }
 
@@ -471,10 +761,7 @@ bool Menu::process_key(int keyin)
         nav = true;
         repaint = page_down();
         if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
-        {
-            repaint = (first_entry != 0);
-            first_entry = 0;
-        }
+            repaint = mdisplay->scroll_to_item(0);
         break;
     case CK_PGUP: case '<': case ';':
         nav = true;
@@ -490,31 +777,20 @@ bool Menu::process_key(int keyin)
         break;
     case CK_HOME:
         nav = true;
-        repaint = (first_entry != 0);
-        first_entry = 0;
+        repaint = mdisplay->scroll_to_item(0);
         break;
     case CK_END:
-    {
         nav = true;
-        const int breakpoint = items.size() - pagesize;
-        if (first_entry < breakpoint)
-        {
-            first_entry = breakpoint;
-            repaint = true;
-        }
+        repaint = mdisplay->scroll_to_item(INT_MAX);
         break;
-    }
     case CONTROL('F'):
     {
         if (!(flags & MF_ALLOW_FILTER))
             break;
-        char linebuf[80];
-        cgotoxy(1,1);
-        clear_to_end_of_line();
-        textcolour(WHITE);
-        cprintf("Select what? (regex) ");
-        textcolour(LIGHTGREY);
-        bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
+        char linebuf[80] = "";
+
+        const bool validline = title_prompt(linebuf, sizeof linebuf,
+                                            "Select what? (regex) ");
         if (validline && linebuf[0])
         {
             text_pattern tpat(linebuf, true);
@@ -550,15 +826,15 @@ bool Menu::process_key(int keyin)
                 InvEntry::set_show_cursor(true);
                 select_index(next, num);
                 get_selected(&sel);
-                draw_select_count(sel.size());
+                draw_title();
                 if (get_cursor() < next)
                 {
-                    first_entry = 0;
+                    mdisplay->scroll_to_item(0);
                     nav = true;
                 }
             }
 
-            if (!nav && (first_entry + pagesize - last_selected) == 1)
+            if (!nav && !in_page(last_selected))
             {
                 page_down();
                 nav = true;
@@ -588,11 +864,11 @@ bool Menu::process_key(int keyin)
             {
                 if (next_cursor < last_selected)
                 {
-                    first_entry = 0;
+                    mdisplay->scroll_to_item(0);
                     nav = true;
                     repaint = true;
                 }
-                else if ((first_entry + pagesize - last_selected) == 1)
+                else if (!in_page(last_selected))
                 {
                     page_down();
                     nav = true;
@@ -608,7 +884,7 @@ bool Menu::process_key(int keyin)
         break;
 
     case '_':
-        if (help_key() != "")
+        if (!help_key().empty())
         {
             show_specific_help(help_key());
             nav     = true;
@@ -647,9 +923,34 @@ bool Menu::process_key(int keyin)
         select_items(keyin, num);
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
-            return false;
+        {
+            if (!on_single_selection)
+                return false;
+#ifdef USE_TILE_LOCAL
+            // XXX: clear the title before we call the hook, so that it's not
+            // visible; the visible menu item range is set to [0,-1]
+            // (for reasons I haven't looked at), so items won't be visible.
+            formatted_string fs;
+            mdisplay->draw_title(fs);
+#endif
+#ifdef USE_TILE_WEB
+            // XXX: on_single_selection is designed to show UI without hiding
+            // the menu, but webtiles can't handle that at the moment, so hide
+            // the menu then show it after the hook has returned
+            tiles.pop_menu();
+#endif
+            if (!on_single_selection(*sel[0]))
+                return false;
+#ifdef USE_TILE_WEB
+            tiles.push_menu(this);
+            _webtiles_title_changed = false;
+#endif
+            deselect_all(true);
+            draw_menu();
+            return true;
+        }
 
-        draw_select_count(sel.size());
+        draw_title();
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -666,7 +967,7 @@ bool Menu::process_key(int keyin)
     if (!isadigit(keyin))
         num = -1;
 
-    if (nav && repaint || always_redraw())
+    if (nav && repaint)
     {
 #ifdef USE_TILE_WEB
         webtiles_update_scroll_pos();
@@ -684,80 +985,6 @@ bool Menu::allow_easy_exit() const
     return sel.empty();
 }
 
-bool Menu::draw_title_suffix(const string &s, bool titlefirst)
-{
-    if (crawl_state.doing_prev_cmd_again)
-        return true;
-
-#ifdef USE_TILE_WEB
-    webtiles_set_suffix(formatted_string(s, 0));
-#endif
-
-    int oldx = wherex(), oldy = wherey();
-
-    if (titlefirst)
-        draw_title();
-
-    int x = wherex();
-    if (x > get_number_of_cols() || x < 1)
-    {
-        cgotoxy(oldx, oldy);
-        return false;
-    }
-
-    // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
-    unsigned avail_width = get_number_of_cols() - x + 1;
-    string towrite = chop_string(s, avail_width);
-    cprintf("%s", towrite.c_str());
-
-    cgotoxy(oldx, oldy);
-    return true;
-}
-
-bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
-{
-    if (crawl_state.doing_prev_cmd_again)
-        return true;
-
-#ifdef USE_TILE_WEB
-    webtiles_set_suffix(fs);
-#endif
-
-    int oldx = wherex(), oldy = wherey();
-
-    if (titlefirst)
-        draw_title();
-
-    int x = wherex();
-    if (x > get_number_of_cols() || x < 1)
-    {
-        cgotoxy(oldx, oldy);
-        return false;
-    }
-
-    // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
-    const unsigned int avail_width = get_number_of_cols() - x + 1;
-    const unsigned int fs_length = fs.width();
-    if (fs_length > avail_width)
-    {
-        formatted_string fs_trunc = fs.chop(avail_width);
-        fs_trunc.display();
-    }
-    else
-    {
-        fs.display();
-        if (fs_length < avail_width)
-        {
-            char fmt[20];
-            sprintf(fmt, "%%%us", avail_width-fs_length);
-            cprintf(fmt, " ");
-        }
-    }
-
-    cgotoxy(oldx, oldy);
-    return true;
-}
-
 string Menu::get_select_count_string(int count) const
 {
     if (f_selitem)
@@ -767,19 +994,11 @@ string Menu::get_select_count_string(int count) const
         char buf[100] = "";
         if (count)
         {
-            snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
+            snprintf(buf, sizeof buf, " (%d item%s)", count,
                     (count > 1 ? "s" : ""));
         }
         return string(buf);
     }
-}
-
-void Menu::draw_select_count(int count, bool force)
-{
-    if (is_set(MF_QUIET_SELECT) || !force && !is_set(MF_MULTISELECT))
-        return;
-
-    draw_title_suffix(get_select_count_string(count));
 }
 
 vector<MenuEntry*> Menu::selected_entries() const
@@ -814,23 +1033,24 @@ void Menu::deselect_all(bool update_view)
             }
         }
     }
+    sel.clear();
+}
+
+int Menu::get_first_visible() const
+{
+    int a, b;
+    mdisplay->get_visible_items_range(a, b);
+    return a;
 }
 
 bool Menu::is_hotkey(int i, int key)
 {
-    int end = first_entry + pagesize;
-    if (end > static_cast<int>(items.size())) end = items.size();
-
     bool ishotkey = items[i]->is_hotkey(key);
-
-    return !is_set(MF_SELECT_BY_PAGE) ? ishotkey
-                                      : ishotkey && i >= first_entry && i < end;
+    return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
 }
 
 void Menu::select_items(int key, int qty)
 {
-    int x = wherex(), y = wherey();
-
     if (key == ',') // Select all or apply filter if there is one.
         select_index(-1, -2);
     else if (key == '*') // Invert selection.
@@ -839,7 +1059,7 @@ void Menu::select_items(int key, int qty)
         select_index(-1, 0);
     else
     {
-        int final = items.size();
+        int first_entry = get_first_visible(), final = items.size();
         bool selected = false;
 
         // Process all items, in case user hits hotkey for an
@@ -891,7 +1111,6 @@ void Menu::select_items(int key, int qty)
             }
         }
     }
-    cgotoxy(x, y);
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
@@ -925,12 +1144,6 @@ FeatureMenuEntry::FeatureMenuEntry(const string &str,
 }
 
 #ifdef USE_TILE
-PlayerMenuEntry::PlayerMenuEntry(const string &str) :
-    MenuEntry(str, MEL_ITEM, 1)
-{
-    quantity = 1;
-}
-
 bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons || tiles.empty())
@@ -938,6 +1151,16 @@ bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     tileset.insert(end(tileset), begin(tiles), end(tiles));
     return true;
+}
+#else
+bool MenuEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
+#endif
+
+#ifdef USE_TILE
+PlayerMenuEntry::PlayerMenuEntry(const string &str) :
+    MenuEntry(str, MEL_ITEM, 1)
+{
+    quantity = 1;
 }
 
 void MenuEntry::add_tile(tile_def tile)
@@ -1089,6 +1312,9 @@ bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.emplace_back(TILEI_NEW_STAIR, TEX_ICONS);
 
+    if (in_bounds(pos) && is_unknown_transporter(pos))
+        tileset.emplace_back(TILEI_NEW_TRANSPORTER, TEX_ICONS);
+
     return true;
 }
 
@@ -1102,7 +1328,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     const player_save_info &player = *static_cast<player_save_info*>(data);
     dolls_data equip_doll = player.doll;
 
-    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
     int p_order[TILEP_PART_MAX] =
     {
         TILEP_PART_SHADOW,  //  0
@@ -1115,12 +1341,12 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
+        TILEP_PART_DRCHEAD,  // 15
         TILEP_PART_HELM,
-        TILEP_PART_DRCHEAD  // 15
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
     };
 
     int flags[TILEP_PART_MAX];
@@ -1218,7 +1444,10 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 
 void Menu::select_index(int index, int qty)
 {
-    int si = index == -1 ? first_entry : index;
+    int first_vis, last_vis;
+    mdisplay->get_visible_items_range(first_vis, last_vis);
+
+    int si = index == -1 ? first_vis : index;
 
     if (index == -1)
     {
@@ -1274,34 +1503,54 @@ int Menu::get_entry_index(const MenuEntry *e) const
     return -1;
 }
 
-void Menu::draw_menu()
+void Menu::draw_menu(bool update_entries)
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
 
     clrscr();
+    mdisplay->set_offset(1 + title_height());
+
+    mdisplay->draw_items();
 
     draw_title();
-    draw_select_count(sel.size());
-    y_offset = 1 + title_height();
 
-    mdisplay->set_offset(y_offset);
+    int a, b;
+    mdisplay->get_visible_items_range(a, b);
+    if ((a > 0 && items[a-1]->level != MEL_END_OF_SECTION)
+        || (b < (int)items.size()-1 && items[b+1]->level != MEL_END_OF_SECTION)
+        || is_set(MF_ALWAYS_SHOW_MORE))
+    {
+        draw_more();
+    }
 
-    int end = first_entry + pagesize;
-    if (end > (int) items.size()) end = items.size();
-
-    for (int i = first_entry; i < end; ++i)
-        draw_item(i);
-
-    if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
-        mdisplay->draw_more();
+#ifdef USE_TILE_WEB
+    if (update_entries)
+    {
+        tiles.json_open_object();
+        tiles.json_write_string("msg", "update_menu");
+        tiles.json_write_int("total_items", items.size());
+        tiles.json_close_object();
+        tiles.finish_message();
+        if (items.size() > 0)
+            webtiles_update_items(0, items.size() - 1);
+    }
+#endif
 }
 
-void Menu::update_title()
+void Menu::draw_more()
 {
-    int x = wherex(), y = wherey();
-    draw_title();
-    cgotoxy(x, y);
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu");
+    tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
+    mdisplay->draw_more();
 }
 
 int Menu::item_colour(int, const MenuEntry *entry) const
@@ -1313,31 +1562,41 @@ int Menu::item_colour(int, const MenuEntry *entry) const
     return icol == -1 ? entry->colour : icol;
 }
 
+formatted_string Menu::calc_title() { return formatted_string(); }
+
 void Menu::draw_title()
 {
-    if (title)
+    if (!title || crawl_state.doing_prev_cmd_again)
+        return;
+
+    formatted_string fs;
+
+#ifdef USE_TILE_LOCAL
+    if (m_filter_text)
     {
-        cgotoxy(1, 1);
-        write_title();
+        fs.textcolour(WHITE);
+        fs.cprintf("Select what? (regex) %s", m_filter_text);
+    } else
+#endif
+        fs = calc_title();
+
+    if (fs.empty())
+    {
+        const bool first = (action_cycle == CYCLE_NONE
+                            || menu_action == ACT_EXECUTE);
+        if (!first)
+            ASSERT(title2);
+
+        auto col = item_colour(-1, first ? title : title2);
+        string text = (first ? title->get_text() : title2->get_text());
+
+        fs = formatted_string(col);
+
+        if (flags & MF_ALLOW_FORMATTING)
+            fs += formatted_string::parse_string(text);
+        else
+            fs.cprintf("%s", text.c_str());
     }
-}
-
-void Menu::write_title()
-{
-    const bool first = (action_cycle == CYCLE_NONE
-                        || menu_action == ACT_EXECUTE);
-    if (!first)
-        ASSERT(title2);
-
-    auto col = item_colour(-1, first ? title : title2);
-    string text = (first ? title->get_text() : title2->get_text());
-
-    formatted_string fs = formatted_string(col);
-
-    if (flags & MF_ALLOW_FORMATTING)
-        fs += formatted_string::parse_string(text);
-    else
-        fs.cprintf("%s", text.c_str());
 
     if (flags & MF_SHOW_PAGENUMBERS)
     {
@@ -1345,24 +1604,19 @@ void Menu::write_title()
         // page a bit less so. To make sense, we hack it so that your
         // current page is based on the first line you're seeing, *unless*
         // you're seeing the last item.
-        int numpages = items.empty() ? 1 : ((items.size()-1) / pagesize + 1);
-        int curpage = first_entry / pagesize + 1;
-        if (in_page(items.size() - 1))
-            curpage = numpages;
-        fs.cprintf(" (page %d of %d)", curpage, numpages);
-    }
-    fs.display();
 
+        if (in_page(items.size() - 1))
+            cur_page = num_pages;
+        fs.cprintf(" (page %d of %d)", cur_page, num_pages);
+    }
+
+    if (!is_set(MF_QUIET_SELECT) && is_set(MF_MULTISELECT))
+        fs.cprintf("%s", get_select_count_string(sel.size()).c_str());
+
+    mdisplay->draw_title(fs);
 #ifdef USE_TILE_WEB
     webtiles_set_title(fs);
 #endif
-
-    // Don't clear the next line if the title was exactly as wide as the
-    // screen; but do clear the current line if the title was empty.
-    const int x = wherex(), y = wherey();
-    if (x > 1 || text.empty())
-        cprintf("%-*s", get_number_of_cols() + 1 - x, "");
-    cgotoxy(x, y);
 }
 
 int Menu::title_height() const
@@ -1372,15 +1626,13 @@ int Menu::title_height() const
 
 bool Menu::in_page(int index) const
 {
-    return index >= first_entry && index < first_entry + pagesize;
+    return mdisplay->item_in_page(index);
 }
 
 void Menu::draw_item(int index) const
 {
     if (!in_page(index) || crawl_state.doing_prev_cmd_again)
         return;
-
-    cgotoxy(1, y_offset + index - first_entry);
 
     draw_index_item(index, items[index]);
 }
@@ -1390,66 +1642,27 @@ void Menu::draw_index_item(int index, const MenuEntry *me) const
     if (crawl_state.doing_prev_cmd_again)
         return;
 
-    if (f_drawitem)
-        (*f_drawitem)(index, me);
-    else
-        draw_stock_item(index, me);
-}
-
-void Menu::draw_stock_item(int index, const MenuEntry *me) const
-{
     mdisplay->draw_stock_item(index, me);
 }
 
 bool Menu::page_down()
 {
-    int old_first = first_entry;
-
-    if ((int) items.size() > first_entry + pagesize)
-    {
-        first_entry += pagesize;
-        //if (first_entry + pagesize > (int) items.size())
-        //    first_entry = items.size() - pagesize;
-
-        if (old_first != first_entry)
-            return true;
-    }
-    return false;
+    return mdisplay->scroll_page(1);
 }
 
 bool Menu::page_up()
 {
-    int old_first = first_entry;
-
-    if (first_entry > 0)
-    {
-        if ((first_entry -= pagesize) < 0)
-            first_entry = 0;
-
-        if (old_first != first_entry)
-            return true;
-    }
-    return false;
+    return mdisplay->scroll_page(-1);
 }
 
 bool Menu::line_down()
 {
-    if (first_entry + pagesize < (int) items.size())
-    {
-        ++first_entry;
-        return true;
-    }
-    return false;
+    return mdisplay->scroll_line(1);
 }
 
 bool Menu::line_up()
 {
-    if (first_entry > 0)
-    {
-        --first_entry;
-        return true;
-    }
-    return false;
+    return mdisplay->scroll_line(-1);
 }
 
 #ifdef USE_TILE_WEB
@@ -1485,6 +1698,7 @@ void Menu::webtiles_write_menu(bool replace) const
     tiles.json_write_int("total_items", count);
     tiles.json_write_int("chunk_start", start - webtiles_section_start());
 
+    int first_entry = get_first_visible();
     if (first_entry != 0 && !is_set(MF_START_AT_END))
         tiles.json_write_int("jump_to", first_entry - webtiles_section_start());
 
@@ -1503,9 +1717,8 @@ void Menu::webtiles_scroll(int first)
     if (first >= (int) items.size()) first = (int) items.size() - 1;
     if (first < 0) first = 0;
 
-    if (first_entry != first)
+    if (mdisplay->scroll_to_item(first))
     {
-        first_entry = first;
         draw_menu();
         update_screen();
         webtiles_update_scroll_pos();
@@ -1544,15 +1757,6 @@ void Menu::webtiles_set_title(const formatted_string title_)
     {
         _webtiles_title_changed = true;
         _webtiles_title = title_;
-    }
-}
-
-void Menu::webtiles_set_suffix(const formatted_string suffix)
-{
-    if (suffix.to_colour_string() != _webtiles_suffix.to_colour_string())
-    {
-        _webtiles_title_changed = true;
-        _webtiles_suffix = suffix;
     }
 }
 
@@ -1608,7 +1812,7 @@ void Menu::webtiles_update_scroll_pos() const
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "menu_scroll");
-    tiles.json_write_int("first", first_entry);
+    tiles.json_write_int("first", get_first_visible());
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -1618,7 +1822,6 @@ void Menu::webtiles_write_title() const
     // the title object only exists for backwards compatibility
     tiles.json_open_object("title");
     tiles.json_write_string("text", _webtiles_title.to_colour_string());
-    tiles.json_write_string("suffix", _webtiles_suffix.to_colour_string());
     tiles.json_close_object("title");
 }
 
@@ -1689,18 +1892,19 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 
 void Menu::webtiles_update_section_boundaries()
 {
+    int first_entry = get_first_visible();
     if (first_entry < webtiles_section_start()
         || webtiles_section_end() <= first_entry)
     {
         _webtiles_section_start = first_entry;
         while (_webtiles_section_start > 0
-               && items[_webtiles_section_start - 1]->level != MEL_TITLE)
+               && items[_webtiles_section_start - 1]->level != MEL_END_OF_SECTION)
         {
             _webtiles_section_start--;
         }
         _webtiles_section_end = min(first_entry + 1, (int) items.size());
         while (_webtiles_section_end < (int) items.size()
-               && items[_webtiles_section_end]->level != MEL_TITLE)
+               && items[_webtiles_section_end]->level != MEL_END_OF_SECTION)
         {
             _webtiles_section_end++;
         }
@@ -1738,7 +1942,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    : pagesize(0), columns()
+    : columns()
 {
     ASSERT(cols > 0);
 
@@ -1759,11 +1963,6 @@ column_composer::column_composer(int cols, ...)
     va_end(args);
 }
 
-void column_composer::set_pagesize(int ps)
-{
-    pagesize = ps;
-}
-
 void column_composer::clear()
 {
     flines.clear();
@@ -1782,11 +1981,8 @@ void column_composer::add_formatted(int ncol,
     vector<formatted_string> newlines;
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
-    if (add_separator && col.lines && !segs.empty()
-        && (!pagesize || col.lines % pagesize))
-    {
+    if (add_separator && col.lines && !segs.empty())
         newlines.emplace_back();
-    }
 
     for (const string &seg : segs)
         newlines.push_back(formatted_string::parse_string(seg));
@@ -1839,16 +2035,28 @@ void column_composer::compose_formatted_column(
     }
 }
 
-formatted_scroller::formatted_scroller() : Menu()
+formatted_scroller::formatted_scroller() : Menu(MF_NOSELECT)
 {
+#ifdef USE_TILE_LOCAL
+    delete mdisplay;
+    mdisplay = new MenuDisplayText(this);
+#endif
     set_highlighter(nullptr);
 }
 
-formatted_scroller::formatted_scroller(int _flags, const string& s) :
-    Menu(_flags)
+formatted_scroller::formatted_scroller(int _flags, const string& s) : Menu()
 {
+    set_flags(_flags);
     set_highlighter(nullptr);
     add_text(s);
+}
+
+void formatted_scroller::set_flags(int new_flags, bool use_options)
+{
+    ASSERT(!(new_flags & MF_MULTISELECT));
+    if (!(new_flags & MF_SINGLESELECT))
+        new_flags |= MF_NOSELECT;
+    Menu::set_flags(new_flags);
 }
 
 void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
@@ -1891,7 +2099,11 @@ void formatted_scroller::add_raw_text(const string& s, bool new_line,
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
                                                    int hotkey)
 {
+#ifdef USE_TILE_LOCAL
+    MenuEntry* me = new MenuEntry(fs.to_colour_string());
+#else
     MenuEntry* me = new MenuEntry;
+#endif
     me->data = new formatted_string(fs);
     if (hotkey)
     {
@@ -1920,7 +2132,10 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
     if (me->data == nullptr)
         Menu::draw_index_item(index, me);
     else
+    {
+        static_cast<MenuDisplayText*>(mdisplay)->cgotoxy_for_index(index);
         static_cast<formatted_string*>(me->data)->display();
+    }
 }
 
 #ifdef USE_TILE_WEB
@@ -1975,13 +2190,17 @@ string get_linebreak_string(const string& s, int maxcol)
     return r;
 }
 
-bool formatted_scroller::jump_to(int i)
+bool formatted_scroller::jump_to(int i, bool no_scroll)
 {
-    if (i == first_entry)
+    MenuDisplayText *display = static_cast<MenuDisplayText*>(mdisplay);
+    if (no_scroll && !display->jump_to_item(i))
+        return false;
+    if (!no_scroll && !display->scroll_to_item(i))
         return false;
 
-    first_entry = i;
-
+    // jump_to() is used to jump between sections of a formatted_scroller
+    // we only want to re-show the menu when we jump between sections, which
+    // is why this code doesn't belong in MenuDisplayText::scroll_to_item()
 #ifdef USE_TILE_WEB
     webtiles_update_section_boundaries();
     if (tiles.is_in_menu(this))
@@ -1994,81 +2213,11 @@ bool formatted_scroller::jump_to(int i)
     return true;
 }
 
-// Don't scroll past MEL_TITLE entries
-bool formatted_scroller::page_down()
-{
-    const int old_first = first_entry;
-
-    if ((int) items.size() <= first_entry + pagesize)
-        return false;
-
-    // If, when scrolling forward, we encounter a MEL_TITLE
-    // somewhere in the newly displayed page, stop scrolling
-    // just before it becomes visible
-    int target;
-    for (target = first_entry; target < first_entry + pagesize; ++target)
-    {
-        const int offset = target + pagesize;
-        if (offset < (int)items.size() && items[offset]->level == MEL_TITLE)
-            break;
-    }
-    first_entry = target;
-    return old_first != first_entry;
-}
-
-bool formatted_scroller::page_up()
-{
-    if (items.empty())
-        return false;
-
-    const int old_first = first_entry;
-
-    // If, when scrolling backward, we encounter a MEL_TITLE
-    // somewhere in the newly displayed page, stop scrolling
-    // just before it becomes visible
-
-    if (items[first_entry]->level == MEL_TITLE)
-        return false;
-
-    for (int i = 0; i < pagesize; ++i)
-    {
-        if (first_entry == 0 || items[first_entry-1]->level == MEL_TITLE)
-            break;
-
-        --first_entry;
-    }
-
-    return old_first != first_entry;
-}
-
-bool formatted_scroller::line_down()
-{
-    if (first_entry + pagesize < static_cast<int>(items.size())
-        && items[first_entry + pagesize]->level != MEL_TITLE)
-    {
-        ++first_entry;
-        return true;
-    }
-    return false;
-}
-
-bool formatted_scroller::line_up()
-{
-    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE
-        && items[first_entry]->level != MEL_TITLE)
-    {
-        --first_entry;
-        return true;
-    }
-    return false;
-}
-
 bool formatted_scroller::jump_to_hotkey(int keyin)
 {
     for (unsigned int i = 0; i < items.size(); ++i)
         if (items[i]->is_hotkey(keyin))
-            return jump_to(i);
-
+            return jump_to(i, true);
     return false;
 }
 
@@ -2127,12 +2276,8 @@ bool formatted_scroller::process_key(int keyin)
         repaint = jump_to(0);
         break;
     case CK_END:
-    {
-        const int breakpoint = items.size() - pagesize;
-        if (first_entry < breakpoint)
-            repaint = jump_to(breakpoint);
+        repaint = jump_to(INT_MAX);
         break;
-    }
     default:
         moved = false;
         if (is_set(MF_SINGLESELECT))
@@ -2775,10 +2920,9 @@ int MenuItem::get_vertical_offset() const
 }
 #endif
 
-#ifdef USE_TILE_LOCAL
-TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
-#else
 TextItem::TextItem()
+#ifdef USE_TILE_LOCAL
+                        : m_font_buf(tiles.get_crt_font())
 #endif
 {
 }
@@ -2905,6 +3049,144 @@ void TextItem::_wrap_text()
         m_render_text = m_render_text.substr(pos);
     }
     // m_render_text now holds the fitting part of the text, ready for render!
+}
+
+
+EditableTextItem::EditableTextItem() : TextItem(),
+                        editable(true), in_edit_mode(false), edit_width(-1),
+                        tag("generic_text_box")
+{
+}
+
+void EditableTextItem::set_editable(bool e, int width)
+{
+    editable = e;
+    edit_width = width;
+}
+
+/**
+ * A rudimentary textbox editing mode.
+ *
+ * This uses a line_reader to read some text at the location of the TextItem.
+ * It does not do anything with the edit results! You will need to call this
+ * function at the right point in the gui, and do something appropriate with
+ * the results elsewhere.
+ *
+ * @param custom_prefill a string to populate the box; if null, this will use
+ *                          the current text.
+ * @param keyproc_fun an optional keyproc for the line_reader
+  *                     (see lin_reader::set_keyproc).
+ *
+ * @return the result of the editing, including the string and the int
+ *          returned by the line_reader.
+ */
+edit_result EditableTextItem::edit(const string *custom_prefill,
+                                   const line_reader::keyproc keyproc_fun)
+{
+    char buf[80];
+
+    if (!editable)
+        return edit_result(string(m_text), 0);
+
+    // this is needed because render will get called during the input loop.
+    unwind_bool e_mode(in_edit_mode, true);
+
+    int e_width;
+    int box_width = m_max_coord.x - m_min_coord.x;
+    if (edit_width <= 0)
+        e_width = box_width;
+    else
+        e_width = edit_width;
+
+    e_width = min(e_width, (int) sizeof buf - 1);
+
+    // TODO: make width not dependent on prefill string
+    string prefill = make_stringf("%-*s", e_width,
+        custom_prefill ? custom_prefill->c_str() : m_text.c_str());
+
+    strncpy(buf, prefill.c_str(), e_width);
+    buf[e_width] = 0;
+
+    mouse_control mc(MOUSE_MODE_PROMPT);
+
+#ifdef USE_TILE_LOCAL
+    m_line_buf.clear();
+    m_line_buf.add_square(m_min_coord.x, m_min_coord.y,
+                          m_max_coord.x, m_max_coord.y, term_colours[RED]);
+    m_line_buf.draw();
+
+    unwind_bool dirty(m_dirty, false);
+
+    fontbuf_line_reader reader(buf, e_width+1, m_font_buf, 80);
+    reader.set_location(coord_def(m_min_coord.x,
+                                  m_min_coord.y + get_vertical_offset()));
+#else
+    line_reader reader(buf, e_width+1, 80);
+    reader.set_location(m_min_coord);
+#endif
+
+    reader.set_edit_mode(EDIT_MODE_OVERWRITE);
+    if (keyproc_fun)
+        reader.set_keyproc(keyproc_fun);
+
+#ifdef USE_TILE_WEB
+    reader.set_prompt(prompt);
+    reader.set_tag(tag);
+#endif
+
+    reader.set_colour(COLOUR_INHERIT, m_highlight_colour);
+    int result = reader.read_line(false, true);
+
+#ifdef USE_TILE_LOCAL
+    m_line_buf.clear();
+    m_line_buf.draw();
+#endif
+
+    return edit_result(string(buf), result);
+}
+
+void EditableTextItem::set_tag(string t)
+{
+    tag = t;
+}
+
+void EditableTextItem::set_prompt(string p)
+{
+    prompt = p;
+}
+
+bool EditableTextItem::selected() const
+{
+    return false;
+}
+
+bool EditableTextItem::can_be_highlighted() const
+{
+    // TODO: make this work better
+    return false;
+}
+
+void EditableTextItem::render()
+{
+#ifdef USE_TILE_LOCAL
+    if (in_edit_mode)
+    {
+        m_line_buf.add_square(m_min_coord.x, m_min_coord.y,
+                              m_max_coord.x, m_max_coord.y,
+                              term_colours[m_highlight_colour]);
+        m_line_buf.draw();
+        // this relies on m_font_buf being modified by the reader
+        m_font_buf.draw();
+    }
+    else
+    {
+        m_line_buf.clear();
+        m_line_buf.draw();
+        TextItem::render();
+    }
+#else
+    TextItem::render();
+#endif //USE_TILE_LOCAL
 }
 
 NoSelectTextItem::NoSelectTextItem()
@@ -3054,7 +3336,7 @@ void SaveMenuItem::set_doll(dolls_data doll)
 void SaveMenuItem::_pack_doll()
 {
     m_tiles.clear();
-    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
     int p_order[TILEP_PART_MAX] =
     {
         TILEP_PART_SHADOW,  //  0
@@ -3067,12 +3349,12 @@ void SaveMenuItem::_pack_doll()
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
+        TILEP_PART_DRCHEAD,  // 15
         TILEP_PART_HELM,
-        TILEP_PART_DRCHEAD  // 15
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
     };
 
     int flags[TILEP_PART_MAX];
@@ -3732,6 +4014,10 @@ MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
 
 MenuScroller::~MenuScroller()
 {
+#ifdef USE_TILE_LOCAL
+    delete m_arrow_up;
+    delete m_arrow_down;
+#endif
     deleteAll(m_entries);
 }
 
@@ -4194,7 +4480,7 @@ MenuItem* MenuScroller::_find_item_by_direction(int start_index,
 }
 
 MenuDescriptor::MenuDescriptor(PrecisionMenu* parent): m_parent(parent),
-    m_active_item(nullptr)
+    m_active_item(nullptr), override_text("")
 {
     ASSERT(m_parent != nullptr);
 }
@@ -4246,13 +4532,29 @@ void MenuDescriptor::render()
     m_desc_item.render();
 }
 
+/**
+ * This allows an arbitrary string to show up in the descriptor, temporarily
+ * overriding whatever is there. The override will last until the descriptor
+ * next changes. Empty strings are not used.
+ *
+ * @param t a string to show in the MenuDescriptor. The empty string will clear
+ *          any existing override.
+ */
+void MenuDescriptor::override_description(const string &t)
+{
+    override_text = t;
+    render();
+}
+
+
 void MenuDescriptor::_place_items()
 {
     MenuItem* tmp = m_parent->get_active_item();
     if (tmp != m_active_item)
     {
-        // update
+        // the active item has changed -- update
         m_active_item = tmp;
+        override_text = "";
 #ifndef USE_TILE_LOCAL
         textcolour(BLACK);
         textbackground(BLACK);
@@ -4271,6 +4573,8 @@ void MenuDescriptor::_place_items()
         else
             m_desc_item.set_text(m_active_item->get_description_text());
     }
+    else if (override_text.size() > 0)
+        m_desc_item.set_text(override_text);
 }
 
 BoxMenuHighlighter::BoxMenuHighlighter(PrecisionMenu *parent): m_parent(parent),

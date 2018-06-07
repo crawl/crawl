@@ -41,7 +41,7 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 string lowercase_string(const string &s)
 {
     string res;
-    ucs_t c;
+    char32_t c;
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
         res.append(buf, wctoutf8(buf, towlower(c)));
@@ -78,7 +78,7 @@ string uppercase_string(string s)
 // least unless you use some more powerful API.
 string lowercase_first(string s)
 {
-    ucs_t c;
+    char32_t c;
     if (!s.empty())
     {
         utf8towc(&c, &s[0]);
@@ -92,7 +92,7 @@ string uppercase_first(string s)
     // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
     // Too bad, there's no standard function to handle that character, and I
     // don't care enough.
-    ucs_t c;
+    char32_t c;
     if (!s.empty())
     {
         utf8towc(&c, &s[0]);
@@ -141,20 +141,29 @@ static const string _get_indent(const string &s)
 // The provided string is consumed!
 string wordwrap_line(string &s, int width, bool tags, bool indent)
 {
+    ASSERT(width > 0);
+
     const char *cp0 = s.c_str();
     const char *cp = cp0, *space = 0;
-    ucs_t c;
+    char32_t c;
+    bool seen_nonspace = false;
 
     while (int clen = utf8towc(&c, cp))
     {
         int cw = wcwidth(c);
         if (c == ' ')
-            space = cp;
+        {
+            if (seen_nonspace)
+                space = cp;
+        }
         else if (c == '\n')
         {
             space = cp;
             break;
         }
+        else
+            seen_nonspace = true;
+
         if (c == '<' && tags)
         {
             ASSERT(cw == 1);
@@ -202,19 +211,27 @@ string wordwrap_line(string &s, int width, bool tags, bool indent)
         cp = space;
     const string ret = s.substr(0, cp - cp0);
 
-    const string indentation = (indent && c != '\n') ? _get_indent(s) : "";
+    const string indentation = (indent && c != '\n' && seen_nonspace)
+                               ? _get_indent(s) : "";
 
     // eat all trailing spaces and up to one newline
     while (*cp == ' ')
         cp++;
     if (*cp == '\n')
         cp++;
+
+#ifdef ASSERTS
+    const size_t inputlength = s.length();
+#endif
     s.erase(0, cp - cp0);
 
     // if we had to break a line, reinsert the indendation
     if (indent && c != '\n')
         s = indentation + s;
 
+    // Make sure the remaining string actually shrank, or else we're likely
+    // to throw our caller into an infinite loop.
+    ASSERT(inputlength > s.length());
     return ret;
 }
 

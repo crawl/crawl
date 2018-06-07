@@ -6,13 +6,16 @@
 
 #include "ability.h"
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-#include "process_desc.h"
+#include "stringutil.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "viewgeom.h"
 
 AbilityRegion::AbilityRegion(const TileRegionInit &init) : GridRegion(init)
@@ -63,6 +66,9 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
 
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
+        // TODO get_talent returns ABIL_NON_ABILITY if you are confused,
+        // but not if you're silenced/penanced, so you only get a message in the
+        // latter case. We'd like these three cases to behave similarly.
         talent tal = get_talent(ability, true);
         if (tal.which == ABIL_NON_ABILITY || !activate_talent(tal))
             flush_input_buffer(FLUSH_ON_FAILURE);
@@ -70,7 +76,7 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
     }
     else if (ability != NUM_ABILITIES && event.button == MouseEvent::RIGHT)
     {
-        describe_talent(get_talent(ability, false));
+        describe_ability(ability);
         redraw_screen();
         return CK_MOUSE_CMD;
     }
@@ -108,12 +114,8 @@ bool AbilityRegion::update_tip_text(string& tip)
         cmd.push_back(CMD_USE_ABILITY);
     }
 
-    // TODO: command to display abilities outside of use
-#if 0
-    tip += "\n[R-Click] Describe (%)";
-    cmd.push_back(CMD_DISPLAY_SPELLS);
+    tip += "\n[R-Click] Describe";
     insert_commands(tip, cmd);
-#endif
 
     return true;
 }
@@ -140,11 +142,7 @@ bool AbilityRegion::update_alt_text(string &alt)
     describe_info inf;
     inf.body << get_ability_desc(ability);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 
@@ -194,7 +192,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     desc.idx      = (int) ability;
     desc.quantity = ability_mp_cost(ability);
 
-    if (!check_ability_possible(ability, true, true))
+    if (!check_ability_possible(ability, true))
         desc.flag |= TILEI_FLAG_INVALID;
 
     return desc;

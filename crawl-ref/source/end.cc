@@ -16,13 +16,14 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "los.h"
 #include "macro.h"
 #include "message.h"
+#include "misc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
@@ -33,6 +34,33 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
+
+/**
+ * Should crawl restart on game end, depending on restart options and options
+ * (command-line or RC) that bypass the startup menu?
+ *
+ * @param saved whether the game ended by saving
+ */
+bool crawl_should_restart(game_exit exit)
+{
+#ifdef DGAMELAUNCH
+    return false;
+#else
+#ifdef USE_TILE_WEB
+    if (is_tiles() && Options.name_bypasses_menu)
+        return false;
+#endif
+    if (exit == game_exit::crash)
+        return false;
+    if (exit == game_exit::abort || exit == game_exit::unknown)
+        return true; // always restart on aborting out of a menu
+    bool ret =
+        tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
+    if (exit == game_exit::save)
+        ret = ret && Options.restart_after_save;
+    return ret;
+#endif
+}
 
 void cio_cleanup()
 {
@@ -216,10 +244,38 @@ NORETURN void screen_end_game(string text)
             get_ch();
     }
 
-    game_ended();
+    game_ended(game_exit::abort); // TODO: is this the right exit condition?
 }
 
-NORETURN void end_game(scorefile_entry &se)
+static game_exit _kill_method_to_exit(kill_method_type kill)
+{
+    switch (kill)
+    {
+        case KILLED_BY_QUITTING: return game_exit::quit;
+        case KILLED_BY_WINNING:  return game_exit::win;
+        case KILLED_BY_LEAVING:  return game_exit::leave;
+        default:                 return game_exit::death;
+    }
+}
+
+static string _exit_type_to_string(game_exit e)
+{
+    // some of these may be used by webtiles, check before editing
+    switch (e)
+    {
+        case game_exit::unknown: return "unknown";
+        case game_exit::win:     return "won";
+        case game_exit::leave:   return "bailed out";
+        case game_exit::quit:    return "quit";
+        case game_exit::death:   return "dead";
+        case game_exit::save:    return "save";
+        case game_exit::abort:   return "abort";
+        case game_exit::crash:   return "crash";
+    }
+    return "BUGGY EXIT TYPE";
+}
+
+NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 {
     for (auto &item : you.inv)
         if (item.defined() && item_type_unknown(item))
@@ -229,13 +285,14 @@ NORETURN void end_game(scorefile_entry &se)
 
     _delete_files();
 
+    kill_method_type death_type = (kill_method_type) se.get_death_type();
+
     // death message
-    if (se.get_death_type() != KILLED_BY_LEAVING
-        && se.get_death_type() != KILLED_BY_QUITTING
-        && se.get_death_type() != KILLED_BY_WINNING)
+    if (death_type != KILLED_BY_LEAVING && death_type != KILLED_BY_QUITTING
+        && death_type != KILLED_BY_WINNING)
     {
         canned_msg(MSG_YOU_DIE);
-        xom_death_message((kill_method_type) se.get_death_type());
+        xom_death_message(death_type);
 
         switch (you.religion)
         {
@@ -268,8 +325,8 @@ NORETURN void end_game(scorefile_entry &se)
         case GOD_YREDELEMNUL:
             if (you.undead_state() != US_ALIVE)
                 simple_god_message(" claims you as an undead slave.");
-            else if (se.get_death_type() != KILLED_BY_DISINT
-                     && se.get_death_type() != KILLED_BY_LAVA)
+            else if (death_type != KILLED_BY_DISINT
+                  && death_type != KILLED_BY_LAVA)
             {
                 mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
                      "zombie.");
@@ -299,8 +356,8 @@ NORETURN void end_game(scorefile_entry &se)
 
         default:
             if (will_have_passive(passive_t::goldify_corpses)
-                && se.get_death_type() != KILLED_BY_DISINT
-                && se.get_death_type() != KILLED_BY_LAVA)
+                && death_type != KILLED_BY_DISINT
+                && death_type != KILLED_BY_LAVA)
             {
                 mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
             }
@@ -313,8 +370,6 @@ NORETURN void end_game(scorefile_entry &se)
         if (crawl_state.game_is_hints())
             hints_death_screen();
     }
-    else
-        you.delay_queue.clear(); // don't lose ev for taking the exit...
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
@@ -329,14 +384,15 @@ NORETURN void end_game(scorefile_entry &se)
         tiles.send_dump_info("morgue", fname);
 #endif
 
+    const game_exit exit_reason = _kill_method_to_exit(death_type);
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
-    string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out" :
-                                                               "dead";
-#ifdef DGL_WHEREIS
+    const string reason = _exit_type_to_string(exit_reason);
+
+# ifdef DGL_WHEREIS
     whereis_record(reason.c_str());
-#endif
+# endif
+#else
+    UNUSED(_exit_type_to_string);
 #endif
 
     if (!crawl_state.seen_hups)
@@ -366,7 +422,8 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5);
+    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+                        hiscore_index);
 
 #ifndef DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",
@@ -377,47 +434,40 @@ NORETURN void end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         get_ch();
 
-    if (se.get_death_type() == KILLED_BY_WINNING)
-        crawl_state.last_game_won = true;
-
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);
 #endif
 
-    game_ended();
+    game_ended(exit_reason);
 }
 
-NORETURN void game_ended()
+NORETURN void game_ended(game_exit exit, const string &message)
 {
-    if (!crawl_state.seen_hups)
-        throw game_ended_condition();
-    else
-        end(0);
-}
-
-NORETURN void game_ended_with_error(const string &message)
-{
-    if (crawl_state.seen_hups)
-        end(1);
-
-#ifdef USE_TILE_WEB
-    tiles.send_exit_reason("error", message);
-#endif
-
-    if (Options.restart_after_game)
+    if (crawl_state.marked_as_won &&
+        (exit == game_exit::death || exit == game_exit::leave))
     {
-        if (crawl_state.io_inited)
+        // used in tutorials
+        exit = game_exit::win;
+    }
+    if (crawl_state.seen_hups ||
+        (exit == game_exit::crash && !crawl_should_restart(game_exit::crash)))
+    {
+        const int retval = exit == game_exit::crash ? 1 : 0;
+        if (message.size() > 0)
         {
-            mprf(MSGCH_ERROR, "%s", message.c_str());
-            more();
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("error", message);
+#endif
+            end(retval, false, "%s\n", message.c_str());
         }
         else
-        {
-            fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
-            getchar();
-        }
-        game_ended();
+            end(retval);
     }
-    else
-        end(1, false, "%s", message.c_str());
+    throw game_ended_condition(exit, message);
+}
+
+// note: this *will not* print a crash dump, and so should probably be avoided.
+NORETURN void game_ended_with_error(const string &message)
+{
+    game_ended(game_exit::crash, message);
 }

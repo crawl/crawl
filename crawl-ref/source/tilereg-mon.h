@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MON_H
-#define TILEREG_MON_H
+#pragma once
 
 #include "tilereg-grid.h"
 
@@ -28,5 +27,4 @@ protected:
     vector<monster_info> m_mon_info;
 };
 
-#endif
 #endif

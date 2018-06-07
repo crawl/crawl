@@ -3,12 +3,13 @@
  * @brief Functions used to print player related info.
 **/
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
 
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
 #endif
+
+void reset_hud();
 
 void update_turn_count();
 
@@ -16,7 +17,7 @@ void print_stats();
 void print_stats_level();
 void draw_border();
 
-void redraw_screen();
+void redraw_screen(bool show_updates = true);
 
 string mpr_monster_list(bool past = false);
 int update_monster_pane();
@@ -26,9 +27,6 @@ int equip_name_to_slot(const char *s);
 
 void print_overview_screen();
 
+string mutation_overview();
+
 string dump_overview_screen(bool full_id);
-
-string magic_res_adjective(int mr);
-string stealth_desc(int stealth);
-
-#endif

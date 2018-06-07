@@ -30,13 +30,19 @@ This includes: creation of projectiles (such as Magic Dart), creation of clouds
 nothing.
 
 This does not include: transmutations (creating something from something else),
-or spells that are specifically flavoured so as not to be conjurations.
+summoning (calling in a pre-existing entity), or spells that are specifically
+flavoured so as not to be conjurations. (Whatever those are.)
+
+Conjurations are always damage spells; this extends to the creation of
+damaging clouds, but anything more indirect is probably out of the school's
+scope.
 
 Hexes
 =====
 
 Hexes are spells that affect things and monsters (usually negatively). They
-never do direct damage nor change fundamental state of anything.
+cannot do direct damage nor change fundamental state of anything without
+another spell school being involved.
 
 If we had spells that bestow a curse on someone or something, make an item
 zap anyone who touched it, enlarge a person or give him a nasty itch, they
@@ -62,6 +68,9 @@ Fire
 All spells involving fire of any kind.
 
 This includes: conjurations of fire, spells involving heat or burning, etc.
+Fire cannot produce non-damage, 'utility' effects without other schools being
+involved, but can be used to create flame clouds or, potentially, temporary
+lava.
 
 Ice
 ===
@@ -69,6 +78,10 @@ Ice
 All spells involving ice or cold of any kind.
 
 This includes: conjurations of ice, spells involving freezing or cooling, etc.
+Ice is a versatile element, and can produce direct damage (with a focus on
+damage that partially ignores elemental resistances), freezing clouds, utility
+effects (especially defensive ones), and debilitating effects, especially
+slowing.
 
 Transmutation
 =============
@@ -77,19 +90,9 @@ Transmutation is the act of converting one thing into another thing. This may
 also include the fundamental change of the state of a thing, whether or not that
 change is permanent.
 
-This includes: converting your body into another form, converting corpses into
-potions, polymorphing creatures into other creatures, altering yourself by
-giving mutations.
-
-This specifically includes: the act of Digging and Liquefaction: converting
-parts of the ground (or walls) into liquid.
-
-This specifically excludes: branding spells: You are not changing the
-fundamental state of the weapon. It also excludes explosive deconstruction
-spells, such as Shatter, Sandblast and Lee's Rapid Deconstruction: you are
-breaking the object into pieces, rather than transmuting it into pieces. The
-fundamental state of the object remains the same -- if you could put all the
-pieces back together.
+This includes: converting your body into another form, polymorphing creatures
+into other creatures, converting rock into liquid, and the creation and
+manipulation of mutagenic radiation.
 
 Caveat: there was a trend towards including the Transmutation spell in most
 schools relating to Earth. Think very carefully about whether a new Earth spell
@@ -105,7 +108,7 @@ unholiness in general.
 
 This includes: all spells relating to the raising of corpses as undead, be they
 as zombies, spectral creatures, simulacra or skeletons; bolts of draining, pain,
-vampiric draining, revivification; fulsome distillation; etc.
+vampiric draining, revivification; etc.
 
 This specifically includes: regeneration. The flavour of this spell is that your
 wounds are reanimated by necromantic magic. This act is considered unholy by its
@@ -140,49 +143,31 @@ being created).
 
 All summoned monsters are Abjurable; all transmuted monsters are not.
 
-While Summoning is currently limited to the summoning of monsters, it is not
-far-fetched to believe that it could be extended to summons of other types. This
-could even be the summoning of specific areas of land (such as a section of the
-Swamp, as proposed in the 'Summon Swamp' spell).
-
-Divination
-==========
-
-Divination is the act of learning something through magical means. In these
-instances this information would be the location of a monster, or information
-about that monster, that is not otherwise attainable through natural means, or
-that is specifically obtained through an act of divination.
-
-There are no player-learnable Divination spells. The skill itself no longer
-exists, though the spell-type flag does for purposes of cards, God abilities,
-etc.
+Note that Summoning is not limited to the summoning of monsters; it can be used
+to summon surrounding terrain as well, as with Summon Forest.
 
 Translocation
 =============
 
 This is the act of moving something through magical means, sometimes via
-portals. This may specifically be described as indirect movement via magic,
-wherein moving something from point A to point C is done by magic, avoiding
-interaction with point B, as opposed to direct, continuous movement, which goes
-from point A, to point B, finally to point C.
+portals.
 
 This includes teleportation, the indirect movement from one place to another, and
 blinking, which is the same but for shorter distances. It also includes the
-creation of portals of any description, such as banishment (the creation of a
-portal to the Abyss), Malign Gateway (the creation of a portal to an undefined
-location), and Portal Projectile (the creation of a portal to a specific, nearby
-location).
+creation of portals of any description, such as Malign Gateway (the creation of a
+portal to an undefined location) or Portal Projectile (the creation of a portal
+to a specific, nearby location).
 
 This also specifically includes spells which cause things to be continuously
-moved from one location to another, such as Apportation.
+moved from one location to another, such as Apportation or Gell's Gravitas.
 
 Poison
 ======
 
 All spells involving poison of any kind.
 
-This includes: the poisoning of weapons, the creation of poisoned projectiles
-(in combination with the Conjuration school), or anything involving poison.
+Poison is specifically intended to be relatively strong early on and to
+fall off later, to create a distinct experience from other spell schools.
 
 This specifically excludes: acid and acid-related spells.
 
@@ -192,6 +177,14 @@ Earth
 All spells involving the earth specifically as an element.
 
 This includes: spells that affect the earth or earth-based substances.
+
+The school is mainly focused on damaging spells, especially single-target
+spells; multi-target damage spells tend to be more limited in number and in
+targeting applicability than those provided by other elemental schools. It
+also uses 'fragment' damage, which is heavily affected by AC.
+
+Other effects provided include manipulation of solid terrain for utility
+(Passwall, Leda's), and petrification (Statue Form, Petrify).
 
 Air
 ===
@@ -203,7 +196,13 @@ manipulating air flow, though not currently flavoured as such), the creation
 of clouds (in combination with the relevant element and the school of
 Conjurations), etc.
 
-This also specifically includes electricity and electrical forces.
+This also specifically includes electricity and electrical forces. Electrical
+effects are either unpredictable and dangerous to the caster (Static Discharge,
+Chain Lightning, Conjure Ball Lightning), or inaccurate (Zap, Lightning Bolt).
+They either partially or entirely ignore AC, and, in the case of beam spells,
+can be bounced off walls for trick shots. Single-target effects are not and
+probably should not be offered; Air's only access to precise single-target
+damage is Airstrike, which is extremely situational.
 
 Holy
 ====

@@ -692,8 +692,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
   local max_radius = math.min(CENTER_X, CENTER_Y) - border
   local layer_count = math.floor((max_radius - center_radius) / layer_size)
 
-  local radial_seperation_min = crawl.random_range(4, 8)
-  local radial_seperation_max = crawl.random_range(radial_seperation_min+4, 20)
+  local radial_separation_min = crawl.random_range(4, 8)
+  local radial_separation_max = crawl.random_range(radial_separation_min+4, 20)
   local plug_percent = crawl.random_range(0, 100)
 
   -- make the octagon layers
@@ -757,7 +757,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
   for i = 0, layer_count - 1 do
     local total_distance = layer[i].side_start[8]
     local hallway_pos = crawl.random2(total_distance)
-    local hallway_pos_end = hallway_pos + total_distance-radial_seperation_min
+    local hallway_pos_end = hallway_pos + total_distance-radial_separation_min
     local is_next_plug = false
 
     while (hallway_pos < hallway_pos_end) do
@@ -807,8 +807,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
         end
       end
 
-      hallway_pos = hallway_pos + crawl.random_range(radial_seperation_min,
-                                                     radial_seperation_max)
+      hallway_pos = hallway_pos + crawl.random_range(radial_separation_min,
+                                                     radial_separation_max)
     end
   end
 

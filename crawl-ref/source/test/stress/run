@@ -34,15 +34,19 @@ run_one()
         echo "arena: kraken v spectral kraken arena:small_deep_pool delay:0 t:20" 1>&2
         $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
     ;;
-    8|abyss_rest)
+    8|spectral)
+        echo "arena: ghost crab v ghost crab arena:small_deep_pool delay:0 t:20" 1>&2
+        $CRAWL -arena 'ghost crab v ghost crab arena:small_deep_pool delay:0 t:20'
+    ;;
+    9|abyss_rest)
         echo "rc: test/stress/abyss_short_wait.rc" 1>&2
         $CRAWL -rc test/stress/abyss_short_wait.rc
     ;;
-    9|abyss_walk)
+    10|abyss_walk)
         echo "rc: test/stress/abyss_short_run.rc" 1>&2
         $CRAWL -rc test/stress/abyss_short_run.rc
     ;;
-    10|qw)
+    11|qw)
         echo "rc: test/stress/qw.rc" 1>&2
         $CRAWL -rc test/stress/qw.rc
     ;;
@@ -58,12 +62,12 @@ run_one()
 
 if [ "$*" = "all" ]
   then
-    for x in 1 2 3 4 5 6 7 8 9; do run_one "$x";done
+    for x in 1 2 3 4 5 6 7 8 9 10; do run_one "$x";done
     exit $?
 elif [ "$*" = "nonwiz" ]
   then
     # only run the tests that don't require wizmode
-    for x in 4 5 6 7; do run_one "$x";done
+    for x in 4 5 6 7 8; do run_one "$x";done
     exit $?
 fi
 

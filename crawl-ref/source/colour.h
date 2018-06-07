@@ -1,5 +1,4 @@
-#ifndef COLOUR_H
-#define COLOUR_H
+#pragma once
 
 struct monster_info;
 
@@ -61,8 +60,10 @@ enum element_type
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
 #if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
-#endif
     ETC_PAKELLAS,       // Pakellas altar colours
+#endif
+    ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
+    ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -95,9 +96,6 @@ protected:
 int str_to_colour(const string &str, int default_colour = -1,
                   bool accept_number = true, bool accept_elemental = true);
 const string colour_to_str(colour_t colour);
-#ifdef USE_TILE
-VColour str_to_tile_colour(string colour);
-#endif
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);
@@ -117,5 +115,3 @@ colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
-
-#endif

@@ -16,10 +16,14 @@
 #include "output.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "unicode.h"
 #include "viewgeom.h"
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
 #include "windowmanager.h"
+#endif
+#ifdef USE_TILE_LOCAL
+#include "tilefont.h"
 #endif
 
 static keycode_type _numpad2vi(keycode_type key)
@@ -53,25 +57,52 @@ static keycode_type _numpad2vi(keycode_type key)
     return key;
 }
 
+// Save and restore the cursor region.
+class unwind_cursor
+{
+public:
+    unwind_cursor()
+        : region(get_cursor_region()), pos(cgetpos(get_cursor_region()))
+    { }
+    unwind_cursor(int x, int y, GotoRegion reg) : unwind_cursor()
+    {
+        cgotoxy(x, y, reg);
+    }
+    ~unwind_cursor()
+    {
+        cgotoxy(pos.x, pos.y, region);
+    }
+private:
+    GotoRegion region;
+    coord_def pos;
+};
+
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
-                            bool fake_ctrl, bool fake_shift)
+                            bool allow_fake_modifiers)
 {
     // Kludging running and opening as two character sequences.
     // This is useful when you can't use control keys (macros, lua) or have
     // them bound to something on your system.
 
-    /* can we say yuck? -- haranp */
-    if (fake_ctrl && keyin == '*')
+    if (allow_fake_modifiers && Options.use_modifier_prefix_keys)
     {
-        keyin = getchm(keymap);
-        // return control-key
-        keyin = CONTROL(toupper(_numpad2vi(keyin)));
-    }
-    else if (fake_shift && keyin == '/')
-    {
-        keyin = getchm(keymap);
-        // return shift-key
-        keyin = toupper(_numpad2vi(keyin));
+        /* can we say yuck? -- haranp */
+        if (keyin == '*')
+        {
+            unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+            cprintf("CTRL");
+            keyin = getchm(keymap);
+            // return control-key
+            keyin = CONTROL(toupper(_numpad2vi(keyin)));
+        }
+        else if (keyin == '/')
+        {
+            unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+            cprintf("SHIFT");
+            keyin = getchm(keymap);
+            // return shift-key
+            keyin = toupper(_numpad2vi(keyin));
+        }
     }
 
     // [dshaligram] More lovely keypad mangling.
@@ -117,6 +148,9 @@ void cursorxy(int x, int y)
 #endif
 
 #ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false); // Don't switch UI modes in cgotoxy.
+#endif
 #if defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
@@ -188,7 +222,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 }
 
 int cancellable_get_line(char *buf, int len, input_history *mh,
-                        int (*keyproc)(int &ch), const string &fill,
+                        keyfun_action (*keyproc)(int &ch), const string &fill,
                         const string &tag)
 {
     flush_prev_message();
@@ -263,12 +297,51 @@ void input_history::clear()
     go_end();
 }
 
+keyfun_action keyfun_num_and_char(int &ch)
+{
+    if (ch == CK_BKSP || isadigit(ch) || (unsigned)ch >= 128)
+        return KEYFUN_PROCESS;
+
+    return KEYFUN_BREAK;
+}
+
+draw_colour::draw_colour(COLOURS fg, COLOURS bg)
+    : foreground(fg), background(bg)
+{
+    set();
+}
+
+draw_colour::~draw_colour()
+{
+    reset();
+}
+
+void draw_colour::reset()
+{
+    // Assume, following the menu code, that this is always the reset set.
+    // TODO: version that saves initial state? this is kind of hard to get, actually.
+    if (foreground != COLOUR_INHERIT)
+        textcolour(LIGHTGRAY);
+    if (background != COLOUR_INHERIT)
+        textbackground(BLACK);
+}
+
+void draw_colour::set()
+{
+    if (foreground != COLOUR_INHERIT)
+        textcolour(foreground);
+    if (background != COLOUR_INHERIT)
+        textbackground(background);
+}
+
 /////////////////////////////////////////////////////////////////////////
 // line_reader
 
 line_reader::line_reader(char *buf, size_t sz, int wrap)
     : buffer(buf), bufsz(sz), history(nullptr), region(GOTO_CRT),
-      start(coord_def(0,0)), keyfn(nullptr), wrapcol(wrap),
+      start(coord_def(-1,-1)), keyfn(nullptr), wrapcol(wrap),
+      mode(EDIT_MODE_INSERT), fg_colour(COLOUR_INHERIT),
+      bg_colour(COLOUR_INHERIT),
       cur(nullptr), length(0), pos(-1)
 {
 }
@@ -290,6 +363,32 @@ void line_reader::set_input_history(input_history *i)
 void line_reader::set_keyproc(keyproc fn)
 {
     keyfn = fn;
+}
+
+void line_reader::set_edit_mode(edit_mode m)
+{
+    mode = m;
+}
+
+void line_reader::set_colour(COLOURS fg, COLOURS bg)
+{
+    fg_colour = fg;
+    bg_colour = bg;
+}
+
+void line_reader::set_prompt(string p)
+{
+    prompt = p;
+}
+
+void line_reader::set_location(coord_def loc)
+{
+    start = loc;
+}
+
+edit_mode line_reader::get_edit_mode()
+{
+    return mode;
 }
 
 #ifdef USE_TILE_WEB
@@ -345,78 +444,35 @@ void line_reader::cursorto(int ncx)
 static void _webtiles_abort_get_line()
 {
     tiles.json_open_object();
-    tiles.json_write_string("msg", "abort_get_line");
+    tiles.json_write_string("msg", "close_input");
     tiles.json_close_object();
     tiles.finish_message();
 }
 #endif
 
-int line_reader::read_line(const string &prefill)
+int line_reader::read_line_core(bool reset_cursor)
 {
-    strncpy(buffer, prefill.c_str(), bufsz);
-    // Just in case it was too long.
-    buffer[bufsz - 1] = '\0';
-    return read_line(false);
-}
-
-int line_reader::read_line(bool clear_previous)
-{
-    if (bufsz <= 0)
-        return false;
-
-    if (clear_previous)
-        *buffer = 0;
-
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
-
-#ifdef USE_TILE_WEB
-    if (!tiles.is_in_crt_menu())
-    {
-        tiles.redraw();
-        tiles.json_open_object();
-        tiles.json_write_string("msg", "get_line");
-        if (!tag.empty())
-            tiles.json_write_string("tag", tag);
-        if (history)
-        {
-            tiles.json_write_string("historyId",
-                                    make_stringf("%p", (void *)history));
-        }
-        tiles.json_write_string("prefill", buffer);
-        tiles.json_write_int("maxlen", (int) bufsz - 1);
-        tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
-        tiles.json_close_object();
-        tiles.finish_message();
-    }
-#endif
-
-    cursor_control con(true);
-
-    region = get_cursor_region();
-    start = cgetpos(region);
-
     length = strlen(buffer);
     int width = strwidth(buffer);
 
     // Remember the previous cursor position, if valid.
-    if (pos < 0 || pos > width)
+    if (reset_cursor)
+        pos = 0;
+    else if (pos < 0 || pos > width)
         pos = width;
 
     cur = buffer;
     int cpos = 0;
     while (*cur && cpos < pos)
     {
-        ucs_t c;
+        char32_t c;
         int s = utf8towc(&c, cur);
         cur += s;
         cpos += wcwidth(c);
     }
 
     if (length)
-        wrapcprintf(wrapcol, "%s", buffer);
+        print_segment();
 
     if (pos != width)
         cursorto(pos);
@@ -440,8 +496,10 @@ int line_reader::read_line(bool clear_previous)
 
         if (keyfn)
         {
-            int whattodo = (*keyfn)(ch);
-            if (whattodo == 0)
+            // if you intercept esc, don't forget to provide another way to
+            // exit. Processing esc will safely cancel.
+            keyfun_action whattodo = (*keyfn)(ch);
+            if (whattodo == KEYFUN_CLEAR)
             {
                 buffer[length] = 0;
                 if (history && length)
@@ -449,24 +507,116 @@ int line_reader::read_line(bool clear_previous)
                 ret = 0;
                 break;
             }
-            else if (whattodo == -1)
+            else if (whattodo == KEYFUN_BREAK)
             {
                 buffer[length] = 0;
                 ret = ch;
                 break;
             }
+            else if (whattodo == KEYFUN_IGNORE)
+                continue;
+            // else case: KEYFUN_PROCESS
         }
 
         ret = process_key(ch);
         if (ret != -1)
             break;
     }
+    return ret;
+}
+
+
+int line_reader::read_line(const string &prefill)
+{
+    strncpy(buffer, prefill.c_str(), bufsz);
+    // Just in case it was too long.
+    buffer[bufsz - 1] = '\0';
+    return read_line(false);
+}
+
+/**
+ * Read a line of input.
+ *
+ * @param clear_previous whether to clear the buffer before reading, or not.
+ *                       Can be used to set a prefill string.
+ * @param reset_cursor if true, start with the cursor at the left edge of the
+ *                      buffer string, otherwise put the cursor at the right
+ *                      edge or previous position (if any).
+ *                      If the buffer is empty or `clear_previous` is true,
+ *                      has no impact.
+ *                      For webtiles, this corresponds with whether the
+ *                      prefill starts selected or not.
+ * @return 0 on success, otherwise, the last character read.
+ */
+int line_reader::read_line(bool clear_previous, bool reset_cursor)
+{
+    if (bufsz <= 0)
+        return false;
+
+    if (clear_previous)
+        *buffer = 0;
+
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    if (wm)
+        wm->show_keyboard();
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "init_input");
+    if (tiles.is_in_crt_menu())
+        tiles.json_write_string("type", "generic");
+    else
+        tiles.json_write_string("type", "messages");
+    if (!tag.empty())
+        tiles.json_write_string("tag", tag);
+    if (history)
+    {
+        tiles.json_write_string("historyId",
+                                make_stringf("%p", (void *)history));
+    }
+    tiles.json_write_string("prefill", buffer);
+    tiles.json_write_bool("select_prefill", reset_cursor);
+    if (prompt.length())
+        tiles.json_write_string("prompt", prompt);
+    tiles.json_write_int("maxlen", (int) bufsz - 1);
+    tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
+
+    cursor_control con(true);
+    draw_colour draw(fg_colour, bg_colour);
+
+    region = get_cursor_region();
+    if (start.x < 0)
+        start = cgetpos(region); // inherit location from cursor
+    else
+        cgotoxy(start.x, start.y, region);
+
+    int ret = read_line_core(reset_cursor);
 
 #ifdef USE_TILE_WEB
     _webtiles_abort_get_line();
 #endif
 
     return ret;
+}
+
+/**
+ * (Re-)print the buffer from start onwards, potentially overprinting
+ * with spaces. Does *not* set cursor position.
+ *
+ * @param start the position in the buffer to print from.
+ * @param how many spaces to overprint.
+ */
+void line_reader::print_segment(int start_point, int overprint)
+{
+    start_point = min(start_point, length);
+    overprint = max(overprint, 0);
+
+    wrapcprintf(wrapcol, "%s%*s", buffer + start_point, overprint, "");
 }
 
 void line_reader::backspace()
@@ -476,9 +626,10 @@ void line_reader::backspace()
 
     char *np = prev_glyph(cur, buffer);
     ASSERT(np);
-    ucs_t ch;
+    char32_t ch;
     utf8towc(&ch, np);
     buffer[length] = 0;
+    const int glyph_width = wcwidth(ch);
     length -= cur - np;
     char *c = cur;
     cur = np;
@@ -488,13 +639,15 @@ void line_reader::backspace()
 
     cursorto(pos);
     buffer[length] = 0;
-    // Two spaces in case we deleted a double-width character, or
-    // caused a double-width character to move back a line.
-    wrapcprintf(wrapcol, "%s  ", cur);
+
+    // have to account for double-wide characters here
+    // TODO: properly handle the case where deleting moves a
+    // double-wide char up a line.
+    print_segment(cur - buffer, glyph_width);
     cursorto(pos);
 }
 
-bool line_reader::is_wordchar(ucs_t c)
+bool line_reader::is_wordchar(char32_t c)
 {
     return iswalnum(c) || c == '_' || c == '-';
 }
@@ -504,14 +657,18 @@ void line_reader::kill_to_begin()
     if (!pos || cur == buffer)
         return;
 
-    int rest = length - (cur - buffer);
-    buffer[length] = 0;
-    cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", cur, pos, "");
+    const int rest = length - (cur - buffer);
+    const int overwrite_len = pos;
+
     memmove(buffer, cur, rest);
-    buffer[length = rest] = 0;;
+    length = rest;
+    buffer[length] = 0;
     pos = 0;
     cur = buffer;
+    // TODO: calculate strwidth of deleted text for more accurate
+    // overwriting.
+    cursorto(pos);
+    print_segment(0, overwrite_len);
     cursorto(pos);
 }
 
@@ -529,7 +686,7 @@ void line_reader::killword()
         if (!np)
             break;
 
-        ucs_t c;
+        char32_t c;
         utf8towc(&c, np);
         if (is_wordchar(c))
             foundwc = true;
@@ -545,7 +702,7 @@ void line_reader::killword()
     calc_pos();
 
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", buffer, ew, "");
+    print_segment(0, ew);
     cursorto(pos);
 }
 
@@ -553,7 +710,7 @@ void line_reader::calc_pos()
 {
     int p = 0;
     const char *cp = buffer;
-    ucs_t c;
+    char32_t c;
     int s;
     while (cp < cur && (s = utf8towc(&c, cp)))
     {
@@ -563,6 +720,53 @@ void line_reader::calc_pos()
         p += wcwidth(c);
     }
     pos = p;
+}
+
+void line_reader::overwrite_char_at_cursor(int ch)
+{
+    int len = wclen(ch);
+    int w = wcwidth(ch);
+
+    if (w >= 0 && cur - buffer + len < static_cast<int>(bufsz))
+    {
+        bool empty = !*cur;
+
+        wctoutf8(cur, ch);
+        cur += len;
+        if (empty)
+            length += len;
+        buffer[length] = 0;
+        pos += w;
+        cursorto(0);
+        print_segment();
+        cursorto(pos);
+    }
+}
+
+void line_reader::insert_char_at_cursor(int ch)
+{
+    if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
+    {
+        int w = wcwidth(ch);
+        int len = wclen(ch);
+        if (*cur)
+        {
+            char *c = buffer + length - 1;
+            while (c >= cur)
+            {
+                c[len] = *c;
+                c--;
+            }
+        }
+        wctoutf8(cur, ch);
+        cur += len;
+        length += len;
+        buffer[length] = 0;
+        pos += w;
+        cursorto(0);
+        print_segment();
+        cursorto(pos);
+    }
 }
 
 int line_reader::process_key(int ch)
@@ -596,7 +800,7 @@ int line_reader::process_key(int ch)
             cursorto(0);
 
             int clear = pos < olen ? olen - pos : 0;
-            wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
+            print_segment(0, clear);
 
             cursorto(pos);
         }
@@ -616,17 +820,21 @@ int line_reader::process_key(int ch)
             int erase = strwidth(cur);
             length = cur - buffer;
             *cur = 0;
-            wrapcprintf(wrapcol, "%*s", erase, "");
+            print_segment(length, erase); // only overprint
             cursorto(pos);
         }
         break;
     }
     case CK_DELETE:
     case CONTROL('D'):
+        // TODO: unify with backspace
         if (*cur)
         {
             const char *np = next_glyph(cur);
             ASSERT(np);
+            char32_t ch_at_point;
+            utf8towc(&ch_at_point, cur);
+            const int glyph_width = wcwidth(ch_at_point);
             const size_t del_bytes = np - cur;
             const size_t follow_bytes = (buffer + length) - np;
             // Copy the NUL too.
@@ -634,9 +842,7 @@ int line_reader::process_key(int ch)
             length -= del_bytes;
 
             cursorto(pos);
-            // Two spaces in case we deleted a double-width character, or
-            // caused a double-width character to move back a line.
-            wrapcprintf(wrapcol, "%s  ", cur);
+            print_segment(cur - buffer, glyph_width);
             cursorto(pos);
         }
         break;
@@ -690,42 +896,87 @@ int line_reader::process_key(int ch)
         redraw_screen();
         return -1;
     default:
-        if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
-        {
-            int w = wcwidth(ch);
-            int len = wclen(ch);
-            if (*cur)
-            {
-                char *c = buffer + length - 1;
-                while (c >= cur)
-                {
-                    c[len] = *c;
-                    c--;
-                }
-            }
-            wctoutf8(cur, ch);
-            cur += len;
-            length += len;
-            buffer[length] = 0;
-            pos += w;
-            if (!w)
-            {
-                cursorto(0);
-                wrapcprintf(wrapcol, "%s", buffer);
-            }
-            else
-            {
-                putwch(ch);
-                if (*cur)
-                    wrapcprintf(wrapcol, "%s", cur);
-            }
-            cursorto(pos);
-        }
+        if (mode == EDIT_MODE_OVERWRITE)
+            overwrite_char_at_cursor(ch);
+        else // mode == EDIT_MODE_INSERT
+            insert_char_at_cursor(ch);
+
         break;
     }
 
     return -1;
 }
+
+#ifdef USE_TILE_LOCAL
+fontbuf_line_reader::fontbuf_line_reader(char *buf, size_t buf_size,
+            FontBuffer& font_buf, int wrap_col) :
+    line_reader(buf, buf_size, wrap_col), m_font_buf(font_buf)
+{
+}
+
+int fontbuf_line_reader::read_line(bool clear_previous, bool reset_cursor)
+{
+    if (bufsz <= 0)
+        return false;
+
+    if (clear_previous)
+        *buffer = 0;
+
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    if (wm)
+        wm->show_keyboard();
+#endif
+
+    cursor_control con(true);
+
+    m_font_buf.clear();
+    m_font_buf.draw();
+
+    return read_line_core(reset_cursor);
+
+}
+
+void fontbuf_line_reader::print_segment(int start_point, int overprint)
+{
+    start_point = min(start_point, length);
+    overprint = max(overprint, 0);
+
+    m_font_buf.clear();
+    m_font_buf.add(make_stringf("%s%*s", buffer, overprint, ""),
+        term_colours[(fg_colour == COLOUR_INHERIT ? LIGHTGRAY : fg_colour)],
+        start.x, start.y);
+    m_font_buf.draw();
+}
+
+
+void fontbuf_line_reader::cursorto(int newcpos)
+{
+    // TODO: does not support multi-line readers
+    newcpos = min(max(newcpos, 0), length);
+
+    // TODO: does this technique get flashing on some screens b/c of the double draw?
+    print_segment(0, 0);
+
+    char32_t c;
+    float pos_x, pos_y;
+
+    if (newcpos >= length)
+        c = ' ';
+    utf8towc(&c, buffer + newcpos);
+
+    pos_y = start.y;
+    string preface(buffer, newcpos);
+    pos_x = start.x + m_font_buf.get_font_wrapper().string_width(preface.c_str());
+
+    // redraw with a cursor
+    m_font_buf.get_font_wrapper().store(m_font_buf, pos_x, pos_y, c,
+        term_colours[LIGHTGRAY], term_colours[DARKGRAY]);
+    m_font_buf.draw();
+}
+
+
+#endif // USE_TILE_LOCAL
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Of mice and other mice.

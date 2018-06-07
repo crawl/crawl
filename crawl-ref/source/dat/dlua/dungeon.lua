@@ -639,38 +639,36 @@ end
 -- List of useful scrolls, with some reasonable weights.
 -- When changing the list or the weights, please keep the total weight at 1000.
 dgn.good_scrolls = [[
-    w:80  scroll of identify no_pickup /
-    w:35  scroll of identify no_pickup q:2 /
+    w:85  scroll of identify no_pickup /
+    w:38  scroll of identify no_pickup q:2 /
     w:10  scroll of identify no_pickup q:3 /
-    w:80  scroll of teleportation no_pickup /
-    w:35  scroll of teleportation no_pickup q:2 /
+    w:85  scroll of teleportation no_pickup /
+    w:38  scroll of teleportation no_pickup q:2 /
     w:10  scroll of teleportation no_pickup q:3 /
-    w:80  scroll of fog no_pickup /
-    w:30  scroll of fog no_pickup q:2 /
-    w:80  scroll of remove curse no_pickup /
-    w:35  scroll of remove curse no_pickup q:2 /
-    w:90  scroll of enchant weapon no_pickup /
-    w:35  scroll of enchant weapon no_pickup q:2 /
-    w:50  scroll of blinking no_pickup /
-    w:20  scroll of blinking no_pickup q:2 /
-    w:50  scroll of enchant armour no_pickup /
-    w:20  scroll of enchant armour no_pickup q:2 /
-    w:50  scroll of recharging no_pickup /
-    w:20  scroll of recharging no_pickup q:2 /
-    w:30  scroll of magic mapping no_pickup /
-    w:10  scroll of magic mapping no_pickup q:2 /
-    w:30  scroll of amnesia no_pickup /
-    w:10  scroll of amnesia no_pickup q:2 /
-    w:30  scroll of holy word no_pickup q:1 /
-    w:10  scroll of holy word no_pickup q:2 /
-    w:20  scroll of silence no_pickup q:1 /
+    w:85  scroll of fog no_pickup /
+    w:33  scroll of fog no_pickup q:2 /
+    w:85  scroll of remove curse no_pickup /
+    w:38  scroll of remove curse no_pickup q:2 /
+    w:95  scroll of enchant weapon no_pickup /
+    w:38  scroll of enchant weapon no_pickup q:2 /
+    w:54  scroll of blinking no_pickup /
+    w:22  scroll of blinking no_pickup q:2 /
+    w:54  scroll of enchant armour no_pickup /
+    w:22  scroll of enchant armour no_pickup q:2 /
+    w:33  scroll of magic mapping no_pickup /
+    w:11  scroll of magic mapping no_pickup q:2 /
+    w:33  scroll of amnesia no_pickup /
+    w:11  scroll of amnesia no_pickup q:2 /
+    w:33  scroll of holy word no_pickup q:1 /
+    w:11  scroll of holy word no_pickup q:2 /
+    w:22  scroll of silence no_pickup q:1 /
     w:5   scroll of silence no_pickup q:2 /
-    w:10  scroll of acquirement no_pickup q:1 /
+    w:11  scroll of acquirement no_pickup q:1 /
     w:4   scroll of acquirement no_pickup q:2 /
     w:1   scroll of acquirement no_pickup q:3 /
-    w:10  scroll of brand weapon no_pickup q:1 /
-    w:10  scroll of torment no_pickup q:1 /
-    w:10  scroll of vulnerability no_pickup
+    w:11  scroll of brand weapon no_pickup q:1 /
+    w:11  scroll of torment no_pickup q:1 /
+    w:11  scroll of vulnerability no_pickup
     ]]
 
 -- Returns true if point1 is inside radius(X, point2).

@@ -3,8 +3,7 @@
  * @brief Functions used to print simple messages.
 **/
 
-#ifndef MPR_H
-#define MPR_H
+#pragma once
 
 // if you mess with this list, you'll need to make changes in initfile.cc
 // to message_channel_names, and probably also to message.cc to colour
@@ -15,7 +14,6 @@ enum msg_channel_type
     MSGCH_FRIEND_ACTION,    // friendly monsters taking actions
     MSGCH_PROMPT,           // various prompts
     MSGCH_GOD,              // god/religion (param is god)
-    MSGCH_PRAY,             // praying messages (param is god)
     MSGCH_DURATION,         // effect down/warnings
     MSGCH_DANGER,           // serious life threats (ie very large HP attacks)
     MSGCH_WARN,             // much less serious threats
@@ -117,6 +115,4 @@ void dprf(PRINTF(0, ));
 void dprf(diag_type param, PRINTF(1, ));
 #else
 # define dprf(...) ((void)0)
-#endif
-
 #endif

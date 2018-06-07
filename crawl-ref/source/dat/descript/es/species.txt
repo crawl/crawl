@@ -42,10 +42,6 @@ Halfling
 Pequeños pero duros, son excelentes con la honda. Tienen una cierta resistencia
 a los efectos mutagénicos.
 %%%%
-High Elf
-
-Elfos orgullosos, que pueden lanzar hechizos así como luchar con la espada.
-%%%%
 Hill Orc
 
 Los orcos tienen talento en el combate cuerpo a cuerpo, y a menudo tantean algo

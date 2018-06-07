@@ -1,10 +1,11 @@
-#ifndef ATTACK_H
-#define ATTACK_H
+#pragma once
 
 #include "artefact.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
+#include "item-status-flag-type.h"
 #include "mon-enum.h"
 #include "ouch.h"
+#include "pronoun-type.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;
@@ -106,6 +107,11 @@ public:
     string anon_name(description_level_type desc);
     string anon_pronoun(pronoun_type ptyp);
 
+    // TODO: Definitely want to get rid of this, which we can't really do
+    // until we refactor the whole pronoun / desc usage from these lowly
+    // classes all the way up to monster/player (and actor) classes.
+    string defender_name(bool allow_reflexive);
+
 // Private Properties
     string aux_source;
     kill_method_type kill_type;
@@ -178,11 +184,6 @@ protected:
                     iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                             | ISFLAG_KNOW_PLUSES);
 
-    // TODO: Definitely want to get rid of this, which we can't really do
-    // until we refactor the whole pronoun / desc usage from these lowly
-    // classes all the way up to monster/player (and actor) classes.
-    string defender_name(bool allow_reflexive);
-
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();
 
@@ -200,5 +201,3 @@ protected:
     virtual int  player_stab(int damage);
     virtual void player_stab_check();
 };
-
-#endif

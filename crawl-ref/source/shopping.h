@@ -3,8 +3,9 @@
  * @brief Shop keeper functions.
 **/
 
-#ifndef SHOPPING_H
-#define SHOPPING_H
+#pragma once
+
+#include <unordered_set>
 
 int artefact_value(const item_def &item);
 
@@ -43,14 +44,13 @@ void list_shop_types();
 struct level_pos;
 class  Menu;
 
+typedef pair<string, int> shoplist_entry;
 class ShoppingList
 {
 public:
     ShoppingList();
 
     bool add_thing(const item_def &item, int cost,
-                   const level_pos* pos = nullptr);
-    bool add_thing(string desc, string buy_verb, int cost,
                    const level_pos* pos = nullptr);
 
     bool is_on_list(const item_def &item, const level_pos* pos = nullptr) const;
@@ -62,6 +62,7 @@ public:
     void del_things_from(const level_id &lid);
 
     void item_type_identified(object_class_type base_type, int sub_type);
+    void spells_added_to_library(const vector<spell_type>& spells, bool quiet);
     bool cull_identical_items(const item_def& item, int cost = -1);
     void remove_dead_shops();
 
@@ -77,10 +78,13 @@ public:
     bool empty() const { return !list || list->empty(); };
     int size() const;
 
+    vector<shoplist_entry> entries();
+
     static bool items_are_same(const item_def& item_a,
                                const item_def& item_b);
 
 private:
+    // An alias for you.props[SHOPPING_LIST_KEY], kept in sync by refresh()
     CrawlVector* list;
 
     int min_unbuyable_cost;
@@ -89,9 +93,11 @@ private:
     int max_buyable_idx;
 
 private:
-    int find_thing(const item_def &item, const level_pos &pos) const;
-    int find_thing(const string &desc, const level_pos &pos) const;
+    unordered_set<int> find_thing(const item_def &item, const level_pos &pos) const;
+    unordered_set<int> find_thing(const string &desc, const level_pos &pos) const;
     void del_thing_at_index(int idx);
+    template <typename C> void del_thing_at_indices(C const &idxs);
+
 
     void fill_out_menu(Menu& shopmenu);
 
@@ -114,6 +120,4 @@ extern ShoppingList shopping_list;
 
 #if TAG_MAJOR_VERSION == 34
 #define REMOVED_DEAD_SHOPS_KEY "removed_dead_shops"
-#endif
-
 #endif

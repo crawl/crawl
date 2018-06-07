@@ -104,10 +104,6 @@ Evoke Invisibility ability
 
 暂时隐去你自己的身形。隐身时产生的魔力会污染你的身体，时间长了会使你身上发光。
 %%%%
-Turn Visible ability
-
-再次隐身。
-%%%%
 Stop Flying ability
 
 停止飞行。

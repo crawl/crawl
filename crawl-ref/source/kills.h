@@ -3,8 +3,7 @@
  * @brief Tracks monsters the player has killed.
 **/
 
-#ifndef KILLS_H
-#define KILLS_H
+#pragma once
 
 #include <cstdio>
 #include <map>
@@ -189,5 +188,3 @@ enum KILL_DUMP_OPTIONS
     KDO_ONE_PLACE,          // Show places only for single kills and uniques.
     KDO_ALL_PLACES,         // Show all available place information
 };
-
-#endif

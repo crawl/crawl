@@ -56,10 +56,6 @@ Halfling
 Petit mais robuste, ils sont excellents avec une fronde. Ils ont une résistance
 supplémentaire aux effets mutagènes.
 %%%%
-High Elf
-
-Elfes hautains qui peuvent aussi bien lancer des sorts que se battre à l'épée.
-%%%%
 Hill Orc
 
 Les Orcs sont doué en combat rapproché et s'essaient souvent à la magie

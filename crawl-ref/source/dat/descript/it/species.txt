@@ -50,11 +50,6 @@ Halfling
 Gli halfling sono piccoli ma resistenti e sono molto bravi a usare le fionde.
 Hanno una notevole resistenza contro gli effetti mutagenici.
 %%%%
-High Elf
-
-Gli elfi alti sono elfi orgogliosi che possono combattere bene sia con la spada
-che con la magia.
-%%%%
 Hill Orc
 
 Gli orchi delle colline sono abili nella mischia e spesso possono usare alcuni

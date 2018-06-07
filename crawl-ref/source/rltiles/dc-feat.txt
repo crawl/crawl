@@ -64,6 +64,7 @@ mangrove2
 %weight 5
 mangrove3
 
+
 ## doors
 %sdir dngn/doors
 closed_door DNGN_CLOSED_DOOR
@@ -156,6 +157,7 @@ statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
 statue_cerebov
+%syn DNGN_STATUE_CEREBOV
 statue_demonic_bust
 %syn DNGN_STATUE_DEMONIC_BUST
 statue_twins
@@ -189,7 +191,7 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
-## an icy teleporter
+# Remove this entry when TAG_MAJOR_VERSION == 34 is false.
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 
 ## golden statues for the holy Pan level
@@ -274,6 +276,8 @@ return DNGN_RETURN
 %rim 0
 sealed_stairs_up DNGN_SEALED_STAIRS_UP
 sealed_stairs_down DNGN_SEALED_STAIRS_DOWN
+one_way_stairs_up DNGN_ONE_WAY_STAIRS_UP
+one_way_stairs_down DNGN_ONE_WAY_STAIRS_DOWN
 
 %sdir dngn/shops
 ##enter_shop DNGN_ENTER_SHOP
@@ -392,11 +396,12 @@ bazaar_portal DNGN_PORTAL_BAZAAR
 bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
+desolation_portal DNGN_PORTAL_DESOLATION
+desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 
 %sdir dngn/altars
-generic DNGN_UNSEEN_ALTAR
 zin DNGN_ALTAR_ZIN
 shining_one DNGN_ALTAR_SHINING_ONE
 kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
@@ -459,7 +464,14 @@ pakellas1
 pakellas2
 pakellas3
 uskayaw DNGN_ALTAR_USKAYAW
-hep DNGN_ALTAR_HEPLIAKLQANA
+hep0 DNGN_ALTAR_HEPLIAKLQANA
+hep1
+hep2
+hep3
+hep4
+hep5
+wu_jian DNGN_ALTAR_WU_JIAN
+ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
@@ -480,7 +492,11 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+# Remove this entry when TAG_MAJOR_VERSION == 34 is false.
 teleporter DNGN_TELEPORTER
+
+transporter DNGN_TRANSPORTER
+transporter_landing_site DNGN_TRANSPORTER_LANDING
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.
@@ -638,6 +654,21 @@ kraken_corner_NW KRAKEN_OVERLAY_NW
 kraken_corner_NE KRAKEN_OVERLAY_NE
 kraken_corner_SE KRAKEN_OVERLAY_SE
 kraken_corner_SW KRAKEN_OVERLAY_SW
+%sdir mon/tentacles/kraken_zombie_corners
+kraken_zombie_corner_NW KRAKEN_ZOMBIE_OVERLAY_NW
+kraken_zombie_corner_NE KRAKEN_ZOMBIE_OVERLAY_NE
+kraken_zombie_corner_SE KRAKEN_ZOMBIE_OVERLAY_SE
+kraken_zombie_corner_SW KRAKEN_ZOMBIE_OVERLAY_SW
+%sdir mon/tentacles/kraken_simulacrum_corners
+kraken_simulacrum_corner_NW KRAKEN_SIMULACRUM_OVERLAY_NW
+kraken_simulacrum_corner_NE KRAKEN_SIMULACRUM_OVERLAY_NE
+kraken_simulacrum_corner_SE KRAKEN_SIMULACRUM_OVERLAY_SE
+kraken_simulacrum_corner_SW KRAKEN_SIMULACRUM_OVERLAY_SW
+%sdir mon/tentacles/kraken_spectral_corners
+kraken_spectral_corner_NW KRAKEN_SPECTRAL_OVERLAY_NW
+kraken_spectral_corner_NE KRAKEN_SPECTRAL_OVERLAY_NE
+kraken_spectral_corner_SE KRAKEN_SPECTRAL_OVERLAY_SE
+kraken_spectral_corner_SW KRAKEN_SPECTRAL_OVERLAY_SW
 %sdir mon/tentacles/eldritch_corners
 eldritch_corner_NW ELDRITCH_OVERLAY_NW
 eldritch_corner_NE ELDRITCH_OVERLAY_NE

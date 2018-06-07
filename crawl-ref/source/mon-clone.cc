@@ -15,7 +15,7 @@
 #include "env.h"
 #include "items.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -52,18 +52,11 @@ static bool _monster_clone_exists(monster* mons)
     return false;
 }
 
-static bool _mons_is_illusion(monster* mons)
-{
-    return mons->type == MONS_PLAYER_ILLUSION
-           || mons->has_ench(ENCH_PHANTOM_MIRROR)
-           || mons->props.exists(CLONE_SLAVE_KEY);
-}
-
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
     return !mons_is_conjured(mons->type)
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && !_mons_is_illusion(mons)
+           && !mons->is_illusion()
            && !_monster_clone_exists(mons);
 }
 
@@ -92,17 +85,26 @@ static void _mons_summon_monster_illusion(monster* caster,
     if (!_mons_is_illusion_cloneable(foe))
         return;
 
+    bool cloning_visible = false;
+    monster *clone = nullptr;
+
     // [ds] Bind the original target's attitude before calling
     // clone_mons, since clone_mons also updates arena bookkeeping.
     //
     // If an enslaved caster creates a clone from a regular hostile,
-    // the clone should still be friendly:
-    const mon_attitude_type clone_att =
-        caster->friendly() ? ATT_FRIENDLY : caster->attitude;
+    // the clone should still be friendly.
+    //
+    // This is all inside its own block so the unwind_var will be unwound
+    // before we use foe->name below.
+    {
+        const mon_attitude_type clone_att =
+            caster->friendly() ? ATT_FRIENDLY : caster->attitude;
 
-    unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
-    bool cloning_visible = false;
-    if (monster *clone = clone_mons(foe, true, &cloning_visible))
+        unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
+        clone = clone_mons(foe, true, &cloning_visible);
+    }
+
+    if (clone)
     {
         const string clone_id = _monster_clone_id_for(foe);
         clone->props[CLONE_SLAVE_KEY] = clone_id;
@@ -204,8 +206,9 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
         }
 
         if (monster *clone = create_monster(
-                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          abj, spell_cast, mons->pos(), mons->foe)))
+                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons),
+                          mons->pos(), mons->foe)
+                 .set_summoned(mons, abj, spell_cast)))
         {
             if (card_power >= 0)
                 mpr("Suddenly you stand beside yourself.");
@@ -330,7 +333,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (you.can_see(*orig) && you.can_see(*mons))
     {
         if (!quiet)
-            simple_monster_message(orig, " is duplicated!");
+            simple_monster_message(*orig, " is duplicated!");
         *obvious = true;
     }
 

@@ -1109,179 +1109,6 @@ ccccccccccccccccccccccccc
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   roderic_aztec_sauvastika
-TAGS:   transparent extra decor
-WEIGHT: 1
-DEPTH:  D, Depths
-MAP
-   ......@..
-  ...xxxxx...
- ....x...x....
-.....xxx.x.....
-.........x.....
-@xxxxxxxxx.xxx.
-.x...xxxxx.x.x.
-.x.x.xxxxx.x.x.
-.x.x.xxxxx...x.
-.xxx.xxxxxxxxx@
-.....x.........
-.....x.xxx.....
- ....x...x....
-  ...xxxxx...
-   ..@......
-ENDMAP
-
-NAME:   roderic_bali_sauvastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-: if crawl.one_chance_in(5) then
-SUBST:  @ = x
-: else
-SUBST:  + = x+
-: end
-MAP
-...@.......
-...x.......
-...x.......
-...xxx.xxx@
-.....x.x...
-...xx+xx...
-...x.x.....
-@xxx.xxx...
-.......x...
-.......x...
-.......@...
-ENDMAP
-
-NAME:   roderic_chinese_pattern_swastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-MAP
-...............
-.x.xxxx.xxxx.x.
-.x.xxxx.xxxx.x.
-.x.xx.....xx.x.
-.xxxxxx.xxxxxx.
-.xxxxxx.xxxxxx.
-.xxxxxx.xxxxxx.
-...xx.x.x.xx...
-.xxxx.x.x.xxxx.
-.xxxx.x.x.xxxx.
-...............
-ENDMAP
-
-NAME:   roderic_hopi_sauvastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-MAP
-.....@.....
-...xxxx....
-...xxxx....
-....xxx.xx.
-.xxxxxxxxx.
-@xxxxxxxxx@
-.xxxxxxxxx.
-.xx.xxx....
-....xxxx...
-....xxxx...
-.....@.....
-ENDMAP
-
-NAME:   roderic_greek_sauvastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-: if crawl.one_chance_in(5) then
-SUBST:  @ = x
-: else
-SUBST:  + = x+
-: end
-MAP
-.........@.
-@xxxxxxx.x.
-.......x.x.
-.xxxxx.x.x.
-.x...x.x.x.
-.x.xx+xx.x.
-.x.x.x...x.
-.x.x.xxxxx.
-.x.x.......
-.x.xxxxxxx@
-.@.........
-ENDMAP
-
-NAME:   roderic_curled_sauvastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-: if crawl.one_chance_in(5) then
-SUBST:  @ = x
-: else
-SUBST:  + = x+
-: end
-MAP
-.@.........
-.x.xxx.xxx@
-.x.x.x.x...
-.xxx.x.xxx.
-.....x...x.
-.xxxx+xxxx.
-.x...x.....
-.xxx.x.xxx.
-...x.x.x.x.
-@xxx.xxx.x.
-.........@.
-ENDMAP
-
-NAME:   roderic_bipointed_swastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-: if crawl.one_chance_in(5) then
-SUBST:  @ = x
-: else
-SUBST:  + = x+
-: end
-MAP
-.@.........
-.x.xxx.xxx@
-.x...x.x...
-.xxx.xxx.x.
-...x.x...x.
-.xxxx+xxxx.
-.x...x.x...
-.x.xxx.xxx.
-...x.x...x.
-@xxx.xxx.x.
-.........@.
-ENDMAP
-
-NAME:   roderic_digamma_sauvastika
-TAGS:   transparent extra decor
-DEPTH:  D, Depths
-WEIGHT: 1
-: if crawl.one_chance_in(5) then
-SUBST:  @ = x
-: else
-SUBST:  + = x+
-: end
-MAP
-.@.........
-.x.xxx.xxx@
-.x.x...x...
-.xxxxx.xxx.
-.....x.x.x.
-.x.xx+xx.x.
-.x.x.x.....
-.xxx.xxxxx.
-...x...x.x.
-@xxx.xxx.x.
-.........@.
-ENDMAP
-
 #squared St Hans cross, ancient Viking symbol
 NAME:   roderic_st_hans_cross
 TAGS:   transparent extra decor
@@ -1351,9 +1178,9 @@ NAME:    roderic_nine_men_s_morris
 TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
-SHUFFLE: defgh
-ITEM:    q:1 $, beef jerky, fruit q:1, royal jelly q:1, stone q:1
-NSUBST:  ' = 9:d / *:.
+ITEM:    q:1 $, ration q:1, stone q:1
+NSUBST:  ' = 2:d / 1:e / 2:f / *:.
+SHUFFLE: ddeff
 MAP
 '.......'.......'
 .xxxxxxx.xxxxxxx.
@@ -1379,8 +1206,8 @@ NAME:   roderic_three_in_a_row
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 1
-ITEM:   q:1 $, fruit q:1, stone, fruit q:1
-SUBST:  ' : TUdefg
+ITEM:   q:1 $, ration, stone
+SUBST:  ' : TTUUddeff
 MAP
 @xxxx@xxxx@
 x'...'...'x
@@ -1393,30 +1220,6 @@ x.x.x.x.x.x
 x..xx.xx..x
 x'...'...'x
 @xxxx@xxxx@
-ENDMAP
-
-NAME:    roderic_ancient_swastika
-TAGS:    transparent extra decor
-DEPTH:   D, Depths
-WEIGHT:  1
-SHUFFLE: '"
-SUBST:   x : xxxxxc
-SUBST:   ? : xxxxxcm
-SUBST:   ' : .
-SUBST:   " : x
-
-MAP
-...........
-.x'''x"""x.
-.".?.x...'.
-.".?.x.??'.
-."...x...'.
-.xxxxxxxxx.
-.'...x...".
-.'??.x.?.".
-.'...x.?.".
-.x"""x'''x.
-...........
 ENDMAP
 
 NAME:  roderic_lattice_a
@@ -1464,23 +1267,6 @@ MAP
 ....ccc....
 ...ccccc...
  .........
-ENDMAP
-
-NAME:   roderic_whirl
-TAGS:   transparent allow_dup extra decor
-DEPTH:  D, Depths, Elf
-WEIGHT: 1
-SUBST:  ? : ttTTG
-MAP
- .......
-.?..xx.?.
-...x.....
-.x.x.xx..
-.x..x..x.
-..xx.x.x.
-.....x...
-.?.xx..?.
- .......
 ENDMAP
 
 NAME:   roderic_lattice_octagonal_star
@@ -2665,6 +2451,121 @@ xx.xxxx
    xxx
 ENDMAP
 
+# A big river that often divides most of the map, with a guaranteed path
+# across. This would ideally be done by a layout, but this vault seems to place
+# well in testing and has the intended effect.
+NAME: chequers_big_river
+TAGS: no_pool_fixup transparent extra decor
+SUBST: - = W:30 w P, ' = W . P:2
+KMONS: P = plant
+KFEAT: P = W / .
+MAP
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxwwxxxxxxx
+xxxwwxxxxxx
+@.xxwwxxx.@
+ .xwwwxx..
+ .xxwwwx...
+ .'-wwww''..
+ .''-ww--''.@
+ ..''-www-''....
+  @.''--w--''''...@
+   ..''-ww----''''....
+    ..'--wwww----''''...@.......@.....
+     .''---wwwww----W''''''''''''..''.@xxxxxxxx
+     ..'''---wwwwwwW---'--------''''xxxxxxxxxxx
+      @..'''-wwwwwwwWWWwwwwwwww----wwwxxxxxxxxx
+        ..''------wwwWWW---wwwwwwwwwwwwwwwxxxxx
+         ..'''''''--''''W''----wwwwwwwwwwxxxxxx
+          @......''''.....'''''''''xxxxxxxxxxxx
+                @.....   @......@......@xxxxxxx
+ENDMAP
+
+NAME: nicolae_lava_and_water
+TAGS: no_pool_fixup transparent extra decor
+DEPTH: D:6-, Depths, Zot
+SHUFFLE: lw
+KPROP: l = no_cloud_gen
+MAP
+  .....
+  .wll....
+  .wcwlww....
+ ..llwlclwll.
+ .lwwcwwlwcw.
+ .lclwllcllw.
+..wwlwcwlww..
+.wllcllwlcl.
+.wcwlwwcwwl.
+.llwlclwll..
+....wwlwcw.
+   ....llw.
+      .....
+ENDMAP
+
+NAME: nicolae_water_bricks
+TAGS: no_pool_fixup transparent extra decor
+DEPTH: D:6-, Depths
+MAP
+           w
+      w   wxw@
+     wxw wx..w
+    wx.xwx...xw
+   wx...x...xw
+  wx...x...xw
+ wx...xwx.xw
+  wx.xwxwx.xw
+   wx.xwx...xw
+  wx...x...xw
+ wx...x...xw
+wx...xwx.xw
+ w..xw wxw
+ @wxw   w
+   w
+ENDMAP
+
+NAME: palyth_stone_intersect
+TAGS: decor extra transparent
+DEPTH: D, Elf, Crypt
+MAP
+..............
+..xx..xx..xx..
+.xxxx....xxxx.
+.xxxxx..xxxxx.
+..xxxx..xxxx..
+...xxx..xxx...
+.x..........x.
+.x..........x.
+...xxx..xxx...
+..xxxx..xxxx..
+.xxxxx..xxxxx.
+.xxxx....xxxx.
+..xx..xx..xx..
+..............
+ENDMAP
+
+NAME:   skrybe_limestone_x
+TAGS:   decor extra transparent
+DEPTH:  D, Depths
+KMASK:  W = no_monster_gen
+SUBST:  W : Wm
+FTILE:  D = floor_limestone
+COLOUR: D = brown
+MAP
+....    ....
+.DD......DD.
+.DDDD..DDDD.
+..DWD..DWD..
+ .DDDDDDDD.
+ ...DWWD...
+ ...DWWD...
+ .DDDDDDDD.
+..DWD..DWD..
+.DDDD..DDDD.
+.DD......DD.
+....    ....
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2853,6 +2754,7 @@ NSUBST: a = 1:+ / *:x
 NSUBST: b = 1:+ / *:x
 NSUBST: c = 1:+ / *:x
 NSUBST: d = 1:+ / *:x
+KPROP:  *+ = no_tele_into
 MAP
   wwwwwwww
  wwwwwwwwww
@@ -2874,24 +2776,21 @@ TAGS:   extra
 WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.
- : dgn.delayed_decay(_G,'B', 'human skeleton')
-KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
+ : dgn.delayed_decay(_G,'A', 'human skeleton')
 # Prevent random teleportation getting you stuck
-KPROP:  AB = no_tele_into
-KFEAT:  AB = floor
+KPROP:  A = no_tele_into
+KFEAT:  A = floor
 MAP
      ....
     .XXXX.
    .XmmmmX.
   .XmmmmmmX.
-  .XmmABmmX.
+  .Xmm.AmmX.
   .XmmmmmmX.
    .XmmmmX.
     .XXXX.
      ....
 ENDMAP
-
-
 
 ####################################################################
 #
@@ -2903,8 +2802,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen extra
-ITEM:   bread ration / meat ration / arrow /\
-        bolt / spear / any potion w:5
+ITEM:   ration w:20 / arrow / bolt / spear / any potion w:5
 MAP
 x+xx
 xddx
@@ -3008,7 +2906,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
-ITEM:   beef jerky / w:5 minotaur chunk
+ITEM:   ration / w:5 minotaur chunk
 : dgn.delayed_decay(_G, 'e', 'minotaur corpse')
 ITEM:   hand axe
 SUBST:  ' = .
@@ -3028,7 +2926,7 @@ NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   fruit q:1 / fruit q:5
+ITEM:   ration / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass / floor_dirt
@@ -3050,7 +2948,7 @@ NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   fruit q:1 / fruit q:5
+ITEM:   ration / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass
@@ -3067,7 +2965,7 @@ NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   fruit q:1 / fruit q:5
+ITEM:   ration / nothing
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
 KFEAT:  w = shallow_water
@@ -3088,7 +2986,7 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = wand of disintegration charges:0 ident:all
+KITEM:  d = wand of disintegration ident:all
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
@@ -3304,7 +3202,7 @@ NAME:  bh_chokoban
 TAGS:  extra decor no_exits
 TAGS:  no_rotate no_hmirror no_vmirror
 DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
-ITEM:  fruit q:1
+ITEM:  ration w:5 / stone
 MAP
 cccccc  ccccc
 c....c  c...c
@@ -3909,46 +3807,4 @@ MAP
 .x........x.
 .x.xxxxxxxx.
 ............
-ENDMAP
-
-NAME: nicolae_lava_and_water
-TAGS: no_pool_fixup transparent extra decor
-DEPTH: D:6-, Depths, Zot
-SHUFFLE: lw
-KPROP: l = no_cloud_gen
-MAP
-  .....
-  .wll....
-  .wcwlww....
- ..llwlclwll.
- .lwwcwwlwcw.
- .lclwllcllw.
-..wwlwcwlww..
-.wllcllwlcl.
-.wcwlwwcwwl.
-.llwlclwll..
-....wwlwcw.
-   ....llw.
-      .....
-ENDMAP
-
-NAME: nicolae_water_bricks
-TAGS: no_pool_fixup transparent extra decor
-DEPTH: D:6-, Depths
-MAP
-           w
-      w   wxw@
-     wxw wx..w
-    wx.xwx...xw
-   wx...x...xw
-  wx...x...xw
- wx...xwx.xw
-  wx.xwxwx.xw
-   wx.xwx...xw
-  wx...x...xw
- wx...x...xw
-wx...xwx.xw
- w..xw wxw
- @wxw   w
-   w
 ENDMAP

@@ -71,17 +71,6 @@ function ice_cave_difficulty()
   return true
 end
 
--- Find the slave of the teleporter and move to it.
-function callback.ice_cave_statue_garden_teleporter(data, triggerable,
-                                                     triggerer, marker, ev)
-  local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-    data.teleport_spot)
-
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different!")
-end
-
 -- For destination (not entry) vaults, use the following line after all
 -- substitutions have been performed:
 -- : ice_cave_appearance(_G)
@@ -551,10 +540,10 @@ ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
 :   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
 :   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
 :   " / nothing w:80")
-: item("hat " .. coldres .. " / cloak " .. coldres ..
+: item("cloak " .. coldres .. " w:15 / hat good_item " ..
 :   " / shield " .. coldres ..  " / large shield " .. coldres ..
-:   " / animal skin " .. coldres .. " / nothing w:60")
-ITEM:    potion of resistance w:5 / potion of beneficial mutation q:1 w:5 / \
+:   " / nothing w:60")
+ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
          potion of might / potion of flight / \
          potion of heal wounds w:5 / any potion w:1
 SHUFFLE: defg
@@ -682,23 +671,18 @@ MONS:    freezing wraith
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
 : mons("necromancer / necromancer w:30 ; robe " .. coldres ..
-:   " . wand of lightning | wand of iceblast | nothing")
+:   " . wand of acid | wand of iceblast | nothing")
 : savage_simulacrum(_G)
 : mons(savage_ice)
 MONS:    ice statue
-ITEM:    wand of iceblast
-ITEM:    ring of ice / staff of cold
-: if crawl.coinflip() then
+ITEM:    wand of iceblast ident:type, ring of ice / staff of cold
+ITEM:    book of ice / book of frost / randbook disc:ice numspells:6 w:2
 ITEM:    manual of ice magic
-ITEM:    nothing
-: else
-KITEM:   de = book of ice / book of frost / randbook disc:ice numspells:6 w:2
-: end
-
-: item("hat " .. coldres .. " / pair of gloves " .. coldres ..
-:   " / cloak " .. coldres .. " / naga barding " .. coldres .. " w:5 " ..
-:   " / centaur barding " .. coldres .. " / buckler " .. coldres .. " w:5 " ..
-:   " / helmet " .. coldres)
+: item("cloak " .. coldres .. " w:15 / pair of gloves good_item " ..
+:   " / hat good_item / naga barding " .. coldres .. " w:5 " ..
+:   " / centaur barding " .. coldres .. " w:5 / buckler " .. coldres .. " w:5")
+SHUFFLE: fg
+KPROP:   l = no_tele_into
 MAP
                           xxxxxx
                         xxx....xx
@@ -721,7 +705,7 @@ xxxx..4...324xxwwxxx3..xxxxxxxxx............x
    xxxx+xxxx.....xxx.....xxx..xxwxx..xx
   xx444544xxx...xxxxx........xxxwwx...xx
  xx.444444.xxxxxxxxx..3..3...xxwwwxx...xx
-xx..xgdegx..xxxxxx*%...1.....xxwwwxxx.66x
+xx..x$de$x..xxxxxx*%...1.....xxwwwxxx.66x
 x...xxffxx...xxxxx*%....3....xwwwwwxx6.6x
 x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
 xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
@@ -742,48 +726,45 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 NSUBST:  . = 9:1 / 1:2 / *:.
-SHUFFLE: Qq / Zz / Nn / Bb / Mm
-SUBST:   Q=2, Z=2, N=., B=., M=.
-SUBST:   q=!, z=!, n=., b=., m=.
+SHUFFLE: Oo / Pp / Qq / Rr / Ss
+SUBST:   OP = 2, op = !, QRSqrs = .
 # Replaces '!'s with fog generators.
 : if dgn.persist.ice_cave_hard then
 : place_fog(_G, "freezing vapour", 100)
 : else
 : place_fog(_G, "freezing vapour", 30)
 : end
-# Couple of more random, milder fog generators away from the entrance.
+# Couple of more random, milder fog generators away from the entrance
+# and in the water.
 NSUBST:  . = 3:! / *:.
 : place_fog(_G, "freezing vapour", 30)
 SUBST:   ! = W
 SUBST:   - = .
-# Still more fog, in the water this time.
 NSUBST:  w = 3:! / *:w
 : place_fog(_G, "freezing vapour", 50)
 SUBST:   ! = w
 {{
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / ice devil w:30")
-ice_cave_item_attributes(_G)
 }}
-: if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
-MONS:    ice devil w:13 / nothing w:2
-MONS:    ice statue
 MONS:    ice devil
-MONS:    ice fiend
+MONS:    ice statue
+MONS:    patrolling reaper ; scythe ego:freezing
 MONS:    blizzard demon
+MONS:    ice fiend
+: if dgn.persist.ice_cave_hard then
+# Swap out the reaper for the standard ice fiend or blizzard demons,
+# alongside making the ice devil placements stronger.
+SUBST:   2 = 1:2 2:13, 0 = 2, 4 = 5
 SHUFFLE: 5` / `6
 : else
-# XXX: Very low monster variety.
-MONS:    white imp / ufetubus
-MONS:    ice devil w:12 / nothing w:5
-MONS:    ice statue
-MONS:    ice devil / nothing
-MONS:    ice devil
+SUBST:   2 = .:5 2:12, 0 = 21, ` = .
 : end
 SHUFFLE: dg, efh
 SUBST:   e = ed
 SUBST:   ` = .
+: ice_cave_item_attributes(_G)
 : item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
 :   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
 :   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
@@ -795,12 +776,11 @@ SUBST:   ` = .
 :   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
 :   " / giant spiked club " .. goodfreezeweap)
 ITEM: demon whip good_item / demon blade good_item / demon trident good_item
-: item("hat " .. coldres .. " / pair of gloves " .. coldres ..
-:   " / cloak " .. coldres .. " / buckler " .. coldres ..
-:   " / pair of boots " .. coldres)
+: item("cloak " .. coldres .. " / hat good_item / pair of gloves good_item / " ..
+:   " / pair of boots good_item / buckler " .. coldres)
 : item("crystal plate armour " .. coldres ..
 :   " / troll leather armour " .. coldres ..
-:   " / ice dragon armour good_item / robe ego:resistance / " ..
+:   " / ice dragon scales good_item / robe ego:resistance ident:type / " ..
 :   " / naga barding " .. goodcoldres .. " w:5" ..
 :   " / centaur barding " .. goodcoldres .. " w:5" ..
 :   " / crystal plate armour " .. goodcoldres ..
@@ -810,29 +790,29 @@ MAP
                   xxx....xxx
                  xx........xxx
                 xx....xxx....xx
-  xxxxx         x...xxx4xxx...xxx
- xx...xxxxx     x...xx44..xxxx..xx
+  xxxxx         x...xxx0xxx...xxx
+ xx...xxxxx     x...xx00..xxxx..xx
 xx.1..1...xx xxxxxx..xx.....xx...x
 x1......1..xxx.x...........dxxx..x
 xx........1.x.........xx..dxx...xx
 x.1..1..1........xxxxxxxxxxx...xx
 xx............xxxxwwwwwwxxx...xx
- x..........xxxwwwwxxxxxxq..xxx
- x3x....x3xxxwwwxxxx....Q..xx
- xxxx..xxxxwwwxxx......QqQ..xxx
+ x..........xxxwwwwxxxxxxp..xxx
+ x3x....x3xxxwwwxxxx....P..xx
+ xxxx..xxxxwwwxxx......PpP..xxx
    xx..xxxwwxxx....xx.........xxx
-  xx..xxxwwxx.....xx..xxxx..z...xx
-  x..xxxwwxx4.b.x.....N..x...Z...xx
-  x...xxwwxx..B.xxx..n.N.xx.ZzZ..4xx
-  xx...xxwwx4BbB..xx..N...xx.......x
-   xx.-.xwwxx.........x.n........4xx
+  xx..xxxwwxx.....xx..xxxx..q...xx
+  x..xxxwwxx0.o.x.....S..x...Q...xx
+  x...xxwwxx..O.xxx..s.S.xx.QqQ..0xx
+  xx...xxwwx0OoO..xx..S...xx.......x
+   xx.-.xwwxx.........x.s........0xx
    xx---xxwwxx...xxx..x..xxx.....xx
    x---xxwwwwxxxxx....x.....x..xxx
-  xx---xxwwwwwwx.....mx.....xxxx
- xx-----xxwwwwwxx.xx.M.m..xxx
- x---A---xxwwwccccc.M.M.ccccc
+  xx---xxwwwwwwx...r..x.....xxxx
+ xx-----xxwwwwwxx.xx.R...rxxx
+ x---A---xxwwwccccc.R.R.ccccc
  x-------xwwwwc...ccc.ccc...c
- xx--<--xxwwwwc.e...`5`...f.c
+ xx--<--xxwwwwc.e...`4`...f.c
   xx---xxwwwwwc...cc*|*cc...c
    xxxxxxxwwwxccccccccccccccc
          xxxxx
@@ -1133,48 +1113,34 @@ ENDMAP
 #
 # These rely on devious placement of ice statues and forcing players to face
 # them (if they want loot, that is).
-
-NAME:   ice_cave_statue_garden_teleport
+# Was called ice_cave_statue_garden_teleport
+NAME:   ice_cave_statue_garden_transporter
 veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
 KMONS:  34 = white ugly thing
-{{
--- Lua marker magic!
-local m_marker = TriggerableFunction:new {
-  func="callback.ice_cave_statue_garden_teleporter",
-  data = {teleport_spot=1},
-  repeated=true }
-m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
-
-lua_marker('M', m_marker)
-
--- And the slave.
-lua_marker('m', portal_desc { teleport_spot=1})
-}}
-KFEAT:  M = teleporter
-TILE:   M = dngn_teleporter_ice_cave
-KPROP:  -24!m_| = no_tele_into
-SUBST:  m- = .
-SUBST:  ! = *
-SUBST:  _ = <
+KITEM:  *! = *
+MARKER: P = lua:transp_loc("statue_garden_first")
+MARKER: Q = lua:transp_dest_loc("statue_garden_first")
+MARKER: R = lua:transp_loc("statue_garden_second")
+MARKER: S = lua:transp_dest_loc("statue_garden_second")
 : ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx...GMG...xxxxxxxxxxxccccccccccccc---------ccc
-xx.....%.....xxxxxxxxxxcccccccccccc---G-!-G---cc
-xx....*.*....xxxxxxxxxxcccccccccccc----!|!----cc
-x......*......xxxxxxxxxccccccccccc------!------c
-x.1..G.3.G..1.xxxxxxxxxccccccccccc----2---2----c
-x.............xxxxxxxxxccccccccccc------4------c
-xx..1.....1..xxxxxxxxxxcccccccccccc-----------cc
-xx...........xxxxxxxxxxcccccccccccc-----------cc
-xx.1...A...1.xxxxxxxxxxcccccccccccc-----m-----cc
-xxx.........xxxxxxxxxxxccccccccccccc---------ccc
-xxxx...<...xxxxxxxxxxxxcccccccccccccc---_---cccc
-xxxxx.....xxxxxxxxxxxxxccccccccccccccc-----ccccc
+xxx...GPG...xxxxxxxxxxxccccccccccccc...!R!...ccc
+xx...%.%.%...xxxxxxxxxxcccccccccccc...G.|.G...cc
+xx....*S*....xxxxxxxxxxcccccccccccc....!.!....cc
+x......*......xxxxxxxxxccccccccccc......!......c
+x.1..G.3.G..1.xxxxxxxxxccccccccccc....2...2....c
+x.............xxxxxxxxxccccccccccc......4......c
+xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
+xx...........xxxxxxxxxxcccccccccccc...........cc
+xx.1...A...1.xxxxxxxxxxcccccccccccc.....Q.....cc
+xxx.........xxxxxxxxxxxccccccccccccc.........ccc
+xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
+xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
@@ -1185,17 +1151,21 @@ ORIENT: encompass
 MONS:   ice beast, white ugly thing, ice statue, white very ugly thing
 : cruel_simulacrum(_G)
 : mons(cruel_ice)
+ITEM:   battleaxe ego:freezing good_item ident:type / book of frost w:5 / \
+        book of ice w:5 / ice dragon scales
+ITEM:   executioner's axe ego:freezing good_item ident:type / \
+        book of ice w:5 / manual of ice magic w:5 / ice dragon scales randart
 : if dgn.persist.ice_cave_hard then
-SUBST:  ! = 3, 2 = 4
+SUBST:  ! = 3, 2 = 4, ? = d
 : else
-SUBST:  !5 = .
+SUBST:  !5 = ., ? = e
 : end
 : ice_cave_appearance(_G)
 MAP
 ccccccccccc
-c|*.....*|c
+c|*..?..*|c
 c*.......*c
-c.........c
+c%.......%c
 c.........c
 c.........c
 cc5.....5cc
@@ -1209,9 +1179,9 @@ c.........c
 c5.......5c
 c3.......3c
 ccccc.ccccc
-x$*.....*$x
-x*5.....5*x
-x.........x
+x%*.....*%x
+x%5.....5%x
+x*.......*x
 x...111...x
 x...111...x
 xx.......xx

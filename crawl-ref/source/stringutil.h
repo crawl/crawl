@@ -3,8 +3,7 @@
  * @brief String manipulation functions that don't fit elsewhere.
  **/
 
-#ifndef STRINGS_H
-#define STRINGS_H
+#pragma once
 
 #include "config.h"
 #include "libutil.h" // always_true
@@ -239,12 +238,13 @@ vector<string> split_string(const string &sep, string s, bool trim = true,
 string make_time_string(time_t abs_time, bool terse = false);
 string make_file_time(time_t when);
 
-// Work around missing std::to_string. This will break when newlib adds
-// support for long double, which will enable std::to_string in libstdc++.
+// Work around older Cygwin's missing std::to_string, resulting from a lack
+// of long double support. Newer versions do provide long double and
+// std::to_string.
 //
-// See http://permalink.gmane.org/gmane.os.cygwin/150485 for more info.
-#ifdef TARGET_COMPILER_CYGWIN
-// Injecting into std:: because we sometimes use std::to_string to
+// See https://cygwin.com/ml/cygwin/2015-01/msg00245.html for more info.
+#ifdef _GLIBCXX_HAVE_BROKEN_VSWPRINTF
+// Inject into std:: because we sometimes use std::to_string to
 // disambiguate.
 namespace std
 {
@@ -281,6 +281,4 @@ namespace std
         return make_stringf("%f", value);
     }
 }
-#endif
-
 #endif

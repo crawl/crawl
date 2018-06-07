@@ -4,8 +4,7 @@
  *        the crawl_environment that are shown to the player.
 **/
 
-#ifndef TILEVIEW_H
-#define TILEVIEW_H
+#pragma once
 
 #include "target.h"
 
@@ -60,5 +59,3 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 
 void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);
-
-#endif

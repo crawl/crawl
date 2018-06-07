@@ -104,8 +104,6 @@ typedef map<int, int> cmd_to_key_map;
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
 
-static KeymapContext _context_for_command(command_type cmd);
-
 static inline int userfunc_index(int key)
 {
     int index = (key <= USERFUNCBASE ? USERFUNCBASE - key : -1);
@@ -424,6 +422,19 @@ static void _macro_inject_sent_keys()
 }
 
 /*
+ * Safely add a command to the end of the sendkeys keybuffer.
+ */
+void macro_sendkeys_end_add_cmd(command_type cmd)
+{
+    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
+
+    // There should be plenty of room between the synthetic keys
+    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
+    // command_type to fit (currently 1000 through 2069).
+    macro_sendkeys_end_add_expanded(-((int) cmd));
+}
+
+/*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
  */
@@ -711,12 +722,15 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
     if (!rgetch)
         rgetch = m_getch;
 
-    keys.push_back(a = rgetch());
-
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
-    while (kbhit() || a == 0)
-        keys.push_back(a = rgetch());
+    do
+    {
+        a = rgetch();
+        if (a != CK_NO_KEY)
+            keys.push_back(a);
+    }
+    while (keys.size() == 0 || ((kbhit() || a == 0) && a != CK_REDRAW));
 
     return keys;
 }
@@ -813,6 +827,13 @@ void flush_input_buffer(int reason)
         || reason == FLUSH_REPLAY_SETUP_FAILURE
         || reason == FLUSH_REPEAT_SETUP_DONE)
     {
+        if (crawl_state.nonempty_buffer_flush_errors)
+        {
+            if (you.wizard) // crash -- intended for tests
+                ASSERT(Buffer.empty());
+            else if (!Buffer.empty())
+                mprf(MSGCH_ERROR, "Flushing non-empty key buffer");
+        }
         while (!Buffer.empty())
         {
             const int key = Buffer.front();
@@ -1137,6 +1158,24 @@ string read_rc_file_macro(const string& field)
     return "";
 }
 
+// useful for debugging
+string keyseq_to_str(const keyseq &seq)
+{
+    string s = "";
+    for (auto k : seq)
+    {
+        if (k == '\n' || k == '\r')
+            s += "newline";
+        else if (k == '\t')
+            s += "tab";
+        else
+            s += (char) k;
+        s += ", ";
+    }
+    return s.size() == 0 ? s : s.substr(0, s.size() - 2);
+
+}
+
 void macro_init()
 {
     for (const auto &fn : Options.additional_macro_files)
@@ -1253,7 +1292,7 @@ void init_keybindings()
         default_binding &data = _default_binding_list[i];
         ASSERT(VALID_BIND_COMMAND(data.cmd));
 
-        KeymapContext context = _context_for_command(data.cmd);
+        KeymapContext context = context_for_command(data.cmd);
 
         ASSERT(context < KMC_CONTEXT_COUNT);
 
@@ -1285,8 +1324,8 @@ command_type key_to_command(int key, KeymapContext context)
 {
     if (-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
     {
-        command_type  cmd         = (command_type) -key;
-        KeymapContext cmd_context = _context_for_command(cmd);
+        const command_type  cmd         = (command_type) -key;
+        const KeymapContext cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
             return CMD_NO_CMD;
@@ -1295,9 +1334,9 @@ command_type key_to_command(int key, KeymapContext context)
         {
             mprf(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
-                 "context",
+                 "context %d",
                  command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
-                 CMD_MAX_CMD + key);
+                 CMD_MAX_CMD + key, (int) context);
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
             if (crawl_state.is_replaying_keys()
@@ -1306,24 +1345,22 @@ command_type key_to_command(int key, KeymapContext context)
                 flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
             }
             flush_input_buffer(FLUSH_BEFORE_COMMAND);
-
             return CMD_NO_CMD;
         }
-
         return cmd;
     }
 
     const auto cmd = static_cast<command_type>(lookup(_keys_to_cmds[context],
                                                       key, CMD_NO_CMD));
 
-    ASSERT(cmd == CMD_NO_CMD || _context_for_command(cmd) == context);
+    ASSERT(cmd == CMD_NO_CMD || context_for_command(cmd) == context);
 
     return cmd;
 }
 
 int command_to_key(command_type cmd)
 {
-    KeymapContext context = _context_for_command(cmd);
+    KeymapContext context = context_for_command(cmd);
 
     if (context == KMC_NONE)
         return '\0';
@@ -1331,7 +1368,7 @@ int command_to_key(command_type cmd)
     return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
-static KeymapContext _context_for_command(command_type cmd)
+KeymapContext context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
         return KMC_DEFAULT;
@@ -1352,7 +1389,7 @@ static KeymapContext _context_for_command(command_type cmd)
 
 void bind_command_to_key(command_type cmd, int key)
 {
-    KeymapContext context = _context_for_command(cmd);
+    KeymapContext context = context_for_command(cmd);
     string   command_name = command_to_name(cmd);
 
     if (context == KMC_NONE || command_name == "CMD_NO_CMD"
@@ -1462,7 +1499,7 @@ string command_to_string(command_type cmd, bool tutorial)
     return result;
 }
 
-void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
+void insert_commands(string &desc, const vector<command_type> &cmds, bool formatted)
 {
     desc = untag_tiles_console(desc);
     for (command_type cmd : cmds)
@@ -1481,47 +1518,3 @@ void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
     }
     desc = replace_all(desc, "percent", "%");
 }
-
-void insert_commands(string &desc, const int first, ...)
-{
-    vector<command_type> cmd_vector;
-    cmd_vector.push_back((command_type) first);
-
-    va_list args;
-    va_start(args, first);
-    int nargs = 10;
-
-    while (nargs-- > 0)
-    {
-        int value = va_arg(args, int);
-        if (!value)
-            break;
-
-        cmd_vector.push_back((command_type) value);
-    }
-    ASSERT(nargs > 0);
-    va_end(args);
-
-    insert_commands(desc, cmd_vector);
-}
-
-#if 0
-// Currently unused, might be useful somewhere.
-static void _list_all_commands(string &commands)
-{
-    for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
-    {
-        const command_type cmd = (command_type) i;
-
-        const string command_name = command_to_name(cmd);
-        if (command_name == "CMD_NO_CMD")
-            continue;
-
-        if (_context_for_command(cmd) != KMC_DEFAULT)
-            continue;
-
-        commands += command_name + ": " + command_to_string(cmd) + "\n";
-    }
-    commands += "\n";
-}
-#endif

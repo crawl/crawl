@@ -3,12 +3,14 @@
  * @brief Traps related functions.
 **/
 
-#ifndef TRAPS_H
-#define TRAPS_H
+#pragma once
 
 #include "enum.h"
+#include "trap-type.h"
 
 #define NEWLY_TRAPPED_KEY "newly_trapped"
+
+#define NET_MIN_DURABILITY -7
 
 struct bolt;
 class monster;
@@ -37,7 +39,6 @@ trap_type get_trap_type(const coord_def& where);
 // known is relevant only during level-gen
 bool is_valid_shaft_level(bool known = false);
 level_id generic_shaft_dest(coord_def pos, bool known);
-void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 
 int       num_traps_for_place();
 trap_type random_trap_for_place();
@@ -45,6 +46,7 @@ trap_type random_vault_trap();
 
 int count_traps(trap_type ttyp);
 void place_webs(int num);
-bool maybe_destroy_web(actor *oaf);
 bool ensnare(actor *fly);
-#endif
+void leave_web(bool quiet = false);
+void monster_web_cleanup(const monster &mons, bool quiet = false);
+void stop_being_held();

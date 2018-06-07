@@ -12,12 +12,14 @@
 #include "libutil.h"
 #include "monster.h"
 #include "output.h"
-#include "process_desc.h"
+#include "describe.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tilereg-dgn.h"
+#include "tiles-build-specific.h"
 #include "tileview.h"
 #include "viewgeom.h"
 
@@ -133,11 +135,7 @@ bool MonsterRegion::update_alt_text(string &alt)
 
     get_square_desc(gc, inf);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 
@@ -189,7 +187,7 @@ void MonsterRegion::pack_buffers()
             }
 
             // Fill the rest of the space with out of sight floor tiles.
-            int tileidx = env.tile_default.floor + m_flavour[i-1] % num_floor;
+            int tileidx = env.tile_default.floor + i % num_floor;
             m_buf.add_dngn_tile(tileidx, x, y);
             m_buf.add_icons_tile(TILEI_MESH, x, y);
         }

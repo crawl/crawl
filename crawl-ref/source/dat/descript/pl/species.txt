@@ -42,10 +42,6 @@ Halfling
 
 Małe lecz odważne, niziołki są zabójcze z procą w ręku.
 %%%%
-High Elf
-
-Dumne elfy, dobre zarówno w czarach jak i w robieniu mieczem.
-%%%%
 Hill Orc
 
 Orki są stworzone do walki wręcz, lecz potrafią sobie radzić z bardziej

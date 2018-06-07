@@ -8,10 +8,10 @@
         if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
             e.kmons('1 = base draconian / nothing w:25')
             e.kmons('2 = nonbase draconian / base draconian w:20')
-            e.kmons('3 = draconian zealot / draconian monk w:2')
+            e.kmons('3 = draconian stormcaller / draconian monk w:2')
         else
             e.kmons('1 = tengu warrior / tengu conjurer / '
-                    .. 'giant orange brain / spriggan berserker w:5 / '
+                    .. 'glowing orange brain / spriggan berserker w:5 / '
                     .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
                     .. 'nothing w:68')
             e.kmons('2 = spriggan berserker / tengu warrior w:20')
@@ -44,7 +44,7 @@
         e.kmons("a = air elemental")
         e.kmons("o = iron golem")
         e.kmons("r = molten gargoyle / gargoyle")
-        e.kmons("t = giant orange brain / wind drake w:5")
+        e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
         e.kfeat("W = deep_water")
         e.shuffle("wKLMN / lghij")
@@ -53,11 +53,10 @@
         e.shuffle("JH")
         e.shuffle("34")
         e.shuffle("m6")
-        e.kitem("p = w:60 potion of mutation / " ..
-                "w:1 potion of cure mutation")
+        e.kitem("p = potion of mutation")
         e.kitem("P = any jewellery good_item")
-        e.kitem("Q = potion of cure mutation")
-        e.kitem("R = potion of cure mutation / nothing")
+        e.kitem("Q = potion of mutation")
+        e.kitem("R = potion of mutation / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
         e.nsubst("G = 1:G / *:2")
         e.nsubst("H = 2:8 / 2:3")
@@ -97,7 +96,7 @@ default-depth: Depths:2-, !Depths:$
 # The River Lethe
 #
 # The two orange statues are placed for maximum pain -- one you're likely to
-# first see while flying, the other aided by a giant eyeball and protective
+# first see while flying, the other aided by a floating eye and protective
 # plants.
 #
 # Lemuel
@@ -107,8 +106,8 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 MONS:    plant / fungus w:2
 MONS:    wolf / warg / hell hound / raiju w:4
-MONS:    shadow w:20 / wraith w:20 / lost soul w:2 / \
-         shadow wraith / phantasmal warrior / skeletal warrior
+MONS:    shadow w:20 / wraith w:20 / shadow wraith / phantasmal warrior / \
+         skeletal warrior
 MONS:    dancing weapon / war gargoyle w:2
 MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \
@@ -118,10 +117,9 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
 MONS:    ancient lich w:20 / tzitzimitl
-KMONS:   8 = Maud, patrolling giant orange brain
-KMONS:   9 = patrolling giant orange brain
+KMONS:   89 = patrolling glowing orange brain
 KMONS:   0 = orange crystal statue
-KMONS:   B = giant eyeball
+KMONS:   B = floating eye
 KMONS:   C = 0 band
 KMONS:   W = patrolling water elemental w:40 / \
              patrolling hydra simulacrum / patrolling hydra spectre / \
@@ -135,7 +133,7 @@ KITEM:   0 = potion of brilliance ident:type
 KFEAT:   8e = >
 KFEAT:   W = w
 NSUBST:  h = 1:+ / *:x, H = 1:+ / *:x
-SHUFFLE: dD/eE/fF/gG
+SHUFFLE: dD / eE / fF / gG
 SUBST:   D = +, EFG = x
 NSUBST:  e = 1:e / 1:* / *:%, f = 1:e / *:%, g = 1:e / *:%
 SUBST:   | = |*
@@ -226,7 +224,7 @@ KMONS:   z = killer bee
 KMONS:   Z = queen bee
 ITEM:    scroll of teleportation
 ITEM:    amulet of reflection
-KITEM:   gzZ = royal jelly w:10 / nothing w:40
+KITEM:   gzZ = ration w:5 tile:food_honeycomb / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
 KFEAT:   ^ = known teleport trap / known Zot trap
@@ -642,14 +640,14 @@ NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 MONS:     deep elf mage w:12 / naga mage / hell knight / efreet w:5 / \
-          rakshasa w:5 ; robe . wand of iceblast | wand of lightning . \
+          rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
           centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . \
                                 arrow . long sword good_item
 MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
           ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
           mana viper w:5 / mana viper perm_ench:shapeshifter w:5 / \
-          very ugly thing w:20 / shock serpent / boulder beetle / \
+          very ugly thing w:20 / shock serpent / catoblepas / \
           hydra simulacrum w:4 / anaconda simulacrum w:4 / harpy simulacrum w:4 / \
           dancing weapon w:8 ; trident ego:flaming | trident ego:freezing | \
                                war axe ego:flaming | war axe ego:freezing | \
@@ -658,7 +656,7 @@ MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
 MONS:     fire giant ; battleaxe ego:freezing / spriggan air mage / sphinx w:5 / \
           frost giant ; great sword ego:flaming / deep troll earth mage / \
           tengu reaver / ettin ; great mace ego:flaming . great mace ego:freezing / \
-          deep elf annihilator ; ice dragon armour | fire dragon armour . \
+          deep elf annihilator ; ice dragon scales | fire dragon scales . \
                                  scimitar ego:flaming | scimitar ego:freezing
 MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
           storm dragon w:5 / storm dragon perm_ench:shapeshifter w:5 / \
@@ -670,7 +668,7 @@ MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
                            great mace ego:flaming | great mace ego:freezing
 KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
                                      rapier ego:flaming . rapier ego:freezing
-KMONS:    6 = deep elf master archer ; fire dragon armour | ice dragon armour . \
+KMONS:    6 = deep elf master archer ; fire dragon scales | ice dragon scales . \
                                        longbow ego:flaming | longbow ego:freezing . \
                                        arrow . potion of haste | potion of resistance
 KMONS:    7 = lich / ancient lich w:5
@@ -871,7 +869,7 @@ MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          deep elf annihilator w:4 / deep elf sorcerer w:4 / \
          deep elf death mage w:2 / deep elf elementalist w:2
 MONS:    large slime creature / ugly thing w:20 / shapeshifter w:20 / \
-         great orb of eyes / giant orange brain / deep troll
+         great orb of eyes / glowing orange brain / deep troll
 MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
          titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2

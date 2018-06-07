@@ -21,9 +21,9 @@
 #include "english.h"
 #include "files.h"
 #include "ghost.h"
-#include "godblessing.h"
+#include "god-blessing.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -41,32 +41,12 @@
 #include "spl-miscast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewmap.h"
 
 #ifdef WIZARD
-// Creates a specific monster by mon type number.
-void wizard_create_spec_monster()
-{
-    int mon = prompt_for_int("Which monster by number? ", true);
-
-    if (mon == -1 || (mon >= NUM_MONSTERS
-                      && mon != RANDOM_MONSTER
-                      && mon != RANDOM_DRACONIAN
-                      && mon != RANDOM_BASE_DRACONIAN
-                      && mon != RANDOM_NONBASE_DRACONIAN
-                      && mon != WANDERING_MONSTER))
-    {
-        canned_msg(MSG_OK);
-    }
-    else
-    {
-        create_monster(
-            mgen_data::sleeper_at(
-                static_cast<monster_type>(mon), you.pos()));
-    }
-}
 
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
@@ -138,12 +118,6 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
-    {
-        mpr("Couldn't find player kraken!");
-        return;
-    }
-
     // FIXME: This is a bit useless, seeing how you cannot set the
     // ghost's stats, brand or level, among other things.
     if (mspec.type == MONS_PLAYER_GHOST)
@@ -203,10 +177,10 @@ void wizard_create_spec_monster_name()
         }
         ghost.job = static_cast<job_type>(job_id);
         ghost.xl = 7;
+        ghost.max_hp = 20;
+        ASSERT(debug_check_ghost(ghost));
 
         mon.set_ghost(ghost);
-
-        ghosts.push_back(ghost);
     }
 }
 
@@ -283,7 +257,7 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exper_value(mi);
+        int exp = exper_value(*mi);
         total_exp += exp;
         if (!mons_is_unique(mi->type))
             total_nonuniq_exp += exp;
@@ -461,7 +435,7 @@ void debug_stethoscope(int mon)
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
          mons.res_magic(),
-         exper_value(&mons),
+         exper_value(mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
@@ -477,7 +451,7 @@ void debug_stethoscope(int mon)
     }
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat(&mons);
+    const habitat_type hab = mons_habitat(mons);
 
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);
@@ -486,11 +460,11 @@ void debug_stethoscope(int mon)
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
-         : mons_is_wandering(&mons)       ? "wander"
-         : mons_is_seeking(&mons)         ? "seek"
-         : mons_is_fleeing(&mons)         ? "flee"
+         : mons_is_wandering(mons)       ? "wander"
+         : mons_is_seeking(mons)         ? "seek"
+         : mons_is_fleeing(mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
-         : mons_is_cornered(&mons)        ? "cornered"
+         : mons_is_cornered(mons)        ? "cornered"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,
@@ -696,7 +670,7 @@ void wizard_gain_monster_level(monster* mon)
     // but cap the levels gained to just 1.
     bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
     if (!worked)
-        simple_monster_message(mon, " seems unable to mature further.", MSGCH_WARN);
+        simple_monster_message(*mon, " seems unable to mature further.", MSGCH_WARN);
 
     // (The gain_exp() method will chop the monster's experience down
     // to half-way between its new level and the next, so we needn't
@@ -727,7 +701,7 @@ void wizard_apply_monster_blessing(monster* mon)
 
 void wizard_give_monster_item(monster* mon)
 {
-    mon_itemuse_type item_use = mons_itemuse(mon);
+    mon_itemuse_type item_use = mons_itemuse(*mon);
     if (item_use < MONUSE_STARTING_EQUIPMENT)
     {
         mpr("That type of monster can't use any items.");
@@ -769,7 +743,10 @@ void wizard_give_monster_item(monster* mon)
 static void _move_player(const coord_def& where)
 {
     if (!you.can_pass_through_feat(grd(where)))
+    {
         grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
+    }
     move_player_to_grid(where, false);
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))
@@ -780,7 +757,7 @@ static void _move_monster(const coord_def& where, int idx1)
 {
     dist moves;
     direction_chooser_args args;
-    args.needs_path = false;
+    args.unrestricted = true;
     args.top_prompt = "Move monster to where?";
     args.default_place = where;
     direction(moves, args);
@@ -803,6 +780,11 @@ static void _move_monster(const coord_def& where, int idx1)
     {
         mon2->moveto(where);
         mon1->check_redraw(where);
+    }
+    if (!you.see_cell(moves.target))
+    {
+        mon1->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
+        mon1->seen_context = SC_NONE;
     }
 }
 
@@ -1215,9 +1197,9 @@ void debug_ghosts()
     const char c = toalower(getchm());
 
     if (c == 'c')
-        save_ghost(true);
+        save_ghosts(ghost_demon::find_ghosts(), true);
     else if (c == 'l')
-        load_ghost(false);
+        load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), false);
     else
         canned_msg(MSG_OK);
 }

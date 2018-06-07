@@ -69,7 +69,7 @@ TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
-MONS:    eye of draining / eye of devastation / giant eyeball / \
+MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
 KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
@@ -94,7 +94,7 @@ TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
-MONS:    eye of draining / eye of devastation / giant eyeball / \
+MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
 KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
@@ -222,7 +222,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 MONS: ancient lich / shadow demon / curse skull / \
       ironbrand convoker / corrupter / deep elf demonologist
 MONS: eye of draining / eye of devastation / \
-      giant eyeball / ghost moth / black sun / torpor snail
+      floating eye / ghost moth / black sun / torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
@@ -421,64 +421,6 @@ x0.~.0x
 xx9.9xx
  Xx0xX
   xxx
-ENDMAP
-
-########################################################################
-# Ziggurat loot chamber (needs work).
-#
-# A reasonably large space to drop loot. Items will be stacked once all
-# free space is occupied by items.
-#
-# TODO:
-# Add marker to set a center point for loot.
-# Maybe programmatically generate loot chamber shapes?
-#
-NAME: ziggurat_loot_1
-TAGS: ziggurat_loot_chamber allow_dup no_rotate
-ORIENT: float
-: ziggurat_loot_spot(_G, "X")
-MAP
- cccccc
-cc....cc
-@.....Xc
-cc....cc
- cccccc
-ENDMAP
-
-NAME: ziggurat_loot_2
-TAGS: ziggurat_loot_chamber allow_dup no_rotate
-ORIENT: float
-: ziggurat_loot_spot(_G, "X")
-MAP
- ccc ccc
-cc.ccc.cc
-@......Xc
-cc.ccc.cc
- ccc ccc
-ENDMAP
-
-NAME: ziggurat_loot_3
-TAGS: ziggurat_loot_chamber allow_dup no_rotate
-ORIENT: float
-WEIGHT: 5
-: ziggurat_loot_spot(_G, "X")
-MAP
-ccc
-@Xc
-ccc
-ENDMAP
-
-#######################################################################
-# not finished!
-NAME: ziggurat_arena
-# Just to keep the map compiler happy:
-TAGS: ziggurat_arena unrand
-MAP
-nnnnnnnnnnnnnn
-n...........An
-n<..........>n
-n...........An
-nnnnnnnnnnnnnn
 ENDMAP
 
 #######################################################################

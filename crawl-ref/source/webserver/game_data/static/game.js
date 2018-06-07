@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
         "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
-        "./player"],
+        "./player", "./mouse_control"],
 function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
           options) {
     "use strict";
@@ -56,14 +56,17 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         $("#stats").html(old_html);
 
         // Determine height of messages area
-        old_html = $("#messages").html();
+
+        // need to clone this, not copy html, since there can be event handlers
+        // embedded in here on an input box.
+        var old_messages = $("#messages").clone(true);
         var old_scroll_top = $("#messages_container").scrollTop();
         s = "";
         for (var i = 0; i < msg_height+1; i++)
             s = s + "<br>";
         $("#messages").html(s);
         var msg_height_px = $("#messages").outerHeight();
-        $("#messages").html(old_html);
+        $("#messages").replaceWith(old_messages);
         $("#messages_container").scrollTop(old_scroll_top);
 
         var remaining_width = window_width - stat_width_px;
@@ -94,6 +97,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         display.invalidate(true);
         display.display();
         minimap.update_overlay();
+
+        var possible_input = $("#messages .game_message input");
+        if (possible_input)
+           possible_input.focus();
     }
 
     options.add_listener(function () {
@@ -168,7 +175,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         {
             msg_height = data.message_pane.height
                          + (data.message_pane.small_more ? 0 : -1);
+            messages.message_pane_height = msg_height;
         }
+        else
+            msg_height = messages.message_pane_height;
 
         if (layout_parameters == null)
             layout({});

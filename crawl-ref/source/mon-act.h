@@ -3,8 +3,7 @@
  * @brief Monsters doing stuff (monsters acting).
 **/
 
-#ifndef MONACT_H
-#define MONACT_H
+#pragma once
 
 struct bolt;
 
@@ -16,6 +15,8 @@ public:
         return m1.second < m2.second;
     }
 };
+
+void mons_set_just_seen(monster *mon);
 
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);
@@ -31,5 +32,3 @@ void handle_monster_move(monster* mon);
 void queue_monster_for_action(monster* mons);
 
 #define ENERGY_SUBMERGE(entry) (max(entry->energy_usage.swim / 2, 1))
-
-#endif

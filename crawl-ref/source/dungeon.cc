@@ -38,22 +38,23 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "flood_find.h"
+#include "flood-find.h"
 #include "food.h"
 #include "ghost.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "misc.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "place.h"
 #include "randbook.h"
@@ -68,7 +69,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -101,8 +102,8 @@ static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
 
-static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
-                              int clump_radius = 4);
+static void _add_plant_clumps(int rarity, int clump_sparseness,
+                              int clump_radius);
 
 static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
@@ -249,7 +250,8 @@ static void _count_gold()
         }
     }
 
-    you.attribute[ATTR_GOLD_GENERATED] += gold;
+    if (!player_in_branch(BRANCH_ABYSS))
+        you.attribute[ATTR_GOLD_GENERATED] += gold;
 
     if (have_passive(passive_t::detect_gold))
     {
@@ -451,6 +453,87 @@ static void _builder_assertions()
                     dungeon_feature_name(grd(*ri)));
             }
 #endif
+}
+
+/**
+ * Place a transporter and set its destination.
+ *
+ * @param pos     The position of the transporter
+ * @param dest    The position the transporter destination.
+ **/
+void dgn_place_transporter(const coord_def &pos, const coord_def &dest)
+{
+    ASSERT(pos != dest);
+
+    env.markers.add(new map_position_marker(pos, DNGN_TRANSPORTER, dest));
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, DNGN_TRANSPORTER, false, true);
+    dungeon_terrain_changed(dest, DNGN_TRANSPORTER_LANDING, false, true);
+}
+
+/**
+ * Create transporters on the current level based on transporter markers. This
+ * does checks for duplicate transporter destinations, transporters with no
+ * destinations, and unused transporter destinations.
+ *
+ * @returns True if no transporter placement errors were found, false
+ *          otherwise.
+ **/
+bool dgn_make_transporters_from_markers()
+{
+    bool no_errors = true;
+
+    // Find transporter destination markers and ensure no duplicates.
+    const vector<map_marker*> dest_markers =
+        find_markers_by_prop(TRANSPORTER_DEST_NAME_PROP);
+    map<string, map_marker *> dest_map;
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (dest_map.find(name) != dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Multiple locations with transporter "
+                 "destination name %s.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dest_map[name] = dm;
+    }
+
+    // Place transporters.
+    const vector<map_marker*> trans_markers =
+        find_markers_by_prop(TRANSPORTER_NAME_PROP);
+    map<string, bool> used_dest_map;
+    for (auto tm : trans_markers)
+    {
+        const string name = tm->property(TRANSPORTER_NAME_PROP);
+        if (dest_map.find(name) == dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Transporter with name %s has no corresponding "
+                 "destination marker.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dgn_place_transporter(tm->pos, dest_map[name]->pos);
+        env.markers.remove(tm);
+        used_dest_map[name] = true;
+    }
+
+    // Clean up any destination markers.
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (used_dest_map[name])
+            env.markers.remove(dm);
+        else
+        {
+            mprf(MSGCH_ERROR, "Unused transporter destination with name %s.",
+                 name.c_str());
+            no_errors = false;
+        }
+    }
+
+    return no_errors;
 }
 
 // Should be called after a level is constructed to perform any final
@@ -1155,7 +1238,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
@@ -1239,28 +1322,29 @@ static int _num_items_wanted(int absdepth0)
         return 3 + roll_dice(3, 11);
 }
 
+// Return how many level monster are wanted for level generation.
 static int _num_mons_wanted()
 {
-    if (player_in_branch(BRANCH_ABYSS))
+    const bool in_pan = player_in_branch(BRANCH_PANDEMONIUM);
+
+    // No disconnected branches aside from Pan have level monsters.
+    if ((!player_in_connected_branch() && !in_pan)
+        // Temple is connected but has no monsters.
+        || !branch_has_monsters(you.where_are_you))
+    {
         return 0;
+    }
 
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-        return random2avg(28, 3);
+    int size = 12;
 
-    // Except for Abyss and Pan, no other portal gets random monsters.
-    if (!player_in_connected_branch())
-        return 0;
+    if (in_pan)
+        size = 8;
+    else if (player_in_branch(BRANCH_CRYPT))
+        size = 10;
+    else if (player_in_hell())
+        size = 23;
 
-    if (!branch_has_monsters(you.where_are_you))
-        return 0;
-
-    if (player_in_branch(BRANCH_CRYPT))
-        return roll_dice(3, 8);
-
-    int mon_wanted = roll_dice(3, 10);
-
-    if (player_in_hell())
-        mon_wanted += roll_dice(3, 8);
+    int mon_wanted = roll_dice(3, size);
 
     if (mon_wanted > 60)
         mon_wanted = 60;
@@ -1291,8 +1375,7 @@ static void _fixup_walls()
         if (you.depth == branches[BRANCH_VAULTS].numlevels)
         {
             wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
-                                               9, DNGN_METAL_WALL,
-                                               0);
+                                               9, DNGN_METAL_WALL);
         }
         break;
     }
@@ -1448,19 +1531,10 @@ static void _fixup_branch_stairs()
     }
 }
 
-static bool _fixup_stone_stairs(bool preserve_vault_stairs)
+/// List all stone stairs of the indicated type.
+static list<coord_def> _find_stone_stairs(bool up_stairs)
 {
-    // This function ensures that there is exactly one each up and down
-    // stone stairs I, II, and III. More than three stairs will result in
-    // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity). Fewer than three stone stairs will result in
-    // random placement of new stairs.
-
-    const unsigned int max_stairs = 20;
-    FixedVector<coord_def, max_stairs> up_stairs;
-    FixedVector<coord_def, max_stairs> down_stairs;
-    unsigned int num_up_stairs   = 0;
-    unsigned int num_down_stairs = 0;
+    list<coord_def> stairs;
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -1468,198 +1542,272 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (feature_mimic_at(c))
             continue;
 
-        if (feat_is_stone_stair_down(grd(c))
-            && num_down_stairs < max_stairs)
+        const dungeon_feature_type feat = grd(c);
+        if (feat_is_stone_stair(feat)
+            && up_stairs == feat_is_stone_stair_up(feat))
         {
-            down_stairs[num_down_stairs++] = c;
-        }
-        else if (feat_is_stone_stair_up(grd(c))
-                 && num_up_stairs < max_stairs)
-        {
-            up_stairs[num_up_stairs++] = c;
+            stairs.push_back(c);
         }
     }
 
-    bool success = true;
+    return stairs;
+}
 
-    for (unsigned int i = 0; i < 2; i++)
+/**
+ * Try to turn excess stairs into hatches.
+ *
+ * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
+ *                          are turned into hatches will be removed.
+ * @param needed_stairs     The desired number of stairs.
+ * @param preserve_vault_stairs    Don't trapdoorify stairs that are in vaults.
+ * @param hatch_type        What sort of hatch to turn excess stairs into.
+ */
+static void _cull_redundant_stairs(list<coord_def> &stairs,
+                                   unsigned int needed_stairs,
+                                   bool preserve_vault_stairs,
+                                   dungeon_feature_type hatch_type)
+{
+    // we're going to iterate over the list, looking for redundant stairs.
+    // (redundant = can walk from one to the other.) For each of
+    // those iterations, we'll iterate over the remaining list checking for
+    // stairs redundant with the outer iteration, and hatchify + remove from
+    // the stair list any redundant stairs we find.
+
+    for (auto iter1 = stairs.begin();
+         iter1 != stairs.end() && stairs.size() <= needed_stairs;
+         ++iter1)
     {
-        FixedVector<coord_def, max_stairs>& stair_list = (i == 0 ? up_stairs
-                                                                 : down_stairs);
+        const coord_def s1_loc = *iter1;
+        // Ensure we don't search for the feature at s1. XXX: unwind_var?
+        const dungeon_feature_type saved_feat = grd(s1_loc);
+        grd(s1_loc) = DNGN_FLOOR;
 
-        unsigned int num_stairs, needed_stairs;
-        dungeon_feature_type base;
-        dungeon_feature_type replace;
-        if (i == 0)
+        auto iter2 = iter1;
+        ++iter2;
+        while (iter2 != stairs.end() && stairs.size() > needed_stairs)
         {
-            num_stairs = num_up_stairs;
-            replace = DNGN_FLOOR;
-            base = DNGN_STONE_STAIRS_UP_I;
-            // Pan abuses stair placement for transits, as we want connectivity
-            // checks.
-            needed_stairs = you.depth == 1
-                            && !player_in_branch(BRANCH_PANDEMONIUM)
-                            ? 1 : 3;
-        }
-        else
-        {
-            num_stairs = num_down_stairs;
-            replace = DNGN_FLOOR;
-            base = DNGN_STONE_STAIRS_DOWN_I;
+            const coord_def s2_loc = *iter2;
+            auto being_examined = iter2;
+            ++iter2;
 
-            if (at_branch_bottom())
-                needed_stairs = 0;
-            else
-                needed_stairs = 3;
-        }
-
-        // In Zot, don't create extra escape hatches, in order to force
-        // the player through vaults that use all three down stone stairs.
-        if (player_in_branch(BRANCH_ZOT))
-            replace = DNGN_GRANITE_STATUE;
-
-        dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
-             num_stairs, needed_stairs, i ? "down" : "up");
-
-        if (num_stairs > needed_stairs)
-        {
-            // Find pairwise stairs that are connected and turn one of them
-            // into an escape hatch of the appropriate type.
-            for (unsigned int s1 = 0; s1 < num_stairs; s1++)
-            {
-                if (num_stairs <= needed_stairs)
-                    break;
-
-                for (unsigned int s2 = s1 + 1; s2 < num_stairs; s2++)
-                {
-                    if (num_stairs <= needed_stairs)
-                        break;
-
-                    if (preserve_vault_stairs
-                        && map_masked(stair_list[s2], MMT_VAULT))
-                    {
-                        continue;
-                    }
-
-                    flood_find<feature_grid, coord_predicate> ff(env.grid,
-                                                                 in_bounds);
-
-                    ff.add_feat(grd(stair_list[s2]));
-
-                    // Ensure we're not searching for the feature at s1.
-                    dungeon_feature_type save = grd(stair_list[s1]);
-                    grd(stair_list[s1]) = DNGN_FLOOR;
-
-                    const coord_def where =
-                        ff.find_first_from(stair_list[s1],
-                                           env.level_map_mask);
-                    if (where.x)
-                    {
-                        dprf(DIAG_DNGN, "Too many stairs -- removing one"
-                                        " of a connected pair.");
-                        grd(stair_list[s2]) = replace;
-                        num_stairs--;
-                        stair_list[s2] = stair_list[num_stairs];
-                        s2--;
-                    }
-
-                    grd(stair_list[s1]) = save;
-                }
-            }
-
-            // If that doesn't work, remove random stairs.
-            while (num_stairs > needed_stairs)
-            {
-                int remove = random2(num_stairs);
-                if (preserve_vault_stairs)
-                {
-                    int tries;
-                    for (tries = num_stairs; tries > 0; tries--)
-                    {
-                        if (!map_masked(stair_list[remove], MMT_VAULT))
-                            break;
-                        remove = (remove + 1) % num_stairs;
-                    }
-
-                    // If we looped through all possibilities, then it
-                    // means that there are more than 3 stairs in vaults and
-                    // we can't preserve vault stairs.
-                    if (!tries)
-                    {
-                        dprf(DIAG_DNGN, "Too many stairs inside vaults!");
-                        break;
-                    }
-                }
-                dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
-                _set_grd(stair_list[remove], replace);
-
-                stair_list[remove] = stair_list[--num_stairs];
-            }
-        }
-
-        // FIXME: stairs that generate inside random vaults are still
-        // protected, resulting in superfluoes ones.
-        dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
-             num_stairs, needed_stairs, i ? "down" : "up");
-
-        if (num_stairs > needed_stairs && preserve_vault_stairs
-            && (i || you.depth != 1 || !player_in_branch(root_branch)))
-        {
-            success = false;
-            continue;
-        }
-
-        // If there are no stairs, it's either a branch entrance or exit.
-        // If we somehow have ended up in a catastrophic "no stairs" state,
-        // the level will not be validated, so we do not need to catch it here.
-        if (num_stairs == 0)
-            continue;
-
-        // Add extra stairs to get to exactly three.
-        for (unsigned int s = num_stairs; s < needed_stairs; s++)
-        {
-            const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
-            coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
-
-            if (!gc.origin())
-            {
-                dprf(DIAG_DNGN, "Adding stair %d at (%d,%d)", s, gc.x, gc.y);
-                // base gets fixed up to be the right stone stair below...
-                _set_grd(gc, base);
-                stair_list[num_stairs++] = gc;
-            }
-            else
-                success = false;
-        }
-
-        // If we only need one stone stair, make sure it's _I.
-        if (i == 0 && needed_stairs == 1)
-        {
-            ASSERT(num_stairs == 1 || player_in_branch(root_branch));
-            if (num_stairs == 1)
-            {
-                grd(stair_list[0]) = DNGN_STONE_STAIRS_UP_I;
+            if (preserve_vault_stairs && map_masked(s2_loc, MMT_VAULT))
                 continue;
-            }
+
+            flood_find<feature_grid, coord_predicate> ff(env.grid,
+                                                         in_bounds);
+            ff.add_feat(grd(s2_loc));
+            const coord_def where =
+                ff.find_first_from(s1_loc, env.level_map_mask);
+            if (!where.x) // these stairs aren't in the same zone
+                continue;
+
+            dprf(DIAG_DNGN,
+                 "Too many stairs -- removing one of a connected pair.");
+            grd(s2_loc) = hatch_type;
+            stairs.erase(being_examined);
         }
 
-        // Ensure uniqueness of three stairs.
-        for (int s = 0; s < 4; s++)
+        grd(s1_loc) = saved_feat;
+    }
+}
+
+/**
+ * Trapdoorify stairs at random, until we reach the specified number.
+ * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
+ *                          are turned into hatches will be removed. Order not
+ *                          preserved.
+ * @param needed_stairs     The desired number of stairs.
+ * @param preserve_vault_stairs    Don't remove stairs that are in vaults.
+ * @param hatch_type        What sort of hatch to turn excess stairs into.
+ */
+static void _cull_random_stairs(list<coord_def> &stairs,
+                                unsigned int needed_stairs,
+                                bool preserve_vault_stairs,
+                                dungeon_feature_type hatch_type)
+{
+    while (stairs.size() > needed_stairs)
+    {
+        const int remove_index = random2(stairs.size());
+        // rotate the list until the desired element is in front
+        for (int i = 0; i < remove_index; ++i)
         {
-            int s1 = s % num_stairs;
-            int s2 = (s1 + 1) % num_stairs;
-            ASSERT(grd(stair_list[s2]) >= base
-                   && grd(stair_list[s2]) < base + 3);
+            stairs.push_back(stairs.front());
+            stairs.pop_front();
+        }
 
-            if (grd(stair_list[s1]) == grd(stair_list[s2]))
+        if (preserve_vault_stairs)
+        {
+            // try to rotate a non-vault stair to the front, if possible.
+            for (size_t i = 0; i < stairs.size(); ++i)
             {
-                _set_grd(stair_list[s2], (dungeon_feature_type)
-                    (base + (grd(stair_list[s2])-base+1) % 3));
+                if (map_masked(stairs.front(), MMT_VAULT))
+                {
+                    stairs.push_back(stairs.front());
+                    stairs.pop_front();
+                }
+            }
+
+            // If we looped through all possibilities, then it
+            // means that there are more than 3 stairs in vaults and
+            // we can't preserve vault stairs.
+            if (map_masked(stairs.front(), MMT_VAULT))
+            {
+                dprf(DIAG_DNGN, "Too many stairs inside vaults!");
+                return;
             }
         }
+
+        dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
+        _set_grd(stairs.front(), hatch_type);
+        stairs.pop_front();
+    }
+}
+
+/**
+ * Ensure that there is only the correct number of each type of 'stone'
+ * (permanent, intra-branch, non-trapdoor) stair on the current level.
+ *
+ * @param preserve_vault_stairs     Don't delete or trapdoorify stairs that are
+ *                                  in vaults.
+ * @param checking_up_stairs        Whether we're looking at stairs that lead
+ *                                  up. If false, we're looking at down-stairs.
+ * @return                          Whether we successfully set the right # of
+ *                                  stairs for the level.
+ */
+static bool _fixup_stone_stairs(bool preserve_vault_stairs,
+                                bool checking_up_stairs)
+{
+    list<coord_def> stairs = _find_stone_stairs(checking_up_stairs);
+
+    unsigned int needed_stairs;
+    dungeon_feature_type base;
+    dungeon_feature_type replace;
+    if (checking_up_stairs)
+    {
+        replace = DNGN_FLOOR;
+        base = DNGN_STONE_STAIRS_UP_I;
+        // Pan abuses stair placement for transits, as we want connectivity
+        // checks.
+        needed_stairs = you.depth == 1
+                        && !player_in_branch(BRANCH_PANDEMONIUM)
+                        ? 1 : 3;
+    }
+    else
+    {
+        replace = DNGN_FLOOR;
+        base = DNGN_STONE_STAIRS_DOWN_I;
+
+        if (at_branch_bottom())
+            needed_stairs = 0;
+        else
+            needed_stairs = 3;
     }
 
-    return success;
+    // In Zot, don't create extra escape hatches, in order to force
+    // the player through vaults that use all three down stone stairs.
+    if (player_in_branch(BRANCH_ZOT))
+    {
+        replace = random_choose(DNGN_FOUNTAIN_BLUE,
+                                DNGN_FOUNTAIN_SPARKLING,
+                                DNGN_FOUNTAIN_BLOOD);
+    }
+
+    dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
+         (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
+
+    // Find pairwise stairs that are connected and turn one of them
+    // into an escape hatch of the appropriate type.
+    if (stairs.size() > needed_stairs)
+    {
+        _cull_redundant_stairs(stairs, needed_stairs,
+                               preserve_vault_stairs, replace);
+    }
+
+    // If that doesn't work, remove random stairs.
+    if (stairs.size() > needed_stairs)
+    {
+        _cull_random_stairs(stairs, needed_stairs,
+                            preserve_vault_stairs, replace);
+    }
+
+    // FIXME: stairs that generate inside random vaults are still
+    // protected, resulting in superfluous ones.
+    dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
+         (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
+
+    // XXX: this logic is exceptionally shady & should be reviewed
+    if (stairs.size() > needed_stairs && preserve_vault_stairs
+        && (!checking_up_stairs || you.depth != 1
+            || !player_in_branch(root_branch)))
+    {
+        return false;
+    }
+
+    // If there are no stairs, it's either a branch entrance or exit.
+    // If we somehow have ended up in a catastrophic "no stairs" state,
+    // the level will not be validated, so we do not need to catch it here.
+    if (stairs.size() == 0)
+        return true;
+
+    // Add extra stairs to get to exactly three.
+    for (unsigned int s = stairs.size(); s < needed_stairs; s++)
+    {
+        const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
+        const coord_def gc
+            = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
+
+        if (gc.origin())
+            return false;
+
+        dprf(DIAG_DNGN, "Adding stair %d at (%d,%d)", s, gc.x, gc.y);
+        // base gets fixed up to be the right stone stair below...
+        _set_grd(gc, base);
+        stairs.push_back(gc);
+    }
+
+    // If we only need one stone stair, make sure it's _I.
+    if (needed_stairs != 3)
+    {
+        ASSERT(checking_up_stairs);
+        ASSERT(needed_stairs == 1);
+        ASSERT(stairs.size() == 1 || player_in_branch(root_branch));
+        if (stairs.size() == 1)
+            grd(stairs.front()) = DNGN_STONE_STAIRS_UP_I;
+
+        return true;
+    }
+
+    // Ensure uniqueness of three stairs.
+    ASSERT(needed_stairs == 3);
+    for (size_t s = 0; s < needed_stairs + 1; s++)
+    {
+        const coord_def s1_loc = stairs.front();
+        const coord_def s2_loc = stairs.back();
+        if (grd(s1_loc) == grd(s2_loc))
+        {
+            _set_grd(s2_loc, (dungeon_feature_type)
+                     (base + (grd(s2_loc)-base+1) % needed_stairs));
+        }
+
+        stairs.push_back(stairs.front());
+        stairs.pop_front();
+    }
+
+    return true;
+}
+
+static bool _fixup_stone_stairs(bool preserve_vault_stairs)
+{
+    // This function ensures that there is exactly one each up and down
+    // stone stairs I, II, and III. More than three stairs will result in
+    // turning additional stairs into escape hatches (with an attempt to keep
+    // level connectivity). Fewer than three stone stairs will result in
+    // random placement of new stairs.
+    const bool upstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
+                                                    true);
+    const bool downstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
+                                                      false);
+    return upstairs_fixed && downstairs_fixed;
 }
 
 static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
@@ -1799,7 +1947,8 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return !player_in_branch(BRANCH_ZIGGURAT);
+    return !player_in_branch(BRANCH_ZIGGURAT)
+        && !player_in_branch(BRANCH_TOMB);
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
@@ -2013,7 +2162,7 @@ struct coord_feat
     unsigned int mask;
 
     coord_feat(const coord_def &c, dungeon_feature_type f)
-        : pos(c), feat(f), prop(0), mask(0)
+        : pos(c), feat(f), prop(), mask(0)
     {
     }
 
@@ -2145,9 +2294,9 @@ static void _ruin_level(Iterator iter,
             && !plant_forbidden_at(p))
         {
             mgen_data mg;
-            mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                     coinflip()        ? MONS_PLANT :
-                     MONS_FUNGUS;
+            mg.cls = random_choose_weighted( 2, MONS_BUSH,
+                                            19, MONS_PLANT,
+                                            19, MONS_FUNGUS);
             mg.pos = p;
             mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
@@ -2297,8 +2446,11 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
-    fixup_misplaced_items();
 
+    if (!dgn_make_transporters_from_markers())
+        throw dgn_veto_exception("Transporter placement failed.");
+
+    fixup_misplaced_items();
     link_items();
 
     if (!player_in_branch(BRANCH_COCYTUS)
@@ -2480,9 +2632,9 @@ static bool _pan_level()
     }
 
     // Unique pan lords become more common as you travel through pandemonium.
-    // On average it takes 27 levels to see all four, and you're likely to see
-    // your first one after about 10 levels.
-    if (x_chance_in_y(1 + place_info.levels_seen, 65 + place_info.levels_seen * 2)
+    // On average it takes about 14 levels to see all four, and on average
+    // about 5 levels to see your first.
+    if (x_chance_in_y(1 + place_info.levels_seen, 20 + place_info.levels_seen)
         && !all_demons_generated)
     {
         do
@@ -2561,6 +2713,21 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     }
 
     const level_id lid = level_id::current();
+
+#if TAG_MAJOR_VERSION == 34
+    if (!minivault
+        && player_in_branch(BRANCH_TOMB)
+        && you.props[TOMB_STONE_STAIRS_KEY])
+    {
+        const map_def *vault = random_map_for_tag("tomb_stone_stairs", true);
+
+        if (vault)
+            return vault;
+
+        end(1, false, "Couldn't find map with tag tomb_stone_stairs for level "
+            "%s.", lid.describe().c_str());
+    }
+#endif
 
     const map_def *vault = 0;
 
@@ -3096,8 +3263,6 @@ static void _place_traps()
         max_webs /= 2;
         place_webs(max_webs + random2(max_webs));
     }
-    else if (player_in_branch(BRANCH_CRYPT))
-        place_webs(random2(20));
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
@@ -3488,12 +3653,11 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
             && player_in_hell()
             && mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3] =
-                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
             mg.base_type = mg.cls;
-            int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
+            const int skel_chance = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+                                            8,           MONS_ZOMBIE,
+                                            1,           MONS_SIMULACRUM);
         }
 
         place_monster(mg);
@@ -3587,19 +3751,6 @@ static void _place_assorted_zombies()
     }
 }
 
-static void _place_lost_souls()
-{
-    int nsouls = random2avg(you.depth + 2, 3);
-    for (int i = 0; i < nsouls; ++i)
-    {
-        mgen_data mg;
-        mg.cls = MONS_LOST_SOUL;
-        mg.behaviour              = BEH_HOSTILE;
-        mg.preferred_grid_feature = DNGN_FLOOR;
-        place_monster(mg);
-    }
-}
-
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
@@ -3613,7 +3764,6 @@ static void _builder_monsters()
     int mon_wanted = _num_mons_wanted();
 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
-    const bool in_pan    = player_in_branch(BRANCH_PANDEMONIUM);
     if (in_shoals)
         dgn_shoals_generate_flora();
 
@@ -3627,22 +3777,30 @@ static void _builder_monsters()
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
-        if (!in_pan)
+
+        // Chance to generate the monster awake, but away from level stairs.
+        // D:1 is excluded from this chance since the player can't escape
+        // upwards and is especially vulnerable.
+        if (player_in_connected_branch()
+            && env.absdepth0 > 0
+            && one_chance_in(8))
+        {
+            mg.proximity = PROX_AWAY_FROM_STAIRS;
+        }
+        // Pan monsters always generate awake.
+        else if (!player_in_branch(BRANCH_PANDEMONIUM))
             mg.behaviour = BEH_SLEEP;
+
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
-
         place_monster(mg);
     }
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
     else
-    {
         _place_assorted_zombies();
-        _place_lost_souls();
-    }
 }
 
 /**
@@ -3661,7 +3819,7 @@ static void _randomly_place_item(int item)
         found = grd(itempos) == DNGN_FLOOR
                 && !map_masked(itempos, MMT_NO_ITEM)
                 // oklobs or statues are ok
-                && (!mon || !mons_is_firewood(mon));
+                && (!mon || !mons_is_firewood(*mon));
     }
     if (!found)
     {
@@ -4154,7 +4312,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         corpse = place_monster_corpse(*mon, true, true);
         // Dismiss the monster we used to place the corpse.
         mon->flags |= MF_HARD_RESET;
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, false, true);
     }
 
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
@@ -4166,7 +4324,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false, false);
+        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
@@ -4313,10 +4471,8 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
-            10, OBJ_MISCELLANY,
-            0);
+            10, OBJ_STAVES,
+            10, OBJ_MISCELLANY);
 }
 
 int dgn_place_item(const item_spec &spec,
@@ -4373,7 +4529,7 @@ int dgn_place_item(const item_spec &spec,
 
     while (true)
     {
-        int item_made;
+        int item_made = NON_ITEM;
 
         if (acquire)
         {
@@ -4381,15 +4537,20 @@ int dgn_place_item(const item_spec &spec,
                                                 spec.acquirement_source,
                                                 true, where);
         }
-        else if (spec.corpselike())
-            item_made = _dgn_item_corpse(spec, where);
-        else
-        {
-            item_made = items(spec.allow_uniques, base_type,
-                              spec.sub_type, level, spec.ego);
 
-            if (spec.level == ISPEC_MUNDANE)
-                squash_plusses(item_made);
+        // Both normal item generation and the failed "acquire foo" fallback.
+        if (item_made == NON_ITEM)
+        {
+            if (spec.corpselike())
+                item_made = _dgn_item_corpse(spec, where);
+            else
+            {
+                item_made = items(spec.allow_uniques, base_type,
+                                  spec.sub_type, level, spec.ego);
+
+                if (spec.level == ISPEC_MUNDANE)
+                    squash_plusses(item_made);
+            }
         }
 
         if (item_made == NON_ITEM || item_made == -1)
@@ -4589,7 +4750,10 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        type = pick_random_monster(mspec.place, mspec.monbase);
+        if (mons_class_is_zombified(mspec.monbase))
+            type = pick_local_zombifiable_monster(mspec.place, mspec.monbase, coord_def());
+        else
+            type = pick_random_monster(mspec.place, mspec.monbase);
         if (!type)
             type = RANDOM_MONSTER;
     }
@@ -4624,7 +4788,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.hd        = mspec.hd;
     mg.hp        = mspec.hp;
     mg.props     = mspec.props;
-    mg.initial_shifter = mspec.initial_shifter;
 
     // Marking monsters as summoned
     mg.abjuration_duration = mspec.abjuration_duration;
@@ -4703,7 +4866,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     //mons->flags |= mspec.extra_monster_flags;
 
     // Monsters with gods set by the spec aren't god gifts
-    // unless they have the "god_gift" tag.  place_monster(),
+    // unless they have the "god_gift" tag. place_monster(),
     // by default, marks any monsters with gods as god gifts,
     // so unmark them here.
     if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
@@ -5000,24 +5163,19 @@ static void _vault_grid_mons(vault_placement &place,
         _vault_grid_glyph_mons(place, where, vgrid);
 }
 
-// Currently only used for Slime: branch end
-// where it will turn the stone walls into clear rock walls
-// once the Royal Jelly has been killed.
-bool seen_replace_feat(dungeon_feature_type old_feat,
-                       dungeon_feature_type new_feat)
+// Only used for Slime:$ where it will turn the stone walls into floor once the
+// Royal Jelly has been killed, or at 6* Jiyva piety.
+bool seen_destroy_feat(dungeon_feature_type old_feat)
 {
-    ASSERT(old_feat != new_feat);
-
     coord_def p1(0, 0);
     coord_def p2(GXM - 1, GYM - 1);
 
     bool seen = false;
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
     {
-        if (grd(*ri) == old_feat)
+        if (orig_terrain(*ri) == old_feat)
         {
-            grd(*ri) = new_feat;
-            set_terrain_changed(*ri);
+            destroy_wall(*ri);
             if (you.see_cell(*ri))
                 seen = true;
         }
@@ -5162,10 +5320,16 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
 
     for (auto c : path)
     {
-        if (!map_masked(c, mapmask) && overwriteable(grd(c)))
+        auto feat = grd(c);
+        if (!map_masked(c, mapmask) && overwriteable(feat))
         {
             grd(c) = DNGN_FLOOR;
             dgn_height_set_at(c);
+        }
+        else
+        {
+            dprf(DIAG_DNGN, "Failed to path through %s at (%d;%d) for connectivity",
+                 get_feature_def(feat).name, c.x, c.y);
         }
     }
 
@@ -5210,14 +5374,14 @@ static dungeon_feature_type _pick_an_altar()
         god = GOD_NO_GOD;
     }
     // Xom can turn up anywhere
-    else if (one_chance_in(20))
+    else if (one_chance_in(27))
         god = GOD_XOM;
     else
     {
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL);
             break;
 
         case BRANCH_ORC: // There are a few heretics
@@ -5237,6 +5401,21 @@ static dungeon_feature_type _pick_an_altar()
 
         case BRANCH_TOMB:
             god = GOD_KIKUBAAQUDGHA;
+            break;
+
+        case BRANCH_VESTIBULE:
+        case BRANCH_DIS:
+        case BRANCH_GEHENNA:
+        case BRANCH_COCYTUS:
+        case BRANCH_TARTARUS:
+        case BRANCH_PANDEMONIUM: // particularly destructive / elemental gods
+            if (one_chance_in(3))
+            {
+                god = random_choose(GOD_KIKUBAAQUDGHA, GOD_NEMELEX_XOBEH,
+                                    GOD_QAZLAL, GOD_VEHUMET);
+            }
+            else
+                god = GOD_MAKHLEB;
             break;
 
         default: // Any god (with exceptions).
@@ -5413,15 +5592,12 @@ static int _make_delicious_corpse()
     // Create corpse object.
     monster dummy;
     dummy.type = mon_type;
-    define_monster(&dummy);
+    define_monster(dummy);
 
     item_def* corpse = place_monster_corpse(dummy, true, true);
     if (!corpse)
         return NON_ITEM;
 
-    // no hides allowed, I guess?
-    if (mons_class_leaves_hide(mon_type))
-        corpse->props[MANGLED_CORPSE_KEY] = true;
     return corpse->index();
 }
 
@@ -5601,9 +5777,7 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        if (one_chance_in(10))
-            return OBJ_RODS;
-        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -5636,10 +5810,7 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return feat_is_water(feat)
-#if TAG_MAJOR_VERSION == 34
-           || player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE
-#endif
-           || player_in_branch(BRANCH_SWAMP) && feat == DNGN_TREE
+           || feat == DNGN_TREE
            || feat_is_lava(feat)
            || feat_is_wall(feat)
            || feat == DNGN_FLOOR;
@@ -5758,9 +5929,16 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     env.trap[where] = t;
 }
 
-static void _add_plant_clumps(int frequency /* = 10 */,
-                              int clump_density /* = 12 */,
-                              int clump_radius /* = 4 */)
+/**
+ * Sprinkle plants around the level.
+ *
+ * @param rarity            1/chance of placing clumps in any given place.
+ * @param clump_density     1/chance of placing more plants within a clump.
+ * @param clump_raidus      Radius of plant clumps.
+ */
+static void _add_plant_clumps(int rarity,
+                              int clump_sparseness,
+                              int clump_radius)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -5773,7 +5951,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             if ((type == MONS_PLANT
                      || type == MONS_FUNGUS
                      || type == MONS_BUSH)
-                 && one_chance_in(frequency))
+                 && one_chance_in(rarity))
             {
                 mg.cls = type;
             }
@@ -5801,7 +5979,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                     // only place plants next to previously placed plants
                     if (abs(rad->x - c.x) <= 1 && abs(rad->y - c.y) <= 1)
                     {
-                        if (one_chance_in(clump_density))
+                        if (one_chance_in(clump_sparseness))
                             more_to_place.push_back(*rad);
                     }
                 }
@@ -5822,30 +6000,48 @@ static void _add_plant_clumps(int frequency /* = 10 */,
     }
 }
 
-static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
+static coord_def _find_named_hatch_dest(string hatch_name)
 {
-    map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
-    if (!marker || shaft)
+    vector <map_marker *> markers;
+    markers = find_markers_by_prop(HATCH_DEST_NAME_PROP, hatch_name);
+    ASSERT(markers.size() == 1);
+    return markers[0]->pos;
+}
+
+static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
+                                const string &hatch_name)
+{
+    const bool shaft = feat == DNGN_TRAP_SHAFT;
+    map_position_marker *marker = nullptr;
+
+    if (!shaft)
+        marker = get_position_marker_at(base_pos, feat);
+
+    if (!marker)
     {
         coord_def dest_pos;
-        do
+
+        if (feat_is_escape_hatch(feat) and !hatch_name.empty())
+            dest_pos = _find_named_hatch_dest(hatch_name);
+        else
         {
-            dest_pos = random_in_bounds();
+            do
+            {
+                dest_pos = random_in_bounds();
+            }
+            while (grd(dest_pos) != DNGN_FLOOR
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         }
-        while (grd(dest_pos) != DNGN_FLOOR
-               || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
+
         if (!shaft)
         {
-            env.markers.add(new map_position_marker(base_pos, dest_pos));
+            env.markers.add(new map_position_marker(base_pos, feat, dest_pos));
             env.markers.clear_need_activate();
         }
         return dest_pos;
     }
     else
-    {
-        map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-        return posm->dest;
-    }
+        return marker->dest;
 }
 
 double dgn_degrees_to_radians(int degrees)
@@ -5892,10 +6088,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
-        int walls = 0;
-        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
-            if (env.grid(*bi) == DNGN_SLIMY_WALL)
-                walls++;
+        const int walls = count_adjacent_slime_walls(*ai);
         if (walls < max_walls)
         {
             *pos = *ai;
@@ -5906,7 +6099,8 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest)
+                                coord_def base_pos, bool find_closest,
+                                string hatch_name)
 {
     dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
@@ -5917,7 +6111,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
+        coord_def pos(_get_feat_dest(base_pos, stair_to_find, hatch_name));
         if (player_in_branch(BRANCH_SLIME))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))
@@ -6151,8 +6345,8 @@ coord_def dgn_region::random_edge_point() const
 {
     return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def(pos.x + random2(size.x),
-                             coinflip()? pos.y : pos.y + size.y - 1)
-                : coord_def(coinflip()? pos.x : pos.x + size.x - 1,
+                             random_choose(pos.y, pos.y + size.y - 1))
+                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
                              pos.y + random2(size.y));
 }
 
@@ -6573,7 +6767,7 @@ void vault_placement::apply_grid()
             if (clear)
             {
                 env.grid_colours(*ri) = 0;
-                env.pgrid(*ri) = 0;
+                env.pgrid(*ri) = terrain_property_t{};
                 // what about heightmap?
                 tile_clear_flavour(*ri);
             }
@@ -6670,7 +6864,7 @@ bool vault_placement::is_space(const coord_def &c)
 {
     // Can't check outside bounds of vault
     if (size.zero() || c.x > size.x || c.y > size.y)
-        return NUM_FEATURES;
+        return false;
 
     const int feat = map.map.glyph(c);
     return feat == ' ';
@@ -6679,7 +6873,7 @@ bool vault_placement::is_exit(const coord_def &c)
 {
     // Can't check outside bounds of vault
     if (size.zero() || c.x > size.x || c.y > size.y)
-        return NUM_FEATURES;
+        return false;
 
     const int feat = map.map.glyph(c);
     return feat == '@';

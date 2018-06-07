@@ -103,7 +103,7 @@ ENDMAP
 
 NAME: gammafunk_enter_depths_forms
 MONS: ugly thing w:8 / shapeshifter / rakshasa w:2
-MONS: giant orange brain / boggart band w:6, slime creature band
+MONS: glowing orange brain / boggart band w:6, slime creature band
 MONS: glowing shapeshifter
 NSUBST: . = 4:1 / *:., 3 = 1:2 / 1:3
 : depths_entry(_G)
@@ -176,7 +176,7 @@ xxx'Xxx+xXx
 ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
-MONS:    hill giant w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf mage w:2
+MONS:    two-headed ogre w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf mage w:2
 MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight w:5 /\
          deep elf archer w:5 / centaur warrior
 MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4

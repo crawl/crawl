@@ -30,14 +30,18 @@ game_state::game_state()
     : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
       need_save(false), saving_game(false), updating_scores(false),
-      seen_hups(0), map_stat_gen(false), obj_stat_gen(false),
-      type(GAME_TYPE_NORMAL), last_type(GAME_TYPE_UNSPECIFIED),
-      arena_suspended(false), generating_level(false), dump_maps(false),
-      test(false), script(false), build_db(false), tests_selected(),
+      seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
+      obj_stat_gen(false), type(GAME_TYPE_NORMAL),
+      last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
+      marked_as_won(false), arena_suspended(false),
+      generating_level(false), dump_maps(false), test(false), script(false),
+      build_db(false), tests_selected(),
 #ifdef DGAMELAUNCH
       throttle(true),
+      bypassed_startup_menu(true),
 #else
       throttle(false),
+      bypassed_startup_menu(false),
 #endif
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
@@ -45,15 +49,13 @@ game_state::game_state()
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
       stat_gain_prompt(false), level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
-#ifndef USE_TILE_LOCAL
-      mlist_targeting(false),
-#else
       tiles_disabled(false),
       title_screen(true),
-#endif
       invisible_targeting(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
-      minor_version(-1), save_rcs_version(), mon_act(nullptr)
+      minor_version(-1), save_rcs_version(),
+      nonempty_buffer_flush_errors(false),
+      mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
@@ -62,6 +64,21 @@ game_state::game_state()
 #else
     no_gdb = access("/usr/bin/gdb", 1) ? "/usr/bin/gdb not executable." : 0;
 #endif
+}
+
+/**
+ * Cleanup for when the game is reset.
+ *
+ * @see main.cc:_reset_game()
+ */
+void game_state::reset_game()
+{
+    // Unset by death, but not by saving with restart_after_save.
+    need_save = false;
+    type = GAME_TYPE_UNSPECIFIED;
+    updating_scores = false;
+    reset_cmd_repeat();
+    reset_cmd_again();
 }
 
 void game_state::add_startup_error(const string &err)
@@ -100,9 +117,9 @@ bool game_state::is_repeating_cmd() const
     return repeat_cmd != CMD_NO_CMD;
 }
 
-void game_state::cancel_cmd_repeat(string reason)
+void game_state::cancel_cmd_repeat(string reason, bool force)
 {
-    if (!is_repeating_cmd())
+    if (!force && !is_repeating_cmd())
         return;
 
     if (repeat_cmd == CMD_WIZARD)
@@ -134,12 +151,13 @@ void game_state::cancel_cmd_repeat(string reason)
         mpr(reason);
 }
 
-void game_state::cancel_cmd_again(string reason)
+void game_state::cancel_cmd_again(string reason, bool force)
 {
-    if (!doing_prev_cmd_again)
+    if (!force && !doing_prev_cmd_again)
         return;
 
-    flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
+    if (is_replaying_keys() || cmd_repeat_start)
+        flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
 
     if (is_processing_macro())
         flush_input_buffer(FLUSH_ABORT_MACRO);
@@ -278,7 +296,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         // when the only monsters around are 0xp.
         const monster* mon = at.mons_data;
 
-        if (!mons_is_threatening(mon) && mon->visible_to(&you))
+        if (!mons_is_threatening(*mon) && mon->visible_to(&you))
             return false;
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");

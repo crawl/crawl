@@ -71,21 +71,6 @@ The saves/ directory can be found in the same directory as the morgue/ one.
 If you'd like to change either location, modify the morgue_dir and/or save_dir
 options in the init file.
 %%%%
-Q:drop
-
-How can I drop/pick up only part of a stack?
-%%%%
-A:drop
-
-A: When choosing items to drop or pick up from a menu, you can select part of a
-stack by first entering a number (the desired amount), followed by the item
-slot. Stacks that are selected only in part are marked with '#' rather than
-'+'.
-
-If you want to pick up part of a single-item stack, you can use the ';'
-command, which will prompt you for the quantity, but otherwise behaves the same
-as ','.
-%%%%
 Q:roguelike difference
 
 What are the biggest differences to other popular roguelike games?
@@ -104,9 +89,6 @@ As for specific differences, the most important are probably the following:
 * You cannot sell items to shops or elsewhere.
 
 * Resistances can be gained via mutations or items, never through eating.
-
-* Praying is used to worship a god at an altar or to offer corpses to gods
-  who'll accept them. To make use of divine powers use the 'a'bility command.
 
 * There are inevitable deaths, but new players can win without spoilers, if
   they learn from their mistakes. Very good players can win several consecutive
@@ -177,8 +159,7 @@ A:starving
 A: It's possible that you simply spend too much time on cleared levels where
 not enough monsters are generated to dine on. You might also be too choosy
 about what you eat; unless you are herbivorous, you should usually be eating
-monster chunks. If you worship a god who enjoys sacrifices, pay attention to
-your own hunger status instead of offering all corpses you come across.
+monster chunks.
 
 Also, casting (difficult) spells will make you hungry, but high Intelligence
 and Spellcasting will lessen this effect. If you press 'II', you can read about

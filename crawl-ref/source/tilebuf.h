@@ -1,5 +1,4 @@
-#ifndef TILEBUF_H
-#define TILEBUF_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -53,6 +52,7 @@ public:
     FontBuffer(FontWrapper *font);
     void add(const formatted_string &fs, float x, float y);
     void add(const string &s, const VColour &col, float x, float y);
+    FontWrapper &get_font_wrapper();
 protected:
     FontWrapper *m_font;
 };
@@ -117,5 +117,3 @@ public:
     void add(float sx, float sy, float ex, float ey, const VColour &c);
     void add_square(float sx, float sy, float ex, float ey, const VColour &c);
 };
-
-#endif

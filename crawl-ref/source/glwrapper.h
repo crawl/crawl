@@ -1,5 +1,4 @@
-#ifndef GL_WRAPPER_H
-#define GL_WRAPPER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 
@@ -143,6 +142,9 @@ public:
                                        const coord_def &m_drawablesz) = 0;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;
     virtual void reset_transform() = 0;
+    virtual void get_transform(GLW_3VF *trans, GLW_3VF *scale) = 0;
+    virtual void set_scissor(int x, int y, unsigned int w, unsigned int h) = 0;
+    virtual void reset_scissor() = 0;
 #ifdef __ANDROID__
     virtual void fixup_gl_state() = 0;
 #endif
@@ -154,6 +156,9 @@ public:
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt,
                               int xoffset=-1, int yoffset=-1) = 0;
+
+    virtual int logical_to_device(int n) const = 0;
+    virtual int device_to_logical(int n, bool round=true) const = 0;
 
     // Debug
 #ifdef ASSERTS
@@ -191,4 +196,3 @@ public:
 extern GLStateManager *glmanager;
 
 #endif // use_tile
-#endif // include guard

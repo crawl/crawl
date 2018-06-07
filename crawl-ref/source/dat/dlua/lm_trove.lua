@@ -369,7 +369,9 @@ function TroveMarker:item_name(do_grammar)
 
   s = util.trim(s)
 
-  if string.find(s, "^%d+") or do_grammar == false then
+  if string.find(s, "^%d+")
+     or string.find(item.sub_type, "dragon scales")
+     or do_grammar == false then
     return s
   else
     return crawl.grammar(s, "a")
@@ -624,7 +626,7 @@ function TroveMarker:check_veto(marker, pname)
   elseif toll.nopiety then
     local yesno_message = (
       "This portal proclaims the superiority of the material over the divine; "
-      .. "those who enter it will find they have lost all favor with their "
+      .. "those who enter it will find they have lost all favour with their "
       .. "chosen deity. Enter anyway?")
     if crawl.yesno(yesno_message, true, "n") then
       self:accept_nopiety()

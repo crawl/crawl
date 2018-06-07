@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_POPUP_H
-#define TILEREG_POPUP_H
+#pragma once
 
 #include "tilereg-menu.h"
 
@@ -19,6 +18,6 @@ public:
 
 protected:
     int m_retval;
+    virtual int _get_layout_scroll_y() const override { return 0; }
 };
-#endif
 #endif

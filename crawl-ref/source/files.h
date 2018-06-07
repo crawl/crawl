@@ -3,8 +3,7 @@
  * @brief Functions used to save and load levels/games.
 **/
 
-#ifndef FILES_H
-#define FILES_H
+#pragma once
 
 #include <cstdio>
 #include <set>
@@ -109,8 +108,8 @@ public:
     void go_to(const level_id &level);
 };
 
-void save_ghost(bool force = false);
-bool load_ghost(bool creating_level);
+void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false);
+bool load_ghosts(int max_ghosts, bool creating_level);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);
@@ -132,4 +131,3 @@ private:
 };
 
 FILE *fopen_replace(const char *name);
-#endif

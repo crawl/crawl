@@ -3,8 +3,7 @@
  * @brief System independent functions
 **/
 
-#ifndef LIBUTIL_H
-#define LIBUTIL_H
+#pragma once
 
 #include <cctype>
 #include <map>
@@ -52,7 +51,7 @@ static inline bool isaalnum(int c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-static inline ucs_t toalower(ucs_t c)
+static inline char32_t toalower(char32_t c)
 {
     return isaupper(c) ? c + 'a' - 'A' : c;
 }
@@ -81,17 +80,13 @@ description_level_type description_type_by_name(const char *desc);
 
 bool shell_safe(const char *file);
 
-#ifdef USE_SOUND
-void play_sound(const char *file);
-#endif
+string unwrap_desc(string&& desc);
 
-string unwrap_desc(string desc);
-
-/** Ignore an argument and return true.
+/** Ignore any number of arguments and return true.
  *
  * @return true
  */
-template<class T> bool always_true(T) { return true; }
+template<class ... Ts> bool always_true(Ts ...) { return true; }
 
 /** Remove an element from a vector without preserving order.
  *  The indicated element is replaced by the last element of the vector.
@@ -181,6 +176,43 @@ unique_ptr<T> make_unique(Args&&... args)
     return unique_ptr<T>(new T(forward<Args>(args)...));
 }
 
+/** Remove from a container all elements matching a predicate.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           and must provide an erase() method taking two iterators.
+ * @tparam P the predicate type, typically but not necessarily
+ *           function<bool (const C::value_type &)>
+ * @param container The container to modify.
+ * @param pred The predicate to test.
+ *
+ * @post The container contains only those elements for which pred(elt)
+ *       returns false, in the same relative order.
+ */
+template<class C, class P>
+void erase_if(C &container, P pred)
+{
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
+
+/** Remove from a container all elements with a given value.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           must provide an erase() method taking two iterators, and
+ *           must provide a value_type type member.
+ * @param container The container to modify.
+ * @param val The value to remove.
+ *
+ * @post The container contains only those elements not equal to val, in the
+ *       in the same relative order.
+ */
+template<class C>
+void erase_val(C &container, const typename C::value_type &val)
+{
+    container.erase(remove(begin(container), end(container), val),
+                    end(container));
+}
+
 static inline int sqr(int x)
 {
     return x * x;
@@ -233,26 +265,8 @@ void text_popup(const string& text, const wchar_t *caption);
 class mouse_control
 {
 public:
-    mouse_control(mouse_mode mode)
-    {
-        m_previous_mode = ms_current_mode;
-        ms_current_mode = mode;
-
-#ifdef USE_TILE_WEB
-        if (m_previous_mode != ms_current_mode)
-            tiles.update_input_mode(mode);
-#endif
-    }
-
-    ~mouse_control()
-    {
-#ifdef USE_TILE_WEB
-        if (m_previous_mode != ms_current_mode)
-            tiles.update_input_mode(m_previous_mode);
-#endif
-        ms_current_mode = m_previous_mode;
-    }
-
+    mouse_control(mouse_mode mode);
+    ~mouse_control();
     static mouse_mode current_mode() { return ms_current_mode; }
 
 private:
@@ -262,4 +276,3 @@ private:
 
 void init_signals();
 void release_cli_signals();
-#endif

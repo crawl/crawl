@@ -91,10 +91,6 @@ Conjure Flame spell
 
 这道法术创造出一团火云。
 %%%%
-Control Undead spell
-
-这道法术尝试让施法者周围的所有不死生物都变成施法者的奴仆。
-%%%%
 Corona spell
 
 这道法术创造出一个光圈把目标生物围住，使目标生物的身体发光。
@@ -136,11 +132,6 @@ Death's Door spell
 Debugging Ray spell
 
 这道射线能造成巨大伤害（1500 hp），而且百发百中。
-%%%%
-Delayed Fireball spell
-
-在成功施放该法术后，施法者就可以在之后的任何一个时间瞬发一颗火球。
-如果你学会了这道法术，你就能不花额外法术位就可以记忆火球术了。
 %%%%
 Dig spell
 

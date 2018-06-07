@@ -124,6 +124,8 @@ sub aptitude_table
     my $seen_draconian_length;
     for my $sp (sort_species(@SPECIES))
     {
+        next if $sp eq 'Mottled Draconian';
+        next if $sp eq 'High Elf';
         next if $sp eq 'Sludge Elf';
         next if $sp eq 'Djinni';
         next if $sp eq 'Lava Orc';
@@ -137,7 +139,8 @@ sub aptitude_table
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
-            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP';
+            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'MR';
+            $pos-- if $abbr eq 'HP';
             if ($pos > length($line))
             {
                 $line .= " " x ($pos - length($line));
@@ -145,7 +148,11 @@ sub aptitude_table
 
             my $fmt = "%+3d";
             $fmt = "%3d" if $skill == 0;
-            $fmt = " NA" if $skill == -99;
+            if ($skill == -99)
+            {
+                $skill = '--';
+                $fmt = "%3s";
+            }
             if ($abbr eq 'HP')
             {
                 $skill = $skill * 10;
@@ -219,7 +226,7 @@ sub load_aptitudes
         }
         else
         {
-            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+)\s*\)/)
+            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*\)/)
             {
                 $species = propercase_string(fix_underscores($1));
                 if (!$SEEN_SPECIES{$species})
@@ -229,6 +236,7 @@ sub load_aptitudes
                 }
 
                 my $apt = $3;
+                $apt = -99 if $apt eq "UNUSABLE_SKILL";
                 my $skill = skill_name($2);
                 next if $skill eq "Stabbing";
                 next if $skill eq "Traps";
@@ -254,14 +262,16 @@ sub load_mods
     {
         my $sp = $_;
         $sp =~ s/Base //;
-        my ($xp, $hp, $mp) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d),/;
+        my ($xp, $hp, $mp, $mr) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
 
         $SPECIES_SKILLS{$_}{"Experience"} = $xp;
         $SPECIES_SKILLS{$_}{"Hit Points"} = $hp;
         $SPECIES_SKILLS{$_}{"Magic Points"} = $mp;
+        $SPECIES_SKILLS{$_}{"Magic Resistance"} = $mr;
         die "couldn't parse mods for $_" unless defined $xp
                                                 && defined $hp
-                                                && defined $mp;
+                                                && defined $mp
+                                                && defined $mr;
     }
     close $inf;
 }

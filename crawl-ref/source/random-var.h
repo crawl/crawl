@@ -1,5 +1,4 @@
-#ifndef RANDOM_VAR_H
-#define RANDOM_VAR_H
+#pragma once
 
 typedef int (*weight_func)(int val);
 
@@ -51,5 +50,3 @@ namespace rv
     random_var roll_dice(int d, int n);
     random_var random2(int n);
 }
-
-#endif

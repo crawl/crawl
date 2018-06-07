@@ -27,7 +27,7 @@
 #include "end.h"
 #include "errors.h"
 #include "files.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "maps.h"

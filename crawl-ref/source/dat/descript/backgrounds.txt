@@ -6,8 +6,8 @@ spread corruption and chaos.
 %%%%
 Air Elementalist
 
-Air Elementalists have learned the Shock spell. Later on, their book of Air
-provides them with the flexibility to survive.
+Air Elementalists have learned the Shock spell. Later on, their selection of
+Air Magic spells provides them with the flexibility to survive.
 %%%%
 Arcane Marksman
 
@@ -36,12 +36,12 @@ god's constantly changing moods.
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells from the book of Conjurations.
+Conjurers confront problems with damaging spells.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to increase the
-spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry stones to fuel the
+spell. More earthen spells are in their set of starting spells.
 %%%%
 Enchanter
 
@@ -56,7 +56,7 @@ choice and a potion of might.
 Fire Elementalist
 
 Fire Elementalists start with the book of Flames and know the Flame Tongue
-spell. The other spells in their book focus on destruction as well.
+spell. Their other starting spells focus on destruction as well.
 %%%%
 Gladiator
 
@@ -70,13 +70,13 @@ armour and a short sword.
 %%%%
 Ice Elementalist
 
-Ice Elementalists start with the book of Frost and the Freeze spell. The book's
-other spells are quite versatile.
+Ice Elementalists begin with the Freeze spell. The spells in their starting
+library are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on the dungeon wearing just a robe and using their
-body. They will gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, and gain additional piety
+with the first god they worship.
 %%%%
 Necromancer
 
@@ -86,22 +86,22 @@ start out with the Pain spell.
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
-the book of Battle.
+the Charms school.
 %%%%
 Summoner
 
-Summoners start with the book of Callings and are able to cast Summon Small
-Mammal from the start.
+Summoners are able to cast Summon Small Mammal from the start, and begin with
+other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters start with the book of Changes. They can learn spells to shift
-their form, as well as to turn sticks into snakes.
+Transmuters learn spells to shift their form, as well as to turn sticks into
+snakes.
 %%%%
 Venom Mage
 
-Venom Mages start with the Young Poisoner's Handbook and the Sting spell, and
-their poison magic is very effective against susceptible foes.
+Venom Mages start with the Sting spell, and their poison magic is very
+effective against susceptible foes.
 %%%%
 Wanderer
 
@@ -109,10 +109,11 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a scroll of blinking. They can
-learn spells from the book of Spatial Translocations.
+Warpers start with a weapon of their choice and a scroll of blinking. They
+begin with a number of Translocations spells in their library.
 %%%%
 Wizard
 
-Wizards start with a book of Minor Magic, containing a wide range of spells.
+Wizards start with the wide range of spells present in a book of Minor Magic in
+their spell library.
 %%%%

@@ -25,11 +25,10 @@
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef USE_TILE_WEB
- #include "tileweb.h"
-#endif
+#include "tiles-build-specific.h"
 #include "unwind.h"
 #include "view.h"
 
@@ -48,6 +47,8 @@ void mpr_nojoin(msg_channel_type channel, string text)
 
 static bool _ends_in_punctuation(const string& text)
 {
+    if (text.size() == 0)
+        return false;
     switch (text[text.size() - 1])
     {
     case '.':
@@ -244,6 +245,9 @@ class circ_vec
     T data[SIZE];
 
     int end;   // first unfilled index
+    bool has_circled;
+    // TODO: properly track the tail, and make this into a real data
+    // structure with an iterator and whatnot
 
     static void inc(int* index)
     {
@@ -258,11 +262,12 @@ class circ_vec
     }
 
 public:
-    circ_vec() : end(0) {}
+    circ_vec() : end(0), has_circled(false) {}
 
     void clear()
     {
         end = 0;
+        has_circled = false;
         for (int i = 0; i < SIZE; ++i)
             data[i] = T();
     }
@@ -270,6 +275,14 @@ public:
     int size() const
     {
         return SIZE;
+    }
+
+    int filled_size() const
+    {
+        if (has_circled)
+            return SIZE;
+        else
+            return end;
     }
 
     T& operator[](int i)
@@ -288,6 +301,8 @@ public:
     {
         data[end] = item;
         inc(&end);
+        if (end == 0)
+            has_circled = true;
     }
 
     void roll_back(int n)
@@ -297,6 +312,19 @@ public:
             dec(&end);
             data[end] = T();
         }
+        // don't bother to worry about has_circled in this case
+        // TODO: properly track the tail
+    }
+
+    /**
+     * Append the contents of `buf` to the current buffer.
+     * If `buf` has cycled, this will overwrite the entire contents of `this`.
+     */
+    void append(const circ_vec<T, SIZE> buf)
+    {
+        const int buf_size = buf.filled_size();
+        for (int i = 0; i < buf_size; i++)
+            push_back(buf[i - buf_size]);
     }
 };
 
@@ -304,15 +332,15 @@ static void readkey_more(bool user_forced=false);
 
 // Types of message prefixes.
 // Higher values override lower.
-enum prefix_type
+enum class prefix_type
 {
-    P_NONE,
-    P_TURN_START,
-    P_TURN_END,
-    P_NEW_CMD, // new command, but no new turn
-    P_NEW_TURN,
-    P_FULL_MORE,   // single-character more prompt (full window)
-    P_OTHER_MORE,  // the other type of --more-- prompt
+    none,
+    turn_start,
+    turn_end,
+    new_cmd, // new command, but no new turn
+    new_turn,
+    full_more,   // single-character more prompt (full window)
+    other_more,  // the other type of --more-- prompt
 };
 
 // Could also go with coloured glyphs.
@@ -321,24 +349,24 @@ static cglyph_t _prefix_glyph(prefix_type p)
     cglyph_t g;
     switch (p)
     {
-    case P_TURN_START:
+    case prefix_type::turn_start:
         g.ch = Options.show_newturn_mark ? '-' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_TURN_END:
-    case P_NEW_TURN:
+    case prefix_type::turn_end:
+    case prefix_type::new_turn:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_NEW_CMD:
+    case prefix_type::new_cmd:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = DARKGRAY;
         break;
-    case P_FULL_MORE:
+    case prefix_type::full_more:
         g.ch = '+';
         g.col = channel_to_colour(MSGCH_PROMPT);
         break;
-    case P_OTHER_MORE:
+    case prefix_type::other_more:
         g.ch = '+';
         g.col = LIGHTRED;
         break;
@@ -493,7 +521,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), temp_line(0), input_line(0), prompt(P_NONE)
+        : next_line(0), temp_line(0), input_line(0), prompt(prefix_type::none)
     {
         clear_lines(); // initialize this->lines
     }
@@ -583,10 +611,10 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(string text, prefix_type first_col = P_NONE,
+    void add_item(string text, prefix_type first_col = prefix_type::none,
                   bool temporary = false)
     {
-        prompt = P_NONE; // reset prompt
+        prompt = prefix_type::none; // reset prompt
 
         vector<formatted_string> newlines;
         linebreak_string(text, out_width());
@@ -631,7 +659,7 @@ public:
 
     void new_cmdturn(bool new_turn)
     {
-        output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
+        output_prefix(new_turn ? prefix_type::new_turn : prefix_type::new_cmd);
     }
 
     bool any_messages()
@@ -653,7 +681,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            cglyph_t g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            cglyph_t g = _prefix_glyph(full ? prefix_type::full_more : prefix_type::other_more);
             formatted_string f;
             f.add_glyph(g);
             f.display();
@@ -731,17 +759,35 @@ public:
 
     void add(const message_line& msg)
     {
-        if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
-            return;
-        flush_prev();
-        prev_msg = msg;
-        if (msg.channel == MSGCH_PROMPT || _temporary)
+        string orig_full_text = msg.full_text();
+
+        if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
+        {
             flush_prev();
+            prev_msg = msg;
+            if (msg.channel == MSGCH_PROMPT || _temporary)
+                flush_prev();
+            }
+
+            // If we play sound, wait until the corresponding message is printed
+            // in case we intend on holding up output that comes after.
+            //
+            // FIXME This doesn't work yet, and causes the game to play the sound,
+            // THEN display the text. This appears to only be solvable by reworking
+            // the way the game outputs messages, as the game it prints messages
+            // one line at a time, not one message at a time.
+            //
+            // However, it should only print one message at a time when it really
+            // needs to, i.e. an sound that interrupts the game. Otherwise it is
+            // more efficent to print text together.
+#ifdef USE_SOUND
+            play_sound(check_sound_patterns(orig_full_text));
+#endif
     }
 
     void store_msg(const message_line& msg)
     {
-        prefix_type p = P_NONE;
+        prefix_type p = prefix_type::none;
         msgs.push_back(msg);
         if (_temporary)
             temp++;
@@ -750,12 +796,9 @@ public:
 #ifdef USE_TILE_WEB
         // ignore this message until it's actually displayed in case we run out
         // of space and have to display --more-- instead
-        send_ignore_one = true;
+        unwind_bool dontsend(send_ignore_one, true);
 #endif
         msgwin.add_item(msg.full_text(), p, _temporary);
-#ifdef USE_TILE_WEB
-        send_ignore_one = false;
-#endif
     }
 
     void roll_back()
@@ -805,6 +848,17 @@ public:
     const store_t& get_store()
     {
         return msgs;
+    }
+
+    void append_store(store_t store)
+    {
+        msgs.append(store);
+        const int msgs_to_print = store.filled_size();
+#ifdef USE_TILE_WEB
+        unwind_bool dontsend(send_ignore_one, true);
+#endif
+        for (int i = 0; i < msgs_to_print; i++)
+            msgwin.add_item(msgs[i - msgs_to_print].full_text(), prefix_type::none, false);
     }
 
     void clear()
@@ -865,6 +919,9 @@ void webtiles_send_last_messages(int n)
     tiles.json_close_object(true);
     tiles.finish_message();
 }
+#else
+void webtiles_send_messages() { }
+void webtiles_send_last_messages(int n) { }
 #endif
 
 static FILE* _msg_dump_file = nullptr;
@@ -877,6 +934,13 @@ static msg_colour_type prepare_message(const string& imsg,
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
     suppress_messages = true;
+}
+
+// Push useful RAII conditional logic into a constructor
+// Won't override an outer suppressing no_messages
+no_messages::no_messages(bool really_suppress) : msuppressed(suppress_messages)
+{
+    suppress_messages = suppress_messages || really_suppress;
 }
 
 no_messages::~no_messages()
@@ -920,7 +984,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         switch (channel)
         {
         case MSGCH_GOD:
-        case MSGCH_PRAY:
             ret = (Options.channels[channel] == MSGCOL_DEFAULT)
                    ? msg_colour(god_colour(static_cast<god_type>(param)))
                    : msg_colour(god_message_altar_colour(static_cast<god_type>(param)));
@@ -1128,7 +1191,7 @@ void mprf_nojoin(const char *format, ...)
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(const char *format, ...)
 {
-    if (Options.quiet_debug_messages[DIAG_NORMAL])
+    if (Options.quiet_debug_messages[DIAG_NORMAL] || you.suppress_wizard)
         return;
 
     va_list argp;
@@ -1139,7 +1202,7 @@ void dprf(const char *format, ...)
 
 void dprf(diag_type param, const char *format, ...)
 {
-    if (Options.quiet_debug_messages[param])
+    if (Options.quiet_debug_messages[param] || you.suppress_wizard)
         return;
 
     va_list argp;
@@ -1188,7 +1251,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     {
     case MSGCH_PROMPT:
     case MSGCH_GOD:
-    case MSGCH_PRAY:
     case MSGCH_DURATION:
     case MSGCH_FOOD:
     case MSGCH_RECOVERY:
@@ -1352,6 +1414,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         more(true);
     if (do_flash_screen)
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
+
 }
 
 static string show_prompt(string prompt)
@@ -1387,7 +1450,7 @@ void msgwin_got_input()
 int msgwin_get_line(string prompt, char *buf, int len,
                     input_history *mh, const string &fill)
 {
-    if (prompt != "")
+    if (!prompt.empty())
         msgwin_prompt(prompt);
 
     int ret = cancellable_get_line(buf, len, mh, nullptr, fill);
@@ -1467,19 +1530,6 @@ static void mpr_check_patterns(const string& message,
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
-
-#ifdef USE_SOUND
-    for (const sound_mapping &sound : Options.sound_mappings)
-    {
-        // Maybe we should allow message channel matching as for
-        // force_more_message?
-        if (sound.pattern.matches(message))
-        {
-            play_sound(sound.soundfile.c_str());
-            break;
-        }
-    }
-#endif
 }
 
 static bool channel_message_history(msg_channel_type channel)
@@ -1755,6 +1805,12 @@ void canned_msg(canned_message_type which_message)
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
             break;
+        case MSG_FULL_HEALTH:
+            mpr("Your health is already full.");
+            break;
+        case MSG_FULL_MAGIC:
+            mpr("Your reserves of magic are already full.");
+            break;
         case MSG_GAIN_HEALTH:
             mpr("You feel better.");
             break;
@@ -1764,6 +1820,15 @@ void canned_msg(canned_message_type which_message)
         case MSG_MAGIC_DRAIN:
             mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
+        case MSG_SOMETHING_IN_WAY:
+            mpr("There's something in the way.");
+            break;
+        case MSG_CANNOT_SEE:
+            mpr("You can't see that place.");
+            break;
+        case MSG_GOD_DECLINES:
+            mpr("Your god isn't willing to do this for you now.");
+            break;
     }
 }
 
@@ -1771,19 +1836,19 @@ void canned_msg(canned_message_type which_message)
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. - bwr
-bool simple_monster_message(const monster* mons, const char *event,
+bool simple_monster_message(const monster& mons, const char *event,
                             msg_channel_type channel,
                             int param,
                             description_level_type descrip)
 {
-    if (you.see_cell(mons->pos())
+    if (you.see_cell(mons.pos())
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
-            || mons->visible_to(&you)))
+            || mons.visible_to(&you)))
     {
-        string msg = mons->name(descrip);
+        string msg = mons.name(descrip);
         msg += event;
 
-        if (channel == MSGCH_PLAIN && mons->wont_attack())
+        if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
         mprf(channel, param, "%s", msg.c_str());
@@ -1796,8 +1861,20 @@ bool simple_monster_message(const monster* mons, const char *event,
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    string msg = uppercase_first(god_name(which_deity)) + event;
+    string msg;
+    if (which_deity == GOD_WU_JIAN)
+       msg = uppercase_first(string("The Council") + event);
+    else
+       msg = uppercase_first(god_name(which_deity)) + event;
+
     god_speaks(which_deity, msg.c_str());
+}
+
+void wu_jian_sifu_message(const char *event)
+{
+    string msg;
+    msg = uppercase_first(string("Sifu ") + wu_jian_random_sifu_name() + event);
+    god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
@@ -1873,6 +1950,11 @@ void load_messages(reader& inf)
 {
     unwind_bool save_more(crawl_state.show_more_prompt, false);
 
+    // assumes that the store was cleared at the beginning of _restore_game!
+    flush_prev_message();
+    store_t load_msgs = buffer.get_store(); // copy of messages during loading
+    clear_message_store();
+
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)
     {
@@ -1891,9 +1973,9 @@ void load_messages(reader& inf)
         if (msg)
             buffer.store_msg(msg);
     }
-    // With Options.message_clear, we don't want the message window
-    // pre-filled.
-    clear_messages();
+    flush_prev_message();
+    buffer.append_store(load_msgs);
+    clear_messages(); // check for Options.message_clear
 }
 
 void replay_messages()
@@ -1912,11 +1994,11 @@ void replay_messages()
             for (unsigned int j = 0; j < parts.size(); ++j)
             {
                 formatted_string line;
-                prefix_type p = P_NONE;
+                prefix_type p = prefix_type::none;
                 if (j == parts.size() - 1 && i + 1 < msgs.size()
                     && msgs[i+1].turn > msgs[i].turn)
                 {
-                    p = P_TURN_END;
+                    p = prefix_type::turn_end;
                 }
                 line.add_glyph(_prefix_glyph(p));
                 line += parts[j];

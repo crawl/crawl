@@ -3,8 +3,7 @@
  * @brief Miscellaneous debugging functions.
 **/
 
-#ifndef DBGUTIL_H
-#define DBGUTIL_H
+#pragma once
 
 monster_type debug_prompt_for_monster();
 skill_type debug_prompt_for_skill(const char *prompt);
@@ -22,11 +21,14 @@ struct coord_def;
 
 string debug_coord_str(const coord_def &pos);
 
+string debug_constriction_string(const actor *act);
 void debug_dump_constriction(const actor *act);
 void debug_dump_mon(const monster* mon, bool recurse);
+void debug_dump_item(const char *name, int num, const item_def &item,
+                       PRINTF(3, ));
+
 
 string debug_mon_str(const monster* mon);
 
 void wizard_toggle_dprf();
-
-#endif
+void debug_list_vacant_keys();

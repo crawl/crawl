@@ -29,13 +29,16 @@ my %field_type = (
     COLD     => "num",
     COLOUR   => "enum",
     CORPSE_VIOLATING => "bool",
-    CURSED   => "num",
+    CORRODE  => "bool",
+    CURSE    => "bool",
     DEX      => "num",
+    DRAIN    => "bool",
     ELEC     => "bool",
     EV       => "num",
     EVIL     => "bool",
     FOG      => "bool",
     FIRE     => "num",
+    FRAGILE  => "bool",
     HOLY     => "bool",
     INSCRIP  => "str",
     INT      => "num",
@@ -63,11 +66,10 @@ my %field_type = (
     SKIP_EGO => "bool",
     SLAY     => "num",
     SPECIAL  => "bool",
+    SLOW     => "bool",
     STEALTH  => "num",
     STR      => "num",
-    SUSTAT   => "bool",
     TYPE     => "str",
-    UNHOLY   => "bool",
     UNIDED   => "bool",
     VALUE    => "num",
 
@@ -238,7 +240,7 @@ sub finish_art
 
     my $flags = "";
     my $flag;
-    foreach $flag ("SPECIAL", "HOLY", "UNHOLY", "EVIL", "CHAOTIC",
+    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC",
                    "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED", "SKIP_EGO")
     {
         if ($artefact->{$flag})
@@ -323,12 +325,7 @@ sub process_line
         foreach $part (@parts)
         {
             my $up = uc($part);
-            if ($up eq "CURSED")
-            {
-                # Start out cursed, but don't re-curse.
-                $artefact->{CURSED} = -1;
-            }
-            elsif (!exists($field_type{$up}))
+            if (!exists($field_type{$up}))
             {
                 error($artefact, "Unknown bool '$part'");
             }
@@ -484,16 +481,16 @@ my @art_order = (
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
-    # Move FOG after FLY, and remove two copies of "unused", when
+    # Move FOG after FLY, and remove four copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
-    "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
+    "MUTATE", "unused", "SLAY", "CURSE", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "SUSTAT", "NO_UPGRADE", "RCORR", "\n",
-    "RMUT", "\n",
+    "RMSL", "FOG", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
+    "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
@@ -578,7 +575,6 @@ sub write_data
         die "Couldn't open '$ART_DATA' for writing: $!\n";
     }
 
-    (my $guard = $ART_DATA) =~ tr/a-zA-Z/_/c;
     print HEADER <<"ENDofTEXT";
 /* Definitions for unrandom artefacts. */
 
@@ -597,12 +593,10 @@ sub write_data
  * to be hunted down and eaten by dire tarantulas.
  **********************************************************************/
 
-#ifndef $guard
+#pragma once
 #ifndef ART_FUNC_H
 #error "art-func.h must be included before art-data.h"
 #endif
-
-#define $guard
 
 ENDofTEXT
 
@@ -614,16 +608,9 @@ ENDofTEXT
     }
 
     print HEADER <<FOOTER;
-#endif /* $guard */
 FOOTER
 
     close(HEADER);
-}
-
-sub guard_constant($)
-{
-    (my $name = shift) =~ tr/a-zA-Z0-9/_/c;
-    $name
 }
 
 sub unrand_enum_constants()
@@ -668,11 +655,9 @@ sub write_enums
     my $unrand_enum = unrand_enum_constants();
 
     open my $artenum, '>', $ART_ENUM or die "Can't write $ART_ENUM: $!\n";
-    my $guard = guard_constant($ART_ENUM);
 
     print $artenum <<ARTENUM;
-#ifndef $guard
-#define $guard
+#pragma once
 
 /**********************************************************************
  * WARNING!
@@ -692,8 +677,6 @@ enum unrand_type
     UNRAND_START = 180,
 $unrand_enum
 };
-
-#endif /* $guard */
 ARTENUM
     close $artenum;
 }

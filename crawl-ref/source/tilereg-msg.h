@@ -1,13 +1,12 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MSG_H
-#define TILEREG_MSG_H
+#pragma once
 
 #include "tilereg-text.h"
 
 class MessageRegion : public TextRegion
 {
 public:
-    MessageRegion(FontWrapper *font);
+    MessageRegion(FontWrapper *font_arg);
 
     void set_overlay(bool is_overlay);
 
@@ -21,5 +20,4 @@ protected:
     bool m_overlay;
 };
 
-#endif
 #endif

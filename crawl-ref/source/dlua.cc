@@ -9,7 +9,7 @@
 
 #include <sstream>
 
-#include "l_libs.h"
+#include "l-libs.h"
 #include "stringutil.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
@@ -290,6 +290,9 @@ void init_dungeon_lua()
     dluaopen_monsters(dlua);
     dluaopen_you(dlua);
     dluaopen_dgn(dlua);
+    #ifdef WIZARD
+    dluaopen_wiz(dlua);
+    #endif
 
     luaL_openlib(dlua, "feat", feat_dlib, 0);
     luaL_openlib(dlua, "spells", spells_dlib, 0);

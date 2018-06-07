@@ -47,6 +47,9 @@ body {
 #stats_piety {
     color: #fce94f; /* yellow */
 }
+#stats_gozag_gold{
+    color: #babdb6; /* lightgray */
+}
 #stats_piety.penance {
     color: #a40000; /* red */
 }
@@ -122,92 +125,72 @@ body {
     display: none;
 }
 
-/* Temperature bar, hidden normally */
-#stats_heatline {
-    display:none;
-    visibility:hidden;
+/* default color when showing "Silenced" */
+#stats_noise_status {
+    color: #FF00FF; /* magenta */
 }
 
-/* Visible for Lava Orcs */
-#stats[data-species="Lava Orc"] #stats_heatline {
-    display:block;
-    visibility:visible;
+/* default bar background color */
+#stats_noise_bar {
+    background-color: #2F2F2F; /* dark slate gray */
 }
 
-#stats_heat_bar {
-    background-color: #555753; /* darkgray */
-}
-#stats_heat_bar_full {
-    background-color: #a40000; /* red */
-}
-#stats_heat_bar_decrease {
-    background-color: #729fcf; /* lightblue */
-}
-#stats_heat_bar_increase {
-    background-color: #ee4f45; /* lightred */
-}
-
-#stats[data-species="Djinni"] #stats_hp_bar_full {
-    background-color: #ba2cde;
-}
-#stats[data-species="Djinni"] #stats_hp_bar_decrease {
-    background-color: #2d0bba;
-}
-#stats[data-species="Djinni"] #stats_hp_bar_increase {
-    background-color: #6c19e4;
-}
-
-/* Djinni contam bar */
-#stats_contamline {
-    display:none;
-    visibility:hidden;
-}
-
-#stats[data-species="Djinni"] #stats_contamline {
-    display:block;
-    visibility:visible;
-}
-/* Hide MP bar */
-#stats[data-species="Djinni"] #stats_mpline {
-    display:none;
-    visibility:hidden;
-}
-
-#stats_contam_bar {
+/* default bar change color */
+#stats_noise_bar_decrease {
     background-color: #555753; /* darkgray */
 }
 
-#stats_contam_bar_full {
-    background-color: #343434;
+/* clear the bar entirely */
+#stats_noise[data-level="blank"] #stats_noise_bar,
+#stats_noise[data-level="blank"] #stats_noise_bar_full {
+    background-color: #000000; /* black */
 }
 
-#stats_contam_bar_decrease,
-#stats_contam_bar_increase {
-    background-color: #232323;
+/* noise number is printed here in wizmode */
+#stats_noise_num {
+    color: #D3D3D3; /* default gray */
+    width: 0;
+}
+#stats_noise[data-shownum] #stats_noise_num {
+    width: 2em;
 }
 
-#stats_contamline[data-contam="2"] #stats_contam_bar_full {
-    background-color: yellow;
+/* use attribute selectors to adjust the bar and number (wizmode) color depending on `data-level`. */
+#stats_noise[data-level="quiet"] #stats_noise_bar_full {
+    background-color: #D3D3D3; /* lightgray */
+}
+#stats_noise[data-level="quiet"] #stats_noise_num {
+    color: #D3D3D3;
+}
+#stats_noise[data-level="loud"] #stats_noise_bar_full {
+    background-color: #FFD700; /* gold */
+}
+#stats_noise[data-level="loud"] #stats_noise_num {
+    color: #FFD700;
+}
+#stats_noise[data-level="veryloud"] #stats_noise_bar_full {
+    background-color: #FF0000; /* red */
+}
+#stats_noise[data-level="veryloud"] #stats_noise_num {
+    color: #FF0000;
+}
+#stats_noise[data-level="superloud"]  #stats_noise_bar_full {
+    background-color: #FF00FF; /* magenta */
+}
+#stats_noise[data-level="superloud"] #stats_noise_num {
+    color: #FF00FF;
 }
 
-#stats_contamline[data-contam="2"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="2"] #stats_contam_bar_increase {
-    background-color: saddlebrown;
+/* make the bar go to eleven on superloud sounds. */
+#stats_noise_bar { width: 82%; }
+#stats_noise[data-level="superloud"] #stats_noise_bar {
+    width: 100%;
 }
 
-#stats_contamline[data-contam="3"] #stats_contam_bar_full {
-    background-color: red;
-}
-
-#stats_contamline[data-contam="3"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="3"] #stats_contam_bar_increase {
-    background-color: darkred;
-}
-
-#stats_contamline[data-contam="4"] #stats_contam_bar_full,
-#stats_contamline[data-contam="4"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="4"] #stats_contam_bar_increase {
-    background-color: darkred;
+/* shrink the bar to the right in wizmode (if `data-shownum` is set). */
+#stats_noise_inter { width: 61%; }
+#stats_noise[data-shownum] #stats_noise_inter {
+     width: 45%;
 }
 
 #message_pane {
@@ -238,6 +221,14 @@ body {
 
 #minimap, #minimap_overlay {
     position: absolute;
+}
+
+
+#tooltip {
+    position: absolute;
+    background: rgba(40, 40, 40, 0.5);
+    padding: 5px;
+    border: 1px solid lightgray;
 }
 
 
@@ -361,6 +352,29 @@ body {
     font-size: 16px;
 }
 
+#input_dialog {
+    line-height: 1.2em;
+    min-width: 20em; /* can override this with a tag-specific class */
+    white-space: pre;
+}
+
+#input_dialog span {
+    display: table-cell;
+}
+
+.input_dialog_box {
+    display: table-cell;
+    width: 90%;
+}
+
+#input_dialog input {
+    width: 90%;
+}
+
+.input_skill_target input {
+    max-width: 5em;
+}
+
 #game .fg0 { color: #000000; } /* black */
 #game .fg1 { color: #204a87; } /* blue */
 #game .fg2 { color: #4e9a06; } /* green */
@@ -395,9 +409,8 @@ body {
 #game .bg14 { background-color: #fce94f; } /* yellow */
 #game .bg15 { background-color: #eeeeec; } /* white */
 
-/* A hack to align the columns in the spell menu */
-.menu_spell #menu_title {
-    margin-left: 32px;
+#menu_txt {
+    width: 80ch;
 }
 
 /* Use crisp (nearest-neighbor) upscaling on HiDPI screens to avoid blurriness. */

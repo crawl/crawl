@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "item-name.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -113,48 +114,53 @@ string debug_mon_str(const monster* mon)
     if (invalid_monster_index(midx))
         return make_stringf("Invalid monster index %d", midx);
 
-    string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    string out = "Monster '" + mon->full_name(DESC_PLAIN) + "' ";
     out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
     return out;
 }
 
-static void _debug_mid_name(mid_t mid)
+static string _debug_mid_name(mid_t mid)
 {
     if (mid == MID_PLAYER)
-    {
-        fprintf(stderr, "player %s",
-                debug_coord_str(you.pos()).c_str());
-    }
+        return make_stringf("player %s", debug_coord_str(you.pos()).c_str());
     else
     {
         monster * const mons = monster_by_mid(mid);
         if (mons)
-            fprintf(stderr, "%s", debug_mon_str(mons).c_str());
+            return debug_mon_str(mons);
         else
-            fprintf(stderr, "bad monster[%" PRImidt"]", mid);
+            return make_stringf("bad monster[%" PRImidt"]", mid);
     }
 }
 
-void debug_dump_constriction(const actor *act)
+string debug_constriction_string(const actor *act)
 {
+    string s;
     if (act->constricting)
     {
         for (const auto &entry : *act->constricting)
         {
-            fprintf(stderr, "Constricting ");
-            _debug_mid_name(entry.first);
-            fprintf(stderr, " for %d ticks\n", entry.second);
+            s += make_stringf("Constricting %s for %d ticks.\n",
+                        _debug_mid_name(entry.first).c_str(), entry.second);
         }
     }
 
     if (act->constricted_by)
     {
-        fprintf(stderr, "Constricted by ");
-        _debug_mid_name(act->constricted_by);
-        fprintf(stderr, "\n");
+        s += make_stringf("Constricted by %s for %d ticks.\n",
+                _debug_mid_name(act->constricted_by).c_str(),
+                    actor_by_mid(act->constricted_by)->constricting->find(act->mid)->second);
     }
+    return s;
+}
+
+void debug_dump_constriction(const actor *act)
+{
+    string desc = debug_constriction_string(act);
+    if (!desc.empty())
+        fprintf(stderr, "%s", desc.c_str());
 }
 
 void debug_dump_mon(const monster* mon, bool recurse)
@@ -169,7 +175,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     fprintf(stderr, "Base name: %s\n",
             mon->base_name(DESC_PLAIN, true).c_str());
     fprintf(stderr, "Full name: %s\n\n",
-            mon->full_name(DESC_PLAIN, true).c_str());
+            mon->full_name(DESC_PLAIN).c_str());
 
     if (in_bounds(mon->pos()))
     {
@@ -346,6 +352,39 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
 }
 
+void debug_dump_item(const char *name, int num, const item_def &item,
+                       const char *format, ...)
+{
+#ifdef DEBUG_FATAL
+    const msg_channel_type chan = MSGCH_WARN;
+#else
+    const msg_channel_type chan = MSGCH_ERROR;
+#endif
+
+    va_list args;
+    va_start(args, format);
+    string msg = vmake_stringf(format, args);
+    va_end(args);
+
+    mprf(chan, "%s", msg.c_str());
+    mprf(chan, "%s", name);
+
+    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
+         num, item.base_type, item.sub_type,
+         item.plus, item.plus2, item.special);
+
+    mprf("    quant: %d; ident: 0x%08" PRIx32"; ident_type: %d",
+         item.quantity, item.flags, get_ident_type(item));
+
+    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
+
+#ifdef DEBUG_FATAL
+    if (!crawl_state.game_crashed)
+        die("%s %s", msg.c_str(), name);
+#endif
+    crawl_state.cancel_cmd_repeat();
+}
+
 skill_type debug_prompt_for_skill(const char *prompt)
 {
     char specs[80];
@@ -356,6 +395,11 @@ skill_type debug_prompt_for_skill(const char *prompt)
     return skill_from_name(lowercase_string(specs).c_str());
 }
 
+/**
+ * Get a skill type from a skill name, accepting abbreviations.
+ *
+ * @see str_to_skill for an exact version.
+ */
 skill_type skill_from_name(const char *name)
 {
     skill_type skill = SK_NONE;
@@ -390,6 +434,37 @@ int debug_cap_stat(int stat)
     return stat < -128 ? -128 :
            stat >  127 ?  127
                        : stat;
+}
+
+void debug_list_vacant_keys()
+{
+    // Excluding / and * as they are prefix keys
+    const char *base_keys = "`~[{]}\\|-_=+;:'\",<.>?!@#$%^&()1234567890";
+    string message = "Available keys:";
+    function<void(char, string)> check = [&message](char k, const string name)
+            {
+                command_type cmd = key_to_command(k, KMC_DEFAULT);
+                if (cmd == CMD_NO_CMD)
+                {
+                    message += ' ';
+                    message += name;
+                }
+            };
+    for (const char *k = base_keys; *k; k++)
+        check(*k, string(1, *k));
+
+    for (char base = 'A'; base <= 'Z'; base++)
+    {
+        check(base, string(1, base));
+
+        char lower = tolower(base);
+        check(lower, string(1, lower));
+
+        char ctrl = CONTROL(base);
+        check(ctrl, string{'^', base});
+    }
+
+    mpr(message);
 }
 
 #ifdef DEBUG

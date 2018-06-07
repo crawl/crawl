@@ -1,5 +1,4 @@
-#ifndef GEOM2D_H
-#define GEOM2D_H
+#pragma once
 
 namespace geom
 {
@@ -93,5 +92,3 @@ bool parallel(const vector& v, const form &f);
 vector reflect(const vector& v, const form &f);
 
 }
-
-#endif

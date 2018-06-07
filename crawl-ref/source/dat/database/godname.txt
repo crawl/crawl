@@ -75,9 +75,13 @@ Uskayaw lastname
 
 Uskayaw the Reveler
 %%%%
-Hepliaklqanal lastname
+Hepliaklqana lastname
 
-Hepliaklqanal the Forgotten
+Hepliaklqana the Forgotten
+%%%%
+Wu Jian lastname
+
+the Wu Jian Council
 %%%%
 Xom lastname
 

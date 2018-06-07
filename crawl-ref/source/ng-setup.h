@@ -3,10 +3,9 @@
  * @brief Setup "you" for a new game.
 **/
 
-#ifndef NG_SETUP_H
-#define NG_SETUP_H
+#pragma once
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 struct item_def;
 item_def* newgame_make_item(object_class_type base,
@@ -16,4 +15,3 @@ item_def* newgame_make_item(object_class_type base,
 
 struct newgame_def;
 void setup_game(const newgame_def& ng);
-#endif

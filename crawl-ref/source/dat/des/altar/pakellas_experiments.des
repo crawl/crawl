@@ -104,7 +104,7 @@ function pakellas_gate(gate_name, raise)
   end
 
   for i, pos in ipairs(gate_pos) do
-    dgn.terrain_changed(pos.x, pos.y, new_feature, false, false)
+    dgn.terrain_changed(pos.x, pos.y, new_feature, false)
   end
 end
 
@@ -253,6 +253,7 @@ NAME:    gammafunk_pakellas_cloud_experiment
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 TAGS:    generate_awake no_monster_gen no_trap_gen no_item_gen no_pool_fixup
 DEPTH:   D:2-
+WEIGHT:  0
 KFEAT:   _ = altar_pakellas
 MONS:    hungry ghost / ugly thing / hydra / rakshasa spells:none ; nothing \
          / fire dragon / wolf spider / ice dragon
@@ -284,10 +285,11 @@ NAME:    gammafunk_pakellas_statue_experiment
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 TAGS:    generate_awake no_item_gen no_monster_gen no_trap_gen no_pool_fixup
 DEPTH:   D:2-
+WEIGHT:  0
 KFEAT:   g = iron_grate
 KFEAT:   _ = altar_pakellas
 : if you.depth() <= 7 then
-MONS:    iguana / jelly / hippogriff / crocodile / wasp / wyvern / yak / troll
+MONS:    iguana / jelly / hippogriff / crocodile / hornet / wyvern / yak / troll
 : else
 MONS:    wyvern / yak / troll / komodo dragon / ugly thing / hydra
 : end
@@ -318,11 +320,12 @@ NAME:   gammafunk_pakellas_spire_experiment
 TAGS:   temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 TAGS:   generate_awake no_monster_gen no_item_gen no_trap_gen no_pool_fixup
 DEPTH:  D:2-
+WEIGHT: 0
 KFEAT:  g = iron_grate
 KFEAT:  _ = altar_pakellas
 MONS:   gargoyle ; nothing / deep elf knight ; nothing / manticore / cyclops \
         / hydra / deep elf annihilator ; nothing / very ugly thing \
-        / fire dragon / ice dragon / boulder beetle / sphinx \
+        / fire dragon / ice dragon / sphinx \
         / tengu reaver ; nothing
 MONS:   lightning spire att:neutral
 KMONS:  P = bush
@@ -352,6 +355,7 @@ NAME:   gammafunk_pakellas_its_alive
 TAGS:   temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 TAGS:   generate_awake no_monster_gen no_item_gen no_trap_gen no_pool_fixup
 DEPTH:  D:2-
+WEIGHT: 0
 KFEAT:  g = iron_grate
 KFEAT:  h = iron_grate
 KFEAT:  _ = altar_pakellas

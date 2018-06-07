@@ -78,7 +78,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     dummy.type         = after;
     dummy.base_monster = base_monster;
     dummy.number       = number;
-    define_monster(&dummy); // assumes after is not a zombie
+    define_monster(dummy); // assumes after is not a zombie
 
     colour = dummy.colour;
     speed  = dummy.speed;
@@ -184,10 +184,10 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
 
     if (levels_gained)
     {
-        if (mons_intel(this) >= I_HUMAN)
-            simple_monster_message(&mcopy, " looks more experienced.");
+        if (mons_intel(*this) >= I_HUMAN)
+            simple_monster_message(mcopy, " looks more experienced.");
         else
-            simple_monster_message(&mcopy, " looks stronger.");
+            simple_monster_message(mcopy, " looks stronger.");
     }
 
     if (get_experience_level() < MAX_MONS_HD

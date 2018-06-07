@@ -23,11 +23,12 @@
 #include "dungeon.h"
 #include "end.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "maps.h"
@@ -42,43 +43,7 @@
 #include "traps.h"
 #include "version.h"
 
-#define DEBUG_ITEM_SCAN
 #ifdef DEBUG_ITEM_SCAN
-static void _dump_item(const char *name, int num, const item_def &item,
-                       PRINTF(3, ));
-
-static void _dump_item(const char *name, int num, const item_def &item,
-                       const char *format, ...)
-{
-#ifdef DEBUG_FATAL
-    const msg_channel_type chan = MSGCH_WARN;
-#else
-    const msg_channel_type chan = MSGCH_ERROR;
-#endif
-
-    va_list args;
-    va_start(args, format);
-    string msg = vmake_stringf(format, args);
-    va_end(args);
-
-    mprf(chan, "%s", msg.c_str());
-    mprf(chan, "%s", name);
-
-    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
-         num, item.base_type, item.sub_type,
-         item.plus, item.plus2, item.special);
-
-    mprf("    quant: %d; ident: 0x%08" PRIx32"; ident_type: %d",
-         item.quantity, item.flags, get_ident_type(item));
-
-    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
-
-#ifdef DEBUG_FATAL
-    if (!crawl_state.game_crashed)
-        die("%s %s", msg.c_str(), name);
-#endif
-    crawl_state.cancel_cmd_repeat();
-}
 
 void debug_item_scan()
 {
@@ -118,14 +83,14 @@ void debug_item_scan()
             // Check for invalid (zero quantity) items that are linked in.
             if (!mitm[obj].defined())
             {
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                debug_dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
                            "Linked invalid item at (%d,%d)!", ri->x, ri->y);
             }
 
             // Check that item knows what stack it's in.
             if (mitm[obj].pos != *ri)
             {
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                debug_dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
                            "Item position incorrect at (%d,%d)!", ri->x, ri->y);
             }
 
@@ -154,12 +119,12 @@ void debug_item_scan()
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
-            _dump_item(name, i, mitm[i], "Unlinked temporary item:");
+            debug_dump_item(name, i, mitm[i], "Unlinked temporary item:");
         else if (mon != nullptr && mon->type == MONS_NO_MONSTER)
-            _dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
+            debug_dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
-            _dump_item(name, i, mitm[i], "Unlinked item:");
+            debug_dump_item(name, i, mitm[i], "Unlinked item:");
 
             if (!in_bounds(mitm[i].pos))
             {
@@ -205,13 +170,13 @@ void debug_item_scan()
             || strstr(name, "buggy") != nullptr
             || strstr(name, "buggi") != nullptr)
         {
-            _dump_item(name, i, mitm[i], "Bad item:");
+            debug_dump_item(name, i, mitm[i], "Bad item:");
         }
         else if (abs(mitm[i].plus) > 30 &&
                     (mitm[i].base_type == OBJ_WEAPONS
                      || mitm[i].base_type == OBJ_ARMOUR))
         {
-            _dump_item(name, i, mitm[i], "Bad plus:");
+            debug_dump_item(name, i, mitm[i], "Bad plus:");
         }
         else if (!is_artefact(mitm[i])
                  && (mitm[i].base_type == OBJ_WEAPONS
@@ -219,10 +184,10 @@ void debug_item_scan()
                      || mitm[i].base_type == OBJ_ARMOUR
                         && mitm[i].brand >= NUM_SPECIAL_ARMOURS))
         {
-            _dump_item(name, i, mitm[i], "Bad special value:");
+            debug_dump_item(name, i, mitm[i], "Bad special value:");
         }
         else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
-            _dump_item(name, i, mitm[i], "Summoned item on floor:");
+            debug_dump_item(name, i, mitm[i], "Summoned item on floor:");
     }
 
     // Quickly scan monsters for "program bug"s.
@@ -379,7 +344,7 @@ void debug_mons_scan()
         {
             mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
         }
         else if (mgrd(pos) != i)
@@ -389,7 +354,7 @@ void debug_mons_scan()
 
             _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
@@ -402,7 +367,7 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
-                string full = m2->full_name(DESC_PLAIN, true);
+                string full = m2->full_name(DESC_PLAIN);
                 if (m2->alive())
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
@@ -424,7 +389,7 @@ void debug_mons_scan()
             env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
             mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  dungeon_feature_name(grd(pos)),
                  pos.x, pos.y,
                  _vault_desc(pos).c_str());
@@ -440,7 +405,7 @@ void debug_mons_scan()
             {
                 mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
                                   "index %d in slot %d.",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, idx, j);
                 continue;
             }
@@ -452,7 +417,7 @@ void debug_mons_scan()
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
                                  "slot %d (midx = %d)",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, j, i);
                 continue;
             }
@@ -463,11 +428,11 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                _dump_item(item.name(DESC_PLAIN, false, true).c_str(),
+                debug_dump_item(item.name(DESC_PLAIN, false, true).c_str(),
                             idx, item,
                            "Monster %s (%d, %d) holding non-monster "
                            "item (midx = %d)",
-                           m->full_name(DESC_PLAIN, true).c_str(),
+                           m->full_name(DESC_PLAIN).c_str(),
                            pos.x, pos.y, i);
                 continue;
             }
@@ -479,10 +444,10 @@ void debug_mons_scan()
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
                                  "item %s, but item thinks it's held by "
                                  "monster %s (%d, %d) [midx = %d]",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      m->pos().x, m->pos().y, i,
                      item.name(DESC_PLAIN).c_str(),
-                     holder->full_name(DESC_PLAIN, true).c_str(),
+                     holder->full_name(DESC_PLAIN).c_str(),
                      holder->pos().x, holder->pos().y, holder->mindex());
 
                 bool found = false;

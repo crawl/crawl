@@ -104,6 +104,13 @@ void FontBuffer::add(const string &s, const VColour &col, float x, float y)
     m_font->store(*this, x, y, s, col);
 }
 
+FontWrapper &FontBuffer::get_font_wrapper()
+{
+    ASSERT(m_font);
+    return *m_font;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // TileBuffer
 
@@ -311,8 +318,11 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
                             const VColour &col)
 {
-    add(sx, sy, ex, sy, col);
-    add(ex, sy, ex, ey, col);
+    GLW_3VF scale;
+    glmanager->get_transform(nullptr, &scale);
+    float dx = 1.0/scale.x, dy = 1.0/scale.y;
+    add(sx-dx, sy, ex-dx, sy, col);
+    add(ex, sy-dy, ex, ey-dy, col);
     add(ex, ey, sx, ey, col);
     add(sx, ey, sx, sy, col);
 }

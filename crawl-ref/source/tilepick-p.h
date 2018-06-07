@@ -3,8 +3,7 @@
  * @brief Look-up functions for player tiles.
 **/
 
-#ifndef TILEPICK_P_H
-#define TILEPICK_P_H
+#pragma once
 
 #ifdef USE_TILE
 
@@ -36,5 +35,4 @@ void tilep_calc_flags(const dolls_data &data, int flag[]);
 void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level);
 void tilep_print_parts(char *fbuf, const dolls_data &doll);
 
-#endif
 #endif

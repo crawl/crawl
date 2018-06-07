@@ -9,13 +9,16 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cmath>
 #include <iomanip>
 #include <numeric>
 #include <set>
 #include <sstream>
 #include <string>
 
+#include "ability.h"
 #include "adjust.h"
+#include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
@@ -23,6 +26,7 @@
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "database.h"
+#include "dbg-util.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe-spells.h"
@@ -33,23 +37,25 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "goditem.h"
+#include "god-abil.h"
+#include "god-item.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
+#include "lang-fake.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-book.h"
 #include "mon-cast.h" // mons_spell_range
+#include "mon-death.h"
 #include "mon-tentacle.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
@@ -73,54 +79,88 @@ int count_desc_lines(const string &_desc, const int width)
     return count(begin(desc), end(desc), '\n');
 }
 
-void print_description(const string &body)
+int show_description(const string &body)
 {
     describe_info inf;
     inf.body << body;
-    print_description(inf);
+    return show_description(inf);
 }
 
-class default_desc_proc
-{
-public:
-    int width() { return get_number_of_cols() - 1; }
-    int height() { return get_number_of_lines(); }
-    void print(const string &str) { cprintf("%s", str.c_str()); }
+/// A message explaining how the player can toggle between quote &
+static const string _toggle_message =
+    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
+#endif
+    " to toggle between the description and quote.";
 
-    void nextline()
+int show_description(const describe_info &inf)
+{
+#ifdef USE_TILE_LOCAL
+    // Ensure we get the full screen size when calling get_number_of_cols()
+    cgotoxy(1, 1);
+#endif
+    string desc = process_description(inf);
+
+    formatted_scroller desc_fs;
+    int flags = MF_NOSELECT | MF_NOWRAP;
+    desc_fs.set_flags(flags, false);
+    desc_fs.set_more();
+    desc_fs.add_text(desc, false, get_number_of_cols());
+
+    formatted_scroller quote_fs;
+    quote_fs.set_more();
+
+    if (!inf.quote.empty())
     {
-        if (wherey() < height())
-            cgotoxy(1, wherey() + 1);
-        else
-            cgotoxy(1, height());
-        // Otherwise cgotoxy asserts; let's just clobber the last line
-        // instead, which should be noticeable enough.
+        desc_fs.set_flags(desc_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        quote_fs.set_flags(quote_fs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        desc_fs.set_more(formatted_string::parse_string(_toggle_message));
+        quote_fs.set_more(formatted_string::parse_string(_toggle_message));
+
+        quote_fs.add_text(inf.title, true);
+        quote_fs.add_text(inf.quote, false, get_number_of_cols() - 1);
     }
-};
 
-void print_description(const describe_info &inf)
-{
-    clrscr();
-    textcolour(LIGHTGREY);
-
-    default_desc_proc proc;
-    process_description<default_desc_proc>(proc, inf);
+    bool show_quote = false;
+    while (true)
+    {
+        formatted_scroller& fs = show_quote ? quote_fs : desc_fs;
+        fs.show();
+        int keyin = fs.getkey();
+        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
+            show_quote = !show_quote;
+        else
+        {
+            clrscr();
+            return keyin;
+        }
+    }
 }
 
-static void _print_quote(const describe_info &inf)
+string process_description(const describe_info &inf)
 {
-    clrscr();
-    textcolour(LIGHTGREY);
-
-    default_desc_proc proc;
-    process_quote<default_desc_proc>(proc, inf);
+    string desc;
+    if (!inf.prefix.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.prefix));
+    if (!inf.title.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.title));
+    desc += "\n\n" + trimmed_string(filtered_lang(inf.body.str()));
+    if (!inf.suffix.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.suffix));
+    if (!inf.footer.empty())
+        desc += "\n\n" + trimmed_string(filtered_lang(inf.footer));
+    trim_string(desc);
+    return desc;
 }
 
 const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES: return "SustAt";
+#endif
     case RING_WIZARDRY:           return "Wiz";
     case RING_FIRE:               return "Fire";
     case RING_ICE:                return "Ice";
@@ -129,10 +169,10 @@ const char* jewellery_base_ability_string(int subtype)
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
-    case AMU_HARM:                return "Harm *Drain";
-    case AMU_DISMISSAL:           return "Dismiss";
+    case AMU_HARM:                return "Harm";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
+    case AMU_ACROBAT:             return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
@@ -148,20 +188,20 @@ const char* jewellery_base_ability_string(int subtype)
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
 /// How to display props of a given type?
-enum prop_note_type
+enum class prop_note
 {
     /// The raw numeral; e.g "Slay+3", "Int-1"
-    PROPN_NUMERAL,
+    numeral,
     /// Plusses and minuses; "rF-", "rC++"
-    PROPN_SYMBOLIC,
+    symbolic,
     /// Don't note the number; e.g. "rMut"
-    PROPN_PLAIN,
+    plain,
 };
 
 struct property_annotators
 {
     artefact_prop_type prop;
-    prop_note_type spell_out;
+    prop_note spell_out;
 };
 
 static vector<string> _randart_propnames(const item_def& item,
@@ -178,53 +218,51 @@ static vector<string> _randart_propnames(const item_def& item,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
-        { ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
-        { ARTP_CONTAM,                PROPN_PLAIN },
-        { ARTP_ANGRY,                 PROPN_PLAIN },
-        { ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
-        { ARTP_NOISE,                 PROPN_PLAIN },
-        { ARTP_CORRODE,               PROPN_PLAIN },
-        { ARTP_DRAIN,                 PROPN_PLAIN },
-        { ARTP_CONFUSE,               PROPN_PLAIN },
-        { ARTP_FRAGILE,               PROPN_PLAIN },
+        { ARTP_PREVENT_SPELLCASTING,  prop_note::plain },
+        { ARTP_PREVENT_TELEPORTATION, prop_note::plain },
+        { ARTP_CONTAM,                prop_note::plain },
+        { ARTP_ANGRY,                 prop_note::plain },
+        { ARTP_CAUSE_TELEPORTATION,   prop_note::plain },
+        { ARTP_NOISE,                 prop_note::plain },
+        { ARTP_CORRODE,               prop_note::plain },
+        { ARTP_DRAIN,                 prop_note::plain },
+        { ARTP_SLOW,                  prop_note::plain },
+        { ARTP_FRAGILE,               prop_note::plain },
 
         // Evokable abilities come second
-        { ARTP_BLINK,                 PROPN_PLAIN },
-        { ARTP_BERSERK,               PROPN_PLAIN },
-        { ARTP_INVISIBLE,             PROPN_PLAIN },
-        { ARTP_FLY,                   PROPN_PLAIN },
-        { ARTP_FOG,                   PROPN_PLAIN },
+        { ARTP_BLINK,                 prop_note::plain },
+        { ARTP_BERSERK,               prop_note::plain },
+        { ARTP_INVISIBLE,             prop_note::plain },
+        { ARTP_FLY,                   prop_note::plain },
 
         // Resists, also really important
-        { ARTP_ELECTRICITY,           PROPN_PLAIN },
-        { ARTP_POISON,                PROPN_PLAIN },
-        { ARTP_FIRE,                  PROPN_SYMBOLIC },
-        { ARTP_COLD,                  PROPN_SYMBOLIC },
-        { ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
-        { ARTP_MAGIC_RESISTANCE,      PROPN_SYMBOLIC },
-        { ARTP_REGENERATION,          PROPN_SYMBOLIC },
-        { ARTP_RMUT,                  PROPN_PLAIN },
-        { ARTP_RCORR,                 PROPN_PLAIN },
+        { ARTP_ELECTRICITY,           prop_note::plain },
+        { ARTP_POISON,                prop_note::plain },
+        { ARTP_FIRE,                  prop_note::symbolic },
+        { ARTP_COLD,                  prop_note::symbolic },
+        { ARTP_NEGATIVE_ENERGY,       prop_note::symbolic },
+        { ARTP_MAGIC_RESISTANCE,      prop_note::symbolic },
+        { ARTP_REGENERATION,          prop_note::symbolic },
+        { ARTP_RMUT,                  prop_note::plain },
+        { ARTP_RCORR,                 prop_note::plain },
 
         // Quantitative attributes
-        { ARTP_HP,                    PROPN_NUMERAL },
-        { ARTP_MAGICAL_POWER,         PROPN_NUMERAL },
-        { ARTP_AC,                    PROPN_NUMERAL },
-        { ARTP_EVASION,               PROPN_NUMERAL },
-        { ARTP_STRENGTH,              PROPN_NUMERAL },
-        { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
-        { ARTP_DEXTERITY,             PROPN_NUMERAL },
-        { ARTP_SLAYING,               PROPN_NUMERAL },
-        { ARTP_SHIELDING,             PROPN_NUMERAL },
+        { ARTP_HP,                    prop_note::numeral },
+        { ARTP_MAGICAL_POWER,         prop_note::numeral },
+        { ARTP_AC,                    prop_note::numeral },
+        { ARTP_EVASION,               prop_note::numeral },
+        { ARTP_STRENGTH,              prop_note::numeral },
+        { ARTP_INTELLIGENCE,          prop_note::numeral },
+        { ARTP_DEXTERITY,             prop_note::numeral },
+        { ARTP_SLAYING,               prop_note::numeral },
+        { ARTP_SHIELDING,             prop_note::numeral },
 
         // Qualitative attributes (and Stealth)
-        { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
-        { ARTP_STEALTH,               PROPN_SYMBOLIC },
-        { ARTP_CURSE,                 PROPN_PLAIN },
-        { ARTP_CLARITY,               PROPN_PLAIN },
-        { ARTP_RMSL,                  PROPN_PLAIN },
-        { ARTP_SUSTAT,                PROPN_PLAIN },
+        { ARTP_SEE_INVISIBLE,         prop_note::plain },
+        { ARTP_STEALTH,               prop_note::symbolic },
+        { ARTP_CURSE,                 prop_note::plain },
+        { ARTP_CLARITY,               prop_note::plain },
+        { ARTP_RMSL,                  prop_note::plain },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -240,9 +278,7 @@ static vector<string> _randart_propnames(const item_def& item,
         if (*type)
             propnames.push_back(type);
     }
-    else if ((item_ident(item, ISFLAG_KNOW_TYPE)
-              || is_artefact(item)
-                 && artefact_known_property(item, ARTP_BRAND))
+    else if (item_brand_known(item)
              && !(is_unrandom_artefact(item) && entry
                   && entry->flags & UNRAND_FLAG_SKIP_EGO))
     {
@@ -302,10 +338,10 @@ static vector<string> _randart_propnames(const item_def& item,
             ostringstream work;
             switch (ann.spell_out)
             {
-            case PROPN_NUMERAL: // e.g. AC+4
+            case prop_note::numeral: // e.g. AC+4
                 work << showpos << artp_name(ann.prop) << val;
                 break;
-            case PROPN_SYMBOLIC: // e.g. F++
+            case prop_note::symbolic: // e.g. F++
             {
                 work << artp_name(ann.prop);
 
@@ -318,10 +354,7 @@ static vector<string> _randart_propnames(const item_def& item,
 
                 break;
             }
-            case PROPN_PLAIN: // e.g. rPois or SInv
-                if (ann.prop == ARTP_CURSE && val < 1)
-                    continue;
-
+            case prop_note::plain: // e.g. rPois or SInv
                 work << artp_name(ann.prop);
                 break;
             }
@@ -363,14 +396,16 @@ static const char* _jewellery_base_ability_description(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
         return "It sustains your strength, intelligence and dexterity.";
+#endif
     case RING_WIZARDRY:
         return "It improves your spell success rate.";
     case RING_FIRE:
-        return "It enhances your fire magic, and weakens your ice magic.";
+        return "It enhances your fire magic.";
     case RING_ICE:
-        return "It enhances your ice magic, and weakens your fire magic.";
+        return "It enhances your ice magic.";
     case RING_TELEPORTATION:
         return "It may teleport you next to monsters.";
 #if TAG_MAJOR_VERSION == 34
@@ -379,12 +414,12 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_HARM:
         return "It increases damage dealt and taken.";
-    case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
     case AMU_MANA_REGENERATION:
         return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
+    case AMU_ACROBAT:
+        return "It helps you evade while moving and waiting.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
@@ -431,7 +466,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_SUSTAT, "It sustains your strength, intelligence and dexterity.", false},
         { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
                                  "enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
@@ -447,17 +481,16 @@ static string _randart_descrip(const item_def &item)
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
-        { ARTP_CURSE, "It may re-curse itself when equipped.", false},
+        { ARTP_CURSE, "It curses itself when equipped.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
         { ARTP_CORRODE, "It may corrode you when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
-        { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
     };
@@ -479,10 +512,6 @@ static string _randart_descrip(const item_def &item)
     {
         if (known_proprt(desc.property))
         {
-            // Only randarts with ARTP_CURSE > 0 may recurse themselves.
-            if (desc.property == ARTP_CURSE && proprt[desc.property] < 1)
-                continue;
-
             string sdesc = desc.desc;
 
             // FIXME Not the nicest hack.
@@ -822,27 +851,173 @@ static string _describe_mutant_beast(const monster_info &mi)
            + " " + _describe_mutant_beast_tier(tier);
 }
 
+/**
+ * Is the item associated with some specific training goal?  (E.g. mindelay)
+ *
+ * @return the goal, or 0 if there is none, scaled by 10.
+ */
+static int _item_training_target(const item_def &item)
+{
+    const int throw_dam = property(item, PWPN_DAMAGE);
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+        return weapon_min_delay_skill(item) * 10;
+    else if (is_shield(item))
+        return round(you.get_shield_skill_to_offset_penalty(item) * 10);
+    else if (item.base_type == OBJ_MISSILES && throw_dam)
+        return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
+    else
+        return 0;
+}
+
+/**
+ * Does an item improve with training some skill?
+ *
+ * @return the skill, or SK_NONE if there is none. Note: SK_NONE is *not* 0.
+ */
+static skill_type _item_training_skill(const item_def &item)
+{
+    const int throw_dam = property(item, PWPN_DAMAGE);
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+        return item_attack_skill(item);
+    else if (is_shield(item))
+        return SK_SHIELDS; // shields are armour, so do shields before armour
+    else if (item.base_type == OBJ_ARMOUR)
+        return SK_ARMOUR;
+    else if (item.base_type == OBJ_MISSILES && throw_dam)
+        return SK_THROWING;
+    else if (item_is_evokable(item)) // not very accurate
+        return SK_EVOCATIONS;
+    else
+        return SK_NONE;
+}
+
+/**
+ * Whether it would make sense to set a training target for an item.
+ *
+ * @param item the item to check.
+ * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
+ */
+static bool _could_set_training_target(const item_def &item, bool ignore_current)
+{
+    if (!crawl_state.need_save || is_useless_item(item) || you.species == SP_GNOLL)
+        return false;
+
+    const skill_type skill = _item_training_skill(item);
+    if (skill == SK_NONE)
+        return false;
+
+    const int target = min(_item_training_target(item), 270);
+
+    return target && you.can_train[skill]
+       && you.skill(skill, 10, false, false, false) < target
+       && (ignore_current || you.get_training_target(skill) < target);
+}
+
+/**
+ * Produce the "Your skill:" line for item descriptions where specific skill targets
+ * are releveant (weapons, missiles, shields)
+ *
+ * @param skill the skill to look at.
+ * @param show_target_button whether to show the button for setting a skill target.
+ * @param scaled_target a target, scaled by 10, to use when describing the button.
+ */
+static string _your_skill_desc(skill_type skill, bool show_target_button, int scaled_target)
+{
+    if (!crawl_state.need_save || skill == SK_NONE)
+        return "";
+    string target_button_desc = "";
+    int min_scaled_target = min(scaled_target, 270);
+    if (show_target_button &&
+            you.get_training_target(skill) < min_scaled_target)
+    {
+        target_button_desc = make_stringf(
+            "; use <white>(s)</white> to set %d.%d as a target for %s.",
+                                min_scaled_target / 10, min_scaled_target % 10,
+                                skill_name(skill));
+    }
+    int you_skill_temp = you.skill(skill, 10, false, true, true);
+    int you_skill = you.skill(skill, 10, false, false, false);
+
+    return make_stringf("Your %sskill: %d.%d%s",
+                            (you_skill_temp != you_skill ? "(base) " : ""),
+                            you_skill / 10, you_skill % 10,
+                            target_button_desc.c_str());
+}
+
+/**
+ * Produce a description of a skill target for items where specific targets are
+ * relevant.
+ *
+ * @param skill the skill to look at.
+ * @param scaled_target a skill level target, scaled by 10.
+ * @param training a training value, from 0 to 100. Need not be the actual training
+ * value.
+ */
+static string _skill_target_desc(skill_type skill, int scaled_target,
+                                        unsigned int training)
+{
+    string description = "";
+    scaled_target = min(scaled_target, 270);
+
+    const bool max_training = (training == 100);
+    const bool hypothetical = !crawl_state.need_save ||
+                                    (training != you.training[skill]);
+
+    const skill_diff diffs = skill_level_to_diffs(skill,
+                                (double) scaled_target / 10, training, false);
+    const int level_diff = xp_to_level_diff(diffs.experience / 10, 10);
+
+    if (max_training)
+        description += "At 100% training ";
+    else if (!hypothetical)
+    {
+        description += make_stringf("At current training (%d%%) ",
+                                        you.training[skill]);
+    }
+    else
+        description += make_stringf("At a training level of %d%% ", training);
+
+    description += make_stringf(
+        "you %s reach %d.%d in %s %d.%d XLs.",
+            hypothetical ? "would" : "will",
+            scaled_target / 10, scaled_target % 10,
+            (you.experience_level + (level_diff + 9) / 10) > 27
+                                ? "the equivalent of" : "about",
+            level_diff / 10, level_diff % 10);
+    if (you.wizard)
+    {
+        description += make_stringf("\n    (%d xp, %d skp)",
+                                    diffs.experience, diffs.skill_points);
+    }
+    return description;
+}
+
+/**
+ * Append two skill target descriptions: one for 100%, and one for the
+ * current training rate.
+ */
+static void _append_skill_target_desc(string &description, skill_type skill,
+                                        int scaled_target)
+{
+    if (you.species != SP_GNOLL)
+        description += "\n    " + _skill_target_desc(skill, scaled_target, 100);
+    if (you.training[skill] > 0 && you.training[skill] < 100)
+    {
+        description += "\n    " + _skill_target_desc(skill, scaled_target,
+                                                    you.training[skill]);
+    }
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
     const int ammo_type = fires_ammo_type(item);
     const int ammo_dam = ammo_type == MI_NONE ? 0 :
                                                 ammo_type_damage(ammo_type);
-    const skill_type skill = item_attack_skill(item);
+    const skill_type skill = _item_training_skill(item);
+    const int mindelay_skill = _item_training_target(item);
 
-    const string your_skill = crawl_state.need_save ?
-      make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
-      : "";
-    description += make_stringf(
-    "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d."
-    "%s",
-     property(item, PWPN_HIT),
-     base_dam + ammo_dam,
-     (float) property(item, PWPN_SPEED) / 10,
-     (float) weapon_min_delay(item) / 10,
-     weapon_min_delay_skill(item),
-     your_skill.c_str());
+    const bool could_set_target = _could_set_training_target(item, true);
 
     if (skill == SK_SLINGS)
     {
@@ -850,6 +1025,24 @@ static void _append_weapon_stats(string &description, const item_def &item)
                                     base_dam +
                                     ammo_type_damage(MI_SLING_BULLET));
     }
+
+    description += make_stringf(
+    "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
+    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
+        property(item, PWPN_HIT),
+        base_dam + ammo_dam,
+        (float) property(item, PWPN_SPEED) / 10,
+        (float) weapon_min_delay(item, item_brand_known(item)) / 10,
+        mindelay_skill / 10);
+
+    if (!is_useless_item(item))
+    {
+        description += "\n    " + _your_skill_desc(skill,
+                    could_set_target && in_inventory(item), mindelay_skill);
+    }
+
+    if (could_set_target)
+        _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
 static string _handedness_string(const item_def &item)
@@ -898,8 +1091,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\n\nIt can be evoked to extend its reach.";
             break;
         case SK_AXES:
-            description += "\n\nIt can hit multiple enemies in an arc"
-                           " around the wielder.";
+            description += "\n\nIt hits all enemies adjacent to the wielder, "
+                           "dealing less damage to those not targeted.";
+            break;
+        case SK_LONG_BLADES:
+            description += "\n\nIt can be used to riposte, swiftly "
+                           "retaliating against a missed attack.";
             break;
         case SK_SHORT_BLADES:
             {
@@ -915,7 +1112,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     }
 
     // ident known & no brand but still glowing
-    // TODO: deduplicate this with the code in itemname.cc
+    // TODO: deduplicate this with the code in item-name.cc
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 
@@ -1000,8 +1197,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 description += "It poisons the flesh of those it strikes.";
             break;
         case SPWPN_PROTECTION:
-            description += "It protects the one who wields it against "
-                "injury (+5 to AC).";
+            description += "It protects the one who uses it against "
+                "injury (+AC on strike).";
             break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
@@ -1026,9 +1223,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
-                description += "Each time it fires, it turns the "
-                    "launched projectile into a different, random type "
-                    "of bolt.";
+                description += "Each projectile launched from it has a "
+                               "different, random effect.";
             }
             else
             {
@@ -1037,8 +1233,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals its "
-                "wielder somewhat when it strikes a living foe.";
+            description += "It inflicts no extra harm, but heals "
+                "its wielder when it wounds a living foe.";
             break;
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
@@ -1073,7 +1269,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] && &item == you.weapon())
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually a";
         if ((int) you.props[ORIGINAL_BRAND_KEY] == SPWPN_NORMAL)
@@ -1107,7 +1303,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     {
         description += "\n\nThis ";
         if (is_unrandom_artefact(item))
-            description += get_artefact_base_name(item, true);
+            description += get_artefact_base_name(item);
         else
             description += "weapon";
         description += " falls into the";
@@ -1163,6 +1359,7 @@ static string _describe_ammo(const item_def &item)
 
         switch (item.brand)
         {
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_FLAME:
             description += "It burns those it strikes, causing extra injury "
                     "to most foes and up to half again as much damage against "
@@ -1176,6 +1373,7 @@ static string _describe_ammo(const item_def &item)
                     "cold-blooded creatures. Compared to normal ammo, it is "
                     "twice as likely to be destroyed on impact.";
             break;
+#endif
         case SPMSL_CHAOS:
             description += "When ";
 
@@ -1189,14 +1387,17 @@ static string _describe_ammo(const item_def &item)
             if (can_launch)
                 description += "fired from an appropriate launcher, ";
 
-            description += "it turns into a bolt of a random type.";
+            description += "it has a random effect.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
             break;
         case SPMSL_CURARE:
-            description += "It is tipped with impact poison. It is twice as "
-                           "likely to be destroyed on impact as other needles.";
+            description += "It is tipped with a substance that causes "
+                           "asphyxiation, dealing direct damage as well as "
+                           "poisoning and slowing those it strikes.\n"
+                           "It is twice as likely to be destroyed on impact as "
+                           "other needles.";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";
@@ -1213,39 +1414,37 @@ static string _describe_ammo(const item_def &item)
             break;
 #endif
         case SPMSL_FRENZY:
-            description += "It is tipped with a substance that causes a mindless "
-                "rage, making people attack friend and foe alike.";
+            description += "It is tipped with a substance that sends those it "
+                           "hits into a mindless rage, attacking friend and "
+                           "foe alike.";
             break;
         case SPMSL_RETURNING:
-            description += "A skilled user can throw it in such a way "
-                "that it will return to its owner.";
+            description += "A skilled user can throw it in such a way that it "
+                           "will return to its owner.";
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
-                "potentially hitting all targets in its path until it "
-                "reaches maximum range.";
+                           "potentially hitting all targets in its path until "
+                           "it reaches its maximum range.";
             break;
         case SPMSL_DISPERSAL:
-            description += "Any target it hits will blink, with a "
-                "tendency towards blinking further away from the one "
-                "who " + threw_or_fired + " it.";
+            description += "It will cause any target it hits to blink, with a "
+                           "tendency towards blinking further away from the "
+                           "one who " + threw_or_fired + " it.";
             break;
         case SPMSL_EXPLODING:
-            description += "It will explode into fragments upon "
-                "hitting a target, hitting an obstruction, or reaching "
-                "the end of its range.";
+            description += "It will explode into fragments upon hitting a "
+                           "target, hitting an obstruction, or reaching its "
+                           "maximum range.";
             break;
         case SPMSL_STEEL:
-            description += "Compared to normal ammo, it does increased "
-                "damage.";
+            description += "It deals increased damage compared to normal ammo.";
             break;
         case SPMSL_SILVER:
-            description += "Silver sears all those touched by chaos. "
-                "Compared to normal ammo, it does 75% more damage to "
-                "chaotic and magically transformed beings. It also does "
-                "extra damage against mutated beings according to how "
-                "mutated they are. With due care, silver ammo can still "
-                "be handled by those it affects.";
+            description += "It deals substantially increased damage to chaotic "
+                           "and magically transformed beings. It also inflicts "
+                           "extra damage against mutated beings, according to "
+                           "how mutated they are.";
             break;
         }
     }
@@ -1254,29 +1453,33 @@ static string _describe_ammo(const item_def &item)
     if (dam)
     {
         const int throw_delay = (10 + dam / 2);
-        const string your_skill = crawl_state.need_save ?
-                make_stringf("\n (Your skill: %.1f)",
-                    (float) you.skill(SK_THROWING, 10) / 10)
-                    : "";
+        const int target_skill = _item_training_target(item);
+        const bool could_set_target = _could_set_training_target(item, true);
 
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
-                "is reached at skill level %d."
-            "%s",
+                "is reached at skill level %d.",
             dam,
             (float) throw_delay / 10,
             (float) FASTEST_PLAYER_THROWING_SPEED / 10,
-            (throw_delay - FASTEST_PLAYER_THROWING_SPEED) * 2,
-            your_skill.c_str()
+            target_skill / 10
         );
+
+        if (!is_useless_item(item))
+        {
+            description += "\n    " +
+                    _your_skill_desc(SK_THROWING,
+                        could_set_target && in_inventory(item), target_skill);
+        }
+        if (could_set_target)
+            _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
-
     if (ammo_always_destroyed(item))
-        description += "\nIt will always be destroyed on impact.";
+        description += "\n\nIt will always be destroyed on impact.";
     else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
+        description += "\n\nIt may be destroyed on impact.";
 
     return description;
 }
@@ -1300,22 +1503,31 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         if (is_shield(item))
         {
-            const float skill = you.get_shield_skill_to_offset_penalty(item);
+            const int target_skill = _item_training_target(item);
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
+            const bool could_set_target = _could_set_training_target(item, true);
+
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
-                            + make_stringf("%.1f", skill);
+                            + make_stringf("%d.%d", target_skill / 10,
+                                                target_skill % 10);
+
                 if (crawl_state.need_save)
                 {
                     description += "\n                            "
-                                + make_stringf("(Your skill: %.1f)",
-                                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                        + _your_skill_desc(SK_SHIELDS,
+                          could_set_target && in_inventory(item), target_skill);
                 }
                 else
                     description += "\n";
+                if (could_set_target)
+                {
+                    _append_skill_target_desc(description, SK_SHIELDS,
+                                                                target_skill);
+                }
             }
 
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
@@ -1412,12 +1624,12 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It protects its wearer from the effects "
                 "of both cold and heat.";
             break;
-
-        // These two are only for robes.
         case SPARM_POSITIVE_ENERGY:
             description += "It protects its wearer from "
                 "the effects of negative energy.";
             break;
+
+        // This is only for robes.
         case SPARM_ARCHMAGI:
             description += "It increases the power of its wearer's "
                 "magical spells.";
@@ -1447,7 +1659,17 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged weaponry (Slay+4).";
+            description += "It improves your effectiveness with ranged "
+                           "weaponry, such as bows and javelins (Slay+4).";
+            break;
+
+        // These are only for scarves.
+        case SPARM_REPULSION:
+            description += "It protects its wearer by repelling missiles.";
+            break;
+
+        case SPARM_CLOUD_IMMUNE:
+            description += "It completely protects its wearer from the effects of clouds.";
             break;
         }
     }
@@ -1468,12 +1690,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     else
     {
         const int max_ench = armour_max_enchant(item);
-        if (armour_is_hide(item))
-        {
-            description += "\n\nEnchanting it will turn it into a suit of "
-                           "magical armour.";
-        }
-        else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             description += "\n\nIt can be maximally enchanted to +"
                            + to_string(max_ench) + ".";
@@ -1691,7 +1908,7 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (!dump)
+    if (!dump && !you.suppress_wizard)
     {
         description << setfill('0');
         description << "\n\n"
@@ -1825,75 +2042,16 @@ string get_item_description(const item_def &item, bool verbose,
         description << _describe_ammo(item);
         break;
 
-    case OBJ_WANDS:
-    {
-        const bool known_empty = is_known_empty_wand(item);
-
-        if (!item_ident(item, ISFLAG_KNOW_PLUSES) && !known_empty)
-        {
-            description << "\nIf evoked without being fully identified,"
-                           " several charges will be wasted out of"
-                           " unfamiliarity with the device.";
-        }
-
-
-        if (item_type_known(item) && !item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            description << "\nIt can have at most " << wand_max_charges(item)
-                        << " charges.";
-        }
-
-        if (known_empty)
-            description << "\nUnfortunately, it has no charges left.";
-        break;
-    }
-
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             break;
 
-        if (mons_class_leaves_hide(item.mon_type))
-        {
-            description << "\n\n";
-            if (item.props.exists(MANGLED_CORPSE_KEY))
-            {
-                description << "This corpse is badly mangled; its hide is "
-                               "beyond any hope of recovery.";
-            }
-            else
-            {
-                description << "Butchering may allow you to recover this "
-                               "creature's hide, which can be enchanted into "
-                               "armour.";
-            }
-        }
         // intentional fall-through
     case OBJ_FOOD:
-        if (item.base_type == OBJ_FOOD)
-        {
-            description << "\n\n";
-
-            const int turns = food_turns(item);
-            ASSERT(turns > 0);
-            if (turns > 1)
-            {
-                description << "It is large enough that eating it takes "
-                            << ((turns > 2) ? "several" : "a couple of")
-                            << " turns, during which time the eater is vulnerable"
-                               " to attack.";
-            }
-            else
-                description << "It is small enough that eating it takes "
-                               "only one turn.";
-        }
         if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
             switch (determine_chunk_effect(item))
             {
-            case CE_MUTAGEN:
-                description << "\n\nEating this meat will cause random "
-                               "mutations.";
-                break;
             case CE_NOXIOUS:
                 description << "\n\nThis meat is toxic.";
                 break;
@@ -1901,59 +2059,6 @@ string get_item_description(const item_def &item, bool verbose,
                 break;
             }
         }
-        break;
-
-    case OBJ_RODS:
-        if (verbose)
-        {
-            description <<
-                "\nIt uses its own magic reservoir for casting spells, and "
-                "recharges automatically according to the recharging "
-                "rate.";
-
-            const int max_charges = MAX_ROD_CHARGE;
-            const int max_recharge_rate = MAX_WPN_ENCHANT;
-            if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            {
-                const int num_charges = item.charge_cap / ROD_CHARGE_MULT;
-                if (max_charges > num_charges)
-                {
-                    description << "\nIt can currently hold " << num_charges
-                                << " charges. It can be magically "
-                                << "recharged to contain up to "
-                                << max_charges << " charges.";
-                }
-                else
-                    description << "\nIts capacity can be increased no further.";
-
-                const int recharge_rate = item.rod_plus;
-                if (recharge_rate < max_recharge_rate)
-                {
-                    description << "\nIts current recharge rate is "
-                                << (recharge_rate >= 0 ? "+" : "")
-                                << recharge_rate << ". It can be magically "
-                                << "recharged up to +" << max_recharge_rate
-                                << ".";
-                }
-                else
-                    description << "\nIts recharge rate is at maximum.";
-            }
-            else
-            {
-                description << "\nIt can have at most " << max_charges
-                            << " charges and +" << max_recharge_rate
-                            << " recharge rate.";
-            }
-        }
-        else if (Options.dump_book_spells)
-        {
-            desc += describe_item_spells(item);
-            if (desc.empty())
-                need_extra_line = false;
-            else
-                description << desc;
-        }
-
         break;
 
     case OBJ_STAVES:
@@ -1969,15 +2074,29 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
+        if (item.sub_type == MISC_ZIGGURAT && you.zigs_completed)
+        {
+            const int zigs = you.zigs_completed;
+            description << "\n\nIt is surrounded by a "
+                        << (zigs >= 27 ? "blinding " : // just plain silly
+                            zigs >=  9 ? "dazzling " :
+                            zigs >=  3 ? "bright " :
+                                         "gentle ")
+                        << "glow.";
+        }
         if (is_xp_evoker(item))
         {
-            description << "\n\nOnce activated, this device "
+            description << "\n\nOnce "
+                        << (item.sub_type == MISC_LIGHTNING_ROD
+                            ? "all charges have been used"
+                            : "activated")
+                        << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
                            "and all other devices of its kind " : "")
                         << "will be rendered temporarily inert. However, "
                         << (!item_is_horn_of_geryon(item) ? "they " : "it ")
                         << "will recharge as you gain experience."
-                        << (!evoker_is_charged(item) ?
+                        << (!evoker_charges(item.sub_type) ?
                            " The device is presently inert." : "");
         }
         break;
@@ -2009,6 +2128,10 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_WANDS:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
+#endif
         // No extra processing needed for these item types.
         break;
 
@@ -2045,7 +2168,7 @@ string get_item_description(const item_def &item, bool verbose,
         }
     }
 
-    if (god_hates_item_handling(item))
+    if (god_hates_item(item))
     {
         description << "\n\n" << uppercase_first(god_name(you.religion))
                     << " disapproves of the use of such an item.";
@@ -2066,6 +2189,16 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
     return description.str();
+}
+
+string get_cloud_desc(cloud_type cloud)
+{
+    if (cloud == CLOUD_NONE)
+        return "";
+    const string cl_name = cloud_type_name(cloud);
+    const string cl_desc = getLongDescription(cl_name + " cloud");
+    return "A cloud of " + cl_name + (cl_desc.empty() ? "." : ".\n\n")
+        + cl_desc + extra_cloud_info(cloud);
 }
 
 void get_feature_desc(const coord_def &pos, describe_info &inf)
@@ -2106,83 +2239,42 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
-        long_desc += "(Pray here to learn more.)\n";
+    {
+        long_desc +=
+            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+                         command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
 
     inf.body << long_desc;
 
-    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+    if (!feat_is_solid(feat))
     {
-        const string cl_name = cloud_type_name(cloud);
-        const string cl_desc = getLongDescription(cl_name + " cloud");
-        inf.body << "\n\nA cloud of " << cl_name
-                 << (cl_desc.empty() ? "." : ".\n\n")
-                 << cl_desc;
+        string area_desc = "";
+        if (haloed(pos) && !umbraed(pos))
+            area_desc += "\n" + getLongDescription("haloed");
+        if (umbraed(pos) && !haloed(pos))
+            area_desc += "\n" + getLongDescription("umbraed");
+        if (liquefied(pos))
+            area_desc += "\n" + getLongDescription("liquefied");
+        if (disjunction_haloed(pos))
+            area_desc += "\n" + getLongDescription("disjunction haloed");
+
+        inf.body << area_desc;
     }
+
+    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+        inf.body << "\n\n" + get_cloud_desc(cloud);
 
     inf.quote = getQuoteString(db_name);
 }
 
-/// A message explaining how the player can toggle between quote &
-static const string _toggle_message =
-    "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
-#endif
-    " to toggle between the description and quote.";
-
-/**
- * If the given description has an associated quote, print a message at the
- * bottom of the screen explaining how the player can toggle between viewing
- * that quote & the description, and then check whether the input corresponds
- * to such a toggle.
- *
- * @param inf[in]       The description in question.
- * @param key[in,out]   The input command. If zero, is set to getchm().
- * @return              Whether the description & quote should be toggled.
- */
-static int _print_toggle_message(const describe_info &inf, int& key)
-{
-    mouse_control mc(MOUSE_MODE_MORE);
-
-    if (inf.quote.empty())
-    {
-        if (!key)
-            key = getchm();
-        return false;
-    }
-
-    const int bottom_line = min(30, get_number_of_lines());
-    cgotoxy(1, bottom_line);
-    formatted_string::parse_string(_toggle_message).display();
-    if (!key)
-        key = getchm();
-
-    if (key == '!' || key == CK_MOUSE_CMD)
-        return true;
-
-    return false;
-}
-
-void describe_feature_wide(const coord_def& pos, bool show_quote)
+void describe_feature_wide(const coord_def& pos)
 {
     describe_info inf;
     get_feature_desc(pos, inf);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_feature");
-#endif
-
-    if (show_quote)
-        _print_quote(inf);
-    else
-        print_description(inf);
-
     if (crawl_state.game_is_hints())
-        hints_describe_pos(pos.x, pos.y);
-
-    int key = 0;
-    if (_print_toggle_message(inf, key))
-        describe_feature_wide(pos, !show_quote);
+        inf.body << hints_describe_pos(pos.x, pos.y);
+    show_description(inf);
 }
 
 void get_item_desc(const item_def &item, describe_info &inf)
@@ -2203,7 +2295,9 @@ static vector<command_type> _allowed_actions(const item_def& item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
+        // intentional fallthrough
     case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
@@ -2214,10 +2308,14 @@ static vector<command_type> _allowed_actions(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
         if (you.species != SP_FELID)
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
+        if (_could_set_training_target(item, false))
+            actions.push_back(CMD_SET_SKILL_TARGET);
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
@@ -2238,7 +2336,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (!you_foodless(true)) // mummies and lich form forbidden
+        if (!you_foodless()) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:
@@ -2278,9 +2376,9 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
         { CMD_DROP, "(d)rop" },
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
+        { CMD_SET_SKILL_TARGET, "(s)kill" },
     };
-    return "You can "
-           + comma_separated_fn(begin(actions), end(actions),
+    return comma_separated_fn(begin(actions), end(actions),
                                 [] (command_type cmd)
                                 {
                                     return act_str.at(cmd);
@@ -2310,7 +2408,10 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_DROP,             'd' },
         { CMD_INSCRIBE_ITEM,    'i' },
         { CMD_ADJUST_INVENTORY, '=' },
+        { CMD_SET_SKILL_TARGET, 's' },
     };
+
+    key = tolower(key);
 
     for (auto cmd : actions)
         if (key == act_key.at(cmd))
@@ -2353,10 +2454,29 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     case CMD_DROP:             drop_item(slot, item.quantity);      break;
     case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
+    case CMD_SET_SKILL_TARGET: target_item(item);                   break;
     default:
         die("illegal inventory cmd %d", action);
     }
     return false;
+}
+
+void target_item(item_def &item)
+{
+    const skill_type skill = _item_training_skill(item);
+    if (skill == SK_NONE)
+        return;
+
+    const int target = _item_training_target(item);
+    if (target == 0)
+        return;
+
+    you.set_training_target(skill, target, true);
+    // ensure that the skill is at least enabled
+    if (you.train[skill] == TRAINING_DISABLED)
+        you.train[skill] = TRAINING_ENABLED;
+    you.train_alt[skill] = you.train[skill];
+    reset_training();
 }
 
 /**
@@ -2371,10 +2491,6 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
     if (!item.defined())
         return true;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
-#endif
 
     string desc = get_item_description(item, true, false);
 
@@ -2395,7 +2511,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
     if (fixup_desc)
         fixup_desc(desc);
-    // spellbooks & rods have their own UIs, so we don't currently support the
+    // spellbooks have their own UIs, so we don't currently support the
     // inscribe/drop/etc prompt UI for them.
     // ...it would be nice if we did, though.
     if (item.has_spells())
@@ -2408,11 +2524,12 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     }
     else
     {
-        const bool do_actions = in_inventory(item)
-                                // Dead men use no items.
-                                && !(you.dead || crawl_state.updating_scores);
+        const bool do_actions = in_inventory(item) // Dead men use no items.
+                                && !(you.pending_revival
+                                     || crawl_state.updating_scores);
         vector<command_type> actions;
         formatted_scroller menu;
+        menu.set_flags(MF_SINGLESELECT);
         menu.add_text(desc, false, get_number_of_cols());
         if (do_actions)
         {
@@ -2466,36 +2583,33 @@ void inscribe_item(item_def &item)
  * in their current condition.
  *
  * @param spell     The spell in question.
- * @param rod       Whether the spell is being cast from a rod (not a book).
  */
-static string _player_spell_stats(const spell_type spell, bool rod)
+static string _player_spell_stats(const spell_type spell)
 {
     string description;
     description += make_stringf("\nLevel: %d", spell_difficulty(spell));
-    if (!rod)
+
+    const string schools = spell_schools_string(spell);
+    description +=
+        make_stringf("        School%s: %s",
+                     schools.find("/") != string::npos ? "s" : "",
+                     schools.c_str());
+
+    if (!crawl_state.need_save
+        || (get_spell_flags(spell) & SPFLAG_MONSTER))
     {
-        const string schools = spell_schools_string(spell);
-        description +=
-            make_stringf("        School%s: %s",
-                         schools.find("/") != string::npos ? "s" : "",
-                         schools.c_str());
-
-        if (!crawl_state.need_save
-            || (get_spell_flags(spell) & SPFLAG_MONSTER))
-        {
-            return description; // all other info is player-dependent
-        }
-
-        const string failure = failure_rate_to_string(raw_spell_fail(spell));
-        description += make_stringf("        Fail: %s", failure.c_str());
+        return description; // all other info is player-dependent
     }
 
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    description += make_stringf("        Fail: %s", failure.c_str());
+
     description += "\n\nPower : ";
-    description += spell_power_string(spell, rod);
+    description += spell_power_string(spell);
     description += "\nRange : ";
-    description += spell_range_string(spell, rod);
+    description += spell_range_string(spell);
     description += "\nHunger: ";
-    description += spell_hunger_string(spell, rod);
+    description += spell_hunger_string(spell);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";
@@ -2547,15 +2661,21 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
+/// How much power do we think the given monster casts this spell with?
+static int _hex_pow(const spell_type spell, const int hd)
+{
+    const int cap = 200;
+    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    return min(cap, pow);
+}
+
 /**
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
 int hex_chance(const spell_type spell, const int hd)
 {
-    const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
-    const int capped_pow = min(cap, pow);
+    const int capped_pow = _hex_pow(spell, hd);
     const int chance = hex_success_chance(you.res_magic(), capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_RESISTANCE)
@@ -2567,13 +2687,12 @@ int hex_chance(const spell_type spell, const int hd)
  * Describe mostly non-numeric player-specific information about a spell.
  *
  * (E.g., your god's opinion of it, whether it's in a high-level book that
- * you can't memorize from, whether it's currently useless for whatever
+ * you can't memorise from, whether it's currently useless for whatever
  * reason...)
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  */
-static string _player_spell_desc(spell_type spell, const item_def* item)
+static string _player_spell_desc(spell_type spell)
 {
     if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
         return ""; // all info is player-dependent
@@ -2589,8 +2708,7 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                         + " summoned by this spell.\n";
     }
 
-    const bool rod = item && item->base_type == OBJ_RODS;
-    if (god_hates_spell(spell, you.religion, rod))
+    if (god_hates_spell(spell, you.religion))
     {
         description += uppercase_first(god_name(you.religion))
                        + " frowns upon the use of this spell.\n";
@@ -2609,10 +2727,10 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        + desc_cannot_memorise_reason(spell)
                        + "\n";
     }
-    else if (spell_is_useless(spell, true, false, rod))
+    else if (spell_is_useless(spell, true, false))
     {
         description += "\nThis spell will have no effect right now because "
-                       + spell_uselessness_reason(spell, true, false, rod)
+                       + spell_uselessness_reason(spell, true, false)
                        + "\n";
     }
 
@@ -2624,32 +2742,27 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
  * Describe a spell, as cast by the player.
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  * @return          Information about the spell; does not include the title or
  *                  db description, but does include level, range, etc.
  */
-string player_spell_desc(spell_type spell, const item_def* item)
+string player_spell_desc(spell_type spell)
 {
-    const bool rod = item && item->base_type == OBJ_RODS;
-    return _player_spell_stats(spell, rod)
-           + _player_spell_desc(spell, item);
+    return _player_spell_stats(spell) + _player_spell_desc(spell);
 }
 
 /**
  * Examine a given spell. Set the given string to its description, stats, &c.
  * If it's a book in a spell that the player is holding, mention the option to
- * memorize or forget it.
+ * memorise it.
  *
  * @param spell         The spell in question.
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
- * @param item          The item (book or rod) holding the spell, if any.
- * @return              BOOK_MEM if you can memorise the spell
- *                      BOOK_FORGET if you can forget it
- *                      BOOK_NEITHER if you can do neither.
+ * @param item          The item holding the spell, if any.
+ * @return              Whether you can memorise the spell.
  */
-static int _get_spell_description(const spell_type spell,
+static bool _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,
                                   string &description,
                                   const item_def* item = nullptr)
@@ -2676,49 +2789,51 @@ static int _get_spell_description(const spell_type spell,
 
     if (mon_owner)
     {
-        const int hd = mon_owner->hd;
+        const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range(spell, hd);
         description += "\nRange : "
                        + range_string(range, range, mons_char(mon_owner->type))
                        + "\n";
 
         // only display this if the player exists (not in the main menu)
-        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            )
         {
-            description += make_stringf("Chance to beat your MR: %d%%\n",
-                                        hex_chance(spell, hd));
+            string wiz_info;
+#ifdef WIZARD
+            if (you.wizard)
+                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+#endif
+            description += make_stringf("Chance to beat your MR: %d%%%s\n",
+                                        hex_chance(spell, hd),
+                                        wiz_info.c_str());
         }
 
     }
     else
-        description += player_spell_desc(spell, item);
+        description += player_spell_desc(spell);
 
-    // Don't allow memorization or amnesia after death.
+    // Don't allow memorization after death.
     // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
-        return BOOK_NEITHER;
+        return false;
 
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    if (item && item->base_type == OBJ_BOOKS
+        && (in_inventory(*item)
+            || item->pos == you.pos() && !is_shop_item(*item))
+        && !you.has_spell(spell) && you_can_memorise(spell))
     {
-        if (you.has_spell(spell))
-        {
-            description += "\n(F)orget this spell by destroying the book.\n";
-            if (you_worship(GOD_SIF_MUNA))
-                description +="Sif Muna frowns upon the destroying of books.\n";
-            return BOOK_FORGET;
-        }
-        else if (you_can_memorise(spell))
-        {
-            description += "\n(M)emorise this spell.\n";
-            return BOOK_MEM;
-        }
+        return true;
     }
 
-    return BOOK_NEITHER;
+    return false;
 }
 
 /**
@@ -2738,46 +2853,48 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 
 /**
  * Examine a given spell. List its description and details, and handle
- * memorizing or forgetting the spell in question, if the player is able to
- * do so & chooses to.
+ * memorizing the spell in question, if the player is able & chooses to do so.
  *
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
  *                  description, 'mon_owner' is that monster. Else, null.
- * @param item      The item (book or rod) holding the spell, if any.
+ * @param item      The item holding the spell, if any.
  */
 void describe_spell(spell_type spelled, const monster_info *mon_owner,
                     const item_def* item)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_spell");
-#endif
-
     string desc;
-    const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
-                                                     item);
-    print_description(desc);
+    const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
+    formatted_scroller menu;
+    menu.add_text(desc, false, get_number_of_cols());
 
-    mouse_control mc(MOUSE_MODE_MORE);
-    char ch;
-    if ((ch = getchm()) == 0)
-        ch = getchm();
+    if (can_mem)
+    {
+        menu.set_flags(menu.get_flags() | MF_ALWAYS_SHOW_MORE);
+        menu.set_more(formatted_string("(M)emorise this spell.", CYAN));
+    }
 
-    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
+    menu.show();
+
+    if (can_mem && toupper(menu.getkey()) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled) || !you.turn_is_over)
             more();
         redraw_screen();
     }
-    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
-    {
-        redraw_screen();
-        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
-            more();
-        redraw_screen();
-    }
 }
+
+/**
+ * Examine a given ability. List its description and details.
+ *
+ * @param ability   The ability in question.
+ */
+void describe_ability(ability_type ability)
+{
+    show_description(get_ability_desc(ability));
+}
+
 
 static string _describe_draconian(const monster_info& mi)
 {
@@ -2791,7 +2908,6 @@ static string _describe_draconian(const monster_info& mi)
         switch (subsp)
         {
         case MONS_BLACK_DRACONIAN:      description += "black ";   break;
-        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
         case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
         case MONS_GREEN_DRACONIAN:      description += "green ";   break;
         case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
@@ -2810,9 +2926,6 @@ static string _describe_draconian(const monster_info& mi)
     {
     case MONS_BLACK_DRACONIAN:
         description += "Sparks flare out of its mouth and nostrils.";
-        break;
-    case MONS_MOTTLED_DRACONIAN:
-        description += "Liquid flames drip from its mouth.";
         break;
     case MONS_YELLOW_DRACONIAN:
         description += "Acidic fumes swirl around it.";
@@ -2848,8 +2961,6 @@ static string _describe_demonspawn_role(monster_type type)
     {
     case MONS_BLOOD_SAINT:
         return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_CHAOS_CHAMPION:
-        return "It possesses chaotic, reality-warping powers.";
     case MONS_WARMONGER:
         return "It is devoted to combat, disrupting the magic of its foes as "
                "it battles endlessly.";
@@ -2874,8 +2985,6 @@ static string _describe_demonspawn_base(int species)
         return "It is covered in icy armour.";
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
-    case MONS_PUTRID_DEMONSPAWN:
-        return "It is surrounded by sickly fumes and gases.";
     case MONS_TORTUROUS_DEMONSPAWN:
         return "It menaces with bony spines.";
     }
@@ -2921,6 +3030,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "negative energy";
     case MR_RES_DAMNATION:
         return "damnation";
+    case MR_RES_TORNADO:
+        return "tornadoes";
     default:
         return "buggy resistance";
     }
@@ -2939,78 +3050,230 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
-static const char* _describe_attack_flavour(attack_flavour flavour)
+/**
+ * Describe monster attack 'flavours' that trigger before the attack.
+ *
+ * @param flavour   The flavour in question; e.g. AF_SWOOP.
+ * @return          A description of anything that happens 'before' an attack
+ *                  with the given flavour;
+ *                  e.g. "swoop behind its target and ".
+ */
+static const char* _special_flavour_prefix(attack_flavour flavour)
 {
     switch (flavour)
     {
-    case AF_ACID:            return "deal extra acid damage";
-    case AF_BLINK:           return "blink self";
-    case AF_COLD:            return "deal extra cold damage";
-    case AF_CONFUSE:         return "cause confusion";
-    case AF_DRAIN_STR:       return "drain strength";
-    case AF_DRAIN_INT:       return "drain intelligence";
-    case AF_DRAIN_DEX:       return "drain dexterity";
-    case AF_DRAIN_STAT:      return "drain strength, intelligence or dexterity";
-    case AF_DRAIN_XP:        return "drain skills";
-    case AF_ELEC:            return "cause electrocution";
-    case AF_FIRE:            return "deal extra fire damage";
-    case AF_HUNGER:          return "cause hungering";
-    case AF_MUTATE:          return "cause mutations";
-    case AF_PARALYSE:        return "poison and cause paralysis or slowing";
-    case AF_POISON:          return "cause poisoning";
-    case AF_POISON_STRONG:   return "cause strong poisoning";
-    case AF_ROT:             return "cause rotting";
-    case AF_VAMPIRIC:        return "drain health";
-    case AF_KLOWN:           return "cause random powerful effects";
-    case AF_DISTORT:         return "cause wild translocation effects";
-    case AF_RAGE:            return "cause berserking";
-    case AF_STICKY_FLAME:    return "apply sticky flame";
-    case AF_CHAOTIC:         return "cause unpredictable effects";
-    case AF_STEAL:           return "steal items";
-    case AF_CRUSH:           return "constrict";
-    case AF_REACH:           return "deal damage from a distance";
-    case AF_HOLY:            return "deal extra damage to undead and demons";
-    case AF_ANTIMAGIC:       return "drain magic";
-    case AF_PAIN:            return "cause pain to the living";
-    case AF_ENSNARE:         return "ensnare with webbing";
-    case AF_ENGULF:          return "engulf with water";
-    case AF_PURE_FIRE:       return "deal pure fire damage";
-    case AF_DRAIN_SPEED:     return "drain speed";
-    case AF_VULN:            return "reduce resistance to hostile enchantments";
-    case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
-    case AF_DROWN:           return "deal drowning damage";
-    case AF_CORRODE:         return "cause corrosion";
-    case AF_SCARAB:          return "drain speed and drain health";
-    case AF_TRAMPLE:         return "knock back the defender";
-    case AF_REACH_STING:     return "cause poisoning from a distance";
-    case AF_WEAKNESS:        return "cause weakness";
-    case AF_MIASMATA:        return "surround the defender with miasma";
-    default:                 return "";
+        case AF_KITE:
+            return "retreat from adjacent foes and ";
+        case AF_SWOOP:
+            return "swoop behind its foe and ";
+        default:
+            return "";
     }
+}
+
+/**
+ * Describe monster attack 'flavours' that have extra range.
+ *
+ * @param flavour   The flavour in question; e.g. AF_REACH_STING.
+ * @return          If the flavour has extra-long range, say so. E.g.,
+ *                  " from a distance". (Else "").
+ */
+static const char* _flavour_range_desc(attack_flavour flavour)
+{
+    if (flavour == AF_REACH || flavour == AF_REACH_STING)
+        return " from a distance";
+    return "";
+}
+
+static string _flavour_base_desc(attack_flavour flavour)
+{
+    static const map<attack_flavour, string> base_descs = {
+        { AF_ACID,              "deal extra acid damage"},
+        { AF_BLINK,             "blink itself" },
+        { AF_COLD,              "deal up to %d extra cold damage" },
+        { AF_CONFUSE,           "cause confusion" },
+        { AF_DRAIN_STR,         "drain strength" },
+        { AF_DRAIN_INT,         "drain intelligence" },
+        { AF_DRAIN_DEX,         "drain dexterity" },
+        { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
+        { AF_DRAIN_XP,          "drain skills" },
+        { AF_ELEC,              "deal up to %d extra electric damage" },
+        { AF_FIRE,              "deal up to %d extra fire damage" },
+        { AF_HUNGER,            "cause hunger" },
+        { AF_MUTATE,            "cause mutations" },
+        { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
+        { AF_POISON,            "cause poisoning" },
+        { AF_POISON_STRONG,     "cause strong poisoning" },
+        { AF_ROT,               "cause rotting" },
+        { AF_VAMPIRIC,          "drain health from the living" },
+        { AF_KLOWN,             "cause random powerful effects" },
+        { AF_DISTORT,           "cause wild translocation effects" },
+        { AF_RAGE,              "cause berserking" },
+        { AF_STICKY_FLAME,      "apply sticky flame" },
+        { AF_CHAOTIC,           "cause unpredictable effects" },
+        { AF_STEAL,             "steal items" },
+        { AF_CRUSH,             "begin ongoing constriction" },
+        { AF_REACH,             "" },
+        { AF_HOLY,              "deal extra damage to undead and demons" },
+        { AF_ANTIMAGIC,         "drain magic" },
+        { AF_PAIN,              "cause pain to the living" },
+        { AF_ENSNARE,           "ensnare with webbing" },
+        { AF_ENGULF,            "engulf with water" },
+        { AF_PURE_FIRE,         "" },
+        { AF_DRAIN_SPEED,       "drain speed" },
+        { AF_VULN,              "reduce resistance to hostile enchantments" },
+        { AF_SHADOWSTAB,        "deal increased damage when unseen" },
+        { AF_DROWN,             "deal drowning damage" },
+        { AF_CORRODE,           "cause corrosion" },
+        { AF_SCARAB,            "drain speed and drain health" },
+        { AF_TRAMPLE,           "knock back the defender" },
+        { AF_REACH_STING,       "cause poisoning" },
+        { AF_WEAKNESS,          "cause weakness" },
+        { AF_KITE,              "" },
+        { AF_SWOOP,             "" },
+        { AF_PLAIN,             "" },
+    };
+
+    const string* desc = map_find(base_descs, flavour);
+    ASSERT(desc);
+    return *desc;
+}
+
+/**
+ * Provide a short, and-prefixed flavour description of the given attack
+ * flavour, if any.
+ *
+ * @param flavour  E.g. AF_COLD, AF_PLAIN.
+ * @param HD       The hit dice of the monster using the flavour.
+ * @return         "" if AF_PLAIN; else " <desc>", e.g.
+ *                 " to deal up to 27 extra cold damage if any damage is dealt".
+ */
+static string _flavour_effect(attack_flavour flavour, int HD)
+{
+    const string base_desc = _flavour_base_desc(flavour);
+    if (base_desc.empty())
+        return base_desc;
+
+    const int flavour_dam = flavour_damage(flavour, HD, false);
+    const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
+
+    if (!flavour_triggers_damageless(flavour)
+        && flavour != AF_KITE && flavour != AF_SWOOP)
+    {
+        return " to " + flavour_desc + " if any damage is dealt";
+    }
+
+    return " to " + flavour_desc;
+}
+
+struct mon_attack_info
+{
+    mon_attack_def definition;
+    const item_def* weapon;
+    bool operator < (const mon_attack_info &other) const
+    {
+        return std::tie(definition.type, definition.flavour,
+                        definition.damage, weapon)
+             < std::tie(other.definition.type, other.definition.flavour,
+                        other.definition.damage, other.weapon);
+    }
+};
+
+/**
+ * What weapon is the given monster using for the given attack, if any?
+ *
+ * @param mi        The monster in question.
+ * @param atk       The attack number. (E.g. 0, 1, 2...)
+ * @return          The melee weapon being used by the monster for the given
+ *                  attack, if any.
+ */
+static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
+{
+    const item_def* weapon
+       = atk == 0 ? mi.inv[MSLOT_WEAPON].get() :
+         atk == 1 && mi.wields_two_weapons() ? mi.inv[MSLOT_ALT_WEAPON].get() :
+         nullptr;
+
+    if (weapon && is_weapon(*weapon))
+        return weapon;
+    return nullptr;
 }
 
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
-    set<attack_flavour> attack_flavours;
-    vector<string> attack_descs;
+    map<mon_attack_info, int> attack_counts;
 
-    for (const auto &attack : mi.attack)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack_flavour af = attack.flavour;
-        if (!attack_flavours.count(af))
-        {
-            attack_flavours.insert(af);
-            const char * const desc = _describe_attack_flavour(af);
-            if (desc[0]) // non-empty
-                attack_descs.push_back(desc);
-        }
+        const mon_attack_def &attack = mi.attack[i];
+        if (attack.type == AT_NONE)
+            break; // assumes there are no gaps in attack arrays
+
+        const item_def* weapon = _weapon_for_attack(mi, i);
+        mon_attack_info attack_info = { attack, weapon };
+
+        ++attack_counts[attack_info];
     }
+
+    // Hydrae have only one explicit attack, which is repeated for each head.
+    if (mons_genus(mi.base_type) == MONS_HYDRA)
+        for (auto &attack_count : attack_counts)
+            attack_count.second = mi.num_heads;
+
+    vector<string> attack_descs;
+    for (const auto &attack_count : attack_counts)
+    {
+        const mon_attack_info &info = attack_count.first;
+        const mon_attack_def &attack = info.definition;
+        const string weapon_note
+            = info.weapon ? make_stringf(" plus %s %s",
+                                         mi.pronoun(PRONOUN_POSSESSIVE),
+                                         info.weapon->name(DESC_PLAIN).c_str())
+                          : "";
+        const string count_desc =
+              attack_count.second == 1 ? "" :
+              attack_count.second == 2 ? " twice" :
+              " " + number_in_words(attack_count.second) + " times";
+
+        // XXX: hack alert
+        if (attack.flavour == AF_PURE_FIRE)
+        {
+            attack_descs.push_back(
+                make_stringf("%s for up to %d fire damage",
+                             mon_attack_name(attack.type, false).c_str(),
+                             flavour_damage(attack.flavour, mi.hd, false)));
+            continue;
+        }
+
+        // Damage is listed in parentheses for attacks with a flavour
+        // description, but not for plain attacks.
+        bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
+        const string damage_desc =
+            make_stringf("%sfor up to %d damage%s%s%s",
+                         has_flavour ? "(" : "",
+                         attack.damage,
+                         attack_count.second > 1 ? " each" : "",
+                         weapon_note.c_str(),
+                         has_flavour ? ")" : "");
+
+        attack_descs.push_back(
+            make_stringf("%s%s%s%s %s%s",
+                         _special_flavour_prefix(attack.flavour),
+                         mon_attack_name(attack.type, false).c_str(),
+                         _flavour_range_desc(attack.flavour),
+                         count_desc.c_str(),
+                         damage_desc.c_str(),
+                         _flavour_effect(attack.flavour, mi.hd).c_str()));
+    }
+
 
     if (!attack_descs.empty())
     {
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << " may attack to " << comma_separated_line(attack_descs.begin(), attack_descs.end());
+        result << " can " << comma_separated_line(attack_descs.begin(),
+                                                  attack_descs.end(),
+                                                  "; and ", "; ");
         result << ".\n";
     }
 
@@ -3019,15 +3282,20 @@ static string _monster_attacks_description(const monster_info& mi)
 
 static string _monster_spells_description(const monster_info& mi)
 {
+    static const string panlord_desc =
+        "It may possess any of a vast number of diabolical powers.\n";
+
     // Show a generic message for pan lords, since they're secret.
-    if (mi.type == MONS_PANDEMONIUM_LORD)
-        return "It may possess any of a vast number of diabolical powers.\n";
+    if (mi.type == MONS_PANDEMONIUM_LORD && !mi.props.exists(SEEN_SPELLS_KEY))
+        return panlord_desc;
 
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
         return "";
 
     formatted_string description;
+    if (mi.type == MONS_PANDEMONIUM_LORD)
+        description.cprintf("%s", panlord_desc.c_str());
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("To read a description, press the key listed above.\n");
     return description.tostring();
@@ -3071,43 +3339,39 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * Print a bar of +s and .s representing a given stat to a provided stream.
  *
  * @param value[in]         The current value represented by the bar.
- * @param max[in]           The max value that can be represented by the bar.
  * @param scale[in]         The value that each + and . represents.
  * @param name              The name of the bar.
  * @param result[in,out]    The stringstream to append to.
  * @param base_value[in]    The 'base' value represented by the bar. If
  *                          INT_MAX, is ignored.
  */
-static void _print_bar(int value, int max, int scale,
-                       string name, ostringstream &result,
-                       int base_value = INT_MAX)
+static void _print_bar(int value, int scale, string name,
+                       ostringstream &result, int base_value = INT_MAX)
 {
     if (base_value == INT_MAX)
         base_value = value;
 
     result << name << " ";
 
-    const int cur_bars = value / scale;
-    const int base_bars = base_value / scale;
-    const int bars = cur_bars ? cur_bars : base_bars;
-    const int max_bars = max / scale;
-
-    const bool currently_disabled = !cur_bars && base_bars;
+    const int display_max = value ? value : base_value;
+    const bool currently_disabled = !value && base_value;
 
     if (currently_disabled)
-        result << "(";
+      result << "(";
 
-    for (int i = 0; i < min(bars, max_bars); i++)
+    for (int i = 0; i * scale < display_max; i++)
+    {
         result << "+";
+        if (i % 5 == 4)
+            result << " ";
+    }
 
     if (currently_disabled)
-        result << ")";
-
-    for (int i = max_bars - 1; i >= bars; --i)
-        result << ".";
+      result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
-    result << " (" << value << ")";
+    if (!you.suppress_wizard)
+        result << " (" << value << ")";
 #endif
 
     if (currently_disabled)
@@ -3115,11 +3379,21 @@ static void _print_bar(int value, int max, int scale,
         result << " (Normal " << name << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
-        result << " (" << base_value << ")";
+        if (!you.suppress_wizard)
+            result << " (" << base_value << ")";
 #endif
     }
+}
 
-    result << "\n";
+/**
+ * Append information about a given monster's HP to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
+{
+    result << "Max HP: " << mi.get_max_hp_desc() << "\n";
 }
 
 /**
@@ -3130,8 +3404,9 @@ static void _print_bar(int value, int max, int scale,
  */
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
-    // max ac 40 (dispater)
-    _print_bar(mi.ac, 40, 5, "AC", result);
+    // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
+    _print_bar(mi.ac, 5, "AC", result);
+    result << "\n";
 }
 
 /**
@@ -3142,8 +3417,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    // max ev 30 (eresh) (also to make space for parens)
-    _print_bar(mi.ev, 30, 5, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    result << "\n";
 }
 
 /**
@@ -3156,22 +3431,46 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 {
     if (mi.res_magic() == MAG_IMMUNE)
     {
-        result << "MR ∞";
+        result << "MR ∞\n";
         return;
     }
 
-    const int max_mr = 200; // export this? is this already exported?
     const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), max_mr, bar_scale, "MR", result);
+    _print_bar(mi.res_magic(), bar_scale, "MR", result);
+    result << "\n";
 }
 
+// Size adjectives
+const char* const size_adj[] =
+{
+    "tiny",
+    "very small",
+    "small",
+    "medium",
+    "large",
+    "very large",
+    "giant",
+};
+COMPILE_CHECK(ARRAYSZ(size_adj) == NUM_SIZE_LEVELS);
+
+// This is used in monster description and on '%' screen for player size
+const char* get_size_adj(const size_type size, bool ignore_medium)
+{
+    if (ignore_medium && size == SIZE_MEDIUM)
+        return nullptr; // don't mention medium size
+    return size_adj[size];
+}
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
 {
+    if (mons_is_sensed(mi.type) || mons_is_projectile(mi.type))
+        return "";
+
     ostringstream result;
 
+    _describe_monster_hp(mi, result);
     _describe_monster_ac(mi, result);
     _describe_monster_ev(mi, result);
     _describe_monster_mr(mi, result);
@@ -3185,6 +3484,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_ROTTING, MR_RES_NEG,    MR_RES_DAMNATION,
+        MR_RES_TORNADO,
     };
 
     vector<string> extreme_resists;
@@ -3199,7 +3499,7 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION)
+            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_TORNADO)
                 level = 3; // one level is immunity
             level = max(level, -1);
             level = min(level,  3);
@@ -3220,6 +3520,9 @@ static string _monster_stat_description(const monster_info& mi)
             }
         }
     }
+
+    if (mi.props.exists(CLOUD_IMMUNE_MB_KEY) && mi.props[CLOUD_IMMUNE_MB_KEY])
+        extreme_resists.emplace_back("clouds of all kinds");
 
     vector<string> resist_descriptions;
     if (!extreme_resists.empty())
@@ -3267,6 +3570,12 @@ static string _monster_stat_description(const monster_info& mi)
                << ".\n";
     }
 
+    if (mi.is(MB_CHAOTIC))
+    {
+        result << uppercase_first(pronoun) << " is vulnerable to silver and"
+                                              " hated by Zin.\n";
+    }
+
     if (mons_class_flag(mi.type, M_STATIONARY)
         && !mons_is_tentacle_or_tentacle_segment(mi.type))
     {
@@ -3292,6 +3601,16 @@ static string _monster_stat_description(const monster_info& mi)
     // Might be better to have some place where players can see holiness &
     // information about holiness.......?
 
+    if (mi.intel() <= I_BRAINLESS)
+    {
+        // Matters for Ely.
+        result << uppercase_first(pronoun) << " is mindless.\n";
+    }
+    else if (mi.intel() >= I_HUMAN)
+    {
+        // Matters for Yred, Gozag, Zin, TSO, Alistair....
+        result << uppercase_first(pronoun) << " is intelligent.\n";
+    }
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
@@ -3380,23 +3699,34 @@ static string _monster_stat_description(const monster_info& mi)
     else if (mons_class_fast_regen(mi.type))
         result << uppercase_first(pronoun) << " regenerates quickly.\n";
 
-    // Size
-    static const char * const sizes[] =
-    {
-        "tiny",
-        "very small",
-        "small",
-        nullptr,     // don't display anything for 'medium'
-        "large",
-        "very large",
-        "giant",
-    };
-    COMPILE_CHECK(ARRAYSZ(sizes) == NUM_SIZE_LEVELS);
+    const char* mon_size = get_size_adj(mi.body_size(), true);
+    if (mon_size)
+        result << uppercase_first(pronoun) << " is " << mon_size << ".\n";
 
-    if (sizes[mi.body_size()])
+    if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {
-        result << uppercase_first(pronoun) << " is "
-        << sizes[mi.body_size()] << ".\n";
+        recite_counts retval;
+        monster *m = monster_at(mi.pos);
+        auto eligibility = zin_check_recite_to_single_monster(m, retval);
+        if (eligibility == RE_INELIGIBLE)
+            result << "Reciting Zin's laws will not affect " << pronoun << ".";
+        else if (eligibility == RE_TOO_STRONG)
+        {
+            result << uppercase_first(pronoun) <<
+                    " is too strong to be affected by reciting Zin's laws.";
+        }
+        else // RE_ELIGIBLE || RE_RECITE_TIMER
+        {
+            result << uppercase_first(pronoun) <<
+                            " can be affected by reciting Zin's laws.";
+        }
+
+        if (you.wizard)
+        {
+            result << " (Recite power:" << zin_recite_power()
+                   << ", Hit dice:" << mi.hd << ")";
+        }
+        result << "\n";
     }
 
     result << _monster_attacks_description(mi);
@@ -3405,19 +3735,26 @@ static string _monster_stat_description(const monster_info& mi)
     return result.str();
 }
 
-static string _serpent_of_hell_flavour(monster_type m)
+branch_type serpent_of_hell_branch(monster_type m)
 {
     switch (m)
     {
     case MONS_SERPENT_OF_HELL_COCYTUS:
-        return "cocytus";
+        return BRANCH_COCYTUS;
     case MONS_SERPENT_OF_HELL_DIS:
-        return "dis";
+        return BRANCH_DIS;
     case MONS_SERPENT_OF_HELL_TARTARUS:
-        return "tartarus";
+        return BRANCH_TARTARUS;
+    case MONS_SERPENT_OF_HELL:
+        return BRANCH_GEHENNA;
     default:
-        return "gehenna";
+        die("bad serpent of hell monster_type");
     }
+}
+
+string serpent_of_hell_flavour(monster_type m)
+{
+    return lowercase_string(branches[serpent_of_hell_branch(m)].shortname);
 }
 
 // Fetches the monster's database description and reads it into inf.
@@ -3427,7 +3764,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (inf.title.empty())
         inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
     if (inf.title.empty())
-        inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
+        inf.title = uppercase_first(mi.full_name(DESC_A)) + ".";
 
     string db_name;
 
@@ -3436,10 +3773,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     else if (mi.mname.empty())
         db_name = mi.db_name();
     else
-        db_name = mi.full_name(DESC_PLAIN, true);
+        db_name = mi.full_name(DESC_PLAIN);
 
     if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
-        db_name += " " + _serpent_of_hell_flavour(mi.type);
+        db_name += " " + serpent_of_hell_flavour(mi.type);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -3484,32 +3821,18 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     switch (mi.type)
     {
-    case MONS_VAMPIRE:
-    case MONS_VAMPIRE_KNIGHT:
-    case MONS_VAMPIRE_MAGE:
-        if (you.undead_state() == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body << "\n" << It << " wants to drink your blood!\n";
-        break;
-
-    case MONS_REAPER:
-        if (you.undead_state(false) == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body <<  "\n" << It << " has come for your soul!\n";
-        break;
-
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_STORMCALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
@@ -3520,10 +3843,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_BLOOD_SAINT:
-    case MONS_CHAOS_CHAMPION:
     case MONS_WARMONGER:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:
@@ -3550,6 +3871,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << _describe_mutant_beast(mi) << "\n";
         break;
 
+    case MONS_BLOCK_OF_ICE:
+        if (mi.is(MB_SLOWLY_DYING))
+            inf.body << "\nIt is quickly melting away.\n";
+        break;
+
+    case MONS_PILLAR_OF_SALT:
+        if (mi.is(MB_SLOWLY_DYING))
+            inf.body << "\nIt is quickly crumbling away.\n";
+        break;
+
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload. Please report "
@@ -3574,6 +3905,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\n" << suffix;
     }
 
+    const int curse_power = mummy_curse_power(mi.type);
+    if (curse_power && !mi.is(MB_SUMMONED))
+    {
+        inf.body << "\n" << It << " will inflict a ";
+        if (curse_power > 10)
+            inf.body << "powerful ";
+        inf.body << "necromantic curse on "
+                 << mi.pronoun(PRONOUN_POSSESSIVE) << " foe when destroyed.\n";
+    }
+
     // Get information on resistances, speed, etc.
     string result = _monster_stat_description(mi);
     if (!result.empty())
@@ -3585,76 +3926,50 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << It << " is incapable of using stairs.\n";
+        inf.body << It << " is incapable of using stairs.\n";
         stair_use = true;
-    }
-
-    if (mi.intel() <= I_BRAINLESS)
-    {
-        // Matters for Ely.
-        inf.body << It << " is mindless.\n";
-    }
-    else if (mi.intel() >= I_HUMAN)
-    {
-        // Matters for Yred, Gozag, Zin, TSO, Alistair....
-        inf.body << It << " is intelligent.\n";
-    }
-
-    if (mi.is(MB_CHAOTIC))
-        inf.body << It << " is vulnerable to silver and hated by Zin.\n";
-
-    if (in_good_standing(GOD_ZIN, 0))
-    {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
-            inf.body << It << " is too strong to be recited to.";
-        else if (check >= -5)
-            inf.body << It << " may be too strong to be recited to.";
-        else
-            inf.body << It << " is weak enough to be recited to.";
-
-        if (you.wizard)
-        {
-            inf.body << " (Recite power:" << zin_recite_power()
-                     << ", Hit dice:" << mi.hd << ")";
-        }
-        inf.body << "\n";
     }
 
     if (mi.is(MB_SUMMONED))
     {
-        inf.body << "\n" << "This monster has been summoned, and is thus only "
-                       "temporary. Killing " << it_o << " yields no "
-                       "experience, nutrition or items";
+        inf.body << "\nThis monster has been summoned, and is thus only "
+                    "temporary. Killing " << it_o << " yields no experience, "
+                    "nutrition or items";
         if (!stair_use)
             inf.body << ", and " << it << " is incapable of using stairs";
         inf.body << ".\n";
     }
     else if (mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\n" << "This monster has been summoned in a durable "
-                    "way, and only partially exists. Killing " << it_o << " "
-                    "yields no experience, nutrition or items. You "
-                    "cannot easily abjure " << it_o << ", though.\n";
+        inf.body << "\nThis monster has been summoned in a durable way. "
+                    "Killing " << it_o << " yields no experience, nutrition "
+                    "or items, but " << it_o << " cannot be abjured.\n";
+    }
+    else if (mi.is(MB_NO_REWARD))
+    {
+        inf.body << "\nKilling this monster yields no experience, nutrition or"
+                    " items.";
     }
     else if (mons_class_leaves_hide(mi.type))
     {
-        inf.body << "\nIf " << it << " is slain and butchered, it may be "
-                    "possible to recover " << mi.pronoun(PRONOUN_POSSESSIVE)
-                 << " hide, which can be enchanted into armour.\n";
+        inf.body << "\nIf " << it << " is slain, it may be possible to "
+                    "recover " << mi.pronoun(PRONOUN_POSSESSIVE)
+                 << " hide, which can be used as armour.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))
     {
-        inf.body << "\n" << "You have summoned too many monsters of this kind "
-                            "to sustain them all, and thus this one will "
-                            "shortly expire.\n";
+        inf.body << "\nYou have summoned too many monsters of this kind to "
+                    "sustain them all, and thus this one will shortly "
+                    "expire.\n";
     }
 
     if (!inf.quote.empty())
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (you.suppress_wizard)
+        return;
     if (mi.pos.origin() || !monster_at(mi.pos))
         return; // not a real monster
     monster& mons = *monster_at(mi.pos);
@@ -3752,6 +4067,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         for (const auto &entry : blame)
             inf.body << "    " << entry.get_string() << "\n";
     }
+    inf.body << "\n\n" << debug_constriction_string(&mons);
 #endif
 }
 
@@ -3770,27 +4086,31 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             inf.footer += "\n" + footer;
     }
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
+#ifdef USE_TILE_LOCAL
+    // Ensure we get the full screen size when calling get_number_of_cols()
+    cgotoxy(1, 1);
 #endif
 
     spell_scroller fs(monster_spellset(mi), &mi, nullptr);
-    fs.add_text(inf.title);
+    fs.add_text(inf.title, true);
     fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
 
     formatted_scroller qs;
 
+    fs.set_more();
+    qs.set_more();
+
     if (!inf.quote.empty())
     {
-        fs.add_item_formatted_string(
-                formatted_string::parse_string("\n" + _toggle_message));
+        fs.set_flags(fs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        qs.set_flags(qs.get_flags() | MF_ALWAYS_SHOW_MORE);
+        fs.set_more(formatted_string::parse_string(_toggle_message));
+        qs.set_more(formatted_string::parse_string(_toggle_message));
 
-        qs.add_text(inf.title);
+        qs.add_text(inf.title, true);
         qs.add_text(inf.quote, false, get_number_of_cols() - 1);
-        qs.add_item_formatted_string(
-                formatted_string::parse_string("\n" + _toggle_message));
     }
 
     fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
@@ -3804,9 +4124,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             fs.show();
 
         int keyin = (show_quote ? qs : fs).get_lastch();
-        // this is never actually displayed to the player
-        // we just use it to check whether we should toggle.
-        if (_print_toggle_message(inf, keyin))
+        if (!inf.quote.empty() && (keyin == '!' || keyin == CK_MOUSE_CMD))
             show_quote = !show_quote;
         else
             return keyin;
@@ -3894,18 +4212,11 @@ string get_ghost_description(const monster_info &mi, bool concise)
 void describe_skill(skill_type skill)
 {
     ostringstream data;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_skill");
-#endif
-
     data << get_skill_description(skill, true);
-
-    print_description(data.str());
-    getchm();
+    show_description(data.str());
 }
 
-#ifdef USE_TILE
+// only used in tiles
 string get_command_description(const command_type cmd, bool terse)
 {
     string lookup = command_to_name(cmd);
@@ -3928,57 +4239,25 @@ string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
-#endif
 
-void alt_desc_proc::nextline()
+/**
+ * Provide auto-generated information about the given cloud type. Describe
+ * opacity & related factors.
+ *
+ * @param cloud_type        The cloud_type in question.
+ * @return e.g. "\nThis cloud is opaque; one tile will not block vision, but
+ *      multiple will. \nClouds of this kind the player makes will vanish very
+ *      quickly once outside the player's sight."
+ */
+string extra_cloud_info(cloud_type cloud_type)
 {
-    ostr << "\n";
-}
-
-void alt_desc_proc::print(const string &str)
-{
-    ostr << str;
-}
-
-int alt_desc_proc::count_newlines(const string &str)
-{
-    return count(begin(str), end(str), '\n');
-}
-
-void alt_desc_proc::trim(string &str)
-{
-    int idx = str.size();
-    while (--idx >= 0)
-    {
-        if (str[idx] != '\n')
-            break;
-    }
-    str.resize(idx + 1);
-}
-
-bool alt_desc_proc::chop(string &str)
-{
-    int loc = -1;
-    for (size_t i = 1; i < str.size(); i++)
-        if (str[i] == '\n' && str[i-1] == '\n')
-            loc = i;
-
-    if (loc == -1)
-        return false;
-
-    str.resize(loc);
-    return true;
-}
-
-void alt_desc_proc::get_string(string &str)
-{
-    str = replace_all(ostr.str(), "\n\n\n\n", "\n\n");
-    str = replace_all(str, "\n\n\n", "\n\n");
-
-    trim(str);
-    while (count_newlines(str) > h)
-    {
-        if (!chop(str))
-            break;
-    }
+    const bool opaque = is_opaque_cloud(cloud_type);
+    const string opacity_info = !opaque ? "" :
+        "\nThis cloud is opaque; one tile will not block vision, but "
+        "multiple will.";
+    const string vanish_info
+        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
+                       "%s once outside their sight.",
+                       opaque ? "quickly" : "almost instantly");
+    return opacity_info + vanish_info;
 }

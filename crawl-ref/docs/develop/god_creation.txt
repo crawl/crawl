@@ -1,0 +1,428 @@
+Written on 2017/02/15 by Cerol.
+
+Gods are the biggest decision you make for your character after character
+creation in Crawl. There's a large variety of them, they're each focused
+on one narrow element, and they've gone though many changes and revisions
+each version. They're also one of the more complex things to add into the
+game, as they can affect almost any gameplay element or add their own
+unique ones in.
+
+Today, we will add in Ralph, Demon Prince of Apathy to the Crawl pantheon.
+He's not known for doing much, or caring much about his followers.
+He does so little, his followers reace similar levels of apathy because
+he can't be bothered to stop his divine power from transferring. His
+followers, in turn, become so apathetic that even those attacking them
+with bloodlust in their hearts get bored and look elsewhere.
+
+We're going to give a passive powers for Ralph: a Chei-style speed drop.
+We're also going to give Ralph an active ability that does nothing to
+restore piety, to demonstrate how to attach talents to a deity.
+
+However, Ralph doesn't care much for the standard piety system. We'll
+look at it, but we won't give him any way to gain or lose piety normally.
+Because we don't bother with piety for Ralph, we will make sure you have
+access to both of his powers at 0 piety.
+
+First up, as usual, is enum.h to declare that Ralph exists:
+
+        enum god_type {
+            GOD_NO_GOD = 0,
+            GOD_ZIN,
+            // TRIMMING MOST DEITIES
+            GOD_HEPLIAKLQANA,
+            GOD_RALPH,      // End of the list, before NUM_GODS
+            NUM_GODS,       // always after last god
+
+We're also going to need to declare an altar feature for Ralph, otherwise
+it's going to be very hard to worship him. This is in enum dungeon_feature_type.
+It's super important to ensure that you add your new alter either outside
+of the MAJOR_VERSION checks, or inside on that uses ==. There's one with
+>, which ignore the entries in that block, and several deities have an
+altar in each for some reason. The new entry should appear at the end of
+the list for save compatibility,
+
+        enum dungeon_feature_type
+        {
+            DNGN_UNSEEN = 0,                   // must be zero
+            DNGN_CLOSED_DOOR,
+            // TRIMMING ALL SORTS OF THINGS
+            DNGN_ALTAR_RU,
+            DNGN_ALTAR_PAKELLAS,
+            DNGN_ALTAR_USKAYAW,
+            DNGN_ALTAR_HEPLIAKLQANA,
+            DNGN_ALTAR_ECUMENICAL,
+            DNGN_ENDLESS_SALT,
+            DNGN_ALTAR_RALPH, //our new one!
+            NUM_FEATURES,
+            // LATER ENTRIES TRIMMED TOO
+
+Our first side-trip is into terrain.cc, to attach Ralph to his altar:
+
+        static const pair<god_type, dungeon_feature_type> _god_altars[] =
+            { GOD_ZIN, DNGN_ALTAR_ZIN },
+            { GOD_SHINING_ONE, DNGN_ALTAR_SHINING_ONE },
+            //TRIM THE REST
+            { GOD_RALPH, DNGN_ALTAR_RALPH },
+        }
+
+We have to make a side-trip into describe-god.cc, because of an ASSERT
+that fails if we don't. Add a set of entries into *divine_title[][8],
+keeping in order to match god_type enum order like so:
+
+        static const char *divine_title[][8] =
+        {
+        // TRIMMED
+            // Hepliaklqana -- memory/ancestry theme
+            {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+                "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
+        // Ralph. Ralph doesn't care.
+            {"Dude",                "Dude",                   "Dude",                      "Dude",
+                "Dude",                "Dude",                   "Dude",                      "Dude"},
+
+Normally those titles are a ranked list from 0 (penance) to 7(maximum
+piety). Ralph doesn't care about titles. The other deities have a good
+themed set of titles for followers. Keep yours in line by staying thematic.
+
+While we're here, we should also look at _describe_god_wrath_causes() to
+set up the descriptor for our wrath on abandonment. Ralph, like Ru, won't
+care. If you make another good god, you'll want to edit this to match and
+include yours.
+
+        static string _describe_god_wrath_causes(god_type which_god)
+        {
+            if (which_god == GOD_RU || which_god == GOD_RALPH)
+                return ""; // no wrath
+                // TRIM THE REST
+
+We also have a mandatory update to godconduct.cc, to add an entry to
+divine_peeves() and divine_likes() so that we can define out what our
+deity does or doesn't like. About half the gods use an empty set, and
+the others have at least one special thing they don't like. This is
+where you set the behaviors for piety gain/loss and penance, and most of
+the behaviors you'll likely want are already implemented. Ralph will use
+the empty default sets. Once again, these are ordered in the god_type
+enum order:
+
+        static peeve_map divine_peeves[] =
+        {
+            // GOD_NO_GOD
+            peeve_map(),
+            // GOD_ZIN,
+            {
+                { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
+                { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
+                { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
+                { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
+                { DID_EVIL, GOOD_EVIL_RESPONSE },
+                { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
+                { DID_ATTACK_NEUTRAL, {
+                    "you attack neutral beings", false,
+                    1, 0,
+                    " forgives your inadvertent attack on a neutral, just this once."
+                } },
+                { DID_ATTACK_IN_SANCTUARY, {
+                    "you attack monters in a sanctuary", false,
+                    1, 1
+                } },
+                { DID_UNCLEAN, {
+                    "you use unclean or chaotic magic or items", true,
+                    1, 1, " forgives your inadvertent unclean act, just this once."
+                } },
+                { DID_CHAOS, {
+                    "you polymorph monsters", true,
+                    1, 1, " forgives your inadvertent chaotic act, just this once."
+                } },
+                { DID_DELIBERATE_MUTATING, {
+                    "you deliberately mutate or transform yourself", true,
+                    1, 0, " forgives your inadvertent chaotic act, just this once."
+                } },
+                { DID_DESECRATE_SOULED_BEING, {
+                    "you butcher sentient beings", true,
+                    5, 3
+                } },
+                { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
+            },
+            // TRIM THE REST
+            // GOD_RALPH
+            peeve_map(), //blank default list.
+            };
+
+        static like_map divine_likes[] =
+        {
+            // GOD_NO_GOD
+            like_map(),
+            // GOD_ZIN,
+            {
+                { DID_KILL_UNCLEAN, _on_kill("you kill unclean or chaotic beings", MH_DEMONIC, true) },
+                { DID_KILL_CHAOTIC, _on_kill(nullptr, MH_DEMONIC, true) },
+            },
+            // TRIMMING AGAIN
+            // GOD_RALPH
+            like_map(), //blank default list.
+        };
+
+These look a little complex, mostly because the only example of existing
+gods included is Zin, who has a complex set of dislikes and specific
+likes. If a feature is already handled by a deity, adding it to your new
+one is a matter of cut and paste. If your god has a way of handling piety
+beyond the existing methods (exploring or killing things, mostly), you
+will need to add in custom handlers based on the existing ones. Ralph
+doesn't grant piety or penance, because he doesn't care either way.
+
+Now we need to go into godwrath.cc and give a descriptor to our new god's
+wrath to avoid another ASSERT. Again, in god_type order:
+
+        static const char *_god_wrath_adjectives[] =
+        {
+            "bugginess",        // NO_GOD
+            "wrath",            // Zin
+            "wrath",            // the Shining One (unused)
+                //TRIM MOST OF THEM HERE
+            "memory",           // Hepliaklqana (unused)
+            "apathy",          //Ralph (unused)
+        };
+
+Next is editing feature-data.h to describe the new altar. Without an
+altar, the only way to worship your deity is through the faded altar
+roulette. Altars are a feature_def type, which is explained in feature.h,
+but altars are so common, they get a shortcut method. Colours are defined
+in the "VColour str_to_tile_colour(string colour)" function in colour.cc,
+so check there if you want to use a color and aren't sure if it exists
+or not. That's all we care about for now, so let's make a new one:
+
+        ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
+        ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
+        ALTAR(DNGN_ALTAR_RALPH, "barely carved altar of Ralph", "altar_ralph", LIGHTGREY),
+
+Easy part's done. Ralph and his altars exist. Again, this should also
+require some work on tiles for completeness, but tiles will be a
+separate tutorial.
+
+The majority of basic deity code is in religion.cc. Lots of other checks
+are scattered out across the code base, but this is the basic starting
+point to make functions and check for things. First on this list is
+defining out our powers for the ^ screen:
+
+        //These entries must match the order of god_type enum.
+        const vector<god_power> god_powers[NUM_GODS] =
+        {
+            // no god
+            { },
+
+            // Zin
+            { { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
+              { 2, ABIL_ZIN_VITALISATION, "call upon Zin for vitalisation" },
+              { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
+              { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
+              {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
+              { 7, ABIL_ZIN_CURE_ALL_MUTATIONS,
+                   "Zin will cure all your mutations... once.",
+                   "Zin is no longer ready to cure all your mutations." },
+            },
+            // TRIM THE REST
+
+            // Ralph, at the bottom as usual.
+            // Entries with an ability grant you an activated ability at
+            // the listed piety breakpoint. Ones without it just light
+            // up at the appropriate piety level. Implement them elsewhere in the code.
+
+            // stars needed, ability name, description.
+            { { 0, "You move slowly and without purpose", "You move at normal speed." },
+              { 0, ABIL_RALPH_NOTHING, "do absolutely nothing" },
+            },
+
+and we'll need to go back to enum.h to create those abilities as
+covered in the ability/mutation writeup. Assume I've done so in the same
+was as the ability tutorial, I won't paste that code block in here.
+
+Also in religion.cc are the basic functions we'll need to handle our god's
+full name, excommunication/desertion penalties, and decaying piety and
+wrath timers. Ralph doesn't have either of those last 2, but we'll show
+you where they get handled, and you'll more than likely be happy to copy
+an existing entry for your new deity in mose cases. You may also want to
+update the divine_retribution() function to handle the things your god
+does when angry.
+
+        void excommunication(bool voluntary, god_type new_god)
+        {
+            // TRIMMING EARLY LOGIC
+                switch (old_god)
+            {
+            case GOD_XOM:
+                _set_penance(old_god, 50);
+                break;
+                case GOD_RALPH:
+                // Ralph doesn't care if you leave him. He didn't care if you followed him either.
+                break;
+                // TRIM MORE CODE.
+        }
+
+        string god_name(god_type which_god, bool long_name)
+        {
+            switch (which_god)
+            {
+            case GOD_NO_GOD:        return "No God";
+            case GOD_RANDOM:        return "random";
+            case GOD_NAMELESS:      return "nameless";
+            case GOD_ZIN:           return "Zin";
+            case GOD_SHINING_ONE:   return "the Shining One";}
+            // TRIM
+            case GOD_RALPH:        return "Ralph"
+
+        void handle_god_time(int /*time_delta*/)
+        {
+             // TRIMMING WRATH CHECK AND OTHER DEITIES PIETY DECAY
+                case GOD_GOZAG:
+                case GOD_XOM:
+                case GOD_RALPH:
+                    // Gods without normal piety do nothing each tick.
+                    return;
+            // TRIM THE REST
+
+For most deities, godwrath.cc will be necessary. The upside is that for
+gods with wrath, adding this is very free-form. You need to add in a line
+like this to divine_retribution() to handle wrath occuring:
+
+        bool divine_retribution(god_type god, bool no_bonus, bool force)
+        {
+            // TRIM SANITY CHECKS
+                switch (god)
+            {
+            // One in ten chance that Xom might do something good...
+            case GOD_XOM:
+                xom_acts(abs(you.piety - HALF_MAX_PIETY),
+                         frombool(one_chance_in(10)));
+                break;
+            case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
+            // Ralph wouldn't actually do anything, just for demonstration.
+            case GOD_RALPH : do_more = _ralph_retribution(); break;
+
+There's no example to do here for this, since Ralph doesn't care, and each
+retribution function just does whatever the angry god might do, independent
+of anything else, and returns true when it's done. Most of these also call
+on other functions in this file to handle things like which monsters to
+summon against your and such. There's lots of examples with the existing
+deity's wraths.
+
+So, we're finally out of the deity interaction stuff, and on to the fun
+parts: the divine benefits. For ABIL_RALPH_SLOW, we're going to find where
+Chei slows you down, and add Ralph to those checks. This is a small block
+in player.cc, and we will modify it slightly:
+
+        // Cheibriados
+        if (have_passive(passive_t::slowed))
+            mv += 2 + min(div_rand_round(you.piety, 20), 8);
+        else if (player_under_penance(GOD_CHEIBRIADOS))
+            mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
+        // Ralph
+        if (you_worship(GOD_RALPH))
+            mv += 5; // Ralph doesn't care to do any math for this.
+
+For ABIL_RALPH_NOTHING, we are creating a new ability that wastes 500
+uninterrupted turns not caring about anything. Because we don't care
+what happens. This is to build up piety with the prince of apathy.
+
+Multi-turn actions are handled in delay.cc and delay.h, so we'll need to
+look there. Here each type of delay has been class-ified, so we can
+implement our own pretty easily.
+
+        // in delay.h:
+        // Copied from AscnedingStairsDelay
+        class RalphDelay : public Delay
+        {
+            void finish() override;
+        public:
+            RalphDelay(int dur) : Delay(dur)
+            { }
+
+            bool try_interrupt() override;
+
+            bool is_stairs() const override
+            {
+                return false;
+            }
+
+            const char* name() const override
+            {
+                return "ralph_nothing";
+            }
+        };
+
+        // and in delay.cc:
+        void RalphDelay::finish()
+        {
+            // You regain all piety for this
+            mpr("You feel very apathetic. Too apathetic to intentionally sit still.");
+            you.piety = 200;
+        }
+        bool RalphDelay::try_interrupt()
+        {
+            mpr("You don't care about whatever that is.");
+            return false;
+        }
+
+Now this should only need one small change into ability.cc to activate:
+a case in the _do_abilty switch:
+
+        case ABIL_RALPH_NOTHING:
+            start_delay<RalphDelay>(500);
+            break;
+
+Our active ability on our new deity should now be hooked up and working, and
+that should be the last of the stuff Ralph grants a follower. Whatever you
+have your deity do, the typical functions you'll call are you_worship(GOD_NAME_HERE)
+and piety_breakpoint(star_number) to make conditional checks for your
+passive powers. You can also use you.religion and you.piety when dealing
+directly with the player object.
+
+We should also add in entries into the text database for Ralph, to fill
+in the important blocks of text when you read over what a deity does. These
+are stored in plain text files, and entries are split with a long string of
+percent signs and the title of the entry. We can just copy the headers
+and change the name and our entries should be used without any actual
+code work. They're organized, but they're searched so we do not have to
+add our entries in a specific order (though we should follow the existing
+ordering). We'll use the writeups below in /dat/descipt/gods.txt:
+
+        %%%%
+        Ralph
+
+        Ralph is the Demon Prince of Apathy, appointed to his position by a
+        cruel superior tired of his lazy ways.
+        He sits on a rock somewhere deep in the Abyss, where lesser demons
+        throws rocks at him when they are bored.
+        So powerful is Ralph that even the rocks, in midflight, get bored
+        and lose the will to finish flying towards him, and fall gently
+        to the ground. Lugonu would certainly expel him  from his domain,
+        were he able to bring himself to bother with such a meaningless
+        underling.
+        %%%%
+        Ralph powers
+
+        Ralph's intense uncaring is contagious, and those that decide to
+        try to worship him find themselves also able to weather any change
+        around them without feeling compelled to react to it. They also
+        find themselves wandering slower than normal, without any real
+        drive to move quickly to any particular destination. There might
+        be other consequences, but who can be be bothered to find them?
+        %%%%
+        Ralph wrath
+
+        Ralph doesn't feel wrath. Ralph might not have even noticed you
+        following him in the first place, should you decide to abandon
+        Ralph. There's no penalty for leaving Ralph, much like there was
+        no benefit to following him in the first place.
+
+Summary:
+    - enum.h to update god_type and dungeon_feature_type, and ability_type.
+    - describe-god.cc to grant a title to our new god and handle
+      explanations for abandonment.
+    - godconduct.cc to handle what grants piety (likes) and gets penance (peeves).
+    - godwrath.cc to handle punishment when angered.
+    - feature-data.h to create the altars.
+    - religion.cc for declaring your deities powers, full name, and
+      abandonment punishment.
+    - use you_worship(GOD_NAME_HERE), you.piety, and piety_breakpoint(star_count)
+      elsewhere in code for conditional behavior based on piety levels.
+    - update /dat/descipt/gods.txt with the flavor text entries for your new god.
+      There should be 3 of them, and separate them with 4 %'s and the title on the next line.

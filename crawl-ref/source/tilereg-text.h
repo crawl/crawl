@@ -1,13 +1,12 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_TEXT_H
-#define TILEREG_TEXT_H
+#pragma once
 
 #include "tilereg.h"
 
 class TextRegion : public Region
 {
 public:
-    TextRegion(FontWrapper *font);
+    TextRegion(FontWrapper *font_arg);
     virtual ~TextRegion();
 
     virtual void render() override;
@@ -39,23 +38,28 @@ public:
 
     // Object's method
     void clear_to_end_of_line();
-    void putwch(ucs_t chr);
+    void putwch(char32_t chr);
 
-    ucs_t   *cbuf; //text backup
+    char32_t *cbuf; //text backup
     uint8_t *abuf; //textcolour backup
 
     int cx_ofs; //cursor x offset
     int cy_ofs; //cursor y offset
 
     void addstr(const char *buffer);
-    void addstr_aux(const ucs_t *buffer, int len);
+    void addstr_aux(const char32_t *buffer, int len);
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
+
+    FontWrapper &font() const;
+
+    void calculate_grid_size(int inner_x, int inner_y) override;
+    const int grid_width_to_pixels(int x) const override;
+    const int grid_height_to_pixels(int y) const override;
 
 protected:
     virtual void on_resize() override;
     FontWrapper *m_font;
 };
 
-#endif
 #endif

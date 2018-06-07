@@ -38,5 +38,5 @@ for i = 1,100 do
 end
 ok("rat chunk", "chunk of flesh")
 fail("zombie chunk")
-fail("giant eyeball corpse")
+fail("floating eye corpse")
 ok("orc warrior corpse", "orc corpse")

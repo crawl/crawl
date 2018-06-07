@@ -12,6 +12,7 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "libutil.h" // map_find
 
 static FixedVector<unique_ptr<element_colour_calc>, NUM_COLOURS> element_colours;
@@ -309,9 +310,6 @@ static int _etc_orb_glow(int, const coord_def& loc)
 
 int dam_colour(const monster_info& mi)
 {
-    if (!mons_class_can_display_wounds(mi.type))
-        return Options.enemy_hp_colour[6]; // undead and whatnot
-
     switch (mi.dam)
     {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
@@ -355,30 +353,6 @@ static int _etc_random(int, const coord_def&)
     return random_colour(true);
 }
 
-static element_colour_calc *_create_random_element_colour_calc(element_type type,
-                                                               string name, ...)
-{
-    random_colour_map rand_vals;
-    va_list ap;
-
-    va_start(ap, name);
-
-    for (;;)
-    {
-        int prob = va_arg(ap, int);
-        if (!prob)
-            break;
-
-        int colour = va_arg(ap, int);
-
-        rand_vals.emplace_back(prob, colour);
-    }
-
-    va_end(ap);
-
-    return new random_element_colour_calc(type, name, rand_vals);
-}
-
 void add_element_colour(element_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
@@ -400,215 +374,213 @@ void add_element_colour(element_colour_calc *colour)
 
 void init_element_colours()
 {
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_FIRE, "fire",
-                            40,  RED,
-                            40,  YELLOW,
-                            40,  LIGHTRED,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  RED},
+                              {40,  YELLOW},
+                              {40,  LIGHTRED},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_ICE, "ice",
-                            40,  LIGHTBLUE,
-                            40,  BLUE,
-                            40,  WHITE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  LIGHTBLUE},
+                              {40,  BLUE},
+                              {40,  WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_EARTH, "earth",
-                            70,  BROWN,
-                            50,  GREEN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {70,  BROWN},
+                              {50,  GREEN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_ELECTRICITY, "electricity",
-                            40,  LIGHTCYAN,
-                            40,  LIGHTBLUE,
-                            40,  CYAN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  LIGHTCYAN},
+                              {40,  LIGHTBLUE},
+                              {40,  CYAN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_AIR, "air",
-                            60,  LIGHTGREY,
-                            60,  WHITE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTGREY},
+                              {60,  WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_POISON, "poison",
-                            60,  LIGHTGREEN,
-                            60,  GREEN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTGREEN},
+                              {60,  GREEN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_WATER, "water",
-                            60,  BLUE,
-                            60,  CYAN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  BLUE},
+                              {60,  CYAN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_MAGIC, "magic",
-                            30,  LIGHTMAGENTA,
-                            30,  LIGHTBLUE,
-                            30,  MAGENTA,
-                            30,  BLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {30,  LIGHTMAGENTA},
+                              {30,  LIGHTBLUE},
+                              {30,  MAGENTA},
+                              {30,  BLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_MUTAGENIC, "mutagenic",
-                            60,  LIGHTMAGENTA,
-                            60,  MAGENTA,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTMAGENTA},
+                              {60,  MAGENTA},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_WARP, "warp",
-                            60,  LIGHTMAGENTA,
-                            60,  MAGENTA,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTMAGENTA},
+                              {60,  MAGENTA},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_ENCHANT, "enchant",
-                            60,  LIGHTBLUE,
-                            60,  BLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTBLUE},
+                              {60,  BLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_HEAL, "heal",
-                            60,  LIGHTBLUE,
-                            60,  YELLOW,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTBLUE},
+                              {60,  YELLOW},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_HOLY, "holy",
-                            60,  YELLOW,
-                            60,  WHITE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  YELLOW},
+                              {60,  WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_DARK, "dark",
-                            80,  DARKGREY,
-                            40,  LIGHTGREY,
-                        0));
+                            { {80,  DARKGREY},
+                              {40,  LIGHTGREY},
+                            }));
     // assassin, necromancer
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_DEATH, "death",
-                            80,  DARKGREY,
-                            40,  MAGENTA,
-                        0));
+                            { {80,  DARKGREY},
+                              {40,  MAGENTA},
+                            }));
     // ie demonology
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_UNHOLY, "unholy",
-                            80,  DARKGREY,
-                            40,  RED,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {80,  DARKGREY},
+                              {40,  RED},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_VEHUMET, "vehumet",
-                            40,  LIGHTRED,
-                            40,  LIGHTMAGENTA,
-                            40,  LIGHTBLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  LIGHTRED},
+                              {40,  LIGHTMAGENTA},
+                              {40,  LIGHTBLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_BEOGH, "beogh",
-                            // plain Orc colour
-                            60,  LIGHTRED,
-                            // Orcish mines wall/idol colour
-                            60,  BROWN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  LIGHTRED}, // plain Orc colour
+                              {60,  BROWN},    // Orcish mines wall/idol colour
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_CRYSTAL, "crystal",
-                            40,  LIGHTGREY,
-                            40,  GREEN,
-                            40,  LIGHTRED,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  LIGHTGREY},
+                              {40,  GREEN},
+                              {40,  LIGHTRED},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_BLOOD, "blood",
-                            60,  RED,
-                            60,  DARKGREY,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  RED},
+                              {60,  DARKGREY},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_SMOKE, "smoke",
-                            30,  LIGHTGREY,
-                            30,  DARKGREY,
-                            30,  LIGHTBLUE,
-                            30,  MAGENTA,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {30,  LIGHTGREY},
+                              {30,  DARKGREY},
+                              {30,  LIGHTBLUE},
+                              {30,  MAGENTA},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_SLIME, "slime",
-                            40,  GREEN,
-                            40,  BROWN,
-                            40,  LIGHTGREEN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  GREEN},
+                              {40,  BROWN},
+                              {40,  LIGHTGREEN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_JEWEL, "jewel",
-                            12,  WHITE,
-                            12,  YELLOW,
-                            12,  LIGHTMAGENTA,
-                            12,  LIGHTRED,
-                            12,  LIGHTGREEN,
-                            12,  LIGHTBLUE,
-                            12,  MAGENTA,
-                            12,  RED,
-                            12,  GREEN,
-                            12,  BLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {12,  WHITE},
+                              {12,  YELLOW},
+                              {12,  LIGHTMAGENTA},
+                              {12,  LIGHTRED},
+                              {12,  LIGHTGREEN},
+                              {12,  LIGHTBLUE},
+                              {12,  MAGENTA},
+                              {12,  RED},
+                              {12,  GREEN},
+                              {12,  BLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_ELVEN, "elven",
-                            40,  LIGHTGREEN,
-                            40,  GREEN,
-                            20,  LIGHTBLUE,
-                            20,  BLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  LIGHTGREEN},
+                              {40,  GREEN},
+                              {20,  LIGHTBLUE},
+                              {20,  BLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_DWARVEN, "dwarven",
-                            40,  BROWN,
-                            40,  LIGHTRED,
-                            20,  LIGHTGREY,
-                            20,  CYAN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  BROWN},
+                              {40,  LIGHTRED},
+                              {20,  LIGHTGREY},
+                              {20,  CYAN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_ORCISH, "orcish",
-                            40,  DARKGREY,
-                            40,  RED,
-                            20,  BROWN,
-                            20,  MAGENTA,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  DARKGREY},
+                              {40,  RED},
+                              {20,  BROWN},
+                              {20,  MAGENTA},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_FLASH, "flash",
-                            30,  LIGHTMAGENTA,
-                            30,  MAGENTA,
-                            30,  YELLOW,
-                            15,  LIGHTRED,
-                            15,  RED,
-                        0));
+                            { {30,  LIGHTMAGENTA},
+                              {30,  MAGENTA},
+                              {30,  YELLOW},
+                              {15,  LIGHTRED},
+                              {15,  RED},
+                            }));
     add_element_colour(new element_colour_calc(
                             ETC_FLOOR, "floor", _etc_floor
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_ROCK, "rock", _etc_rock
                        ));
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_MIST, "mist",
-                            100, CYAN,
-                            20,  BLUE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {100, CYAN},
+                              {20,  BLUE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_SHIMMER_BLUE, "shimmer_blue",
-                            90,  BLUE,
-                            20,  LIGHTBLUE,
-                            10,  CYAN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {90,  BLUE},
+                              {20,  LIGHTBLUE},
+                              {10,  CYAN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_DECAY, "decay",
-                            60,  BROWN,
-                            60,  GREEN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  BROWN},
+                              {60,  GREEN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_SILVER, "silver",
-                            90,  LIGHTGREY,
-                            30,  WHITE,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {90,  LIGHTGREY},
+                              {30,  WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_GOLD, "gold",
-                            60,  YELLOW,
-                            60,  BROWN,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  YELLOW},
+                              {60,  BROWN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_IRON, "iron",
-                            40,  CYAN,
-                            40,  LIGHTGREY,
-                            40,  DARKGREY,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {40,  CYAN},
+                              {40,  LIGHTGREY},
+                              {40,  DARKGREY},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_BONE, "bone",
-                            90,  WHITE,
-                            30,  LIGHTGREY,
-                        0));
+                            { {90,  WHITE},
+                              {30,  LIGHTGREY},
+                            }));
     add_element_colour(new element_colour_calc(
                             ETC_ELVEN_BRICK, "elven_brick", _etc_elven_brick
                        ));
@@ -633,26 +605,39 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
                        ));
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_DITHMENOS, "dithmenos",
-                            40,  DARKGREY,
-                            40,  MAGENTA,
-                            40,  BLUE,
-                        0));
+                            { {40,  DARKGREY},
+                              {40,  MAGENTA},
+                              {40,  BLUE},
+                            }));
     add_element_colour(new element_colour_calc(
                             ETC_ELEMENTAL, "elemental", _etc_elemental
                        ));
-    add_element_colour(_create_random_element_colour_calc(
+    add_element_colour(new random_element_colour_calc(
                             ETC_INCARNADINE, "incarnadine",
-                            60,  MAGENTA,
-                            60,  RED,
-                        0));
-    add_element_colour(_create_random_element_colour_calc(
+                            { {60,  MAGENTA},
+                              {60,  RED},
+                            }));
+#if TAG_MAJOR_VERSION == 34
+    add_element_colour(new random_element_colour_calc(
                             ETC_PAKELLAS, "pakellas",
-                            40,  LIGHTGREEN,
-                            40,  LIGHTMAGENTA,
-                            40,  LIGHTCYAN,
-                        0));
+                            { {40,  LIGHTGREEN},
+                              {40,  LIGHTMAGENTA},
+                              {40,  LIGHTCYAN},
+                            }));
+#endif
+    add_element_colour(new random_element_colour_calc(
+                            ETC_AWOKEN_FOREST, "awoken_forest",
+                            { {40, GREEN},
+                              {40, LIGHTGREEN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_WU_JIAN, "wu_jian",
+                            { {40, LIGHTRED},
+                              {40, YELLOW},
+                              {10, WHITE},
+                            }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
@@ -739,16 +724,17 @@ VColour str_to_tile_colour(string colour)
 }
 #endif
 
-static const string cols[16] =
+static const char* const cols[16] =
 {
     "black", "blue", "green", "cyan", "red", "magenta", "brown",
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
+COMPILE_CHECK(ARRAYSZ(cols) == NUM_TERM_COLOURS);
 
 const string colour_to_str(colour_t colour)
 {
-    if (colour >= 16)
+    if (colour >= NUM_TERM_COLOURS)
         return "lightgrey";
     else
         return cols[colour];
@@ -760,14 +746,14 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
 {
     int ret;
 
-    for (ret = 0; ret < 16; ++ret)
+    for (ret = 0; ret < NUM_TERM_COLOURS; ++ret)
     {
         if (str == cols[ret])
             break;
     }
 
     // Check for alternate spellings.
-    if (ret == 16)
+    if (ret == NUM_TERM_COLOURS)
     {
         if (str == "lightgray")
             ret = 7;
@@ -775,7 +761,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
             ret = 8;
     }
 
-    if (ret == 16 && accept_elemental)
+    if (ret == NUM_TERM_COLOURS && accept_elemental)
     {
         // Maybe we have an element colour attribute.
         if (element_colour_calc **calc = map_find(element_colours_str, str))
@@ -785,17 +771,17 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
         }
     }
 
-    if (ret == 16 && accept_number)
+    if (ret == NUM_TERM_COLOURS && accept_number)
     {
         // Check if we have a direct colour index.
         const char *s = str.c_str();
         char *es = nullptr;
         const int ci = static_cast<int>(strtol(s, &es, 10));
-        if (s != es && es && ci >= 0 && ci < 16)
+        if (s != es && es && ci >= 0 && ci < NUM_TERM_COLOURS)
             ret = ci;
     }
 
-    return (ret == 16) ? default_colour : ret;
+    return (ret == NUM_TERM_COLOURS) ? default_colour : ret;
 }
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)

@@ -3,14 +3,14 @@
  * @brief Classes tracking player stashes
 **/
 
-#ifndef STASH_H
-#define STASH_H
+#pragma once
 
 #include <map>
 #include <string>
 #include <vector>
 
 #include "shopping.h"
+#include "trap-type.h"
 
 class input_history;
 class reader;
@@ -31,6 +31,8 @@ public:
     bool unmark_trapping_nets();
     void save(writer&) const;
     void load(reader&);
+
+    void rot_all_corpses();
 
     string description() const;
     string feature_description() const;
@@ -99,9 +101,9 @@ public:
     bool is_at(coord_def other) const { return shop.pos == other; }
     bool is_visited() const { return !shop.stock.empty(); }
 
-private:
     shop_struct shop;
 
+private:
     string shop_item_name(const item_def &it) const;
     string shop_item_desc(const item_def &it) const;
 
@@ -121,6 +123,9 @@ struct stash_search_result
     // the first matching item in the stash or the name of the shop.
     string match;
 
+    // A string to use for a primary sort, if different from just `match`.
+    string primary_sort;
+
     // Item that was matched.
     item_def item;
 
@@ -130,26 +135,13 @@ struct stash_search_result
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0), match(), item(),
-                            shop(nullptr), in_inventory(false)
-    {
-    }
+    // Are there duplicates? This is updated only after the initial search.
+    int duplicates;
+    int duplicate_piles;
 
-    stash_search_result(const stash_search_result &o)
-        : pos(o.pos), player_distance(o.player_distance), match(o.match),
-          item(o.item), shop(o.shop), in_inventory(o.in_inventory)
+    stash_search_result() : pos(), player_distance(0), match(), primary_sort(), item(),
+                            shop(nullptr), in_inventory(false), duplicates(0), duplicate_piles(0)
     {
-    }
-
-    stash_search_result &operator = (const stash_search_result &o)
-    {
-        pos = o.pos;
-        player_distance = o.player_distance;
-        match = o.match;
-        item = o.item;
-        shop = o.shop;
-        in_inventory = o.in_inventory;
-        return *this;
     }
 
     bool operator < (const stash_search_result &ssr) const
@@ -175,6 +167,8 @@ public:
 
     // Update stash at (x,y).
     bool  update_stash(const coord_def& c);
+
+    void rot_all_corpses();
 
     // Mark nets at (x,y) as no longer trapping an actor.
     bool unmark_trapping_nets(const coord_def &c);
@@ -334,5 +328,3 @@ string stash_annotate_item(const char *s, const item_def *item,
 
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
-
-#endif

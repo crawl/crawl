@@ -1,0 +1,795 @@
+################################################################################
+# polyominoes (minmay)
+#
+# A large set of simple, abstract, very early vaults, based off of re-arranging
+# sets of select polyominoes.
+# (Since vaults can be mirrored, there is no point in including both versions
+# of the chiral polyominoes.)
+
+{{
+function polyominoes_setup(e)
+  e.tags('uniq_minmay_polyomino')
+  e.weight('4')
+  e.subst('b : xcvbmGT%0 .:50')
+  e.subst('" : xcvbmGT%0 .:120')
+  e.subst('x : x:240 c:30 v:30 b m')
+  e.subst('0 = 000.')
+  e.subst('% = %%%.')
+end
+}}
+
+default-depth: D:1-2
+################################################################################
+# dominoes
+NAME: minmay_domino_2
+: polyominoes_setup(_G)
+MAP
+...
+.x0..
+.x%x.
+..0x.
+  ...
+ENDMAP
+
+NAME: minmay_domino_4
+: polyominoes_setup(_G)
+MAP
+......
+.xx0x.
+.0%%x.
+.x%%0.
+.x0xx.
+......
+ENDMAP
+
+################################################################################
+# trominoes
+NAME: minmay_tromino_i2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx.
+.0%..
+..%0.
+.xxx.
+.....
+ENDMAP
+
+NAME: minmay_tromino_i4
+: polyominoes_setup(_G)
+MAP
+    ...
+.....x.
+.xxx0x.
+..0%%x.
+ .x%%0..
+ .x0xxx.
+ .x.....
+ ...
+ENDMAP
+
+NAME: minmay_tromino_v2
+: polyominoes_setup(_G)
+MAP
+.....
+.xx..
+.x%0..
+..0%x.
+  .xx.
+  ....
+ENDMAP
+
+NAME: minmay_tromino_v4_a
+: polyominoes_setup(_G)
+MAP
+   ...
+ ...x..
+..x0xx.
+.xx%%0..
+..0%%xx.
+ .xx0x..
+ ..x...
+  ...
+ENDMAP
+
+NAME: minmay_tromino_v4_b
+: polyominoes_setup(_G)
+MAP
+.. . . ..
+.........
+ .xx.xx.
+..x%.0x..
+ ...b...
+..x0.%x..
+ .xx.xx.
+.........
+.. . . ..
+ENDMAP
+
+NAME: minmay_tromino_v4_c
+: polyominoes_setup(_G)
+MAP
+   ...
+  ..x.
+  .xx...
+....%.x..
+.xx0b0xx.
+..x.%....
+ ...xx.
+   .x..
+   ...
+ENDMAP
+
+NAME: minmay_tromino_v7
+: polyominoes_setup(_G)
+MAP
+....
+.xx......
+..x.x0xx.
+.x0xx%x..
+.xx%%x0x..
+...0xx.xx.
+  .x......
+  .xx.
+  ....
+ENDMAP
+
+NAME: minmay_tromino_mix6
+: polyominoes_setup(_G)
+MAP
+...
+.x...
+.x.x......
+.x.xx0xxx.
+.0.%%%%.0.
+.xxx0xx.x.
+......x.x.
+     ...x.
+       ...
+ENDMAP
+
+################################################################################
+# tetrominoes
+NAME: minmay_tetromino_i2
+: polyominoes_setup(_G)
+MAP
+  ...
+  .x.
+  .x.
+.0%x.
+.x%x.
+.x%0.
+.x.
+.x.
+...
+ENDMAP
+
+NAME: minmay_tetromino_i4
+: polyominoes_setup(_G)
+MAP
+     ...
+......x.
+.xxxx0x.
+..0.%.x.
+ .x%b%x.
+ .x.%.0..
+ .x0xxxx.
+ .x......
+ ...
+ENDMAP
+
+NAME: minmay_tetromino_l2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx.
+.0%x.
+.x%0.
+.xxx.
+.....
+ENDMAP
+
+NAME: minmay_tetromino_l4
+: polyominoes_setup(_G)
+MAP
+ .....
+ .xxx...
+..x%0xx.
+.x0bb%x.
+.x%bb0x.
+.xx0%x..
+...xxx.
+  .....
+ENDMAP
+
+NAME: minmay_tetromino_o2
+: polyominoes_setup(_G)
+MAP
+....
+.xx0
+.xx%..
+..%xx.
+  0xx.
+  ....
+ENDMAP
+
+NAME: minmay_tetromino_o4
+: polyominoes_setup(_G)
+MAP
+ ....
+ .xx....
+ .xx0xx.
+..0%%xx.
+.xx%%0..
+.xx0xx.
+....xx.
+   ....
+ENDMAP
+
+NAME: minmay_tetromino_t2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx%.
+.0x%x0.
+ .%xxx.
+  .....
+ENDMAP
+
+NAME: minmay_tetromino_t4
+: polyominoes_setup(_G)
+MAP
+ .....
+ .xxx...
+...x0.x.
+.x0%%xx.
+.xx%%0x.
+.x.0x...
+...xxx.
+  .....
+ENDMAP
+
+NAME: minmay_tetromino_s2
+: polyominoes_setup(_G)
+MAP
+ ....
+ .xx0.
+..%xx.
+.xx%..
+.0xx.
+ ...
+ENDMAP
+
+NAME: minmay_tetromino_s4
+: polyominoes_setup(_G)
+MAP
+  ...
+  .x......
+  .xx..xx.
+ ..0x%xx..
+..xx%x0..
+.xx..xx.
+......x.
+     ...
+ENDMAP
+
+################################################################################
+# pentominoes
+NAME: minmay_pentomino_r2
+: polyominoes_setup(_G)
+MAP
+....
+.xx..
+..xx.
+ .x%0.
+ .0%x.
+  .xx..
+  ..xx.
+   ....
+ENDMAP
+
+NAME: minmay_pentomino_r4
+: polyominoes_setup(_G)
+MAP
+ ....
+ .xx.  ..
+  .xx%.x.
+  %x0xxx.
+..x0b0x..
+.xxx0x%
+.x.%xx.
+..  .xx.
+    ....
+ENDMAP
+
+NAME: minmay_pentomino_u2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx.
+.x%x.
+..00..
+ .x%x.
+ .xxx.
+ .....
+ENDMAP
+
+NAME: minmay_pentomino_u4
+: polyominoes_setup(_G)
+MAP
+ .....
+ .xxx....
+ .x%x.xx.
+....0.%x.
+.xx0b0xx.
+.x%.0....
+.xx.x%x.
+....xxx.
+   .....
+ENDMAP
+
+NAME: minmay_pentomino_z2
+: polyominoes_setup(_G)
+MAP
+....
+.xx....
+.%x0xx.
+ .xx0x%.
+ ....xx.
+    ....
+ENDMAP
+
+NAME: minmay_pentomino_z4
+: polyominoes_setup(_G)
+MAP
+  .. ...
+...x0xx.
+.xxx..x..
+.x..%.xx.
+ 0.%b%.0
+.xx.%..x.
+..x..xxx.
+ .xx0x...
+ ... ..
+ENDMAP
+
+NAME: minmay_pentomino_t2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx.
+..x%0.
+ .x%x.
+ .0%x..
+  .xxx.
+  .....
+ENDMAP
+
+NAME: minmay_pentomino_t4
+: polyominoes_setup(_G)
+MAP
+  ...
+  .x....
+ ..x..x...
+ .xxx0xxx.
+ ..0%%x...
+...x%%0..
+.xxx0xxx.
+...x..x..
+  ....x.
+     ...
+ENDMAP
+
+NAME: minmay_pentomino_x2
+: polyominoes_setup(_G)
+MAP
+    ...
+   ..x..
+   .xxx.
+ ..0%x..
+..x%0..
+.xxx.
+..x..
+ ...
+ENDMAP
+
+NAME: minmay_pentomino_x4
+: polyominoes_setup(_G)
+MAP
+    ...
+ ....x..
+..x0xxx.
+.xxx%x0.
+..x%b%x..
+ .0x%xxx.
+ .xxx0x..
+ ..x....
+  ...
+ENDMAP
+
+NAME: minmay_pentomino_w2
+: polyominoes_setup(_G)
+MAP
+....
+.xx....
+..xx%x0.
+ .0x%xx..
+  ....xx.
+     ....
+ENDMAP
+
+NAME: minmay_pentomino_w4
+: polyominoes_setup(_G)
+MAP
+  ....
+ ..xx0...
+ .xx..xx..
+ .x%0b%xx.
+.0.b%%0.x.
+.x.0%%b.0.
+.xx%b0%x.
+..xx..xx.
+ ...0xx..
+    ....
+ENDMAP
+
+# this pentomino sucks
+NAME: minmay_pentomino_p2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx.0..
+.xx%%xx.
+..0.xxx.
+   .....
+ENDMAP
+
+NAME: minmay_pentomino_p4
+: polyominoes_setup(_G)
+MAP
+........
+.xx0xxx.
+.xxb.xx.
+.x.%%b0.
+.0b%%.x.
+.xx.bxx.
+.xxx0xx.
+........
+ENDMAP
+
+NAME: minmay_pentomino_q2
+: polyominoes_setup(_G)
+MAP
+.......
+.xxxx0.
+.x%%%x.
+.0xxxx.
+.......
+ENDMAP
+
+NAME: minmay_pentomino_q4
+: polyominoes_setup(_G)
+MAP
+  ....
+  .xx.
+  .%x...
+   .x.x%...
+   .x0xxxx.
+....0b0....
+.xxxx0x.
+...%x.x.
+   ...x%.
+     .xx.
+     ....
+ENDMAP
+
+# it took a while to figure out how to NOT draw a swastika with the V-pentomino
+NAME: minmay_pentomino_v2
+: polyominoes_setup(_G)
+MAP
+  ...
+  .x.
+..%x.
+.xxx0...
+...0xxx.
+   .x%..
+   .x.
+   ...
+ENDMAP
+
+NAME: minmay_pentomino_v4
+DEPTH: D:1-2
+WEIGHT: 4
+: polyominoes_setup(_G)
+MAP
+.... ..
+.xxx0x.
+.x%..x%..
+.x.".xxx.
+ 0..b..0
+.xxx.".x.
+..%x..%x.
+  .x0xxx.
+  .. ....
+ENDMAP
+
+NAME: minmay_pentomino_o2
+: polyominoes_setup(_G)
+MAP
+.......
+.xxxxx.
+.0%%%0.
+.xxxxx.
+.......
+ENDMAP
+
+NAME: minmay_pentomino_o4
+: polyominoes_setup(_G)
+MAP
+.........
+.xxxxx0x.
+...0...x.
+  .x%"%x.
+  .x.b.x.
+  .x%"%x.
+  .x...0...
+  .x0xxxxx.
+  .........
+ENDMAP
+
+NAME: minmay_pentomino_s2
+: polyominoes_setup(_G)
+MAP
+.....
+.xxx..
+.0%xx.
+.xx%0.
+..xxx.
+ .....
+ENDMAP
+
+NAME: minmay_pentomino_s4
+: polyominoes_setup(_G)
+MAP
+   .....
+....xxx.
+.x0xx%0.
+.x%"."x..
+.xx.b.xx.
+..x"."%x.
+ .0%xx0x.
+ .xxx....
+ .....
+ENDMAP
+
+################################################################################
+# hexominoes
+# due to the large number of polyominoes of order 6 and greater, there are only
+# vaults for the most interesting hex+ ominoes, instead of for all of them like
+# pent- ominoes
+# I also don't know of any naming convention for hex+ ominoes, so I just gave
+# them the closest letters I could think of
+NAME: minmay_hexomino_p4
+: polyominoes_setup(_G)
+MAP
+ ......
+ .xxxx...
+..0.xx0x.
+.xx.%..x.
+.xx%b%xx.
+.x..%.xx.
+.x0xx.0..
+...xxxx.
+  ......
+ENDMAP
+
+NAME:    minmay_hexomino_r4
+SHUFFLE: "'
+SUBST:   ' = ..0%
+: polyominoes_setup(_G)
+MAP
+      ...
+  .....x.
+...x0xxx..
+.xxx..%xx.
+..x%"'".0.
+ .x.'B'.x.
+ .0."'"%x..
+ .xx%..xxx.
+ ..xxx0x...
+  .x.....
+  ...
+ENDMAP
+
+NAME:    minmay_hexomino_u4
+SHUFFLE: "'
+SUBST:   ' = ..0%
+: polyominoes_setup(_G)
+MAP
+     ...
+    ..x..
+ ....xxx.
+..xx0x%x.
+.xx%"'"0...
+..xx'b'xx..
+ ..0"'"%xx.
+  .x%x0xx..
+  .xxx....
+  ..x..
+   ...
+ENDMAP
+
+NAME: minmay_hexomino_f4
+: polyominoes_setup(_G)
+MAP
+ ......
+ .xxxx...
+...x%x.x.
+.xx0"0xx.
+.x%"b"%x.
+.xx0"0xx.
+.x.x%x...
+...xxxx.
+  ......
+ENDMAP
+
+NAME: minmay_hexomino_c4
+: polyominoes_setup(_G)
+MAP
+  ......
+  .xxxx.
+...x%%x...
+.xx0"b0xx.
+.x%b00"%x.
+.x%"00b%x.
+.xx0b"0xx.
+...x%%x...
+  .xxxx.
+  ......
+ENDMAP
+
+################################################################################
+# heptominoes
+NAME: minmay_heptomino_o4
+: polyominoes_setup(_G)
+MAP
+ .....
+ .xxx.....
+ .x%x.xxx.
+ .xx0bx%x.
+...b""0xx.
+.xx0""b...
+.x%xb0xx.
+.xxx.x%x.
+.....xxx.
+    .....
+ENDMAP
+
+NAME: minmay_heptomino_h4
+: polyominoes_setup(_G)
+MAP
+.........
+.x0x.xxx.
+.xxx.%x0.
+.x%x.xxx.
+....b....
+.xxx.x%x.
+.0x%.xxx.
+.xxx.x0x.
+.........
+ENDMAP
+
+NAME: minmay_heptomino_d4
+: polyominoes_setup(_G)
+MAP
+ .......
+..xx0xx..
+.x.xxx.x.
+.xx.%.xx.
+.0x%b%x0.
+.xx.%.xx.
+.x.xxx.x.
+..xx0xx..
+ .......
+ENDMAP
+
+NAME:    minmay_heptomino_w4
+SHUFFLE: "'?
+SUBST:   ' = 0%, ? = 0%
+: polyominoes_setup(_G)
+MAP
+   ....
+  ..xx0..
+ ..xx.xx..
+ .xx.'.xx..
+.0x.?"?.xx.
+.x.'"b"'.x.
+.xx.?"?.x0.
+..xx.'.xx.
+ ..xx.xx..
+  ..0xx..
+    ....
+ENDMAP
+
+NAME: minmay_heptomino_l4
+: polyominoes_setup(_G)
+MAP
+  ......
+  .xxxx.
+...x..0...
+.x0x.xxxx.
+.x.x%%..x.
+.x..%%x.x.
+.xxxx.x0x.
+...0..x...
+  .xxxx.
+  ......
+ENDMAP
+
+################################################################################
+# octominoes
+NAME: minmay_octomino_e4
+: polyominoes_setup(_G)
+MAP
+..........
+.xxxxx.xx.
+.x%x0x.%x.
+....b..xx.
+.xx.""b0x.
+.x0b"".xx.
+.xx..b....
+.x%.x0x%x.
+.xx.xxxxx.
+..........
+ENDMAP
+
+NAME: minmay_octomino_c4
+: polyominoes_setup(_G)
+MAP
+..........
+.xxx0xxxx.
+.x%..x%%x.
+.x%..x..x.
+.xxx00..0.
+.0..00xxx.
+.x..x..%x.
+.x%%x..%x.
+.xxxx0xxx.
+..........
+ENDMAP
+
+NAME:  minmay_octomino_j4
+: polyominoes_setup(_G)
+MAP
+ ...
+ .x........
+ .xxxx..xx.
+ ..0x.x0x..
+ ..xx%xxx.
+ .x.%b%.x.
+ .xxx%xx..
+..x0x.x0..
+.xx..xxxx.
+........x.
+       ...
+ENDMAP
+
+################################################################################
+# nonominoes
+NAME:    minmay_nonomino_d4
+SHUFFLE: "'?!
+SUBST:   ' = 0%, ? = 0%, ! = "
+: polyominoes_setup(_G)
+MAP
+...........
+.xxxx0xxxx.
+.x%x...x%x.
+.xx..?..xx.
+.x.."'"..x.
+.0.?'b'?.0.
+.x.."'"..x.
+.xx..?..xx.
+.x%x...x%x.
+.xxxx0xxxx.
+...........
+ENDMAP

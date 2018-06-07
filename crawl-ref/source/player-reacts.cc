@@ -58,26 +58,28 @@
 #include "fineff.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-status-flag-type.h"
+#include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -85,6 +87,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -123,7 +126,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -293,15 +296,16 @@ static int _current_horror_level()
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || !mons_is_threatening(mon)
-            || !you.can_see(*mon))
+            || !mons_is_threatening(*mon)
+            || !you.can_see(*mon)
+            || mons_is_tentacle_or_tentacle_segment(mon->type))
         {
             continue;
         }
 
         ASSERT(mon);
 
-        const mon_threat_level_type threat_level = mons_threat_level(mon);
+        const mon_threat_level_type threat_level = mons_threat_level(*mon);
         if (threat_level == MTHRT_NASTY)
             horror_level += 3;
         else if (threat_level == MTHRT_TOUGH)
@@ -344,7 +348,7 @@ static void _end_horror()
  */
 static void _update_cowardice()
 {
-    if (!player_mutation_level(MUT_COWARDICE))
+    if (!you.has_mutation(MUT_COWARDICE))
     {
         // If the player somehow becomes sane again, handle that
         _end_horror();
@@ -383,8 +387,7 @@ static void _update_cowardice()
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
 {
-    if (you.props[USKAYAW_DID_DANCE_ACTION].get_bool()
-            && you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
+    if (you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
     {
         int num_hurt = you.props[USKAYAW_NUM_MONSTERS_HURT];
         int hurt_val = you.props[USKAYAW_MONSTER_HURT_VALUE];
@@ -416,7 +419,6 @@ static void _handle_uskayaw_piety(int time_taken)
     }
 
     // Re-initialize Uskayaw piety variables
-    you.props[USKAYAW_DID_DANCE_ACTION] = false;
     you.props[USKAYAW_NUM_MONSTERS_HURT] = 0;
     you.props[USKAYAW_MONSTER_HURT_VALUE] = 0;
 }
@@ -463,13 +465,16 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
+    if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)
+        || you.get_mutation_level(MUT_STRONG_NOSE) > 0)
+    {
         detect_items(-1);
+    }
 
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awake();
+        you.awaken();
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -505,25 +510,23 @@ static void _handle_recitation(int step)
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
     // turns.
-    practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
+    practise_using_ability(ABIL_ZIN_RECITE);
 
     noisy(you.shout_volume(), you.pos());
 
     if (step == 0)
     {
-        string speech = zin_recite_text(you.attribute[ATTR_RECITE_SEED],
-                                        you.attribute[ATTR_RECITE_TYPE], -1);
-        speech += ".";
-        if (one_chance_in(9))
+        ostringstream speech;
+        speech << zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                  you.attribute[ATTR_RECITE_TYPE], -1);
+        speech << '.';
+        if (one_chance_in(27))
         {
             const string closure = getSpeakString("recite_closure");
-            if (!closure.empty() && one_chance_in(3))
-            {
-                speech += " ";
-                speech += closure;
-            }
+            if (!closure.empty())
+                speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
+        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
     }
 }
 
@@ -574,7 +577,7 @@ static void _decrement_durations()
     if (you.gourmand())
     {
         // Innate gourmand is always fully active.
-        if (player_mutation_level(MUT_GOURMAND) > 0)
+        if (you.has_mutation(MUT_GOURMAND))
             you.duration[DUR_GOURMAND] = GOURMAND_MAX;
         else if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -604,42 +607,26 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (you.duration[DUR_DIVINE_SHIELD] > 0)
-    {
-        if (you.duration[DUR_DIVINE_SHIELD] > 1)
-        {
-            you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 1;
-                mprf(MSGCH_DURATION, "Your divine shield starts to fade.");
-            }
-        }
-
-        if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
-        {
-            you.redraw_armour_class = true;
-            if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 0;
-                mprf(MSGCH_DURATION, "Your divine shield fades away.");
-            }
-        }
-    }
-
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != TRAN_NONE)
+        && you.form != transformation::none)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
+    if (you.species != SP_VAMPIRE || you.form != transformation::bat
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
+        if (form_can_fly()
+            || form_likes_water() && feat_is_water(grd(you.pos())))
+        {
+            // Disable emergency flight if it was active
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
+        }
+
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
                                   "Your transformation is almost over."))
         {
@@ -677,8 +664,9 @@ static void _decrement_durations()
     }
 
     dec_ambrosia_player(delay);
+    dec_channel_player(delay);
     dec_slow_player(delay);
-    dec_exhaust_player(delay);
+    dec_berserk_recovery_player(delay);
     dec_haste_player(delay);
 
     if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
@@ -693,13 +681,6 @@ static void _decrement_durations()
             mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
             you.redraw_stats[s] = true;
         }
-    }
-
-
-    if (you.duration[DUR_BERSERK]
-        && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
-    {
-        you.duration[DUR_BERSERK] = 1; // end
     }
 
     // Leak piety from the piety pool into actual piety.
@@ -821,7 +802,7 @@ static void _decrement_durations()
     }
 
     if (you.duration[DUR_GRASPING_ROOTS])
-        check_grasping_roots(&you);
+        check_grasping_roots(you);
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
@@ -836,7 +817,8 @@ static void _decrement_durations()
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
-    you.maybe_degrade_bone_armour(delay);
+    extract_manticore_spikes("You carefully extract the barbed spikes from "
+                             "your body.");
 
     if (!env.sunlight.empty())
         process_sunlights();
@@ -854,32 +836,16 @@ static void _decrement_durations()
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
 
+    if (you.attribute[ATTR_HEAVENLY_STORM]
+        && !you.duration[DUR_HEAVENLY_STORM])
+    {
+        end_heavenly_storm(); // we shouldn't hit this, but just in case
+    }
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
             _decrement_simple_duration((duration_type) i, delay);
-}
-
-
-// For worn items; weapons do this on melee attacks.
-static void _check_equipment_conducts()
-{
-    if (you_worship(GOD_DITHMENOS) && one_chance_in(10))
-    {
-        bool fiery = false;
-        const item_def* item;
-        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
-        {
-            item = you.slot_item(static_cast<equipment_type>(i));
-            if (item && is_fiery_item(*item))
-            {
-                fiery = true;
-                break;
-            }
-        }
-        if (fiery)
-            did_god_conduct(DID_FIRE, 1, true);
-    }
 }
 
 /**
@@ -893,7 +859,6 @@ static void _rot_ghoul_players()
     int resilience = 400;
     if (have_passive(passive_t::slow_metabolism))
         resilience = resilience * 3 / 2;
-
 
     // Faster rotting when hungry.
     if (you.hunger_state < HS_SATIATED)
@@ -936,6 +901,7 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
+    // HP Regeneration
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
@@ -945,7 +911,7 @@ static void _regenerate_hp_and_mp(int delay)
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
-        if (player_mutation_level(MUT_MANA_LINK)
+        if (you.has_mutation(MUT_MANA_LINK)
             && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
@@ -957,21 +923,16 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    update_regen_amulet_attunement();
+    update_amulet_attunement_by_health();
 
+    // MP Regeneration
     if (!player_regenerates_mp())
         return;
 
     if (you.magic_points < you.max_magic_points)
     {
-        const int base_val = 7 + you.max_magic_points / 2;
+        const int base_val = player_mp_regen();
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
-
-        if (player_mutation_level(MUT_MANA_REGENERATION))
-            mp_regen_countup *= 2;
-        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
-            mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
-
         you.magic_points_regeneration += mp_regen_countup;
     }
 
@@ -991,22 +952,15 @@ void player_reacts()
     search_around();
 
     //XXX: does this _need_ to be calculated up here?
-    const int stealth = check_stealth();
+    const int stealth = player_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        temperature_check();
-#endif
-
-    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
+    if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
-
-    _check_equipment_conducts();
 
     if (you.unrand_reacts.any())
         unrand_reacts();
@@ -1025,7 +979,7 @@ void player_reacts()
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
-    if (one_chance_in(10))
+    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
         const int teleportitis_level = player_teleport();
         // this is instantaneous
@@ -1042,7 +996,7 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == TRAN_WISP && !you.stasis())
+        else if (you.form == transformation::wisp && !you.stasis())
             uncontrolled_blink();
     }
 
@@ -1055,7 +1009,7 @@ void player_reacts()
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
-        maybe_melt_player_enchantments(BEAM_FIRE, 10);
+        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     // Handle starvation before subtracting hunger for this turn (including
     // hunger from the berserk duration) and before monsters react, so you
@@ -1087,8 +1041,6 @@ void player_reacts()
     dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)

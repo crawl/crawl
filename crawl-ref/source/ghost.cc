@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @brief Player ghost and random Pandemonium demon handling.
@@ -14,22 +13,22 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-type.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
 #include "ng-input.h"
 #include "skills.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stringutil.h"
 #include "unwind.h"
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
 #define MAX_GHOST_EVASION    60
-
-vector<ghost_demon> ghosts;
 
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =
@@ -38,17 +37,11 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_SHATTER,
     SPELL_FREEZING_CLOUD,
-    SPELL_STEAM_BALL,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_METAL_SPLINTERS,
     SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord conjuration spell list.
@@ -66,9 +59,7 @@ static spell_type search_order_conj[] =
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord self-enchantment spell list.
@@ -76,12 +67,9 @@ static spell_type search_order_selfench[] =
 {
     SPELL_HASTE,
     SPELL_SILENCE,
-    SPELL_BATTLESPHERE,
-    SPELL_SPELLFORGED_SERVITOR,
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord summoning spell list.
@@ -95,7 +83,6 @@ static spell_type search_order_summon[] =
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
     SPELL_SUMMON_BUTTERFLIES, // funny
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord misc spell list.
@@ -110,10 +97,7 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
-    SPELL_NO_SPELL, // end of list
 };
-
-// Last slot (emergency) can only be Teleport Self or Blink.
 
 ghost_demon::ghost_demon()
 {
@@ -162,8 +146,7 @@ static brand_type _random_special_pan_lord_brand()
                                   20, SPWPN_PAIN,
                                   20, SPWPN_ANTIMAGIC,
                                   20, SPWPN_DISTORTION,
-                                  20, SPWPN_CHAOS,
-                                  0);
+                                  20, SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -179,16 +162,14 @@ static int _panlord_random_resist_level()
                                   3,  0,
                                   3,  1,
                                   2,  2,
-                                  1,  3,
-                                  0);
+                                  1,  3);
 }
 
 static int _panlord_random_elec_resist_level()
 {
     return random_choose_weighted(3, 0,
                                   6, 1,
-                                  1, 3,
-                                  0);
+                                  1, 3);
 }
 
 void ghost_demon::init_pandemonium_lord()
@@ -207,9 +188,9 @@ void ghost_demon::init_pandemonium_lord()
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
     int total_def = 10 + random2avg(40, 3);
-    int split = biased_random2(5, 2);
+    int split = 1 + biased_random2(4, 2);
     ac = div_rand_round(total_def * split, 10);
-    ev = total_def - ev;
+    ev = total_def - ac;
     if (coinflip())
         swap(ac, ev);
 
@@ -257,16 +238,16 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        // This bit uses the list of player spells to find appropriate
-        // spells for the demon, then converts those spells to the monster
-        // spell indices. Some special monster-only spells are at the end.
+        if (!one_chance_in(10))
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
-
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
-        else
-            ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        if (!one_chance_in(10))
+        {
+            if (coinflip())
+                ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+            else
+                ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        }
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));
@@ -276,7 +257,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -284,34 +265,13 @@ void ghost_demon::init_pandemonium_lord()
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
 }
 
-// Returns the movement speed for a player ghost. Note that this is a
-// a movement cost, so lower is better.
-//FIXME: deduplicate with player_movement_speed()
-static int _player_ghost_movement_energy()
-{
-    int energy = 10;
-
-    if (int fast = player_mutation_level(MUT_FAST, false))
-        energy -= fast + 1;
-    if (int slow = player_mutation_level(MUT_SLOW, false))
-        energy += slow + 2;
-
-    if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
-        energy -= 1;
-
-    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
-        energy += 1;
-
-    if (energy < FASTEST_PLAYER_MOVE_SPEED)
-        energy = FASTEST_PLAYER_MOVE_SPEED;
-
-    return energy;
-}
+static const set<brand_type> ghost_banned_brands =
+                { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
 
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     // don't preserve transformations for ghosty purposes
-    unwind_var<transformation_type> form(you.form, TRAN_NONE);
+    unwind_var<transformation> form(you.form, transformation::none);
     unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
                                                  FixedBitVector<NUM_EQUIP>());
     unwind_var<bool> fishtail(you.fishtail, false);
@@ -327,7 +287,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     set_resist(resists, MR_RES_FIRE, player_res_fire());
     set_resist(resists, MR_RES_COLD, player_res_cold());
     set_resist(resists, MR_RES_ELEC, player_res_electricity());
-    // clones might lack innate rPois, copy it.  pghosts don't care.
+    // clones might lack innate rPois, copy it. pghosts don't care.
     set_resist(resists, MR_RES_POISON, player_res_poison());
     set_resist(resists, MR_RES_NEG, you.res_negative_energy());
     set_resist(resists, MR_RES_ACID, player_res_acid());
@@ -337,7 +297,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     set_resist(resists, MR_RES_ROTTING, you.res_rotting());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
-    move_energy = _player_ghost_movement_energy();
+    move_energy = 10;
     speed       = 10;
 
     damage = 4;
@@ -362,9 +322,8 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
 
-                // Ghosts can't get holy wrath, but they get to keep
-                // the weapon.
-                if (brand == SPWPN_HOLY_WRATH)
+                // normalize banned weapon brands
+                if (ghost_banned_brands.count(brand) > 0)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
@@ -390,7 +349,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     else
     {
         // Unarmed combat.
-        if (you.innate_mutation[MUT_CLAWS])
+        if (you.has_innate_mutation(MUT_CLAWS))
             damage += you.experience_level;
 
         damage += you.skills[SK_UNARMED_COMBAT];
@@ -677,17 +636,6 @@ void ghost_demon::add_spells(bool actual_ghost)
     }
 
     normalize_spell_freq(spells, xl);
-
-    // After normalizing the frequencies!
-    if (species_is_draconian(species)
-        && species != SP_BASE_DRACONIAN
-        && species != SP_GREY_DRACONIAN
-        // Don't give pillusions extra breath
-        && actual_ghost)
-    {
-        spells.emplace_back(SPELL_BOLT_OF_DRAINING, 33, // Not too common
-                            MON_SPELL_NATURAL | MON_SPELL_BREATH);
-    }
 }
 
 bool ghost_demon::has_spells() const
@@ -703,10 +651,10 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     {
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
-    case SPELL_DELAYED_FIREBALL:
-        return SPELL_FIREBALL;
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
+    case SPELL_SWIFTNESS:
+        return SPELL_SPRINT;
     default:
         break;
     }
@@ -714,7 +662,7 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     return spell;
 }
 
-vector<ghost_demon> ghost_demon::find_ghosts()
+const vector<ghost_demon> ghost_demon::find_ghosts()
 {
     vector<ghost_demon> gs;
 
@@ -729,21 +677,18 @@ vector<ghost_demon> ghost_demon::find_ghosts()
     // Pick up any other ghosts that happen to be on the level if we
     // have space. If the player is undead, add one to the ghost quota
     // for the level.
-    find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
+    find_extra_ghosts(gs);
 
     return gs;
 }
 
 void ghost_demon::find_transiting_ghosts(
-    vector<ghost_demon> &gs, int n)
+    vector<ghost_demon> &gs)
 {
-    if (n <= 0)
-        return;
-
     const m_transit_list *mt = get_transit_list(level_id::current());
     if (mt)
     {
-        for (auto i = mt->begin(); i != mt->end() && n > 0; ++i)
+        for (auto i = mt->begin(); i != mt->end(); ++i)
         {
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
@@ -752,7 +697,6 @@ void ghost_demon::find_transiting_ghosts(
                 {
                     announce_ghost(*m.ghost);
                     gs.push_back(*m.ghost);
-                    --n;
                 }
             }
         }
@@ -766,85 +710,102 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 #endif
 }
 
-void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs, int n)
+void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
 {
-    for (monster_iterator mi; mi && n > 0; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get())
         {
             // Bingo!
             announce_ghost(*(mi->ghost));
             gs.push_back(*(mi->ghost));
-            --n;
         }
     }
 
     // Check the transit list for the current level.
-    find_transiting_ghosts(gs, n);
+    find_transiting_ghosts(gs);
 }
 
-// Returns the number of extra ghosts allowed on the level.
-int ghost_demon::n_extra_ghosts()
+/// Returns the number of ghosts allowed on the specified level.
+int ghost_demon::max_ghosts_per_level(int absdepth)
 {
-    if (env.absdepth0 < 10)
-        return 0;
+    return absdepth < 10 ? 1 : MAX_GHOSTS;
+}
 
-    return MAX_GHOSTS - 1;
+static const set<branch_type> ghosts_banned =
+            { BRANCH_ABYSS, BRANCH_LABYRINTH, BRANCH_SEWER, BRANCH_OSSUARY,
+              BRANCH_BAILEY, BRANCH_ICE_CAVE, BRANCH_VOLCANO, BRANCH_WIZLAB,
+              BRANCH_DESOLATION, BRANCH_TEMPLE };
+
+
+/// Is the current location eligible for ghosts?
+bool ghost_demon::ghost_eligible()
+{
+    return !crawl_state.game_is_tutorial()
+        && !Options.seed
+        && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
+        && ghosts_banned.count(you.where_are_you) == 0;
+}
+
+bool debug_check_ghost(const ghost_demon &ghost)
+{
+    // Values greater than the allowed maximum or less then the
+    // allowed minimum signalise bugginess.
+    if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
+        return false;
+    if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
+        return false;
+    if (ghost.xl < 1 || ghost.xl > 27)
+        return false;
+    if (ghost.ev > MAX_GHOST_EVASION)
+        return false;
+    if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
+        return false;
+    if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
+        return false;
+    if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
+        return false;
+    if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
+        return false;
+    if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
+        return false;
+    if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
+        return false;
+    if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
+        return false;
+
+    if (ghost.brand == SPWPN_HOLY_WRATH)
+        return false;
+
+    // Only (very) ugly things get non-plain attack types and
+    // flavours.
+    if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
+        return false;
+
+    // Name validation.
+    if (!validate_player_name(ghost.name, false))
+        return false;
+    // Many combining characters can come per every letter, but if there's
+    // that much, it's probably a maliciously forged ghost of some kind.
+    if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
+        return false;
+    if (ghost.name != trimmed_string(ghost.name))
+        return false;
+
+    // Check for non-existing spells.
+    for (const mon_spell_slot &slot : ghost.spells)
+        if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
+            return false;
+
+    return true;
 }
 
 // Sanity checks for some ghost values.
-bool debug_check_ghosts()
+bool debug_check_ghosts(vector<ghost_demon> &ghosts)
 {
     for (const ghost_demon &ghost : ghosts)
-    {
-        // Values greater than the allowed maximum or less then the
-        // allowed minimum signalise bugginess.
-        if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
+        if (!debug_check_ghost(ghost))
             return false;
-        if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
-            return false;
-        if (ghost.xl < 1 || ghost.xl > 27)
-            return false;
-        if (ghost.ev > MAX_GHOST_EVASION)
-            return false;
-        if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
-            return false;
-        if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
-            return false;
-        if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
-            return false;
-        if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
-            return false;
-        if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
-            return false;
-        if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
-            return false;
-        if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
-            return false;
-
-        if (ghost.brand == SPWPN_HOLY_WRATH)
-            return false;
-
-        // Only (very) ugly things get non-plain attack types and
-        // flavours.
-        if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
-            return false;
-
-        // Name validation.
-        if (!validate_player_name(ghost.name, false))
-            return false;
-        // Many combining characters can come per every letter, but if there's
-        // that much, it's probably a maliciously forged ghost of some kind.
-        if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
-            return false;
-        if (ghost.name != trimmed_string(ghost.name))
-            return false;
-
-        // Check for non-existing spells.
-        for (const mon_spell_slot &slot : ghost.spells)
-            if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
-                return false;
-    }
     return true;
 }
 

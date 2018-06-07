@@ -2,7 +2,9 @@ language: cpp
 compiler:
     - clang
     - gcc
+sudo: required
 before_install:
+    - sudo apt-get update --option Acquire::Retries=100 --option Acquire::http::Timeout="60"
     - perl .travis/apt.pl
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
 env:
@@ -16,7 +18,6 @@ env:
     - USE_DGAMELAUNCH=1 WEBTILES=1 EXTERNAL_DEFINES=-UTOURNEY
     - TILES=1 BUILD_ALL=1
     - WEBTILES=1 BUILD_ALL=1
-    - MONSTER=1
 git:
     submodules: false
 install: perl .travis/deps.pl
@@ -27,8 +28,13 @@ notifications:
         on_failure: always
 #        recipients:
 #          - crawl-ref-commits@lists.sourceforge.net
+# the IRC channel name (chat.freenode.net##crawl-dev) is encrypted so that
+# forks won't spam ##crawl-dev.
+# See: https://github.com/travis-ci/travis-ci/issues/1094
+# and https://docs.travis-ci.com/user/encryption-keys/
     irc:
-        channels: "chat.freenode.net##crawl-dev"
+        channels:
+           - secure: "bZx+ynE2xu+XAuMDSxMfk9WrWpGuetYmJ7bYZfyEePCo2RZNMla1ehFof/srnFuC+KyK6E2gNpUsU4HAyySb7n20AdZxcXFaHQmQvnSU6pUEyLRifgBy7Rsn6DbI3mrsEDhiOECFIxYj2f63nsO5dkRJBQLYQwf/czAQH/0aylw="
         on_success: change
         on_failure: always
         use_notice: true

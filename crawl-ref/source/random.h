@@ -1,5 +1,4 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 #include <algorithm>  // iter_swap
 #include <iterator>   // advance
@@ -7,6 +6,7 @@
 #include <vector>
 
 #include "hash.h"
+#include "rng-type.h"
 
 void seed_rng();
 void seed_rng(uint32_t seed);
@@ -139,41 +139,31 @@ int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 }
 
 template <typename T>
-T random_choose_weighted(int weight, T first, ...)
+T random_choose_weighted(int cweight, T curr)
 {
-    va_list args;
-    va_start(args, first);
-    T chosen = first;
-    int cweight = weight, nargs = 100;
-
-    while (nargs-- > 0)
-    {
-        const int nweight = va_arg(args, int);
-        if (!nweight)
-            break;
-
-        const int choice = va_arg(args, int);
-        if (random2(cweight += nweight) < nweight)
-            chosen = static_cast<T>(choice);
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-
-    return chosen;
+    return curr;
 }
 
-const char* random_choose_weighted(int weight, const char* first, ...);
+template <typename T, typename... Args>
+T random_choose_weighted(int cweight, T curr, int nweight, T next, Args... args)
+{
+    return random_choose_weighted<T>(cweight + nweight,
+                                     random2(cweight+nweight) < nweight ? next
+                                                                        : curr,
+                                     args...);
+}
 
 struct dice_def
 {
     int num;
     int size;
 
-    dice_def() : num(0), size(0) {}
-    dice_def(int n, int s) : num(n), size(s) {}
+    constexpr dice_def() : num(0), size(0) {}
+    constexpr dice_def(int n, int s) : num(n), size(s) {}
     int roll() const;
 };
+
+constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
 dice_def calc_dice(int num_dice, int max_damage);
 
@@ -204,7 +194,7 @@ void shuffle_array(T *arr, int n)
 
 /**
  * A defer_rand object represents an infinite tree of random values, allowing
- * for a much more functional approach to randomness.  defer_rand values which
+ * for a much more functional approach to randomness. defer_rand values which
  * have been used should not be copy-constructed. Querying the same path
  * multiple times will always give the same result.
  *
@@ -260,5 +250,3 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     ASSERT(result >= 0);
     return result;
 }
-
-#endif

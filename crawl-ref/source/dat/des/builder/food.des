@@ -20,11 +20,11 @@ end
 # Guarantee at least some really minimal food supply.
 ##########################################################################
 
-NAME:   first_bread
+NAME:   first_ration
 DEPTH:  D:2-5
 CHANCE: 2500, 3333 (D:3), 5000 (D:4), 10000 (D:5)
 TAGS:   uniq_first_food extra transparent
-ITEM:   bread ration
+ITEM:   ration
 MAP
 d
 ENDMAP
@@ -35,8 +35,6 @@ ENDMAP
 # These should give around 20k nutrition.  Currently all strict
 # carnivores have a large buffer so they can survive lulls in edible supply
 # well until Crypt, so all-veggie is ok.
-#
-# normal/herbi/carni
 
 ##############################################################################
 # A number of fruity vaults, by blue_anna
@@ -47,14 +45,10 @@ ENDMAP
 #
 # TODO: Using KMONS and KITEM, we could have fruits on the same
 #       square as a plant, though it'd change nutrition averages.
-#
-# The average of the old averages, for herbivore 3, seemed to have
-# been ~10.1k nutrition. It now provides that much more directly.
-#
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup unrand
 KMONS:  P = plant
-ITEM:   fruit q:4
+ITEM:   ration
 NSUBST: . = 1:d / *:., " = 2:d / *:.
 FTILE:  .dP = floor_grey_dirt / floor_grass w:20 / floor_dirt w:15
 COLOUR: .dP = lightgrey / green w:20 / brown w:15
@@ -65,7 +59,6 @@ MAP
 .....
 ENDMAP
 
-# 17.6k/26.6k/0
 NAME:   the_bakery
 DEPTH:  D:7-14
 # Previously this was a 25% CHANCE; I'm assuming this was meant to weight this
@@ -75,7 +68,7 @@ DEPTH:  D:7-14
 : food_weight(_G, 7)
 WEIGHT: 25
 TAGS:   uniq_second_food extra chance_second_food
-ITEM:   bread ration q:2
+ITEM:   ration q:2
 : if crawl.one_chance_in(8) then
 :   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
 : else
@@ -91,18 +84,18 @@ x.1xxx
 x+xxxx
 ENDMAP
 
-# 14k
 NAME:   david_nohive_1
 DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   royal jelly
+ITEM:   ration tile:food_honeycomb
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
 NSUBST: 2 = 12:2 / * = 2.
+SUBST:  d = d.
 MAP
 ............
 ....aaaa....
@@ -118,7 +111,6 @@ MAP
 ............
 ENDMAP
 
-# 20.6k/46.5k/0
 NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
 : food_weight(_G, 8)
@@ -141,7 +133,6 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
-# 23.2k/19.9k/13k
 # Not really a fish farm now that fish are gone...
 NAME:   hangedman_fish_farm
 DEPTH:  D:9-14
@@ -151,7 +142,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
         patrolling
 KMONS:  A = merfolk ; spear
 KFEAT:  g = shallow_water
-ITEM:   meat ration q:2, bread ration q:3, throwing net
+ITEM:   ration q:2, throwing net
 :       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
 MAP
 xxxxxx
@@ -161,26 +152,23 @@ xWWWWx
 xxxxxx
 ENDMAP
 
-# 18k/18.8k/16.6k (min 18k/12k/12k), plus perishable 6k/6k/0
 NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   wasp / worm w:5 / worker ant
-MONS:   wasp w:7 / soldier ant w:13
-ITEM:   beef jerky q:3 / fruit q:3
-ITEM:   royal jelly q:3, royal jelly q:6
+MONS:   hornet / worm w:5 / worker ant
+MONS:   hornet w:7 / soldier ant w:13
+ITEM:   ration q:1 w:40 / ration q:2 w:10
 MAP
 .xxxxxxx
 @xx.x.xcccc
- ..x1x2cdec
-@xx.x.x+fdc
+ ..x1x2cddc
+@xx.x.x+ddc
 .x1x.x2cccc
  xxxxxxx
 ENDMAP
 
-# 25k (min 20k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 : food_weight(_G, 8)
@@ -191,7 +179,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = royal jelly q:10
+KITEM:  C = ration q:4
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MARKER: + = lua:props_marker({ door_restrict="veto" })
@@ -205,7 +193,6 @@ MAP
  .Wxxxxxx
 ENDMAP
 
-# 22.3k/18.8k/19k (min 9.6k)
 NAME:     hangedman_ranch
 DEPTH:    D:8-14
 : food_weight(_G, 8)
@@ -213,15 +200,15 @@ WEIGHT:   10
 TAGS:     uniq_second_food extra chance_second_food no_monster_gen patrolling
 SUBVAULT: Z : fruiting_plant
 KMONS:    A = three-headed hydra / w:5 two-headed hydra
-KMONS:    B = sheep
+KMONS:    B = dream sheep
 KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = slice of pizza q:3
+KITEM:    C = ration
 KITEM:    E = falchion ego:flaming ident:type / \
               hand axe ego:flaming ident:type
-KITEM:    H = meat ration q:2
+KITEM:    H = ration q:2
 KITEM:    I = halberd
 KFEAT:    EF = shallow_water
 MAP
@@ -237,54 +224,6 @@ xFFW.W.W.x
 xxxxx@xxxx
 ENDMAP
 
-# 15.3k/34.2k/0
-NAME:   hangedman_tree_tricks
-DEPTH:  D:8-14
-: food_weight(_G, 8)
-WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen
-NSUBST: T = 1:. / 1:t
-KMONS:  1 = oklob sapling
-KITEM:  1A_ = fruit q:3
-KFEAT:  _ = altar_fedhas
-MAP
- tttttttttt
-tttt.ttttttt
-@tt.t.tttttt
-t.tt.t.Tt2tt
-t.t.ttT.A.tt
-t.t.tttA_Att
-t.t.tt2.Attt
-tt.ttttttttt
- tttttttttt
-ENDMAP
-
-# 16.8k/21.3/8k
-NAME:   hangedman_tell_no_tales
-DEPTH:  D:9-14
-: food_weight(_G, 9)
-WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food
-TAGS:   no_monster_gen no_item_gen patrolling
-MONS:   spriggan skeleton / centaur skeleton
-MONS:   troll skeleton / hungry ghost
-KMONS:  A = unseen horror w:16 / nothing w:4
-ITEM:   fruit q:1
-ITEM:   royal jelly q:2
-ITEM:   bread ration q:3
-SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
-MAP
- cccccccccc
-ccxx1x1+DDc
-c.x.x..mDDc
-@.d.x2.mDDc
-c.x.x..cc+c
-ccxx1x.c1fc
- cccccccccc
-ENDMAP
-
-# 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
 DEPTH:   D:10-14
 : food_weight(_G, 8)
@@ -302,8 +241,8 @@ KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
-KITEM:   Ya = bread ration / meat ration
-KITEM:   b = royal jelly / fruit q:1
+KITEM:   Ya = ration
+KITEM:   b = ration / nothing w:12
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
@@ -324,7 +263,6 @@ MAP
  .......
 ENDMAP
 
-# 22.0k/29.5k/0
 # A tengu has staked out a little piece of the dungeon.
 NAME:   grunt_tengu_nest
 DEPTH:  D:10-14
@@ -333,7 +271,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu warrior / tengu conjurer, plant
 NSUBST: 2 : 3:2 / *:.
-ITEM:   bread ration / fruit q:7
+ITEM:   ration
 MAP
  xx+xx
 xx2.2xx
@@ -344,7 +282,6 @@ xxdddxx
  xxxxx
 ENDMAP
 
-# 22.2k/17.7k/12.6k
 # An ogre roasts intruders over his little campfire.
 NAME:   grunt_ogre_cave
 DEPTH:  D:7-14
@@ -365,7 +302,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
-ITEM:   bread ration q:3, beef jerky q:3, throwing net
+ITEM:   ration q:3, ration q:1, throwing net
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -383,7 +320,35 @@ xx.xxx.
   @
 ENDMAP
 
-# 20.8k/23.8k/12.0k
+NAME:   grunt_livestock
+DEPTH:  D:7-14
+: food_weight(_G, 7)
+WEIGHT: 15
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+MONS:   human ; animal skin . hand axe
+{{
+  local hog_weight = 14 - you.absdepth()
+  if hog_weight <= 0 then
+    mons("yak")
+  else
+    mons("hog w:" .. hog_weight .. " / yak w:1")
+  end
+}}
+ITEM:   ration q:2
+ITEM:   ration q:1
+KFEAT:  K = iron_grate
+KFEAT:  - = open_door
+MAP
+.xxxxxxx
+@+...edx
+.x...1dx
+ xKK-KKx
+ x2...2x
+ x.2.2.x
+ xxxxxxx
+ENDMAP
+
 # Welcome to Pandemonium Pizzeria; is this for carry-out or delivery?
 # (Ideally the cashier would have a silly hat, but they can't wear hats.)
 NAME:   grunt_pizzeria
@@ -395,7 +360,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
 MONS:   human ; short sword | rapier / \
         orc warrior ; dagger / \
         spriggan ; dagger
-ITEM:   slice of pizza q:8, bread ration q:2
+ITEM:   ration tile:food_pizza
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -409,34 +374,4 @@ xmmm.xx
 x.....x
 xmm+mmx
  ..@..
-ENDMAP
-
-# 22.6k/22.6k/15k (+ perishable up to 16k, avg 6k)
-NAME:   grunt_livestock
-DEPTH:  D:7-14
-: food_weight(_G, 7)
-WEIGHT: 15
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
-        patrolling
-MONS:   human ; animal skin . hand axe
-{{
-  local sheep_weight = 14 - you.absdepth()
-  if sheep_weight <= 0 then
-    mons("hog / yak")
-  else
-    mons("sheep w:" .. sheep_weight .. " / hog w:1 / yak w:1")
-  end
-}}
-ITEM:   slice of pizza q:7, bread ration q:2
-ITEM:   beef jerky q:2
-KFEAT:  K = iron_grate
-KFEAT:  - = open_door
-MAP
-.xxxxxxx
-@+...fdx
-.x...1ex
- xKK-KKx
- x2...2x
- x.2.2.x
- xxxxxxx
 ENDMAP

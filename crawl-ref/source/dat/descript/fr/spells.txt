@@ -178,10 +178,6 @@ Conjure Flame spell
 
 Ce sort crée une colonne de flammes ronflantes.
 %%%%
-Control Undead spell
-
-Ce sort tente d'asservir tous les morts-vivants à portée du sorcier.
-%%%%
 Controlled Blink spell
 
 Ce sort permet une translocation à courte distance, avec un contrôle précis.
@@ -243,12 +239,6 @@ Ce sort protège le sorcier de toutes attaques par projectiles, en les rendant
 plus facile à esquiver. Ce sort est extrêmement efficace contre les attaques
 mono-cible et pénétrantes. Chaque fois qu'un projectile est dévié, le sort
 risque d'expirer avec des chances plus faibles à haute puissance.
-%%%%
-Delayed Fireball spell
-
-Incanter avec succès ce sort donne au sorcier l'habilité de relâcher
-instantanément une boule de feu plus tard. Connaitre ce sortilège permet au
-sorcier d'apprendre Boule de feu sans coût additionnel de niveau de sort.
 %%%%
 Dig spell
 

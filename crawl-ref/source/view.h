@@ -3,16 +3,15 @@
  * @brief Misc function used to render the dungeon.
 **/
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "defines.h"
 #include "options.h"
-#include "player.h" // check_stealth()
+#include "player.h" // player_stealth()
 #include "viewgeom.h"
 
 bool mon_enemies_around(const monster* mons);
-void seen_monsters_react(int stealth = check_stealth());
+void seen_monsters_react(int stealth = player_stealth());
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
@@ -24,7 +23,7 @@ string screenshot();
 int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
-class targetter;
+class targeter;
 
 static inline void scaled_delay(unsigned int ms)
 {
@@ -33,13 +32,15 @@ static inline void scaled_delay(unsigned int ms)
 
 // beware, flash_view is broken for USE_TILE_LOCAL
 void flash_view(use_animation_type a, colour_t colour,
-                targetter *where = nullptr);
+                targeter *where = nullptr);
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targetter *where = nullptr);
-#ifndef USE_TILE_LOCAL
+                      targeter *where = nullptr);
+
+// warning: this function is broken (and ifdef'd out) in local tiles.
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
-#endif
+
+
 
 enum animation_type
 {
@@ -79,5 +80,3 @@ void toggle_show_terrain();
 void reset_show_terrain();
 
 void handle_terminal_resize(bool redraw = true);
-
-#endif

@@ -3,8 +3,7 @@
  * @brief Functions used when Bad Things happen to the player.
 **/
 
-#ifndef OUCH_H
-#define OUCH_H
+#pragma once
 
 #define DEATH_NAME_LENGTH 10
 
@@ -94,4 +93,3 @@ void expose_player_to_element(beam_type flavour, int strength = 0,
 int timescale_damage(const actor *act, int damage);
 bool can_shave_damage();
 int do_shave_damage(int dam);
-#endif

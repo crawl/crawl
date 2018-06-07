@@ -33,7 +33,7 @@ class TextDB
 public:
     // db_name is the savedir-relative name of the db file,
     // minus the "db" extension.
-    TextDB(const char* db_name, const char* dir, ...);
+    TextDB(const char* db_name, const char* dir, vector<string> files);
     TextDB(TextDB *parent);
     ~TextDB() { shutdown(true); delete translation; }
     void init();
@@ -72,7 +72,7 @@ static void _add_entry(DBM *db, const string &k, string &v);
 static TextDB AllDBs[] =
 {
     TextDB("descriptions", "descript/",
-            "features.txt",
+          { "features.txt",
             "items.txt",
             "unident.txt",
             "unrand.txt",
@@ -85,60 +85,58 @@ static TextDB AllDBs[] =
             "cards.txt",
             "commands.txt",
             "clouds.txt",
-            "status.txt",
-            nullptr),
+            "status.txt" }),
 
     TextDB("gamestart", "descript/",
-            "species.txt",
-            "backgrounds.txt",
-            nullptr),
+          { "species.txt",
+            "backgrounds.txt" }),
 
     TextDB("randart", "database/",
-            "randname.txt",
+          { "randname.txt",
             "rand_wpn.txt", // mostly weapons
             "rand_arm.txt", // mostly armour
             "rand_all.txt", // jewellery and general
             "randbook.txt", // artefact books
             // This doesn't really belong here, but they *are* god gifts...
-            "monname.txt",  // orcish names for Beogh to choose from
-            nullptr),
+            "monname.txt"   // orcish names for Beogh to choose from
+            }),
 
     TextDB("speak", "database/",
-            "monspeak.txt", // monster speech
+          { "monspeak.txt", // monster speech
             "monspell.txt", // monster spellcasting speech
             "monflee.txt",  // monster fleeing speech
             "wpnnoise.txt", // noisy weapon speech
             "insult.txt",   // imp/demon taunts
-            "godspeak.txt", // god speech
-            nullptr),
+            "godspeak.txt"  // god speech
+            }),
 
     TextDB("shout", "database/",
-            "shout.txt",
-            "insult.txt",   // imp/demon taunts, again
-            nullptr),
+          { "shout.txt",
+            "insult.txt"    // imp/demon taunts, again
+            }),
 
     TextDB("misc", "database/",
-            "miscname.txt", // names for miscellaneous things
+          { "miscname.txt", // names for miscellaneous things
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
-            nullptr),
+            }),
 
     TextDB("quotes", "descript/",
-            "quotes.txt",   // quotes for items and monsters
-            nullptr),
+          { "quotes.txt"    // quotes for items and monsters
+            }),
 
     TextDB("help", "database/",
-            "help.txt",     // database for outsourced help texts
-            nullptr),
+          { "help.txt"      // database for outsourced help texts
+            }),
 
     TextDB("FAQ", "database/",
-            "FAQ.txt",      // database for Frequently Asked Questions
-            nullptr),
+          { "FAQ.txt",      // database for Frequently Asked Questions
+            }),
 
     TextDB("hints", "descript/",
-            "hints.txt",    // hints mode
+          { "hints.txt",    // hints mode
             "tutorial.txt", // tutorial mode
-            nullptr),
+            }),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -163,24 +161,10 @@ static string _db_cache_path(string db, const char *lang)
 // TextDB
 // ----------------------------------------------------------------------
 
-TextDB::TextDB(const char* db_name, const char* dir, ...)
-    : _db_name(db_name), _directory(dir),
+TextDB::TextDB(const char* db_name, const char* dir, vector<string> files)
+    : _db_name(db_name), _directory(dir), _input_files(files),
       _db(nullptr), timestamp(""), _parent(0), translation(0)
 {
-    va_list args;
-    va_start(args, dir);
-    while (true)
-    {
-        const char* input_file = va_arg(args, const char *);
-
-        if (input_file == 0)
-            break;
-
-        // probably forgot the terminating 0
-        ASSERT(strstr(input_file, ".txt") != 0);
-        _input_files.push_back(input_file);
-    }
-    va_end(args);
 }
 
 TextDB::TextDB(TextDB *parent)
@@ -331,39 +315,12 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
-#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS)
-static void* init_db(void *arg)
-{
-    AllDBs[(intptr_t)arg].init();
-    return 0;
-}
-#endif
-
 #define NUM_DB ARRAYSZ(AllDBs)
 
 void databaseSystemInit()
 {
-    // Note: if you're building contrib libraries initially checked out
-    // before 2011-12-28 and this assertion fails, please make sure you have
-    // the current version ("git submodule sync;git submodule update --init").
-    ASSERT(sqlite3_threadsafe());
-
-    thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
-// Using threads for loading on Windows at the moment seems to cause
-// random failures to find files (#5854); thus disabling it here until
-// we can identify what's going on.
-#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS)
-        if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
-#endif
-        {
-            // if thread creation fails, do it serially
-            th[i] = 0;
-            AllDBs[i].init();
-        }
-    for (unsigned int i = 0; i < NUM_DB; i++)
-        if (th[i])
-            thread_join(th[i]);
+        AllDBs[i].init();
 }
 
 void databaseSystemShutdown()

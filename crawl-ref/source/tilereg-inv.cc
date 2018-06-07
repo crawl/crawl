@@ -9,10 +9,11 @@
 #include "describe.h"
 #include "env.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-status-flag-type.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -20,9 +21,10 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
 #include "rot.h"
 #include "spl-book.h"
+#include "stringutil.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-icons.h"
@@ -53,7 +55,7 @@ void InventoryRegion::pack_buffers()
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
-                tileidx_t t = env.tile_default.floor + m_flavour[i] % num_floor;
+                tileidx_t t = env.tile_default.floor + i % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
             else
@@ -164,27 +166,28 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         tiles.set_need_redraw();
         if (on_floor)
         {
-            if (event.mod & MOD_SHIFT)
+            if (event.mod & TILES_MOD_SHIFT)
                 tile_item_use_floor(idx);
             else
-                tile_item_pickup(idx, (event.mod & MOD_CTRL));
+                tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
         }
         else
         {
-            if (event.mod & MOD_SHIFT)
-                tile_item_drop(idx, (event.mod & MOD_CTRL));
-            else if (event.mod & MOD_CTRL)
+            if (event.mod & TILES_MOD_SHIFT)
+                tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
+            else if (event.mod & TILES_MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
                 tile_item_use(idx);
         }
+        update();
         return CK_MOUSE_CMD;
     }
     else if (event.button == MouseEvent::RIGHT)
     {
         if (on_floor)
         {
-            if (event.mod & MOD_SHIFT)
+            if (event.mod & TILES_MOD_SHIFT)
             {
                 m_last_clicked_item = item_idx;
                 tiles.set_need_redraw();
@@ -408,7 +411,6 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-            case OBJ_RODS:
                 if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
@@ -428,18 +430,12 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                if (item.sub_type >= MISC_DECK_OF_ESCAPE
-                    && item.sub_type <= MISC_DECK_OF_DEFENCE)
-                {
-                    _handle_wield_tip(tmp, cmd);
-                    break;
-                }
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
             case OBJ_MISCELLANY + EQUIP_OFFSET:
-                if (item.sub_type >= MISC_DECK_OF_ESCAPE
-                    && item.sub_type <= MISC_DECK_OF_DEFENCE)
+                if (item.sub_type >= MISC_FIRST_DECK
+                    && item.sub_type <= MISC_LAST_DECK)
                 {
                     tmp += "Draw a card (%)";
                     cmd.push_back(CMD_EVOKE_WIELDED);
@@ -602,11 +598,7 @@ bool InventoryRegion::update_alt_text(string &alt)
     else
         get_item_desc(*item, inf);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 
@@ -655,19 +647,17 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
         // -1 specifies don't display anything
         desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
     }
-    else if (type == OBJ_WANDS
-             && ((item.flags & ISFLAG_KNOW_PLUSES)
-                 || item.used_count == ZAPCOUNT_EMPTY))
-    {
+    else if (type == OBJ_WANDS && item.flags & ISFLAG_KNOW_TYPE)
         desc.quantity = item.charges;
-    }
-    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.charges / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR || type == OBJ_RODS)
+        || type == OBJ_ARMOUR
+#if TAG_MAJOR_VERSION == 34
+        || type == OBJ_RODS
+#endif
+       )
     {
         desc.special = tileidx_known_brand(item);
     }
@@ -698,7 +688,7 @@ void InventoryRegion::update()
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
-    ucs_t c;
+    char32_t c;
     const char *tp = Options.tile_show_items.c_str();
     int s;
     do // Do one last iteration with the 0 char at the end.
@@ -729,7 +719,7 @@ void InventoryRegion::update()
             _fill_item_info(desc, get_item_info(you.inv[i]));
             desc.idx = i;
 
-            for (int eq = 0; eq < NUM_EQUIP; ++eq)
+            for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
             {
                 if (you.equip[eq] == i)
                 {

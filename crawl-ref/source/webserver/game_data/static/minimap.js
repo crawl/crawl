@@ -64,6 +64,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         }
 
         $("#minimap, #minimap_overlay").css("display", display);
+        // suppress rclick menu (so we can rclick to view)
+        $("#minimap")[0].oncontextmenu =  function() { return false; }
+        overlay.oncontextmenu =  function() { return false; }
     }
 
     function clear()
@@ -128,6 +131,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function init_options()
     {
+        // This must match the order of map_feature in map-feature.h
         minimap_colours = [
             options.get("tile_unseen_col"),         // MF_UNSEEN
             options.get("tile_floor_col"),          // MF_FLOOR
@@ -136,8 +140,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_mapped_wall_col"),    // MF_MAP_WALL
             options.get("tile_door_col"),           // MF_DOOR
             options.get("tile_item_col"),           // MF_ITEM
-            options.get("tile_monster_col"),       // MF_MONS_FRIENDLY
-            options.get("tile_monster_col"),       // MF_MONS_PEACEFUL
+            options.get("tile_monster_col"),        // MF_MONS_FRIENDLY
+            options.get("tile_monster_col"),        // MF_MONS_PEACEFUL
             options.get("tile_monster_col"),        // MF_MONS_NEUTRAL
             options.get("tile_monster_col"),        // MF_MONS_HOSTILE
             options.get("tile_plant_col"),          // MF_MONS_NO_EXP
@@ -152,7 +156,10 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_excluded_col"),       // MF_EXCL
             options.get("tile_player_col"),         // MF_PLAYER
             options.get("tile_deep_water_col"),     // MF_DEEP_WATER
-            options.get("tile_portal_col")          // MF_PORTAL
+            options.get("tile_portal_col"),         // MF_PORTAL
+            options.get("tile_transporter_col"),    // MF_TRANSPORTER
+            options.get("tile_transporter_landing_col"), // MF_TRANSPORTER_LANDING
+            options.get("tile_explore_horizon_col") // MF_EXPLORE_HORIZON
         ].map(vcolour_to_css_colour);
     }
 
@@ -225,7 +232,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             .mousedown(minimap_farview)
             .mousemove(minimap_farview)
             .mouseup(stop_minimap_farview)
-            .bind("contextmenu", function(ev) { ev.preventDefault(); });
     });
 
     return {

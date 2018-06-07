@@ -19,12 +19,15 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
-#include "godpassive.h"
-#include "godabil.h"
+#include "god-passive.h"
+#include "god-abil.h"
+#include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -36,6 +39,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "tiledef-gui.h"    // spell tiles
+#include "tiles-build-specific.h"
 #include "transform.h"
 
 struct spell_desc
@@ -216,13 +220,24 @@ int get_spell_slot_by_letter(char letter)
 
 static int _get_spell_slot(spell_type spell)
 {
+    // you.spells is a FixedVector of spells in some arbitrary order. It
+    // doesn't corespond to letters.
     auto i = find(begin(you.spells), end(you.spells), spell);
     return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
 
+static int _get_spell_letter_from_slot(int slot)
+{
+    // you.spell_letter_table is a FixedVector that is basically a mapping
+    // from alpha char indices to spell slots (e.g. indices in you.spells).
+    auto letter = find(begin(you.spell_letter_table), end(you.spell_letter_table), slot);
+    return letter == end(you.spell_letter_table) ? -1 : letter - begin(you.spell_letter_table);
+}
+
 int get_spell_letter(spell_type spell)
 {
-    return index_to_letter(_get_spell_slot(spell));
+    int i = _get_spell_letter_from_slot(_get_spell_slot(spell));
+    return (i == -1) ? -1 : index_to_letter(i);
 }
 
 spell_type get_spell_by_letter(char letter)
@@ -236,18 +251,18 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
-    int i;
-    int j = -1;
+    int slot_i;
+    int letter_j = -1;
     string sname = spell_title(spell);
     lowercase(sname);
     // first we find a slot in our head:
-    for (i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (slot_i = 0; slot_i < MAX_KNOWN_SPELLS; slot_i++)
     {
-        if (you.spells[i] == SPELL_NO_SPELL)
+        if (you.spells[slot_i] == SPELL_NO_SPELL)
             break;
     }
 
-    you.spells[i] = spell;
+    you.spells[slot_i] = spell;
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
@@ -264,54 +279,54 @@ bool add_spell_to_memory(spell_type spell)
                 overwrite = false;
             else if (isaalpha(ch))
             {
-                const int slot = letter_to_index(ch);
-                const int existing = you.spell_letter_table[slot];
-                if (existing == -1)
+                const int new_letter = letter_to_index(ch);
+                const int existing_slot = you.spell_letter_table[new_letter];
+                if (existing_slot == -1)
                 {
-                    j = slot;
+                    letter_j = new_letter;
                     break;
                 }
                 else if (overwrite)
                 {
                     const string ename = lowercase_string(
-                            spell_title(static_cast<spell_type>(existing)));
+                            spell_title(get_spell_by_letter(ch)));
                     // Don't overwrite a spell matched by the same rule.
                     if (!entry.first.matches(ename))
                     {
-                        j = slot;
+                        letter_j = new_letter;
                         break;
                     }
                 }
                 // Otherwise continue on to the next letter in this rule.
             }
         }
-        if (j != -1)
+        if (letter_j != -1)
             break;
     }
     // If we didn't find a label above, choose the first available one.
-    if (j == -1)
-        for (j = 0; j < 52; j++)
+    if (letter_j == -1)
+        for (letter_j = 0; letter_j < 52; letter_j++)
         {
-            if (you.spell_letter_table[j] == -1)
+            if (you.spell_letter_table[letter_j] == -1)
                 break;
         }
 
     if (you.num_turns)
-        mprf("Spell assigned to '%c'.", index_to_letter(j));
+        mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
     // Swapping with an existing spell.
-    if (you.spell_letter_table[j] != -1)
+    if (you.spell_letter_table[letter_j] != -1)
     {
         // Find a spot for the spell being moved. Assumes there will be one.
-        for (int free = 0; free < 52; free++)
-            if (you.spell_letter_table[free] == -1)
+        for (int free_letter = 0; free_letter < 52; free_letter++)
+            if (you.spell_letter_table[free_letter] == -1)
             {
-                you.spell_letter_table[free] = you.spell_letter_table[j];
+                you.spell_letter_table[free_letter] = you.spell_letter_table[letter_j];
                 break;
             }
     }
 
-    you.spell_letter_table[j] = i;
+    you.spell_letter_table[letter_j] = slot_i;
 
     you.spell_no++;
 
@@ -340,24 +355,6 @@ static void _remove_spell_attributes(spell_type spell)
                                  you.missile_deflection() < orig_defl
                                  ? "less protected"
                                  : "your spell is no longer protecting you");
-        }
-        break;
-    case SPELL_REPEL_MISSILES:
-        if (you.attribute[ATTR_REPEL_MISSILES])
-        {
-            const int orig_defl = you.missile_deflection();
-            you.attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel %s from missiles.",
-                                 you.missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
-        }
-        break;
-    case SPELL_DELAYED_FIREBALL:
-        if (you.attribute[ATTR_DELAYED_FIREBALL])
-        {
-            you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         }
         break;
     default:
@@ -403,7 +400,7 @@ bool del_spell_from_memory(spell_type spell)
         return del_spell_from_memory_by_slot(i);
 }
 
-int spell_hunger(spell_type which_spell, bool rod)
+int spell_hunger(spell_type which_spell)
 {
     if (player_energy())
         return 0;
@@ -419,13 +416,7 @@ int spell_hunger(spell_type which_spell, bool rod)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    if (rod)
-    {
-        hunger -= you.skill(SK_EVOCATIONS, 10);
-        hunger = max(hunger, level * 5);
-    }
-    else
-        hunger -= you.skill(SK_SPELLCASTING, you.intel());
+    hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;
@@ -437,7 +428,8 @@ int spell_hunger(spell_type which_spell, bool rod)
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
 {
-    return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION;
+    return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -483,7 +475,7 @@ int spell_difficulty(spell_type which_spell)
 int spell_levels_required(spell_type which_spell)
 {
     int levels = spell_difficulty(which_spell);
-
+#if TAG_MAJOR_VERSION == 34
     if (which_spell == SPELL_DELAYED_FIREBALL
         && you.has_spell(SPELL_FIREBALL))
     {
@@ -494,6 +486,7 @@ int spell_levels_required(spell_type which_spell)
     {
         levels = 0;
     }
+#endif
 
     return levels;
 }
@@ -590,26 +583,6 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where)
 
     for (adjacent_iterator ai(where, true); ai; ++ai)
         rv += cf(*ai);
-
-    return rv;
-}
-
-// Like apply_area_around_square, but for monsters in those squares,
-// and takes care not to affect monsters twice that change position.
-int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int radius)
-{
-    int rv = 0;
-    set<const monster*> affected;
-    for (radius_iterator ri(where, radius, C_SQUARE, true); ri; ++ri)
-    {
-        monster* mon = monster_at(*ri);
-        if (mon && !affected.count(mon))
-        {
-            rv += mf(mon);
-            affected.insert(mon);
-        }
-    }
 
     return rv;
 }
@@ -737,14 +710,12 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       const actor *agent,
-                       int spread_rate, int colour, string name,
-                       string tile, int excl_rad)
+                       const actor *agent, int spread_rate, int excl_rad)
 {
     if (number <= 0)
         return;
 
-    targetter_cloud place(agent, GDM, number, number);
+    targeter_cloud place(agent, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
@@ -761,7 +732,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 
         if (place.seen[c] <= 0 || cell_is_solid(c))
             continue;
-        func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
+        func(c, pow, spread_rate, ctype, agent, excl_rad);
         number--;
     }
 }
@@ -823,8 +794,6 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype)
         return "Necr";
     case SPTYP_SUMMONING:
         return "Summ";
-    case SPTYP_DIVINATION:
-        return "Divn";
     case SPTYP_TRANSLOCATION:
         return "Tloc";
     case SPTYP_POISON:
@@ -860,8 +829,6 @@ const char* spelltype_long_name(spschool_flag_type which_spelltype)
         return "Necromancy";
     case SPTYP_SUMMONING:
         return "Summoning";
-    case SPTYP_DIVINATION:
-        return "Divination";
     case SPTYP_TRANSLOCATION:
         return "Translocation";
     case SPTYP_POISON:
@@ -895,7 +862,6 @@ skill_type spell_type2skill(spschool_flag_type spelltype)
     case SPTYP_AIR:            return SK_AIR_MAGIC;
 
     default:
-    case SPTYP_DIVINATION:
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return SK_NONE;
     }
@@ -975,7 +941,7 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool player_spell)
+int spell_range(spell_type spell, int pow, bool allow_bonus)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
@@ -985,14 +951,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     if (maxrange < 0)
         return maxrange;
 
-    // Sandblast is a special case.
-    if (spell == SPELL_SANDBLAST && wielding_rocks())
-    {
-        minrange++;
-        maxrange++;
-    }
-
-    if (player_spell
+    if (allow_bonus
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
@@ -1043,6 +1002,7 @@ int spell_effect_noise(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_IGNITION:
         expl_size = 1;
         break;
 
@@ -1070,7 +1030,7 @@ int spell_effect_noise(spell_type spell)
  * Does the given spell map to a player transformation?
  *
  * @param spell     The spell in question.
- * @return          Whether the spell, when cast, sets a TRAN_ on the player.
+ * @return          Whether the spell, when cast, puts the player in a form.
  */
 bool spell_is_form(spell_type spell)
 {
@@ -1099,16 +1059,14 @@ bool spell_is_form(spell_type spell)
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ *                   false if it is a spell being cast normally.
  * @return           Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
+bool spell_is_useless(spell_type spell, bool temp, bool prevent,
                       bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent,
-                                    evoked, fake_spell) != "";
+    return !spell_uselessness_reason(spell, temp, prevent, fake_spell).empty();
 }
 
 /**
@@ -1120,23 +1078,22 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ *                   false if it is a spell being cast normally.
  * @return           The reason a spell is useless to the player, if it is;
  *                   "" otherwise. The string should be a full clause, but
  *                   begin with a lowercase letter so callers can put it in
  *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool evoked, bool fake_spell)
+                                bool fake_spell)
 {
     if (temp)
     {
         if (!fake_spell && you.duration[DUR_CONF] > 0)
             return "you're too confused.";
         if (!enough_mp(spell_mana(spell), true, false)
-            && !evoked && !fake_spell)
+            && !fake_spell)
         {
             return "you don't have enough magic.";
         }
@@ -1145,42 +1102,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (!fake_spell && !evoked
-        && cannot_use_schools(get_spell_disciplines(spell)))
-    {
+    if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
-    }
-
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
-            return "you're too hot.";
-
-        if (spell == SPELL_LEDAS_LIQUEFACTION)
-            return "you can't cast this while perpetually flying.";
-    }
-
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (spell == SPELL_OZOCUBUS_ARMOUR)
-            return "your stony body would shatter the ice.";
-
-        if (temp && !temperature_effect(LORC_STONESKIN))
-        {
-            switch (spell)
-            {
-                case SPELL_STATUE_FORM:
-                case SPELL_ICE_FORM:
-                    return "you're too hot.";
-                default:
-                    break;
-            }
-        }
-
-    }
-#endif
 
     switch (spell)
     {
@@ -1189,15 +1112,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
-            return pluralise(species_name(you.species)) + " cannot teleport.";
+            return "your stasis prevents you from teleporting.";
 
         if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));
         break;
 
     case SPELL_SWIFTNESS:
-        if (temp && !prevent)
+        if (temp)
         {
+            if (you.duration[DUR_SWIFTNESS])
+                return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already traveling as fast as you can.";
             if (you.is_stationary())
@@ -1212,16 +1137,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
-        if (!prevent && temp && (you.haloed() || have_passive(passive_t::halo)))
+        if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
         break;
 
-    case SPELL_REPEL_MISSILES:
-        if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                        || you.scan_artefacts(ARTP_RMSL, true)))
-        {
-            return "you're already repelling missiles.";
-        }
+    case SPELL_DEFLECT_MISSILES:
+        if (temp && you.attribute[ATTR_DEFLECT_MISSILES])
+            return "you're already deflecting missiles.";
         break;
 
     case SPELL_STATUE_FORM:
@@ -1251,9 +1173,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
-    case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
+        if (temp
+            && (!you.weapon()
+                || you.weapon()->base_type != OBJ_WEAPONS
+                || !is_brandable_weapon(*you.weapon(), true)))
+        {
+            return "you aren't wielding a brandable weapon.";
+        }
+        // intentional fallthrough
+    case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
@@ -1261,20 +1190,27 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (temp && (!you.stand_on_solid_ground()
-                        || you.duration[DUR_LIQUEFYING]
-                        || liquefied(you.pos())))
+                     || you.duration[DUR_LIQUEFYING]
+                     || liquefied(you.pos())))
         {
             return "you must stand on solid ground to cast this.";
         }
         break;
 
-    case SPELL_DELAYED_FIREBALL:
-        if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
-            return "you are already charged.";
-        break;
-
     case SPELL_BORGNJORS_REVIVIFICATION:
+        if (temp && you.hp == you.hp_max)
+            return "you cannot be healed further.";
+        if (temp && you.hp_max < 21)
+            return "you lack the resilience to cast this spell.";
+        // Prohibited to all undead.
+        if (you.undead_state(temp))
+            return "you're too dead.";
+        break;
     case SPELL_DEATHS_DOOR:
+        if (temp && you.duration[DUR_DEATHS_DOOR])
+            return "you are already standing in death's doorway.";
+        if (temp && you.duration[DUR_DEATHS_DOOR_COOLDOWN])
+            return "you are still too close to death's doorway.";
         // Prohibited to all undead.
         if (you.undead_state(temp))
             return "you're too dead.";
@@ -1285,14 +1221,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead.";
         break;
 
-    case SPELL_CURE_POISON:
-        // no good for poison-immune species (ghoul, mummy, garg)
-        if (player_res_poison(false, temp, temp) == 3
-            // allow starving vampires to memorize cpois
-            && you.undead_state() != US_SEMI_UNDEAD)
-        {
-            return "you can't be poisoned.";
-        }
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (temp && !player_effectively_in_light_armour())
+            return "your body armour is too heavy.";
+        if (temp && you.form == transformation::statue)
+            return "the film of ice won't work on stone.";
+        if (temp && you.duration[DUR_FIRE_SHIELD])
+            return "your ring of flames would instantly melt the ice.";
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
@@ -1305,7 +1240,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no blood to sublime.";
         }
         if (you.magic_points == you.max_magic_points && temp)
-            return "your magic capacity is already full.";
+            return "your reserves of magic are already full.";
         break;
 
     case SPELL_TORNADO:
@@ -1329,15 +1264,33 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can only summon one forest at a time.";
         break;
 
+    case SPELL_PASSWALL:
+        if (temp && you.is_stationary())
+            return "you can't move.";
+        break;
+
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
-    case SPELL_TWISTED_RESURRECTION:
-    case SPELL_CONTROL_UNDEAD:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
-        if (player_mutation_level(MUT_NO_LOVE))
+    case SPELL_INFESTATION:
+        if (you.get_mutation_level(MUT_NO_LOVE))
             return "you cannot coerce anything to obey you.";
         break;
+
+    case SPELL_CORPSE_ROT:
+    case SPELL_POISONOUS_VAPOURS:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_MEPHITIC_CLOUD:
+        if (temp && env.level_state & LSTATE_STILL_WINDS)
+            return "the air is too still for clouds to form.";
+        break;
+
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (orb_limits_translocation(temp))
+            return "the Orb prevents this spell from working.";
 
     default:
         break;
@@ -1345,8 +1298,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (get_spell_disciplines(spell) & SPTYP_SUMMONING
         && spell != SPELL_AURA_OF_ABJURATION
-        && spell != SPELL_RECALL
-        && player_mutation_level(MUT_NO_LOVE))
+        && you.get_mutation_level(MUT_NO_LOVE))
     {
         return "you cannot coerce anything to answer your summons.";
     }
@@ -1360,33 +1312,39 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
  * @param spell           The type of spell to be coloured.
  * @param default_colour   Colour to be used if the spell is unremarkable.
  * @param transient       If true, check if spell is temporarily useless.
- * @param rod_spell       If the spell being evoked from a rod.
+ * @param memcheck        If true, check if spell can be memorised
  * @return                The colour to highlight the spell.
  */
 int spell_highlight_by_utility(spell_type spell, int default_colour,
-                               bool transient, bool rod_spell)
+                               bool transient, bool memcheck)
 {
-    // If your god hates the spell, that
-    // overrides all other concerns
-    if (god_hates_spell(spell, you.religion, rod_spell)
+    // If your god hates the spell, that overrides all other concerns.
+    if (god_hates_spell(spell, you.religion)
         || is_good_god(you.religion) && you.spellcasting_unholy())
     {
         return COL_FORBIDDEN;
     }
-
+    // Grey out spells for which you lack experience or spell levels.
+    if (memcheck && (spell_difficulty(spell) > you.experience_level
+        || player_spell_levels() < spell_levels_required(spell)))
+    {
+        return COL_INAPPLICABLE;
+    }
+    // Check if the spell is considered useless based on your current status
     if (spell_is_useless(spell, transient))
-        default_colour = COL_USELESS;
+        return COL_USELESS;
 
     return default_colour;
 }
 
-bool spell_no_hostile_in_range(spell_type spell, bool rod)
+bool spell_no_hostile_in_range(spell_type spell)
 {
-    const int range = calc_spell_range(spell, 0, rod);
+    const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
+
     switch (spell)
     {
-    // These don't target monsters.
+    // These don't target monsters or can target features.
     case SPELL_APPORTATION:
     case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
@@ -1394,24 +1352,24 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-
-    // Shock and Lightning Bolt are no longer here, as the code below can
-    // account for possible bounces.
-
+    // This can always potentially hit out-of-LOS, although this is conditional
+    // on spell-power.
     case SPELL_FIRE_STORM:
         return false;
 
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return minRange > LOS_RADIUS;
+    case SPELL_INTOXICATE:
+    case SPELL_IGNITION:
+        return minRange > you.current_vision;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     {
-        targetter_cloud tgt(&you, range);
+        targeter_cloud tgt(&you, range);
         // Accept monsters that are in clouds for the hostiles-in-range check
         // (not for actual targeting).
         tgt.avoid_clouds = false;
@@ -1428,13 +1386,17 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
                 // Checks here are from get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
-                if (mons && !mons->wont_attack() && mons_is_threatening(mons))
+                if (mons && !mons->wont_attack() && mons_is_threatening(*mons))
                     return false;
             }
         }
 
         return true;
     }
+
+    case SPELL_IGNITE_POISON:
+        return cast_ignite_poison(&you, -1, false, true) == SPRET_ABORT;
+
     default:
         break;
     }
@@ -1442,24 +1404,27 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     if (minRange < 0 || range < 0)
         return false;
 
+    const unsigned int flags = get_spell_flags(spell);
+
     // The healing spells.
-    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
+    if (testbits(flags, SPFLAG_HELPFUL))
         return false;
 
-    const bool neutral = testbits(get_spell_flags(spell), SPFLAG_NEUTRAL);
+    const bool neutral = testbits(flags, SPFLAG_NEUTRAL);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
     beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
-    if (spell == SPELL_RANDOM_BOLT) // don't let it think that there are no susceptible monsters in range
+    // Don't let it think that there are no susceptible monsters in range
+    if (spell == SPELL_RANDOM_BOLT)
         zap = ZAP_DEBUGGING_RAY;
 
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true, false, true, rod), false,
+        zappy(zap, calc_spell_power(spell, true, false, true), false,
               beam);
         if (spell == SPELL_MEPHITIC_CLOUD)
             beam.damage = dice_def(1, 1); // so that foe_info is populated
@@ -1481,12 +1446,39 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
+
+        const bool smite = testbits(flags, SPFLAG_TARGET);
+
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT);
              ri; ++ri)
         {
             tempbeam = beam;
             tempbeam.target = *ri;
-            tempbeam.fire();
+
+            // For smite-targeted spells that aren't LOS-range.
+            if (smite)
+            {
+                // XXX These are basic checks that might be applicable to
+                // non-smiting spells as well. For those, the loop currently
+                // relies mostly on results from the temp beam firing, but it
+                // may be valid to exclude solid and non-reachable targets for
+                // all spells. -gammafunk
+                if (cell_is_solid(*ri) || !you.see_cell_no_trans(*ri))
+                    continue;
+
+                // XXX Currently Vile Clutch is the only smite-targeted area
+                // spell that isn't LOS-range. Spell explosion radii are not
+                // stored anywhere, defaulting to 1 for non-smite-targeting
+                // spells through bolt::refine_for_explosions() or being set in
+                // setup functions for the smite targeted explosions. It would
+                // be good to move basic explosion radius info into spell_desc
+                // or possibly zap_data. -gammafunk
+                tempbeam.ex_size = tempbeam.is_explosion ? 1 : 0;
+                tempbeam.explode();
+            }
+            else
+                tempbeam.fire();
+
             if (tempbeam.foe_info.count > 0
                 || neutral && tempbeam.friend_info.count > 0)
             {
@@ -1514,7 +1506,6 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_TRANSMUTATION_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
-    NUM_MUTATIONS, // SPTYP_DIVINATION
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_POISON_MAGIC,
     MUT_NO_EARTH_MAGIC,
@@ -1542,7 +1533,7 @@ bool cannot_use_schools(spschools_type schools)
 
         // check if the player has this school locked out
         const mutation_type lockout_mut = arcana_sacrifice_map[i];
-        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+        if (you.has_mutation(lockout_mut))
             return true;
     }
 

@@ -306,14 +306,6 @@ synderligt godt, så han har forvekslet dig med en harpy.
     end
 }}
 %%%%
-Wiglaf
-
-En fed dværg med en tåbeligt udseende hat. {{
-    if you.can_smell() then
-        return "Han stinker af sprit."
-    end
-}}
-%%%%
 Xtahua
 
 En ældgammel og mægtig drage.

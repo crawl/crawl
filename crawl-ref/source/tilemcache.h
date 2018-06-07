@@ -4,8 +4,7 @@
 **/
 
 #ifdef USE_TILE
-#ifndef TILEMCACHE_H
-#define TILEMCACHE_H
+#pragma once
 
 #include <vector>
 
@@ -80,5 +79,4 @@ protected:
 // The global monster cache.
 extern mcache_manager mcache;
 
-#endif
 #endif

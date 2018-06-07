@@ -6,8 +6,10 @@
 
 #include "libutil.h"
 #include "random.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilefont.h"
+#include "tiles-build-specific.h"
 
 InventoryTile::InventoryTile()
 {
@@ -26,18 +28,11 @@ bool InventoryTile::empty() const
 
 GridRegion::GridRegion(const TileRegionInit &init) :
     TileRegion(init),
-    m_flavour(nullptr),
     m_cursor(NO_CURSOR),
     m_last_clicked_item(-1),
     m_grid_page(0),
     m_buf(init.im)
 {
-}
-
-GridRegion::~GridRegion()
-{
-    delete[] m_flavour;
-    m_flavour = nullptr;
 }
 
 void GridRegion::clear()
@@ -48,18 +43,8 @@ void GridRegion::clear()
 
 void GridRegion::on_resize()
 {
-    if (m_flavour)
-    {
-        delete[] m_flavour;
-        m_flavour = nullptr;
-    }
-
-    if (mx * my <= 0)
-        return;
-
-    m_flavour = new unsigned char[mx * my];
-    for (int i = 0; i < mx * my; ++i)
-        m_flavour[i] = random2((unsigned char)~0);
+    // probably needed? mimicking MenuRegion::on_resize()
+    m_dirty = true;
 }
 
 unsigned int GridRegion::cursor_index() const

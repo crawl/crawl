@@ -3,13 +3,17 @@
  * @brief Functions related to ranged attacks.
 **/
 
-#ifndef BEAM_H
-#define BEAM_H
+#pragma once
 
+#include "ac-type.h"
+#include "beam-type.h"
+#include "enchant-type.h"
+#include "mon-attitude-type.h"
 #include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
+#include "zap-type.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -48,7 +52,7 @@ struct bolt
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
     int         range = -2;
-    ucs_t       glyph = '*';           // missile gfx
+    char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
     beam_type   flavour = BEAM_MAGIC;
     beam_type   real_flavour = BEAM_MAGIC; // for random and chaos beams this
@@ -99,8 +103,6 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
-    bool   evoked = false;        // Was this beam evoked from a wand?
-
     // Do we draw animations?
     bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
@@ -149,9 +151,7 @@ struct bolt
 
     ray_def     ray;             // shoot on this specific ray
 
-#ifdef USE_TILE
-    int         tile_beam;
-#endif
+    int         tile_beam; // only used if USE_TILE is defined
 
 private:
     bool can_see_invis = false;
@@ -180,9 +180,10 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
-    bool can_affect_wall(dungeon_feature_type feat) const;
+    bool can_affect_wall(const coord_def& p) const;
     bool ignores_monster(const monster* mon) const;
-    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
+    bool can_knockback(const actor &act, int dam = -1) const;
+    bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
@@ -206,7 +207,6 @@ public:
 private:
     void do_fire();
     void initialise_fire();
-    void apply_beam_conducts();
 
     // Lots of properties of the beam.
     coord_def pos() const;
@@ -226,7 +226,6 @@ private:
     bool need_regress() const;
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
-    bool pierces_shields() const;
     bool bush_immune(const monster &mons) const;
 
     set<string> message_cache;
@@ -247,7 +246,6 @@ private:
     void affect_wall();
     void digging_wall_effect();
     void burn_wall_effect();
-    void destroy_wall_effect();
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
@@ -268,6 +266,7 @@ private:
     void enchantment_affect_monster(monster* mon);
 public:
     mon_resist_type apply_enchantment_to_monster(monster* mon);
+    void apply_beam_conducts();
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
@@ -281,6 +280,7 @@ private:
     void internal_ouch(int dam);
     // for both
     void knockback_actor(actor *act, int dam);
+    void pull_actor(actor *act, int dam);
 
     // tracers
     void tracer_affect_player();
@@ -320,7 +320,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
-                  bool explode_only = false);
+                  bool explode_only = false, bool explosion_hole = false);
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
@@ -343,4 +343,5 @@ int explosion_noise(int rad);
 bool shoot_through_monster(const bolt& beam, const monster* victim);
 
 int omnireflect_chance_denom(int SH);
-#endif
+
+bolt setup_targetting_beam(const monster &mons);

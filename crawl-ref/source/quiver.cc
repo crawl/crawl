@@ -15,11 +15,12 @@
 
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
+#include "sound.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "throw.h"
@@ -159,6 +160,10 @@ void quiver_item(int slot)
         t = _get_weapon_ammo_type(weapon);
 
     you.m_quiver.set_quiver(you.inv[slot], t);
+
+#ifdef USE_SOUND
+    parse_sound(CHANGE_QUIVER_SOUND);
+#endif
     mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
          t == AMMO_BLOWGUN  ? "blowguns" :
@@ -176,9 +181,8 @@ void choose_item_for_quiver()
     }
 
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
-                                  MT_INVLIST,
-                                  OSEL_THROWABLE, true, true, true, '-',
-                                  -1, nullptr, OPER_QUIVER, false);
+                                  MT_INVLIST, OSEL_THROWABLE, OPER_QUIVER,
+                                  invprompt_flag::hide_known, '-');
 
     if (prompt_failed(slot))
         return;
@@ -238,7 +242,7 @@ void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
                                                     item);
 
         // Don't do anything if this item is not really fit for throwing.
-        if (projected == LRET_FUMBLED)
+        if (projected == launch_retval::FUMBLED)
             return;
 
 #ifdef DEBUG_QUIVER
@@ -340,7 +344,7 @@ void player_quiver::_maybe_fill_empty_slot()
 #endif
 
     const launch_retval desired_ret =
-         (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
+         (weapon && is_range_weapon(*weapon)) ? launch_retval::LAUNCHED : launch_retval::THROWN;
 
     vector<int> order;
     _get_fire_order(order, false, weapon, false);
@@ -410,7 +414,7 @@ void player_quiver::_get_fire_order(vector<int>& order,
             continue;
 
         // Don't do anything if this item is not really fit for throwing.
-        if (is_launched(&you, you.weapon(), item) == LRET_FUMBLED)
+        if (is_launched(&you, you.weapon(), item) == launch_retval::FUMBLED)
             continue;
 
         // =f prevents item from being in fire order.
@@ -588,7 +592,7 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
         case WPN_BLOWGUN:
             return AMMO_BLOWGUN;
         case WPN_HUNTING_SLING:
-        case WPN_GREATSLING:
+        case WPN_FUSTIBALUS:
             return AMMO_SLING;
         case WPN_SHORTBOW:
         case WPN_LONGBOW:

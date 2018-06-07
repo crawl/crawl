@@ -1,5 +1,4 @@
-#ifndef COORD_H
-#define COORD_H
+#pragma once
 
 coord_def random_in_bounds();
 
@@ -73,6 +72,4 @@ coord_def clamp_in_bounds(const coord_def &p) PURE;
 #else
 #  define ASSERT_IN_BOUNDS(where)           ((void) 0)
 #  define ASSERT_IN_BOUNDS_OR_ORIGIN(where) ((void) 0)
-#endif
-
 #endif

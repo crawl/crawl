@@ -21,7 +21,7 @@ function callback.dk_vehumet_trees_los(data, triggerable, triggerer, marker, ev)
   if not dgn.persist.dk_vt_tree_died and you.god() == "Vehumet" then
     crawl.mpr("Suddenly, the trees start to burn!")
     for slave in iter.slave_iterator("tree", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+        dgn.terrain_changed(slave.x, slave.y, "floor", false)
         dgn.place_cloud(slave.x, slave.y, "flame", crawl.random2(15) + 5)
     end
     triggerable:remove(marker)

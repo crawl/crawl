@@ -3,8 +3,7 @@
  * @brief Monster tentacle-related code.
 **/
 
-#ifndef MONTENTACLE_H
-#define MONTENTACLE_H
+#pragma once
 
 bool mons_is_tentacle_head(monster_type mc);
 bool mons_is_child_tentacle(monster_type mc);
@@ -18,7 +17,7 @@ monster_type mons_tentacle_parent_type(const monster* mons);
 monster_type mons_tentacle_child_type(const monster* mons);
 
 bool mons_tentacle_adjacent(const monster* parent, const monster* child);
-bool get_tentacle_head(const monster*& mon);
+const monster& get_tentacle_head(const monster& mon);
 
 void move_solo_tentacle(monster* tentacle);
 void move_child_tentacles(monster * kraken);
@@ -27,5 +26,3 @@ bool destroy_tentacle(monster* head);
 
 int mons_available_tentacles(monster* head);
 void mons_create_tentacles(monster* head);
-
-#endif

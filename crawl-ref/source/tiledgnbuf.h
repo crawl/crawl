@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEDGNBUF_H
-#define TILEDGNBUF_H
+#pragma once
 
 #include "tilebuf.h"
 #include "tilecell.h"
@@ -59,5 +58,4 @@ protected:
     TileBuffer m_buf_icons;
 };
 
-#endif
 #endif

@@ -109,11 +109,11 @@ function init_aquarium(e)
     e.kfeat('W = W')
     e.kmons('W = w:' .. nothing_weight .. [[ nothing /
                  w:10 generate_awake bat /
-                 w:5  generate_awake giant newt]] )
+                 w:5  generate_awake frilled lizard ]] )
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:50 fungus /
                  w:10 generate_awake bat /
-                 w:5  generate_awake giant newt]] )
+                 w:5  generate_awake frilled lizard ]] )
   elseif you.absdepth() <= 9 then
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
@@ -150,7 +150,6 @@ function init_aquarium(e)
                  w:1  generate_awake wolf spider simulacrum /
                  w:1  generate_awake wolf simulacrum /
                  w:1  generate_awake polar bear simulacrum /
-                 w:1  generate_awake boulder beetle simulacrum /
                  w:1  generate_awake fire dragon simulacrum /
                  w:1  generate_awake hydra simulacrum]] )
     e.ftile('! = floor_frozen')

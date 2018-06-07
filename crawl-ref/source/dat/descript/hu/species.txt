@@ -42,11 +42,6 @@ Halfling
 Kicsi de kemény, a félszerzet kiválóan bánik a parittyával. Enyhén ellenállóak
 mutációkkal szemben.
 %%%%
-High Elf
-
-Büszke tündék, akik épp oly jól használják a varázslatokat mint ahogy a kardot
-forgatják.
-%%%%
 Hill Orc
 
 Az orkok a közelharc mesterei, gyakran belekóstolnak a támadó mágiába is.

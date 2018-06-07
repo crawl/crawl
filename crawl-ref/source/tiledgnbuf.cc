@@ -4,6 +4,7 @@
 
 #include "env.h"
 #include "player.h"
+#include "tile-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
@@ -235,6 +236,12 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NW, x, y);
                 else if (bg & TILE_FLAG_TENTACLE_VINE)
                     m_buf_feat.add(TILE_VINE_OVERLAY_NW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_NW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_NW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_NW, x, y);
             }
             else if (bg & TILE_FLAG_TENTACLE_NE)
             {
@@ -246,6 +253,12 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NE, x, y);
                 else if (bg & TILE_FLAG_TENTACLE_VINE)
                     m_buf_feat.add(TILE_VINE_OVERLAY_NE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_NE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_NE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_NE, x, y);
             }
             else if (bg & TILE_FLAG_TENTACLE_SW)
             {
@@ -257,6 +270,12 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SW, x, y);
                 else if (bg & TILE_FLAG_TENTACLE_VINE)
                     m_buf_feat.add(TILE_VINE_OVERLAY_SW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_SW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_SW, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_SW, x, y);
             }
             else if (bg & TILE_FLAG_TENTACLE_SE)
             {
@@ -268,6 +287,12 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SE, x, y);
                 else if (bg & TILE_FLAG_TENTACLE_VINE)
                     m_buf_feat.add(TILE_VINE_OVERLAY_SE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_SE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_SE, x, y);
+                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                    m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_SE, x, y);
             }
         }
 
@@ -292,6 +317,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
+            if (cell.awakened_forest)
+                m_buf_icons.add(TILEI_BERSERK, x, y);
 
             if (cell.fg)
             {
@@ -312,15 +339,17 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
-        if (bg & TILE_FLAG_RAY)
-            m_buf_feat.add(TILE_RAY, x, y);
-        else if (bg & TILE_FLAG_RAY_OOR)
-            m_buf_feat.add(TILE_RAY_OUT_OF_RANGE, x, y);
-        else if (bg & TILE_FLAG_LANDING)
-            m_buf_feat.add(TILE_LANDING, x, y);
-        else if (bg & TILE_FLAG_RAY_MULTI)
-            m_buf_feat.add(TILE_RAY_MULTI, x, y);
     }
+
+    // allow rays even on completely unseen squares (e.g. passwall)
+    if (bg & TILE_FLAG_RAY)
+        m_buf_feat.add(TILE_RAY, x, y);
+    else if (bg & TILE_FLAG_RAY_OOR)
+        m_buf_feat.add(TILE_RAY_OUT_OF_RANGE, x, y);
+    else if (bg & TILE_FLAG_LANDING)
+        m_buf_feat.add(TILE_LANDING, x, y);
+    else if (bg & TILE_FLAG_RAY_MULTI)
+        m_buf_feat.add(TILE_RAY_MULTI, x, y);
 }
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
@@ -471,10 +500,45 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
         status_shift += 10;
     }
+    if (fg & TILE_FLAG_BOUND_SOUL)
+    {
+        m_buf_icons.add(TILEI_BOUND_SOUL, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_INFESTED)
+    {
+        m_buf_icons.add(TILEI_INFESTED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_CORRODED)
+    {
+        m_buf_icons.add(TILEI_CORRODED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_SWIFT)
+    {
+        m_buf_icons.add(TILEI_SWIFT, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_PINNED)
+    {
+        m_buf_icons.add(TILEI_PINNED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_RECALL)
     {
         m_buf_icons.add(TILEI_RECALL, x, y, -status_shift, 0);
         status_shift += 9;
+    }
+    if (fg & TILE_FLAG_VILE_CLUTCH)
+    {
+        m_buf_icons.add(TILEI_VILE_CLUTCH, x, y, -status_shift, 0);
+        status_shift += 11;
+    }
+    if (fg & TILE_FLAG_POSSESSABLE)
+    {
+        m_buf_icons.add(TILEI_POSSESSABLE, x, y, -status_shift, 0);
+        status_shift += 6;
     }
 
     // Summoned and anim. weap. icons will overlap if you have a
@@ -499,6 +563,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     // draw it otherwise.
     if (bg & TILE_FLAG_NEW_STAIR && status_shift == 0)
         m_buf_icons.add(TILEI_NEW_STAIR, x, y);
+
+    if (bg & TILE_FLAG_NEW_TRANSPORTER && status_shift == 0)
+        m_buf_icons.add(TILEI_NEW_TRANSPORTER, x, y);
 
     if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
         m_buf_icons.add(TILEI_TRAVEL_EXCLUSION_CENTRE_FG, x, y);

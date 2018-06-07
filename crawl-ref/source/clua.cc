@@ -9,7 +9,8 @@
 #include "end.h"
 #include "files.h"
 #include "libutil.h"
-#include "l_libs.h"
+#include "l-libs.h"
+#include "maybe-bool.h"
 #include "misc.h" // erase_val
 #include "options.h"
 #include "state.h"
@@ -846,7 +847,7 @@ void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 }
 
 // Can be called from within a debugger to look at the current Lua
-// call stack.  (Borrowed from ToME 3)
+// call stack. (Borrowed from ToME 3)
 void CLua::print_stack()
 {
     struct lua_Debug dbg;

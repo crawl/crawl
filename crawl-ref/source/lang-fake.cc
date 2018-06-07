@@ -560,24 +560,24 @@ void filter_lang(string &str)
 
         switch (fake_lang.lang_id)
         {
-            case FLANG_DWARVEN:
+            case flang_t::dwarven:
                 repl = dwarven;
                 break;
-            case FLANG_JAGERKIN:
+            case flang_t::jagerkin:
                 repl = jager;
                 break;
-            case FLANG_KRAUT:
+            case flang_t::kraut:
                 _german(str), repl = german;
                 break;
-            case FLANG_WIDE:
+            case flang_t::wide:
                 return _wide(str);
-            case FLANG_FUTHARK:
+            case flang_t::futhark:
                 repl = runes;
                 break;
-            case FLANG_GRUNT:
+            case flang_t::grunt:
                 _grunt(str); repl = grunt;
                 break;
-            case FLANG_BUTT:
+            case flang_t::butt:
                 _butt(str, fake_lang.value);
                 continue;
             default:

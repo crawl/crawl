@@ -16,8 +16,10 @@
 #include "colour.h"
 #include "files.h"
 #include "message.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "unicode.h"
 #include "viewgeom.h"
 
@@ -38,15 +40,6 @@
 #ifdef DGL_ENABLE_CORE_DUMP
     #include <sys/time.h>
     #include <sys/resource.h>
-#endif
-
-#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
-    #ifdef __ANDROID__
-        #include <SDL_mixer.h>
-    #else
-        #include <SDL2/SDL_mixer.h>
-    #endif
-    Mix_Chunk* sdl_sound_to_play = nullptr;
 #endif
 
 unsigned int isqrt(unsigned int a)
@@ -106,34 +99,6 @@ bool shell_safe(const char *file)
     int match = strcspn(file, "\\`$*?|><&\n!;");
     return match < 0 || !file[match];
 }
-
-#ifdef USE_SOUND
-void play_sound(const char *file)
-{
-#if defined(WINMM_PLAY_SOUNDS)
-    // Check whether file exists, is readable, etc.?
-    if (file && *file)
-        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
-
-#elif defined(SOUND_PLAY_COMMAND)
-    char command[255];
-    command[0] = 0;
-    if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
-        && shell_safe(file))
-    {
-        snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(OUTS(command));
-    }
-#elif defined(USE_SDL)
-    if (Mix_Playing(0))
-        Mix_HaltChannel(0);
-    if (sdl_sound_to_play != nullptr)
-        Mix_FreeChunk(sdl_sound_to_play);
-    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    Mix_PlayChannel(0, sdl_sound_to_play, 0);
-#endif
-}
-#endif
 
 bool key_is_escape(int key)
 {
@@ -414,7 +379,12 @@ GotoRegion get_cursor_region()
 {
     return _current_region;
 }
-#endif // USE_TILE_LOCAL
+
+void set_cursor_region(GotoRegion region)
+{
+    _current_region = region;
+}
+#endif // !USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
 {
@@ -443,10 +413,30 @@ void cscroll(int n, GotoRegion region)
 
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
 
-string unwrap_desc(string desc)
+mouse_control::mouse_control(mouse_mode mode)
+{
+    m_previous_mode = ms_current_mode;
+    ms_current_mode = mode;
+
+#ifdef USE_TILE_WEB
+    if (m_previous_mode != ms_current_mode)
+        tiles.update_input_mode(mode);
+#endif
+}
+
+mouse_control::~mouse_control()
+{
+#ifdef USE_TILE_WEB
+    if (m_previous_mode != ms_current_mode)
+        tiles.update_input_mode(m_previous_mode);
+#endif
+    ms_current_mode = m_previous_mode;
+}
+
+string unwrap_desc(string&& desc)
 {
     // Don't append a newline to an empty description.
-    if (desc == "")
+    if (desc.empty())
         return "";
 
     trim_string_right(desc);
@@ -460,7 +450,7 @@ string unwrap_desc(string desc)
         desc.erase(0, pos + 1);
         if (tag == "nowrap")
             return desc;
-        else if (desc == "")
+        else if (desc.empty())
             return "";
     }
 
@@ -585,7 +575,7 @@ void text_popup(const string& text, const wchar_t *caption)
     MessageBoxW(0, OUTW(text), caption, MB_OK);
 }
 #else
-# ifdef USE_CURSES
+#ifndef USE_TILE_LOCAL // is curses in use?
 
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.

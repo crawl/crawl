@@ -18,12 +18,13 @@
 #include "env.h"
 #include "hints.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "view.h"
 
@@ -34,8 +35,11 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // These include the base monster's name in their name, but we don't
     // want things in the auto_exclude option to match them.
-    if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE)
+    if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE
+        || mon->type == MONS_TEST_STATUE)
+    {
         return false;
+    }
 
     if (mon->is_stationary())
         return !sleepy;
@@ -68,12 +72,13 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
 // only makes sense. This is only possible because it's a permanent
-// mutation; the lantern of Shadows should not have this effect.
-// TODO: update the radiuses on wield/unwield, we already need to do that
-// when gaining/losing nightstalker.
+// mutation; other sources of LOS reduction should not have this effect.
+// Similarly, Barachim's LOS increase.
 static int _get_full_exclusion_radius()
 {
-    return LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
+    // XXX: dedup with update_vision_range()!
+    return LOS_DEFAULT_RANGE - you.get_mutation_level(MUT_NIGHTSTALKER)
+                             + (you.species == SP_BARACHI ? 1 : 0);
 }
 
 // If the monster is in the auto_exclude list, automatically set an
@@ -369,8 +374,7 @@ static void _tile_exclude_gmap_update(const coord_def &p)
         for (int y = -8; y <= 8; y++)
         {
             const coord_def pc(p.x + x, p.y + y);
-            if (in_bounds(pc))
-                tiles.update_minimap(pc);
+            tiles.update_minimap(pc);
         }
 }
 #endif
@@ -426,7 +430,7 @@ void clear_excludes()
 static void _exclude_gate(const coord_def &p, bool del = false)
 {
     set<coord_def> all_doors;
-    find_connected_identical(p, all_doors);
+    find_connected_identical(p, all_doors, true);
     for (const auto &dc : all_doors)
     {
         if (del)
@@ -442,7 +446,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(grd(p)))
+        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;
@@ -528,7 +532,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
 }
 
 // If a cell that was placed automatically no longer contains the original
-// monster (or it is invisible), remove the exclusion.
+// monster (or it is invisible), or if the player is no longer vulnerable to a
+// damaging cloud, then remove the exclusion.
 void maybe_remove_autoexclusion(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
@@ -537,14 +542,21 @@ void maybe_remove_autoexclusion(const coord_def &p)
             return;
 
         const monster* m = monster_at(p);
-        if (!m || !you.can_see(*m)
-            || m->attitude != ATT_HOSTILE
-                && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
-            || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
-                      exc->desc.c_str()) != 0)
+        // We don't want to remove excluded clouds, check exc desc
+        // XXX: This conditional is a mess.
+        string desc = exc->desc;
+        bool cloudy_exc = ends_with(desc, "cloud");
+        if ((!m || !you.can_see(*m)
+                || m->attitude != ATT_HOSTILE
+                    && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
+                || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
+                          exc->desc.c_str()) != 0)
+            && !cloudy_exc)
         {
             del_exclude(p);
         }
+        else if (cloudy_exc && you.cloud_immune())
+            del_exclude(p);
     }
 }
 
@@ -567,7 +579,7 @@ string exclude_set::get_exclusion_desc()
         if (ma != auto_unique_annotations.end())
             continue;
 
-        if (ex.desc != "")
+        if (!ex.desc.empty())
             desc.push_back(ex.desc);
         else
             count_other++;

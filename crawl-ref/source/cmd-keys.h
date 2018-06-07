@@ -1,5 +1,4 @@
-#ifndef CMD_KEYS_H
-#define CMD_KEYS_H
+#pragma once
 
 // If there are several keys assigned to the same command, the last one
 // will be the one displayed on the command help screen. Keys assigned
@@ -46,7 +45,6 @@
 {'i', CMD_DISPLAY_INVENTORY},
 {'m', CMD_DISPLAY_SKILLS},
 {'o', CMD_EXPLORE},
-{'p', CMD_PRAY},
 {'q', CMD_QUAFF},
 {'r', CMD_READ},
 {'t', CMD_SHOUT},
@@ -195,7 +193,6 @@
 {'<', CMD_TARGET_FIND_UPSTAIR},
 {'>', CMD_TARGET_FIND_DOWNSTAIR},
 {'r', CMD_TARGET_FIND_YOU},
-{CONTROL('L'), CMD_TARGET_TOGGLE_MLIST},
 {'p', CMD_TARGET_PREV_TARGET},
 //{'f', CMD_TARGET_SELECT}, // HACK: Moved to be the downmost for tutorial key
                             // look-up.
@@ -382,5 +379,3 @@
 #endif
 
 {'\0', CMD_NO_CMD}
-
-#endif // CMD_KEY_H

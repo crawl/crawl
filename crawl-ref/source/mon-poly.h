@@ -3,8 +3,7 @@
  * @brief Monster polymorph and mimic functions.
 **/
 
-#ifndef MONPOLY_H
-#define MONPOLY_H
+#pragma once
 
 #include "libutil.h" // always_true
 
@@ -35,4 +34,3 @@ void slimify_monster(monster* mons, bool hostile = false);
 bool mon_can_be_slimified(const monster* mons);
 
 void seen_monster(monster* mons);
-#endif

@@ -1,9 +1,9 @@
-#ifndef WINDOWMANAGER_H
-#define WINDOWMANAGER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 
 #include "tiletex.h"
+#include "tiles-build-specific.h"
 
 enum wm_event_type
 {
@@ -11,14 +11,15 @@ enum wm_event_type
     WME_ACTIVEEVENT,
     WME_KEYDOWN,
     WME_KEYUP,
-    WME_KEYPRESS,
     WME_MOUSEMOTION,
     WME_MOUSEBUTTONUP,
     WME_MOUSEBUTTONDOWN,
+    WME_MOUSEWHEEL,
     WME_QUIT,
     WME_CUSTOMEVENT,
     WME_RESIZE,
     WME_EXPOSE,
+    WME_MOVE,
     WME_NUMEVENTS = 15
 };
 
@@ -97,14 +98,13 @@ public:
     static void shutdown();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz, int *densityNum,
-                     int *densityDen) = 0;
+    virtual int init(coord_def *m_windowsz) = 0;
 
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
     virtual bool set_window_icon(const char* icon_name) = 0;
-    virtual key_mod get_mod_state() const = 0;
-    virtual void set_mod_state(key_mod mod) = 0;
+    virtual tiles_key_mod get_mod_state() const = 0;
+    virtual void set_mod_state(tiles_key_mod mod) = 0;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
@@ -120,6 +120,7 @@ public:
     virtual void show_keyboard() = 0;
 
     // Display functions
+    virtual bool init_hidpi() = 0;
     virtual void resize(coord_def &m_windowsz) = 0;
     virtual void swap_buffers() = 0;
     virtual int screen_width() const = 0;
@@ -139,4 +140,3 @@ public:
 extern WindowManager *wm;
 
 #endif //USE_TILE_LOCAL
-#endif //include guard

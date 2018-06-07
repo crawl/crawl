@@ -22,12 +22,6 @@ ring
 A talisman charged with arcane forces of unknown provenance, to be worn as
 jewellery on a finger.
 %%%%
-rod
-
-A magical rod which can wielded and evoked to cast a spell, drawing on a
-self-recharging reservoir of power. It is also robust enough to be used as a
-simple blunt weapon.
-%%%%
 scroll
 
 A disposable arcane formula inscribed on parchment by a professional scribe or

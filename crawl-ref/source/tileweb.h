@@ -3,15 +3,20 @@
  * @brief Webtiles implementation of the tiles interface
 **/
 
-#ifndef TILEWEB_H
-#define TILEWEB_H
+#pragma once
+
+#ifdef USE_TILE_WEB
 
 #include <bitset>
 #include <map>
 #include <sys/un.h>
 
-#include "map_knowledge.h"
+#include "cursor-type.h"
+#include "equipment-type.h"
+#include "map-cell.h"
+#include "map-knowledge.h"
 #include "status.h"
+#include "text-tag-type.h"
 #include "tiledoll.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
@@ -50,7 +55,8 @@ struct player_info
     int hp, hp_max, real_hp_max, poison_survival;
     int mp, mp_max;
     int contam;
-    int heat;
+    int noise;
+    int adjusted_noise;
 
     int armour_class;
     int evasion;
@@ -125,7 +131,7 @@ public:
     // Webtiles-specific
     void textcolour(int col);
     void textbackground(int col);
-    void put_ucs_string(ucs_t *str);
+    void put_ucs_string(char32_t *str);
     void clear_to_end_of_line();
 
     void push_menu(Menu* m);

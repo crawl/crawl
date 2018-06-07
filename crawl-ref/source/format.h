@@ -1,5 +1,4 @@
-#ifndef __FORMAT_H__
-#define __FORMAT_H__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -28,6 +27,7 @@ public:
     void add_glyph(cglyph_t g);
     void textcolour(int colour);
     formatted_string chop(int length) const;
+    formatted_string chop_bytes(int length) const;
     void del_char();
     void all_caps();
     void capitalise();
@@ -97,5 +97,3 @@ int tagged_string_tag_length(const string& s);
 int printed_width(const string& s);
 
 void display_tagged_block(const string& s);
-
-#endif

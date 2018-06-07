@@ -3,8 +3,7 @@
  * @brief Assertions and such.
 **/
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
 
 // Synch with ANSI definitions.
 #if !(defined(DEBUG) ^ defined(NDEBUG))
@@ -102,5 +101,4 @@ NORETURN void die_noline(PRINTF(0, ));
 
 #ifdef DEBUG
 void debuglog(PRINTF(0, ));
-#endif
 #endif

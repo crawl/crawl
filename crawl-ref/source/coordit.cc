@@ -196,7 +196,7 @@ radius_iterator::radius_iterator(const coord_def _center,
       los(_los)
 {
     ASSERT(map_bounds(_center));
-    credit = los_radius;
+    credit = get_los_radius();
     is_square = true;
     ++(*this);
     if (_exclude_center)
@@ -490,6 +490,7 @@ void coordit_tests()
     // bounding box of our playground
     #define BC   16
     #define BBOX 32
+    int los_radius = get_los_radius();
     ASSERT(los_radius < BC - 2);
     coord_def center(BC, BC);
 

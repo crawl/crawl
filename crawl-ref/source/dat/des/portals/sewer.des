@@ -7,12 +7,17 @@
 # Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
 # and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
-# interesting when encountered at low level (river rat, giant frog etc.) Loot
+# interesting when encountered at low level (river rat, bullfrog etc.) Loot
 # consists of renewable items; the harder maps contain a few good items.
 #
 ##############################################################################
 
 {{
+
+-- Sewer entry vaults should call this function to place the portal and have a
+-- single `O' glyph for the portal location. Additionally, if they want the `1'
+-- glyph to place a monster, they should define the `1' through KMONS (and not
+-- the usual MONS statement).
 function sewer_portal(e)
   local timeout_turns = crawl.random_range(600, 800)
 
@@ -57,6 +62,7 @@ end
 }}
 
 # Basic sewer entries ##########################################
+# NOTE: See comments above regarding KMONS for the 1 glyph in these vaults.
 default-depth: D:3-6
 
 NAME:   portal_sewer_entry_a
@@ -143,7 +149,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_f
 : sewer_portal(_G)
-KMONS:  1 = giant gecko / giant cockroach / nothing w:5
+KMONS:  1 = leopard gecko / giant cockroach / nothing w:5
 NSUBST: W = 6:1 / *:W
 COLOUR: W = green / cyan w:5
 MAP
@@ -157,7 +163,7 @@ ENDMAP
 NAME:   gup_sewer_entry_pipe
 TAGS:   patrolling no_pool_fixup
 : sewer_portal(_G)
-KMONS:  2 = giant cockroach / giant gecko / nothing
+KMONS:  2 = giant cockroach / leopard gecko / nothing
 SUBST:  W = WW.
 MAP
 @Wxxxxxxxxx
@@ -177,7 +183,7 @@ NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            giant gecko / worm w:5 / nothing
+            leopard gecko / worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
 xxxxxxxxxx
@@ -197,7 +203,7 @@ NAME:   gup_sewer_entry_bubbles
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            giant gecko / worm w:5 / nothing
+            leopard gecko / worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
  xxx    xxx
@@ -217,7 +223,7 @@ ENDMAP
 NAME:   gup_sewer_entry_bowl
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / \
-            giant cockroach / giant gecko / worm w:3 / nothing
+            giant cockroach / leopard gecko / worm w:3 / nothing
 MAP
 ..........
 .xxx.xxxx..
@@ -245,7 +251,7 @@ ENDMAP
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
-MONS: river rat / adder / rat / worm
+KMONS: 1 = river rat / adder / rat / worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
@@ -263,6 +269,72 @@ vvvvWvWvWW
 ..WWWWW.W.
 ....W.....
 ..........
+ENDMAP
+
+NAME: cheibrodos_sewer_entry_bend
+TAGS: no_monster_gen
+ORIENT: northeast
+KMONS: 1 = worm
+NSUBST: - = 1:1 / 1=1.. / 1=1...
+KFEAT: A = iron_grate
+: sewer_portal(_G)
+MAP
+xxxxxxxxxxxxxx
+xxAAxxxxxxxxxx
+xxWWxxxxx---xx
+...WWWWWWW--xx
+....WWWWWWW-xx
+ @..xxxxOWWxxx
+  .....mxWWxxx
+     @..xWWxxx
+      @.xWWxxx
+       .xWWxxx
+       ...WWAx
+       ....WAx
+        @..xxx
+         ..xxx
+ENDMAP
+
+NAME: cheibrodos_sewer_entry_drain
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: 1 = rat / ball python / giant cockroach / worm
+NSUBST: 1 = 2:1 / 2=1.. / *:.
+: sewer_portal(_G)
+MAP
+  ...@...
+ ..x1.1x..
+...WWWWW...
+.xWWWWWWWx.
+.1WWWWWWW1.
+@.WWWOWWW.@
+.1WWWWWWW1.
+.xWWWWWWWx.
+...WWWWW...
+ ..x1.1x..
+  ...@...
+ENDMAP
+
+NAME: cheibrodos_sewer_entry_sluice
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: 1 = ball python / worm / bat / w:5 river rat
+SHUFFLE: AB
+SUBST: A = w, B = .
+NSUBST: . = 2:1 / 2=1.
+: sewer_portal(_G)
+MAP
+.....@.....
+.xxwwAwwxx.
+.xxwwAwwxx.
+.ww.....ww.
+.ww.....ww.
+.ww..O....@
+.ww.....ww.
+.ww.....ww.
+.xxwwwwwxx.
+.xxwwwwwxx.
+...........
 ENDMAP
 
 # The actual portal vaults #####################################
@@ -339,7 +411,7 @@ WEIGHT: 15
 ORIENT: encompass
 MONS:   rat / river rat w:3
 MONS:   kobold / big kobold w:1
-MONS:   ball python / adder w:5 / giant newt w:2 / ooze w:1
+MONS:   ball python / adder w:5 / frilled lizard w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
@@ -391,7 +463,7 @@ NAME:    kennysheep_pipe_town
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / big kobold w:2
-MONS:    bat / rat / ooze w:5 / ball python / giant newt w:5 / \
+MONS:    bat / rat / ooze w:5 / ball python / frilled lizard w:5 /\
          giant cockroach w:5 / adder w:1
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
@@ -443,7 +515,7 @@ ENDMAP
 # Giant frogs, specifically. Combined weight 40.
 
 ############################################################################
-# Two fairly watery vaults with (usually) two giant frogs in the end.
+# Two fairly watery vaults with (usually) two bullfrogs in the end.
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
@@ -453,14 +525,14 @@ SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
-MONS:     giant newt / ball python w:5 / giant cockroach / \
-          generate_awake giant newt / generate_awake ball python w:5 / \
+MONS:     frilled lizard / ball python w:5 / giant cockroach / \
+          generate_awake frilled lizard / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake \
-          giant gecko / adder w:8 / nothing w:8
+          leopard gecko / adder w:8 / nothing w:8
 NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
-KMONS:    ! = giant frog / nothing w:2
+KMONS:    ! = bullfrog / nothing w:2
 : sewer_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccc
@@ -500,13 +572,13 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = giant newt / ball python / giant cockroach / \
-              giant gecko / ooze / adder w:4 / \
+KMONS:    W = frilled lizard / ball python / giant cockroach / \
+              leopard gecko / ooze / adder w:4 / \
               nothing w:270
 KFEAT:    W = W
 KFEAT:    ! = w
 COLOUR:   ! = green
-KMONS:    ! = giant frog / nothing w:2
+KMONS:    ! = bullfrog / nothing w:2
 SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
@@ -546,60 +618,57 @@ ENDMAP
 ############################################################################
 # Sewer in the shape of the letter W. Sort of. Frogs at the end.
 #
-# Harder than the two other frog maps. Frogs are guaranteed, exit isn't
-# reachable when frogs come to sight, and loot isn't handed out as a way
-# to handle them.
+# Harder than the two other frog maps. Frogs are guaranteed, and neither
+# exit nor chokepoints aren't reachable when one sees them.
+#
+# XXX: An outlier in size, openness, and minimal land as a map.
 NAME:    sewer_minmay_w
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: de
 MONS:    rat / river rat w:2
-MONS:    ball python / adder w:5 / giant newt w:2 / ooze w:1
-MONS:    giant frog
+MONS:    ball python / adder w:5 / frilled lizard w:2 / ooze w:1
+MONS:    bullfrog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\
-         scroll of fear w:5 / scroll of magic mapping /\
-         scroll of recharging / scroll of fog
-SUBST:   y : yyyyyyW., Y : YYYYYYWw
+         scroll of fear w:5 / scroll of magic mapping / scroll of fog
+SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
 : sewer_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxcccc2..2ccccxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxccc..........cccxxxxxxxxxxxxxxxxx
-xccccccxxxxxxxxxcc..............ccxxxxcccccccccccx
-cc....ccxxxxxxxcc................ccxxxcdedcc3..3cc
-c......cxxxxxxxc.1.1.1.2cc2.......cxxxce<e+2..2.2c
-c..<A..cxxxxxxcc1.1.1.cccc+c......ccxxcdedc.2..2.c
-c......cxxxxxxc1.1.1.ccxcddcc......cxxccccc2.2..2c
-cyyyyyycxxxxxxcyyyyyycxxcddccyyyyyycxxxxxxcyyyyyyc
-cYYWYYYcxxxxxxcYYWYYYcxxcccccYYYYWYcxxxxxxcYYWYYYc
-cwYWYYwcxxxxxxcwYWYwwcxxxxxxcwwwYWYcxxxxxxcYYWYwYc
-cwYYWYwcxxxxxxcwYWYYwcxxxxxxcwwYYWYcxxxxxxcwYWYYwc
-cwwYWYwcxxxxxxcwwYWYwcxxxxxxcwYYWYYcxxxxxxcwYWWYwc
-cwwYWYwcxxxxxxcwwYWYYcxxxxxxcYWWYYwcxxxxxxcwYYWYYc
-cwYYWYwcxxxxxxcwwYYWYcxxxxxxcWYYYwwcxxxxxxcwwYWWYc
-cwYWYYwcxxxxxxcwwwYWYcxxxxxxcWWYYYwcxxxxxxcwwYYWYc
-cwYWYwwcxxxxxxcwwwYYWcxxxxxxcYWyWYYcxxxxxxcwwwYWYc
-cwYWYwwcxxxxxxcwwwwYWcxxxxxxcWyyyyWcxxxxxxcwwYYWYc
-cwYWYYwcxxxxxxcwwwwYWcxxxxxxcyy%%yycxxxxxxcwwYWWYc
-cwYYWYwcxxxxxxcwwwYYWcxxxxxxcWyyyyWcxxxxxxcwwYWYYc
-cwwYWYwcxxxxxxcwwwYWYcxxxxxxcYWWYWYcxxxxxxcwYYWYwc
-cwwYWYwcxxxxxxcwwYYWYcxxxxxxcYYYWYYcxxxxxxcwYWWYwc
-cwwYWYwcxxxxxxcwwYWYYcxxxxxxcwYWYYwcxxxxxxcwYWYYwc
-cwwYWYwcxxxxxxcwYYWYwcxxxxxxcwYWYYwcxxxxxxcYYWYwYc
-cYYYWYYcxxxxxxcwYWYwwcxxxxxxcYYYWYYcxxcccccYYWYYYc
-cyyyyyycxxxxxxcyyyyyycxxxxxxcyyyyyycxxceeccyyyyyyc
-c1.1.1.ccxxxxcc......cxxxxxxc1.1.1.ccxceecc......c
-cc1.1.1.cccccc......ccxxxxxxcc1.1.1.cccc+c......cc
-xc........cc........cxxxxxxxxc.1.1.1.2cc2.......cx
-xcc................ccxxxxxxxxcc.1.1.1..........ccx
-xxcc..............ccxxxxxxxxxxcc...2.2..2.2...ccxx
-xxxccc..........cccxxxxxxxxxxxxccc..........cccxxx
-xxxxxcccc2..2ccccxxxxxxxxxxxxxxxxcccc2..2ccccxxxxx
-xxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcccccc2.2ccccccxxxxxxxxxxxxxxxx
+xccccccxxxxxxxxcc....2...2....ccxxxcccccccccccx
+cc....ccxxxxxxcc...............ccxxcdedcc3..3cc
+c......cxxxxxxc.1.1.1.c.........cxxce<e+2..2.2c
+c..<A..cxxxxxcc1.1.1.cc+cc......ccxcdedc.2..2.c
+c......cxxxxxc1.1.1.cccddcc......cxccccc2.2..2c
+czyyyyzcxxxxxczyyyyzcxcddcczyyyyzcxxxxxczyyyyzc
+cYYWYYYcxxxxxcYYWYYYcxcccccYYYYWYcxxxxxcYYZWYYc
+cwYWYYwcxxxxxcwYWYwwcxxxxxcwwwYWYcxxxxxcYYWYwYc
+cwYYWYwcxxxxxcwYWYYwcxxxxxcwwYYWYcxxxxxcwYWYYwc
+cwwYWYwcxxxxxcwwYWYwcxxxxxcwYYWYYcxxxxxcwYWWYwc
+cwwYWYwcxxxxxcwwYWZYcxxxxxcYWWYYwcxxxxxcwYYWZYc
+cwYZWYwcxxxxxcwwYZWYcxxxxxcWYYYwwcxxxxxcwwYZWYc
+cwYWZYwcxxxxxcwwwYWYcxxxxxcWWYYwwcxxxxxcwwwY.Yc
+cw.WYwwcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwwY.Yc
+cwYWZYwcxxxxxcwwwZY.cxxxxxcyy%%ywcxxxxxcwwYZWYc
+cwYZW.wcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwYWZYc
+cwwYWYwcxxxxxcwwwYWYcxxxxxcwwYYWWcxxxxxcwYYWYwc
+cwwYWYwcxxxxxcwwYZWYcxxxxxcwwwYYWcxxxxxcwYWWYwc
+cwwYWYwcxxxxxcwwYWZYcxxxxxcwYYWWYcxxxxxcwYWYYwc
+cwwYWYwcxxxxxcwYYWYwcxxxxxcwYWYYwcxxxxxcwYWYwYc
+cYYYWYYcxxxxxcwYWYwwcxxxxxcYYWYYYcxcccccYYWYYYc
+czyyyyzcxxxxxczyyyyzcxxxxxczyyyyzcxceecczyyyyzc
+c1.1.1.ccxxxcc......cxxxxxc1.1.1.ccceecc......c
+cc1.1.1.ccxcc......ccxxxxxcc1.1.1.cc+cc2.....cc
+xc.......ccc.......cxxxxxxxc.1.1.1.c.........cx
+xcc...............ccxxxxxxxcc.1.1.1.........ccx
+xxcccc.........ccccxxxxxxxxxcccc.2......2ccccxx
+xxxxxcccc2.2ccccxxxxxxxxxxxxxxxcccc2.2ccccxxxxx
+xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
 ENDMAP
 
 ## BIG BADDIE (Purgy) ######################################################
@@ -655,7 +724,7 @@ KMONS:  4 = Purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / meat ration / potion of blood / \
+        scroll of random uselessness / ration / potion of blood / \
         nothing w:140
 : sewer_setup(_G)
 MAP
@@ -713,8 +782,8 @@ SUBST:   R = .
 #      lesser monsters.
 KFEAT:   1 = w
 COLOUR:  1 = green
-KMONS:   1 = giant newt / ball python w:5 / \
-         generate_awake giant newt / generate_awake ball python w:5 / \
+KMONS:   1 = frilled lizard / ball python w:5 / \
+         generate_awake frilled lizard / generate_awake ball python w:5 / \
          adder w:4 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
@@ -723,7 +792,7 @@ KITEM:   ? = potion of flight q:2 w:15 / potion of curing /\
          potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+         scroll of fog w:3
 #      Randomized environment
 SUBST:   . = .WW
 SUBST:   X = xx.
@@ -777,13 +846,13 @@ ENDMAP
 NAME:   kennysheep_door_sewer
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold w:40 / bat / giant newt / giant cockroach / \
+MONS:   kobold w:40 / bat / frilled lizard / giant cockroach / \
         adder w:5 / big kobold w:1
 KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / meat ration / potion of blood / \
+        scroll of random uselessness / ration / potion of blood / \
         nothing w:140
 NSUBST: e = 3:* / 9:d / *:.
 NSUBST: 0 = 5:1 / 1:2 / *:.
@@ -832,14 +901,14 @@ COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = bat / giant newt / ball python / giant cockroach / \
-              giant gecko / ooze w:4 / worm w:4 / adder w:2
+KMONS:    ? = bat / frilled lizard / ball python / giant cockroach / \
+              leopard gecko / ooze w:4 / worm w:4 / adder w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     bat / giant newt / ball python / giant cockroach / \
-          giant gecko / ooze w:4 / worm w:4 / adder w:2
+MONS:     bat / frilled lizard / ball python / giant cockroach / \
+          leopard gecko / ooze w:4 / worm w:4 / adder w:2
 SHUFFLE:  23
 MONS:     bat / nothing w:2
 MONS:     patrolling jackal
@@ -855,11 +924,10 @@ ITEM:     potion of flight w:50 / potion of invisibility / \
 #       possibly rather generous loot, if you get to the center
 ITEM:     scroll of vulnerability / scroll of identify / hat / \
           potion of magic / potion of brilliance / potion of resistance
-ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
-          pair of gloves w:5 / pair of boots w:5 / potion of agility / nothing
-ITEM:     scroll of identify / scroll of recharging / \
-          potion of resistance / potion of might / potion of berserk rage / \
-          buckler / nothing
+ITEM:     scroll of identify / potion of invisibility / pair of gloves w:5 / \
+          pair of boots w:5 / potion of agility / nothing
+ITEM:     scroll of identify / potion of resistance / potion of might / \
+          potion of berserk rage / buckler / nothing
 KITEM:    ' = scroll of random uselessness w:30 / \
               scroll of identify / scroll of teleportation / \
               potion of degeneration w:100 / potion of mutation / \
@@ -900,11 +968,11 @@ TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
 MONS:   rat w:4 / nothing w:1, rat / river rat w:5
-KMONS:  G = siren hd:3 name:sickly name_adjective name_species
+KMONS:  G = merfolk siren hd:3 name:sickly name_adjective name_species
 KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
-KMONS:  hJ = giant newt / ball python / adder / nothing w:2
-KMONS:  g = giant newt / ball python / giant cockroach / \
-            giant gecko / nothing w:7
+KMONS:  hJ = frilled lizard / ball python / adder / nothing w:2
+KMONS:  g = frilled lizard / ball python / giant cockroach / \
+            leopard gecko / nothing w:7
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
 COLOUR: gh = lightgreen
@@ -991,7 +1059,7 @@ KITEM:   ? = potion of flight w:5 / potion of flight q:2 w:5 /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+         scroll of fog w:3
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
@@ -1054,7 +1122,7 @@ KITEM:  e = potion of curing / potion of heal wounds / potion of might /\
         potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
         scroll of blinking w:3 / scroll of magic mapping w:3 /\
-        scroll of recharging w:2 / scroll of fog w:3
+        scroll of fog w:3
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
@@ -1118,8 +1186,8 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 #      water creatures
-MONS:    giant newt / ball python w:5 / \
-         generate_awake giant newt / generate_awake ball python w:5 / \
+MONS:    frilled lizard / ball python w:5 / \
+         generate_awake frilled lizard / generate_awake ball python w:5 / \
          adder w:2 / nothing w:4
 KMONS:   2 = adder
 KFEAT:   2 = W
@@ -1149,7 +1217,7 @@ KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+         scroll of fog w:3
 : sewer_setup(_G)
 MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1195,7 +1263,7 @@ KMONS:   P = plant / nothing
 #      pipe monsters.
 KFEAT:   1 = W
 COLOUR:  1 = lightgreen
-KMONS:   1 = giant newt / ball python w:5 /  generate_awake ball python w:5 / \
+KMONS:   1 = frilled lizard / ball python w:5 / generate_awake ball python w:5 / \
          adder w:7
 SUBST:   1 = 1111W
 #      other monsters
@@ -1209,7 +1277,7 @@ KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+         scroll of fog w:3
 SUBST:   . = .W
 SUBST:   X = x.
 SUBST:   Y = xxw

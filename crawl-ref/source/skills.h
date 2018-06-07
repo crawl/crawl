@@ -3,8 +3,7 @@
  * @brief Skill exercising functions.
 **/
 
-#ifndef SKILLS_H
-#define SKILLS_H
+#pragma once
 
 #include "player.h"
 
@@ -18,6 +17,7 @@ struct skill_state
     FixedVector<training_status, NUM_SKILLS>       train;
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
+    FixedVector<unsigned int, NUM_SKILLS> training_targets;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     int skill_cost_level;
@@ -29,6 +29,15 @@ struct skill_state
     void save();
     void restore_levels();
     void restore_training();
+};
+
+struct skill_diff
+{
+    skill_diff() : skill_points(0), experience(0) { }
+    skill_diff(int skp, int xp) : skill_points(skp), experience(xp) { }
+
+    int skill_points;
+    int experience;
 };
 
 typedef set<skill_type> skill_set;
@@ -51,6 +60,7 @@ void init_can_train();
 void init_training();
 void update_can_train();
 void reset_training();
+int calc_skill_level_change(skill_type sk, int starting_level, int sk_points);
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
 void change_skill_level(skill_type exsk, int num_level);
 void change_skill_points(skill_type sk, int points, bool do_level_up);
@@ -61,7 +71,7 @@ void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
 bool skill_trained(int i);
 static inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
-void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE);
+void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE, bool recalculate_order = true);
 void set_skill_level(skill_type skill, double amount);
 
 int get_skill_progress(skill_type sk, int level, int points, int scale);
@@ -69,6 +79,7 @@ int get_skill_progress(skill_type sk, int scale);
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
+skill_type str_to_skill_safe(const string &skill);
 
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
@@ -85,18 +96,24 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
                       skill_type excl_skill = SK_NONE);
 void init_skill_order();
 
+bool is_removed_skill(skill_type skill);
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
-bool all_skills_maxed(bool really_all = false);
+bool can_enable_skill(skill_type sk, bool override = false);
+bool trainable_skills(bool check_all = false);
+bool skills_being_trained();
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
 float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+skill_diff skill_level_to_diffs(skill_type skill, double amount,
+    int scaled_training=100, bool base_only=true);
 
 bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
+int get_crosstrain_points(skill_type sk);
 
 int elemental_preference(spell_type spell, int scale = 1);
 
@@ -107,6 +124,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu, bool boost = false);
 int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
+
+bool target_met(skill_type sk);
+bool check_training_target(skill_type sk);
+bool check_training_targets();
 
 static const skill_type skill_display_order[] =
 {
@@ -141,5 +162,3 @@ static inline bool is_invalid_skill(skill_type skill)
 {
     return skill < SK_FIRST_SKILL || skill >= NUM_SKILLS;
 }
-
-#endif

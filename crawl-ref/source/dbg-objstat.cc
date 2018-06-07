@@ -22,12 +22,13 @@
 #include "dungeon.h"
 #include "end.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "itemprop-enum.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-prop-enum.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "maps.h"
@@ -61,7 +62,6 @@ enum item_base_type
     ITEM_ARMOUR,
     ITEM_JEWELLERY,
     ITEM_MISCELLANY,
-    ITEM_RODS,
     ITEM_BOOKS,
     ITEM_ARTEBOOKS,
     ITEM_MANUALS,
@@ -153,10 +153,6 @@ static const vector<string> item_fields[NUM_ITEM_BASE_TYPES] = {
     { // ITEM_MISCELLANY
         "Num", "NumMin", "NumMax", "NumSD", "MiscPlus"
     },
-    { // ITEM_RODS
-        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
-        "RodMana", "RodRecharge", "NumCursed"
-    },
     { // ITEM_BOOKS
         "Num", "NumMin", "NumMax", "NumSD"
     },
@@ -173,9 +169,10 @@ static const char* equip_brand_fields[] = {"OrdBrandNums", "ArteBrandNums",
 static const char* missile_brand_field = "BrandNums";
 
 static const vector<string> monster_fields = {
-    "Num", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
-    "MonsXP", "TotalXP", "MonsNumChunks", "MonsNumMutChunks", "TotalNutr",
-    "TotalCarnNutr", "TotalGhoulNutr",
+    "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
+    "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
+    "MonsNumChunks", "TotalNutr", "TotalCarnNutr",
+    "TotalGhoulNutr",
 };
 
 static map<monster_type, int> valid_monsters;
@@ -240,9 +237,6 @@ static item_base_type _item_base_type(const item_def &item)
     case OBJ_JEWELLERY:
         type = ITEM_JEWELLERY;
         break;
-    case OBJ_RODS:
-        type = ITEM_RODS;
-        break;
     default:
         type = ITEM_IGNORE;
         break;
@@ -284,9 +278,6 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
         break;
     case ITEM_JEWELLERY:
         type = OBJ_JEWELLERY;
-        break;
-    case ITEM_RODS:
-        type = OBJ_RODS;
         break;
     case ITEM_MISCELLANY:
         type = OBJ_MISCELLANY;
@@ -574,7 +565,6 @@ static bool _item_track_curse(item_base_type base_type)
     case ITEM_STAVES:
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
-    case ITEM_RODS:
         return true;
     default:
         return false;
@@ -620,7 +610,6 @@ static bool _item_track_monster(item_base_type base_type)
     case ITEM_WEAPONS:
     case ITEM_STAVES:
     case ITEM_ARMOUR:
-    case ITEM_RODS:
     case ITEM_MISSILES:
     case ITEM_JEWELLERY:
         return true;
@@ -658,15 +647,16 @@ void objstat_record_item(const item_def &item)
         brand = get_ammo_brand(item);
         break;
     case ITEM_FOOD:
-        _record_item_stat(cur_lev, itype, "TotalNormNutr", food_value(item));
+        _record_item_stat(cur_lev, itype, "TotalNormNutr",
+                          food_value(item) * item.quantity);
         // Set these dietary mutations so we can get accurate nutrition.
-        you.mutation[MUT_CARNIVOROUS] = 3;
+        you.mutation[MUT_CARNIVOROUS] = 1;
         _record_item_stat(cur_lev, itype, "TotalCarnNutr",
-                             food_value(item) * food_is_meaty(item.sub_type));
+                          food_value(item) * item.quantity);
         you.mutation[MUT_CARNIVOROUS] = 0;
-        you.mutation[MUT_HERBIVOROUS] = 3;
+        you.mutation[MUT_HERBIVOROUS] = 1;
         _record_item_stat(cur_lev, itype, "TotalHerbNutr",
-                             food_value(item) * food_is_veggie(item.sub_type));
+                          food_value(item) * item.quantity);
         you.mutation[MUT_HERBIVOROUS] = 0;
         break;
     case ITEM_WEAPONS:
@@ -677,11 +667,6 @@ void objstat_record_item(const item_def &item)
         break;
     case ITEM_WANDS:
         all_plus_f = "WandCharges";
-        break;
-    case ITEM_RODS:
-        _record_item_stat(cur_lev, itype, "RodMana",
-                             item.charge_cap / ROD_CHARGE_MULT);
-        _record_item_stat(cur_lev, itype, "RodRecharge", item.rod_plus);
         break;
     case ITEM_MISCELLANY:
         all_plus_f = "MiscPlus";
@@ -739,6 +724,8 @@ static void _record_monster_stat(const level_id &lev, int mons_ind, string field
 void objstat_record_monster(const monster *mons)
 {
     monster_type type;
+    bool from_vault = !mons->originating_map().empty();
+
     if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         type = MONS_GLOWING_SHAPESHIFTER;
     else if (mons->has_ench(ENCH_SHAPESHIFTER))
@@ -753,9 +740,23 @@ void objstat_record_monster(const monster *mons)
     level_id lev = level_id::current();
 
     _record_monster_stat(lev, mons_ind, "Num", 1);
+    if (from_vault)
+        _record_monster_stat(lev, mons_ind, "NumVault", 1);
+    else
+        _record_monster_stat(lev, mons_ind, "NumNonVault", 1);
     _record_monster_stat(lev, mons_ind, "NumForIter", 1);
-    _record_monster_stat(lev, mons_ind, "MonsXP", exper_value(mons));
-    _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(mons));
+    _record_monster_stat(lev, mons_ind, "MonsXP", exper_value(*mons));
+    _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(*mons));
+    if (from_vault)
+    {
+        _record_monster_stat(lev, mons_ind, "TotalVaultXP",
+                exper_value(*mons));
+    }
+    else
+    {
+        _record_monster_stat(lev, mons_ind, "TotalNonVaultXP",
+                exper_value(*mons));
+    }
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
 
@@ -768,13 +769,11 @@ void objstat_record_monster(const monster *mons)
                                             4, 4, 12, 12)) / 2.0;
         item_def chunk_item = _dummy_item(item_type(ITEM_FOOD, FOOD_CHUNK));
 
-        you.mutation[MUT_CARNIVOROUS] = 3;
+        you.mutation[MUT_CARNIVOROUS] = 1;
         int carn_value = food_value(chunk_item);
         you.mutation[MUT_CARNIVOROUS] = 0;
 
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
-        if (chunk_effect == CE_MUTAGEN)
-            _record_monster_stat(lev, mons_ind, "MonsNumMutChunks", chunks);
 
         if (chunk_effect == CE_CLEAN)
         {
@@ -858,14 +857,11 @@ static void _write_stat(map<string, double> &stats, string field)
     if (field == "PileQuant")
         value = stats["Num"] / stats["NumPiles"];
     else if (field == "WandCharges"
-             || field == "RodMana"
-             || field == "RodRecharge"
              || field == "MiscPlus"
              || field == "MonsHD"
              || field == "MonsHP"
              || field == "MonsXP"
-             || field == "MonsNumChunks"
-             || field == "MonsNumMutChunks")
+             || field == "MonsNumChunks")
     {
         value = stats[field] / stats["Num"];
     }
@@ -1181,6 +1177,9 @@ void objstat_generate_stats()
     you.wizard = true;
     // Let "acquire foo" have skill aptitudes to work with.
     you.species = SP_HUMAN;
+
+    if (!crawl_state.force_map.empty() && !mapstat_find_forced_map())
+        return;
 
     initialise_item_descriptions();
     initialise_branch_depths();

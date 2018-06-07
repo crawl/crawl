@@ -10,8 +10,7 @@
  * level or a minivault that occupies just a portion of the level.
  */
 
-#ifndef __MAPDEF_H__
-#define __MAPDEF_H__
+#pragma once
 
 #include <cstdio>
 #include <memory>
@@ -22,12 +21,15 @@
 #include "dlua.h"
 #include "enum.h"
 #include "fprop.h"
+#include "god-type.h"
 #include "makeitem.h"
 #include "matrix.h"
+#include "mon-attitude-type.h"
 #include "mon-ench.h"
 #include "mon-flags.h"
 #include "tags.h"
-#include "travel_defs.h"
+#include "trap-type.h"
+#include "travel-defs.h"
 
 #define NEVER_CORPSE_KEY "never_corpse"
 
@@ -503,8 +505,8 @@ private:
     {
         overlay_def() :
             colour(0), rocktile(""), floortile(""), tile(""),
-            no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
-            keyspec_idx(0)
+            no_random(false), last_tile(false), property(),
+            height(INVALID_HEIGHT), keyspec_idx(0)
         {}
         colour_t colour;
         string rocktile;
@@ -512,7 +514,7 @@ private:
         string tile;
         bool no_random;
         bool last_tile;
-        int property;
+        terrain_property_t property;
         int height;      // heightmap height
         int keyspec_idx;
     };
@@ -649,7 +651,7 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    int colour; // either COLOUR_INHERIT for "default", COLOUR_INDEF for any
+    int colour; // either COLOUR_INHERIT for "default", COLOUR_UNDEF for any
                 // colour upon creation, or an otherwise valid colour_t value.
 
     god_type god;
@@ -734,6 +736,7 @@ private:
     void get_zombie_type(string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const string &name) const;
     mons_spec get_slime_spec(const string &name) const;
+    mons_spec get_salt_spec(const string &name) const;
     mons_spec get_zombified_monster(const string &name,
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(string spec);
@@ -943,30 +946,17 @@ struct map_file_place
     }
 };
 
-const int DEFAULT_CHANCE_PRIORITY = 100;
 struct map_chance
 {
-    int chance_priority;
     int chance;
-    map_chance() : chance_priority(-1), chance(-1) { }
-    map_chance(int _priority, int _chance)
-        : chance_priority(_priority), chance(_chance) { }
-    map_chance(int _chance)
-        : chance_priority(DEFAULT_CHANCE_PRIORITY), chance(_chance) { }
-    bool valid() const { return chance_priority >= 0 && chance >= 0; }
-    bool dummy_chance() const { return chance_priority == 0 && chance >= 0; }
+    map_chance() : chance(-1) { }
+    map_chance(int _chance) : chance(_chance) { }
+    bool valid() const { return chance >= 0; }
     string describe() const;
     // Returns true if the vault makes the random CHANCE_ROLL.
     bool roll() const;
     void write(writer &) const;
     void read(reader &);
-};
-
-// For the bison parser's token union:
-struct map_chance_pair
-{
-    int priority;
-    int chance;
 };
 
 typedef vector<level_range> depth_ranges_v;
@@ -1333,4 +1323,5 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
 const char *map_section_name(int msect);
 
 int store_tilename_get_index(const string& tilename);
-#endif
+
+int str_to_ego(object_class_type item_type, string ego_str);

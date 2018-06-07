@@ -24,6 +24,7 @@
     Haran Pilpel
     Johanna Ploog
     David Lawrence Ramsey
+    Isaac Sloat
     J. Van
     Robert Vollmert
     Enne Walker
@@ -99,11 +100,11 @@
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
-    Can of Worms
     Edgar Carballo
     Cedor
+    Cerol
     Rahul Chandra
-    Gregory Chereshnev
+    Gregory D. Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
@@ -120,6 +121,7 @@
     Mike Drinen
     DrKe
     Kieron Dunbar
+    Russell Dunk
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -131,6 +133,7 @@
     Chris Galardi
     Benoît Giannangeli
     Ben Goetter
+    Aaron Golden
     Ed Gonzalez
     Rob Grant
     John Greenberg
@@ -185,6 +188,7 @@
     MainiacJoe
     Arien Malec
     Paul Maloney
+    Pablo Mansanet
     Wille Mäntylä
     James 'Eronarn' Meickle
     mikee
@@ -196,7 +200,9 @@
     Eva Myers
     nagdon
     Naruni
+    neofelis
     nicolae
+    NormalPerson7
     Erkki Nurmi
     Mattias Nyberg
     nyra
@@ -213,6 +219,7 @@
     Lemuel Pitkin
     Iago Porto
     pubby
+    Edward Randtke
     Derek Ray
     Terence Reeves
     Tobias Rehbein
@@ -228,8 +235,10 @@
     Sandman25
     Brett Scarborough
     Roman Sêk
+    Brennan Shacklett
     ShadyAmish
     Evan Shaw
+    Aditya Shevade
     Robert Shimmin
     Sigurd
     Edgar Simo
@@ -263,15 +272,19 @@
     Evan Williams
     Jeremey Wilson
     Yelve Yakut
+    Edward Z. Yang
+    Yermak
     Rob Young
     Zannick
     Zooko
 
 The Dungeon Crawl Stone Soup development team is:
+    advil
     Peter Berger
     Adam Borowski
     Samuel Bronson
     Jude Brown
+    CanOfWorms
     Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
@@ -284,6 +297,7 @@ The Dungeon Crawl Stone Soup development team is:
     gammafunk
     Shayne Halvorson
     Brendan Hickey
+    Aidan Holm
     Pete Hurst
     Eino Keskitalo
     Vsevolod Kozlov

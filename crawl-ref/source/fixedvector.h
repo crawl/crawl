@@ -3,8 +3,7 @@
  * @brief Fixed size vector class that asserts if you do something bad.
 **/
 
-#ifndef FIXVEC_H
-#define FIXVEC_H
+#pragma once
 
 #include <algorithm>
 #include <cstdarg>
@@ -111,5 +110,3 @@ void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
     fill(::begin(mData), ::end(mData), def);
 }
-
-#endif    // FIXVEC_H

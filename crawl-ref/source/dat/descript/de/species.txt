@@ -50,11 +50,6 @@ Halfling
 Klein, aber zäh, sind Halblinge unübertroffene Meister mit Schleudern. Sie
 haben eine erhöhte Resistenz gegen Mutationen.
 %%%%
-High Elf
-
-Stolze Elfen, die sowohl Zauber sprechen als auch mit dem Schwert kämpfen
-können.
-%%%%
 Hill Orc
 
 Orks sind geschickt im Nahkampf, und versuchen sich oft in offensiver Magie.

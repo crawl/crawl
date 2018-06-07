@@ -3,8 +3,7 @@
  * @brief Auxiliary functions to make savefile versioning simpler.
 **/
 
-#ifndef TAGS_H
-#define TAGS_H
+#pragma once
 
 #include <cstdio>
 
@@ -13,6 +12,7 @@
 struct show_type;
 struct monster_info;
 struct map_cell;
+class ghost_demon;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -146,6 +146,7 @@ void        unmarshallString4 (reader &, string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monster& item);
+dungeon_feature_type unmarshallFeatureType(reader &);
 level_id    unmarshall_level_id(reader& th);
 
 uint64_t unmarshallUnsigned(reader& th);
@@ -170,10 +171,11 @@ void tag_read(reader &inf, tag_type tag_id);
 void tag_write(tag_type tagID, writer &outf);
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor);
 
+vector<ghost_demon> tag_read_ghosts(reader &th);
+void tag_write_ghosts(writer &th, const vector<ghost_demon> &ghosts);
+
 /* ***********************************************************************
  * misc
  * *********************************************************************** */
 
 string make_date_string(time_t in_date);
-
-#endif // TAGS_H

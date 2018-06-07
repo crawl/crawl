@@ -1,4 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+
+use warnings;
 
 die "Two args plz (dat/descript/foo.{key,val}), m'kay?\n" if $#ARGV != 1;
 

@@ -1,5 +1,4 @@
-#ifndef LIBCONSOLE_H
-#define LIBCONSOLE_H
+#pragma once
 
 #include "defines.h"
 
@@ -21,7 +20,7 @@ void cprintf(const char *format, ...);
 
 int wherex();
 int wherey();
-void putwch(ucs_t c);
+void putwch(char32_t c);
 int getchk();
 int getch_ck();
 bool kbhit();
@@ -45,4 +44,4 @@ struct coord_def;
 coord_def cgetpos(GotoRegion region = GOTO_CRT);
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
-#endif
+void set_cursor_region(GotoRegion region);

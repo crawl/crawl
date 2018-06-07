@@ -31,10 +31,6 @@ bardiche
 
 Dlouhá tyč s obrovskou čepelí určenou k sekání na konci.
 %%%%
-beef jerky
-
-Proužek konzervované, mrtvé krávy či býka.
-%%%%
 blessed great sword
 
 Meč s velmi dlouhou a těžkou čepelí, a dlouhou rukojetí. Byl vylepšen silou
@@ -62,10 +58,6 @@ bow
 
 Zakřivený kus dřeva s tětivou, určený k střílení šípů. V boji způsobuje
 obstojné zranění, a zkušený uživatel jej bude schopen dobře využít.
-%%%%
-bread ration
-
-Ztvrdlé, ale vydatné pečivo.
 %%%%
 centaur barding
 
@@ -141,10 +133,6 @@ lychee
 
 Tropické ovoce.
 %%%%
-meat ration
-
-Sytá porce sušené konzervovaného masa různého druhu.
-%%%%
 orange
 
 Lahodné, šťavnaté oranžové plody.
@@ -213,11 +201,6 @@ ring of see invisible
 
 Tento prsten umožňuje svému nositeli vidět věci skryté pohledu kouzlem.
 %%%%
-ring of sustain attributes
-
-Tento prsten chrání svého nositele před ztrátou jeho síly, obratnosti a
-inteligence.
-%%%%
 ring of wizardry
 
 Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.
@@ -246,10 +229,6 @@ wand of fireball
 
 Magické zařízení, které vrhá vybuchující poryvy ohně.
 %%%%
-wand of lightning
-
-Magický přístroj, který vrhá velké blesky.
-%%%%
 wand of magic darts
 
 Magický přístroj, který vrhá malé údery destruktivní energie. Nikdy se nemine.
@@ -262,13 +241,4 @@ obzvláště účinné proti tvar-měnící bytosti.
 wand of random effects
 
 Magické zařízení, které může produkovat různé efekty.
-%%%%
-wand of slowing
-
-Magické zařízení, které vrhá kouzla zpomalení na bytost, na kterou je právě
-namířeno.
-%%%%
-wand of teleportation
-
-Magické zařízení, které způsobí, že bytost bude náhodně přemístěna.
 %%%%

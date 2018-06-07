@@ -29,6 +29,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
+#include "butcher.h" // for fedhas_rot_all_corpses
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -38,16 +39,20 @@
 #include "dungeon.h"
 #include "end.h"
 #include "errors.h"
+#include "player-save-info.h"
 #include "fineff.h"
+#include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h" // for fedhas_rot_all_corpses
+#include "god-companions.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapmark.h"
@@ -59,7 +64,9 @@
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
+#include "species.h"
 #include "spl-summoning.h"
+#include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -71,7 +78,8 @@
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
-#include "timed_effects.h"
+#include "tiles-build-specific.h"
+#include "timed-effects.h"
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
@@ -92,6 +100,8 @@ static bool _ghost_version_compatible(reader &ghost_reader);
 static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
+
+static bool _convert_obsolete_species();
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
@@ -833,7 +843,8 @@ static int _get_dest_stair_type(branch_type old_branch,
 }
 
 static void _place_player_on_stair(branch_type old_branch,
-                                   int stair_taken, const coord_def& dest_pos)
+                                   int stair_taken, const coord_def& dest_pos,
+                                   const string &hatch_name)
 
 {
     bool find_first = true;
@@ -842,7 +853,8 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
-    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
+    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
+                                     hatch_name));
 }
 
 static void _clear_env_map()
@@ -857,7 +869,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
         return false;
 
     monster* fol = monster_at(pos);
-    if (!fol || !fol->alive())
+    if (!fol || !fol->alive() || fol->incapacitated())
         return false;
 
     // only H's ancestors can follow into portals & similar.
@@ -873,7 +885,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
     // behind it that might want to push through.
     // This means we don't actually send it on transit, but we do
     // return true, so adjacent real followers are handled correctly. (jpeg)
-    if (!mons_can_use_stairs(fol))
+    if (!mons_can_use_stairs(*fol))
         return true;
 
     level_id dest = level_id::current();
@@ -912,7 +924,7 @@ static void _grab_followers()
         if (mons_is_mons_class(fol, MONS_DOWAN) && fol->alive())
             dowan = fol;
 
-        if (fol->wont_attack() && !mons_can_use_stairs(fol))
+        if (fol->wont_attack() && !mons_can_use_stairs(*fol))
         {
             non_stair_using_allies++;
             // If the class can normally use stairs it
@@ -1021,12 +1033,52 @@ static void _do_lost_items()
             item_was_lost(item);
 }
 
+/// Rot all corpses remaining on the level, giving Fedhas piety for doing so.
+static void _fedhas_rot_all_corpses(const level_id& old_level)
+{
+    bool messaged = false;
+    for (size_t mitm_index = 0; mitm_index < mitm.size(); ++mitm_index)
+    {
+        item_def &item = mitm[mitm_index];
+        if (!item.defined()
+            || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
+            || item.props.exists(CORPSE_NEVER_DECAYS))
+        {
+            continue;
+        }
+
+        if (mons_skeleton(item.mon_type))
+            ASSERT(turn_corpse_into_skeleton(item));
+        else
+        {
+            item_was_destroyed(item);
+            destroy_item(mitm_index);
+        }
+
+        if (!messaged)
+        {
+            simple_god_message("'s fungi set to work.");
+            messaged = true;
+        }
+
+        const int piety = x_chance_in_y(2, 5) ? 2 : 1; // match fungal_bloom()
+        // XXX: deduplicate above ^
+        did_god_conduct(DID_ROT_CARRION, piety);
+    }
+
+    // assumption: CORPSE_NEVER_DECAYS is never set for seen corpses
+    LevelStashes *ls = StashTrack.find_level(old_level);
+    if (ls) // assert?
+        ls->rot_all_corpses();
+}
+
 /**
  * Perform cleanup when leaving a level.
  *
  * If returning to the previous level on the level stack (e.g. when leaving the
  * abyss), pop it off the stack. Delete non-permanent levels. Also check to be
- * sure no loops have formed in the level stack.
+ * sure no loops have formed in the level stack, and, for Fedhasites, rots any
+ * corpses left behind.
  *
  * @param stair_taken   The means used to leave the last level.
  * @param old_level     The ID of the previous level.
@@ -1037,6 +1089,9 @@ static bool _leave_level(dungeon_feature_type stair_taken,
                          const level_id& old_level, coord_def *return_pos)
 {
     bool popped = false;
+
+    if (you.religion == GOD_FEDHAS)
+        _fedhas_rot_all_corpses(old_level);
 
     if (!you.level_stack.empty()
         && you.level_stack.back().id == level_id::current())
@@ -1122,14 +1177,8 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    if (!crawl_state.game_is_tutorial()
-        && !Options.seed
-        && !player_in_branch(BRANCH_ABYSS)
-        && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(3))
-    {
-        load_ghost(true);
-    }
+    if (ghost_demon::ghost_eligible() && one_chance_in(3))
+        load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), true);
     env.turns_on_level = 0;
     // sanctuary
     env.sanctuary_pos  = coord_def(-1, -1);
@@ -1146,14 +1195,14 @@ static void _make_level(dungeon_feature_type stair_taken,
  */
 static void _place_player(dungeon_feature_type stair_taken,
                           branch_type old_branch, const coord_def &return_pos,
-                          const coord_def &dest_pos)
+                          const coord_def &dest_pos, const string &hatch_name)
 {
     if (player_in_branch(BRANCH_ABYSS))
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
     else
-        _place_player_on_stair(old_branch, stair_taken, dest_pos);
+        _place_player_on_stair(old_branch, stair_taken, dest_pos, hatch_name);
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
@@ -1181,7 +1230,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 
         dprf("%s under player and can't be moved anywhere; killing",
              mon->name(DESC_PLAIN).c_str());
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
 }
@@ -1190,6 +1239,22 @@ static void _place_player(dungeon_feature_type stair_taken,
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
+}
+
+static string _get_hatch_name()
+{
+    vector <map_marker *> markers;
+    markers = find_markers_by_prop(HATCH_NAME_PROP);
+    for (auto m : markers)
+    {
+        if (m->pos == you.pos())
+        {
+            string name = m->property(HATCH_NAME_PROP);
+            ASSERT(!name.empty());
+            return name;
+        }
+    }
+    return "";
 }
 
 /**
@@ -1203,7 +1268,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
 
-    string level_name = level_id::current().describe();
+    const string level_name = level_id::current().describe();
     const bool make_changes =
     (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
@@ -1211,6 +1276,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     bool popped = false;
 
     coord_def return_pos; //TODO: initialize to null
+
+    string hatch_name = "";
+    if (feat_is_escape_hatch(stair_taken))
+        hatch_name = _get_hatch_name();
+
     if (load_mode != LOAD_VISITOR)
         popped = _leave_level(stair_taken, old_level, &return_pos);
 
@@ -1225,10 +1295,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Save position for hatches to place a marker on the destination level.
     coord_def dest_pos = you.pos();
-
-    // Going up/down stairs, going through a portal, or being banished
-    // means the previous x/y movement direction is no longer valid.
-    you.reset_prev_move();
 
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
@@ -1320,7 +1386,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         delete_all_clouds();
 
-        _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
+        _place_player(stair_taken, old_level.branch, return_pos, dest_pos,
+                      hatch_name);
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
@@ -1331,10 +1398,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
-    {
         place_transiting_monsters();
-        place_transiting_items();
-    }
 
     if (make_changes)
     {
@@ -1360,7 +1424,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // want them to attack players quite as soon:
         you.time_taken *= (just_created_level ? 1 : 2);
 
-        you.time_taken = div_rand_round(you.time_taken * 2, 3);
+        you.time_taken = div_rand_round(you.time_taken * 3, 4);
 
         dprf("arrival time: %d", you.time_taken);
 
@@ -1624,14 +1688,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    if (Options.restart_after_game && Options.restart_after_save
-        && !crawl_state.seen_hups)
-    {
-        throw game_ended_condition(true);
-    }
-
-    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-        farewellmsg? farewellmsg : you.your_name.c_str());
+    game_ended(game_exit::save, farewellmsg ? farewellmsg
+                                : "See you soon, " + you.your_name + "!");
 }
 
 // Saves the game without exiting.
@@ -1690,13 +1748,72 @@ static string _find_ghost_file()
     return bonefiles[ui_random(bonefiles.size())];
 }
 
+static vector<ghost_demon> _load_ghost_vec(bool creating_level, bool wiz_cmd)
+{
+    vector<ghost_demon> result;
+
+    const string ghost_filename = _find_ghost_file();
+    if (ghost_filename.empty())
+    {
+        if (wiz_cmd && !creating_level)
+            mprf(MSGCH_PROMPT, "No ghost files for this level.");
+        return result; // no such ghost.
+    }
+
+    reader inf(ghost_filename);
+    if (!inf.valid())
+    {
+        if (wiz_cmd && !creating_level)
+            mprf(MSGCH_PROMPT, "Ghost file invalidated before read.");
+        return result;
+    }
+
+    inf.set_safe_read(true); // don't die on 0-byte bones
+    if (_ghost_version_compatible(inf))
+    {
+        try
+        {
+            result = tag_read_ghosts(inf);
+            inf.fail_if_not_eof(ghost_filename);
+        }
+        catch (short_read_exception &short_read)
+        {
+            mprf(MSGCH_ERROR, "Broken bones file: %s",
+                 ghost_filename.c_str());
+        }
+    }
+    inf.close();
+
+    // Remove bones file - ghosts are hardly permanent.
+    if (unlink(ghost_filename.c_str()) != 0)
+    {
+        mprf(MSGCH_ERROR, "Failed to unlink bones file: %s",
+                ghost_filename.c_str());
+    }
+
+    if (!debug_check_ghosts(result))
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "Refusing to load buggy ghost from file \"%s\"!",
+             ghost_filename.c_str());
+
+        result.clear();
+        return result;
+    }
+
+    return result;
+
+}
+
 /**
  * Attempt to load one or more ghosts into the level.
  *
+ * @param max_ghosts        A maximum number of ghosts to creat.
+ *                          Set to <= 0 to load as many as possible.
  * @param creating_level    Whether a level is currently being generated.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level)
+bool load_ghosts(int max_ghosts, bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1724,84 +1841,40 @@ bool load_ghost(bool creating_level)
         ;
 #endif // BONES_DIAGNOSTICS
 
-    const string ghost_filename = _find_ghost_file();
-    if (ghost_filename.empty())
-    {
-        if (wiz_cmd && !creating_level)
-            mprf(MSGCH_PROMPT, "No ghost files for this level.");
-        return false; // no such ghost.
-    }
-
-    reader inf(ghost_filename);
-    if (!inf.valid())
-    {
-        if (wiz_cmd && !creating_level)
-            mprf(MSGCH_PROMPT, "Ghost file invalidated before read.");
-        return false;
-    }
-
-    inf.set_safe_read(true); // don't die on 0-byte bones
-    if (_ghost_version_compatible(inf))
-    {
-        try
-        {
-            ghosts.clear();
-            tag_read(inf, TAG_GHOST);
-            inf.fail_if_not_eof(ghost_filename);
-        }
-        catch (short_read_exception &short_read)
-        {
-            mprf(MSGCH_ERROR, "Broken bones file: %s",
-                 ghost_filename.c_str());
-        }
-    }
-    inf.close();
-
-    // Remove bones file - ghosts are hardly permanent.
-    unlink(ghost_filename.c_str());
-
-    if (!debug_check_ghosts())
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "Refusing to load buggy ghost from file \"%s\"!",
-             ghost_filename.c_str());
-
-        return false;
-    }
+    vector<ghost_demon> loaded_ghosts = _load_ghost_vec(creating_level, wiz_cmd);
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
-             (unsigned int)ghosts.size());
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s), will attempt to place %d of them",
+             (unsigned int)loaded_ghosts.size(), max_ghosts);
     }
-#endif
 
-#ifdef BONES_DIAGNOSTICS
-    unsigned int  unplaced_ghosts = ghosts.size();
     bool          ghost_errors    = false;
 #endif
 
+    max_ghosts = max_ghosts <= 0 ? loaded_ghosts.size()
+                                 : min(max_ghosts, (int) loaded_ghosts.size());
+    int placed_ghosts = 0;
+
     // Translate ghost to monster and place.
-    while (!ghosts.empty())
+    while (!loaded_ghosts.empty() && placed_ghosts < max_ghosts)
     {
         monster * const mons = get_free_monster();
         if (!mons)
             break;
 
         mons->set_new_monster_id();
-        mons->set_ghost(ghosts[0]);
+        mons->set_ghost(loaded_ghosts[0]);
         mons->type = MONS_PLAYER_GHOST;
         mons->ghost_init();
-        mons->bind_melee_flags();
-        if (mons->has_spells())
-            mons->bind_spell_flags();
 
-        ghosts.erase(ghosts.begin());
+        loaded_ghosts.erase(loaded_ghosts.begin());
+        placed_ghosts++;
+
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
-            unplaced_ghosts--;
             if (!mons->alive())
             {
                 mprf(MSGCH_DIAGNOSTICS, "Placed ghost is not alive.");
@@ -1819,15 +1892,18 @@ bool load_ghost(bool creating_level)
     }
 
 #ifdef BONES_DIAGNOSTICS
-    if (do_diagnostics && unplaced_ghosts > 0)
+    if (do_diagnostics && placed_ghosts < max_ghosts)
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
-             (unsigned int)ghosts.size());
+             max_ghosts - placed_ghosts);
         ghost_errors = true;
     }
     if (ghost_errors)
         more();
 #endif
+    // resave any unused ghosts
+    if (!loaded_ghosts.empty())
+        save_ghosts(loaded_ghosts);
 
     return true;
 }
@@ -1837,6 +1913,15 @@ static bool _restore_game(const string& filename)
 {
     if (Options.no_save)
         return false;
+
+#ifdef USE_TILE_WEB
+    // a more before the player is loaded will crash when it tries to send
+    // enough information to the webtiles client to render the display.
+    // TODO: is there a good way to do any mores in load_messages?
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
+#endif
+
+    clear_message_store();
 
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
@@ -1855,25 +1940,35 @@ static bool _restore_game(const string& filename)
             you.save = 0;
             return false;
         }
-        fail("Cannot load an incompatible save from version %s",
-             you.prev_save_version.c_str());
+        crawl_state.default_startup_name = you.your_name; // for main menu
+        you.save->abort();
+        delete you.save;
+        you.save = 0;
+        game_ended(game_exit::abort,
+            you.your_name + " is from an incompatible version and can't be loaded.");
     }
+
+    crawl_state.default_startup_name = you.your_name; // for main menu
 
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno("This game comes from a previous release of Crawl. If you "
-                   "load it now, you won't be able to go back. Continue?",
-                   true, 'n'))
+        if (!yesno(("This game comes from a previous release of Crawl (" +
+                    you.prev_save_version + "). If you load it now,"
+                    " you won't be able to go back. Continue?").c_str(),
+                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            end(0, false, "Please reinstall the stable version then.\n");
+            game_ended(game_exit::abort, "Please use version " +
+                you.prev_save_version + " to load " + you.your_name + " then.");
         }
     }
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
+
+    _convert_obsolete_species();
 
     const int minorVersion = crawl_state.minor_version;
 
@@ -2047,6 +2142,56 @@ bool get_save_version(reader &file, int &major, int &minor)
     minor = buf[1];
 
     return true;
+}
+
+static bool _convert_obsolete_species()
+{
+    // At this point the character has been loaded but not resaved, but the grid, lua, stashes, etc have not been.
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!yes_or_no("This <red>Lava Orc</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Hill Orc. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to keep it as a Lava Orc.");
+        }
+        change_species_to(SP_HILL_ORC);
+        // No need for conservation
+        you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
+        // This is not an elegant way to deal with lava, but at this point the
+        // level isn't loaded so we can't check the grid features. In
+        // addition, even if the player isn't over lava, they might still get
+        // trapped.
+        fly_player(100);
+        return true;
+    }
+    if (you.species == SP_DJINNI)
+    {
+        if (!yes_or_no("This <red>Djinni</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Vine Stalker. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to keep it as a Djinni.");
+        }
+        change_species_to(SP_VINE_STALKER);
+        you.magic_contamination = 0;
+        // Djinni were flying, so give the player some time to land
+        fly_player(100);
+        // Give them some time to find food. Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
+        you.hunger = HUNGER_MAXIMUM;
+        return true;
+    }
+#endif
+    return false;
 }
 
 static bool _read_char_chunk(package *save)
@@ -2254,7 +2399,7 @@ static FILE* _make_bones_file(string * return_gfilename)
  * @param force   Forces ghost generation even in otherwise-disallowed levels.
  **/
 
-void save_ghost(bool force)
+void save_ghosts(const vector<ghost_demon> &ghosts, bool force)
 {
 #ifdef BONES_DIAGNOSTICS
     const bool do_diagnostics =
@@ -2268,8 +2413,6 @@ void save_ghost(bool force)
         ;
 #endif // BONES_DIAGNOSTICS
 
-    ghosts = ghost_demon::find_ghosts();
-
     if (ghosts.empty())
     {
 #ifdef BONES_DIAGNOSTICS
@@ -2279,13 +2422,8 @@ void save_ghost(bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, the Temple, or the Abyss.
-    if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)
-                   || player_in_branch(BRANCH_ABYSS)))
-    {
+    if (!force && !ghost_demon::ghost_eligible())
         return;
-    }
 
     if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
     {
@@ -2311,7 +2449,7 @@ void save_ghost(bool force)
     writer outw(g_file_name, ghost_file);
 
     _write_ghost_version(outw);
-    tag_write(TAG_GHOST, outw);
+    tag_write_ghosts(outw, ghosts);
 
     lk_close(ghost_file, g_file_name);
 

@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "mapdef.h"
+#include "message.h"
 #include "random.h"
 
 // Adds a simple hollow box to the map with the specified

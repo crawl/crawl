@@ -103,10 +103,6 @@ Evoke Invisibility ability
 Werde für eine kurze Zeit unsichtbar. Unsichtbarkeit erhöht deine magische
 Kontamination und wird schließlich Glühen verursachen.
 %%%%
-Turn Visible ability
-
-Werde wieder sichtbar.
-%%%%
 Stop Flying ability
 
 Höre auf zu fliegen.

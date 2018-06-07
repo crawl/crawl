@@ -52,9 +52,17 @@ deaths_door DEATHS_DOOR
 recall RECALL
 drain DRAIN
 idealised IDEALISED
+bound_soul BOUND_SOUL
+infested INFESTED
+corroded CORRODED
+swift SWIFT
+pinned PINNED
+vile_clutch VILE_CLUTCH
+possessable POSSESSABLE
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
+new_transporter NEW_TRANSPORTER
 
 %sdir misc
 out_of_sight MESH

@@ -33,10 +33,6 @@ bardiche
 
 Uma haste longa com uma enorme lâmina cortante em uma ponta.
 %%%%
-beef jerky
-
-Uma tira de carne de vaca, ou boi, seca.
-%%%%
 blowgun
 
 Um tubo longo e leve, aberto de ambos os lados. Causa pouquíssimo dano. O seu
@@ -109,10 +105,6 @@ Um livro de magia cheio de runas para controlar os mortos.
 book of wizardry
 
 Um livro de magia.
-%%%%
-bread ration
-
-Uma refeição farta de pão dormido mas massudo.
 %%%%
 buckler
 
@@ -287,11 +279,6 @@ scythe
 
 Uma ferramenta do campo, normalmente inútil em combate.
 %%%%
-slice of pizza
-
-Uma fatia de pizza: massa de pão achatada com molho de tomate, muzarela de
-búfala e manjericão.
-%%%%
 snozzcumber
 
 Um vegetal repulsivo no formato de um pepino.
@@ -312,22 +299,14 @@ sultana
 
 Uma humilde passa.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 Uma armadura mágica feita das escamas de um dragão do pântano, que confere
 resistência a veneno ao usuário.
 %%%%
-wand of heal wounds
-
-Um dispositivo mágico capaz de curar as feridas de uma criatura.
-%%%%
 wand of invisibility
 
 Um dispositivo mágico capaz de ocultar uma criatura das demais.
-%%%%
-wand of lightning
-
-Um dispositivo mágico que arremessa grandes rajadas de raios.
 %%%%
 whip
 

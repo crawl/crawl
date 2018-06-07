@@ -1,11 +1,23 @@
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#pragma once
 
 #include <algorithm>
 
+#include "activity-interrupt-type.h"
+#include "char-set-type.h"
+#include "confirm-level-type.h"
+#include "confirm-prompt-type.h"
 #include "feature.h"
-#include "newgame_def.h"
+#include "flang-t.h"
+#include "flush-reason-type.h"
+#include "hunger-state-t.h"
+#include "lang-t.h"
+#include "maybe-bool.h"
+#include "mpr.h"
+#include "newgame-def.h"
 #include "pattern.h"
+#include "screen-mode.h"
+#include "skill-focus-mode.h"
+#include "tag-pref.h"
 
 enum autosac_type
 {
@@ -46,9 +58,13 @@ struct sound_mapping
 {
     text_pattern pattern;
     string       soundfile;
+    bool         interrupt_game;
+
     bool operator== (const sound_mapping &o) const
     {
-        return pattern == o.pattern && soundfile == o.soundfile;
+        return pattern == o.pattern
+                && soundfile == o.soundfile
+                && interrupt_game == o.interrupt_game;
     }
 };
 
@@ -105,10 +121,12 @@ enum use_animation_type
 DEF_BITFIELD(use_animations_type, use_animation_type);
 
 class LineInput;
+class GameOption;
 struct game_options
 {
 public:
     game_options();
+    ~game_options();
     void reset_options();
 
     void read_option_line(const string &s, bool runscripts = false);
@@ -136,9 +154,9 @@ public:
 
     // View options
     map<dungeon_feature_type, feature_def> feature_colour_overrides;
-    map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
+    map<dungeon_feature_type, FixedVector<char32_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
-    ucs_t cset_override[NUM_DCHAR_TYPES];
+    char32_t cset_override[NUM_DCHAR_TYPES];
     typedef pair<string, cglyph_t> item_glyph_override_type;
     vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
@@ -167,9 +185,9 @@ public:
     int         mlist_min_height;
     int         msg_min_height;
     int         msg_max_height;
+    int         msg_webtiles_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
-    bool        mlist_targeting;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 
@@ -199,11 +217,11 @@ public:
     bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
-    bool        show_game_turns; // Show game turns instead of player turns.
+    bool        show_game_time; // Show game time instead of player turns.
+    bool        equip_bar; // Show equip bar instead of noise bar.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
-    bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        travel_open_doors;     // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
@@ -212,9 +230,11 @@ public:
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     int         confirm_butcher; // When to prompt for butchery
+    hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
+    bool        auto_hide_spells; // hide new spells
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;   // take note when skills reach new max
@@ -226,9 +246,11 @@ public:
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
+    bool        simple_targeting; // disable smart spell targeting
 
     int         colour[16];      // macro fg colours to other colours
-    int         background_colour; // select default background colour
+    unsigned    background_colour; // select default background colour
+    unsigned    foreground_colour; // select default foreground colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
@@ -240,24 +262,30 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
-    bool        no_dark_brand;    // Attribute for branding friendly monsters
+    bool        blink_brightens_background; // Assume blink will brighten bg.
+    bool        bold_brightens_foreground; // Assume bold will brighten fg.
+    bool        best_effort_brighten_background; // Allow bg brighten attempts.
+    bool        best_effort_brighten_foreground; // Allow fg brighten attempts.
+    bool        allow_extended_colours; // Use more than 8 terminal colours.
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
     int         autofight_warning;      // Amount of real time required between
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
 
+    bool        wall_jump_prompt; // Whether to ask for confirmation before jumps.
+    bool        wall_jump_move;   // Whether to allow wall jump via movement
+
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
+    bool        sounds_on;              // Allow sound effects to play
+    bool        one_SDL_sound_channel;  // Limit to one SDL sound at once
+
     char_set_type  char_set;
-    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
-
-    int         num_colours;     // used for setting up curses colour table (8 or 16)
-
-    vector<string> pizzas;
+    FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
 #ifdef WIZARD
     int            wiz_mode;      // no, never, start in wiz mode
@@ -274,7 +302,6 @@ public:
     vector<pair<int, int> > mp_colour;
     vector<pair<int, int> > stat_colour;
     vector<int> enemy_hp_colour;
-    bool visual_monster_hp;
 
     string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
@@ -305,17 +332,20 @@ public:
     vector<message_filter> flash_screen_message;
     vector<text_pattern> confirm_action;
 
-    int         tc_reachable;   // Colour for squares that are reachable
-    int         tc_excluded;    // Colour for excluded squares.
-    int         tc_exclude_circle; // Colour for squares in the exclusion radius
-    int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
-    int         tc_disconnected;// Areas that are completely disconnected.
+    unsigned    tc_reachable;   // Colour for squares that are reachable
+    unsigned    tc_excluded;    // Colour for excluded squares.
+    unsigned    tc_exclude_circle; // Colour for squares in the exclusion radius
+    // Colour for squares which are safely traversable but that travel
+    // considers forbidden, either because they are themselves forbidden by
+    // travel options or exclusions or because they are only accessible through
+    // such squares.
+    unsigned    tc_forbidden;
+    // Colour for squares that are not safely traversable (e.g. deep water,
+    // lava, or traps)
+    unsigned    tc_dangerous;
+    unsigned    tc_disconnected;// Areas that are completely disconnected.
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.
-
-    int         travel_stair_cost;
-
-    bool        show_waypoints;
 
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
@@ -337,8 +367,6 @@ public:
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view
 
-    int         explore_stop_prompt;
-
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
     vector<text_pattern> explore_stop_pickup_ignore;
@@ -354,14 +382,10 @@ public:
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
 
-    // Some experimental improvements to explore
-    bool        explore_improved;
-
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    bool        auto_sacrifice;
-
     vector<sound_mapping> sound_mappings;
+    string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 
@@ -382,19 +406,27 @@ public:
                                     // pickup
     bool        easy_exit_menu;     // Menus are easier to get out of
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
+    bool        easy_floor_use;     // , selects the floor item if there's 1
 
     int         assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
-    bool        restart_after_game; // If true, Crawl will not close on game-end
+    maybe_bool  restart_after_game; // If true, Crawl will not close on game-end
+                                    // If maybe, Crawl will restart only if the
+                                    // CL options would bring up the startup
+                                    // menu.
     bool        restart_after_save; // .. or on save
+    bool        newgame_after_quit; // override the restart_after_game behavior
+                                    // to always start a new game on quit.
 
+    bool        name_bypasses_menu; // should the menu be skipped if there is
+                                    // a name set on game start
     bool        read_persist_options; // If true, Crawl will try to load
                                       // options from c_persist.options
 
     vector<text_pattern> drop_filter;
 
-    FixedVector<FixedBitVector<NUM_AINTERRUPTS>, NUM_DELAYS> activity_interrupts;
+    map<string, FixedBitVector<NUM_AINTERRUPTS>> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
     FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif
@@ -412,6 +444,8 @@ public:
 
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.
+
+    bool        use_modifier_prefix_keys; // Treat '/' as SHIFT and '*' as CTRL
 
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
@@ -448,32 +482,37 @@ public:
 #endif  // WIZARD
 
 #ifdef USE_TILE
+    // TODO: have these present but ignored in non-tile builds
     string      tile_show_items; // show which item types in tile inventory
     bool        tile_skip_title; // wait for a key at title screen?
     bool        tile_menu_icons; // display icons in menus?
 
     // minimap colours
-    VColour     tile_player_col;
-    VColour     tile_monster_col;
-    VColour     tile_plant_col;
-    VColour     tile_item_col;
     VColour     tile_unseen_col;
     VColour     tile_floor_col;
     VColour     tile_wall_col;
     VColour     tile_mapped_floor_col;
     VColour     tile_mapped_wall_col;
     VColour     tile_door_col;
-    VColour     tile_downstairs_col;
+    VColour     tile_item_col;
+    VColour     tile_monster_col;
+    VColour     tile_plant_col;
     VColour     tile_upstairs_col;
+    VColour     tile_downstairs_col;
     VColour     tile_branchstairs_col;
-    VColour     tile_portal_col;
     VColour     tile_feature_col;
-    VColour     tile_trap_col;
     VColour     tile_water_col;
-    VColour     tile_deep_water_col;
     VColour     tile_lava_col;
-    VColour     tile_excluded_col;
+    VColour     tile_trap_col;
     VColour     tile_excl_centre_col;
+    VColour     tile_excluded_col;
+    VColour     tile_player_col;
+    VColour     tile_deep_water_col;
+    VColour     tile_portal_col;
+    VColour     tile_transporter_col;
+    VColour     tile_transporter_landing_col;
+    VColour     tile_explore_horizon_col;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     // font settings
@@ -531,6 +570,7 @@ public:
     string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
+    bool        tile_web_mouse_control;
 #endif
 #endif // USE_TILE
 
@@ -548,12 +588,6 @@ private:
     set<string>    included;  // Files we've included already.
 
 public:
-    // Convenience accessors for the second-class options in named_options.
-    int         o_int(const char *name, int def = 0) const;
-    bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = nullptr) const;
-    int         o_colour(const char *name, int def = LIGHTGREY) const;
-
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
 
@@ -604,10 +638,15 @@ private:
     void set_tile_offsets(const string &s, bool set_shield);
 
     static const string interrupt_prefix;
+
+    vector<GameOption*> option_behaviour;
+    map<string, GameOption*> options_by_name;
+    const vector<GameOption*> build_options_list();
+    map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
 };
 
-ucs_t get_glyph_override(int c);
-object_class_type item_class_by_sym(ucs_t c);
+char32_t get_glyph_override(int c);
+object_class_type item_class_by_sym(char32_t c);
 
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)
@@ -616,8 +655,6 @@ extern game_options  Options;
 
 static inline short macro_colour(short col)
 {
-    ASSERT(col < MAX_TERM_COLOUR);
+    ASSERT(col < NUM_TERM_COLOURS);
     return col < 0 ? col : Options.colour[ col ];
 }
-
-#endif

@@ -5,17 +5,20 @@
 #include "tilereg-spl.h"
 
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-#include "process_desc.h"
 #include "prompt.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stringutil.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "viewgeom.h"
 
 SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
@@ -138,11 +141,7 @@ bool SpellRegion::update_alt_text(string &alt)
     describe_info inf;
     get_spell_desc(spell, inf);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 

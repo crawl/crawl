@@ -85,11 +85,6 @@ Hellfire ability
 
 Frappe vos ennemis avec des flammes infernales.
 %%%%
-Release Delayed Fireball ability
-
-Relâche instantanément une boule de feu (retardée) sans coût additionnel de
-magie ou de faim.
-%%%%
 Stop Singing ability
 
 Vous cessez de chanter votre chanson du tueur.
@@ -135,10 +130,6 @@ Evoke Invisibility ability
 
 Vous rend invisible pour un temps limité. Devenir invisible accroit votre
 contamination magique et peut vous rendre luminescent.
-%%%%
-Turn Visible ability
-
-Redevenir à nouveau visible.
 %%%%
 Stop Flying ability
 

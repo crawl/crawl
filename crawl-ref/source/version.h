@@ -3,8 +3,7 @@
  * @brief Contains version information
 **/
 
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
@@ -51,8 +50,9 @@ namespace Version
      * Indicates whether it's a devel or a stable version.
      */
     extern const rel_type ReleaseType;
+
+    void record(string prev);
+    string history();
 }
 
 extern const char* compilation_info;
-
-#endif

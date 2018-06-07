@@ -1,5 +1,4 @@
-#ifndef PATTERN_H
-#define PATTERN_H
+#pragma once
 
 class pattern_match
 {
@@ -155,4 +154,3 @@ private:
     string pattern;
     bool ignore_case;
 };
-#endif

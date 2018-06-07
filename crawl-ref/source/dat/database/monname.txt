@@ -12,7 +12,7 @@
 # Other syllables may be borrowed from real life, or made up.
 #
 # To determine a name for an orcish follower, the game first looks
-# looks for this follower's specific type, followed by the key word
+# for this follower's specific type, followed by the key word
 # "name", e.g. "orc warrior name" or "orc sorcerer name". If no name
 # has been found, the genus "orc" is tried instead. Should that also
 # fail, plain orcs as well as followers of professions that have not
@@ -240,7 +240,7 @@ Zartorak
 Zorug
 %%%%
 # Ancestor names, split by gender & culture.
-# FR: asian, african names
+# FR: asian names
 ancestor male name
 
 @_west_european_male_name_@
@@ -252,6 +252,16 @@ ancestor male name
 @_mesopotamian_male_name_@
 
 @_egyptian_male_name_@
+
+@_zulu_male_name_@
+
+# not many names
+w:5
+@_arabic_male_name_@
+
+# not many names
+w:5
+@_slavic_male_name_@
 %%%%
 ancestor female name
 
@@ -264,6 +274,16 @@ ancestor female name
 @_mesopotamian_female_name_@
 
 @_egyptian_female_name_@
+
+@_zulu_female_name_@
+
+# not many names
+w:5
+@_arabic_female_name_@
+
+# not many names
+w:5
+@_slavic_female_name_@
 %%%%
 _west_european_male_name_
 
@@ -464,7 +484,8 @@ Shedsu-nefertum
 Si-Tayit
 
 w:1
-Snaaib # lmao
+Snaaib
+# lmao
 
 Sosibius
 
@@ -472,6 +493,108 @@ Thamphthis
 
 Udjahorresnet
 
+%%%%
+_zulu_male_name_
+Ayize
+
+w:1
+Bongani
+
+Cashile
+
+Chakide
+
+Chitauli
+
+Dube
+
+Ingiyab
+
+Impisi
+
+Jabu
+
+Londisizwe
+
+Manelesi
+
+Msizi
+
+Njabulo
+
+Qinisela
+
+Sanele
+
+Sizwe
+
+Thabo
+
+Thulani
+
+Vusi
+
+Xolani
+%%%%
+_arabic_male_name_
+Arif
+
+Ferran
+
+Hamal
+
+Kateb
+
+Lufti
+
+w:1
+Rigel
+
+Rabi
+
+Shunnar
+
+Sofian
+
+Tawil
+
+w:1
+Zero
+%%%%
+_slavic_male_name_
+
+Bolek
+
+Bor
+
+Branko
+
+Dejan
+
+Laslo
+
+w:1
+Lech
+
+Milos
+
+Mirko
+
+Plamen
+
+Preben
+
+Stanko
+
+Tihomir
+
+Vojtech
+
+Wenzel
+
+Zdislav
+
+Zoran
 %%%%
 _west_european_female_name_
 
@@ -617,4 +740,106 @@ Matia
 Nebetia
 
 Nefertari
+%%%%
+_zulu_female_name_
+Busisiwe
+
+Fikile
+
+Ingwe
+
+Kaya
+
+Lwandle
+
+Mbali
+
+Nhalahla
+
+Nkonkoni
+
+Nolwazi
+
+Nomusa
+
+Nozipho
+
+Ntombi
+
+Simosihle
+
+Thoko
+
+Zola
+%%%%
+_arabic_female_name_
+Amala
+
+Ara
+
+Atia
+
+Caliana
+
+Jaydra
+
+Khalidah
+
+w:5
+Manar
+
+Melek
+
+Muriel
+
+Oma
+
+Qitarah
+
+Rabi
+
+Rana
+
+Shunnareh
+
+Waqi
+
+Zada
+
+Zayda
+
+Zulima
+%%%%
+_slavic_female_name_
+
+Bojana
+
+Bozena
+
+Bozidara
+
+Dagmar
+
+Dusana
+
+Libusa
+
+w:5
+Marzanna
+
+w:5
+Marzena
+
+Mira
+
+Mirna
+
+Rodica
+
+w:5
+Vesna
+
+Zarja
+
+Zorana
 %%%%

@@ -1,6 +1,6 @@
-#ifndef FPROP_H
-#define FPROP_H
+#pragma once
 
+#include "enum.h" // DEF_BITFIELD
 struct coord_def;
 
 enum feature_property_type
@@ -31,6 +31,7 @@ enum feature_property_type
     FPROP_BLOOD_EAST    = FPROP_BLOOD_WEST | FPROP_BLOOD_NORTH,
     FPROP_OLD_BLOOD     = (1 << 18),
 };
+DEF_BITFIELD(terrain_property_t, feature_property_type);
 
 bool is_sanctuary(const coord_def& p);
 bool is_bloodcovered(const coord_def& p);
@@ -40,5 +41,3 @@ bool glowing_mold(const coord_def & p);
 void remove_mold(const coord_def & p);
 feature_property_type str_to_fprop(const string &str);
 char blood_rotation(const coord_def & p);
-
-#endif

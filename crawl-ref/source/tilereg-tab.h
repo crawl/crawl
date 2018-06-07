@@ -1,7 +1,7 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_TAB_H
-#define TILEREG_TAB_H
+#pragma once
 
+#include "command-type.h"
 #include "tilereg-grid.h"
 
 // A region that contains multiple region, selectable by tabs.
@@ -28,6 +28,7 @@ public:
     void deactivate_tab();
     int active_tab() const;
     int num_tabs() const;
+    int min_height_for_items() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
     int find_tab(string tab_name) const;
@@ -80,5 +81,4 @@ private:
     int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
 };
 
-#endif
 #endif

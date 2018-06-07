@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_SKL_H
-#define TILEREG_SKL_H
+#pragma once
 
 #include "tilereg-grid.h"
 
@@ -23,5 +22,4 @@ protected:
     virtual void activate() override;
 };
 
-#endif
 #endif

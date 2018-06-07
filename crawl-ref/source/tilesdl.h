@@ -3,11 +3,20 @@
  * @brief SDL-related functionality for the tiles port
 **/
 
-#ifdef USE_TILE
-#ifndef TILESDL_H
-#define TILESDL_H
+#pragma once
 
+#ifdef USE_TILE_LOCAL
+
+#include "cursor-type.h"
+#include "text-tag-type.h"
 #include "tilereg.h"
+
+#ifndef PROPORTIONAL_FONT
+# error PROPORTIONAL_FONT not defined
+#endif
+#ifndef MONOSPACED_FONT
+# error MONOSPACED_FONT not defined
+#endif
 
 class Popup;
 class Region;
@@ -36,15 +45,22 @@ class StatRegion;
 class MessageRegion;
 
 struct map_cell;
+struct crawl_view_geometry;
+
+void gui_init_view_params(crawl_view_geometry &geom);
+
+// If mouse on dungeon map, returns true and sets gc.
+// Otherwise, it just returns false.
+bool gui_get_mouse_grid_pos(coord_def &gc);
 
 typedef map<int, TabbedRegion*>::iterator tab_iterator;
 
-enum key_mod
+enum tiles_key_mod
 {
-    MOD_NONE  = 0x0,
-    MOD_SHIFT = 0x1,
-    MOD_CTRL  = 0x2,
-    MOD_ALT   = 0x4,
+    TILES_MOD_NONE  = 0x0,
+    TILES_MOD_SHIFT = 0x1,
+    TILES_MOD_CTRL  = 0x2,
+    TILES_MOD_ALT   = 0x4,
 };
 
 struct MouseEvent
@@ -54,6 +70,7 @@ struct MouseEvent
         PRESS,
         RELEASE,
         MOVE,
+        WHEEL,
     };
 
     enum mouse_event_button
@@ -82,6 +99,23 @@ struct MouseEvent
     unsigned int py;
 };
 
+struct HiDPIState
+{
+    HiDPIState(int device_density, int logical_density);
+    int logical_to_device(int n) const;
+    int device_to_logical(int n, bool round=true) const;
+    float scale_to_logical() const;
+    float scale_to_device() const;
+    bool update(int ndevice, int nlogical);
+
+    int get_device() const { return device; };
+    int get_logical() const { return logical; };
+
+private:
+    int device;
+    int logical;
+};
+
 class FontWrapper;
 class crawl_view_buffer;
 
@@ -103,6 +137,7 @@ public:
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
     GotoRegion get_cursor_region() const;
+    void set_cursor_region(GotoRegion region);
     int get_number_of_lines();
     int get_number_of_cols();
     bool is_using_small_layout();
@@ -121,6 +156,7 @@ public:
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
+    bool update_dpi();
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
@@ -154,8 +190,9 @@ public:
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 protected:
+    void reconfigure_fonts();
     int load_font(const char *font_file, int font_size,
-                  bool default_on_fail, bool outline);
+                  bool default_on_fail);
     int handle_mouse(MouseEvent &event);
 
     void use_control_region(ControlRegion *region, bool use_control_layer = true);
@@ -163,8 +200,6 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
-    // screen pixel density ratio
-    int densityNum, densityDen;
     // screen pixels per view cell
     coord_def m_viewsc;
 
@@ -224,7 +259,6 @@ protected:
     {
         string name;
         int size;
-        bool outline;
         FontWrapper *font;
     };
     vector<font_info> m_fonts;
@@ -246,7 +280,6 @@ protected:
     void autosize_minimap();
     void place_minimap();
     void resize_inventory();
-    void place_gold_turns();
 
     ImageManager *m_image;
 
@@ -287,6 +320,6 @@ protected:
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
+extern HiDPIState display_density;
 
-#endif
 #endif

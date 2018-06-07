@@ -57,6 +57,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (is_sanctuary != other.is_sanctuary) return false;
     if (is_liquefied != other.is_liquefied) return false;
     if (mangrove_water != other.mangrove_water) return false;
+    if (awakened_forest != other.awakened_forest) return false;
     if (orb_glow != other.orb_glow) return false;
     if (blood_rotation != other.blood_rotation) return false;
     if (old_blood != other.old_blood) return false;

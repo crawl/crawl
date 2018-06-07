@@ -12,23 +12,44 @@
 
 #include "jobs.h"
 #include "newgame.h"
-#include "newgame_def.h"
+#include "newgame-def.h"
+#include "size-type.h"
 #include "species.h"
 
 static bool _banned_combination(job_type job, species_type species)
 {
-    return species == SP_FELID
-            && (job == JOB_GLADIATOR
-                || job == JOB_ASSASSIN
-                || job == JOB_HUNTER
-                || job == JOB_ARCANE_MARKSMAN)
-           || species == SP_DEMIGOD
-               && (job == JOB_BERSERKER
-                   || job == JOB_CHAOS_KNIGHT
-                   || job == JOB_ABYSSAL_KNIGHT)
-           || job == JOB_TRANSMUTER
-              && (species_undead_type(species) == US_UNDEAD
-                  || species_undead_type(species) == US_HUNGRY_DEAD);
+    switch (species)
+    {
+    case SP_FELID:
+        if (job == JOB_GLADIATOR
+            || job == JOB_ASSASSIN
+            || job == JOB_HUNTER
+            || job == JOB_ARCANE_MARKSMAN)
+        {
+            return true;
+        }
+        break;
+    case SP_DEMIGOD:
+        if (job == JOB_BERSERKER
+            || job == JOB_CHAOS_KNIGHT
+            || job == JOB_ABYSSAL_KNIGHT
+            || job == JOB_MONK)
+        {
+            return true;
+        }
+        break;
+    default:
+        break;
+    }
+
+    if (job == JOB_TRANSMUTER
+        && (species_undead_type(species) == US_UNDEAD
+           || species_undead_type(species) == US_HUNGRY_DEAD))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 char_choice_restriction species_allowed(job_type job, species_type speci)
@@ -85,13 +106,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     if (ng.species == SP_FELID && wpn != WPN_UNARMED)
         return CC_BANNED;
-
-    // Can't use them with a shield.
-    if (ng.species == SP_SPRIGGAN && ng.job == JOB_FIGHTER
-        && (wpn == WPN_TRIDENT || wpn == WPN_SPEAR))
-    {
-        return CC_BANNED;
-    }
 
     // These recommend short blades because they're good at stabbing,
     // but the fighter's armour hinders that.

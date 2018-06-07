@@ -4,7 +4,3 @@ Centaur
 Hızlı, güçlü, iri yarı. Centaurlar diğer türlere göre daha fazla yemeğe ihtiyaç
 duyar. Uzak mesafe silahları kullanırlar
 %%%%
-High Elf
-
-Kibirli elfler, büyü yapabildiği gibi kılıçla da savaşabilirler
-%%%%

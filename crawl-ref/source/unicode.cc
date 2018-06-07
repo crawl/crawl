@@ -17,7 +17,7 @@
 #include "syscalls.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!
-int wctoutf8(char *d, ucs_t s)
+int wctoutf8(char *d, char32_t s)
 {
     if (s < 0x80)
     {
@@ -50,7 +50,7 @@ int wctoutf8(char *d, ucs_t s)
     return wctoutf8(d, 0xFFFD);
 }
 
-int utf8towc(ucs_t *d, const char *s)
+int utf8towc(char32_t *d, const char *s)
 {
     if (*s == 0)
     {
@@ -71,7 +71,7 @@ int utf8towc(ucs_t *d, const char *s)
     }
 
     int cnt;
-    ucs_t c;
+    char32_t c;
     if ((*s & 0xe0) == 0xc0)
         cnt=2, c = *s & 0x1f;
     else if ((*s & 0xf0) == 0xe0)
@@ -117,7 +117,7 @@ int utf8towc(ucs_t *d, const char *s)
 wstring utf8_to_16(const char *s)
 {
     wstring d;
-    ucs_t c;
+    char32_t c;
 
     while (int l = utf8towc(&c, s))
     {
@@ -141,14 +141,14 @@ static
 string utf16_to_8(const utf16_t *s)
 {
     string d;
-    ucs_t c;
+    char32_t c;
 
     while (*s)
     {
         if (*s >= 0xD800 && *s <= 0xDBFF)
             if (s[1] >= 0xDC00 && s[1] <= 0xDFFF)
             {
-                c = (((ucs_t)s[0]) << 10) + s[1] - 0x35fdc00;
+                c = (((char32_t)s[0]) << 10) + s[1] - 0x35fdc00;
                 s++;
             }
             else
@@ -174,7 +174,7 @@ string utf8_to_mb(const char *s)
     return s;
 #else
     string d;
-    ucs_t c;
+    char32_t c;
     int l;
     mbstate_t ps;
 
@@ -200,7 +200,7 @@ string utf8_to_mb(const char *s)
 static string utf8_validate(const char *s)
 {
     string d;
-    ucs_t c;
+    char32_t c;
     int l;
 
     while ((l = utf8towc(&c, s)))
@@ -310,7 +310,7 @@ string FileLineInput::get_line()
     vector<utf16_t> win;
     string out;
     char buf[512];
-    ucs_t c;
+    char32_t c;
     int len;
 
     switch (bom)
@@ -473,7 +473,7 @@ string UTF8FileLineInput::get_line()
 
 int strwidth(const char *s)
 {
-    ucs_t c;
+    char32_t c;
     int w = 0;
 
     while (int l = utf8towc(&c, s))
@@ -492,7 +492,7 @@ int strwidth(const string &s)
     return strwidth(s.c_str());
 }
 
-int wclen(ucs_t c)
+int wclen(char32_t c)
 {
     char dummy[4];
     return wctoutf8(dummy, c);
@@ -500,7 +500,7 @@ int wclen(ucs_t c)
 
 char *prev_glyph(char *s, char *start)
 {
-    ucs_t c;
+    char32_t c;
     do
     {
         // Find the start of the previous code point.
@@ -517,7 +517,7 @@ char *prev_glyph(char *s, char *start)
 char *next_glyph(char *s)
 {
     char *s_cur;
-    ucs_t c;
+    char32_t c;
     // Skip at least one character.
     s += utf8towc(&c, s);
     if (!c)
@@ -534,7 +534,7 @@ char *next_glyph(char *s)
 string chop_string(const char *s, int width, bool spaces)
 {
     const char *s0 = s;
-    ucs_t c;
+    char32_t c;
 
     while (int clen = utf8towc(&c, s))
     {
@@ -563,7 +563,7 @@ string chop_tagged_string(const char *s, int width, bool spaces)
     const char * const s0 = s;
     bool in_tag = false;    // are we in a tag
     bool tag_first = false; // is this the first character of a tag?
-    ucs_t c;
+    char32_t c;
 
     while (int clen = utf8towc(&c, s))
     {

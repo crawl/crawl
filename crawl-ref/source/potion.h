@@ -3,8 +3,9 @@
  * @brief Potion and potion-like effects.
 **/
 
-#ifndef POTION_H
-#define POTION_H
+#pragma once
+
+#include "potion-type.h"
 
 class PotionEffect
 {
@@ -27,11 +28,11 @@ public:
      *
      * @param was_known     Whether the player should be held responsible.
      * @param pow           The 'power' of the effect. Mostly disused.
-     * @param is_device     Whether to apply the effects of MUT_NO_DEVICE_HEAL.
+     * @param is_potion     Whether to apply the effects of MUT_NO_POTION_HEAL.
      * @return              Whether or not the potion had an effect.
      */
     virtual bool effect(bool was_known = true, int pow = 40,
-                        bool is_device = true) const = 0;
+                        bool is_potion = true) const = 0;
 
     // Quaff also handles god-conduct and potion-specific
     // uncancellability
@@ -45,7 +46,4 @@ public:
 const PotionEffect* get_potion_effect(potion_type pot);
 
 bool quaff_potion(item_def &potion);
-void potionlike_effect(potion_type effect, int pow, bool was_known = true,
-                       bool is_device = false);
-
-#endif
+void potionlike_effect(potion_type effect, int pow, bool was_known = true);

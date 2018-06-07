@@ -101,10 +101,6 @@ Evoke Invisibility ability
 Te vuelves invisible durante un tiempo limitado. Volverse invisible incrementa
 tu contaminación mágica y puede finalmente causar brillo.
 %%%%
-Turn Visible ability
-
-Te vuelves visible de nuevo.
-%%%%
 Evoke Jump Attack ability
 
 Salta hacia un enemigo cercano y realizas un ataque cuerpo-a-cuerpo,

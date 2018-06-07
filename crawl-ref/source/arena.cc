@@ -15,7 +15,8 @@
 #include "dungeon.h"
 #include "end.h"
 #include "food.h"
-#include "itemname.h"
+#include "item-name.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"
@@ -23,7 +24,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-tentacle.h"
@@ -736,16 +737,16 @@ namespace arena
                 // We have no members left, so to prevent the round
                 // from ending attempt to displace whatever is in
                 // our position.
-                monster* other = monster_at(pos);
+                monster& other = *monster_at(pos);
 
-                if (to_respawn[other->mindex()] == -1)
+                if (to_respawn[other.mindex()] == -1)
                 {
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
                     mprf(MSGCH_DIAGNOSTICS,
                          "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
-                         other->name(DESC_PLAIN, true).c_str());
+                         other.name(DESC_PLAIN, true).c_str());
                     monster_die(other, KILL_DISMISSED, NON_MONSTER);
                 }
                 else
@@ -754,8 +755,8 @@ namespace arena
                     mprf(MSGCH_DIAGNOSTICS,
                          "Teleporting respawner %s to make room for "
                          "other respawner whose side has 0 active members.",
-                         other->name(DESC_PLAIN, true).c_str());
-                    monster_teleport(other, true);
+                         other.name(DESC_PLAIN, true).c_str());
+                    monster_teleport(&other, true);
                 }
 
                 mon = dgn_place_monster(spec, pos, false, true);
@@ -830,7 +831,7 @@ namespace arena
         trials_done++;
 
         // We bother with all this to properly deal with ties, and with
-        // ball lightning or giant spores winning the fight via suicide.
+        // ball lightning or ballistomycete spores winning the fight via suicide.
         // The sanity checking is probably just paranoia.
         bool was_tied = false;
         if (!faction_a.won && !faction_b.won)
@@ -1126,7 +1127,7 @@ void arena_placed_monster(monster* mons)
 
 #ifdef ARENA_VERBOSE
     mprf("%s %s!",
-         mons->full_name(DESC_A, true).c_str(),
+         mons->full_name(DESC_A).c_str(),
          arena::is_respawning                ? "respawns" :
          (summoned && ! arena::real_summons) ? "is summoned"
                                              : "enters the arena");
@@ -1208,7 +1209,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         // winner, since self-destruction is their purpose. But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
-        else if (mons_self_destructs(mons) && MON_KILL(killer))
+        else if (mons_self_destructs(*mons) && MON_KILL(killer))
         {
             if (mons->attitude == ATT_FRIENDLY)
                 arena::faction_a.won = true;
@@ -1399,5 +1400,5 @@ NORETURN void run_arena(const string& teams)
     arena::global_setup(teams);
     arena::simulate();
     arena::global_shutdown();
-    game_ended();
+    game_ended(game_exit::death); // there is only death in the arena
 }

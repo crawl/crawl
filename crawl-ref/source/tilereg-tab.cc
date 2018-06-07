@@ -4,6 +4,7 @@
 
 #include "tilereg-tab.h"
 
+#include "command-type.h"
 #include "cio.h"
 #include "english.h"
 #include "libutil.h"
@@ -11,6 +12,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tiledef-gui.h"
+#include "tiles-build-specific.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
@@ -297,6 +299,16 @@ void TabbedRegion::draw_tag()
         return;
 
     draw_desc(tab->name().c_str());
+}
+
+int TabbedRegion::min_height_for_items() const
+{
+    for (int i = (int)m_tabs.size()-1; i >= 0; --i)
+    {
+        if (m_tabs[i].enabled)
+            return m_tabs[i].max_y;
+    }
+    return 0;
 }
 
 void TabbedRegion::on_resize()

@@ -50,6 +50,7 @@ DEADJOE
 
 # Generated documentation
 /docs/aptitudes.txt
+/docs/aptitudes-wide.txt
 /docs/FAQ.html
 /docs/crawl_manual.txt
 
@@ -75,6 +76,10 @@ webtiles.log
 debuglog.txt
 dolls.txt
 macro.txt
+init.txt.persist
+/source/test/stress/qw.rc.persist
+# Default output file for -edit-save
+chunk
 
 # Valgrind logs from misc/grind.sh
 /source/grind.log
@@ -106,6 +111,7 @@ makefile.dep
 /source/*.ilk
 /source/rltiles/*.d
 /source/.cflags
+/source/.ver
 /source/rltiles/.cflags
 /source/.android-cflags
 /source/.android-cxxflags

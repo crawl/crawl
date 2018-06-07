@@ -80,7 +80,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
             {
                 string message = " struggles to " + verb
                                  + " free from constriction.";
-                simple_monster_message(this, message.c_str());
+                simple_monster_message(*this, message.c_str());
             }
             return false;
         }
@@ -90,7 +90,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     {
         string message = " " + conj_verb(verb)
                          + (was_constricted ? " free!" : "!");
-        simple_monster_message(this, message.c_str());
+        simple_monster_message(*this, message.c_str());
     }
 
     if (!(flags & MF_WAS_IN_VIEW))
@@ -103,7 +103,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     // Leave a cloud.
     if (!props.exists(FAKE_BLINK_KEY) && !cell_is_solid(oldplace))
     {
-        place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
+        place_cloud(jump ? CLOUD_DUST : CLOUD_TLOC_ENERGY,
                     oldplace, 1 + random2(3), this);
     }
 
@@ -206,47 +206,19 @@ static bool _monster_random_space(const monster* mons, coord_def& target,
 
 void mons_relocated(monster* mons)
 {
-    // If the main body teleports get rid of the tentacles
-    if (mons_is_tentacle_head(mons_base_type(mons)))
-    {
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->is_child_tentacle_of(mons))
-            {
-                for (monster_iterator connect; connect; ++connect)
-                {
-                    if (connect->is_child_tentacle_of(*mi))
-                        monster_die(*connect, KILL_RESET, -1, true, false);
-                }
-                monster_die(*mi, KILL_RESET, -1, true, false);
-            }
-        }
-    }
-    // If a tentacle/segment is relocated just kill the tentacle
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
+        destroy_tentacles(mons); // If the main body teleports get rid of the tentacles
     else if (mons->is_child_monster())
-    {
-        for (monster_iterator connect; connect; ++connect)
-        {
-            if (connect->is_child_tentacle_of(mons))
-                monster_die(*connect, KILL_RESET, -1, true, false);
-        }
-
-        monster_die(mons, KILL_RESET, -1, true, false);
-    }
-    // Kill an eldritch tentacle and all its segments.
+        destroy_tentacle(mons); // If a tentacle/segment is relocated just kill the tentacle
     else if (mons->type == MONS_ELDRITCH_TENTACLE
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
+        // Kill an eldritch tentacle and all its segments.
         monster* tentacle = mons->type == MONS_ELDRITCH_TENTACLE
                             ? mons : monster_by_mid(mons->tentacle_connect);
 
-        for (monster_iterator mit; mit; ++mit)
-        {
-            if (mit->is_child_tentacle_of(tentacle))
-                monster_die(*mit, KILL_RESET, -1, true, false);
-        }
-
-        monster_die(tentacle, KILL_RESET, -1, true, false);
+        // this should take care of any tentacles
+        monster_die(*tentacle, KILL_RESET, -1, true, false);
     }
 
     mons->clear_clinging();
@@ -262,12 +234,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         if (mons->del_ench(ENCH_TP))
         {
             if (!silent)
-                simple_monster_message(mons, " seems more stable.");
+                simple_monster_message(*mons, " seems more stable.");
         }
         else
         {
             if (!silent)
-                simple_monster_message(mons, " looks slightly unstable.");
+                simple_monster_message(*mons, " looks slightly unstable.");
 
             mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
                                        random_range(20, 30)));
@@ -280,12 +252,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     if (!_monster_random_space(mons, newpos, !mons->wont_attack()))
     {
-        simple_monster_message(mons, " flickers for a moment.");
+        simple_monster_message(*mons, " flickers for a moment.");
         return;
     }
 
     if (!silent)
-        simple_monster_message(mons, " disappears!");
+        simple_monster_message(*mons, " disappears!");
 
     const coord_def oldplace = mons->pos();
 
@@ -296,7 +268,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent && now_visible)
     {
         if (was_seen)
-            simple_monster_message(mons, " reappears nearby!");
+            simple_monster_message(*mons, " reappears nearby!");
         else
         {
             // Even if it doesn't interrupt an activity (the player isn't
@@ -304,7 +276,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             // a message.
             activity_interrupt_data ai(mons, SC_TELEPORT_IN);
             if (!interrupt_activity(AI_SEE_MONSTER, ai))
-                simple_monster_message(mons, " appears out of thin air!");
+                simple_monster_message(*mons, " appears out of thin air!");
         }
     }
 

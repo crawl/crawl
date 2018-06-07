@@ -1,5 +1,4 @@
-#ifndef TAG_VERSION_H
-#define TAG_VERSION_H
+#pragma once
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
@@ -7,6 +6,7 @@
 // the save browser across versions, possibly leading to overwritten games.
 // It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
+COMPILE_CHECK(TAG_CHR_FORMAT < 256);
 
 // Let CDO updaters know if the syntax changes.
 // Really, really, REALLY _never_ ever bump this and clean up old #ifdefs
@@ -15,6 +15,7 @@
 #ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
 #endif
+COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
@@ -34,7 +35,11 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_ABYSS_SEED,   // Remove the abyss seed.
     TAG_MINOR_REIFY_SUBVAULTS,     // Save subvaults with level for attribution
     TAG_MINOR_VEHUMET_SPELL_GIFT,  // Vehumet gift spells instead of books
-    TAG_MINOR_0_11 = 17,           // 0.11 final saves
+    TAG_MINOR_LUA_DUMMY_0,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_1,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_2,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_3,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_0_11,                 // 0.11 final saves
     TAG_MINOR_0_12,                // (no change)
     TAG_MINOR_BATTLESPHERE_MID,    // Monster battlesphere (mid of creator)
     TAG_MINOR_MALMUTATE,           // Convert Polymorph to Malmutate on old monsters
@@ -93,7 +98,7 @@ enum tag_minor_version
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
     TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
     TAG_MINOR_CLOUD_OWNER,         // Track owners of clouds in map knowledge
-    TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
+    TAG_MINOR_NO_POTION_HEAL,      // Made MUT_NO_POTION_HEAL a normal bad mutation.
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
     TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
@@ -187,6 +192,35 @@ enum tag_minor_version
     TAG_MINOR_GHOST_NOSINV,        // don't marshall ghost_demon sinv
     TAG_MINOR_NO_DRACO_TYPE,       // don't marshall mon-info draco_type
     TAG_MINOR_DEMONIC_SPELLS,      // merge demonic spells into magical spells
+    TAG_MINOR_MUMMY_RESTORATION,   // remove mummy self-restoration ability
+    TAG_MINOR_DECUSTOM_CLOUDS,     // remove support for custom clouds
+    TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
+    TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
+    TAG_MINOR_SPIT_POISON_AGAIN,   // Make Naga poison spit a 2-level mutation.
+    TAG_MINOR_HIDE_TO_SCALE,       // Rename dragon hides to scales.
+    TAG_MINOR_NO_PRIORITY,         // Remove CHANCE priority in map definitions.
+    TAG_MINOR_MOTTLED_REMOVAL,     // Mottled dracos get breathe fire
+    TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component
+    TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
+    TAG_MINOR_FOOD_PURGE_RELOADED, // The exciting sequel, removing pizza/jerky.
+    TAG_MINOR_ELYVILON_WRATH,      // Make Elyvilon wrath expire with XP gain.
+    TAG_MINOR_DESOLATION_GLOBAL,   // Recover from saves where desolation is incorrectly marked as global
+    TAG_MINOR_NO_MORE_LORC,        // Don't save lava orc temperature (or anything else). LO/Dj removal.
+    TAG_MINOR_NO_ITEM_TRANSIT,     // Remove code to transit items across levels.
+    TAG_MINOR_TOMB_HATCHES,        // Use fixed-destination hatches in Tomb.
+    TAG_MINOR_TRANSPORTERS,        // Transporters and position marker changes.
+    TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
+    TAG_MINOR_TRANSPORTER_LANDING, // Transporters landing site features.
+    TAG_MINOR_STATLOCKED_GNOLLS,   // Gnolls have stats locked at 7/7/7.
+    TAG_MINOR_LIGHTNING_ROD_XP_FIX, // Set XP debt for partially used l. rods.
+    TAG_MINOR_LEVEL_XP_INFO,       // Track XP gain by level.
+    TAG_MINOR_LEVEL_XP_INFO_FIX,   // Fix orb spawn XP tracking.
+    TAG_MINOR_FOLLOWER_TRANSIT_TIME, // Handle updating lost_ones after placing.
+    TAG_MINOR_GNOLLS_REDUX,        // Handle Gnolls that always train all skills and no stat lock.
+    TAG_MINOR_TRAINING_TARGETS,    // training targets for skills
+    TAG_MINOR_XP_SCALING,          // scale exp_available and total_experience
+    TAG_MINOR_NO_ACTOR_HELD,       // Remove actor.held.
+    TAG_MINOR_GOLDIFY_BOOKS,       // Spellbooks disintegrate when picked up, like gold/runes/orbs
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -194,5 +228,3 @@ enum tag_minor_version
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
-
-#endif

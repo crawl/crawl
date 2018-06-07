@@ -1,5 +1,4 @@
-#ifndef TILEDEF_DEFINES_H
-#define TILEDEF_DEFINES_H
+#pragma once
 
 #include <vector>
 
@@ -94,5 +93,3 @@ bool binary_search(F find, pair<F, R> *arr, int num_pairs,
 
     return false;
 }
-
-#endif

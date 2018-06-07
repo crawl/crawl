@@ -18,7 +18,7 @@ trove = {}
 function trove.get_trove_item(e, value, base_item)
   -- This function should return a table with the following values:
   --  quantity=0 (number of items, 1 unless consumables)
-  --  base_type="armour" (armour, weapon, potion, scroll, jewellery, book, or miscellaneous)
+  --  base_type="armour" (armour, weapon, potion, scroll, jewellery, or miscellaneous)
   --  sub_type="robe" (short sword, etc)
   --  ego_type="resistance" (or false)
   --  plus1=4 (or false)
@@ -64,7 +64,7 @@ function trove.get_trove_item(e, value, base_item)
                           "ring of dexterity", "ring of slaying",
                           "amulet of reflection"}
     local bt = shop_item.base_type
-    if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
+    if bt == "armour" or bt == "weapon" or bt == "jewellery" then
       if shop_item.identified() then
         item.quantity = shop_item.quantity
         item.base_type = shop_item.base_type
@@ -82,8 +82,6 @@ function trove.get_trove_item(e, value, base_item)
           if util.contains(jwith_pluses, item.sub_type) then
             item.plus1 = shop_plus1
           end
-        elseif item.base_type == "book" and string.find(item.sub_type, "manual") then
-            item.plus1 = shop_plus1
         else
           item.plus1 = false
         end
@@ -116,11 +114,11 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local arm = {
-       {base="armour", type="gold dragon armour", quant=1+d(2)},
-       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
-       {base="armour", type="ice dragon armour", quant=d(3)+d(3)} }
+       {base="armour", type="gold dragon scales", quant=1+d(2)},
+       {base="armour", type="storm dragon scales", quant=d(2)+d(2)},
+       {base="armour", type="shadow dragon scales", quant=d(2)+d(2)},
+       {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
+       {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
   if you.race() ~= "Felid" and you.race() ~= "Octopode" then
     for _, toll in ipairs(arm) do
@@ -145,17 +143,10 @@ function trove.get_trove_item(e, value, base_item)
     if you.race() ~= "Formicid" then
       table.insert(pots, {base="potion", type="haste", quant=4+d(3)+d(2)})
     end
-    if you.race() ~= "Ghoul" then
-      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(4)})
-    end
 
     for _, toll in ipairs(pots) do
       table.insert(prices, toll)
     end
-  end
-
-  if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=9})
   end
 
   local stasis_tolls = {
@@ -163,9 +154,6 @@ function trove.get_trove_item(e, value, base_item)
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
-    if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=9})
-    end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
     end
@@ -232,15 +220,16 @@ function trove.setup_features(e)
     e.kfeat("< = exit_trove")
 end
 
--- "any scroll good_item" still gets you 'scroll of noise' etc
--- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls,
--- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
+-- "any scroll good_item" still gets you 'scroll of noise' etc so let's
+-- limit it to the enchant scrolls, tloc scrolls, identify scrolls, mapping
+-- scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)
     e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
-             scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
-             scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 /
-             scroll of vulnerability w:2 / scroll of holy word w:8 / scroll of fog w:8]])
+             scroll of magic mapping w:5 / scroll of blinking /
+             scroll of silence w:2 / scroll of acquirement w:1 /
+             scroll of teleportation w:20 / scroll of vulnerability w:2 /
+             scroll of holy word w:8 / scroll of fog w:8]])
 end
 
 function trove.place_fog(e, type, strength)
@@ -583,7 +572,6 @@ KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
 KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
 KITEM:   B = acquire book / acquire:sif_muna book / any book
 KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
-             potion of cure mutation q:1 / potion of beneficial mutation q:1 / \
              potion of might / potion of agility / potion of brilliance / \
              potion of resistance / potion of magic / potion of haste
 KFEAT:   w = W
@@ -667,7 +655,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
+ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
@@ -812,7 +800,7 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
+ITEM:    gold dragon scales / storm dragon scales / fire dragon scales / troll leather armour / any useful armour good_item
 ITEM:    arrow good_item / bolt good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123
@@ -845,7 +833,7 @@ MONS:   ynoxinul
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   wand of disintegration ident:all
+ITEM:   wand of digging ident:all
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
@@ -871,11 +859,11 @@ COLOUR: x = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = generate_awake shining eye
 # 21 items, 'cos this one is *nasty*.
-# There are 4 extra potions of cure/beneficial mutation, anyway.
+# There are 4 extra potions of cure/mutation, anyway.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of cure mutation ident:type / potion of beneficial mutation ident:type
+ITEM:   potion of mutation q:3 ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
@@ -919,19 +907,19 @@ veto {{ return crawl.game_started()
 COLOUR: x = blue
 COLOUR: ' = yellow
 SUBST:  d = dde
-KFEAT:  _ = altar_pakellas
-FTILE:  'T_ : floor_limestone
+FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   acquire misc / any rod w:4
+ITEM:   any misc
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
-ITEM:   scroll of recharging / scroll of recharging q:3 w:5
+ITEM:   manual of evocations
 : trove.setup_features(_G)
 MAP
-  xxxxx
-  xfffx
+   xxx
+   xfx
  xxx+xxx
- xdT_Tdx
+ xd'''dx
+ xd'''dx
  xd'''dx
  xd'''dx
  xd'''dx
@@ -954,12 +942,12 @@ WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
          potion of curing q:2 / potion of heal wounds q:2
-ITEM:    potion of experience q:1 / potion of beneficial mutation q:1 w:30
+ITEM:    potion of experience q:1
 ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \
          potion of magic q:2 / potion of haste q:2
-ITEM:    potion of cure mutation / potion of beneficial mutation
+ITEM:    potion of mutation
 SHUFFLE: df
 SHUFFLE: eg
 : trove.setup_features(_G)
@@ -986,7 +974,7 @@ ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 ITEM:    any useful armour good_item / any useful weapon good_item / \
          any useful jewellery good_item
 : trove.good_scroll(_G)
-KITEM:   h = wand of disintegration ident:all, wand of disintegration ident:all
+KITEM:   h = wand of digging ident:all, wand of digging ident:all
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP

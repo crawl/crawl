@@ -1,5 +1,4 @@
-#ifndef __CLUA_H__
-#define __CLUA_H__
+#pragma once
 
 extern "C" {
 #include <lua.h>
@@ -12,6 +11,8 @@ extern "C" {
 #include <map>
 #include <set>
 #include <string>
+
+#include "maybe-bool.h"
 
 class CLua;
 
@@ -241,5 +242,3 @@ private:
 extern CLua clua;
 
 string quote_lua_string(const string &s);
-
-#endif

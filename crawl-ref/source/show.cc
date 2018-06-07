@@ -11,11 +11,13 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mon-place.h"
 #include "options.h"
 #include "state.h"
@@ -24,6 +26,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -139,11 +142,6 @@ static void _update_feat_at(const coord_def &gp)
     if (disjunction_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_DISJUNCT;
 
-#if TAG_MAJOR_VERSION == 34
-    if (heated(gp))
-        env.map_knowledge(gp).flags |= MAP_HOT;
-#endif
-
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
@@ -158,7 +156,7 @@ static void _update_feat_at(const coord_def &gp)
     if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (you.made_nervous_by(gp))
+    if (you.is_nervous() && you.see_cell(gp) && !monster_at(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if ((feat_is_stone_stair(feat)
@@ -209,7 +207,9 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAFF;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:       return SHOW_ITEM_ROD;
+#endif
     case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -223,7 +223,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     }
 }
 
-void update_item_at(const coord_def &gp, bool detected)
+void update_item_at(const coord_def &gp, bool detected, bool wizard)
 {
     if (!in_bounds(gp))
         return;
@@ -231,18 +231,21 @@ void update_item_at(const coord_def &gp, bool detected)
     item_def eitem;
     bool more_items = false;
 
-    if (you.see_cell(gp))
+    if (you.see_cell(gp) || wizard)
     {
-        if (you.visible_igrd(gp) != NON_ITEM)
-            eitem = mitm[you.visible_igrd(gp)];
-        else
+        const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
+        if (item_grid == NON_ITEM)
             return;
+        eitem = mitm[item_grid];
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem.link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+        if (eitem.link > NON_ITEM)
             more_items = true;
         else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
             more_items = true;
+
+        if (wizard)
+            StashTrack.add_stash(gp);
     }
     else
     {
@@ -264,30 +267,13 @@ static void _update_cloud(cloud_struct& cloud)
 {
     const coord_def gp = cloud.pos;
 
-    unsigned short ch = 0;
-
-    tileidx_t index = 0;
-    if (!cloud.tile.empty())
-    {
-        if (!tile_main_index(cloud.tile.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", cloud.tile.c_str());
-            ch = TILE_ERROR;
-        }
-        else
-        {
-            int offset = tile_main_count(index);
-            ch = index + offset;
-        }
-    }
-
     int dur = cloud.decay/20;
     if (dur < 0)
         dur = 0;
     else if (dur > 3)
         dur = 3;
 
-    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, ch, gp,
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
                   cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }
@@ -490,11 +476,8 @@ static void _update_monster(monster* mons)
         return;
     }
 
-    // Monsters at anything other than max stealth get a stealth check; if they
-    // fail this and are either very unstealthy or also fail a flat 1/4 chance,
-    // they leave an invis indicator at their position.
-    if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4
-        && (mons->stealth() <= -2 || !_hashed_rand(mons, 1, 4)))
+    // 1/7 chance to leave an invis indicator at the real position.
+    if (!_hashed_rand(mons, 0, 7))
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;
@@ -587,4 +570,9 @@ void show_update_emphasis()
     for (const stair_info &stair : stairs)
         if (stair.destination.is_valid())
             env.map_knowledge(stair.position).flags &= ~MAP_EMPHASIZE;
+
+    vector<transporter_info> transporters = level_info.get_transporters();
+    for (const transporter_info &transporter: transporters)
+        if (!transporter.destination.origin())
+            env.map_knowledge(transporter.position).flags &= ~MAP_EMPHASIZE;
 }

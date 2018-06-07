@@ -4,7 +4,7 @@
 
 #include "enum.h"
 #include "errors.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "ng-setup.h"
@@ -78,14 +78,10 @@ void job_stat_init(job_type job)
     {
         for (int i = 0; i < 12; i++)
         {
-            const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-            // Stats that are already high will be chosen half as often.
-            if (you.base_stats[stat] > 17 && coinflip())
-            {
-                i--;
-                continue;
-            }
-
+            const auto stat = random_choose_weighted(
+                    you.base_stats[STAT_STR] > 17 ? 1 : 2, STAT_STR,
+                    you.base_stats[STAT_INT] > 17 ? 1 : 2, STAT_INT,
+                    you.base_stats[STAT_DEX] > 17 ? 1 : 2, STAT_DEX);
             you.base_stats[stat]++;
         }
     }
@@ -159,7 +155,7 @@ void debug_jobdata()
         for (const string& it : entry.second.equipment)
         {
             const string error = dummy.add_item(it, false);
-            if (error != "")
+            if (!error.empty())
                 fails += error + "\n";
         }
 

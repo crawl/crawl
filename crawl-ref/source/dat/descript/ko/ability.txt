@@ -107,10 +107,6 @@ Evoke Invisibility ability
 짧은 시간동안 몸을 투명하게 만든다. 투명 상태에서는 마법오염이 조금씩 쌓이며,
 마법오염이 너무 많이 쌓이면 발광 상태가 되어 적이 볼 수 있게 된다.
 %%%%
-Turn Visible ability
-
-투명화를 해제한다.
-%%%%
 Stop Flying ability
 
 비행을 그만둔다.
@@ -717,10 +713,6 @@ Reject Sacrifices ability
 루는 기존 희생 선택이 남아있는 동안 새로운 희생을 제공하지 않습니다.
 연이은 거부는 희생 시간을 더 증가시킬 것입니다.
 만약 희생을 받아들인다면 이 시간은 표준적으로 되돌아갑니다.
-%%%%
-Release Delayed Fireball ability
-
-미리 준비해둔 (지연된) 화염구를 추가적인 마법이나 허기 없이 즉시 발사합니다.
 %%%%
 Sacrifice Arcana ability
 

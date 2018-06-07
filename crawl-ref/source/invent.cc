@@ -21,13 +21,14 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
-#include "itemprop.h"
+#include "item-use.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -157,7 +158,7 @@ bool InvEntry::is_equipped() const
     if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
         return false;
 
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
             return true;
 
@@ -259,9 +260,11 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
     case OBJ_STAVES:
         glyphs.push_back('|');
         break;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
         glyphs.push_back('\\');
         break;
+#endif
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
         break;
@@ -301,13 +304,13 @@ void InvEntry::set_show_glyph(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(nullptr),
+    : Menu(mflags, "inventory"), type(MT_INVLIST), pre_select(nullptr),
       title_annotate(nullptr)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
+        set_flags(mflags | MF_USE_TWO_COLUMNS);
 #endif
-        mdisplay->set_num_columns(2);
 
     InvEntry::set_show_cursor(false);
 }
@@ -352,7 +355,7 @@ static bool _has_melded_armour()
     return false;
 }
 
-static bool _has_tran_unwearable_armour()
+static bool _has_temp_unwearable_armour()
 {
     for (const auto &item : you.inv)
     {
@@ -371,8 +374,8 @@ static bool _has_hand_evokable()
     for (const auto &item : you.inv)
     {
         if (item.defined()
-            && item_is_evokable(item, true, true, true, false, false)
-            && !item_is_evokable(item, true, true, true, false, true))
+            && item_is_evokable(item, true, true, false, false)
+            && !item_is_evokable(item, true, true, false, true))
         {
             return true;
         }
@@ -403,19 +406,14 @@ string no_selectables_message(int item_selector)
     {
         if (_has_melded_armour())
             return "Your armour is currently melded into you.";
-        else if (_has_tran_unwearable_armour())
-            return "You aren't carrying any armour you can wear in your "
-                   "current form.";
+        else if (_has_temp_unwearable_armour())
+            return "You aren't carrying any currently wearable armour.";
         else
             return "You aren't carrying any wearable armour.";
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
-    case OSEL_RECHARGE:
-    case OSEL_DIVINE_RECHARGE:
-    case OSEL_SUPERCHARGE:
-        return "You aren't carrying any rechargeable items.";
-    case OSEL_ENCH_ARM:
+    case OSEL_ENCHANTABLE_ARMOUR:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
         return "You don't have any corpses.";
@@ -426,8 +424,9 @@ string no_selectables_message(int item_selector)
     case OBJ_POTIONS:
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
+        return "You aren't carrying any scrolls.";
     case OBJ_BOOKS:
-        return "You aren't carrying any spellbooks or scrolls.";
+        return "You don't have any books.";
     case OBJ_WANDS:
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
@@ -441,10 +440,12 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return "You aren't wearing any piece of uncursed armour.";
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
+#endif
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -473,29 +474,23 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 }
 
 #ifdef USE_TILE
-bool InvEntry::get_tiles(vector<tile_def>& tileset) const
+bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
-    if (!Options.tile_menu_icons)
-        return false;
-
-    if (quantity <= 0)
-        return false;
-
-    tileidx_t idx = tileidx_item(get_item_info(*item));
+    tileidx_t idx = tileidx_item(get_item_info(item));
     if (!idx)
         return false;
 
-    if (in_inventory(*item))
+    if (in_inventory(item))
     {
-        const equipment_type eq = item_equip_slot(*item);
+        const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
-            if (item_known_cursed(*item))
+            if (item_known_cursed(item))
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
             else
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
         }
-        else if (item_known_cursed(*item))
+        else if (item_known_cursed(item))
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
@@ -509,11 +504,11 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     else
     {
         // Do we want to display the floor type or is that too distracting?
-        const coord_def c = item->held_by_monster()
-            ? item->holding_monster()->pos()
-            : item->pos;
+        const coord_def c = item.held_by_monster()
+            ? item.holding_monster()->pos()
+            : item.pos;
         tileidx_t ch = 0;
-        if (c != coord_def() && show_background)
+        if (c != coord_def() && show_background && item.link != ITEM_IN_SHOP)
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
@@ -538,22 +533,40 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
                 tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
         }
     }
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
-        || item->base_type == OBJ_ARMOUR || item->base_type == OBJ_RODS)
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
+        || item.base_type == OBJ_ARMOUR
+#if TAG_MAJOR_VERSION == 34
+        || item.base_type == OBJ_RODS
+#endif
+       )
     {
-        tileidx_t brand = tileidx_known_brand(*item);
+        tileidx_t brand = tileidx_known_brand(item);
         if (brand)
             tileset.emplace_back(brand, TEX_DEFAULT);
     }
-    else if (item->base_type == OBJ_CORPSES)
+    else if (item.base_type == OBJ_CORPSES)
     {
-        tileidx_t brand = tileidx_corpse_brand(*item);
+        tileidx_t brand = tileidx_corpse_brand(item);
         if (brand)
             tileset.emplace_back(brand, TEX_DEFAULT);
     }
 
     return true;
 }
+
+bool InvEntry::get_tiles(vector<tile_def>& tileset) const
+{
+    if (!Options.tile_menu_icons)
+        return false;
+
+    // Runes + orb of zot have a special uncollected tile
+    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
+        return false;
+
+    return get_tiles_for_item(*item, tileset, show_background);
+}
+#else
+bool InvEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
 #endif
 
 bool InvMenu::is_selectable(int index) const
@@ -730,7 +743,9 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_STAVES,
+#if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
+#endif
     OBJ_JEWELLERY,
     OBJ_WANDS,
     OBJ_SCROLLS,
@@ -838,10 +853,6 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         }
     }
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (mitems.size() > 52 && (max_pagesize > 52 || max_pagesize == 0))
-        set_maxpagesize(52);
-
     return ckey;
 }
 
@@ -882,7 +893,8 @@ int InvMenu::getkey() const
         return mkey;
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
-        && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
+        && mkey != '*' && !key_is_escape(mkey) && mkey != '\\'
+        && mkey != ',')
     {
         mkey = ' ';
     }
@@ -922,7 +934,9 @@ const char *item_class_name(int type, bool terse)
         case OBJ_POTIONS:    return "Potions";
         case OBJ_BOOKS:      return "Books";
         case OBJ_STAVES:     return "Magical Staves";
+#if TAG_MAJOR_VERSION == 34
         case OBJ_RODS:       return "Rods";
+#endif
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
         case OBJ_CORPSES:    return "Carrion";
@@ -971,6 +985,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
         }
 
         new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
+        new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
@@ -996,25 +1011,19 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_ARMOUR && item_is_equipped(i);
 
     case OSEL_UNIDENT:
-        return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
+        return !fully_identified(i) && itype != OBJ_BOOKS;
 
     case OBJ_MISSILES:
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
 
     case OSEL_THROWABLE:
     {
-        if (you_worship(GOD_TROG) && item_is_spellbook(i))
-            return true;
-
-        if (you.has_spell(SPELL_CORPSE_ROT) && itype == OBJ_CORPSES)
-            return true;
-
         if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
             return false;
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
 
-        if (projected == LRET_FUMBLED)
+        if (projected == launch_retval::FUMBLED)
             return false;
 
         return true;
@@ -1027,16 +1036,10 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_SCROLLS
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
-    case OSEL_RECHARGE:
-    case OSEL_DIVINE_RECHARGE:
-    case OSEL_SUPERCHARGE:
-        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE,
-                                    selector == OSEL_DIVINE_RECHARGE);
-
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true, true, true);
+        return item_is_evokable(i, true, true);
 
-    case OSEL_ENCH_ARM:
+    case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
@@ -1049,11 +1052,13 @@ bool item_is_selected(const item_def &i, int selector)
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
 
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR;
 
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY;
+#endif
 
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
@@ -1167,27 +1172,22 @@ static unsigned char _invent_select(const char *title = nullptr,
 void display_inventory()
 {
     int flags = MF_SINGLESELECT;
-    if (you.dead || crawl_state.updating_scores)
+    if (you.pending_revival || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
-    while (true)
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    menu.load_inv_items(OSEL_ANY, -1);
+    menu.set_type(MT_INVLIST);
+
+    menu.on_single_selection = [](const MenuEntry& item)
     {
-        unsigned char select =
-            _invent_select(nullptr, MT_INVLIST, OSEL_ANY, -1, flags);
+        unsigned char select = item.hotkeys[0];
+        const int invidx = letter_to_index(select);
+        ASSERT(you.inv[invidx].defined());
+        return describe_item(you.inv[invidx]);
+    };
 
-        if (isaalpha(select))
-        {
-            const int invidx = letter_to_index(select);
-            if (you.inv[invidx].defined())
-            {
-                if (!describe_item(you.inv[invidx]))
-                    break;
-            }
-        }
-        else
-            break;
-    }
-
+    menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();
 }
@@ -1219,39 +1219,53 @@ static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
     return keyin;
 }
 
-// This function prompts the user for an item, handles the '?' and '*'
-// listings, and returns the inventory slot to the caller (which if
-// must_exist is true, as it is by default, will be an assigned item,
-// with a positive quantity.
-//
-// It returns PROMPT_ABORT       if the player hits escape.
-// It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
-//
-// Note: This function never checks if the item is appropriate.
-vector<SelItem> prompt_invent_items(
-                        const char *prompt,
-                        menu_type mtype,
-                        int type_expect,
-                        invtitle_annotator titlefn,
-                        bool auto_list,
-                        bool allow_easy_quit,
-                        const char other_valid_char,
-                        vector<text_pattern> *select_filter,
-                        Menu::selitem_tfn fn,
-                        const vector<SelItem> *pre_select)
+static string _drop_selitem_text(const vector<MenuEntry*> *s)
 {
-    unsigned char  keyin = 0;
+    bool extraturns = false;
+
+    if (s->empty())
+        return "";
+
+    for (MenuEntry *entry : *s)
+    {
+        const item_def *item = static_cast<item_def *>(entry->data);
+        const int eq = get_equip_slot(item);
+        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
+        {
+            extraturns = true;
+            break;
+        }
+    }
+
+    return make_stringf(" (%u%s turn%s)",
+                        (unsigned int)s->size(),
+                        extraturns? "+" : "",
+                        s->size() > 1? "s" : "");
+}
+
+/**
+ * Prompt the player to select zero or more items to drop.
+ * TODO: deduplicate/merge with prompt_invent_item().
+ *
+ * @param   Items already selected to drop.
+ * @return  The total set of items the player's chosen to drop.
+ */
+vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
+{
+    const string prompt = "Drop what? " + slot_description()
+#ifdef TOUCH_UI
+                          + " (<Enter> or tap header to drop)"
+#else
+                          + " (_ for help)"
+#endif
+    ;
+
+    unsigned char  keyin = '?';
     int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
     bool           need_prompt = true;
-    bool           need_getch  = true;
-
-    if (auto_list)
-    {
-        need_getch = false;
-        keyin       = '?';
-    }
+    bool           need_getch  = false;
 
     vector<SelItem> items;
     int count = -1;
@@ -1266,7 +1280,7 @@ vector<SelItem> prompt_invent_items(
         if (need_prompt)
         {
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt);
+                 prompt.c_str());
         }
 
         if (need_getch)
@@ -1278,21 +1292,18 @@ vector<SelItem> prompt_invent_items(
 
         // Note:  We handle any "special" character first, so that
         //        it can be used to override the others.
-        if (other_valid_char != 0 && keyin == other_valid_char)
-        {
-            ret = PROMPT_GOT_SPECIAL;
-            break;
-        }
-        else if (keyin == '?' || keyin == '*' || keyin == ',')
+        if (keyin == '?' || keyin == '*' || keyin == ',')
         {
             // The "view inventory listing" mode.
-            const int ch = _invent_select(prompt,
-                                          mtype,
-                                          keyin == '*' ? OSEL_ANY : type_expect,
+            const int ch = _invent_select(prompt.c_str(),
+                                          MT_DROP,
+                                          OSEL_ANY,
                                           -1,
                                           MF_MULTISELECT | MF_ALLOW_FILTER,
-                                          titlefn, &items, select_filter, fn,
-                                          pre_select);
+                                          nullptr, &items,
+                                          &Options.drop_filter,
+                                          _drop_selitem_text,
+                                          &preselected_items);
 
             if (key_is_escape(ch))
             {
@@ -1332,9 +1343,7 @@ vector<SelItem> prompt_invent_items(
             need_getch  = false;
         }
         else if (key_is_escape(keyin)
-                || (Options.easy_quit_item_prompts
-                    && allow_easy_quit
-                    && keyin == ' '))
+                || (Options.easy_quit_item_prompts && keyin == ' '))
         {
             ret = PROMPT_ABORT;
             break;
@@ -1368,28 +1377,30 @@ vector<SelItem> prompt_invent_items(
     return items;
 }
 
-int digit_inscription_to_inv_index(char digit, operation_types oper)
+static bool item_matches_digit_inscription(item_def &item, char digit, operation_types oper)
 {
+    const string& r(item.inscription);
     const char iletter = static_cast<char>(oper);
+    for (unsigned int j = 0; j + 2 < r.size(); ++j)
+        if (r[j] == '@' && (r[j+1] == iletter || r[j+1] == '*') && r[j+2] == digit)
+            return true;
+    return false;
+}
 
+item_def *digit_inscription_to_item(char digit, operation_types oper)
+{
     for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
+        if (you.inv[i].defined()
+                && item_matches_digit_inscription(you.inv[i], digit, oper))
         {
-            const string& r(you.inv[i].inscription);
-            // Note that r.size() is unsigned.
-            for (unsigned int j = 0; j + 2 < r.size(); ++j)
-            {
-                if (r[j] == '@'
-                     && (r[j+1] == iletter || r[j+1] == '*')
-                     && r[j+2] == digit)
-                {
-                    return i;
-                }
-            }
+            return &you.inv[i];
         }
-    }
-    return -1;
+
+    for (stack_iterator si(you.pos(), true); si; ++si)
+        if (item_matches_digit_inscription(*si, digit, oper))
+            return &*si;
+
+    return nullptr;
 }
 
 static bool _has_warning_inscription(const item_def& item,
@@ -1417,8 +1428,9 @@ static bool _has_warning_inscription(const item_def& item,
     return false;
 }
 
-// Checks if current item (to be removed) has a warning inscription
-// and prompts the user for confirmation.
+// In order to equip this item, we may need to remove an old item in the
+// corresponding slot which has a warning inscription. If this is the case,
+// prompt the user for confirmation.
 bool check_old_item_warning(const item_def& item,
                              operation_types oper)
 {
@@ -1529,7 +1541,7 @@ static bool _is_known_no_tele_item(const item_def &item)
     return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known) && known;
 }
 
-bool nasty_stasis(const item_def &item, operation_types oper)
+bool needs_notele_warning(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON || oper == OPER_WEAR
                 || oper == OPER_WIELD && !_is_wielded(item))
@@ -1576,7 +1588,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_REMOVE && item.is_type(OBJ_JEWELLERY, AMU_HARM))
         return true;
 
-    if (nasty_stasis(item, oper))
+    if (needs_notele_warning(item, oper))
         return true;
 
     if (oper == OPER_ATTACK && god_hates_item(item)
@@ -1590,8 +1602,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !have_passive(passive_t::safe_distortion)
-            && !you.duration[DUR_WEAPON_BRAND])
+            && !have_passive(passive_t::safe_distortion))
         {
             return true;
         }
@@ -1645,10 +1656,29 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
+    // If you're invis from an item, warn that you're about to get an extra dose
+    // of contam from removing it. This check is rough, since we need to
+    // establish that the operation is a removal, the item being removed is in
+    // fact the +Invis one, and no other +Invis sources exist, and the player
+    // is currently invis from +Invis.
+    if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
+        && (
+                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
+                || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
+            )
+        && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.
+        && you.duration[DUR_INVIS] > 1
+        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+    {
+        return true;
+    }
+
     return false;
 }
 
-// Returns true if user OK'd it (or no warning), false otherwise.
+// If there are warning inscriptions associated with performing this operation
+// on this item, prompt the user for confirmation. Return true if all prompts
+// are OK'd.
 bool check_warning_inscriptions(const item_def& item,
                                  operation_types oper)
 {
@@ -1662,14 +1692,18 @@ bool check_warning_inscriptions(const item_def& item,
         if (oper == OPER_DESTROY)
             return false;
 
+        // Common pattern for wield/wear/put:
+        // - if the player isn't capable of equipping it, return true
+        //   immediately. No point warning, since the op is impossible.
+        // - if the item is already worn, treat this as the corresponding
+        //   unequip operation
         if (oper == OPER_WIELD)
         {
-            // Can't use can_wield in item_use.cc because it wants
+            // Can't use can_wield in item-use.cc because it wants
             // a non-const item_def.
             if (!you.can_wield(item))
                 return true;
 
-            // Don't ask if item already wielded.
             int equip = you.equip[EQ_WEAPON];
             if (equip != -1 && item.link == equip)
                 return check_old_item_warning(item, oper);
@@ -1679,7 +1713,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (!can_wear_armour(item, false, false))
                 return true;
 
-            // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
                 return check_old_item_warning(item, oper);
@@ -1689,7 +1722,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (item.base_type != OBJ_JEWELLERY)
                 return true;
 
-            // Don't ask if item already worn.
             if (jewellery_is_amulet(item))
             {
                 int equip = you.equip[EQ_AMULET];
@@ -1698,7 +1730,7 @@ bool check_warning_inscriptions(const item_def& item,
             }
             else
             {
-                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
                 {
                     if (slots == EQ_AMULET)
                         continue;
@@ -1720,12 +1752,10 @@ bool check_warning_inscriptions(const item_def& item,
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (nasty_stasis(item, oper)
+        if (needs_notele_warning(item, oper)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            prompt += string(" while ")
-                      + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
+            prompt += " while about to teleport";
         }
         prompt += "?";
         if (penance)
@@ -1751,22 +1781,12 @@ bool check_warning_inscriptions(const item_def& item,
  * @param mtype            The menu type.
  * @param type_expect      The object_class_type or object_selector for
  *                         items to be listed.
- * @param must_exist       If true, only allows selecting items that exist.
- * @param auto_list        If true, start in the '?' list InvMenu.
- * @param allow_easy_quit  If true and the corresponding game option is enabled,
- *                         menu can be quit with space in addition to escape.
- * @param other_valid_char A character that, if not '\0', will cause
- *                         PROMPT_GOT_SPECIAL to be returned when pressed.
- * @param excluded_slot    An inventory slot that will be omitted from listings.
- * @param count            [out] The quantity of the selected item to perform
- *                         the operation on.
- *                         Also disables numeric inscription shortcuts.
  * @param oper             The operation_type that will be used on the result.
  *                         Modifies some checks, including applicability of
  *                         warning inscriptions.
- * @param allow_list_known If true, '\' will switch to the known item list.
- * @param do_warning       If true, warning inscriptions are checked and the
- *                         user prompted, if necessary.
+ * @param flags            See comments on invent_prompt_flags.
+ * @param other_valid_char A character that, if not '\0', will cause
+ *                         PROMPT_GOT_SPECIAL to be returned when pressed.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.
@@ -1775,16 +1795,17 @@ bool check_warning_inscriptions(const item_def& item,
  */
 int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
-                       bool must_exist, bool auto_list,
-                       bool allow_easy_quit,
-                       const char other_valid_char,
-                       int excluded_slot,
-                       int *const count,
                        operation_types oper,
-                       bool allow_list_known,
-                       bool do_warning)
+                       invent_prompt_flags flags,
+                       const char other_valid_char)
 {
-    if (!any_items_of_type(type_expect, excluded_slot)
+    const bool do_warning = !(flags & invprompt_flag::no_warning);
+    const bool allow_list_known = !(flags & invprompt_flag::hide_known);
+    const bool must_exist = !(flags & invprompt_flag::unthings_ok);
+    const bool auto_list = !(flags & invprompt_flag::manual_list);
+    const bool allow_easy_quit = !(flags & invprompt_flag::escape_only);
+
+    if (!any_items_of_type(type_expect)
         && type_expect == OSEL_THROWABLE
         && (oper == OPER_FIRE || oper == OPER_QUIVER)
         && mtype == MT_INVLIST)
@@ -1792,8 +1813,7 @@ int prompt_invent_item(const char *prompt,
         type_expect = OSEL_ANY;
     }
 
-    if (!any_items_of_type(type_expect, excluded_slot)
-        && type_expect != OSEL_WIELD)
+    if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD)
     {
         mprf(MSGCH_PROMPT, "%s",
              no_selectables_message(type_expect).c_str());
@@ -1803,6 +1823,7 @@ int prompt_invent_item(const char *prompt,
     unsigned char  keyin = 0;
     int            ret = PROMPT_ABORT;
 
+    int current_type_expected = type_expect;
     bool           need_redraw = false;
     bool           need_prompt = true;
     bool           need_getch  = true;
@@ -1851,11 +1872,12 @@ int prompt_invent_item(const char *prompt,
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
+            current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
             keyin = _invent_select(
                         prompt,
                         mtype,
-                        keyin == '*' ? OSEL_ANY : type_expect,
-                        excluded_slot,
+                        current_type_expected,
+                        -1,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
                             | MF_EASY_EXIT,
                         nullptr,
@@ -1871,14 +1893,10 @@ int prompt_invent_item(const char *prompt,
             need_getch  = false;
 
             // Don't redraw if we're just going to display another listing
-            need_redraw = (keyin != '?' && keyin != '*')
-                          && !(count && auto_list && isadigit(keyin));
+            need_redraw = keyin != '?' && keyin != '*';
 
             if (!items.empty())
             {
-                if (count)
-                    *count = items[0].quantity;
-
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
@@ -1886,25 +1904,14 @@ int prompt_invent_item(const char *prompt,
                 }
             }
         }
-        else if (count != nullptr && isadigit(keyin))
-        {
-            // The "read in quantity" mode
-            keyin = _get_invent_quant(keyin, *count);
-
-            need_prompt = false;
-            need_getch  = false;
-
-            if (auto_list)
-                need_redraw = true;
-        }
-        else if (count == nullptr && isadigit(keyin))
+        else if (isadigit(keyin))
         {
             // scan for our item
-            int res = digit_inscription_to_inv_index(keyin, oper);
-            if (res != -1)
+            item_def *item = digit_inscription_to_item(keyin, oper);
+            if (item && in_inventory(*item))
             {
-                ret = res;
-                if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
+                ret = item->link;
+                if (!do_warning || check_warning_inscriptions(*item, oper))
                     break;
             }
         }
@@ -1927,6 +1934,11 @@ int prompt_invent_item(const char *prompt,
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
+            else if (must_exist && !item_is_selected(you.inv[ret],
+                                                     current_type_expected))
+            {
+                mpr("That's the wrong kind of item! (Use * to select it.)");
+            }
             else if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
@@ -1962,18 +1974,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    if (is_weapon(item) || item.base_type == OBJ_RODS)
-        return you.species != SP_FELID;
-
-    if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE
-            || item.sub_type == MI_LARGE_ROCK
-               && you.could_wield(item, true, true)))
-    {
-        return you.has_spell(SPELL_SANDBLAST);
-    }
-
-    return false;
+    return is_weapon(item) && you.species != SP_FELID;
 }
 
 /**
@@ -1983,18 +1984,17 @@ bool item_is_wieldable(const item_def &item)
  * @param reach     Do weapons of reaching count?
  * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
- * @param all_wands When set, return true for empty wands.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
 bool item_is_evokable(const item_def &item, bool reach, bool known,
-                      bool all_wands, bool msg, bool equip)
+                      bool msg, bool equip)
 {
     const string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
 
-    const bool no_evocables = player_mutation_level(MUT_NO_ARTIFICE);
+    const bool no_evocables = you.get_mutation_level(MUT_NO_ARTIFICE);
     const char* const no_evocable_error = "You cannot evoke magical items.";
 
     if (is_unrandom_artefact(item))
@@ -2024,7 +2024,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     if (no_evocables
         && item.base_type != OBJ_WEAPONS // reaching is ok.
         && !(item.base_type == OBJ_MISCELLANY
-             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+             && (item.sub_type == MISC_ZIGGURAT
+                 || is_deck(item)))) // decks and zigfigs are OK.
     {
         // the rest are forbidden under sac evocables.
         if (msg)
@@ -2038,15 +2039,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        if (all_wands)
-            return true;
-
-        if (item.used_count == ZAPCOUNT_EMPTY)
-        {
-            if (msg)
-                mpr("This wand has no charges.");
-            return false;
-        }
         return true;
 
     case OBJ_WEAPONS:
@@ -2067,15 +2059,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if (msg)
             mpr("That item cannot be evoked!");
         return false;
-
-    case OBJ_RODS:
-        if (!wielded)
-        {
-            if (msg)
-                mpr(error);
-            return false;
-        }
-        return true;
 
     case OBJ_STAVES:
         if (known && !item_type_known(item)

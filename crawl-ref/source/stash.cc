@@ -21,11 +21,13 @@
 #include "describe-spells.h"
 #include "directn.h"
 #include "env.h"
+#include "files.h"
 #include "feature.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "menu.h"
@@ -44,6 +46,9 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewmap.h"
+#ifdef USE_TILE
+# include "tilepick.h"
+#endif
 
 // Global
 StashTracker StashTrack;
@@ -178,9 +183,8 @@ Stash::Stash(coord_def pos_) : items()
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.is_type(b.base_type, b.sub_type)
-        // Ignore Gozag's gold flag, and rod charges.
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
-                             || a.base_type == OBJ_RODS && !exact)
+        // Ignore Gozag's gold flag.
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.get_colour() == b.get_colour() // ????????
@@ -276,7 +280,10 @@ void Stash::update()
 
         // Now, grab all items on that square and fill our vector
         for (stack_iterator si(pos, true); si; ++si)
+        {
+            god_id_item(*si);
             add_item(*si);
+        }
 
         verified = true;
     }
@@ -390,7 +397,7 @@ string Stash::stash_item_name(const item_def &item)
 
     if (in_inventory(item))
     {
-        name.insert(0, "(carried) ");
+        name.insert(0, " (carried) ");
         return name;
     }
 
@@ -454,6 +461,7 @@ vector<stash_search_result> Stash::matches_search(
         {
             stash_search_result res;
             res.match = s;
+            res.primary_sort = item.name(DESC_QUALNAME);
             res.item = item;
             results.push_back(res);
         }
@@ -466,6 +474,7 @@ vector<stash_search_result> Stash::matches_search(
         {
             stash_search_result res;
             res.match = fdesc;
+            res.primary_sort = fdesc;
             results.push_back(res);
         }
     }
@@ -474,6 +483,17 @@ vector<stash_search_result> Stash::matches_search(
         res.pos.pos = pos;
 
     return results;
+}
+
+/// Fedhas: rot away all corpses.
+void Stash::rot_all_corpses()
+{
+    for (int i = items.size() - 1; i >= 0; i--)
+    {
+        item_def &item = items[i];
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY) && item.stash_freshness >= 0)
+            item.stash_freshness = -1;
+    }
 }
 
 void Stash::_update_corpses(int rot_time)
@@ -680,18 +700,24 @@ vector<stash_search_result> ShopInfo::matches_search(
     vector<stash_search_result> results;
 
     no_notes nx;
+    bool shop_matches = false;
 
     const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
     if (search.matches(shoptitle + " " + prefix + " {shop}"))
     {
         stash_search_result res;
         res.match = shoptitle;
+        res.primary_sort = shoptitle;
         res.shop = this;
         res.pos.pos = shop.pos;
         results.push_back(res);
         // if the player is just searching for shops, don't show contents
-        if (search.matches("shop"))
+        if (search.matches(prefix + " {shop}")
+            && search.tostring() != "." && search.tostring() != "..")
+        {
             return results;
+        }
+        shop_matches = true;
     }
 
     for (const item_def &item : shop.stock)
@@ -700,11 +726,13 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        if (search.matches(prefix + " " + ann + " " + sname)
+        if (shop_matches
+            || search.matches(prefix + " " + ann + " " + sname)
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
             res.match = sname;
+            res.primary_sort = item.name(DESC_QUALNAME);
             res.item = item;
             res.pos.pos = shop.pos;
             results.push_back(res);
@@ -937,6 +965,13 @@ void LevelStashes::get_matching_stashes(
     }
 }
 
+/// Fedhas: rot away all corpses.
+void LevelStashes::rot_all_corpses()
+{
+    for (auto &entry : m_stashes)
+        entry.second.rot_all_corpses();
+}
+
 void LevelStashes::_update_corpses(int rot_time)
 {
     for (auto &entry : m_stashes)
@@ -1131,7 +1166,6 @@ void StashTracker::load(reader& inf)
 void StashTracker::update_visible_stashes()
 {
     LevelStashes *lev = find_current_level();
-    coord_def c;
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
@@ -1210,6 +1244,36 @@ protected:
     }
 };
 
+static bool _is_potentially_boring(stash_search_result res)
+{
+    return res.item.defined() && !res.in_inventory && !res.shop
+           && (res.item.base_type == OBJ_WEAPONS
+               || res.item.base_type == OBJ_ARMOUR
+               || res.item.base_type == OBJ_MISSILES)
+           && (item_type_known(res.item) || !item_is_branded(res.item));
+}
+
+static bool _is_duplicate_for_search(stash_search_result l, stash_search_result r, bool ignore_missile_stacks=true)
+{
+    if (l.in_inventory || r.in_inventory)
+        return false;
+    if (ignore_missile_stacks &&
+        l.item.base_type == OBJ_MISSILES
+        && r.item.base_type == OBJ_MISSILES
+        && l.item.sub_type == r.item.sub_type
+        && l.item.brand == r.item.brand
+        && is_shop_item(l.item) == is_shop_item(r.item))
+    {
+        // Special handling for missile deduplication: ignore that stacks
+        // of different sizes have different "names".
+        return true;
+    }
+    // Otherwise just use the search result description.
+    // TODO: better handling for items in shops (ideally, ignore price)
+    return l.match == r.match;
+}
+
+
 // helper for search_stashes
 static bool _compare_by_distance(const stash_search_result& lhs,
                                  const stash_search_result& rhs)
@@ -1241,10 +1305,24 @@ static bool _compare_by_distance(const stash_search_result& lhs,
 static bool _compare_by_name(const stash_search_result& lhs,
                              const stash_search_result& rhs)
 {
-    if (lhs.match != rhs.match)
+    if (lhs.primary_sort != rhs.primary_sort)
     {
-        // Sort by name
-        return lhs.match < rhs.match;
+        // Sort first by DESC_QUALNAME for items
+        return lhs.primary_sort < rhs.primary_sort;
+    }
+    else if (!_is_duplicate_for_search(lhs, rhs, true))
+        // are the matches not equal for deduplication purposes?
+    {
+        // Then sort by 1. whether the item is in a shop, and 2. the full
+        // stash description (which is DESC_A plus other stuff). The shop
+        // check is there so that non-shop ammo (which isn't considered a
+        // search duplicate for shop ammo) will be adjacent, and thus
+        // collapsible, in _stash_filter_duplicates.
+        const bool l_shop = is_shop_item(lhs.item);
+        const bool r_shop = is_shop_item(rhs.item);
+
+        return !l_shop && r_shop
+            || l_shop == r_shop && lhs.match < rhs.match;
     }
     else if (lhs.player_distance != rhs.player_distance)
     {
@@ -1252,7 +1330,12 @@ static bool _compare_by_name(const stash_search_result& lhs,
         return lhs.player_distance < rhs.player_distance;
     }
     else
-        return false;
+    {
+        // If on the same level, sort by distance to player.
+        const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
+        const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
+        return lhs_dist < rhs_dist;
+    }
 }
 
 static vector<stash_search_result> _inventory_search(const base_pattern &search)
@@ -1271,6 +1354,7 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
         {
             stash_search_result res;
             res.match = s;
+            res.primary_sort = s; // don't use DESC_QUALNAME for inventory items
             res.item = item;
             // Needs to not be equal to ITEM_IN_INVENTORY so the describe
             // menu doesn't think it can manipulate the item.
@@ -1282,6 +1366,43 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
     }
 
     return results;
+}
+
+/*
+ * Eliminate boring duplicates from stash search results. Uses `match`
+ * to determine whether something is a duplicate.
+ *
+ * Populates the `duplicates` field of the search results as a side effect.
+ *
+ * @param in  the search result to filter.
+ * @return a vector sorted by `match`.
+ */
+static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_result> &in)
+{
+    vector<stash_search_result> out;
+    out.clear();
+    out.reserve(in.size());
+    // TODO: any problems doing this in place?
+    // Everything gets resorted before display.
+    stable_sort(in.begin(), in.end(), _compare_by_name);
+
+    for (const stash_search_result &res : in)
+    {
+        if (out.size() && !out.back().in_inventory &&
+            _is_potentially_boring(res) && _is_duplicate_for_search(out.back(), res))
+        {
+            // don't push_back the duplicate
+            out.back().duplicate_piles++;
+            out.back().duplicates += res.item.quantity;
+        }
+        else
+        {
+            out.push_back(res);
+            out.back().duplicate_piles = 0;
+            out.back().duplicates = 0;
+        }
+    }
+    return out;
 }
 
 void StashTracker::search_stashes()
@@ -1375,27 +1496,45 @@ void StashTracker::search_stashes()
         return;
     }
 
-    if (results.size() > SEARCH_SPAM_THRESHOLD)
+    // The spam threshold works a lot better if we use the deduplicated size.
+    vector<stash_search_result> dedup_results = _stash_filter_duplicates(results);
+
+    if (dedup_results.size() > SEARCH_SPAM_THRESHOLD)
     {
         mprf(MSGCH_PLAIN, "Too many matches; use a more specific search.");
         return;
     }
 
     bool sort_by_dist = true;
-    bool filter_useless = false;
+    bool filter_useless = true;
     bool default_execute = true;
     while (true)
     {
+        bool again;
         // Note that sort_by_dist and filter_useless can be modified by the
         // following call if requested by the user. Also, "results" will be
         // sorted by the call as appropriate:
-        const bool again = display_search_results(results,
-                                                  sort_by_dist,
-                                                  filter_useless,
-                                                  default_execute,
-                                                  search,
-                                                  csearch == "."
-                                                  || csearch == "..");
+        if (filter_useless)
+        {
+            // use the deduplicated results if we are filtering useless items
+            again = display_search_results(dedup_results,
+                                                      sort_by_dist,
+                                                      filter_useless,
+                                                      default_execute,
+                                                      search,
+                                                      csearch == "."
+                                                      || csearch == "..");
+        }
+        else
+        {
+            again = display_search_results(results,
+                                                      sort_by_dist,
+                                                      filter_useless,
+                                                      default_execute,
+                                                      search,
+                                                      csearch == "."
+                                                      || csearch == "..");
+        }
         if (!again)
             break;
     }
@@ -1413,8 +1552,6 @@ void StashTracker::get_matching_stashes(
         if (curr_lev && curr != entry.first)
             continue;
         entry.second.get_matching_stashes(search, results);
-        if (results.size() > SEARCH_SPAM_THRESHOLD)
-            return;
     }
 
     for (stash_search_result &result : results)
@@ -1431,7 +1568,7 @@ class StashSearchMenu : public Menu
 {
 public:
     StashSearchMenu(const char* sort_style_,const char* filtered_)
-        : Menu(),
+        : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING),
           request_toggle_sort_method(false),
           request_toggle_filter_useless(false),
           sort_style(sort_style_),
@@ -1446,33 +1583,35 @@ public:
 
 protected:
     bool process_key(int key) override;
-    void draw_title() override;
+    virtual formatted_string calc_title() override;
 };
 
-void StashSearchMenu::draw_title()
+formatted_string StashSearchMenu::calc_title()
 {
-    if (title)
+    formatted_string fs;
+    fs.textcolour(title->colour);
+    fs.cprintf("%d %s%s",
+                title->quantity, title->text.c_str(),
+                title->quantity == 1 ? "" : "es");
+    if (title->quantity == 0 && filtered)
     {
-        cgotoxy(1, 1);
-        formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s",
-                   title->quantity, title->text.c_str(),
-                   title->quantity == 1 ? "" : "es");
-        fs.display();
-
-#ifdef USE_TILE_WEB
-        webtiles_set_title(fs);
-#endif
-
-        draw_title_suffix(formatted_string::parse_string(make_stringf(
-                 "<lightgrey>"
-                 ": <w>%s</w> [toggle: <w>!</w>],"
-                 " by <w>%s</w> [<w>/</w>],"
-                 " <w>%s</w> useless [<w>=</w>]"
-                 "</lightgrey>",
-                 menu_action == ACT_EXECUTE ? "travel" : "view  ",
-                 sort_style, filtered)), false);
+        // TODO: it might be better to just force filtered=false in the
+        // display loop if only useless items are found.
+        fs += formatted_string::parse_string(
+            "<lightgrey>"
+            ": only useless items found; press <w>=</w> to show."
+            "</lightgrey>");
+    } else {
+        fs += formatted_string::parse_string(make_stringf(
+            "<lightgrey>"
+            ": <w>%s</w> [toggle: <w>!</w>],"
+            " by <w>%s</w> [<w>/</w>],"
+            " <w>%s</w> useless & duplicates [<w>=</w>]"
+            "</lightgrey>",
+            menu_action == ACT_EXECUTE ? "travel" : "view  ",
+            sort_style, filtered));
     }
+    return fs;
 }
 
 bool StashSearchMenu::process_key(int key)
@@ -1491,10 +1630,10 @@ bool StashSearchMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static void _stash_filter_useless(const vector<stash_search_result> &in,
-                                  vector<stash_search_result> &out)
+static vector<stash_search_result> _stash_filter_useless(const vector<stash_search_result> &in)
 {
     // Creates search results vector with useless items filtered
+    vector<stash_search_result> out;
     out.clear();
     out.reserve(in.size());
     for (const stash_search_result &res : in)
@@ -1502,6 +1641,7 @@ static void _stash_filter_useless(const vector<stash_search_result> &in,
         if (!res.item.defined() || !is_useless_item(res.item, false))
             out.push_back(res);
     }
+    return out;
 }
 
 // Returns true to request redisplay if display method was toggled
@@ -1516,12 +1656,12 @@ bool StashTracker::display_search_results(
     if (results_in.empty())
         return false;
 
-    vector<stash_search_result> * results = &results_in;
+    vector<stash_search_result> * results;
     vector<stash_search_result> results_filtered;
 
     if (filter_useless)
     {
-        _stash_filter_useless(results_in, results_filtered);
+        results_filtered = _stash_filter_useless(results_in);
         results = &results_filtered;
     }
     else
@@ -1544,13 +1684,6 @@ bool StashTracker::display_search_results(
     mtitle->quantity = results->size();
     stashmenu.set_title(mtitle);
 
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (results->size() > 52
-        && (stashmenu.maxpagesize() > 52 || stashmenu.maxpagesize() == 0))
-    {
-        stashmenu.set_maxpagesize(52);
-    }
-
     menu_letter hotkey;
     for (stash_search_result &res : *results)
     {
@@ -1563,8 +1696,20 @@ bool StashTracker::display_search_results(
         }
 
         matchtitle << res.match;
+        if (res.duplicates > 0)
+        {
+            matchtitle << " (" << res.duplicates << " further duplicate" << (res.duplicates == 1 ? "" : "s");
+            if (res.duplicates != res.duplicate_piles)
+            {
+                matchtitle << " in " << res.duplicate_piles
+                           << " pile" << (res.duplicate_piles == 1 ? "" : "s");
+            }
+            matchtitle << ")";
+        }
 
-        MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
+        MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1,
+                                      res.in_inventory ? 0
+                                                       : (int)hotkey);
         me->data = &res;
 
         if (res.shop && !res.shop->is_visited())
@@ -1578,36 +1723,36 @@ bool StashTracker::display_search_results(
                 me->colour = itemcol;
         }
 
+#ifdef USE_TILE
+        if (res.item.defined())
+        {
+            vector<tile_def> item_tiles;
+            get_tiles_for_item(res.item, item_tiles, false);
+            for (const auto &tile : item_tiles)
+                me->add_tile(tile);
+        }
+        else if (res.shop)
+            me->add_tile(tile_def(tileidx_shop(&res.shop->shop), TEX_FEAT));
+        else
+        {
+            const dungeon_feature_type feat = feat_by_desc(res.match);
+            const tileidx_t idx = tileidx_feature_base(feat);
+            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+        }
+#endif
+
         stashmenu.add_entry(me);
-        ++hotkey;
+        if (!res.in_inventory)
+            ++hotkey;
     }
 
     stashmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
 
-    vector<MenuEntry*> sel;
-    while (true)
+    stashmenu.on_single_selection = [&stashmenu, &search, &nohl](const MenuEntry& item)
     {
-        sel = stashmenu.show();
-
-        default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
-        if (stashmenu.request_toggle_sort_method)
+        stash_search_result *res = static_cast<stash_search_result *>(item.data);
+        if (stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
         {
-            sort_by_dist = !sort_by_dist;
-            return true;
-        }
-
-        if (stashmenu.request_toggle_filter_useless)
-        {
-            filter_useless = !filter_useless;
-            return true;
-        }
-
-        if (sel.size() == 1
-            && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
-        {
-            stash_search_result *res =
-                static_cast<stash_search_result *>(sel[0]->data);
-
             if (res->item.defined())
             {
                 item_def it = res->item;
@@ -1620,21 +1765,37 @@ bool StashTracker::display_search_results(
             }
             else if (res->shop)
                 res->shop->show_menu(res->pos);
-            continue;
+            else
+            {
+                level_excursion le;
+                le.go_to(res->pos.id);
+                describe_feature_wide(res->pos.pos);
+            }
         }
-        break;
-    }
-
-    redraw_screen();
-    if (sel.size() == 1 && stashmenu.menu_action == Menu::ACT_EXECUTE)
-    {
-        const stash_search_result *res =
-                static_cast<stash_search_result *>(sel[0]->data);
-        level_pos lp = res->pos;
-        if (show_map(lp, true, true, true))
-            start_translevel_travel(lp);
         else
-            return true;
+        {
+            level_pos lp = res->pos;
+            if (show_map(lp, true, true, true))
+            {
+                start_translevel_travel(lp);
+                return false;
+            }
+        }
+        return true;
+    };
+
+    vector<MenuEntry*> sel = stashmenu.show();
+    redraw_screen();
+    default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
+    if (stashmenu.request_toggle_sort_method)
+    {
+        sort_by_dist = !sort_by_dist;
+        return true;
+    }
+    if (stashmenu.request_toggle_filter_useless)
+    {
+        filter_useless = !filter_useless;
+        return true;
     }
     return false;
 }

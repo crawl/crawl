@@ -14,7 +14,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "end.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "libutil.h"
 #include "maps.h"
 #include "random.h"
@@ -38,7 +38,7 @@ static uint8_t _random_potion_description()
         desc %= PDC_NCOLOURS;
 
     // nature and colour correspond to primary and secondary in
-    // itemname.cc.
+    // item-name.cc.
 
 #if TAG_MAJOR_VERSION == 34
     if (PCOLOUR(desc) == PDC_CLEAR) // only water can be clear, re-roll
@@ -395,9 +395,9 @@ static int _get_random_coagulated_blood_desc()
 
 static int _get_random_blood_desc()
 {
-    return PDESCQ(coinflip() ? PDQ_NONE :
-                  coinflip() ? PDQ_VISCOUS
-                             : PDQ_SEDIMENTED, PDC_RED);
+    return PDESCQ(random_choose_weighted(2, PDQ_NONE,
+                                         1, PDQ_VISCOUS,
+                                         1, PDQ_SEDIMENTED), PDC_RED);
 }
 
 void initialise_item_descriptions()
@@ -470,7 +470,7 @@ void initialise_item_descriptions()
                         you.item_description[i][j] %= NDSC_JEWEL_PRI;
                     break;
 
-                case IDESC_STAVES: // staves and rods
+                case IDESC_STAVES: // staves
                     you.item_description[i][j] = random2(NDSC_STAVE_PRI
                                                          * NDSC_STAVE_SEC);
                     break;

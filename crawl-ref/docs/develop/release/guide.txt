@@ -38,7 +38,15 @@ for those the list begins with step 3.
        -- should be the version number followed by the tagline in quotes.
 
 
-3. Wait and fix some bugs
+3. Update servers
+
+   Contact the server admins to ask them to add the new version, and
+   preferably to make it the default until the end of the tournament.
+   This will increase the amount of playtesting the branch gets before
+   release.
+
+
+4. Wait and fix some bugs
 
    Wait at least 2-3 weeks for bug reports, and fix all severe old ones. When
    fixing bugs concentrate on the important ones (crashes and game-breakers),
@@ -55,7 +63,7 @@ for those the list begins with step 3.
    (on stone_soup.0.X) git cherry-pick -x 0123456789abc
 
 
-4. Sanity testing
+5. Sanity testing
 
    Build the binaries (preferably on all platforms) to see if the code compiles
    correctly, then run some basic sanity tests including at least the
@@ -69,22 +77,17 @@ for those the list begins with step 3.
        * accessing all help screens (including the ? submenus)
 
 
-5. Sync the documentation
+6. Update documentation files
 
-   Update the release date in the changelog. In major releases (not point
-   ones!), use "make rest" to fetch the the manual from the wiki
-   (https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest). Remember that
-   after the release the wiki refers to the next major version, so any further
-   changes need to be done in the git tree directly. Commit.
+   Update the release date in the changelog. This is a good time to make a
+   final check of the Crawl manual to make sure it's updated for any relevant
+   changes.
 
-
-6. Update and commit the Debian changelog
-
-   In the debian.txt guide in this directory, see the step "0.2
-   Release Prerequisites" to update `source/debian/changelog` for the
-   new version. You don't have to test or prepare the debian packages
-   at this stage, but it's ideal that you make the commit updating the
-   Debian changelog before tagging the release.
+   It's ideal if you can also update the Debian changelog file before tagging
+   the release, but this can be done later by the person preparing the debian
+   packages. In the debian.txt guide in this directory, see the step "0.2
+   Release Prerequisites" to update `source/debian/changelog` for the new
+   version.
 
 
 7. Tag the release
@@ -113,7 +116,7 @@ for those the list begins with step 3.
    the installer and stand-alone zips respectively. Unless you're on msys, you
    need to specify CROSSHOST as well:
 
-   make LTO=y CROSSHOST=i686-w64-mingw32 package-windows
+   make CROSSHOST=i686-w64-mingw32 package-windows
 
    It's ideal to test the windows packages (both Tiles and console) under wine
    at the very least, assuming you've cross-compiled, and testing under a
@@ -138,23 +141,24 @@ for those the list begins with step 3.
 
 10. Upload the files to CDO
 
-   Use the crawl login on CDO to upload the binaries to ~/website/release/ over
-   scp or sftp. The links on the download page currently at
-   ~/website/download.htm must then be updated.
+    Use the crawl login on CDO to upload the binaries to ~/website/release/
+    over scp or sftp. The links on the download page currently at
+    ~/website/download.htm must then be updated.
 
-   Presently there's a repository that manages the web files for non-wordpress
-   pages on CDO like the splash and download pages. This repo is cloned to
-   ~/dcss-website, and the origin repo on github is maintained by chequers, who
-   can grant push access to new users. It's best to update the files in the
-   dcss-website/site in the repo, make a commit for the change, and then copy
-   the download.htm file to the live ~/website directory.
+    Presently there's a repository that manages the web files for non-wordpress
+    pages on CDO like the splash and download pages. This repo is cloned to
+    ~/dcss-website, and the origin repo on github is maintained by chequers,
+    who can grant push access to new users. It's best to update the files in
+    the dcss-website/site in the repo, make a commit for the change, and then
+    copy the download.htm file to the live ~/website directory.
 
-   Ideally you'll also push the commit to chequers' origin repo. In the future
-   we'll probably move the website repo to the github crawl group and better
-   integrate it to the CDO website directory to avoid manual copying.
+    Ideally you'll also push the commit to chequers' origin repo. In the future
+    we'll probably move the website repo to the github crawl group and better
+    integrate it to the CDO website directory to avoid manual copying.
 
-   Building and installing the Debian packages is covered in the debian.txt
-   guide in this directory.
+    Building and installing the Debian packages is covered in the debian.txt
+    guide in this directory.
+
 
 11. Update Sourceforge
 

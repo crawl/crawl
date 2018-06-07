@@ -14,22 +14,25 @@
 #include "crash.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
+#include "delay.h"
 #include "directn.h"
 #include "dlua.h"
 #include "env.h"
 #include "files.h"
 #include "hiscores.h"
 #include "initfile.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "jobs.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mutation.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "version.h"
 #include "view.h"
@@ -184,16 +187,11 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (const delay_queue_item &item : you.delay_queue)
+        for (const auto delay : you.delay_queue)
         {
-            fprintf(file, "    type:     %d", item.type);
-            if (item.type <= DELAY_NOT_DELAYED || item.type >= NUM_DELAYS)
-                fprintf(file, " <invalid>");
+            fprintf(file, "    type:     %s", delay->name());
             fprintf(file, "\n");
-            fprintf(file, "    duration: %d\n", item.duration);
-            fprintf(file, "    parm1:    %d\n", item.parm1);
-            fprintf(file, "    parm2:    %d\n", item.parm2);
-            fprintf(file, "    started:  %d\n\n", (int) item.started);
+            fprintf(file, "    duration: %d\n", delay->duration);
         }
         fprintf(file, "\n");
     }
@@ -357,7 +355,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "\n");
 
     fprintf(file, "Equipment:\n");
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         int8_t eq = you.equip[i];
 
@@ -581,7 +579,7 @@ static void _dump_options(FILE *file)
 {
     fprintf(file, "RC options:\n");
     fprintf(file, "restart_after_game = %s\n",
-            Options.restart_after_game? "true" : "false");
+            maybe_to_string(Options.restart_after_game).c_str());
     fprintf(file, "\n\n");
 }
 
@@ -603,7 +601,7 @@ void do_crash_dump()
 
         _dump_ver_stuff(stderr);
 
-        dump_crash_info(stderr);
+        fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
         write_stack_trace(stderr, 0);
         call_gdb(stderr);
 
@@ -625,14 +623,19 @@ void do_crash_dump()
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
-    if (!crawl_state.test && !_assert_msg.empty())
-        fprintf(stderr, "\n%s", _assert_msg.c_str());
+    const string signal_info = crash_signal_info();
+    const string cause_msg = _assert_msg.empty() ? signal_info : _assert_msg;
+
+    if (!crawl_state.test && !cause_msg.empty())
+        fprintf(stderr, "\n%s", cause_msg.c_str());
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
-            "Please submit a bug report at https://crawl.develz.org/mantis/ "
-            "and include the crash report (%s), your save file (%s), and a "
-            "description of what you were doing when this crash occurred.\n\n",
+            "\nPlease submit a bug report at https://crawl.develz.org/mantis/ "
+            "and include:"
+            "\n- The crash report: %s"
+            "\n- Your save file: %s"
+            "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
@@ -653,8 +656,8 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-    if (!_assert_msg.empty())
-        fprintf(file, "%s\n\n", _assert_msg.c_str());
+    if (!cause_msg.empty())
+        fprintf(file, "%s\n\n", cause_msg.c_str());
 
     _dump_ver_stuff(file);
 
@@ -665,7 +668,8 @@ void do_crash_dump()
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
     // might themselves cause crashes.
-    dump_crash_info(file);
+    if (!signal_info.empty())
+        fprintf(file, "%s\n\n", signal_info.c_str());
     write_stack_trace(file, 0);
     fprintf(file, "\n");
 
@@ -699,6 +703,7 @@ void do_crash_dump()
 
     // Dumping the player state and crawl state is next least likely to cause
     // another crash, so do that next.
+    fprintf(file, "\nVersion history:\n%s\n", Version::history().c_str());
     crawl_state.dump();
     _dump_player(file);
 
@@ -750,7 +755,7 @@ void do_crash_dump()
 
     set_msg_dump_file(nullptr);
 
-    mark_milestone("crash", _assert_msg, "", t);
+    mark_milestone("crash", cause_msg, "", t);
 
     if (file != stderr)
         fclose(file);

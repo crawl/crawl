@@ -6,8 +6,9 @@
 
 #include "libutil.h"
 #include "macro.h"
+#include "tiles-build-specific.h"
 
-StatRegion::StatRegion(FontWrapper *font) : TextRegion(font)
+StatRegion::StatRegion(FontWrapper *font_arg) : TextRegion(font_arg)
 {
 }
 
@@ -22,13 +23,8 @@ int StatRegion::handle_mouse(MouseEvent &event)
     if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
         return 0;
 
-#ifdef TOUCH_UI
     // clicking on stats should show all the stats
     return command_to_key(CMD_RESISTS_SCREEN);
-#else
-    // Resting
-    return command_to_key(CMD_REST);
-#endif
 }
 
 bool StatRegion::update_tip_text(string& tip)
@@ -36,10 +32,7 @@ bool StatRegion::update_tip_text(string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
-    if (tiles.is_using_small_layout())
-        tip = "[L-Click] Show player information";
-    else
-        tip = "[L-Click] Rest / Search for a while";
+    tip = "[L-Click] Show player information";
     return true;
 }
 

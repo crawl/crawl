@@ -1,11 +1,10 @@
-#ifndef VIEWGEOM_H
-#define VIEWGEOM_H
+#pragma once
 
 #include "tilecell.h"
 
 struct screen_cell_t
 {
-    ucs_t glyph;
+    char32_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
     unsigned short flash_colour;
 #ifdef USE_TILE
@@ -199,5 +198,3 @@ static inline bool in_los_bounds_g(const coord_def& pos)
 {
     return crawl_view.in_los_bounds_g(pos);
 }
-
-#endif

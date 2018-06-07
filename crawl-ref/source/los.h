@@ -3,10 +3,10 @@
  * @brief Line-of-sight algorithm.
 **/
 
-#ifndef LOS_H
-#define LOS_H
+#pragma once
 
 #include "coord-circle.h"
+#include "los-type.h"
 #include "losparam.h"
 
 class circle_def;
@@ -17,7 +17,7 @@ struct ray_def;
 bool double_is_zero(const double x);
 
 void set_los_radius(int r);
-extern int los_radius;
+int get_los_radius();
 
 // Default bounds that tracks global LOS radius.
 #define BDS_DEFAULT (circle_def())
@@ -51,4 +51,3 @@ void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_changed();
 opacity_type mons_opacity(const monster* mon, los_type how);
-#endif

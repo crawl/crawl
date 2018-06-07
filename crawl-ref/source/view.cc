@@ -32,15 +32,17 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
-#include "itemname.h" // item_type_known
-#include "itemprop.h" // get_weapon_brand
+#include "item-name.h" // item_type_known
+#include "item-prop.h" // get_weapon_brand
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -48,6 +50,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -63,10 +66,12 @@
 #include "terrain.h"
 #include "tilemcache.h"
 #ifdef USE_TILE
+ #include "tile-flags.h"
  #include "tilepick.h"
  #include "tilepick-p.h"
  #include "tileview.h"
 #endif
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
@@ -129,7 +134,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(*mi))
+        if ((mi->asleep() || mons_is_wandering(**mi))
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
@@ -260,7 +265,7 @@ static void _genus_factoring(map<monster_type, int> &types,
 
 static bool _is_weapon_worth_listing(const item_def *wpn)
 {
-    return wpn && (wpn->base_type == OBJ_RODS || wpn->base_type == OBJ_STAVES
+    return wpn && (wpn->base_type == OBJ_STAVES
                    || is_unrandom_artefact(*wpn)
                    || get_weapon_brand(*wpn) != SPWPN_NORMAL);
 }
@@ -284,7 +289,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
             continue;
         }
 
-        if (!divine && monsters.size() == 1)
+        if (!divine && (ash_ided || monsters.size() == 1))
             continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
@@ -398,12 +403,14 @@ static void _handle_comes_into_view(const vector<string> &msgs,
 /// If the player has the shout mutation, maybe shout at newly-seen monsters.
 static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 {
-    if (!player_mutation_level(MUT_SCREAM))
+    if (!you.get_mutation_level(MUT_SCREAM))
         return;
 
     for (const monster* mon : monsters)
     {
-        if (x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (!mons_is_tentacle_or_tentacle_segment(mon->type)
+            && !mons_is_conjured(mon->type)
+            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
             return;
@@ -534,7 +541,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
         // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
         {
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);
@@ -572,7 +579,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 
     // must not produce the magic value (-1)
     int seed = ((static_cast<int>(you.where_are_you) << 8) + you.depth)
-             ^ (you.game_seeds[SEED_PASSIVE_MAP] & 0x7fffffff);
+             ^ (you.game_seed & 0x7fffffff);
 
     if (seed == cache_seed)
         return cache;
@@ -589,11 +596,8 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
-                   coord_def pos)
+                   coord_def origin)
 {
-    if (!in_bounds(pos))
-        pos = you.pos();
-
     if (!force && !is_map_persistent())
     {
         if (!suppress_msg)
@@ -618,52 +622,63 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, C_SQUARE);
+    for (radius_iterator ri(in_bounds(origin) ? origin : you.pos(),
+                            map_radius, C_SQUARE);
          ri; ++ri)
     {
+        coord_def pos = *ri;
         if (!wizard_map)
         {
             int threshold = proportion;
 
-            const int dist = grid_distance(you.pos(), *ri);
+            const int dist = grid_distance(you.pos(), pos);
 
             if (dist > very_far)
                 threshold = threshold / 3;
             else if (dist > pfar)
                 threshold = threshold * 2 / 3;
 
-            if (difficulty(*ri) > threshold)
+            if (difficulty(pos) > threshold)
                 continue;
         }
 
-        if (env.map_knowledge(*ri).changed())
+        map_cell& knowledge = env.map_knowledge(pos);
+
+        if (knowledge.changed())
         {
             // If the player has already seen the square, update map
             // knowledge with the new terrain. Otherwise clear what we had
             // before.
-            if (env.map_knowledge(*ri).seen())
+            if (knowledge.seen())
             {
-                dungeon_feature_type newfeat = grd(*ri);
+                dungeon_feature_type newfeat = grd(pos);
                 if (newfeat == DNGN_UNDISCOVERED_TRAP)
                     newfeat = DNGN_FLOOR;
-                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(*ri) : TRAP_UNASSIGNED;
-                env.map_knowledge(*ri).set_feature(newfeat, env.grid_colours(*ri), tr);
+                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
+                knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }
             else
-                env.map_knowledge(*ri).clear();
+                knowledge.clear();
         }
 
-        if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
+        // Don't assume that DNGN_UNSEEN cells ever count as mapped.
+        // Because of a bug at one point in map forgetting, cells could
+        // spuriously get marked as mapped even when they were completely
+        // unseen.
+        const bool already_mapped = knowledge.mapped()
+                            && knowledge.feat() != DNGN_UNSEEN;
+
+        if (!wizard_map && (knowledge.seen() || already_mapped))
             continue;
 
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = grd(pos);
 
         bool open = true;
 
         if (feat_is_solid(feat) && !feat_is_closed_door(feat))
         {
             open = false;
-            for (adjacent_iterator ai(*ri); ai; ++ai)
+            for (adjacent_iterator ai(pos); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
                                         || feat_is_closed_door(grd(*ai))))
@@ -678,31 +693,31 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             if (wizard_map)
             {
-                env.map_knowledge(*ri).set_feature(grd(*ri), 0,
-                    feat_is_trap(grd(*ri)) ? get_trap_type(*ri)
+                knowledge.set_feature(grd(pos), 0,
+                    feat_is_trap(grd(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
-            else if (!env.map_knowledge(*ri).feat())
-                env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
-            if (emphasise(*ri))
-                env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
+            else if (!knowledge.feat())
+                knowledge.set_feature(magic_map_base_feat(grd(pos)));
+            if (emphasise(pos))
+                knowledge.flags |= MAP_EMPHASIZE;
 
             if (wizard_map)
             {
                 if (is_notable_terrain(feat))
-                    seen_notable_thing(feat, *ri);
+                    seen_notable_thing(feat, pos);
 
-                set_terrain_seen(*ri);
+                set_terrain_seen(pos);
 #ifdef USE_TILE
-                tile_wizmap_terrain(*ri);
+                tile_wizmap_terrain(pos);
 #endif
             }
             else
             {
-                set_terrain_mapped(*ri);
+                set_terrain_mapped(pos);
 
-                if (get_cell_map_feature(env.map_knowledge(*ri)) == MF_STAIR_BRANCH)
-                    seen_notable_thing(feat, *ri);
+                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, pos);
 
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
@@ -805,7 +820,7 @@ string screenshot()
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
                                      coord_def(x, y));
-            ucs_t ch =
+            char32_t ch =
                   (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;
@@ -889,11 +904,12 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
-#ifndef USE_TILE_LOCAL
+// TODO: this should be fixed so that it can work in local tiles
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
     ASSERT(mon); // XXX: change to const monster &mon
+#ifndef USE_TILE_LOCAL
     if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
     {
         colour_t old_flash_colour = you.flash_colour;
@@ -909,8 +925,8 @@ void flash_monster_colour(const monster* mon, colour_t fmc_colour,
         view_update_at(c);
         update_screen();
     }
-}
 #endif
+}
 
 bool view_update()
 {
@@ -922,7 +938,7 @@ bool view_update()
     return false;
 }
 
-void flash_view(use_animation_type a, colour_t colour, targetter *where)
+void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (Options.use_animations & a)
     {
@@ -933,7 +949,7 @@ void flash_view(use_animation_type a, colour_t colour, targetter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targetter *where)
+                      targeter *where)
 {
     if (Options.use_animations & a)
     {
@@ -978,8 +994,8 @@ static void _debug_pane_bounds()
 
 enum class update_flag
 {
-    AFFECT_EXCLUDES = (1 << 0),
-    ADDED_EXCLUDE   = (1 << 1),
+    affect_excludes = (1 << 0),
+    added_exclude   = (1 << 1),
 };
 DEF_BITFIELD(update_flags, update_flag);
 
@@ -1008,9 +1024,9 @@ static update_flags player_view_update_at(const coord_def &gc)
                 size = 0;
 
             bool was_exclusion = is_exclude_root(gc);
-            set_exclude(gc, size, false, false, true);
+            set_exclude(gc, size, true, false, true);
             if (!did_exclude && !was_exclusion)
-                ret |= update_flag::ADDED_EXCLUDE;
+                ret |= update_flag::added_exclude;
         }
     }
 
@@ -1019,7 +1035,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
-        ret |= update_flag::AFFECT_EXCLUDES;
+        ret |= update_flag::affect_excludes;
 
     set_terrain_visible(gc);
 
@@ -1063,9 +1079,9 @@ static void player_view_update()
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         update_flags flags = player_view_update_at(*ri);
-        if (flags & update_flag::AFFECT_EXCLUDES)
+        if (flags & update_flag::affect_excludes)
             update_excludes.push_back(*ri);
-        if (flags & update_flag::ADDED_EXCLUDE)
+        if (flags & update_flag::added_exclude)
             need_update = true;
     }
     // Update exclusion LOS for possibly affected excludes.
@@ -1085,7 +1101,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 #endif
 }
 
-static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
+static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
+                                    const coord_def &ep)
 {
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
@@ -1093,6 +1110,10 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
+    // this is just for out-of-los rays, but I don't see a more efficient way..
+    if (in_bounds(ep))
+        cell->tile.bg = env.tile_bg(ep);
+
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #endif
 }
@@ -1462,7 +1483,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     if (!map_bounds(gc))
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, coord_def());
     else if (gc == you.pos() && you.on_current_level
              && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
@@ -1473,9 +1494,23 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     else if (you.see_cell(gc) && you.on_current_level)
         _draw_los(cell, gc, ep, anim_updates);
     else
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
     cell->flash_colour = BLACK;
+
+    // Don't hide important information by recolouring monsters.
+    bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
+        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
+    });
+
+    // Is this cell excluded from movement by mesmerise-related statuses?
+    // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
+    bool mesmerise_excluded = (gc != you.pos() // for fungus form
+                               && allow_mon_recolour
+                               && map_bounds(gc)
+                               && you.on_current_level
+                               && (env.map_knowledge(gc).flags & MAP_WITHHELD)
+                               && !feat_is_solid(grd(gc)));
 
     // Alter colour if flashing the characters vision.
     if (flash_colour)
@@ -1486,18 +1521,15 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else
             cell->colour = real_colour(flash_colour);
 #else
-        else if (gc != you.pos())
-        {
-            monster_type mons = env.map_knowledge(gc).monster();
-            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-                cell->colour = real_colour(flash_colour);
-        }
+        else if (gc != you.pos() && allow_mon_recolour)
+            cell->colour = real_colour(flash_colour);
 #endif
         cell->flash_colour = cell->colour;
     }
     else if (crawl_state.darken_range)
     {
-        if (!crawl_state.darken_range->valid_aim(gc))
+        if ((crawl_state.darken_range->obeys_mesmerise && mesmerise_excluded)
+            || (!crawl_state.darken_range->valid_aim(gc)))
         {
             cell->colour = DARKGREY;
 #ifdef USE_TILE
@@ -1523,25 +1555,23 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if (!found)
             cell->colour = DARKGREY;
     }
+    else if (mesmerise_excluded) // but no range limits in place
+    {
+        cell->colour = DARKGREY;
+
 #ifdef USE_TILE_LOCAL
-    // Grey out grids that cannot be reached due to beholders.
-    else if (you.get_beholder(gc))
         cell->tile.bg |= TILE_FLAG_OOR;
-
-    else if (you.get_fearmonger(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
-    tile_apply_properties(gc, cell->tile);
 #elif defined(USE_TILE_WEB)
-    // For webtiles, we only grey out visible tiles
-    else if (you.get_beholder(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
+        // For webtiles, we only grey out visible tiles
+        if (you.see_cell(gc))
+            cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+    }
 
-    else if (you.get_fearmonger(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
+#ifdef USE_TILE
     tile_apply_properties(gc, cell->tile);
 #endif
+
 #ifndef USE_TILE_LOCAL
     if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level

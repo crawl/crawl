@@ -11,7 +11,6 @@
 #include <algorithm>
 
 #include "dlua.h"
-#include "libutil.h" // map_find
 #include "monster.h"
 #include "stringutil.h"
 
@@ -31,109 +30,19 @@ CrawlStoreValue::CrawlStoreValue()
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
+    : type(SV_NONE), flags(SFLAG_UNSET)
 {
     ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
 
-    val.ptr = nullptr;
-
-    type  = other.type;
-    flags = other.flags;
-
-    if (flags & SFLAG_UNSET)
+    // very shallow copy for unset values
+    if (other.flags & SFLAG_UNSET)
     {
+        type = other.type;
+        flags = other.flags;
         val = other.val;
         return;
     }
-
-    switch (type)
-    {
-    case SV_NONE:
-    case SV_BOOL:
-    case SV_BYTE:
-    case SV_SHORT:
-    case SV_INT:
-    case SV_INT64:
-    case SV_FLOAT:
-        val = other.val;
-        break;
-
-    case SV_STR:
-    {
-        string* str;
-        str = new string(*static_cast<string*>(other.val.ptr));
-        val.ptr = static_cast<void*>(str);
-        break;
-    }
-
-    case SV_COORD:
-    {
-        coord_def* coord;
-        coord = new coord_def(*static_cast<coord_def*>(other.val.ptr));
-        val.ptr = static_cast<void*>(coord);
-        break;
-    }
-
-    case SV_ITEM:
-    {
-        item_def* item;
-        item = new item_def(*static_cast<item_def*>(other.val.ptr));
-        val.ptr = static_cast<void*>(item);
-        break;
-    }
-
-    case SV_HASH:
-    {
-        CrawlHashTable* hash;
-        CrawlHashTable* tmp = static_cast<CrawlHashTable*>(other.val.ptr);
-        hash = new CrawlHashTable(*tmp);
-        val.ptr = static_cast<void*>(hash);
-        break;
-    }
-
-    case SV_VEC:
-    {
-        CrawlVector* vec;
-        CrawlVector* tmp = static_cast<CrawlVector*>(other.val.ptr);
-        vec = new CrawlVector(*tmp);
-        val.ptr = static_cast<void*>(vec);
-        break;
-    }
-
-    case SV_LEV_ID:
-    {
-        level_id* id;
-        id = new level_id(*static_cast<level_id*>(other.val.ptr));
-        val.ptr = static_cast<void*>(id);
-        break;
-    }
-
-    case SV_LEV_POS:
-    {
-        level_pos* pos;
-        pos = new level_pos(*static_cast<level_pos*>(other.val.ptr));
-        val.ptr = static_cast<void*>(pos);
-        break;
-    }
-
-    case SV_MONST:
-    {
-        monster* mon;
-        mon = new monster(*static_cast<monster* >(other.val.ptr));
-        val.ptr = static_cast<void*>(mon);
-        break;
-    }
-
-    case SV_LUA:
-    {
-        dlua_chunk* chunk;
-        chunk = new dlua_chunk(*static_cast<dlua_chunk*>(other.val.ptr));
-        val.ptr = static_cast<void*>(chunk);
-        break;
-    }
-
-    case NUM_STORE_VAL_TYPES:
-        die("unknown stored value type");
-    }
+    *this = other;
 }
 
 CrawlStoreValue::CrawlStoreValue(const store_flags _flags,
@@ -379,14 +288,11 @@ void CrawlStoreValue::unset(bool force)
     flags |= SFLAG_UNSET;
 }
 
-#define COPY_PTR(ptr_type) \
-    { \
-        ptr_type *ptr = static_cast<ptr_type*>(val.ptr); \
-        if (ptr != nullptr) \
-            delete ptr; \
-        ptr = static_cast<ptr_type*>(other.val.ptr); \
-        val.ptr = (void*) new ptr_type (*ptr);  \
-    }
+#define DELETE_PTR(ptr_type) (delete static_cast<ptr_type*>(val.ptr))
+
+#define COPY_PTR(ptr_type) val.ptr = (void*) new ptr_type( \
+        *(static_cast<ptr_type*>(other.val.ptr)) \
+        )
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 {
@@ -401,10 +307,42 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
             ASSERT(type == SV_NONE || type == other.type);
     }
 
-    type  = other.type;
-    flags = other.flags;
-
+    // clean up any memory allocated for old pointer-typed values
     switch (type)
+    {
+    case SV_STR:
+        DELETE_PTR(string);
+        break;
+
+    case SV_COORD:
+        DELETE_PTR(coord_def);
+        break;
+
+    case SV_ITEM:
+        DELETE_PTR(item_def);
+        break;
+
+    case SV_HASH:
+        DELETE_PTR(CrawlHashTable);
+        break;
+
+    case SV_VEC:
+        DELETE_PTR(CrawlVector);
+        break;
+
+    case SV_LEV_ID:
+        DELETE_PTR(level_id);
+        break;
+
+     case SV_LEV_POS:
+        DELETE_PTR(level_pos);
+        break;
+
+    default:
+        break; // nothing to delete for non-pointers
+    }
+
+    switch (other.type)
     {
     case SV_NONE:
     case SV_BOOL:
@@ -440,14 +378,25 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         COPY_PTR(level_id);
         break;
 
-     case SV_LEV_POS:
+    case SV_LEV_POS:
         COPY_PTR(level_pos);
+        break;
+
+    case SV_MONST:
+        COPY_PTR(monster);
+        break;
+
+    case SV_LUA:
+        COPY_PTR(dlua_chunk);
         break;
 
      default:
         die("CrawlStoreValue has invalid type");
         break;
     }
+
+    type  = other.type;
+    flags = other.flags;
 
     return *this;
 }
@@ -585,6 +534,8 @@ void CrawlStoreValue::write(writer &th) const
 
 void CrawlStoreValue::read(reader &th)
 {
+    ASSERT(type == SV_NONE);
+
     type = static_cast<store_val_type>(unmarshallByte(th));
     flags = (store_flags) unmarshallByte(th);
 
@@ -1230,52 +1181,6 @@ string &CrawlStoreValue::operator += (const string &_val)
     return get_string() += _val;
 }
 
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-
-CrawlHashTable::CrawlHashTable()
-{
-    hash_map = nullptr;
-}
-
-CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
-{
-    if (other.hash_map == nullptr)
-    {
-        hash_map = nullptr;
-        return;
-    }
-
-    hash_map = new hash_map_type(*(other.hash_map));
-}
-
-CrawlHashTable::~CrawlHashTable()
-{
-    // NOTE: Not using unique_ptr because making hash_map an unique_ptr
-    // causes compile weirdness in externs.h
-    if (hash_map == nullptr)
-        return;
-
-    delete hash_map;
-    hash_map = nullptr;
-}
-
-CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
-{
-    if (hash_map != nullptr)
-        delete hash_map;
-
-    if (other.hash_map == nullptr)
-    {
-        hash_map = nullptr;
-        return *this;
-    }
-
-    hash_map = new hash_map_type(*(other.hash_map));
-
-    return *this;
-}
-
 //////////////////////////////
 // Read/write from/to savefile
 void CrawlHashTable::write(writer &th) const
@@ -1289,7 +1194,7 @@ void CrawlHashTable::write(writer &th) const
 
     marshallUnsigned(th, size());
 
-    for (const auto &entry : *hash_map)
+    for (const auto &entry : *this)
     {
         marshallString(th, entry.first);
         entry.second.write(th);
@@ -1314,11 +1219,6 @@ void CrawlHashTable::read(reader &th)
     unsigned int _size = unmarshallUnsigned(th);
 #endif
 
-    if (_size == 0)
-        return;
-
-    init_hash_map();
-
     for (unsigned int i = 0; i < _size; i++)
     {
         string           key = unmarshallString(th);
@@ -1342,23 +1242,17 @@ static map<string, int> accesses;
 
 bool CrawlHashTable::exists(const string &key) const
 {
-    if (!hash_map)
-        return false;
-
     ACCESS(key);
     ASSERT_VALIDITY();
-    return hash_map->find(key) != hash_map->end();
+    return find(key) != end();
 }
 
 void CrawlHashTable::assert_validity() const
 {
 #ifdef DEBUG
-    if (hash_map == nullptr)
-        return;
-
     size_t actual_size = 0;
 
-    for (const auto &entry : *hash_map)
+    for (const auto &entry : *this)
     {
         actual_size++;
 
@@ -1419,114 +1313,23 @@ void CrawlHashTable::assert_validity() const
 CrawlStoreValue& CrawlHashTable::get_value(const string &key)
 {
     ASSERT_VALIDITY();
-    init_hash_map();
-
     ACCESS(key);
     // Inserts CrawlStoreValue() if the key was not found.
-    return (*hash_map)[key];
+    return map::operator[](key);
 }
 
 const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
-    ASSERTM(hash_map,
-            "trying to read non-existent property \"%s\"", key.c_str());
     ASSERT_VALIDITY();
-
     ACCESS(key);
-    CrawlStoreValue *store = map_find(*hash_map, key);
+    auto iter = find(key);
+    ASSERTM(iter != end(), "trying to read non-existent property \"%s\"", key.c_str());
 
-    ASSERTM(store, "trying to read non-existent property \"%s\"", key.c_str());
-    ASSERT(store->type != SV_NONE);
-    ASSERT(!(store->flags & SFLAG_UNSET));
+    const CrawlStoreValue& store = iter->second;
+    ASSERT(store.type != SV_NONE);
+    ASSERT(!(store.flags & SFLAG_UNSET));
 
-    return *store;
-}
-
-///////////////////////////
-// std::map style interface
-unsigned int CrawlHashTable::size() const
-{
-    if (hash_map == nullptr)
-        return 0;
-
-    return hash_map->size();
-}
-
-bool CrawlHashTable::empty() const
-{
-    if (hash_map == nullptr)
-        return true;
-
-    return hash_map->empty();
-}
-
-void CrawlHashTable::erase(const string& key)
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    ACCESS(key);
-    iterator i = hash_map->find(key);
-
-    if (i != hash_map->end())
-    {
-#ifdef ASSERTS
-        CrawlStoreValue &val = i->second;
-        ASSERT(!(val.flags & SFLAG_NO_ERASE));
-#endif
-
-        hash_map->erase(i);
-    }
-}
-
-void CrawlHashTable::clear()
-{
-    ASSERT_VALIDITY();
-    if (hash_map == nullptr)
-        return;
-
-    delete hash_map;
-    hash_map = nullptr;
-}
-
-CrawlHashTable::iterator CrawlHashTable::begin()
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    return hash_map->begin();
-}
-
-CrawlHashTable::iterator CrawlHashTable::end()
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    return hash_map->end();
-}
-
-CrawlHashTable::const_iterator CrawlHashTable::begin() const
-{
-    ASSERT(hash_map != nullptr);
-    ASSERT_VALIDITY();
-
-    return hash_map->begin();
-}
-
-CrawlHashTable::const_iterator CrawlHashTable::end() const
-{
-    ASSERT(hash_map != nullptr);
-    ASSERT_VALIDITY();
-
-    return hash_map->end();
-}
-
-void CrawlHashTable::init_hash_map()
-{
-    if (hash_map != nullptr)
-        return;
-
-    hash_map = new hash_map_type();
+    return store;
 }
 
 /////////////////////////////////////////////////////////////////////////////

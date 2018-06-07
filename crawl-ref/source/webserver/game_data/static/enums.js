@@ -28,6 +28,17 @@ define(function () {
     exports.mouse_mode.YESNO = val++;
     exports.mouse_mode.MAX = val++;
 
+    // Textures
+    val = 0;
+    exports.texture = {};
+    exports.texture.FLOOR = val++;   // floor.png
+    exports.texture.WALL = val++;    // wall.png
+    exports.texture.FEAT = val++;    // feat.png
+    exports.texture.PLAYER = val++;  // player.png
+    exports.texture.DEFAULT = val++; // main.png
+    exports.texture.GUI = val++;     // gui.png
+    exports.texture.ICONS = val++;   // icons.png
+
     // Cursors
     exports.CURSOR_MOUSE = 0;
     exports.CURSOR_TUTORIAL = 1;
@@ -188,6 +199,13 @@ define(function () {
     fg_flags.flags.DEATHS_DOOR  = [0, 0x20000];
     fg_flags.flags.RECALL       = [0, 0x40000];
     fg_flags.flags.DRAIN        = [0, 0x80000];
+    fg_flags.flags.IDEALISED    = [0, 0x100000];
+    fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
+    fg_flags.flags.INFESTED     = [0, 0x400000];
+    fg_flags.flags.CORRODED     = [0, 0x800000];
+    fg_flags.flags.SWIFT        = [0, 0x1000000];
+    fg_flags.flags.PINNED       = [0, 0x2000000];
+    fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
@@ -207,14 +225,6 @@ define(function () {
         DEMON_3    : [0, 0x06],
         DEMON_2    : [0, 0x08],
         DEMON_1    : [0, 0x0E],
-    });
-
-    // Mimics, 2 bits.
-    fg_flags.exclusive_flags.push({
-        mask        : [0, 0x60],
-        MIMIC_INEPT : [0, 0x20],
-        MIMIC       : [0, 0x40],
-        MIMIC_RAVEN : [0, 0x60],
     });
 
     fg_flags.mask             = 0x0000FFFF;
@@ -237,6 +247,7 @@ define(function () {
     bg_flags.flags.OOR        = 0x02000000;
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
+    bg_flags.flags.NEW_TRANSPORTER = 0x10000000;
 
     // Kraken tentacle overlays.
     bg_flags.flags.KRAKEN_NW  = 0x20000000;

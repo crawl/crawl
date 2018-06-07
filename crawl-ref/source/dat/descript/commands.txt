@@ -32,16 +32,6 @@ CMD_USE_ABILITY
 
 Use divine, innate or evokable abilities
 %%%%
-CMD_PRAY
-
-Pray at an altar
-%%%%
-CMD_PRAY verbose
-
-While standing at an altar, allows you to join the corresponding god. Some gods
-will also accept sacrifices of specific items when praying over them, or grant
-unique gifts when praying at an altar with high piety.
-%%%%
 CMD_SEARCH_STASHES
 
 Search for items/features
