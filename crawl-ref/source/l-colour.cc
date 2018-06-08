@@ -61,7 +61,7 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     string colour = luaL_checkstring(ls, -1);
     lua_pop(ls, 1);
 
-    return str_to_colour(colour);
+    return str_to_colour(colour,-1,false,true);
 }
 
 /***
@@ -87,7 +87,7 @@ LUAFN(l_add_colour)
     if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 2))
         luaL_error(ls, "Expected colour generation function.");
 
-    int col = str_to_colour(name, -1, false);
+    int col = str_to_colour(name, -1, false, true);
     if (col == -1)
         luaL_error(ls, ("Unknown colour: " + name).c_str());
 
