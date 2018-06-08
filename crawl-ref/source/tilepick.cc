@@ -1361,7 +1361,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 // for when they have a bow.
 static bool _bow_offset(const monster_info& mon)
 {
-    if (!mon.inv[MSLOT_WEAPON].get())
+    if (!mon.inv[MSLOT_WEAPON])
         return true;
 
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
@@ -1695,7 +1695,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return base + (_bow_offset(mon) ? 1 : 0);
 
         case MONS_CEREBOV:
-            return base + (mon.inv[MSLOT_WEAPON].get() == nullptr ? 1 : 0);
+            return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);
 
         case MONS_SLAVE:
             return base + (mon.mname == "freed slave" ? 1 : 0);
@@ -1713,7 +1713,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // but will use a regular stance if she picks up a shield
             // (enhancer staves are compatible with those).
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
-            if (!mon.inv[MSLOT_SHIELD].get() && weapon
+            if (!mon.inv[MSLOT_SHIELD] && weapon
                 && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
@@ -1766,7 +1766,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_SPECTRAL_WEAPON:
         {
-            if (!mon.inv[MSLOT_WEAPON].get())
+            if (!mon.inv[MSLOT_WEAPON])
                 return TILEP_MONS_SPECTRAL_SBL;
 
             // Tiles exist for each class of weapon.

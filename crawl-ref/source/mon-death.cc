@@ -133,7 +133,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     if (col == COLOUR_UNDEF)
     {
         // XXX hack to avoid crashing in wiz mode.
-        if (mons_is_ghost_demon(mons.type) && !mons.ghost.get())
+        if (mons_is_ghost_demon(mons.type) && !mons.ghost)
             col = LIGHTRED;
         else
         {

@@ -191,7 +191,7 @@ subvault_place::subvault_place(const coord_def &_tl,
 
 subvault_place::subvault_place(const subvault_place &place)
     : tl(place.tl), br(place.br),
-      subvault(place.subvault.get() ? new map_def(*place.subvault) : nullptr)
+      subvault(place.subvault ? new map_def(*place.subvault) : nullptr)
 {
 }
 
@@ -199,7 +199,7 @@ subvault_place &subvault_place::operator = (const subvault_place &place)
 {
     tl = place.tl;
     br = place.br;
-    subvault.reset(place.subvault.get() ? new map_def(*place.subvault)
+    subvault.reset(place.subvault ? new map_def(*place.subvault)
                                         : nullptr);
     return *this;
 }
@@ -570,7 +570,7 @@ void map_lines::apply_markers(const coord_def &c)
 
 void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
 {
-    if (!overlay.get())
+    if (!overlay)
         return;
 
     for (int y = height() - 1; y >= 0; --y)
@@ -594,7 +594,7 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             const int fheight = (*overlay)(x, y).height;
             if (fheight != INVALID_HEIGHT)
             {
-                if (!env.heightmap.get())
+                if (!env.heightmap)
                     dgn_initialise_heightmap();
                 dgn_height_at(gc) = fheight;
             }
@@ -1050,7 +1050,7 @@ void map_lines::extend(int min_width, int min_height, char fill)
     normalise(fill);
 
     // Extend overlay matrix as well.
-    if (overlay.get())
+    if (overlay)
     {
         auto new_overlay = make_unique<overlay_matrix>(width(), height());
 
@@ -1157,7 +1157,7 @@ void map_lines::subst(subst_spec &spec)
 
 void map_lines::bind_overlay()
 {
-    if (!overlay.get())
+    if (!overlay)
         overlay.reset(new overlay_matrix(width(), height()));
 }
 
@@ -1226,7 +1226,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
     vbr.x -= (width_diff - ox);
     vbr.y -= (height_diff - oy);
 
-    if (!overlay.get())
+    if (!overlay)
         overlay.reset(new overlay_matrix(width(), height()));
 
     // Clear any markers in the vault's grid
@@ -1392,7 +1392,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
             (*this)(x, y) = SUBVAULT_GLYPH;
 
             // Merge overlays
-            if (vlines.overlay.get())
+            if (vlines.overlay)
                 (*overlay)(x, y) = (*vlines.overlay)(vx, vy);
             else
             {
@@ -1409,7 +1409,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
 
 void map_lines::overlay_tiles(tile_spec &spec)
 {
-    if (!overlay.get())
+    if (!overlay)
         overlay.reset(new overlay_matrix(width(), height()));
 
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
@@ -1560,7 +1560,7 @@ void map_lines::rotate(bool clockwise)
         newlines.push_back(line);
     }
 
-    if (overlay.get())
+    if (overlay)
     {
         auto new_overlay = make_unique<overlay_matrix>(lines.size(), map_width);
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
@@ -1629,7 +1629,7 @@ void map_lines::vmirror()
         lines[vsize - 1 - i] = temp;
     }
 
-    if (overlay.get())
+    if (overlay)
     {
         for (int i = 0; i < midpoint; ++i)
             for (int j = 0, wide = width(); j < wide; ++j)
@@ -1647,7 +1647,7 @@ void map_lines::hmirror()
         for (int j = 0; j < midpoint; ++j)
             swap(s[j], s[map_width - 1 - j]);
 
-    if (overlay.get())
+    if (overlay)
     {
         for (int i = 0, vsize = lines.size(); i < vsize; ++i)
             for (int j = 0; j < midpoint; ++j)
@@ -1675,8 +1675,8 @@ keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
     if (key == SUBVAULT_GLYPH)
     {
         // Any subvault should create the overlay.
-        ASSERT(overlay.get());
-        if (!overlay.get())
+        ASSERT(overlay);
+        if (!overlay)
             return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
@@ -1695,8 +1695,8 @@ const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
     if (key == SUBVAULT_GLYPH)
     {
         // Any subvault should create the overlay and set the keyspec idx.
-        ASSERT(overlay.get());
-        if (!overlay.get())
+        ASSERT(overlay);
+        if (!overlay)
             return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
@@ -5794,8 +5794,8 @@ string map_marker_spec::apply_transform(map_lines &map)
 
 map_marker *map_marker_spec::create_marker()
 {
-    return lua_fn.get()
-        ? new map_lua_marker(*lua_fn.get())
+    return lua_fn
+        ? new map_lua_marker(*lua_fn)
         : map_marker::parse_marker(marker);
 }
 
@@ -6165,12 +6165,12 @@ void feature_spec::init_with(const feature_spec& other)
     mimic = other.mimic;
     no_mimic = other.no_mimic;
 
-    if (other.trap.get())
+    if (other.trap)
         trap.reset(new trap_spec(*other.trap));
     else
         trap.reset(nullptr);
 
-    if (other.shop.get())
+    if (other.shop)
         shop.reset(new shop_spec(*other.shop));
     else
         shop.reset(nullptr);

@@ -236,7 +236,7 @@ void map_lua_marker::check_register_table()
 
 bool map_lua_marker::get_table() const
 {
-    if (marker_table.get())
+    if (marker_table)
     {
         marker_table->push();
         return lua_istable(dlua, -1);

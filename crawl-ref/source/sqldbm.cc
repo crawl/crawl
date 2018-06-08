@@ -423,8 +423,8 @@ sql_datum dbm_fetch(SQL_DBM *db, const sql_datum &key)
 static sql_datum dbm_key(SQL_DBM *db, unique_ptr<string> (SQL_DBM::*key)())
 {
     unique_ptr<string> res = (db->*key)();
-    if (res.get())
-        return sql_datum(*res.get());
+    if (res)
+        return sql_datum(*res);
     else
     {
         sql_datum dummy;

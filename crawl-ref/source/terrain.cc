@@ -771,7 +771,7 @@ static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {
-    map_mask_boolean &mask(*_slime_wall_precomputed_neighbour_mask.get());
+    map_mask_boolean &mask(*_slime_wall_precomputed_neighbour_mask);
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         if (grd(*ri) == DNGN_SLIMY_WALL)
@@ -788,7 +788,7 @@ unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
     if (!(env.level_state & LSTATE_SLIMY_WALL))
         return;
 
-    if (docompute && !_slime_wall_precomputed_neighbour_mask.get())
+    if (docompute && !_slime_wall_precomputed_neighbour_mask)
     {
         did_compute_mask = true;
         _slime_wall_precomputed_neighbour_mask.reset(
@@ -808,7 +808,7 @@ bool slime_wall_neighbour(const coord_def& c)
     if (!(env.level_state & LSTATE_SLIMY_WALL))
         return false;
 
-    if (_slime_wall_precomputed_neighbour_mask.get())
+    if (_slime_wall_precomputed_neighbour_mask)
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
     // Not using count_adjacent_slime_walls because the early return might

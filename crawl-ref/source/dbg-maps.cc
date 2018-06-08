@@ -192,7 +192,7 @@ static void _dungeon_places()
         for (int depth = 1; depth <= brdepth[it->id]; ++depth)
         {
             level_id l(it->id, depth);
-            if (SysEnv.map_gen_range.get() && !SysEnv.map_gen_range->is_usable_in(l))
+            if (SysEnv.map_gen_range && !SysEnv.map_gen_range->is_usable_in(l))
                 continue;
             generated_levels.push_back(l);
             if (new_branch)
@@ -346,7 +346,7 @@ static void _write_map_stats()
         for (int dep = 1; dep <= brdepth[it->id]; ++dep)
         {
             const level_id lid(it->id, dep);
-            if (SysEnv.map_gen_range.get()
+            if (SysEnv.map_gen_range
                 && !SysEnv.map_gen_range->is_usable_in(lid))
             {
                 continue;
@@ -406,7 +406,7 @@ static void _write_map_stats()
             fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
     }
 
-    if (!unused_maps.empty() && !SysEnv.map_gen_range.get())
+    if (!unused_maps.empty() && !SysEnv.map_gen_range)
     {
         fprintf(outf, "\n\nUnused maps:\n\n");
         for (int i = 0, size = unused_maps.size(); i < size; ++i)
