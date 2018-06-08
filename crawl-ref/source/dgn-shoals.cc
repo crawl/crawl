@@ -670,7 +670,7 @@ void dgn_build_shoals_level()
 // in the vault to reasonable levels.
 void shoals_postprocess_level()
 {
-    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap.get())
+    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap)
         return;
 
     for (rectangle_iterator ri(1); ri; ++ri)
@@ -1008,7 +1008,7 @@ void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
 {
     if (!player_in_branch(BRANCH_SHOALS)
         || (!turns_elapsed && !force)
-        || !env.heightmap.get())
+        || !env.heightmap)
     {
         return;
     }
@@ -1104,7 +1104,7 @@ static void _shoals_force_tide(CrawlHashTable &props, int increment)
 
 void wizard_mod_tide()
 {
-    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap.get())
+    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap)
     {
         mprf(MSGCH_WARN, "Not in Shoals or no heightmap; tide not available.");
         return;

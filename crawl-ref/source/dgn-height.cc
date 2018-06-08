@@ -20,7 +20,7 @@ void dgn_initialise_heightmap(int height)
 
 void dgn_height_set_at(const coord_def &c, int height)
 {
-    if (env.heightmap.get())
+    if (env.heightmap)
         dgn_height_at(c) = height;
 }
 
