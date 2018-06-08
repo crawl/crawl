@@ -671,7 +671,7 @@ static int dgn_lfloorcol(lua_State *ls)
     if (!lua_isnone(ls, 2))
     {
         const char *s = luaL_checkstring(ls, 2);
-        int colour = str_to_colour(s);
+        int colour = str_to_colour(s, -1, false, true);
 
         if (colour < 0 || colour == BLACK)
         {
@@ -702,7 +702,7 @@ static int dgn_lrockcol(lua_State *ls)
     if (!lua_isnone(ls, 2))
     {
         const char *s = luaL_checkstring(ls, 2);
-        int colour = str_to_colour(s);
+        int colour = str_to_colour(s, -1, false, true);
 
         if (colour < 0 || colour == BLACK)
         {
@@ -744,7 +744,7 @@ static int _lua_colour(lua_State *ls, int ndx,
         return lua_tointeger(ls, ndx);
     else if (const char *s = luaL_checkstring(ls, ndx))
     {
-        const int colour = str_to_colour(s);
+        const int colour = str_to_colour(s, -1, false, true);
 
         if (colour < 0 || colour == forbidden_colour)
         {
@@ -1030,7 +1030,7 @@ static int dgn_floor_halo(lua_State *ls)
     }
 
     const char *s2 = luaL_checkstring(ls, 2);
-    short colour = str_to_colour(s2);
+    short colour = str_to_colour(s2, -1, false, true);
 
     if (colour == -1)
     {
