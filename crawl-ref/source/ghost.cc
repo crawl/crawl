@@ -693,7 +693,7 @@ void ghost_demon::find_transiting_ghosts(
             if (i->mons.type == MONS_PLAYER_GHOST)
             {
                 const monster& m = i->mons;
-                if (m.ghost.get())
+                if (m.ghost)
                 {
                     announce_ghost(*m.ghost);
                     gs.push_back(*m.ghost);
@@ -714,7 +714,7 @@ void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get())
+        if (mi->type == MONS_PLAYER_GHOST && mi->ghost)
         {
             // Bingo!
             announce_ghost(*(mi->ghost));

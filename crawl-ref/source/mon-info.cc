@@ -638,7 +638,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (mons_is_pghost(type))
     {
-        ASSERT(m->ghost.get());
+        ASSERT(m->ghost);
         ghost_demon& ghost = *m->ghost;
         i_ghost.species = ghost.species;
         if (species_is_draconian(i_ghost.species) && ghost.xl < 7)
@@ -818,7 +818,7 @@ static string _mutant_beast_facet(int facet)
 
 string monster_info::db_name() const
 {
-    if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON].get())
+    if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON])
     {
         iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
         bool     use_inscrip  = false;
@@ -886,7 +886,7 @@ string monster_info::_core_name() const
 
         case MONS_DANCING_WEAPON:
         case MONS_SPECTRAL_WEAPON:
-            if (inv[MSLOT_WEAPON].get())
+            if (inv[MSLOT_WEAPON])
             {
                 iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
                 bool     use_inscrip  = true;

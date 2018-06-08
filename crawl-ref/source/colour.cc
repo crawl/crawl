@@ -159,7 +159,7 @@ static int _etc_waves(int, const coord_def& loc)
 {
     // Shouldn't have this outside of Shoals, but it can happen.
     // See !lg lakren crash 8 .
-    if (!env.heightmap.get())
+    if (!env.heightmap)
         return CYAN;
     short height = dgn_height_at(loc);
     int cycle_point = you.num_turns % 20;

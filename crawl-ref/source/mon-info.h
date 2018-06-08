@@ -245,7 +245,7 @@ struct monster_info : public monster_info_base
     {
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
-            if (mi.inv[i].get())
+            if (mi.inv[i])
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
     }

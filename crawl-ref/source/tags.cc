@@ -4244,8 +4244,8 @@ static void tag_construct_level(writer &th)
             marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
 
-    marshallBoolean(th, !!env.map_forgotten.get());
-    if (env.map_forgotten.get())
+    marshallBoolean(th, !!env.map_forgotten);
+    if (env.map_forgotten)
         for (int x = 0; x < GXM; x++)
             for (int y = 0; y < GYM; y++)
                 marshallMapCell(th, (*env.map_forgotten)[x][y]);
@@ -4292,8 +4292,8 @@ static void tag_construct_level(writer &th)
     marshallInt(th, you.dactions.size());
 
     // Save heightmap, if present.
-    marshallByte(th, !!env.heightmap.get());
-    if (env.heightmap.get())
+    marshallByte(th, !!env.heightmap);
+    if (env.heightmap)
     {
         grid_heightmap &heightmap(*env.heightmap);
         for (rectangle_iterator ri(0); ri; ++ri)
@@ -5192,7 +5192,7 @@ void marshallMonster(writer &th, const monster& m)
     if (parts & MP_GHOST_DEMON)
     {
         // *Must* have ghost field set.
-        ASSERT(m.ghost.get());
+        ASSERT(m.ghost);
         marshallGhost(th, *m.ghost);
     }
 
@@ -5259,10 +5259,10 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
         _marshall_mi_attack(th, mi.attack[i]);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
-        if (mi.inv[i].get())
+        if (mi.inv[i])
         {
             marshallBoolean(th, true);
-            marshallItem(th, *mi.inv[i].get(), true);
+            marshallItem(th, *mi.inv[i], true);
         }
         else
             marshallBoolean(th, false);
@@ -5516,7 +5516,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         if (unmarshallBoolean(th))
         {
             mi.inv[i].reset(new item_def());
-            unmarshallItem(th, *mi.inv[i].get());
+            unmarshallItem(th, *mi.inv[i]);
         }
     }
 

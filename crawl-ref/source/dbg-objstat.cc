@@ -1129,8 +1129,8 @@ static void _write_stat_info()
     string all_desc;
     if (num_branches > 1)
     {
-        if (SysEnv.map_gen_range.get())
-            all_desc = SysEnv.map_gen_range.get()->describe();
+        if (SysEnv.map_gen_range)
+            all_desc = SysEnv.map_gen_range->describe();
         else
             all_desc = "All Levels";
         all_desc = "Levels included in AllLevels: " + all_desc + "\n";
@@ -1205,7 +1205,7 @@ void objstat_generate_stats()
         for (int dep = 1; dep <= brdepth[br]; ++dep)
         {
             const level_id lid(br, dep);
-            if (SysEnv.map_gen_range.get()
+            if (SysEnv.map_gen_range
                 && !SysEnv.map_gen_range->is_usable_in(lid))
             {
                 continue;

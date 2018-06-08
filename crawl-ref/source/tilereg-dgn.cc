@@ -1014,7 +1014,7 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += make_stringf("GC(%d, %d) EP(%d, %d)\n",
                                 gc.x, gc.y, ep.x, ep.y);
 
-            if (env.heightmap.get())
+            if (env.heightmap)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
@@ -1023,7 +1023,7 @@ bool DungeonRegion::update_tip_text(string &tip)
         else
         {
             tip += make_stringf("GC(%d, %d) [out of sight]\n", gc.x, gc.y);
-            if (env.heightmap.get())
+            if (env.heightmap)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
             tip += "\n";
         }
