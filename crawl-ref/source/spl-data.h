@@ -3626,7 +3626,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THROW_ALLY, "Throw Ally",
     SPTYP_TRANSLOCATION,
-    SPFLAG_MONSTER | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_MONSTER | SPFLAG_NOT_SELF,
     2,
     50,
     LOS_RADIUS, LOS_RADIUS,
