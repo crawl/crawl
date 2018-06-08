@@ -356,17 +356,6 @@ static bool _check_can_do_command(lua_State *ls)
         return false;
     }
 
-    // if there's pending input, all of the code that uses this check will
-    // separate the first key/command from the rest of the sequence, so don't
-    // allow the sequence to start. TODO: an alternative might be to just push
-    // everything at the end? The current version seems safer, though.
-    if (has_pending_input())
-    {
-        luaL_error(ls,
-                "Cannot currently process new keys (there is pending input)");
-        return false;
-    }
-
     if (you.turn_is_over)
     {
         luaL_error(ls, "Cannot currently process new keys (turn is over)");
@@ -383,6 +372,18 @@ static int crawl_process_keys(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
         return 0;
+
+    // if there's pending input, pushing to the end of the buffer may separate
+    // the first element of the sequence from the rest. TODO: should this be
+    // changed to push the key sequence to the beginning of the buffer? See
+    // crawl_do_commands below.
+    if (has_pending_input())
+    {
+        luaL_error(ls,
+                "Cannot currently process new keys (there is pending input)");
+        return 0;
+    }
+
 
     const char* keys = luaL_checkstring(ls, 1);
 
@@ -450,10 +451,10 @@ static int crawl_do_commands(lua_State *ls)
         lua_pop(ls, 1);
     }
 
-    flush_input_buffer(FLUSH_BEFORE_COMMAND);
-
     bool first = true;
     command_type firstcmd = CMD_NO_CMD;
+    deque<command_type> cmd_seq;
+
     for (const auto& command : commands)
     {
         command_type cmd = name_to_command(command);
@@ -469,8 +470,15 @@ static int crawl_do_commands(lua_State *ls)
             first = false;
         }
         else
-            macro_sendkeys_end_add_cmd(cmd);
+            cmd_seq.push_front(cmd); // reverse order for adding below
     }
+
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
+    // insert commands to the front of the macro buffer so that they are
+    // guaranteed to be processed adjacent to firstcmd
+    for (auto c : cmd_seq)
+        macro_buf_add_cmd(c, true);
 
     process_command(firstcmd);
 
