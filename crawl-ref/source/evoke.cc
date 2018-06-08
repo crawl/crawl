@@ -561,7 +561,9 @@ void finish_manual(int slot)
         for (int i = 0; i < ENDOFPACK; i++)
             if (you.inv[i].defined()
                 && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+            {
                 crate_index = i;
+            }
 
         if (crate_index != -1)
         {

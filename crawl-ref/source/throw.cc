@@ -64,7 +64,9 @@ static bool _is_always_penetrating_attack(const actor& attacker,
     // Ammo of penetration penetrates for free.
     if (get_ammo_brand(projectile) == SPMSL_PENETRATION &&
         is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED)
+    {
         return true;
+    }
 
     return false;
 }

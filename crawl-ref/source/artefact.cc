@@ -1865,14 +1865,18 @@ const vector<int> archaeologist_unrands()
 
         if (entry->flags & UNRAND_FLAG_NOGEN
             || entry->flags & UNRAND_FLAG_NOTAC)
+        {
             continue;
+        }
 
         // As a non-felid: jewellery does not shape a character enough
         // As a felid: we have no choice but to give jewellery
         // XXX: This seems like a really convoluted way to do XNOR -- NP7.
         if (you.species == SP_FELID && entry->base_type != OBJ_JEWELLERY
             || you.species != SP_FELID && entry->base_type == OBJ_JEWELLERY)
+        {
             continue;
+        }
 
         eligible_unrands.push_back(index);
     }

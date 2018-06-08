@@ -857,7 +857,9 @@ bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
                && you.props[ORIGINAL_BRAND_KEY].get_int() == SPWPN_HOLY_WRATH
 #endif
     ))
+    {
         return false;
+    }
 
     return true;
 }

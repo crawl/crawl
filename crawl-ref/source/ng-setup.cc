@@ -339,13 +339,17 @@ static void _setup_archaeologist()
         if (you.inv[i].defined()
             && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
 
+        {
             manual_skill = _setup_archaeologist_crate(you.inv[i]);
+        }
 
     for (uint8_t i = 0; i < ENDOFPACK; i++)
         if (you.inv[i].defined()
             && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
 
+        {
             you.inv[i].props[ARCHAEOLOGIST_TOME_SKILL] = manual_skill;
+        }
 }
 
 static void _give_items_skills(const newgame_def& ng)

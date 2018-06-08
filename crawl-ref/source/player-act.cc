@@ -338,8 +338,10 @@ hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
                                                         : WPN_UNKNOWN;
     // All weapons except gc and gsc are one-handed for Fo
     if (species == SP_FORMICID)
+    {
         return wpn_type == WPN_GIANT_CLUB || wpn_type == WPN_GIANT_SPIKED_CLUB
                ? HANDS_TWO : HANDS_ONE;
+    }
     else
         return actor::hands_reqd(item, base);
 }

@@ -3218,7 +3218,9 @@ int player_stealth()
     //Fairies' bright wings reduce stealth.
     if (you.species == SP_FAIRY
         && !(player_is_shapechanged() && you.form == transformation::dragon))
+    {
         stealth -= STEALTH_PIP;
+    }
 
     if (!you.airborne())
     {
