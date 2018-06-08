@@ -237,6 +237,22 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
+static skill_type _archaeologist_armour_skill_unusable(int type)
+{  // Only deals with auxiliary armour unrands not handled in the
+   // switch-case in _setup_archaeologist_crate()
+    switch (type)
+    {
+    case UNRAND_STARLIGHT:
+        return SK_FIGHTING;
+    case UNRAND_ALCHEMIST:
+        return SK_SPELLCASTING;
+    case UNRAND_RATSKIN_CLOAK:
+        return SK_EVOCATIONS;
+    default: // UNRAND_DYROVEPREVA
+        return SK_DODGING;
+    }
+}
+
 static skill_type _setup_archaeologist_crate(item_def& crate)
 {
     item_def unrand;
@@ -298,7 +314,9 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     else if (unrand.sub_type == ARM_ROBE || unrand.sub_type == ARM_ANIMAL_SKIN)
         return coinflip() ? SK_SPELLCASTING : SK_DODGING;
     else
-        return SK_ARMOUR;
+        return species_apt(SK_ARMOUR) == UNUSABLE_SKILL
+               ? _archaeologist_armour_skill_unusable(type)
+               : SK_ARMOUR;
 }
 
 static void _setup_archaeologist()
