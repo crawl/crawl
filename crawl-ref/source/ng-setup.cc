@@ -250,8 +250,7 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
         if (!make_item_unrandart(unrand, type))
             continue;
     }
-    while (!you.could_wield(unrand) && !can_wear_armour(unrand, false, true)
-           || !can_generate(unrand));
+    while (!you.could_wield(unrand) && !can_wear_armour(unrand, false, true));
 
     dprf("Initializing archaeologist crate with %s",
          unrand.name(DESC_A).c_str());
