@@ -2302,7 +2302,7 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_ARM_SWAMP_DRAGON_ARMOUR;
          
     case ARM_IRON_DRAGON_ARMOUR:
-  	return TILE_ARM_IRON_DRAGON_ARMOUR;
+        return TILE_ARM_IRON_DRAGON_ARMOUR;
     }
 
     return TILE_ERROR;

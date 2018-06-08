@@ -175,7 +175,7 @@ static const armour_def Armour_prop[] =
     DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
     DRAGON_ARMOUR(IRON,        "iron",                   16, -270,  800,
-	ARMF_NO_FLAGS),
+        ARMF_NO_FLAGS),
         
 
 #undef DRAGON_ARMOUR

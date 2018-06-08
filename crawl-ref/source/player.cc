@@ -3048,7 +3048,7 @@ void level_change(bool skip_attribute_increase)
 
         if (tome_index != -1)
             archaeologist_read_tome(you.inv[tome_index]);
-        else if(!you.props.exists(ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP))
+        else if (!you.props.exists(ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP))
             mpr("You suddenly remember the dusty tome you brought into the dungeon! "
                  "You feel able to decipher it now. "
                  "If only you could remember where you put it...");
@@ -5954,7 +5954,7 @@ int player::racial_ac(bool temp) const
                        + 100 * max(0, experience_level - 7) * 2 / 5;
         }
         else if (species == SP_FAIRY)
-	        return 300 + 100 * experience_level / 3;
+                return 300 + 100 * experience_level / 3;
     }
 
     return 0;
