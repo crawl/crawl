@@ -3461,7 +3461,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION == 34
         case SCR_RANDOM_USELESSNESS:
             return true;
 #endif
