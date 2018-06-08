@@ -4750,8 +4750,15 @@ bool check_for_interesting_features()
         if (env.map_knowledge(p).flags & MAP_SEEN_FLAG
             && !env.map_seen(p))
         {
+            // Update the shadow map
             env.map_seen.set(p);
-            _check_interesting_square(p, discoveries);
+
+            // But don't stop if we knew about it previously
+            if (env.map_forgotten
+                && !((*env.map_forgotten)(p).flags & MAP_SEEN_FLAG))
+            {
+                _check_interesting_square(p, discoveries);
+            }
         }
     }
 
