@@ -654,7 +654,7 @@ static void _dgn_load_colour_grid()
 
 static void _dgn_map_colour_fixup()
 {
-    if (!dgn_colour_grid.get())
+    if (!dgn_colour_grid)
         return;
 
     // If the original coloured feature has been changed, reset the colour.
@@ -677,7 +677,7 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
     if (colour != BLACK)
     {
         env.grid_colours(c) = colour;
-        if (!dgn_colour_grid.get())
+        if (!dgn_colour_grid)
             dgn_colour_grid.reset(new dungeon_colour_grid);
 
         (*dgn_colour_grid)(c) = coloured_feature(grd(c), colour);
@@ -4976,11 +4976,11 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
     if (mapsp)
     {
         feature_spec f = mapsp->get_feat();
-        if (f.trap.get())
+        if (f.trap)
         {
             // f.feat == 1 means trap is generated known.
             if (f.feat == 1)
-                return trap_category(static_cast<trap_type>(f.trap.get()->tr_type));
+                return trap_category(static_cast<trap_type>(f.trap->tr_type));
             else
                 return DNGN_UNDISCOVERED_TRAP;
         }
@@ -4988,7 +4988,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
             return map_feature_at(nullptr, c, f.glyph);
-        else if (f.shop.get())
+        else if (f.shop)
             return DNGN_ENTER_SHOP;
 
         return DNGN_FLOOR;
@@ -5001,24 +5001,18 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
                                 keyed_mapspec& mapsp)
 {
     const feature_spec f = mapsp.get_feat();
-    if (f.trap.get())
+    if (f.trap)
     {
         // f.feat == 1 means trap is generated known.
         const bool known = f.feat == 1;
-        trap_spec* spec = f.trap.get();
-        if (spec)
-            _place_specific_trap(where, spec, 0, known);
+        _place_specific_trap(where, f.trap.get(), 0, known);
     }
     else if (f.feat >= 0)
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
-    else if (f.shop.get())
-    {
-        shop_spec *spec = f.shop.get();
-        ASSERT(spec);
-        place_spec_shop(where, *spec);
-    }
+    else if (f.shop)
+        place_spec_shop(where, *f.shop);
     else
         grd(where) = DNGN_FLOOR;
 
@@ -6901,17 +6895,13 @@ static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
 {
     dungeon_feature_type found = NUM_FEATURES;
     const feature_spec f = mapsp.get_feat();
-    if (f.trap.get())
-    {
-        trap_spec* spec = f.trap.get();
-        if (spec)
-            found = trap_category(spec->tr_type);
-    }
+    if (f.trap)
+        found = trap_category(f.trap->tr_type);
     else if (f.feat >= 0)
         found = static_cast<dungeon_feature_type>(f.feat);
     else if (f.glyph >= 0)
         found = _vault_inspect_glyph(place, f.glyph);
-    else if (f.shop.get())
+    else if (f.shop)
         found = DNGN_ENTER_SHOP;
     else
         found = DNGN_FLOOR;

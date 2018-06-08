@@ -4447,13 +4447,11 @@ static void _gozag_place_shop(int index)
     ASSERT(grd(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
-    if (!kmspec.get_feat().shop.get())
-        die("Invalid shop spec?");
 
     feature_spec feat = kmspec.get_feat();
-    shop_spec *spec = feat.shop.get();
-    ASSERT(spec);
-    place_spec_shop(you.pos(), *spec, you.experience_level);
+    if (!feat.shop)
+        die("Invalid shop spec?");
+    place_spec_shop(you.pos(), *feat.shop, you.experience_level);
 
     link_items();
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
