@@ -135,7 +135,7 @@ static const map<species_type, species_def> species_data =
     "Dg",
     "Demigod", "Divine", nullptr,
     SPF_NONE,
-    -2, 1, 2, 4,
+    -1, 1, 2, 4,
     MONS_DEMIGOD,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 12, 11, // 34
