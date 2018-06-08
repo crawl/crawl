@@ -2502,6 +2502,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     return result ? 1 : 0;
 }
 
+#if TAG_MAJOR_VERSION == 34
 void random_uselessness()
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -2554,6 +2555,7 @@ void random_uselessness()
         break;
     }
 }
+#endif
 
 static void _handle_read_book(item_def& book)
 {
@@ -2857,9 +2859,11 @@ void read_scroll(item_def& scroll)
 
     switch (which_scroll)
     {
+#if TAG_MAJOR_VERSION == 34
     case SCR_RANDOM_USELESSNESS:
         random_uselessness();
         break;
+#endif
 
     case SCR_BLINKING:
     {

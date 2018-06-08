@@ -502,14 +502,12 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
          big kobold zombie / centaur zombie
 # mix of good items with useless ones
-ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
-         scroll of identify / scroll of remove curse / \
+ITEM:    scroll of immolation / scroll of identify / scroll of remove curse / \
          potion of mutation w:5 / potion of ambrosia w:5 / \
          potion of degeneration / potion of lignification / \
          potion of flight / potion of curing w:15
 # and sometimes mostly useless ones
-ITEM:    scroll of noise / scroll of random uselessness w:20 / \
-         scroll of immolation / potion of mutation w:5 / \
+ITEM:    scroll of noise / scroll of immolation / potion of mutation w:5 / \
          potion of degeneration w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
@@ -768,8 +766,7 @@ TAGS:    no_item_gen no_monster_gen
 ITEM:    potion of curing / potion of heal wounds / potion of haste / \
          potion of ambrosia w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
-         scroll of blinking w:5 / scroll of holy word / \
-         scroll of random uselessness
+         scroll of blinking w:5 / scroll of holy word
 # There are three setups than can occur:
 # 10% - part of the loot in the closets, bit more loot
 # 45% - traps are nasty, monsters asleep

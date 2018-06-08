@@ -956,7 +956,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          glowing shapeshifter
 ITEM:    superb_item, ration
 ITEM:    bolt good_item q:40 / arrow good_item q:40, any magical staff
-ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
+ITEM:    scroll of magic mapping q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item ident:type / \
          demon trident ego:chaos good_item ident:type / \
@@ -1458,8 +1458,7 @@ KMONS:   5 = thrashing horror
 KMONS:   6 = lurking horror
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
-KITEM:   4d = scroll of random uselessness w:15 q:1 / ration w:1 / \
-         club w:6 / stone q:1 / needle q:1 ego:confusion / \
+KITEM:   4d = ration w:1 / club w:6 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   5 = wand of random effects / wand of flame / whip not_cursed w:2 / \
          hat not_cursed mundane w:5

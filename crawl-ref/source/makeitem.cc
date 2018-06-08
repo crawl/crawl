@@ -1437,9 +1437,9 @@ static void _generate_scroll_item(item_def& item, int force_type,
         // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
-            // total weight:    709  if depth_mod < 4
-            //                  828  otherwise
-            //                 -122  in sprint
+            // total weight:    687  if depth_mod < 4
+            //                  806  otherwise
+            //                 -122  in sprint  XXX: what does this mean? -- NP7
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
@@ -1456,7 +1456,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_IMMOLATION,
                  // [Cha] don't generate noise scrolls if in sprint
                  22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-                 22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
                  17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),

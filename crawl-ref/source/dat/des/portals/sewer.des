@@ -523,8 +523,7 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SUBST:    - = WWW.
 SHUFFLE:  |d
-ITEM:     scroll of teleportation w:2 / scroll of blinking / \
-          scroll of random uselessness w:1
+ITEM:     scroll of teleportation w:2 / scroll of blinking
 MONS:     frilled lizard / ball python w:5 / giant cockroach / \
           generate_awake frilled lizard / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake \
@@ -581,8 +580,7 @@ COLOUR:   ! = green
 KMONS:    ! = bullfrog / nothing w:2
 SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
-ITEM:     scroll of teleportation w:2 / scroll of blinking / \
-          scroll of random uselessness w:1
+ITEM:     scroll of teleportation w:2 / scroll of blinking
 ITEM:     nothing, nothing
 KITEM:    de = *
 : sewer_setup(_G)
@@ -724,8 +722,7 @@ KMONS:  4 = Purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / ration / potion of blood / \
-        nothing w:140
+        ration / potion of blood / nothing w:140
 : sewer_setup(_G)
 MAP
    ccccccccc
@@ -852,8 +849,7 @@ KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / ration / potion of blood / \
-        nothing w:140
+        ration / potion of blood / nothing w:140
 NSUBST: e = 3:* / 9:d / *:.
 NSUBST: 0 = 5:1 / 1:2 / *:.
 KFEAT:  ' = deep_water
@@ -928,9 +924,8 @@ ITEM:     scroll of identify / potion of invisibility / pair of gloves w:5 / \
           pair of boots w:5 / potion of agility / nothing
 ITEM:     scroll of identify / potion of resistance / potion of might / \
           potion of berserk rage / buckler / nothing
-KITEM:    ' = scroll of random uselessness w:30 / \
-              scroll of identify / scroll of teleportation / \
-              potion of degeneration w:100 / potion of mutation / \
+KITEM:    ' = scroll of identify / scroll of teleportation / \
+              potion of degeneration w:130 / potion of mutation / \
               potion of flight / hat / buckler / pair of gloves w:5 / \
               pair of boots w:5
 MAP
