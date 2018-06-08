@@ -995,18 +995,17 @@ void make_book_kiku_gift(item_def &book, bool first)
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
 
-        chosen_spells[1] = random_choose(SPELL_BOLT_OF_DRAINING,
-                                         SPELL_AGONY,
-                                         SPELL_DEATH_CHANNEL,
-                                         SPELL_BORGNJORS_VILE_CLUTCH);
         do
-        {  // Pick another spell from the above list, but don't duplicate spells
-            chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
-                                             SPELL_AGONY,
-                                             SPELL_DEATH_CHANNEL,
-                                             SPELL_BORGNJORS_VILE_CLUTCH);
+        {  // Pick two spells from this list, but don't duplicate spells
+            for (int i = 1; i < 3; i++)
+            {
+                chosen_spells[i] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                                 SPELL_AGONY,
+                                                 SPELL_DEATH_CHANNEL,
+                                                 SPELL_BORGNJORS_VILE_CLUTCH);
+            }
         }
-        while (chosen_spells[2] == chosen_spells[1]);
+        while (chosen_spells[1] == chosen_spells[2]);
 
         spell_type extra_spell;
         do
