@@ -761,6 +761,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
+            // Formicids wielding giant (spiked) clubs
+            else if (you.species == SP_FORMICID)
+                mpr("You'd need six hands to do that!");
             else
             {
                 // Singular hand should have already been handled above.
