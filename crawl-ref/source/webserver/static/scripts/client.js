@@ -662,6 +662,46 @@ function (exports, $, key_conversion, chat, comm) {
         $("#register_message").html(data.reason);
     }
 
+    function start_forgot_password()
+    {
+        $("#forgot_message").html("");
+        show_dialog("#forgot");
+        $("#forgot_email").focus();
+    }
+
+    function cancel_forgot_password()
+    {
+        hide_dialog();
+    }
+
+    function forgot_password()
+    {
+        var email = $("#forgot_email").val();
+
+        if (email.indexOf(" ") >= 0)
+        {
+            $("#forgot_message").html("The email address can't contain spaces.");
+            return false;
+        }
+
+        send_message("forgot_password", {
+            email: email
+        });
+
+        return false;
+    }
+
+    function forgot_password_failed(data)
+    {
+        $("#forgot_message").html(data.reason);
+    }
+
+    function forgot_password_done()
+    {
+        hide_dialog();
+        show_dialog("#forgot_2");
+    }
+
     var editing_rc;
     function edit_rc(id)
     {
@@ -1160,6 +1200,8 @@ function (exports, $, key_conversion, chat, comm) {
         "login_fail": login_failed,
         "login_cookie": set_login_cookie,
         "register_fail": register_failed,
+        "forgot_password_fail": forgot_password_failed,
+        "forgot_password_done": forgot_password_done,
 
         "watching_started": watching_started,
 
@@ -1195,6 +1237,12 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_link").bind("click", start_register);
         $("#register_form").bind("submit", register);
         $("#reg_cancel").bind("click", cancel_register);
+
+        $("#forgot_link").bind("click", start_forgot_password);
+        $("#forgot_form").bind("submit", forgot_password);
+        $("#forgot_cancel").bind("click", cancel_forgot_password);
+
+        $("#forgot_2 input").bind("click", hide_dialog);
 
         $("#rc_edit_form").bind("submit", send_rc);
 

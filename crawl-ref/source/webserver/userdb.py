@@ -4,6 +4,7 @@ import re
 import os.path
 import logging
 import random
+import smtplib
 
 from config import (max_passwd_length, nick_regex, password_db,
                     crypt_algorithm, crypt_salt_length)
@@ -81,6 +82,38 @@ def register_user(username, passwd, email): # Returns an error message or None
         conn.commit()
 
         return None
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
+def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
+    if email == "": return None, "The email can't be empty!"
+
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute("select email from dglusers where email=? collate nocase",
+                  (email,))
+        result = c.fetchone()
+
+        if result:
+            server = smtplib.SMTP('localhost', 42456)
+            #server = smtplib.SMTP_SSL('localhost', 42456)
+            #server.login("admin@webtiles.org", "password")
+ 
+            msg = """Someone (hopefully you) has requested to reset the password for your account at crawl.example.org.
+
+If you initiated this request, please click the following link to reset your password.
+
+    <Link here>
+
+If you did not request this, you don't need to do anything. Your account is safe."""
+            server.sendmail("admin@webtiles.org", email, msg)
+            server.quit()
+
+            return True, None
+
+        return None, None
     finally:
         if c: c.close()
         if conn: conn.close()

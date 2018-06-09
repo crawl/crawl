@@ -27,6 +27,7 @@
           <label for="remember_me">Stay logged in</label>
           <span class="extra_links">|
           <a id="reg_link" href="javascript:">Register</a>
+          <a id="forgot_link" href="javascript:">Forgot Password</a>
           <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
         </div>
       </div>
@@ -50,6 +51,23 @@
                  value="Cancel">
           <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
         </form>
+      </div>
+
+      <div id="forgot" class="floating_dialog" style="display: none;">
+        <span id="forgot_message"></span>
+        <form action="#" id="forgot_form">
+          <label for="reg_email">Email address:</label>
+          <input class="text" type="text" name="reg_email" id="forgot_email">
+          <br>
+          <input class="button" type="button" name="cancel" id="forgot_cancel"
+                 value="Cancel">
+          <input class="button" type="submit" name="submit" id="forgot_submit" value="Submit">
+        </form>
+      </div>
+
+      <div id="forgot_2" class="floating_dialog" style="display: none;">
+        <span>If a matching account was found, then an email was sent to reset your password.</span>
+        <input class="button" type="submit" name="submit" value="OK">
       </div>
 
       <div id="rc_edit" class="floating_dialog" style="display: none;">
