@@ -27,7 +27,9 @@
           <label for="remember_me">Stay logged in</label>
           <span class="extra_links">|
           <a id="reg_link" href="javascript:">Register</a>
+{% if config.allow_password_reset %}
           <a id="forgot_link" href="javascript:">Forgot Password</a>
+{% end %}
           <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
         </div>
       </div>
@@ -53,6 +55,7 @@
         </form>
       </div>
 
+{% if config.allow_password_reset %}
       <div id="forgot" class="floating_dialog" style="display: none;">
         <span id="forgot_message"></span>
         <form action="#" id="forgot_form">
@@ -69,6 +72,7 @@
         <span>If a matching account was found, then an email was sent to reset your password.</span>
         <input class="button" type="submit" name="submit" value="OK">
       </div>
+{% end %}
 
       <div id="rc_edit" class="floating_dialog" style="display: none;">
         <form action="#" id="rc_edit_form">

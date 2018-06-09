@@ -516,10 +516,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("register_fail", reason = error)
 
     def forgot_password(self, email):
+        if not config.allow_password_reset: return
         sent, error = send_forgot_password(email)
         if error is None:
             if sent:
-                self.logger.info("Sent forgot password email to %s.", email)
+                self.logger.info("Sent password reset email to %s.", email)
             else:
                 self.logger.info("User requested a password reset, but email is not registered (%s).", email)
             self.send_message("forgot_password_done")

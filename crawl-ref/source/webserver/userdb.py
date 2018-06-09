@@ -7,7 +7,8 @@ import random
 import smtplib
 
 from config import (max_passwd_length, nick_regex, password_db,
-                    crypt_algorithm, crypt_salt_length)
+                    crypt_algorithm, crypt_salt_length,
+                    smtp_use_ssl, smtp_host, smtp_port, smtp_user, smtp_password, smtp_from_addr)
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
@@ -87,7 +88,7 @@ def register_user(username, passwd, email): # Returns an error message or None
         if conn: conn.close()
 
 def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
-    if email == "": return None, "The email can't be empty!"
+    if email == "": return False, "The email can't be empty!"
 
     try:
         conn = sqlite3.connect(password_db)
@@ -97,9 +98,12 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
         result = c.fetchone()
 
         if result:
-            server = smtplib.SMTP('localhost', 42456)
-            #server = smtplib.SMTP_SSL('localhost', 42456)
-            #server.login("admin@webtiles.org", "password")
+            if smtp_use_ssl:
+                server = smtplib.SMTP_SSL(smtp_host, smtp_port)
+            else:
+                server = smtplib.SMTP(smtp_host, smtp_port)
+
+            server.login(smtp_user, smtp_password)
  
             msg = """Someone (hopefully you) has requested to reset the password for your account at crawl.example.org.
 
@@ -108,12 +112,12 @@ If you initiated this request, please click the following link to reset your pas
     <Link here>
 
 If you did not request this, you don't need to do anything. Your account is safe."""
-            server.sendmail("admin@webtiles.org", email, msg)
+            server.sendmail(smtp_from_addr, email, msg)
             server.quit()
 
             return True, None
 
-        return None, None
+        return False, None
     finally:
         if c: c.close()
         if conn: conn.close()

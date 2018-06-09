@@ -124,6 +124,14 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
+allow_password_reset = False # Set to true to allow users to request a password reset. SMTP must be properly configured if this is enabled
+smtp_host = "localhost"
+smtp_port = 25
+smtp_use_ssl = False
+smtp_user = ""
+smtp_password = ""
+smtp_from_addr = "noreply@crawl.example.org" # The address from which automated emails will be sent
+
 # crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
 # false, use traditional DES (but then only the first eight characters of the
 # password are significant). If set to "broken", use traditional DES with
