@@ -2017,6 +2017,8 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
+    attk.damage = m.bezot(attk.damage, true);
+
     return zombified ? _downscale_zombie_attack(mon, attk, !base_flavour) : attk;
 }
 

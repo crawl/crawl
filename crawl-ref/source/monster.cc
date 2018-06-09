@@ -51,6 +51,8 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "mon-util.h"
+#include "notes.h" // bezotting
 #include "religion.h"
 #include "rot.h"
 #include "spl-monench.h"
@@ -91,6 +93,8 @@ monster::monster()
     clear_constricted();
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
+    turns_spent_tracking_player = 0;
+    tracking_amnesty = DEFAULT_TRACKING_AMNESTY;
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -141,6 +145,8 @@ void monster::reset()
     god             = GOD_NO_GOD;
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
+    turns_spent_tracking_player = 0;
+    tracking_amnesty = DEFAULT_TRACKING_AMNESTY;
 
     mons_remove_from_grid(*this);
     target.reset();
@@ -2310,6 +2316,7 @@ string monster::name(description_level_type desc, bool force_vis,
     // i.e. to produce "the Maras" instead of just "Maras"
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
+
     return mi.proper_name(desc)
 #ifdef DEBUG_MONINDEX
     // This is incredibly spammy, too bad for regular debug builds, but
@@ -3316,6 +3323,8 @@ int monster::armour_class(bool calc_unid) const
 {
     int ac = base_armour_class();
 
+    ac = bezot(ac, false);
+
     // check for protection-brand weapons
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 
@@ -3430,6 +3439,8 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
 
     int ev = base_evasion();
+
+    ev = bezot(ev, false);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
@@ -5036,6 +5047,8 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(*this);
 
+    speed = bezot(speed, false);
+
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
@@ -5734,12 +5747,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     // Randomize interval between servitor spellcasts
     if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
         energy_loss += random2(16);
-
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
 
     speed_increment -= energy_loss;
 }
@@ -6709,4 +6716,101 @@ bool monster::angered_by_attacks() const
             && type != MONS_SPELLFORGED_SERVITOR
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
+}
+
+/**
+ * Increase an attribute of a bezotted monster, either by the standard
+ * percentage or by a standard additive value.
+ *
+ * @param i                      The value to upgrade
+ * @param is_percentage_increase Whether the upgrade should be a percentile
+ *                               or an additive increase.
+ *
+ * return int The new value, or the old one if the monster is not bezotted.
+ */
+int monster::bezot(int i, bool is_percentage_increase) const
+{
+    int bezotting_level = 0;
+    if (props.exists(BEZOTTED_KEY))
+        bezotting_level = props[BEZOTTED_KEY].get_int();
+
+    // Exit early if not bezotted.
+    if (bezotting_level == 0)
+        return i;
+
+    if (is_percentage_increase)
+        return i * (5 + bezotting_level) / 5;
+    else
+        return i += 2 * bezotting_level;
+}
+
+/**
+ * Upgrade a monster. This is intended to be used as a punishment for letting
+ * monsters spend a long time being aware of you. Some monster attributes are
+ * set directly here, but others are derived from the monster definition, and
+ * so are upgraded when they're read out of the monster definition.
+ *
+ * Other attributes upgraded: damage, ac, ev, move speed, action speed.
+ */
+void monster::bezot_monster()
+{
+    int old_bezotting_level = 0;
+
+    if (props.exists(BEZOTTED_KEY))
+        old_bezotting_level = props[BEZOTTED_KEY].get_int();
+
+    // If we're already at the max level, do nothing.
+    if (old_bezotting_level == MAX_BEZOT_LEVEL)
+        return;
+
+    // Make sure we're within the acceptable range.
+    int bezotting_level = max(MIN_BEZOT_LEVEL,
+                            min(MAX_BEZOT_LEVEL, old_bezotting_level += 1));
+
+    // We probably want to eventually remove this, but it's good info for testing.
+    const string message = make_stringf("%s gained the power of zot (level %d).",
+                                                    name(DESC_A).c_str(),
+                                                    bezotting_level).c_str();
+    take_note(Note(NOTE_MESSAGE, 0, 0, message));
+
+    if (visible_to(&you))
+    {
+        if (bezotting_level > 1)
+            simple_monster_message(*this, " is increasingly filled with the power of Zot!", MSGCH_WARN);
+        else
+            simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
+    }
+
+    props[BEZOTTED_KEY] = bezotting_level;
+    set_hit_dice(bezot(hit_dice, true));
+    hit_points = bezot(hit_points, true);
+    max_hit_points = bezot(max_hit_points, true);
+
+    calc_speed();
+
+    // Reset the turns spent tracking to avoid rapid re-zotting
+    turns_spent_tracking_player = 0;
+
+}
+
+/**
+ * Updates the number of turns this monster has spent tracking the player. As
+ * this number increases, the odds of bezotting the monster increase as well.
+ */
+void monster::track_player()
+{
+    // If we've decided to defer tracking for a turn, don't track.
+    if (tracking_amnesty > 0)
+    {
+        tracking_amnesty -= 1;
+        return;
+    }
+
+    turns_spent_tracking_player += 1;
+
+    if (x_chance_in_y(turns_spent_tracking_player,
+        turns_spent_tracking_player + BEZOT_TRACKING_CONSTANT))
+    {
+        bezot_monster();
+    }
 }

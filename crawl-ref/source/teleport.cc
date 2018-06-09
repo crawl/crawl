@@ -112,6 +112,11 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
 
     mons_relocated(this);
 
+    // Make the blinking monster skip tracking for the average distance away
+    // from the player it moved. We could be more precise, but I don't think
+    // it would be meaningful.
+    tracking_amnesty += 3;
+
     return true;
 }
 

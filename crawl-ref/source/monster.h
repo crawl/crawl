@@ -13,6 +13,11 @@
 #include "xp-tracking-type.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
+const int DEFAULT_TRACKING_AMNESTY = 6; // defaults to the distance between a monster at edge of los and player.
+const int MAX_BEZOT_LEVEL = 3;
+const int MIN_BEZOT_LEVEL = 0;
+const int BEZOT_TRACKING_CONSTANT = 2000;
+
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
@@ -23,6 +28,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define SEEN_SPELLS_KEY "seen_spells"
 #define KNOWN_MAX_HP_KEY "known_max_hp"
 #define VAULT_HD_KEY "vault_hd"
+#define BEZOTTED_KEY "bezotted"
 
 #define FAKE_BLINK_KEY "fake_blink"
 #define CEREBOV_DISARMED_KEY "cerebov_disarmed"
@@ -111,6 +117,9 @@ public:
 
     bool went_unseen_this_turn;
     coord_def unseen_pos;
+
+    int turns_spent_tracking_player;   // Used to decide when to upgrade monsters.
+    int tracking_amnesty;              // When this is >0, take turns off here instead of the above
 
 public:
     void set_new_monster_id();
@@ -562,6 +571,10 @@ public:
 
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
+
+    int bezot(int i, bool is_percentage_increase) const;
+    void track_player();
+    void bezot_monster();
 
 private:
     int hit_dice;
