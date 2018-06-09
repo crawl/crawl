@@ -4,17 +4,15 @@ import re
 import os.path
 import logging
 import random
-import smtplib
 import hashlib
 
 from base64 import urlsafe_b64encode
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 from config import (max_passwd_length, nick_regex, password_db, settings_db,
                     crypt_algorithm, crypt_salt_length,
-                    lobby_url,
-                    smtp_use_ssl, smtp_host, smtp_port, smtp_user, smtp_password, smtp_from_addr)
+                    lobby_url)
+
+from util import send_email
 
 def ensure_settings_db_exists():
     if os.path.exists(settings_db):
@@ -204,17 +202,9 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
             conn.commit()
 
             # send email
-            if smtp_use_ssl:
-                email_server = smtplib.SMTP_SSL(smtp_host, smtp_port)
-            else:
-                email_server = smtplib.SMTP(smtp_host, smtp_port)
-
-            try:
-                email_server.login(smtp_user, smtp_password)
-
-                url_text = lobby_url + "?ResetToken=" + token
-         
-                msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
+            url_text = lobby_url + "?ResetToken=" + token
+     
+            msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
 
 If you initiated this request, please use this link to reset your password:
 
@@ -223,7 +213,7 @@ If you initiated this request, please use this link to reset your password:
 If you did not ask to reset your password, feel free to ignore this email.
 """
 
-                msg_body_html = """<html>
+            msg_body_html = """<html>
   <head></head>
   <body>
     <p>Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.<br /><br />
@@ -234,22 +224,9 @@ If you did not ask to reset your password, feel free to ignore this email.
   </body>
 </html>"""
 
-                msg = MIMEMultipart('alternative')
-                msg['Subject'] = 'Request to reset your password'
-                msg['From'] = smtp_from_addr
-                msg['To'] = email
+            send_email(email, 'Request to reset your password', msg_body_plaintext, msg_body_html)
 
-                part1 = MIMEText(msg_body_plaintext, 'plain')
-                part2 = MIMEText(msg_body_html, 'html')
-                
-                msg.attach(part1)
-                msg.attach(part2)
-
-                email_server.sendmail(smtp_from_addr, email, msg.as_string())
-
-                return True, None
-            finally:
-                if email_server: email_server.quit()
+            return True, None
 
         # email was not found, do nothing
         return False, None
