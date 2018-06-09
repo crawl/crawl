@@ -74,7 +74,7 @@
       </div>
 {% end %}
 
-{% if reset_token %}
+{% if config.allow_password_reset and reset_token %}
       <div id="reset_pw" class="floating_dialog" style="display: none;">
         <span>Please choose a new password.</span>
         <br>
