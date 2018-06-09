@@ -6,6 +6,7 @@ import logging
 import random
 import smtplib
 import hashlib
+from base64 import urlsafe_b64encode
 
 from config import (max_passwd_length, nick_regex, password_db, settings_db,
                     crypt_algorithm, crypt_salt_length,
@@ -180,19 +181,26 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
     if email == "": return False, "The email can't be empty!"
 
     try:
+        # lookup user-provided email
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
         c.execute("select email from dglusers where email=? collate nocase",
                   (email,))
         result = c.fetchone()
 
+        # email was found
         if result:
-            token = str(random.getrandbits(64))
+            # generate random token
+            token_bytes = os.urandom(32)
+            token = urlsafe_b64encode(token_bytes)
+            # hash token
             token_hash_obj = hashlib.sha256(token)
             token_hash = token_hash_obj.hexdigest()
+            # store hash in db
             c.execute("update dglusers set password_reset_token=?, password_reset_time=datetime('now') where email=?", (token_hash, email))
             conn.commit()
 
+            # send email
             if smtp_use_ssl:
                 server = smtplib.SMTP_SSL(smtp_host, smtp_port)
             else:
@@ -212,6 +220,7 @@ If you did not ask to reset your password, feel free to ignore this email."""
 
             return True, None
 
+        # email was not found, do nothing
         return False, None
     finally:
         if c: c.close()
