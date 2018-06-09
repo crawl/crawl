@@ -43,7 +43,8 @@ def ensure_user_db_exists():
         c = conn.cursor()
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
-                  " password text, flags integer);")
+                  " password text, flags integer," +
+                  " password_reset_token text NULL, password_reset_time text NULL);")
         c.execute(schema)
         conn.commit()
     finally:
