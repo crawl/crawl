@@ -252,6 +252,8 @@ class ArmourOffDelay : public Delay
              armour.name(DESC_YOUR).c_str());
     }
 
+    bool invalidated() override;
+
     void finish() override;
 public:
     ArmourOffDelay(int dur, item_def& item) :
