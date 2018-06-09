@@ -23,6 +23,7 @@ logging_config = {
 }
 
 password_db = "./webserver/passwd.db3"
+settings_db = "./webserver/user_settings.db3"
 
 static_path = "./webserver/static"
 template_path = "./webserver/templates/"
