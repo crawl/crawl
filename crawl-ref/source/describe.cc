@@ -3705,7 +3705,10 @@ static string _monster_stat_description(const monster_info& mi)
         monster *m = monster_at(mi.pos);
         auto eligibility = zin_check_recite_to_single_monster(m, retval);
         if (eligibility == RE_INELIGIBLE)
-            result << "Reciting Zin's laws will not affect " << pronoun << ".";
+        {
+            result << uppercase_first(pronoun) <<
+                    " cannot be affected by reciting Zin's laws.";
+        }
         else if (eligibility == RE_TOO_STRONG)
         {
             result << uppercase_first(pronoun) <<
