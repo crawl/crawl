@@ -350,7 +350,7 @@ static const map<species_type, species_def> species_data =
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
       { MUT_SHAGGY_FUR, 1, 6 }, { MUT_SHAGGY_FUR, 1, 12 }, },
-    { "You cannot wear armour.",
+    { "You cannot wear almost all types of armour.",
       "You are incapable of wielding weapons or throwing items.",
       "Your paws allow you to move quietly. (Stealth)" },
     { "no armour", "no weapons or thrown items", "stealth" },
