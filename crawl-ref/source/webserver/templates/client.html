@@ -59,8 +59,8 @@
       <div id="forgot" class="floating_dialog" style="display: none;">
         <span id="forgot_message"></span>
         <form action="#" id="forgot_form">
-          <label for="reg_email">Email address:</label>
-          <input class="text" type="text" name="reg_email" id="forgot_email">
+          <label for="forgot_email">Email address:</label>
+          <input class="text" type="text" name="forgot_email" id="forgot_email">
           <br>
           <input class="button" type="button" name="cancel" id="forgot_cancel"
                  value="Cancel">
@@ -71,6 +71,26 @@
       <div id="forgot_2" class="floating_dialog" style="display: none;">
         <span>If a matching account was found, then an email was sent to reset your password.</span>
         <input class="button" type="submit" name="submit" value="OK">
+      </div>
+{% end %}
+
+{% if reset_token %}
+      <div id="reset_pw" class="floating_dialog" style="display: none;">
+        <span>Please choose a new password.</span>
+        <br>
+        <span id="reset_pw_message"></span>
+        <form action="#" id="reset_pw_form">
+          <input class="text" type="hidden" readonly="readonly" name="reset_pw_token" id="reset_pw_token" value="{{ reset_token }}">
+          <br>
+          <label for="reset_pw_password">Password:</label>
+          <input class="text" type="password" name="reset_pw_password" id="reset_pw_password">
+          <br>
+          <label for="reset_pw_repeat_password">Password:</label>
+          <input class="text" type="password" name="reset_pw_repeat_password" id="reset_pw_repeat_password">
+          <br>
+          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+          <input class="button" type="submit" name="submit" id="reset_pw_submit" value="Submit">
+        </form>
       </div>
 {% end %}
 

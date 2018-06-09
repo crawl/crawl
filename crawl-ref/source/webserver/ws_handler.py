@@ -148,6 +148,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "chat_msg": self.post_chat_message,
             "register": self.register,
             "forgot_password": self.forgot_password,
+            "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
@@ -528,6 +529,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Failed to generate forgot password email for %s: %s",
                              email, error)
             self.send_message("forgot_password_fail", reason = error)
+
+    def reset_password(self, token, password):
+        username, error = update_user_password_from_token(token, password)
+        if error is None:
+            self.logger.info("User %s has completed their password reset.", username)
+            self.send_message("reload_url")
+        else:
+            self.logger.info("Failed to update password for token %s: %s", token, error)
+            self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):
         if not config.dgl_mode: return

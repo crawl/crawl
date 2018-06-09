@@ -124,7 +124,14 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
-allow_password_reset = False # Set to true to allow users to request a password reset. SMTP must be properly configured if this is enabled
+allow_password_reset = False # Set to true to allow users to request a password reset email. Some settings must be properly configured for this to work
+
+# Set to the primary URL where a player would reach the main lobby
+# For example: "http://crawl.akrasiac.org/"
+# This is required for for password reset
+lobby_url = None
+
+# Proper SMTP settings are required for password reset to function properly
 smtp_host = "localhost"
 smtp_port = 25
 smtp_use_ssl = False

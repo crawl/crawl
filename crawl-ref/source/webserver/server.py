@@ -21,8 +21,11 @@ class MainHandler(tornado.web.RequestHandler):
             protocol = "wss://"
         else:
             protocol = "ws://"
+
+        token = self.get_argument("ResetToken",None) if config.allow_password_reset else None
+
         self.render("client.html", socket_server = protocol + host + "/socket",
-                    username = None, config = config)
+                    username = None, config = config, reset_token = token)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -186,6 +189,10 @@ def check_config():
             not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
+
+    if config.allow_password_reset and not config.lobby_url:
+        logging.warning("Lobby URL needs to be defined!")
+        success = False
     return success
 
 
