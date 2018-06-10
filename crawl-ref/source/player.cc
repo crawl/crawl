@@ -2744,10 +2744,20 @@ int xp_to_level_diff(int xp, int scale)
         level++;
     if (scale > 1)
     {
+        //variables for calculating the remainder after the last level
         unsigned int remainder = adjusted_xp - (int) exp_needed(level);
         unsigned int denom = exp_needed(level + 1) - (int) exp_needed(level);
-        return (level - you.experience_level) * scale +
-                    (remainder * scale / denom);
+
+        //variables for calculating the experience needed to hit the first level
+        unsigned int exp_to_first_level =
+                    (int) exp_needed(you.experience_level + 1) - you.experience;
+        unsigned int total_exp_for_first_level =
+                    (int) exp_needed(you.experience_level + 1)
+                    - (int) exp_needed(you.experience_level);
+
+        return (level - you.experience_level - 1) * scale
+                + (exp_to_first_level * scale / total_exp_for_first_level)
+                + (remainder * scale / denom);
     } else
         return level - you.experience_level;
 }
