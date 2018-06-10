@@ -104,7 +104,7 @@ def ensure_user_db_exists():
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
                   " password text, flags integer," +
-                  " password_reset_token text NULL, password_reset_time text NULL);")
+                  " password_reset_token text, password_reset_time text);")
         c.execute(schema)
         conn.commit()
     finally:
@@ -118,14 +118,17 @@ def upgrade_user_db():
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        c.execute('PRAGMA user_version;')
-        db_version = c.fetchone()[0]
+        columns = [i[1] for i in c.execute("PRAGMA table_info(dglusers)")]
+        logging.warn(columns)
 
-        if db_version == 0:
-            logging.warn("User database is out of date; upgrading")
-            c.executescript("pragma user_version = 1;"
-                            "alter table dglusers add password_reset_token text NULL;"
-                            "alter table dglusers add password_reset_time text NULL;")
+        if "password_reset_token" not in columns:
+            logging.warn("User database missing column 'password_reset_token'; adding now")
+            c.execute("alter table dglusers add password_reset_token text;")
+            conn.commit()
+
+        if "password_reset_time" not in columns:
+            logging.warn("User database missing column 'password_reset_time'; adding now")
+            c.execute("alter table dglusers add password_reset_time text;")
             conn.commit()
     finally:
         if c: c.close()
