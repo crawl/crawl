@@ -641,12 +641,6 @@ function (exports, $, key_conversion, chat, comm) {
             return false;
         }
 
-        if (email.indexOf(" ") >= 0)
-        {
-            $("#register_message").html("The email address can't contain spaces.");
-            return false;
-        }
-
         if (password !== password_repeat)
         {
             $("#register_message").html("Passwords don't match.");

@@ -114,7 +114,7 @@ def send_email(to_address, subject, body_plaintext, body_html):
 
         part1 = MIMEText(body_plaintext, 'plain')
         part2 = MIMEText(body_html, 'html')
-        
+
         msg.attach(part1)
         msg.attach(part2)
 
@@ -123,3 +123,10 @@ def send_email(to_address, subject, body_plaintext, body_html):
     finally:
         # end connection
         if email_server: email_server.quit()
+
+def validate_email_address(address): # Returns an error string describing the problem, or None
+    if not address: return "Email address can't be empty"
+    if " " in address: return "Email address can't contain a space"
+    if "@" not in address: return "Expected email address to contain the @ symbol"
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", address): return "Invalid email address"
+    return None

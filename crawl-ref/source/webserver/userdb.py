@@ -12,7 +12,7 @@ from config import (max_passwd_length, nick_regex, password_db, settings_db,
                     crypt_algorithm, crypt_salt_length,
                     lobby_url)
 
-from util import send_email
+from util import (send_email, validate_email_address)
 
 def ensure_settings_db_exists():
     if os.path.exists(settings_db):
@@ -150,6 +150,9 @@ def encrypt_pw(passwd):
 
 def register_user(username, passwd, email): # Returns an error message or None
     if passwd == "": return "The password can't be empty!"
+    if email: # validate the email only if it is provided
+        result = validate_email_address(email)
+        if result: return result
     username = username.strip()
     if not re.match(nick_regex, username): return "Invalid username!"
 
@@ -201,7 +204,8 @@ def update_user_password_from_token(token, passwd): # Returns a tuple where item
         if conn: conn.close()
 
 def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
-    if email == "": return False, "The email can't be empty!"
+    email_error = validate_email_address(email)
+    if email_error: return False, email_error
 
     try:
         # lookup user-provided email
