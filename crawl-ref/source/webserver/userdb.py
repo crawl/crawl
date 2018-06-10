@@ -103,8 +103,11 @@ def ensure_user_db_exists():
         c = conn.cursor()
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
-                  " password text, flags integer," +
-                  " password_reset_token text, password_reset_time text);")
+                  " password text, flags integer);")
+        c.execute(schema)
+        schema = ("CREATE TABLE recovery_tokens (token text primary key,"
+                   " token_time text, user_id integer not null,"
+                   " foreign key(user_id) references dglusers(id));")
         c.execute(schema)
         conn.commit()
     finally:
@@ -118,16 +121,14 @@ def upgrade_user_db():
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        columns = [i[1] for i in c.execute("PRAGMA table_info(dglusers)")]
+        tables = [i[0] for i in c.execute("SELECT name FROM sqlite_master WHERE type='table';")]
 
-        if "password_reset_token" not in columns:
-            logging.warn("User database missing column 'password_reset_token'; adding now")
-            c.execute("alter table dglusers add password_reset_token text;")
-            conn.commit()
-
-        if "password_reset_time" not in columns:
-            logging.warn("User database missing column 'password_reset_time'; adding now")
-            c.execute("alter table dglusers add password_reset_time text;")
+        if "recovery_tokens" not in tables:
+            logging.warn("User database missing table 'recovery_tokens'; adding now")
+            schema = ("CREATE TABLE recovery_tokens (token text primary key,"
+                      " token_time text, user_id integer not null,"
+                      " foreign key(user_id) references dglusers(id));")
+            c.execute(schema)
             conn.commit()
     finally:
         if c: c.close()
@@ -187,18 +188,31 @@ def update_user_password_from_token(token, passwd): # Returns a tuple where item
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        c.execute("select username from dglusers where password_reset_token=? and password_reset_time > datetime('now','-1 hour') collate nocase",
-                  (token_hash,))
+        c.execute("""\
+select u.id, u.username, case when t.token_time > datetime('now','-1 hour') then 'N' else 'Y' end as Expired
+from recovery_tokens t
+join dglusers u on u.id = t.user_id
+where t.token = ?
+collate rtrim
+""", (token_hash,))
         result = c.fetchone()
 
         if not result:
             return None, "Invalid token"
         else:
-            c.execute("update dglusers set password=?, password_reset_token=null, password_reset_time=null where password_reset_token=?",
-                      (crypted_pw, token_hash))
-            conn.commit()
+            userid = result[0]
+            username = result[1]
+            expired = result[2]
+            if expired == 'Y':
+                return username, "Expired token"
+            else:
+                c.execute("update dglusers set password=? where id=?",
+                          (crypted_pw, userid))
+                c.execute("delete from recovery_tokens where user_id=?",
+                          (userid,))
+                conn.commit()
 
-            return result[0], None
+            return username, None
     finally:
         if c: c.close()
         if conn: conn.close()
@@ -211,12 +225,13 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
         # lookup user-provided email
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        c.execute("select email from dglusers where email=? collate nocase",
+        c.execute("select id from dglusers where email=? collate nocase",
                   (email,))
         result = c.fetchone()
 
-        # email was found
+        # user was found
         if result:
+            userid = result[0]
             # generate random token
             token_bytes = os.urandom(32)
             token = urlsafe_b64encode(token_bytes)
@@ -224,7 +239,8 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
             token_hash_obj = hashlib.sha256(token)
             token_hash = token_hash_obj.hexdigest()
             # store hash in db
-            c.execute("update dglusers set password_reset_token=?, password_reset_time=datetime('now') where email=?", (token_hash, email))
+            c.execute("insert into recovery_tokens(token, token_time, user_id) values (?,datetime('now'),?)",
+                      (token_hash, userid))
             conn.commit()
 
             # send email

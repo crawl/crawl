@@ -563,7 +563,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("User %s has completed their password reset.", username)
             self.send_message("reload_url")
         else:
-            self.logger.info("Failed to update password for token %s: %s", token, error)
+            if username is None: self.logger.info("Failed to update password for token %s: %s", token, error)
+            else: self.logger.info("Failed to update password for user %s: %s", username, error)
             self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):
