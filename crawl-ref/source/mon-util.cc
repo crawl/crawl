@@ -3248,7 +3248,7 @@ mon_energy_usage mons_class_energy(monster_type mc)
 mon_energy_usage mons_energy(const monster& mon)
 {
     mon_energy_usage meu = mons_class_energy(mons_base_type(mon));
-    if (mon.ghost.get())
+    if (mon.ghost)
         meu.move = meu.swim = mon.ghost->move_energy;
     return meu;
 }
@@ -3269,7 +3269,7 @@ int mons_class_zombie_base_speed(monster_type zombie_base_mc)
  */
 int mons_base_speed(const monster& mon, bool known)
 {
-    if (mon.ghost.get())
+    if (mon.ghost)
         return mon.ghost->speed;
 
     if (mon.props.exists(MON_SPEED_KEY)

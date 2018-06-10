@@ -565,7 +565,7 @@ void debug_stethoscope(int mon)
 
     if (mons_is_ghost_demon(mons.type))
     {
-        ASSERT(mons.ghost.get());
+        ASSERT(mons.ghost);
         const ghost_demon &ghost = *mons.ghost;
         mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d; att_type: %d; "
                                 "att_flav: %d",

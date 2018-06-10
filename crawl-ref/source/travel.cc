@@ -378,7 +378,7 @@ private:
 public:
     precompute_travel_safety_grid() : did_compute(false)
     {
-        if (!_travel_safe_grid.get())
+        if (!_travel_safe_grid)
         {
             did_compute = true;
             auto tsgrid = make_unique<travel_safe_grid>();
@@ -418,7 +418,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!in_bounds(c))
         return false;
 
-    if (_travel_safe_grid.get())
+    if (_travel_safe_grid)
     {
         const cell_travel_safety &cell((*_travel_safe_grid)(c));
         return ignore_hostile? cell.safe_if_ignoring_hostile_terrain

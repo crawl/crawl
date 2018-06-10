@@ -3448,7 +3448,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     }
     const string traveldest = _stair_destination_description(where);
     string height_desc;
-    if (env.heightmap.get())
+    if (env.heightmap)
         height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
     const dungeon_feature_type feat = grd(where);
 
