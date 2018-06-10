@@ -1242,8 +1242,8 @@ bool mcache_monster::valid(const monster_info& mon)
     bool have_shield_offs = (mon.type == MONS_PLAYER
                              && Options.tile_shield_offsets.first != INT_MAX)
         || get_shield_offset(mon_tile, &ox, &oy);
-    return (mon.inv[MSLOT_WEAPON].get() != nullptr && have_weapon_offs)
-        || (mon.inv[MSLOT_SHIELD].get() != nullptr && have_shield_offs);
+    return (mon.inv[MSLOT_WEAPON] && have_weapon_offs)
+        || (mon.inv[MSLOT_SHIELD] && have_shield_offs);
 }
 
 /////////////////////////////////////////////////////////////////////////////
