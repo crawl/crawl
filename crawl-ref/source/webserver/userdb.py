@@ -111,6 +111,26 @@ def ensure_user_db_exists():
         if c: c.close()
         if conn: conn.close()
 
+# automatically upgrades database
+def upgrade_user_db():
+    c = None
+    conn = None
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute('PRAGMA user_version;')
+        db_version = c.fetchone()[0]
+
+        if db_version == 0:
+            logging.warn("User database is out of date; upgrading")
+            c.executescript("pragma user_version = 1;"
+                            "alter table dglusers add password_reset_token text NULL;"
+                            "alter table dglusers add password_reset_time text NULL;")
+            conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
 saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 def make_salt(saltlen):

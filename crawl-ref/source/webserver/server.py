@@ -223,6 +223,7 @@ if __name__ == "__main__":
 
     if dgl_mode:
         userdb.ensure_user_db_exists()
+        userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
