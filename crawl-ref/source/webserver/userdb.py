@@ -119,7 +119,6 @@ def upgrade_user_db():
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
         columns = [i[1] for i in c.execute("PRAGMA table_info(dglusers)")]
-        logging.warn(columns)
 
         if "password_reset_token" not in columns:
             logging.warn("User database missing column 'password_reset_token'; adding now")
