@@ -972,6 +972,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
 }
 
+#if TAG_MAJOR_VERSION == 34
 spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -995,6 +996,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 
     return SPRET_SUCCESS;
 }
+#endif
 
 /**
  * Choose a type of imp to summon with Call Imp.
@@ -3273,7 +3275,9 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
     { SPELL_SHADOW_CREATURES,           { 4, 2 } },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
+#if TAG_MAJOR_VERSION == 34
     { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
+#endif
     { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
     // Monster spells
     { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },

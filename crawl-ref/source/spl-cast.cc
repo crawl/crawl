@@ -1718,8 +1718,10 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
         return cast_summon_lightning_spire(powc, beam.target, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_GUARDIAN_GOLEM:
         return cast_summon_guardian_golem(powc, god, fail);
+#endif
 
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);

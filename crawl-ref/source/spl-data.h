@@ -3176,6 +3176,7 @@ static const struct spell_desc spelldata[] =
     TILEG_SUMMON_LIGHTNING_SPIRE,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
     SPTYP_SUMMONING | SPTYP_HEXES,
@@ -3186,6 +3187,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     TILEG_SUMMON_GUARDIAN_GOLEM,
 },
+#endif
 
 {
     SPELL_SHADOW_SHARD, "Shadow Shard",
