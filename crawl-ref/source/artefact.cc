@@ -1858,7 +1858,7 @@ const vector<int> archaeologist_unrands()
     for (int i = 0; i < NUM_UNRANDARTS; ++i)
     {
         const int index = i + UNRAND_START;
-        const unrandart_entry *entry = &unranddata[index];
+        const unrandart_entry *entry = &unranddata[i];
 
         if (entry->base_type == OBJ_UNASSIGNED)
             continue;
