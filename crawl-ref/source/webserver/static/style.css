@@ -176,9 +176,33 @@ body {
     z-index: 3000;
 }
 
+#chat_hidden {
+    background: rgba(0, 0, 0, 0.85);
+    width: 1em;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    color: #A2A2A2;
+
+    font-size: small;
+    text-align: center;
+
+    padding: 5px;
+    border: 1px solid #626262;
+
+    z-index: 3000;
+}
+
 #chat a {
     color: inherit;
     font-weight: inherit;
+}
+
+#chat_hidden a {
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: none;
 }
 
 #chat_caption {
@@ -200,6 +224,12 @@ body {
 }
 
 #message_count {
+    float: right;
+}
+#chat_hide_button_span {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 3px;
     float: right;
 }
 #message_count.has_new {

@@ -14,7 +14,7 @@ import zlib
 
 import config
 import checkoutput
-from userdb import *
+import userdb
 from util import *
 
 sockets = set()
@@ -133,6 +133,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.message_queue = []
 
         self.subprotocol = None
+
+        self.chat_hidden = False
 
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg
@@ -302,6 +304,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             self.send_message("game_started")
+            self.restore_mutelist()
 
             if config.dgl_mode:
                 if self.process.where == {}:
@@ -382,7 +385,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_game_links()
 
     def login(self, username, password):
-        real_username = user_passwd_match(username, password)
+        real_username = userdb.user_passwd_match(username, password)
         if real_username:
             self.logger.info("User %s logged in.", real_username)
             self.do_login(real_username)
@@ -424,6 +427,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 del login_tokens[(token, username)]
         except ValueError:
             return
+
+    def restore_mutelist(self):
+        if not self.username:
+            return
+        receiver = None
+        if self.process:
+            receiver = self.process
+        elif self.watched_game:
+            receiver = self.watched_game
+
+        if not receiver:
+            return
+
+        db_string = userdb.get_mutelist(self.username)
+        if db_string is None:
+            db_string = ""
+        # list constructor here is for forward compatibility with python 3.
+        muted = list(filter(None, db_string.strip().split(' ')))
+        receiver.restore_mutelist(self.username, muted)
+
+    def save_mutelist(self, muted):
+        db_string = " ".join(muted).strip()
+        userdb.set_mutelist(self.username, db_string)
 
     def pong(self):
         self.received_pong = True
@@ -502,10 +528,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   = 'You need to log in to send messages!')
                 return
 
-            receiver.handle_chat_message(self.username, text)
+            if not receiver.handle_chat_command(self, text):
+                receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
-        error = register_user(username, password, email)
+        error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)
             self.do_login(username)

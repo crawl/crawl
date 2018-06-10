@@ -94,6 +94,8 @@ class CrawlProcessHandlerBase(object):
         self.last_milestone = None
         self.kill_timeout = None
 
+        self.muted = set()
+
         now = datetime.datetime.utcnow()
         self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
         self.lock_basename = self.formatted_time + ".ttyrec"
@@ -145,10 +147,95 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.send_message(msg, **data)
 
+    def chat_help_message(self, source, command, desc):
+        if len(command) == 0:
+            self.handle_notification_raw(source,
+                        "&nbsp;" * 8 + "<span>%s</span>" % (xhtml_escape(desc)))
+        else:
+            self.handle_notification_raw(source,
+                        "&nbsp;" * 4 + "<span>%s: %s</span>" %
+                                (xhtml_escape(command), xhtml_escape(desc)))
+
+    def chat_command_help(self, source):
+        # TODO: generalize
+        # the chat window is basically fixed width, and these are calibrated
+        # to not do a linewrap
+        self.handle_notification(source, "The following chat commands are available:")
+        self.chat_help_message(source, "/help", "show chat command help.")
+        self.chat_help_message(source, "/hide", "hide the chat window.")
+        if self.is_player(source):
+            self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
+            self.chat_help_message(source, "", "Must be present in channel.")
+            self.chat_help_message(source, "/mutelist", "show your entire mute list.")
+            self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
+            self.chat_help_message(source, "/unmute *", "clear your mute list.")
+
+    def handle_chat_command(self, source_ws, text):
+        source = source_ws.username
+        text = text.strip()
+        if len(text) == 0 or text[0] != '/':
+            return False
+        splitlist = text.split(None, 1)
+        if len(splitlist) == 1:
+            command = splitlist[0]
+            remainder = ""
+        else:
+            command, remainder = splitlist
+        command = command.lower()
+        # TODO: generalize
+        if command == "/mute":
+            self.mute(source, remainder)
+        elif command == "/unmute":
+            self.unmute(source, remainder)
+        elif command == "/mutelist":
+            self.show_mute_list(source)
+        elif command == "/help":
+            self.chat_command_help(source)
+        elif command == "/hide":
+            self.hide_chat(source_ws, remainder.strip())
+        else:
+            return False
+        return True
+
     def handle_chat_message(self, username, text):
+        if username in self.muted: # TODO: message?
+            return
         chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
                     (username, xhtml_escape(text)))
         self.send_to_all("chat", content = chat_msg)
+
+    def get_receivers_by_username(self, username):
+        result = list()
+        for w in self._receivers:
+            if not w.username:
+                continue
+            if w.username == username:
+                result.append(w)
+        return result
+
+    def get_primary_receiver(self):
+        # TODO: does this work with console? Probably not...
+        if self.username is None:
+            return None
+        receivers = self.get_receivers_by_username(self.username)
+        for r in receivers:
+            if not r.watched_game:
+                return r
+        return None
+
+    def send_to_user(self, username, msg, **data):
+        # a single user may be viewing from multiple receivers
+        for receiver in self.get_receivers_by_username(username):
+            receiver.send_message(msg, **data)
+
+    # obviously, don't use this for player/spectator-accessible data. But, it
+    # is still partially sanitized in chat.js.
+    def handle_notification_raw(self, username, text):
+        msg = ("<span class='chat_msg'>%s</span>" % text)
+        self.send_to_user(username, "chat", content=msg)
+
+    def handle_notification(self, username, text):
+        self.handle_notification_raw(username, xhtml_escape(text))
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -167,6 +254,123 @@ class CrawlProcessHandlerBase(object):
         if self.end_callback:
             self.end_callback()
 
+    def get_watchers(self, chatting_only=False):
+        # TODO: I don't understand why this code didn't just use self.username,
+        # when will this be different than player_name? Maybe for a console
+        # player?
+        player_name = None
+        watchers = list()
+        for w in self._receivers:
+            if not w.username: # anon
+                continue
+            if chatting_only and w.chat_hidden:
+                continue
+            if not w.watched_game:
+                player_name = w.username
+            else:
+                watchers.append(w.username)
+        watchers.sort(key=lambda s:s.lower())
+        return (player_name, watchers)
+
+    def is_player(self, username):
+        # TODO: probably doesn't work for console players spectating themselves
+        # TODO: let admin accounts mute as well?
+        player_name, watchers = self.get_watchers()
+        return (username == player_name)
+
+    def hide_chat(self, receiver, param):
+        if param == "forever":
+            receiver.send_message("super_hide_chat")
+            receiver.chat_hidden = True # currently only for super hidden chat
+            self.update_watcher_description()
+        else:
+            receiver.send_message("toggle_chat")
+
+    def restore_mutelist(self, source, l):
+        if not self.is_player(source) or l is None:
+            return
+        if len(l) == 0:
+            return
+        self.muted = {u for u in l if u != source}
+        self.handle_notification(source, "Restoring mute list.")
+        self.show_mute_list(source)
+        self.logger.info("Player '%s' restoring mutelist %s" %
+                                            (source, repr(list(self.muted))))
+
+    def save_mutelist(self, source):
+        if not self.is_player(source):
+            return
+        receiver = self.get_primary_receiver()
+        if receiver is not None:
+            receiver.save_mutelist(list(self.muted))
+
+    def mute(self, source, target):
+        if not self.is_player(source):
+            self.handle_notification(source,
+                            "You do not have permission to mute spectators.")
+            return False
+        if (source == target):
+            self.handle_notification(source, "You can't mute yourself!")
+            return False
+        player_name, watchers = self.get_watchers()
+        watchers = set(watchers)
+        if not target in watchers:
+            self.handle_notification(source, "Mute who??")
+            return False
+        self.logger.info("Player '%s' has muted '%s'" % (source, target))
+        self.handle_notification(source,
+                            "Spectator '%s' has now been muted." % target)
+        self.muted |= {target}
+        self.save_mutelist(source)
+        self.update_watcher_description()
+        return True
+
+    def unmute(self, source, target):
+        if not self.is_player(source):
+            self.handle_notification(source,
+                            "You do not have permission to unmute spectators.")
+            return False
+        if (source == target):
+            self.handle_notification(source,
+                                    "You can't unmute (or mute) yourself!")
+            return False
+        if target == "*":
+            if (len(self.muted) == 0):
+                self.handle_notification(source, "No one is muted!")
+                return False
+            self.logger.info("Player '%s' has cleared their mute list." % (source))
+            self.handle_notification(source, "You have cleared your mute list.")
+            self.muted = set()
+            self.save_mutelist(source)
+            self.update_watcher_description()
+            return True
+
+        if not target in self.muted:
+            self.handle_notification(source, "Unmute who??")
+            return False
+
+        self.logger.info("Player '%s' has unmuted '%s'" % (source, target))
+        self.handle_notification(source, "You have unmuted '%s'." % target)
+        self.muted -= {target}
+        self.save_mutelist(source)
+        self.update_watcher_description()
+        return True
+
+    def show_mute_list(self, source):
+        if not self.is_player(source):
+            return False
+        names = list(self.muted)
+        names.sort(key=lambda s: s.lower())
+        if len(names) == 0:
+            self.handle_notification(source, "No one is muted.")
+        else:
+            self.handle_notification(source, "You have muted: " +
+                                                            ", ".join(names))
+        return True
+
+    def get_anon(self):
+        return [w for w in self._receivers if not w.username]
+
     def update_watcher_description(self):
         try:
             player_url = config.player_url
@@ -177,29 +381,22 @@ class CrawlProcessHandlerBase(object):
                 class_type = 'player'
             else:
                 class_type = 'watcher'
+            n = watcher
+            if (watcher in self.muted):
+                n += " (muted)"
             if player_url is None:
-                return "<span class='{0}'>{1}</span>".format(class_type,
-                                                             watcher)
-            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, watcher)
-            username = username.replace('%s', watcher.lower())
+                return "<span class='{0}'>{1}</span>".format(class_type, n)
+            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, n)
             return username
 
-        player_name = None
-        watchers = []
-        for w in self._receivers:
-            if not w.username:
-                continue
-            if not w.watched_game:
-                player_name = w.username
-            else:
-                watchers.append(w.username)
-        watchers.sort(key=lambda s:s.lower())
+        player_name, watchers = self.get_watchers(True)
+
         watcher_names = []
         if player_name is not None:
             watcher_names.append(wrap_name(player_name, True))
         watcher_names += [wrap_name(w) for w in watchers]
 
-        anon_count = len(self._receivers) - len(watcher_names)
+        anon_count = len(self.get_anon())
         s = ", ".join(watcher_names)
         if len(watcher_names) > 0 and anon_count > 0:
             s = s + " and %i Anon" % anon_count
