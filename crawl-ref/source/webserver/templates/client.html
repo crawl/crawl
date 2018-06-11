@@ -77,6 +77,13 @@
 
 {% if config.allow_password_reset and reset_token %}
       <div id="reset_pw" class="floating_dialog" style="display: none;">
+  {% if reset_token_error %}
+        <form action="#" id="reset_pw_form">
+          <span>{{ reset_token_error }}</span>
+          <br><br>
+          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+        </form>
+  {% else %}
         <span>Please choose a new password.</span>
         <br>
         <span id="reset_pw_message"></span>
@@ -92,6 +99,7 @@
           <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
           <input class="button" type="submit" name="submit" id="reset_pw_submit" value="Submit">
         </form>
+  {% end %}
       </div>
 {% end %}
 

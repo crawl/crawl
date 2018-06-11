@@ -23,10 +23,17 @@ class MainHandler(tornado.web.RequestHandler):
         else:
             protocol = "ws://"
 
-        token = self.get_argument("ResetToken",None) if config.allow_password_reset else None
+        recovery_token = None
+        recovery_token_error = None
+
+        if config.allow_password_reset:
+            recovery_token = self.get_argument("ResetToken",None)
+            if recovery_token:
+                recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
 
         self.render("client.html", socket_server = protocol + host + "/socket",
-                    username = None, config = config, reset_token = token)
+                    username = None, config = config,
+                    reset_token = recovery_token, reset_token_error = recovery_token_error)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
