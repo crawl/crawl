@@ -178,10 +178,7 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
-def update_user_password_from_token(token, passwd): # Returns a tuple where item 1 is the username that was found for the given token, and item 2 is an error message or None
-    if passwd == "": return None, "The password can't be empty!"
-    crypted_pw = encrypt_pw(passwd)
-
+def find_recovery_token(token): # Returns tuple (userid, username, error)
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()
 
@@ -198,24 +195,39 @@ collate rtrim
         result = c.fetchone()
 
         if not result:
-            return None, "Invalid token"
+            return None, None, "Invalid token"
         else:
             userid = result[0]
             username = result[1]
             expired = result[2]
             if expired == 'Y':
-                return username, "Expired token"
+                return userid, username, "Expired token"
             else:
-                c.execute("update dglusers set password=? where id=?",
-                          (crypted_pw, userid))
-                c.execute("delete from recovery_tokens where user_id=?",
-                          (userid,))
-                conn.commit()
-
-            return username, None
+                return userid, username, None
     finally:
         if c: c.close()
         if conn: conn.close()
+
+def update_user_password_from_token(token, passwd): # Returns a tuple where item 1 is the username that was found for the given token, and item 2 is an error message or None
+    if passwd == "": return None, "The password can't be empty!"
+    crypted_pw = encrypt_pw(passwd)
+
+    userid, username, token_error = find_recovery_token(token)
+
+    if userid and not token_error:
+        try:
+            conn = sqlite3.connect(password_db)
+            c = conn.cursor()
+            c.execute("update dglusers set password=? where id=?",
+                    (crypted_pw, userid))
+            c.execute("delete from recovery_tokens where user_id=?",
+                    (userid,))
+            conn.commit()
+        finally:
+            if c: c.close()
+            if conn: conn.close()
+
+    return username, token_error
 
 def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
     email_error = validate_email_address(email)
