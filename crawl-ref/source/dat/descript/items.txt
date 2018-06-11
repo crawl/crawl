@@ -806,6 +806,10 @@ ring of flight
 A ring that allows its wearer to fly. Its power cannot be evoked while already
 airborne, making it ill-suited for longer trips above deadly liquid.
 %%%%
+ring of grounding
+
+A ring that protects its wearer from lightning and other electrical discharges.
+%%%%
 ring of ice
 
 A ring that brings its wearer more in contact with the powers of ice. It grants

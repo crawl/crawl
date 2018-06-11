@@ -754,6 +754,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION:            return "protection";
         case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
         case RING_POISON_RESISTANCE:     return "poison resistance";
+        case RING_ELEC_RESISTANCE:       return "insulation";
         case RING_PROTECTION_FROM_COLD:  return "protection from cold";
         case RING_STRENGTH:              return "strength";
         case RING_SLAYING:               return "slaying";
@@ -808,6 +809,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION:            return "AC";
         case RING_PROTECTION_FROM_FIRE:  return "rF+";
         case RING_POISON_RESISTANCE:     return "rPois";
+        case RING_ELEC_RESISTANCE:       return "rElec";
         case RING_PROTECTION_FROM_COLD:  return "rC+";
         case RING_STRENGTH:              return "Str";
         case RING_SLAYING:               return "Slay";
@@ -3629,6 +3631,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_POISON_RESISTANCE:
             return player_res_poison(false, temp, false) > 0
                    && (temp || you.species != SP_VAMPIRE);
+
+        case RING_ELEC_RESISTANCE:
+            return player_res_electricity(false, temp, false) > 0;
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);

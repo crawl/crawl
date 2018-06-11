@@ -384,6 +384,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
     { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
+    { RING_ELEC_RESISTANCE, { { ARTP_ELECTRICITY, 1 } } },
     { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC_RESISTANCE, 1 } } },
 
@@ -1424,6 +1425,10 @@ static bool _randart_is_redundant(const item_def &item,
 
     case RING_POISON_RESISTANCE:
         provides = ARTP_POISON;
+        break;
+
+    case RING_ELEC_RESISTANCE:
+        provides = ARTP_ELECTRICITY;
         break;
 
     case RING_ICE:
