@@ -316,7 +316,6 @@ NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
 FTILE:  -|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
 : ghost_vault_setup(_G)
 MAP
-MAP
  ccccccc
 .nDcDcDc
 .n----gc
@@ -370,7 +369,6 @@ cfh----=.
 ccj----n.
  cc---cn.
   ccccc
-nnnn
 ENDMAP
 
 NAME:   gammafunk_ghost_mausoleum
