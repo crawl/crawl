@@ -689,6 +689,7 @@ static const pop_entry pop_zot[] =
   {  1,  5,  515, FLAT, MONS_TENTACLED_MONSTROSITY },
   {  1,  5,   89, FALL, MONS_ELECTRIC_GOLEM },
   {  1,  5,   42, FLAT, MONS_ORB_OF_FIRE },
+  {  1,  9,  150, SEMI, MONS_ORB_DEMON },
   { 0,0,0,FLAT,MONS_0 }
 };
 #if TAG_MAJOR_VERSION == 34

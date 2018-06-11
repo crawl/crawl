@@ -612,6 +612,7 @@ enum monster_type                      // menv[].type
     MONS_ICE_FIEND,
     MONS_TZITZIMITL,
     MONS_PANDEMONIUM_LORD,
+    MONS_ORB_DEMON,
 
     // Spiritual beings ('R')
     MONS_EFREET,

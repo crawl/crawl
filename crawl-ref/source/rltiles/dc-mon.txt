@@ -295,6 +295,7 @@ green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
 tzitzimitl MONS_TZITZIMITL
+orb_demon MONS_ORB_DEMON
 %sdir mon/unique
 ignacio MONS_IGNACIO
 %sdir mon/demons

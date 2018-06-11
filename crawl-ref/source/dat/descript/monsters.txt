@@ -1769,6 +1769,12 @@ orange demon
 
 An amber-coloured demon with a barbed tail not unlike that of a scorpion.
 %%%%
+Orb Demon
+
+An incredibly powerful demon bound by the power of Zot himself to protect the Orb
+at all costs. Its destructive magic is highly potent, and it does not hesitate
+to swiftly bring an end to anything trespassing upon the Realm of Zot.
+%%%%
 Orb Guardian
 
 A huge, glowing, four-limbed purple creature with heightened senses, created by
