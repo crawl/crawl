@@ -219,6 +219,9 @@ brand_type player::damage_brand(int)
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
+    if (player_equip_unrand(UNRAND_FISTS_OF_THUNDER))
+        return SPWPN_ELECTROCUTION;
+
     return get_form()->get_uc_brand();
 }
 
@@ -634,6 +637,9 @@ string player::unarmed_attack_name() const
     }
     else if (has_usable_tentacles(true))
         default_name = "Tentacles";
+
+    if (player_equip_unrand(UNRAND_FISTS_OF_THUNDER))
+        default_name += " (elec)";
 
     return get_form()->get_uc_attack_name(default_name);
 }

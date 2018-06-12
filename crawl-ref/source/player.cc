@@ -6855,7 +6855,9 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return !slot_item(EQ_GLOVES) && has_claws(allow_tran);
+    return !(slot_item(EQ_GLOVES)
+             && !player_equip_unrand(UNRAND_FISTS_OF_THUNDER))
+           && has_claws(allow_tran);
 }
 
 int player::has_talons(bool allow_tran) const
