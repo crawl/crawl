@@ -121,6 +121,11 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
 %%%%
+Sand Dwarf
+
+Sand Dwarves are hardy, skilled with axes and maces, and can use magic
+while wearing heavy armour. However, having short legs, they move slowly.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans make highly competent stabbers

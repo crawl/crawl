@@ -276,6 +276,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_KOBOLD,          SK_INVOCATIONS,     1),
     APT(SP_KOBOLD,          SK_EVOCATIONS,      2),
 
+    // SP_SAND_DWARF
+    APT(SP_SAND_DWARF,  SK_FIGHTING,        2),
+    APT(SP_SAND_DWARF,  SK_SHORT_BLADES,   -2),
+    APT(SP_SAND_DWARF,  SK_LONG_BLADES,    -2),
+    APT(SP_SAND_DWARF,  SK_AXES,            2),
+    APT(SP_SAND_DWARF,  SK_MACES_FLAILS,    4),
+    APT(SP_SAND_DWARF,  SK_POLEARMS,       -1),
+    APT(SP_SAND_DWARF,  SK_STAVES,          0),
+    APT(SP_SAND_DWARF,  SK_SLINGS,          0),
+    APT(SP_SAND_DWARF,  SK_BOWS,           -2),
+    APT(SP_SAND_DWARF,  SK_CROSSBOWS,       2),
+    APT(SP_SAND_DWARF,  SK_THROWING,        0),
+    APT(SP_SAND_DWARF,  SK_ARMOUR,          2),
+    APT(SP_SAND_DWARF,  SK_DODGING,        -2),
+    APT(SP_SAND_DWARF,  SK_STEALTH,        -2),
+    #if TAG_MAJOR_VERSION == 34
+    APT(SP_SAND_DWARF,  SK_STABBING,      UNUSABLE_SKILL),
+    #endif
+    APT(SP_SAND_DWARF,  SK_SHIELDS,         0),
+    #if TAG_MAJOR_VERSION == 34
+    APT(SP_SAND_DWARF,  SK_TRAPS,         UNUSABLE_SKILL),
+    #endif
+    APT(SP_SAND_DWARF,  SK_UNARMED_COMBAT,  1),
+    APT(SP_SAND_DWARF,  SK_SPELLCASTING,   -1),
+    APT(SP_SAND_DWARF,  SK_CONJURATIONS,   -4),
+    APT(SP_SAND_DWARF,  SK_HEXES,          -2),
+    APT(SP_SAND_DWARF,  SK_CHARMS,          0),
+    APT(SP_SAND_DWARF,  SK_SUMMONINGS,     -2),
+    APT(SP_SAND_DWARF,  SK_NECROMANCY,      0),
+    APT(SP_SAND_DWARF,  SK_TRANSLOCATIONS, -2),
+    APT(SP_SAND_DWARF,  SK_TRANSMUTATIONS, -2),
+    APT(SP_SAND_DWARF,  SK_FIRE_MAGIC,      2),
+    APT(SP_SAND_DWARF,  SK_ICE_MAGIC,      -2),
+    APT(SP_SAND_DWARF,  SK_AIR_MAGIC,      -2),
+    APT(SP_SAND_DWARF,  SK_EARTH_MAGIC,     2),
+    APT(SP_SAND_DWARF,  SK_POISON_MAGIC,    0),
+    APT(SP_SAND_DWARF,  SK_INVOCATIONS,    -1),
+    APT(SP_SAND_DWARF,  SK_EVOCATIONS,      3),
+
     // SP_MUMMY
     APT(SP_MUMMY,           SK_FIGHTING,        0),
     APT(SP_MUMMY,           SK_SHORT_BLADES,   -2),

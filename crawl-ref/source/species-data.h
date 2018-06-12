@@ -662,6 +662,23 @@ static const map<species_type, species_def> species_data =
     { SK_STAVES, SK_SHORT_BLADES},
 } },
 
+{ SP_SAND_DWARF, {
+    "SD",
+    "Sand Dwarf", "Dwarven", nullptr,
+    SPF_NONE,
+    0, 1, 0, 5,
+    MONS_DWARF,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    12, 8, 6, // 26
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_SLOW, 1, 1 }, { MUT_NO_ARMOUR_CAST_PENALTY, 1, 1} },
+    {},
+    {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_BERSERKER,
+      JOB_SKALD, JOB_WIZARD, JOB_EARTH_ELEMENTALIST, JOB_ARTIFICER },
+    { SK_MACES_FLAILS, SK_AXES, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_VAMPIRE, {
     "Vp",
     "Vampire", "Vampiric", nullptr,

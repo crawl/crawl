@@ -2269,8 +2269,12 @@ int player_armour_shield_spell_penalty()
 {
     const int scale = 100;
 
-    const int body_armour_penalty =
-        max(19 * you.adjusted_body_armour_penalty(scale), 0);
+    int body_armour_penalty = 0;
+    if(!you.get_mutation_level(MUT_NO_ARMOUR_CAST_PENALTY))
+    {
+        body_armour_penalty =
+            max(19 * you.adjusted_body_armour_penalty(scale), 0);
+    }
 
     const int total_penalty = body_armour_penalty
                  + 19 * you.adjusted_shield_penalty(scale);
