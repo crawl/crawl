@@ -96,6 +96,35 @@ MAP
 .............
 ENDMAP
 
+NAME:    gammafunk_vaults_ghost_cemetery
+TAGS:    vaults_orient_s
+KMONS:   DEF = player ghost
+KMONS:   p = withered plant
+# 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
+SHUFFLE: DdqEerFfs / DdqZyzFfs / DdqZyzFfs / DdqEerZyz / DdqEerZyz / \
+         DdqEerZyz / DdqZyzZyz / DdqZyzZyz / DdqZyzZyz / DdqZyzZyz / \
+         DdqZyzZyz / DdqZyzZyz
+# 1.5 items per ghost, upgrading quality with depth.
+NSUBST:  d = 2=|* / |*--, e = |* / |*--, f = 2=|* / |*--
+SUBST:   qrs = G, Z = -, y = p, z = V, t : tp
+TILE:    G = dngn_gravestone
+TILE:    t = dngn_tree_dead
+FTILE:   -|*%$DEFpGt = floor_pebble_brown / floor_pebble_darkgray
+: set_feature_name("granite_statue", "a gravestone")
+: vaults_ghost_setup(_G)
+MAP
+qd--ere--dq
+dD---E---Dd
+-----------
+-----------
+f---------f
+sF-------Fs
+f---------f
+xxnn===nnxx
+...........
+...........
+ENDMAP
+
 NAME:   gammafunk_vaults_ghost_necromancy
 TAGS:   vaults_orient_w
 KMONS:  O = player ghost
