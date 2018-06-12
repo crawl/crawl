@@ -1576,7 +1576,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         // (since showing 'eudaemon blade' is unhelpful in the former case, and
         // showing 'broad axe' is misleading in the latter)
         // could be a flag, but doesn't seem worthwhile for only two items
-        if (is_unrandom_artefact(weap, UNRAND_ZEALOT_SWORD)
+        if (is_unrandom_artefact(weap, UNRAND_JIHAD)
             || is_unrandom_artefact(weap, UNRAND_DEMON_AXE))
         {
             return long_name;

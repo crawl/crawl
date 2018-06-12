@@ -508,7 +508,7 @@ flaming_death FLAMING_DEATH
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
-zealot_sword ZEALOT_SWORD
+jihad JIHAD
 singing_sword SINGING_SWORD
 zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
