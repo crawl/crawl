@@ -3415,8 +3415,9 @@ spret_type fedhas_evolve_flora(bool fail)
 
         return SPRET_ABORT;
     }
-
-    monster_conversion upgrade = *map_find(conversions, plant->type);
+    auto upgrade_ptr = map_find(conversions, plant->type);
+    ASSERT(upgrade_ptr);
+    monster_conversion upgrade = *upgrade_ptr;
 
     vector<pair<int, int> > collected_rations;
     if (upgrade.ration_cost)
