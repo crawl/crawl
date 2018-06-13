@@ -4937,6 +4937,7 @@ spret_type qazlal_elemental_force(bool fail)
     mg.summon_type = MON_SUMM_AID;
     mg.abjuration_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
+    mg.summoner = &you;
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < targets.size(); i++)
     {
