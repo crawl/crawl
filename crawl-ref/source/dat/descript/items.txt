@@ -811,6 +811,10 @@ ring of ice
 A ring that brings its wearer more in contact with the powers of ice. It grants
 resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
+ring of insulation
+
+A ring that protects its wearer from lightning and other electrical discharges.
+%%%%
 ring of intelligence
 
 A ring that increases or decreases the mental ability of its wearer, depending

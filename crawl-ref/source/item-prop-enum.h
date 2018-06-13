@@ -215,9 +215,7 @@ enum jewellery_type
     RING_PROTECTION_FROM_MAGIC,
     RING_FIRE,
     RING_ICE,
-#if TAG_MAJOR_VERSION == 34
-    RING_TELEPORT_CONTROL,
-#endif
+    RING_ELEC_RESISTANCE,
     NUM_RINGS,                         //   keep as last ring; should not overlap
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts
