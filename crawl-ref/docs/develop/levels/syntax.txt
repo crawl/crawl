@@ -17,6 +17,8 @@ triggerables.txt.
 G.   Glyphs
 ===========
 
+By default, a glyph that has no mapping is turned into floor (DNGN_FLOOR).
+
 Terrain
 -------
  x - rock wall                                            (DNGN_ROCK_WALL)
