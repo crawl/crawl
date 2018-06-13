@@ -4947,7 +4947,12 @@ spret_type qazlal_elemental_force(bool fail)
         const cloud_struct &cl = *cloud_at(pos);
         mg.behaviour = BEH_FRIENDLY;
         mg.pos       = pos;
-        mg.cls = *map_find(elemental_clouds, cl.type);
+        auto mons_type = map_find(elemental_clouds, cl.type);
+        // it is not impossible that earlier placements caused new clouds not
+        // in the map.
+        if (!mons_type)
+            continue;
+        mg.cls = *mons_type;
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
