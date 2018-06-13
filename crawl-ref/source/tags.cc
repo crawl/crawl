@@ -4869,7 +4869,11 @@ void unmarshallItem(reader &th, item_def &item)
     };
     // ASSUMPTION: there was no such thing as an artefact hide
     if (item.base_type == OBJ_ARMOUR && hide_to_armour.count(item.sub_type))
-        item.sub_type = *map_find(hide_to_armour, item.sub_type);
+    {
+        auto subtype_ptr = map_find(hide_to_armour, item.sub_type);
+        ASSERT(subtype_ptr);
+        item.sub_type = *subtype_ptr;
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_HIDE_TO_SCALE && armour_is_hide(item))
     {
