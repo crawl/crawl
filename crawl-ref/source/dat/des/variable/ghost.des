@@ -380,7 +380,7 @@ SUBST:  d = *, e = *%, f = %$--,  ghi = -
 NSUBST: - = 2=1 / 4=1. / 2=2 / 4=2. / .
 :     elseif you.depth() < 12 then
 SUBST:  d = |*, e = *, f = %$,  ghi = -
-NSUBST: e = %$-- / -, - = 2=1 / 4=1. / 3=2 / 6=2. / .
+NSUBST: - = 2=1 / 4=1. / 3=2 / 6=2. / .
 :     elseif you.depth() < 14 then
 SUBST:  def = |*, g = *%, h = %$--, ij = -
 NSUBST: - =  2=1 / 4=1. / 4=2 / 8=2. / 1=3...
@@ -390,7 +390,7 @@ NSUBST: - = 2=1 / 4=1. / 3=2 / 6=2. / 1=3 / 2=3.
 :     end
 : elseif you.in_branch("Lair") then
 SUBST:  de = |*, f = *%, g = %$--, hij = -
-NSUBST: f = *%$ / -, - = 2=1 / 4=1. / 3=2 / 6=2. / 1=3 / 1=3...
+NSUBST: - = 2=1 / 4=1. / 3=2 / 6=2. / 1=3 / 1=3...
 # Depths
 : else
 SUBST:  defgh = |*, i = *%, j = %$--
