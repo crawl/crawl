@@ -506,3 +506,87 @@ MAP
  .nnnnnnnnnnnnn.
  ...............
 ENDMAP
+
+NAME:   gammafunk_ghost_hydra_chop
+DEPTH:  D:8-, Lair, Swamp
+ORIENT: float
+KMONS:  O = player ghost
+{{
+-- Set up hydra monster entry with a range of possible extra heads.
+max_heads = 11 + math.floor((you.absdepth() - 8) / 2)
+for h = 9, max_heads do
+    def = h .. "-headed hydra"
+    if hydra_def == nil then
+        hydra_def = def
+    else
+        hydra_def = hydra_def .. " / " .. def
+    end
+end
+mons(hydra_def)
+
+-- Set up the non-flaming edged weapon "left" by the ghost.
+make_arte = crawl.one_chance_in(3)
+
+-- Basic set of egos with weights.
+egos  =  {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+          ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
+          ["vampiric"] = 5, ["draining"] = 5, ["pain"] = 2,
+          ["distortion"] = 2, ["anti-magic"] = 2, ["speed"] = 1}
+esum = 0
+for ego, weight in pairs(egos) do
+    esum = esum + weight
+    if not make_arte or ego ~= "none" then
+        esum  = esum + weight
+    end
+end
+
+-- Possible weapon types with weights. We stick to weapons wieldable by all
+-- non-felids.
+weapons = {["long blade"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
+           ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
+           ["lajatang"] = 2}
+for wname, wweight in pairs(weapons) do
+    for ename, eweight in pairs(egos) do
+        if not make_arte or ename ~= "none" then
+            quality = make_arte and " randart " or " good_item "
+            -- Scale the final weapon entry weight by weapon weight and ego
+            -- weight with a 100 scaling factor so the smallest weight value is
+            -- non-zero.
+            def = wname .. quality .. " ego:" .. ename .. " w:" ..
+                  math.floor(100 * wweight * eweight / esum)
+            if weapon_def == nil then
+                 weapon_def = def
+            else
+                 weapon_def = weapon_def .. " / " .. def
+            end
+        end
+    end
+end
+kitem("O = " .. weapon_def)
+}}
+KMONS:  pq = plant
+KFEAT:  q = W
+SUBST:  t = ttWpq''
+: if you.absdepth() < 10 then
+NSUBST: ' = * / *% / -, - = 1 / 1--- / -
+: elseif you.absdepth() < 12 then
+NSUBST:  ' = |* / * / %$-- / -, - = 1 / 1- / -
+: elseif you.absdepth() < 14 then
+NSUBST:  ' = 2=|* / %$ / -, - = 1 / 111- / -
+: elseif you.absdepth() <= 16 then
+NSUBST:  ' = 2=|* / *% / %$-- / -, - = 1 / 2=1- / -
+: else
+NSUBST:  ' = 4=|* / -, - = 1 / 3=1- / -
+: end
+: ghost_vault_setup(_G)
+MAP
+  ccccc
+ cctttcn.
+cct'''-n.
+ct''---=.
+ct'-O--=@
+ct''---=.
+cct'''-n.
+ cctttcn.
+  ccccc
+ENDMAP
