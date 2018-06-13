@@ -1,7 +1,7 @@
-define(["exports", "jquery", "key_conversion", "chat", "comm",
+define(["exports", "jquery", "key_conversion", "chat", "comm", "ui",
         "contrib/jquery.cookie", "contrib/jquery.tablesorter",
         "contrib/jquery.waitforimages", "contrib/inflate"],
-function (exports, $, key_conversion, chat, comm) {
+function (exports, $, key_conversion, chat, comm, ui) {
 
     // Need to keep this global for backwards compatibility :(
     window.current_layer = "crt";
@@ -308,6 +308,7 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 e.preventDefault();
                 hide_dialog();
+                ui.hide_popup();
             }
             return;
         }
@@ -765,6 +766,7 @@ function (exports, $, key_conversion, chat, comm) {
         var msg = data.reason;
         set_layer("crt");
         hide_dialog();
+        ui.hide_all_popups();
         chat.reset_visibility(false);
         $("#crt").html(msg + "<br><br>");
         showing_close_message = true;
@@ -794,6 +796,7 @@ function (exports, $, key_conversion, chat, comm) {
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
 
         hide_dialog();
+        ui.hide_all_popups();
 
         $(document).trigger("game_cleanup");
         $("#game").html('<div id="crt" style="display: none;"></div>');
@@ -1372,6 +1375,7 @@ function (exports, $, key_conversion, chat, comm) {
                 if (!showing_close_message)
                 {
                     set_layer("crt");
+                    ui.hide_all_popups();
                     $("#crt").html("");
                     $("#crt").append("The WebSocket connection failed.<br>");
                     showing_close_message = true;
@@ -1383,6 +1387,7 @@ function (exports, $, key_conversion, chat, comm) {
                 if (!showing_close_message)
                 {
                     set_layer("crt");
+                    ui.hide_all_popups();
                     $("#crt").html("");
                     $("#crt").append("The Websocket connection was closed.<br>");
                     if (ev.reason)

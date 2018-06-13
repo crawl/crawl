@@ -713,7 +713,8 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
 
 static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
-    return is_harmless_cloud(cloud.type)
+    return (is_harmless_cloud(cloud.type) &&
+                (!is_opaque_cloud(cloud.type) || is_opaque_cloud(ct)))
            || cloud.type == CLOUD_STEAM
            || ct == CLOUD_TORNADO; // soon gone
 }

@@ -8,11 +8,21 @@ import hashlib
 
 from base64 import urlsafe_b64encode
 
-from config import (max_passwd_length, nick_regex, password_db, settings_db,
+from config import (max_passwd_length, nick_regex, password_db,
                     crypt_algorithm, crypt_salt_length,
                     lobby_url)
 
 from util import (send_email, validate_email_address)
+
+def setup_settings_path():
+    global settings_db
+    try:
+        from config import settings_db as sdb_config
+        settings_db = sdb_config
+    except:
+        settings_db = os.path.join(os.path.dirname(password_db), "user_settings.db3")
+
+setup_settings_path()
 
 def ensure_settings_db_exists():
     if os.path.exists(settings_db):
