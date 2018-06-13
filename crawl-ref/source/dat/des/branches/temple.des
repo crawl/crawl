@@ -3223,7 +3223,7 @@ SUBST:     " : " .:3,  " = .c, ' : ' .:3,  ' = .S
 SUBST:     - = --.
 LFLOORCOL: green
 COLOUR:    - = lightgray
-FTILE:     .J = floor_slime
+FTILE:     .JB = floor_slime
 : set_feature_name("stone_wall", "rune-carved stone wall")
 MAP
 SSSSSSSSSSSSSSSSSSSSSSSSSSSS
