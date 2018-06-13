@@ -19,6 +19,59 @@
 
 : require("dlua/ghost.lua")
 
+{{
+-- Set up the non-flaming edged weapon "left" by the ghost in
+-- gammafunk_ghost_hydra_chop.
+function init_hydra_weapons(e)
+    make_arte = crawl.one_chance_in(3)
+
+    -- Basic set of egos with weights.
+    egos  =  {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+              ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
+              ["vampiric"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
+              ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2,
+              ["speed"] = 1}
+
+    -- Possible weapon types with weights. We stick to weapons wieldable by all
+    -- non-felids.
+    weapons = {["long blade"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
+               ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
+               ["lajatang"] = 2}
+
+    for wname, wweight in pairs(weapons) do
+        -- We need the sum of ego weights to make an ego rarity scaling factor.
+        esum = 0
+        for ego, weight in pairs(egos) do
+            esum = esum + weight
+            -- Don't allow demon weapons to get holy wrath or artefacts with
+            -- no ego.
+            if (not wname:find("demon") or ego ~= "holy_wrath")
+               and (not make_arte or ego ~= "none") then
+                esum  = esum + weight
+            end
+        end
+
+        -- Define an item spec with all weapon+ego combinations, each with
+        -- weight scaled by weapon rarity and ego rarity.
+        for ename, eweight in pairs(egos) do
+            if (not wname:find("demon") or ename ~= "holy_wrath")
+               and (not make_arte or ename ~= "none") then
+                quality = make_arte and " randart" or " good_item"
+                -- Scale the final weight by 300 so the smallest is non-zero.
+                def = wname .. quality .. " ego:" .. ename .. " w:" ..
+                      math.floor(300 * wweight * eweight / esum)
+                if weapon_def == nil then
+                     weapon_def = def
+                else
+                     weapon_def = weapon_def .. " / " .. def
+                end
+            end
+        end
+    end
+    e.kitem("O = " .. weapon_def)
+end
+}}
+
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
 # vault may only be appropriate for a subset of these levels, in which case
 # they should set their own DEPTH. Note that if this default depth is changed,
@@ -512,7 +565,8 @@ DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
 KMONS:  O = player ghost
 {{
--- Set up hydra monster entry with a range of possible extra heads.
+-- Set up hydra monster entry with a range of possible extra heads based on
+-- depth.
 max_heads = 11 + math.floor((you.absdepth() - 8) / 2)
 for h = 9, max_heads do
     def = h .. "-headed hydra"
@@ -523,50 +577,10 @@ for h = 9, max_heads do
     end
 end
 mons(hydra_def)
-
--- Set up the non-flaming edged weapon "left" by the ghost.
-make_arte = crawl.one_chance_in(3)
-
--- Basic set of egos with weights.
-egos  =  {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
-          ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
-          ["vampiric"] = 5, ["draining"] = 5, ["pain"] = 2,
-          ["distortion"] = 2, ["anti-magic"] = 2, ["speed"] = 1}
-esum = 0
-for ego, weight in pairs(egos) do
-    esum = esum + weight
-    if not make_arte or ego ~= "none" then
-        esum  = esum + weight
-    end
-end
-
--- Possible weapon types with weights. We stick to weapons wieldable by all
--- non-felids.
-weapons = {["long blade"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
-           ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
-           ["lajatang"] = 2}
-for wname, wweight in pairs(weapons) do
-    for ename, eweight in pairs(egos) do
-        if not make_arte or ename ~= "none" then
-            quality = make_arte and " randart " or " good_item "
-            -- Scale the final weapon entry weight by weapon weight and ego
-            -- weight with a 100 scaling factor so the smallest weight value is
-            -- non-zero.
-            def = wname .. quality .. " ego:" .. ename .. " w:" ..
-                  math.floor(100 * wweight * eweight / esum)
-            if weapon_def == nil then
-                 weapon_def = def
-            else
-                 weapon_def = weapon_def .. " / " .. def
-            end
-        end
-    end
-end
-kitem("O = " .. weapon_def)
 }}
 KMONS:  pq = plant
 KFEAT:  q = W
-SUBST:  t = ttWpq''
+SUBST:  t = tttWpq'
 : if you.absdepth() < 10 then
 NSUBST: ' = * / *% / -, - = 1 / 1--- / -
 : elseif you.absdepth() < 12 then
@@ -578,6 +592,7 @@ NSUBST:  ' = 2=|* / *% / %$-- / -, - = 1 / 2=1- / -
 : else
 NSUBST:  ' = 4=|* / -, - = 1 / 3=1- / -
 : end
+: init_hydra_weapons(_G)
 : ghost_vault_setup(_G)
 MAP
   ccccc
