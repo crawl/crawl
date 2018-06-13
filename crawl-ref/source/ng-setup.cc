@@ -301,6 +301,8 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     case UNRAND_ELEMENTAL_STAFF:
     case UNRAND_OLGREB:
         return SK_EVOCATIONS;
+    case UNRAND_FISTS_OF_THUNDER:
+        return SK_UNARMED_COMBAT;
     default:
         break;
     }
