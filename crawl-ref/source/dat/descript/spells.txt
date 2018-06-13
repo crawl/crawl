@@ -1097,7 +1097,7 @@ Surrounds the caster with a mobile ring of highly-damaging thunderclouds.
 %%%%
 Sandblast spell
 
-Consumes a stone to create a short blast of high-velocity rock shards. Its
+Consumes ten stones to create a short blast of high-velocity rock shards. Its
 damage is strongly reduced by armour.
 %%%%
 Sap Magic spell
@@ -1293,7 +1293,7 @@ Throws a ball of hot steam towards a targeted creature.
 Sticks to Snakes spell
 
 Transforms a number of arrows in inventory into short-lived snakes, creating
-more dangerous snakes with higher power.
+more dangerous snakes with higher power. Each snake costs ten arrows.
 %%%%
 Sticky Flame Range spell
 

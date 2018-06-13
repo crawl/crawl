@@ -2354,14 +2354,14 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
         if (i.is_type(OBJ_MISSILES, MI_STONE)
             && check_warning_inscriptions(i, OPER_DESTROY))
         {
-            num_stones += i.quantity;
+            num_stones += i.quantity / 10;
             stone = &i;
         }
     }
 
     if (num_stones == 0)
     {
-        mpr("You don't have any stones to cast with.");
+        mpr("You don't have enough stones to cast with.");
         return SPRET_ABORT;
     }
 
@@ -2370,8 +2370,10 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 
     if (ret == SPRET_SUCCESS)
     {
-        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
-            mpr("You now have no stones remaining.");
+        if (dec_inv_item_quantity(letter_to_index(stone->slot), 10)
+            || stone->quantity < 10)
+            mpr("You now have insufficient stones remaining to "
+                "continue to cast sandblast.");
         else
             mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
     }

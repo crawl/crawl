@@ -131,6 +131,8 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
+    // XXX This function is a mess; different arrow types no longer exist -- NP7
+
     // The first items placed into this list will be the first
     // to be converted; for players with bow skill we prefer
     // plain arrows.
@@ -149,12 +151,12 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                 valid_sticks.push_front(&i);
             else
                 valid_sticks.push_back(&i);
-            num_sticks += i.quantity;
+            num_sticks += i.quantity / 10;
         }
 
-    if (valid_sticks.empty())
+    if (num_sticks == 0)
     {
-        mpr("You don't have anything to turn into a snake.");
+        mpr("You don't have enough sticks to turn into a snake.");
         return SPRET_ABORT;
     }
     // Sort by the quantity if the player has no bow skill; this will
@@ -198,7 +200,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                                             false))
         {
             count++;
-            dec_inv_item_quantity(letter_to_index(stick->slot), 1);
+            dec_inv_item_quantity(letter_to_index(stick->slot), 10);
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
@@ -215,6 +217,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         {
             mprf("You now have %d arrow%s.", sticks_left,
                                              sticks_left > 1 ? "s" : "");
+            if (sticks_left < 10)
+            mpr("You now have insufficient arrows remaining to make any more "
+                "snakes.");
         }
         else
             mpr("You now have no arrows remaining.");
