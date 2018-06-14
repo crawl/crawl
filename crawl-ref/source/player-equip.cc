@@ -1145,6 +1145,7 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _remove_amulet_of_harm()
 {
     if (you.undead_state() == US_ALIVE)
@@ -1154,6 +1155,7 @@ static void _remove_amulet_of_harm()
 
     drain_player(150, false, true);
 }
+#endif
 
 static void _equip_amulet_of_regeneration()
 {

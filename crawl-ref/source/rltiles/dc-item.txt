@@ -782,7 +782,7 @@ sun
 # These must be in the same order as the enum in item-prop-enum.h!
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
-i-harm AMU_HARM
+i-harm AMU_REMOVEME3
 i-acrobat AMU_ACROBAT
 i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND

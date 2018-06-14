@@ -328,7 +328,9 @@ public:
     virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
     virtual bool reflection(bool calc_unid = true, bool items = true) const;
+#if TAG_MAJOR_VERSION == 34
     virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
+#endif
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
