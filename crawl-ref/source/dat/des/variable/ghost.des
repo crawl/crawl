@@ -297,6 +297,23 @@ ccnn===nncc
   ...@...
 ENDMAP
 
+NAME: ebering_ghost_inner_flame
+KPROP: cn'O = w:5 bloody / nothing
+KMONS: O = player_ghost
+KITEM: O = scroll of immolation ident:all
+NSUBST: '= |* / 998 / 3=dd. / 2=F. / .
+MARKER: F = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 10000, pow_max = 10000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1 }
+: dgn.delayed_decay(_G, "d", "chunk")
+MAP
+ ccccc
+.n'''c
+@='O'c
+.n'''c
+ ccccc
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
@@ -801,4 +818,65 @@ v--lll--v
 v-.O...-v
 vnn===nnv
 G...@...G
+ENDMAP
+
+NAME: ebering_ghost_funeral_grove
+DEPTH: D:8-, Lair, Swamp
+ORIENT: float
+
+# Foliage
+SUBST: - = pt.
+: if you.in_branch("Dungeon") then
+COLOUR: .' = green
+FTILE: .pO' = floor_moss
+: end
+
+: if crawl.one_chance_in(5) then
+: if you.in_branch("Swamp") then
+COLOUR: t = lightgrey / darkgrey / brown
+TILE: t = dngn_tree_dead / dngn_tree_yellow w:5
+: set_feature_name("tree","dead tree")
+MONS: withered plant, fungus
+: else
+MONS: plant, fungus
+COLOUR: t = lightred / red w:4 / yellow w:4
+TILE: t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+: end
+: else
+MONS: plant, plant / fungus w:5
+: end
+SUBST: p = 12
+SUBST: S : GV A:1
+
+# Monsters and loot
+: if you.absdepth() < 10 then
+MONS: spriggan ; spear, spriggan druid
+SUBST: " = *
+NSUBST: ' = *% / M, M = 4 / 3 / 3. / .
+: elseif you.absdepth() < 12 then
+MONS: spriggan rider / spriggan ; spear, spriggan druid
+SUBST: " = |*
+NSUBST:  ' = * / %$MM / M, M = 4 / 3 / 3. / .
+: elseif you.absdepth() < 14 then
+MONS: spriggan rider, spriggan druid
+SUBST: " = |*
+NSUBST:  ' = |* / %$ / M, M = 4 / 3 / 333. / .
+: else
+MONS: spriggan rider, spriggan druid
+SUBST: " = |*
+NSUBST:  ' = |* / *% / %$MM / M, M = 4 / 2=3 / 3.
+: end
+
+KMONS: O = player ghost
+KITEM: O = potion of lignification ident:all
+: ghost_vault_setup(_G)
+MAP
+  ttttttt
+ tt'''--tt
+ t--t-..-t
+ tt-"O--.t
+tt-..t--.tt
+t-'-.---t't
+t'tnn=nnt't
+tttS.@.Sttt
 ENDMAP
