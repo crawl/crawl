@@ -491,7 +491,7 @@ MONS:   vampire mosquito band / shadow / death knight / skeletal warrior / \
         freezing wraith w:5
 SUBST:  d = |*, e = *, f = *%,  g = %$--, hi = -
 NSUBST: D = 2=1 / 4=1- / 2=2- / -
-:     elseif you.depth() < 14 then
+:     elseif you.depth() < 15 then
 MONS:   zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15 / \
         vampire mosquito band / death knight / skeletal warrior
 MONS:   freezing wraith / necromancer / shadow wraith / vampire knight / \
