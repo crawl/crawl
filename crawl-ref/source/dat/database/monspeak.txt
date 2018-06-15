@@ -5935,7 +5935,7 @@ _Sigmund_rare_
 VISUAL:@The_monster@ smiles chillingly.
 ## END Sigmund ##
 %%%%
-############ SOJOBO ### tengu queen
+############ SOJOBO ### tengu king
 Sojobo
 
 @_Sojobo_common_@
