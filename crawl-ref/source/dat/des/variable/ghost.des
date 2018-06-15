@@ -613,3 +613,62 @@ cct'''-n.
  cctttcn.
   ccccc
 ENDMAP
+
+NAME:   gammafunk_ghost_fury_of_okawaru
+DEPTH:  D:12-, Orc, Elf, Crypt
+ORIENT: float
+KFEAT:  O = altar_okawaru
+KMONS:  O = player ghost
+: if you.in_branch("D") then
+:      if you.depth() < 14 then
+MONS:   orc warrior / centaur warrior / tengu warrior
+MONS:   orc knight / naga warrior / merfolk impaler
+MONS:   merfolk javelineer / deep elf knight / deep elf archer
+SUBST:  def = |*, g = *, h = %$, ij = -
+NSUBST: - = 2=1 / 4=1- / 12-- / 2 / 2=2- / 3- / -
+:      else
+MONS:   orc warrior / centaur warrior / tengu warrior / orc knight / \
+        naga warrior / merfolk impaler
+MONS:   merfolk javelineer / deep elf knight / deep elf archer
+MONS:   stone giant / minotaur / fire giant / frost giant / orc warlord
+SUBST:  def = |*, g = *, h = %$, ij = -
+NSUBST: - = 3=1 / 3=1- / 2 / 3=2- / 333- / -
+:      end
+: elseif you.in_branch("Orc") then
+MONS:   orc warrior / centaur warrior / tengu warrior / orc knight
+MONS:   naga warrior / merfolk impaler / merfolk javelineer / \
+        deep elf knight / deep elf archer
+MONS:   minotaur / stone giant / orc warlord
+NSUBST: - = 2=1 / 4=1- / 12-- / 2 / 2=2- / 3- / -
+: elseif you.in_branch("Elf") then
+MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
+        merfolk impaler / merfolk javelineer / deep elf knight / \
+        deep elf archer
+MONS:   minotaur / stone giant / orc warlord
+MONS:   fire giant / frost giant / deep elf blademaster / \
+        deep elf master archer / titan
+SUBST:  defgh = |*, i = *%, j = %$..
+NSUBST: - = 3=1 / 4=1- / 2=2 / 2=2- / 2=3- / 3--- / -
+# Crypt
+: else
+MONS:   centaur warrior / tengu warrior / naga warrior / merfolk impaler / \
+        merfolk javelineer / deep elf knight / deep elf archer
+MONS:   minotaur / stone giant / orc warlord / fire giant / frost giant / \
+        deep elf blademaster / deep elf master archer
+MONS:   titan
+SUBST:  defgh = |*, i = *%, j = %$..
+NSUBST: - = 3=1 / 4=1- / 12-- / 2=2 / 2=2- / 3 / 3- / -
+: end
+: ghost_setup(_G)
+MAP
+ccccccccccc
+cGvvvvvvvGc
+c-igvOvhj-c
+c---edf---c
+c-vG---Gv-c
+c---------c
+c-vG---Gv-c
+c---------c
+cnnn===nnnc
+ ....@....
+ENDMAP
