@@ -22,7 +22,7 @@
 {{
 -- Set up the non-flaming edged weapon "left" by the ghost in
 -- gammafunk_ghost_hydra_chop.
-function init_hydra_weapons(e)
+function init_hydra_weapon(e)
     make_arte = crawl.one_chance_in(3)
 
     -- Basic set of egos with weights.
@@ -563,6 +563,7 @@ ENDMAP
 NAME:   gammafunk_ghost_hydra_chop
 DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
+: init_hydra_weapon(_G)
 KMONS:  O = player ghost
 {{
 -- Set up hydra monster entry with a range of possible extra heads based on
@@ -592,7 +593,6 @@ NSUBST:  ' = 2=|* / *% / %$-- / -, - = 1 / 2=1- / -
 : else
 NSUBST:  ' = 4=|* / -, - = 1 / 3=1- / -
 : end
-: init_hydra_weapons(_G)
 : ghost_vault_setup(_G)
 MAP
   ccccc
