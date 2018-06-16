@@ -1078,7 +1078,7 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
         case SPELL_SINGULARITY:
-        case SPELL_ORBAGEDDON:
+        case SPELL_ISKENDERUNS_UNDOING:
             return 6;
 
         case SPELL_SUMMON_DRAGON:

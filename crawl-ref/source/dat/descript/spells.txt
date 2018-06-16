@@ -977,7 +977,7 @@ Orb of Electricity spell
 Hurls a crackling orb of electrical energy, creating a huge explosion on
 impact. Its damage partially bypasses armour.
 %%%%
-Orbageddon spell
+Iskenderun's Undoing spell
 
 Fires Orbs of Destruction in all 8 directions. In addition to homing in on
 their target, they will explode (as per Iskenderun's Mystic Blast) when they

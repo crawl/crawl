@@ -1612,8 +1612,8 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_IOOD:
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
         
-    case SPELL_ORBAGEDDON:
-        return cast_orbageddon(&you, powc, &beam, fail);
+    case SPELL_ISKENDERUNS_UNDOING:
+        return cast_undoing(&you, powc, &beam, fail);
 
     // Clouds and explosions.
     case SPELL_POISONOUS_CLOUD:

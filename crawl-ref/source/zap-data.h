@@ -1321,7 +1321,7 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
 },
 
 {
-    ZAP_ORBAGEDDON_EXPLOSION,
+    ZAP_UNDOING_EXPLOSION,
     "orb of destruction",
     200,
     new calcdice_calculator<3, 24, 1, 3>,
