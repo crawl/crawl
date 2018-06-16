@@ -25,11 +25,11 @@ static const mutation_def mut_data[] =
 { MUT_PINCERS, 0, 1, mutflag::good, false,
   "pincers",
 
-  {"You have two beautiful pincers."},
+  {"You have pincers for hands."},
 
-  {"Apotheosis of the flesh."},
+  {"Your hands reach apotheosis of the flesh."},
 
-  {"The nadir of existence."},
+  {"Your hands dissolve to normality, the nadir of existence."},
 },
 
 { MUT_TOUGH_SKIN, 0, 3, mutflag::good, true,

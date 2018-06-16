@@ -1759,6 +1759,23 @@ Gnolls
   also have powerful noses adapted to the Dungeon's scents, allowing them to
   easily locate where treasures lay hidden.
 
+Hermit Crabs
+  Hermit Crabs are a sub-species of crab that have traded their evolutionary
+  trait of breathing exotic vapours for human-like intelligence. They explore
+  the world in the hopes of discovering stronger and fancier shells.
+
+  Hermit Crabs are poor fighters due to their oversized and unwieldly (but
+  marvelous) pincers. Instead, crab civilization leans towards studying the ways
+  of magic. In combination with always trading up for larger and heavier shells
+  throughout their youth, this has led to Hermit Crabs having strong defensive
+  aptitudes and the ability to cast many kinds of magic in even the heaviest of
+  armours.
+  
+  Hermit Crab society has taught its citizens that the form of the crab is the
+  pinnacle of evolution, and abandoning it should be looked upon in shame. As such,
+  the magic of Transmutation is often ignored for other pursuits, and their bodies
+  have learned to reject any mutation that would otherwise mar their perfect forms.
+
 The Undead
 ========================================
 

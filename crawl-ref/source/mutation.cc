@@ -1187,8 +1187,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Hermit Crabs are unable to gain body slot mutations.
-    if (you.species == SP_HERMIT_CRAB && (mutat == MUT_FANGS || mutat == MUT_BEAK || mutat == MUT_ANTENNAE || mutat == MUT_HORNS || mutat == MUT_HOOVES || mutat == MUT_TALONS || mutat == MUT_CLAWS))
+    // Hermit Crabs are unable to gain drastic body slot mutations or deformation.
+    if (you.species == SP_HERMIT_CRAB && (mutat == MUT_FANGS || 
+        mutat == MUT_BEAK || mutat == MUT_ANTENNAE || mutat == MUT_HORNS || 
+        mutat == MUT_HOOVES || mutat == MUT_TALONS || mutat == MUT_CLAWS ||
+        mutat == MUT_DEFORMED))
     {
         return true;
     }
