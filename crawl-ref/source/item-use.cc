@@ -1561,10 +1561,10 @@ static bool _swap_rings(int ring_slot)
         if (unwanted == EQ_NONE)
         {
             // do this here rather than in remove_ring so that the custom
-            // message is visible. TODO: show only worn rings
+            // message is visible.
             unwanted = prompt_invent_item(
                     "You're wearing all the rings you can. Remove which one?",
-                    MT_INVLIST, OBJ_JEWELLERY, OPER_REMOVE,
+                    MT_INVLIST, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
                     invprompt_flag::no_warning | invprompt_flag::hide_known);
         }
 
