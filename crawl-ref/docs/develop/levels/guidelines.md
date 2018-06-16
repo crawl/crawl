@@ -11,7 +11,7 @@ is neither to get a grip on most of D:1 nor to hand out starting gear.
 Playing Crawl a bit will show you a number of arrival vaults, which live in
 [crawl-ref/source/dat/des/arrival/](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/arrival)
 
-**We need more arrival vaults!**
+### We need more arrival vaults!
 
 We love new arrival vaults, and it is easy to make new ones. Coding abilities
 are not required. If you are completely new to making maps, have a look at
@@ -26,7 +26,7 @@ in
 [crawl-ref/source/dat/des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des)
 for what is going on. New maps are always welcome.
 
-**Some guidelines for arrival vault creators:**
+### Some guidelines for arrival vault creators
 
 * Try to come up with small maps.
 * Avoid placing guaranteed items.
@@ -38,11 +38,11 @@ for what is going on. New maps are always welcome.
   monsters in view of the player. Zero experience monsters like plants
   are exempt.
 
-**Naming conventions**
+### Naming conventions
 
 Entry vaults should be NAMEd as follows:
 
-    NAME:  nick_arrival_name
+``` NAME:  nick_arrival_name ```
 
 where "nick" is the name/nick of the vault designer and "name" is a somewhat
 descriptive label for the vault. Avoid numbers, please.
@@ -73,7 +73,7 @@ it may be interesting to created serial vaults around threats.
 
 In general, we don't want more than one serial vault on a level. Use the
 
-    TAGS: luniq_serial
+``` TAGS: luniq_serial ```
 
 in the serial vault's header map for this.
 
@@ -92,7 +92,7 @@ placement, you can:
 * Give them no `DEPTH` line when you have no preceding default-depth.
 * Explicitly remove them with an empty depth line like this:
 
-      DEPTH:
+``` DEPTH: ```
 
 ## Guidelines for creating ghost vaults
 
