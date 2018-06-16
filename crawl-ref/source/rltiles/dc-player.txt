@@ -28,6 +28,8 @@ frog_m BARACHI
 frog_f
 frog2_f
 frog2_m
+gnoll_f GNOLL
+gnoll_m
 gnome_f
 gnome_m
 halfling_m HALFLING
