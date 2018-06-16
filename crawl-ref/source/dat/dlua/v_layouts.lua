@@ -72,6 +72,7 @@ function vaults_default_options()
       -- be 0 since this generator is only chosen through a specific ghost
       -- chance roll.
       { generator = "tagged", tag = "vaults_ghost", weight = 0, max_rooms = 1 },
+      -- Remove the Forest and Blade entries when TAG_MAJOR_VERSION > 34
       { generator = "tagged", tag = "vaults_entry_forest", weight = (you.where() == dgn.level_name(dgn.br_entrance("Forest"))) and 25 or 0, max_rooms = 1 },
       { generator = "tagged", tag = "vaults_entry_blade", weight = (you.where() == dgn.level_name(dgn.br_entrance("Blade"))) and 25 or 0, max_rooms = 1 },
     },
