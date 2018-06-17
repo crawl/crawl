@@ -1299,6 +1299,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     const uint32_t seed = hash32(&mon.mname[0], mon.mname.size())
                         ^ hash32(&mon.i_ghost, sizeof(mon.i_ghost));
 
+    m_doll.parts[TILEP_PART_BASE] = TILEP_SHOW_EQUIP;
     tilep_race_default(mon.i_ghost.species, 0, &m_doll);
     tilep_job_default(mon.i_ghost.job, &m_doll);
 
