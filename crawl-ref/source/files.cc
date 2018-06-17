@@ -1914,22 +1914,17 @@ bool define_ghost_from_bones(monster& mons)
     int place_i = random2(loaded_ghosts.size());
     _ghost_dprf("Loaded ghost file with %u ghost(s), placing %s",
          (unsigned int)loaded_ghosts.size(), loaded_ghosts[place_i].name.c_str());
-    bool  ghost_errors    = false;
 
     mons.set_ghost(loaded_ghosts[place_i]);
     mons.type = MONS_PLAYER_GHOST;
     mons.ghost_init(false);
 
     if (!mons.alive())
-    {
         mprf(MSGCH_ERROR, "Placed ghost is not alive.");
-        ghost_errors = true;
-    }
     else if (mons.type != MONS_PLAYER_GHOST)
     {
         mprf(MSGCH_ERROR, "Placed ghost is not MONS_PLAYER_GHOST, but %s",
              mons.name(DESC_PLAIN, true).c_str());
-        ghost_errors = true;
     }
 
     if (!used_permastore)
