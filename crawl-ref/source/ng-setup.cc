@@ -279,7 +279,6 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     {
     case UNRAND_PONDERING:
     case UNRAND_MAJIN:
-    case UNRAND_WUCAD_MU:
     case UNRAND_ETHERIC_CAGE:
         return SK_SPELLCASTING;
     case UNRAND_DRAGONMASK:
@@ -300,6 +299,7 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
         return SK_STEALTH;
     case UNRAND_ELEMENTAL_STAFF:
     case UNRAND_OLGREB:
+    case UNRAND_WUCAD_MU:
         return SK_EVOCATIONS;
     case UNRAND_FISTS_OF_THUNDER:
         return SK_UNARMED_COMBAT;
