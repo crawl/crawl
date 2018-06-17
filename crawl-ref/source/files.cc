@@ -2513,7 +2513,7 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts)
     vector<ghost_demon> permastore = _load_permastore_ghosts();
 
     bool rewrite = false;
-    int i = 0;
+    unsigned int i = 0;
     while (permastore.size() < GHOST_PERMASTORE_SIZE && i < ghosts.size())
     {
         // TODO: heuristics to make this as distinct as possible; maybe
