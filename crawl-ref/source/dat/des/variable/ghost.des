@@ -672,3 +672,107 @@ c---------c
 cnnn===nnnc
  ....@....
 ENDMAP
+
+NAME:   muffindrake_ghost_dualentry
+DEPTH:  D:10-, Depths
+ORIENT: float
+KMONS:  O = player_ghost
+: if you.in_branch("D") then
+MONS:   skeletal warrior / vampire
+MONS:   wraith / random simulacrum
+MONS:   necromancer
+MONS:   lich
+: else
+MONS:   vampire knight / vampire mage
+MONS:   flayed ghost / juggernaut simulacrum
+MONS:   deep elf death mage
+MONS:   ancient lich
+: end
+TILE:   G = dngn_gravestone
+TILE:   t = dngn_tree_dead
+FTILE:  OG-81$*| = floor_pebble_darkgray
+: set_feature_name("granite_statue", "a gravestone")
+: ghost_setup(_G)
+MAP
+  cccc ccc
+  c|-c c-cc
+  c-$ccc-*ccc
+  c-$cGc$$-*c
+  cc2cOc1cc$c
+  cG1G4G2Gc-c
+ cc---9-----c
+ ct8-ncn-8--c
+cc1-nn.nn-t-c
+c---n...n-3-c
+c-t-n.T.nt-cc
+cc--c...c--c
+ c=cc...cc=c
+  @... ...@
+ENDMAP
+
+NAME:   muffindrake_ghost_three_little_ghosts
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player_ghost
+KMONS:  I = iron dragon
+KMONS:  J = iron giant
+KMONS:  K = iron troll
+KMONS:  D = golden dragon
+KMONS:  E = stone giant
+KMONS:  F = deep troll earth mage
+KMONS:  T = deep troll
+: ghost_setup(_G)
+MAP
+vvvvvvv
+v.$.|.v
+v..K..v
+v.IOJ.v
+v.....v
+v.....v
+vvn=nvv
+ n...n
+ccc+ccc
+c.$.*.c
+c..F..c
+c.DOE.c
+c.....c
+c.....c
+ccn=ncc
+ n...n
+xxx+xxx
+x...$.x
+x..T..x
+x..O..x
+x.....x
+x.....x
+xxm=mxx
+  .@.
+ENDMAP
+
+NAME:   muffindrake_ghost_deadmansdrink
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player_ghost
+KMONS:  P = col:brown fungus
+KMONS:  D = titan zombie
+KMONS:  E = juggernaut zombie
+KMONS:  F = stone giant zombie
+: dgn.delayed_decay(_G, "G", "felid corpse")
+: ghost_setup(_G)
+MAP
+ccccccc
+c..+*Tc
+cT.xxxc
+c..+ETccccccccc
+cT.xxxc|$$....c
+c..+ETc*$$....c
+c+cccccvvvccc+c
+c....GvTO...+.c
+c.....PPPPPPP.c
+cEP.G......D..c
+c.PF.F...D....c
+cDP..PD.EP.FP.c
+c.F....G....F.c
+ccncccn=ncccncc
+ ......@.G....
+ENDMAP
