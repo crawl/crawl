@@ -3608,7 +3608,7 @@ DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.branch() == "Depths" then
-MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
+MONS: shadow fiend, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
 MONS: death knight / w:5 wraith / w:1 freezing wraith / w:4 skeletal warrior
@@ -5768,7 +5768,7 @@ KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
 : elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / \
+KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / \
             w:5 hell sentinel / iron dragon / tormentor / iron golem / \
             place:Dis
 SUBST:  *% = .
@@ -5777,7 +5777,7 @@ KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / place:Geh
 SUBST:  *% = .
 : elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / \
+KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / \
             lich / ancient lich / w:15 place:Tar
 SUBST:  *% = .
 : elseif you.in_branch("Coc") then
@@ -8942,7 +8942,7 @@ NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
 KMONS: 2 = greater demon / nonbase demonspawn
-KMONS: 3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
+KMONS: 3 = executioner / brimstone fiend / ice fiend / shadow fiend \
            / hell sentinel
 SUBST: 8 = 39, 9 = 02, H = K
 :   elseif you.in_branch("Zot") then

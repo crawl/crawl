@@ -3008,7 +3008,7 @@ monster_type random_demon_by_tier(int tier)
     case 1:
         return random_choose(MONS_BRIMSTONE_FIEND,
                              MONS_ICE_FIEND,
-                             MONS_TZITZIMITL,
+                             MONS_SHADOW_FIEND,
                              MONS_HELL_SENTINEL,
                              MONS_EXECUTIONER);
     default:

@@ -358,7 +358,7 @@ function sroom_demon_pit(e)
         tier_twos[mon] = 0
     end
 
-    lord_mon = "brimstone fiend / ice fiend / tzitzimitl / " ..
+    lord_mon = "brimstone fiend / ice fiend / shadow fiend / " ..
                "hell sentinel / nonbase demonspawn w:20"
 
     fill_special_room(e, mons, lord_mon, true)

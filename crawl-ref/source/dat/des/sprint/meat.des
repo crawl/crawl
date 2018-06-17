@@ -130,7 +130,7 @@
     ". large shield plus:12 not_cursed ego:none " ..
     "ident:all no_pickup"
 
-  -- Meatlord shadow creatures will be tzitzimimeh
+  -- Meatlord shadow creatures will be shadow fiends
   local meatlord =
     "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta " ..
     "generate_awake never_corpse " ..
@@ -273,7 +273,7 @@
     dgn.create_monster(43, 63, phase)
 
     if you.turns() < 230 then
-    dgn.set_random_mon_list("tzitzimitl / nothing")
+    dgn.set_random_mon_list("shadow fiend / nothing")
     else
     dgn.set_random_mon_list("starcursed mass")
     end

@@ -1530,7 +1530,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_TZITZIMITL,
+    {  MST_SHADOW_FIEND,
       {
        { SPELL_BOLT_OF_COLD, 15, MON_SPELL_MAGICAL },
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_MAGICAL },

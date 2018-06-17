@@ -898,7 +898,7 @@ static const pop_entry pop_pan[] =
   {  1,  1,  335, FLAT, MONS_BRIMSTONE_FIEND },
   {  1,  1,  335, FLAT, MONS_ICE_FIEND },
   {  1,  1,  335, FLAT, MONS_HELL_SENTINEL },
-  {  1,  1,  335, FLAT, MONS_TZITZIMITL },
+  {  1,  1,  335, FLAT, MONS_SHADOW_FIEND },
   {  1,  1,    8, FLAT, MONS_PROFANE_SERVITOR },
   {  1,  1,  250, FLAT, MONS_MONSTROUS_DEMONSPAWN },
   {  1,  1,  250, FLAT, MONS_GELID_DEMONSPAWN },

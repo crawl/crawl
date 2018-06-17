@@ -476,7 +476,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / wind drake /\
                     air elemental / ball lightning / storm dragon",
-                "tzitzimitl / reaper / shadow dragon / death drake /\
+                "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
                     death knight w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / apis",
@@ -549,7 +549,7 @@ function arena_sprint_get_monster_set(round, boss)
                     white draconian",
                 "spriggan air mage / titan / electric golem / ball lightning /\
                     storm dragon",
-                "tzitzimitl / reaper / shadow dragon / death drake /\
+                "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon w:20 / ophan / apis",
@@ -581,7 +581,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "greater mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
-                "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
+                "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
@@ -619,7 +619,7 @@ function arena_sprint_get_monster_set(round, boss)
                     white draconian annihilator",
                 "spriggan air mage / titan / electric golem w:20 /\
                     storm dragon",
-                "tzitzimitl / reaper / shadow dragon / death drake /\
+                "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5",
                 "daeva w:20 / angel / cherub / pearl dragon w:20 / ophan / apis",
@@ -650,7 +650,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "greater mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
-                "brimstone fiend / ice fiend / tzitzimitl w:5 / hell sentinel",
+                "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice / " ..

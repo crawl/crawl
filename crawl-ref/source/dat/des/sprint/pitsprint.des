@@ -91,10 +91,10 @@ function base_monster_setup(e)
            deep elf master archer / blizzard demon / executioner /\
            green death / hellion / tormentor / iron elemental w:3 /\
            death drake w:2 / hell sentinel w:2 / brimstone fiend w:2 /\
-           ice fiend w:2 / tzitzimitl w:2 / moth of wrath w:5 /\
+           ice fiend w:2 / shadow fiend w:2 / moth of wrath w:5 /\
            balrug band w:5")
   e.kmons("F = orb of fire / electric golem / ancient lich / greater mummy /\
-           hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
+           hell sentinel / brimstone fiend / ice fiend / shadow fiend /\
            pandemonium lord w:20 / pearl dragon / titan")
   e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
            ball python /\
@@ -139,7 +139,7 @@ function base_monster_setup(e)
            balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater /\
            lorocyproca")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
-           lorocyproca / brimstone fiend / ice fiend / tzitzimitl /\
+           lorocyproca / brimstone fiend / ice fiend / shadow fiend /\
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            death ooze / azure jelly / acid blob /\

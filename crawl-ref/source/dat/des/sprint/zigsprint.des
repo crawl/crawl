@@ -482,7 +482,7 @@ local rnd = crawl.random2(142)
 -- Tartarus
   elseif rnd < 67 then
     e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:5 /\
-                 tzitzimitl w:1 / spectral thing place:Tar:$ / ghoul w:5")
+                 shadow fiend w:1 / spectral thing place:Tar:$ / ghoul w:5")
 -- Dis
   elseif rnd < 72 then
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")

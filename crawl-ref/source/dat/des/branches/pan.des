@@ -2841,7 +2841,7 @@ MONS:    rakshasa, corrupter, blood saint
 MONS:    dancing weapon ; demon trident good_item ego:distortion
 MONS:    dancing weapon ; lajatang good_item ego:distortion
 MONS:    dancing weapon ; demon blade good_item ego:distortion
-MONS:    brimstone fiend / ice fiend / tzitzimitl / hell sentinel
+MONS:    brimstone fiend / ice fiend / shadow fiend / hell sentinel
 KMONS:   p = demonic plant
 KMONS:   P = pandemonium lord
 ITEM:    any potion

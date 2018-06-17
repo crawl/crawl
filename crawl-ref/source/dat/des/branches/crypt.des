@@ -656,7 +656,7 @@ ENDMAP
 NAME:    minmay_shadows
 ORIENT:  northwest
 DEPTH:   Crypt, Tar
-MONS:    shadow, soul eater, tzitzimitl
+MONS:    shadow, soul eater, shadow fiend
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then

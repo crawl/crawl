@@ -335,7 +335,7 @@ mset(with_props(spec_fn(function ()
   local g = 0 + you.zigs_completed()
   return "place:Tar:$ w:" .. d .. " / shadow demon w:" .. e .. " / " ..
          "curse toe w:" .. e .. " / reaper w:" .. f + 15 .. " / " ..
-         "tzitzimitl w:" .. f .. " / silent spectre w:" .. g
+         "shadow fiend w:" .. f .. " / silent spectre w:" .. g
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -385,7 +385,7 @@ mset(with_props(spec_fn(function ()
          "soul eater w:" .. d .. " / death knight w:" .. d - 10 .. " / " ..
          "shadow dragon w:" .. e .. " / revenant w:" .. e - 10 .. " / " ..
          "black sun w:" .. e .. " / profane servitor w:" .. e - 10 .. " / " ..
-         "tzitzimitl w:" .. f
+         "shadow fiend w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()

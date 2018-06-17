@@ -1284,12 +1284,12 @@ MONS:   w:4 soul eater / w:1 reaper, reaper, reaper / nothing
 MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer w:15 / w:5 deep elf death mage, lich, \
         lich / deep elf death mage / nothing
-MONS:   soul eater / w:5 reaper, reaper, tzitzimitl / w:5 reaper
+MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
 : else
 MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / deep elf death mage, \
         w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich
-MONS:   reaper / soul eater, reaper, tzitzimitl
+MONS:   reaper / soul eater, reaper, shadow fiend
 : end
 MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
@@ -2139,7 +2139,7 @@ MONS:    shadow, boggart, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon
 KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
 KMONS:   8 = bone dragon / reaper / doom hound
-KMONS:   _ = tzitzimitl
+KMONS:   _ = shadow fiend
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, boots_of_the_assassin
 ITEM:    shadow dragon scales randart, ring of stealth randart

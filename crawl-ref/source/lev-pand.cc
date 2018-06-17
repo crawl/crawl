@@ -84,7 +84,7 @@ void init_pandemonium()
         env.mons_alloc[7 + random2(3)] = MONS_ICE_FIEND;
 
     if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_TZITZIMITL;
+        env.mons_alloc[7 + random2(3)] = MONS_SHADOW_FIEND;
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;

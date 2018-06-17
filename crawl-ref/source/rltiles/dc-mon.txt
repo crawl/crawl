@@ -294,7 +294,7 @@ brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
-tzitzimitl MONS_TZITZIMITL
+shadow_fiend MONS_SHADOW_FIEND
 orb_demon MONS_ORB_DEMON
 %sdir mon/unique
 ignacio MONS_IGNACIO

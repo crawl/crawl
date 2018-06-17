@@ -5565,7 +5565,7 @@ COLOUR:  F = lightblue
 : elseif you.in_branch("Tar") then
 KMONS:   9 = soul eater / shadow demon / vampire mage / flayed ghost
 KMONS:   8 = tormentor / revenant / mummy priest
-KMONS:   7 = tzitzimitl
+KMONS:   7 = shadow fiend
 MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -6553,13 +6553,13 @@ KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer
 KMONS:  8 = bone dragon / lich / ancient lich / vampire knight / w:5 revenant / \
             ancient champion / w:5 eidolon / w:20 reaper / soul eater / w:30 place:Crypt:$
 : elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
+KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
             iron dragon / tormentor / iron golem / place:Dis
 : elseif you.in_branch("Geh") then
 KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / place:Geh
 : elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / lich / \
+KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
             ancient lich / w:5 revenant / w:15 place:Tar
 : elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \

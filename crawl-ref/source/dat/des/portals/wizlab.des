@@ -785,7 +785,7 @@ KMONS:      0% = smoke demon / ynoxinul / neqoxec w:6 / ice devil /\
                  chaos spawn / soul eater / sun demon
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
                 blizzard demon / green death / balrug / cacodemon
-KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
+KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
                 ice fiend / executioner
 :           set_random_mon_list(
 :               "smoke demon / ynoxinul / neqoxec / " ..
