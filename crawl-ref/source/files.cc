@@ -935,7 +935,7 @@ static void _grab_followers()
     monster* dowan = nullptr;
     monster* duvessa = nullptr;
 
-    // Handle nearby ghosts.
+    // Handle some hacky cases
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monster* fol = monster_at(*ai);
@@ -955,14 +955,6 @@ static void _grab_followers()
             // must have been a summon
             if (mons_class_can_use_stairs(fol->type))
                 non_stair_using_summons++;
-        }
-
-        if (fol->type == MONS_PLAYER_GHOST
-            && fol->hit_points < fol->max_hit_points / 2)
-        {
-            if (fol->visible_to(&you))
-                mpr("The ghost fades into the shadows.");
-            monster_teleport(fol, true);
         }
     }
 
