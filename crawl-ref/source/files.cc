@@ -1724,22 +1724,8 @@ void save_game_state()
 
 static string _make_ghost_filename(bool store=false)
 {
-    // Only use level-numbered bones files for places where players die a lot.
-    // For the permastore, go even coarser (just D and Lair use level numbers).
-    // n.b. some branches here may not currently generate ghosts.
-    // TODO: further adjustments? Make Zot coarser?
-    const bool with_number = store ? player_in_branch(BRANCH_DUNGEON) ||
-                                     player_in_branch(BRANCH_LAIR)
-                                   : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                                       player_in_branch(BRANCH_CRYPT) ||
-                                       player_in_branch(BRANCH_TOMB) ||
-                                       player_in_branch(BRANCH_ABYSS) ||
-                                       player_in_branch(BRANCH_SLIME));
-    // Players die so rarely in hell in practice that it doesn't even make
-    // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell() ? "Hells" :
-        replace_all(level_id::current().describe(false, with_number), ":", "-");
-    return string("bones.") + (store ? "store." : "") + level_desc;
+    return string("bones.") + (store ? "store." : "")
+           + replace_all(level_id::current().describe(), ":", "-");
 }
 
 static string _bones_permastore_file()
@@ -1914,17 +1900,22 @@ bool define_ghost_from_bones(monster& mons)
     int place_i = random2(loaded_ghosts.size());
     _ghost_dprf("Loaded ghost file with %u ghost(s), placing %s",
          (unsigned int)loaded_ghosts.size(), loaded_ghosts[place_i].name.c_str());
+    bool  ghost_errors    = false;
 
     mons.set_ghost(loaded_ghosts[place_i]);
     mons.type = MONS_PLAYER_GHOST;
     mons.ghost_init(false);
 
     if (!mons.alive())
+    {
         mprf(MSGCH_ERROR, "Placed ghost is not alive.");
+        ghost_errors = true;
+    }
     else if (mons.type != MONS_PLAYER_GHOST)
     {
         mprf(MSGCH_ERROR, "Placed ghost is not MONS_PLAYER_GHOST, but %s",
              mons.name(DESC_PLAIN, true).c_str());
+        ghost_errors = true;
     }
 
     if (!used_permastore)
@@ -2513,7 +2504,7 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts)
     vector<ghost_demon> permastore = _load_permastore_ghosts();
 
     bool rewrite = false;
-    unsigned int i = 0;
+    int i = 0;
     while (permastore.size() < GHOST_PERMASTORE_SIZE && i < ghosts.size())
     {
         // TODO: heuristics to make this as distinct as possible; maybe
