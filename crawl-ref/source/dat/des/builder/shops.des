@@ -437,9 +437,9 @@ KMONS: s = naga w:50 / naga warrior
 : else
 KMONS: s = centaur w:50 / centaur warrior
 : end
-KFEAT: s = armour shop type:Specialty suffix:Armours count:6 use_all ; \
-   naga barding | naga barding | naga barding good_item | \
-   centaur barding | centaur barding | centaur barding good_item
+KFEAT: s = armour shop type:Specialty suffix:Armours count:4 use_all ; \
+   barding | barding good_item | \
+   barding | barding good_item
 MAP
 .......
 ..xxx..

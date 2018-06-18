@@ -137,13 +137,16 @@ static const armour_def Armour_prop[] =
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   45,
         EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true },
+#if TAG_MAJOR_VERSION == 34
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
     { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -60,  230,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
     { ARM_NAGA_BARDING,         "naga barding",           4,  -60,  230,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
-
+#endif
+    { ARM_BARDING,              "barding",                4,  -60,  230,
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_BUCKLER,              "buckler",                3,  -8,   45,
@@ -1376,8 +1379,11 @@ int armour_max_enchant(const item_def &item)
 
     int max_plus = MAX_SEC_ENCHANT;
     if (eq_slot == EQ_BODY_ARMOUR
+#if TAG_MAJOR_VERSION == 34
         || item.sub_type == ARM_CENTAUR_BARDING
-        || item.sub_type == ARM_NAGA_BARDING)
+        || item.sub_type == ARM_NAGA_BARDING
+#endif
+        || item.sub_type == ARM_BARDING)
     {
         max_plus = property(item, PARM_AC);
     }

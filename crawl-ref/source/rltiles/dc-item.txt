@@ -406,6 +406,7 @@ scarf2_3
 scarf3
 
 %sdir item/armour/bardings
+# Remove variations on bardings when TAG_MAJOR_VERSION > 34
 naga_barding_blue ARM_NAGA_BARDING
 naga_barding_metal
 naga_barding_magenta
@@ -414,6 +415,13 @@ centaur_barding_blue ARM_CENTAUR_BARDING
 centaur_barding_metal
 centaur_barding_magenta
 centaur_barding_red
+# End of remove when TAG_MAJOR_VERSION incremented
+
+centaur_barding_blue ARM_BARDING
+centaur_barding_metal
+centaur_barding_magenta
+centaur_barding_red
+
 
 %sdir item/armour/shields
 %rim 0

@@ -91,6 +91,10 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
+barding
+
+A special armour made for centaurs and nagas, to wear over their lower halves.
+%%%%
 battleaxe
 
 A large war axe with a formidable double-sided head.
