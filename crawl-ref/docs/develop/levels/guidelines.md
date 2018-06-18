@@ -2,6 +2,7 @@
 
 1. [Guidelines for D:1 arrival vaults](#guidelines-for-d1-arrival-vaults)
 2. [Guidelines for creating serial vaults](#guidelines-for-creating-serial-vaults)
+3. [Guidelines for creating ghost vaults](#guidelines-for-creating-ghost-vaults)
 
 ## Guidelines for D:1 arrival vaults
 
@@ -92,3 +93,30 @@ placement, you can:
 * Explicitly remove them with an empty depth line like this:
 
       DEPTH:
+
+## Guidelines for creating ghost vaults
+
+### Basic guidelines
+
+Ghost vaults should always be sealed. This means one of: runed doors,
+transporters, or perhaps diggable walls. They should also have the features
+`no_tele_into` and `no_trap_gen`. While placing some decent items (especially
+for deeper ghost vaults) can be a good idea, exercise restraint. In general,
+it should be apparent from the outside that the vault *is* a ghost vault, and
+ideally the ghost should be visible so that the player can xv it.
+
+### Distribution
+
+Outside of vaults, ghost vault distribution should usually be determined by a
+(relatively low) CHANCE setting rather than a weight. This means they should
+have the feature `chance_player_ghost`, so that the chance of player ghost
+vaults is specified as a group. Ghost vaults should also typically have the
+`luniq_player_ghost` tag, and the `allow_dup` tag.
+
+Within vaults, CHANCE can't be used, so you will need to use a WEIGHT tag,
+probably hand-adjusting it using mapstat to get a targeted percentage for the
+vault layout type.
+
+To summarize, for a non-vaults map, here is a typical TAGS value:
+
+    TAGS:   player_ghost luniq_player_ghost chance_player_ghost no_tele_into no_trap_gen allow_dup
