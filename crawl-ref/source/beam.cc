@@ -3344,7 +3344,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_PARALYSIS:
-        you.paralyse(agent(), 2 + random2(6));
+        you.paralyse(agent(), 2 + random2(3));
         obvious_effect = true;
         break;
 
