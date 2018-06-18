@@ -673,13 +673,14 @@ cnnn===nnnc
  ....@....
 ENDMAP
 
-NAME:   muffindrake_ghost_dualentry
+NAME:   muffindrake_ghost_dual_entry
 DEPTH:  D:10-, Depths
+WEIGHT: 5 (D:10-11)
 ORIENT: float
 KMONS:  O = player_ghost
 : if you.in_branch("D") then
 MONS:   skeletal warrior / vampire
-MONS:   wraith / random simulacrum
+MONS:   wraith / simulacrum place:D:15
 MONS:   necromancer
 MONS:   lich
 : else
@@ -688,25 +689,27 @@ MONS:   flayed ghost / juggernaut simulacrum
 MONS:   deep elf death mage
 MONS:   ancient lich
 : end
+NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / 3 / -
 TILE:   G = dngn_gravestone
 TILE:   t = dngn_tree_dead
-FTILE:  OG-81$*| = floor_pebble_darkgray
+FTILE:  GtO123498$*|- = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 : ghost_setup(_G)
 MAP
-  cccc ccc
-  c|-c c-cc
-  c-$ccc-*ccc
-  c-$cGc$$-*c
-  cc2cOc1cc$c
-  cG1G4G2Gc-c
+     .@.
+  cccc.ccc
+  c|-n.n-cc
+  c-$nnn-*ccc
+  c-|cGc$$-*c
+  cc-cOc-cc$c
+  cG-G4G-Gc-c
  cc---9-----c
- ct8-ncn-8--c
-cc1-nn.nn-t-c
-c---n...n-3-c
+ ct8-nnn-8--c
+cc--nn.nn-t-c
+c---n...n---c
 c-t-n.T.nt-cc
 cc--c...c--c
- c=cc...cc=c
+ c=cc. .cc=c
   @... ...@
 ENDMAP
 
