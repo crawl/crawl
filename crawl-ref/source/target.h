@@ -33,6 +33,7 @@ public:
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
     virtual bool can_affect_outside_range();
+    virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
@@ -58,9 +59,9 @@ protected:
     void set_explosion_aim(bolt tempbeam);
     void set_explosion_target(bolt &tempbeam);
     int min_expl_rad, max_expl_rad;
+    int range;
 private:
     bool penetrates_targets;
-    int range;
     explosion_map exp_map_min, exp_map_max;
 };
 
@@ -99,6 +100,7 @@ public:
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
     virtual bool can_affect_outside_range() override;
+    bool can_affect_walls() override;
     aff_type is_affected(coord_def loc) override;
 protected:
     // assumes exp_map is valid only if >0, so let's keep it private
@@ -309,4 +311,15 @@ public:
 
 private:
     unique_ptr<passwall_path> cur_path;
+};
+
+class targeter_dig : public targeter_beam
+{
+public:
+    targeter_dig(int max_range);
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+    bool can_affect_unseen() override;
+    bool can_affect_walls() override;
+    bool affects_monster(const monster_info& mon) override;
 };

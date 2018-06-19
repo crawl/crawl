@@ -907,7 +907,7 @@ void bolt::affect_wall()
 {
     if (is_tracer)
     {
-        if (!can_affect_wall(pos()))
+        if (!in_bounds(pos()) || !can_affect_wall(pos(), true))
             finish_beam();
 
         // potentially warn about offending your god by burning trees
@@ -1173,7 +1173,9 @@ void bolt::do_fire()
             // Well, we warned them.
         }
 
-        if (feat_is_solid(feat) && !can_affect_wall(pos()))
+        // digging is taken care of in affect_cell
+        if (feat_is_solid(feat) && !can_affect_wall(pos())
+                                                    && flavour != BEAM_DIGGING)
         {
             if (is_bouncy(feat))
             {
@@ -1221,8 +1223,9 @@ void bolt::do_fire()
         // through find_ray and setup_retrace, but they didn't
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
+        // Dig tracers continue through unseen cells.
         ASSERT(!cell_is_solid(pos())
-               || is_tracer && can_affect_wall(pos())
+               || is_tracer && can_affect_wall(pos(), true)
                || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
@@ -2500,7 +2503,9 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return is_explosion || is_big_cloud() || aimed_at_spot;
+    // the pos check is to avoid a ray.cc assert for a ray that goes nowhere
+    return is_explosion || is_big_cloud() ||
+            (aimed_at_spot && (pos() == source || flavour != BEAM_DIGGING));
 }
 
 void bolt::drop_object()
@@ -2624,9 +2629,16 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_INNER_FLAME;
 }
 
-bool bolt::can_affect_wall(const coord_def& p) const
+bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
 {
     dungeon_feature_type wall = grd(p);
+
+    // digging might affect unseen squares, as far as the player knows
+    if (map_knowledge && flavour == BEAM_DIGGING &&
+                                        !env.map_knowledge(pos()).seen())
+    {
+        return true;
+    }
 
     // Temporary trees (from Summon Forest) can't be burned/distintegrated.
     if (feat_is_tree(wall) && is_temp_terrain(p))
@@ -6015,7 +6027,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         if (stop_at_walls && !(delta.origin() && can_affect_wall(loc)))
             return;
         // But remember that we are at a wall.
-        at_wall = true;
+        if (flavour != BEAM_DIGGING)
+            at_wall = true;
     }
 
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
