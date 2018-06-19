@@ -5202,7 +5202,8 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_HUMAN
              || (!caller && targ.friendly())
-             || (caller && !mons_aligned(&targ, caller->as_monster())))
+             || (caller && !mons_aligned(&targ, caller->as_monster()))
+             || targ.type == MONS_PLAYER_GHOST)
     {
         return false;
     }
