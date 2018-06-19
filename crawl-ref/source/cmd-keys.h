@@ -337,6 +337,7 @@
 
 #ifdef WIZARD
 {'T', CMD_MAP_WIZARD_TELEPORT},
+{CONTROL('X'), CMD_MAP_WIZARD_FORGET},
 #endif
 
 #ifdef USE_TILE
