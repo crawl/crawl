@@ -18,7 +18,10 @@ import userdb
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
-        if self.request.protocol == "https":
+        proto = self.request.headers.get_list('x-forwarded-proto')
+        if len(proto) > 0 : proto = proto[0]
+        else: proto = None
+        if self.request.protocol == "https" or proto == "https":
             protocol = "wss://"
         else:
             protocol = "ws://"
