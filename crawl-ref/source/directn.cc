@@ -427,7 +427,7 @@ void direction_chooser::describe_cell() const
             print_items_description();
         if (just_looking || show_floor_desc)
         {
-            print_floor_description(true);
+            print_floor_description(show_boring_feats);
             if (!did_cloud)
                 _print_cloud_desc(target());
         }
@@ -512,6 +512,7 @@ direction_chooser::direction_chooser(dist& moves_,
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
     show_floor_desc(args.show_floor_desc),
+    show_boring_feats(args.show_boring_feats),
     hitfunc(args.hitfunc),
     default_place(args.default_place),
     unrestricted(args.unrestricted),
@@ -1539,11 +1540,12 @@ void direction_chooser::print_floor_description(bool boring_too) const
 
 #ifdef DEBUG_DIAGNOSTICS
     // [ds] Be more verbose in debug mode.
-    _debug_describe_feature_at(target());
-#else
+    if (you.wizard)
+        _debug_describe_feature_at(target());
+    else
+#endif
     mprf(MSGCH_EXAMINE_FILTER, "%s",
          feature_description_at(target(), true).c_str());
-#endif
 }
 
 void direction_chooser::reinitialize_move_flags()

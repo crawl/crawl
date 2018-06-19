@@ -8,6 +8,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
@@ -19,6 +20,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "spl-other.h"
+#include "stringutil.h"
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -33,8 +35,11 @@ static string _wallmsg(coord_def c)
 bool targeter::set_aim(coord_def a)
 {
     // This matches a condition in direction_chooser::move_is_ok().
-    if (agent && !cell_see_cell(agent->pos(), a, LOS_NO_TRANS))
+    if (agent && !can_affect_unseen() &&
+            !cell_see_cell(agent->pos(), a, LOS_NO_TRANS))
+    {
         return false;
+    }
 
     aim = a;
     return true;
@@ -46,6 +51,11 @@ bool targeter::can_affect_outside_range()
 }
 
 bool targeter::can_affect_unseen()
+{
+    return false;
+}
+
+bool targeter::can_affect_walls()
 {
     return false;
 }
@@ -143,7 +153,8 @@ void targeter_beam::set_explosion_target(bolt &tempbeam)
 
 bool targeter_beam::valid_aim(coord_def a)
 {
-    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    if (a != origin && !can_affect_unseen() &&
+            !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
         if (agent->see_cell(a))
             return notify_fail("There's something in the way.");
@@ -445,6 +456,11 @@ bool targeter_smite::can_affect_outside_range()
     return exp_range_max > 0;
 }
 
+bool targeter_smite::can_affect_walls()
+{
+    return affects_walls;
+}
+
 aff_type targeter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
@@ -542,6 +558,79 @@ bool targeter_passwall::can_affect_unseen()
 bool targeter_passwall::affects_monster(const monster_info& mon)
 {
     return false;
+}
+
+targeter_dig::targeter_dig(int max_range) :
+    targeter_beam(&you, max_range, ZAP_DIG, 0, 0, 0)
+{
+}
+
+bool targeter_dig::valid_aim(coord_def a)
+{
+    if (a == origin)
+        return notify_fail("Please select a direction to dig.");
+    if ((origin - a).rdist() > range || !in_bounds(a))
+        return notify_fail("Out of range.");
+    // TODO: calling set_aim here is really inefficient
+    if (!set_aim(a))
+        return false;
+    int possible_squares_affected = 0;
+    for (auto p : path_taken)
+        if (beam.can_affect_wall(p) ||
+                in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
+        {
+            possible_squares_affected++;
+        }
+    if (possible_squares_affected == 0)
+        return notify_fail("Digging in that direction won't affect any walls.");
+    return true;
+}
+
+bool targeter_dig::can_affect_unseen()
+{
+    return true;
+}
+
+bool targeter_dig::affects_monster(const monster_info& mon)
+{
+    return false;
+}
+
+bool targeter_dig::can_affect_walls()
+{
+    return true;
+}
+
+aff_type targeter_dig::is_affected(coord_def loc)
+{
+    coord_def c;
+    aff_type current = AFF_YES;
+    bool hit_barrier = false;
+    for (auto pc : path_taken)
+    {
+        if (hit_barrier)
+            return AFF_NO; // some previous iteration hit a barrier
+        current = AFF_YES;
+        // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
+        // mapping etc. TODO: console tracers use the same symbol/color as
+        // mmapped walls.
+        if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
+        {
+            if (!cell_is_solid(pc))
+                current = AFF_TRACER;
+            else if (!beam.can_affect_wall(pc))
+            {
+                current = AFF_TRACER; // show tracer at the barrier cell
+                hit_barrier = true;
+            }
+            // otherwise, default to AFF_YES
+        }
+        // unseen squares default to AFF_YES
+        if (pc == loc)
+            return current;
+    }
+    // path never intersected loc at all
+    return AFF_NO;
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :

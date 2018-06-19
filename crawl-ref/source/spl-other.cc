@@ -324,7 +324,7 @@ bool passwall_path::is_valid(string *fail_msg) const
     if (actual_walls() == 0)
     {
         if (fail_msg)
-            *fail_msg = "That's not a passable wall.";
+            *fail_msg = "There is no adjacent passable wall in that direction.";
         return false;
     }
     if (!dest_found)
@@ -352,6 +352,8 @@ bool passwall_path::is_valid(string *fail_msg) const
 /// find possible destinations, given the player's map knowledge
 vector <coord_def> passwall_path::possible_dests() const
 {
+    // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
+    // mapping etc
     vector<coord_def> dests;
     for (auto p : path)
         if (!in_bounds(p) ||

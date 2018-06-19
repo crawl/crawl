@@ -1208,7 +1208,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
 
     case SPELL_PASSWALL:
         return make_unique<targeter_passwall>(range);
-
+    case SPELL_DIG:
+        return make_unique<targeter_dig>(range);
     default:
         break;
     }
@@ -1388,6 +1389,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         args.needs_path = needs_path;
         args.target_prefix = prompt;
         args.top_prompt = title;
+        if (hitfunc && hitfunc->can_affect_walls())
+        {
+            args.show_floor_desc = true;
+            args.show_boring_feats = false; // don't show "The floor."
+        }
         if (testbits(flags, SPFLAG_NOT_SELF))
             args.self = CONFIRM_CANCEL;
         else
