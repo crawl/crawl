@@ -271,9 +271,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
         var contents = $(menu.scroller.scrollElement);
-        var baseline = contents.children().offset().top;
-
-        contents.scrollTop(item.elem.offset().top - baseline);
+        var baseline = contents.children()[0].getBoundingClientRect().top;
+        var elem_y = item.elem[0].getBoundingClientRect().top;
+        contents[0].scrollTop = elem_y - baseline;
 
         menu.anchor_last = false;
         menu_scroll_handler(was_server_initiated);
@@ -299,42 +299,30 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function update_visible_indices()
     {
-        var contents = menu.elem.find(".menu_contents")
-        var top = contents.offset().top;
-        var bottom = top + contents.innerHeight();
-        menu.first_visible = null;
-        menu.last_visible = null;
-        for (var i in menu.items)
+        var $contents = menu.elem.find(".menu_contents");
+        var container_rect = $contents.children()[0].getBoundingClientRect();
+        var top = container_rect.top, bottom = container_rect.bottom, i;
+
+        for (i = 0; i < menu.items.length; i++)
         {
-            if (!menu.items.hasOwnProperty(i) || i == "length") continue;
             var item = menu.items[i];
-            var item_top = item.elem.offset().top;
-            var item_bottom = item_top + item.elem.outerHeight();
-            if (item_top < top && item_bottom >= top)
+            var item_top = item.elem[0].getBoundingClientRect().top;
+            if (item_top >= top)
             {
-                var candidate = Number(i) + 1;
-                while (menu.items[candidate] == null &&
-                       candidate <= menu.last_present)
-                {
-                    candidate++;
-                }
-                menu.first_visible = candidate;
-                if (menu.last_visible !== null) return;
-            }
-            if (item_top <= bottom && item_bottom >= bottom)
-            {
-                var candidate = Number(i) - 1;
-                while (menu.items[candidate] == null &&
-                       candidate >= menu.first_present)
-                {
-                    candidate--;
-                }
-                menu.last_visible = candidate;
-                if (menu.first_visible !== null) return;
+                menu.first_visible = i;
+                break;
             }
         }
-        menu.first_visible = menu.first_visible || menu.first_present;
-        menu.last_visible = menu.last_visible || menu.last_present;
+        for (; i < menu.items.length; i++)
+        {
+            var item = menu.items[i];
+            var item_bottom = item.elem[0].getBoundingClientRect().bottom;
+            if (item_bottom >= bottom)
+            {
+                menu.last_visible = i;
+                break;
+            }
+        }
     }
 
     function update_server_scroll()
