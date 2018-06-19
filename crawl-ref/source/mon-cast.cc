@@ -7595,7 +7595,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target)
     for (fair_adjacent_iterator ai(target, false); ai; ++ai)
     {
         if (!_feat_is_awakenable(grd(*ai))
-            || env.markers.property_at(*ai, MAT_ANY, "veto_disintegrate")
+            || env.markers.property_at(*ai, MAT_ANY, "veto_dig")
                == "veto")
         {
             continue;

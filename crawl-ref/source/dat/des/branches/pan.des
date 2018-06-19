@@ -2866,8 +2866,7 @@ FTILE:   D.xp01234567dO = floor_pebble
 FTILE:   _{+ = floor_hall
 TILE:    D = dngn_disco_ball
 : set_feature_name("granite_statue", "weirdly glowing ball")
-MARKER:  D = lua:props_marker { veto_fragmentation="veto", \
-                                veto_disintegrate="veto", \
+MARKER:  D = lua:props_marker { veto_dig="veto", \
                                 veto_shatter="veto" }
 MAP
                xx+xx

@@ -136,8 +136,7 @@ MONS: rust devil / nothing, iron imp / nothing
     lua_marker(']', trap_marker)
     lua_marker(')', trap_marker)
     lua_marker('G', props_marker {trap_statue=1,
-                                  veto_fragmentation="veto",
-                                  veto_disintegrate="veto",
+                                  veto_dig="veto",
                                   veto_shatter="veto"})
     set_feature_name("granite_statue", "iron statue")
 }}
@@ -784,7 +783,7 @@ MARKER:  o = lua:monster_on_death { \
             message_seen="The iron statue comes to life!", \
             message_unseen="You hear a grinding sound.", \
             monster_place_feature=dgn.fnum("granite_statue"), \
-            veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_dig="veto", \
             veto_shatter="veto" \
          }
 KITEM:   | = superb_item no_pickup

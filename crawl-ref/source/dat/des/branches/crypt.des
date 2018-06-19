@@ -405,8 +405,7 @@ SUBST:  HI = G
       type="player_los"})
   lua_marker('J', trap_marker)
   lua_marker('G', props_marker {trap_sarcophagus=1,
-                                veto_fragmentation="veto",
-                                veto_disintegrate="veto",
+                                veto_dig="veto",
                                 veto_shatter="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}

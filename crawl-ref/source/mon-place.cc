@@ -449,7 +449,6 @@ monster_type resolve_monster_type(monster_type mon_type,
                                   proximity_type proximity,
                                   coord_def *pos,
                                   unsigned mmask,
-                                  dungeon_char_type *stair_type,
                                   level_id *place,
                                   bool *want_band,
                                   bool allow_ood)
@@ -548,8 +547,7 @@ monster_type resolve_monster_type(monster_type mon_type,
                     mon_type =
                         resolve_monster_type(mon_type, base_type,
                                              proximity, pos, mmask,
-                                             stair_type, place,
-                                             want_band, allow_ood);
+                                             place, want_band, allow_ood);
                 }
                 return mon_type;
             }
@@ -637,7 +635,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         return nullptr;
 
     int tries = 0;
-    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
 
     // (1) Early out (summoned to occupied grid).
     if (mg.use_position() && monster_at(mg.pos))
@@ -651,10 +648,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     level_id place = mg.place;
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
                                   &mg.pos, mg.map_mask,
-                                  &stair_type,
-                                  &place,
-                                  &want_band,
-                                  allow_ood);
+                                  &place, &want_band, allow_ood);
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
@@ -2493,9 +2487,8 @@ static monster_type _band_member(band_type band, int which,
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
         coord_def tmppos;
-        dungeon_char_type tmpfeat;
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
-                                    PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
+                                    PROX_ANYWHERE, &tmppos, 0,
                                     &parent_place, nullptr, allow_ood);
     }
 
