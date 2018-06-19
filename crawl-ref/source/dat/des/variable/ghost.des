@@ -717,38 +717,35 @@ NAME:   muffindrake_ghost_three_little_ghosts
 DEPTH:  Depths
 ORIENT: float
 KMONS:  O = player_ghost
-KMONS:  I = iron dragon
-KMONS:  J = iron giant
-KMONS:  K = iron troll
-KMONS:  D = golden dragon
-KMONS:  E = stone giant
-KMONS:  F = deep troll earth mage
-KMONS:  T = deep troll
+MONS:   deep troll shaman band
+MONS:   stone giant / deep troll earth mage / golden dragon
+MONS:   iron troll / iron dragon, iron giant
+NSUBST:  2 = 2=2 / 2=2., 3 = 2=3 / 2=3.
 : ghost_setup(_G)
 MAP
 vvvvvvv
-v.$.|.v
-v..K..v
-v.IOJ.v
+v$*|*$v
+v$3O3$v
+v.343.v
 v.....v
 v.....v
 vvn=nvv
- n...n
+ v...v
+bbb+bbb
+b.*|$.b
+b.2O2.b
+b.2.2.b
+b.....b
+b.....b
+bbn=nbb
+ b...b
 ccc+ccc
-c.$.*.c
-c..F..c
-c.DOE.c
+c.*|$.c
+c..O..c
+c..1..c
 c.....c
 c.....c
 ccn=ncc
- n...n
-xxx+xxx
-x...$.x
-x..T..x
-x..O..x
-x.....x
-x.....x
-xxm=mxx
   .@.
 ENDMAP
 
