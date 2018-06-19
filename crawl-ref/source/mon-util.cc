@@ -28,6 +28,7 @@
 #include "env.h"
 #include "errors.h"
 #include "fight.h"
+#include "files.h"
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -1704,7 +1705,6 @@ bool mons_class_can_use_stairs(monster_type mc)
     return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
-           && mc != MONS_PLAYER_GHOST
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY;
 }
@@ -1935,7 +1935,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (mons_is_ghost_demon(mc))
     {
-        if (attk_number == 0)
+        if (attk_number == 0 && mon.ghost)
         {
             return { mon.ghost->att_type, mon.ghost->att_flav,
                      mon.ghost->damage };
@@ -2942,10 +2942,23 @@ void define_monster(monster& mons)
     }
 
     case MONS_PLAYER_GHOST:
+    {
+        if (define_ghost_from_bones(mons))
+            break;
+        dprf("No ghosts found in bones, falling back on mirrored player");
+        // intentional fallthrough -- fall back on mirroring the player
+    }
     case MONS_PLAYER_ILLUSION:
     {
         ghost_demon ghost;
         ghost.init_player_ghost(mcls == MONS_PLAYER_GHOST);
+        if (mcls == MONS_PLAYER_GHOST)
+        {
+            // still don't allow undead ghosts, even mirrored
+            if (you.undead_state(false) != US_ALIVE)
+                ghost.species = SP_HUMAN;
+            mons.props[MIRRORED_GHOST_KEY] = true;
+        }
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));
         break;
@@ -5189,7 +5202,8 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_HUMAN
              || (!caller && targ.friendly())
-             || (caller && !mons_aligned(&targ, caller->as_monster())))
+             || (caller && !mons_aligned(&targ, caller->as_monster()))
+             || targ.type == MONS_PLAYER_GHOST)
     {
         return false;
     }

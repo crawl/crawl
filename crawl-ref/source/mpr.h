@@ -96,6 +96,9 @@ enum diag_type
 
 msg_colour_type msg_colour(int colour);
 
+void do_message_print(msg_channel_type channel, int param, bool cap,
+                             bool nojoin, const char *format, va_list argp);
+
 void mpr(const string &text);
 void mpr_nojoin(msg_channel_type channel, string text);
 
