@@ -777,3 +777,28 @@ MAP
  ccncccn=ncccncc
   ......@.'....
 ENDMAP
+
+NAME: biasface_ghost_demon_polymorph
+DEPTH: Depths
+KMONS: O = player ghost
+KITEM: O = wand of polymorph ident:type
+MONS: any common demon
+MONS: balrug / blizzard demon / cacodemon / green death / \
+      hell beast / lorocyproca / shadow demon
+MONS: brimstone fiend / tzitzimitl / ice fiend / hell sentinel
+SUBST: d = |*
+NSUBST: - = 4=1 / 6=1. / 2=2. / .
+TILE: G = dngn_statue_imp / dngn_statue_cerebov / dngn_statue_demonic_bust / \
+          dngn_statue_ancient_evil
+: ghost_setup(_G)
+MAP
+vvvvvvvvv
+vGdddddGv
+v$$232$$v
+v--lll--v
+v--lll--v
+v--lll--v
+v-.O...-v
+vnn===nnv
+G...@...G
+ENDMAP
