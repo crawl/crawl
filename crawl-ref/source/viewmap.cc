@@ -586,7 +586,7 @@ static void _unforget_map()
         }
 }
 
-static void _forget_map()
+static void _forget_map(bool wizard_forget = false)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -594,9 +594,16 @@ static void _forget_map()
         // don't touch squares we can currently see
         if (flags & MAP_VISIBLE_FLAG)
             continue;
-        // squares we've seen in the past, pretend we've mapped instead
-        if (flags & MAP_SEEN_FLAG)
+        if (wizard_forget)
         {
+            env.map_knowledge(*ri).clear();
+#ifdef USE_TILE
+            tile_forget_map(*ri);
+#endif
+        }
+        else if (flags & MAP_SEEN_FLAG)
+        {
+            // squares we've seen in the past, pretend we've mapped instead
             flags |= MAP_MAGIC_MAPPED_FLAG;
             flags &= ~MAP_SEEN_FLAG;
         }
@@ -877,6 +884,25 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_CLEAR_MAP:
                 clear_map_or_travel_trail();
                 break;
+
+#ifdef WIZARD
+            case CMD_MAP_WIZARD_FORGET:
+                {
+                    // this doesn't seem useful outside of debugging and may
+                    // be buggy in unexpected ways, so wizmode-only. (Though
+                    // it doesn't leak information or anything.)
+                    if (!you.wizard)
+                        break;
+                    if (env.map_forgotten)
+                        _unforget_map();
+                    MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+                    // completely wipe out map
+                    _forget_map(true);
+                    env.map_forgotten.reset(old);
+                    mpr("Level map wiped.");
+                    break;
+                }
+#endif
 
             case CMD_MAP_FORGET:
                 {
