@@ -66,7 +66,7 @@ static const char *conducts[] =
     "Corpse Violation", "Carrion Rot", "Souled Friend Died",
     "Attack In Sanctuary", "Kill Artificial", "Exploration",
     "Desecrate Holy Remains", "Seen Monster", "Sacrificed Love", "Channel",
-    "Hurt Foe",
+    "Hurt Foe", "Use Enchant Scroll", "Heated by Mystical Fire"
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -462,6 +462,13 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_WU_JIAN,
     peeve_map(),
+    // GOD_IGNI_IPTHES,
+    {
+        { DID_HEATED_BY_MYSTICAL_FIRE, {
+            "you are heated by mystical fire", true,
+            1, 1,
+        } },
+    },
 };
 
 string get_god_dislikes(god_type which_god)
@@ -986,6 +993,28 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
+    },
+    // GOD_IGNI_IPTHES
+    {
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 10;
+            }
+        } },
+        { DID_ENCHANT_SCROLL, {
+            "you read enchant scrolls", false,
+            0, 0, 0, nullptr, 
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 8;
+                simple_god_message(" appreciates your use of that scroll.");
+            }
+        } },
     },
 };
 

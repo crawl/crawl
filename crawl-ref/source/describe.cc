@@ -20,7 +20,6 @@
 #include "adjust.h"
 #include "areas.h"
 #include "art-enum.h"
-#include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
 #include "cloud.h" // cloud_type_name
@@ -204,13 +203,10 @@ struct property_annotators
     prop_note spell_out;
 };
 
-static vector<string> _randart_propnames(const item_def& item,
+static vector<string> _randart_propnames(artefact_properties_t proprt,
+                                         artefact_known_props_t known,
                                          bool no_comma = false)
 {
-    artefact_properties_t  proprt;
-    artefact_known_props_t known;
-    artefact_desc_properties(item, proprt, known);
-
     vector<string> propnames;
 
     // list the following in rough order of importance
@@ -218,6 +214,7 @@ static vector<string> _randart_propnames(const item_def& item,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
+        { ARTP_DEDICATED,             prop_note::plain },
         { ARTP_PREVENT_SPELLCASTING,  prop_note::plain },
         { ARTP_PREVENT_TELEPORTATION, prop_note::plain },
         { ARTP_CONTAM,                prop_note::plain },
@@ -263,77 +260,15 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CURSE,                 prop_note::plain },
         { ARTP_CLARITY,               prop_note::plain },
         { ARTP_RMSL,                  prop_note::plain },
+        { ARTP_RCLOUD,                prop_note::plain },
+        { ARTP_SILENCE,               prop_note::plain },
     };
-
-    const unrandart_entry *entry = nullptr;
-    if (is_unrandom_artefact(item))
-        entry = get_unrand_entry(item.unrand_idx);
-
-    // For randart jewellery, note the base jewellery type if it's not
-    // covered by artefact_desc_properties()
-    if (item.base_type == OBJ_JEWELLERY
-        && (item_ident(item, ISFLAG_KNOW_TYPE)))
-    {
-        const char* type = jewellery_base_ability_string(item.sub_type);
-        if (*type)
-            propnames.push_back(type);
-    }
-    else if (item_brand_known(item)
-             && !(is_unrandom_artefact(item) && entry
-                  && entry->flags & UNRAND_FLAG_SKIP_EGO))
-    {
-        string ego;
-        if (item.base_type == OBJ_WEAPONS)
-            ego = weapon_brand_name(item, true);
-        else if (item.base_type == OBJ_ARMOUR)
-            ego = armour_ego_name(item, true);
-        if (!ego.empty())
-        {
-            // XXX: Ugly hack for adding a comma if needed.
-            bool extra_props = false;
-            for (const property_annotators &ann : propanns)
-                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND)
-                {
-                    extra_props = true;
-                    break;
-                }
-
-            if (!no_comma && extra_props
-                || is_unrandom_artefact(item)
-                   && entry && entry->inscrip != nullptr)
-            {
-                ego += ",";
-            }
-
-            propnames.push_back(ego);
-        }
-    }
-
-    if (is_unrandom_artefact(item) && entry && entry->inscrip != nullptr)
-        propnames.push_back(entry->inscrip);
 
     for (const property_annotators &ann : propanns)
     {
         if (known_proprt(ann.prop))
         {
             const int val = proprt[ann.prop];
-
-            // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
-            if (item.base_type == OBJ_JEWELLERY)
-            {
-                if (item.sub_type == RING_FIRE
-                    && (ann.prop == ARTP_FIRE && val == 1
-                        || ann.prop == ARTP_COLD && val == -1))
-                {
-                    continue;
-                }
-                if (item.sub_type == RING_ICE
-                    && (ann.prop == ARTP_COLD && val == 1
-                        || ann.prop == ARTP_FIRE && val == -1))
-                {
-                    continue;
-                }
-            }
 
             ostringstream work;
             switch (ann.spell_out)
@@ -363,6 +298,79 @@ static vector<string> _randart_propnames(const item_def& item,
     }
 
     return propnames;
+}
+
+static vector<string> _randart_propnames(const item_def& item,
+                                         bool no_comma = false)
+{
+    artefact_properties_t  proprt;
+    artefact_known_props_t known;
+    artefact_desc_properties(item, proprt, known);
+
+    // Prevent rings of fire from displaying rF+ rC-
+    if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_FIRE)
+    {
+        --proprt[ARTP_FIRE];
+        ++proprt[ARTP_COLD];
+    }
+
+    // Prevent rings of fire from displaying rF- rC+
+    if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_ICE)
+    {
+        ++proprt[ARTP_FIRE];
+        --proprt[ARTP_COLD];
+    }
+
+    vector<string> propnames = _randart_propnames(proprt, known, no_comma);
+
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+
+    // For randart jewellery, note the base jewellery type if it's not
+    // covered by artefact_desc_properties()
+    if (item.base_type == OBJ_JEWELLERY
+        && (item_ident(item, ISFLAG_KNOW_TYPE)))
+    {
+        const char* type = jewellery_base_ability_string(item.sub_type);
+        if (*type)
+            propnames.insert(propnames.begin(), type);
+    }
+    else if (item_brand_known(item)
+             && !(is_unrandom_artefact(item) && entry
+                  && entry->flags & UNRAND_FLAG_SKIP_EGO))
+    {
+        string ego;
+        if (item.base_type == OBJ_WEAPONS)
+            ego = weapon_brand_name(item, true);
+        else if (item.base_type == OBJ_ARMOUR)
+            ego = armour_ego_name(item, true);
+        if (!ego.empty())
+        {
+            if (!propnames.empty())
+                ego += ",";
+            propnames.insert(propnames.begin(), ego);
+        }
+    }
+
+    if (is_unrandom_artefact(item) && entry && entry->inscrip != nullptr)
+        propnames.push_back(entry->inscrip);
+
+    return propnames;
+}
+
+string artefact_inscription(const artefact_properties_t& proprt)
+{
+    artefact_known_props_t known;
+    known.init(1);
+
+    const vector<string> propnames = _randart_propnames(proprt, known);
+
+    string insc = comma_separated_line(propnames.begin(), propnames.end(),
+                                       " ", " ");
+    if (!insc.empty() && insc[insc.length() - 1] == ',')
+        insc.erase(insc.length() - 1);
+    return insc;
 }
 
 string artefact_inscription(const item_def& item)
@@ -493,6 +501,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
+        { ARTP_RCLOUD, "It protects you from clouds.", false},
+        { ARTP_SILENCE, "It's shrouded in silence.", false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -508,6 +518,15 @@ static string _randart_descrip(const item_def &item)
         }
     }
 
+    if (known_proprt(ARTP_DEDICATED))
+    {
+        const int branch = proprt[ARTP_DEDICATED] - 1;
+        char buf[120];
+        snprintf(buf, sizeof buf, "\nIt suppresses itself when not in %s.",
+                 branches[branch].longname);
+        description += buf;
+    }
+
     for (const property_descriptor &desc : propdescs)
     {
         if (known_proprt(desc.property))
@@ -515,7 +534,7 @@ static string _randart_descrip(const item_def &item)
             string sdesc = desc.desc;
 
             // FIXME Not the nicest hack.
-            char buf[80];
+            char buf[120];
             snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
             sdesc = replace_all(sdesc, "%d", buf);
 
@@ -546,7 +565,7 @@ static string _randart_descrip(const item_def &item)
     if (known_proprt(ARTP_STEALTH))
     {
         const int stval = proprt[ARTP_STEALTH];
-        char buf[80];
+        char buf[120];
         snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
                  (stval < -1 || stval > 1) ? "much " : "",
                  (stval < 0) ? "less" : "more");

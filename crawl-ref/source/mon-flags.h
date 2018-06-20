@@ -272,6 +272,9 @@ enum monster_flag_type : uint64_t
     MF_JUST_SLEPT         = BIT(37),
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
+
+    // Monster was disarmed by Igni Ipthes
+    MF_DISARMED           = BIT(39),
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

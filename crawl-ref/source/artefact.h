@@ -105,20 +105,24 @@ void artefact_desc_properties(const item_def        &item,
 
 void artefact_properties(const item_def       &item,
                          artefact_properties_t &proprt,
-                         artefact_known_props_t &known);
+                         artefact_known_props_t &known,
+                         bool check_suppressed);
 
 void artefact_properties(const item_def &item,
-                         artefact_properties_t &proprt);
+                         artefact_properties_t &proprt,
+                         bool check_suppressed);
 
 int artefact_property(const item_def &item, artefact_prop_type prop,
-                      bool &known);
+                      bool &known, bool check_suppressed);
 
-int artefact_property(const item_def &item, artefact_prop_type prop);
+int artefact_property(const item_def &item, artefact_prop_type prop, 
+                      bool check_suppressed);
 
 int artefact_known_property(const item_def &item, artefact_prop_type prop);
 
 void artefact_learn_prop(item_def &item, artefact_prop_type prop);
 
+bool make_item_blank_randart(item_def &item);
 bool make_item_randart(item_def &item, bool force_mundane = false);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
@@ -133,6 +137,8 @@ const unrandart_entry* get_unrand_entry(int unrand_index);
 void artefact_set_property(item_def           &item,
                            artefact_prop_type  prop,
                            int                 val);
+void artefact_set_properties(item_def &item, 
+                             const artefact_properties_t &props);
 
 enum artp_value_type
 {
@@ -150,3 +156,7 @@ bool artp_potentially_bad(artefact_prop_type prop);
 int get_unrandart_num(const char *name);
 
 void unrand_reacts();
+
+bool suppressed_artefact_property(const item_def &item, 
+                                  artefact_prop_type prop);
+

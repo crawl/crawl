@@ -327,7 +327,7 @@ struct monster_info : public monster_info_base
         return mitemuse;
     }
 
-    int randarts(artefact_prop_type ra_prop) const;
+    int randarts(artefact_prop_type ra_prop, bool check_suppressed) const;
     bool can_see_invisible() const;
     int res_magic() const;
 

@@ -196,3 +196,15 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
 bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ, bool ability);
 bool wu_jian_wall_jump_ability();
+
+
+bool is_scrappable_jewellery(const item_def& item);
+bool is_dedicatable_armour(const item_def& item);
+bool is_immortalizable_weapon(const item_def& item);
+
+bool igni_ipthes_scrap_ability();
+bool igni_ipthes_fire_fortress_ability();
+bool igni_ipthes_brand_ability();
+bool igni_ipthes_dedicate_ability();
+bool igni_ipthes_immortalize_ability();
+

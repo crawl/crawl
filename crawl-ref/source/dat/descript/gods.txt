@@ -65,14 +65,6 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Wu Jian
-
-The Wu Jian Council is a congregation of martial monks, ascended to divinity
-after battling their way out of the afterlife. Disciples of the Council are
-able to execute acrobatic martial maneuvers, such as wall jumps, spinning
-attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds.
-%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -80,6 +72,15 @@ support the spread and satiation of their fellow slimes by allowing them to
 consume items, and are forbidden from harming any slimes. Especially favoured
 followers will become as shapeless as their god, as their attributes and
 mutations shift around under Jiyva's influence.
+%%%%
+Igni Ipthes
+
+Igni Ipthes controls the fire beneath the earth, understanding that the element
+is more useful for creation than destruction. As a patron of blacksmiths and
+craftsmen, Igni appreciates those who enchant their equipment and those
+that seek out the means to do so by exploring the world. Those that follow
+Igni Ipthes will gain access to the divine smithy, enabling them to craft
+artefacts with the gods.
 %%%%
 Kikubaaqudgha
 
@@ -188,6 +189,14 @@ assistance in commanding the hermetic arts, and the most favoured stand to gain
 access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
+%%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
 %%%%
 Xom
 
@@ -305,27 +314,14 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
-Wu Jian powers
+Igni Ipthes powers
 
-Disciples of the Council learn to perform three martial techniques, shown
-below. They will also be taught to move at unfathomable speeds for short
-distances, and become able to summon a storm of golden clouds to increase their
-precision and damage for as long as they keep using martial attacks.
-
-  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
-  .......       .......
-
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one action.
-
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault off it and
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
-  ..#....       ..#.... takes two turns. Can also be activated via the
-                        (a)bility menu. Set the config option <lightred>wall_jump_move =
-                        false</lightred> to disable movement-activated wall jump.
-
+Igni Ipthes's followers can sacrifice jewellery in exchange for enchant
+scrolls. Those that worship the smith also have the power to conjure fortresses 
+of mystical fire around themselves, and disarming any enemy that is surrounded
+in the process. Pious worshipers can do more with the forge, such as brand
+weapons and turn equipment into artefacts, provided they supply all the
+required items.
 %%%%
 Kikubaaqudgha powers
 
@@ -454,6 +450,28 @@ their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
 %%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques, shown
+below. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
+
+  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
+  .......       .......
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
+  .......       ....... motion pins monsters in place for one action.
+
+  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault off it and
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
+  ..#....       ..#.... takes two turns. Can also be activated via the
+                        (a)bility menu. Set the config option <lightred>wall_jump_move =
+                        false</lightred> to disable movement-activated wall jump.
+
+%%%%
 Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower worshippers
@@ -549,12 +567,11 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
-Wu Jian wrath
+Igni Ipthes wrath
 
-Those who turn against the Council must be prepared to endure death by a
-thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
-the sudden spring of traps, the flying daggers and the armies of animated
-weapons that will ambush the betrayer.
+TODO! 
+TODO! 
+TODO! 
 %%%%
 Kikubaaqudgha wrath
 
@@ -645,6 +662,13 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
 %%%%
 Xom wrath
 

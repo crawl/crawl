@@ -881,7 +881,7 @@ bool melee_attack::attack()
     if (attacker->is_player()
         && weapon
         && is_artefact(*weapon)
-        && artefact_property(*weapon, ARTP_NOISE))
+        && artefact_property(*weapon, ARTP_NOISE, true))
     {
         noisy_equipment();
     }
@@ -916,7 +916,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY, true), 100))
             {
                 attacker->go_berserk(false);
                 return;
@@ -935,7 +935,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY, true), 100))
             {
                 attacker->go_berserk(false);
                 return;
@@ -3092,13 +3092,7 @@ void melee_attack::mons_do_tendril_disarm()
         && (random2(you.dex()) > adj_mon_hd
             || random2(you.strength()) > adj_mon_hd))
     {
-        item_def* mons_wpn = mon->disarm();
-        if (mons_wpn)
-        {
-            mprf("Your tendrils lash around %s %s and pull it to the ground!",
-                 apostrophise(mon->name(DESC_THE)).c_str(),
-                 mons_wpn->name(DESC_PLAIN).c_str());
-        }
+        mon->disarm(true, true);
     }
 }
 

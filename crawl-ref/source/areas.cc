@@ -489,7 +489,8 @@ static int _silence_range(int dur)
 
 int player::silence_radius() const
 {
-    return _silence_range(duration[DUR_SILENCE]);
+    int artval = you.scan_artefacts(ARTP_SILENCE, true);
+    return (_silence_range(duration[DUR_SILENCE]) + (artval ? artval : -1));
 }
 
 int monster::silence_radius() const

@@ -289,6 +289,13 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
+    // CLOUD_MYSTICAL_FIRE,
+    { "mystical fire", nullptr,                 // terse, verbose name
+       COLOUR_UNDEF,                            // colour
+       { TILE_CLOUD_FIRE, CTVARY_DUR },         // tile
+       BEAM_FIRE,                               // beam_effect
+       { 4, 8, true },                         // base, random damage
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -502,6 +509,17 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     // Ink cloud shouldn't appear outside of water.
     if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
         return cloud.decay;
+
+    if (cloud.type == CLOUD_MYSTICAL_FIRE)
+    {
+        if (monster_at(cloud.pos))
+            return dissipate * 3;
+
+        for (adjacent_iterator ai(cloud.pos); ai; ++ai)
+            if (monster* mons = monster_at(*ai))
+                if (!mons->friendly() && !mons->is_stationary())
+                    return dissipate * 2;
+    }
 
     return dissipate;
 }
@@ -811,6 +829,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_MYSTICAL_FIRE:
         return true;
     default:
         return false;
@@ -854,6 +873,10 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
 
     switch (type)
     {
+        case CLOUD_MYSTICAL_FIRE:
+            if (act.is_player() && you_worship(GOD_IGNI_IPTHES))
+                return false;
+            // fall-through
         case CLOUD_FIRE:
         case CLOUD_FOREST_FIRE:
             if (!act.is_player())
@@ -934,6 +957,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
         return act->is_fiery()? 0 : MAG_IMMUNE;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
+    case CLOUD_MYSTICAL_FIRE:
         return act->res_fire();
     case CLOUD_HOLY:
         return act->res_holy_energy();
@@ -972,10 +996,20 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     monster *mons = !player? act->as_monster() : nullptr;
     switch (cloud.type)
     {
+    case CLOUD_MYSTICAL_FIRE:
+        if (player)
+        {
+            did_god_conduct(DID_HEATED_BY_MYSTICAL_FIRE, 1);
+            ouch(you.hp / 3, KILLED_BY_DIVINE_WRATH, MID_NOBODY, "Mystical Fire");
+        }
+        // fall-through
     case CLOUD_FIRE:
     case CLOUD_STEAM:
         if (player)
             maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
+        if (cloud.type != CLOUD_STEAM)
+            break;
+        // fall-through
     case CLOUD_RAIN:
     case CLOUD_STORM:
         if (act->is_fiery() && final_damage > 0)
@@ -1166,6 +1200,7 @@ static int _actor_cloud_damage(const actor *act,
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
+    case CLOUD_MYSTICAL_FIRE:
     case CLOUD_HOLY:
     case CLOUD_COLD:
     case CLOUD_STEAM:
@@ -1667,6 +1702,16 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         return random_choose_weighted(9, YELLOW,
                                       4, RED,
                                       3, LIGHTRED);
+
+    case CLOUD_MYSTICAL_FIRE:
+        if (cloud.decay <= 20)
+            return MAGENTA;
+        return LIGHTMAGENTA;
+
+        // total weight 16
+        return random_choose_weighted(9, WHITE,
+                                      4, MAGENTA,
+                                      3, LIGHTMAGENTA);
 
     case CLOUD_COLD:
         if (cloud.decay <= 20)

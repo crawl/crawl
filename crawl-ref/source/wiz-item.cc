@@ -252,7 +252,7 @@ static void _tweak_randart(item_def &item)
         clear_messages();
 
     artefact_properties_t props;
-    artefact_properties(item, props);
+    artefact_properties(item, props, false);
 
     string prompt = "";
 
@@ -1352,7 +1352,7 @@ static void _debug_rap_stats(FILE *ostat)
         item.unrand_idx = 0;
         item.props.clear();
         make_item_randart(item);
-        artefact_properties(item, proprt);
+        artefact_properties(item, proprt, false);
 
         if (randart_is_bad(item, proprt))
         {
@@ -1499,6 +1499,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_SLOW",
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
+        "ARTP_RCLOUD",
+        "ARTP_SILENCE",
+        "ARTP_DEDICATED",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

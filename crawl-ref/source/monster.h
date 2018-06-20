@@ -305,12 +305,13 @@ public:
     void      wield_melee_weapon(maybe_bool msg = MB_MAYBE);
     void      swap_weapons(maybe_bool msg = MB_MAYBE);
     bool      pickup_item(item_def &item, bool msg, bool force);
-    bool      drop_item(mon_inv_type eslot, bool msg);
+    bool      drop_item(mon_inv_type eslot, bool msg, bool force = false);
     bool      unequip(item_def &item, bool msg, bool force = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
-    item_def* disarm();
+    bool disarm_slot(mon_inv_type mslot, bool safe_drop, bool msg);
+    bool disarm(bool safe_drop, bool msg);
 
     bool      can_use_missile(const item_def &item) const;
     bool      likes_wand(const item_def &item) const;

@@ -3585,8 +3585,8 @@ int slaying_bonus(bool ranged)
     return ret;
 }
 
-// Checks each equip slot for a randart, and adds up all of those with
-// a given property. Slow if any randarts are worn, so avoid where
+// Checks each equip slot for an artefact, and adds up all of those with
+// a given property. Slow if any artefacts are worn, so avoid where
 // possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
@@ -3603,14 +3603,14 @@ int player::scan_artefacts(artefact_prop_type which_property,
         const int eq = equip[i];
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && inv[ eq ].base_type != OBJ_WEAPONS)
+        if (i == EQ_WEAPON && inv[eq].base_type != OBJ_WEAPONS)
             continue;
 
-        if (!is_artefact(inv[ eq ]))
+        if (!is_artefact(inv[eq]))
             continue;
 
         bool known;
-        int val = artefact_property(inv[eq], which_property, known);
+        int val = artefact_property(inv[eq], which_property, known, true);
         if (calc_unid || known)
         {
             retval += val;

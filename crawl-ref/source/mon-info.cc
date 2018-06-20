@@ -1593,7 +1593,7 @@ string monster_info::constriction_description() const
     return cinfo;
 }
 
-int monster_info::randarts(artefact_prop_type ra_prop) const
+int monster_info::randarts(artefact_prop_type ra_prop, bool check_suppressed) const
 {
     int ret = 0;
 
@@ -1606,19 +1606,19 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
         item_def* ring   = inv[MSLOT_JEWELLERY].get();
 
         if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
-            ret += artefact_property(*weapon, ra_prop);
+            ret += artefact_property(*weapon, ra_prop, check_suppressed);
 
         if (second && second->base_type == OBJ_WEAPONS && is_artefact(*second))
-            ret += artefact_property(*second, ra_prop);
+            ret += artefact_property(*second, ra_prop, check_suppressed);
 
         if (armour && armour->base_type == OBJ_ARMOUR && is_artefact(*armour))
-            ret += artefact_property(*armour, ra_prop);
+            ret += artefact_property(*armour, ra_prop, check_suppressed);
 
         if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
-            ret += artefact_property(*shield, ra_prop);
+            ret += artefact_property(*shield, ra_prop, check_suppressed);
 
         if (ring && ring->base_type == OBJ_JEWELLERY && is_artefact(*ring))
-            ret += artefact_property(*ring, ra_prop);
+            ret += artefact_property(*ring, ra_prop, check_suppressed);
     }
 
     return ret;

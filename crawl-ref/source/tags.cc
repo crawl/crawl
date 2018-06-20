@@ -4599,9 +4599,9 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
-        && artefact_property(item, ARTP_MAGIC_RESISTANCE))
+        && artefact_property(item, ARTP_MAGIC_RESISTANCE, false))
     {
-        int prop_mr = artefact_property(item, ARTP_MAGIC_RESISTANCE);
+        int prop_mr = artefact_property(item, ARTP_MAGIC_RESISTANCE, false);
         if (prop_mr > 99)
             artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 3);
         else if (prop_mr > 79)
@@ -4617,9 +4617,9 @@ void unmarshallItem(reader &th, item_def &item)
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
     if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE && is_artefact(item))
     {
-        if (artefact_property(item, ARTP_STEALTH))
+        if (artefact_property(item, ARTP_STEALTH, false))
         {
-            int prop_st = artefact_property(item, ARTP_STEALTH);
+            int prop_st = artefact_property(item, ARTP_STEALTH, false);
             if (prop_st > 60)
                 artefact_set_property(item, ARTP_STEALTH, 2);
             else if (prop_st < -70)
@@ -4631,7 +4631,7 @@ void unmarshallItem(reader &th, item_def &item)
         }
 
         // Remove fast metabolism property
-        if (artefact_property(item, ARTP_METABOLISM))
+        if (artefact_property(item, ARTP_METABOLISM, false))
         {
             artefact_set_property(item, ARTP_METABOLISM, 0);
             artefact_set_property(item, ARTP_STEALTH, -1);
@@ -4707,8 +4707,8 @@ void unmarshallItem(reader &th, item_def &item)
 
         if (item.props.exists(ARTEFACT_PROPS_KEY))
         {
-            acc = artefact_property(item, ARTP_ACCURACY);
-            dam = artefact_property(item, ARTP_SLAYING);
+            acc = artefact_property(item, ARTP_ACCURACY, false);
+            dam = artefact_property(item, ARTP_SLAYING, false);
             slay = dam < 0 ? dam : max(acc, dam);
 
             artefact_set_property(item, ARTP_SLAYING, slay);
@@ -4818,30 +4818,30 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
         && is_artefact(item)
-        && artefact_property(item, ARTP_NEGATIVE_ENERGY))
+        && artefact_property(item, ARTP_NEGATIVE_ENERGY, false))
     {
-        if (artefact_property(item, ARTP_NEGATIVE_ENERGY) < 0)
+        if (artefact_property(item, ARTP_NEGATIVE_ENERGY, false) < 0)
             artefact_set_property(item, ARTP_NEGATIVE_ENERGY, 0);
     }
 
     if (th.getMinorVersion() < TAG_MINOR_NO_RPOIS_MINUS
         && is_artefact(item)
-        && artefact_property(item, ARTP_POISON))
+        && artefact_property(item, ARTP_POISON, false))
     {
-        if (artefact_property(item, ARTP_POISON) < 0)
+        if (artefact_property(item, ARTP_POISON, false) < 0)
             artefact_set_property(item, ARTP_POISON, 0);
     }
 
     if (th.getMinorVersion() < TAG_MINOR_TELEPORTITIS
         && is_artefact(item)
-        && artefact_property(item, ARTP_CAUSE_TELEPORTATION) > 1)
+        && artefact_property(item, ARTP_CAUSE_TELEPORTATION, false) > 1)
     {
         artefact_set_property(item, ARTP_CAUSE_TELEPORTATION, 1);
     }
 
     if (th.getMinorVersion() < TAG_MINOR_NO_TWISTER
         && is_artefact(item)
-        && artefact_property(item, ARTP_TWISTER))
+        && artefact_property(item, ARTP_TWISTER, false))
     {
         artefact_set_property(item, ARTP_TWISTER, 0);
     }

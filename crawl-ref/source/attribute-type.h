@@ -94,5 +94,8 @@ enum attribute_type
     ATTR_SERPENTS_LASH,        // Remaining instant movement actions.
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
+    ATTR_IGNI_DEDICATED_SLOTS, // Armour slots of items dedicated by Igni Ipthes.
+    ATTR_IGNI_DEDICATED_PROPS, // Props used in items dedicated by Igni Ipthes.
+    ATTR_IGNI_IMMORTALIZED_PROPS, // Props used in items immortalized by Igni Ipthes.
     NUM_ATTRIBUTES
 };

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 
+#include "artefact.h"
 #include "command-type.h"
 #include "enum.h"
 #include "mon-util.h"
@@ -89,6 +90,7 @@ string process_description(const describe_info &inf);
 const char* get_size_adj(const size_type size, bool ignore_medium = false);
 
 const char* jewellery_base_ability_string(int subtype);
+string artefact_inscription(const artefact_properties_t& proprt);
 string artefact_inscription(const item_def& item);
 void add_inscription(item_def &item, string inscrip);
 

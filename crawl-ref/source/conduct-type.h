@@ -45,5 +45,7 @@ enum conduct_type
     DID_SACRIFICE_LOVE,                   // Ru
     DID_CHANNEL,                          // Pakellas
     DID_HURT_FOE,                         // Uskayaw
+    DID_ENCHANT_SCROLL,                   // Igni Ipthes
+    DID_HEATED_BY_MYSTICAL_FIRE,          // Igni Ipthes
     NUM_CONDUCTS
 };

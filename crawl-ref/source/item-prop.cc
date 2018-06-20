@@ -1272,7 +1272,7 @@ brand_type get_weapon_brand(const item_def &item)
         return SPWPN_NORMAL;
 
     if (is_artefact(item))
-        return static_cast<brand_type>(artefact_property(item, ARTP_BRAND));
+        return static_cast<brand_type>(artefact_property(item, ARTP_BRAND, true));
 
     return static_cast<brand_type>(item.brand);
 }
@@ -1295,7 +1295,7 @@ special_armour_type get_armour_ego_type(const item_def &item)
     if (is_artefact(item))
     {
         return static_cast<special_armour_type>(
-                   artefact_property(item, ARTP_BRAND));
+                   artefact_property(item, ARTP_BRAND, true));
     }
 
     return static_cast<special_armour_type>(item.brand);
@@ -2343,7 +2343,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_property(arm, ARTP_FIRE);
+        res += artefact_property(arm, ARTP_FIRE, true);
 
     return res;
 }
@@ -2363,7 +2363,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_property(arm, ARTP_COLD);
+        res += artefact_property(arm, ARTP_COLD, true);
 
     return res;
 }
@@ -2382,7 +2382,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_property(arm, ARTP_POISON);
+        res += artefact_property(arm, ARTP_POISON, true);
 
     return res;
 }
@@ -2397,7 +2397,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     res += armour_type_prop(arm.sub_type, ARMF_RES_ELEC);
 
     if (check_artp && is_artefact(arm))
-        res += artefact_property(arm, ARTP_ELECTRICITY);
+        res += artefact_property(arm, ARTP_ELECTRICITY, true);
 
     return res;
 }
@@ -2416,7 +2416,7 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_property(arm, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(arm, ARTP_NEGATIVE_ENERGY, true);
 
     return res;
 }
@@ -2435,7 +2435,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE, true);
 
     return res;
 }
@@ -2449,7 +2449,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_SEE_INVISIBLE);
+        return artefact_property(arm, ARTP_SEE_INVISIBLE, true);
 
     return false;
 }
@@ -2471,7 +2471,7 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_RMSL);
+        return artefact_property(arm, ARTP_RMSL, true);
 
     return false;
 }
@@ -2507,7 +2507,7 @@ int get_jewellery_res_fire(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_property(ring, ARTP_FIRE);
+        res += artefact_property(ring, ARTP_FIRE, true);
 
     return res;
 }
@@ -2533,7 +2533,7 @@ int get_jewellery_res_cold(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_property(ring, ARTP_COLD);
+        res += artefact_property(ring, ARTP_COLD, true);
 
     return res;
 }
@@ -2548,7 +2548,7 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_property(ring, ARTP_POISON);
+        res += artefact_property(ring, ARTP_POISON, true);
 
     return res;
 }
@@ -2560,7 +2560,7 @@ int get_jewellery_res_elec(const item_def &ring, bool check_artp)
     int res = 0;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_property(ring, ARTP_ELECTRICITY);
+        res += artefact_property(ring, ARTP_ELECTRICITY, true);
 
     return res;
 }
@@ -2576,7 +2576,7 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_property(ring, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(ring, ARTP_NEGATIVE_ENERGY, true);
 
     return res;
 }
@@ -2591,7 +2591,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
+        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE, true);
 
     return res;
 }
@@ -2604,7 +2604,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_property(ring, ARTP_SEE_INVISIBLE);
+        return artefact_property(ring, ARTP_SEE_INVISIBLE, true);
 
     return false;
 }
@@ -2625,13 +2625,13 @@ int property(const item_def &item, int prop_type)
             {
             case PWPN_DAMAGE:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].dam
-                       + artefact_property(item, ARTP_BASE_DAM);
+                       + artefact_property(item, ARTP_BASE_DAM, true);
             case PWPN_HIT:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].hit
-                       + artefact_property(item, ARTP_BASE_ACC);
+                       + artefact_property(item, ARTP_BASE_ACC, true);
             case PWPN_SPEED:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].speed
-                       + artefact_property(item, ARTP_BASE_DELAY);
+                       + artefact_property(item, ARTP_BASE_DELAY, true);
             }
         }
         if (prop_type == PWPN_DAMAGE)
@@ -2726,7 +2726,7 @@ bool gives_ability(const item_def &item)
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap), true)) 
             return true;
 
     // Unrands that grant an evokable ability.
@@ -2805,7 +2805,7 @@ bool gives_resistance(const item_def &item)
         if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
             continue;
 
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap), true))
             return true;
     }
 

@@ -61,6 +61,11 @@ A viscous altar of Jiyva
 A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
 you don't really want to know.
 %%%%
+A red-hot altar of Igni Ipthes
+
+An anvil that is serving as an altar to Igni Ipthes the Firesmith. An small
+hammer appears to be banging on it.
+%%%%
 An ancient bone altar of Kikubaaqudgha
 
 An altar created from piles of ancient bones, dedicated to the terrible

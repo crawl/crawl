@@ -22,6 +22,7 @@
 #include "env.h"
 #include "food.h"
 #include "god-item.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-prop.h"
@@ -454,6 +455,12 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying anything you can give to a follower.";
     case OSEL_CURSABLE:
         return "You don't have any cursable items.";
+    case OSEL_SCRAPPABLE_JEWELLERY:
+        return "You aren't carrying any jewellery that can scrapped.";
+    case OSEL_DEDICATABLE_ARMOUR:
+        return "You aren't carrying any armour that can dedicated.";
+    case OSEL_IMMORTALIZABLE_WEAPON:
+        return "You aren't carrying any weapons that can immortalized.";
     }
 
     return "You aren't carrying any such object.";
@@ -1082,6 +1089,15 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_CURSABLE:
         return item_is_cursable(i);
 
+    case OSEL_SCRAPPABLE_JEWELLERY:
+        return is_scrappable_jewellery(i);
+
+    case OSEL_DEDICATABLE_ARMOUR:
+        return is_dedicatable_armour(i);
+
+    case OSEL_IMMORTALIZABLE_WEAPON:
+        return is_immortalizable_weapon(i);
+
     default:
         return false;
     }
@@ -1538,7 +1554,7 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 
     bool known;
-    return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known) && known;
+    return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known, true) && known;
 }
 
 bool needs_notele_warning(const item_def &item, operation_types oper)
@@ -1616,15 +1632,15 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM, false))
         {
             if (_is_wielded(item) && you_worship(GOD_ZIN))
                 penance = true;
             return true;
         }
 
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN, false)
+                                  || artefact_property(item, ARTP_FRAGILE, false)))
         {
             return true;
         }
@@ -1633,7 +1649,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM, false))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1643,8 +1659,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN, false)
+                                  || artefact_property(item, ARTP_FRAGILE, false)))
         {
             return true;
         }
@@ -1663,7 +1679,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     // is currently invis from +Invis.
     if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
         && (
-                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
+                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE, false))
                 || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
             )
         && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.

@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -24,6 +25,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -63,6 +65,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
+#include "pcg.h"
 #include "place.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -7359,3 +7362,891 @@ bool wu_jian_wall_jump_ability()
 
     return true;
 }
+
+bool is_scrappable_jewellery(const item_def& item)
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return false;
+    
+    if (!item_type_known(item))
+        return true; // Unknown stuff can always be scrapped!
+
+    if (is_useless_item(item, false))
+        return false;
+
+    return true;
+}
+
+bool igni_ipthes_scrap_ability() 
+{ 
+    int item_slot = prompt_invent_item("Scrap which item?", MT_INVLIST,
+                                       OSEL_SCRAPPABLE_JEWELLERY, OPER_ANY,
+                                       invprompt_flag::escape_only);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& scrapped(you.inv[item_slot]);
+
+    if (!yesno(("Scrap "+scrapped.name(DESC_THE)+"?").c_str(), false, 'y'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    if (is_useless_item(scrapped, false))
+    {
+        simple_god_message((" finds "+scrapped.name(DESC_THE)+" to be worthless!").c_str());
+        return true;
+    }
+
+    simple_god_message((" tosses "+scrapped.name(DESC_THE)+" into the forge!").c_str());
+                       
+    dec_inv_item_quantity(item_slot, 1);
+
+    scroll_type type = coinflip() ? SCR_ENCHANT_WEAPON : SCR_ENCHANT_ARMOUR;
+    int scroll = items(false, OBJ_SCROLLS, type, 0);
+    mitm[scroll].quantity = 1;
+
+    flash_view(UA_PLAYER, RED);
+
+    // Allow extra time for the flash to linger.
+    scaled_delay(200);
+
+    if (!move_item_to_grid(&scroll, you.pos(), true))
+        destroy_item(scroll, true); // shouldn't happen
+    else
+        simple_god_message((" grants you "+mitm[scroll].name(DESC_A)+"!").c_str());
+
+    return true;
+}
+
+static void _igni_ipthes_trap_monster(monster& mons)
+{
+    bool disarmed = false;
+
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        const mon_inv_type mslot = static_cast<mon_inv_type>(i);
+        disarmed |= mons.disarm_slot(mslot, false, true);
+    }
+
+    if (disarmed)
+    {
+        // Wake up the monster.
+        if (mons.behaviour == BEH_SLEEP)
+            mons.behaviour = BEH_WANDER;
+    }
+}
+
+static void _fire_fortress_find_centers(coord_def where, set<coord_def>& centers)
+{
+    for (adjacent_iterator ai(where); ai; ++ai)
+    {
+        if (actor* a = actor_at(*ai))
+        {
+            if (centers.insert(*ai).second)
+                _fire_fortress_find_centers(a->pos(), centers);
+        }
+        else if (cloud_struct* cloud = cloud_at(*ai))
+        {
+            if (cloud->type == CLOUD_MYSTICAL_FIRE && centers.insert(*ai).second)
+                _fire_fortress_find_centers(*ai, centers);
+        }
+    }
+}
+
+bool igni_ipthes_fire_fortress_ability()
+{
+    set<coord_def> centers;
+    centers.insert(you.pos());
+    _fire_fortress_find_centers(you.pos(), centers);
+
+    set<coord_def> clouds;
+    for (set<coord_def>::iterator it = centers.begin();
+         it != centers.end(); ++it)
+    {
+        for (adjacent_iterator ai(*it); ai; ++ai)
+        {
+            if (*ai == you.pos() || cell_is_solid(*ai))
+                continue;
+
+            if (monster* mons = monster_at(*ai))
+            {
+                if (!mons->friendly())
+                    _igni_ipthes_trap_monster(*mons);
+                continue;
+            }
+
+            clouds.insert(*ai);
+        }
+    }
+
+    for (set<coord_def>::iterator it = clouds.begin(); it != clouds.end(); ++it)
+    {
+        int const dist = grid_distance(*it, you.pos());
+        int const dur = max(random2(18 - dist), 13 - dist * dist);
+        if (cloud_struct* cloud = cloud_at(*it))
+        {
+            if (cloud->type == CLOUD_MYSTICAL_FIRE && cloud->decay < dur)
+                cloud->decay = dur;
+        }
+        else
+            place_cloud(CLOUD_MYSTICAL_FIRE, *it, dur, &you);
+    }
+
+    mpr("A fire fortress surrounds you!");
+    noisy(18, you.pos());
+
+    return true;
+}
+
+// Selects up to a requested number of options.
+class PickNumMenu : public Menu
+{
+    virtual bool process_key(int keyin) override
+    {
+        if (!Menu::process_key(keyin))
+            return false;
+
+        get_selected(&sel);
+        return sel.size() < pick_num;
+    }
+
+public:
+    size_t pick_num;
+
+    PickNumMenu(size_t pick_num_) 
+    : Menu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_ALLOW_FORMATTING)
+    , pick_num(pick_num_) 
+    {
+        set_highlighter(NULL);
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+    }
+};
+
+bool igni_ipthes_brand_ability() 
+{
+    int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
+                                       OSEL_BRANDABLE_WEAPON, OPER_ANY,
+                                       invprompt_flag::escape_only);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& wpn(you.inv[item_slot]);
+    if (!is_brandable_weapon(wpn, true, true))
+    {
+        mprf("That weapon can't be branded.");
+        return false;
+    }
+
+    int flash_colors[] =  { RED, CYAN, GREEN };
+    brand_type brands[] = { SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM };
+
+    PickNumMenu menu(1);
+    menu.set_title(new MenuEntry("Which brand?", MEL_TITLE));
+
+    for (unsigned i = 0; i < ARRAYSZ(brands); ++i)
+    {
+        if (wpn.brand == brands[i])
+            continue;
+
+        string desc = brand_type_name(brands[i], false);
+        desc += " brand";
+
+        auto* me = new MenuEntry(std::move(desc), MEL_ITEM, 1, index_to_letter(i % 52));
+        me->data = reinterpret_cast<void*>(i);
+        menu.add_entry(me);
+    }
+
+    vector<MenuEntry*> sel = menu.show();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty() || sel.size() > menu.pick_num)
+        return false;
+
+    const uintptr_t sel_i = reinterpret_cast<uintptr_t>(sel[0]->data);
+    const brand_type brand = brands[sel_i];
+
+    convert2bad(wpn); // Turn scourges into demon whips, etc.
+
+    set_item_ego_type(wpn, OBJ_WEAPONS, brand);
+
+    item_set_appearance(wpn);
+    set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+    calc_mp(); // in case the old brand was antimagic,
+    you.redraw_armour_class = true; // protection,
+    you.redraw_evasion = true;      // or evasion
+    you.wield_change = true;
+
+    flash_view(UA_PLAYER, flash_colors[sel_i]);
+    mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
+    simple_god_message(" booms: This will aid you in your quest!");
+
+    // Allow extra time for the flash to linger.
+    scaled_delay(200);
+    return true;
+}
+
+bool is_dedicatable_armour(const item_def& arm)
+{
+    return (arm.base_type == OBJ_ARMOUR && !is_artefact(arm)
+            && !(you.attribute[ATTR_IGNI_DEDICATED_SLOTS] & (1 << get_armour_slot(arm))));
+}
+
+bool is_immortalizable_weapon(const item_def& wpn)
+{
+    return wpn.base_type == OBJ_WEAPONS && !is_artefact(wpn);
+}
+
+static bool _summable_prop_type(artefact_prop_type type)
+{
+    switch (type)
+    {
+    case ARTP_BRAND:
+    case ARTP_ELECTRICITY:
+    case ARTP_POISON:
+    case ARTP_SEE_INVISIBLE:
+    case ARTP_INVISIBLE:
+    case ARTP_FLY:
+    case ARTP_BLINK:
+    case ARTP_BERSERK:
+    case ARTP_NOISE:
+    case ARTP_PREVENT_SPELLCASTING:
+    case ARTP_CAUSE_TELEPORTATION:
+    case ARTP_PREVENT_TELEPORTATION:
+    case ARTP_ANGRY:
+    case ARTP_CONTAM:
+    case ARTP_CURSE:
+    case ARTP_CLARITY:
+    case ARTP_RMSL:
+    case ARTP_REGENERATION:
+    case ARTP_NO_UPGRADE:
+    case ARTP_RCORR:
+    case ARTP_RMUT:
+    case ARTP_CORRODE:
+    case ARTP_DRAIN:
+    case ARTP_SLOW:
+    case ARTP_FRAGILE:
+    case ARTP_RCLOUD:
+    case ARTP_DEDICATED:
+        return false;
+    default:
+        return true;
+    }
+}
+
+static bool _combine_props(artefact_properties_t& props, 
+                           const artefact_properties_t& combine_with)
+{
+    for (unsigned i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        if (props[i] && combine_with[i] && props[i] != combine_with[i]
+            && !_summable_prop_type(static_cast<artefact_prop_type>(i)))
+        {
+            return false;
+        }
+    }
+
+    for (unsigned i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+        props[i] += combine_with[i];
+
+    return true;
+}
+
+struct igni_cost
+{
+    object_class_type base_type;
+    uint8_t sub_type;
+    short quantity;
+
+    item_def to_item() const
+    {
+        item_def itm;
+        itm.base_type = base_type;
+        itm.sub_type = sub_type;
+        itm.quantity = quantity;
+        set_ident_flags(itm, ISFLAG_IDENT_MASK);
+        return itm;
+    }
+
+    int find_in_inv() const
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            const item_def& itm = you.inv[i];
+
+            if (!itm.defined() || !item_type_known(itm))
+                continue;
+
+            if (base_type == itm.base_type && sub_type  == itm.sub_type
+                && quantity <= itm.quantity)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    int satisfiable() const
+    {
+        if (base_type == OBJ_GOLD)
+            return you.gold >= quantity;
+        return find_in_inv() != -1;
+    }
+
+    void pay() const
+    {
+        ASSERT(satisfiable());
+
+        if (base_type == OBJ_GOLD)
+            you.del_gold(quantity);
+        else
+            dec_inv_item_quantity(find_in_inv(), quantity);
+    }
+};
+
+
+class igni_costs
+{
+    using base_sub = pair<object_class_type, uint8_t>;
+    map<base_sub, short> costs;
+public:
+    void sum_with(const igni_cost& cost)
+    {
+        costs[make_pair(cost.base_type, cost.sub_type)] += cost.quantity;
+    }
+
+    int satisfiable() const
+    {
+        for (const auto& bs : costs)
+        {
+            igni_cost cost = { bs.first.first, bs.first.second, bs.second };
+            if (!cost.satisfiable())
+                return false;
+        }
+        return true;
+    }
+
+    void pay() const
+    {
+        for (const auto& bs : costs)
+        {
+            igni_cost cost = { bs.first.first, bs.first.second, bs.second };
+            cost.pay();
+        }
+    }
+};
+
+static const vector<artefact_properties_t> _dedicate_props = []()
+{
+    vector<artefact_properties_t> props_vec;
+    artefact_properties_t props;
+
+    props.init(0);
+    props[ARTP_FIRE] = 2;
+    props[ARTP_COLD] = -1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_COLD] = 2;
+    props[ARTP_FIRE] = -1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_NEGATIVE_ENERGY] = 2;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_POISON] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_ELECTRICITY] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_MAGIC_RESISTANCE] = 2;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_CLARITY] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SEE_INVISIBLE] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_RCORR] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_RCLOUD] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_RMSL] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_STEALTH] = 4;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_REGENERATION] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_INVISIBLE] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_FLY] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SILENCE] = 3;
+    props_vec.push_back(props);
+
+    return props_vec;
+}();
+
+bool igni_ipthes_dedicate_ability() 
+{ 
+    {
+        std::string msg;
+
+        const auto inverse_flags = ~you.attribute[ATTR_IGNI_DEDICATED_SLOTS];
+
+        if (inverse_flags & (1 << EQ_GLOVES))
+            msg += " {gloves}";
+
+        if (inverse_flags & (1 << EQ_HELMET))
+            msg += " {helmet}";
+
+        if (inverse_flags & (1 << EQ_CLOAK))
+            msg += " {cloak}";
+
+        if (inverse_flags & (1 << EQ_BOOTS))
+        {
+            if (you.species == SP_CENTAUR || you.species == SP_NAGA)
+                msg += " {barding}";
+            else
+                msg += " {boots}";
+        }
+
+        if (inverse_flags & (1 << EQ_SHIELD))
+            msg += " {shield}";
+
+        if (inverse_flags & (1 << EQ_BODY_ARMOUR))
+            msg += " {body}";
+
+        if (msg.empty())
+        {
+            simple_god_message(" has dedicated an item for every slot!");
+            return false;
+        }
+
+        msg = " can dedicate one item per armour slot."
+              " The following slots are unchosen:" + msg;
+
+        simple_god_message(msg.c_str());
+        more();
+    }
+
+    igni_cost costs[] = 
+    {
+        { OBJ_GOLD, 0, 400 },
+        { OBJ_GOLD, 0, 300 },
+        { OBJ_GOLD, 0, 200 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_CURING, 3 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
+        if (is_useless_item(costs[i].to_item()))
+            costs[i] = { OBJ_GOLD, 0, 300 };
+
+    uint64_t seed = you.birth_time;
+    PcgRNG rng(&seed, 1);
+    shuffle(costs, costs + ARRAYSZ(costs), rng);
+
+    // First pick the armour.
+
+    int item_slot = prompt_invent_item("Dedicate which armour?", MT_INVLIST,
+                                       OSEL_DEDICATABLE_ARMOUR, OPER_ANY,
+                                       invprompt_flag::escape_only);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& arm(you.inv[item_slot]);
+
+    // Then pick the properties.
+
+    PickNumMenu menu(2);
+    menu.set_title(new MenuEntry("Choose up to two properties. ", MEL_TITLE));
+
+    for (unsigned i = 0; i < _dedicate_props.size(); ++i)
+    {
+        if (you.attribute[ATTR_IGNI_DEDICATED_PROPS] & (1 << i))
+            continue;
+
+        const auto& props = _dedicate_props[i];
+        string desc = artefact_inscription(props);
+
+        desc.resize(max<size_t>(desc.size(), 13), ' ');
+        string colour = colour_to_str(costs[i].satisfiable() ? CYAN : RED);
+        desc += " <" + colour + ">Cost: ";
+        desc += costs[i].to_item().name(DESC_PLAIN);
+        desc += "</" + colour + ">";
+
+        auto* me = new MenuEntry(std::move(desc), MEL_ITEM, 1, index_to_letter(i % 52));
+        me->data = reinterpret_cast<void*>(i);
+        menu.add_entry(me);
+    }
+
+    vector<MenuEntry*> sel = menu.show();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty() || sel.size() > menu.pick_num)
+        return false;
+
+    igni_costs summed_costs;
+    artefact_properties_t props;
+    props.init(0);
+    int prop_flags = 0;
+
+    for (auto* ptr : sel)
+    {
+        const uintptr_t i = reinterpret_cast<uintptr_t>(ptr->data);
+        summed_costs.sum_with(costs[i]);
+    }
+
+    if (!summed_costs.satisfiable())
+    {
+        mprf("You can't afford that.");
+        return false;
+    }
+
+    for (auto* ptr : sel)
+    {
+        const uintptr_t i = reinterpret_cast<uintptr_t>(ptr->data);
+        if (!_combine_props(props, _dedicate_props[i]))
+        {
+            mprf("Those choices are incompatible.");
+            return false;
+        }
+        prop_flags |= 1 << i;
+    }
+
+    {
+        string prompt = "Dedicate ";
+        prompt += arm.name(DESC_THE);
+        prompt += " to ";
+        prompt += your_branch().longname;
+        prompt += " with ";
+        prompt += artefact_inscription(props);
+        prompt += "?\nThese choices will be barred from future dedications.";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    if (!make_item_blank_randart(arm))
+    {
+        mprf("That item can't be dedicated.");
+        return false;
+    }
+
+    summed_costs.pay();
+
+    props[ARTP_DEDICATED] = you.where_are_you + 1;
+    props[ARTP_BRAND] = arm.brand;
+
+    if (armour_is_enchantable(arm))
+        arm.plus += 1;
+
+    artefact_set_properties(arm, props);
+    set_artefact_name(arm, item_base_name(arm) + " of " + your_branch().longname);
+
+    you.attribute[ATTR_IGNI_DEDICATED_PROPS] |= prop_flags;
+    you.attribute[ATTR_IGNI_DEDICATED_SLOTS] |= 1 << get_armour_slot(arm);
+
+    flash_view_delay(UA_PLAYER, WHITE, 200);
+    simple_god_message(" booms: Use this wisely!");
+
+    // In case areas were changed:
+    invalidate_agrid(true);
+    if (you.beheld())
+        you.update_beholders();
+
+    return true; 
+}
+
+static const vector<artefact_properties_t> _immortalize_props = []()
+{
+    vector<artefact_properties_t> props_vec;
+    artefact_properties_t props;
+
+    props.init(0);
+    props[ARTP_BRAND] = SPWPN_SPEED;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_FIRE] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_COLD] = 1;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SLAYING] = 3;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SLAYING] = 2;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_STRENGTH] = 5;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_DEXTERITY] = 5;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_INTELLIGENCE] = 5;
+    props_vec.push_back(props);
+
+    return props_vec;
+}();
+
+bool igni_ipthes_immortalize_ability()
+{
+    igni_cost costs[] = 
+    {
+        { OBJ_GOLD, 0, 1200 },
+        { OBJ_GOLD, 0, 1100 },
+        { OBJ_GOLD, 0, 1000 },
+        { OBJ_GOLD, 0, 900 },
+        { OBJ_GOLD, 0, 800 },
+        { OBJ_POTIONS, POT_CURING, 9 },
+        { OBJ_POTIONS, POT_CURING, 8 },
+        { OBJ_POTIONS, POT_CURING, 7 },
+        { OBJ_POTIONS, POT_CURING, 6 },
+        { OBJ_POTIONS, POT_CURING, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HASTE, 3 },
+        { OBJ_POTIONS, POT_HASTE, 2 },
+        { OBJ_POTIONS, POT_RESISTANCE, 2 },
+        { OBJ_POTIONS, POT_INVISIBILITY, 2 },
+        { OBJ_POTIONS, POT_AGILITY, 3 },
+        { OBJ_POTIONS, POT_MIGHT, 3 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 3 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 3 },
+        { OBJ_SCROLLS, SCR_FEAR, 4 },
+        { OBJ_SCROLLS, SCR_FOG, 4 },
+        { OBJ_SCROLLS, SCR_BLINKING, 3 },
+        { OBJ_SCROLLS, SCR_BLINKING, 3 },
+        { OBJ_SCROLLS, SCR_BLINKING, 3 },
+        { OBJ_SCROLLS, SCR_BLINKING, 3 },
+        { OBJ_SCROLLS, SCR_BLINKING, 2 },
+        { OBJ_SCROLLS, SCR_BLINKING, 2 },
+        { OBJ_SCROLLS, SCR_BLINKING, 2 },
+        { OBJ_SCROLLS, SCR_BLINKING, 2 },
+        { OBJ_SCROLLS, SCR_SUMMONING, 1 },
+        { OBJ_SCROLLS, SCR_IMMOLATION, 3 },
+        { OBJ_SCROLLS, SCR_ACQUIREMENT, 1 },
+        { OBJ_SCROLLS, SCR_BRAND_WEAPON, 1 },
+        { OBJ_SCROLLS, SCR_MAGIC_MAPPING, 4 },
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
+        if (is_useless_item(costs[i].to_item()))
+            costs[i] = { OBJ_GOLD, 0, 1000 };
+
+    uint64_t seed = you.birth_time;
+    PcgRNG rng(&seed, 1);
+    shuffle(costs, costs + ARRAYSZ(costs), rng);
+
+    // First pick the weapon.
+
+    int item_slot = prompt_invent_item("Immortalize which armour?", MT_INVLIST,
+                                       OSEL_IMMORTALIZABLE_WEAPON, OPER_ANY,
+                                       invprompt_flag::escape_only);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& wpn(you.inv[item_slot]);
+
+    // Then pick the properties.
+
+    PickNumMenu menu(4);
+    menu.set_title(new MenuEntry("Choose up to four properties. ", MEL_TITLE));
+
+    for (unsigned i = 0; i < _immortalize_props.size(); ++i)
+    {
+        if (you.attribute[ATTR_IGNI_IMMORTALIZED_PROPS] & (1 << i))
+            continue;
+
+        const auto& props = _immortalize_props[i];
+        string desc;
+        if (props[ARTP_BRAND])
+            desc = desc + brand_type_name(props[ARTP_BRAND], false) + " brand";
+        desc += artefact_inscription(props);
+
+        desc.resize(max<size_t>(desc.size(), 13), ' ');
+        string colour = colour_to_str(costs[i].satisfiable() ? CYAN : RED);
+        desc += " <" + colour + ">Cost: ";
+        desc += costs[i].to_item().name(DESC_PLAIN);
+        desc += "</" + colour + ">";
+
+        auto* me = new MenuEntry(std::move(desc), MEL_ITEM, 1, index_to_letter(i % 52));
+        me->data = reinterpret_cast<void*>(i);
+        menu.add_entry(me);
+    }
+
+    vector<MenuEntry*> sel = menu.show();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty() || sel.size() > menu.pick_num)
+        return false;
+
+    igni_costs summed_costs;
+    artefact_properties_t props;
+    props.init(0);
+    int prop_flags = 0;
+
+    for (auto* ptr : sel)
+    {
+        const uintptr_t i = reinterpret_cast<uintptr_t>(ptr->data);
+        summed_costs.sum_with(costs[i]);
+    }
+
+    if (!summed_costs.satisfiable())
+    {
+        mprf("You can't afford that.");
+        return false;
+    }
+
+    for (auto* ptr : sel)
+    {
+        const uintptr_t i = reinterpret_cast<uintptr_t>(ptr->data);
+        if (!_combine_props(props, _immortalize_props[i]))
+        {
+            mprf("Those choices are incompatible.");
+            return false;
+        }
+        prop_flags |= 1 << i;
+    }
+
+    {
+        string prompt = "Immortalize ";
+        prompt += wpn.name(DESC_THE);
+        prompt += " with ";
+        prompt += artefact_inscription(props);
+        prompt += "?\nThese choices will be barred from future immortalizations.";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    if (!make_item_blank_randart(wpn))
+    {
+        mprf("That item can't be immortalized.");
+        return false;
+    }
+
+    while (true)
+    {
+        mprf(MSGCH_PROMPT, "Give it a name: ");
+
+        char buf[17];
+        buf[sizeof(buf)-1] = 0;
+        if (cancellable_get_line(buf, sizeof(buf)))
+            return false;
+
+        if (buf[0] != '\0')
+        {
+            set_artefact_name(wpn, item_base_name(wpn) + " \"" + buf + "\"");
+            break;
+        }
+    }
+
+    summed_costs.pay();
+
+    if (!props[ARTP_BRAND])
+        props[ARTP_BRAND] = wpn.brand;
+    wpn.plus += 1 + props[ARTP_SLAYING];
+    props[ARTP_SLAYING] = 0;
+
+    artefact_set_properties(wpn, props);
+
+    you.attribute[ATTR_IGNI_IMMORTALIZED_PROPS] |= prop_flags;
+
+    flash_view_delay(UA_PLAYER, WHITE, 200);
+    simple_god_message(" booms: Use this wisely!");
+
+    return true; 
+}
+

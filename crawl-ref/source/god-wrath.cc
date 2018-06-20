@@ -89,6 +89,7 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
+    "erruption",        // Igni Ipthes
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1659,6 +1660,54 @@ static bool _wu_jian_retribution()
     return true;
 }
 
+static const pop_entry pop_igni_ipthes_wrath[] =
+{
+  {  0, 12, 25, SEMI, MONS_FIRE_ELEMENTAL },
+  {  4, 12, 50, FLAT, MONS_FIRE_CRAB },
+  {  8, 16, 30, FLAT, MONS_LINDWURM },
+  { 12, 27, 50, SEMI, MONS_FIRE_DRAGON },
+
+  {  0, 12, 25, SEMI, MONS_HUMAN },
+  {  4, 12, 50, FLAT, MONS_VAULT_GUARD },
+  { 10, 22, 50, SEMI, MONS_VAULT_GUARD },
+  { 18, 27, 50, RISE, MONS_VAULT_WARDEN },
+
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static void _igni_ipthes_summon()
+{
+    const god_type god = GOD_IGNI_IPTHES;
+
+    const int how_many = 1 + div_rand_round(you.experience_level, 3);
+    bool success = false;
+
+    for (int i = 0; i < how_many; i++)
+    {
+        monster_type mon = pick_monster_from(pop_igni_ipthes_wrath,
+                                             you.experience_level);
+
+        success |= !!create_monster(_wrath_mon_data(mon, god), false);
+    }
+
+    if (success)
+        simple_god_message(" incites a fiery army against you!", god);
+    else
+        simple_god_message(" fails to incite a fiery army against you.", god);
+}
+
+static bool _igni_ipthes_retribution()
+{
+    god_type god = GOD_IGNI_IPTHES;
+
+    _igni_ipthes_summon();
+
+    you.increase_duration(DUR_NO_SCROLLS, 70 + random2(90), 15);
+    simple_god_message(" prevents you from reading scrolls!", god);
+
+    return true;
+}
+
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -1745,6 +1794,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
+    case GOD_IGNI_IPTHES:   do_more = _igni_ipthes_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

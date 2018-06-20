@@ -76,7 +76,7 @@ int artefact_value(const item_def &item)
 
     int ret = 10;
     artefact_properties_t prop;
-    artefact_properties(item, prop);
+    artefact_properties(item, prop, false);
 
     // Brands are already accounted for via existing ego checks
 

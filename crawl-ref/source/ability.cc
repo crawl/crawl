@@ -641,6 +641,14 @@ static const ability_def Ability_List[] =
     { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::none },
     { ABIL_WU_JIAN_WALLJUMP, "Wall Jump", 0, 0, 0, 0, {}, abflag::none },
 
+    // Igni Ipthes
+    { ABIL_IGNI_IPTHES_SCRAP, "Scrap", 0, 0, 0, 0, {}, abflag::none},
+    { ABIL_IGNI_IPTHES_FIRE_FORTRESS, "Fire Fortress", 
+      0, scaling_cost::fixed(1), 150, 0, {}, abflag::none},
+    { ABIL_IGNI_IPTHES_BRAND, "Brand Weapon", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_IGNI_IPTHES_DEDICATE, "Dedicate Armour", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_IGNI_IPTHES_IMMORTALIZE, "Immortalize Weapon", 0, 0, 0, 0, {}, abflag::none },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
@@ -1352,6 +1360,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         case ABIL_SIF_MUNA_DIVINE_ENERGY:
         case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
         case ABIL_WU_JIAN_WALLJUMP:
+        case ABIL_IGNI_IPTHES_SCRAP:
+        case ABIL_IGNI_IPTHES_BRAND:
+        case ABIL_IGNI_IPTHES_DEDICATE:
+        case ABIL_IGNI_IPTHES_IMMORTALIZE:
         case ABIL_DIG: // Doesn't work when starving, but is free to toggle.
             hungerCheck = false;
             break;
@@ -3039,6 +3051,32 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         return wu_jian_wall_jump_ability() ? SPRET_SUCCESS : SPRET_ABORT;
 
+    case ABIL_IGNI_IPTHES_SCRAP:
+        if (!igni_ipthes_scrap_ability())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_IGNI_IPTHES_FIRE_FORTRESS:
+        fail_check();
+        if (!igni_ipthes_fire_fortress_ability())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_IGNI_IPTHES_BRAND:
+        if (!igni_ipthes_brand_ability())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_IGNI_IPTHES_DEDICATE:
+        if (!igni_ipthes_dedicate_ability())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_IGNI_IPTHES_IMMORTALIZE:
+        if (!igni_ipthes_immortalize_ability())
+            return SPRET_ABORT;
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3600,6 +3638,15 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
         first_slot = letter_to_index('G');
+        break;
+    case ABIL_IGNI_IPTHES_SCRAP:
+        first_slot = letter_to_index('s');
+        break;
+    case ABIL_IGNI_IPTHES_FIRE_FORTRESS:
+    case ABIL_IGNI_IPTHES_BRAND:
+    case ABIL_IGNI_IPTHES_DEDICATE:
+    case ABIL_IGNI_IPTHES_IMMORTALIZE:
+        first_slot = letter_to_index('a');
         break;
     default:
         break;

@@ -862,3 +862,28 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Scrap ability
+
+Jewellery with useful properties can be sacrificed in exchange for enchant
+scrolls.
+%%%%
+Fire Fortress ability
+
+Clouds of mystical fire will be conjured around you and contiguous monsters,
+disarming all enemies in the process. Worshipers that step into these flames
+will incur penance.
+%%%%
+Brand Weapon ability
+
+Changes a weapon's brand to be one of Flaming, Freezing, or Venom.
+%%%%
+Dedicate Armour ability
+
+Grants a piece of armour artefact properties for a cost, but said properties
+will only be active when inside the branch they were crafted in. This ability 
+can only be used once for each equipment slot.
+%%%%
+Immortalize Weapon ability
+
+Grants a weapon artefact qualities for a cost.

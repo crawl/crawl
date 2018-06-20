@@ -638,6 +638,13 @@ void init_element_colours()
                               {40, YELLOW},
                               {10, WHITE},
                             }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_IGNI_IPTHES, "igni ipthes",
+                            { {40,  RED},
+                              {40,  LIGHTRED},
+                              {40,  LIGHTGREY},
+                              {40,  WHITE},
+                            }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

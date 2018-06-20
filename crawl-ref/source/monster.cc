@@ -1074,6 +1074,9 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
 {
     ASSERT(item.defined());
 
+    if (testbits(flags, MF_DISARMED))
+        return false;
+
     const monster* other_mon = item.holding_monster();
 
     if (other_mon != nullptr)
@@ -1180,7 +1183,7 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     return true;
 }
 
-bool monster::drop_item(mon_inv_type eslot, bool msg)
+bool monster::drop_item(mon_inv_type eslot, bool msg, bool force)
 {
     int item_index = inv[eslot];
     if (item_index == NON_ITEM)
@@ -1196,7 +1199,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*this))
     {
-        if (!unequip(pitem, msg))
+        if (!unequip(pitem, msg, force))
             return false;
         was_unequipped = true;
     }
@@ -1560,7 +1563,7 @@ bool monster::wants_weapon(const item_def &weap) const
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
-        && artefact_property(weap, ARTP_PREVENT_SPELLCASTING))
+        && artefact_property(weap, ARTP_PREVENT_SPELLCASTING, false))
     {
         return false;
     }
@@ -1596,7 +1599,7 @@ bool monster::wants_armour(const item_def &item) const
     if (!pos().origin() && is_actual_spellcaster()
         && (property(item, PARM_EVASION) / 10 < -5
             || is_artefact(item)
-               && artefact_property(item, ARTP_PREVENT_SPELLCASTING)))
+               && artefact_property(item, ARTP_PREVENT_SPELLCASTING, false)))
     {
         return false;
     }
@@ -1610,7 +1613,7 @@ bool monster::wants_jewellery(const item_def &item) const
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(item)
-        && artefact_property(item, ARTP_PREVENT_SPELLCASTING))
+        && artefact_property(item, ARTP_PREVENT_SPELLCASTING, false))
     {
         return false;
     }
@@ -6422,44 +6425,51 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
     return &new_item;
 }
 
-/** Disarm this monster, and preferably pull the weapon into your tile.
+/** Forces the monster to drop an item.
  *
- *  @returns a pointer to the weapon disarmed, or nullptr if unsuccessful.
+ *  @returns true if an item was dropped.
  */
-item_def* monster::disarm()
+bool monster::disarm_slot(mon_inv_type mslot, bool safe_drop, bool msg)
 {
-    item_def *mons_wpn = mslot_item(MSLOT_WEAPON);
+    item_def *item = mslot_item(mslot);
 
-    // is it ok to move the weapon into your tile (w/o destroying it?)
-    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+    if (safe_drop && feat_eliminates_items(grd(pos())))
+        return false;
 
-    // It's ok to drop the weapon into deep water if it comes out right away,
-    // but if the monster is on lava we just have to abort.
-    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
-                             && (your_tile_ok
-                                 || !feat_eliminates_items(grd(pos())));
+    if (!item || mons_class_is_animated_weapon(type))
+        return false;
 
-    if (!mons_wpn
-        || mons_wpn->cursed()
-        || mons_class_is_animated_weapon(type)
-        || !adjacent(you.pos(), pos())
-        || !you.can_see(*this)
-        || !mon_tile_ok
-        || mons_wpn->flags & ISFLAG_SUMMONED)
+    // Note: cursed items can be disarmed. 
+    // This prevents abusing disarm as a reusable detect curse.
+    if (drop_item(mslot, false, true))
     {
-        return nullptr;
+        if (msg)
+        {
+            mprf("%s is disarmed of %s %s.", name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str(), 
+                 item->name(DESC_THE).c_str());
+        }
+
+        if (type == MONS_CEREBOV)
+            you.props[CEREBOV_DISARMED_KEY] = true;
+
+        // Set this to prevent monsters from picking their items up.
+        flags |= MF_DISARMED;
+
+        return true;
     }
 
-    drop_item(MSLOT_WEAPON, false);
+    return false;
+}
 
-    // XXX: assumes nothing's re-ordering items - e.g. gozag gold
-    if (your_tile_ok)
-        move_top_item(pos(), you.pos());
-
-    if (type == MONS_CEREBOV)
-        you.props[CEREBOV_DISARMED_KEY] = true;
-
-    return mons_wpn;
+/** Forces the monster to drop its weapons.
+ *
+ *  @returns true if an item was dropped.
+ */
+bool monster::disarm(bool safe_drop, bool msg)
+{
+    return (disarm_slot(MSLOT_WEAPON, safe_drop, msg)
+            | disarm_slot(MSLOT_ALT_WEAPON, safe_drop, msg));
 }
 
 /**
@@ -6508,7 +6518,7 @@ bool monster::attempt_escape(int attempts)
         }
         else
             randfact = roll_dice(1, 3 + you.experience_level);
-    }
+   }
     else
     {
         randfact = roll_dice(1, 5) + 5;

@@ -217,7 +217,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, true);
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
         you.redraw_armour_class = true;
@@ -267,6 +267,15 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
+
+    if (proprt[ARTP_SILENCE])
+    {
+        invalidate_agrid(true);
+
+        if (you.beheld())
+            you.update_beholders();
+    }
+
 #undef unknown_proprt
 }
 
@@ -301,7 +310,7 @@ static void _unequip_fragile_artefact(item_def& item, bool meld)
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, false);
 
     if (proprt[ARTP_FRAGILE] && !meld)
     {
@@ -319,7 +328,7 @@ static void _unequip_artefact_effect(item_def &item,
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, false);
     const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
@@ -365,6 +374,14 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
+
+    if (proprt[ARTP_SILENCE])
+    {
+        invalidate_agrid(true);
+
+        if (you.beheld())
+            you.update_beholders();
+    }
 
     if (is_unrandom_artefact(item))
     {
@@ -464,7 +481,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         if (artefact)
         {
-            special = artefact_property(item, ARTP_BRAND);
+            special = artefact_property(item, ARTP_BRAND, true);
 
             if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
             {

@@ -2434,19 +2434,29 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
 {
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
                                              SCR_ENCHANT_WEAPON);
+
     if (!weapon)
-        return !alreadyknown;
+    {
+        if (!alreadyknown
+            || (you_worship(GOD_IGNI_IPTHES)
+                && yesno("Sacrifice scroll for piety?", true, 'n')))
+        {
+            did_god_conduct(DID_ENCHANT_SCROLL, 1);
+            return true;
+        }
+
+        return false;
+    }
 
     enchant_weapon(*weapon, false);
+    did_god_conduct(DID_ENCHANT_SCROLL, 1);
     return true;
 }
 
-bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
+bool enchant_armour(item_def &arm, bool quiet)
 {
     ASSERT(arm.defined());
     ASSERT(arm.base_type == OBJ_ARMOUR);
-
-    ac_change = 0;
 
     // Cannot be enchanted.
     if (!is_enchantable_armour(arm))
@@ -2467,30 +2477,37 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     }
 
     arm.plus++;
-    ac_change++;
 
     return true;
 }
 
-static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
+static bool _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
     item_def* target = _choose_target_item_for_scroll(alreadyknown, OSEL_ENCHANTABLE_ARMOUR,
                                                       "Enchant which item?");
 
     if (!target)
-        return alreadyknown ? -1 : 0;
+    {
+        if (!alreadyknown
+            || (you_worship(GOD_IGNI_IPTHES)
+                && yesno("Sacrifice scroll for piety?", true, 'n')))
+        {
+            did_god_conduct(DID_ENCHANT_SCROLL, 1);
+            return true;
+        }
+
+        return false;
+    }
 
     // Okay, we may actually (attempt to) enchant something.
     if (alreadyknown)
         mpr(pre_msg);
 
-    int ac_change;
-    bool result = enchant_armour(ac_change, false, *target);
-
-    if (ac_change)
+    if (enchant_armour(*target, false))
         you.redraw_armour_class = true;
 
-    return result ? 1 : 0;
+    did_god_conduct(DID_ENCHANT_SCROLL, 1);
+    return true;
 }
 
 void random_uselessness()
@@ -2700,9 +2717,13 @@ string cannot_read_item_reason(const item_def &item)
             return "";
 
         case SCR_ENCHANT_ARMOUR:
+            if (you_worship(GOD_IGNI_IPTHES))
+                return "";
             return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
 
         case SCR_ENCHANT_WEAPON:
+            if (you_worship(GOD_IGNI_IPTHES))
+                return "";
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
@@ -3047,8 +3068,7 @@ void read_scroll(item_def& scroll)
             mpr("It is a scroll of enchant armour.");
             // included in default force_more_message (to show it before menu)
         }
-        cancel_scroll =
-            (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
+        cancel_scroll = !_handle_enchant_armour(alreadyknown, pre_succ_msg);
         break;
 #if TAG_MAJOR_VERSION == 34
     // Should always be identified by Ashenzari.

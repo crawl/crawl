@@ -253,6 +253,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_WU_JIAN,
     DNGN_TRANSPORTER,
     DNGN_TRANSPORTER_LANDING,
+    DNGN_ALTAR_IGNI_IPTHES,
 #endif
 
     NUM_FEATURES

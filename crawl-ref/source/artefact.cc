@@ -80,7 +80,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSE)))
+                 || artefact_property(item, ARTP_CURSE, false)))
     {
         return false;
     }
@@ -89,8 +89,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     {
     case GOD_ELYVILON:
         // Peaceful healer god: no berserking.
-        if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
+        if (artefact_property(item, ARTP_ANGRY, false)
+            || artefact_property(item, ARTP_BERSERK, false))
         {
             return false;
         }
@@ -98,7 +98,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_ZIN:
         // Lawful god: no mutagenics.
-        if (artefact_property(item, ARTP_CONTAM))
+        if (artefact_property(item, ARTP_CONTAM, false))
             return false;
         break;
 
@@ -107,8 +107,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
             return false;
 
-        if (artefact_property(item, ARTP_INVISIBLE)
-            || artefact_property(item, ARTP_STEALTH) > 0)
+        if (artefact_property(item, ARTP_INVISIBLE, false)
+            || artefact_property(item, ARTP_STEALTH, false) > 0)
         {
             return false;
         }
@@ -127,7 +127,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_SIF_MUNA:
     case GOD_VEHUMET:
         // The magic gods: no preventing spellcasting.
-        if (artefact_property(item, ARTP_PREVENT_SPELLCASTING))
+        if (artefact_property(item, ARTP_PREVENT_SPELLCASTING, false))
             return false;
         break;
 
@@ -136,7 +136,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
             return false;
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
+        if (artefact_property(item, ARTP_MAGICAL_POWER, false) > 0)
             return false;
         break;
 
@@ -155,8 +155,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (ego == SPARM_RUNNING)
             return false;
 
-        if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
+        if (artefact_property(item, ARTP_ANGRY, false)
+            || artefact_property(item, ARTP_BERSERK, false))
         {
             return false;
         }
@@ -176,7 +176,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         }
         // No reducing stealth.
-        if (artefact_property(item, ARTP_STEALTH) < 0)
+        if (artefact_property(item, ARTP_STEALTH, false) < 0)
             return false;
         break;
 
@@ -460,7 +460,7 @@ void artefact_desc_properties(const item_def &item,
         return;
 
     // actual artefact properties
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, false);
 
     // fake artefact properties (intrinsics)
     _populate_item_intrinsic_artps(item, proprt, known);
@@ -725,6 +725,9 @@ static const artefact_prop_data artp_data[] =
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
+    { "rCloud", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RCLOUD,
+    { "Silence", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SILENCE,
+    { "Dedicated", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_DEDICATED,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -981,7 +984,8 @@ static bool _init_artefact_properties(item_def &item)
 
 void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt,
-                         artefact_known_props_t &known)
+                         artefact_known_props_t &known,
+                         bool check_suppressed)
 {
     ASSERT(is_artefact(item));
     if (!item.props.exists(KNOWN_PROPS_KEY))
@@ -1025,36 +1029,48 @@ void artefact_properties(const item_def &item,
     }
     else
         _get_randart_properties(item, proprt);
+
+    if (check_suppressed)
+    {
+        for (int i = 0; i < ART_PROPERTIES; i++)
+        {
+            artefact_prop_type prop = static_cast<artefact_prop_type>(i);
+            if (suppressed_artefact_property(item, prop))
+                proprt[i] = 0;
+        }
+    }
 }
 
 void artefact_properties(const item_def &item,
-                         artefact_properties_t &proprt)
+                         artefact_properties_t &proprt,
+                         bool check_suppressed)
 {
     artefact_known_props_t known;
 
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, check_suppressed);
 }
 
 int artefact_property(const item_def &item, artefact_prop_type prop,
-                      bool &_known)
+                      bool &_known, bool check_suppressed)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
     proprt.init(0);
     known.init(0);
 
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, check_suppressed);
 
     _known = known[prop];
 
     return proprt[prop];
 }
 
-int artefact_property(const item_def &item, artefact_prop_type prop)
+int artefact_property(const item_def &item, artefact_prop_type prop,
+                      bool check_suppressed)
 {
     bool known;
 
-    return artefact_property(item, prop, known);
+    return artefact_property(item, prop, known, check_suppressed);
 }
 
 int artefact_known_property(const item_def &item, artefact_prop_type prop)
@@ -1064,7 +1080,7 @@ int artefact_known_property(const item_def &item, artefact_prop_type prop)
     proprt.init(0);
     known.init(0);
 
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt, known, false);
 
     if (known[prop])
         return proprt[prop];
@@ -1584,7 +1600,7 @@ bool randart_is_bad(const item_def &item)
 {
     artefact_properties_t proprt;
     proprt.init(0);
-    artefact_properties(item, proprt);
+    artefact_properties(item, proprt, false);
 
     return randart_is_bad(item, proprt);
 }
@@ -1611,9 +1627,7 @@ static void _artefact_setup_prop_vectors(item_def &item)
     }
 }
 
-// If force_mundane is true, normally mundane items are forced to
-// nevertheless become artefacts.
-bool make_item_randart(item_def &item, bool force_mundane)
+bool make_item_blank_randart(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1630,31 +1644,8 @@ bool make_item_randart(item_def &item, bool force_mundane)
     if (item.flags & ISFLAG_UNRANDART)
         return false;
 
-    // Mundane items are much less likely to be artefacts.
-    if (!force_mundane && item.is_mundane() && !one_chance_in(5))
-        return false;
-
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
-
-    const god_type god_gift = origin_as_god_gift(item);
-
-    int randart_tries = 500;
-    do
-    {
-        // Now that we found something, initialise the props array.
-        if (--randart_tries <= 0 || !_init_artefact_properties(item))
-        {
-            // Something went wrong that no amount of rerolling will fix.
-            item.unrand_idx = 0;
-            item.props.erase(ARTEFACT_PROPS_KEY);
-            item.props.erase(KNOWN_PROPS_KEY);
-            item.flags &= ~ISFLAG_RANDART;
-            return false;
-        }
-    }
-    while (randart_is_bad(item)
-           || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
 
     // get true artefact name
     if (item.props.exists(ARTEFACT_NAME_KEY))
@@ -1668,6 +1659,41 @@ bool make_item_randart(item_def &item, bool force_mundane)
     else
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
             make_artefact_name(item, true);
+
+    return true;
+}
+
+// If force_mundane is true, normally mundane items are forced to
+// nevertheless become artefacts.
+bool make_item_randart(item_def &item, bool force_mundane)
+{
+    // Mundane items are much less likely to be artefacts.
+    if (!force_mundane && item.is_mundane() && !one_chance_in(5))
+        return false;
+
+    if (!make_item_blank_randart(item))
+        return false;
+
+    const god_type god_gift = origin_as_god_gift(item);
+
+    int randart_tries = 500;
+    do
+    {
+        // Now that we found something, initialise the props array.
+        if (--randart_tries <= 0 || !_init_artefact_properties(item))
+        {
+            // Something went wrong that no amount of rerolling will fix.
+            item.unrand_idx = 0;
+            item.props.erase(ARTEFACT_PROPS_KEY);
+            item.props.erase(KNOWN_PROPS_KEY);
+            item.props.erase(ARTEFACT_NAME_KEY);
+            item.props.erase(ARTEFACT_APPEAR_KEY);
+            item.flags &= ~ISFLAG_RANDART;
+            return false;
+        }
+    }
+    while (randart_is_bad(item)
+           || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
 
     return true;
 }
@@ -1687,7 +1713,7 @@ static void _make_faerie_armour(item_def &item)
         }
 
         // -Cast makes no sense on someone called "the Enchantress".
-        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING))
+        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING, false))
             continue;
 
         if (one_chance_in(20))
@@ -1825,6 +1851,16 @@ void artefact_set_property(item_def          &item,
     rap_vec[prop].get_short() = val;
 }
 
+void artefact_set_properties(item_def &item, 
+                             const artefact_properties_t &props)
+{
+    for (unsigned i = 0; i < props.size(); ++i)
+    {
+        artefact_prop_type prop = static_cast<artefact_prop_type>(i);
+        artefact_set_property(item, prop, props[i]);
+    }
+}
+
 template<typename Z>
 static inline void artefact_pad_store_vector(CrawlVector &vec, Z value)
 {
@@ -1848,4 +1884,23 @@ void artefact_fixup_props(item_def &item)
 
     if (props.exists(KNOWN_PROPS_KEY))
         artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
+}
+
+bool suppressed_artefact_property(const item_def &item, 
+                                  artefact_prop_type prop)
+{
+    if (prop == ARTP_BRAND
+        || prop == ARTP_CONTAM
+        || prop == ARTP_CORRODE
+        || prop == ARTP_DRAIN
+        || prop == ARTP_FRAGILE
+        || prop == ARTP_DEDICATED)
+    {
+        return false;
+    }
+
+    if (int dedi = artefact_property(item, ARTP_DEDICATED, false))
+        return (dedi - 1) != you.where_are_you;
+
+    return false;
 }

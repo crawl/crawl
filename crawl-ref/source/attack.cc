@@ -367,7 +367,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
-        artefact_properties(*weapon, art_props);
+        artefact_properties(*weapon, art_props, true);
         if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }

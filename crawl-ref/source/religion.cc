@@ -341,6 +341,14 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_WU_JIAN_HEAVENLY_STORM, "summon a storm of heavenly clouds to empower your attacks",
            "summon a storm of heavenly clouds" },
     },
+
+    // Igni Ipthes
+    { { 0, ABIL_IGNI_IPTHES_SCRAP, "scrap jewellery for enchant scrolls" },
+      { 1, ABIL_IGNI_IPTHES_FIRE_FORTRESS, "conjure fire fortresses" },
+      { 3, ABIL_IGNI_IPTHES_BRAND, "brand weapons" },
+      { 4, ABIL_IGNI_IPTHES_DEDICATE, "dedicate armour" },
+      { 6, ABIL_IGNI_IPTHES_IMMORTALIZE, "immortalize a weapon" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -2099,7 +2107,8 @@ string god_name(god_type which_god, bool long_name)
     case GOD_PAKELLAS:      return "Pakellas";
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
-    case GOD_WU_JIAN:     return "Wu Jian";
+    case GOD_WU_JIAN:       return "Wu Jian";
+    case GOD_IGNI_IPTHES:   return "Igni Ipthes";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -3126,6 +3135,21 @@ static void _god_welcome_handle_gear()
         }
     }
 
+    if (you_worship(GOD_IGNI_IPTHES))
+    {
+        if (!item_type_known(OBJ_SCROLLS, SCR_ENCHANT_WEAPON))
+        {
+            set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON, true);
+            pack_item_identify_message(OBJ_SCROLLS, SCR_ENCHANT_WEAPON);
+        }
+
+        if (!item_type_known(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR))
+        {
+            set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, true);
+            pack_item_identify_message(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR);
+        }
+    }
+
     if (have_passive(passive_t::identify_items))
     {
         // Seemingly redundant with auto_id_inventory(), but we don't want to
@@ -4059,6 +4083,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_SIF_MUNA:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
+        case GOD_IGNI_IPTHES:
             if (one_chance_in(35))
                 lose_piety(1);
             break;

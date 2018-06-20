@@ -61,5 +61,8 @@ enum artefact_prop_type
     ARTP_SLOW,
     ARTP_FRAGILE,
     ARTP_SHIELDING,
+    ARTP_RCLOUD,
+    ARTP_SILENCE,
+    ARTP_DEDICATED,
     ARTP_NUM_PROPERTIES
 };

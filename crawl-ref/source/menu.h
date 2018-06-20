@@ -153,7 +153,7 @@ public:
         {
             char buf[300];
             snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
+                    " %c %c %s", hotkeys[0], selected() ? '+' : '-',
                                  text.c_str());
             return string(buf);
         }
@@ -167,7 +167,7 @@ public:
 
     virtual bool selected() const
     {
-        return selected_qty > 0 && quantity;
+        return preselected || (selected_qty > 0 && quantity);
     }
 
     // -1: Invert
