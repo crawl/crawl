@@ -822,63 +822,62 @@ vnn===nnv
 G...@...G
 ENDMAP
 
-NAME: ebering_ghost_funeral_grove
-DEPTH: D:8-, Lair, Swamp
+NAME:   ebering_ghost_funeral_grove
+DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
-
-# Foliage
-SUBST: - = pt.
-: if you.in_branch("Dungeon") then
-COLOUR: .' = green
-FTILE: .pO' = floor_moss
-: end
-
-: if crawl.one_chance_in(5) then
+# Monsters and loot
+KITEM:  O = potion of lignification ident:all
+KMONS:  O = player ghost
 : if you.in_branch("Swamp") then
+MONS:   spriggan rider, spriggan rider ; spear randart | trident randart
+MONS:   spriggan druid
+NSUBST: ' = 4=|* / 098 / 098. / 111. / 2 / 3 / .
+# Lair and Dungeon
+: else
+MONS:   wolf / black bear / polar bear
+MONS:   spriggan ; spear | trident, spriggan ; spear randart | trident randart
+MONS:   spriggan rider, spriggan rider ; spear randart | trident randart
+MONS:   boggart
+:     if you.absdepth() < 10 then
+NSUBST: ' = * / *% / 1 / 1. / 2 / 2. / 3 / .
+:     elseif you.absdepth() < 12 then
+NSUBST: ' = |* / * / %$.. / 1 / 1. / 2 / 2. / 3 / 4. / .
+:     elseif you.absdepth() < 14 then
+NSUBST: ' = 2=|* / %$ / 1 / 1. / 2 / 24.. / 5 / 6. / .
+:     else
+NSUBST: ' = 2=|* / *% / %$.. / 1 / 122. / 244. / 5 / 6 / .
+:     end
+: end
+# Foliage, 1/5 chance for death theme in swamp or Autumn theme elsewhere.
+: if crawl.one_chance_in(5) then
+:     if you.in_branch("Swamp") then
+KMONS:  p = withered plant / fungus
 COLOUR: t = lightgrey / darkgrey / brown
 TILE: t = dngn_tree_dead / dngn_tree_yellow w:5
 : set_feature_name("tree","dead tree")
-MONS: withered plant, fungus
-: else
-MONS: plant, fungus
+:     else
+KMONS:  p = plant / fungus
 COLOUR: t = lightred / red w:4 / yellow w:4
-TILE: t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
-: end
+TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+:     end
 : else
-MONS: plant, plant / fungus w:5
+KMONS:  p = plant / fungus w:2
 : end
-SUBST: p = 12
-SUBST: S : GV A:1
-
-# Monsters and loot
-: if you.absdepth() < 10 then
-MONS: spriggan ; spear, spriggan druid
-SUBST: " = *
-NSUBST: ' = *% / M, M = 4 / 3 / 3. / .
-: elseif you.absdepth() < 12 then
-MONS: spriggan rider / spriggan ; spear, spriggan druid
-SUBST: " = |*
-NSUBST:  ' = * / %$MM / M, M = 4 / 3 / 3. / .
-: elseif you.absdepth() < 14 then
-MONS: spriggan rider, spriggan druid
-SUBST: " = |*
-NSUBST:  ' = |* / %$ / M, M = 4 / 3 / 333. / .
-: else
-MONS: spriggan rider, spriggan druid
-SUBST: " = |*
-NSUBST:  ' = |* / *% / %$MM / M, M = 4 / 2=3 / 3.
+SUBST:  - = pt., S : GV A:1
+# Dungeon needs floor color and tiles.
+: if you.in_branch("Dungeon") then
+COLOUR: .pO012345689|*$ = green
+FTILE:  tGVA.pO012345689|*$ = floor_moss
 : end
-
-KMONS: O = player ghost
-KITEM: O = potion of lignification ident:all
-: ghost_vault_setup(_G)
+: ghost_setup(_G)
 MAP
   ttttttt
  tt'''--tt
- t--t-..-t
- tt-"O--.t
+ t'-t-..-t
+ tt-'O--.t
 tt-..t--.tt
 t-'-.---t't
 t'tnn=nnt't
-tttS.@.Sttt
+ttnS...Sntt
+ ....@....
 ENDMAP
