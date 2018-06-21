@@ -10,6 +10,7 @@
 #include "attack.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -980,7 +981,7 @@ string attack::debug_damage_number()
  *
  * Used in player / monster (both primary and aux) attacks
  */
-string attack::attack_strength_punctuation(int dmg)
+string attack_strength_punctuation(int dmg)
 {
     if (dmg < HIT_WEAK)
         return ".";
@@ -989,16 +990,7 @@ string attack::attack_strength_punctuation(int dmg)
     else if (dmg < HIT_STRONG)
         return "!!";
     else
-    {
-        string ret = "!!!";
-        int tmpdamage = dmg;
-        while (tmpdamage >= 2*HIT_STRONG)
-        {
-            ret += "!";
-            tmpdamage >>= 1;
-        }
-        return ret;
-    }
+        return string(3 + (int) log2(dmg / HIT_STRONG), '!');
 }
 
 /* Returns evasion adverb
