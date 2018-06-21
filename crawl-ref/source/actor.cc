@@ -765,22 +765,8 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     {
         exclamations = ", but do no damage.";
     }
-    else if (damage < HIT_WEAK)
-        exclamations = ".";
-    else if (damage < HIT_MED)
-        exclamations = "!";
-    else if (damage < HIT_STRONG)
-        exclamations = "!!";
     else
-    {
-        int tmpdamage = damage;
-        exclamations = "!!!";
-        while (tmpdamage >= 2 * HIT_STRONG)
-        {
-            exclamations += "!";
-            tmpdamage >>= 1;
-        }
-    }
+        exclamations = attack_strength_punctuation(damage);
 
     if (is_player() || you.can_see(*this))
     {
