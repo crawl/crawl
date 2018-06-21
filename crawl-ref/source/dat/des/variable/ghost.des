@@ -82,6 +82,34 @@ function setup_hydra_weapon(e)
     local weapon_def = random_item_def(weapons, egos, crawl.one_chance_in(3))
     e.kitem("O = " .. weapon_def)
 end
+
+-- Set up equipment for the fancier orc warriors, knights, and warlord in
+-- biasface_ghost_orc_armoury.
+function setup_armoury_orcs(e)
+    warrior_weap = {["long sword"] = 10, ["short sword"] = 10,
+                    ["scimitar"] = 10, ["battleaxe"] = 10, ["hand axe"] = 10,
+                    ["halberd"] = 10, ["glaive"] = 10, ["mace"] = 10,
+                    ["dire flail"] = 10, ["trident"] = 10, ["war axe"] = 9,
+                    ["flail"] = 9, ["broad axe"] = 1, ["morningstar"] = 1}
+    knight_weap = {["great sword"] = 4, ["long sword"] = 4, ["battleaxe"] = 4,
+                   ["war axe"] = 4, ["great mace"] = 3, ["dire flail"] = 2,
+                   ["bardiche"] = 1, ["glaive"] = 1, ["broad axe"] = 1 ,
+                   ["halberd"] = 1}
+    make_arte_weap = crawl.coinflip()
+    warrior_def = random_item_def(warrior_weap, nil, make_arte, '|')
+    knight_def = random_item_def(knight_weap, nil, make_arte, '|')
+    e.kmons("D = orc warrior ; " .. warrior_def .. " . chain mail good_item " ..
+            "| chain mail randart | plate armour good_item" ..
+            "| plate armour randart")
+    e.kmons("E = orc knight ; " .. knight_def .. " . chain mail good_item " ..
+            "| chain mail randart | plate armour good_item " ..
+            "| plate armour randart")
+    e.kmons("F = orc warlord ; " .. knight_def .. " . chain mail good_item " ..
+            "| plate armour good_item " ..
+            "| plate armour randart . shield good_item w:4" ..
+            "| shield randart w:2 | large shield good_item w:2 " ..
+            "| large shield randart w:1")
+end
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -891,4 +919,57 @@ t-'-.---t't
 t'tnn=nnt't
 ttnS...Sntt
  ....@....
+ENDMAP
+
+NAME:   biasface_ghost_orc_armoury
+DEPTH:  D:3-, Orc
+ITEM:   boots / helmet / hat / gloves / cloak
+ITEM:   boots good_item / helmet good_item / hat good_item / \
+        gloves good_item / cloak good_item
+ITEM:   any armour, any armour good_item, any weapon, any weapon good_item
+ITEM:   any jewellery, any jewellery good_item
+KMONS:  O = player ghost
+MONS:   orc, orc ; any weapon good_item | any weapon randart . \
+            leather armour good_item | leather_armour randart | \
+            ring mail good_item | ring mail randart | scale mail good_item | \
+            scale mail randart | chain mail good_item | chain mail randart
+MONS:   orc priest, warg, orc warrior, orc knight, orc high priest
+: setup_armoury_orcs(_G)
+: if you.in_branch("D") then
+:     if you.depth() < 4 then
+SUBST:  hj = -
+NSUBST: - = 3=1 / 6=1. / 2 / 3... / .
+:     elseif you.depth() < 6 then
+SUBST:  h = h-, j = -
+NSUBST: - = 3=1 / 6=1. / 2 / 3 / 3. / 5... / .
+:     elseif you.depth() < 9 then
+SUBST:  d = e, j = -
+NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4... / 2=5. / D / .
+:     elseif you.depth() < 12 then
+SUBST:  d = e, f = g, j = j-
+NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4. / 5 / 2=5. / D / .
+:     elseif you.depth() < 14 then
+SUBST:  d = e, f = g, h = i
+NSUBST: - = 3=1 / 4=1. / 3 / 2=3. / 4. / 2=5 / 4=5. / DDDE / .
+:     else
+SUBST:  d = e, f = g, h = i, j = k
+NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / 2=6 / 2=6. / EEEF / .7 / .
+:    end
+# Orc
+: else
+SUBST:  d = e, f = g, h = i, j = k
+NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / 2=6 / 2=6. / EEEF / .7 / .
+: end
+KFEAT:  _ = altar_beogh
+: ghost_setup(_G)
+MAP
+ccccccccccccccc
+cI---hd_fj---Ic
+c-------------c
+c-cIc--I--cIc-c
+c-cnc--O--cnc-c
+c----ccncc----c
+c.............c
+cnnnnn===nnnnnc
+I......@......I
 ENDMAP
