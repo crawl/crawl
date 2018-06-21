@@ -672,3 +672,57 @@ c---------c
 cnnn===nnnc
  ....@....
 ENDMAP
+
+NAME:   muffindrake_ghost_lightning
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player_ghost
+MONS:   storm dragon
+MONS:   black draconian
+MONS:   air elemental
+MONS:   titan
+MONS:   black draconian stormcaller
+MONS:   spark wasp
+: if not you.uniques("Sojobo") and crawl.one_chance_in(4) then
+MONS:   sojobo band
+: else
+MONS:   titan
+: end
+NSUBST: - = 3:1 / 4:2 / 2:3 / 1:4 / 1:5 / 1:6 / 1:7 / 1:8 / 1:O
+NSUBST: _ = 1:1 / 2:2 / 1:3 / 1:6 / 1:O
+FTILE:  12345678O-_$*| = floor_pebble_blue
+: ghost_setup(_G)
+MAP
+     ..nnnnnnnnnnn..
+    ..nn$$$$$n*|*nW..
+    .nn$$$$$n*||*nWW.
+    .n$$$$$n--nnnnwW..
+   ..n$$$nn----nnwwWW.
+   .nn$$n------nwwwwW.
+   .n$$n------nnwwwWW..
+  ..nnn-------nwwwwwWW.
+  .nn--------wnwwwwWWW..
+  .n-----m---nnwwwWWwWW.
+ ..n----m---wnwwwwwwwwW.
+ .nn---m----wnwwwnnnnnn.
+ .n----m----n=nnnn____n.
+ .n---m----wnnnwm_m___n.
+ .n--m----nnww--m_____n.
+..n--m-----w---wnnn___n.
+.nn----------wwnnn___nn.
+.n--------wnnn=nn__m_n..
+.n-----wwnnnwwwn____nn.
+.n--wnnnnnwwwwnn____n..
+.nnnnnwwwwwwwnn____nn.
+.WWwwwwwwwwnnn_____n..
+..Wwwwwwwwnn_____nnn.
+ .WWwwwwwwn__m_nnn...
+ ..WWwwwwnn___nn...
+  ..Wwwwnn___nn..
+   .Wwwnn____n..
+   .WWwn___nnn.
+   ..Wwn__nn...
+    .WWn=nn..
+    ..nWWWWn
+     ..nnn@
+ENDMAP
