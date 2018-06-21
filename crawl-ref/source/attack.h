@@ -170,7 +170,6 @@ protected:
 
     /* Output */
     string debug_damage_number();
-    string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
     virtual void set_attack_verb(int damage) = 0;
@@ -201,3 +200,5 @@ protected:
     virtual int  player_stab(int damage);
     virtual void player_stab_check();
 };
+
+string attack_strength_punctuation(int dmg);
