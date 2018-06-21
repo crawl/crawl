@@ -21,54 +21,65 @@
 : require("dlua/ghost.lua")
 
 {{
--- Set up the non-flaming edged weapon "left" by the ghost in
--- gammafunk_ghost_hydra_chop.
-function init_hydra_weapon(e)
-    make_arte = crawl.one_chance_in(3)
 
-    -- Basic set of egos with weights.
-    egos  =  {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
-              ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
-              ["vampiric"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
-              ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2,
-              ["speed"] = 1}
+-- Make an item definition that will randomly choose from combinations of the
+-- given tables of weighted item types and optional egos. If make_arte is true,
+-- a quality of 'randart' will be used instead of the default 'good_item'. The
+-- separator arg allows using this for MONS statements, where the '|' separator
+-- is needed.
+function random_item_def(items, egos, make_arte, separator)
+    separator = separator ~= nil and separator or '/'
+    local item_def
 
-    -- Possible weapon types with weights. We stick to weapons wieldable by all
-    -- non-felids.
-    weapons = {["long blade"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
-               ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
-               ["lajatang"] = 2}
+    for iname, iweight in pairs(items) do
+        quality = make_arte and " randart" or " good_item"
 
-    for wname, wweight in pairs(weapons) do
-        -- We need the sum of ego weights to make an ego rarity scaling factor.
-        esum = 0
-        for ego, weight in pairs(egos) do
-            esum = esum + weight
-            -- Don't allow demon weapons to get holy wrath or artefacts with
-            -- no ego.
-            if (not wname:find("demon") or ego ~= "holy_wrath")
-               and (not make_arte or ego ~= "none") then
-                esum  = esum + weight
-            end
-        end
-
-        -- Define an item spec with all weapon+ego combinations, each with
-        -- weight scaled by weapon rarity and ego rarity.
-        for ename, eweight in pairs(egos) do
-            if (not wname:find("demon") or ename ~= "holy_wrath")
-               and (not make_arte or ename ~= "none") then
-                quality = make_arte and " randart" or " good_item"
-                -- Scale the final weight by 300 so the smallest is non-zero.
-                def = wname .. quality .. " ego:" .. ename .. " w:" ..
-                      math.floor(300 * wweight * eweight / esum)
-                if weapon_def == nil then
-                     weapon_def = def
-                else
-                     weapon_def = weapon_def .. " / " .. def
+        -- If we have egos, define an item spec with all item+ego
+        -- combinations, each with weight scaled by item rarity and ego
+        -- rarity.
+        if egos ~= nil then
+            for ename, eweight in pairs(egos) do
+                if (not iname:find("demon") or ename ~= "holy_wrath")
+                   and (not make_arte or ename ~= "none") then
+                    def = iname .. quality .. " ego:" .. ename .. " w:" ..
+                          math.floor(iweight * eweight)
+                    if item_def == nil then
+                         item_def = def
+                    else
+                         item_def = item_def .. " " .. separator .. " " .. def
+                    end
                 end
+            end
+        -- No egos, so define item spec with all item combinations, each with
+        -- weight scaled by item rarity.
+        else
+            def = iname .. quality .. " w:" .. iweight
+            if item_def == nil then
+                 item_def = def
+            else
+                 item_def = item_def .. " " .. separator .. " " .. def
             end
         end
     end
+    return item_def
+end
+
+-- Set up the non-flaming edged weapon "left" by the ghost in
+-- gammafunk_ghost_hydra_chop.
+function setup_hydra_weapon(e)
+    -- Possible weapon types with weights. We stick to weapons wieldable by all
+    -- non-felids.
+    weapons = {["long sword"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
+               ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
+               ["lajatang"] = 2}
+
+    -- Basic set of egos with weights.
+    egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+            ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
+            ["vampiric"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
+            ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
+
+    local weapon_def = random_item_def(weapons, egos, crawl.one_chance_in(3))
     e.kitem("O = " .. weapon_def)
 end
 }}
@@ -590,7 +601,7 @@ ENDMAP
 NAME:   gammafunk_ghost_hydra_chop
 DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
-: init_hydra_weapon(_G)
+: setup_hydra_weapon(_G)
 KMONS:  O = player ghost
 {{
 -- Set up hydra monster entry with a range of possible extra heads based on
