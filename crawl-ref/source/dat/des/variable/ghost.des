@@ -384,7 +384,22 @@ ORIENT: float
 # If ghost selectors ever happen this should be a gozag ghost
 KMONS: O = player_ghost
 KFEAT: O = abandoned_shop
-ITEM: acquire gold
+# Scale up to acquire gold by depth
+# D:3 Min: 66 Max: 1656 Mean: 365 Dev: 274
+# D:7 Min: 154 Max: 3864 Mean: 851 Dev: 638
+# D:10- acquire gold
+{{
+  if you.in_branch("D") and you.depth() < 10 then
+    gold_qty = you.depth() * (20
+                             + crawl.roll_dice(1, 20)
+                             + (crawl.roll_dice(1, 8)
+                                * crawl.roll_dice(1, 8)
+                                * crawl.roll_dice(1, 8)))
+    item("gold q:" .. gold_qty)
+  else
+    item("acquire gold")
+  end
+}}
 NSUBST: ' = d / 2=998 / $
 KFEAT: Z = altar_gozag
 SUBST: _ = GZ
