@@ -427,6 +427,24 @@ cnn===nnc
  ...@...
 ENDMAP
 
+NAME: ebering_ghost_reflecting_pool
+ORIENT: float
+KMONS: O = player_ghost
+KFEAT: O = shallow_water
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
+MAP
+ccccc
+cdOec
+c-w-c
+c-w-c
+c-w-c
+c-W-c
+cn=nc
+ .@.
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
