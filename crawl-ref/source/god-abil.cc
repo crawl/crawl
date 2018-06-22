@@ -7894,7 +7894,7 @@ bool igni_ipthes_dedicate_ability()
     };
 
     for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
-        if (is_useless_item(costs[i].to_item()))
+        if (!is_emergency_item(costs[i].to_item()))
             costs[i] = { OBJ_GOLD, 0, 300 };
 
     uint64_t seed = you.birth_time;
@@ -8066,11 +8066,9 @@ bool igni_ipthes_immortalize_ability()
 {
     igni_cost costs[] = 
     {
+        { OBJ_GOLD, 0, 1400 },
         { OBJ_GOLD, 0, 1200 },
-        { OBJ_GOLD, 0, 1100 },
         { OBJ_GOLD, 0, 1000 },
-        { OBJ_GOLD, 0, 900 },
-        { OBJ_GOLD, 0, 800 },
         { OBJ_POTIONS, POT_CURING, 9 },
         { OBJ_POTIONS, POT_CURING, 8 },
         { OBJ_POTIONS, POT_CURING, 7 },
@@ -8082,40 +8080,25 @@ bool igni_ipthes_immortalize_ability()
         { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
         { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
         { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
+        { OBJ_POTIONS, POT_HASTE, 3 },
+        { OBJ_POTIONS, POT_HASTE, 3 },
         { OBJ_POTIONS, POT_HASTE, 3 },
         { OBJ_POTIONS, POT_HASTE, 2 },
+        { OBJ_POTIONS, POT_HASTE, 2 },
         { OBJ_POTIONS, POT_RESISTANCE, 2 },
-        { OBJ_POTIONS, POT_INVISIBILITY, 2 },
-        { OBJ_POTIONS, POT_AGILITY, 3 },
-        { OBJ_POTIONS, POT_MIGHT, 3 },
         { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
         { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
         { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
         { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 3 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 3 },
         { OBJ_SCROLLS, SCR_FEAR, 4 },
-        { OBJ_SCROLLS, SCR_FOG, 4 },
-        { OBJ_SCROLLS, SCR_BLINKING, 3 },
-        { OBJ_SCROLLS, SCR_BLINKING, 3 },
         { OBJ_SCROLLS, SCR_BLINKING, 3 },
         { OBJ_SCROLLS, SCR_BLINKING, 3 },
         { OBJ_SCROLLS, SCR_BLINKING, 2 },
         { OBJ_SCROLLS, SCR_BLINKING, 2 },
-        { OBJ_SCROLLS, SCR_BLINKING, 2 },
-        { OBJ_SCROLLS, SCR_BLINKING, 2 },
-        { OBJ_SCROLLS, SCR_SUMMONING, 1 },
-        { OBJ_SCROLLS, SCR_IMMOLATION, 3 },
-        { OBJ_SCROLLS, SCR_ACQUIREMENT, 1 },
-        { OBJ_SCROLLS, SCR_BRAND_WEAPON, 1 },
-        { OBJ_SCROLLS, SCR_MAGIC_MAPPING, 4 },
     };
 
     for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
-        if (is_useless_item(costs[i].to_item()))
+        if (!is_emergency_item(costs[i].to_item()))
             costs[i] = { OBJ_GOLD, 0, 1000 };
 
     uint64_t seed = you.birth_time;
