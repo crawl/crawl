@@ -2159,18 +2159,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     }
 
   do_terrain:
-
-    if (env.markers.property_at(target, MAT_ANY,
-                                "veto_fragmentation") == "veto")
-    {
-        if (caster->is_player() && !quiet)
-        {
-            mprf("%s seems to be unnaturally hard.",
-                 feature_description_at(target, false, DESC_THE, false).c_str());
-        }
-        return false;
-    }
-
     switch (grid)
     {
     // Stone and rock terrain
@@ -2220,10 +2208,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     case DNGN_SEALED_DOOR:
-        // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";
-
         // fall-through
     case DNGN_STONE_ARCH:
         if (what && *what == nullptr)

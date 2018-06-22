@@ -1074,7 +1074,7 @@ nsubst("G = " .. graves .. ":G / *:.")
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("Z", portal_desc { wizard_grave = 1})
 lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
-        veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
+        veto_dig="veto", veto_shatter="veto" })
 
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
@@ -1240,16 +1240,17 @@ lua_marker('A', summon_marker)
 lua_marker('A', wucad_marker)
 
 }}
-MARKER:     G = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+MARKER:     G = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     + = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+MARKER:     + = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     ' = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+MARKER:     ' = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     c = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+MARKER:     c = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
-                                  veto_shatter="veto", veto_fire="veto" }
+MARKER:     t = lua:props_marker {veto_dig="veto", \
+                                  veto_shatter="veto", \
+                                  veto_fire="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / hungry ghost w:2 / ]]

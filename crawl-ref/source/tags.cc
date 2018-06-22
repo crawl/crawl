@@ -5808,6 +5808,19 @@ static void tag_read_level(reader &th)
                 grd(dest) = DNGN_TRANSPORTER_LANDING;
         }
     }
+    if (th.getMinorVersion() < TAG_MINOR_VETO_DISINT)
+    {
+        for (map_marker *mark : env.markers.get_all(MAT_ANY))
+        {
+            if (mark->property("veto_disintegrate") == "veto")
+            {
+                map_wiz_props_marker *marker =
+                    new map_wiz_props_marker(mark->pos);
+                marker->set_property("veto_dig", "veto");
+                env.markers.add(marker);
+            }
+        }
+    }
 #endif
 
     env.properties.clear();

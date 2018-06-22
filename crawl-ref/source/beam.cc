@@ -805,7 +805,7 @@ void bolt::fake_flavour()
 
 void bolt::digging_wall_effect()
 {
-    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_dig") == "veto")
     {
         finish_beam();
         return;
