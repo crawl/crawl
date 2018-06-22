@@ -440,6 +440,49 @@ cn=nc
 ..@..
 ENDMAP
 
+NAME: ebering_ghost_sewer_d
+# based on sewer_entry_d
+ORIENT: float
+DEPTH: D:3-6
+KMONS: O = player_ghost
+KFEAT: O = expired_portal
+KMONS: 1 = patrolling adder
+KFEAT: 1 = W
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "W")
+COLOUR: 1W = lightgreen / cyan w:5
+FTILE: O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+       ..
+ccccccnn.
+cdOe1WW=.
+ccccccnn.
+       ..
+ENDMAP
+
+NAME: ebering_ghost_sewer_f
+# based on sewer_entry_f
+ORIENT: float
+DEPTH: D:3-6
+KMONS: O = player_ghost
+KFEAT: O = expired_portal
+KMONS:  1 = leopard gecko / giant cockroach / nothing w:5
+NSUBST: W = 6:1 / *:W
+KFEAT: 1 = W
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "W")
+COLOUR: 1W = lightgreen / cyan w:5
+FTILE: O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+ ccccccccccc
+.nWWWWeWWWWn.
+@=WWWWOWWWW=@
+.nWWWWdWWWWn.
+ ccccccccccc
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
