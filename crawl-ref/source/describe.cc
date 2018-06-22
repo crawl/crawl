@@ -214,6 +214,7 @@ static vector<string> _randart_propnames(artefact_properties_t proprt,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
+        { ARTP_IGNI,                  prop_note::plain },
         { ARTP_DEDICATED,             prop_note::plain },
         { ARTP_PREVENT_SPELLCASTING,  prop_note::plain },
         { ARTP_PREVENT_TELEPORTATION, prop_note::plain },
@@ -503,6 +504,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
         { ARTP_RCLOUD, "It protects you from clouds.", false},
         { ARTP_SILENCE, "It's shrouded in silence.", false},
+        { ARTP_IGNI, "It was crafted by the forge of Igni Ipthes.", false},
     };
 
     // Give a short description of the base type, for base types with no

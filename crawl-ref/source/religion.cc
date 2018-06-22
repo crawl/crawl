@@ -3052,6 +3052,23 @@ static bool _transformed_player_can_join_god(god_type which_god)
     }
 }
 
+static bool _player_can_join_god_equipped_with(god_type which_god)
+{
+    if (which_god == GOD_IGNI_IPTHES)
+    {
+        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
+        {
+            if (you.equip[i] == -1)
+                continue;
+
+            if (igni_hates(you.inv[you.equip[i]]))
+                return false;
+        }
+    }
+
+    return true;
+}
+
 int gozag_service_fee()
 {
     if (you.char_class == JOB_MONK && had_gods() == 0)
@@ -3111,6 +3128,9 @@ bool player_can_join_god(god_type which_god)
     {
       return false;
     }
+
+    if (!_player_can_join_god_equipped_with(which_god))
+        return false;
 
     return _transformed_player_can_join_god(which_god);
 }
@@ -3741,6 +3761,12 @@ void god_pitch(god_type which_god)
         {
             simple_god_message(" does not accept worship from those who are "
                                "unable to use magical devices!", which_god);
+        }
+        else if (!_player_can_join_god_equipped_with(which_god))
+        {
+            simple_god_message(" says: How dare you approach while wearing "
+                               "such tacky artefacts!",
+                               which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
         {

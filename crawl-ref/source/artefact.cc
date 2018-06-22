@@ -728,6 +728,7 @@ static const artefact_prop_data artp_data[] =
     { "rCloud", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RCLOUD,
     { "Silence", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SILENCE,
     { "Dedicated", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_DEDICATED,
+    { "Igni", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_IGNI,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

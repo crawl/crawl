@@ -64,5 +64,6 @@ enum artefact_prop_type
     ARTP_RCLOUD,
     ARTP_SILENCE,
     ARTP_DEDICATED,
+    ARTP_IGNI,
     ARTP_NUM_PROPERTIES
 };

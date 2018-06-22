@@ -7365,7 +7365,7 @@ bool wu_jian_wall_jump_ability()
 
 bool is_scrappable_jewellery(const item_def& item)
 {
-    if (item.base_type != OBJ_JEWELLERY)
+    if (item.base_type != OBJ_JEWELLERY || igni_hates(item))
         return false;
     
     if (!item_type_known(item))
@@ -8000,6 +8000,7 @@ bool igni_ipthes_dedicate_ability()
 
     props[ARTP_DEDICATED] = you.where_are_you + 1;
     props[ARTP_BRAND] = arm.brand;
+    props[ARTP_IGNI] = 1;
 
     if (armour_is_enchantable(arm))
         arm.plus += 1;
@@ -8239,6 +8240,7 @@ bool igni_ipthes_immortalize_ability()
         props[ARTP_BRAND] = wpn.brand;
     wpn.plus += 1 + props[ARTP_SLAYING];
     props[ARTP_SLAYING] = 0;
+    props[ARTP_IGNI] = 1;
 
     artefact_set_properties(wpn, props);
 

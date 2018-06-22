@@ -1502,6 +1502,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_RCLOUD",
         "ARTP_SILENCE",
         "ARTP_DEDICATED",
+        "ARTP_IGNI",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

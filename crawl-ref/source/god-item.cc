@@ -530,3 +530,11 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
 
     return true;
 }
+
+bool igni_hates(const item_def &item)
+{
+    if (!is_artefact(item))
+        return false;
+
+    return artefact_property(item, ARTP_IGNI, false) == 0;
+}

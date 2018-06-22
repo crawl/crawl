@@ -336,6 +336,12 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (!weapon)
         return true;
 
+    if (you_worship(GOD_IGNI_IPTHES) && igni_hates(*weapon))
+    {
+        SAY(simple_god_message(" prevents wielding such tacky artefacts!"));
+        return false;
+    }
+
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
@@ -988,6 +994,12 @@ static bool _can_equip_armour(const item_def &item)
     if (base_type != OBJ_ARMOUR)
     {
         mpr("You can't wear that.");
+        return false;
+    }
+
+    if (you_worship(GOD_IGNI_IPTHES) && igni_hates(item))
+    {
+        simple_god_message(" prevents wearing such tacky artefacts!");
         return false;
     }
 
@@ -1651,6 +1663,12 @@ static bool _can_puton_jewellery(int item_slot)
         || !is_amulet && !you_can_wear(EQ_RINGS, true))
     {
         mpr("You can't wear that in your present form.");
+        return false;
+    }
+
+    if (you_worship(GOD_IGNI_IPTHES) && igni_hates(item))
+    {
+        simple_god_message(" prevents putting on such tacky artefacts!");
         return false;
     }
 
