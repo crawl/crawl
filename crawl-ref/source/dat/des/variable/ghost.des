@@ -445,6 +445,28 @@ cn=nc
  .@.
 ENDMAP
 
+NAME: ebering_ghost_xom
+ORIENT: float
+KMONS: O = player_ghost
+KFEAT: O = altar_xom
+: lone_ghost_extra_loot(_G,"-")
+{{
+  egos = {["vorpal"] = 20, ["freezing"] = 15, ["flaming"] = 15,
+          ["venom"] = 10, ["protection"] = 10, ["electrocution"] = 5,
+          ["draining"] = 5, ["antimagic"] = 2}
+  local dagger_def = random_item_def({["dagger"] = 10}, egos,
+                                     crawl.one_chance_in(7), "|")
+  mons("dancing weapon; " .. dagger_def)
+}}
+FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
+MAP
+ ccc
+cc1cc
+cdOec
+cn=nc
+..@..
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
