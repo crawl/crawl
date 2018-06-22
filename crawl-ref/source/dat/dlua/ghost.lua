@@ -81,6 +81,53 @@ function random_item_def(items, egos, args, separator)
     return item_def
 end
 
+-- Basic loot scale for extra loot for lone ghosts. Takes none_glyph to use
+-- when it would like no item and adds depth appropriate items to d and e
+-- glyphs.
+function lone_ghost_extra_loot(e, none_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.subst("de = " .. none_glyph)
+        elseif you.depth() < 9 then
+            e.subst("d = %$" .. none_glyph .. none_glyph)
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 12 then
+            e.subst("d = %$")
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 14 then
+            e.subst("d = |*")
+            e.subst("e = %$")
+        else
+            e.subst("d = |*")
+            e.subst("e = *$")
+        end
+    elseif you.in_branch("Lair") then
+        e.subst("d = *%")
+        e.subst("e = %$" .. none_glyph .. none_glyph)
+    elseif you.in_branch("Orc") then
+        e.subst("d = |*")
+        e.subst("e = %$")
+    else
+        e.subst("de = |*")
+    end
+end
+
+-- Basic loot scale for ghost "guarded" loot for lone ghost vaults. KITEMS this
+-- loot to ghost_glyph.
+function lone_ghost_guarded_loot(e, ghost_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.kitem(ghost_glyph .. " = star_item / any")
+        elseif you.depth() < 9 then
+            e.kitem(ghost_glyph .. " = star_item")
+        else
+            e.kitem(ghost_glyph .. " = superb_item / star_item")
+        end
+    else
+        e.kitem(ghost_glyph .. " = superb_item / star_item")
+    end
+end
+
 -- Some scroll and potions with weights that are used as nice loot.
 ghost_loot_scrolls = "scroll of teleportation w:15 / scroll of fog w:15 / " ..
     "scroll of fear w:15 / scroll of blinking w:10 / " ..
@@ -196,4 +243,119 @@ function ghost_good_loot(e)
     else
         e.item("superb_item / star_item")
     end
+end
+
+-- Determine the number of gold piles placed for ebering_ghost_gozag and
+-- ebering_vaults_ghost_gozag. Mean ranges from 3 to 15 from D:3-D:15 with
+-- 12-13 in Orc and 15 elsewhere, and the actual number placed varies by +/- 3.
+function setup_gozag_gold(e)
+    if you.in_branch("D") then
+        depth = you.depth()
+    elseif you.in_branch("Orc") then
+        depth = 11 + you.depth()
+    else
+        depth = you.absdepth()
+    end
+    pile_mean = math.min(15, math.floor(3/4 * depth + 3.75))
+    pile_count = crawl.random_range(pile_mean - 3, pile_mean + 3)
+    e.nsubst("' = " .. pile_count .. "=$ / -")
+end
+
+-- Set up the chaos dancing weapon for ebering_ghost_xom and
+-- ebering_vaults_ghost_xom.
+function setup_xom_dancing_weapon(e)
+    quality = ""
+    great_weight = 1
+    great_weapons = {}
+
+    -- Progress the base type of weapons so that it's more reasonable as reward
+    -- as depth increases. The very rare weapons only show up at all in later
+    -- depths and always with lower weight.
+    if you.absdepth() < 6 then
+        base_weapons = {"dagger", "short sword", "falchion", "club", "whip",
+                        "hand axe", "spear"}
+        good_weapons = {"rapier", "long sword",  "mace", "flail", "war axe",
+                        "trident", "quarterstaff"}
+    elseif you.absdepth() < 9 then
+        base_weapons = {"dagger", "short sword", "rapier", "falchion",
+                        "long sword", "whip", "mace", "hand axe", "spear",
+                        "trident"}
+        good_weapons = {"scimitar", "flail", "war axe", "quarterstaff"}
+        quality = crawl.one_chance_in(6) and "good_item" or ""
+    elseif you.absdepth() < 12 then
+        base_weapons = {"rapier", "long sword", "scimitar", "mace", "flail",
+                        "hand axe", "war axe", "trident", "quarterstaff"}
+        good_weapons = {"morningstar", "dire flail", "broad axe", "halberd"}
+        quality = crawl.one_chance_in(4) and "good_item" or ""
+    elseif you.absdepth() < 14 then
+        base_weapons = {"rapier", "long sword", "scimitar", "flail",
+                        "morningstar", "dire flail", "war axe", "broad axe",
+                        "trident", "halberd", "scythe", "quarterstaff"}
+        good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
+        great_weapons = {"quickblade", "demon blade", "double sword",
+                         "triple sword", "demon whip", "eveningstar",
+                         "executioner's axe", "demon trident", "bardiche",
+                         "lajatang"}
+        quality = crawl.one_chance_in(3) and "good_item"
+                  or crawl.one_chance_in(4) and "randart"
+                  or ""
+    else
+        base_weapons = {"rapier", "scimitar", "great sword", "morningstar",
+                        "dire flail", "great mace", "war axe", "broad axe",
+                        "battleaxe", "halberd", "scythe", "glaive",
+                        "quarterstaff"}
+        good_weapons = {}
+        great_weapons = {"quickblade", "demon blade", "double sword",
+                         "triple sword", "demon whip", "eveningstar",
+                         "executioner's axe", "demon trident", "bardiche",
+                         "lajatang"}
+        great_weight = 3
+        quality = crawl.coinflip() and "good_item"
+                  or crawl.coinflip() and "randart"
+                  or ""
+    end
+
+    -- Make one weapons table with each weapon getting weight by class.
+    weapons = {}
+    for _, wname in ipairs(base_weapons) do
+        weapons[wname] = 10
+    end
+    for _, wname in ipairs(good_weapons) do
+        weapons[wname] = 5
+    end
+    for _, wname in ipairs(great_weapons) do
+        weapons[wname] = great_weight
+    end
+
+    -- Generate a dancing weapon based on the table that always has chaos ego.
+    weapon_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
+    e.mons("dancing weapon; " .. weapon_def)
+end
+
+-- Set up equipment for the fancier orc warriors, knights, and warlord in
+-- biasface_ghost_orc_armoury and biasface_vaults_ghost_orc_armoury.
+function setup_armoury_orcs(e)
+    warrior_weap = {["long sword"] = 10, ["short sword"] = 10,
+                    ["scimitar"] = 10, ["battleaxe"] = 10, ["hand axe"] = 10,
+                    ["halberd"] = 10, ["glaive"] = 10, ["mace"] = 10,
+                    ["dire flail"] = 10, ["trident"] = 10, ["war axe"] = 9,
+                    ["flail"] = 9, ["broad axe"] = 1, ["morningstar"] = 1}
+    knight_weap = {["great sword"] = 4, ["long sword"] = 4, ["battleaxe"] = 4,
+                   ["war axe"] = 4, ["great mace"] = 3, ["dire flail"] = 2,
+                   ["bardiche"] = 1, ["glaive"] = 1, ["broad axe"] = 1 ,
+                   ["halberd"] = 1}
+    weapon_quality = crawl.coinflip() and "randart" or "good_item"
+    warrior_def = random_item_def(warrior_weap, nil, weapon_quality, '|')
+    knight_def = random_item_def(knight_weap, nil, weapon_quality, '|')
+    e.kmons("D = orc warrior ; " .. warrior_def .. " . chain mail good_item " ..
+            "| chain mail randart | plate armour good_item" ..
+            "| plate armour randart")
+    e.kmons("E = orc knight ; " .. knight_def .. " . chain mail good_item " ..
+            "| chain mail randart | plate armour good_item " ..
+            "| plate armour randart")
+    e.kmons("F = orc warlord ; " .. knight_def .. " . chain mail good_item " ..
+            "| chain mail randart | plate armour good_item " ..
+            "| plate armour randart . shield good_item w:4" ..
+            "| shield randart w:2 | large shield good_item w:2 " ..
+            "| large shield randart w:1")
 end

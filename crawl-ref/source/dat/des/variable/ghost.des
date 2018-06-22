@@ -21,50 +21,6 @@
 : require("dlua/ghost.lua")
 
 {{
--- Basic loot scale for extra loot for lone ghosts
--- takes none_glyph to use when it would like no item
--- adds depth appropriate items to de
-function lone_ghost_extra_loot(e, none_glyph)
-    if you.in_branch("D") then
-        if you.depth() < 6 then
-            e.subst("de = " .. none_glyph)
-        elseif you.depth() < 9 then
-            e.subst("d = %$" .. none_glyph .. none_glyph)
-            e.subst("e = " ..none_glyph)
-        elseif you.absdepth() < 11 then
-            e.subst("d = %$")
-            e.subst("e = " ..none_glyph)
-        else
-            e.subst("d = |*")
-            e.subst("e = *$")
-        end
-    elseif you.in_branch("Lair") then
-        e.subst("d = *%")
-        e.subst("e = %$" .. none_glyph .. none_glyph)
-    elseif you.in_branch("Orc") then
-        e.subst("d = |*")
-        e.subst("e = %$")
-    else
-        e.subst("de = |*")
-    end
-end
-
--- Basic loot scale for ghost "guarded" loot for lone ghosts
--- KITEMS this to ghost_glyph
-function lone_ghost_guarded_loot(e, ghost_glyph)
-    if you.in_branch("D") then
-        if you.depth() < 6 then
-            e.kitem(ghost_glyph .. " = star_item / any")
-        elseif you.depth() < 9 then
-            e.kitem(ghost_glyph .. " = star_item")
-        else
-            e.kitem(ghost_glyph .. " = superb_item / star_item")
-        end
-    else
-        e.kitem(ghost_glyph .. " = superb_item / star_item")
-    end
-end
-
 -- Set up the non-flaming edged weapon "left" by the ghost in
 -- gammafunk_ghost_hydra_chop.
 function setup_hydra_weapon(e)
@@ -83,103 +39,6 @@ function setup_hydra_weapon(e)
     quality = crawl.one_chance_in(3) and "randart" or "good_item"
     local weapon_def = random_item_def(weapons, egos, quality)
     e.kitem("O = " .. weapon_def)
-end
-
--- Set up equipment for the fancier orc warriors, knights, and warlord in
--- biasface_ghost_orc_armoury.
-function setup_armoury_orcs(e)
-    warrior_weap = {["long sword"] = 10, ["short sword"] = 10,
-                    ["scimitar"] = 10, ["battleaxe"] = 10, ["hand axe"] = 10,
-                    ["halberd"] = 10, ["glaive"] = 10, ["mace"] = 10,
-                    ["dire flail"] = 10, ["trident"] = 10, ["war axe"] = 9,
-                    ["flail"] = 9, ["broad axe"] = 1, ["morningstar"] = 1}
-    knight_weap = {["great sword"] = 4, ["long sword"] = 4, ["battleaxe"] = 4,
-                   ["war axe"] = 4, ["great mace"] = 3, ["dire flail"] = 2,
-                   ["bardiche"] = 1, ["glaive"] = 1, ["broad axe"] = 1 ,
-                   ["halberd"] = 1}
-    weapon_quality = crawl.coinflip() and "randart" or "good_item"
-    warrior_def = random_item_def(warrior_weap, nil, weapon_quality, '|')
-    knight_def = random_item_def(knight_weap, nil, weapon_quality, '|')
-    e.kmons("D = orc warrior ; " .. warrior_def .. " . chain mail good_item " ..
-            "| chain mail randart | plate armour good_item" ..
-            "| plate armour randart")
-    e.kmons("E = orc knight ; " .. knight_def .. " . chain mail good_item " ..
-            "| chain mail randart | plate armour good_item " ..
-            "| plate armour randart")
-    e.kmons("F = orc warlord ; " .. knight_def .. " . chain mail good_item " ..
-            "| plate armour good_item " ..
-            "| plate armour randart . shield good_item w:4" ..
-            "| shield randart w:2 | large shield good_item w:2 " ..
-            "| large shield randart w:1")
-end
-
-function setup_xom_dancing_weapon(e)
-    quality = ""
-    great_weight = 1
-    great_weapons = {}
-
-    -- Progress the base type of weapons so that it's more reasonable as reward
-    -- as depth increases. The very rare weapons only show up at all in later
-    -- depths and always with lower weight.
-    if you.absdepth() < 6 then
-        base_weapons = {"dagger", "short sword", "falchion", "club", "whip",
-                        "hand axe", "spear"}
-        good_weapons = {"rapier", "long sword",  "mace", "flail", "war axe",
-                        "trident", "quarterstaff"}
-    elseif you.absdepth() < 9 then
-        base_weapons = {"dagger", "short sword", "rapier", "falchion",
-                        "long sword", "whip", "mace", "hand axe", "spear",
-                        "trident"}
-        good_weapons = {"scimitar", "flail", "war axe", "quarterstaff"}
-        quality = crawl.one_chance_in(6) and "good_item" or ""
-    elseif you.absdepth() < 12 then
-        base_weapons = {"rapier", "long sword", "scimitar", "mace", "flail",
-                        "hand axe", "war axe", "trident", "quarterstaff"}
-        good_weapons = {"morningstar", "dire flail", "broad axe", "halberd"}
-        quality = crawl.one_chance_in(4) and "good_item" or ""
-    elseif you.absdepth() < 14 then
-        base_weapons = {"rapier", "long sword", "scimitar", "flail",
-                        "morningstar", "dire flail", "war axe", "broad axe",
-                        "trident", "halberd", "scythe", "quarterstaff"}
-        good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
-        great_weapons = {"quickblade", "demon blade", "double sword",
-                         "triple sword", "demon whip", "eveningstar",
-                         "executioner's axe", "demon trident", "bardiche",
-                         "lajatang"}
-        quality = crawl.one_chance_in(3) and "good_item"
-                  or crawl.one_chance_in(4) and "randart"
-                  or ""
-    else
-        base_weapons = {"rapier", "scimitar", "great sword", "morningstar",
-                        "dire flail", "great mace", "war axe", "broad axe",
-                        "battleaxe", "halberd", "scythe", "glaive",
-                        "quarterstaff"}
-        good_weapons = {}
-        great_weapons = {"quickblade", "demon blade", "double sword",
-                         "triple sword", "demon whip", "eveningstar",
-                         "executioner's axe", "demon trident", "bardiche",
-                         "lajatang"}
-        great_weight = 3
-        quality = crawl.coinflip() and "good_item"
-                  or crawl.coinflip() and "randart"
-                  or ""
-    end
-
-    -- Make one weapons table with each weapon getting weight by class.
-    weapons = {}
-    for _, wname in ipairs(base_weapons) do
-        weapons[wname] = 10
-    end
-    for _, wname in ipairs(good_weapons) do
-        weapons[wname] = 5
-    end
-    for _, wname in ipairs(great_weapons) do
-        weapons[wname] = great_weight
-    end
-
-    -- Generate a dancing weapon based on the table that always has chaos ego.
-    weapon_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
-    e.mons("dancing weapon; " .. weapon_def)
 end
 }}
 
@@ -395,6 +254,68 @@ MAP
  ccccc
 ENDMAP
 
+NAME:   ebering_ghost_gozag
+DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+: kitem("DE = " .. ghost_loot_potions)
+# If ghost selectors ever happen this should be a gozag ghost
+KMONS:  O = player_ghost
+# D and F place an 8 monster plus potion or shop, E and H place the potion/shop
+# without any monster. D, E, and J place an abandoned shop for decor.
+KMONS:  DF = 8
+MONS:   obsidian statue
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+NSUBST: M = 0 / 2=0' / 9 / 8-JJ / J
+SUBST:  1 = G
+:     elseif you.absdepth() < 9 then
+NSUBST: M = 0 / 2=09 / 8J / J
+SUBST:  1 = G, D = DF, E = EH
+:     elseif you.absdepth() < 12 then
+# The 4th term gives a 50% chance of placing a potion/shop and an independent
+# %50 chance of placing an 8.
+NSUBST: M = 0 / 2=09 / 9J / DE8J / J
+SUBST:  1 = 1GGGG, D = DF, E = EH
+:     elseif you.absdepth() < 14 then
+# The 5th term gives a 33% chance of placing a second potion/shop and an
+# independent 50% chance of placing an 8.
+NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
+SUBST:  1 = 1GG, D = DF, E = EH
+:     else
+# Chance like the one above, but 50% for second potion/shop.
+NSUBST: M = 0 / 2=09 / 9 / D / DE8J / J
+SUBST:  1 = 1G, D = DF, E = EH
+:     end
+: elseif you.in_branch("Orc") then
+NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
+SUBST:  1 = 1GG, D = DF, E = EH
+: else
+NSUBST: M = 0 / 2=09 / 9 / 2=D / J
+SUBST:  D = DF
+: end
+# The ' glyph is used to place gold.
+: setup_gozag_gold(_G)
+KFEAT:  ODEJ = abandoned_shop
+KFEAT:  FH = antiques shop
+KFEAT:  _ = altar_gozag
+TILE:   G = dngn_golden_statue
+FTILE:  -_DEFHJ$0189OG = floor_limestone
+COLOUR: G = yellow
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("stone_wall", "golden wall")
+: ghost_setup(_G)
+MAP
+ ccccccc
+ccMGOGMcc
+cM'''''Mc
+cG''1''Gc
+cM''_''Mc
+cc'''''cc
+ nn===nn
+ ...@...
+ENDMAP
+
 NAME:   ebering_ghost_rock_garden
 ORIENT: float
 KMONS:  O = player_ghost
@@ -436,81 +357,6 @@ cn=nc
  .@.
 ENDMAP
 
-NAME:   ebering_ghost_xom
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
-ORIENT: float
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, "-")
-: setup_xom_dancing_weapon(_G)
-KMONS:  O = player_ghost
-KFEAT:  O = altar_xom
-FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
-MAP
- ccc
-cc1cc
-cdOec
-cn=nc
-..@..
-ENDMAP
-
-# based on sewer_entry_d
-NAME:   ebering_ghost_sewer_d
-ORIENT: float
-DEPTH:  D:3-6
-KMONS:  O = player_ghost
-KFEAT:  O = expired_portal
-KMONS:  1 = adder
-KMONS:  2 = bullfrog
-KFEAT:  12*%$ = W
-: lone_ghost_guarded_loot(_G, "O")
-: if you.depth() < 6 then
-SUBST:  d = %$, e = W
-NSUBST: 1 = 1 / 1W / 122WWW / W
-: else
-SUBST:  d = *%, e = %$WW
-NSUBST: 1 = 1 / 2 / 12WW / W
-: end
-COLOUR: 12*%$W = lightgreen / cyan w:5
-FTILE:  O = dngn_portal_sewer_rusted
-: ghost_setup(_G)
-MAP
-       ..
-ccccccnn.
-cdOe111=.
-ccccccnn.
-       ..
-ENDMAP
-
-# based on sewer_entry_f
-NAME:   ebering_ghost_sewer_f
-ORIENT: float
-DEPTH:  D:3-6
-KMONS:  O = player_ghost
-KMONS:  1 = leopard gecko / giant cockroach / rat / ball python
-KMONS:  2 = adder / worm / river rat
-KMONS:  3 = bullfrog
-KFEAT:  O = expired_portal
-KFEAT:  123*%$ = W
-: lone_ghost_guarded_loot(_G, "O")
-: if you.depth() < 6 then
-SUBST:  d = %$, e = W
-NSUBST: W = 1 / 2=112WWW / 2 / 2W / 3WW / W
-: else
-SUBST:  d = *%, e = %$WW
-NSUBST: W = 1 / 2=1223WW / 2 / 3 / 3W / W
-: end
-COLOUR: 123*%$W = lightgreen / cyan w:5
-FTILE:  O = dngn_portal_sewer_rusted
-: ghost_setup(_G)
-MAP
- ccccccccccc
-.nWWWWeWWWWn.
-@=WWWWOWWWW=@
-.nWWWWdWWWWn.
- ccccccccccc
-ENDMAP
-
 NAME:   hellmonk_ghost_happy_afterlife
 DEPTH:  D:3-, Lair
 ORIENT: float
@@ -543,6 +389,30 @@ MAP
  ..nn-nn..
   ..n=n..
    .....
+ENDMAP
+
+NAME:   ebering_ghost_disaster_area
+ORIENT: float
+KMONS:  O = player ghost
+NSUBST: ' = d / e / 8=wWlr / -
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+: if you.depth() < dgn.br_depth(you.branch()) then
+KFEAT:  r = known shaft trap
+: else
+SUBST:  r = wWl
+: end
+SUBST: P = GTV
+: ghost_setup(_G)
+MAP
+cccccccccc
+cccc'c'ccc
+cc''O''c'c
+c'c'''''cc
+c''P'c''cc
+cc'''''''c
+ccnn==nncc
+  ..@@..
 ENDMAP
 
 ###############################################################################
@@ -1204,12 +1074,12 @@ NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
 :     else
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
 SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 67 / D''' / '
+NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 4=1 / 6=1' / 2=4 / 2=4' / 7''' / '
+SUBST:  f = *%, h = %$--, ij = -
+NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
 KITEM:  O = ring of fire randart ident:type
@@ -1226,8 +1096,8 @@ MAP
     ..cnn===nnc..
    ..cc'''''''cc.
    .cc'''''''''c..
-   .c''''''''''cc.
-   cc''''xxxx'''c..
+  ..c''''''''''cc.
+  .cc''''xxxx'''c..
   .c'''xxxdexx''cc.
   .c''xxhfijgxx''c.
  ..n''x---O---x''n.
@@ -1282,9 +1152,85 @@ MAP
 .....@.....
 ENDMAP
 
+NAME:   ebering_ghost_xom
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+: setup_xom_dancing_weapon(_G)
+KMONS:  O = player_ghost
+KFEAT:  O = altar_xom
+FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+ ccc
+cc1cc
+cdOec
+cn=nc
+..@..
+ENDMAP
+
+# based on sewer_entry_d
+NAME:   ebering_ghost_sewer_d
+ORIENT: float
+DEPTH:  D:3-6
+KMONS:  O = player_ghost
+KFEAT:  O = expired_portal
+KMONS:  1 = adder
+KMONS:  2 = bullfrog
+KFEAT:  12*%$ = W
+: lone_ghost_guarded_loot(_G, "O")
+: if you.depth() < 6 then
+SUBST:  d = %$, e = W
+NSUBST: 1 = 1 / 1W / 122WWW / W
+: else
+SUBST:  d = *%, e = %$WW
+NSUBST: 1 = 1 / 2 / 12WW / W
+: end
+COLOUR: 12*%$W = lightgreen / cyan w:5
+FTILE:  O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+       ..
+ccccccnn.
+cdOe111=.
+ccccccnn.
+       ..
+ENDMAP
+
+# based on sewer_entry_f
+NAME:   ebering_ghost_sewer_f
+ORIENT: float
+DEPTH:  D:3-6
+KMONS:  O = player_ghost
+KMONS:  1 = leopard gecko / giant cockroach / rat / ball python
+KMONS:  2 = adder / worm / river rat
+KMONS:  3 = bullfrog
+KFEAT:  O = expired_portal
+KFEAT:  123*%$ = W
+: lone_ghost_guarded_loot(_G, "O")
+: if you.depth() < 6 then
+SUBST:  d = %$, e = W
+NSUBST: W = 1 / 2=112WWW / 2 / 2W / 3WW / W
+: else
+SUBST:  d = *%, e = %$WW
+NSUBST: W = 1 / 2=1223WW / 2 / 3 / 3W / W
+: end
+COLOUR: 123*%$W = lightgreen / cyan w:5
+FTILE:  O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+ ccccccccccc
+.nWWWWeWWWWn.
+@=WWWWOWWWW=@
+.nWWWWdWWWWn.
+ ccccccccccc
+ENDMAP
+
 NAME:   ploomutoo_gammafunk_potion_laboratory
 DEPTH:  D:8-, Elf, Depths
 WEIGHT: 5
+ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(ghost_loot_potions)
 ITEM:   hat / robe good_item / gloves / boots / cloak
@@ -1340,6 +1286,109 @@ c-c---c-c
 c;;;c;;;c
 c;c;;;c;c
 c;;;;;;;c
-ccnn=nncc
+cnn===nnc
 c...@...c
+ENDMAP
+
+NAME:    ebering_ghost_davey_jones
+DEPTH:   Shoals
+ORIENT:  float
+TAGS:    water_ok
+KMONS:   O = player_ghost
+KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
+KMONS:   1 = kraken
+KMONS:   2 = kraken simulacrum / spectral kraken
+SHUFFLE: 1D / D2
+KFEAT:   Od = W
+KFEAT:   12D = w
+SUBST:   u = wW, s=W.
+NSUBST:  d = 3=|* / *%
+TILE:    G = dngn_statue_mermaid
+{{
+dgn.delayed_decay(_G,"'","minotaur skeleton / halfling skeleton" ..
+  " / dwarf skeleton / human skeleton / kobold skeleton" ..
+  " / felid skeleton / orc skeleton / centaur skeleton")
+}}
+: ghost_setup(_G)
+MAP
+ WWWWWWWWWWWWW
+WWcccccccccccWW
+WccGwwwwwwwGccW
+WcWuwwwwwdwuWcW
+WcWWWdDwDwWWWcW
+Wns'Www1wwWWWnW
+Wn.sWwwwwwW'snW
+Wc'sWduOudWs.cW
+Wc..'sWsWWs..cW
+WccG.....'.GccW
+WWcnnn===nnncWW
+ WW....@....WW
+ENDMAP
+
+NAME:   gammafunk_ghost_stat_death
+DEPTH:  D:3-, Orc
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   quasit, neqoxec
+NSUBST: R = R / -
+: ghost_good_loot(_G)
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+KITEM:  O = ring of dexterity ident:type
+SUBST:  d = *%, e = %$, fgh = -
+NSUBST: - = 2=1 / 2=1- / -
+:     elseif you.depth() < 9 then
+KITEM:  O = ring of dexterity ident:type / \
+            ring of dexterity good_item ident:type w:5
+SUBST:  d = *, e = *%, f = %$--, gh = -
+NSUBST: - = 2=1 / 4=1- / -
+:     elseif you.depth() < 12 then
+KITEM:  O = ring of dexterity ident:type / \
+            ring of dexterity good_item ident:type w:5 / \
+            ring of intelligence ident:type / \
+            ring of intelligence good_item ident:type w:5
+SUBST:  e = *, f = %$, gh = -
+NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / -
+:     elseif you.depth() < 14 then
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type w:5 / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type w:5
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
+:     else
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type
+SUBST:  f = |*, g = *%, h = %$--
+NSUBST: - = 2=1 / 2=1- / 3=2 / 4=2- / -
+:     end
+: elseif you.in_branch("Orc") then
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type w:5 / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type w:5
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
+: end
+MARKER: P = lua:transp_loc("stat_death_entry")
+MARKER: Q = lua:transp_dest_loc("stat_death_entry")
+MARKER: R = lua:transp_loc("stat_death_exit")
+MARKER: S = lua:transp_dest_loc("stat_death_exit")
+: ghost_setup(_G)
+MAP
+    ....@.....
+   ..cncScccc.....
+  ..ccRccc--cccnc.
+  .cc------x---Rc..
+  .c----x---x---cc.
+  .c--xx--x------c.
+ ..nR--x--Q--xx-Rn.
+ .cc-x-----x-----c.
+ .c----xxxO--xx-cc.
+ .cc--x-gedfh---c..
+ ..ccc--cnnnc--cc.
+  ...cccc.P.cccc..
+    ......@......
 ENDMAP
