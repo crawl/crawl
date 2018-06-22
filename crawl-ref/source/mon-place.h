@@ -35,7 +35,6 @@ monster_type resolve_monster_type(monster_type mon_type,
                                   proximity_type proximity = PROX_ANYWHERE,
                                   coord_def *pos = nullptr,
                                   unsigned mmask = 0,
-                                  dungeon_char_type *stair_type = nullptr,
                                   level_id *place = nullptr,
                                   bool *want_band = nullptr,
                                   bool allow_ood = true);
