@@ -378,6 +378,33 @@ MAP
  ccccc
 ENDMAP
 
+NAME: ebering_ghost_gozag
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+# If ghost selectors ever happen this should be a gozag ghost
+KMONS: O = player_ghost
+KFEAT: O = abandoned_shop
+ITEM: acquire gold
+NSUBST: ' = d / 2=998 / $
+KFEAT: Z = altar_gozag
+SUBST: _ = GZ
+TILE: G = dngn_golden_statue
+FTILE: -d$89OGZ = floor_limestone
+RTILE: c = wall_sandstone
+COLOUR: cG = yellow
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("stone_wall", "golden wall")
+: ghost_setup(_G)
+MAP
+  ccc
+ ccOcc
+cc'''cc
+c'-_-'c
+cc---cc
+ cn=nc
+  .@.
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
