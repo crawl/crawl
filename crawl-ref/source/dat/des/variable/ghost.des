@@ -378,6 +378,28 @@ MAP
  ccccc
 ENDMAP
 
+NAME: ebering_ghost_rock_garden
+ORIENT: float
+KMONS: O = player_ghost
+: local large_rocks = crawl.random_range(3,7)
+: kitem("O = large rock q:" .. large_rocks)
+KITEM: ' = stone q:1 / large rock w:1
+NSUBST: r = O / d / e / tG / t'' / '
+: lone_ghost_extra_loot(_G, "'")
+COLOUR: -deOtG'|*%$ = yellow, c = white
+FTILE: -deOtG'|*%$ = floor_dirt
+: ghost_setup(_G)
+MAP
+ccccccccc
+c---r-r-c
+crr-----c
+c----r--c
+c--r----c
+cr----r-c
+cnn===nnc
+ ...@...
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
