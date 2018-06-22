@@ -468,7 +468,7 @@ KFEAT: O = altar_xom
 {{
   egos = {["vorpal"] = 20, ["freezing"] = 15, ["flaming"] = 15,
           ["venom"] = 10, ["protection"] = 10, ["electrocution"] = 5,
-          ["draining"] = 5, ["antimagic"] = 2}
+          ["draining"] = 5, ["antimagic"] = 2, ["chaos"] = 1}
   local dagger_def = random_item_def({["dagger"] = 10}, egos,
                                      crawl.one_chance_in(7), "|")
   mons("dancing weapon; " .. dagger_def)
