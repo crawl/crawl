@@ -110,6 +110,51 @@ function setup_armoury_orcs(e)
             "| shield randart w:2 | large shield good_item w:2 " ..
             "| large shield randart w:1")
 end
+
+-- Basic loot scale for extra loot for lone ghosts
+-- takes none_glyph to use when it would like no item
+-- adds depth appropriate items to de
+function lone_ghost_extra_loot(e,none_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.subst("de = " .. none_glyph)
+        elseif you.depth() < 9 then
+            e.subst("d = %$" .. none_glyph .. none_glyph)
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 12 then
+            e.subst("d = %$")
+            e.subst("e = " ..none_glyph)
+        else
+            e.subst("d = |*")
+            e.subst("e = *$")
+        end
+    elseif you.in_branch("Lair") then
+        e.subst("d = *%")
+        e.subst("e = %$" .. none_glyph .. none_glyph)
+    elseif you.in_branch("Orc") then
+        e.subst("d = |*")
+        e.subst("e = %$")
+    else
+        e.subst("de = |*")
+    end
+end
+
+-- Basic loot scale for ghost "guarded" loot for lone ghosts
+-- KITEMS this to ghost_glyph
+function lone_ghost_guarded_loot(e,ghost_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.kitem(ghost_glyph .. " = star_item / any")
+        elseif you.depth() < 9 then
+            e.kitem(ghost_glyph .. " = star_item")
+        else
+            e.kitem(ghost_glyph .. " = superb_item / star_item")
+        end
+    else
+        e.kitem(ghost_glyph .. " = superb_item / star_item")
+    end
+end
+
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -130,30 +175,8 @@ default-depth: D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, \
 NAME:  gammafunk_ghost_grave
 ORIENT: float
 WEIGHT: 20 (D:3-11)
-: if you.in_branch("D") then
-:     if you.depth() < 6 then
-KITEM: O = star_item / any
-SUBST: de = -
-:     elseif you.depth() < 9 then
-KITEM: O = star_item
-SUBST: d = %$--, e = -
-:     elseif you.absdepth() < 12 then
-KITEM: O = superb_item / star_item
-SUBST: d = %$, e = -
-:     else
-KITEM: O = superb_item / star_item
-SUBST: d = |*, e = *$
-:     end
-: elseif you.in_branch("Lair") then
-KITEM: O = superb_item / star_item
-SUBST: d = *%, e = %$--
-: elseif you.in_branch("Orc") then
-KITEM: O = superb_item / star_item
-SUBST: d = |*, e = %$
-: else
-KITEM: O = superb_item / star_item
-SUBST: de = |*
-: end
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
 KMONS: O = player ghost
 KMONS: p = withered plant
 SUBST: t : tp
