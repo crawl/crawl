@@ -7784,11 +7784,11 @@ static const vector<artefact_properties_t> _dedicate_props = []()
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_SHIELDING] = 3;
+    props[ARTP_SHIELDING] = 4;
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_EVASION] = 3;
+    props[ARTP_EVASION] = 4;
     props_vec.push_back(props);
 
     props.init(0);
@@ -7879,7 +7879,10 @@ bool igni_ipthes_dedicate_ability()
 
     vector<igni_cost> costs;
     costs.push_back({ OBJ_GOLD, 0, 400 });
+    costs.push_back({ OBJ_GOLD, 0, 400 });
     costs.push_back({ OBJ_GOLD, 0, 300 });
+    costs.push_back({ OBJ_GOLD, 0, 300 });
+    costs.push_back({ OBJ_GOLD, 0, 200 });
     costs.push_back({ OBJ_GOLD, 0, 200 });
 
     if (you.species != SP_MUMMY)
@@ -8037,11 +8040,23 @@ static const vector<artefact_properties_t> _immortalize_props = []()
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_FIRE] = 1;
+    props[ARTP_FIRE] = 2;
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_COLD] = 1;
+    props[ARTP_COLD] = 2;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_NEGATIVE_ENERGY] = 2;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_MAGIC_RESISTANCE] = 3;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SLAYING] = 4;
     props_vec.push_back(props);
 
     props.init(0);
@@ -8049,19 +8064,19 @@ static const vector<artefact_properties_t> _immortalize_props = []()
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_SLAYING] = 2;
+    props[ARTP_STRENGTH] = 8;
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_STRENGTH] = 5;
+    props[ARTP_DEXTERITY] = 8;
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_DEXTERITY] = 5;
+    props[ARTP_INTELLIGENCE] = 8;
     props_vec.push_back(props);
 
     props.init(0);
-    props[ARTP_INTELLIGENCE] = 5;
+    props[ARTP_MAGICAL_POWER] = 9;
     props_vec.push_back(props);
 
     return props_vec;
@@ -8070,23 +8085,23 @@ static const vector<artefact_properties_t> _immortalize_props = []()
 bool igni_ipthes_immortalize_ability()
 {
     vector<igni_cost> costs;
+    costs.push_back({ OBJ_GOLD, 0, 1400 });
     costs.push_back({ OBJ_GOLD, 0, 1200 });
     costs.push_back({ OBJ_GOLD, 0, 1000 });
-    costs.push_back({ OBJ_GOLD, 0, 800 });
     costs.push_back({ OBJ_SCROLLS, SCR_FEAR, 4 });
 
     if (you.species != SP_MUMMY)
     {
-        costs.push_back({ OBJ_POTIONS, POT_CURING, 6 });
+        costs.push_back({ OBJ_POTIONS, POT_CURING, 5 });
         costs.push_back({ OBJ_POTIONS, POT_RESISTANCE, 2 });
-        costs.push_back({ OBJ_POTIONS, POT_MIGHT, 4 });
-        costs.push_back({ OBJ_POTIONS, POT_AGILITY, 4 });
+        costs.push_back({ OBJ_POTIONS, POT_MIGHT, 3 });
+        costs.push_back({ OBJ_POTIONS, POT_AGILITY, 3 });
 
         if (you.species != SP_VINE_STALKER)
-            costs.push_back({ OBJ_POTIONS, POT_HEAL_WOUNDS, 4 });
+            costs.push_back({ OBJ_POTIONS, POT_HEAL_WOUNDS, 3 });
 
         if (you.species != SP_FORMICID)
-            costs.push_back({ OBJ_POTIONS, POT_HASTE, 3 });
+            costs.push_back({ OBJ_POTIONS, POT_HASTE, 2 });
     }
 
     if (you.species != SP_FORMICID)
