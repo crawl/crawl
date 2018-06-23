@@ -112,8 +112,7 @@ opacity_type opacity_no_actor::operator()(const coord_def& p) const
 
 static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    return feat_is_opaque(feat) ? OPC_OPAQUE
-         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
+    return feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
 }
 
 opacity_type opacity_excl::operator()(const coord_def& p) const
