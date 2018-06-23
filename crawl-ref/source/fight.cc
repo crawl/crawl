@@ -751,7 +751,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
-        if (def && def->alive() && !_dont_harm(attacker, *def))
+        if (def && def->alive() && !_dont_harm(attacker, *def) && cleave_target_adjacent(attacker, def))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
@@ -761,6 +761,37 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
         }
         targets.pop_front();
     }
+}
+
+/**
+ * Determines adjacency of a cleave target.
+ *
+ * @param attacker                 The attacking creature.
+ * @param target                   The target to cleave.
+ */
+bool cleave_target_adjacent(actor &attacker, actor &target)
+{
+	coord_def apos = attacker.pos();
+	coord_def tpos = target.pos();
+
+	int dx = abs(apos.x - tpos.x);
+	int dy = abs(apos.y - tpos.y);
+
+	//  Maximum cleave range is 1
+	//  Note:  this is an assumption; if the max cleave range ever changes,
+	//  then more code will need to be put into place here.
+	int max_cleave_range = 1;
+
+	if((dx <= max_cleave_range) && (dy <= max_cleave_range))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
 }
 
 /**
