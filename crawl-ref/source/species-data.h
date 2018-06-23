@@ -354,7 +354,7 @@ static const map<species_type, species_def> species_data =
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
     { JOB_FIGHTER, JOB_HUNTER, JOB_ABYSSAL_KNIGHT, JOB_ARCANE_MARKSMAN,
-      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
+      JOB_ENCHANTER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_CROSSBOWS, SK_SLINGS },
 } },
