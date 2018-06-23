@@ -983,6 +983,35 @@ static bool _init_artefact_properties(item_def &item)
     return true;
 }
 
+static void _handle_suppressed(const item_def &item, 
+                               artefact_properties_t& proprt)
+{
+    bool suppress = (proprt[ARTP_DEDICATED] 
+                     && proprt[ARTP_DEDICATED] - 1 != you.where_are_you)
+                    || (proprt[ARTP_IGNI] && !you_worship(GOD_IGNI_IPTHES));
+
+    if (!suppress)
+        return;
+
+    for (int i = 0; i < ART_PROPERTIES; i++)
+    {
+        artefact_prop_type prop = static_cast<artefact_prop_type>(i);
+
+        if (prop == ARTP_BRAND
+            || prop == ARTP_CONTAM
+            || prop == ARTP_CORRODE
+            || prop == ARTP_DRAIN
+            || prop == ARTP_FRAGILE
+            || prop == ARTP_DEDICATED
+            || prop == ARTP_IGNI)
+        {
+            continue;
+        }
+
+        proprt[i] = 0;
+    }
+}
+
 void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt,
                          artefact_known_props_t &known,
@@ -1032,14 +1061,7 @@ void artefact_properties(const item_def &item,
         _get_randart_properties(item, proprt);
 
     if (check_suppressed)
-    {
-        for (int i = 0; i < ART_PROPERTIES; i++)
-        {
-            artefact_prop_type prop = static_cast<artefact_prop_type>(i);
-            if (suppressed_artefact_property(item, prop))
-                proprt[i] = 0;
-        }
-    }
+        _handle_suppressed(item, proprt);
 }
 
 void artefact_properties(const item_def &item,
@@ -1887,21 +1909,3 @@ void artefact_fixup_props(item_def &item)
         artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
 }
 
-bool suppressed_artefact_property(const item_def &item, 
-                                  artefact_prop_type prop)
-{
-    if (prop == ARTP_BRAND
-        || prop == ARTP_CONTAM
-        || prop == ARTP_CORRODE
-        || prop == ARTP_DRAIN
-        || prop == ARTP_FRAGILE
-        || prop == ARTP_DEDICATED)
-    {
-        return false;
-    }
-
-    if (int dedi = artefact_property(item, ARTP_DEDICATED, false))
-        return (dedi - 1) != you.where_are_you;
-
-    return false;
-}

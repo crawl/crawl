@@ -2960,6 +2960,12 @@ void excommunication(bool voluntary, god_type new_god)
         _set_penance(old_god, 25);
         break;
 
+    case GOD_IGNI_IPTHES:
+        _set_penance(old_god, 25);
+        invalidate_agrid(true);
+        simple_god_message(" has suppressed crafted artefacts.", old_god);
+        break;
+
     default:
         break;
     }

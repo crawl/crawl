@@ -203,7 +203,7 @@ bool is_dedicatable_armour(const item_def& item);
 bool is_immortalizable_weapon(const item_def& item);
 
 bool igni_ipthes_scrap_ability();
-bool igni_ipthes_fire_fortress_ability();
+bool igni_ipthes_fire_fortress_ability(bool wrath=false);
 bool igni_ipthes_brand_ability();
 bool igni_ipthes_dedicate_ability();
 bool igni_ipthes_immortalize_ability();

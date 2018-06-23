@@ -1667,11 +1667,6 @@ static const pop_entry pop_igni_ipthes_wrath[] =
   {  8, 16, 30, FLAT, MONS_LINDWURM },
   { 12, 27, 50, SEMI, MONS_FIRE_DRAGON },
 
-  {  0, 12, 25, SEMI, MONS_HUMAN },
-  {  4, 12, 50, FLAT, MONS_VAULT_GUARD },
-  { 10, 22, 50, SEMI, MONS_VAULT_GUARD },
-  { 18, 27, 50, RISE, MONS_VAULT_WARDEN },
-
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1679,7 +1674,7 @@ static void _igni_ipthes_summon()
 {
     const god_type god = GOD_IGNI_IPTHES;
 
-    const int how_many = 1 + div_rand_round(you.experience_level, 3);
+    const int how_many = 4 + div_rand_round(you.experience_level, 3);
     bool success = false;
 
     for (int i = 0; i < how_many; i++)
@@ -1701,9 +1696,7 @@ static bool _igni_ipthes_retribution()
     god_type god = GOD_IGNI_IPTHES;
 
     _igni_ipthes_summon();
-
-    you.increase_duration(DUR_NO_SCROLLS, 70 + random2(90), 15);
-    simple_god_message(" prevents you from reading scrolls!", god);
+    igni_ipthes_fire_fortress_ability(true);
 
     return true;
 }

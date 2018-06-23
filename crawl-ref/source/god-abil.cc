@@ -7459,7 +7459,7 @@ static void _fire_fortress_find_centers(coord_def where, set<coord_def>& centers
     }
 }
 
-bool igni_ipthes_fire_fortress_ability()
+bool igni_ipthes_fire_fortress_ability(bool wrath)
 {
     set<coord_def> centers;
     centers.insert(you.pos());
@@ -7476,7 +7476,7 @@ bool igni_ipthes_fire_fortress_ability()
 
             if (monster* mons = monster_at(*ai))
             {
-                if (!mons->friendly())
+                if (!mons->friendly() && !wrath)
                     _igni_ipthes_trap_monster(*mons);
                 continue;
             }
