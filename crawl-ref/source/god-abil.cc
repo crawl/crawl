@@ -7780,6 +7780,18 @@ static const vector<artefact_properties_t> _dedicate_props = []()
     props_vec.push_back(props);
 
     props.init(0);
+    props[ARTP_SLAYING] = 3;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_SHIELDING] = 3;
+    props_vec.push_back(props);
+
+    props.init(0);
+    props[ARTP_EVASION] = 3;
+    props_vec.push_back(props);
+
+    props.init(0);
     props[ARTP_CLARITY] = 1;
     props_vec.push_back(props);
 
@@ -7865,41 +7877,34 @@ bool igni_ipthes_dedicate_ability()
         more();
     }
 
-    igni_cost costs[] = 
-    {
-        { OBJ_GOLD, 0, 400 },
-        { OBJ_GOLD, 0, 300 },
-        { OBJ_GOLD, 0, 200 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_CURING, 3 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
-    };
+    vector<igni_cost> costs;
+    costs.push_back({ OBJ_GOLD, 0, 400 });
+    costs.push_back({ OBJ_GOLD, 0, 300 });
+    costs.push_back({ OBJ_GOLD, 0, 200 });
 
-    for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
-        if (!is_emergency_item(costs[i].to_item()))
-            costs[i] = { OBJ_GOLD, 0, 300 };
+    if (you.species != SP_MUMMY)
+    {
+        costs.push_back({ OBJ_POTIONS, POT_CURING, 1 });
+        costs.push_back({ OBJ_POTIONS, POT_MIGHT, 1 });
+        costs.push_back({ OBJ_POTIONS, POT_AGILITY, 1 });
+
+        if (you.species != SP_VINE_STALKER)
+            costs.push_back({ OBJ_POTIONS, POT_HEAL_WOUNDS, 1 });
+
+        if (you.species != SP_FORMICID)
+            costs.push_back({ OBJ_POTIONS, POT_HASTE, 1 });
+    }
+
+    if (you.species != SP_FORMICID)
+        costs.push_back({ OBJ_SCROLLS, SCR_TELEPORTATION, 1 });
+
+    costs.insert(costs.end(), costs.begin(), costs.end());
+    costs.insert(costs.end(), costs.begin(), costs.end());
+    costs.insert(costs.end(), costs.begin(), costs.end());
 
     uint64_t seed = you.birth_time;
     PcgRNG rng(&seed, 1);
-    shuffle(costs, costs + ARRAYSZ(costs), rng);
+    shuffle(costs.begin(), costs.end(), rng);
 
     // First pick the armour.
 
@@ -8064,46 +8069,39 @@ static const vector<artefact_properties_t> _immortalize_props = []()
 
 bool igni_ipthes_immortalize_ability()
 {
-    igni_cost costs[] = 
-    {
-        { OBJ_GOLD, 0, 1400 },
-        { OBJ_GOLD, 0, 1200 },
-        { OBJ_GOLD, 0, 1000 },
-        { OBJ_POTIONS, POT_CURING, 9 },
-        { OBJ_POTIONS, POT_CURING, 8 },
-        { OBJ_POTIONS, POT_CURING, 7 },
-        { OBJ_POTIONS, POT_CURING, 6 },
-        { OBJ_POTIONS, POT_CURING, 5 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 4 },
-        { OBJ_POTIONS, POT_HASTE, 3 },
-        { OBJ_POTIONS, POT_HASTE, 3 },
-        { OBJ_POTIONS, POT_HASTE, 3 },
-        { OBJ_POTIONS, POT_HASTE, 2 },
-        { OBJ_POTIONS, POT_HASTE, 2 },
-        { OBJ_POTIONS, POT_RESISTANCE, 2 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 5 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
-        { OBJ_SCROLLS, SCR_TELEPORTATION, 4 },
-        { OBJ_SCROLLS, SCR_FEAR, 4 },
-        { OBJ_SCROLLS, SCR_BLINKING, 3 },
-        { OBJ_SCROLLS, SCR_BLINKING, 3 },
-        { OBJ_SCROLLS, SCR_BLINKING, 2 },
-        { OBJ_SCROLLS, SCR_BLINKING, 2 },
-    };
+    vector<igni_cost> costs;
+    costs.push_back({ OBJ_GOLD, 0, 1200 });
+    costs.push_back({ OBJ_GOLD, 0, 1000 });
+    costs.push_back({ OBJ_GOLD, 0, 800 });
+    costs.push_back({ OBJ_SCROLLS, SCR_FEAR, 4 });
 
-    for (unsigned i = 0; i < ARRAYSZ(costs); ++i)
-        if (!is_emergency_item(costs[i].to_item()))
-            costs[i] = { OBJ_GOLD, 0, 1000 };
+    if (you.species != SP_MUMMY)
+    {
+        costs.push_back({ OBJ_POTIONS, POT_CURING, 6 });
+        costs.push_back({ OBJ_POTIONS, POT_RESISTANCE, 2 });
+        costs.push_back({ OBJ_POTIONS, POT_MIGHT, 4 });
+        costs.push_back({ OBJ_POTIONS, POT_AGILITY, 4 });
+
+        if (you.species != SP_VINE_STALKER)
+            costs.push_back({ OBJ_POTIONS, POT_HEAL_WOUNDS, 4 });
+
+        if (you.species != SP_FORMICID)
+            costs.push_back({ OBJ_POTIONS, POT_HASTE, 3 });
+    }
+
+    if (you.species != SP_FORMICID)
+    {
+        costs.push_back({ OBJ_SCROLLS, SCR_TELEPORTATION, 4 });
+        costs.push_back({ OBJ_SCROLLS, SCR_BLINKING, 2 });
+    }
+
+    costs.insert(costs.end(), costs.begin(), costs.end());
+    costs.insert(costs.end(), costs.begin(), costs.end());
+    costs.insert(costs.end(), costs.begin(), costs.end());
 
     uint64_t seed = you.birth_time;
     PcgRNG rng(&seed, 1);
-    shuffle(costs, costs + ARRAYSZ(costs), rng);
+    shuffle(costs.begin(), costs.end(), rng);
 
     // First pick the weapon.
 
