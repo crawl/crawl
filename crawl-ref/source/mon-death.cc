@@ -316,10 +316,6 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    experience = (experience * mons->damage_friendly / mons->damage_total
-                  + 1) / 2;
-    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
-
     // Note: This doesn't happen currently since monsters with
     //       MF_PACIFIED have always gone through pacification,
     //       hence also have MF_WAS_NEUTRAL. [rob]
