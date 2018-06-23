@@ -152,9 +152,8 @@ public:
         if (level == MEL_ITEM && hotkeys.size())
         {
             char buf[300];
-            snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], selected() ? '+' : '-',
-                                 text.c_str());
+            snprintf(buf, sizeof buf, " %c %c %s", hotkeys[0], 
+                     preselected || selected() ? '+' : '-', text.c_str());
             return string(buf);
         }
         return text;
@@ -167,7 +166,7 @@ public:
 
     virtual bool selected() const
     {
-        return preselected || (selected_qty > 0 && quantity);
+        return selected_qty > 0 && quantity;
     }
 
     // -1: Invert
