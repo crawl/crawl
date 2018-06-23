@@ -973,3 +973,70 @@ c.............c
 cnnnnn===nnnnnc
 I......@......I
 ENDMAP
+
+NAME:   gammafunk_ghost_icy
+DEPTH:  D:3-, Lair, Depths
+WEIGHT: 5 (D:3-7)
+KMONS:  O = player ghost
+MONS:   simulacrum, white imp, ice beast, rime drake, ice devil
+MONS:   blizzard demon, ice dragon
+KMONS:  D = frost giant
+KMONS:  E = ice fiend
+: if you.in_branch("D") then
+:     if you.depth() < 4 then
+KITEM:  O = ring of fire ident:type
+SUBST:  d = *%, e = %$, fghij = -
+NSUBST: - = 3=1 / 4=1' / 2''' / '
+:     elseif you.depth() < 6 then
+KITEM:  O = ring of fire ident:type
+SUBST:  d = *%, e = %$, fghij = -
+NSUBST: - = 3=1 / 4=1' / 23 / 23'' / '
+:     elseif you.depth() < 9 then
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
+SUBST:  d = *, e = *%, f = %$--, ghij = -
+NSUBST: - = 3=12 / 4=12'' / 3 / 3=3' / '
+:     elseif you.depth() < 12 then
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
+SUBST:  d = |*, e = *, f = %$, ghij = -
+NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
+:     elseif you.depth() < 14 then
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 6''' / '
+:     else
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 67 / D''' / '
+:    end
+: elseif you.in_branch("Lair") then
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+SUBST:  def = |*, g = *%, h = %$--, ij = -
+NSUBST: - = 4=1 / 6=1' / 2=4 / 2=4' / 7''' / '
+# Depths
+: else
+KITEM:  O = ring of fire randart ident:type
+SUBST:  defghij = |*
+NSUBST: - = 4=1 / 6=1' / 5 / 2=5' / 6 / 2=6' / 2=7D / 2=7D'' / E' / '
+: end
+COLOUR: xc = white
+COLOUR: O1234567DE|*%$' = blue
+RTILE:  x = wall_ice_block
+FTILE:  =cnO1234567DE|*%$' = floor_ice
+: ghost_setup(_G)
+MAP
+     ...........
+    ..cnn===nnc..
+   ..cc'''''''cc.
+   .cc'''''''''c..
+   .c''''''''''cc.
+   cc''''xxxx'''c..
+  .c'''xxxdexx''cc.
+  .c''xxhfijgxx''c.
+ ..n''x---O---x''n.
+ .cc''x------xx''c.
+ .c'''-----xxx''cc.
+ .cc''--------''c..
+ ..ccc--cnnc--'cc.
+  ...cccc..ccccc..
+    .............
+ENDMAP
