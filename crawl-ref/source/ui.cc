@@ -99,6 +99,7 @@ public:
     void send_mouse_enter_leave_events(int mx, int my);
 
     bool needs_paint;
+    bool debug_draw = false;
     vector<KeymapContext> keymap_stack;
     vector<int> cutoff_stack;
     vector<Widget*> focus_stack;
@@ -1587,6 +1588,25 @@ void UIRoot::render()
     ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
     for (int i = cutoff; i < static_cast<int>(m_root.num_children()); i++)
         m_root.get_child(i)->render();
+    if (debug_draw)
+    {
+        LineBuffer lb;
+        size_t i = 0;
+        for (const auto& w : prev_hover_path)
+        {
+            i4 r = w->get_region();
+            i++;
+            VColour lc;
+            lc = i == prev_hover_path.size() ?
+                VColour(255, 100, 0, 100) : VColour(0, 50 + i*40, 0, 100);
+            lb.add_square(r[0]+1, r[1]+1, r[0]+r[2], r[1]+r[3], lc);
+        }
+        if (auto w = get_focused_widget()) {
+            i4 r = w->get_region();
+            lb.add_square(r[0]+1, r[1]+1, r[0]+r[2], r[1]+r[3], VColour(128,31,239,255));
+        }
+        lb.draw();
+    }
 #else
     // Render only the top of the UI stack on console
     if (m_root.num_children() > 0)
@@ -1668,11 +1688,24 @@ bool UIRoot::on_event(const wm_event& event)
     if (event_filter && event_filter(event))
         return true;
 
+    if (event.type == WME_KEYDOWN && event.key.keysym.sym == CK_INSERT)
+    {
+        ui_root.debug_draw = !ui_root.debug_draw;
+        ui_root.queue_layout();
+        ui_root.expose_region({0,0,INT_MAX,INT_MAX});
+        return true;
+    }
+
     switch (event.type)
     {
         case WME_MOUSEBUTTONDOWN:
         case WME_MOUSEBUTTONUP:
         case WME_MOUSEMOTION:
+            if (ui_root.debug_draw)
+            {
+                ui_root.queue_layout();
+                ui_root.expose_region({0,0,INT_MAX,INT_MAX});
+            }
         case WME_MOUSEWHEEL:
             for (auto w = prev_hover_path.rbegin(); w != prev_hover_path.rend(); ++w)
                 if ((*w)->on_event(event))
