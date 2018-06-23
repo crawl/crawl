@@ -316,6 +316,11 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
+    //I think this ASSERT might be needed for some builds, even though
+    //it works with just Tiles and I thought it was only needed for XP
+    //reduction. Whatever, I'm being lazy about this.
+    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
+
     // Note: This doesn't happen currently since monsters with
     //       MF_PACIFIED have always gone through pacification,
     //       hence also have MF_WAS_NEUTRAL. [rob]
