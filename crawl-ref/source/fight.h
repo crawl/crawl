@@ -51,7 +51,6 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int effective_attack_number = 0,
                            wu_jian_attack_type wu_jian_attack
                                = WU_JIAN_ATTACK_NONE);
-bool cleave_target_adjacent(actor &attacker, actor &target);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
