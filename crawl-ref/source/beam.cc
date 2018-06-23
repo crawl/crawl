@@ -6190,8 +6190,11 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
     bool at_wall = false;
 
-    // Check to see if we're blocked by a wall.
-    if (feat_is_wall(dngn_feat)
+    // Check to see if we're blocked by a wall or a tree.
+    // Can't use feat_is_solid here, since that includes statues which
+    // are a separate check, nor feat_is_opaque, since that excludes
+    // transparent walls, which we want.
+    if (feat_is_wall(dngn_feat) || feat_is_tree(dngn_feat)
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue
