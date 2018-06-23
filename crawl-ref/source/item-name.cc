@@ -3371,6 +3371,9 @@ bool is_useless_item(const item_def &item, bool temp)
     if (you.species == SP_UNKNOWN)
         return false;
 
+    if (you_worship(GOD_IGNI_IPTHES) && igni_hates(item))
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
