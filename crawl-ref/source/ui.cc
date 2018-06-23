@@ -1189,20 +1189,33 @@ void Grid::layout_track(Direction dim, SizeReq sr, int size)
     for (size_t i = 0; i < infos.size(); ++i)
         infos[i].size = infos[i].sr.min;
 
+    const bool stretch = dim ? stretch_v : stretch_h;
+    bool stretching = false;
+
     while (true)
     {
         int sum_flex_grow = 0, sum_taken = 0;
         for (const auto& info : infos)
             sum_flex_grow += info.size < info.sr.nat ? info.flex_grow : 0;
         if (!sum_flex_grow)
-            break;
+        {
+            if (!stretch)
+                break;
+            stretching = true;
+            for (const auto& info : infos)
+                sum_flex_grow += info.flex_grow;
+            if (!sum_flex_grow)
+                break;
+        }
 
         for (size_t i = 0; i < infos.size(); ++i)
         {
-            float efg = infos[i].size < infos[i].sr.nat ? infos[i].flex_grow : 0;
+            float efg = (infos[i].size < infos[i].sr.nat || stretching)
+                ? infos[i].flex_grow : 0;
             int tr_extra = extra * efg / sum_flex_grow;
-            ASSERT(infos[i].size <= infos[i].sr.nat);
-            int taken = min(tr_extra, infos[i].sr.nat - infos[i].size);
+            ASSERT(stretching || infos[i].size <= infos[i].sr.nat);
+            int taken = stretching ? tr_extra
+                : min(tr_extra, infos[i].sr.nat - infos[i].size);
             infos[i].size += taken;
             sum_taken += taken;
         }

@@ -482,6 +482,8 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 
+    bool stretch_h = false, stretch_v = false;
+
 protected:
     i4 get_tracks_region(int x, int y, int w, int h) const
     {
