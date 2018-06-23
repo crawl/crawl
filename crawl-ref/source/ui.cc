@@ -73,6 +73,14 @@ public:
     };
     size_t num_children() const { return m_root.num_children(); };
 
+    bool widget_is_in_layout(const Widget* w)
+    {
+        for (; w; w = w->_get_parent())
+            if (w == &m_root)
+                return true;
+        return false;
+    }
+
     void resize(int w, int h);
     void layout();
     void render();
@@ -94,6 +102,8 @@ public:
     vector<KeymapContext> keymap_stack;
     vector<int> cutoff_stack;
 
+    Widget* focused_widget = nullptr;
+
 protected:
     int m_w, m_h;
     i4 m_region;
@@ -106,27 +116,17 @@ static stack<i4> scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
+Widget::~Widget()
+{
+    Widget::slots.event.remove_by_target(this);
+    if (get_focused_widget() == this)
+        set_focused_widget(nullptr);
+    _set_parent(nullptr);
+}
+
 bool Widget::on_event(const wm_event& event)
 {
     return Widget::slots.event.emit(this, event);
-}
-
-static inline bool _maybe_propagate_event(wm_event event, shared_ptr<Widget> &child)
-{
-#ifdef USE_TILE_LOCAL
-    /* WME_MOUSELEAVE is conspicuously absent because it is emitted
-     * only on widgets that the cursor just left */
-    if (event.type == WME_MOUSEMOTION
-     || event.type == WME_MOUSEENTER
-     || event.type == WME_MOUSEBUTTONDOWN
-     || event.type == WME_MOUSEBUTTONUP)
-    {
-        i2 pos = {(int)event.mouse_event.px, (int)event.mouse_event.py};
-        if (!pos_in_rect(pos, child->get_region()))
-            return false;
-    }
-#endif
-    return child->on_event(event);
 }
 
 shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
@@ -140,25 +140,6 @@ shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
             return child;
     }
     return nullptr;
-}
-
-bool Container::on_event(const wm_event& event)
-{
-    if (Widget::on_event(event))
-        return true;
-    for (shared_ptr<Widget> &child : *this)
-        if (_maybe_propagate_event(event, child))
-            return true;
-    return false;
-}
-
-bool Bin::on_event(const wm_event& event)
-{
-    if (Widget::on_event(event))
-        return true;
-    if (_maybe_propagate_event(event, m_child))
-        return true;
-    return false;
 }
 
 shared_ptr<Widget> Bin::get_child_at_offset(int x, int y)
@@ -906,19 +887,31 @@ SizeReq Image::_get_preferred_size(Direction dim, int prosp_width)
 
 void Stack::add_child(shared_ptr<Widget> child)
 {
+    bool adjust_focus = ui_root.widget_is_in_layout(get_focused_widget());
+
+    if (adjust_focus)
+        set_focused_widget(nullptr);
+    Widget* child_ui = child.get();
     child->_set_parent(this);
     m_children.push_back(move(child));
     _invalidate_sizereq();
     _queue_allocation();
+    if (adjust_focus || ui_root.num_children() == 0)
+        set_focused_widget(child_ui);
 }
 
 void Stack::pop_child()
 {
     if (!m_children.size())
         return;
+    bool adjust_focus = ui_root.widget_is_in_layout(m_children.back().get());
+    if (adjust_focus)
+        set_focused_widget(nullptr);
     m_children.pop_back();
     _invalidate_sizereq();
     _queue_allocation();
+    if (adjust_focus && !m_children.empty())
+        set_focused_widget(m_children.front().get());
 }
 
 shared_ptr<Widget> Stack::get_child_at_offset(int x, int y)
@@ -962,17 +955,11 @@ void Stack::_allocate_region()
     }
 }
 
-bool Stack::on_event(const wm_event& event)
-{
-    if (Widget::on_event(event))
-        return true;
-    if (m_children.size() > 0 &&_maybe_propagate_event(event, m_children.back()))
-        return true;
-    return false;
-}
-
 void Switcher::add_child(shared_ptr<Widget> child)
 {
+    // TODO XXX: if there's a focused widget
+    // - it must be in the current top child
+    // - unfocus it before we
     child->_set_parent(this);
     m_children.push_back(move(child));
     _invalidate_sizereq();
@@ -981,6 +968,8 @@ void Switcher::add_child(shared_ptr<Widget> child)
 
 int& Switcher::current()
 {
+    // TODO XXX: we need to update the focused widget
+    // so we need an API change
     _expose();
     return m_current;
 }
@@ -1016,16 +1005,6 @@ void Switcher::_allocate_region()
         cr[3] = min(max(ph.min, m_region[3]), ph.nat);
         child->allocate_region(cr);
     }
-}
-
-bool Switcher::on_event(const wm_event& event)
-{
-    if (Widget::on_event(event))
-        return true;
-    m_current = max(0, min(m_current, (int)m_children.size()));
-    if (m_children.size() > 0 &&_maybe_propagate_event(event, m_children[m_current]))
-        return true;
-    return false;
 }
 
 shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
@@ -1633,6 +1612,7 @@ void UIRoot::send_mouse_enter_leave_events(int mx, int my)
         current = current->get_child_at_offset(mx, my);
     }
 
+    size_t new_hover_path_size = hover_path.size();
     size_t sz = max(prev_hover_path.size(), hover_path.size());
     prev_hover_path.resize(sz, nullptr);
     hover_path.resize(sz, nullptr);
@@ -1652,24 +1632,63 @@ void UIRoot::send_mouse_enter_leave_events(int mx, int my)
         {
             ev.type = WME_MOUSELEAVE;
             if (!event_filter || !event_filter(ev))
-                prev_hover_path[diff]->on_event(ev);
+                for (size_t i = sz; i > diff; --i)
+                {
+                    if (!prev_hover_path[i-1])
+                        continue;
+                    prev_hover_path[i-1]->on_event(ev);
+                }
         }
         if (hover_path[diff])
         {
             ev.type = WME_MOUSEENTER;
             if (!event_filter || !event_filter(ev))
-                hover_path[diff]->on_event(ev);
+                for (size_t i = diff; i < sz; ++i)
+                {
+                    if (!hover_path[i])
+                        break;
+                    hover_path[i]->on_event(ev);
+                }
         }
     }
 
     prev_hover_path = move(hover_path);
+    prev_hover_path.resize(new_hover_path_size);
 }
 
 bool UIRoot::on_event(const wm_event& event)
 {
     if (event_filter && event_filter(event))
         return true;
-    return m_root.on_event(event);
+
+    switch (event.type)
+    {
+        case WME_MOUSEBUTTONDOWN:
+        case WME_MOUSEBUTTONUP:
+        case WME_MOUSEMOTION:
+        case WME_MOUSEWHEEL:
+            for (auto w = prev_hover_path.rbegin(); w != prev_hover_path.rend(); ++w)
+                if ((*w)->on_event(event))
+                    return true;
+            break;
+        case WME_MOUSEENTER:
+        case WME_MOUSELEAVE:
+            die("unreachable");
+            break;
+        default:
+            size_t layer_idx = m_root.num_children();
+            if (!layer_idx)
+                return false;
+            Widget* layer_root = m_root.get_child(layer_idx-1).get();
+            if (layer_root->on_event(event))
+                return true;
+            for (Widget* w = focused_widget; w && w != layer_root; w = w->_get_parent())
+                if (w->on_event(event))
+                    return true;
+            break;
+    }
+
+    return false;
 }
 
 void push_scissor(i4 scissor)
@@ -2117,6 +2136,44 @@ formatted_string progress_popup::get_progress_string(unsigned int len)
     bar[(center_pos + 1) % len] = marker[2];
     bar = string("<lightmagenta>") + bar + "</lightmagenta>";
     return formatted_string::parse_string(bar);
+}
+
+void set_focused_widget(Widget* w)
+{
+    static bool sent_focusout;
+    static Widget* new_focus;
+
+    if (w == ui_root.focused_widget)
+        return;
+
+    new_focus = w;
+
+    if (ui_root.focused_widget && !sent_focusout)
+    {
+        sent_focusout = true;
+        wm_event ev = {0};
+        ev.type = WME_FOCUSOUT;
+        ui_root.focused_widget->on_event(ev);
+    }
+
+    if (new_focus != w)
+        return;
+
+    ui_root.focused_widget = new_focus;
+
+    sent_focusout = false;
+
+    if (new_focus)
+    {
+        wm_event ev = {0};
+        ev.type = WME_FOCUSIN;
+        new_focus->on_event(ev);
+    }
+}
+
+Widget* get_focused_widget()
+{
+    return ui_root.focused_widget;
 }
 
 }

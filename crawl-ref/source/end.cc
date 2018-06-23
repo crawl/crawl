@@ -476,14 +476,13 @@ NORETURN void end_game(scorefile_entry &se)
             morgue_directory().c_str());
 #endif
 
+    mouse_control mc(MOUSE_MODE_MORE);
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
+    auto popup = make_shared<ui::Popup>(prompt_ui);
     bool done = false;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
         return done = ev.type == WME_KEYDOWN;
     });
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    auto popup = make_shared<ui::Popup>(prompt_ui);
 
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         ui::run_layout(move(popup), done);

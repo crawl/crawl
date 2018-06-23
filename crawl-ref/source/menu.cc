@@ -703,7 +703,7 @@ bool UIMenu::on_event(const wm_event& event)
         wm_event ev = {0};
         ev.type = WME_KEYDOWN;
         ev.key.keysym.sym = key;
-        on_event(ev);
+        m_menu->m_ui.popup->on_event(ev);
     }
 
     return true;
@@ -1002,7 +1002,7 @@ void Menu::do_menu()
     bool done = false;
     m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
-    m_ui.menu->on(Widget::slots.event, [this, &done](wm_event ev) {
+    m_ui.popup->on(Widget::slots.event, [this, &done](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         if (m_filter)
@@ -1035,6 +1035,7 @@ void Menu::do_menu()
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
+    ui::set_focused_widget(m_ui.popup.get());
 
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);

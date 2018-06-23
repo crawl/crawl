@@ -100,10 +100,7 @@ public:
         VERT,
     };
 
-    virtual ~Widget() {
-        Widget::slots.event.remove_by_target(this);
-        _set_parent(nullptr);
-    }
+    virtual ~Widget();
 
     i4 margin = {0,0,0,0};
     int flex_grow = 1;
@@ -118,6 +115,7 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width);
     virtual void _allocate_region();
     void _set_parent(Widget* p);
+    Widget* _get_parent() const { return m_parent; };
     void _invalidate_sizereq(bool immediate = true);
     void _queue_allocation(bool immediate = true);
     void set_allocation_needed() { alloc_queued = true; };
@@ -154,6 +152,7 @@ public:
         Slot<Widget, bool (const wm_event&)> event;
     } slots;
 
+    // XXX: add documentation
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) {
         return nullptr;
     };
@@ -224,8 +223,6 @@ public:
         iter_impl *it;
     };
 
-    virtual bool on_event(const wm_event& event) override;
-
 public:
     virtual iterator begin() = 0;
     virtual iterator end() = 0;
@@ -238,7 +235,6 @@ public:
         if (m_child)
             _unparent(m_child);
     };
-    virtual bool on_event(const wm_event& event) override;
     void set_child(shared_ptr<Widget> child);
     virtual shared_ptr<Widget> get_child() { return m_child; };
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
@@ -441,7 +437,6 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
 };
 
 class Switcher : public ContainerVec
@@ -454,7 +449,6 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
 
 protected:
     int m_current;
@@ -635,6 +629,9 @@ void ui_delay(unsigned int ms);
 void push_scissor(i4 scissor);
 void pop_scissor();
 i4 get_scissor();
+
+void set_focused_widget(Widget* w);
+Widget* get_focused_widget();
 
 // XXX: this is a hack used to ensure that when switching to a
 // layout-based UI, the starting window size is correct. This is necessary

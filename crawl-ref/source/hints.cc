@@ -175,10 +175,11 @@ void pick_hints(newgame_def& choice)
         "\n* - Random hints mode character"
         "</brown>";
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
+    auto popup = make_shared<ui::Popup>(prompt_ui);
 
     bool done = false;
     int keyn;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+    popup->on(Widget::slots.event, [&](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         keyn = ev.key.keysym.sym;
@@ -208,8 +209,6 @@ void pick_hints(newgame_def& choice)
                 return true;
         }
     });
-
-    auto popup = make_shared<ui::Popup>(prompt_ui);
     ui::run_layout(move(popup), done);
 
     switch (keyn)
