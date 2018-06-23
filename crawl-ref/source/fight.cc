@@ -752,8 +752,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
-        bool def_adjacent = adjacent(attacker.pos(), def->pos());
-        if (def && def->alive() && !_dont_harm(attacker, *def) && def_adjacent)
+
+        if (def && def->alive() && !_dont_harm(attacker, *def) && adjacent(attacker.pos(), def->pos()))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
