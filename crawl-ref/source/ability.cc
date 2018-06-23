@@ -1146,7 +1146,8 @@ void no_ability_msg()
         }
     }
     else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
-             || you.get_mutation_level(MUT_BIG_WINGS))
+             || you.get_mutation_level(MUT_BIG_WINGS)
+             || you.get_mutation_level(MUT_FAERIE_DRAGON_FLIGHT))
     {
         if (you.airborne())
             mpr("You're already flying!");
@@ -2007,7 +2008,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FLY:
         fail_check();
-        // high level Te or Dr/Gr wings
+        // FD, high level Te, or Dr/Gr wings
         if (you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 1;

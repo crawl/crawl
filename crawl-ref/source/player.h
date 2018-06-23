@@ -514,6 +514,8 @@ public:
     bool is_skeletal() const override;
 
     bool tengu_flight() const;
+    bool faerie_dragon_flight() const;
+
     int heads() const override;
 
     bool spellcasting_unholy() const;
