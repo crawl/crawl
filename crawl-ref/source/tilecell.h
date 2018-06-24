@@ -21,6 +21,7 @@ struct packed_cell
     tile_flavour flv;
     tileidx_t cloud;
 
+    bool is_highlighted;
     bool is_bloody;
     bool is_silenced;
     char halo;
