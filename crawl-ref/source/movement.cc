@@ -33,28 +33,28 @@ bool cancel_barbed_move()
 void apply_barbs_damage()
 {
     if (you.duration[DUR_BARBS])
-        {
-            mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
-                             "as you move.");
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
-            bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
+    {
+        mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
+                         "as you move.");
+        ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
+        bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
 
-            // Sometimes decrease duration even when we move.
-            if (one_chance_in(3))
-                extract_manticore_spikes("The barbed spikes snap loose.");
-            // But if that failed to end the effect, duration stays the same.
-            if (you.duration[DUR_BARBS])
-                you.duration[DUR_BARBS] += you.time_taken;
-        }
+        // Sometimes decrease duration even when we move.
+        if (one_chance_in(3))
+            extract_manticore_spikes("The barbed spikes snap loose.");
+        // But if that failed to end the effect, duration stays the same.
+        if (you.duration[DUR_BARBS])
+            you.duration[DUR_BARBS] += you.time_taken;
+    }
 }
 
 void remove_ice_armour_movement()
 {
     if (you.duration[DUR_ICY_ARMOUR])
-        {
-            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
-                                 "you move.");
-            you.duration[DUR_ICY_ARMOUR] = 0;
-            you.redraw_armour_class = true;
-        }
+    {
+        mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
+                             "you move.");
+        you.duration[DUR_ICY_ARMOUR] = 0;
+        you.redraw_armour_class = true;
+    }
 }

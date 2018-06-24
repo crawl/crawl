@@ -1480,9 +1480,9 @@ static void _take_stairs(bool down)
                              && ygrd != DNGN_UNDISCOVERED_TRAP);
 
     if (!(_can_take_stairs(ygrd, down, shaft)
+          && !cancel_barbed_move()
           && _prompt_stairs(ygrd, down, shaft)
-          && you.attempt_escape()
-          && !cancel_barbed_move())) // false means constricted and don't escape
+          && you.attempt_escape())) // false means constricted and don't escape
     {
         return;
     }
