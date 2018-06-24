@@ -540,6 +540,29 @@ MAP
  ccccccccccc
 ENDMAP
 
+NAME:   ebering_ghost_disaster_area
+ORIENT: float
+KMONS:  O = player ghost
+NSUBST: ' = d / e / 8=wWlr / -
+: if you.depth() < dgn.br_depth(you.branch()) then
+KFEAT:  r = known shaft trap
+: else
+SUBST:  r = wWl
+: end
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+: ghost_setup(_G)
+MAP
+cccccccccc
+cccc'c'ccc
+cc''O''c'c
+c'c'''''cc
+c''''c''cc
+cc'''''''c
+ccnn==nncc
+  ..@@..
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
