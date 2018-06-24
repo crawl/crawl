@@ -109,6 +109,7 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "movement.h"
 #include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
@@ -132,6 +133,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -1479,7 +1481,8 @@ static void _take_stairs(bool down)
 
     if (!(_can_take_stairs(ygrd, down, shaft)
           && _prompt_stairs(ygrd, down, shaft)
-          && you.attempt_escape())) // false means constricted and don't escape
+          && you.attempt_escape()
+          && !_cancel_barbed_move())) // false means constricted and don't escape
     {
         return;
     }
@@ -2428,24 +2431,6 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-static bool _cancel_barbed_move()
-{
-    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
-    {
-        string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return true;
-        }
-
-        you.props[BARBS_MOVE_KEY] = true;
-    }
-
-    return false;
-}
-
 static bool _cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -2886,6 +2871,7 @@ static void _entered_malign_portal(actor* act)
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
+// TODO: Move player movement code to its own file 
 static void _move_player(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
@@ -3209,28 +3195,8 @@ static void _move_player(coord_def move)
         if (swap)
             targ_monst->apply_location_effects(targ);
 
-        if (you.duration[DUR_BARBS])
-        {
-            mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
-                             "as you move.");
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
-            bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
-
-            // Sometimes decrease duration even when we move.
-            if (one_chance_in(3))
-                extract_manticore_spikes("The barbed spikes snap loose.");
-            // But if that failed to end the effect, duration stays the same.
-            if (you.duration[DUR_BARBS])
-                you.duration[DUR_BARBS] += you.time_taken;
-        }
-
-        if (you.duration[DUR_ICY_ARMOUR])
-        {
-            mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
-                                 "you move.");
-            you.duration[DUR_ICY_ARMOUR] = 0;
-            you.redraw_armour_class = true;
-        }
+        apply_barbs_damage();
+        remove_ice_armour_movement();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
