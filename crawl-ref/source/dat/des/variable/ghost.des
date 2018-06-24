@@ -112,6 +112,75 @@ function setup_armoury_orcs(e)
             "| shield randart w:2 | large shield good_item w:2 " ..
             "| large shield randart w:1")
 end
+
+function setup_xom_dancing_weapon(e)
+    quality = ""
+    great_weight = 1
+    great_weapons = {}
+
+    -- Progress the base type of weapons so that it's more reasonable as reward
+    -- as depth increases. The very rare weapons only show up at all in later
+    -- depths and always with lower weight.
+    if you.absdepth() < 6 then
+        base_weapons = {"dagger", "short sword", "falchion", "club", "whip",
+                        "hand axe", "spear"}
+        good_weapons = {"rapier", "long sword",  "mace", "flail", "war axe",
+                        "trident", "quarterstaff"}
+    elseif you.absdepth() < 9 then
+        base_weapons = {"dagger", "short sword", "rapier", "falchion",
+                        "long sword", "whip", "mace", "hand axe", "spear",
+                        "trident"}
+        good_weapons = {"scimitar", "flail", "war axe", "quarterstaff"}
+        quality = crawl.one_chance_in(6) and "good_item" or ""
+    elseif you.absdepth() < 12 then
+        base_weapons = {"rapier", "long sword", "scimitar", "mace", "flail",
+                        "hand axe", "war axe", "trident", "quarterstaff"}
+        good_weapons = {"morningstar", "dire flail", "broad axe", "halberd"}
+        quality = crawl.one_chance_in(4) and "good_item" or ""
+    elseif you.absdepth() < 14 then
+        base_weapons = {"rapier", "long sword", "scimitar", "flail",
+                        "morningstar", "dire flail", "war axe", "broad axe",
+                        "trident", "halberd", "scythe", "quarterstaff"}
+        good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
+        great_weapons = {"quickblade", "demon blade", "double sword",
+                         "triple sword", "demon whip", "eveningstar",
+                         "executioner's axe", "demon trident", "bardiche",
+                         "lajatang"}
+        quality = crawl.one_chance_in(3) and "good_item"
+                  or crawl.one_chance_in(4) and "randart"
+                  or ""
+    else
+        base_weapons = {"rapier", "scimitar", "great sword", "morningstar",
+                        "dire flail", "great mace", "war axe", "broad axe",
+                        "battleaxe", "halberd", "scythe", "glaive",
+                        "quarterstaff"}
+        good_weapons = {}
+        great_weapons = {"quickblade", "demon blade", "double sword",
+                         "triple sword", "demon whip", "eveningstar",
+                         "executioner's axe", "demon trident", "bardiche",
+                         "lajatang"}
+        great_weight = 3
+        quality = crawl.coinflip() and "good_item"
+                  or crawl.coinflip() and "randart"
+                  or ""
+    end
+
+    -- Make one weapons table with each weapon getting weight by class.
+    weapons = {}
+    for _, wname in ipairs(base_weapons) do
+        weapons[wname] = 10
+    end
+    for _, wname in ipairs(good_weapons) do
+        weapons[wname] = 5
+    end
+    for _, wname in ipairs(great_weapons) do
+        weapons[wname] = great_weight
+    end
+
+    -- Generate a dancing weapon based on the table that always has chaos ego.
+    dagger_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
+    e.mons("dancing weapon; " .. dagger_def)
+end
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -375,19 +444,14 @@ cn=nc
  .@.
 ENDMAP
 
-NAME: ebering_ghost_xom
+NAME:   ebering_ghost_xom
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
-KMONS: O = player_ghost
-KFEAT: O = altar_xom
-: lone_ghost_extra_loot(_G,"-")
-{{
-  egos = {["vorpal"] = 20, ["freezing"] = 15, ["flaming"] = 15,
-          ["venom"] = 10, ["protection"] = 10, ["electrocution"] = 5,
-          ["draining"] = 5, ["antimagic"] = 2, ["chaos"] = 1}
-  local dagger_def = random_item_def({["dagger"] = 10}, egos,
-                                     crawl.one_chance_in(7), "|")
-  mons("dancing weapon; " .. dagger_def)
-}}
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+: setup_xom_dancing_weapon(_G)
+KMONS:  O = player_ghost
+KFEAT:  O = altar_xom
 FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
 MAP
  ccc
