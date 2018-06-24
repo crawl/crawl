@@ -433,6 +433,7 @@ KFEAT:  O = shallow_water
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
 FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
 MAP
 ccccc
 cdOec
