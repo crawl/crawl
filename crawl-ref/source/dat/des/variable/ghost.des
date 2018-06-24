@@ -111,6 +111,22 @@ function setup_armoury_orcs(e)
             "| large shield randart w:1")
 end
 
+-- Determine the number of gold piles placed for the Gozag ghost
+-- Linearly interpolates between 3-9 on D:3 and 12-18 on D:15, with
+-- Lair and Orc getting 8-14 and everything else getting 12-18.
+-- ebering_gozag_ghost
+function setup_gozag_gold(e)
+    if you.in_branch("D") then
+        pile_mean = math.floor(3/4 * you.depth() + 3.75)
+    elseif you.in_branch("Lair") or you.in_branch("Orc") then
+        pile_mean = 11
+    else
+        pile_mean = 15
+    end
+    pile_count = crawl.random_range(pile_mean - 3, pile_mean + 3)
+    e.nsubst("' = " .. pile_count .. "=$ / -")
+end
+
 -- Basic loot scale for extra loot for lone ghosts
 -- takes none_glyph to use when it would like no item
 -- adds depth appropriate items to de
@@ -384,40 +400,39 @@ ORIENT: float
 # If ghost selectors ever happen this should be a gozag ghost
 KMONS: O = player_ghost
 KFEAT: O = abandoned_shop
-# Scale up to acquire gold by depth
-# D:3 Min: 66 Max: 1656 Mean: 365 Dev: 274
-# D:7 Min: 154 Max: 3864 Mean: 851 Dev: 638
-# D:10- acquire gold
-{{
-  if you.in_branch("D") and you.depth() < 10 then
-    gold_qty = you.depth() * (20
-                             + crawl.roll_dice(1, 20)
-                             + (crawl.roll_dice(1, 8)
-                                * crawl.roll_dice(1, 8)
-                                * crawl.roll_dice(1, 8)))
-    item("gold q:" .. gold_qty)
-  else
-    item("acquire gold")
-  end
-}}
-NSUBST: ' = d / 2=998 / $
-KFEAT: Z = altar_gozag
-SUBST: _ = GZ
+KFEAT: _ = altar_gozag
+: if you.absdepth() < 10 then
+NSUBST: M = 2=998 / G
+: else
+NSUBST: M = 2=998 / 2=0 / 2=0G
+: end
+: if you.absdepth() >= 14 then
+:   if you.in_branch("Lair") then
+MONS: oklob plant
+:   else
+MONS: obsidian statue
+:   end
+SUBST: S = GG1
+: else
+SUBST: S = G
+: end
+: setup_gozag_gold(_G)
 TILE: G = dngn_golden_statue
-FTILE: -d$89OGZ = floor_limestone
+FTILE: -$0189OGZS = floor_limestone
 RTILE: c = wall_sandstone
 COLOUR: cG = yellow
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G)
 MAP
-  ccc
- ccOcc
-cc'''cc
-c'-_-'c
-cc---cc
- cn=nc
-  .@.
+ ccccccc
+ccMcOcMcc
+cM'''''Mc
+cc''S''cc
+cM''_''Mc
+cc'''''cc
+ nn===nn
+ ...@...
 ENDMAP
 
 NAME: ebering_ghost_rock_garden
