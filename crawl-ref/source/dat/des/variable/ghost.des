@@ -385,11 +385,11 @@ ccnn===nncc
   ...@...
 ENDMAP
 
-NAME: ebering_ghost_inner_flame
+NAME:   ebering_ghost_inner_flame
 WEIGHT: 2 (D:3-7), 5 (D:8-11)
-KPROP: cn'O = w:5 bloody / nothing
-KMONS: O = player_ghost
-KITEM: O = scroll of immolation ident:all
+KPROP:  cn'O = w:5 bloody / nothing
+KMONS:  O = player_ghost
+KITEM:  O = scroll of immolation ident:all
 NSUBST: ' = |* / |*$ / 998 / dF / 3=d. / F. / .
 MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
@@ -404,16 +404,16 @@ MAP
  ccccc
 ENDMAP
 
-NAME: ebering_ghost_rock_garden
+NAME:   ebering_ghost_rock_garden
 ORIENT: float
-KMONS: O = player_ghost
+KMONS:  O = player_ghost
 : local large_rocks = crawl.random_range(3,7)
 : kitem("O = large rock q:" .. large_rocks)
-KITEM: ' = stone q:1 / large rock w:1
+KITEM:  ' = stone q:1 / large rock w:1
 NSUBST: r = O / d / e / tG / t'' / '
 : lone_ghost_extra_loot(_G, "'")
-COLOUR: -deOtG'|*%$ = yellow, c = white
-FTILE: -deOtG'|*%$ = floor_dirt
+COLOUR: '-O|*%$tG = yellow, c = white
+FTILE:  '-O|*%$tG = floor_dirt
 : ghost_setup(_G)
 MAP
 ccccccccc
@@ -426,10 +426,10 @@ cnn===nnc
  ...@...
 ENDMAP
 
-NAME: ebering_ghost_reflecting_pool
+NAME:   ebering_ghost_reflecting_pool
 ORIENT: float
-KMONS: O = player_ghost
-KFEAT: O = shallow_water
+KMONS:  O = player_ghost
+KFEAT:  O = shallow_water
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
 FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
@@ -527,7 +527,7 @@ ENDMAP
 
 NAME:   gammafunk_ghost_necromancy
 # Omit Elf since that branch has few good monsters for derived undead.
-DEPTH:  D:3-, Lair, Orc, Shoals, Snake, Spider, Swamp, Crypt, Depths, Zot
+WEIGHT: 0 (Elf)
 ORIENT: float
 KMONS:  O = player ghost
 # Progressive depth/numbers of zombies and type/amount of loot.
@@ -798,6 +798,7 @@ KMONS:  O = player ghost
 -- Set up hydra monster entry with a range of possible extra heads based on
 -- depth.
 max_heads = 11 + math.floor((you.absdepth() - 8) / 2)
+local hydra_def
 for h = 9, max_heads do
     def = h .. "-headed hydra"
     if hydra_def == nil then
