@@ -232,3 +232,27 @@ xn=nx
 .....
 .....
 ENDMAP
+
+NAME:   ebering_vaults_ghost_disaster_area
+TAGS:   vaults_orient_s
+KMONS:  O = player ghost
+NSUBST: ' = d / e / 8=wWlr / -
+: if you.depth() < dgn.br_depth(you.branch()) then
+KFEAT:  r = known shaft trap
+: else
+SUBST:  r = wWl
+: end
+SUBST:  P = GTV
+KITEM:  O = superb_item / star_item
+SUBST:  de = |*
+: vaults_ghost_setup(_G)
+MAP
+..........
+.'xx'x'x'.
+.x''O''x'.
+.'x'''''x.
+.''P'x''x.
+.x'''''''.
+xxnn==nnxx
+....@@....
+ENDMAP
