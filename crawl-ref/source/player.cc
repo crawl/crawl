@@ -724,11 +724,10 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_BOOTS: // And bardings
         dummy.sub_type = ARM_BOOTS;
-        if (you.species == SP_NAGA
-            || you.species == SP_CENTAUR)
-        {
-            alternate.sub_type = ARM_BARDING;
-        }
+        if (you.species == SP_NAGA)
+            alternate.sub_type = ARM_NAGA_BARDING;
+        if (you.species == SP_CENTAUR)
+            alternate.sub_type = ARM_CENTAUR_BARDING;
         break;
 
     case EQ_BODY_ARMOUR:
@@ -6892,7 +6891,7 @@ bool player::has_usable_hooves(bool allow_tran) const
 {
     return has_hooves(allow_tran)
            && (!slot_item(EQ_BOOTS)
-               || wearing(EQ_BOOTS, ARM_BARDING, true));
+               || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
 }
 
 int player::has_fangs(bool allow_tran) const

@@ -3071,10 +3071,15 @@ string hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);
                 wearable = false;
             }
-            else if ((you.species != SP_NAGA || you.species != SP_CENTAUR)
-                     && item.sub_type == ARM_BARDING)
+            else if (item.sub_type == ARM_CENTAUR_BARDING)
             {
-                ostr << "Only nagas and centaurs can wear bardings.";
+                ostr << "Only centaurs can wear centaur barding.";
+                wearable = false;
+            }
+            else if (item.sub_type == ARM_NAGA_BARDING)
+            {
+                ostr << "Only nagas can wear naga barding.";
+                wearable = false;
             }
             else
             {
