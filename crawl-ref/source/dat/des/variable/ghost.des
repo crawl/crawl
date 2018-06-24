@@ -1181,3 +1181,35 @@ c.............c
 cnnnnn===nnnnnc
 I......@......I
 ENDMAP
+
+NAME:   ebering_ghost_davey_jones
+ORIENT: float
+TAGS:   water_ok
+DEPTH:  Shoals, !Shoals:$
+KMONS:  O = player_ghost
+KITEM:  O = any ring randart w:20 / ring of the octopus king w:1
+KFEAT:  O' = W
+KMONS:  1 = kraken / kraken simulacrum
+KFEAT:  1 = w
+SUBST:  u = wW, s=W.
+NSUBST: ' = 3=|* / *%
+{{
+dgn.delayed_decay(_G,"%","minotaur skeleton / halfling skeleton" ..
+  " / dwarf skeleton / human skeleton / kobold skeleton" ..
+  " / felid skeleton / orc skeleton / centaur skeleton")
+}}
+: ghost_setup(_G)
+MAP
+ WWWWWWWWWWWWW
+WWcccccccccccWW
+WccuwwwwwwwuccW
+WcWuwwwww'wuWcW
+WcWWW'wwwuWWWcW
+Wns%Wuw1wuWWWnW
+Wn.sWuwwwuW%snW
+Wc%sW'uOu'Ws.cW
+Wc..%sWsWWs..cW
+Wcc......%..ccW
+WWcnnn===nnncWW
+ WW....@....WW
+ENDMAP
