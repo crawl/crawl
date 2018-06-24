@@ -134,6 +134,8 @@ ssl_port = 8081
 connection_timeout = 600
 max_idle_time = 5 * 60 * 60
 
+use_gzip = True
+
 # Seconds until stale HTTP connections are closed
 # This needs a patch currently not in mainline tornado.
 http_connection_timeout = None
