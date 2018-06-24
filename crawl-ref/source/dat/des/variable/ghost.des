@@ -549,6 +549,7 @@ KFEAT:  r = known shaft trap
 : else
 SUBST:  r = wWl
 : end
+SUBST: P = GTV
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
 : ghost_setup(_G)
@@ -557,7 +558,7 @@ cccccccccc
 cccc'c'ccc
 cc''O''c'c
 c'c'''''cc
-c''''c''cc
+c''P'c''cc
 cc'''''''c
 ccnn==nncc
   ..@@..
