@@ -288,7 +288,7 @@ braces may be omitted.
         {
             if (grd[x][y] == DNGN_LAVA)
                 lava_spaces++;
-            if (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == NGN_SHALLOW_WATER)
+            if (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
                 water_spaces++;
         }
 
