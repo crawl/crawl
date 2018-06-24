@@ -32,3 +32,51 @@ function vaults_ghost_setup(e)
     -- Vaults branch layout expects vaults_ghost as a tag selector.
     e.tags("vaults_ghost")
 end
+
+-- Make an item definition that will randomly choose from combinations of the
+-- given tables of weighted item types and optional egos.
+--
+-- @param items     A table with weapon names as keys and weights as values.
+-- @param egos      An optional table with ego names as keys and weights as
+--                  values.
+-- @param args      An optional string of arguments to use on every item entry.
+--                  Should not have leading or trailing whitespace.
+-- @param separator An optional separator to use between the item entries.
+--                  Defaults to '/', which is appropriate for ITEM statements.
+--                  Use '|' if making item statements for use with MONS.
+-- @returns A string containing the item definition.
+function random_item_def(items, egos, args, separator)
+    args = args ~= nil and " " .. args or ""
+    separator = separator ~= nil and separator or '/'
+    local item_def
+
+    for iname, iweight in pairs(items) do
+        -- If we have egos, define an item spec with all item+ego
+        -- combinations, each with weight scaled by item rarity and ego
+        -- rarity.
+        if egos ~= nil then
+            for ename, eweight in pairs(egos) do
+                if (not iname:find("demon") or ename ~= "holy_wrath")
+                   and (not make_arte or ename ~= "none") then
+                    def = iname .. args .. " ego:" .. ename .. " w:" ..
+                          math.floor(iweight * eweight)
+                    if item_def == nil then
+                         item_def = def
+                    else
+                         item_def = item_def .. " " .. separator .. " " .. def
+                    end
+                end
+            end
+        -- No egos, so define item spec with all item combinations, each with
+        -- weight scaled by item rarity.
+        else
+            def = iname .. args .. " w:" .. iweight
+            if item_def == nil then
+                 item_def = def
+            else
+                 item_def = item_def .. " " .. separator .. " " .. def
+            end
+        end
+    end
+    return item_def
+end
