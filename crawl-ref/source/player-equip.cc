@@ -920,14 +920,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_CLOUD_IMMUNE:
-        	if( have_passive(passive_t::cloud_immunity) )
-        	{
+        	if (have_passive(passive_t::cloud_immunity))
                 mpr("You feel your immunity to clouds is unaffected.");
-        	}
         	else
-        	{
                 mpr("You feel immune to the effects of clouds.");
-        	}
             break;
         }
     }
@@ -1093,14 +1089,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_CLOUD_IMMUNE:
-    	if( have_passive(passive_t::cloud_immunity) )
-    	{
+    	if (have_passive(passive_t::cloud_immunity))
             mpr("You feel your immunity to clouds is unaffected.");
-    	}
     	else
-    	{
             mpr("You feel vulnerable to the effects of clouds.");
-    	}
         break;
 
     default:
