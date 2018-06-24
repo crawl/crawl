@@ -213,3 +213,22 @@ MAP
 ..x''..
 ..x....
 ENDMAP
+
+NAME:   ebering_vaults_ghost_reflecting_pool
+TAGS:   vaults_orient_s no_pool_fixup
+KMONS:  O = player_ghost
+KFEAT:  O = shallow_water
+KITEM:  O = superb_item / star_item
+SUBST:  de = |*
+: vaults_ghost_setup(_G)
+MAP
+.....
+.dOe.
+.-w-.
+.-w-.
+.-w-.
+.-W-.
+xn=nx
+.....
+.....
+ENDMAP
