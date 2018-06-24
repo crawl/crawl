@@ -110,6 +110,67 @@ function setup_armoury_orcs(e)
             "| shield randart w:2 | large shield good_item w:2 " ..
             "| large shield randart w:1")
 end
+
+-- Determine the number of gold piles placed for the Gozag ghost
+-- Linearly interpolates between 3-9 on D:3 and 12-18 on D:15, with
+-- Lair and Orc getting 8-14 and everything else getting 12-18.
+-- ebering_gozag_ghost
+function setup_gozag_gold(e)
+    if you.in_branch("D") then
+        pile_mean = math.floor(3/4 * you.depth() + 3.75)
+    elseif you.in_branch("Lair") or you.in_branch("Orc") then
+        pile_mean = 11
+    else
+        pile_mean = 15
+    end
+    pile_count = crawl.random_range(pile_mean - 3, pile_mean + 3)
+    e.nsubst("' = " .. pile_count .. "=$ / -")
+end
+
+-- Basic loot scale for extra loot for lone ghosts
+-- takes none_glyph to use when it would like no item
+-- adds depth appropriate items to de
+function lone_ghost_extra_loot(e,none_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.subst("de = " .. none_glyph)
+        elseif you.depth() < 9 then
+            e.subst("d = %$" .. none_glyph .. none_glyph)
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 12 then
+            e.subst("d = %$")
+            e.subst("e = " ..none_glyph)
+        else
+            e.subst("d = |*")
+            e.subst("e = *$")
+        end
+    elseif you.in_branch("Lair") then
+        e.subst("d = *%")
+        e.subst("e = %$" .. none_glyph .. none_glyph)
+    elseif you.in_branch("Orc") then
+        e.subst("d = |*")
+        e.subst("e = %$")
+    else
+        e.subst("de = |*")
+    end
+end
+
+-- Basic loot scale for ghost "guarded" loot for lone ghosts
+-- KITEMS this to ghost_glyph
+function lone_ghost_guarded_loot(e,ghost_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.kitem(ghost_glyph .. " = star_item / any")
+        elseif you.depth() < 9 then
+            e.kitem(ghost_glyph .. " = star_item")
+        else
+            e.kitem(ghost_glyph .. " = superb_item / star_item")
+        end
+    else
+        e.kitem(ghost_glyph .. " = superb_item / star_item")
+    end
+end
+
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -130,30 +191,8 @@ default-depth: D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, \
 NAME:  gammafunk_ghost_grave
 ORIENT: float
 WEIGHT: 20 (D:3-11)
-: if you.in_branch("D") then
-:     if you.depth() < 6 then
-KITEM: O = star_item / any
-SUBST: de = -
-:     elseif you.depth() < 9 then
-KITEM: O = star_item
-SUBST: d = %$--, e = -
-:     elseif you.absdepth() < 12 then
-KITEM: O = superb_item / star_item
-SUBST: d = %$, e = -
-:     else
-KITEM: O = superb_item / star_item
-SUBST: d = |*, e = *$
-:     end
-: elseif you.in_branch("Lair") then
-KITEM: O = superb_item / star_item
-SUBST: d = *%, e = %$--
-: elseif you.in_branch("Orc") then
-KITEM: O = superb_item / star_item
-SUBST: d = |*, e = %$
-: else
-KITEM: O = superb_item / star_item
-SUBST: de = |*
-: end
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
 KMONS: O = player ghost
 KMONS: p = withered plant
 SUBST: t : tp
@@ -353,6 +392,152 @@ MAP
 @='O'c
 .n'''c
  ccccc
+ENDMAP
+
+NAME: ebering_ghost_gozag
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+# If ghost selectors ever happen this should be a gozag ghost
+KMONS: O = player_ghost
+KFEAT: O = abandoned_shop
+KFEAT: _ = altar_gozag
+: if you.absdepth() < 10 then
+NSUBST: M = 2=998 / G
+: else
+NSUBST: M = 2=998 / 2=0 / 2=0G
+: end
+: if you.absdepth() >= 14 then
+:   if you.in_branch("Lair") then
+MONS: oklob plant
+:   else
+MONS: obsidian statue
+:   end
+SUBST: S = GG1
+: else
+SUBST: S = G
+: end
+: setup_gozag_gold(_G)
+TILE: G = dngn_golden_statue
+FTILE: -$0189OGZS = floor_limestone
+RTILE: c = wall_sandstone
+COLOUR: cG = yellow
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("stone_wall", "golden wall")
+: ghost_setup(_G)
+MAP
+ ccccccc
+ccMcOcMcc
+cM'''''Mc
+cc''S''cc
+cM''_''Mc
+cc'''''cc
+ nn===nn
+ ...@...
+ENDMAP
+
+NAME: ebering_ghost_rock_garden
+ORIENT: float
+KMONS: O = player_ghost
+: local large_rocks = crawl.random_range(3,7)
+: kitem("O = large rock q:" .. large_rocks)
+KITEM: ' = stone q:1 / large rock w:1
+NSUBST: r = O / d / e / tG / t'' / '
+: lone_ghost_extra_loot(_G, "'")
+COLOUR: -deOtG'|*%$ = yellow, c = white
+FTILE: -deOtG'|*%$ = floor_dirt
+: ghost_setup(_G)
+MAP
+ccccccccc
+c---r-r-c
+crr-----c
+c----r--c
+c--r----c
+cr----r-c
+cnn===nnc
+ ...@...
+ENDMAP
+
+NAME: ebering_ghost_reflecting_pool
+ORIENT: float
+KMONS: O = player_ghost
+KFEAT: O = shallow_water
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
+MAP
+ccccc
+cdOec
+c-w-c
+c-w-c
+c-w-c
+c-W-c
+cn=nc
+ .@.
+ENDMAP
+
+NAME: ebering_ghost_xom
+ORIENT: float
+KMONS: O = player_ghost
+KFEAT: O = altar_xom
+: lone_ghost_extra_loot(_G,"-")
+{{
+  egos = {["vorpal"] = 20, ["freezing"] = 15, ["flaming"] = 15,
+          ["venom"] = 10, ["protection"] = 10, ["electrocution"] = 5,
+          ["draining"] = 5, ["antimagic"] = 2, ["chaos"] = 1}
+  local dagger_def = random_item_def({["dagger"] = 10}, egos,
+                                     crawl.one_chance_in(7), "|")
+  mons("dancing weapon; " .. dagger_def)
+}}
+FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
+MAP
+ ccc
+cc1cc
+cdOec
+cn=nc
+..@..
+ENDMAP
+
+NAME: ebering_ghost_sewer_d
+# based on sewer_entry_d
+ORIENT: float
+DEPTH: D:3-6
+KMONS: O = player_ghost
+KFEAT: O = expired_portal
+KMONS: 1 = patrolling adder
+KFEAT: 1 = W
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "W")
+COLOUR: 1W = lightgreen / cyan w:5
+FTILE: O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+       ..
+ccccccnn.
+cdOe1WW=.
+ccccccnn.
+       ..
+ENDMAP
+
+NAME: ebering_ghost_sewer_f
+# based on sewer_entry_f
+ORIENT: float
+DEPTH: D:3-6
+KMONS: O = player_ghost
+KFEAT: O = expired_portal
+KMONS:  1 = leopard gecko / giant cockroach / nothing w:5
+NSUBST: W = 6:1 / *:W
+KFEAT: 1 = W
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "W")
+COLOUR: 1W = lightgreen / cyan w:5
+FTILE: O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+ ccccccccccc
+.nWWWWeWWWWn.
+@=WWWWOWWWW=@
+.nWWWWdWWWWn.
+ ccccccccccc
 ENDMAP
 
 ###############################################################################
