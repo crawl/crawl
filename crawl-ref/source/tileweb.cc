@@ -1299,6 +1299,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.halo != current_pc.halo)
             json_write_int("halo", next_pc.halo);
 
+        if (next_pc.is_highlighted != current_pc.is_highlighted)
+            json_write_bool("highlighted", next_pc.is_highlighted);
+
         if (next_pc.is_moldy != current_pc.is_moldy)
             json_write_bool("moldy", next_pc.is_moldy);
 

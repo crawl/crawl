@@ -692,6 +692,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                             this.draw_dngn(dngn.HALO_GD_NEUTRAL, x, y);
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
+
+                        if (cell.highlighted)
+                            this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
                     }
 
 

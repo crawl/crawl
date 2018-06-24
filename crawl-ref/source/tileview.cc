@@ -1412,6 +1412,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else
         cell.halo = HALO_NONE;
 
+    if (mc.monsterinfo() && mc.monsterinfo()->is(MB_HIGHLIGHT))
+        cell.is_highlighted = true;
+
     if (mc.flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
     else if (print_blood && (_suppress_blood(mc)
