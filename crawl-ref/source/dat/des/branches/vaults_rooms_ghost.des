@@ -195,3 +195,67 @@ nnn===nnn
 .........
 .........
 ENDMAP
+
+NAME:   ebering_vaults_ghost_inner_flame
+TAGS:   vaults_orient_w
+KPROP:  xn'O = w:5 bloody / nothing
+KMONS:  O = player_ghost
+KITEM:  O = scroll of immolation ident:all
+NSUBST: ' = |* / |*$ / 998 / dF / 3=d. / F. / .
+MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
+            pow_min = 10000, pow_max = 10000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1 }
+: dgn.delayed_decay(_G, "d", "chunk")
+: vaults_ghost_setup(_G)
+MAP
+..x....
+..x''..
+..n'''.
+..='O'.
+..n'''.
+..x''..
+..x....
+ENDMAP
+
+NAME:   ebering_vaults_ghost_reflecting_pool
+TAGS:   vaults_orient_s no_pool_fixup
+KMONS:  O = player_ghost
+KFEAT:  O = shallow_water
+KITEM:  O = superb_item / star_item
+SUBST:  de = |*
+: vaults_ghost_setup(_G)
+MAP
+.....
+.dOe.
+.-w-.
+.-w-.
+.-w-.
+.-W-.
+xn=nx
+.....
+.....
+ENDMAP
+
+NAME:   ebering_vaults_ghost_disaster_area
+TAGS:   vaults_orient_s
+KMONS:  O = player ghost
+NSUBST: ' = d / e / 8=wWlr / -
+: if you.depth() < dgn.br_depth(you.branch()) then
+KFEAT:  r = known shaft trap
+: else
+SUBST:  r = wWl
+: end
+SUBST:  P = GTV
+KITEM:  O = superb_item / star_item
+SUBST:  de = |*
+: vaults_ghost_setup(_G)
+MAP
+..........
+.'xx'x'x'.
+.x''O''x'.
+.'x'''''x.
+.''P'x''x.
+.x'''''''.
+xxnn==nnxx
+....@@....
+ENDMAP
