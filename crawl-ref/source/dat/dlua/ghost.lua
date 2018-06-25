@@ -80,3 +80,118 @@ function random_item_def(items, egos, args, separator)
     end
     return item_def
 end
+
+function ghost_good_loot(e)
+    -- Possible loot items.
+    jewellery = "any jewellery"
+    good_jewellery = "any jewellery good_item"
+    randart_jewellery = "any jewellery randart"
+    aux = "cloak / scarf / helmet / hat / gloves / pair of boots"
+    good_aux = "cloak good_item / scarf good_item / helmet good_item / " ..
+        "hat good_item / gloves good_item / pair of boots good_item"
+    randart_aux = good_aux:gsub("good_item", "randart")
+    scrolls = "scroll of teleportation w:15 / scroll of fog w:15 / " ..
+        "scroll of fear w:15 / scroll of blinking w:10 / " ..
+        "scroll of enchant weapon w:5 / scroll of enchant armour w:5 / " ..
+        "scroll of brand weapon w:3 / scroll of magic mapping w:10 / " ..
+        "scroll of acquirement w:1"
+    potions = "potion of haste w:15 / potion of might w:10 / " ..
+        "potion of invisibility w:10 / potion of agility w:10 / " ..
+        "potion of brilliance w:5 / potion of magic w:10 / " ..
+        "potion of heal wounds w:15 / potion of mutation w:10 / " ..
+        "potion of cancelation w:10 / potion of resistance w:5 / " ..
+        "potion of experience w:1"
+
+    first_item = true
+    second_item = false
+    if you.in_branch("D") then
+        if you.depth() < 9 then
+            first_item = false
+        elseif you.depth() < 12 then
+            if crawl.coinflip() then
+                first_item = false
+            end
+        elseif you.depth() < 14 then
+            if crawl.coinflip() then
+                aux = good_aux
+                jewellery = good_jewellery
+            end
+            if crawl.one_chance_in(3) then
+                second_item = true
+            end
+        else
+            aux = good_aux
+            jewellery = good_jewellery
+            if crawl.one_chance_in(4) then
+               aux = randart_aux
+               jewellery = randart_jewellery
+            end
+            if crawl.coinflip() then
+                second_item = true
+            end
+         end
+    elseif you.in_branch("Lair") then
+        if crawl.one_chance_in(3) then
+            aux = good_aux
+            jewellery = good_jewellery
+        end
+        if crawl.one_chance_in(4) then
+            second_item = true
+        end
+    elseif you.in_branch("Orc") then
+        if crawl.coinflip() then
+            aux = good_aux
+            jewellery = good_jewellery
+        end
+        if crawl.one_chance_in(3) then
+            second_item = true
+        end
+    elseif you.in_branch("Shoals")
+      or you.in_branch("Snake")
+      or you.in_branch("Spider")
+      or you.in_branch("Swamp") then
+        aux = good_aux
+        jewellery = good_jewellery
+        if crawl.one_chance_in(3) then
+           aux = randart_aux
+           jewellery = randart_jewellery
+        end
+        second_item = true
+    elseif you.in_branch("Vaults") or you.in_branch("Elf") then
+        aux = good_aux
+        jewellery = good_jewellery
+        if crawl.coinflip() then
+           aux = randart_aux
+           jewellery = randart_jewellery
+        end
+        second_item = true
+    else
+        aux = randart_aux
+        jewellery = randart_jewellery
+        second_item = true
+    end
+
+    -- Define loot tables of potential item defs.
+    first_loot = { {name = "scrolls", def = scrolls, weight = 20},
+                   {name = "potions", def = potions, weight = 20},
+                   {name = "aux", def = aux, weight = 10},
+                   {name = "jewellery", def = jewellery, weight = 10},
+                   {name = "manual", def = "any manual", weight = 5} }
+    second_loot = { {name = "scrolls", def = scrolls, weight = 10},
+                    {name = "potions", def = potions, weight = 10} }
+
+    -- If we're upgrading the first item , choose a class, define the item
+    -- slot, otherwise the slot becomes the usual '|*' definition.
+    if first_item then
+        chosen = util.random_weighted_from("weight", first_loot)
+        e.item(chosen["def"])
+    else
+        e.item("superb_item / star_item")
+    end
+    if second_item then
+        chosen = util.random_weighted_from("weight", second_loot)
+        e.item(chosen["def"])
+    else
+        e.item("superb_item / star_item")
+    end
+end
