@@ -1833,7 +1833,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_EPHEMERAL_INFUSION:
 #endif
-    case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_GRAND_AVATAR:
@@ -3205,11 +3204,6 @@ static bool _elec_vulnerable(actor* victim)
 static bool _mutation_vulnerable(actor* victim)
 {
     return victim->can_mutate();
-}
-
-static bool _dummy_vulnerable(actor* victim)
-{
-    return true;
 }
 
 static void _cast_black_mark(monster* agent)
@@ -6373,7 +6367,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_CHAIN_LIGHTNING:
-    case SPELL_CHAIN_OF_CHAOS:
         cast_chain_spell(spell_cast, splpow, mons);
         return;
 
@@ -8020,8 +8013,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHAIN_LIGHTNING:
         return !_trace_los(mon, _elec_vulnerable)
                 || you.visible_to(mon) && friendly; // don't zap player
-    case SPELL_CHAIN_OF_CHAOS:
-        return !_trace_los(mon, _dummy_vulnerable);
     case SPELL_CORRUPTING_PULSE:
         return !_trace_los(mon, _mutation_vulnerable)
                || you.visible_to(mon)
