@@ -34,6 +34,9 @@ function lone_ghost_extra_loot(e, none_glyph)
         elseif you.absdepth() < 12 then
             e.subst("d = %$")
             e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 14 then
+            e.subst("d = |*")
+            e.subst("e = %$")
         else
             e.subst("d = |*")
             e.subst("e = *$")
@@ -547,7 +550,7 @@ NSUBST: 1 = 2=1 / 1-
 MONS:   w:5 zombie place:D:12 / spectre place:D:12 / simulacrum place:D:12
 SUBST:  d = |*, e = *, f = %$, ghij = -
 NSUBST: 1 = 3=1 / 1-, - = 1- / -
-:     elseif you.depth() < 15 then
+:     elseif you.depth() < 14 then
 MONS:   w:5 zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15
 SUBST:  def = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 4=1- / -
@@ -720,7 +723,7 @@ MONS:   vampire mosquito band / shadow / death knight / skeletal warrior / \
         freezing wraith w:5
 SUBST:  d = |*, e = *, f = *%,  g = %$--, hi = -
 NSUBST: D = 2=1 / 4=1- / 2=2- / -
-:     elseif you.depth() < 15 then
+:     elseif you.depth() < 14 then
 MONS:   zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15 / \
         vampire mosquito band / death knight / skeletal warrior
 MONS:   freezing wraith / necromancer / shadow wraith / vampire knight / \
