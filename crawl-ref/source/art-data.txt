@@ -186,12 +186,13 @@ BRAND:   SPWPN_ANTIMAGIC
 
 NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
-PLUS:    +0   # Set on generation
+INSCRIP: chain chaos
+PLUS:    +10
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   600
-BOOL:    special, no_upgrade
+BOOL:    skip_ego
 BRAND:   SPWPN_CHAOS
 
 NAME:    glaive of Prune
