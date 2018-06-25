@@ -178,8 +178,8 @@ function setup_xom_dancing_weapon(e)
     end
 
     -- Generate a dancing weapon based on the table that always has chaos ego.
-    dagger_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
-    e.mons("dancing weapon; " .. dagger_def)
+    weapon_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
+    e.mons("dancing weapon; " .. weapon_def)
 end
 }}
 
@@ -303,7 +303,6 @@ SUBST:  def = |*, g = *%, h = %$.., ij = .
 NSUBST: D = 2=0 / 4=0. / 9 / 9. / 2=8. / .
 : elseif you.in_branch("Elf") then
 SUBST:  defg = |*, h = *, i = %$, j = .
-SUBST:  de = |*, f = *, g = %$, hij = .
 NSUBST: D = 3=0 / 4=0. / 9 / 3=9. / 8 / 2=8. / .
 : elseif you.in_branch("Crypt") then
 SUBST:  defgh = |*, i = *%, j = %$..
@@ -319,7 +318,7 @@ NSUBST: D = 3=0 / 5=0. / 2=9 / 3=9. / 2=8 / 2=8. / .
 SUBST:  defg = |*, h = *%, i = %$.., j = .
 NSUBST: D = 3=0 / 3=0. / 098. / 9 / 2=9. / 8 / 8. / .
 : end
-SUBST:  r : b., s : b., b : bcvx
+SUBST:  r : x., s : x., x : cx
 NSUBST: R = R / .
 MARKER: P = lua:transp_loc("ghost_arena_entry")
 MARKER: Q = lua:transp_dest_loc("ghost_arena_entry")
@@ -683,7 +682,6 @@ NSUBST: - = 6=2 / 7=2. / 4=3 / 8=3. / .
 KFEAT:  _ = altar_jiyva
 COLOUR: c = green
 COLOUR: n = lightgreen
-FTILE:  -|*%$O01289G = floor_pebble_brown / floor_pebble_darkgray
 : ghost_setup(_G)
 MAP
   ccccc
@@ -1143,6 +1141,7 @@ ENDMAP
 NAME:   gammafunk_ghost_icy
 DEPTH:  D:3-, Lair, Depths
 WEIGHT: 5 (D:3-7)
+ORIENT: float
 KMONS:  O = player ghost
 MONS:   simulacrum, white imp, ice beast, rime drake, ice devil
 MONS:   blizzard demon, ice dragon

@@ -104,7 +104,7 @@ KMONS:   p = withered plant
 SHUFFLE: DdqEerFfs / DdqZyzFfs / DdqZyzFfs / DdqEerZyz / DdqEerZyz / \
          DdqEerZyz / DdqZyzZyz / DdqZyzZyz / DdqZyzZyz / DdqZyzZyz / \
          DdqZyzZyz / DdqZyzZyz
-# 1.5 items per ghost, upgrading quality with depth.
+# 1.5 items per ghost.
 NSUBST:  d = 2=|* / |*--, e = |* / |*--, f = 2=|* / |*--
 SUBST:   qrs = G, Z = -, y = p, z = V, t : tp
 TILE:    G = dngn_gravestone
