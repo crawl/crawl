@@ -1767,9 +1767,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
-    if (unrand_index == UNRAND_VARIABILITY)
-        item.plus = random_range(-4, 16);
-    else if (unrand_index == UNRAND_FAERIE)
+    if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
