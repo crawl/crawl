@@ -3303,7 +3303,10 @@ static void _move_player(coord_def move)
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking)
-        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump, initial_position);
+    {
+        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump,
+                                                       initial_position);
+    }
 
     // If you actually moved you are eligible for amulet of the acrobat.
     if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
