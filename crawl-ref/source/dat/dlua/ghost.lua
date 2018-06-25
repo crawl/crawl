@@ -313,6 +313,8 @@ function setup_xom_dancing_weapon(e)
         quality = crawl.coinflip() and "good_item"
                   or crawl.coinflip() and "randart"
                   or ""
+        variability = not you.unrands("mace of Variability")
+                      and crawl.one_chance_in(100) and "mace of Variability"
     end
 
     -- Make one weapons table with each weapon getting weight by class.
@@ -328,7 +330,8 @@ function setup_xom_dancing_weapon(e)
     end
 
     -- Generate a dancing weapon based on the table that always has chaos ego.
-    weapon_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
+    weapon_def = variability
+                 or random_item_def(weapons, {["chaos"] = 1}, quality, "|")
     e.mons("dancing weapon; " .. weapon_def)
 end
 
