@@ -1228,3 +1228,49 @@ MAP
   ...cccc..ccccc..
     .............
 ENDMAP
+
+NAME:   maelrawn_ghost_labyrinth_escape
+# Same depths where labs can place
+DEPTH:  D:11-, Lair, Orc:$
+WEIGHT: 5
+ORIENT: float
+KPROP:  x = bloody
+KMONS:  O = player ghost
+MONS:   minotaur
+: ghost_good_loot(_G)
+NSUBST: ' = 1 / -
+: if you.in_branch("D") then
+:     if you.depth() < 12 then
+SUBST:  e = *, f = %$, gh = -
+NSUBST: - = 2=0 / 2=0- / -
+:     elseif you.depth() < 14 then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=0 / 3=0- / 2=9- / -
+:     else
+SUBST:  f = |*, g = *%, h = %$--
+NSUBST: - = 2=0 / 3=0- / 9 / 9- / -
+:     end
+: elseif you.in_branch("Lair") then
+SUBST:  f = *%, g = %$--, h = -
+NSUBST: - = 2=0 / 2=0- / 9- / -
+: elseif you.in_branch("Orc") then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=0 / 2=0- / 2=9- / -
+: end
+SUBST:  a = c.
+KFEAT:  O = expired_portal
+FTILE:  O = dngn_portal_labyrinth_gone
+: ghost_setup(_G)
+MAP
+...........
+.nnccnccnn.
+.n-gxOxh-n.
+.cc'edf'cc.
+.c-c'''c-c.
+.cac-caa-c.
+.c-a---cac.
+.c-cc--c-c.
+.c-------c.
+.cnn===nnc.
+.....@.....
+ENDMAP
