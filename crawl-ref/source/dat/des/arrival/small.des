@@ -3208,3 +3208,197 @@ xx'...--.......'xx
     xxaataaaataxx
      xxxxxxxxxxx
 ENDMAP
+
+################################################################################
+NAME:       psy_arrival_batcave
+TAGS:       arrival no_monster_gen
+WEIGHT:     5
+ORIENT:     float
+KFEAT:      2 = w
+KFEAT:      1 = W
+KMONS:      12 = bat
+MAP
+      xxx          
+ xxxxxx.@    xxxx  
+xx...xx+x   xxW1xx 
+x.....x.xxxxx...Wx 
+x..{.......+.....x 
+x.....x.x.xxx....x 
+xx...xx+x.xxxx..xx 
+ xxxxx..x.xxxxxxx  
+ xxxx..xx.xxxxxxxxx
+ xx....xx..+...WW+@
+ xW.....x.xxx..Wxxx
+ xWW...Wx+xx..WWwxx
+ xx1WWWxx.x..WWW2wx
+  xxxxxx..xWWWWwwwx
+       @@xxx1W2wwxx
+           xxwwwxx 
+            xxxxx  
+ENDMAP
+
+NAME:       psy_arrival_crosshairs
+TAGS:       arrival no_monster_gen
+WEIGHT:     5
+ORIENT:     float
+SUBST:      p : xxwWlcbvm
+SUBST:      q : xxwWlcbvm
+SUBST:      r : xxwWlcbvm
+SUBST:      s : xxwWlcbvm
+MAP
+rrrrrrrr@rrrrrrrr
+r...............r
+r.qqqqqq.qqqqqq.r
+r.q...........q.r
+r.q.ssss.ssss.q.r
+r.q.s.......s.q.r
+r.q.s.pp.pp.s.q.r
+r.q.s.p...p.s.q.r
+@.......{.......@
+r.q.s.p...p.s.q.r
+r.q.s.pp.pp.s.q.r
+r.q.s.......s.q.r
+r.q.ssss.ssss.q.r
+r.q...........q.r
+r.qqqqqq.qqqqqq.r
+r...............r
+rrrrrrrr@rrrrrrrr
+ENDMAP
+
+NAME:       psy_arrival_fountain
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+FTILE:      t.qpP{T = floor_grass
+SHUFFLE:    pq
+SUBST:      p = .P, q : .
+KMONS:      P = plant
+MAP
+xxxxxxxxxxxxx
+xtttttttttttx
+xt{.........+
+xt...tttttqtx
+xt....PtPtqtx
+xt.t....qtqtx
+xt.tt.T...qtx
+xt.tP....tttx
+xt.ttP.pttttx
+xt.ttt.tttttx
+xt.pppptttttx
+xt.tttttttttx
+xx+xxxxxxxxxx
+ENDMAP
+
+NAME:       psy_arrival_solomon
+TAGS:       arrival no_monster_gen no_rotate no_item_gen no_pool_fixup
+ORIENT:     float
+SUBST:      p : tvGGd, q : wwlx'''
+KFEAT:      '" = .
+FTILE:      ' = floor_pebble_darkgray
+COLOUR:     ' : darkgrey
+ITEM:       stone
+MAP
+    x+xxxxx+x    
+  xxx...q...xxx  
+ xx.p..q.q..p.xx 
+xx....q...q....xx
+xqqqqqqqqqqqqqqqx
++.q..q.....q..q.+
+x..q.q.....q.q..x
+x..qq.......qq..x
+xp..q...{...q..px
+x..qq.......qq..x
+x..q.q.....q.q..x
++.q..q.....q..q.+
+xqqqqqqqqqqqqqqqx
+xx....q...q....xx
+ xx.p..q.q..p.xx 
+  xxx...q...xxx  
+    x+xxxxx+x    
+ENDMAP
+
+NAME:       psy_arrival_spokes
+TAGS:       arrival no_monster_gen
+WEIGHT:     3
+ORIENT:     float
+: if crawl.coinflip() then
+SUBST:      q : @, r : x, p : .
+:end
+CLEAR:      pqr
+MAP
+     rqx@@@xqr     
+     rpx...xpr     
+     rpx...xpr     
+     rpx...xpr     
+     rpx...xpr     
+     rpx...xpr     
+     rpx...xpr     
+    rrpx...xprr    
+   rrpxx.{.xxprr   
+  rrpxx.....xxprr  
+ rrpxx..}.G..xxprr 
+rrpxx.........xxprr
+rpxx.....x.....xxpr
+qxx.....xxx.....xxq
+xx.....xxpxx.....xx
+x.....xxprpxx.....x
+@@...xxprrrpxx...@@
+ @@.xxprr rrpxx.@@ 
+  @xxqrr   rrqxx@  
+ENDMAP
+
+NAME:       psy_arrival_statuary
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+FTILE:      'qrp{ = floor_pebble_darkgray
+FTILE:      . = floor_pebble_cyan
+COLOUR:     'qrp{ = darkgrey
+COLOUR:     . = cyan
+SHUFFLE:    pqr
+SUBST:      p : GGU, qr : .
+SUBST:      s : Gxxxb
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx+xxxxxxx
+xxq'..'''..'qxx
+xx''..'r'..''xx
+xx..p'...'p..xx
+xx..''...''..xx
+xx''..'''..''xx
+xs'r..'{'..r'sx
+xx''..'''..''xx
+xx..''...''..xx
+xx..p'...'p..xx
+xx''..'r'..''xx
+xxq'..'''..'qxx
+xxxxxxx+xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:       psy_arrival_terrarium
+TAGS:       arrival
+ORIENT:     float
+FTILE:      Pqr' = floor_grass
+KMONS:      p = plant
+KMONS:      P = plant / bush
+KFEAT:      p = W
+KMASK:      WpPqr' = no_item_gen
+KMASK:      WpPqr' = no_monster_gen
+KPROP:      WpPqr' = no_tele_into
+SUBST:      q = P', r = P''
+MAP
+   xxxx+xxxx   
+  xxppm.mPPxx  
+ xxpWWm.mqqPxx 
+xxpWWWm.mrrqPxx
+xpWWWWm.m''rqPx
+xpWWWWm.m''rqPx
+xmmmmmm.mmmmmmx
++......{......+
+xmmmmmm.mmmmmmx
+xPqr''m.mWWWWpx
+xPqr''m.mWWWWpx
+xxPqrrm.mWWWpxx
+ xxPqqm.mWWpxx 
+  xxPPm.mppxx  
+   xxxx+xxxx   
+ENDMAP
