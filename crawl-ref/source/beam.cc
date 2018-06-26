@@ -542,35 +542,29 @@ bool bolt::can_affect_actor(const actor *act) const
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
     beam_type flavour;
-    do
-    {
-        flavour = random_choose_weighted(
-            10, BEAM_FIRE,
-            10, BEAM_COLD,
-            10, BEAM_ELECTRICITY,
-            10, BEAM_POISON,
-            10, BEAM_NEG,
-            10, BEAM_ACID,
-            10, BEAM_DAMNATION,
-            10, BEAM_STICKY_FLAME,
-            10, BEAM_SLOW,
-            10, BEAM_HASTE,
-            10, BEAM_MIGHT,
-            10, BEAM_BERSERK,
-            10, BEAM_HEALING,
-            10, BEAM_PARALYSIS,
-            10, BEAM_CONFUSION,
-            10, BEAM_INVISIBILITY,
-            10, BEAM_POLYMORPH,
-            10, BEAM_BANISH,
-            10, BEAM_DISINTEGRATION,
-            10, BEAM_PETRIFY,
-            10, BEAM_AGILITY,
-             2, BEAM_ENSNARE);
-    }
-    while (beam->origin_spell == SPELL_CHAIN_OF_CHAOS
-           && (flavour == BEAM_BANISH
-               || flavour == BEAM_POLYMORPH));
+    flavour = random_choose_weighted(
+        10, BEAM_FIRE,
+        10, BEAM_COLD,
+        10, BEAM_ELECTRICITY,
+        10, BEAM_POISON,
+        10, BEAM_NEG,
+        10, BEAM_ACID,
+        10, BEAM_DAMNATION,
+        10, BEAM_STICKY_FLAME,
+        10, BEAM_SLOW,
+        10, BEAM_HASTE,
+        10, BEAM_MIGHT,
+        10, BEAM_BERSERK,
+        10, BEAM_HEALING,
+        10, BEAM_PARALYSIS,
+        10, BEAM_CONFUSION,
+        10, BEAM_INVISIBILITY,
+        10, BEAM_POLYMORPH,
+        10, BEAM_BANISH,
+        10, BEAM_DISINTEGRATION,
+        10, BEAM_PETRIFY,
+        10, BEAM_AGILITY,
+         2, BEAM_ENSNARE);
 
     return flavour;
 }

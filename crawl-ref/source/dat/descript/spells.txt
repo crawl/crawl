@@ -266,7 +266,7 @@ caster's line of sight will end the effect.
 Chain of Chaos spell
 
 Creates an arc of pure chaos, striking nearby creatures with unpredictable
-effects.
+effects. The arc can touch upon the caster without harming them.
 %%%%
 Chain Lightning spell
 
