@@ -3237,34 +3237,6 @@ xx...xx+x.xxxx..xx
             xxxxx  
 ENDMAP
 
-NAME:       psy_arrival_crosshairs
-TAGS:       arrival no_monster_gen
-WEIGHT:     5
-ORIENT:     float
-SUBST:      p : xxwWlcbvm
-SUBST:      q : xxwWlcbvm
-SUBST:      r : xxwWlcbvm
-SUBST:      s : xxwWlcbvm
-MAP
-rrrrrrrr@rrrrrrrr
-r...............r
-r.qqqqqq.qqqqqq.r
-r.q...........q.r
-r.q.ssss.ssss.q.r
-r.q.s.......s.q.r
-r.q.s.pp.pp.s.q.r
-r.q.s.p...p.s.q.r
-@.......{.......@
-r.q.s.p...p.s.q.r
-r.q.s.pp.pp.s.q.r
-r.q.s.......s.q.r
-r.q.ssss.ssss.q.r
-r.q...........q.r
-r.qqqqqq.qqqqqq.r
-r...............r
-rrrrrrrr@rrrrrrrr
-ENDMAP
-
 NAME:       psy_arrival_fountain
 TAGS:       arrival no_monster_gen
 ORIENT:     float
@@ -3348,6 +3320,7 @@ ENDMAP
 
 NAME:       psy_arrival_statuary
 TAGS:       arrival no_monster_gen
+WEIGHT:     5
 ORIENT:     float
 FTILE:      'qrp{ = floor_pebble_darkgray
 FTILE:      . = floor_pebble_cyan

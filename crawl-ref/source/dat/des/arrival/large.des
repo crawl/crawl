@@ -1026,7 +1026,7 @@ KFEAT:      p = W
 KMONS:      p = plant
 NSUBST:     p = 10:p / *:W, q = 10:P / *:.
 MAP
- xxxxxxxxx+++xxxxxxxxx 
+ xxxxxxxxx@@@xxxxxxxxx 
 xxtttttttx...xtttttttxx
 xttpW.qttx...xttq.Wpttx
 xtGWW^...........^WWGtx
