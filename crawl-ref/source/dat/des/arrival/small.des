@@ -3208,3 +3208,111 @@ xx'...--.......'xx
     xxaataaaataxx
      xxxxxxxxxxx
 ENDMAP
+
+################################################################################
+NAME:       psy_arrival_fountain
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+FTILE:      t.qpP{T = floor_grass
+COLOUR:     . = green
+SHUFFLE:    pq
+SUBST:      p = .P, q : .
+KMONS:      P = plant
+MAP
+xxxxxxxxxxxxx
+xtttttttttttx
+xt{.........+
+xt...tttttqtx
+xt....PtPtqtx
+xt.t....qtqtx
+xt.tt.T...qtx
+xt.tP....tttx
+xt.ttP.pttttx
+xt.ttt.tttttx
+xt.pppptttttx
+xt.tttttttttx
+xx+xxxxxxxxxx
+ENDMAP
+
+NAME:       psy_arrival_spokes
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+: if crawl.coinflip() then
+SUBST:      q : @, r : x, p : .
+:end
+CLEAR:      pqr
+MAP
+     rqx@@@xqr
+     rpx...xpr
+     rpx...xpr
+     rpx...xpr
+     rpx...xpr
+     rpx...xpr
+     rpx...xpr
+    rrpx...xprr
+   rrpxx.{.xxprr
+  rrpxx.....xxprr
+ rrpxx..}.G..xxprr
+rrpxx.........xxprr
+rpxx.....x.....xxpr
+qxx.....xxx.....xxq
+xx.....xxpxx.....xx
+x.....xxprpxx.....x
+@@...xxprrrpxx...@@
+ @@.xxprr rrpxx.@@
+  @xxqrr   rrqxx@
+ENDMAP
+
+NAME:       psy_arrival_statuary
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+FTILE:      'p{ = floor_pebble_darkgray
+COLOUR:     . = cyan
+SHUFFLE:    pqr
+SUBST:      p : GGT
+SUBST:      s : Gxxxb
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx+xxxxxxx
+xx''..'''..''xx
+xx''..'''..''xx
+xx..p'...'p..xx
+xx..''...''..xx
+xx''..'''..''xx
+xs''..'{'..''sx
+xx''..'''..''xx
+xx..''...''..xx
+xx..p'...'p..xx
+xx''..'''..''xx
+xx''..'''..''xx
+xxxxxxx+xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:       psy_arrival_terrarium
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+FTILE:      Pqr' = floor_grass
+KMONS:      p = plant
+KMONS:      P = plant / bush
+KFEAT:      p = W
+KMASK:      WpPqr' = no_item_gen
+KPROP:      WpPqr' = no_tele_into
+SUBST:      q = P', r = P''
+MAP
+   xxxx+xxxx
+  xxppm.mPPxx
+ xxpWWm.mqqPxx
+xxpWWWm.mrrqPxx
+xpWWWWm.m''rqPx
+xpWWWWm.m''rqPx
+xmmmmmm.mmmmmmx
++......{......+
+xmmmmmm.mmmmmmx
+xPqr''m.mWWWWpx
+xPqr''m.mWWWWpx
+xxPqrrm.mWWWpxx
+ xxPqqm.mWWpxx
+  xxPPm.mppxx
+   xxxx+xxxx
+ENDMAP
