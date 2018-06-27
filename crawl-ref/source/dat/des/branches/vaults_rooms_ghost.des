@@ -154,7 +154,7 @@ MONS:   wraith / shadow
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
 MONS:   eidolon, revenant / curse skull
 : ghost_good_loot(_G)
-SUBST:  fg = |*, h = *, i = %$
+SUBST:  fg = |*, h = *, i = %$--
 NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
 FTILE:  -de|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
 : vaults_ghost_setup(_G)

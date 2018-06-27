@@ -608,31 +608,33 @@ DEPTH:  D:8-, Crypt
 ORIENT: float
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
-: if you.absdepth() < 10 then
+: if you.in_branch("D") then
+:     if you.depth() < 9 then
 MONS:   wraith, shadow / freezing wraith
 SUBST:  d = *, e = *%, f = %$--,  ghi = -
-NSUBST: D = 2=1 / 4=1- / -
-: elseif you.absdepth() < 12 then
+NSUBST: D = 2=1 / 1-
+:     elseif you.depth() < 12 then
 MONS:   wraith, shadow / freezing wraith
 SUBST:  e = *, f = %$,  ghi = -
 NSUBST: D = 3=1 / 2=1- / 2-, - = 1- / -
-: elseif you.absdepth() < 14 then
-MONS:  wraith, shadow / freezing wraith
-MONS:  shadow wraith / flayed ghost / phantasmal warrior
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: D = 4=1 / 1222 / 23--, - = 1- / -
-: elseif you.absdepth() < 16 then
+:     elseif you.depth() < 14 then
 MONS:   wraith, shadow / freezing wraith
 MONS:   shadow wraith / flayed ghost / phantasmal warrior
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: D = 2=1 / 12 / 2=2- / 3-, - = 1 / 3=1- / -
+SUBST:  f = |*, g = *%, h = %$--, i = -
+NSUBST: D = 2=1 / 2 / 2=2- / 23--, - = 3=1- / -
+:     else
+MONS:   wraith, shadow / freezing wraith
+MONS:   shadow wraith / flayed ghost / phantasmal warrior
+SUBST:  f = |*, g = *%, h = %$--, i = -
+NSUBST: D = 2=2 / 2=2- / 2=3-, - = 2=1 / 2=1- / -
+:    end
 # Crypt
 : else
 MONS:   wraith / shadow
 MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
 MONS:   eidolon, revenant / curse skull
 SUBST:  fg = |*, h = *, i = %$
-NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
+NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2=2 / 2=2- / -
 : end
 FTILE:  -de|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
 : ghost_setup(_G)
