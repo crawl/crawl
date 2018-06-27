@@ -221,7 +221,7 @@ MAP
  cccc
 ENDMAP
 
-NAME:  gammafunk_ghost_split
+NAME:   gammafunk_ghost_split
 WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS: O = player ghost
@@ -243,8 +243,6 @@ NSUBST: D = 2=0 / 3=0. / 9 / 9. / 2=8. / 98.. / .
 SUBST:  f = |*, g = *%, h = %$--
 NSUBST: D = 2=0 / 2=0. / 9 / 2=9. / 8 / 8. / .
 :     end
-# From this point the average monster count stays at 6.5, but the composition
-# increases the proporation of 9s and 8s.
 : elseif you.in_branch("Lair") then
 SUBST:  f = *%, g = %$..
 NSUBST: D = 3=0 / 3=0. / 2=9. / 8. / 98.. / .
@@ -254,9 +252,9 @@ NSUBST: D = 2=0 / 4=0. / 9 / 9. / 2=8. / .
 # All remaining branches.
 : else
 SUBST:  fgh = |*
-NSUBST: D = 2=0 / 2=0. / 9 / 2=9. / 8 / 8. / .
+NSUBST: D = 0 / 2=0. / 2=9 / 2=9. / 8 / 2=8. / .
 : end
-SUBST: c : bcv, p : b., q : b., b : bcv
+SUBST:  p : x., q : x., x : xc
 : ghost_setup(_G)
 MAP
 ...........

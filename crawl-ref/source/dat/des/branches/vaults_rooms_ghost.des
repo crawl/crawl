@@ -78,7 +78,7 @@ NAME:   gammafunk_vaults_ghost_split
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
 SUBST:  fg = |*, p : b., q : b., b : xbcv
-NSUBST: D = 2=0 / 2=0. / 9 / 2=9. / 8 / 8. / .
+NSUBST: D = 0 / 2=0. / 2=9 / 2=9. / 8 / 2=8. / .
 : vaults_ghost_setup(_G)
 MAP
 .............
