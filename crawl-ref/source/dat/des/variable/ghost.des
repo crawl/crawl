@@ -520,6 +520,40 @@ MAP
  ccccccccccc
 ENDMAP
 
+NAME:   hellmonk_ghost_happy_afterlife
+DEPTH:  D:3-, Lair
+ORIENT: float
+ITEM:   ration, any potion
+: item(ghost_loot_potions)
+KMONS:  O = player ghost
+: if you.absdepth() < 6 then
+SUBST:  g = -
+: elseif you.absdepth() < 9 then
+SUBST:  e = ef, g = e-
+: elseif you.absdepth() < 12 then
+SUBST:  e = f, g = e
+: elseif you.absdepth() < 14 then
+SUBST:  e = f, g = ef
+: else
+SUBST:  eg = f
+: end
+COLOUR: -1deOf = green
+FTILE:  -1defOTt = floor_grass
+: ghost_setup(_G)
+MAP
+   .....
+  ..nnn..
+ ..nnTnn..
+..nn---nn..
+.nn--g--nn.
+.nT-dte-Tn.
+.nn--O--nn.
+..nn---nn..
+ ..nn-nn..
+  ..n=n..
+   .....
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
@@ -1195,7 +1229,7 @@ NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 6''' / '
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
 SUBST:  f = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 67 / D''' / '
-:    end
+:     end
 : elseif you.in_branch("Lair") then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
 SUBST:  f = |*, g = *%, h = %$--, ij = -
@@ -1273,4 +1307,69 @@ MAP
 .c-------c.
 .cnn===nnc.
 .....@.....
+ENDMAP
+
+NAME:   ploomutoo_gammafunk_potion_laboratory
+DEPTH:  D:8-, Elf, Depths
+WEIGHT: 5
+ITEM:   potion of mutation ident:type q:1
+: item(ghost_loot_potions)
+ITEM:   hat / robe good_item / gloves / boots / cloak
+ITEM:   hat good_item / robe good_item / gloves good_item / boots good_item / \
+        cloak good_item
+ITEM:   hat randart / robe randart / gloves randart / boots randart / \
+        cloak randart
+KITEM:  O = potion of cancellation q:2 ident:type
+KMONS:  O = player ghost
+MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
+MONS:   large abomination, very ugly thing, glowing shapeshifter
+KMONS:  D = cacodemon
+KMONS:  E = tentacled monstrosity
+NSUBST: - = 2=P / 2=P; / ;, ' = 2=P` / `
+: if you.in_branch("D") then
+:     if you.depth() < 9 then
+NSUBST: ; = d. / 2=e / 2=1 / 4=1. /  46.. / .
+NSUBST: " = d / d. / f / ", ` = 2=3 / 2=3. / 2 / 2. / .
+:     elseif you.depth() < 12 then
+NSUBST: ; = d. / 2=e / e. / 3=1 / 3=1. / 4. / 6. / .
+NSUBST: " = 2=d / ffg / ", ` = 2=3 / 3=3. / 2 / 2=2. / 7... / .
+:     elseif you.depth() < 14 then
+NSUBST: ; = d / 3=e / 3=1 / 4=1. / 2=4. / 6 / 6. / .
+NSUBST: " = 2=d / d. / e. / fg / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7. / D... / .
+:     else
+NSUBST: ; = d / 3=e / e. / 3=1 / 4=1. / 4 / 4. / 6 / 2=6. / .
+NSUBST: " = 3=d / e. / ggh / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7 / D. / .
+:     end
+: elseif you.in_branch("Elf") then
+NSUBST: ; = d / d. / 4=e / 5=5 / 5=5. / 2=E / 2=E. / .
+NSUBST: " = 3=d / d. / e / h / ", ` = 4=3 / 4=3. / 7 / 3=7. / D / 2=D. / .
+# Depths
+: else
+NSUBST: ; = d / d. / 5=e / 4=6 / 5=6. / 4 / 4. / 3=E / 3=E. / .
+NSUBST: " = 4=d / d. / e / h / ", ` = 4=3 / 4=3. / 2=7 / 3=7. / 2=D / 2=D. / .
+: end
+MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
+                pow_max = 5, delay = 5, start_clouds = 3, size = 1, \
+                spread_rate = 0, excl_rad = 0 }
+MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
+                pow_max = 5, delay = 5, start_clouds = 3, size = 2, \
+                spread_rate = 0, excl_rad = 0 }
+: ghost_setup(_G)
+MAP
+bbbbbbbbb
+bbU"P"Ubb
+b"""O"""b
+b'''''''b
+b'b'''b'b
+b```````b
+bnn===nnb
+c-------c
+c-c---c-c
+cc-c-c-cc
+c-c---c-c
+c;;;c;;;c
+c;c;;;c;c
+c;;;;;;;c
+ccnn=nncc
+c...@...c
 ENDMAP
