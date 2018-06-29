@@ -461,7 +461,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     /// Slightly randomized bonus enchantment for certain uniques' hides
     static const map<monster_type, int> hide_avg_plusses = {
         { MONS_SNORG, 2 },
-        { MONS_XTAHUA, 3 },
         { MONS_BAI_SUZHEN, 3 },
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
@@ -508,9 +507,45 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
+static void _create_xtahua_scales(const item_def &corpse, bool silent)
+{
+    const unrand_type scales = UNRAND_XTAHUA;
+
+    // OBJ_RANDOM is a hack which allows this to bypass the assert in items()
+    int o = items(false, OBJ_ARMOUR, ARM_FIRE_DRAGON_ARMOUR, 0);
+    squash_plusses(o);
+
+    if (o == NON_ITEM)
+        return;
+
+    item_def& item = mitm[o];
+    make_item_unrandart(item, scales);
+    do_uncurse_item(item);
+
+    const coord_def pos = item_pos(corpse);
+    if (pos.origin())
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        return;
+    }
+
+    move_item_to_grid(&o, pos);
+
+    // Don't display this message if the scales were dropped over
+    // lava/deep water, because then they are hardly intact.
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(grd(pos)))
+        mpr("Xtahua's scales shine brightly as they fall to the ground intact.");
+
+    // after messaging, for better results
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+}
+
 static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
 {
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
+
+    if (corpse.orig_monnum == MONS_XTAHUA)
+        _create_xtahua_scales(corpse, silent);
+    else if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse, silent);
 }
 

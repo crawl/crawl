@@ -1315,7 +1315,7 @@ TILE:     urand_xtahua_scales
 TILE_EQ:  xtahua_scales
 MAGIC:    1
 FIRE:     1
-BOOL:     notac
+BOOL:     nogen, notac
 
 NAME:     hand wraps "Fists of Thunder"
 INSCRIP:  +elec,
