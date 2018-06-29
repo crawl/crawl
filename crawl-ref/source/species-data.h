@@ -94,6 +94,25 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_CLOUD_ELF, {
+    "Cl",
+    "Cloud Elf", "Elven", "Elf",
+    SPF_NONE,
+    0, -2, 2, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    6, 13, 8, // 28
+    { STAT_INT }, 4,
+    { },
+    { },
+    { },
+    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
+      JOB_WANDERER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+
 { SP_CENTAUR, {
     "Ce",
     "Centaur", nullptr, nullptr,

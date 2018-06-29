@@ -85,7 +85,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HIGH_ELF,        SK_POISON_MAGIC,   -2),
     APT(SP_HIGH_ELF,        SK_INVOCATIONS,     1),
     APT(SP_HIGH_ELF,        SK_EVOCATIONS,      0),
-#endif
 
     // SP_DEEP_ELF
     APT(SP_DEEP_ELF,        SK_FIGHTING,       -2),
@@ -102,13 +101,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_ARMOUR,         -2),
     APT(SP_DEEP_ELF,        SK_DODGING,         2),
     APT(SP_DEEP_ELF,        SK_STEALTH,         3),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_DEEP_ELF,        SK_STABBING,      UNUSABLE_SKILL),
-#endif
     APT(SP_DEEP_ELF,        SK_SHIELDS,        -2),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_DEEP_ELF,        SK_TRAPS,         UNUSABLE_SKILL),
-#endif
     APT(SP_DEEP_ELF,        SK_UNARMED_COMBAT, -2),
     APT(SP_DEEP_ELF,        SK_SPELLCASTING,    3),
     APT(SP_DEEP_ELF,        SK_CONJURATIONS,    1),
@@ -125,6 +120,48 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_POISON_MAGIC,    1),
     APT(SP_DEEP_ELF,        SK_INVOCATIONS,     1),
     APT(SP_DEEP_ELF,        SK_EVOCATIONS,      1),
+#endif
+
+    // SP_CLOUD_ELF  --- ****** REMEMBER TO ADD BACK STABBING AND TRAPS ******
+                                                     // to DE          to Te
+    APT(SP_CLOUD_ELF,       SK_FIGHTING,       -1),  // buff from -2   nerf from  0
+    APT(SP_CLOUD_ELF,       SK_SHORT_BLADES,    1),  // buff from  0   no change
+    APT(SP_CLOUD_ELF,       SK_LONG_BLADES,     1),  // buff from -1   no change
+    APT(SP_CLOUD_ELF,       SK_AXES,           -2),  // no change      nerf from +1
+    APT(SP_CLOUD_ELF,       SK_MACES_FLAILS,   -2),  // no change      nerf from +1
+    APT(SP_CLOUD_ELF,       SK_POLEARMS,       -1),  // buff from -2   nerf from +1
+    APT(SP_CLOUD_ELF,       SK_STAVES,          0),  // no change      nerf from +1
+    APT(SP_CLOUD_ELF,       SK_SLINGS,         -1),  // no change      nerf from  0
+    APT(SP_CLOUD_ELF,       SK_BOWS,            1),  // no change      no change
+    APT(SP_CLOUD_ELF,       SK_CROSSBOWS,       1),  // buff from -1   no change
+    APT(SP_CLOUD_ELF,       SK_THROWING,        0),  // no change      no change
+    APT(SP_CLOUD_ELF,       SK_ARMOUR,          1),  // buff from -2   no change
+    APT(SP_CLOUD_ELF,       SK_DODGING,         1),  // nerf from +2   no change
+    APT(SP_CLOUD_ELF,       SK_STEALTH,         1),  // nerf from +3   no change
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CLOUD_ELF,       SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_CLOUD_ELF,       SK_SHIELDS,        -1),  // buff from -2   nerf from  0
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CLOUD_ELF,       SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_CLOUD_ELF,       SK_UNARMED_COMBAT, -1),  // buff from -2   nerf from +1
+    APT(SP_CLOUD_ELF,       SK_SPELLCASTING,    2),  // nerf from +3   buff from -1
+    APT(SP_CLOUD_ELF,       SK_CONJURATIONS,    3),  // buff from +1   no change
+    APT(SP_CLOUD_ELF,       SK_HEXES,          -1),  // nerf from +3   buff from -3
+    APT(SP_CLOUD_ELF,       SK_CHARMS,         -1),  // nerf from +4   buff from -2
+    APT(SP_CLOUD_ELF,       SK_SUMMONINGS,      2),  // buff from +1   no change
+    APT(SP_CLOUD_ELF,       SK_NECROMANCY,      1),  // nerf from +2   no change
+    APT(SP_CLOUD_ELF,       SK_TRANSLOCATIONS, -1),  // nerf from +1   buff from -2
+    APT(SP_CLOUD_ELF,       SK_TRANSMUTATIONS, -1),  // nerf from +1   buff from -2
+    APT(SP_CLOUD_ELF,       SK_FIRE_MAGIC,      1),  // no change      no change
+    APT(SP_CLOUD_ELF,       SK_ICE_MAGIC,       0),  // nerf from +1   buff from -1
+    APT(SP_CLOUD_ELF,       SK_AIR_MAGIC,       3),  // buff from  0   no change
+    APT(SP_CLOUD_ELF,       SK_EARTH_MAGIC,    -3),  // nerf from +1   no change
+    APT(SP_CLOUD_ELF,       SK_POISON_MAGIC,    1),  // no change      buff from  0
+    APT(SP_CLOUD_ELF,       SK_INVOCATIONS,     1),  // no change      buff from -1
+    APT(SP_CLOUD_ELF,       SK_EVOCATIONS,      1),  // no change      buff from  0
+
 
 #if TAG_MAJOR_VERSION == 34
     // SP_SLUDGE_ELF
