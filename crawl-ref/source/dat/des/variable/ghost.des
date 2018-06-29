@@ -544,12 +544,12 @@ MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 / \
         simulacrum place:D:9
 SUBST:  d = *, e = *%, f = %$--, ghij = -
 NSUBST: 1 = 2=1 / 1-
-:     elseif you.depth() < 12 then
-MONS:   w:5 zombie place:D:12 / spectre place:D:12 / simulacrum place:D:12
+:     elseif you.depth() < 10 then
+MONS:   w:5 zombie place:D:10 / spectre place:D:10 / simulacrum place:D:10
 SUBST:  e = *, f = %$, ghij = -
 NSUBST: 1 = 3=1 / 1-, - = 1- / -
-:     elseif you.depth() < 14 then
-MONS:   w:5 zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15
+:     elseif you.depth() < 12 then
+MONS:   w:5 zombie place:D:12 / spectre place:D:12 / simulacrum place:D:12
 SUBST:  f = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 4=1- / -
 :     else
@@ -718,15 +718,15 @@ MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 / \
 MONS:   wraith / vampire
 SUBST:  d = *, e = *%, f = %$,  ghi = -
 NSUBST: D = 2=1 / 3=1- / 2- / 2--- / -
-:     elseif you.depth() < 12 then
-MONS:   mummy / wight / zombie place:D:12 / spectre place:D:12 / \
+:     elseif you.depth() < 10 then
+MONS:   mummy / wight / zombie place:D:10 / spectre place:D:10 / \
         simulacrum place:D:12 / phantom / hungry ghost / wraith / vampire
 MONS:   vampire mosquito band / shadow / death knight / skeletal warrior / \
         freezing wraith w:5
 SUBST:  e = *, f = *%,  g = %$--, hi = -
 NSUBST: D = 2=1 / 4=1- / 2=2- / -
-:     elseif you.depth() < 14 then
-MONS:   zombie place:D:15 / spectre place:D:15 / simulacrum place:D:15 / \
+:     elseif you.depth() < 12 then
+MONS:   zombie place:D:12 / spectre place:D:12 / simulacrum place:D:12 / \
         vampire mosquito band / death knight / skeletal warrior
 MONS:   freezing wraith / necromancer / shadow wraith / vampire knight / \
         phantasmal warrior / flayed ghost
@@ -914,7 +914,7 @@ ORIENT: float
 KMONS:  O = player_ghost
 : if you.in_branch("D") then
 MONS:   skeletal warrior / vampire
-MONS:   wraith / simulacrum place:D:15
+MONS:   wraith / simulacrum place:D:12
 MONS:   necromancer
 MONS:   lich
 : else
@@ -1022,7 +1022,7 @@ KMONS:  O = player ghost
 MONS:   any common demon
 MONS:   balrug / blizzard demon / cacodemon / green death / \
         hell beast / lorocyproca / shadow demon
-MONS:   brimstone fiend / tzitzimitl / ice fiend / hell sentinel
+MONS:   brimstone fiend / shadow fiend / ice fiend / hell sentinel
 : ghost_good_loot(_G)
 SUBST:  f = |*
 NSUBST: - = 4=1 / 6=1. / 2=2. / .
