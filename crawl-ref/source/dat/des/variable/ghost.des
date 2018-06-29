@@ -520,6 +520,40 @@ MAP
  ccccccccccc
 ENDMAP
 
+NAME:   hellmonk_ghost_happy_afterlife
+DEPTH:  D:3-, Lair
+ORIENT: float
+ITEM:   ration, any potion
+: item(ghost_loot_potions)
+KMONS:  O = player ghost
+: if you.absdepth() < 6 then
+SUBST:  g = -
+: elseif you.absdepth() < 9 then
+SUBST:  e = ef, g = e-
+: elseif you.absdepth() < 12 then
+SUBST:  e = f, g = e
+: elseif you.absdepth() < 14 then
+SUBST:  e = f, g = ef
+: else
+SUBST:  eg = f
+: end
+COLOUR: -1deOf = green
+FTILE:  -1defOTt = floor_grass
+: ghost_setup(_G)
+MAP
+   .....
+  ..nnn..
+ ..nnTnn..
+..nn---nn..
+.nn--g--nn.
+.nT-dte-Tn.
+.nn--O--nn.
+..nn---nn..
+ ..nn-nn..
+  ..n=n..
+   .....
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
