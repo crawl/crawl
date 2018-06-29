@@ -31,12 +31,9 @@ function lone_ghost_extra_loot(e, none_glyph)
         elseif you.depth() < 9 then
             e.subst("d = %$" .. none_glyph .. none_glyph)
             e.subst("e = " ..none_glyph)
-        elseif you.absdepth() < 12 then
+        elseif you.absdepth() < 11 then
             e.subst("d = %$")
             e.subst("e = " ..none_glyph)
-        elseif you.absdepth() < 14 then
-            e.subst("d = |*")
-            e.subst("e = %$")
         else
             e.subst("d = |*")
             e.subst("e = *$")
@@ -233,12 +230,9 @@ NSUBST: D = 2=0 / 2=0. / 9. / .
 :     elseif you.depth() < 9 then
 SUBST:  d = *, e = *%, f = %$..,  gh = .
 NSUBST: D = 2=0 / 3=0. / 9. / 98.. / .
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 SUBST:  e = *, f = %$,  gh = .
 NSUBST: D = 2=0 / 4=0. / 2=9. / 8. / .
-:     elseif you.depth() < 14 then
-SUBST:  f = *, g = %$, h = .
-NSUBST: D = 2=0 / 3=0. / 9 / 9. / 2=8. / 98.. / .
 :     else
 SUBST:  f = |*, g = *%, h = %$--
 NSUBST: D = 2=0 / 2=0. / 9 / 2=9. / 8 / 8. / .
@@ -282,12 +276,9 @@ NSUBST: D = 2=0 / 2=0. / 9. / .
 :     elseif you.depth() < 9 then
 SUBST:  d = *, e = *%, f = %$,  ghi = .
 NSUBST: D = 2=0 / 2=0. / 098. / 9. / .
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 SUBST:  e = *, f = *%,  g = %$.., hi = .
 NSUBST: D = 2=0 / 3=0. / 2=9. / 8. / .
-:     elseif you.depth() < 14 then
-SUBST:  f = |*, g = *, h = %$, ij = .
-NSUBST: D = 2=0 / 4=0. / 098. / 9 / 9. / 2=8. / .
 :     else
 SUBST:  f = |*, g = *, h = %$, ij = .
 NSUBST: D = 3=0 / 3=0. / 9 / 2=9. / 8 / 8. / .
@@ -353,7 +344,7 @@ SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
 NSUBST:  de = 2=*% / %$--, f = *% / %$--, h = 2=*% / %$--
 :     elseif you.depth() < 9 then
 NSUBST:  de = 2=* / *%--, f = * / *%--, h = 2=* / *%--
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 # From here on, one 'd' glyph is used by the good loot item, so we don't
 # replace that one.
 NSUBST:  d = d / *-, e = |* / *-, f = |* / *-, h = 2=|* / *-
@@ -647,15 +638,10 @@ KMONS:  O = player ghost
 MONS:   wraith, shadow / freezing wraith
 SUBST:  d = *, e = *%, f = %$--,  ghi = -
 NSUBST: D = 2=1 / 1-
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 MONS:   wraith, shadow / freezing wraith
 SUBST:  e = *, f = %$,  ghi = -
 NSUBST: D = 3=1 / 2=1- / 2-, - = 1- / -
-:     elseif you.depth() < 14 then
-MONS:   wraith, shadow / freezing wraith
-MONS:   shadow wraith / flayed ghost / phantasmal warrior
-SUBST:  f = |*, g = *%, h = %$--, i = -
-NSUBST: D = 2=1 / 2 / 2=2- / 23--, - = 3=1- / -
 :     else
 MONS:   wraith, shadow / freezing wraith
 MONS:   shadow wraith / flayed ghost / phantasmal warrior
@@ -697,9 +683,6 @@ NSUBST: - = 2=1 / 4=1. / 2 / 2=2. / .
 :     elseif you.depth() < 12 then
 SUBST:  e = *, f = %$,  ghi = -
 NSUBST: - = 2=1 / 4=1. / 2=2 / 2=2. / .
-:     elseif you.depth() < 14 then
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - =  2=1 / 3=1. / 2=2 / 4=2. / 3. / .
 :     else
 SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: - =  2=1 / 2=1. / 2=2 / 5=2. / 3 / 3. / .
@@ -888,7 +871,7 @@ ORIENT: float
 KFEAT:  O = altar_okawaru
 KMONS:  O = player ghost
 : if you.in_branch("D") then
-:      if you.depth() < 14 then
+:      if you.depth() < 11 then
 MONS:   orc warrior / centaur warrior / tengu warrior
 MONS:   orc knight / naga warrior / merfolk impaler
 MONS:   merfolk javelineer / deep elf knight / deep elf archer
@@ -1165,12 +1148,9 @@ NSUBST: - = 3=1 / 6=1. / 2 / 3 / 3. / 5... / .
 :     elseif you.depth() < 9 then
 SUBST:  d = e, j = -
 NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4... / 2=5. / D / .
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 SUBST:  d = e, f = g, j = j-
 NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4. / 5 / 2=5. / D / .
-:     elseif you.depth() < 14 then
-SUBST:  d = e, f = g, h = i
-NSUBST: - = 3=1 / 4=1. / 3 / 2=3. / 4. / 2=5 / 4=5. / DDDE / .
 :     else
 SUBST:  d = e, f = g, h = i, j = k
 NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / 2=6 / 2=6. / EEEF / .7 / .
@@ -1217,14 +1197,10 @@ NSUBST: - = 3=1 / 4=1' / 23 / 23'' / '
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
 SUBST:  d = *, e = *%, f = %$--, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 3 / 3=3' / '
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
 SUBST:  e = *, f = %$, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
-:     elseif you.depth() < 14 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 6''' / '
 :     else
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
 SUBST:  f = |*, g = *%, h = %$--, ij = -
@@ -1274,12 +1250,9 @@ MONS:   minotaur
 : ghost_good_loot(_G)
 NSUBST: ' = 1 / -
 : if you.in_branch("D") then
-:     if you.depth() < 12 then
+:     if you.depth() < 11 then
 SUBST:  e = *, f = %$, gh = -
 NSUBST: - = 2=0 / 2=0- / -
-:     elseif you.depth() < 14 then
-SUBST:  f = *, g = %$, h = -
-NSUBST: - = 2=0 / 3=0- / 2=9- / -
 :     else
 SUBST:  f = |*, g = *%, h = %$--
 NSUBST: - = 2=0 / 3=0- / 9 / 9- / -
@@ -1330,12 +1303,9 @@ NSUBST: - = 2=P / 2=P; / ;, ' = 2=P` / `
 :     if you.depth() < 9 then
 NSUBST: ; = d. / 2=e / 2=1 / 4=1. /  46.. / .
 NSUBST: " = d / d. / f / ", ` = 2=3 / 2=3. / 2 / 2. / .
-:     elseif you.depth() < 12 then
+:     elseif you.depth() < 11 then
 NSUBST: ; = d. / 2=e / e. / 3=1 / 3=1. / 4. / 6. / .
 NSUBST: " = 2=d / ffg / ", ` = 2=3 / 3=3. / 2 / 2=2. / 7... / .
-:     elseif you.depth() < 14 then
-NSUBST: ; = d / 3=e / 3=1 / 4=1. / 2=4. / 6 / 6. / .
-NSUBST: " = 2=d / d. / e. / fg / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7. / D... / .
 :     else
 NSUBST: ; = d / 3=e / e. / 3=1 / 4=1. / 4 / 4. / 6 / 2=6. / .
 NSUBST: " = 3=d / e. / ggh / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7 / D. / .
