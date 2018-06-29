@@ -3022,7 +3022,7 @@ void MiscastEffect::_zot()
             }
             break;
         case 8:
-            if (!_malign_gateway(target->is_player()))
+            if (!_malign_gateway(true))
                 goto reroll_1;
             break;
         }
