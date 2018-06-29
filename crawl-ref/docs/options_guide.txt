@@ -67,12 +67,12 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
-                equip_bar, item_stack_summary_minimum, mlist_min_height,
-                mlist_allow_alternate_layout, msg_min_height, msg_max_height,
-                messages_at_top, skill_focus, msg_condense_repeats,
-                msg_condense_short, show_travel_trail, monster_list_colour,
-                view_delay, force_more_message, flash_screen_message,
-                use_animations, darken_beyond_range
+                equip_bar, animate_equip_bar, item_stack_summary_minimum,
+                mlist_min_height, mlist_allow_alternate_layout, msg_min_height,
+                msg_max_height, messages_at_top, skill_focus,
+                msg_condense_repeats, msg_condense_short, show_travel_trail,
+                monster_list_colour, view_delay, force_more_message,
+                flash_screen_message, use_animations, darken_beyond_range
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1438,6 +1438,10 @@ equip_bar = false
         When set to true, this option replaces the noise bar with an
         "equipment bar" showing the glyphs of all currently equipped items,
         with gaps for available but currently unfilled equipment slots.
+
+animate_equip_bar = false
+        When set to true, any items displayed in the equipment bar that have a
+        variable colour will be animated.
 
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in

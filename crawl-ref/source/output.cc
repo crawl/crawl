@@ -594,6 +594,7 @@ static void _print_stats_equip(int x, int y)
             if (you.slot_item(eqslot))
             {
                 cglyph_t g = get_item_glyph(*(you.slot_item(eqslot)));
+                g.col = element_colour(g.col, !Options.animate_equip_bar);
                 formatted_string::parse_string(glyph_to_tagstr(g)).display();
             }
             else if (!you_can_wear(eqslot, true))
