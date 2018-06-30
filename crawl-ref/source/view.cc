@@ -622,8 +622,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (knowledge.seen())
             {
                 dungeon_feature_type newfeat = grd(pos);
-                if (newfeat == DNGN_UNDISCOVERED_TRAP)
-                    newfeat = DNGN_FLOOR;
                 trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
                 knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }

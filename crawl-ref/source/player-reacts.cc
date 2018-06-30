@@ -958,8 +958,6 @@ static void _regenerate_hp_and_mp(int delay)
 
 void player_reacts()
 {
-    search_around();
-
     //XXX: does this _need_ to be calculated up here?
     const int stealth = player_stealth();
 

@@ -1293,7 +1293,7 @@ static void _place_player(dungeon_feature_type stair_taken,
     for (distance_iterator di(you.pos(), true, false); di; ++di)
         if (you.is_habitable_feat(grd(*di))
             && !is_feat_dangerous(grd(*di), true)
-            && !feat_is_trap(grd(*di), true))
+            && !feat_is_trap(grd(*di)))
         {
             if (you.pos() != *di)
                 you.moveto(*di);

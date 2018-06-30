@@ -1912,7 +1912,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     else
         feat = _abyss_proto_feature();
 
-    if (feat_is_trap(feat, true)
+    if (feat_is_trap(feat)
         || feat == DNGN_UNSEEN
         || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
             && coinflip()))

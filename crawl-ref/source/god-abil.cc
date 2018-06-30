@@ -3874,8 +3874,7 @@ bool dithmenos_shadow_step()
         if (!zot_trap_prompted)
         {
             trap_def* trap = trap_at(site);
-            if (trap && env.grid(site) != DNGN_UNDISCOVERED_TRAP
-                && trap->type == TRAP_ZOT)
+            if (trap && trap->type == TRAP_ZOT)
             {
                 if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))

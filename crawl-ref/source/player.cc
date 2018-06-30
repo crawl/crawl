@@ -171,7 +171,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 {
     // If there's no trap, let's go.
     trap_def* trap = trap_at(p);
-    if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
+    if (!trap)
         return true;
 
     if (trap->type == TRAP_ZOT && !trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
@@ -356,7 +356,6 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
     // prompt when swapping into known zot traps
     if (!quiet && trap_at(loc) && trap_at(loc)->type == TRAP_ZOT
-        && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
         && !yes_or_no("Do you really want to swap %s into the Zot trap?",
                       mons->name(DESC_YOUR).c_str()))
     {

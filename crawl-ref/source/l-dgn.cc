@@ -1055,7 +1055,7 @@ static int dgn_floor_halo(lua_State *ls)
 
                 const dungeon_feature_type feat2 = grd(*ai);
 
-                if (feat2 == DNGN_FLOOR || feat2 == DNGN_UNDISCOVERED_TRAP)
+                if (feat2 == DNGN_FLOOR)
                     env.grid_colours(*ai) = colour;
             }
         }

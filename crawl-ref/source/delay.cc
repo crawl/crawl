@@ -847,7 +847,6 @@ void PasswallDelay::finish()
     // triggered by changing location would be better (per Pleasingfungus),
     // but player_reacts is very sensitive to order and can't be easily
     // refactored in this way.
-    search_around();
     you.update_beholders();
     you.update_fearmongers();
 }

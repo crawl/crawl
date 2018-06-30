@@ -992,14 +992,6 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
 
         if (old_dist == -1 || old_dist >= dist)
         {
-            // Ignore teleportation and shaft traps that the monster
-            // shouldn't know about.
-            if (!mons_is_native_in_branch(*mon)
-                && grd(e[i].target) == DNGN_UNDISCOVERED_TRAP)
-            {
-                continue;
-            }
-
             retval = i;
             old_dist = dist;
         }

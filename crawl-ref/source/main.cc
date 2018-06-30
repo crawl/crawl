@@ -1458,8 +1458,7 @@ static void _take_stairs(bool down)
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
-    const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT
-                             && ygrd != DNGN_UNDISCOVERED_TRAP);
+    const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT);
 
     if (!(_can_take_stairs(ygrd, down, shaft)
           && !cancel_barbed_move()

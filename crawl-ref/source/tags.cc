@@ -5934,6 +5934,8 @@ static void tag_read_level_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap.type >= TRAP_TELEPORT)
             trap.type = (trap_type)(trap.type - 1);
+        if (th.getMinorVersion() < TAG_MINOR_REVEAL_TRAPS)
+            grd(trap.pos) = trap.category();
         if (th.getMinorVersion() < TAG_MINOR_TRAPS_DETERM
             || th.getMinorVersion() == TAG_MINOR_0_11)
         {
@@ -5952,9 +5954,10 @@ static void tag_read_level_items(reader &th)
         for (int j = 0; j < GYM; j++)
         {
             coord_def pos(i, j);
-            if (feat_is_trap(grd(pos), true) && !map_find(env.trap, pos))
+            if (feat_is_trap(grd(pos)) && !map_find(env.trap, pos))
                 grd(pos) = DNGN_FLOOR;
         }
+
 #endif
 
     // how many items?
