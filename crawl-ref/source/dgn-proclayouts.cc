@@ -200,7 +200,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         feature = DNGN_FLOOR;
     if (feature == DNGN_ENTER_SHOP)
         feature = DNGN_ABANDONED_SHOP;
-    if (feat_is_trap(feature, true))
+    if (feat_is_trap(feature))
         feature = DNGN_FLOOR;
     switch (feature)
     {

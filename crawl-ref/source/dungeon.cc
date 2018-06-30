@@ -92,7 +92,7 @@ static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
 static void _place_specific_trap(const coord_def& where, trap_spec* spec,
-                                 int charges = 0, bool known = false);
+                                 int charges = 0);
 static void _place_branch_entrances(bool use_vaults);
 static void _place_extra_vaults();
 static void _place_chance_vaults();
@@ -665,8 +665,7 @@ static void _dgn_map_colour_fixup()
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
             if (dcgrid[x][y].colour != BLACK
                 && grd[x][y] != dcgrid[x][y].feature
-                && (grd[x][y] != DNGN_UNDISCOVERED_TRAP
-                    || dcgrid[x][y].feature != DNGN_FLOOR))
+                && dcgrid[x][y].feature != DNGN_FLOOR)
             {
                 env.grid_colours[x][y] = BLACK;
             }
@@ -3202,18 +3201,9 @@ static bool _builder_normal()
     return true;
 }
 
-// Shafts can be generated visible.
-//
-// Starts about 50% of the time and approaches 0%
-static bool _shaft_known(int depth)
-{
-    return coinflip() && x_chance_in_y(3, depth);
-}
-
 static void _place_traps()
 {
     const int num_traps = num_traps_for_place();
-    int level_number = env.absdepth0;
 
     ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
@@ -3249,9 +3239,7 @@ static void _place_traps()
         }
 
         ts.type = type;
-        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        if (ts.type == TRAP_SHAFT && _shaft_known(level_number))
-            ts.reveal();
+        grd(ts.pos) = ts.category();
         ts.prepare_ammo();
         env.trap[ts.pos] = ts;
         dprf("placed a trap");
@@ -4972,11 +4960,10 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
         feature_spec f = mapsp->get_feat();
         if (f.trap)
         {
-            // f.feat == 1 means trap is generated known.
-            if (f.feat == 1)
-                return trap_category(static_cast<trap_type>(f.trap->tr_type));
+            if (f.trap->tr_type >= NUM_TRAPS)
+                return DNGN_FLOOR;
             else
-                return DNGN_UNDISCOVERED_TRAP;
+                return trap_category(static_cast<trap_type>(f.trap->tr_type));
         }
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
@@ -4996,11 +4983,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
 {
     const feature_spec f = mapsp.get_feat();
     if (f.trap)
-    {
-        // f.feat == 1 means trap is generated known.
-        const bool known = f.feat == 1;
-        _place_specific_trap(where, f.trap.get(), 0, known);
-    }
+        _place_specific_trap(where, f.trap.get(), 0);
     else if (f.feat >= 0)
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
     else if (f.glyph >= 0)
@@ -5896,11 +5879,11 @@ void place_specific_trap(const coord_def& where, trap_type spec_type, int charge
 }
 
 static void _place_specific_trap(const coord_def& where, trap_spec* spec,
-                                 int charges, bool known)
+                                 int charges)
 {
     trap_type spec_type = spec->tr_type;
 
-    if (spec_type == TRAP_SHAFT && !is_valid_shaft_level(known))
+    if (spec_type == TRAP_SHAFT && !is_valid_shaft_level())
     {
         mprf(MSGCH_ERROR, "Vault %s tried to place a shaft at a branch end",
                 env.placing_vault.c_str());
@@ -5911,7 +5894,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
            || spec_type == TRAP_DART || spec_type == TRAP_GAS
            || spec_type == TRAP_SHADOW || spec_type == TRAP_SHADOW_DORMANT
 #endif
-           || !is_valid_shaft_level(known) && spec_type == TRAP_SHAFT)
+           || !is_valid_shaft_level() && spec_type == TRAP_SHAFT)
     {
         spec_type = static_cast<trap_type>(random2(TRAP_MAX_REGULAR + 1));
     }
@@ -5919,8 +5902,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     trap_def t;
     t.type = spec_type;
     t.pos = where;
-    grd(where) = known ? trap_category(spec_type)
-                       : DNGN_UNDISCOVERED_TRAP;
+    grd(where) = trap_category(spec_type);
     t.prepare_ammo(charges);
     env.trap[where] = t;
 }

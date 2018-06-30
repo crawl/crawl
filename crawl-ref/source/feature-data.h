@@ -240,12 +240,14 @@ TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GRE
 TRAP(DNGN_TRAP_SHAFT, "shaft", "shaft", BROWN),
 TRAP(DNGN_TRAP_WEB, "web", "trap_web", LIGHTGREY),
 
+#if TAG_MAJOR_VERSION == 34
 {
     DNGN_UNDISCOVERED_TRAP, "floor", "undiscovered_trap",
     DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
     COLOUR_IS(ETC_FLOOR),
     FFT_NONE, MF_FLOOR,
 },
+#endif
 
 {
     DNGN_ENTER_SHOP, "shop", "enter_shop",

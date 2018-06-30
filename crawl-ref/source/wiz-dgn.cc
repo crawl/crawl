@@ -244,7 +244,7 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat == DNGN_ENTER_SHOP)
         return debug_make_shop(pos);
 
-    if (feat_is_trap(feat, true))
+    if (feat_is_trap(feat))
         return debug_make_trap(pos);
 
     env.tile_flv(pos).feat = 0;
@@ -640,7 +640,7 @@ void debug_place_map(bool primary)
 static void _debug_kill_traps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (feat_is_trap(grd(*ri), true))
+        if (feat_is_trap(grd(*ri)))
             destroy_trap(*ri);
 }
 

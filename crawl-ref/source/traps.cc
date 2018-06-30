@@ -86,11 +86,6 @@ void trap_def::destroy(bool known)
     env.trap.erase(pos);
 }
 
-void trap_def::hide()
-{
-    grd(pos) = DNGN_UNDISCOVERED_TRAP;
-}
-
 void trap_def::prepare_ammo(int charges)
 {
     skill_rnd = random2(256);
@@ -150,10 +145,9 @@ string trap_def::name(description_level_type desc) const
 
 bool trap_def::is_known(const actor* act) const
 {
-    const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
-    if (act == nullptr || act->is_player())
-        return player_knows;
+    if (act->is_player())
+        return true;
     else if (act->is_monster())
     {
         const monster* mons = act->as_monster();
@@ -173,13 +167,13 @@ bool trap_def::is_known(const actor* act) const
             // * Lower intelligence requirement for native monsters.
             // * Allied zombies won't fall through shafts. (No herding!)
             return intel > I_BRAINLESS && mons_is_native_in_branch(*mons)
-                   || player_knows && mons->wont_attack();
+                   || mons->wont_attack();
         }
         else
         {
             if (intel < I_HUMAN)
                 return false;
-            if (player_knows && mons->wont_attack())
+            if (mons->wont_attack())
                 return true;
 
             return mons_is_native_in_branch(*mons);
@@ -507,7 +501,6 @@ static string _direction_string(coord_def pos, bool fuzz)
 
 void trap_def::trigger(actor& triggerer)
 {
-    const bool you_know = is_known();
     const bool trig_knows = is_known(&triggerer);
 
     const bool you_trigger = triggerer.is_player();
@@ -536,11 +529,6 @@ void trap_def::trigger(actor& triggerer)
     {
         return;
     }
-
-    // Anything stepping onto a trap almost always reveals it.
-    // (We can rehide it later for the exceptions.)
-    if (in_sight)
-        reveal();
 
     // Store the position now in case it gets cleared in between.
     const coord_def p(pos);
@@ -577,10 +565,6 @@ void trap_def::trigger(actor& triggerer)
     }
     case TRAP_TELEPORT:
     case TRAP_TELEPORT_PERMANENT:
-        // Never revealed by monsters.
-        // except when it's in sight, it's pretty obvious what happened. -doy
-        if (!you_trigger && !you_know && !in_sight)
-            hide();
         if (you_trigger)
             mprf("You enter %s!", name(DESC_A).c_str());
         if (ammo_qty > 0 && !--ammo_qty)
@@ -594,7 +578,7 @@ void trap_def::trigger(actor& triggerer)
             }
             destroy();
         }
-        if (!triggerer.no_tele(true, you_know || you_trigger))
+        if (!triggerer.no_tele(true, you_trigger))
             triggerer.teleport(true);
         break;
 
@@ -603,7 +587,7 @@ void trap_def::trigger(actor& triggerer)
 
         if (silenced(pos))
         {
-            if (you_know && in_sight)
+            if (in_sight)
             {
                 mprf("%s vibrates slightly, failing to make a sound.",
                      name(DESC_THE).c_str());
@@ -660,14 +644,12 @@ void trap_def::trigger(actor& triggerer)
         {
             if (one_chance_in(5) || (trig_knows && coinflip()))
             {
-                // Trap doesn't trigger. Don't reveal it.
-                if (you_know)
+                // Trap doesn't trigger.
+                if (in_sight)
                 {
                     simple_monster_message(*m,
                                            " fails to trigger a blade trap.");
                 }
-                else
-                    hide();
             }
             else if (random2(m->evasion()) > 8
                      || (trig_knows && random2(m->evasion()) > 8))
@@ -744,10 +726,8 @@ void trap_def::trigger(actor& triggerer)
             {
                 // Not triggered, trap stays.
                 triggered = false;
-                if (you_know)
+                if (in_sight)
                     simple_monster_message(*m, " fails to trigger a net trap.");
-                else
-                    hide();
             }
             else if (random2(m->evasion()) > 8
                      || (trig_knows && random2(m->evasion()) > 8))
@@ -807,7 +787,7 @@ void trap_def::trigger(actor& triggerer)
         {
             trap_destroyed = true;
             if (you_trigger)
-                mprf("You tear through %s web.", you_know ? "the" : "a");
+                mpr("You tear through the web.");
             else if (m)
                 simple_monster_message(*m, " tears through a web.");
             break;
@@ -847,10 +827,8 @@ void trap_def::trigger(actor& triggerer)
             if (one_chance_in(3) || (trig_knows && coinflip()))
             {
                 // Not triggered, trap stays.
-                if (you_know)
+                if (in_sight)
                     simple_monster_message(*m, " evades a web.");
-                else
-                    hide();
             }
             else
             {
@@ -878,10 +856,7 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_ZOT:
         if (you_trigger)
         {
-            mpr((trig_knows) ? "You enter the Zot trap."
-                             : "Oh no! You have blundered into a Zot trap!");
-            if (!trig_knows)
-                xom_is_stimulated(25);
+            mpr("You enter the Zot trap.");
 
             MiscastEffect(&you, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, name(DESC_A));
@@ -926,25 +901,6 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_SHAFT:
-        // Unknown shafts are traps triggered by walking onto them.
-        // Known shafts are used as escape hatches
-
-        // Paranoia
-        if (!is_valid_shaft_level())
-        {
-            if (you_know && in_sight)
-                mpr("The shaft disappears in a puff of logic!");
-
-            trap_destroyed = true;
-            break;
-        }
-
-        // If the shaft isn't known, don't reveal it.
-        // The shafting code in downstairs() needs to know
-        // whether it's undiscovered.
-        if (!you_know)
-            hide();
-
         // Known shafts don't trigger as traps.
         if (trig_knows)
             break;
@@ -961,7 +917,7 @@ void trap_def::trigger(actor& triggerer)
         triggerer.do_shaft();
 
         // Player-used shafts are destroyed
-        // after one use in down_stairs(), misc.cc
+        // after one use in down_stairs()
         if (!you_trigger)
         {
             if (in_sight)
@@ -977,7 +933,7 @@ void trap_def::trigger(actor& triggerer)
 
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
-        if (in_sight && you_know)
+        if (in_sight)
             mpr("The gas trap seems to be inoperative.");
         trap_destroyed = true;
         break;
@@ -1081,7 +1037,7 @@ void destroy_trap(const coord_def& pos)
 
 trap_def* trap_at(const coord_def& pos)
 {
-    if (!feat_is_trap(grd(pos), true))
+    if (!feat_is_trap(grd(pos)))
         return nullptr;
 
     auto it = env.trap.find(pos);
@@ -1098,48 +1054,6 @@ trap_type get_trap_type(const coord_def& pos)
         return ptrap->type;
 
     return TRAP_UNASSIGNED;
-}
-
-void search_around()
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    int base_skill = you.experience_level * 100 / 3;
-    int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
-    + (base_skill/200.0) + 15;
-
-    if (have_passive(passive_t::search_traps))
-        skill += you.piety * 2;
-
-    int max_dist = div_rand_round(skill, 32);
-    if (max_dist > 5)
-        max_dist = 5;
-    if (max_dist < 1)
-        max_dist = 1;
-
-    for (radius_iterator ri(you.pos(), max_dist, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        if (grd(*ri) != DNGN_UNDISCOVERED_TRAP)
-            continue;
-
-        int dist = ri->distance_from(you.pos());
-
-        // Note: Currently, being on an untriggered trap will always detect it.
-        // (But that probably can't happen?)
-
-        int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
-
-        trap_def* ptrap = trap_at(*ri);
-        ASSERT(ptrap);
-
-        if (effective > ptrap->skill_rnd)
-        {
-            ptrap->reveal();
-            mprf("You found %s!",
-                 ptrap->name(DESC_A).c_str());
-            learned_something_new(HINT_SEEN_TRAP, *ri);
-        }
-    }
 }
 
 /**
@@ -1505,13 +1419,9 @@ dungeon_feature_type trap_category(trap_type type)
 /***
  * Can a shaft be placed on the current level?
  *
- * @param known Whether the potential shaft will be known to the player
- *              (default false). During level-generation, unknown shafts
- *              are not permitted on certain levels; at any other time,
- *              this argument is ignored.
  * @returns true if such a shaft can be placed.
  */
-bool is_valid_shaft_level(bool known)
+bool is_valid_shaft_level()
 {
     // Important: We are sometimes called before the level has been loaded
     // or generated, so should not depend on properties of the level itself,
@@ -1534,17 +1444,8 @@ bool is_valid_shaft_level(bool known)
         return false;
     }
 
-    // When generating levels, don't place an unknown shaft on the level
-    // immediately above the bottom of a branch if that branch is
-    // significantly more dangerous than normal.
-    int min_delta = 1;
-    if (!known && env.turns_on_level == -1
-        && branch.branch_flags & BFLAG_DANGEROUS_END)
-    {
-        min_delta = 2;
-    }
-
-    return (brdepth[place.branch] - place.depth) >= min_delta;
+    // Don't allow shafts from the bottom of a branch.
+    return (brdepth[place.branch] - place.depth) >= 1;
 }
 
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
@@ -1557,22 +1458,9 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     int curr_depth = lid.depth;
     int max_depth = brdepth[lid.branch];
 
-    // Shaft traps' behavior depends on whether it is entered intentionally.
-    // Knowingly entering one is more likely to drop you 1 level.
-    // Falling in unknowingly can drop you 1/2/3 levels with equal chance.
-    if (known)
-    {
-        // Chances are 2/3 for 1 level, 1/3 for 2 levels
-        if (one_chance_in(3))
-            lid.depth += 2;
-        else
-            lid.depth += 1;
-    }
-    else
-    {
-        // 33.3% for 1, 2, 3 from D:3, less before
-        lid.depth += 1 + random2(min(lid.depth, 3));
-    }
+    // Shafts drop you 1/2/3 levels with equal chance.
+    // 33.3% for 1, 2, 3 from D:3, less before
+    lid.depth += 1 + random2(min(lid.depth, 3));
 
     if (lid.depth > max_depth)
         lid.depth = max_depth;
@@ -1581,8 +1469,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
         return lid;
 
     // Only shafts on the level immediately above a dangerous branch
-    // bottom will take you to that dangerous bottom, and shafts can't
-    // be created during level generation time.
+    // bottom will take you to that dangerous bottom.
     if (branches[lid.branch].branch_flags & BFLAG_DANGEROUS_END
         && lid.depth == max_depth
         && (max_depth - curr_depth) > 1)
@@ -1747,11 +1634,8 @@ void place_webs(int num)
             break;
 
         ts.type = TRAP_WEB;
-        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         ts.prepare_ammo();
-        // Reveal some webs
-        if (coinflip())
-            ts.reveal();
+        ts.reveal();
         env.trap[ts.pos] = ts;
     }
 }
@@ -1782,11 +1666,8 @@ bool ensnare(actor *fly)
     if (grd(fly->pos()) == DNGN_FLOOR)
     {
         place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
-        if (grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
-            && you.see_cell(fly->pos()))
-        {
+        if (you.see_cell(fly->pos()))
             grd(fly->pos()) = DNGN_TRAP_WEB;
-        }
     }
 
     if (fly->is_player())

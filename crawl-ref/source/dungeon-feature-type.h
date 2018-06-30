@@ -61,7 +61,9 @@ enum dungeon_feature_type
     DNGN_TRAP_ZOT,
     DNGN_PASSAGE_OF_GOLUBRIA,
 #endif
+#if TAG_MAJOR_VERSION == 34
     DNGN_UNDISCOVERED_TRAP,
+#endif
 
     DNGN_ENTER_SHOP,
     DNGN_ABANDONED_SHOP,
