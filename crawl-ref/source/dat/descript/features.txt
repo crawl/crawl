@@ -596,7 +596,8 @@ An alarm trap
 
 A trap that creates a loud noise to attract nearby monsters. In addition to the
 noise it creates, it will apply an enchantment making monsters all over the
-level aware of your location.
+level aware of your location. The monsters of the dungeon may even trigger it
+themselves to invoke its effects against you.
 %%%%
 An arrow trap
 
