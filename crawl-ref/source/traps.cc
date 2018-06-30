@@ -1427,6 +1427,23 @@ bool is_valid_shaft_level()
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
+/***
+ * Can we force shaft the player from this level?
+ *
+ * @returns true if we can.
+ */
+bool is_valid_shaft_effect_level()
+{
+    const level_id place = level_id::current();
+    const Branch &branch = branches[place.branch];
+
+    // Don't shaft the player when we can't, and also when it would be into a
+    // dangerous end.
+    return is_valid_shaft_level()
+           && !(branch.branch_flags & BFLAG_DANGEROUS_END
+                && brdepth[place.branch] - place.depth == 1);
+}
+
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id lid = lpos.id;
@@ -1457,6 +1474,42 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     }
 
     return lid;
+}
+
+/***
+ * The player rolled a new tile, try to trap them maybe.
+ * */
+void do_trap_effects()
+{
+    const level_id place = level_id::current();
+    const Branch &branch = branches[place.branch];
+
+    int trap_count = div_rand_round(num_traps_for_place(),5);
+
+    // Chance to trigger a trap effect
+    if (x_chance_in_y(trap_count, env.density))
+    {
+        // Don't shaft the player when we can't, and also when it would be into a
+        // dangerous end.
+        if (coinflip() && is_valid_shaft_level()
+            && !(branch.branch_flags & BFLAG_DANGEROUS_END
+                 && brdepth[place.branch] - place.depth == 1))
+        {
+            dprf("Attempting to shaft player.");
+            you.do_shaft();
+        }
+        // No alarms on the first 3 floors
+        else if (env.absdepth0 > 3)
+        {
+            // Alarm effect alarms are always noisy, even if the player is
+            // silenced, to avoid "travel only while silenced" behavior.
+            // XXX: improve messaging to make it clear theres a wail outside of the
+            // player's silence
+            mprf("You set off the alarm!");
+            fake_noisy(40, you.pos());
+            you.sentinel_mark(true);
+        }
+    }
 }
 
 level_id generic_shaft_dest(coord_def pos, bool known = false)
