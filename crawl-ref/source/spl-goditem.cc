@@ -598,23 +598,42 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _selectively_remove_curse(const string &pre_msg)
+/**
+ * Using a remove curse scroll with Ashenzari
+ *     @param pre_msg  The message to print after an item is uncursed
+ *     @return         The number of items uncursed.
+ */
+static int _selectively_remove_curse(const string &pre_msg)
 {
-    bool used = false;
+    ASSERT(you_worship(GOD_ASHENZARI));
+
+    int items_uncursed = 0;
 
     while (1)
     {
-        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && items_uncursed)
         {
             mpr("You have uncursed all your worn items.");
-            return used;
+            return items_uncursed;
         }
 
-        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
+        const char *piety_cost_descriptions[] = {
+            "none",
+            "small",
+            "moderate",
+            "large",
+            "extremely large"
+        };
+        const string prompt_msg =
+            make_stringf("Uncurse which item? (Current piety cost: %s)",
+                         items_uncursed > 4
+                             ? "extremely large"
+                             : piety_cost_descriptions[items_uncursed]);
+        int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
                                            OSEL_CURSED_WORN, OPER_ANY,
                                            invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
-            return used;
+            return items_uncursed;
 
         item_def& item(you.inv[item_slot]);
 
@@ -627,20 +646,35 @@ static bool _selectively_remove_curse(const string &pre_msg)
             continue;
         }
 
-        if (!used && !pre_msg.empty())
+        if (!items_uncursed && !pre_msg.empty())
             mpr(pre_msg);
 
         do_uncurse_item(item, false);
-        used = true;
+        items_uncursed += 1;
     }
 }
 
 bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
-    if (have_passive(passive_t::want_curses) && alreadyknown)
+    if (have_passive(passive_t::want_curses))
     {
-        if (_selectively_remove_curse(pre_msg))
+        int items_uncursed = _selectively_remove_curse(pre_msg);
+        if (items_uncursed)
         {
+            // It costs piety to uncurse items with Ash
+            int base_piety_cost = 6 * items_uncursed;
+
+            // Apply the standard randomisation formula for god abilities
+            int real_piety_cost = base_piety_cost
+                                  + random2((base_piety_cost + 1) / 2 + 1);
+            lose_piety(real_piety_cost);
+
+            const char *piety_adverb = real_piety_cost <= 10 ? "slightly " :
+                                       real_piety_cost <= 20 ? "" :
+                                       real_piety_cost <= 30 ? "significantly "
+                                                             : "dramatically ";
+            mprf("Your piety has %sdecreased.", piety_adverb);
+
             ash_check_bondage();
             return true;
         }

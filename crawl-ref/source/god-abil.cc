@@ -3801,19 +3801,15 @@ bool ashenzari_end_transfer(bool finished, bool force)
  * Give a prompt to curse an item.
  *
  * This is the core logic behind Ash's Curse Item ability.
- * Player can abort without penalty.
+ * It is a free ability.
  * Player can curse any cursable item (not just worn ones).
  *
- * @param num_rc Number of remove curse scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item(int num_rc)
+bool ashenzari_curse_item()
 {
-    ASSERT(num_rc > 0);
-    const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
-            " (Esc to abort)",
-            num_rc, num_rc == 1 ? "" : "s");
+    const string prompt_msg = "Curse which item? (Esc to abort)";
+
     const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
                                              OSEL_CURSABLE, OPER_ANY,
                                              invprompt_flag::escape_only);

@@ -222,7 +222,8 @@ soon be granted the ability to scry through walls. Ashenzari will passively
 grant followers increased skills depending on how cursed they are by equipment
 associated with those skills, and will reveal the invisible and grant clarity
 of mind. The truly devout will gain the ability to transfer a portion of their
-knowledge from one skill to another.
+knowledge from one skill to another. Ashenzari requests that followers remain
+shackled, therefore it will cost piety to uncurse equipment.
 %%%%
 Beogh powers
 

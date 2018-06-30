@@ -524,7 +524,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::remove_curse_scroll },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 0, 2, {fail_basis::invo}, abflag::instant },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
@@ -2776,29 +2776,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_ASHENZARI_CURSE:
-    {
         fail_check();
-        auto iter = find_if(begin(you.inv), end(you.inv),
-                [] (const item_def &it) -> bool
-                {
-                    return it.defined()
-                           && it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE)
-                           && check_warning_inscriptions(it, OPER_DESTROY);
-                });
-        if (iter != end(you.inv))
-        {
-            if (ashenzari_curse_item(iter->quantity))
-                dec_inv_item_quantity(iter - begin(you.inv), 1);
-            else
-                return SPRET_ABORT;
-        }
-        else
-        {
-            mpr("You need a scroll of remove curse to do this.");
+        if (!ashenzari_curse_item())
             return SPRET_ABORT;
-        }
         break;
-    }
 
     case ABIL_ASHENZARI_SCRYING:
         fail_check();

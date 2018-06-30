@@ -138,7 +138,7 @@ bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();
 bool ashenzari_end_transfer(bool finished = false, bool force = false);
-bool ashenzari_curse_item(int num_rc);
+bool ashenzari_curse_item();
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
