@@ -259,3 +259,38 @@ MAP
 xxnn==nnxx
 ....@@....
 ENDMAP
+
+NAME:   ebering_vaults_ghost_gozag
+: kitem("D = " .. ghost_loot_potions)
+# If ghost selectors ever happen this should be a gozag ghost
+KMONS:  O = player_ghost
+# D and F place an 8 monster plus potion or shop, respectively. D and J place
+# an abandoned shop for decor.
+KMONS:  DF = 8
+MONS:   obsidian statue
+NSUBST: M = 0 / 2=09 / 9 / 2=D / J
+SUBST:  D = DF
+# The ' glyph is used to place gold.
+: setup_gozag_gold(_G)
+KFEAT:  ODJ = abandoned_shop
+KFEAT:  F = antiques shop
+KFEAT:  _ = altar_gozag
+TILE:   G = dngn_golden_statue
+FTILE:  -_DFJ$0189OG = floor_limestone
+COLOUR: G = yellow
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("stone_wall", "golden wall")
+: vaults_ghost_setup(_G)
+MAP
+.............
+.............
+...ccccccc...
+..ccMGOGMcc..
+..cM'''''Mc..
+..cG''1''Gc..
+..cM''_''Mc..
+..cc'''''cc..
+...nn===nn...
+.............
+.............
+ENDMAP

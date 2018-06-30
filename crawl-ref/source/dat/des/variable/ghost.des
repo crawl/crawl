@@ -184,22 +184,6 @@ function setup_xom_dancing_weapon(e)
     weapon_def = random_item_def(weapons, {["chaos"] = 1}, quality, "|")
     e.mons("dancing weapon; " .. weapon_def)
 end
-
--- Determine the number of gold piles placed for the Gozag ghost
--- Linearly interpolates between 3-9 on D:3 and 12-18 on D:15, with
--- Lair and Orc getting 8-14 and everything else getting 12-18.
--- ebering_gozag_ghost
-function setup_gozag_gold(e)
-    if you.in_branch("D") then
-        pile_mean = math.floor(3/4 * you.depth() + 3.75)
-    elseif you.in_branch("Lair") or you.in_branch("Orc") then
-        pile_mean = 11
-    else
-        pile_mean = 15
-    end
-    pile_count = crawl.random_range(pile_mean - 3, pile_mean + 3)
-    e.nsubst("' = " .. pile_count .. "=$ / -")
-end
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -420,41 +404,63 @@ MAP
  ccccc
 ENDMAP
 
-NAME: ebering_ghost_gozag
+NAME:   ebering_ghost_gozag
+DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
 WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
+: kitem("DE = " .. ghost_loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
-KMONS: O = player_ghost
-KFEAT: O = abandoned_shop
-KFEAT: _ = altar_gozag
-: if you.absdepth() < 10 then
-NSUBST: M = 2=998 / G
+KMONS:  O = player_ghost
+# D and F place an 8 monster plus potion or shop, E and H place the loot/shop
+# without any monster. D, E, and J place an abandoned shop for decor.
+KMONS:  DF = 8
+MONS:   obsidian statue
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+NSUBST: M = 0 / 2=0' / 9 / 8-JJ / J
+SUBST:  1 = G
+:     elseif you.absdepth() < 9 then
+NSUBST: M = 0 / 2=09 / 8J / J
+SUBST:  1 = G, D = DF, E = EH
+:     elseif you.absdepth() < 12 then
+# The 4th term gives a 50% chance of placing a potion/shop and an independent
+# %50 chance of placing an 8.
+NSUBST: M = 0 / 2=09 / 9J / DE8J / J
+SUBST:  1 = 1GGGG, D = DF, E = EH
+:     elseif you.absdepth() < 14 then
+# The 5th term gives a 33% chance of placing a second potion/shop and an
+# independent 50% chance of placing an 8.
+NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
+SUBST:  1 = 1GG, D = DF, E = EH
+:     else
+# Chance like the one above, but 50% for second potion/shop.
+NSUBST: M = 0 / 2=09 / 9 / D / DE8J / J
+SUBST:  1 = 1G, D = DF, E = EH
+:     end
+: elseif you.in_branch("Orc") then
+NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
+SUBST:  1 = 1GG, D = DF, E = EH
 : else
-NSUBST: M = 2=998 / 2=0 / 2=0G
+NSUBST: M = 0 / 2=09 / 9 / 2=D / J
+SUBST:  D = DF
 : end
-: if you.absdepth() >= 14 then
-:   if you.in_branch("Lair") then
-MONS: oklob plant
-:   else
-MONS: obsidian statue
-:   end
-SUBST: S = GG1
-: else
-SUBST: S = G
-: end
+# The ' glyph is used to place gold.
 : setup_gozag_gold(_G)
-TILE: G = dngn_golden_statue
-FTILE: -$0189OGZS = floor_limestone
-RTILE: c = wall_sandstone
+KFEAT:  ODEJ = abandoned_shop
+KFEAT:  FH = antiques shop
+KFEAT:  _ = altar_gozag
+TILE:   G = dngn_golden_statue
+FTILE:  -_DEFHJ$0189OG = floor_limestone
+RTILE:  c = wall_sandstone
 COLOUR: cG = yellow
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G)
 MAP
  ccccccc
-ccMcOcMcc
+ccMGOGMcc
 cM'''''Mc
-cc''S''cc
+cG''1''Gc
 cM''_''Mc
 cc'''''cc
  nn===nn

@@ -197,3 +197,19 @@ function ghost_good_loot(e)
         e.item("superb_item / star_item")
     end
 end
+
+-- Determine the number of gold piles placed for ebering_ghost_gozag and
+-- ebering_vaults_ghost_gozag. Mean ranges from 3 to 15 from D:3-D:15 with
+-- 12-13 in Orc and 15 elsewhere, and the actual number placed varies by +/- 3.
+function setup_gozag_gold(e)
+    if you.in_branch("D") then
+        depth = you.depth()
+    elseif you.in_branch("Orc") then
+        depth = 11 + you.depth()
+    else
+        depth = you.absdepth()
+    end
+    pile_mean = math.min(15, math.floor(3/4 * depth + 3.75))
+    pile_count = crawl.random_range(pile_mean - 3, pile_mean + 3)
+    e.nsubst("' = " .. pile_count .. "=$ / -")
+end
