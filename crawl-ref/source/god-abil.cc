@@ -5959,6 +5959,8 @@ bool ru_do_sacrifice(ability_type sac)
     // get confirmation that the sacrifice is desired.
     if (!_execute_sacrifice(sac, offer_text.c_str()))
         return false;
+    // save piety gain, since sacrificing skills can lower the piety gain
+    const int piety_gain = _ru_get_sac_piety_gain(sac);
     // Apply the sacrifice, starting by mutating the player.
     if (variable_sac)
     {
@@ -6019,8 +6021,7 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    set_piety(min(piety_breakpoint(5),
-                  you.piety + _ru_get_sac_piety_gain(sac)));
+    set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
 
     if (you.piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
