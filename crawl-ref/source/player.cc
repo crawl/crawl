@@ -7290,17 +7290,14 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 // different effect from the player invokable ability.
 bool player::do_shaft()
 {
-    if (!is_valid_shaft_level())
-        return false;
-
-    // Handle instances of do_shaft() being invoked magically when
-    // the player isn't standing over a shaft.
-    if (get_trap_type(pos()) != TRAP_SHAFT
-        && !feat_is_shaftable(grd(pos())))
+    if (!is_valid_shaft_level()
+        || !feat_is_shaftable(grd(pos()))
+        || duration[DUR_SHAFT_IMMUNITY])
     {
         return false;
     }
 
+    duration[DUR_SHAFT_IMMUNITY] = 1;
     down_stairs(DNGN_TRAP_SHAFT);
 
     return true;

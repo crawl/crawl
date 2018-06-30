@@ -1015,6 +1015,7 @@ static update_flags player_view_update_at(const coord_def &gc)
             did_god_conduct(DID_EXPLORATION, 2500);
             const int density = env.density ? env.density : 2000;
             you.exploration += div_rand_round(1<<16, density);
+            do_trap_effects();
         }
     }
 
