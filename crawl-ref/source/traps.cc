@@ -477,28 +477,6 @@ static passage_type _find_other_passage_side(coord_def& to)
     return PASSAGE_FREE;
 }
 
-// Returns a direction string from you.pos to the
-// specified position. If fuzz is true, may be wrong.
-// Returns an empty string if no direction could be
-// determined (if fuzz if false, this is only if
-// you.pos==pos).
-static string _direction_string(coord_def pos, bool fuzz)
-{
-    int dx = you.pos().x - pos.x;
-    if (fuzz)
-        dx += random2avg(41,2) - 20;
-    int dy = you.pos().y - pos.y;
-    if (fuzz)
-        dy += random2avg(41,2) - 20;
-    const char *ew=((dx > 0) ? "west" : ((dx < 0) ? "east" : ""));
-    const char *ns=((dy < 0) ? "south" : ((dy > 0) ? "north" : ""));
-    if (abs(dy) > 2 * abs(dx))
-        ew="";
-    if (abs(dx) > 2 * abs(dy))
-        ns="";
-    return string(ns) + ew;
-}
-
 void trap_def::trigger(actor& triggerer)
 {
     const bool trig_knows = is_known(&triggerer);
@@ -583,42 +561,28 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_ALARM:
-        trap_destroyed = true;
-
-        if (silenced(pos))
+        if (in_sight)
         {
-            if (in_sight)
+            if (you_trigger)
+                mprf("You set off the alarm!");
+            else
+                mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
+                     mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
+
+            if (silenced(pos))
             {
                 mprf("%s vibrates slightly, failing to make a sound.",
                      name(DESC_THE).c_str());
             }
-        }
-        else
-        {
-            string msg;
-            if (you_trigger)
-            {
-                msg = make_stringf("%s emits a blaring wail!",
-                                   name(DESC_THE).c_str());
-            }
             else
             {
-                string dir = _direction_string(pos, !in_sight);
-                msg = string("You hear a ") + ((in_sight) ? "" : "distant ")
-                      + "blaring wail " + (!dir.empty()? ("to the " + dir + ".")
-                                                       : "behind you!");
+                string msg = make_stringf("%s emits a blaring wail!",
+                                   name(DESC_THE).c_str());
+                noisy(40, pos, msg.c_str(), triggerer.mid);
             }
 
-            // XXX: this is very goofy and probably should be replaced with
-            // const mid_t source = triggerer.mid;
-            mid_t source = !m ? MID_PLAYER :
-                            mons_intel(*m) >= I_HUMAN ? m->mid : MID_NOBODY;
-
-            noisy(40, pos, msg.c_str(), source);
-        }
-
-        if (you_trigger)
             you.sentinel_mark(true);
+        }
         break;
 
     case TRAP_BLADE:
