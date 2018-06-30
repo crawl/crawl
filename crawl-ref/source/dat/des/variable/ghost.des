@@ -21,53 +21,6 @@
 : require("dlua/ghost.lua")
 
 {{
--- Basic loot scale for extra loot for lone ghosts
--- takes none_glyph to use when it would like no item
--- adds depth appropriate items to de
-function lone_ghost_extra_loot(e, none_glyph)
-    if you.in_branch("D") then
-        if you.depth() < 6 then
-            e.subst("de = " .. none_glyph)
-        elseif you.depth() < 9 then
-            e.subst("d = %$" .. none_glyph .. none_glyph)
-            e.subst("e = " ..none_glyph)
-        elseif you.absdepth() < 12 then
-            e.subst("d = %$")
-            e.subst("e = " ..none_glyph)
-        elseif you.absdepth() < 14 then
-            e.subst("d = |*")
-            e.subst("e = %$")
-        else
-            e.subst("d = |*")
-            e.subst("e = *$")
-        end
-    elseif you.in_branch("Lair") then
-        e.subst("d = *%")
-        e.subst("e = %$" .. none_glyph .. none_glyph)
-    elseif you.in_branch("Orc") then
-        e.subst("d = |*")
-        e.subst("e = %$")
-    else
-        e.subst("de = |*")
-    end
-end
-
--- Basic loot scale for ghost "guarded" loot for lone ghosts
--- KITEMS this to ghost_glyph
-function lone_ghost_guarded_loot(e, ghost_glyph)
-    if you.in_branch("D") then
-        if you.depth() < 6 then
-            e.kitem(ghost_glyph .. " = star_item / any")
-        elseif you.depth() < 9 then
-            e.kitem(ghost_glyph .. " = star_item")
-        else
-            e.kitem(ghost_glyph .. " = superb_item / star_item")
-        end
-    else
-        e.kitem(ghost_glyph .. " = superb_item / star_item")
-    end
-end
-
 -- Set up the non-flaming edged weapon "left" by the ghost in
 -- gammafunk_ghost_hydra_chop.
 function setup_hydra_weapon(e)
@@ -411,7 +364,7 @@ ORIENT: float
 : kitem("DE = " .. ghost_loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
 KMONS:  O = player_ghost
-# D and F place an 8 monster plus potion or shop, E and H place the loot/shop
+# D and F place an 8 monster plus potion or shop, E and H place the potion/shop
 # without any monster. D, E, and J place an abandoned shop for decor.
 KMONS:  DF = 8
 MONS:   obsidian statue
@@ -451,8 +404,7 @@ KFEAT:  FH = antiques shop
 KFEAT:  _ = altar_gozag
 TILE:   G = dngn_golden_statue
 FTILE:  -_DEFHJ$0189OG = floor_limestone
-RTILE:  c = wall_sandstone
-COLOUR: cG = yellow
+COLOUR: G = yellow
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G)
@@ -508,81 +460,6 @@ cn=nc
  .@.
 ENDMAP
 
-NAME:   ebering_ghost_xom
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
-ORIENT: float
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, "-")
-: setup_xom_dancing_weapon(_G)
-KMONS:  O = player_ghost
-KFEAT:  O = altar_xom
-FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
-MAP
- ccc
-cc1cc
-cdOec
-cn=nc
-..@..
-ENDMAP
-
-# based on sewer_entry_d
-NAME:   ebering_ghost_sewer_d
-ORIENT: float
-DEPTH:  D:3-6
-KMONS:  O = player_ghost
-KFEAT:  O = expired_portal
-KMONS:  1 = adder
-KMONS:  2 = bullfrog
-KFEAT:  12*%$ = W
-: lone_ghost_guarded_loot(_G, "O")
-: if you.depth() < 6 then
-SUBST:  d = %$, e = W
-NSUBST: 1 = 1 / 1W / 122WWW / W
-: else
-SUBST:  d = *%, e = %$WW
-NSUBST: 1 = 1 / 2 / 12WW / W
-: end
-COLOUR: 12*%$W = lightgreen / cyan w:5
-FTILE:  O = dngn_portal_sewer_rusted
-: ghost_setup(_G)
-MAP
-       ..
-ccccccnn.
-cdOe111=.
-ccccccnn.
-       ..
-ENDMAP
-
-# based on sewer_entry_f
-NAME:   ebering_ghost_sewer_f
-ORIENT: float
-DEPTH:  D:3-6
-KMONS:  O = player_ghost
-KMONS:  1 = leopard gecko / giant cockroach / rat / ball python
-KMONS:  2 = adder / worm / river rat
-KMONS:  3 = bullfrog
-KFEAT:  O = expired_portal
-KFEAT:  123*%$ = W
-: lone_ghost_guarded_loot(_G, "O")
-: if you.depth() < 6 then
-SUBST:  d = %$, e = W
-NSUBST: W = 1 / 2=112WWW / 2 / 2W / 3WW / W
-: else
-SUBST:  d = *%, e = %$WW
-NSUBST: W = 1 / 2=1223WW / 2 / 3 / 3W / W
-: end
-COLOUR: 123*%$W = lightgreen / cyan w:5
-FTILE:  O = dngn_portal_sewer_rusted
-: ghost_setup(_G)
-MAP
- ccccccccccc
-.nWWWWeWWWWn.
-@=WWWWOWWWW=@
-.nWWWWdWWWWn.
- ccccccccccc
-ENDMAP
-
 NAME:   hellmonk_ghost_happy_afterlife
 DEPTH:  D:3-, Lair
 ORIENT: float
@@ -621,14 +498,14 @@ NAME:   ebering_ghost_disaster_area
 ORIENT: float
 KMONS:  O = player ghost
 NSUBST: ' = d / e / 8=wWlr / -
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
 : if you.depth() < dgn.br_depth(you.branch()) then
 KFEAT:  r = known shaft trap
 : else
 SUBST:  r = wWl
 : end
 SUBST: P = GTV
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, "-")
 : ghost_setup(_G)
 MAP
 cccccccccc
@@ -1396,9 +1273,85 @@ MAP
 .....@.....
 ENDMAP
 
+NAME:   ebering_ghost_xom
+WEIGHT: 2 (D:3-7), 5 (D:8-11)
+ORIENT: float
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+: setup_xom_dancing_weapon(_G)
+KMONS:  O = player_ghost
+KFEAT:  O = altar_xom
+FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G)
+MAP
+ ccc
+cc1cc
+cdOec
+cn=nc
+..@..
+ENDMAP
+
+# based on sewer_entry_d
+NAME:   ebering_ghost_sewer_d
+ORIENT: float
+DEPTH:  D:3-6
+KMONS:  O = player_ghost
+KFEAT:  O = expired_portal
+KMONS:  1 = adder
+KMONS:  2 = bullfrog
+KFEAT:  12*%$ = W
+: lone_ghost_guarded_loot(_G, "O")
+: if you.depth() < 6 then
+SUBST:  d = %$, e = W
+NSUBST: 1 = 1 / 1W / 122WWW / W
+: else
+SUBST:  d = *%, e = %$WW
+NSUBST: 1 = 1 / 2 / 12WW / W
+: end
+COLOUR: 12*%$W = lightgreen / cyan w:5
+FTILE:  O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+       ..
+ccccccnn.
+cdOe111=.
+ccccccnn.
+       ..
+ENDMAP
+
+# based on sewer_entry_f
+NAME:   ebering_ghost_sewer_f
+ORIENT: float
+DEPTH:  D:3-6
+KMONS:  O = player_ghost
+KMONS:  1 = leopard gecko / giant cockroach / rat / ball python
+KMONS:  2 = adder / worm / river rat
+KMONS:  3 = bullfrog
+KFEAT:  O = expired_portal
+KFEAT:  123*%$ = W
+: lone_ghost_guarded_loot(_G, "O")
+: if you.depth() < 6 then
+SUBST:  d = %$, e = W
+NSUBST: W = 1 / 2=112WWW / 2 / 2W / 3WW / W
+: else
+SUBST:  d = *%, e = %$WW
+NSUBST: W = 1 / 2=1223WW / 2 / 3 / 3W / W
+: end
+COLOUR: 123*%$W = lightgreen / cyan w:5
+FTILE:  O = dngn_portal_sewer_rusted
+: ghost_setup(_G)
+MAP
+ ccccccccccc
+.nWWWWeWWWWn.
+@=WWWWOWWWW=@
+.nWWWWdWWWWn.
+ ccccccccccc
+ENDMAP
+
 NAME:   ploomutoo_gammafunk_potion_laboratory
 DEPTH:  D:8-, Elf, Depths
 WEIGHT: 5
+ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(ghost_loot_potions)
 ITEM:   hat / robe good_item / gloves / boots / cloak
@@ -1457,7 +1410,7 @@ c-c---c-c
 c;;;c;;;c
 c;c;;;c;c
 c;;;;;;;c
-ccnn=nncc
+cnn===nnc
 c...@...c
 ENDMAP
 

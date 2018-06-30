@@ -81,6 +81,53 @@ function random_item_def(items, egos, args, separator)
     return item_def
 end
 
+-- Basic loot scale for extra loot for lone ghosts. Takes none_glyph to use
+-- when it would like no item and adds depth appropriate items to d and e
+-- glyphs.
+function lone_ghost_extra_loot(e, none_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.subst("de = " .. none_glyph)
+        elseif you.depth() < 9 then
+            e.subst("d = %$" .. none_glyph .. none_glyph)
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 12 then
+            e.subst("d = %$")
+            e.subst("e = " ..none_glyph)
+        elseif you.absdepth() < 14 then
+            e.subst("d = |*")
+            e.subst("e = %$")
+        else
+            e.subst("d = |*")
+            e.subst("e = *$")
+        end
+    elseif you.in_branch("Lair") then
+        e.subst("d = *%")
+        e.subst("e = %$" .. none_glyph .. none_glyph)
+    elseif you.in_branch("Orc") then
+        e.subst("d = |*")
+        e.subst("e = %$")
+    else
+        e.subst("de = |*")
+    end
+end
+
+-- Basic loot scale for ghost "guarded" loot for lone ghost vaults. KITEMS this
+-- loot to ghost_glyph.
+function lone_ghost_guarded_loot(e, ghost_glyph)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+            e.kitem(ghost_glyph .. " = star_item / any")
+        elseif you.depth() < 9 then
+            e.kitem(ghost_glyph .. " = star_item")
+        else
+            e.kitem(ghost_glyph .. " = superb_item / star_item")
+        end
+    else
+        e.kitem(ghost_glyph .. " = superb_item / star_item")
+    end
+end
+
 -- Some scroll and potions with weights that are used as nice loot.
 ghost_loot_scrolls = "scroll of teleportation w:15 / scroll of fog w:15 / " ..
     "scroll of fear w:15 / scroll of blinking w:10 / " ..

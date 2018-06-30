@@ -55,14 +55,14 @@ ENDMAP
 
 NAME:  gammafunk_vaults_ghost_grave
 TAGS:  vaults_orient_w
-KITEM: O = superb_item / star_item
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, ".")
 KMONS: p = withered plant
 KMONS: O = player ghost
-SUBST: de = |*, t : tp
+SUBST: t : tp
 TILE:  G = dngn_gravestone
 TILE:  t = dngn_tree_dead
 : set_feature_name("granite_statue", "a gravestone")
-FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
 : vaults_ghost_setup(_G)
 MAP
 ..x.....
@@ -106,11 +106,10 @@ SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
 : ghost_good_loot(_G)
 # 1.5 items per ghost. One 'd' glyphs and one 'e' glyph are used by the good
 # loot items, so we don't replace those.
-NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
-SUBST:   qrs = G, Z = -, y = p, z = V, t : tp
+NSUBST:  d = d / |*.., e = e / |*.., f = |* / |*.., h = 2=|* / |*..
+SUBST:   qrs = G, Z = ., y = p, z = V, t : tp
 TILE:    G = dngn_gravestone
 TILE:    t = dngn_tree_dead
-FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 : vaults_ghost_setup(_G)
 MAP
@@ -132,8 +131,7 @@ KMONS:  O = player ghost
 MONS:   simulacrum place:Vaults:5 / spectre place:Vaults:5, lich
 : ghost_good_loot(_G)
 SUBST:  fg = |*, h = *, i = %$, j = -
-NSUBST: 1 = 12 / 1, - = 3=1 / 6=1- / -
-FTILE:  -de|*%$O12G = floor_pebble_brown / floor_pebble_darkgray
+NSUBST: 1 = 12 / 1, - = 3=1 / 6=1. / .
 : vaults_ghost_setup(_G)
 MAP
 ..xxxxxxx
@@ -155,8 +153,7 @@ MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
 MONS:   eidolon, revenant / curse skull
 : ghost_good_loot(_G)
 SUBST:  fg = |*, h = *, i = %$--
-NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2 / 3=2- / -
-FTILE:  -de|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
+NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1. / 2 / 3=2. / .
 : vaults_ghost_setup(_G)
 MAP
 ..xxxxxxx
@@ -181,7 +178,7 @@ MONS:   minotaur / stone giant / orc warlord
 MONS:   fire giant / frost giant / deep elf blademaster / \
         deep elf master archer / titan
 SUBST:  defgh = |*, i = *%, j = %$..
-NSUBST: - = 3=1 / 4=1- / 2=2 / 2=2- / 2=3- / 3--- / -
+NSUBST: - = 3=1 / 4=1. / 2=2 / 2=2. / 2=3. / 3... / .
 : vaults_ghost_setup(_G)
 MAP
 GvvvvvvvG
@@ -219,18 +216,18 @@ ENDMAP
 
 NAME:   ebering_vaults_ghost_reflecting_pool
 TAGS:   vaults_orient_s no_pool_fixup
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, ".")
 KMONS:  O = player_ghost
 KFEAT:  O = shallow_water
-KITEM:  O = superb_item / star_item
-SUBST:  de = |*
 : vaults_ghost_setup(_G)
 MAP
 .....
 .dOe.
-.-w-.
-.-w-.
-.-w-.
-.-W-.
+..w..
+..w..
+..w..
+..W..
 xn=nx
 .....
 .....
@@ -239,25 +236,25 @@ ENDMAP
 NAME:   ebering_vaults_ghost_disaster_area
 TAGS:   vaults_orient_s
 KMONS:  O = player ghost
-NSUBST: ' = d / e / 8=wWlr / -
+NSUBST: ' = d / e / 8=wWlr / .
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, ".")
 : if you.depth() < dgn.br_depth(you.branch()) then
 KFEAT:  r = known shaft trap
 : else
 SUBST:  r = wWl
 : end
 SUBST:  P = GTV
-KITEM:  O = superb_item / star_item
-SUBST:  de = |*
 : vaults_ghost_setup(_G)
 MAP
-..........
-.'xx'x'x'.
-.x''O''x'.
-.'x'''''x.
-.''P'x''x.
-.x'''''''.
-xxnn==nnxx
-....@@....
+'xx'x'x'
+x''O''x'
+'x'''''x
+''P'x''x
+x'''''''
+xnn==nnx
+........
+........
 ENDMAP
 
 NAME:   ebering_vaults_ghost_gozag
