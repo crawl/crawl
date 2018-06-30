@@ -1461,19 +1461,22 @@ ccnn=nncc
 c...@...c
 ENDMAP
 
-NAME:   ebering_ghost_davey_jones
-ORIENT: float
-TAGS:   water_ok
-DEPTH:  Shoals, !Shoals:$
-KMONS:  O = player_ghost
-KITEM:  O = any ring randart w:20 / ring of the octopus king w:1
-KFEAT:  O' = W
-KMONS:  1 = kraken / kraken simulacrum
-KFEAT:  1 = w
-SUBST:  u = wW, s=W.
-NSUBST: ' = 3=|* / *%
+NAME:    ebering_ghost_davey_jones
+DEPTH:   Shoals
+ORIENT:  float
+TAGS:    water_ok
+KMONS:   O = player_ghost
+KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
+KMONS:   1 = kraken
+KMONS:   2 = kraken simulacrum / spectral kraken
+SHUFFLE: 1D / D2
+KFEAT:   Od = W
+KFEAT:   12D = w
+SUBST:   u = wW, s=W.
+NSUBST:  d = 3=|* / *%
+TILE:    G = dngn_statue_mermaid
 {{
-dgn.delayed_decay(_G,"%","minotaur skeleton / halfling skeleton" ..
+dgn.delayed_decay(_G,"'","minotaur skeleton / halfling skeleton" ..
   " / dwarf skeleton / human skeleton / kobold skeleton" ..
   " / felid skeleton / orc skeleton / centaur skeleton")
 }}
@@ -1481,14 +1484,14 @@ dgn.delayed_decay(_G,"%","minotaur skeleton / halfling skeleton" ..
 MAP
  WWWWWWWWWWWWW
 WWcccccccccccWW
-WccuwwwwwwwuccW
-WcWuwwwww'wuWcW
-WcWWW'wwwuWWWcW
-Wns%Wuw1wuWWWnW
-Wn.sWuwwwuW%snW
-Wc%sW'uOu'Ws.cW
-Wc..%sWsWWs..cW
-Wcc......%..ccW
+WccGwwwwwwwGccW
+WcWuwwwwwdwuWcW
+WcWWWdDwDwWWWcW
+Wns'Www1wwWWWnW
+Wn.sWwwwwwW'snW
+Wc'sWduOudWs.cW
+Wc..'sWsWWs..cW
+WccG.....'.GccW
 WWcnnn===nnncWW
  WW....@....WW
 ENDMAP
