@@ -184,7 +184,6 @@ const int AGILITY_BONUS = 5;
 #define TORNADO_RADIUS 5
 #define VORTEX_RADIUS 3
 
-#define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
 #define ZIG_ENTRY_RUNES 2
 
