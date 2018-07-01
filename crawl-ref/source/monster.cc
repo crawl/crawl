@@ -4680,8 +4680,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return true;
 #endif
 
-    // No friendly monsters will ever enter a Zot trap.
-    if (friendly() && trap.type == TRAP_ZOT)
+    // No friendly monsters will ever enter a trap that harms the player
+    // when triggered.
+    if (friendly() && trap.is_bad_for_player())
         return false;
 
     // Dumb monsters don't care at all.
