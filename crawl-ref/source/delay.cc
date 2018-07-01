@@ -13,6 +13,7 @@
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "bloodspatter.h"
 #include "butcher.h"
 #include "clua.h"
@@ -1125,6 +1126,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
     {
         ash_id_monster_equipment(mon);
         mark_mon_equipment_seen(mon);
+        do_conversions(mon);
 
         string text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())

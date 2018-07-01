@@ -146,12 +146,17 @@ void seen_monsters_react(int stealth)
             monster_consider_shouting(**mi);
         }
 
+        // Beogh conversions are only attempted on awake orcs with you as their
+        // target, while Jiyva and Gozag happen as soon as the monster enters
+        // los. Handle conversion here as well as _monster_warning in delay.cc
+        // for future-proofing.
+        //
+        // XXX: Beogh should probably not have a complicated check before
+        // attempting to convert.
+        do_conversions(*mi);
+
         if (!mi->visible_to(&you))
             continue;
-
-        beogh_follower_convert(*mi);
-        gozag_check_bribe(*mi);
-        slime_convert(*mi);
 
         if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
         {

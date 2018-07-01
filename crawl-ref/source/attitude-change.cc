@@ -486,3 +486,11 @@ void gozag_break_bribe(monster* victim)
         if (mi->can_see(*victim))
             gozag_break_bribe(*mi);
 }
+
+// Conversions and bribes.
+void do_conversions(monster* target)
+{
+        beogh_follower_convert(target);
+        gozag_check_bribe(target);
+        slime_convert(target);
+}
