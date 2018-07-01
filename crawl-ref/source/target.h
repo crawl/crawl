@@ -232,7 +232,6 @@ enum shadow_step_block_reason
     BLOCKED_MOVE,
     BLOCKED_PATH,
     BLOCKED_NO_TARGET,
-    BLOCKED_MOBILE,
 };
 
 class targeter_shadow_step : public targeter

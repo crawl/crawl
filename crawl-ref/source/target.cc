@@ -1180,8 +1180,6 @@ bool targeter_shadow_step::valid_aim(coord_def a)
             return notify_fail("There's something in the way.");
         case BLOCKED_NO_TARGET:
             return notify_fail("There isn't a shadow there.");
-        case BLOCKED_MOBILE:
-            return notify_fail("That shadow isn't sufficiently still.");
         case BLOCKED_NONE:
             die("buggy no_landing_reason");
         }
@@ -1252,9 +1250,10 @@ aff_type targeter_shadow_step::is_affected(coord_def loc)
     return aff;
 }
 
-// If something unseen either occupies the aim position or blocks the shadow_step path,
-// indicate that with step_is_blocked, but still return true so long there is at
-// least one valid landing position from the player's perspective.
+// If something unseen either occupies the aim position or blocks the
+// shadow_step path, indicate that with step_is_blocked, but still return true
+// so long there is at least one valid landing position from the player's
+// perspective.
 bool targeter_shadow_step::set_aim(coord_def a)
 {
     if (a == origin)
@@ -1264,8 +1263,8 @@ bool targeter_shadow_step::set_aim(coord_def a)
 
     step_is_blocked = false;
 
-    // Find our set of landing sites, choose one at random to be the destination
-    // and see if it's actually blocked.
+    // Find our set of landing sites, choose one at random to be the
+    // destination and see if it's actually blocked.
     set_additional_sites(aim);
     if (additional_sites.size())
     {
@@ -1302,13 +1301,6 @@ void targeter_shadow_step::get_additional_sites(coord_def a)
         || !victim->umbraed())
     {
         no_landing_reason = BLOCKED_NO_TARGET;
-        return;
-    }
-    if (!victim->is_stationary()
-        && !victim->cannot_move()
-        && !victim->asleep())
-    {
-        no_landing_reason = BLOCKED_MOBILE;
         return;
     }
 
