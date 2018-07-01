@@ -1008,27 +1008,6 @@ int trap_def::to_hit_bonus()
     }
 }
 
-int reveal_traps(const int range)
-{
-    int traps_found = 0;
-
-    for (auto& entry : env.trap)
-    {
-        trap_def& trap = entry.second;
-        if (!trap.active())
-            continue;
-        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
-        {
-            traps_found++;
-            trap.reveal();
-            env.map_knowledge(trap.pos).set_feature(grd(trap.pos), 0, trap.type);
-            set_terrain_mapped(trap.pos);
-        }
-    }
-
-    return traps_found;
-}
-
 void destroy_trap(const coord_def& pos)
 {
     if (trap_def* ptrap = trap_at(pos))

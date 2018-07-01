@@ -11,7 +11,6 @@
 
 bool wizard_create_feature(const coord_def& pos = you.pos());
 void wizard_list_branches();
-void wizard_reveal_traps();
 void wizard_map_level();
 void wizard_place_stairs(bool down);
 void wizard_level_travel(bool down);

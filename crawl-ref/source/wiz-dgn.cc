@@ -341,12 +341,6 @@ void wizard_list_branches()
     }
 }
 
-void wizard_reveal_traps()
-{
-    int traps_revealed = reveal_traps(1000);
-    mprf("Revealed %d traps.", traps_revealed);
-}
-
 void wizard_map_level()
 {
     if (!is_map_persistent())
