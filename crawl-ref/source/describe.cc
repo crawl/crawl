@@ -637,6 +637,7 @@ static const char *trap_names[] =
 #endif
     "arrow", "spear",
 #if TAG_MAJOR_VERSION > 34
+    "dispersal",
     "teleport",
 #endif
     "permanent teleport",
@@ -645,7 +646,7 @@ static const char *trap_names[] =
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
-    "shadow", "dormant shadow",
+    "shadow", "dormant shadow", "dispersal"
 #endif
 };
 

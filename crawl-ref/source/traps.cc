@@ -32,6 +32,7 @@
 #include "map-knowledge.h"
 #include "mon-enum.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "mgen-enum.h"
 #include "message.h"
 #include "mon-place.h"
@@ -46,6 +47,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "travel.h"
 #include "view.h"
@@ -541,6 +543,20 @@ void trap_def::trigger(actor& triggerer)
         }
         break;
     }
+    case TRAP_DISPERSAL:
+        dprf("Triggered dispersal.");
+        if (you_trigger)
+            mprf("You enter %s!", name(DESC_A).c_str());
+        else if (in_sight)
+            mprf("%s enters %s!", triggerer.name(DESC_THE).c_str(),
+                    name(DESC_A).c_str());
+        apply_visible_monsters([] (monster& mons) {
+                return !mons.no_tele() && monster_blink(&mons);
+            }, pos);
+        triggerer.blink();
+        if (!you_trigger && in_sight)
+            you.blink();
+        break;
     case TRAP_TELEPORT:
     case TRAP_TELEPORT_PERMANENT:
         if (you_trigger)
@@ -1324,7 +1340,8 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_WEB;
     case TRAP_SHAFT:
         return DNGN_TRAP_SHAFT;
-
+    case TRAP_DISPERSAL:
+        return DNGN_TRAP_DISPERSAL;
     case TRAP_TELEPORT:
     case TRAP_TELEPORT_PERMANENT:
         return DNGN_TRAP_TELEPORT;
@@ -1533,9 +1550,10 @@ trap_type random_trap_for_place()
 
     const pair<trap_type, int> trap_weights[] =
     {
-        { TRAP_TELEPORT, tele_ok  ? 2 : 0},
-        { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
-        { TRAP_ALARM,   alarm_ok  ? 1 : 0},
+        { TRAP_DISPERSAL, tele_ok  ? 1 : 0},
+        { TRAP_TELEPORT,  tele_ok  ? 1 : 0},
+        { TRAP_SHAFT,    shaft_ok  ? 1 : 0},
+        { TRAP_ALARM,    alarm_ok  ? 1 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
