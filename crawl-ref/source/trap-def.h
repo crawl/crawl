@@ -16,6 +16,7 @@ struct trap_def
     dungeon_feature_type category() const;
     string name(description_level_type desc = DESC_PLAIN) const;
     bool is_known(const actor* act = 0) const;
+    bool is_bad_for_player() const;
     bool is_safe(actor* act = 0) const;
     void trigger(actor& triggerer);
     void destroy(bool known = false);
