@@ -291,3 +291,85 @@ MAP
 .............
 .............
 ENDMAP
+
+NAME:   ebering_vaults_ghost_xom
+TAGS:   vaults_orient_s
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, ".")
+: setup_xom_dancing_weapon(_G)
+KMONS:  O = player_ghost
+KFEAT:  _ = altar_xom
+: vaults_ghost_setup(_G)
+MAP
+...1...
+..d_e..
+...O...
+xxn=nxx
+.......
+.......
+ENDMAP
+
+NAME:   biasface_vaults_ghost_orc_armoury
+TAGS:   vaults_orient_s
+ITEM:   boots good_item / helmet good_item / hat good_item / \
+        gloves good_item / cloak good_item
+ITEM:   any armour good_item, any weapon good_item, any jewellery good_item
+: item(ghost_loot_potions .. " / " .. ghost_loot_scrolls)
+KMONS:  O = player ghost
+MONS:   orc, orc warrior, orc knight, orc high priest, stone giant, orc warlord
+: setup_armoury_orcs(_G)
+NSUBST: - = 2=1 / 2=1. / 2=2 / 2=2. / 3=3 / 3=3. / 4 / 2=4. / 5 / 2=5. \
+            / F / 2=6F..
+KFEAT:  _ = altar_beogh
+: vaults_ghost_setup(_G)
+MAP
+I---fd_eg---I
+------h------
+-xIx--I--xIx-
+-xnx--O--xnx-
+----xxnxx----
+.............
+nnnnn===nnnnn
+I...........I
+.............
+ENDMAP
+
+NAME:   ploomutoo_gammafunk_vaults_potion_laboratory
+TAGS:   vaults_orient_s
+WEIGHT: 5
+ITEM:   potion of mutation ident:type q:1
+: item(ghost_loot_potions)
+ITEM:   hat randart / robe randart / gloves randart / boots randart / \
+        cloak randart
+KITEM:  O = potion of cancellation q:2 ident:type
+KMONS:  O = player ghost
+MONS:   shapeshifter, glowing orange brain, very ugly thing
+MONS:   glowing shapeshifter, cacodemon, tentacled monstrosity
+NSUBST: - = 2=P / 2=P; / ;, ' = 2=P` / `
+NSUBST: ; = d / d. / 4=e / 4=3 / 4=3. / 2 / 2. / 2=6 / 2=6. / .
+NSUBST: " = 3=d / d. / e / f / ", ` = 4=1 / 4=1. / 4 / 3=4. / 5 / 2=5. / .
+MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
+                pow_max = 5, delay = 5, start_clouds = 3, size = 1, \
+                spread_rate = 0, excl_rad = 0 }
+MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
+                pow_max = 5, delay = 5, start_clouds = 3, size = 2, \
+                spread_rate = 0, excl_rad = 0 }
+: vaults_ghost_setup(_G)
+MAP
+bU"P"Ub
+"""O"""
+'''''''
+'b'''b'
+```````
+nn===nn
+-------
+-x---x-
+x-x-x-x
+-x---x-
+;;;x;;;
+;x;;;x;
+;;;;;;;
+nn===nn
+.......
+.......
+ENDMAP
