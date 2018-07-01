@@ -59,6 +59,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
+    DNGN_TRAP_DISPERSAL,
     DNGN_PASSAGE_OF_GOLUBRIA,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -255,6 +256,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_WU_JIAN,
     DNGN_TRANSPORTER,
     DNGN_TRANSPORTER_LANDING,
+    DNGN_TRAP_DISPERSAL,
 #endif
 
     NUM_FEATURES
