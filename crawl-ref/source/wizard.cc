@@ -215,7 +215,6 @@ static void _do_wizard_command(int wiz_command)
         if (!wizard_add_mutation())
             mpr("Failure to give mutation.");
         break;
-    case '}': wizard_reveal_traps(); break;
 
     case '\\': debug_make_shop(); break;
     case '|': wizard_create_all_artefacts(); break;
@@ -449,7 +448,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "       temples in the dungeon\n"
                        "<w>;</w>      list known levels and counters\n"
                        "<w>{</w>      magic mapping\n"
-                       "<w>}</w>      detect all traps on level\n"
                        "<w>Ctrl-W</w> change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> dump level builder information\n"
                        "<w>Ctrl-R</w> regenerate current level\n"
