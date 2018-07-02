@@ -187,7 +187,7 @@ BRAND:   SPWPN_ANTIMAGIC
 NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 INSCRIP: chain chaos
-PLUS:    +10
+PLUS:    +7
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
