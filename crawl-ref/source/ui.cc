@@ -56,7 +56,7 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
 }
 
 #ifndef USE_TILE_LOCAL
-static void clear_text_region(i4 region);
+static void clear_text_region(i4 region, COLOURS bg);
 #endif
 
 // must be before ui_root declaration for correct destruction order
@@ -750,6 +750,8 @@ void Text::_render()
     vector<size_t> highlights;
     int begin_idx = 0;
 
+    clear_text_region(m_region, m_bg_colour);
+
     if (!hl_pat.empty())
     {
         for (int i = 0; i < region[1]-m_region[1]; i++)
@@ -850,6 +852,14 @@ void Text::_allocate_region()
 {
     wrap_text_to_size(m_region[2], m_region[3]);
 }
+
+#ifndef USE_TILE_LOCAL
+void Text::set_bg_colour(COLOURS colour)
+{
+    m_bg_colour = colour;
+    _expose();
+}
+#endif
 
 void Image::set_tile(tile_def tile)
 {
@@ -1582,7 +1592,7 @@ void UIRoot::render()
     m_dirty_region = aabb_intersect(m_dirty_region, m_region);
     textcolour(LIGHTGREY);
     textbackground(BLACK);
-    clear_text_region(m_dirty_region);
+    clear_text_region(m_dirty_region, BLACK);
 #endif
 
     push_scissor(m_region);
@@ -1695,14 +1705,14 @@ i4 get_scissor()
 }
 
 #ifndef USE_TILE_LOCAL
-static void clear_text_region(i4 region)
+static void clear_text_region(i4 region, COLOURS bg)
 {
     if (scissor_stack.size() > 0)
         region = aabb_intersect(region, scissor_stack.top());
     if (region[2] <= 0 || region[3] <= 0)
         return;
     textcolour(LIGHTGREY);
-    textbackground(BLACK);
+    textbackground(bg);
     for (int y=region[1]; y < region[1]+region[3]; y++)
     {
         cgotoxy(region[0]+1, y+1);
