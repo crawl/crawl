@@ -317,6 +317,14 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         // Be kinder to the caster.
         if (target == caster->pos())
         {
+            if (spell_cast == SPELL_CHAIN_OF_CHAOS)
+            {
+                // This should not hit the caster, too scary as a player effect
+                // and too kind to the player as a monster effect.
+                // Mnoleg and Chaos Champions should not paralyse themselves.
+                beam.real_flavour = BEAM_VISUAL;
+                beam.flavour      = BEAM_VISUAL;
+            }
             if (!(beam.damage.num /= 2))
                 beam.damage.num = 1;
             if ((beam.damage.size /= 2) < 3)
