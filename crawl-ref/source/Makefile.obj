@@ -175,6 +175,7 @@ ng-wanderer.o \
 notes.o \
 orb.o \
 ouch.o \
+outer-menu.o \
 output.o \
 package.o \
 pattern.o \

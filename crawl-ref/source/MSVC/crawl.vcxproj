@@ -687,6 +687,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\ng-restr.cc" />
     <ClCompile Include="..\notes.cc" />
     <ClCompile Include="..\ouch.cc" />
+    <ClCompile Include="..\outer-menu.cc" />
     <ClCompile Include="..\output.cc" />
     <ClCompile Include="..\pattern.cc" />
     <ClCompile Include="..\place.cc" />
@@ -1085,6 +1086,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\orb-type.h" />
     <ClInclude Include="..\orb.h" />
     <ClInclude Include="..\ouch.h" />
+    <ClInclude Include="..\outer-menu.h" />
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\package.h" />
     <ClInclude Include="..\pattern.h" />
