@@ -538,32 +538,51 @@ bool bolt::can_affect_actor(const actor *act) const
     return !act->submerged();
 }
 
+// Choose the beam effect for BEAM_CHAOS that's analogous to the effect used by
+// SPWPN_CHAOS, with weightings similar to those use by that brand. XXX: Rework
+// this and SPWPN_CHAOS to use the same tables.
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
     beam_type flavour;
     flavour = random_choose_weighted(
-        10, BEAM_FIRE,
-        10, BEAM_COLD,
-        10, BEAM_ELECTRICITY,
-        10, BEAM_POISON,
-        10, BEAM_NEG,
-        10, BEAM_ACID,
-        10, BEAM_DAMNATION,
-        10, BEAM_STICKY_FLAME,
-        10, BEAM_SLOW,
-        10, BEAM_HASTE,
-        10, BEAM_MIGHT,
-        10, BEAM_BERSERK,
-        10, BEAM_HEALING,
-        10, BEAM_PARALYSIS,
-        10, BEAM_CONFUSION,
-        10, BEAM_INVISIBILITY,
-        10, BEAM_POLYMORPH,
-        10, BEAM_BANISH,
-        10, BEAM_DISINTEGRATION,
-        10, BEAM_PETRIFY,
-        10, BEAM_AGILITY,
-         2, BEAM_ENSNARE);
+         // SPWPN_CHAOS randomizes to brands analogous to these beam effects
+         // with similar weights.
+         70, BEAM_FIRE,
+         70, BEAM_COLD,
+         70, BEAM_ELECTRICITY,
+         70, BEAM_POISON,
+         // Combined weight from drain + vamp.
+         70, BEAM_NEG,
+         35, BEAM_HOLY,
+         14, BEAM_CONFUSION,
+         // We don't have a distortion beam, so choose from the three effects
+         // we can use, based on the lower weight distortion has.
+          5, BEAM_BANISH,
+          5, BEAM_BLINK,
+          5, BEAM_TELEPORT,
+         // From here are beam effects analogous to effects that happen when
+         // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
+         // Weights similar to those from chaos_effects in attack.cc
+         10, BEAM_SLOW,
+         10, BEAM_HASTE,
+         10, BEAM_INVISIBILITY,
+          5, BEAM_PARALYSIS,
+          5, BEAM_PETRIFY,
+          5, BEAM_BERSERK,
+         // Combined weight for poly, clone, and "shapeshifter" effects.
+          5, BEAM_POLYMORPH,
+         // Seen through miscast effects.
+          5, BEAM_ACID,
+          5, BEAM_DAMNATION,
+          5, BEAM_STICKY_FLAME,
+          5, BEAM_DISINTEGRATION,
+         // These are not actualy used by SPWPN_CHAOS, but are here to augment
+         // the list of effects, since not every SPWN_CHAOS effect has an
+         // analogous BEAM_ type.
+          4, BEAM_MIGHT,
+          4, BEAM_HEALING,
+          4, BEAM_AGILITY,
+          4, BEAM_ENSNARE);
 
     return flavour;
 }
