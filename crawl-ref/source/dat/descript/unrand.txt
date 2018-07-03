@@ -20,10 +20,10 @@ battle.
 %%%%
 mace of Variability
 
-A weapon with a peculiar reputation — said to be at times peerless in quality,
-and other times virtually useless. No one knows exactly who would have made
-such a weapon, or why, but Xom is probably to blame somehow. Striking an enemy
-with it will occasionally unleash a chain of chaos.
+A large mace said to have appeared when Xom grew bored with the predictability
+of more ordinary instruments of chaos. Striking an enemy with this weapon will
+occasionally unleash arcs of chaos upon any creatures nearby, leaving the
+wielder unharmed.
 %%%%
 glaive of Prune
 
