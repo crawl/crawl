@@ -1574,6 +1574,19 @@ void melee_attack::set_attack_verb(int damage)
                 attack_verb = "attack";
                 verb_degree = "'s weak point";
             }
+            else if (get_mon_shape(defender_genus) == MON_SHAPE_BLOB
+                     && one_chance_in(3))
+            {
+                static const char * const pierce_desc[][2] =
+                {
+                    {"prod", "like stale pudding"},
+                    {"plough into", "like fruit mash"},
+                    {"turn over", "like a beet garden"}
+                };
+                const int choice = random2(ARRAYSZ(pierce_desc));
+                attack_verb = pierce_desc[choice][0];
+                verb_degree = pierce_desc[choice][1];
+            }
             else
             {
                 static const char * const pierce_desc[][2] =
