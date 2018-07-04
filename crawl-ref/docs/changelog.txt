@@ -1,3 +1,22 @@
+Stone Soup 0.21.1 (20180201)
+----------------------------
+
+Bugfix Release
+--------------
+* Dith shadow mimic of launcher attacks no longer copies the enchant and ego
+  of the launcher.
+* Monsters lose constriction by Borgnjor's Vile Clutch when they are moved by
+  any means.
+* Formicids can now manually cancel digging, allowing them to use Wu Jian's
+  Wall Jump ability after digging.
+* Wu Jian's Wall Jump ability now works under silence.
+* New splash screen art.
+* Numlock on Windows systems no longer causes unpredictable repeating
+  movement.
+* Alt-F4 no longer causes freezing in Tiles on Windows systems.
+* Resizing the local Tiles window during prompts no longer causes crashes.
+* SDL 2 contrib updated to 2.0.7, which fixes compilation under Msys2.
+
 Stone Soup 0.21 (20180105)
 --------------------------
 
@@ -122,6 +141,19 @@ Spells
 * Removed:
   - Control Undead.
   - Cigotuvi's Embrace.
+
+Stone Soup 0.20.1 (20170701)
+----------------------------
+
+Bugfix Release
+--------------
+
+* Restore 5 base damage to kick aux attacks, which had been missing since
+  0.16.0.
+* Don't let equipped weapon accuracy affect throwing accuracy.
+* Ignore negative relative window sizes in fullscreen mode. Not ignoring these
+  settings caused fullscreen issues on Windows platforms in particular.
+* 41 other bugfixes and cleanups.
 
 Stone Soup 0.20 (20170525)
 --------------------------
@@ -283,6 +315,49 @@ Modding/contribution support
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
 
+Stone Soup 0.19.5 (20170228)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix save compatibility when loading games from version 0.18.
+* Macros now work in map mode in Tiles.
+* Autopickup is now smarter about whether items are permanently or temporarily
+  useless.
+* 22 other bug-fixes and cleanups.
+
+Stone Soup 0.19.4 (20170130)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix mouse lag experienced by trackpad users on Mac systems.
+* Fix to allow the Temple entrance to place as part of a vault instead of
+  always by itself.
+
+Stone Soup 0.19.3 (20170121)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Work around an AMD driver bug where the game crashes when loading 512x512
+  images.
+
+Stone Soup 0.19.2 (20170120)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix a long-standing Tiles mouse lag bug. Now there is no lag when updating
+  cursor information upon mouse movement to a new tile.
+* Fix to allow helmets as armour acquirement gifts.
+* Fix to prevent Infestation death scarabs becoming hostile when killing their
+  host in an explosion.
+* 24 other bug-fixes and cleanups.
 
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------
@@ -524,7 +599,6 @@ Spells
 * Various other spellbooks have had minor adjustments.
 * Removed: Cure Poison, Haste, and Warp Weapon.
 
-
 Stone Soup 0.18 (20160504)
 --------------------------------------------
 
@@ -750,6 +824,21 @@ Interface
   default init.txt.
 * New character dump option: skill_gains, which shows when skills were gained.
 * A s(T)atus effect lookup has been added to ?/.
+
+Stone Soup 0.17.1 (20151210)
+----------------------------
+* Fix insect monsters never berserking. This bug prevented queen bees from
+  berserking their hive bees and moths of wrath berserking insects in Spider.
+* Prevent the Gell's Gravitas spell from moving monsters into deep water or
+  lava.
+* Fix resting to stop properly when MP don't regenerate.
+* Properly warn when a beam might poison a monster while worshiping the Shining
+  One.
+* Put hunter's swords in slot 'a' or 'b' at game start to allow easier
+  switching between ranged and melee weapons.
+* Put EE starting stones on the 'b' slot.
+* Update the manual for 0.17.
+* Many other bug fixes for game crashes, to vaults, and to in-game text.
 
 Stone Soup 0.17 (20151106)
 --------------------------
