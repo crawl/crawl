@@ -27,7 +27,7 @@ static const map<species_type, species_def> species_data =
     0, 1, 2, 3,
     MONS_DEMONSPAWN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 9, 6, // 25
+    9, 9, 7, // 25
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_HORNS, 1, 1 }, { MUT_CLAWS, 1, 1 }, { MUT_FANGS, 1, 1 } },
     { "You learn spells by gaining experience, not through books or religion.",
@@ -38,7 +38,7 @@ static const map<species_type, species_def> species_data =
       JOB_EARTH_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE, 
       JOB_NECROMANCER, JOB_WARPER, JOB_ARCANE_MARKSMAN },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS, SK_UNARMED_COMBAT },
 } },
 
 { SP_BARACHI, {
