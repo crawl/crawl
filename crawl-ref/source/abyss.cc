@@ -1662,24 +1662,30 @@ void abyss_morph()
     los_changed();
 }
 
-bool _abyss_force_descent()
+// Force the player one level deeper in the abyss during an abyss teleport with
+// probability:
+//   (XL + 4 - Depth)^2 / (27^2 * (Depth + 5))
+//
+// Consequences of this formula:
+// - Chance to be pulled deeper increases with XL and decreases with current
+//   abyss depth.
+// - Characters at XL 1 have about a 0.1% chance of getting pulled from A:1.
+// - Characters at XL 13 have chances for getting pulled from A:1/A:2/A:3/A:4
+//   of about 5.9%/4.4%/3.3%/2.6%.
+// - Characters at XL 27 have chances for getting pulled from A:1/A:2/A:3/A:4
+//   of about 20.6%/16.5%/13.4%/11.1%.
+static bool _abyss_force_descent()
 {
-    // Force the player deeper in the abyss during an abyss
-    // teleport with probability
-    // ( max(0, XL - Depth - 13) / 27 )^2
-    // Consequences of this formula:
-    // - Characters at xl 13 + depth or below do not go deeper
-    // - Characters at xl 27 have a 169/729 ~ .23 chance of being pulled
-    //   down from A:1, and a 100/729 ~ .13 chance of A:4 -> A:5
-    int fraction = max(0, you.experience_level
-                          - level_id::current().depth - 13);
-    return x_chance_in_y(fraction * fraction, 729);
+    const int depth = level_id::current().depth;
+    const int xl_factor = you.experience_level + 4 - depth;
+    return x_chance_in_y(xl_factor * xl_factor, 729 * (5 + depth));
 }
 
 void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
+
     if (level_id::current().depth < brdepth[BRANCH_ABYSS]
         && _abyss_force_descent())
     {
@@ -1687,10 +1693,13 @@ void abyss_teleport()
         more();
         return;
     }
-    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
+
+    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of"
+        " the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+
     stop_delay(true);
     forget_map(false);
     clear_excludes();
