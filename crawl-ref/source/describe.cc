@@ -2507,7 +2507,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     }
 
     if (crawl_state.game_is_hints())
-        desc += hints_describe_item(item);
+        desc += "\n\n" + hints_describe_item(item);
 
     if (fixup_desc)
         fixup_desc(desc);
