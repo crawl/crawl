@@ -25,7 +25,7 @@ static const map<species_type, species_def> species_data =
     "Oni", nullptr, nullptr,
     SPF_NONE,
     0, 1, 2, 3,
-    MONS_DEMONSPAWN,
+    MONS_ONI,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     9, 9, 7, // 25
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
