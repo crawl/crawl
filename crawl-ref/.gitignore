@@ -53,12 +53,11 @@ DEADJOE
 /docs/aptitudes-wide.txt
 /docs/FAQ.html
 /docs/crawl_manual.txt
+/docs/lua/
+/docs/develop/lua/
 
 # Doxygen documentation
 /source/html/
-
-# Luadoc stuff
-/source/luadoc/
 
 # Crawl generated junk
 arena.result
