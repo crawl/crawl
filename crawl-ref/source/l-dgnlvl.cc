@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Level and branch bindings (library "dgn").
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

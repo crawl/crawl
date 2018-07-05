@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief General game bindings.
-**/
-
 /*
 --- General game bindings
 
@@ -948,7 +943,7 @@ LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
  * values should be numeric or convertible to numeric and give the weights for
  * their corresponding keys. A value with no key will default to a weight of
  * 1. A random key is then returned based on these weights.
- * @returns A random element from list.
+ * @return A random element from list.
 */
 static int crawl_random_element(lua_State *ls)
 {
@@ -1281,7 +1276,7 @@ static string _crawl_make_name(lua_State *ls)
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
-/** Check that a Lua argument is a god name, and store that god's enum in
+/* Check that a Lua argument is a god name, and store that god's enum in
  *  a variable.
  *
  *  @param argno  The Lua argument number of the god name. Evaluated once.

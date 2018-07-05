@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Boolean feat-related functions lua library "feat".
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

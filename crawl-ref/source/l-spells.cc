@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Spell-related functions lua library "spells".
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"
