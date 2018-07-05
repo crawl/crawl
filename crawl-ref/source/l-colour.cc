@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Colour related functions
-**/
-
 /*
 --- Colour related functions
 

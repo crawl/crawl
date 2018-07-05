@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief functions for managed Lua item manipulation
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

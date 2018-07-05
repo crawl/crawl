@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief User-accessible monster info.
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

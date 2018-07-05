@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief User interaction with env.show.
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

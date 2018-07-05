@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Travel and exclusions.
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

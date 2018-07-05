@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Lua bindings for LOS.
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

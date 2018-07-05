@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Wizmode-specific bindings
-**/
-
 /*
 --- General game bindings
 
