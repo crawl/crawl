@@ -83,7 +83,8 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows docs greet api android FORCE monster
+        build-windows package-windows docs greet api api-dev android FORCE \
+	monster
 
 include Makefile.obj
 
@@ -1304,11 +1305,16 @@ $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
 
-CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
-api: $(CLUA_MODULE_SOURCES)
-	mkdir -p luadoc
-	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
+api:
+	mkdir -p $(DOC_BASE)/develop/lua/
+	# need abspath here because ldoc is fragile
+	ldoc --config util/config.ld --dir $(abspath $(DOC_BASE)/lua/) .
 
+api-dev:
+	mkdir -p $(DOC_BASE)/develop/lua/
+	# need abspath here because ldoc is fragile
+	ldoc --config util/config.ld --dir $(abspath $(DOC_BASE)/develop/lua/) \
+	     --all .
 
 ##########################################################################
 # The level compiler
