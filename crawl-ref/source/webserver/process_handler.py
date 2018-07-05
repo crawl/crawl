@@ -373,9 +373,9 @@ class CrawlProcessHandlerBase(object):
 
     def update_watcher_description(self):
         try:
-            player_url = config.player_url
+            player_url_template = config.player_url
         except:
-            player_url = None
+            player_url_template = None
         def wrap_name(watcher, is_player=False):
             if is_player:
                 class_type = 'player'
@@ -384,9 +384,10 @@ class CrawlProcessHandlerBase(object):
             n = watcher
             if (watcher in self.muted):
                 n += " (muted)"
-            if player_url is None:
+            if player_url_template is None:
                 return "<span class='{0}'>{1}</span>".format(class_type, n)
-            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, n)
+            player_url = player_url_template.replace("%s", watcher.lower())
+            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(player_url, class_type, n)
             return username
 
         player_name, watchers = self.get_watchers(True)
