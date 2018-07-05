@@ -628,11 +628,11 @@ static const ability_def Ability_List[] =
         abflag::none },
 
     { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
-        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
+        0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
-        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
+        0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
-        0, 0, 0, 0, {fail_basis::invo},abflag::starve_ok },
+        0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
 
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
@@ -642,8 +642,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, 2, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
     { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
-    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::starve_ok },
-    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::starve_ok },
+    // Lunge and Whirlwind abilities aren't menu abilities but currently need
+    // to exist for action counting, hence need enums/entries.
+    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::none },
     { ABIL_WU_JIAN_WALLJUMP, "Wall Jump", 0, 0, 0, 0, {}, abflag::starve_ok },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
