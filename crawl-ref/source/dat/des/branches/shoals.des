@@ -12,7 +12,9 @@ function shoals_finale_setup(e, qualifier, decoy_count)
   e.hook('post_place', function ()
     -- one rune hut, one ilsuiw hut, maybe a mimic hut, and a bunch of decoys.
     dgn.place_maps{tag=("shoal_rune" .. qualifier), count=1, die_on_error=true}
-    dgn.place_maps{tag="shoal_guardian", count=1, die_on_error=true}
+    if crawl.one_chance_in(5) then
+        dgn.place_maps{tag="shoal_guardian", count=1, die_on_error=true}
+    end
     if crawl.one_chance_in(10) then
         dgn.place_maps{tag=("shoal_mimic" .. qualifier), count=1,
                        die_on_error=true}

@@ -364,7 +364,10 @@ WEIGHT: 50
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
-DEPTH:  Shoals:3-
+# Her placement on Shoals:$ is handled through the shoal_guardian tagged
+# vaults.
+DEPTH:  Shoals:2-, !Shoals:$
+WEIGHT: 50
 : place_unique(_G, "Ilsuiw band")
 
 NAME:   uniq_arachne
