@@ -491,12 +491,17 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 ///////////////////////////////////////////////////
 
-// XXX: Pluses at creation time are hardcoded in make_item_unrandart()
-
-static void _VARIABILITY_world_reacts(item_def *item)
+static void _VARIABILITY_melee_effects(item_def* weapon, actor* attacker,
+                                       actor* defender, bool mondied,
+                                       int dam)
 {
-    item->plus += random_choose(0, 0, 0, +1, -1);
-    item->plus = max((short)-4, min((short)16, item->plus));
+    if (!mondied && one_chance_in(5))
+    {
+        const int pow = 75 + random2avg(75, 2);
+        if (you.can_see(*attacker))
+            mpr("The mace of Variability scintillates.");
+        cast_chain_spell(SPELL_CHAIN_OF_CHAOS, pow, attacker);
+    }
 }
 
 ///////////////////////////////////////////////////

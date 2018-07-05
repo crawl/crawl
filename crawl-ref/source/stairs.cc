@@ -30,6 +30,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-death.h"
+#include "movement.h"
 #include "notes.h"
 #include "orb-type.h"
 #include "output.h"
@@ -555,7 +556,8 @@ static level_id _travel_destination(const dungeon_feature_type how,
  */
 void floor_transition(dungeon_feature_type how,
                       const dungeon_feature_type whence, level_id whither,
-                      bool forced, bool going_up, bool shaft, bool update_travel_cache)
+                      bool forced, bool going_up, bool shaft,
+                      bool update_travel_cache)
 {
     const level_id old_level = level_id::current();
 
@@ -565,6 +567,15 @@ void floor_transition(dungeon_feature_type how,
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
+
+    if (!forced)
+    {
+        // Break ice armour
+        remove_ice_armour_movement();
+
+        // Check for barbs and apply
+        apply_barbs_damage();
+    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);

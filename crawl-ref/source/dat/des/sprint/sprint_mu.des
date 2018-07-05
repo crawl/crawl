@@ -1511,13 +1511,13 @@ MARKER: # = lua:props_marker({ \
         door_description_suffix=" to the Realm of Zot", \
         door_description_noun="gate", \
         veto_reason="You need three runes to open the Realm of Zot!", \
-        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto" \
+        veto_shatter="veto", veto_dig="veto" \
         })
 MARKER: # = lua:lock_door {}
 MARKER: # = lua:restrict_door {}
 MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
-        veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
+        veto_shatter="veto", veto_dig="veto", door_restrict="veto" \
         })
 KPROP: X#kpq+^ag78yL45il%3x21*To$. = no_tele_into
 MAP

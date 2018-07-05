@@ -144,16 +144,38 @@ local function pick_room(e, options)
 
   -- Filters out generators that have reached their max
   local function weight_callback(generator)
-    if generator.max_rooms ~= nil and generator.placed_count ~= nil and generator.placed_count >= generator.max_rooms then
+    if generator.max_rooms ~= nil
+        and generator.placed_count ~= nil
+        and generator.placed_count >= generator.max_rooms then
       return 0
     end
     return generator.weight
   end
-  -- Pick generator from weighted table
-  local chosen = util.random_weighted_from(weight_callback,options.room_type_weights)
-  local room
+
+  local chosen
+  -- Roll the chance to pick a ghost vault room if we haven't done so.
+  if not options.did_ghost_chance then
+    if crawl.x_chance_in_y(_GHOST_CHANCE_PERCENT, 100) then
+      -- Find the ghost vault generator, if this somehow doesn't exist, we will
+      -- fall back to the usual set of generators.
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_ghost" then
+          chosen = r
+        end
+      end
+    end
+    options.did_ghost_chance = true
+  end
+
+  -- We aren't choosing a ghost vault, so pick a generator from the weighted
+  -- table.
+  if chosen == nil then
+    chosen = util.random_weighted_from(weight_callback,
+                                       options.room_type_weights)
+  end
 
   -- Main generator loop
+  local room
   local veto,tries,maxTries = false,0,50
   while tries < maxTries and (room == nil or veto) do
     tries = tries + 1

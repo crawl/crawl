@@ -182,7 +182,8 @@ level-map
 if you.wizard() then
     return "\n\n"
           .. "<h>Wizard commands</h>\n"
-          .. "<w>T</w>          : Teleport to cursor."
+          .. "<w>T</w>          : Teleport to cursor.\n"
+          .. "<w>Ctrl-X</w>     : Completely wipe out map."
 end }}
 %%%%
 interlevel-travel.branch.prompt

@@ -8,6 +8,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     var message_history = [];
     var unsent_message = "";
     var history_pos = -1;
+    var chat_hidden = false;
 
     function update_spectators(data)
     {
@@ -135,8 +136,59 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         }
     }
 
+    function toggle_entire_chat()
+    {
+        if ($("#chat").css("display") === "none")
+        {
+            chat_hidden = false;
+            // slide looks odd if the chat box is already 1 line
+            if ($("#chat_body").css("display") === "none")
+                $("#chat").show();
+            else
+                $("#chat").slideDown(200);
+        }
+        else
+        {
+            chat_hidden = true;
+            $(document.activeElement).blur();
+            // slide looks odd if the chat box is already 1 line
+            if ($("#chat_body").css("display") === "none")
+                $("#chat").hide();
+            else
+                $("#chat").slideUp(200);
+        }
+        $("#chat_hidden").toggle(chat_hidden);
+    }
+
+    function super_hide_chat()
+    {
+        // this hides chat and deletes the + div, so needs a reload or logout
+        // to get back the chat window.
+        if ($("#chat").css("display") != "none")
+            toggle_entire_chat();
+        $("#chat_hidden").remove();
+    }
+
+    function reset_visibility(in_game)
+    {
+        if (!in_game)
+        {
+            $("#chat").hide()
+            $("#chat_hidden").hide()
+        }
+        else
+        {
+            $("#chat").toggle(!chat_hidden);
+            $("#chat_hidden").toggle(chat_hidden);
+        }
+    }
+
     function focus()
     {
+        if (!$("#chat_hidden").length)
+            return;
+        if ($("#chat_hidden").css("display") != "none")
+            toggle_entire_chat();
         if ($("#chat_body").css("display") === "none")
             toggle();
 
@@ -157,17 +209,22 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     $(document).ready(function () {
         $("#chat_input").bind("keydown", chat_message_send);
         $("#chat_caption").bind("click", toggle);
+        $("#chat_hide_button").bind("click", toggle_entire_chat);
+        $("#chat_hidden").bind("click", toggle_entire_chat);
     });
 
     comm.register_handlers({
         "dump": handle_dump,
         "chat": receive_message,
-        "update_spectators": update_spectators
+        "update_spectators": update_spectators,
+        "toggle_chat": toggle_entire_chat,
+        "super_hide_chat": super_hide_chat
     });
 
     return {
         spectators: spectators,
         clear: clear,
         focus: focus,
+        reset_visibility: reset_visibility,
     }
 });

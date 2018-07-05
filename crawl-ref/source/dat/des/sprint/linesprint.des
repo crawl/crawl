@@ -16,8 +16,7 @@ function line_setup(e)
   e.kfeat("x = permarock_wall")
   e.colour("x = brown")
   e.kfeat("# = permarock_wall")
-  e.lua_marker('t', props_marker { veto_fragmentation="veto",
-                                   veto_disintegrate="veto",
+  e.lua_marker('t', props_marker { veto_dig="veto",
                                    veto_shatter="veto",
                                    veto_fire="veto" })
 end

@@ -761,6 +761,11 @@ void ArmourOnDelay::finish()
     check_item_hint(armour, old_talents);
 }
 
+bool ArmourOffDelay::invalidated()
+{
+    return !armour.defined();
+}
+
 void ArmourOffDelay::finish()
 {
     const equipment_type slot = get_armour_slot(armour);

@@ -94,6 +94,7 @@ struct direction_chooser_args
     string top_prompt;
     targeting_behaviour *behaviour;
     bool show_floor_desc;
+    bool show_boring_feats;
     desc_filter get_desc_func;
     coord_def default_place;
 
@@ -109,6 +110,7 @@ struct direction_chooser_args
         target_prefix(nullptr),
         behaviour(nullptr),
         show_floor_desc(false),
+        show_boring_feats(true),
         get_desc_func(nullptr),
         default_place(0, 0) {}
 };
@@ -248,6 +250,7 @@ private:
     string top_prompt;          // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be nullptr for default
     bool show_floor_desc;       // Describe the floor of the current target
+    bool show_boring_feats;
     targeter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
 

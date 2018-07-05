@@ -163,6 +163,7 @@ mon-tentacle.o \
 mon-transit.o \
 mon-util.o \
 monster.o \
+movement.o \
 mutation.o \
 nearby-danger.o \
 newgame.o \

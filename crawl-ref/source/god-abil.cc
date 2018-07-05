@@ -59,6 +59,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "movement.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -76,9 +77,9 @@
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
-#include "spl-wpnench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -3415,8 +3416,9 @@ spret_type fedhas_evolve_flora(bool fail)
 
         return SPRET_ABORT;
     }
-
-    monster_conversion upgrade = *map_find(conversions, plant->type);
+    auto upgrade_ptr = map_find(conversions, plant->type);
+    ASSERT(upgrade_ptr);
+    monster_conversion upgrade = *upgrade_ptr;
 
     vector<pair<int, int> > collected_rations;
     if (upgrade.ration_cost)
@@ -4447,13 +4449,11 @@ static void _gozag_place_shop(int index)
     ASSERT(grd(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
-    if (!kmspec.get_feat().shop.get())
-        die("Invalid shop spec?");
 
     feature_spec feat = kmspec.get_feat();
-    shop_spec *spec = feat.shop.get();
-    ASSERT(spec);
-    place_spec_shop(you.pos(), *spec, you.experience_level);
+    if (!feat.shop)
+        die("Invalid shop spec?");
+    place_spec_shop(you.pos(), *feat.shop, you.experience_level);
 
     link_items();
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
@@ -4941,6 +4941,7 @@ spret_type qazlal_elemental_force(bool fail)
     mg.summon_type = MON_SUMM_AID;
     mg.abjuration_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
+    mg.summoner = &you;
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < targets.size(); i++)
     {
@@ -4949,7 +4950,12 @@ spret_type qazlal_elemental_force(bool fail)
         const cloud_struct &cl = *cloud_at(pos);
         mg.behaviour = BEH_FRIENDLY;
         mg.pos       = pos;
-        mg.cls = *map_find(elemental_clouds, cl.type);
+        auto mons_type = map_find(elemental_clouds, cl.type);
+        // it is not impossible that earlier placements caused new clouds not
+        // in the map.
+        if (!mons_type)
+            continue;
+        mg.cls = *mons_type;
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
@@ -5956,6 +5962,8 @@ bool ru_do_sacrifice(ability_type sac)
     // get confirmation that the sacrifice is desired.
     if (!_execute_sacrifice(sac, offer_text.c_str()))
         return false;
+    // save piety gain, since sacrificing skills can lower the piety gain
+    const int piety_gain = _ru_get_sac_piety_gain(sac);
     // Apply the sacrifice, starting by mutating the player.
     if (variable_sac)
     {
@@ -6016,8 +6024,7 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    set_piety(min(piety_breakpoint(5),
-                  you.piety + _ru_get_sac_piety_gain(sac)));
+    set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
 
     if (you.piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
@@ -7280,6 +7287,7 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
 bool wu_jian_wall_jump_ability()
 {
     // This needs to be kept in sync with direct walljumping via movement.
+    // TODO: Refactor to call the same code.
     ASSERT(!crawl_state.game_is_arena());
 
     if (crawl_state.is_repeating_cmd())
@@ -7289,11 +7297,16 @@ bool wu_jian_wall_jump_ability()
         crawl_state.cancel_cmd_repeat();
         return false;
     }
+
+    if (cancel_barbed_move())
+        return false;
+
     if (you.digging)
     {
         you.digging = false;
         mpr("You retract your mandibles.");
     }
+
     string wj_error;
     bool has_targets = false;
 
@@ -7357,5 +7370,7 @@ bool wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
+    apply_barbs_damage();
+    remove_ice_armour_movement();
     return true;
 }

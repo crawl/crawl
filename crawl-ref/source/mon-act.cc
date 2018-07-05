@@ -2127,6 +2127,7 @@ static void _ancient_zyme_sicken(monster* mons)
         return;
 
     if (!is_sanctuary(you.pos())
+        && !mons->wont_attack()
         && you.res_rotting() <= 0
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
@@ -2135,7 +2136,8 @@ static void _ancient_zyme_sicken(monster* mons)
         {
             if (!you.duration[DUR_SICKENING])
             {
-                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
+                mprf(MSGCH_WARN, "You feel yourself growing ill in the "
+                                 "presence of %s.",
                     mons->name(DESC_THE).c_str());
             }
 
@@ -2156,7 +2158,8 @@ static void _ancient_zyme_sicken(monster* mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+        if (m && !mons_aligned(mons, m)
+            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
             && !is_sanctuary(*ri))
         {
             m->sicken(2 * you.time_taken);

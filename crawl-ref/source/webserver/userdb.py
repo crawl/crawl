@@ -8,6 +8,74 @@ import random
 from config import (max_passwd_length, nick_regex, password_db,
                     crypt_algorithm, crypt_salt_length)
 
+def setup_settings_path():
+    global settings_db
+    try:
+        from config import settings_db as sdb_config
+        settings_db = sdb_config
+    except:
+        settings_db = os.path.join(os.path.dirname(password_db), "user_settings.db3")
+
+setup_settings_path()
+
+def ensure_settings_db_exists():
+    if os.path.exists(settings_db):
+        return
+    logging.warn("User settings database didn't exist at '%s'; creating it now." % settings_db)
+    c = None
+    conn = None
+    try:
+        conn = sqlite3.connect(settings_db)
+        c = conn.cursor()
+        schema = ("CREATE TABLE mutesettings (username text primary key not null unique, mutelist text default '');")
+        c.execute(schema)
+        conn.commit()
+    finally:
+        if c:
+            c.close()
+        if conn:
+            conn.close()
+
+def get_mutelist(username):
+    # TODO: based on userdb; why doesn't this just keep the database open?
+    # I think sqlite can handle that...
+    try:
+        conn = sqlite3.connect(settings_db)
+        c = conn.cursor()
+        c.execute("select mutelist from mutesettings where username=? collate nocase",
+                  (username,))
+        result = c.fetchone()
+
+        if result is None:
+            return None
+        else:
+            return result[0]
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
+def set_mutelist(username, mutelist):
+    # TODO: based on userdb; why doesn't this just keep the database open?
+    # I think sqlite can handle that...
+    try:
+        conn = sqlite3.connect(settings_db)
+        c = conn.cursor()
+        if mutelist is None:
+            mutelist = ""
+
+        # n.b. the following will wipe out any columns not mentioned, if there
+        # ever are any...
+        c.execute("insert or replace into mutesettings(username, mutelist) values (?,?)",
+                  (username, mutelist))
+
+        conn.commit()
+    finally:
+        if c:
+            c.close()
+        if conn:
+            conn.close()
+
+
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
         passwd = passwd[0:max_passwd_length]

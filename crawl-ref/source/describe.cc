@@ -3709,7 +3709,10 @@ static string _monster_stat_description(const monster_info& mi)
         monster *m = monster_at(mi.pos);
         auto eligibility = zin_check_recite_to_single_monster(m, retval);
         if (eligibility == RE_INELIGIBLE)
-            result << "Reciting Zin's laws will not affect " << pronoun << ".";
+        {
+            result << uppercase_first(pronoun) <<
+                    " cannot be affected by reciting Zin's laws.";
+        }
         else if (eligibility == RE_TOO_STRONG)
         {
             result << uppercase_first(pronoun) <<
@@ -3855,6 +3858,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PLAYER_GHOST:
         inf.body << "The apparition of " << get_ghost_description(mi) << ".\n";
+        if (mi.props.exists(MIRRORED_GHOST_KEY))
+            inf.body << "It looks just like you...spooky!\n";
         break;
 
     case MONS_PLAYER_ILLUSION:

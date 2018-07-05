@@ -307,7 +307,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             case SPELL_CHAIN_OF_CHAOS:
                 beam.colour       = ETC_RANDOM;
                 beam.ench_power   = pow;
-                beam.damage       = calc_dice(3, 5 + pow / 2);
+                beam.damage       = calc_dice(3, 5 + pow / 6);
                 beam.real_flavour = BEAM_CHAOS;
                 beam.flavour      = BEAM_CHAOS;
             default:
@@ -317,6 +317,14 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         // Be kinder to the caster.
         if (target == caster->pos())
         {
+            if (spell_cast == SPELL_CHAIN_OF_CHAOS)
+            {
+                // This should not hit the caster, too scary as a player effect
+                // and too kind to the player as a monster effect.
+                // Mnoleg and Chaos Champions should not paralyse themselves.
+                beam.real_flavour = BEAM_VISUAL;
+                beam.flavour      = BEAM_VISUAL;
+            }
             if (!(beam.damage.num /= 2))
                 beam.damage.num = 1;
             if ((beam.damage.size /= 2) < 3)
@@ -2159,18 +2167,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     }
 
   do_terrain:
-
-    if (env.markers.property_at(target, MAT_ANY,
-                                "veto_fragmentation") == "veto")
-    {
-        if (caster->is_player() && !quiet)
-        {
-            mprf("%s seems to be unnaturally hard.",
-                 feature_description_at(target, false, DESC_THE, false).c_str());
-        }
-        return false;
-    }
-
     switch (grid)
     {
     // Stone and rock terrain
@@ -2220,10 +2216,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     case DNGN_SEALED_DOOR:
-        // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";
-
         // fall-through
     case DNGN_STONE_ARCH:
         if (what && *what == nullptr)

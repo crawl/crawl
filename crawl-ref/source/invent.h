@@ -45,6 +45,7 @@ enum object_selector
 #if TAG_MAJOR_VERSION == 34
     OSEL_DIVINE_RECHARGE         = -18,
 #endif
+    OSEL_UNCURSED_WORN_RINGS     = -19,
 };
 
 /// Behaviour flags for prompt_invent_item().

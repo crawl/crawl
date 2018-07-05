@@ -256,7 +256,7 @@ caster's line of sight will end the effect.
 Chain of Chaos spell
 
 Creates an arc of pure chaos, striking nearby creatures with unpredictable
-effects.
+effects. The arc can touch upon the caster without harming them.
 %%%%
 Chain Lightning spell
 
@@ -729,8 +729,8 @@ effect when the caster's magic is depleted.
 %%%%
 Injury Bond spell
 
-Binds the caster to a nearby ally, redirecting half of any damage the target
-suffers to the caster.
+Binds the caster to nearby allies, redirecting half of any damage they suffer
+to the caster.
 %%%%
 Injury Mirror spell
 

@@ -15,6 +15,7 @@
 
 #include "art-enum.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "english.h"
@@ -751,7 +752,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
-        if (def && def->alive() && !_dont_harm(attacker, *def))
+
+        if (def && def->alive() && !_dont_harm(attacker, *def) && adjacent(attacker.pos(), def->pos()))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);

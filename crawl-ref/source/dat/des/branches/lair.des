@@ -2772,8 +2772,7 @@ set_feature_name("granite_statue", "elephant-shaped statue")
 }}
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 MARKER: o = lua:portal_desc { slaved_to="elephant" }
-MARKER: G = lua:props_marker { veto_fragmentation="veto", \
-                               veto_disintegrate="veto", \
+MARKER: G = lua:props_marker { veto_dig="veto", \
                                veto_shatter="veto" }
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", \
@@ -2781,7 +2780,7 @@ MARKER: o = lua:monster_on_death { \
             message_seen="The elephant guardians awaken!", \
             message_unseen="You hear a distant trumpeting.", \
             master_name="elephant", \
-            veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_dig="veto", \
             veto_shatter="veto", \
          }
 COLOUR: oG = green
