@@ -1,3 +1,6 @@
+/*** Information about the player.
+ * @module you
+ */
 #include "AppHdr.h"
 
 #include <cmath>
@@ -43,176 +46,539 @@
 #include "travel.h"
 #include "wiz-you.h"
 
-/*
---- Player-related bindings.
-
-module "you"
-*/
-
 // ///////////////////////////////////////////////////////////////////
 // Bindings to get information on the player (clua).
 //
 
-/*
---- Has player done something that takes time?
-function turn_is_over() */
+/*** Has player done something that takes time?
+ * @treturn boolean
+ * @function turn_is_over
+ */
 LUARET1(you_turn_is_over, boolean, you.turn_is_over)
-/*
---- Get player's name
-function name() */
+/*** Get player's name.
+ * @treturn string
+ * @function name
+ */
 LUARET1(you_name, string, you.your_name.c_str())
-/*
---- Get name of player's race
-function race() */
+/*** Get name of player's race.
+ * @treturn string
+ * @function race
+ */
 LUARET1(you_race, string, species_name(you.species).c_str())
-/*
---- Get name of player's background
-function class() */
+/*** Get name of player's background.
+ * @treturn string
+ * @function class
+ */
 LUARET1(you_class, string, get_job_name(you.char_class))
-/*
---- Is player in wizard mode?
-function wizard() */
+/*** Is player in wizard mode?
+ * @treturn boolean
+ * @function wizard
+ */
 LUARET1(you_wizard, boolean, you.wizard)
-/*
---- Get name of player's god
-function god() */
+/*** Get name of player's god
+ * @treturn string
+ * @function god
+ */
 LUARET1(you_god, string, god_name(you.religion).c_str())
-/*
---- Is this [player's] god good?
--- @param god defaults to you.god()
-function good_god(god) */
+/*** Is this [player's] god good?
+ * @tparam[opt=you.god()] string god
+ * @treturn boolean
+ * @function good_god
+ */
 LUARET1(you_good_god, boolean,
         lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
         : is_good_god(you.religion))
-/*
---- Is this [player's] god evil?
--- @param god defaults to you.god()
-function evil_god(god) */
+/*** Is this [player's] god evil?
+ * @tparam[opt=you.god()] string god
+ * @treturn boolean
+ * @function evil_god
+ */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
-/*
---- Has the [player's] current god's one-time ability been used? (if any)
-function one_time_ability_used() */
+/*** Has the [player's] current god's one-time ability been used? (if any).
+ * @treturn boolean
+ * @function one_time_ability_used
+ */
 LUARET1(you_one_time_ability_used, boolean,
         you.one_time_ability_used[you.religion])
+/*** Hit points.
+ * @treturn int current hp
+ * @treturn int current max hp
+ * @function hp
+ */
 LUARET2(you_hp, number, you.hp, you.hp_max)
+/*** Magic points.
+ * @treturn int current mp
+ * @treturn int current max mp
+ * @function mp
+ */
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
+/*** Base max mp.
+ * @treturn int
+ * @function base_mp
+ */
 LUARET1(you_base_mp, number, get_real_mp(false))
+/*** How much rot.
+ * @treturn int
+ * @function rot
+ */
 LUARET1(you_rot, number, player_rotted())
+/*** Minimum hp after poison wears off.
+ * @treturn int
+ * @function poison_survival
+ */
 LUARET1(you_poison_survival, number, poison_survival())
+/*** Corrosion amount.
+ * @treturn int
+ * @function corrosion
+ */
 LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
+/*** Hunger state number.
+ * @treturn int
+ * @function hunger
+ */
 LUARET1(you_hunger, number, you.hunger_state - 1)
+/*** Hunger state string.
+ * @treturn string
+ * @function hunger_name
+ */
 LUARET1(you_hunger_name, string, hunger_level())
+/*** Strength.
+ * @treturn int current strength
+ * @treturn int max strength
+ * @function strength
+ */
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
+/*** Intelligence.
+ * @treturn int current intelligence
+ * @treturn int max intelligence
+ * @function intelligence
+ */
 LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
+/*** Dexterity.
+ * @treturn int current dexterity
+ * @treturn int max dexterity
+ * @function dexterity
+ */
 LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
+/*** XL.
+ * @treturn int xl
+ * @tfunction xl
+ */
 LUARET1(you_xl, number, you.experience_level)
+/*** XL progress.
+ * @treturn number percentage of the way to the next xl [0,100]
+ * @function xl_progress
+ */
 LUARET1(you_xl_progress, number, get_exp_progress())
+/*** Skill progress.
+ * @tparam string name skill name
+ * @treturn number percentage of the way to the next skill level
+ * @function skill_progress
+ */
 LUARET1(you_skill_progress, number,
         lua_isstring(ls, 1)
             ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
             : 0)
+/*** Can a skill be trained?
+ * @tparam string name skill name
+ * @treturn boolean
+ * @function can_train_skill
+ */
 LUARET1(you_can_train_skill, boolean,
         lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
                             : false)
+/*** Best skill.
+ * @treturn string
+ * @function best_skill
+ */
 LUARET1(you_best_skill, string,
         skill_name(best_skill(SK_FIRST_SKILL, SK_LAST_SKILL)))
+/*** Poison resistance (rPois).
+ * @treturn int resistance level
+ * @function res_poison
+ */
 LUARET1(you_res_poison, number, player_res_poison(false))
+/*** Fire resistance (rF).
+ * @treturn int resistance level
+ * @function res_fire
+ */
 LUARET1(you_res_fire, number, player_res_fire(false))
+/*** Cold resistance (rC).
+ * @treturn int resistance level
+ * @function res_cold
+ */
 LUARET1(you_res_cold, number, player_res_cold(false))
+/*** Negative energy resistance (rN).
+ * @treturn int resistance level
+ * @function res_draining
+ */
 LUARET1(you_res_draining, number, player_prot_life(false))
+/*** Electric resistance (rElec).
+ * @treturn int resistance level
+ * @function res_shock
+ */
 LUARET1(you_res_shock, number, player_res_electricity(false))
+/*** Drowning resistance (rDrown).
+ * @treturn int resistance level
+ * @function res_drowning
+ */
 LUARET1(you_res_drowning, boolean, you.res_water_drowning())
+/*** Mutation resistance (rMut).
+ * @treturn int resistance level
+ * @function res_mutation
+ */
 LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
+/*** See invisible (sInv).
+ * @treturn boolean
+ * @function see_invisible
+ */
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
-// Returning a number so as not to break existing scripts.
+/*** Guardian spirit.
+ * Returns a number for backwards compatibility.
+ * @treturn int
+ * @function spirit_shield
+ */
 LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
+/*** Gourmand.
+ * @treturn boolean
+ * @function gourmond
+ */
 LUARET1(you_gourmand, boolean, you.gourmand(false))
+/*** Corrosion resistance (rCorr).
+ * @treturn int resistance level
+ * @function res_corr
+ */
 LUARET1(you_res_corr, boolean, you.res_corr(false))
-// Returning a number so as not to break existing scripts.
+/*** Do you like to eat chunks?
+ * Returns a number so as not to break existing scripts.
+ * @treturn int
+ * @function like_chunks
+ */
 LUARET1(you_like_chunks, number, player_likes_chunks(true) ? 3 : 0)
+/*** Are you flying?
+ * @treturn boolean
+ * @function flying
+ */
 LUARET1(you_flying, boolean, you.airborne())
+/*** Current transformation, if any.
+ * @treturn string transformation name
+ * @function transform
+ */
 LUARET1(you_transform, string, you.form == transformation::none
                                ? "" : transform_name())
+/*** Are you berserk?
+ * @treturn boolean
+ * @function berserk
+ */
 LUARET1(you_berserk, boolean, you.berserk())
+/*** Are you confused?
+ * @treturn boolean
+ * @function confused
+ */
 LUARET1(you_confused, boolean, you.confused())
+/*** Do you have a Shroud of Golubria?
+ * @treturn boolean
+ * @function shrouded
+ */
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
+/*** Are you currently +Swift or -Swift?
+ * If you have neither, returns 0. If you are +Swift, +1, and -Swift, -1.
+ * @treturn int Swift level
+ * @function swift
+ */
 LUARET1(you_swift, number, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SWIFTNESS] >= 0) ? 1 : -1) : 0)
+/*** Are you paralysed?
+ * @treturn boolean
+ * @function paralysed
+ */
 LUARET1(you_paralysed, boolean, you.paralysed())
+/*** Are you asleep?
+ * @treturn boolean
+ * @function asleep
+ */
 LUARET1(you_asleep, boolean, you.asleep())
+/*** Are you hasted?
+ * @treturn boolean
+ * @function hasted
+ */
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
+/*** Are you slowed?
+ * @treturn boolean
+ * @function slowed
+ */
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
+/*** Are you exhausted?
+ * @treturn boolean
+ * @function exhausted
+ */
 LUARET1(you_exhausted, boolean, you.duration[DUR_EXHAUSTED])
+/*** Are you teleporting?
+ * @treturn boolean
+ * @function teleporting
+ */
 LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
+/*** Are you dimensionally anchored?
+ * @treturn boolean
+ * @function anchored
+ */
 LUARET1(you_anchored, boolean, you.duration[DUR_DIMENSION_ANCHOR])
+/*** Are you rooted?
+ * @treturn boolean
+ * @function rooted
+ */
 LUARET1(you_rooted, boolean, you.duration[DUR_GRASPING_ROOTS])
+/*** Are you poisoned?
+ * @treturn boolean
+ * @function poisoned
+ */
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
+/*** Are you invisible?
+ * @treturn boolean
+ * @function invisible
+ */
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
+/*** Are you mesmerised?
+ * @treturn boolean
+ * @function mesmerised
+ */
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
+/*** Are you on fire?
+ * @treturn boolean
+ * @function on_fire
+ */
 LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
+/*** Are you petrifying?
+ * @treturn boolean
+ * @function petrifying
+ */
 LUARET1(you_petrifying, boolean, you.duration[DUR_PETRIFYING])
+/*** Are you silencing the world around you?
+ * @treturn boolean
+ * @function silencing
+ */
 LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
+/*** Are you regenerating?
+ * @treturn boolean
+ * @function regenerating
+ */
 LUARET1(you_regenerating, boolean, you.duration[DUR_REGENERATION]
                                    || you.duration[DUR_TROGS_HAND])
+/*** Are you out of breath?
+ * @treturn boolean
+ * @function breath_timeout
+ */
 LUARET1(you_breath_timeout, boolean, you.duration[DUR_BREATH_WEAPON])
+/*** Are you extra resistant?
+ * @treturn boolean
+ * @function extra_resistant
+ */
 LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
+/*** Are you mighty?
+ * @treturn boolean
+ * @function mighty
+ */
 LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
+/*** Are you agile?
+ * @treturn boolean
+ * @function agile
+ */
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
+/*** Are you brilliant?
+ * @treturn boolean
+ * @function brilliant
+ */
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
+/*** Are you silenced?
+ * @treturn boolean
+ * @function silenced
+ */
 LUARET1(you_silenced, boolean, silenced(you.pos()))
+/*** Are you sick?
+ * @treturn boolean
+ * @function sick
+ */
 LUARET1(you_sick, boolean, you.disease)
+/*** Are you contaminated?
+ * @treturn boolean
+ * @function contaminated
+ */
 LUARET1(you_contaminated, number, get_contamination_level())
+/*** Do you feel safe?
+ * @treturn boolean
+ * @function feel_safe
+ */
 LUARET1(you_feel_safe, boolean, i_feel_safe())
+/*** How many times have you died?
+ * @treturn int
+ * @function deaths
+ */
 LUARET1(you_deaths, number, you.deaths)
+/*** How many extra lives do you have?
+ * @treturn int
+ * @function lives
+ */
 LUARET1(you_lives, number, you.lives)
 #if TAG_MAJOR_VERSION == 34
 LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
 #endif
 
+/*** Where are you?
+ * @treturn string
+ * @function where
+ */
 LUARET1(you_where, string, level_id::current().describe().c_str())
+/*** What branch are you in?
+ * @treturn string
+ * @function branch
+ */
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
+/*** Your current depth in that branch.
+ * @treturn int
+ * @function depth
+ */
 LUARET1(you_depth, number, you.depth)
+/*** What fraction of the branch you've gone into.
+ * @treturn number
+ * @function depth_fraction
+ */
 LUARET1(you_depth_fraction, number,
         (brdepth[you.where_are_you] <= 1) ? 1
         : ((float)(you.depth - 1) / (brdepth[you.where_are_you] - 1)))
+/*** The current "absolute depth".
+ * Absolute depth of the current location.
+ * @treturn number
+ * @function absdepth
+ */
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
 LUARET1(you_absdepth, number, env.absdepth0 + 1)
+/*** Interrupt the current multi-turn activity or macro sequence.
+ * @function stop_activity
+ */
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
+/*** Are you taking the stairs?
+ * @treturn boolean
+ * @function taking_stairs
+ */
 LUARET1(you_taking_stairs, boolean, player_stair_delay())
+/*** How many turns have been taken.
+ * @treturn int
+ * @function turns
+ */
 LUARET1(you_turns, number, you.num_turns)
+/*** Total elapsed time in auts.
+ * @treturn int
+ * @function time
+ */
 LUARET1(you_time, number, you.elapsed_time)
+/*** How many spell levels are currently available.
+ * @treturn int
+ * @function spell_levels
+ */
 LUARET1(you_spell_levels, number, player_spell_levels())
+/*** Can you smell?
+ * @treturn boolean
+ * @function can_smell
+ */
 LUARET1(you_can_smell, boolean, you.can_smell())
+/*** Do you have claws?
+ * @treturn int claws level
+ * @function has_claws
+ */
 LUARET1(you_has_claws, number, you.has_claws(false))
+/*** How many temporary mutations do you have?
+ * @treturn int
+ * @function temp_mutations
+ */
 LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
+/*** Mutation overview string.
+ * @treturn string
+ * @function mutation_overview
+ */
 LUARET1(you_mutation_overview, string, mutation_overview().c_str())
 
+/*** LOS Radius.
+ * @treturn int
+ * @function los
+ */
 LUARET1(you_los, number, get_los_radius())
+/*** Can you see a cell?
+ * Uses player-centered coordinates
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function see_cell
+ */
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+/*** Can you see this cell without looking through a window?
+ * Checks line of sight treating transparent rock and stone as opaque.
+ * Uses player-centered coordinates.
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function see_cell_no_trans
+ */
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+/*** Can you see this cell without something solid in the way?
+ * Checks line of sight treating all solid features as opaque.
+ * Uses player-centered coordinates.
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function see_cell_solid
+ */
 LUARET1(you_see_cell_solid_rel, boolean,
         cell_see_cell(you.pos(),
                       (coord_def(luaL_checkint(ls, 1),
                                  luaL_checkint(ls, 2)) + you.pos()),
                       LOS_SOLID))
+/*** Can you see this cell with nothing in the way?
+ * Checks line of sight treating all solid features as opaque and properly
+ * checking bushes and clouds.
+ * Uses player-centered coordinates.
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function see_cell_solid_see
+ */
 LUARET1(you_see_cell_solid_see_rel, boolean,
         cell_see_cell(you.pos(),
                       (coord_def(luaL_checkint(ls, 1),
                                  luaL_checkint(ls, 2)) + you.pos()),
                       LOS_SOLID_SEE))
+/*** Stars of piety.
+ * @treturn int
+ * @function piety_rank
+ */
 LUARET1(you_piety_rank, number, piety_rank())
+/*** Are you under penance?
+ * @treturn boolean
+ * @function under_penance
+ */
 LUARET1(you_under_penance, boolean,
         lua_isstring(ls, 1) ? player_under_penance(str_to_god(lua_tostring(ls, 1)))
                             : player_under_penance())
+/*** Are you currently constricted?
+ * @treturn boolean
+ * @function constricted
+ */
 LUARET1(you_constricted, boolean, you.is_constricted())
+/*** Are you currently constricting anything?
+ * @treturn boolean
+ * @function constricting
+ */
 LUARET1(you_constricting, boolean, you.is_constricting())
 
+/*** The name of your monster type.
+ * @treturn string
+ * @function monster
+ */
 static int l_you_monster(lua_State *ls)
 {
     const monster_type mons = player_species_to_mons_species(you.species);
@@ -224,6 +590,11 @@ static int l_you_monster(lua_State *ls)
     return 1;
 }
 
+/*** Your genus.
+ * As a lower-case plural string.
+ * @treturn string
+ * @function genus
+ */
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
@@ -235,12 +606,21 @@ static int l_you_genus(lua_State *ls)
     return 1;
 }
 
+/*** The items on your cell on the floor.
+ * @treturn array an Array of @{items.Item} objects
+ * @function floor_items
+ */
 static int you_floor_items(lua_State *ls)
 {
     lua_push_floor_items(ls, you.visible_igrd(you.pos()));
     return 1;
 }
 
+/*** List your spells
+ * @treturn array An array of spell names
+ * @see spells
+ * @function spells
+ */
 static int l_you_spells(lua_State *ls)
 {
     lua_newtable(ls);
@@ -257,6 +637,11 @@ static int l_you_spells(lua_State *ls)
     return 1;
 }
 
+/*** Currently used spell letters
+ * @treturn array An array of letters
+ * @see spells
+ * @function spell_letters
+ */
 static int l_you_spell_letters(lua_State *ls)
 {
     lua_newtable(ls);
@@ -278,6 +663,11 @@ static int l_you_spell_letters(lua_State *ls)
     return 1;
 }
 
+/*** Get the spell table.
+ * @treturn table A table matching spell letters to spell names
+ * @see spells
+ * @function spell_table
+ */
 static int l_you_spell_table(lua_State *ls)
 {
     lua_newtable(ls);
@@ -299,6 +689,11 @@ static int l_you_spell_table(lua_State *ls)
     return 1;
 }
 
+/*** Get memorisable spells.
+ * This lists the spells available in the spell library.
+ * @treturn array An array of spell names.
+ * @function mem_spells
+ */
 static int l_you_mem_spells(lua_State *ls)
 {
     lua_newtable(ls);
@@ -319,6 +714,10 @@ static int l_you_mem_spells(lua_State *ls)
     return 1;
 }
 
+/*** Available abilities
+ * @treturn array An array of ability names.
+ * @function abils
+ */
 static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
@@ -332,6 +731,10 @@ static int l_you_abils(lua_State *ls)
     return 1;
 }
 
+/*** Ability letters in use.
+ * @treturn array An array of ability letters
+ * @function abil_letters
+ */
 static int l_you_abil_letters(lua_State *ls)
 {
     lua_newtable(ls);
@@ -349,6 +752,10 @@ static int l_you_abil_letters(lua_State *ls)
     return 1;
 }
 
+/*** Ability table.
+ * @treturn table A map of letters to ability names
+ * @function abil_table
+ */
 static int l_you_abil_table(lua_State *ls)
 {
     lua_newtable(ls);
@@ -366,6 +773,10 @@ static int l_you_abil_table(lua_State *ls)
     return 1;
 }
 
+/*** How much gold do you have?
+ * @treturn int
+ * @function gold
+ */
 static int you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1 && !CLua::get_vm(ls).managed_vm)
@@ -381,6 +792,10 @@ static int you_gold(lua_State *ls)
     PLUARET(number, you.gold);
 }
 
+/*** Can you eat chunks?
+ * @treturn boolean
+ * @function you_can_consume_corpses
+ */
 static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls, you.get_mutation_level(MUT_HERBIVOROUS) == 0
@@ -407,10 +822,22 @@ static int _you_have_rune(lua_State *ls)
     return 1;
 }
 
+/*** How many runes do you have?
+ * @treturn int
+ * @function num_runes
+ */
 LUARET1(you_num_runes, number, runes_in_pack())
 
+/*** Do you have the orb?
+ * @treturn boolean
+ * @function have_orb
+ */
 LUARET1(you_have_orb, boolean, player_has_orb())
 
+/*** Are you caught in something?
+ * @treturn string|nil what's got you
+ * @function caught
+ */
 LUAFN(you_caught)
 {
     if (you.caught())
@@ -421,6 +848,15 @@ LUAFN(you_caught)
     return 1;
 }
 
+/*** Get the mutation level of a mutation.
+ * If all optional parameters are false this returns zero.
+ * @tparam string mutationname
+ * @tparam[opt=true] boolean innate include innate mutations
+ * @tparam[optchain=true] boolean temp include temporary mutations
+ * @tparam[optchain=true] boolean normal include normal mutations
+ * @treturn int level
+ * @function get_base_mutation_level
+ */
 LUAFN(you_get_base_mutation_level)
 {
     string mutname = luaL_checkstring(ls, 1);
@@ -441,6 +877,14 @@ LUAFN(you_get_base_mutation_level)
     return luaL_argerror(ls, 1, err.c_str());
 }
 
+/*** How mutated are you?
+ * Adds up the total number (including levels if requested) of mutations.
+ * @tparam boolean innate include innate mutations
+ * @tparam boolean levels count levels
+ * @tparam boolean temp include temporary mutations
+ * @treturn int
+ * @function how_mutated
+ */
 LUAFN(you_how_mutated)
 {
     bool innate = lua_toboolean(ls, 1); // whether to include innate mutations
@@ -450,7 +894,12 @@ LUAFN(you_how_mutated)
     PLUARET(number, result);
 }
 
-// these two are still here for compatibility with old scripts, but superseded by you_get_base_mutation_level.
+/*** Deprecated: use @{you.get_base_mutation_level}.
+ * Equivalent to `you.get_base_mutation_level(name)`
+ * @tparam string mutation name
+ * @treturn int num
+ * @function mutation
+ */
 LUAFN(you_mutation)
 {
     string mutname = luaL_checkstring(ls, 1);
@@ -462,6 +911,13 @@ LUAFN(you_mutation)
     return luaL_argerror(ls, 1, err.c_str());
 }
 
+
+/*** Deprecated: use @{you.get_base_mutation_level}.
+ * Equivalent to `you.get_base_mutation_level(name, false, true, false)`
+ * @tparam string mutation name
+ * @treturn int num
+ * @function temp_mutation
+ */
 LUAFN(you_temp_mutation)
 {
     string mutname = luaL_checkstring(ls, 1);
@@ -473,6 +929,14 @@ LUAFN(you_temp_mutation)
     return luaL_argerror(ls, 1, err.c_str());
 }
 
+/*** Check the level stack.
+ * When entering portal branches or the abyss crawl tracks
+ * where we came from with a level stack, which we can query.
+ * Can take a Branch or Branch:depth string.
+ * @tparam string levelname
+ * @treturn boolean
+ * @function is_level_on_stack
+ */
 LUAFN(you_is_level_on_stack)
 {
     string levname = luaL_checkstring(ls, 1);
@@ -489,6 +953,11 @@ LUAFN(you_is_level_on_stack)
     PLUARET(boolean, is_level_on_stack(lev));
 }
 
+/*** Current skill level.
+ * @tparam string name
+ * @treturn number
+ * @function skill
+ */
 LUAFN(you_skill)
 {
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
@@ -496,6 +965,11 @@ LUAFN(you_skill)
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
+/*** Base skill level.
+ * Ignores drain, crosstraining, &c.
+ * @tparam string name
+ * @function base_skill
+ */
 LUAFN(you_base_skill)
 {
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
@@ -503,6 +977,19 @@ LUAFN(you_base_skill)
     PLUARET(number, you.skill(sk, 10, true) * 0.1);
 }
 
+/*** Train a skill.
+ * Training levels:
+ *
+ * - 0 is disable
+ * - 1 is enable
+ * - 2 is focus
+ *
+ * If no level is passed, does not change the current training.
+ * @tparam string name
+ * @tparam[opt] int level set training level
+ * @treturn int training level
+ * @function train_skill
+ */
 LUAFN(you_train_skill)
 {
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
@@ -517,6 +1004,11 @@ LUAFN(you_train_skill)
     PLUARET(number, you.train[sk]);
 }
 
+/*** Get a training target.
+ * @tparam string name
+ * @treturn number
+ * @function get_training_target
+ */
 LUAFN(you_get_training_target)
 {
     string sk_name = luaL_checkstring(ls, 1);
@@ -530,6 +1022,12 @@ LUAFN(you_get_training_target)
     PLUARET(number, (double) you.get_training_target(sk) * 0.1);
 }
 
+/*** Set a training target.
+ * @tparam string name
+ * @tparam number target
+ * @treturn number|nil if successfully set the new target
+ * @function set_training_target
+ */
 LUAFN(you_set_training_target)
 {
     string sk_name = luaL_checkstring(ls, 1);
@@ -544,6 +1042,11 @@ LUAFN(you_set_training_target)
     return 1;
 }
 
+/*** Cost of training this skill.
+ * @tparam string name
+ * @treturn number
+ * @function skill_cost
+ */
 LUAFN(you_skill_cost)
 {
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
@@ -556,6 +1059,13 @@ LUAFN(you_skill_cost)
     PLUARET(number, max(1, (int)(10.0 * cost + 0.5)) * 0.1);
 }
 
+/*** Check status effects.
+ * Given a specific status name, checks for that status.
+ * Otherwise, lists all statuses.
+ * @tparam[opt] string stat
+ * @treturn string|boolean
+ * @function status
+ */
 LUAFN(you_status)
 {
     const char* which = nullptr;

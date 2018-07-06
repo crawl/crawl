@@ -119,6 +119,10 @@ static void _lua_push_inv_items(lua_State *ls = nullptr)
 
 #define UDATA_ITEM(name) ITEM(name, lua_upvalueindex(1))
 
+/*** Information and interaction with a single item.
+ * @type Item
+ */
+
 static int l_item_do_wield(lua_State *ls)
 {
     if (you.turn_is_over)
@@ -134,6 +138,10 @@ static int l_item_do_wield(lua_State *ls)
     return 1;
 }
 
+/*** Wield this item.
+ * @treturn boolean successfuly wielded
+ * @function wield
+ */
 IDEFN(wield, do_wield)
 
 static int l_item_do_wear(lua_State *ls)
@@ -151,6 +159,10 @@ static int l_item_do_wear(lua_State *ls)
     return 1;
 }
 
+/*** Wear this item (as armour).
+ * @treturn boolean successfuly worn
+ * @function wear
+ */
 IDEFN(wear, do_wear)
 
 static int l_item_do_puton(lua_State *ls)
@@ -167,6 +179,10 @@ static int l_item_do_puton(lua_State *ls)
     return 1;
 }
 
+/*** Put this item on (as jewellry).
+ * @treturn boolean successfuly put on
+ * @function puton
+ */
 IDEFN(puton, do_puton)
 
 static int l_item_do_remove(lua_State *ls)
@@ -203,6 +219,11 @@ static int l_item_do_remove(lua_State *ls)
     return 1;
 }
 
+/*** Remove this item from our body.
+ * @treturn boolean|nil successfully removed something; nil if nothing to
+ * remove
+ * @function remove
+ */
 IDEFN(remove, do_remove)
 
 static int l_item_do_drop(lua_State *ls)
@@ -234,8 +255,17 @@ static int l_item_do_drop(lua_State *ls)
     return 1;
 }
 
+/*** Drop this.
+ * Optionally specify how many for partially dropping a stack.
+ * @tparam[opt] int qty
+ * @treturn boolean successfully dropped
+ * @function drop
+ */
 IDEFN(drop, do_drop)
 
+/*** Is this equipped?
+ * @field equipped boolean
+ */
 IDEF(equipped)
 {
     if (!item || !in_inventory(*item))
@@ -268,6 +298,11 @@ static int l_item_do_class(lua_State *ls)
     return 1;
 }
 
+/*** What is the item class?
+ * @tparam[opt=false] boolean terse
+ * @treturn string
+ * @function class
+ */
 IDEFN(class, do_class)
 
 static int l_item_do_subtype(lua_State *ls)
@@ -302,6 +337,10 @@ static int l_item_do_subtype(lua_State *ls)
     return 1;
 }
 
+/*** What is the subtype?
+ * @treturn string|nil the item's subtype, if any
+ * @function subtype
+ */
 IDEFN(subtype, do_subtype)
 
 static int l_item_do_ego(lua_State *ls)
@@ -331,8 +370,16 @@ static int l_item_do_ego(lua_State *ls)
     return 1;
 }
 
+/*** What is the ego?
+ * @tparam[opt=false] boolean terse
+ * @treturn string|nil the item's ego, if any
+ * @function ego
+ */
 IDEFN(ego, do_ego)
 
+/*** Is this item cursed?
+ * @field cursed boolean
+ */
 IDEF(cursed)
 {
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
@@ -341,6 +388,10 @@ IDEF(cursed)
     return 1;
 }
 
+/*** Are we wearing this item?
+ * @field worn slot index
+ */
+// XXX: this should be defined by IDEFN so that it can have multiple returns.
 IDEF(worn)
 {
     int worn = get_equip_slot(item);
@@ -377,6 +428,13 @@ static int l_item_do_name(lua_State *ls)
     return 1;
 }
 
+/*** Get this item's name.
+ * For the levels of item descriptions see @{crawl.grammar}
+ * @tparam[opt="plain"] string desc description type
+ * @tparam[opt="false"] boolean terse
+ * @treturn string
+ * @function name
+ */
 IDEFN(name, do_name)
 
 static int l_item_do_name_coloured(lua_State *ls)
@@ -400,6 +458,13 @@ static int l_item_do_name_coloured(lua_State *ls)
     return 1;
 }
 
+/*** Get this item's name as a colour-formatted string.
+ * Adds item colouring suitable for @{crawl.formatted_mpr}.
+ * @tparam[opt="plain"] string desc description type
+ * @tparam[opt="false"] boolean terse
+ * @treturn string
+ * @function name_coloured
+ */
 IDEFN(name_coloured, do_name_coloured)
 
 static int l_item_do_stacks(lua_State *ls)
@@ -434,11 +499,17 @@ static int l_item_do_stacks(lua_State *ls)
 
 IDEFN(stacks, do_stacks)
 
+/*** How many do we have in a stack?
+ * @field quantity int
+ */
 IDEF(quantity)
 {
     PLUARET(number, item? item->quantity : 0);
 }
 
+/*** This item's inventory slot.
+ * @field slot index or nil
+ */
 IDEF(slot)
 {
     if (item && in_inventory(*item))
@@ -448,11 +519,18 @@ IDEF(slot)
     return 1;
 }
 
+/*** Is this item in the inventory?
+ * @field ininventory boolean
+ */
 IDEF(ininventory)
 {
     PLUARET(boolean, item && in_inventory(*item));
 }
 
+/*** The slot number this item goes in.
+ * @field equip_type int
+ */
+// XXX: another multiple return dropped by lua
 IDEF(equip_type)
 {
     if (!item || !item->defined())
@@ -480,6 +558,9 @@ IDEF(equip_type)
     return 2;
 }
 
+/*** The weapon skill this item requires.
+ * @field weap_skill string|nil nil for non-weapons
+ */
 IDEF(weap_skill)
 {
     if (!item || !item->defined())
@@ -494,6 +575,9 @@ IDEF(weap_skill)
     return 2;
 }
 
+/*** The reach range of this item.
+ * @field reach_range int
+ */
 IDEF(reach_range)
 {
     if (!item || !item->defined())
@@ -504,6 +588,9 @@ IDEF(reach_range)
     return 1;
 }
 
+/*** Is this a ranged weapon?
+ * @field is_ranged boolean
+ */
 IDEF(is_ranged)
 {
     if (!item || !item->defined())
@@ -514,6 +601,9 @@ IDEF(is_ranged)
     return 1;
 }
 
+/*** Can this be thrown effectively?
+ * @field is_throwable boolean
+ */
 IDEF(is_throwable)
 {
     if (!item || !item->defined())
@@ -524,6 +614,9 @@ IDEF(is_throwable)
     return 1;
 }
 
+/*** Did we drop this?
+ * @field dropped boolean
+ */
 IDEF(dropped)
 {
     if (!item || !item->defined())
@@ -534,6 +627,9 @@ IDEF(dropped)
     return 1;
 }
 
+/*** Is this item currently melded to us?
+ * @field is_melded boolean
+ */
 IDEF(is_melded)
 {
     if (!item || !item->defined())
@@ -544,6 +640,9 @@ IDEF(is_melded)
     return 1;
 }
 
+/*** Is this a corpse?
+ * @field is_corpse boolean
+ */
 IDEF(is_corpse)
 {
     if (!item || !item->defined())
@@ -554,6 +653,9 @@ IDEF(is_corpse)
     return 1;
 }
 
+/*** Is this a skeleton?
+ * @field is_skeleton boolean
+ */
 IDEF(is_skeleton)
 {
     if (!item || !item->defined())
@@ -564,6 +666,9 @@ IDEF(is_skeleton)
     return 1;
 }
 
+/*** Does this have a skeleton?
+ * @field has_skeleton boolean false if it's not even a corpse
+ */
 IDEF(has_skeleton)
 {
     if (!item || !item->defined())
@@ -576,6 +681,9 @@ IDEF(has_skeleton)
     return 1;
 }
 
+/*** Can this be a zombie?
+ * @field can_zombify boolean
+ */
 IDEF(can_zombify)
 {
     if (!item || !item->defined())
@@ -587,6 +695,9 @@ IDEF(can_zombify)
     return 1;
 }
 
+/*** Do we prefer eating this?
+ * @field is_preferred_food boolean
+ */
 IDEF(is_preferred_food)
 {
     if (!item || !item->defined())
@@ -597,6 +708,10 @@ IDEF(is_preferred_food)
     return 1;
 }
 
+/*** Is this bad food?
+ * @field is_bad_food boolean
+ */
+// XXX: does this matter anymore?
 IDEF(is_bad_food)
 {
     if (!item || !item->defined())
@@ -607,6 +722,9 @@ IDEF(is_bad_food)
     return 1;
 }
 
+/*** Is this useless?
+ * @field is_useless boolean
+ */
 IDEF(is_useless)
 {
     if (!item || !item->defined())
@@ -617,6 +735,9 @@ IDEF(is_useless)
     return 1;
 }
 
+/*** Is this an artefact?
+ * @field artefact boolean
+ */
 IDEF(artefact)
 {
     if (!item || !item->defined())
@@ -627,6 +748,9 @@ IDEF(artefact)
     return 1;
 }
 
+/*** Is this branded?
+ * @field branded
+ */
 IDEF(branded)
 {
     if (!item || !item->defined())
@@ -649,6 +773,9 @@ IDEF(hands)
     return 1;
 }
 
+/*** Is this a god gift?
+ * @field god_gift boolean
+ */
 IDEF(god_gift)
 {
     if (!item || !item->defined())
@@ -659,6 +786,9 @@ IDEF(god_gift)
     return 1;
 }
 
+/*** Is this fully identified?
+ * @field fully_identified boolean
+ */
 IDEF(fully_identified)
 {
     if (!item || !item->defined())
@@ -669,6 +799,9 @@ IDEF(fully_identified)
     return 1;
 }
 
+/*** Item plus.
+ * @field plus int
+ */
 IDEF(plus)
 {
     if (!item || !item->defined())
@@ -704,6 +837,9 @@ IDEF(plus2)
     return 1;
 }
 
+/*** What spells are in this?
+ * @field spells array of spell names
+ */
 IDEF(spells)
 {
     if (!item || !item->defined() || !item->has_spells())
@@ -721,6 +857,10 @@ IDEF(spells)
     return 1;
 }
 
+/*** Artefact properties
+ * Full list in `artefact-prop-type.h`
+ * @field table artefact property table
+ */
 IDEF(artprops)
 {
     if (!item || !item->defined() || !is_artefact(*item)
@@ -745,6 +885,9 @@ IDEF(artprops)
     return 1;
 }
 
+/*** Item base damage.
+ * @field damage int
+ */
 IDEF(damage)
 {
     if (!item || !item->defined())
@@ -761,6 +904,9 @@ IDEF(damage)
     return 1;
 }
 
+/*** Item base accuracy.
+ * @field accuracy int
+ */
 IDEF(accuracy)
 {
     if (!item || !item->defined())
@@ -774,6 +920,9 @@ IDEF(accuracy)
     return 1;
 }
 
+/*** Item base delay.
+ * @field delay int
+ */
 IDEF(delay)
 {
     if (!item || !item->defined())
@@ -787,6 +936,9 @@ IDEF(delay)
     return 1;
 }
 
+/*** Item base AC.
+ * @field ac int
+ */
 IDEF(ac)
 {
     if (!item || !item->defined())
@@ -800,6 +952,9 @@ IDEF(ac)
     return 1;
 }
 
+/*** Item encumbrance rating.
+ * @field encumbrance int
+ */
 IDEF(encumbrance)
 {
     if (!item || !item->defined())
@@ -813,6 +968,9 @@ IDEF(encumbrance)
     return 1;
 }
 
+/*** Item is for sale.
+ * @field is_in_shop boolean
+ */
 IDEF(is_in_shop)
 {
     if (!item || !item->defined())
@@ -823,6 +981,9 @@ IDEF(is_in_shop)
     return 1;
 }
 
+/*** Item inscription string.
+ * @field inscription string
+ */
 IDEF(inscription)
 {
     if (!item || !item->defined())
@@ -1046,13 +1207,25 @@ IDEF(is_cursed)
     return 1;
 }
 
-// Library functions below
+/***
+ * @section end
+ */
+
+/*** Get the current inventory.
+ * @treturn array An array of @{Item} objects for the current inventory
+ * @function inventory
+ */
 static int l_item_inventory(lua_State *ls)
 {
     _lua_push_inv_items(ls);
     return 1;
 }
 
+/*** Get the inventory letter of a slot number.
+ * @tparam int idx
+ * @treturn string
+ * @function index_to_letter
+ */
 static int l_item_index_to_letter(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
@@ -1063,6 +1236,11 @@ static int l_item_index_to_letter(lua_State *ls)
     return 1;
 }
 
+/*** Get the index of an inventory letter.
+ * @tparam string let
+ * @treturn int
+ * @function letter_to_index
+ */
 static int l_item_letter_to_index(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -1072,6 +1250,12 @@ static int l_item_letter_to_index(lua_State *ls)
     return 1;
 }
 
+/*** Swap item slots.
+ * Requires item indexes, use @{letter_to_index} if you want to swap letters.
+ * @tparam int idx1
+ * @tparam int idx2
+ * @function swap_slots
+ */
 static int l_item_swap_slots(lua_State *ls)
 {
     int slot1 = luaL_checkint(ls, 1),
@@ -1129,6 +1313,18 @@ static bool l_item_pickup2(item_def *item, int qty)
     return pickup_single_item(floor_link, qty);
 }
 
+/*** Pick up items.
+ * Accepts either a single Item object, and optionally a quantity (for picking
+ * up part of a stack), defaulting to the whole stack, or a table of (Item,qty)
+ * pairs.
+ *
+ * In the first usage returns how many of the single Item were picked up. In
+ * the second usage returns how many keys were successfully picked up.
+ * @tparam Item|table what
+ * @tparam[opt] int qty how many; defaults to the whole stack
+ * @treturn int
+ * @function pickup
+ */
 static int l_item_pickup(lua_State *ls)
 {
     if (you.turn_is_over)
@@ -1174,7 +1370,12 @@ static int l_item_pickup(lua_State *ls)
     return 0;
 }
 
-// Returns item equipped in a slot defined in an argument.
+/*** Get the Item in a given equipment slot.
+ * Takes either a slot name or a slot number.
+ * @tparam string|int where
+ * @treturn Item|nil returns nil for nothing equiped or invalid slot
+ * @function equipped_at
+ */
 static int l_item_equipped_at(lua_State *ls)
 {
     int eq = -1;
@@ -1199,6 +1400,10 @@ static int l_item_equipped_at(lua_State *ls)
     return 1;
 }
 
+/*** Get the Item we should fire by default.
+ * @treturn Item|nil returns nil if there is no default quiver item
+ * @function fired_item
+ */
 static int l_item_fired_item(lua_State *ls)
 {
     int q = you.m_quiver.get_fire_item();
@@ -1214,6 +1419,13 @@ static int l_item_fired_item(lua_State *ls)
     return 1;
 }
 
+/*** What item is in this slot?
+ * Uses numeric slot index, use @{letter_to_index} to look up the index from
+ * the number.
+ * @tparam int idx slot index
+ * @treturn Item|nil the item in that slot, nil if none
+ * @function inslot
+ */
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
@@ -1224,6 +1436,13 @@ static int l_item_inslot(lua_State *ls)
     return 1;
 }
 
+/*** List the seen items at a grid cell.
+ * This function uses player centered coordinates.
+ * @tparam int x
+ * @tparam int y
+ * @treturn array An array of @{Item} objects
+ * @function get_items_at
+ */
 static int l_item_get_items_at(lua_State *ls)
 {
     coord_def s;
@@ -1251,6 +1470,11 @@ static int l_item_get_items_at(lua_State *ls)
     return 1;
 }
 
+/*** See what a shop has for sale.
+ * Only works when standing at a shop.
+ * @treturn array|nil An array of @{Item} objects or nil if not on a shop
+ * @function shop_inventory
+ */
 static int l_item_shop_inventory(lua_State *ls)
 {
     shop_struct *shop = shop_at(you.pos());
@@ -1276,6 +1500,11 @@ static int l_item_shop_inventory(lua_State *ls)
     return 1;
 }
 
+/*** Look at the shopping list.
+ * @treturn array|nil Array of @{Item}s on the shopping list or nil if the
+ * shopping list is empty
+ * @function shopping_list
+ */
 static int l_item_shopping_list(lua_State *ls)
 {
     if (shopping_list.empty())

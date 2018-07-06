@@ -1,7 +1,7 @@
 ------------------------------------------------------------------
--- macro.lua:
--- Crawl macro framework for Lua.
---
+-- @module Globals
+
+--- Crawl macro framework for Lua.
 -- Macros are called as Lua coroutines. If the macro yields false, the
 -- coroutine is discarded (assuming an error). If the macro yields
 -- true, Crawl will start a macro delay for the macro and call the
@@ -13,7 +13,11 @@
 -- perform world updates between actions. Coroutines are the simplest
 -- way to pass control back and forth without losing the macro's
 -- state.
-------------------------------------------------------------------
+--
+-- This is the internal crawl hook for executing a macro. If you would like to
+-- start one from clua use @{crawl.runmacro}.
+-- @param fn macro name
+-- @local
 function c_macro(fn)
    if fn == nil then
       if c_macro_coroutine ~= nil then
