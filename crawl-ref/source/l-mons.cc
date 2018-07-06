@@ -1,3 +1,6 @@
+/*** Dungeon building monster functions (dlua only).
+ * @module mons
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -25,7 +28,7 @@
     } \
     monster *name(___mw ? ___mw->mons : nullptr)
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 // Monster handling
 
 void push_monster(lua_State *ls, monster* mons)

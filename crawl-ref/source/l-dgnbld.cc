@@ -1,3 +1,6 @@
+/***
+ * @module dgn
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -346,7 +349,7 @@ struct join_the_dots_path
     int avoid_vault_count;
 };
 
-/**
+/*
  * Calculates a possible path joining the provided coordinates.
  *
  * @param from              The start of the path to be calculated.
@@ -461,7 +464,7 @@ static join_the_dots_path _calculate_join_the_dots_path (const coord_def& from,
 }
 
 
-/**
+/*
  * Calculates a possible path joining the provided coordinates.
  *
  * @param from              The start of the path to be calculated.

@@ -1,3 +1,6 @@
+/*** Pre-defined globals.
+ * @module Globals
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -6,7 +9,7 @@
 #include "libutil.h" // map_find
 #include "options.h"
 
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 // Miscellaneous globals
 
 #define PATTERN_FLUSH_CEILING 100

@@ -1,3 +1,6 @@
+/*** Dungeon building line of sight (dlua only).
+ * @module los
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

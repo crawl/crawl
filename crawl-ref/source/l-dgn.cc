@@ -1,3 +1,6 @@
+/*** Dungeon builder interface (dlua only).
+ * @module dgn
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -27,9 +30,6 @@
 #include "view.h"
 
 static const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
-
-///////////////////////////////////////////////////////////////////////////
-// Lua dungeon bindings (in the dgn table).
 
 static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
 {
