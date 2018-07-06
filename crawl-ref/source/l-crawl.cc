@@ -1480,11 +1480,24 @@ void cluaopen_crawl(lua_State *ls)
 // Non-user-accessible bindings (dlua).
 //
 
+/*** Get the commandline arguments
+ * @within dlua
+ * @treturn table
+ * @function args
+ */
 LUAFN(_crawl_args)
 {
     return clua_stringtable(ls, SysEnv.cmd_args);
 }
 
+/*** Mark a milestone
+ * Register a dgl milestone. No op if not a dgl game.
+ * @within dlua
+ * @tparam string type
+ * @tparam string milestone
+ * @tparam string origin
+ * @function milestone
+ */
 LUAFN(_crawl_milestone)
 {
     mark_milestone(luaL_checkstring(ls, 1),
@@ -1493,12 +1506,24 @@ LUAFN(_crawl_milestone)
     return 0;
 }
 
+/*** Redraw the viewwindow.
+ * You probably want @{redraw_screen} unless you specifically want only the
+ * view window.
+ * @within dlua
+ * @function redraw_view
+ */
 LUAFN(_crawl_redraw_view)
 {
     viewwindow();
     return 0;
 }
 
+/*** Redraw the player stats.
+ * You probably want @{redraw_screen} unless you specifically want only the
+ * player stats.
+ * @within dlua
+ * @function redraw_stats
+ */
 LUAFN(_crawl_redraw_stats)
 {
     you.wield_change         = true;
@@ -1516,6 +1541,12 @@ LUAFN(_crawl_redraw_stats)
     return 0;
 }
 
+/*** Current milliseconds.
+ * Gives the current milliseconds of the time of day.
+ * @within dlua
+ * @treturn int
+ * @function millis
+ */
 LUAFN(_crawl_millis)
 {
 #ifdef TARGET_OS_WINDOWS
@@ -1535,13 +1566,18 @@ LUAFN(_crawl_millis)
 #endif
     return 1;
 }
-
 static string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name.
     return make_name();
 }
 
+
+/*** Make an item name at random.
+ * @within dlua
+ * @treturn string
+ * @function make_name
+ */
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
 /* Check that a Lua argument is a god name, and store that god's enum in
@@ -1590,6 +1626,12 @@ LUAFN(_crawl_unavailable_god)
     return 1;
 }
 
+/*** Divine voices.
+ * @within dlua
+ * @tparam string Name of a current crawl god.
+ * @tparam string Speach
+ * @function god_speaks
+ */
 LUAFN(_crawl_god_speaks)
 {
     if (!crawl_state.io_inited)
@@ -1606,6 +1648,12 @@ LUAFN(_crawl_god_speaks)
     return 0;
 }
 
+/*** Set Max Runes
+ * Modify the total number of obtainable runes.
+ * @within dlua
+ * @tparam int nrune
+ * @function set_max_runes
+ */
 LUAFN(_crawl_set_max_runes)
 {
     int max_runes = luaL_checkinteger(ls, 1);
