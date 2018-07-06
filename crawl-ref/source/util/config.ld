@@ -4,6 +4,7 @@ add_language_extension("cc", "c")
 -- LDoc is insane and demands that config.ld be in the root of the lua to be
 -- documented
 file = {
+"../clua.cc",
 "../l-colour.cc",
 "../l-crawl.cc",
 "../l-debug.cc",
@@ -32,9 +33,14 @@ file = {
 "../l-view.cc",
 "../l-wiz.cc",
 "../l-you.cc",
+"../dat/dlua/macro.lua",
+"../dat/dlua/util.lua",
+"../dat/dlua/iter.lua",
+"../dat/dlua/init.lua",
+"../dat/dlua/userbase.lua",
 }
 title = "Crawl Lua API"
-project = "clua and dlua"
+project = "crawllua"
 sort = true
 no_lua_ref = true
 merge = true

@@ -899,7 +899,7 @@ void CLua::print_stack()
     fprintf(stderr, "\n");
 }
 
-////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////
 // lua_text_pattern
 
 // We could simplify this a great deal by just using lex and yacc, but I
@@ -1067,7 +1067,7 @@ bool lua_text_pattern::translate() const
     return translated;
 }
 
-//////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////
 
 lua_call_throttle::lua_clua_map lua_call_throttle::lua_map;
 
@@ -1201,6 +1201,20 @@ static int _clua_guarded_pcall(lua_State *ls)
     return lua_gettop(ls);
 }
 
+// Document clua globals here, as they're bound by the interpreter object
+
+/*** Pre-defined globals.
+ *
+ * *Note:* this is not a real module. All names described here are defined in
+ * the global clua namespace.
+ * @module Globals
+ */
+
+/*** Load the named lua file as a chunk.
+ * @tparam string filename
+ * @return function chunk or nil,error
+ * @function loadfile
+ */
 static int _clua_loadfile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
@@ -1218,6 +1232,13 @@ static int _clua_loadfile(lua_State *ls)
     return 1;
 }
 
+/*** Load and execute the named lua file.
+ * Differs from @{dofile} in that the file is run for its side effects.
+ * If the execution has an error we raise that error and exit.
+ * @tparam string filename
+ * @treturn boolean|nil
+ * @function require
+ */
 static int _clua_require(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
@@ -1232,6 +1253,13 @@ static int _clua_require(lua_State *ls)
     return 1;
 }
 
+/*** Load and execute the named luafile, returning the result.
+ * Differs from @{require} in that the file is run for a result. Errors
+ * come back on the lua stack and can be handled by the caller.
+ * @tparam string filename
+ * @return whatever is left on the lua stack by filename
+ * @function dofile
+ */
 static int _clua_dofile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
@@ -1256,7 +1284,7 @@ static string _get_persist_file()
     return Options.filename + ".persist";
 }
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 
 lua_shutdown_listener::~lua_shutdown_listener()
 {
