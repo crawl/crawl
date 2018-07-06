@@ -1,4 +1,4 @@
-/*** Colour related functions (dlua only)
+/*** Colour related functions (dlua only).
  * @module colour
  */
 

@@ -1,3 +1,6 @@
+/*** Item handling functions and type.
+ * @module items
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -33,7 +36,7 @@
 #include "stringutil.h"
 #include "throw.h"
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 // Item handling
 
 struct item_wrapper

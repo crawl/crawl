@@ -1,3 +1,6 @@
+/*** Debugging functions (dlua only).
+ * @module debug
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
