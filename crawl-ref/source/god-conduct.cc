@@ -64,9 +64,9 @@ static const char *conducts[] =
     "Deliberate Mutation", "Cause Glowing", "Use Unclean", "Use Chaos",
     "Desecrate Orcish Remains", "Kill Slime", "Kill Plant", "Was Hasty",
     "Corpse Violation", "Carrion Rot", "Souled Friend Died",
-    "Attack In Sanctuary", "Kill Artificial", "Destroy Spellbook", 
-    "Exploration", "Desecrate Holy Remains", "Seen Monster", 
-    "Sacrificed Love", "Channel", "Hurt Foe",
+    "Attack In Sanctuary", "Kill Artificial", "Exploration", 
+    "Desecrate Holy Remains", "Seen Monster", "Sacrificed Love", "Channel", 
+    "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -353,9 +353,7 @@ static peeve_map divine_peeves[] =
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
-    {
-        { DID_DESTROY_SPELLBOOK, { "you destroy spellbooks", true, 1, 2 } },
-    },
+    peeve_map(),
     // GOD_TROG,
     {
         { DID_SPELL_MEMORISE, {
