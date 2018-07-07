@@ -2757,7 +2757,7 @@ string player_spell_desc(spell_type spell)
 /**
  * Examine a given spell. Set the given string to its description, stats, &c.
  * If it's a book in a spell that the player is holding, mention the option to
- * memorize or forget it.
+ * memorise it.
  *
  * @param spell         The spell in question.
  * @param mon_owner     If this spell is being examined from a monster's
@@ -2870,8 +2870,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 
 /**
  * Examine a given spell. List its description and details, and handle
- * memorizing or forgetting the spell in question, if the player is able to
- * do so & chooses to.
+ * memorizing the spell in question, if the player is able & chooses to do so.
  *
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
