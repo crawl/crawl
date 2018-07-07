@@ -469,25 +469,25 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_BLADE_OF_DISASTER:
-    inf->light_text = "Disaster";
+    inf.light_text = "Disaster";
         break;
 
     case DUR_NO_MORE_DISASTER:
-    inf->light_text = "-Disaster";
+    inf.light_text = "-Disaster";
          break;
          
     case STATUS_TIME_STOP:
         if (you.attribute[ATTR_TIME_STOP] > 0)
         {
-            inf->light_colour = LIGHTMAGENTA;
+            inf.light_colour = LIGHTMAGENTA;
             int auts = you.attribute[ATTR_TIME_STOP];
             int turns = auts/10;
             int subturns = auts%10;
-            inf->light_text
+            inf.light_text
                = make_stringf("TimeStop (%u.%u)",
                               turns, subturns);
-            inf->short_text = "time stop";
-            inf->long_text = "Time is stopped.";
+            inf.short_text = "time stop";
+            inf.long_text = "Time is stopped.";
         }
 
     case STATUS_BEOGH:
@@ -740,8 +740,8 @@ bool fill_status_info(int status, status_info& inf)
     case STATUS_PLAYING_HARP:
         if (you.attribute[ATTR_PLAYING_HARP])
         {
-            inf->light_colour = WHITE;
-            inf->light_text  = "Harp";
+            inf.light_colour = WHITE;
+            inf.light_text  = "Harp";
         }
         break;
 
