@@ -270,6 +270,47 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         return $popup;
     }
 
+    var update_server_scroll_timeout = null;
+    var formatted_scroller_monitor_scrolling = true;
+
+    function formatted_scroller_line_height(body)
+    {
+        var span = $(scroller(body).contentElement).children("span")[0];
+        var rect = span.getBoundingClientRect();
+        return rect.bottom - rect.top;
+    }
+
+    function update_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("formatted-scroller"))
+            return;
+        var body = $popup.find(".body")[0];
+        var container = scroller(body).scrollElement;
+        var line_height = formatted_scroller_line_height(body);
+        comm.send_message("formatted_scroller_scroll", {
+            scroll: Math.round(container.scrollTop / line_height),
+        });
+    }
+
+    function formatted_scroller_onscroll()
+    {
+        if (!formatted_scroller_monitor_scrolling)
+        {
+            // don't tell the server we scrolled, when we did so because the
+            // server told us to; not absolutely necessary, but nice to have
+            formatted_scroller_monitor_scrolling = true;
+            return;
+        }
+        if (!update_server_scroll_timeout)
+            update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
+    }
+
     function formatted_scroller(desc)
     {
         var $popup = $(".templates > .formatted-scroller").clone();
@@ -278,7 +319,38 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         $body.html(util.formatted_string_to_html(desc.text));
         $more.html(util.formatted_string_to_html(desc.more));
         var scroll_elem = scroller($body[0]).scrollElement;
+        scroll_elem.addEventListener("scroll", formatted_scroller_onscroll);
         return $popup;
+    }
+
+    function formatted_scroller_update(msg)
+    {
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("formatted-scroller"))
+            return;
+        if (msg.text !== undefined)
+        {
+            var $body = $(scroller($popup.find(".body")[0]).contentElement);
+            $body.html(util.formatted_string_to_html(msg.text));
+        }
+        if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
+        {
+            var body = $popup.find(".body")[0];
+            var $scroller = $(scroller(body).scrollElement);
+            if (msg.scroll == 2147483647) // FS_START_AT_END
+            {
+                // special case for webkit: excessively large values don't work
+                var inner_h = $(scroller(body).contentElement).outerHeight();
+                $scroller[0].scrollTop = inner_h - $(body).outerHeight();
+            }
+            else
+            {
+                var line_height = formatted_scroller_line_height(body);
+                msg.scroll *= line_height;
+                formatted_scroller_monitor_scrolling = false;
+                $scroller[0].scrollTop = msg.scroll;
+            }
+        }
     }
 
     var ui_handlers = {
@@ -324,11 +396,27 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui) {
         var ui_handlers = {
             "mutations" : mutations_update,
             "describe-god" : describe_god_update,
+            "formatted-scroller" : formatted_scroller_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)
             handler(msg);
     }
+
+    function ui_layouts_cleanup()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+    }
+
+    $(document).off("game_init.ui-layouts")
+        .on("game_init.ui-layouts", function () {
+        $(document).off("game_cleanup.ui-layouts")
+                   .on("game_cleanup.ui-layouts", ui_layouts_cleanup);
+    });
 
     comm.register_handlers({
         "ui-push": recv_ui_push,

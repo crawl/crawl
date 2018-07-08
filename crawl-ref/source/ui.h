@@ -560,6 +560,7 @@ void pop_layout();
 void pump_events(int wait_event_timeout = INT_MAX);
 void run_layout(shared_ptr<Widget> root, const bool& done);
 int getch(KeymapContext km = KMC_DEFAULT);
+void ui_force_render();
 
 void push_scissor(i4 scissor);
 void pop_scissor();
