@@ -34,6 +34,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
@@ -384,6 +385,12 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
             process_command((command_type) c);
         }
         c = CK_MOUSE_CMD;
+    }
+    else if (msgtype == "formatted_scroller_scroll")
+    {
+        JsonWrapper scroll = json_find_member(obj.node, "scroll");
+        scroll.check(JSON_NUMBER);
+        recv_formatted_scroller_scroll((int)scroll->number_);
     }
 
     return c;

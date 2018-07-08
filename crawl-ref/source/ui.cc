@@ -1270,6 +1270,12 @@ static void remap_key(wm_event &event)
     ASSERT(event.key.keysym.sym != -1);
 }
 
+void ui_force_render()
+{
+    ui_root.layout();
+    ui_root.render();
+}
+
 void pump_events(int wait_event_timeout)
 {
     int macro_key = macro_buf_get();
