@@ -1838,16 +1838,13 @@ static void _cloud_card(int power, deck_rarity_type rarity)
 
         switch (power_level)
         {
-            case 0: cloudy = (you_worship(GOD_SHINING_ONE) || !one_chance_in(5))
-                              ? CLOUD_MEPHITIC : CLOUD_POISON;
+            case 0: cloudy = !one_chance_in(5) ? CLOUD_MEPHITIC : CLOUD_POISON;
                     break;
 
-            case 1: cloudy = (you_worship(GOD_DITHMENOS) || coinflip())
-                              ? CLOUD_COLD : CLOUD_FIRE;
+            case 1: cloudy = coinflip() ? CLOUD_COLD : CLOUD_FIRE;
                     break;
 
-            case 2: cloudy = (is_good_god(you.religion) || coinflip())
-                              ? CLOUD_ACID: CLOUD_MIASMA;
+            case 2: cloudy = coinflip() ? CLOUD_ACID: CLOUD_MIASMA;
                     break;
 
             default: cloudy = CLOUD_DEBUGGING;
@@ -1930,12 +1927,6 @@ static void _illusion_card(int power, deck_rarity_type rarity)
 static void _degeneration_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-
-    if (you_worship(GOD_ZIN))
-    {
-        _suppressed_card_message(you.religion, DID_CHAOS);
-        return;
-    }
 
     if (!apply_visible_monsters([power_level](monster& mons)
            {
