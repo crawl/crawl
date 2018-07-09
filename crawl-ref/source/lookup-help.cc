@@ -838,7 +838,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-            | MF_USE_TWO_COLUMNS , toggleable_sort());
+            | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS , toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
