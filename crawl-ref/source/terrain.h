@@ -31,6 +31,7 @@ private:
 actor* actor_at(const coord_def& c);
 
 bool cell_is_solid(const coord_def &c);
+bool cell_is_runed(const coord_def &p);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
 bool feat_is_wall(dungeon_feature_type feat);

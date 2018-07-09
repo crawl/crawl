@@ -4175,9 +4175,11 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
     if (only_in_sight && !you.see_cell_no_trans(p))
         return false;
 
-    if ((grd(p) == DNGN_CLOSED_DOOR
-        || grd(p) == DNGN_SEALED_DOOR)
-            && _mons_can_pass_door(&mon, p))
+    if (cell_is_runed(p))
+        return false;
+
+    // Includes sealed doors.
+    if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
     {
         return true;
     }
