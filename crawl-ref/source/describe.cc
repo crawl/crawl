@@ -98,12 +98,12 @@ int show_description(const string &body, const tile_def *tile)
 }
 
 /// A message explaining how the player can toggle between quote &
-static const string _toggle_message =
+static const formatted_string _toggle_message = formatted_string::parse_string(
     "Press '<w>!</w>'"
 #ifdef USE_TILE_LOCAL
     " or <w>Right-click</w>"
 #endif
-    " to toggle between the description and quote.";
+    " to toggle between the description and quote.");
 
 int show_description(const describe_info &inf, const tile_def *tile)
 {
