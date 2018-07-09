@@ -3269,7 +3269,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         }
     }
 
-    if (grd(f) == DNGN_CLOSED_DOOR || grd(f) == DNGN_SEALED_DOOR)
+    ASSERT(!cell_is_runed(f)); // should be checked in mons_can_traverse
+
+    if (feat_is_closed_door(grd(f)))
     {
         if (mons_can_destroy_door(mons, f))
         {
