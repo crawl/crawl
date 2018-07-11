@@ -224,8 +224,9 @@ void TilesFramework::finish_message()
                     {
                         // Wait for half a second at first (up to five), then
                         // try again.
-                        const int sleep_time = retries <= 10
-                                                ? 5000 * 1000 : 500 * 1000;
+                        const int sleep_time = retries > 25 ? 2 * 1000
+                                             : retries > 10 ? 500 * 1000
+                                             : 5000 * 1000;
 #ifdef DEBUG_WEBSOCKETS
                         fprintf(stderr, "failed (%s), sleeping for %dms.\n",
                                                     errmsg, sleep_time / 1000);
