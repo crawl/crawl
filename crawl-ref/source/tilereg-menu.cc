@@ -177,13 +177,15 @@ void MenuRegion::_place_entries()
                     && !m_entries[index+1].heading)
             {
                 m_div_line_buf.add(entry.sx, entry.sy+scroll_y+5,
-                        mx-entry.sx, entry.sy+scroll_y+5, VColour(0, 64, 255, 70));
+                        entry.sx+m_num_col*m_col_width, entry.sy+scroll_y+5, VColour(0, 64, 255, 70));
             }
             m_font_buf.add(split, entry.sx, entry.sy+scroll_y+8);
         }
         else
         {
             const int entry_height = entry.ey - entry.sy;
+            entry.sx += entry.column * m_col_width;
+            entry.ex += entry.column * m_col_width;
 
             const int ty = entry.sy + max(entry_height-32, 0)/2;
             for (const tile_def &tile : entry.tiles)
@@ -253,10 +255,11 @@ void MenuRegion::_do_layout(const int left_offset, const int top_offset,
 
 col_retry:
     int column = -1; // an initial increment makes this 0
-    const int column_width = menu_width / num_columns;
+    const int max_column_width = menu_width / num_columns;
     const int text_height = m_font_entry->char_height();
     const int more_height = (count_linebreaks(m_more)+1) * m_font_entry->char_height();
 
+    int column_width = 0;
     int row_height = 0;
     int height = top_offset;
 
@@ -308,10 +311,10 @@ col_retry:
         else
         {
             entry.sy = height;
-            int entry_start = column * column_width + left_offset;
+            int entry_start = left_offset;
             int text_sx = text_indent + entry_start;
 
-            entry.sx = entry.tiles.empty() ? text_sx : entry_start + tile_indent;
+            entry.sx = entry_start + (entry.tiles.empty() ? text_indent : tile_indent);
             // Force all entries to the same height, regardless of whethery
             // they have a tile: this ensures <=52 items / page
             int entry_height = max(max_tile_height, text_height);
@@ -320,7 +323,7 @@ col_retry:
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
             // Split menu entries that don't fit into a single line into
             // two lines.
-            if (draw_tiles && text_sx + text_width > entry_start + column_width - tile_indent)
+            if (draw_tiles && text_sx + text_width > entry_start + max_column_width - tile_indent)
             {
                 formatted_string text;
                 if (_has_hotkey_prefix(entry.text.tostring()))
@@ -335,7 +338,7 @@ col_retry:
                 else
                     text += entry.text;
 
-                int w = entry_start + column_width - tile_indent - text_sx;
+                int w = entry_start + max_column_width - tile_indent - text_sx;
                 int h = m_font_entry->char_height() * 2;
                 formatted_string split = m_font_entry->split(text, w, h);
                 int string_height = m_font_entry->string_height(split);
@@ -343,8 +346,11 @@ col_retry:
                 entry_height = max(entry_height, string_height);
             }
 
-            entry.ex = entry_start + column_width - tile_indent;
+            column_width = max(column_width, text_sx + text_width + tile_indent);
+
+            entry.ex = entry_start - tile_indent; // less column_width (still unknown)
             entry.ey = entry.sy + entry_height;
+            entry.column = column;
             row_height = max(row_height, entry_height);
         }
     }
@@ -364,6 +370,17 @@ col_retry:
         num_columns++;
         goto col_retry;
     }
+
+    // Now that we know the column_width, add it to all entry.ex
+    column_width = min(column_width, max_column_width);
+    for (int index = 0; index < (int)m_entries.size(); ++index)
+    {
+        MenuRegionEntry &entry = m_entries[index];
+        if (entry.valid && !entry.heading)
+            entry.ex += column_width;
+    }
+    m_col_width = column_width;
+    m_num_col = num_columns;
 
     // Give each entry a page number
     int page = 1, page_top = top_offset;
