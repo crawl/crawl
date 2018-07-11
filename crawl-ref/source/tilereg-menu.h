@@ -48,7 +48,7 @@ protected:
         formatted_string text;
         int colour; // keep it separate from text
         int sx, ex, sy, ey;
-        int page;
+        int page, column;
         bool selected;
         bool heading;
         char key;
@@ -66,7 +66,9 @@ protected:
 #ifdef TOUCH_UI
     int m_more_region_start;
 #endif
+    // Set during _do_layout();
     int m_end_height;
+    int m_col_width, m_num_col;
 
     virtual void run() override {};
     void _place_entries();
