@@ -391,7 +391,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool antimagic_susceptible() const override;
 
-    bool stasis() const override;
+    bool stasis(bool calc_unid = true, bool items = true) const override;
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;

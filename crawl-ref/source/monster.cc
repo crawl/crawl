@@ -6579,10 +6579,11 @@ bool monster::check_clarity(bool silent) const
     return true;
 }
 
-bool monster::stasis() const
+bool monster::stasis(bool calc_unid, bool items) const
 {
     return mons_genus(type) == MONS_FORMICID
-           || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
+           || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID
+           || actor::stasis(calc_unid, items);
 }
 
 bool monster::cloud_immune(bool calc_unid, bool items) const

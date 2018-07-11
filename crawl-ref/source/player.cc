@@ -3524,9 +3524,10 @@ bool player::gourmand(bool calc_unid, bool items) const
            || actor::gourmand(calc_unid, items);
 }
 
-bool player::stasis() const
+bool player::stasis(bool calc_unid, bool items) const
 {
-    return species == SP_FORMICID;
+    return species == SP_FORMICID
+           || actor::stasis(calc_unid, items);
 }
 
 bool player::cloud_immune(bool calc_unid, bool items) const

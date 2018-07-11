@@ -214,6 +214,11 @@ bool actor::res_corr(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
+bool actor::stasis(bool calc_unid, bool items) const
+{
+    return items && wearing_ego(EQ_CLOAK, SPARM_STASIS, calc_unid);
+}
+
 bool actor::cloud_immune(bool calc_unid, bool items) const
 {
     return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));

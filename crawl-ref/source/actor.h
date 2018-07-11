@@ -318,7 +318,7 @@ public:
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
     bool has_notele_item(bool calc_unid = true,
                          vector<item_def> *matches = nullptr) const;
-    virtual bool stasis() const = 0;
+    virtual bool stasis(bool calc_unid = true, bool items = true) const;
     virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
