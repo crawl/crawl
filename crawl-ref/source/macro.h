@@ -69,6 +69,7 @@ void macro_buf_add(const keyseq &actions,
 int macro_buf_get();
 
 void macro_buf_add_cmd(command_type cmd, bool reverse = false);
+void macro_buf_add_with_keymap(keyseq keys, KeymapContext mc);
 
 bool is_userfunction(int key);
 bool is_synthetic_key(int key);

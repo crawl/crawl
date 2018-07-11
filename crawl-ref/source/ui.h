@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "format.h"
+#include "KeymapContext.h"
 #include "tilefont.h"
 #include "tiledef-gui.h"
 #include "windowmanager.h"
@@ -551,10 +552,11 @@ protected:
 };
 #endif
 
-void push_layout(shared_ptr<Widget> root);
+void push_layout(shared_ptr<Widget> root, KeymapContext km = KMC_DEFAULT);
 void pop_layout();
 void pump_events();
 void run_layout(shared_ptr<Widget> root, const bool& done);
+int getch(KeymapContext km = KMC_DEFAULT);
 
 void push_scissor(i4 scissor);
 void pop_scissor();

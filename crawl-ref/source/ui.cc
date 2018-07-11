@@ -10,6 +10,7 @@
 
 #include "ui.h"
 #include "cio.h"
+#include "macro.h"
 # include "state.h"
 
 #ifdef USE_TILE_LOCAL
@@ -60,7 +61,7 @@ static void clear_text_region(i4 region);
 static struct UIRoot
 {
 public:
-    void push_child(shared_ptr<Widget> child);
+    void push_child(shared_ptr<Widget> child, KeymapContext km);
     void pop_child();
 
     void resize(int w, int h);
@@ -80,6 +81,7 @@ public:
     };
 
     bool needs_paint;
+    vector<KeymapContext> keymap_stack;
 
 protected:
     int m_w, m_h;
@@ -1063,10 +1065,11 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int prosp_width)
 }
 #endif
 
-void UIRoot::push_child(shared_ptr<Widget> ch)
+void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
 {
     m_root.add_child(move(ch));
     m_needs_layout = true;
+    keymap_stack.push_back(km);
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 1)
     {
@@ -1080,6 +1083,7 @@ void UIRoot::pop_child()
 {
     m_root.pop_child();
     m_needs_layout = true;
+    keymap_stack.pop_back();
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 0)
         clrscr();
@@ -1166,8 +1170,12 @@ void UIRoot::render()
     m_dirty_region = {0, 0, 0, 0};
 }
 
+static function<bool(const wm_event&)> event_filter;
+
 bool UIRoot::on_event(const wm_event& event)
 {
+    if (event_filter && event_filter(event))
+        return true;
     return m_root.on_event(event);
 }
 
@@ -1218,9 +1226,9 @@ static void clear_text_region(i4 region)
 }
 #endif
 
-void push_layout(shared_ptr<Widget> root)
+void push_layout(shared_ptr<Widget> root, KeymapContext km)
 {
-    ui_root.push_child(move(root));
+    ui_root.push_child(move(root), km);
 }
 
 void pop_layout()
@@ -1233,23 +1241,48 @@ void resize(int w, int h)
     ui_root.resize(w, h);
 }
 
+static void remap_key(wm_event &event)
+{
+    keyseq keys = {event.key.keysym.sym};
+    KeymapContext km = ui_root.keymap_stack.size() > 0 ? ui_root.keymap_stack[0] : KMC_NONE;
+    macro_buf_add_with_keymap(keys, km);
+    event.key.keysym.sym = macro_buf_get();
+    ASSERT(event.key.keysym.sym != -1);
+}
+
 void pump_events()
 {
+    int macro_key = macro_buf_get();
+
 #ifdef USE_TILE_LOCAL
     // Don't render while there are unhandled mousewheel events,
     // since these can come in faster than crawl can redraw.
     // unlike mousemotion events, we don't drop all but the last event
-    if (!wm->get_event_count(WME_MOUSEWHEEL))
+    // ...but if there are macro keys, we do need to layout (for menu UI)
+    if (!wm->get_event_count(WME_MOUSEWHEEL) || macro_key != -1)
 #endif
     {
         ui_root.layout();
-        ui_root.render();
+#ifndef USE_TILE_WEB
+        // On webtiles, we can't skip rendering while there are macro keys: a
+        // crt screen may be opened and without a render() call, its text won't
+        // won't be sent to the client(s). E.g: macro => iai
+        if (macro_key == -1)
+#endif
+            ui_root.render();
     }
 
 #ifdef USE_TILE_LOCAL
     wm_event event = {0};
     while (true)
     {
+        if (macro_key != -1)
+        {
+            event.type = WME_KEYDOWN;
+            event.key.keysym.sym = macro_key;
+            break;
+        }
+
         if (!wm->wait_event(&event))
             continue;
         if (event.type == WME_MOUSEMOTION)
@@ -1264,6 +1297,10 @@ void pump_events()
         }
         if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
             continue;
+
+        // translate any key events with the current keymap
+        if (event.type == WME_KEYDOWN)
+            remap_key(event);
         break;
     }
 
@@ -1301,7 +1338,7 @@ void pump_events()
     }
 #else
     set_getch_returns_resizes(true);
-    int k = getch_ck();
+    int k = macro_key != -1 ? macro_key : getch_ck();
     set_getch_returns_resizes(false);
 
     if (k == CK_RESIZE)
@@ -1318,6 +1355,8 @@ void pump_events()
         wm_event ev = {0};
         ev.type = WME_KEYDOWN;
         ev.key.keysym.sym = k;
+        if (macro_key == -1)
+            remap_key(ev);
         ui_root.on_event(ev);
     }
 #endif
@@ -1329,6 +1368,35 @@ void run_layout(shared_ptr<Widget> root, const bool& done)
     while (!done && !crawl_state.seen_hups)
         pump_events();
     pop_layout();
+}
+
+int getch(KeymapContext km)
+{
+    // getch() can be called when there are no widget layouts, i.e.
+    // older layout/rendering code is being used. these parts of code don't
+    // set a dirty region, so we should do that now. One example of this
+    // is mprf() called from yesno()
+    ui_root.needs_paint = true;
+
+    int key;
+    bool done = false;
+    event_filter = [&](wm_event event) {
+        // swallow all events except key presses here; we don't want any other
+        // parts of the UI to react to anything while we're blocking for a key
+        // press. An example: clicking shopping menu items when asked whether
+        // to purchase already-selected items should not do anything.
+        if (event.type != WME_KEYDOWN)
+            return true;
+        key = event.key.keysym.sym;
+        done = true;
+        return true;
+    };
+    ui_root.keymap_stack.emplace_back(km);
+    while (!done && !crawl_state.seen_hups)
+        pump_events();
+    ui_root.keymap_stack.pop_back();
+    event_filter = nullptr;
+    return key;
 }
 
 }
