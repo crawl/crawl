@@ -57,6 +57,8 @@
 #include "viewgeom.h"
 #include "view.h"
 
+//#define DEBUG_WEBSOCKETS
+
 static unsigned int get_milliseconds()
 {
     // This is Unix-only, but so is Webtiles at the moment.
@@ -175,6 +177,10 @@ void TilesFramework::finish_message()
 {
     if (m_msg_buf.size() == 0)
         return;
+#ifdef DEBUG_WEBSOCKETS
+    const int initial_buf_size = m_msg_buf.size();
+    fprintf(stderr, "websocket: About to send %d bytes.\n", initial_buf_size);
+#endif
 
     if (m_sock_name.empty())
     {
@@ -185,11 +191,13 @@ void TilesFramework::finish_message()
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
     const char* data_end = m_msg_buf.data() + m_msg_buf.size();
+    int fragments = 0;
     while (fragment_start < data_end)
     {
         int fragment_size = data_end - fragment_start;
         if (fragment_size > m_max_msg_size)
             fragment_size = m_max_msg_size;
+        fragments++;
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
@@ -200,6 +208,10 @@ void TilesFramework::finish_message()
                 ssize_t retval = sendto(m_sock, fragment_start + sent,
                     fragment_size - sent, 0, (sockaddr*) &m_dest_addrs[i],
                     sizeof(sockaddr_un));
+#ifdef DEBUG_WEBSOCKETS
+                fprintf(stderr,
+                            "    trying to send fragment to client %d...", i);
+#endif
                 if (retval <= 0)
                 {
                     const char *errmsg = retval == 0 ? "No bytes sent"
@@ -212,11 +224,21 @@ void TilesFramework::finish_message()
                     {
                         // Wait for half a second at first (up to five), then
                         // try again.
-                        usleep(retries <= 10 ? 5000 * 1000 : 500 * 1000);
+                        const int sleep_time = retries <= 10
+                                                ? 5000 * 1000 : 500 * 1000;
+#ifdef DEBUG_WEBSOCKETS
+                        fprintf(stderr, "failed (%s), sleeping for %dms.\n",
+                                                    errmsg, sleep_time / 1000);
+#endif
+                        usleep(sleep_time);
                     }
                     else if (errno == ECONNREFUSED || errno == ENOENT)
                     {
                         // the other side is dead
+#ifdef DEBUG_WEBSOCKETS
+                        fprintf(stderr,
+                            "failed (%s), breaking.\n", errmsg);
+#endif
                         m_dest_addrs.erase(m_dest_addrs.begin() + i);
                         i--;
                         break;
@@ -225,7 +247,12 @@ void TilesFramework::finish_message()
                         die("Socket write error: %s", errmsg);
                 }
                 else
+                {
+#ifdef DEBUG_WEBSOCKETS
+                    fprintf(stderr, "fragment size %d sent.\n", fragment_size);
+#endif
                     sent += retval;
+                }
             }
         }
 
@@ -233,6 +260,10 @@ void TilesFramework::finish_message()
     }
     m_msg_buf.clear();
     m_need_flush = true;
+#ifdef DEBUG_WEBSOCKETS
+    fprintf(stderr, "websocket: Sent %d bytes in %d fragments.\n",
+                                                initial_buf_size, fragments);
+#endif
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -313,6 +344,9 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     JsonWrapper msg = json_find_member(obj.node, "msg");
     msg.check(JSON_STRING);
     string msgtype(msg->string_);
+#ifdef DEBUG_WEBSOCKETS
+    fprintf(stderr, "websocket: Received control message '%s' in %d byte.\n", msgtype.c_str(), (int) data.size());
+#endif
 
     int c = 0;
 
