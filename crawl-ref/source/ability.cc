@@ -2443,9 +2443,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
 
-        int power = you.skill(SK_INVOCATIONS, 1)
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1))
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1));
+        int power = 3 + you.skill(SK_INVOCATIONS, 1)
+                    + random2(1 + you.skill(SK_INVOCATIONS, 2))
+                    + random2(1 + you.skill(SK_INVOCATIONS, 2));
 
         // Since the actual beam is random, check with BEAM_MMISSILE.
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, beam.range))
