@@ -314,6 +314,13 @@ void change_monster_type(monster* mons, monster_type targetc)
             mons->props["old_heads"].get_int() = mons->num_heads;
     }
 
+    //if monster was frenzied before it was polymorphed reset attitude
+    if (mons->props.exists("old_attitude"))
+    {
+        mons->attitude = static_cast<mon_attitude_type>(mons->props["old_attitude"].get_short());
+        mons_att_changed(mons);
+    }
+
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
