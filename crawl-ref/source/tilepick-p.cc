@@ -1034,7 +1034,9 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_BARACHI)
-             || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_GNOLL))
+             || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_GNOLL)
+             || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_GARGOYLE)
+             || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_VINE_STALKER))
     {
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
