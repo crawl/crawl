@@ -1419,3 +1419,62 @@ MAP
   ...cccc.P.cccc..
     ......@......
 ENDMAP
+
+NAME:   gammafunk_ghost_smash
+DEPTH:  D:3-, Orc
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   ogre, ogre ; dire flail good_item | dire flail randart | \
+        great mace good_item | great mace randart
+MONS:   two-headed ogre, two-headed ogre ; dire flail good_item | \
+            dire flail randart | great mace good_item | great mace randart \
+            . dire flail good_item | dire flail randart | \
+            great mace good_item | great mace randart
+MONS:   ettin, ettin ; great mace good_item | great mace randart \
+            .  great mace good_item | great mace randart
+MONS:   fire giant ; great mace ego:flaming randart
+KMONS:  D = frost giant ; great mace ego:freezing randart
+# Use one of the two inner wall patterns.
+SHUFFLE: xv
+SUBST: v = -, x : xcbv
+NSUBST: R = R / -
+: ghost_good_loot(_G)
+# Only one of the highest-tier monsters gets a fancy weapon (or two).
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+SUBST:  d = *%, e = %$, fgh = -
+NSUBST: - = 2=1- / 2 / -
+:     elseif you.depth() < 9 then
+SUBST:  d = *, e = *%, f = %$--, gh = -
+NSUBST: - = 1 / 2=1- / 24 / -
+:     elseif you.depth() < 12 then
+SUBST:  e = *, f = %$, gh = -
+NSUBST: - = 1 / 2=1- / 2=3- / 4 / -
+:     elseif you.depth() < 14 then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 1 / 2=1- / 2=3 / 2=3- / 4444467D / -
+:     else
+SUBST:  f = |*, g = *%, h = %$--
+NSUBST: - = 1 / 2=1- / 2=3 / 35 / 2=3- / 67D / -
+:     end
+: elseif you.in_branch("Orc") then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 1 / 2=1- / 2=3 / 2=3- / 46 / -
+: end
+MARKER: P = lua:transp_loc("smash_entry")
+MARKER: Q = lua:transp_dest_loc("smash_entry")
+MARKER: R = lua:transp_loc("smash_exit")
+MARKER: S = lua:transp_dest_loc("smash_exit")
+: ghost_setup(_G)
+MAP
+     .@.
+.....P.S.....
+nnnnnnnnnnnnn
+cR--gedfh--Rc
+c-vxxvOvxxv-c
+c-xvvx-xvvx-c
+c-xvvx-xvvx-c
+c-vxxv-vxxv-c
+cR----Q----Rc
+ccccccccccccc
+ENDMAP
