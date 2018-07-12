@@ -1,4 +1,4 @@
-Stone Soup 0.22 (through 0.22-a0-604-gc538b7411b)
+Stone Soup 0.22 (through 0.22-a0-617-g6d95e9e505)
 -------------------------------------------------
 
 Branches, Environment
@@ -16,6 +16,7 @@ Branches, Environment
 
 Character
 ---------
+* The player can use wands in all forms.
 * The MP-powered wand mutation allows use of wands at 0 MP and is now
   considered a good mutation.
 
