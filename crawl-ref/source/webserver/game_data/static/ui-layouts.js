@@ -143,11 +143,20 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         return $popup;
     }
 
+    function format_spell_html(desc)
+    {
+        var parts = desc.match(/(.*\n\n)(Level: [^\n]+)(\n\n.*)/);
+        if (parts == null || parts.length != 4)
+            return fmt_body_txt(desc);
+        parts[2] = parts[2].replace(/ /g, '&nbsp;');
+        return fmt_body_txt(parts[1]+parts[2]+parts[3])
+    }
+
     function describe_spell(desc)
     {
         var $popup = $(".templates > .describe-spell").clone();
         $popup.find(".header > span").html(desc.title);
-        $popup.find(".body").html(fmt_body_txt(desc.desc));
+        $popup.find(".body").html(format_spell_html(desc.desc));
         scroller($popup.find(".body")[0]);
         if (desc.can_mem)
             $popup.find(".actions").removeClass("hidden");
