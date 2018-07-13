@@ -216,6 +216,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
+        new BoolGameOption(SIMPLE_NAME(dump_options), false),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -1142,6 +1143,7 @@ void game_options::reset_options()
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
         new_dump_fields("xp_by_level");
+    new_dump_fields("options");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -1583,6 +1585,8 @@ void read_init_file(bool runscript)
     UNUSED(lua_builtins);
     UNUSED(config_defaults);
 #endif
+    // Clear Options.file_contents here to avoid duplication in dump
+    Options.file_contents.clear();
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
@@ -1590,6 +1594,7 @@ void read_init_file(bool runscript)
     Options.line_num     = 0;
     for (const string &extra : SysEnv.extra_opts_first)
     {
+        Options.file_contents += extra + "\n";  // Add extra options to dump
         Options.line_num++;
         Options.read_option_line(extra, true);
     }
@@ -1633,7 +1638,8 @@ void read_init_file(bool runscript)
 
     if (f.error())
         return;
-    Options.read_options(f, runscript);
+    string option_file_contents = Options.read_options(f, runscript);
+    Options.file_contents += "\n" + option_file_contents + "\n\n";
 
     if (Options.read_persist_options)
     {
@@ -1651,6 +1657,7 @@ void read_init_file(bool runscript)
     Options.line_num     = 0;
     for (const string &extra : SysEnv.extra_opts_last)
     {
+        Options.file_contents += extra + "\n";  // Add extra options to dump
         Options.line_num++;
         Options.read_option_line(extra, true);
     }
@@ -1763,7 +1770,7 @@ game_options::~game_options()
     deleteAll(option_behaviour);
 }
 
-void game_options::read_options(LineInput &il, bool runscript,
+string game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -1779,7 +1786,7 @@ void game_options::read_options(LineInput &il, bool runscript,
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);
-
+    string content = "";
     while (!il.eof())
     {
         line_num++;
@@ -1788,6 +1795,8 @@ void game_options::read_options(LineInput &il, bool runscript,
         line++;
 
         trim_string(str);
+
+        content += str + "\n";
 
         // This is to make some efficient comments
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
@@ -1932,6 +1941,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
+    return content;
 }
 
 void game_options::fixup_options()

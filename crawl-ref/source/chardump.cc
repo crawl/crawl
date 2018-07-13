@@ -85,6 +85,7 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
+static void _sdump_rc_file(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
@@ -142,6 +143,7 @@ static dump_section_handler dump_handlers[] =
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
     { "skill_gains",    _sdump_skill_gains   },
+    { "options",        _sdump_rc_file       },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -1461,6 +1463,23 @@ static void _sdump_mutations(dump_params &par)
         text += "\n";
         text += (formatted_string::parse_string(describe_mutations(false)));
         text += "\n\n";
+    }
+}
+
+static void _sdump_rc_file(dump_params &par)
+{
+    if (Options.dump_options)
+    {
+        par.text += "\n";
+        par.text += "---------------------\n";
+        par.text += "Options file contents\n";
+        par.text += "---------------------\n\n";
+
+        par.text += Options.file_contents;
+
+        par.text += "-------------------\n";
+        par.text += "End of options file\n";
+        par.text += "-------------------\n\n";
     }
 }
 
