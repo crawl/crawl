@@ -18,6 +18,7 @@
 # include "glwrapper.h"
 # include "tilebuf.h"
 #else
+# include <unistd.h>
 # include "output.h"
 # include "view.h"
 # include "stringutil.h"
@@ -1805,7 +1806,9 @@ void ui_delay(unsigned int ms)
         ui_root.expose_region({0,0,INT_MAX,INT_MAX});
         pump_events(wait_event_timeout);
         auto now = std::chrono::high_resolution_clock::now();
-        wait_event_timeout = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
+        wait_event_timeout =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - start)
+            .count();
     }
     while ((unsigned)wait_event_timeout < ms && !crawl_state.seen_hups);
 #else
@@ -1813,7 +1816,9 @@ void ui_delay(unsigned int ms)
     while (!crawl_state.seen_hups)
     {
         auto now = std::chrono::high_resolution_clock::now();
-        auto remaining = ms - std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
+        long remaining = ms -
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - start)
+            .count();
         if (remaining < 0)
             break;
         usleep(max(0l, min(poll_interval, remaining)));
