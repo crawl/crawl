@@ -187,7 +187,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
             for (var j = 0; j < displayed_monsters; ++j)
             {
                 renderer.render_cell(monsters[j].loc.x, monsters[j].loc.y,
-                                     j * w, 0);
+                                     j * w, 0, null, null, true);
             }
 
             if (monsters.length == 1)
