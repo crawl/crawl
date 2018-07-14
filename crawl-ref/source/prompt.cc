@@ -72,7 +72,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
 #endif
 
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
-    MenuEntry *status;
+    MenuEntry *status = nullptr;
 
     if (use_popup)
     {
@@ -152,7 +152,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
                              || crawl_state.game_is_hints_tutorial());
             const string pr = make_stringf("%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
-            if (use_popup)
+            if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else if (message)
                 mpr(pr);
