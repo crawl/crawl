@@ -475,8 +475,8 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ENCH] =
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
-    // Draconian head/wings.
-    if (species_is_draconian(you.species))
+    // Draconian and Faerie Dragon head/wings.
+    if (species_is_draconian(you.species) || you.species == SP_FAERIE_DRAGON)
     {
         tileidx_t base = 0;
         tileidx_t head = 0;
