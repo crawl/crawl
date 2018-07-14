@@ -828,7 +828,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         vsnprintf(detail, sizeof(detail), text, args);
         va_end(args);
         // Build the final result
-        char final_mesg[1024];
+        char final_mesg[1026];
         snprintf(final_mesg, sizeof(final_mesg), "%s (%s)", mesg, detail);
         _assert_msg = final_mesg;
         _BreakStrToDebugger(final_mesg, true);
@@ -845,7 +845,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
 NORETURN void die(const char *file, int line, const char *format, ...)
 {
     char tmp[2048] = {};
-    char mesg[2048] = {};
+    char mesg[2071] = {};
 
     va_list args;
 
@@ -864,7 +864,7 @@ NORETURN void die(const char *file, int line, const char *format, ...)
 NORETURN void die_noline(const char *format, ...)
 {
     char tmp[2048] = {};
-    char mesg[2048] = {};
+    char mesg[2055] = {};
 
     va_list args;
 

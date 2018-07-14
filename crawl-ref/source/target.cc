@@ -603,7 +603,6 @@ bool targeter_dig::can_affect_walls()
 
 aff_type targeter_dig::is_affected(coord_def loc)
 {
-    coord_def c;
     aff_type current = AFF_YES;
     bool hit_barrier = false;
     for (auto pc : path_taken)

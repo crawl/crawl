@@ -259,8 +259,8 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
     resize(rhs.m_size);
     if (rhs.m_buffer)
     {
-        size_t count = sizeof(m_buffer[0]) * m_size.x * m_size.y;
-        memcpy(m_buffer, rhs.m_buffer, count);
+        size_t count = m_size.x * m_size.y;
+        copy(rhs.m_buffer, rhs.m_buffer+count, m_buffer);
     }
     return *this;
 }
