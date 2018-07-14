@@ -589,6 +589,7 @@ static string _random_name()
     return "";
 }
 
+#ifndef DGAMELAUNCH
 static void _choose_name(newgame_def& ng, newgame_def& choice)
 {
     char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
@@ -668,6 +669,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);
 }
+#endif
 
 // Read a choice of game into ng.
 // Returns false if a game (with name ng.name) should
