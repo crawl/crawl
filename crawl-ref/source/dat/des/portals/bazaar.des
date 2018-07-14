@@ -281,7 +281,7 @@ ENDMAP
 # Crystal gate, Pan only
 # No allow_dup to prevent scumming.
 NAME:    bzr_crystal_pan
-TAGS:    extra
+TAGS:    extra allow_dup luniq
 DEPTH:   Pan
 COLOUR:  b = lightmagenta
 COLOUR:  . = magenta
