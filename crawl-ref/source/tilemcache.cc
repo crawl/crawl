@@ -1305,10 +1305,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
         if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
-        {
-            int part_offset = hash_rand(tile_player_part_count[p], seed, p);
-            m_doll.parts[p] = tile_player_part_start[p] + part_offset;
-        }
+            do {
+                int part_offset = hash_rand(tile_player_part_count[p], seed, p);
+                m_doll.parts[p] = tile_player_part_start[p] + part_offset;
+            } while (m_doll.parts[p] == TILEP_HELM_PUMPKIN);
     }
 
     int ac = mon.i_ghost.ac;
