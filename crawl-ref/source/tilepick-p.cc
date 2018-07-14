@@ -631,12 +631,15 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VINE_STALKER;
     case SP_BARACHI:
         return TILEP_BASE_BARACHI;
+<<<<<<< HEAD
     case SP_FAIRY:
         return TILEP_BASE_FAERIE_DRAGON;
     case SP_DUSK_WALKER:
         return TILEP_BASE_DUSK_WALKER;
     case SP_SAND_DWARF:
         return TILEP_BASE_HALFLING;
+=======
+>>>>>>> 2b25d890ec... tabs to spaces
     case SP_GNOLL:
         return TILEP_BASE_GNOLL;
     default:
