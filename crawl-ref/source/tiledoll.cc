@@ -351,6 +351,8 @@ void fill_doll_equipment(dolls_data &result)
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
             else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_HERMIT_CRAB))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_HC;
             else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
         else if (item == -1)

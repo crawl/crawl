@@ -1298,6 +1298,8 @@ string blade_parts(bool terse)
         str = terse ? "paw" : "front paw";
     else if (you.species == SP_OCTOPODE)
         str = "tentacle";
+    else if (you.species == SP_HERMIT_CRAB)
+        str = "claw";
     else
         str = "hand";
 
