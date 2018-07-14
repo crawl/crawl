@@ -626,12 +626,32 @@ static void _decrement_durations()
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
-
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            untransform();
-        }
+        
+        bool safe_recast = false;
+        if(you.form == transformation::spider)
+            safe_recast = calc_spell_power(SPELL_SPIDER_FORM,
+                true, false, false) >= 15;
+        if(you.form == transformation::statue)
+            safe_recast = calc_spell_power(SPELL_STATUE_FORM,
+                true, false, false) >= 50;
+        if(you.form == transformation::ice)
+            safe_recast = calc_spell_power(SPELL_ICE_FORM,
+                true, false, false) >= 25;
+        if(you.form == transformation::lich)
+            safe_recast = calc_spell_power(SPELL_NECROMUTATION,
+                true, false, false) >= 100;
+        if(you.form == transformation::dragon)
+            safe_recast = calc_spell_power(SPELL_DRAGON_FORM,
+                true, false, false) >= 75;
+        if(you.form == transformation::hydra)
+            safe_recast = calc_spell_power(SPELL_HYDRA_FORM,
+                true, false, false) >= 50;
+        if(!safe_recast)
+            if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr,
+                random2(3), "Your transformation is almost over."))
+            {
+                untransform();
+            }
     }
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
