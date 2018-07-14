@@ -42,7 +42,7 @@ static const map<species_type, species_def> species_data =
     "Faerie Dragon", "Faerie", "Faerie",
     SPF_NO_HAIR,
     0, -1, 0, 4,
-    MONS_ACID_DRAGON,
+    MONS_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_SMALL,
     6, 11, 7, // 24
     { STAT_INT, STAT_DEX }, 4,

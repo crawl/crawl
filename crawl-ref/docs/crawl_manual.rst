@@ -1763,7 +1763,7 @@ Faerie Dragons
   Faerie Dragons are a small species of magically-attuned dragonkin with so
   few living members remaining that many believe them extinct. They are very
   intelligent, but are known to be brash and often overconfident when
-  confronted with  danger. Their shimmering scales and bright wings are
+  confronted with danger. Their shimmering scales and bright wings are
   attractive, but have proven to be more bane than boon by drawing the
   attention of the Dungeon's denizens.
   
