@@ -49,6 +49,7 @@ enum species_type
     SP_BARACHI,
     SP_GNOLL,
     SP_HERMIT_CRAB,
+    SP_FAERIE_DRAGON,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

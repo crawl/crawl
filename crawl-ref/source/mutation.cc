@@ -274,7 +274,7 @@ static const mutation_type _all_scales[] =
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
-    MUT_SANGUINE_ARMOUR,
+    MUT_SANGUINE_ARMOUR,            MUT_SHIMMERING_SCALES,
 };
 
 static bool _is_covering(mutation_type mut)
@@ -350,6 +350,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_ROUGH_BLACK_SCALES:
 #endif
         case MUT_RUGGED_BROWN_SCALES:
+        case MUT_SHIMMERING_SCALES:
             return mutation_activity_type::PARTIAL;
         case MUT_YELLOW_SCALES:
         case MUT_ICY_BLUE_SCALES:

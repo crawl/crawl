@@ -489,6 +489,7 @@ tileidx_t tileidx_player()
         case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
         case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+        case SP_FAERIE_DRAGON:     ch = TILEP_TRAN_DRAGON_FAERIE;  break;
         default:                   ch = TILEP_TRAN_DRAGON;         break;
         }
         break;
@@ -634,18 +635,23 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_HERMIT_CRAB;
     case SP_GNOLL:
         return TILEP_BASE_GNOLL;
+    case SP_FAERIE_DRAGON:
+        return TILEP_BASE_FAERIE_DRAGON;
     default:
         return TILEP_BASE_HUMAN;
     }
 }
+//TODO: Maybe don't hack Faerie Dragons into this, find a better solution
 void tilep_draconian_init(int sp, int level, tileidx_t *base,
                           tileidx_t *head, tileidx_t *wing)
 {
-    const int colour_offset = _draconian_colour(sp, level);
-    *base = TILEP_BASE_DRACONIAN + colour_offset * 2;
+    const int colour_offset = you.species == SP_FAERIE_DRAGON ? 
+        9 : _draconian_colour(sp, level);
+    *base = you.species == SP_FAERIE_DRAGON ? TILEP_BASE_FAERIE_DRAGON : 
+        TILEP_BASE_DRACONIAN + colour_offset * 2;
     *head = tile_player_part_start[TILEP_PART_DRCHEAD] + colour_offset;
 
-    if (you.has_mutation(MUT_BIG_WINGS))
+    if (you.has_mutation(MUT_BIG_WINGS) || you.has_mutation(MUT_FAERIE_DRAGON_FLIGHT))
         *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 
@@ -698,6 +704,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_BLACK_DRACONIAN:
         case SP_PURPLE_DRACONIAN:
         case SP_PALE_DRACONIAN:
+        case SP_FAERIE_DRAGON:
         {
             tilep_draconian_init(sp, level, &result, &head, &wing);
             hair   = 0;
@@ -997,6 +1004,10 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FAERIE_DRAGON))
+    {
+        flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER))
     {

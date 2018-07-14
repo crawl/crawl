@@ -84,6 +84,8 @@ djinni_m
 formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
+faerie_dragon_f FAERIE_DRAGON
+faerie_dragon_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
@@ -1156,6 +1158,7 @@ drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
+drcwing_faerie FAERIE
 %end_ctg
 
 %parts_ctg DRCHEAD
@@ -1169,4 +1172,5 @@ drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
+drchead_faerie FAERIE
 %end_ctg

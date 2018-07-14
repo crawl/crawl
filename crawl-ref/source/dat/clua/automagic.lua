@@ -239,6 +239,7 @@ end
 
 local function mp_is_low()
   local mp, mmp = you.mp()
+  local fd = 0
   return (100*mp <= AUTOMAGIC_STOP*mmp)
 end
 
