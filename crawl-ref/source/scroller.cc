@@ -148,7 +148,7 @@ int formatted_scroller::show()
 
     // this needs to match the value in ui.js
     if (m_flags & FS_START_AT_END)
-        m_scroller->set_scroll(numeric_limits<uint32_t>::max());
+        m_scroller->set_scroll(numeric_limits<int32_t>::max());
 
     open_scrollers.push_back(this);
     ui::run_layout(move(popup), done);
