@@ -84,7 +84,8 @@ djinni_m
 formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
-faerie_dragon FAERIE_DRAGON
+faerie_dragon_f FAERIE_DRAGON
+faerie_dragon_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
