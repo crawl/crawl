@@ -2,8 +2,6 @@ define(["jquery", "comm", "client"],
 function ($, comm, client) {
     "use strict";
 
-    var $ui_stack = $("#ui-stack");
-
     function wrap_popup(elem, ephemeral)
     {
         var wrapper = $(".templates > .ui-popup").clone();
@@ -20,6 +18,7 @@ function ($, comm, client) {
 
     function show_popup(id)
     {
+        var $ui_stack = $("#ui-stack");
         var elem = $(id);
         var ephemeral = elem.parent().length === 0;
         elem.detach();
@@ -34,6 +33,7 @@ function ($, comm, client) {
 
     function hide_popup(show_below)
     {
+        var $ui_stack = $("#ui-stack");
         var wrapper = $ui_stack.children().last();
         console.assert(wrapper.length === 1, "no popup to hide");
 
@@ -66,6 +66,7 @@ function ($, comm, client) {
 
     function hide_all_popups()
     {
+        var $ui_stack = $("#ui-stack");
         while ($ui_stack.children().length > 0)
             hide_popup(false);
     }
