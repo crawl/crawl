@@ -540,7 +540,7 @@ void show_hiscore_table()
     unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
 
     auto vbox = make_shared<Box>(Widget::VERT);
-    auto title = make_shared<Text>("<yellow>Dungeon Crawl Stone Soup: High Scores</yellow>");
+    auto title = make_shared<Text>(formatted_string("Dungeon Crawl Stone Soup: High Scores", YELLOW));
     title->align_self = Widget::CENTER;
     title->set_margin_for_sdl({0, 0, 20, 0});
     auto hiscore_ui = make_shared<UIHiscoresMenu>();

@@ -431,7 +431,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
             morgue_directory().c_str());
 #endif
 
-    auto prompt_ui = make_shared<Text>(goodbye_msg);
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
     bool done = false;
     prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
         return done = ev.type == WME_KEYDOWN;
