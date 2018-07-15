@@ -1000,7 +1000,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     title_hbox->add_child(move(icon));
 #endif
 
-    auto title = make_shared<Text>(trimmed_string(topline.to_colour_string()));
+    auto title = make_shared<Text>(topline.trim());
     title->set_margin_for_crt({0, 0, 0, 0});
     title->set_margin_for_sdl({0, 0, 0, 16});
     title_hbox->add_child(move(title));
@@ -1036,12 +1036,13 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     {
         const auto &desc = descs[i];
         auto scroller = make_shared<Scroller>();
-        auto text = make_shared<Text>(trimmed_string(desc.to_colour_string()));
+        auto text = make_shared<Text>(desc.trim());
         text->wrap_text = true;
         scroller->set_child(text);
         desc_sw->add_child(move(scroller));
 
-        more_sw->add_child(make_shared<Text>(mores[i]));
+        more_sw->add_child(make_shared<Text>(
+                formatted_string::parse_string(mores[i])));
     }
 
     desc_sw->set_margin_for_sdl({20, 0, 20, 0});
@@ -1182,10 +1183,10 @@ bool describe_god_with_join(god_type which_god)
         prompt_fs.textcolour(channel_to_colour(MSGCH_PROMPT));
 
         prompt_fs.cprintf("%s", prompts[i].c_str());
-        more_sw->add_child(make_shared<Text>(prompt_fs.to_colour_string()));
+        more_sw->add_child(make_shared<Text>(prompt_fs));
 
         prompt_fs.cprintf(" [Y]es or [n]o only, please.");
-        more_sw->add_child(make_shared<Text>(prompt_fs.to_colour_string()));
+        more_sw->add_child(make_shared<Text>(prompt_fs));
     }
 
     const int num_panes = 3; // overview, detailed, wrath

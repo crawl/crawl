@@ -463,6 +463,11 @@ formatted_string formatted_string::substr_bytes(int pos, int length) const
     return result;
 }
 
+formatted_string formatted_string::trim() const
+{
+    return parse_string(trimmed_string(to_colour_string()));
+}
+
 void formatted_string::del_char()
 {
     for (auto i = ops.begin(); i != ops.end(); ++i)

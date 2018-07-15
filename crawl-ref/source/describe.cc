@@ -143,7 +143,8 @@ int show_description(const describe_info &inf, const tile_def *tile)
     {
         const auto &desc = descs[static_cast<int>(i)];
         auto scroller = make_shared<Scroller>();
-        auto text = make_shared<Text>(trimmed_string(desc));
+        auto fs = formatted_string::parse_string(trimmed_string(desc));
+        auto text = make_shared<Text>(fs);
         text->wrap_text = true;
         scroller->set_child(text);
         switcher->add_child(move(scroller));
@@ -2794,7 +2795,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     vbox->add_child(move(title_hbox));
 
     auto scroller = make_shared<Scroller>();
-    auto text = make_shared<Text>(trimmed_string(fs_desc.to_colour_string()));
+    auto text = make_shared<Text>(fs_desc.trim());
     text->wrap_text = true;
     scroller->set_child(text);
     vbox->add_child(scroller);
