@@ -753,14 +753,20 @@ NAME:   gammafunk_ghost_fury_of_okawaru
 DEPTH:  D:12-, Orc, Elf, Crypt
 ORIENT: float
 KFEAT:  O = altar_okawaru
-KMONS:  O = player ghost
+KMONS:  OP = player ghost
 # Bad Oka gift.
 KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
         animal skin cursed ident:all / robe cursed ident:all / \
         leather armour cursed ident:all / whip cursed ident:all / \
         spear cursed ident:all / short sword cursed ident:all / \
         dagger cursed ident:all / hand axe cursed ident:all / \
-        scythe cursed ident:all / club cursed ident:all
+        scythe cursed ident:all / club cursed ident:all / \
+        hunting sling cursed ident:all
+: if you.unrands("robe_of_misfortune") then
+KITEM:  P = robe cursed plus:-8 randart ident:all
+: else
+KITEM:  P = robe_of_misfortune ident:all
+: end
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         double sword good_item w:5 / demon blade good_item w:5 / \
@@ -772,6 +778,8 @@ ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         bardiche good_item w:5 / lajatang good_item w:5
 # An "Oka armour gift" on 'e'
 ITEM:   any armour good_item / any armour randart
+# Rarely place the robe of misfortune or a bad randart robe.
+SUBST:  O = O:49 P:1
 : if you.in_branch("D") then
 :      if you.depth() < 14 then
 MONS:   orc warrior / centaur warrior / tengu warrior
