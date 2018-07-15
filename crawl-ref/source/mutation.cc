@@ -754,15 +754,16 @@ string describe_mutations(bool drop_title)
     return result;
 }
 
-static string _vampire_Ascreen_footer(bool first_page)
+static formatted_string _vampire_Ascreen_footer(bool first_page)
 {
     const char *text = first_page ? "<w>Mutations</w>|Blood properties"
                                   : "Mutations|<w>Blood properties</w>";
-    return make_stringf("[<w>!</w>/<w>^</w>"
+    const string fmt = make_stringf("[<w>!</w>/<w>^</w>"
 #ifdef USE_TILE_LOCAL
             "|<w>Right-click</w>"
 #endif
             "]: %s", text);
+    return formatted_string::parse_string(fmt);
 }
 
 static int _vampire_bloodlessness()
@@ -875,7 +876,8 @@ void display_mutations()
     for (int i = 0; i < 2; i++)
     {
         auto scroller = make_shared<Scroller>();
-        auto text = make_shared<Text>(descs[static_cast<int>(i)]);
+        auto text = make_shared<Text>(formatted_string::parse_string(
+                descs[static_cast<int>(i)]));
         text->wrap_text = true;
         scroller->set_child(text);
         switcher->add_child(move(scroller));
@@ -913,7 +915,7 @@ void display_mutations()
             tiles.json_write_int("pane", c);
             tiles.ui_state_change("mutations", 0);
 #endif
-            bottom->set_text(formatted_string::parse_string(_vampire_Ascreen_footer(c)));
+            bottom->set_text(_vampire_Ascreen_footer(c));
         } else
             done = !vbox->on_event(ev);
         return true;
