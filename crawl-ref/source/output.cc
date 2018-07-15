@@ -2486,6 +2486,7 @@ void print_overview_screen()
     overview.add_text("\n");
     overview.add_text(_status_mut_rune_list(get_number_of_cols()));
     overview.show();
+    redraw_screen();
 }
 
 string dump_overview_screen(bool full_id)
