@@ -664,7 +664,7 @@ void Text::_render()
     }
 
     unsigned int hl_idx = 0;
-    for (size_t i = 0; i < min(lines.size(), (lines::size_type)region[3]); i++)
+    for (size_t i = 0; i < min(lines.size(), (size_t)region[3]); i++)
     {
         cgotoxy(region[0]+1, region[1]+1+i);
         formatted_string line = lines[i+region[1]-m_region[1]];
