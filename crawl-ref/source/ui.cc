@@ -582,7 +582,7 @@ void Text::_render()
             size_t sy = 0, ey = line_height;
             bool started = false, ended = false;
 
-            if (start >= 0 && start < oplen)
+            if (start < oplen) // assume start is unsigned and so >=0
             {
                 {
                     size_t line_start = full_text.rfind('\n', highlights[0]);
@@ -596,7 +596,7 @@ void Text::_render()
                 }
                 started = true;
             }
-            if (end >= 0 && end < oplen)
+            if (end < oplen) // assume end is unsigned and so >=0
             {
                 {
                     size_t line_start = full_text.rfind('\n', highlights[0]+hl_pat.size()-1);
