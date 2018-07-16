@@ -1306,10 +1306,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
         if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
-            do {
-                int part_offset = hash_rand(tile_player_part_count[p], seed, p);
-                m_doll.parts[p] = tile_player_part_start[p] + part_offset;
-            } while (m_doll.parts[p] == TILEP_HELM_PUMPKIN);
+        {
+            int part_offset = hash_rand(tile_player_part_count[p], seed, p);
+            m_doll.parts[p] = tile_player_part_start[p] + part_offset;
+        }
     }
 
     int ac = mon.i_ghost.ac;
@@ -1319,6 +1319,9 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     // Become uncannily spooky!
     if (today_is_halloween())
         m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_PUMPKIN;
+    else if (m_doll.parts[TILEP_PART_HELM] == TILEP_HELM_PUMPKIN)
+        m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_FIRST_NORM; // every day is *not* halloween
+
 
     if (ac > 25)
         m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_PLATE_BLACK;
