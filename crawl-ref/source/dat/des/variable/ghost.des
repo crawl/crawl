@@ -1504,3 +1504,66 @@ c-vxxv-vxxv-c
 cR----Q----Rc
 ccccccccccccc
 ENDMAP
+
+NAME:   gammafunk_ghost_nasty_kobolds
+DEPTH:  D:3-13
+KMONS:  pq = plant / fungus
+KFEAT:  q = W
+KMONS:  O = player ghost
+MONS:   kobold, big kobold, kobold demonologist
+KMONS:  D = kobold ; blowgun . needle ego:curare | needle ego:poisoned . dagger
+KMONS:  E = big kobold ; blowgun . needle ego:curare | \
+                needle ego:poisoned w:5 . dagger | short sword | whip
+KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger
+KMONS:  H = big kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger | short sword | whip
+KMONS:  J = kobold ; dagger ego:distortion
+KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
+                whip ego:distortion
+# Define some kobolds with more general nasty ego weapons.
+{{
+    weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
+    egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
+            ["pain"] = 5, ["electrocution"] = 5}
+    basic_def = random_item_def(weapons, egos, "", "|")
+    quality = crawl.coinflip() and "randart" or "good_item"
+    good_def = random_item_def(weapons, egos, "good_item", "|")
+    kmons("L = kobold ; " .. basic_def)
+    kmons("M = big kobold ; " .. basic_def)
+    kmons("N = kobold ; " .. good_def)
+    kmons("P = big kobold ; " .. good_def)
+}}
+# 50% of time put statue/tree/fountain with plants and vertical wall, otherwise
+# add some diagonal wall instead. The second shuffle makes any statue sometimes
+# be fountain + water plants.
+SHUFFLE: Gprs / Zrsr, Gp / Tq
+SUBST: r = -, Z = T, s = x, G : GGt, T : TTUV, x : xcbv
+: ghost_good_loot(_G)
+: if you.depth() < 6 then
+SUBST:  d = *%, e = %$, fg = -
+NSUBST: - = 2=1 / 4=1. / DEFH / DF.. / NP / JK / 2=JL.. / .
+: elseif you.depth() < 9 then
+SUBST:  d = *, e = *%, f = %$--, g = -
+NSUBST: - = 2=2 / 4=2. / EH / EH.. / P / K / 3=KM.. / 3. / .
+: elseif you.depth() < 12 then
+SUBST:  e = *, f = %$, g = -
+NSUBST: - = 2=2 / 2=2. / EH / 2=EH.. / P / K / 3=KM.. / 3 / 2=3. / .
+: else
+SUBST:  f = *, g = %$
+NSUBST: - = E / H / 2=EH.. / 2=P / 2=K / 3=KM.. / 2=3 / 4=3. / .
+: end
+: ghost_setup(_G)
+MAP
+  ccccc
+ ccedfcc
+cc--g--cc
+cprs-srpc
+cG-xOx-Gc
+cprs-srpc
+cn-----nc
+.nn===nn.
+....@....
+ENDMAP
