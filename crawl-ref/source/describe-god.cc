@@ -1059,7 +1059,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 }
 
 #ifdef USE_TILE_WEB
-static void _send_god_ui(god_type god)
+static void _send_god_ui(god_type god, bool is_altar)
 {
     tiles.json_open_object();
 
@@ -1071,6 +1071,7 @@ static void _send_god_ui(god_type god)
 
     tiles.json_write_int("colour", god_colour(god));
     tiles.json_write_string("name", god_name(god, true));
+    tiles.json_write_bool("is_altar", is_altar);
 
     tiles.json_write_string("description", getLongDescription(god_name(god)));
     if (you_worship(god))
@@ -1123,7 +1124,7 @@ void describe_god(god_type which_god)
 
 #ifdef USE_TILE_WEB
     tiles_crt_control disable_crt(false);
-    _send_god_ui(which_god);
+    _send_god_ui(which_god, false);
 #endif
 
     ui::run_layout(popup, done);
@@ -1157,6 +1158,14 @@ bool describe_god_with_join(god_type which_god)
     shared_ptr<Switcher> desc_sw;
     shared_ptr<Switcher> more_sw;
     build_partial_god_ui(which_god, popup, desc_sw, more_sw);
+
+    for (auto& child : *more_sw)
+    {
+        Text* label = static_cast<Text*>(child.get());
+        formatted_string text = label->get_text();
+        text += formatted_string::parse_string("  [<w>Enter</w>]: join religion");
+        label->set_text(text);
+    }
 
     // States for the state machine
     enum join_step_type {
@@ -1224,6 +1233,7 @@ bool describe_god_with_join(god_type which_god)
         }
 
         // Next, allow child widgets to handle scrolling keys
+        if (keyin != ' ' && keyin != CK_ENTER)
         if (popup->get_child()->on_event(ev))
             return true;
 
@@ -1264,7 +1274,7 @@ update_ui:
 
 #ifdef USE_TILE_WEB
     tiles_crt_control disable_crt(false);
-    _send_god_ui(which_god);
+    _send_god_ui(which_god, true);
 #endif
 
     ui::run_layout(popup, done);

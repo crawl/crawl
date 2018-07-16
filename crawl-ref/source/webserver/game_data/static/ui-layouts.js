@@ -253,6 +253,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $footer = $popup.find(".footer > .paneset");
         var $panes = $body.children(".pane");
 
+        if (!desc.is_altar)
+            $footer.find('.join-keyhelp').remove();
+
         $panes.eq(0).find(".desc").html(desc.description);
         $panes.eq(0).find(".god-favour td.title").addClass("fg"+desc.colour).html(desc.title);
         $panes.eq(0).find(".god-favour td.favour").addClass("fg"+desc.colour).html(desc.favour);
