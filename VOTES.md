@@ -156,13 +156,19 @@ P 003 | Dithmenos | 15+ | Pulled
 
 ## Legend
 P 00X  --  A vote referring to a mainline DCSS change
+
  0XXX  --  A vote referring to distinct X-Crawl content
+
  0XXXa --  A subvote of a set of votes listed a to another letter, or a clarification vote on a previous vote, in which case this may start at b.
 
  X+ -- Number of votes for the change in question
+
  X- -- Number of votes against the change in question
+
  X~ -- Number of votes requesting changes on the vote in question
+
  X? -- Number of votes requesting clarification on the vote in question
+
  X(description) -- Number of votes for the described option.
 
 #### Votes are up to date to JULY 16TH, 2018.
