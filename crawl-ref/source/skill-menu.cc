@@ -780,7 +780,8 @@ void SkillMenu::init(int flag, int region_height)
 
     if (is_set(SKMF_EXPERIENCE))
     {
-        m_skill_backup.save();
+        if (!m_skill_backup.state_saved())
+            m_skill_backup.save();
         you.auto_training = false;
         reset_training();
 
