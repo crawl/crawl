@@ -639,10 +639,9 @@ body {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    width: 100%; /* for IE11 */
+    min-width: 40em;
 }
 .mutations > .header {
-    text-align: center;
     margin-bottom: 15px;
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
