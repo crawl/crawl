@@ -190,7 +190,7 @@ static void _print_version()
     title_hbox->add_child(move(icon));
 #endif
 
-    auto title = make_shared<Text>(info);
+    auto title = make_shared<Text>(formatted_string::parse_string(info));
     title->set_margin_for_crt({0, 0, 0, 0});
     title->set_margin_for_sdl({0, 0, 0, 10});
     title_hbox->add_child(move(title));
