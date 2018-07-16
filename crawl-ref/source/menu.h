@@ -16,7 +16,6 @@
 #include "tiles-build-specific.h"
 #include "cio.h"
 #include "format.h"
-#include "prompt.h"
 #ifdef USE_TILE
  #include "tiledoll.h"
 #endif
@@ -153,16 +152,8 @@ public:
         if (level == MEL_ITEM && hotkeys.size())
         {
             char buf[300];
-            char sel_glyph;
-            if (hotkeys.empty() || !selected_qty)
-                sel_glyph = preselected ? '+' : '-';
-            else if (selected_qty < quantity)
-                sel_glyph = '#';
-            else
-                sel_glyph = '+';
-
             snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], sel_glyph,
+                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
                                  text.c_str());
             return string(buf);
         }
@@ -276,7 +267,7 @@ enum MenuFlag
                                     ///< select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
     MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
-    MF_SWAP_MODE        = 0x0800,   ///< Swaps items once, then exits.
+    //                    0x0800,
     MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
     MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
     MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.
@@ -363,9 +354,6 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
-    function<bool(MenuEntry&, MenuEntry*, int)> on_entry_swap;
-
-    string swap_mode_prompt_noun;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
@@ -421,11 +409,6 @@ protected:
                                   string &line, bool check_eol);
     void do_menu();
     virtual string get_select_count_string(int count) const;
-
-    bool swap_mode = false;
-    MenuEntry *first_swap_item = nullptr;
-    bool process_item_swap_key(int key);
-    void stop_swapping_entries();
 
 #ifdef USE_TILE_WEB
     void webtiles_set_title(const formatted_string title);

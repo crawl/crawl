@@ -11,7 +11,6 @@
 #include <sstream>
 #include <cmath>
 
-#include "adjust.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
@@ -159,14 +158,13 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &title, spell_selector selector, bool swap_mode)
+                const string &title, spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
-    const int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALWAYS_SHOW_MORE
-            | MF_ALLOW_FORMATTING | (swap_mode ? MF_SWAP_MODE : 0);
-    ToggleableMenu spell_menu(flags);
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
     {
         ToggleableMenuEntry* me =
@@ -265,14 +263,6 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             return false;
         }
     };
-
-    spell_menu.on_entry_swap = [](MenuEntry &first, MenuEntry *second, int key)
-    {
-        no_messages mx;
-        swap_spell_slots(letter_to_index(first.hotkeys[0]), letter_to_index(key));
-        return true;
-    };
-    spell_menu.swap_mode_prompt_noun = "spell";
 
     spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)

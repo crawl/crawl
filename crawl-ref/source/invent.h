@@ -228,7 +228,7 @@ vector<SelItem> select_items(
 
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 
-void display_inventory(bool swap_mode = false);
+void display_inventory();
 
 bool in_inventory(const item_def &i);
 void identify_inventory();

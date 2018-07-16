@@ -14,7 +14,6 @@
 #include <iomanip>
 #include <sstream>
 
-#include "adjust.h"
 #include "artefact.h"
 #include "colour.h"
 #include "command.h"
@@ -1176,27 +1175,11 @@ static unsigned char _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
-void display_inventory(bool swap_mode)
+void display_inventory()
 {
-    const int swap_mode_flag = swap_mode ? MF_SWAP_MODE : 0;
-    InvMenu menu(swap_mode_flag | MF_SINGLESELECT | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(MT_INVLIST);
-
-    menu.on_entry_swap = [](MenuEntry &first, MenuEntry *second, int key)
-    {
-        InvEntry &swap_first = static_cast<InvEntry&>(first);
-        InvEntry *swap_second = static_cast<InvEntry*>(second);
-
-        swap_inv_slots(letter_to_index(first.hotkeys[0]), letter_to_index(key), false);
-        if (swap_second)
-            swap(swap_first.item, swap_second->item);
-        else
-            swap_first.item = &you.inv[letter_to_index(key)];
-
-        return true;
-    };
-    menu.swap_mode_prompt_noun = "item";
 
     menu.on_single_selection = [](const MenuEntry& item)
     {
