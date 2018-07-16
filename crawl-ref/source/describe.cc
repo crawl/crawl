@@ -700,7 +700,7 @@ int str_to_trap(const string &s)
 static string _describe_demon(const string& name, bool flying)
 {
     const uint32_t seed = hash32(&name[0], name.size());
-    #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
+    #define HRANDOM_ELEMENT(arr, id) arr[hash_with_seed(ARRAYSZ(arr), seed, id)]
 
     static const char* body_types[] =
     {
@@ -836,10 +836,10 @@ static string _describe_demon(const string& name, bool flying)
     description << "and ";
     description << HRANDOM_ELEMENT(head_names, 1) << ".";
 
-    if (!hash_rand(5, seed, 4) && you.can_smell()) // 20%
+    if (!hash_with_seed(5, seed, 4) && you.can_smell()) // 20%
         description << HRANDOM_ELEMENT(smell_descs, 5);
 
-    if (hash_rand(2, seed, 6)) // 50%
+    if (hash_with_seed(2, seed, 6)) // 50%
         description << HRANDOM_ELEMENT(misc_descs, 6);
 
     return description.str();

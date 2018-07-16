@@ -1068,7 +1068,7 @@ static level_id _get_random_level()
         return level_id(static_cast<branch_type>(BRANCH_DUNGEON), 1);
     }
 
-    return levels[hash_rand(levels.size(), abyssal_state.seed)];
+    return levels[hash_with_seed(levels.size(), abyssal_state.seed)];
 }
 
 /**************************************************************/
