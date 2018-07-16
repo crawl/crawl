@@ -588,7 +588,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = hash_rand(100, seed, y * GXM + x);
+            cache[x][y] = hash_with_seed(100, seed, y * GXM + x);
 
     return cache;
 }
