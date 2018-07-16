@@ -1588,6 +1588,9 @@ void pop_layout()
     int x, y;
     wm->get_mouse_state(&x, &y);
     ui_root.send_mouse_enter_leave_events(x, y);
+#else
+    if (!has_layout())
+        redraw_screen(false);
 #endif
 }
 
