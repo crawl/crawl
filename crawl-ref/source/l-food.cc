@@ -41,7 +41,7 @@ static int food_prompt_eat_chunks(lua_State *ls)
 
 /*** Prompt the player to eat directly from the inventory menu.
  * @treturn boolean true if we ate
- * @function promt_inventory_menu
+ * @function prompt_inventory_menu
  */
 static int food_prompt_inventory_menu(lua_State *ls)
 {

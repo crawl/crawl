@@ -9,9 +9,6 @@
 #include "libutil.h" // map_find
 #include "options.h"
 
-// ////////////////////////////////////////////////////////////////////
-// Miscellaneous globals
-
 #define PATTERN_FLUSH_CEILING 100
 
 typedef map<string, unique_ptr<base_pattern>> pattern_map;

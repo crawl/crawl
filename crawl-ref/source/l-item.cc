@@ -36,9 +36,6 @@
 #include "stringutil.h"
 #include "throw.h"
 
-// ///////////////////////////////////////////////////////////////////
-// Item handling
-
 struct item_wrapper
 {
     item_def *item;

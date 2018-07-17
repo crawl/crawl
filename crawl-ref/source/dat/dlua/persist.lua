@@ -1,7 +1,6 @@
-------------------------------------------------------------------------------
 -- persist.lua
 -- Functions to persist the lua table c_persist
-------------------------------------------------------------------------------
+
 -- We want to load this file immediately before calling c_save_persist() to
 -- ensure that the functions haven't been overwritten by player versions.
 
