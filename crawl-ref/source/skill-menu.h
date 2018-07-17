@@ -145,7 +145,7 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    bool exit();
+    bool exit(bool experience_check);
 #ifdef USE_TILE_LOCAL
     int get_line_height();
 #endif
@@ -159,6 +159,9 @@ public:
     int read_skill_target(skill_type sk, int keyn);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
+
+    void init_experience();
+    void finish_experience();
 
 private:
     MenuFreeform*        m_ff;

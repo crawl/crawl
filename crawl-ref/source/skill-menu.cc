@@ -773,11 +773,8 @@ SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
 {
 }
 
-void SkillMenu::init(int flag, int region_height)
+void SkillMenu::init_experience()
 {
-    m_flags = flag;
-    init_flags();
-
     if (is_set(SKMF_EXPERIENCE))
     {
         if (!m_skill_backup.state_saved())
@@ -795,6 +792,25 @@ void SkillMenu::init(int flag, int region_height)
             }
         }
     }
+}
+
+void SkillMenu::finish_experience()
+{
+    if (is_set(SKMF_EXPERIENCE))
+    {
+        ASSERT(m_skill_backup.state_saved());
+        redraw_screen();
+        train_skills();
+        m_skill_backup.restore_training();
+    }
+}
+
+void SkillMenu::init(int flag, int region_height)
+{
+    m_flags = flag;
+    init_flags();
+
+    init_experience();
 
 #ifdef USE_TILE_LOCAL
     const int char_height = tiles.get_crt_font()->char_height();
@@ -941,6 +957,8 @@ void SkillMenu::clear()
     m_help_button = nullptr;
     m_middle_button = nullptr;
     m_clear_targets_button = nullptr;
+    m_skill_backup = skill_state();
+    m_flags = 0;
 }
 
 //Public methods
@@ -1009,7 +1027,7 @@ bool SkillMenu::do_skill_enabled_check()
 }
 
 // Before we exit, make sure there's at least one skill enabled.
-bool SkillMenu::exit()
+bool SkillMenu::exit(bool experience_check)
 {
     if (crawl_state.seen_hups)
     {
@@ -1020,12 +1038,8 @@ bool SkillMenu::exit()
     if (!do_skill_enabled_check())
         return false;
 
-    if (is_set(SKMF_EXPERIENCE))
-    {
-        redraw_screen();
-        train_skills();
-        m_skill_backup.restore_training();
-    }
+    if (experience_check)
+        finish_experience();
 
     clear();
     return true;
@@ -1736,7 +1750,8 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
 
 void UISkillMenu::_allocate_region()
 {
-    skm.exit();
+
+    skm.exit(false);
     int height = m_region[3];
     skm.init(flag, height);
 }
@@ -1795,19 +1810,12 @@ void skill_menu(int flag, int exp)
         return;
     }
 
+    unwind_bool xp_gain(crawl_state.simulating_xp_gain, flag & SKMF_EXPERIENCE);
+
     // notify the player again
     you.received_noskill_warning = false;
 
     you.exp_available += exp;
-
-    // Calling a user lua function here to let players automatically accept
-    // the given skill distribution for a potion of experience.
-    if (skm.is_set(SKMF_EXPERIENCE)
-        && clua.callbooleanfn(false, "auto_experience", nullptr)
-        && skm.exit())
-    {
-        return;
-    }
 
     bool done = false;
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
@@ -1851,11 +1859,11 @@ void skill_menu(int flag, int exp)
             // Fallthrough
             case ' ':
                 // Space and escape exit in any mode.
-                if (skm.exit())
+                if (skm.exit(true))
                     return done = true;
             default:
                 // Don't exit from !experience on random keys.
-                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit())
+                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(true))
                     return done = true;
             }
         }
@@ -1908,5 +1916,16 @@ void skill_menu(int flag, int exp)
     // to use the new ui framework; until then, this fixes the crash.
     skm.init(flag, MIN_LINES);
 
+    // Calling a user lua function here to let players automatically accept
+    // the given skill distribution for a potion of experience.
+    if (skm.is_set(SKMF_EXPERIENCE)
+        && clua.callbooleanfn(false, "auto_experience", nullptr)
+        && skm.exit(true))
+    {
+        return;
+    }
+
     ui::run_layout(move(popup), done);
+
+    skm.clear();
 }
