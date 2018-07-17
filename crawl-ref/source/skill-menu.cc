@@ -776,10 +776,9 @@ SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
 
 void SkillMenu::init_experience()
 {
-    if (is_set(SKMF_EXPERIENCE))
+    if (is_set(SKMF_EXPERIENCE) && !m_skill_backup.state_saved())
     {
-        if (!m_skill_backup.state_saved())
-            m_skill_backup.save();
+        m_skill_backup.save();
         you.auto_training = false;
         reset_training();
 
@@ -795,14 +794,16 @@ void SkillMenu::init_experience()
     }
 }
 
-void SkillMenu::finish_experience()
+void SkillMenu::finish_experience(bool experience_check)
 {
-    if (is_set(SKMF_EXPERIENCE))
+    if (is_set(SKMF_EXPERIENCE) && m_skill_backup.state_saved())
     {
-        ASSERT(m_skill_backup.state_saved());
-        redraw_screen();
-        unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
-        train_skills();
+        if (experience_check)
+        {
+            redraw_screen();
+            unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
+            train_skills();
+        }
         m_skill_backup.restore_training();
         m_skill_backup = skill_state();
     }
@@ -1041,8 +1042,7 @@ bool SkillMenu::exit(bool experience_check)
     if (!do_skill_enabled_check())
         return false;
 
-    if (experience_check)
-        finish_experience();
+    finish_experience(experience_check);
 
     clear();
     return true;
