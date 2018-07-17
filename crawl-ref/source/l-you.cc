@@ -46,7 +46,7 @@
 #include "travel.h"
 #include "wiz-you.h"
 
-// ///////////////////////////////////////////////////////////////////
+//
 // Bindings to get information on the player (clua).
 //
 
@@ -1238,7 +1238,7 @@ void cluaopen_you(lua_State *ls)
     luaL_openlib(ls, "you", you_clib, 0);
 }
 
-// ///////////////////////////////////////////////////////////////////
+//
 // Player information (dlua). Grid coordinates etc.
 //
 

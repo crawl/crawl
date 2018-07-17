@@ -238,7 +238,7 @@ end
 -- @tparam int x
 -- @tparam int y
 -- @treturn boolean|nil
--- @function ch_target_shadow_step
+-- @function ch_target_monster_expl
 
 --- What letter should this item get?
 --

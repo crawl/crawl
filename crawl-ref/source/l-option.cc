@@ -24,9 +24,6 @@
 #include "libutil.h" // map_find
 #include "options.h"
 
-// //////////////////////////////////////////////////////////////
-// Option handling
-
 typedef int (*ohandler)(lua_State *ls, const char *name, void *data, bool get);
 struct option_handler
 {

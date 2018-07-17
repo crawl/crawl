@@ -28,9 +28,6 @@
     } \
     monster *name(___mw ? ___mw->mons : nullptr)
 
-// ///////////////////////////////////////////////////////////////////
-// Monster handling
-
 void push_monster(lua_State *ls, monster* mons)
 {
     MonsterWrap *mw = clua_new_userdata< MonsterWrap >(ls, MONS_METATABLE);

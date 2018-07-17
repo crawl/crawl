@@ -4,8 +4,6 @@
 -- dungeon grid coordinates.
 -- @module iter
 
--- ----------------------------------------------------------------------------
---
 -- Example usage of adjacent_iterator:
 --
 -- function iter.rats()
@@ -16,18 +14,14 @@
 -- end
 --
 -- The above function will surround the player with rats.
---
--- ----------------------------------------------------------------------------
+
 -- dgn.point iterators.
 -- All functions expect dgn.point parameters, and return dgn.points.
--- ----------------------------------------------------------------------------
 iter = {}
 
--- ----------------------------------------------------------------------------
 -- generic filters for use with iterators
 --   these always need to be used with 'rvi', and any filter that acts on them
 --   is assumed to as well (but only return a point)
--- ----------------------------------------------------------------------------
 
 function iter.monster_filter (filter)
   local function filter_fn (point)
@@ -48,9 +42,7 @@ function iter.monster_filter (filter)
   return filter_fn
 end
 
--- ----------------------------------------------------------------------------
 -- rectangle_iterator
--- ----------------------------------------------------------------------------
 iter.rectangle_iterator = {}
 
 function iter.rectangle_iterator:_new ()
@@ -158,10 +150,7 @@ function iter.border_iterator(top_corner, bottom_corner, rvi)
   return iter.rectangle_iterator:new(top_corner, bottom_corner, check_inner, rvi)
 end
 
--- -----------------------------------------------------------------------------
 -- los_iterator
--- -----------------------------------------------------------------------------
-
 function iter.los_iterator (ic, filter, center, rvi)
   local y_x, y_y = you.pos()
 
@@ -213,10 +202,7 @@ function iter.mons_los_iterator (ic, filter, center)
   return iter.los_iterator(ic, iter.monster_filter(filter), center, true)
 end
 
--- -----------------------------------------------------------------------------
 -- adjacent_iterator
--- -----------------------------------------------------------------------------
-
 function iter.adjacent_iterator (ic, filter, center, rvi)
   local y_x, y_y = you.pos()
 
@@ -268,10 +254,7 @@ function iter.adjacent_iterator_to(center, include_center, filter)
   return iter.adjacent_iterator(include_center, filter, center, true)
 end
 
--- -----------------------------------------------------------------------------
--- Circle_iterator
--- -----------------------------------------------------------------------------
-
+-- circle_iterator
 function iter.circle_iterator (radius, ic, filter, center, rvi)
   if radius == nil then
     error("circle_iterator needs a radius")
@@ -328,11 +311,8 @@ function iter.mons_circle_iterator (radius, ic, filter, center)
   return iter.circle_iterator(radius, ic, iter.monster_filter(filter), center, true)
 end
 
--- -----------------------------------------------------------------------------
 -- item stack-related functions
 --   not necessarily iterators
--- -----------------------------------------------------------------------------
-
 function iter.stack_search (coord, term, extra)
   local _x, _y
   if extra ~= nil then
@@ -392,11 +372,9 @@ function iter.stack_destroy(coord, extra)
   end
 end
 
--- -----------------------------------------------------------------------------
 -- subvault_iterator
 -- Iterates through all map locations in a subvault that will get written
 -- back to a parent.
--- -----------------------------------------------------------------------------
 function iter.subvault_iterator (e, filter)
 
   if e == nil then
@@ -428,11 +406,9 @@ function iter.subvault_iterator (e, filter)
   return iter.rect_iterator(top_corner, bottom_corner, check_mask)
 end
 
--- -----------------------------------------------------------------------------
 -- Marker iterators
 --   firstly, a point iterator. It's really just a fancy ipairs(), but stateful
 --   and with the ability to filter points.
--- -----------------------------------------------------------------------------
 
 iter.point_iterator = {}
 
@@ -499,8 +475,7 @@ function iter.slave_iterator (prop, value)
   end
 end
 
--------------------------------------------------------------------------------
--- Inventory iterator.
+--- Inventory iterator.
 -- Iterates over tables of @{items.Item} objects, possibly filtering them.
 -- @usage `for item in iter.invent_iterator()
 --   if item.is_useless then
@@ -508,7 +483,6 @@ end
 --   end
 -- end`
 -- @type iter.invent_iterator
--------------------------------------------------------------------------------
 
 iter.invent_iterator = {}
 

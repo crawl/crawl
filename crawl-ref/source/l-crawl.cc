@@ -43,7 +43,7 @@
 # include <time.h>
 #endif
 
-// ///////////////////////////////////////////////////////////////////
+//
 // User accessible (clua) functions
 //
 
@@ -1476,7 +1476,7 @@ void cluaopen_crawl(lua_State *ls)
     luaL_openlib(ls, "crawl", crawl_clib, 0);
 }
 
-// ///////////////////////////////////////////////////////////////////
+//
 // Non-user-accessible bindings (dlua).
 //
 
