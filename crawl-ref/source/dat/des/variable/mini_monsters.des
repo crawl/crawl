@@ -6487,6 +6487,49 @@ bb....bbbbb....bb
  bbbbbb   bbbbbb
 ENDMAP
 
+NAME: chequers_guarded_unrand_robe
+TAGS: no_monster_gen no_item_gen patrolling
+# A randart robe is possible so that it's not trivial to identify the
+# robe of misfortune.
+{{
+robe_unrands = { "robe of augmentation", "robe of night", "robe of clouds",
+  "robe of vines", "robe of misfortune", "robe randart" }
+avail_robes = {}
+for _, name in ipairs(robe_unrands) do
+  if not you.unrands(name) then
+    avail_robes[#avail_robes + 1] = name
+  end
+end
+item(table.concat(avail_robes, " / "))
+}}
+# 3 of each. Vague theme of robe wearers
+MONS: wizard ; robe good_item,
+      orc sorcerer ; robe good_item,
+      meliai ; robe good_item,
+      blood saint ; robe good_item
+NSUBST: 1 = 3:1 / *:.,
+        2 = 3:2 / *:.,
+        3 = 3:3 / *:.,
+        4 = 3:4 / *:.
+DEPTH: D:11-, Orc
+MAP
+c.....@.....c
+cc.........cc
+ c.........c
+ cc.......cc
+  c.......c
+  cc=====cc
+   c11111c
+   c22222c
+   c33333c
+   c44444c
+   ccccc+c
+       cdc
+       ccn
+          @
+ENDMAP
+
+
 ###################################################################
 #
 # <<9>> The classics.
