@@ -477,7 +477,7 @@ spret_type conjure_distortion(const actor *agent, int pow, bool fail)
         }
         noisy(spell_effect_noise(SPELL_CONJURE_DISTORTION), point);
         
-        return SPRET_ABORT;
+        return SPRET_SUCCESS;
     }
     else
     {
