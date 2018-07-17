@@ -222,7 +222,7 @@ Yredelemnul (for undead allies). Also, while unreliable, Xom can be a lot of
 fun.
 
 Whenever you encounter an altar, be sure to read the corresponding god's
-description (by 'p'raying on the altar) and take your time in deciding whether
+description (by praying on the altar with '>') and take your time in deciding whether
 to pick this deity or not. As a follower, you can reread your god's
 description, now more detailed via the '!' toggle, on the '^' screen.
 
