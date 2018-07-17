@@ -1991,6 +1991,10 @@ void Menu::webtiles_write_menu(bool replace) const
 
 void Menu::webtiles_scroll(int first)
 {
+    // catch and ignore stale scroll events
+    if (first >= static_cast<int>(items.size()))
+        return;
+
     int item_y;
     m_ui.menu->get_item_region(first, &item_y, nullptr);
     if (m_ui.scroller->get_scroll() != item_y)
