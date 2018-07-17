@@ -3643,13 +3643,13 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
             if (altar_god == GOD_SIF_MUNA
                 && !player_can_join_god(altar_god))
             {
-                ostr << "As <w>p</w>raying on the altar will tell you, "
+                ostr << "As praying with <w>></w> on the altar will tell you, "
                      << god_name(altar_god) << " only accepts worship from "
                         "those who have already dabbled in magic. You can "
                         "find out more about this god by searching the "
                         "database with <w>?/g</w>.\n"
                         "For other gods, you'll be able to join the faith "
-                        "by <w>p</w>raying at their altar.";
+                        "by praying with <w>></w> at their altar.";
             }
             else if (you_worship(GOD_NO_GOD))
             {
@@ -3660,7 +3660,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                         "tributes or entertainment in return.\n"
                         "You can get information about <w>"
                      << god_name(altar_god)
-                     << "</w> by pressing <w>p</w> while standing on the "
+                     << "</w> by pressing <w>></w> while standing on the "
                         "altar. Before taking up the responding faith "
                         "you'll be asked for confirmation.";
             }
@@ -3676,7 +3676,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                         "but having a look won't hurt: to get information "
                         "on <w>";
                 ostr << god_name(altar_god);
-                ostr << "</w>, press <w>p</w> while standing on the "
+                ostr << "</w>, press <w>></w> while standing on the "
                         "altar. Before taking up the responding faith (and "
                         "abandoning your current one!) you'll be asked for "
                         "confirmation."
