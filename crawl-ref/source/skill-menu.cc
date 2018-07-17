@@ -29,6 +29,7 @@
  #include "tilereg-crt.h"
 #endif
 #include "ui.h"
+#include "unwind.h"
 
 using namespace ui;
 
@@ -800,8 +801,10 @@ void SkillMenu::finish_experience()
     {
         ASSERT(m_skill_backup.state_saved());
         redraw_screen();
+        unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
         train_skills();
         m_skill_backup.restore_training();
+        m_skill_backup = skill_state();
     }
 }
 

@@ -1272,7 +1272,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         skill_inc += bonus;
         bonus_left -= bonus;
         manual.skill_points -= bonus;
-        if (!manual.skill_points && !simu)
+        if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
             finish_manual(slot);
     }
 
