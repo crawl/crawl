@@ -739,7 +739,12 @@ void UIStartupMenu::_allocate_region()
                      "descriptor");
     menu.attach_object(descriptor);
 
+#ifdef USE_TILE_LOCAL
+    // Black and White highlighter looks kinda bad on tiles
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+#else
+    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+#endif
     highlighter->init(coord_def(-1, -1), coord_def(-1, -1), "highlighter");
     menu.attach_object(highlighter);
 
