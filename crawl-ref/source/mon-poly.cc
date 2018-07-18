@@ -354,7 +354,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Make sure we have a god if we've been polymorphed into a priest.
-    mons->god = mons->is_priest() ? GOD_NAMELESS : god;
+    mons->god = (mons->is_priest() && god == GOD_NO_GOD) ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
