@@ -6439,6 +6439,8 @@ static void tag_read_level_monsters(reader &th)
         if (!m.alive())
             continue;
 
+        monster *dup_m = monster_by_mid(m.mid);
+
 #if TAG_MAJOR_VERSION == 34
         // clear duplicates of followers who got their god cleared as the result
         // of a bad polymorph prior to e6d7efa92cb0. This only fires on level
@@ -6448,7 +6450,6 @@ static void tag_read_level_monsters(reader &th)
         // loading will fix up the duplicate errors. A similar check also
         // happens in follower::place (since that runs after the level is
         // loaded).
-        monster *dup_m = monster_by_mid(m.mid);
         if (dup_m)
         {
             if (maybe_bad_priest_monster(*dup_m))
@@ -6473,6 +6474,13 @@ static void tag_read_level_monsters(reader &th)
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
             monster_die(m, KILL_RESET, -1, true, false);
+            // avoid "mid cache bogosity" if there's an unhandled clone bug
+            if (dup_m && dup_m->alive())
+            {
+                mprf(MSGCH_ERROR, "elsewhere companion has duplicate mid %d: %s",
+                    dup_m->mid, dup_m->full_name(DESC_PLAIN).c_str());
+                env.mid_cache[dup_m->mid] = dup_m->mindex();
+            }
             continue;
         }
 
