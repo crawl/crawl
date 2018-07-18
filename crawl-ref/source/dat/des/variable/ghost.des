@@ -229,10 +229,9 @@ FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 : ghost_setup(_G)
 MAP
-   ccccc
-  ccfrfcc
- ccd-F-ecc
-ccq-----qcc
+  ccccccc
+ ccdfrfecc
+ccq--F--qcc
 cd-D---D-ec
 ch-------hc
 csH-----Hsc
