@@ -88,6 +88,7 @@ struct element_colour_calc
     virtual ~element_colour_calc() {};
 
 protected:
+    int rand_max {120};
     int rand(bool non_random);
 
     element_colour_calculator calc;
