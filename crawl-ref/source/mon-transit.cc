@@ -253,6 +253,15 @@ monster* follower::place(bool near_player)
 
     if (m->find_place_to_live(near_player))
     {
+#if TAG_MAJOR_VERSION == 34
+        // fix up some potential cloned monsters for beogh chars.
+        // see comments on maybe_bad_priest monster and in tags.cc for details
+        monster *dup_m = monster_by_mid(m->mid);
+        if (dup_m && maybe_bad_priest_monster(*dup_m))
+            fixup_bad_priest_monster(*dup_m);
+        // any clones not covered under maybe_bad_priest_monster will result
+        // in duplicate mid errors.
+#endif
         dprf("Placed follower: %s", m->name(DESC_PLAIN, true).c_str());
         m->target.reset();
 
