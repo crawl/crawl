@@ -3379,8 +3379,11 @@ monster* mons_find_elven_twin_of(const monster* mons)
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
     // Sometimes, if you pacify one twin near a staircase, they leave
-    // in the same turn. Convert, in those instances.
-    if (twin->neutral() && !twin->has_ench(ENCH_INSANE))
+    // in the same turn. Convert, in those instances. The strict_neutral check
+    // is intended to cover the slimify case, we don't want to pacify the other
+    // if a slimified twin dies.
+    if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
+                                                    && !twin->strict_neutral())
     {
         elven_twins_pacify(twin);
         return;
@@ -3392,7 +3395,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->good_neutral())
+    if (mons->good_neutral() || mons->strict_neutral())
         return;
 
     // Okay, let them climb stairs now.
@@ -3524,9 +3527,10 @@ void elven_twins_unpacify(monster* twin)
     if (!mons)
         return;
 
-    // Don't consider already neutralised monsters.
+    // Don't consider already un-neutralised monsters.
     if (!mons->neutral() || mons->has_ench(ENCH_INSANE))
         return;
+    simple_monster_message(*mons, " gets angry again!");
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
 }
