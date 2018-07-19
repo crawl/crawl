@@ -1699,6 +1699,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
+    case SPELL_SUMMON_SCORPIONS:
+        return cast_summon_scorpions(&you, powc, god, fail);
+
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
 
@@ -2283,7 +2286,6 @@ const set<spell_type> removed_spells =
     SPELL_SEE_INVISIBLE,
     SPELL_SINGULARITY,
     SPELL_SONG_OF_SHIELDING,
-    SPELL_SUMMON_SCORPIONS,
     SPELL_SUMMON_ELEMENTAL,
     SPELL_TWISTED_RESURRECTION,
     SPELL_SURE_BLADE,

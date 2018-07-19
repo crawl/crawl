@@ -1454,7 +1454,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                    (original > 0) ? " completely resists."
                                                   : " appears unharmed.");
         }
-        else if (doFlavouredEffects && !one_chance_in(3))
+        else if (doFlavouredEffects)
             poison_monster(mons, pbolt.agent());
 
         break;

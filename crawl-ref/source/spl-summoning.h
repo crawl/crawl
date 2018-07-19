@@ -30,6 +30,8 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
 
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
+spret_type cast_summon_scorpions(actor* caster, int pow, god_type god,
+                                 bool fail = false);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
 spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god,
                                  bool fail = false);

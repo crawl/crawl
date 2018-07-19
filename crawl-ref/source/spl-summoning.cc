@@ -252,6 +252,54 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_summon_scorpions(actor* caster, int pow, god_type god, bool fail)
+{
+    fail_check();
+    monster_type mon = MONS_SCORPION;
+    
+    mgen_data mdata = _summon_data(*caster, mon, 4, god,
+        SPELL_SUMMON_SCORPIONS);
+    mdata.flags |= MG_DONT_CAP;
+
+    int power_left = pow;
+
+    int seen_count = 0;
+    bool first = true;
+    int mid = -1;
+
+    while(power_left > 0)
+        {
+        if (monster* beast = create_monster(mdata))
+        {
+            if (you.can_see(*beast))
+                seen_count++;
+
+            // link scorpions for summon cap
+            if (mid == -1)
+                mid = beast->mid;
+            beast->props["summon_id"].get_int() = mid;
+
+            // Handle cap only for the first of the batch being summoned
+            if (first)
+                summoned_monster(beast, &you, SPELL_SUMMON_SCORPIONS);
+
+            first = false;
+        }
+        
+        power_left -= 25 + random2(6);
+        }
+    
+    if(seen_count)
+        {
+        if(seen_count > 1)
+            mpr("Scorpions appear around you.");
+        else
+            mpr("A scorpion appears.");
+        }
+
+    return SPRET_SUCCESS;
+}
+
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3271,6 +3319,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
     { SPELL_SUMMON_HYDRA,               { 3, 2 } },
     { SPELL_SUMMON_MANA_VIPER,          { 2, 2 } },
+    { SPELL_SUMMON_SCORPIONS,           { 1, 2 } },
     // Demons
     { SPELL_CALL_IMP,                   { 3, 3 } },
     { SPELL_SUMMON_DEMON,               { 3, 2 } },
@@ -3331,7 +3380,8 @@ int summons_limit(spell_type spell)
 static bool _spell_has_variable_cap(spell_type spell)
 {
     return spell == SPELL_SHADOW_CREATURES
-           || spell == SPELL_MONSTROUS_MENAGERIE;
+           || spell == SPELL_MONSTROUS_MENAGERIE
+           || spell == SPELL_SUMMON_SCORPIONS;
 }
 
 static void _expire_capped_summon(monster* mon, int delay, bool recurse)

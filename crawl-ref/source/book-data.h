@@ -47,7 +47,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Fire
-    SPELL_IGNITE_POISON,
     SPELL_FIREBALL,
     SPELL_BOLT_OF_FIRE,
     SPELL_RING_OF_FLAMES,
@@ -84,8 +83,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Young Poisoner's Handbook
     SPELL_STING,
     SPELL_POISONOUS_VAPOURS,
-    SPELL_MEPHITIC_CLOUD,
+    SPELL_IGNITE_POISON,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_SUMMON_SCORPIONS,
     SPELL_VENOM_BOLT,
 },
 

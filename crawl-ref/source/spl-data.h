@@ -425,18 +425,16 @@ static const struct spell_desc spelldata[] =
     TILEG_MASS_ABJURATION,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
     SPTYP_SUMMONING | SPTYP_POISON,
     SPFLAG_NONE,
     4,
-    200,
+    100,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_SUMMON_SCORPIONS,
 },
-#endif
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",

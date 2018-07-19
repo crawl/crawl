@@ -1015,9 +1015,9 @@ with each cast of the spell.
 %%%%
 Poison Arrow spell
 
-Fires a magical arrow coated with the most vile and noxious toxin. Even those
-resistant to poison will be poisoned by it, and a small portion of its direct
-damage bypasses poison resistance.
+Fires a magical arrow coated with the most vile and noxious toxin. It can
+poison even creatures resistant to poison, and the arrow will do some
+physical damage.
 %%%%
 Poisonous Cloud spell
 
@@ -1025,8 +1025,8 @@ Conjures forth a great cloud of lethal gases.
 %%%%
 Poisonous Vapours spell
 
-Turns the air around a targeted creature poisonous. Exceedingly little poison
-is created, generally just enough to poison the target before dispersing.
+Turns the air around a targeted creature poisonous. At high power, the
+poisonous cloud will last longer, but it will never last very long.
 %%%%
 Polymorph spell
 
@@ -1441,6 +1441,10 @@ Summons wandering mushrooms and deathcaps next to a targeted creature.
 Summon Scarabs spell
 
 Calls forth a swarm of death scarabs.
+%%%%
+Summon Scorpions spell
+
+Summons one or more scorpions, with more being summoned at high power.
 %%%%
 Summon Small Mammal spell
 
