@@ -406,7 +406,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         macro_save();
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_popup show_as_popup();
 #endif
 
     string goodbye_msg;

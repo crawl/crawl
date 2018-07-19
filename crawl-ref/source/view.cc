@@ -1444,10 +1444,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
     you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
-#ifdef USE_TILE_WEB
-    tiles_crt_control crt(false);
-#endif
-
     if (!tiles_only)
     {
         puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);

@@ -1028,7 +1028,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
 #elif defined(USE_TILE_WEB)
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_popup show_as_popup();
 #endif
 
 
@@ -1051,7 +1051,7 @@ static void _choose_arena_teams(newgame_def& choice,
                                 const newgame_def& defaults)
 {
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_popup show_as_popup();
 #endif
 
     if (!choice.arena_teams.empty())

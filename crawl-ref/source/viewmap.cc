@@ -630,7 +630,6 @@ bool show_map(level_pos &lpos,
 #endif
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control crt(false);
     tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
