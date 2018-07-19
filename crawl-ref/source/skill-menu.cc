@@ -794,11 +794,19 @@ void SkillMenu::init_experience()
     }
 }
 
-void SkillMenu::finish_experience(bool experience_check)
+/**
+ * resolve the player's experience state at the end of the skill menu, dealing
+ * with any experience applied to this skill menu instance (e.g. by a potion
+ * of experience).
+ *
+ * @param experience_change whether to actually do the experience change, or
+ *                          just do cleanup.
+ */
+void SkillMenu::finish_experience(bool experience_change)
 {
     if (is_set(SKMF_EXPERIENCE) && m_skill_backup.state_saved())
     {
-        if (experience_check)
+        if (experience_change)
         {
             redraw_screen();
             unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
@@ -1008,8 +1016,8 @@ void SkillMenu::cancel_help()
 }
 
 /**
- * Does the player need to enable a skill?
- * Side effect: will set an error message in the help line if so.
+ * Does the player have at least one skill enabled?
+ * Side effect: will set an error message in the help line if not.
  *
  * @return true if the check passes: either a skill is enabled or no skills
  *         can be enabled.
@@ -1030,19 +1038,25 @@ bool SkillMenu::do_skill_enabled_check()
     return true;
 }
 
-// Before we exit, make sure there's at least one skill enabled.
-bool SkillMenu::exit(bool experience_check)
+bool SkillMenu::exit(bool just_reset)
 {
+    if (just_reset)
+    {
+        finish_experience(false);
+        clear();
+        return true;
+    }
     if (crawl_state.seen_hups)
     {
         clear();
         return true;
     }
 
+    // Before we exit, make sure there's at least one skill enabled.
     if (!do_skill_enabled_check())
         return false;
 
-    finish_experience(experience_check);
+    finish_experience(true);
 
     clear();
     return true;
@@ -1753,8 +1767,7 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
 
 void UISkillMenu::_allocate_region()
 {
-
-    skm.exit(false);
+    skm.exit(true);
     int height = m_region[3];
     skm.init(flag, height);
 }
@@ -1862,11 +1875,11 @@ void skill_menu(int flag, int exp)
             // Fallthrough
             case ' ':
                 // Space and escape exit in any mode.
-                if (skm.exit(true))
+                if (skm.exit(false))
                     return done = true;
             default:
                 // Don't exit from !experience on random keys.
-                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(true))
+                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
                     return done = true;
             }
         }
@@ -1923,7 +1936,7 @@ void skill_menu(int flag, int exp)
     // the given skill distribution for a potion of experience.
     if (skm.is_set(SKMF_EXPERIENCE)
         && clua.callbooleanfn(false, "auto_experience", nullptr)
-        && skm.exit(true))
+        && skm.exit(false))
     {
         return;
     }

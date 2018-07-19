@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <vector>
 
+bool check_texture_size(const char *name, int width, int height);
+
 struct coord_def;
 
 struct GLW_2VF

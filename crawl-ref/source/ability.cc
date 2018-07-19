@@ -3239,7 +3239,7 @@ string describe_talent(const talent& tal)
     desc << left
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 30)
-         << chop_string(failure, 7);
+         << chop_string(failure, 12);
     return desc.str();
 }
 

@@ -2010,6 +2010,10 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
+#ifdef USE_TILE
+    ui::cutoff_point ui_cutoff_point;
+#endif
+
     if (restricts == DIR_DIR)
         return choose_compass();
 
@@ -2043,6 +2047,10 @@ bool direction_chooser::choose_direction()
     msgwin_set_temporary(true);
     show_initial_prompt();
     need_text_redraw = false;
+
+#ifndef USE_TILE_LOCAL
+    redraw_screen();
+#endif
 
     do_redraws();
 

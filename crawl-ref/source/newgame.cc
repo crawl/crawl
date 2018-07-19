@@ -440,10 +440,6 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 {
     const newgame_def ng_reset = ng;
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
-#endif
-
     if (ng.type == GAME_TYPE_TUTORIAL)
     {
         choose_tutorial_character(choice);
@@ -678,6 +674,10 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU);
+#endif
+
     clrscr();
 
     // XXX: this should be somewhere else.
@@ -1310,6 +1310,7 @@ void UINewGameMenu::_allocate_region()
     welcome_text->set_text(welcome.to_colour_string());
     welcome_text->set_bounds(coord_def(1, 1), coord_def(num_cols+1, 2));
     welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
     freeform->attach_item(welcome_text);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
@@ -1909,12 +1910,10 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
             return done = true;
         case M_APTITUDES:
             show_help('%', _highlight_pattern(ng));
-            ret = _prompt_weapon(ng, ng_choice, defaults, weapons);
-            return done = true;
+            return true;
         case M_HELP:
             show_help('?');
-            ret = _prompt_weapon(ng, ng_choice, defaults, weapons);
-            return done = true;
+            return true;
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
             {
@@ -2285,6 +2284,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     welcome_text->set_text(welcome.to_colour_string());
     welcome_text->set_bounds(coord_def(1, 1), coord_def(ui_w+1, 5));
     welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
     freeform->attach_item(welcome_text);
 
     freeform->set_visible(true);
@@ -2346,12 +2346,10 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             return done = true;
         case M_APTITUDES:
             show_help('%', _highlight_pattern(ng));
-            _prompt_gamemode_map(ng, ng_choice, defaults, maps);
-            return done = true;
+            return true;
         case M_HELP:
             show_help('?');
-            _prompt_gamemode_map(ng, ng_choice, defaults, maps);
-            return done = true;
+            return true;
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);
             return done = true;

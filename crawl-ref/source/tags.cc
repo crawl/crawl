@@ -2197,7 +2197,8 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     // be forward-compatible. We validate them only on an actual restore.
     you.your_name         = unmarshallString2(th);
     you.prev_save_version = unmarshallString2(th);
-    dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
+    dprf("Saved character %s, version: %s", you.your_name.c_str(),
+                                            you.prev_save_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));

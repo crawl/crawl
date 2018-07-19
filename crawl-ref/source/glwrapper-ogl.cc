@@ -39,6 +39,21 @@
 # include <android/log.h>
 #endif
 
+bool check_texture_size(const char *name, int width, int height)
+{
+    int max_texture_size;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+    if (width > max_texture_size || height > max_texture_size)
+    {
+        mprf(MSGCH_ERROR,
+            "Texture %s is bigger than maximum driver texture size "
+            "(%d,%d vs. %d)",
+            name, width, height, max_texture_size);
+        return false;
+    }
+    return true;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Static functions from GLStateManager
 

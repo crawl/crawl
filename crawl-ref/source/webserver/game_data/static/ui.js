@@ -1,5 +1,5 @@
-define(["jquery", "comm", "client"],
-function ($, comm, client) {
+define(["jquery", "comm", "client", "./options"],
+function ($, comm, client, options) {
     "use strict";
 
     function wrap_popup(elem, ephemeral)
@@ -83,11 +83,25 @@ function ($, comm, client) {
         new_ev.type = ev.type.replace(/^game_/, "");
         $popup.triggerHandler(new_ev);
 
-        if (new_ev.default_prevented)
+        if (new_ev.isDefaultPrevented())
             ev.preventDefault();
-        if (new_ev.propagation_stopped)
+        if (new_ev.isImmediatePropagationStopped())
             ev.stopImmediatePropagation();
     }
+
+    options.add_listener(function ()
+    {
+        var size = options.get("tile_font_crt_size");
+        $("#ui-stack").css("font-size", size === 0 ? "" : (size + "px"));
+
+        var family = options.get("tile_font_crt_family");
+        if (family !== "" && family !== "monospace")
+        {
+            family += ", monospace";
+            $("#ui-stack").css("font-family", family);
+        }
+    });
+
 
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {

@@ -33,6 +33,7 @@
 #include "tileview.h"
 #include "tiles-build-specific.h"
 #include "travel.h"
+#include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
@@ -629,6 +630,9 @@ bool show_map(level_pos &lpos,
     tiles.do_map_display();
 #endif
 
+#ifdef USE_TILE
+    ui::cutoff_point ui_cutoff_point;
+#endif
 #ifdef USE_TILE_WEB
     tiles_crt_control crt(false);
     tiles_ui_control ui(UI_VIEW_MAP);

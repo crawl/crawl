@@ -78,8 +78,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         else
             $popup.find(".header > span").html(desc.title);
         $body.html(fmt_body_txt(desc.body + desc.footer));
-        scroller($popup.children(".body")[0])
-            .contentElement.className += " describe-generic-body";
+        var s = scroller($popup.children(".body")[0]);
+        s.contentElement.className += " describe-generic-body";
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
 
         var canvas = $popup.find(".header > canvas");
         if (desc.tile)
@@ -114,7 +117,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0, feat.tile.ymax, false);
             $popup.append($feat);
         });
-        scroller($popup[0]);
+        var s = scroller($popup[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         return $popup;
     }
 
@@ -125,7 +131,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $body = $popup.find(".body");
         $body.html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($body, desc.spellset);
-        scroller($body[0]);
+        var s = scroller($popup[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         if (desc.actions !== "")
             $popup.find(".actions").html(desc.actions);
         else
@@ -145,7 +154,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function format_spell_html(desc)
     {
-        var parts = desc.match(/(.*\n\n)(Level: [^\n]+)(\n\n.*)/);
+        var parts = desc.match(/(^[\s\S]*\n\n)(Level: [^\n]+)(\n\n[\s\S]*)$/);
         if (parts == null || parts.length != 4)
             return fmt_body_txt(desc);
         parts[2] = parts[2].replace(/ /g, '&nbsp;');
@@ -157,7 +166,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = $(".templates > .describe-spell").clone();
         $popup.find(".header > span").html(desc.title);
         $popup.find(".body").html(format_spell_html(desc.desc));
-        scroller($popup.find(".body")[0]);
+        var s = scroller($popup.find(".body")[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         if (desc.can_mem)
             $popup.find(".actions").removeClass("hidden");
 
@@ -187,7 +199,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
             $popup.append($card);
         });
-        scroller($popup[0]);
+        var s = scroller($popup[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         return $popup;
     }
 
@@ -198,7 +213,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $footer = $popup.find(".footer");
         var $muts = $body.children().first(), $vamp = $body.children().last();
         $muts.html(fmt_body_txt(util.formatted_string_to_html(desc.mutations)));
-        scroller($muts[0]);
+        var s = scroller($muts[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         paneset_cycle($body);
 
         if (desc.vampire !== undefined)
@@ -207,7 +225,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
             css = css.replace(/%d/g, desc.vampire + 1);
             $vamp.children("style").html(css);
-            scroller($vamp[0]);
+            var vs = scroller($vamp[0]);
+            $popup.on("keydown", function (event) {
+                scroller_handle_key(vs, event);
+            });
             paneset_cycle($footer);
         }
         else
@@ -273,6 +294,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $panes.eq(2).html(fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
         for (var i = 0; i < 3; i++)
             scroller($panes.eq(i)[0]);
+
+        $popup.on("keydown", function (event) {
+            var s = scroller($panes.filter(".current")[0]);
+            scroller_handle_key(s, event);
+        });
 
         $popup.on("keydown", function (event) {
             if (event.key === "!" || event.key === "^")
@@ -353,7 +379,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             bg: 0,
         }});
 
-        scroller($popup.find(".body")[0]);
+        var s = scroller($popup.find(".body")[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         return $popup;
     }
 
@@ -363,7 +392,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.find(".header > span").html(desc.information);
         var $body = $popup.find(".body");
         $body.html(fmt_body_txt(desc.features) + fmt_body_txt(desc.changes));
-        scroller($body[0]);
+        var s = scroller($body[0]);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
 
         var t = gui.STARTUP_STONESOUP, tex = enums.texture.GUI;
         var $canvas = $popup.find(".header > canvas");
@@ -376,18 +408,102 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     }
 
     var update_server_scroll_timeout = null;
-    var formatted_scroller_monitor_scrolling = true;
+    var scroller_from_server = false;
 
-    function formatted_scroller_line_height(body)
+    function scroller_handle_key(scroller, event)
     {
-        var $body = $(scroller(body).contentElement);
-        var span = $body.children("span")[0];
-        if (span == null) {
-            $body.html("<span style='visibility:hidden;position:absolute;'> </span>"+$body.html());
-            span = $body.children("span")[0];
+        if (event.altKey || event.shiftkey || event.ctrlKey) {
+            if (update_server_scroll_timeout)
+                update_server_scroll();
+            return;
         }
+
+        var handled = true;
+
+        switch (event.which)
+        {
+            case 33: // page up
+                scroller_scroll_page(scroller, -1);
+                break;
+            case 34: // page down
+                scroller_scroll_page(scroller, 1);
+                break;
+            case 35: // end
+                scroller_scroll_to_line(scroller, 2147483647);
+                break;
+            case 36: // home
+                scroller_scroll_to_line(scroller, 0);
+                break;
+            case 38: // up
+                scroller_scroll_line(scroller, -1);
+                break;
+            case 40: // down
+                scroller_scroll_line(scroller, 1);
+                break;
+            default:
+                handled = false;
+                break;
+        }
+
+        if (!handled)
+        switch (String.fromCharCode(event.which))
+        {
+            case " ": case ">": case "+": case '\'':
+                scroller_scroll_page(scroller, 1);
+                break;
+            case "-": case "<": case ";":
+                scroller_scroll_page(scroller, -1);
+                break;
+        }
+
+        if (handled)
+        {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+        return handled;
+    }
+
+    function scroller_line_height(scroller)
+    {
+        var span = $(scroller.scrollElement).siblings('.scroller-lhd')[0];
         var rect = span.getBoundingClientRect();
         return rect.bottom - rect.top;
+    }
+
+    function scroller_scroll_page(scroller, dir)
+    {
+        // var line_height = scroller_line_height(scroller);
+        var contents = $(scroller.scrollElement);
+        var page_shift = contents[0].getBoundingClientRect().height;
+        // page_shift = Math.floor(page_shift / line_height) * line_height;
+        contents[0].scrollTop += page_shift * dir;
+        update_server_scroll();
+    }
+
+    function scroller_scroll_line(scroller, dir)
+    {
+        var line_height = scroller_line_height(scroller);
+        var contents = $(scroller.scrollElement);
+        contents[0].scrollTop += line_height * dir;
+        update_server_scroll(scroller);
+    }
+
+    function scroller_scroll_to_line(scroller, line)
+    {
+        var $scroller = $(scroller.scrollElement);
+        if (line == 2147483647) // FS_START_AT_END
+        {
+            // special case for webkit: excessively large values don't work
+            var inner_h = $(scroller.contentElement).outerHeight();
+            $scroller[0].scrollTop = inner_h - $scroller.parent().outerHeight();
+        }
+        else
+        {
+            var line_height = scroller_line_height(scroller);
+            line *= line_height;
+            $scroller[0].scrollTop = line;
+        }
     }
 
     function update_server_scroll()
@@ -400,23 +516,21 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = ui.top_popup();
         if (!$popup.hasClass("formatted-scroller"))
             return;
-        var body = $popup.find(".body")[0];
-        var container = scroller(body).scrollElement;
-        var line_height = formatted_scroller_line_height(body);
+        var body = $popup.find(".simplebar-scroll-content").parent()[0];
+        var s = scroller(body);
+        var container = s.scrollElement;
+        var line_height = scroller_line_height(s);
         comm.send_message("formatted_scroller_scroll", {
             scroll: Math.round(container.scrollTop / line_height),
         });
     }
 
-    function formatted_scroller_onscroll()
+    function scroller_onscroll()
     {
-        if (!formatted_scroller_monitor_scrolling)
-        {
-            // don't tell the server we scrolled, when we did so because the
-            // server told us to; not absolutely necessary, but nice to have
-            formatted_scroller_monitor_scrolling = true;
+        // don't tell the server we scrolled, when we did so because the
+        // server told us to; not absolutely necessary, but nice to have
+        if (scroller_from_server)
             return;
-        }
         if (!update_server_scroll_timeout)
             update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
     }
@@ -439,8 +553,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
         $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
-        var scroll_elem = scroller($body[0]).scrollElement;
-        scroll_elem.addEventListener("scroll", formatted_scroller_onscroll);
+        var s = scroller($body[0]);
+        var scroll_elem = s.scrollElement;
+        scroll_elem.addEventListener("scroll", scroller_onscroll);
+        $popup.on("keydown", function (event) {
+            scroller_handle_key(s, event);
+        });
         return $popup;
     }
 
@@ -449,28 +567,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = ui.top_popup();
         if (!$popup.hasClass("formatted-scroller"))
             return;
+        var s = scroller($popup.find(".body")[0]);
         if (msg.text !== undefined)
         {
-            var $body = $(scroller($popup.find(".body")[0]).contentElement);
+            var $body = $(s.contentElement);
             $body.html(util.formatted_string_to_html(msg.text));
         }
         if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
         {
-            var body = $popup.find(".body")[0];
-            var $scroller = $(scroller(body).scrollElement);
-            if (msg.scroll == 2147483647) // FS_START_AT_END
-            {
-                // special case for webkit: excessively large values don't work
-                var inner_h = $(scroller(body).contentElement).outerHeight();
-                $scroller[0].scrollTop = inner_h - $(body).outerHeight();
-            }
-            else
-            {
-                var line_height = formatted_scroller_line_height(body);
-                msg.scroll *= line_height;
-                formatted_scroller_monitor_scrolling = false;
-                $scroller[0].scrollTop = msg.scroll;
-            }
+            scroller_from_server = true;
+            scroller_scroll_to_line(s, msg.scroll);
+            scroller_from_server = false;
         }
     }
 
@@ -541,6 +648,23 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             handler(msg);
     }
 
+    function recv_ui_scroll(msg)
+    {
+        var $popup = ui.top_popup();
+        // formatted scrollers send their own synchronization messages
+        if ($popup === undefined
+            || $popup.hasClass("formatted-scroller")
+            || $popup.hasClass("menu"))
+            return;
+
+        if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
+        {
+            var body = $popup.find(".simplebar-scroll-content").parent();
+            if (body.length === 1)
+                scroller_scroll_to_line(scroller(body[0]), msg.scroll);
+        }
+    }
+
     function ui_layouts_cleanup()
     {
         if (update_server_scroll_timeout)
@@ -561,6 +685,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "ui-pop": recv_ui_pop,
         "ui-stack": recv_ui_stack,
         "ui-state": recv_ui_state,
+        "ui-scroller-scroll": recv_ui_scroll,
     });
 
     return {

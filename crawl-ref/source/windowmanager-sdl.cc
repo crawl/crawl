@@ -1140,7 +1140,11 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
     bool success = false;
     if (!proc || proc(pixels, new_width, new_height))
+    {
+        // TODO: could fail if texture is too large
+        check_texture_size(filename, new_width, new_height);
         success |= tex->load_texture(pixels, new_width, new_height, mip_opt);
+    }
 
     // If conversion has occurred, delete converted data.
     if (pixels != img->pixels)

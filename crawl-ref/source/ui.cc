@@ -13,6 +13,7 @@
 #include "cio.h"
 #include "macro.h"
 # include "state.h"
+#include "tileweb.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -84,6 +85,7 @@ public:
 
     bool needs_paint;
     vector<KeymapContext> keymap_stack;
+    vector<int> cutoff_stack;
 
 protected:
     int m_w, m_h;
@@ -1140,6 +1142,16 @@ void Scroller::set_scroll(int y)
         return;
     m_scroll = y;
     _queue_allocation();
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "ui-scroller-scroll");
+    // XXX: always false, since we do not yet synchronize
+    // webtiles client-side scrolls
+    tiles.json_write_bool("from_webtiles", false);
+    tiles.json_write_int("scroll", y);
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
 }
 
 void Scroller::_render()
@@ -1176,7 +1188,7 @@ void Scroller::_allocate_region()
     m_child->allocate_region(ch_reg);
 
 #ifdef USE_TILE_LOCAL
-    int shade_height = 32, ds = 4;
+    int shade_height = 12, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region[3]/2});
     int shade_bot = min({(sr.nat-m_region[3]-m_scroll)/ds, shade_height, m_region[3]/2});
     VColour col_a(4,2,4,0), col_b(4,2,4,200);
@@ -1457,7 +1469,10 @@ void UIRoot::render()
 
     push_scissor(m_region);
 #ifdef USE_TILE_LOCAL
-    m_root.render();
+    int cutoff = cutoff_stack.empty() ? 0 : cutoff_stack.back();
+    ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
+    for (int i = cutoff; i < static_cast<int>(m_root.num_children()); i++)
+        m_root.get_child(i)->render();
 #else
     // Render only the top of the UI stack on console
     if (m_root.num_children() > 0)
@@ -1573,6 +1588,25 @@ static void clear_text_region(i4 region)
         cgotoxy(region[0]+1, y+1);
         cprintf("%*s", region[2], "");
     }
+}
+#endif
+
+#ifdef USE_TILE
+void push_cutoff()
+{
+    int cutoff = static_cast<int>(ui_root.num_children());
+    ui_root.cutoff_stack.push_back(cutoff);
+#ifdef USE_TILE_WEB
+    tiles.push_ui_cutoff();
+#endif
+}
+
+void pop_cutoff()
+{
+    ui_root.cutoff_stack.pop_back();
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_cutoff();
+#endif
 }
 #endif
 

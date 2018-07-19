@@ -499,6 +499,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_keydown_handler(event)
     {
         if (!menu || menu.type === "crt") return;
+        if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
             if (update_server_scroll_timeout)
@@ -561,6 +562,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_keypress_handler(event)
     {
         if (!menu || menu.type === "crt") return;
+        if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         var chr = String.fromCharCode(event.which);
 

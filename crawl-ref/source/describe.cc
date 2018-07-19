@@ -2429,7 +2429,7 @@ void describe_feature_wide(const coord_def& pos)
 
         if (has_desc)
         {
-            auto text = make_shared<Text>(feat.body);
+            auto text = make_shared<Text>(formatted_string::parse_string(feat.body));
             if (&feat != &feats.back())
                 text->set_margin_for_sdl({0, 0, 20, 0});
             text->wrap_text = true;

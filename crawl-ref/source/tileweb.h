@@ -144,6 +144,8 @@ public:
     void pop_ui_layout();
     void pop_all_ui_layouts();
     void ui_state_change(const string& type, unsigned state_slot);
+    void push_ui_cutoff();
+    void pop_ui_cutoff();
 
     void send_exit_reason(const string& type, const string& message = "");
     void send_dump_info(const string& type, const string& filename);
@@ -252,6 +254,7 @@ protected:
 
     WebtilesUIState m_ui_state;
     WebtilesUIState m_last_ui_state;
+    vector<int> m_ui_cutoff_stack;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;

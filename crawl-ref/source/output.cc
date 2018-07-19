@@ -2372,7 +2372,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
-    out += _stealth_bar(get_number_of_cols()) + "\n";
+    out += _stealth_bar(20) + "\n";
 
     const int regen = player_regen(); // round up
     out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
@@ -2463,13 +2463,15 @@ private:
 
 void print_overview_screen()
 {
+    // TODO: this should handle window resizes
+    constexpr int num_cols = 80;
     bool calc_unid = false;
     overview_popup overview;
 
     overview.set_more();
     overview.set_tag("resists");
 
-    overview.add_text(_overview_screen_title(80));
+    overview.add_text(_overview_screen_title(num_cols));
 
     for (const formatted_string &bline : _get_overview_stats())
         overview.add_formatted_string(bline, true);
@@ -2477,14 +2479,14 @@ void print_overview_screen()
 
     {
         vector<formatted_string> blines =
-            _get_overview_resistances(overview.equip_chars, calc_unid, get_number_of_cols());
+            _get_overview_resistances(overview.equip_chars, calc_unid, num_cols);
 
         for (unsigned int i = 0; i < blines.size(); ++i)
             overview.add_text(blines[i].to_colour_string() + "\n");
     }
 
     overview.add_text("\n");
-    overview.add_text(_status_mut_rune_list(get_number_of_cols()));
+    overview.add_text(_status_mut_rune_list(num_cols));
     overview.show();
 }
 
