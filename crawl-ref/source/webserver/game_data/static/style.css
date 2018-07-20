@@ -311,22 +311,22 @@ body {
 .scroller-shade {
     position: absolute;
     width: 100%;
-    height: 50px;
+    height: 12px;
     pointer-events: none;
 }
 .scroller-shade.top {
     top: 0;
-    background: -webkit-gradient(linear, left top, left bottom, from(rgb(4, 2, 4)), to(rgba(4, 2, 4, 0.001)));
-    background: -webkit-linear-gradient(rgb(4, 2, 4), rgba(4, 2, 4, 0.001));
-    background: -o-linear-gradient(rgb(4, 2, 4), rgba(4, 2, 4, 0.001));
-    background: linear-gradient(rgb(4, 2, 4), rgba(4, 2, 4, 0.001));
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(4, 2, 4, 0.784)), to(rgba(4, 2, 4, 0.001)));
+    background: -webkit-linear-gradient(rgba(4, 2, 4, 0.784), rgba(4, 2, 4, 0.001));
+    background: -o-linear-gradient(rgba(4, 2, 4, 0.784), rgba(4, 2, 4, 0.001));
+    background: linear-gradient(rgba(4, 2, 4, 0.784), rgba(4, 2, 4, 0.001));
 }
 .scroller-shade.bot {
     bottom: 0;
-    background: -webkit-gradient(linear, left top, left bottom, from(rgba(4, 2, 4, 0.001)), to(rgb(4, 2, 4)));
-    background: -webkit-linear-gradient(rgba(4, 2, 4, 0.001), rgb(4, 2, 4));
-    background: -o-linear-gradient(rgba(4, 2, 4, 0.001), rgb(4, 2, 4));
-    background: linear-gradient(rgba(4, 2, 4, 0.001), rgb(4, 2, 4));
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(4, 2, 4, 0.001)), to(rgba(4, 2, 4, 0.784)));
+    background: -webkit-linear-gradient(rgba(4, 2, 4, 0.001), rgba(4, 2, 4, 0.784));
+    background: -o-linear-gradient(rgba(4, 2, 4, 0.001), rgba(4, 2, 4, 0.784));
+    background: linear-gradient(rgba(4, 2, 4, 0.001), rgba(4, 2, 4, 0.784));
 }
 .simplebar-scroll-content {
     transform: translateZ(0);
