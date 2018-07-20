@@ -130,8 +130,8 @@ Blade Hands spell
 Causes long, scythe-shaped blades to grow from the caster's hands, increasing
 melee damage significantly.
 
-While transformed, any equipped weapons are melded. The caster also becomes
-unable to evoke wands, and casting spells becomes somewhat more difficult.
+While transformed, any equipped weapons are melded, and casting spells becomes
+somewhat more difficult.
 %%%%
 Blink Allies Away spell
 
@@ -684,9 +684,8 @@ gnashing teeth are instantly devoured, reinvigorating the caster in their
 reptilian rampage. The caster gains innate armour and increased health, and
 becomes resistant to poison.
 
-While transformed, any equipped weapons and armour are melded, and wands cannot
-be evoked. The form's number of heads is fixed upon casting the spell, and
-increases with power.
+While transformed, any equipped weapons and armour are melded. The form's
+number of heads is fixed upon casting the spell, and increases with power.
 %%%%
 Iceblast spell
 
@@ -699,8 +698,7 @@ Transforms the caster into a frozen ice-creature, light enough to float on
 water. The caster gains a freezing melee attack, and becomes incredibly
 resistant to cold and resistant to poison, but vulnerable to fire.
 
-While transformed, any equipped weapons and armour are melded, and wands cannot
-be evoked.
+While transformed, any equipped weapons and armour are melded.
 %%%%
 Ignite Poison spell
 
@@ -1037,8 +1035,8 @@ shape-changing creatures.
 %%%%
 Porkalator spell
 
-Transforms the target into a pig. The target moves swiftly but cannot evoke
-wands or cast spells. The caster's demise will cause the transformation to end.
+Transforms the target into a pig. The target moves swiftly but cannot cast
+spells. The caster's demise will cause the transformation to end.
 %%%%
 Portal Projectile spell
 
@@ -1250,9 +1248,8 @@ Spider Form spell
 Transforms the caster into a venomous, spider-like creature. The caster becomes
 highly evasive and gains a poisonous bite, but gains vulnerability to poison.
 
-While transformed, any equipped weapons and armour are melded. The caster also
-becomes unable to evoke wands, and casting spells becomes slightly more
-difficult.
+While transformed, any equipped weapons and armour are melded, and casting
+spells becomes slightly more difficult.
 %%%%
 Spit Acid spell
 
