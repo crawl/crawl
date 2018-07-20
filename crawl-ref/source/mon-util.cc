@@ -4180,9 +4180,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
 
     // Includes sealed doors.
     if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
-    {
         return true;
-    }
 
     if (!mon.is_habitable(p))
         return false;
