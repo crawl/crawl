@@ -694,7 +694,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_LOUDNESS:
+                case RING_ATTENTION:
                 case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;

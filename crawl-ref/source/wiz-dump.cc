@@ -99,8 +99,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_WIZARDRY;
     if (s == "SInv")
         return RING_SEE_INVISIBLE;
-    if (s == "Noisy")
-        return RING_LOUDNESS;
+    if (s == "Noisy" || s == "Stlth-")
+        return RING_ATTENTION;
     if (s == "+Fly")
         return RING_FLIGHT;
     if (s == "rPois")

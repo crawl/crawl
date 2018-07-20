@@ -520,7 +520,7 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
 
         case GOD_DITHMENOS:
             // Shadow god: no reducing stealth.
-            if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
+            if (item.is_type(OBJ_JEWELLERY, RING_ATTENTION))
                 return false;
             break;
 
