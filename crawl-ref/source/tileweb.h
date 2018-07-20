@@ -30,6 +30,7 @@ enum WebtilesUIState
     UI_NORMAL,
     UI_CRT,
     UI_VIEW_MAP,
+    UI_HIDE_POPUPS,
 };
 
 struct player_info

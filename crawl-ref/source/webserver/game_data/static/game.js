@@ -163,7 +163,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
             break;
         }
         document.querySelector("#ui-stack").classList.toggle("hidden",
-            ui_state == enums.ui.VIEW_MAP);
+            ui_state == enums.ui.VIEW_MAP || ui_state == enums.ui.HIDE_POPUPS);
     }
 
     function handle_set_layout(data)

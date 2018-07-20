@@ -13,6 +13,7 @@ define(function () {
     exports.ui.NORMAL   = 0;
     exports.ui.CRT      = 1;
     exports.ui.VIEW_MAP = 2;
+    exports.ui.HIDE_POPUPS = 3;
 
     // Mouse modes
     val = 0;
