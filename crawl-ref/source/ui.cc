@@ -13,6 +13,7 @@
 #include "cio.h"
 #include "macro.h"
 # include "state.h"
+#include "tileweb.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -84,6 +85,7 @@ public:
 
     bool needs_paint;
     vector<KeymapContext> keymap_stack;
+    vector<int> cutoff_stack;
 
 protected:
     int m_w, m_h;
@@ -1457,7 +1459,10 @@ void UIRoot::render()
 
     push_scissor(m_region);
 #ifdef USE_TILE_LOCAL
-    m_root.render();
+    int cutoff = cutoff_stack.empty() ? 0 : cutoff_stack.back();
+    ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
+    for (int i = cutoff; i < static_cast<int>(m_root.num_children()); i++)
+        m_root.get_child(i)->render();
 #else
     // Render only the top of the UI stack on console
     if (m_root.num_children() > 0)
@@ -1573,6 +1578,25 @@ static void clear_text_region(i4 region)
         cgotoxy(region[0]+1, y+1);
         cprintf("%*s", region[2], "");
     }
+}
+#endif
+
+#ifdef USE_TILE
+void push_cutoff()
+{
+    int cutoff = static_cast<int>(ui_root.num_children());
+    ui_root.cutoff_stack.push_back(cutoff);
+#ifdef USE_TILE_WEB
+    tiles.push_ui_cutoff();
+#endif
+}
+
+void pop_cutoff()
+{
+    ui_root.cutoff_stack.pop_back();
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_cutoff();
+#endif
 }
 #endif
 

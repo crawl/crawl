@@ -654,6 +654,20 @@ void TilesFramework::ui_state_change(const string& type, unsigned state_slot)
     tiles.finish_message();
 }
 
+void TilesFramework::push_ui_cutoff()
+{
+    int cutoff = static_cast<int>(m_menu_stack.size());
+    m_ui_cutoff_stack.push_back(cutoff);
+    send_message("{\"msg\":\"ui_cutoff\",\"cutoff\":%d}", cutoff);
+}
+
+void TilesFramework::pop_ui_cutoff()
+{
+    m_ui_cutoff_stack.pop_back();
+    int cutoff = m_ui_cutoff_stack.empty() ? 0 : m_ui_cutoff_stack.back();
+    send_message("{\"msg\":\"ui_cutoff\",\"cutoff\":%d}", cutoff);
+}
+
 static void _send_text_cursor(bool enabled)
 {
     tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
