@@ -394,7 +394,7 @@ static void _rune_effect(dungeon_feature_type ftype)
         if (silenced(you.pos()))
             mpr("The gate opens wide!");
         else
-            mpr("With a loud hiss the gate opens wide!");
+            mpr("With a soft hiss the gate opens wide!");
         // these are included in default force_more_message
     }
 }

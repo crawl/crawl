@@ -158,7 +158,7 @@ force_more_message += You pick up the .* rune and feel its power
 force_more_message += The lock glows eerily
 force_more_message += Heavy smoke blows from the lock
 force_more_message += The gate opens wide
-force_more_message += With a loud hiss the gate opens wide
+force_more_message += With a soft hiss the gate opens wide
 
 # God gifts
 force_more_message += grants you (a gift|ammunition|armour|a weapon)
