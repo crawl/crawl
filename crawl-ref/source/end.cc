@@ -235,7 +235,8 @@ NORETURN void screen_end_game(string text)
 
     if (!text.empty())
     {
-        auto prompt_ui = make_shared<Text>(text);
+        auto prompt_ui = make_shared<Text>(
+                formatted_string::parse_string(text));
         bool done = false;
         prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
             return done = ev.type == WME_KEYDOWN;
