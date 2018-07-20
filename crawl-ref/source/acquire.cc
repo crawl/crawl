@@ -1388,7 +1388,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 acq_item.plus = max(abs((int) acq_item.plus), 1);
                 break;
 
-            case RING_LOUDNESS:
+            case RING_ATTENTION:
             case RING_TELEPORTATION:
             case AMU_INACCURACY:
                 // These are the only truly bad pieces of jewellery.
