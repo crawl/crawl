@@ -136,8 +136,6 @@ protected:
 
 void UIMenu::update_items()
 {
-    if (crawl_state.doing_prev_cmd_again)
-        return;
     _invalidate_sizereq();
 
 #ifdef USE_TILE_LOCAL
@@ -211,8 +209,6 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
 
 void UIMenu::update_item(int index)
 {
-    if (crawl_state.doing_prev_cmd_again)
-        return;
     _invalidate_sizereq();
     _queue_allocation();
 #ifdef USE_TILE_LOCAL
