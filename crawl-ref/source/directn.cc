@@ -2010,10 +2010,6 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-#ifdef USE_TILE_WEB
-    tiles_ui_control ui(UI_HIDE_POPUPS);
-#endif
-
     if (restricts == DIR_DIR)
         return choose_compass();
 
