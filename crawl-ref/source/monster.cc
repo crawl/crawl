@@ -6157,11 +6157,14 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         ench_cache     = old_ench_cache;
         ench_countdown = old_ench_countdown;
 
+
         if (observable())
         {
             mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
                  name(DESC_THE).c_str());
         }
+        if (caught())
+            check_net_will_hold_monster(this);
 
         add_ench(ENCH_RING_OF_THUNDER);
     }
