@@ -83,9 +83,9 @@ function ($, comm, client, options) {
         new_ev.type = ev.type.replace(/^game_/, "");
         $popup.triggerHandler(new_ev);
 
-        if (new_ev.default_prevented)
+        if (new_ev.isDefaultPrevented())
             ev.preventDefault();
-        if (new_ev.propagation_stopped)
+        if (new_ev.isImmediatePropagationStopped())
             ev.stopImmediatePropagation();
     }
 
