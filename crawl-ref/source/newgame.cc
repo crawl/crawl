@@ -1307,6 +1307,7 @@ void UINewGameMenu::_allocate_region()
     welcome_text->set_text(welcome.to_colour_string());
     welcome_text->set_bounds(coord_def(1, 1), coord_def(num_cols+1, 2));
     welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
     freeform->attach_item(welcome_text);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
