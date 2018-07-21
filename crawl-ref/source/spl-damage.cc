@@ -1884,11 +1884,6 @@ spret_type cast_inner_flame(int powc, monster* mon, actor* agent, bool fail)
         mpr("That already has an inner flame.");
         return SPRET_ABORT;
     }
-    else if (agent->can_see(*mon) && mon->is_summoned())
-    {
-        mpr("You cannot affect that.");
-        return SPRET_ABORT;
-    }
     
     bolt beam;
     beam.source = mon->pos();

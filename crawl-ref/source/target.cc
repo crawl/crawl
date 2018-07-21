@@ -262,7 +262,7 @@ bool targeter_beam::affects_monster(const monster_info& mon)
 
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
-           || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
+           || beam.flavour == BEAM_INNER_FLAME;
 }
 
 targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
