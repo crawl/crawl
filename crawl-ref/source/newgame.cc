@@ -2282,6 +2282,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     welcome_text->set_text(welcome.to_colour_string());
     welcome_text->set_bounds(coord_def(1, 1), coord_def(ui_w+1, 5));
     welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
     freeform->attach_item(welcome_text);
 
     freeform->set_visible(true);
