@@ -24,6 +24,13 @@
 
 class Menu;
 
+enum WebtilesCRTMode
+{
+    CRT_DISABLED,
+    CRT_NORMAL,
+    CRT_MENU
+};
+
 enum WebtilesUIState
 {
     UI_INIT = -1,
@@ -197,6 +204,10 @@ public:
     string m_sock_name;
     bool m_await_connection;
 
+    WebtilesCRTMode m_crt_mode;
+
+    void clear_crt_menu() { m_text_menu.clear(); }
+
     void set_text_cursor(bool enabled);
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
@@ -283,6 +294,7 @@ protected:
 
     bool m_has_overlays;
 
+    WebTextArea m_text_crt;
     WebTextArea m_text_menu;
 
     GotoRegion m_cursor_region;
@@ -322,18 +334,36 @@ protected:
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
-class tiles_crt_popup
+class tiles_crt_control
 {
 public:
-    tiles_crt_popup(string tag = "")
+    tiles_crt_control(bool crt_enabled)
+        : m_old_mode(tiles.m_crt_mode)
     {
-        tiles.push_crt_menu(tag);
+        tiles.m_crt_mode = crt_enabled ? CRT_NORMAL : CRT_DISABLED;
     }
 
-    ~tiles_crt_popup()
+    tiles_crt_control(WebtilesCRTMode mode,
+                      string tag = "")
+        : m_old_mode(tiles.m_crt_mode)
     {
-        tiles.pop_menu();
+        tiles.m_crt_mode = mode;
+        if (mode == CRT_MENU)
+            tiles.push_crt_menu(tag);
     }
+
+    ~tiles_crt_control()
+    {
+        if (tiles.m_crt_mode == CRT_MENU)
+        {
+            tiles.pop_menu();
+            tiles.clear_crt_menu();
+        }
+        tiles.m_crt_mode = m_old_mode;
+    }
+
+private:
+    WebtilesCRTMode m_old_mode;
 };
 
 class tiles_ui_control

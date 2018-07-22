@@ -674,7 +674,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults)
 {
 #ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
+    tiles_crt_control show_as_menu(CRT_MENU);
 #endif
 
     clrscr();

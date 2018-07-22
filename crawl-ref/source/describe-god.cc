@@ -1123,6 +1123,7 @@ void describe_god(god_type which_god)
     });
 
 #ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
     _send_god_ui(which_god, false);
 #endif
 
@@ -1272,6 +1273,7 @@ update_ui:
     });
 
 #ifdef USE_TILE_WEB
+    tiles_crt_control disable_crt(false);
     _send_god_ui(which_god, true);
 #endif
 

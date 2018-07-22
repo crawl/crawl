@@ -895,6 +895,9 @@ void Menu::reset()
 
 vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt_enabled(false);
+#endif
     cursor_control cs(false);
 
     if (reuse_selections)
