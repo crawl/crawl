@@ -233,9 +233,9 @@ TILE_EQ: wucad_mu
 VALUE:   1000
 
 NAME:    Vampire's Tooth
-OBJ:     OBJ_WEAPONS/WPN_DAGGER
-# it's a dagger made from a tooth -> no TYPE
-PLUS:    +4
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+# it's a quick blade made from a tooth -> no TYPE
+PLUS:    +12
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
