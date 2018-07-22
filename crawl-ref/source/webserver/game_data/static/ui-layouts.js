@@ -376,13 +376,30 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     }
 
     var update_server_scroll_timeout = null;
-    var formatted_scroller_monitor_scrolling = true;
+    var scroller_from_server = false;
 
-    function formatted_scroller_line_height(body)
+    function scroller_line_height(scroller)
     {
-        var span = $(scroller(body).scrollElement).siblings('.scroller-lhd')[0];
+        var span = $(scroller.scrollElement).siblings('.scroller-lhd')[0];
         var rect = span.getBoundingClientRect();
         return rect.bottom - rect.top;
+    }
+
+    function scroller_scroll_to_line(scroller, line)
+    {
+        var $scroller = $(scroller.scrollElement);
+        if (line == 2147483647) // FS_START_AT_END
+        {
+            // special case for webkit: excessively large values don't work
+            var inner_h = $(scroller.contentElement).outerHeight();
+            $scroller[0].scrollTop = inner_h - $scroller.parent().outerHeight();
+        }
+        else
+        {
+            var line_height = scroller_line_height(scroller);
+            line *= line_height;
+            $scroller[0].scrollTop = line;
+        }
     }
 
     function update_server_scroll()
@@ -395,23 +412,21 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = ui.top_popup();
         if (!$popup.hasClass("formatted-scroller"))
             return;
-        var body = $popup.find(".body")[0];
-        var container = scroller(body).scrollElement;
-        var line_height = formatted_scroller_line_height(body);
+        var body = $popup.find(".simplebar-scroll-content").parent()[0];
+        var s = scroller(body);
+        var container = s.scrollElement;
+        var line_height = scroller_line_height(s);
         comm.send_message("formatted_scroller_scroll", {
             scroll: Math.round(container.scrollTop / line_height),
         });
     }
 
-    function formatted_scroller_onscroll()
+    function scroller_onscroll()
     {
-        if (!formatted_scroller_monitor_scrolling)
-        {
-            // don't tell the server we scrolled, when we did so because the
-            // server told us to; not absolutely necessary, but nice to have
-            formatted_scroller_monitor_scrolling = true;
+        // don't tell the server we scrolled, when we did so because the
+        // server told us to; not absolutely necessary, but nice to have
+        if (scroller_from_server)
             return;
-        }
         if (!update_server_scroll_timeout)
             update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
     }
@@ -434,8 +449,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
         $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
-        var scroll_elem = scroller($body[0]).scrollElement;
-        scroll_elem.addEventListener("scroll", formatted_scroller_onscroll);
+        var s = scroller($body[0]);
+        var scroll_elem = s.scrollElement;
+        scroll_elem.addEventListener("scroll", scroller_onscroll);
         return $popup;
     }
 
@@ -444,28 +460,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = ui.top_popup();
         if (!$popup.hasClass("formatted-scroller"))
             return;
+        var s = scroller($popup.find(".body")[0]);
         if (msg.text !== undefined)
         {
-            var $body = $(scroller($popup.find(".body")[0]).contentElement);
+            var $body = $(s.contentElement);
             $body.html(util.formatted_string_to_html(msg.text));
         }
         if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
         {
-            var body = $popup.find(".body")[0];
-            var $scroller = $(scroller(body).scrollElement);
-            if (msg.scroll == 2147483647) // FS_START_AT_END
-            {
-                // special case for webkit: excessively large values don't work
-                var inner_h = $(scroller(body).contentElement).outerHeight();
-                $scroller[0].scrollTop = inner_h - $(body).outerHeight();
-            }
-            else
-            {
-                var line_height = formatted_scroller_line_height(body);
-                msg.scroll *= line_height;
-                formatted_scroller_monitor_scrolling = false;
-                $scroller[0].scrollTop = msg.scroll;
-            }
+            scroller_from_server = true;
+            scroller_scroll_to_line(s, msg.scroll);
+            scroller_from_server = false;
         }
     }
 
@@ -536,6 +541,20 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             handler(msg);
     }
 
+    function recv_ui_scroll(msg)
+    {
+        var $popup = ui.top_popup();
+        // formatted scrollers send their own synchronization messages
+        if ($popup === undefined || $popup.hasClass("formatted-scroller"))
+            return;
+        if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
+        {
+            var body = $popup.find(".simplebar-scroll-content").parent();
+            if (body.length === 1)
+                scroller_scroll_to_line(scroller(body[0]), msg.scroll);
+        }
+    }
+
     function ui_layouts_cleanup()
     {
         if (update_server_scroll_timeout)
@@ -556,6 +575,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "ui-pop": recv_ui_pop,
         "ui-stack": recv_ui_stack,
         "ui-state": recv_ui_state,
+        "ui-scroller-scroll": recv_ui_scroll,
     });
 
     return {

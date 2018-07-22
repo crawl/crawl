@@ -1142,6 +1142,16 @@ void Scroller::set_scroll(int y)
         return;
     m_scroll = y;
     _queue_allocation();
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "ui-scroller-scroll");
+    // XXX: always false, since we do not yet synchronize
+    // webtiles client-side scrolls
+    tiles.json_write_bool("from_webtiles", false);
+    tiles.json_write_int("scroll", y);
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
 }
 
 void Scroller::_render()
