@@ -652,8 +652,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = ui.top_popup();
         // formatted scrollers send their own synchronization messages
-        if ($popup === undefined || $popup.hasClass("formatted-scroller"))
+        if ($popup === undefined
+            || $popup.hasClass("formatted-scroller")
+            || $popup.hasClass("menu"))
             return;
+
         if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
         {
             var body = $popup.find(".simplebar-scroll-content").parent();
