@@ -130,7 +130,7 @@ protected:
     virtual bool handle_phase_end();
 
     /* Combat Calculations */
-    virtual bool using_weapon() = 0;
+    virtual bool using_weapon() const = 0;
     virtual int weapon_damage() = 0;
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage();

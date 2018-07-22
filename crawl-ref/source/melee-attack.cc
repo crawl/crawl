@@ -3495,7 +3495,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     return your_to_hit;
 }
 
-bool melee_attack::using_weapon()
+bool melee_attack::using_weapon() const
 {
     return weapon && is_melee_weapon(*weapon);
 }
