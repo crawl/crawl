@@ -132,9 +132,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Fen Folio
     SPELL_CORPSE_ROT,
     SPELL_STONE_ARROW,
-    SPELL_LEDAS_LIQUEFACTION,
     SPELL_SUMMON_FOREST,
     SPELL_HYDRA_FORM,
+    SPELL_POISON_ARROW,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -345,7 +345,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Annihilations
-    SPELL_POISON_ARROW,
     SPELL_CHAIN_LIGHTNING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_GLACIATE,

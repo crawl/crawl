@@ -474,7 +474,7 @@ static inline int get_resistible_fraction(beam_type flavour)
         return 55;
 
     case BEAM_POISON_ARROW:
-        return 70;
+        return 50;
 
     default:
         return 100;
