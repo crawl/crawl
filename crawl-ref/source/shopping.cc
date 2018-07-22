@@ -744,6 +744,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case MISC_BOX_OF_BEASTS:
         case MISC_SACK_OF_SPIDERS:
+        case MISC_DISC_OF_STORMS:
             valued += 200;
             break;
 
@@ -1794,6 +1795,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         switch (item.sub_type)
         {
             case MISC_CRYSTAL_BALL_OF_ENERGY:
+            case MISC_DISC_OF_STORMS:
                 break;
             default:
                 if (!is_xp_evoker(item))

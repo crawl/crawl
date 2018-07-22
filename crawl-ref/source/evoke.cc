@@ -328,6 +328,64 @@ static void _spray_lightning(int range, int power)
 }
 
 /**
+ * Evoke the Disc of Storms, potentially hurling Shock, Lightning Bolt, or
+ * Orb of Electricity in all directions around the player. Odds of doing so,
+ * the number of zaps created, & their power all increase with Evocations.
+ */
+static bool _disc_of_storms()
+{
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+    
+    const int fail_rate =
+        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS), surge);
+    
+    //TODO: Crawlcode, fix this later
+    if (x_chance_in_y(fail_rate, 100))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return false;
+    }
+    if (x_chance_in_y(fail_rate, 100))
+    {
+        mpr("The disc glows for a moment, then fades.");
+        return false;
+    }
+    if (x_chance_in_y(fail_rate, 100))
+    {
+        mpr("Little bolts of electricity crackle over the disc.");
+        return false;
+    }
+
+    const int disc_count
+        = roll_dice(2, player_adjust_evoc_power(
+                           1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7), surge));
+    ASSERT(disc_count);
+
+    mpr("The disc erupts in an explosion of electricity!");
+    const int range = player_adjust_evoc_power(
+                          you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5, surge); // 5--14
+    const int power = player_adjust_evoc_power(
+                          30 + you.skill(SK_EVOCATIONS, 2), surge); // 30-84
+    for (int i = 0; i < disc_count; ++i)
+        _spray_lightning(range, power);
+
+    // Let it rain.
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+        if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
+        {
+            place_cloud(CLOUD_RAIN, *ri,
+                        random2(you.skill(SK_EVOCATIONS)), &you);
+        }
+    }
+
+    return true;
+}
+
+/**
  * Evoke a lightning rod, creating an arc of lightning that can be sustained
  * by continuing to evoke.
  *
@@ -2028,6 +2086,11 @@ bool evoke_item(int slot, bool check_range)
             if (!_check_crystal_ball())
                 unevokable = true;
             else if (_ball_of_energy())
+                practise_evoking(1);
+            break;
+
+        case MISC_DISC_OF_STORMS:
+            if(_disc_of_storms())
                 practise_evoking(1);
             break;
 

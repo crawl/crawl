@@ -3917,6 +3917,8 @@ colour_t item_def::miscellany_colour() const
             return BROWN;
         case MISC_LIGHTNING_ROD:
             return LIGHTGREY;
+        case MISC_DISC_OF_STORMS:
+            return LIGHTGREY; // I really need to look up the alternative colors
         case MISC_PHIAL_OF_FLOODS:
             return LIGHTBLUE;
         case MISC_BOX_OF_BEASTS:

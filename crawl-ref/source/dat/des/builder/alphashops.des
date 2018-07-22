@@ -81,7 +81,7 @@
        "book of dreams", "book of the dragon", "dagger", "demon blade",
        "demon trident", "demon whip", "dire flail", "double sword",
        "ring of dexterity", "manual of dodging", "wand of disintegration",
-       "staff of death", "wand of digging" }
+       "disc of storms", "staff of death", "wand of digging" }
 
       elseif s == "E" then i = { "book of enchantments", "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",

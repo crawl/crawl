@@ -988,6 +988,7 @@ static string misc_type_name(int type, bool known)
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
 #endif
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
+    case MISC_DISC_OF_STORMS:           return "disc of storms";
     case MISC_LIGHTNING_ROD:             return "lightning rod";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
