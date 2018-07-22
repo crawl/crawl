@@ -145,7 +145,7 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    bool exit(bool experience_check);
+    bool exit(bool just_reset = false);
 #ifdef USE_TILE_LOCAL
     int get_line_height();
 #endif
@@ -161,7 +161,7 @@ public:
     void toggle(skill_menu_switch sw);
 
     void init_experience();
-    void finish_experience(bool experience_check);
+    void finish_experience(bool experience_change);
 
 private:
     MenuFreeform*        m_ff;
