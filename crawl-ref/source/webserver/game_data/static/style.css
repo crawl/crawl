@@ -339,6 +339,10 @@ body {
 .simplebar-content > :last-child {
     margin-bottom: 0 !important;
 }
+.scroller-lhd {
+    visibility: hidden;
+    position: absolute;
+}
 
 /* paneset */
 .paneset {

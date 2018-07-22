@@ -380,12 +380,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function formatted_scroller_line_height(body)
     {
-        var $body = $(scroller(body).contentElement);
-        var span = $body.children("span")[0];
-        if (span == null) {
-            $body.html("<span style='visibility:hidden;position:absolute;'> </span>"+$body.html());
-            span = $body.children("span")[0];
-        }
+        var span = $(scroller(body).scrollElement).siblings('.scroller-lhd')[0];
         var rect = span.getBoundingClientRect();
         return rect.bottom - rect.top;
     }

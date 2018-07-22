@@ -13,8 +13,9 @@ function ($, simplebar) {
             var scrollElement = scroller.getScrollElement();
             var contentElement = scroller.getContentElement();
             var top = $("<div class='scroller-shade top'>"),
-                bot = $("<div class='scroller-shade bot'>");
-            $el.append(top).append(bot);
+                bot = $("<div class='scroller-shade bot'>"),
+                lhd = $("<span class='scroller-lhd'>_</span>");
+            $el.append(top).append(bot).append(lhd);
             var update_shades = function () {
                 var dy = $(scrollElement).scrollTop(),
                     ch = $(contentElement).outerHeight(),
