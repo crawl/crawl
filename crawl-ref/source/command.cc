@@ -1252,7 +1252,7 @@ private:
 
         return formatted_scroller::process_key(ch);
     };
-    int prev_page;
+    int prev_page{0};
 };
 
 void show_help(int section, string highlight_string)
