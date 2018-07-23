@@ -2908,5 +2908,5 @@ Sprint VIII: "Arena of Blood"
 Sprint IX: "|||||||||||||||||||||||||||||"
   This mode, also known as "linesprint", puts the entire game of Crawl in a
   single winding 1-space corridor, with each region as one straight line. Fight
-  your way to the middle of the map to claim the Orb of Zot, and continue onwards
-  to collect all 15 runes on your way to escaping.
+  your way to the middle of the map to claim the Orb of Zot. Escape with it,
+  or continue onwards to collect all 15 runes first.
