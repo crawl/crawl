@@ -665,6 +665,7 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>V</w>: Version information\n"
         "<w>Home</w>: This screen\n");
 
+    // TODO: generate this from the manual somehow
     cols.add_formatted(
         1,
         "<h>Manual Contents\n\n"
@@ -687,7 +688,8 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>2</w>.      List of Character Backgrounds\n"
         "<w>3</w>.      List of Skills\n"
         "<w>4</w>.      List of Keys and Commands\n"
-        "<w>5</w>.      Inscriptions\n");
+        "<w>5</w>.      Inscriptions\n"
+        "<w>6</w>.      Dungeon sprint modes\n");
 }
 
 static void _add_formatted_keyhelp(column_composer &cols)
