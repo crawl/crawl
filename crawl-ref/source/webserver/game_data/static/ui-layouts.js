@@ -154,7 +154,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function format_spell_html(desc)
     {
-        var parts = desc.match(/(.*\n\n)(Level: [^\n]+)(\n\n.*)/);
+        var parts = desc.match(/(^[\s\S]*\n\n)(Level: [^\n]+)(\n\n[\s\S]*)$/);
         if (parts == null || parts.length != 4)
             return fmt_body_txt(desc);
         parts[2] = parts[2].replace(/ /g, '&nbsp;');
