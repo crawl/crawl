@@ -233,7 +233,7 @@ VALUE:   1000
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
-# it's a dagger made from a tooth -> no TYPE
+# it's a quick blade made from a tooth -> no TYPE
 PLUS:    +12
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
