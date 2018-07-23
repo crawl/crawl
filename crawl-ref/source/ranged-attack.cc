@@ -326,7 +326,7 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
-bool ranged_attack::using_weapon()
+bool ranged_attack::using_weapon() const
 {
     return weapon && (launch_type == launch_retval::LAUNCHED
                      || launch_type == launch_retval::BUGGY // not initialized

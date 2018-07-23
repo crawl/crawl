@@ -28,7 +28,7 @@ private:
     bool ignores_shield(bool verbose) override;
 
     /* Combat Calculations */
-    bool using_weapon() override;
+    bool using_weapon() const override;
     int weapon_damage() override;
     int calc_base_unarmed_damage() override;
     int calc_mon_to_hit_base() override;
