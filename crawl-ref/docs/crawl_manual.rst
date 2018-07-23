@@ -2850,10 +2850,10 @@ each property of an artefact will be listed and described.
 6. Dungeon sprint modes
 ****************************************
 
-Dungeon sprints are short, faster-paced variants of crawl that aim at more of a
-"coffee break"-style of gameplay. They can be accessed from the main menu, and
-save files co-exist with regular game saves. Sprint modes all use the basic
-crawl mechanics, but with certain aspects of the game sped up. All sprint
+Dungeon sprints are short, faster-paced variants of Crawl that aim at more of a
+"coffee break" style of gameplay. They can be accessed from the main menu, and
+save files coexist with regular game saves. Sprint modes all use the basic
+Crawl mechanics, but with certain aspects of the game sped up. All sprint
 games take place on a single map. The most noticeable speed change is much more
 rapid experience gain, as well as piety growth. Many sprint modes focus on some
 specific aspect of the game, and several introduce variant mechanics or items
@@ -2873,9 +2873,9 @@ Sprint III: "The Ten Rune Challenge"
   and the Orb of Zot in a single dungeon level.
 
 Sprint IV: "Fedhas' Mad Dash"
-  Fedhas' Mad Dash is a shorter sprint map with Fedhas-themed monsters; watch
-  out for the Oklobs! As usual, your goal is to find the Orb of Zot and then
-  escape.
+  Fedhas' Mad Dash is a shorter sprint map, a contest organised by Fedhas Madash.
+  The monsters are Fedhas-themed; watch out for the many flavours of Oklobs! As
+  usual, your goal is to find the Orb of Zot and then escape.
 
 Sprint V: "Ziggurat Sprint"
   Ziggurat Sprint focuses on the Ziggurat mechanic. The map consists of a
@@ -2892,21 +2892,21 @@ Sprint VI: "Thunderdome"
   every monster in a normal or boss round, you will get some gold, arena points,
   and a bit of time to rest. In a lightning round, to win you just need to
   survive. A variety of interesting items are available for purchase in shops
-  along the sides -- don't miss the quad damage! To win this sprint mode, kill
-  the final boss, and the Orb will appear.
+  along the sides -- don't miss the QUAD DAMAGE! To win this sprint, kill the
+  final boss, and the Orb will appear.
 
 Sprint VII: "The Pits"
   This map is a "traditional-style" sprint map that embeds the quest for the Orb
   of Zot into a dungeon level with three runes.
 
 Sprint VIII: "Arena of Blood"
-  The Arena of Blood, also known as "meatsprint", pits a Makhleb-worshipping
-  character wielding the famous "Axe of Woe" against a large variety of
+  In the Arena of Blood, also known as "meatsprint", you are a vessel of Makhleb,
+  wielding Makhleb's immensely destructive Axe of Woe against a large variety of
   meat-based monsters in an open arena. To win this mode, kill the Meatlord,
   pick up the Orb of Zot, and escape.
 
 Sprint IX: "|||||||||||||||||||||||||||||"
-  This mode, also known as "linesprint", puts the entire game of crawl in a
-  single winding 1-space corridor, with each region as one straight line. The
-  Orb of Zot appears in the middle of the map, which continues through all 15
-  runes past Zot.
+  This mode, also known as "linesprint", puts the entire game of Crawl in a
+  single winding 1-space corridor, with each region as one straight line. Fight
+  your way to the middle of the map to claim the Orb of Zot, and continue onwards
+  to collect all 15 runes on your way to escaping.
