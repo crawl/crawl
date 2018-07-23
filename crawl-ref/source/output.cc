@@ -2372,7 +2372,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
-    out += _stealth_bar(get_number_of_cols()) + "\n";
+    out += _stealth_bar(20) + "\n";
 
     const int regen = player_regen(); // round up
     out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
