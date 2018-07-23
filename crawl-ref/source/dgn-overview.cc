@@ -849,7 +849,7 @@ void remove_unique_annotation(monster* mons)
         // the same unique_name elsewhere.
         if ((mons->type != MONS_PLAYER_GHOST
              || i->second == level_id::current()
-             || you.can_see(*mons))
+             || you.can_see(*mons) && testbits(mons->flags, MF_TAKING_STAIRS))
             && i->first == name)
         {
             affected_levels.insert(i->second);
