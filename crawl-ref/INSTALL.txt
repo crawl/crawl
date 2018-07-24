@@ -244,6 +244,8 @@ For the graphical version:
 Building on Windows (MSYS2)
 ---------------------------
 
+This is the recommended windows build process.
+
 MSYS2 which is a Cygwin-derived software distro for Windows that can build
 native applications. We recommend Windows users try this method first for
 compiling crawl, since it is tested by our active Windows developers. You can
@@ -264,9 +266,17 @@ version of MSYS2 and *not* the version labeled 'MSYS2 MSYS'.
   is the path to your home directory in this new MSYS2 installation.
 
 * After the installer finishes, you'll want to start the MSYS2 Shell to follow
-  steps 5-7 in order to update your installation. Be sure to use the menu entry
-  that's labeled MSYS2 MinGW 64-bit and *not* the one labeled 'MSYS2 MSYS'.
-  After each update step, restart the MSYS2 shell before the next step.
+  steps 5-6 from the MSYS2 install instructions in order to update your
+  installation. Be sure to use the menu entry that's labeled MSYS2 MinGW 64-bit
+  and *not* the one labeled 'MSYS2 MSYS'. These steps are repeated here:
+
+    5. At the command line, run `pacman -Syu` to update the core packages.
+       Then restart your MSYS2 shell.
+       
+    6. At the command line, run `pacman -Su` to update all packages. Then
+       restart your MSYS2 shell.
+
+* 
 
 After MSYS2 is fully installed and updated, follow steps below to install
 development packages and compile Crawl. The commands shown below should be run
@@ -284,24 +294,28 @@ from within the MSYS2 Shell.
 
   pacman -S mingw-w64-x86_64-toolchain
 
-  At this point you may need to add the newly installed toolchain to your path.
-  You can do this with the following line, either at the command line (for that
-  shell instance only) or in the file `~/.bashrc` to make it permanent:
+* At this point you may need to add the newly installed toolchain to your path.
+  On recent MSYS2 versions, this will be done automatically for you and you can
+  skip this step. To test whether it worked, run:
+  
+  gcc -v
+  
+  If this doesn't work, run the following line, either at the command line (for
+  that shell instance only) or in the file `~/.bashrc` to make it permanent:
 
   export PATH=$PATH:/mingw64/bin
-
-  To test that this worked, run:
-
-  gcc -v
 
   After the packages are installed and gcc runs, you're ready to build crawl!
 
 * To get the Crawl source, you can follow the steps in the Source Code Checkout
-  section above to clone Crawl into your MSYS2 home directory. If you've
-  downloaded the source elsewhere, first 'cd' to that Crawl source directory.
-  For example, if you have the Crawl sources in c:\crawl\source, you would run:
-
-  cd /c/crawl/source
+  section above to clone Crawl into your MSYS2 home directory. We recommend
+  using the MSYS2-installed version of git for these steps. In brief:
+  
+  1. `cd` to the location where you would like the crawl repository to be. It
+     will clone into a folder named `crawl`.
+  2. Run `git clone https://github.com/crawl/crawl.git`.
+  3. Run `cd crawl/crawl-ref-source`.
+  4. Run `git submodule update --init`.
 
 * Build the console version of Crawl by simply running:
 
@@ -319,6 +333,8 @@ from within the MSYS2 Shell.
 
 Building on Windows (Cygwin)
 ----------------------------
+
+* This build process is not currently supported.
 
 * Get Cygwin from http://www.cygwin.com/. When installing, ensure that the
   following packages are selected: gcc, g++, make, flex, bison,
@@ -356,7 +372,7 @@ Building on Windows 10 (Linux Subsystem)
 Building on Windows (MSVC)
 --------------------------
 
-* This build process is not currently maintained and is unlikely to be
+* This build process is not currently supported and is unlikely to be
   straightforward in versions of MSVC besides those explicitly mentioned
   here. If you get it to work on a more recent version, please let us know
   and submit a patch!
