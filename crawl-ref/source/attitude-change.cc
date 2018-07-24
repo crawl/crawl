@@ -74,14 +74,11 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
     // For followers of Beogh, decide whether orcs will join you.
     if (will_have_passive(passive_t::convert_orcs)
-        && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
         && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly()
-        && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(*mons) && !mons->paralysed())
+        && !mons->friendly())
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
