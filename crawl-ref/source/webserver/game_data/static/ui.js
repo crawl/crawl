@@ -16,7 +16,7 @@ function ($, comm, client, options) {
         return wrapper.find(".ui-popup-inner").children();
     }
 
-    function show_popup(id)
+    function show_popup(id, centred)
     {
         var $ui_stack = $("#ui-stack");
         var elem = $(id);
@@ -25,6 +25,7 @@ function ($, comm, client, options) {
 
         console.assert(elem.length === 1, "no popup to show");
         var wrapper = wrap_popup(elem, ephemeral);
+        wrapper.toggleClass("centred", centred == true);
         $("#ui-stack").append(wrapper);
         wrapper.stop(true, true).fadeIn(100, function () {
             elem.focus();

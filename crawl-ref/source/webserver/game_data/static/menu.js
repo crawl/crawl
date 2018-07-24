@@ -96,7 +96,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             // Custom-drawn CRT menu
             menu_div.removeClass("menu").addClass("menu_txt");
-            ui.show_popup(menu_div);
+            ui.show_popup(menu_div, menu["ui-centred"]);
             return;
         }
 
@@ -128,7 +128,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (client.is_watching())
             menu.following_player_scroll = true;
 
-        ui.show_popup(menu_div);
+        ui.show_popup(menu_div, menu["ui-centred"]);
         handle_size_change();
 
         if (menu.flags & enums.menu_flag.START_AT_END)

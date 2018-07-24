@@ -1956,6 +1956,7 @@ void Menu::webtiles_write_menu(bool replace) const
 
     tiles.json_open_object();
     tiles.json_write_string("msg", "menu");
+    tiles.json_write_bool("ui-centred", !crawl_state.need_save);
     tiles.json_write_string("tag", tag);
     tiles.json_write_int("flags", flags);
     if (replace)

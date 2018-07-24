@@ -64,6 +64,10 @@ static struct UIRoot
 public:
     void push_child(shared_ptr<Widget> child, KeymapContext km);
     void pop_child();
+    shared_ptr<Widget> top_child() {
+        size_t sz = m_root.num_children();
+        return sz > 0 ? m_root.get_child(sz-1) : nullptr;
+    };
     size_t num_children() const { return m_root.num_children(); };
 
     void resize(int w, int h);
@@ -1213,7 +1217,7 @@ void Scroller::_allocate_region()
         const int h = m_region[3]*min(max(0.05f, h_percent), 1.0f);
         const float scroll_percent = m_scroll/(float)(ch_reg[3]-m_region[3]);
         const int y = m_region[1] + (m_region[3]-h)*scroll_percent;
-        GLWPrim rect(x+6, y, x+8, y+h);
+        GLWPrim rect(x+10, y, x+12, y+h);
         rect.set_col(VColour(158,124,75,200));
         m_scrollbar_buf.add_primitive(rect);
     }
@@ -1274,46 +1278,12 @@ bool Scroller::on_event(const wm_event& event)
 
 Popup::Popup(shared_ptr<Widget> child)
 {
-    vector<shared_ptr<Image>> box_img(9);
-    for (int i=0; i<9; i++)
-    {
-        box_img[i] = make_shared<Image>();
-        box_img[i]->set_tile(tile_def(TILEG_SKIN_BOX+i, TEX_GUI));
-        box_img[i]->shrink_h = i==1 || i == 4 || i==7;
-        box_img[i]->shrink_v = i==3 || i == 4 || i==5;
-    }
-
-    auto box_grid = make_shared<Grid>();
-    for (int y = 0; y < 3; y++)
-        for (int x = 0; x < 3; x++)
-            box_grid->add_child(move(box_img[y*3+x]), x+1, y+1);
-    box_grid->add_child(child, 2, 2);
-
-    // XXX: Add struts around the box, because Grid barfs with empty tracks
 #ifdef USE_TILE_LOCAL
-    const bool centre = true;
-#else
-    const bool centre = false;
+    m_depth = ui_root.num_children();
 #endif
-    using E = Box::Expand;
-    E expand_horz = centre ? E::EXPAND_H : E::NONE;
-    E expand_vert = centre ? E::EXPAND_V : E::NONE;
-    box_grid->add_child(make_shared<Box>(VERT, expand_horz), 0, 2);
-    box_grid->add_child(make_shared<Box>(VERT, expand_horz), 4, 2);
-    box_grid->add_child(make_shared<Box>(VERT, expand_vert), 2, 0);
-    box_grid->add_child(make_shared<Box>(VERT, expand_vert), 2, 4);
-
-    box_grid->set_margin_for_sdl({15, 15, 15, 15});
-    box_grid->column_flex_grow(0) = 1;
-    box_grid->column_flex_grow(2) = 10000;
-    box_grid->column_flex_grow(4) = 1;
-    box_grid->row_flex_grow(0) = 1;
-    box_grid->row_flex_grow(2) = 10000;
-    box_grid->row_flex_grow(4) = 1;
-
+    child->_set_parent(this);
     m_child = move(child);
-    m_root = move(box_grid);
-    m_root->_set_parent(this);
+    expand_h = expand_v = true;
 }
 
 void Popup::_render()
@@ -1321,33 +1291,65 @@ void Popup::_render()
 #ifdef USE_TILE_LOCAL
     m_buf.draw();
 #endif
-    m_root->render();
+    m_child->render();
 }
 
 SizeReq Popup::_get_preferred_size(Direction dim, int prosp_width)
 {
-    return m_root->get_preferred_size(dim, prosp_width);
+    SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
+#ifdef USE_TILE_LOCAL
+    constexpr int pad = m_base_margin + m_padding;
+    return {
+        0, sr.nat + 2*pad + (dim ? m_depth*m_depth_indent*(!m_centred) : 0)
+    };
+#else
+    return { sr.min, sr.nat };
+#endif
 }
 
 void Popup::_allocate_region()
 {
+    i4 region = m_region;
 #ifdef USE_TILE_LOCAL
     m_buf.clear();
     m_buf.add(m_region[0], m_region[1],
             m_region[0] + m_region[2], m_region[1] + m_region[3],
             VColour(0, 0, 0, 150));
+    constexpr int pad = m_base_margin + m_padding;
+    region[2] -= 2*pad;
+    region[3] -= 2*pad + m_depth*m_depth_indent*(!m_centred);
+
+    SizeReq hsr = m_child->get_preferred_size(HORZ, -1);
+    region[2] = max(hsr.min, min(region[2], hsr.nat));
+    SizeReq vsr = m_child->get_preferred_size(VERT, region[2]);
+    region[3] = max(vsr.min, min(region[3], vsr.nat));
+
+    region[0] += pad + (m_region[2]-2*pad-region[2])/2;
+    region[1] += pad + (m_centred ? (m_region[3]-2*pad-region[3])/2 : 0);
+
+    m_buf.add(region[0] - m_padding, region[1] - m_padding,
+            region[0] + region[2] + m_padding,
+            region[1] + region[3] + m_padding,
+            VColour(125, 98, 60));
+    m_buf.add(region[0] - m_padding + 2, region[1] - m_padding + 2,
+            region[0] + region[2] + m_padding - 2,
+            region[1] + region[3] + m_padding - 2,
+            VColour(0, 0, 0));
+    m_buf.add(region[0] - m_padding + 3, region[1] - m_padding + 3,
+            region[0] + region[2] + m_padding - 3,
+            region[1] + region[3] + m_padding - 3,
+            VColour(4, 2, 4));
 #endif
-    m_root->allocate_region(m_region);
+    m_child->allocate_region(region);
 }
 
 i2 Popup::get_max_child_size()
 {
 #ifdef USE_TILE_LOCAL
-    const auto td = tile_def(TILEG_SKIN_BOX, TEX_GUI);
-    const tile_info &ti = tiles.get_image_manager()->tile_def_info(td);
+    constexpr int pad = m_base_margin + m_padding;
     return {
-        (m_region[2] - 2*ti.width - 15*2) & ~0x1,
-        (m_region[3] - 2*ti.height - 15*2) & ~0x1,
+        (m_region[2] - 2*pad) & ~0x1,
+        (m_region[3] - 2*pad - m_depth*m_depth_indent) & ~0x1,
     };
 #else
     return { m_region[2], m_region[3] };
@@ -1626,6 +1628,11 @@ void pop_layout()
     if (!has_layout())
         redraw_screen(false);
 #endif
+}
+
+shared_ptr<Widget> top_layout()
+{
+    return ui_root.top_child();
 }
 
 void resize(int w, int h)
