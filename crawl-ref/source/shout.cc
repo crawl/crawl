@@ -525,7 +525,7 @@ static int _issue_orders_prompt()
         mprf(" t - %s!", cap_shout.c_str());
     }
 
-    if (!you.berserk())
+    if (!you.berserk() && !you.confused())
     {
         string previous;
         if (_can_target_prev())
