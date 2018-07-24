@@ -169,7 +169,7 @@ bool formatted_scroller::process_key(int ch)
         CASE_ESCAPE
             return false;
         default:
-            return true;
+            return !(m_flags & FS_EASY_EXIT);
     }
 }
 

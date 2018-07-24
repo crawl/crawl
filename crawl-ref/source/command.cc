@@ -532,7 +532,7 @@ string help_highlighter::get_species_key() const
 int show_keyhelp_menu(const vector<formatted_string> &lines,
                       int hotkey, string highlight_string)
 {
-    int flags = FS_PREWRAPPED_TEXT;
+    int flags = FS_PREWRAPPED_TEXT | FS_EASY_EXIT;
     formatted_scroller cmd_help(flags);
     cmd_help.set_tag("help");
     cmd_help.set_more();
