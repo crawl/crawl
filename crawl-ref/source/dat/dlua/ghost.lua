@@ -292,7 +292,7 @@ function setup_xom_dancing_weapon(e)
                         "morningstar", "dire flail", "war axe", "broad axe",
                         "trident", "halberd", "scythe", "quarterstaff"}
         good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
-        great_weapons = {"quickblade", "demon blade", "double sword",
+        great_weapons = {"quick blade", "demon blade", "double sword",
                          "triple sword", "demon whip", "eveningstar",
                          "executioner's axe", "demon trident", "bardiche",
                          "lajatang"}
@@ -305,7 +305,7 @@ function setup_xom_dancing_weapon(e)
                         "battleaxe", "halberd", "scythe", "glaive",
                         "quarterstaff"}
         good_weapons = {}
-        great_weapons = {"quickblade", "demon blade", "double sword",
+        great_weapons = {"quick blade", "demon blade", "double sword",
                          "triple sword", "demon whip", "eveningstar",
                          "executioner's axe", "demon trident", "bardiche",
                          "lajatang"}
