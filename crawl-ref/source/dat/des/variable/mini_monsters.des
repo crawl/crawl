@@ -2896,8 +2896,8 @@ NAME:  aerie_lemuel
 DEPTH: D:12-, Depths, !Depths:$
 MONS:  insubstantial wisp, ball lightning, wind drake, air elemental
 TAGS:  no_monster_gen
-SUBST: .:..w
-SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
+SUBST: .:..W
+SUBST: 1 = 1 W:3, 2= 2 W:3, 3 = 3 W:3, 4 = 4 |:3
 MAP
     bbbbbbbbbb
   bbb11211211bbb
