@@ -235,8 +235,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Fedhas
     {
       { 0, ABIL_FEDHAS_FUNGAL_BLOOM, "turn corpses into toadstools" },
-      { 1, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
-      { 2, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
+      { 1, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
+      { 2, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
       { 3, ABIL_FEDHAS_PLANT_RING, "cause a ring of plants to grow" },
       { 4, ABIL_FEDHAS_SPAWN_SPORES, "spawn explosive spores" },
       { 5, ABIL_FEDHAS_RAIN, "control the weather" },
