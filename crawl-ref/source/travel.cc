@@ -4754,8 +4754,8 @@ bool check_for_interesting_features()
             env.map_seen.set(p);
 
             // But don't stop if we knew about it previously
-            if (env.map_forgotten
-                && !((*env.map_forgotten)(p).flags & MAP_SEEN_FLAG))
+            if (!env.map_forgotten
+                || !((*env.map_forgotten)(p).flags & MAP_SEEN_FLAG))
             {
                 _check_interesting_square(p, discoveries);
             }
