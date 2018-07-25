@@ -94,6 +94,7 @@ static void _initialize()
     init_item_name_cache();
 
     msg::initialise_mpr_streams();
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
 
     // Init item array.
     for (int i = 0; i < MAX_ITEMS; ++i)
@@ -196,6 +197,8 @@ static void _initialize()
             "or DEBUG_TESTS)");
 #endif
     }
+
+    mpr(opening_screen().c_str());
 }
 
 /** KILL_RESETs all monsters in LOS.
@@ -866,6 +869,14 @@ bool UIStartupMenu::on_event(const wm_event& ev)
 
         return true;
     }
+    else if (keyn == CONTROL('P'))
+    {
+        replay_messages();
+        MenuItem *active = menu.get_active_item();
+        if (active && active->get_id() >= NUM_GAME_TYPE)
+            startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+        return true;
+    }
 
     if (!menu.process_key(keyn))
     {
@@ -1025,6 +1036,8 @@ bool UIStartupMenu::on_event(const wm_event& ev)
 static void _show_startup_menu(newgame_def& ng_choice,
                                const newgame_def& defaults)
 {
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
 #elif defined(USE_TILE_WEB)
