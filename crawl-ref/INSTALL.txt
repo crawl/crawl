@@ -272,11 +272,11 @@ version of MSYS2 and *not* the version labeled 'MSYS2 MSYS'.
 
     5. At the command line, run `pacman -Syu` to update the core packages.
        Then restart your MSYS2 shell.
-       
+
     6. At the command line, run `pacman -Su` to update all packages. Then
        restart your MSYS2 shell.
 
-* 
+*
 
 After MSYS2 is fully installed and updated, follow steps below to install
 development packages and compile Crawl. The commands shown below should be run
@@ -297,9 +297,9 @@ from within the MSYS2 Shell.
 * At this point you may need to add the newly installed toolchain to your path.
   On recent MSYS2 versions, this will be done automatically for you and you can
   skip this step. To test whether it worked, run:
-  
+
   gcc -v
-  
+
   If this doesn't work, run the following line, either at the command line (for
   that shell instance only) or in the file `~/.bashrc` to make it permanent:
 
@@ -310,7 +310,7 @@ from within the MSYS2 Shell.
 * To get the Crawl source, you can follow the steps in the Source Code Checkout
   section above to clone Crawl into your MSYS2 home directory. We recommend
   using the MSYS2-installed version of git for these steps. In brief:
-  
+
   1. `cd` to the location where you would like the crawl repository to be. It
      will clone into a folder named `crawl`.
   2. Run `git clone https://github.com/crawl/crawl.git`.
