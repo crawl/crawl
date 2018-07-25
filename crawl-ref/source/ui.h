@@ -264,6 +264,7 @@ class ContainerVec : public Container
 public:
     virtual ~ContainerVec() {}
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+    size_t num_children() const { return m_children.size(); }
 private:
     typedef Container::iterator I;
 
@@ -409,7 +410,6 @@ public:
     virtual ~Stack() {};
     void add_child(shared_ptr<Widget> child);
     void pop_child();
-    size_t num_children() const { return m_children.size(); }
     shared_ptr<Widget> get_child(size_t idx) const { return m_children[idx]; };
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
@@ -424,7 +424,6 @@ class Switcher : public ContainerVec
 public:
     virtual ~Switcher() {};
     void add_child(shared_ptr<Widget> child);
-    size_t num_children() const { return m_children.size(); }
     int& current();
 
     virtual void _render() override;
