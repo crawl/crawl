@@ -132,7 +132,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $body = $popup.find(".body");
         $body.html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($body, desc.spellset);
-        var s = scroller($popup[0]);
+        var s = scroller($body[0]);
         $popup.on("keydown", function (event) {
             scroller_handle_key(s, event);
         });
