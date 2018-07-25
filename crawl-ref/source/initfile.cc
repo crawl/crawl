@@ -364,6 +364,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
+        new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),

@@ -529,7 +529,8 @@ void UIMenuPopup::_allocate_region()
     int more_height = m_menu->m_ui.more_bin->get_region()[3];
     // switch number of columns
     int num_cols = m_menu->m_ui.menu->get_num_columns();
-    if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS))
+    if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS)
+        && !Options.tile_single_column_menus)
     {
         if ((num_cols == 1 && m_height+more_height > max_height)
          || (num_cols == 2 && m_height+more_height <= max_height))
