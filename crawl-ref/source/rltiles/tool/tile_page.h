@@ -20,6 +20,7 @@ public:
     bool add_synonym(const string &enumname, const string &syn);
     bool add_synonym(int idx, const string &syn);
     void add_variation(int var_idx, int base_idx, int colour);
+    bool pad_texture();
 
     vector<tile*> m_tiles;
     vector<unsigned int> m_counts;
