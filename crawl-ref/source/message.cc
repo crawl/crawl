@@ -2049,7 +2049,6 @@ void replay_messages()
             string text = msgs[i].full_text();
             linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             vector<formatted_string> parts;
-            fprintf(stderr, "printing '%s'\n", text.c_str());
             formatted_string::parse_string_to_multiple(text, parts, 80);
             for (unsigned int j = 0; j < parts.size(); ++j)
             {
