@@ -100,8 +100,9 @@ function ($, comm, client, options) {
             family += ", monospace";
             $("#ui-stack").css("font-family", family);
         }
-    });
 
+        $("#ui-stack").data('display-mode', options.get("tile_display_mode"));
+    });
 
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {

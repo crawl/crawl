@@ -941,3 +941,7 @@ body {
 .hidden, .templates {
     display: none !important;
 }
+
+#ui-stack:not([data-display-mode="tiles"]) .glyph-mode-hidden {
+    display: none !important;
+}

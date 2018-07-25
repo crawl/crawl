@@ -35,7 +35,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $container.append(book.label);
             var $list = $("<ol>");
             $.each(book.spells, function (i, spell) {
-                var $item = $("<li class=selectable>"), $canvas = $("<canvas>");
+                var $item = $("<li class=selectable>");
+                var $canvas = $("<canvas class='glyph-mode-hidden'>");
                 var letter = spell.letter;
 
                 var renderer = new cr.DungeonCellRenderer();
