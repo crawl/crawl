@@ -627,7 +627,7 @@ void InventoryRegion::draw_tag()
 
 void InventoryRegion::activate()
 {
-    if (inv_count() < 1)
+    if (inv_count() < 1 && you.num_turns > 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         flush_prev_message();

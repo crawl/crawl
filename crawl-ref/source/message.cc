@@ -799,7 +799,8 @@ public:
         // of space and have to display --more-- instead
         unwind_bool dontsend(send_ignore_one, true);
 #endif
-        msgwin.add_item(msg.full_text(), p, _temporary);
+        if (crawl_state.io_inited)
+            msgwin.add_item(msg.full_text(), p, _temporary);
     }
 
     void roll_back()
@@ -1351,16 +1352,12 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         die_noline("%s", text.c_str());
 #endif
 
-    if (!crawl_state.io_inited)
-    {
-        if (channel == MSGCH_ERROR)
-            fprintf(stderr, "%s\n", text.c_str());
-        return;
-    }
+    if (!crawl_state.io_inited && channel == MSGCH_ERROR)
+        fprintf(stderr, "%s\n", text.c_str());
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
-    if (!_updating_view)
+    if (!_updating_view && crawl_state.io_inited)
     {
         _updating_view = true;
         flush_comes_into_view();
@@ -1376,7 +1373,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     msg_colour_type colour = prepare_message(text, channel, param);
 
-    if (colour == MSGCOL_MUTED)
+    if (colour == MSGCOL_MUTED && crawl_state.io_inited)
     {
         if (channel == MSGCH_PROMPT)
             msgwin.show();
@@ -1393,6 +1390,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
 
     formatted_string fs = formatted_string::parse_string(text);
+
+    // TODO: this kind of check doesn't really belong in logging code...
     if (you.duration[DUR_QUAD_DAMAGE])
         fs.all_caps(); // No sound, so we simulate the reverb with all caps.
     else if (cap)
@@ -1403,6 +1402,10 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     message_line msg = message_line(text, channel, param, join);
     buffer.add(msg);
+
+    if (!crawl_state.io_inited)
+        return;
+
     _last_msg_turn = msg.turn;
 
     if (channel == MSGCH_ERROR)
@@ -1611,7 +1614,7 @@ static msg_colour_type prepare_message(const string& imsg,
     if (suppress_messages)
         return MSGCOL_MUTED;
 
-    if (silenced(you.pos())
+    if (you.num_turns > 0 && silenced(you.pos())
         && (channel == MSGCH_SOUND || channel == MSGCH_TALK))
     {
         return MSGCOL_MUTED;

@@ -74,6 +74,7 @@ static void _initialize()
     Options.fixup_options();
 
     you.symbol = MONS_PLAYER;
+    msg::initialise_mpr_streams();
 
     seed_rng();
 
@@ -93,7 +94,6 @@ static void _initialize()
     // be set to use with item_names_by_glyph_cache.
     init_item_name_cache();
 
-    msg::initialise_mpr_streams();
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
     // Init item array.
