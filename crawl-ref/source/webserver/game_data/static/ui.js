@@ -16,7 +16,7 @@ function ($, comm, client, options) {
         return wrapper.find(".ui-popup-inner").children();
     }
 
-    function show_popup(id)
+    function show_popup(id, centred)
     {
         var $ui_stack = $("#ui-stack");
         var elem = $(id);
@@ -25,10 +25,13 @@ function ($, comm, client, options) {
 
         console.assert(elem.length === 1, "no popup to show");
         var wrapper = wrap_popup(elem, ephemeral);
+        wrapper.toggleClass("centred", centred == true);
         $("#ui-stack").append(wrapper);
         wrapper.stop(true, true).fadeIn(100, function () {
             elem.focus();
         });
+        if (elem.find(".paneset").length > 0)
+            ui_resize_handler();
     }
 
     function hide_popup(show_below)
@@ -89,6 +92,22 @@ function ($, comm, client, options) {
             ev.stopImmediatePropagation();
     }
 
+    function ui_resize_handler (ev)
+    {
+        if ($.browser.webkit)
+        {
+            $("#ui-stack .paneset").each(function (i, el) {
+                $(el).children(".pane").css("height", "");
+                var height = $(el).outerHeight() + "px";
+                $(el).children(".pane").css("height", height);
+            });
+
+            $("#ui-stack [data-simplebar]").each(function (i, el) {
+                $(el).data("scroller").recalculate();
+            });
+        }
+    }
+
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -100,14 +119,17 @@ function ($, comm, client, options) {
             family += ", monospace";
             $("#ui-stack").css("font-family", family);
         }
-    });
 
+        $("#ui-stack").attr('data-display-mode',
+                options.get("tile_display_mode"));
+    });
 
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {
         $(document).off("game_keydown.ui game_keypress.ui")
             .on("game_keydown.ui", ui_key_handler)
             .on("game_keypress.ui", ui_key_handler);
+        $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
     });
 
     return {

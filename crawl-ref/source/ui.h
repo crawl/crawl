@@ -10,6 +10,7 @@
 
 #include "format.h"
 #include "KeymapContext.h"
+#include "state.h"
 #include "tilefont.h"
 #include "tiledef-gui.h"
 #include "windowmanager.h"
@@ -264,6 +265,7 @@ class ContainerVec : public Container
 public:
     virtual ~ContainerVec() {}
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+    size_t num_children() const { return m_children.size(); }
 private:
     typedef Container::iterator I;
 
@@ -409,7 +411,6 @@ public:
     virtual ~Stack() {};
     void add_child(shared_ptr<Widget> child);
     void pop_child();
-    size_t num_children() const { return m_children.size(); }
     shared_ptr<Widget> get_child(size_t idx) const { return m_children[idx]; };
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
@@ -424,7 +425,6 @@ class Switcher : public ContainerVec
 public:
     virtual ~Switcher() {};
     void add_child(shared_ptr<Widget> child);
-    size_t num_children() const { return m_children.size(); }
     int& current();
 
     virtual void _render() override;
@@ -551,10 +551,14 @@ public:
     i2 get_max_child_size();
 
 protected:
-    shared_ptr<Widget> m_root;
 #ifdef USE_TILE_LOCAL
     ShapeBuffer m_buf;
+    int m_depth;
+    static constexpr int m_depth_indent = 20;
+    static constexpr int m_base_margin = 50;
+    static constexpr int m_padding = 23;
 #endif
+    bool m_centred{!crawl_state.need_save};
 };
 
 #ifdef USE_TILE_LOCAL
@@ -589,6 +593,7 @@ public:
 
 void push_layout(shared_ptr<Widget> root, KeymapContext km = KMC_DEFAULT);
 void pop_layout();
+shared_ptr<Widget> top_layout();
 void pump_events(int wait_event_timeout = INT_MAX);
 void run_layout(shared_ptr<Widget> root, const bool& done);
 bool has_layout();

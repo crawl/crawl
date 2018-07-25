@@ -133,12 +133,15 @@ int formatted_scroller::show()
             return true;
         if (vbox->on_event(ev))
             return true;
+        if (m_flags & FS_EASY_EXIT)
+            return done = true;
         return false;
     });
 
 #ifdef USE_TILE_WEB
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
+    tiles.json_write_string("tag", m_tag);
     tiles.json_write_string("text", contents.to_colour_string());
     tiles.json_write_string("highlight", highlight);
     tiles.json_write_string("more", m_more.to_colour_string());
@@ -169,7 +172,7 @@ bool formatted_scroller::process_key(int ch)
         CASE_ESCAPE
             return false;
         default:
-            return !(m_flags & FS_EASY_EXIT);
+            return true;
     }
 }
 

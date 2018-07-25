@@ -1894,6 +1894,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         // We have a significant key input!
         // Construct selection vector
         vector<MenuItem*> selection = menu.get_selected_items();
+        menu.clear_selections();
         // There should only be one selection, otherwise something broke
         if (selection.size() != 1)
         {
@@ -2330,6 +2331,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
         // We have a significant key input!
         // Construct selection vector
         vector<MenuItem*> selection = menu.get_selected_items();
+        menu.clear_selections();
         // There should only be one selection, otherwise something broke
         if (selection.size() != 1)
         {

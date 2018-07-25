@@ -811,7 +811,13 @@ void UIStartupMenu::_allocate_region()
     }
 
     descriptor->render();
-    descriptor->override_description(crawl_state.last_game_exit.message);
+    if (recent_error_messages())
+    {
+        descriptor->override_description(
+            "Errors during initialization; press ctrl-p to view.");
+    }
+    else
+        descriptor->override_description(crawl_state.last_game_exit.message);
 
 }
 
@@ -844,6 +850,11 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     if (ev.type != WME_KEYDOWN)
         return false;
     int keyn = ev.key.keysym.sym;
+
+    // XXX: these keys are effectively broken on the main menu; there's a new
+    // menu implementation on the way, but until it's ready, disable them
+    if (keyn == CK_PGUP || keyn == CK_PGDN)
+        return true;
 
     _expose();
 
@@ -968,12 +979,12 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     }
     // we had a significant action!
     vector<MenuItem*> selected = menu.get_selected_items();
+    menu.clear_selections();
     if (selected.empty())
     {
         // Uninteresting action, poll a new key
         return true;
     }
-    menu.clear_selections();
 
     int id = selected.at(0)->get_id();
     switch (id)

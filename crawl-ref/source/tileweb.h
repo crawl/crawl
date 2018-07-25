@@ -249,6 +249,7 @@ protected:
         Menu* menu;
         string crt_tag;
         vector<string> ui_json;
+        bool centred;
     };
     vector<UIStackFrame> m_menu_stack;
 

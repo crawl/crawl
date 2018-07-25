@@ -922,11 +922,9 @@ void hints_monster_seen(const monster& mon)
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
     {
         text =  "However, as a conjurer you will want to deal with it using "
-                "magic. If you have a look at your spellbook from your "
-                "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this."
-                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
-                "book in your inventory to read its description.</tiles>";
+                "magic. If you look at the help entry for the "
+                "<w>M</w>emorisation screen you'll find an explanation of how "
+                "to do this.";
         mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
@@ -1161,19 +1159,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up a book"
                 "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
-             << "'</w>) "
-                "If it's a spellbook, you'll be able to memorise spells from "
-                "it via <w>%</w>, and cast them with <w>%</w>.</console>"
-                "<tiles>. If it's a spellbook, you can memorise spells from "
-                "it with <w>left-click</w>.</tiles>";
+             << "'</w>) </console>"
+                "If it's a spellbook, you can pick it up to add its spells "
+                "to your library. You'll be able to memorise spells from "
+                "it via <w>%</w>, and cast them with <w>%</w>.</console>";
         cmd.push_back(CMD_MEMORISE_SPELL);
         cmd.push_back(CMD_CAST_SPELL);
 
         if (you_worship(GOD_TROG))
         {
             text << god_name(GOD_TROG)
-                 << " hates it when you memorize magic, and prefers you to "
-                    "burn books with the corresponding <w>%</w>bility.";
+                 << " hates it when you memorise or study magic, though.";
             cmd.push_back(CMD_USE_ABILITY);
         }
         break;
@@ -2812,6 +2808,62 @@ static string _hints_target_mode(bool spells = false)
     return result;
 }
 
+string hints_memorise_info()
+{
+    // TODO: this should probably be in z or I, but adding it to the memorise
+    // menu was easier for the moment.
+    //textcolour(channel_to_colour(MSGCH_TUTORIAL));
+    ostringstream text;
+    vector<command_type> cmd;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    string m = "This screen shows the spells in your spell library. From here "
+               "you can memorise spells by selecting them, as well as view "
+               "spell descriptions, search for them, and organize them. As a "
+               "conjurer, you start with five memorisable spells, and one "
+               "already memorised: Magic Dart. (To view memorised spells, you "
+               "can exit this menu and select <w>I</w>.)";
+
+    if (player_has_available_spells())
+    {
+        m += "\n\nA spell that isn't <darkgray>grayed out</darkgray> or "
+             "<lightred>forbidden</lightred> can be "
+             "memorised right away by selecting it at at this menu.";
+    }
+    else
+    {
+        m += "\n\nYou cannot memorise any ";
+        m += (you.spell_no ? "more " : "");
+        m += "spells right now. This will change as you grow in levels and "
+             "Spellcasting proficiency. ";
+    }
+
+    if (you.spell_no)
+    {
+        m += "\n\nTo use magic, ";
+#ifdef USE_TILE
+        m += "you can <w>left mouse click</w> on the monster you wish to "
+             "target (or on your player character to cast a spell on "
+             "yourself) while pressing the <w>Control key</w>, and then select "
+             "a spell from the menu. Or you can switch to the spellcasting "
+             "display by <w>clicking on the</w> corresponding <w>tab</w>."
+             "\n\nAlternatively, ";
+#endif
+        m += "you can type <w>%</w> and choose a spell, e.g. <w>a</w> (check "
+             "with <w>?</w>). For attack spells you'll ";
+        cmd.push_back(CMD_CAST_SPELL);
+    }
+
+    linebreak_string(m, _get_hints_cols());
+    if (!cmd.empty())
+        insert_commands(m, cmd);
+    text << m;
+    if (you.spell_no)
+        text << _hints_target_mode(true);
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    return text.str();
+}
+
 static string _hints_abilities(const item_def& item)
 {
     string str = "To do this, ";
@@ -3279,78 +3331,10 @@ string hints_describe_item(const item_def &item)
             }
             else // It's a spellbook!
             {
-                if (you_worship(GOD_TROG))
-                {
-                    if (!item_ident(item, ISFLAG_KNOW_TYPE))
-                    {
-                        ostr << "\nIt's a book, you can <w>%</w>ead it.";
-                        cmd.push_back(CMD_READ);
-                    }
-                    else
-                    {
-                        ostr << "\nA spellbook! You could <w>%</w>emorise some "
-                                "spells and then cast them with <w>%</w>.";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                        cmd.push_back(CMD_CAST_SPELL);
-                    }
-                    ostr << "\nAs a worshipper of "
-                         << god_name(GOD_TROG)
-                         << ", though, you might instead wish to burn this "
-                            "tome of hated magic by using the corresponding "
-                            "<w>%</w>bility. "
-                            "Note that this only works on books that are lying "
-                            "on the floor and not on your current square. ";
-                    cmd.push_back(CMD_USE_ABILITY);
-                }
-                else if (!item_ident(item, ISFLAG_KNOW_TYPE))
-                {
-                    // XXX: can this happen?
-                    ostr << "\nIt's a book, you can <w>%</w>ead it"
-#ifdef USE_TILE
-                            ", something that can also be achieved by clicking "
-                            "on its tile in your inventory."
-#endif
-                            ".";
-                    cmd.push_back(CMD_READ);
-                }
-                else
-                {
-                    if (player_can_memorise(item))
-                    {
-                        ostr << "\nSuch a <lightblue>highlighted "
-                                "spell</lightblue> can be <w>%</w>emorised "
-                                "right away. ";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                    }
-                    else
-                    {
-                        ostr << "\nYou cannot memorise any "
-                             << (you.spell_no ? "more " : "")
-                             << "spells right now. This will change as you "
-                                "grow in levels and Spellcasting proficiency. ";
-                    }
-
-                    if (you.spell_no)
-                    {
-                        ostr << "\n\nTo use magic, ";
-#ifdef USE_TILE
-                        ostr << "you can <w>left mouse click</w> on the "
-                                "monster you wish to target (or on your "
-                                "player character to cast a spell on "
-                                "yourself) while pressing the <w>Control "
-                                "key</w>, and then select a spell from the "
-                                "menu. Or you can switch to the spellcasting "
-                                "display by <w>clicking on the</w> "
-                                "corresponding <w>tab</w>."
-                                "\n\nAlternatively, ";
-#endif
-                        ostr << "you can type <w>%</w> and choose a "
-                                "spell, e.g. <w>a</w> (check with <w>?</w>). "
-                                "For attack spells you'll ";
-                        cmd.push_back(CMD_CAST_SPELL);
-                        ostr << _hints_target_mode(true);
-                    }
-                }
+                ostr << "\nIt's a book, you can pick it up to add its "
+                        "spells to your spell library. (View your spell "
+                        " library with <w>%</w>";
+                cmd.push_back(CMD_MEMORISE_SPELL);
             }
             ostr << "\n";
             Hints.hints_events[HINT_SEEN_SPBOOK] = false;

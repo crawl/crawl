@@ -22,7 +22,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         return desc_parts.join("");
     }
 
-    function _fmt_spells_list(root, spellset)
+    function _fmt_spells_list(root, spellset, colour)
     {
         var $container = root.find("#spellset_placeholder");
         $container.attr("id", "").addClass("menu_contents spellset");
@@ -35,7 +35,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $container.append(book.label);
             var $list = $("<ol>");
             $.each(book.spells, function (i, spell) {
-                var $item = $("<li class=selectable>"), $canvas = $("<canvas>");
+                var $item = $("<li class=selectable>");
+                var $canvas = $("<canvas class='glyph-mode-hidden'>");
                 var letter = spell.letter;
 
                 var renderer = new cr.DungeonCellRenderer();
@@ -51,7 +52,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     $item.append("<span>("+spell.hex_chance+"%) </span>");
 
                 $list.append($item);
-                $item.addClass("fg"+spell.colour);
+                if (colour)
+                    $item.addClass("fg"+spell.colour);
                 $item.on("click", function () {
                     comm.send_message("input", { text: letter });
                 });
@@ -130,8 +132,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.find(".header > span").html(desc.title);
         var $body = $popup.find(".body");
         $body.html(_fmt_spellset_html(desc.body));
-        _fmt_spells_list($body, desc.spellset);
-        var s = scroller($popup[0]);
+        _fmt_spells_list($body, desc.spellset, true);
+        var s = scroller($body[0]);
         $popup.on("keydown", function (event) {
             scroller_handle_key(s, event);
         });
@@ -334,7 +336,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = $(".templates > .describe-generic").clone();
         $popup.find(".header > span").html(desc.title);
         $popup.find(".body").html(_fmt_spellset_html(desc.body));
-        _fmt_spells_list($popup.find(".body"), desc.spellset);
+        _fmt_spells_list($popup.find(".body"), desc.spellset, false);
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
@@ -551,13 +553,15 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 return "<span class=highlight>" + line + "</span>";
             });
         }
+        $popup.attr("data-tag", desc.tag);
         $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
         var s = scroller($body[0]);
         var scroll_elem = s.scrollElement;
         scroll_elem.addEventListener("scroll", scroller_onscroll);
         $popup.on("keydown", function (event) {
-            scroller_handle_key(s, event);
+            if (event.which !== 36 || desc.tag !== "help")
+                scroller_handle_key(s, event);
         });
         return $popup;
     }
@@ -619,7 +623,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var handler = ui_handlers[msg.type];
         var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
-        ui.show_popup(popup);
+        ui.show_popup(popup, msg["ui-centred"]);
     }
 
     function recv_ui_pop(msg)

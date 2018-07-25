@@ -537,6 +537,7 @@ void TilesFramework::push_menu(Menu* m)
     UIStackFrame frame;
     frame.type = UIStackFrame::MENU;
     frame.menu = m;
+    frame.centred = !crawl_state.need_save;
     m_menu_stack.push_back(frame);
     m->webtiles_write_menu();
     tiles.finish_message();
@@ -547,12 +548,14 @@ void TilesFramework::push_crt_menu(string tag)
     UIStackFrame frame;
     frame.type = UIStackFrame::CRT;
     frame.crt_tag = tag;
+    frame.centred = !crawl_state.need_save;
     m_menu_stack.push_back(frame);
 
     json_open_object();
     json_write_string("msg", "menu");
     json_write_string("type", "crt");
     json_write_string("tag", tag);
+    json_write_bool("ui-centred", frame.centred);
     json_close_object();
     finish_message();
 }
@@ -598,11 +601,13 @@ void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots
     ASSERT(m_json_stack.back().type == '}'); // enums, schmenums
     tiles.json_write_string("msg", "ui-push");
     tiles.json_write_string("type", type);
+    tiles.json_write_bool("ui-centred", !crawl_state.need_save);
     tiles.json_close_object();
     UIStackFrame frame;
     frame.type = UIStackFrame::UI;
     frame.ui_json.resize(num_state_slots+1);
     frame.ui_json[0] = m_msg_buf;
+    frame.centred = !crawl_state.need_save;
     m_menu_stack.push_back(frame);
     tiles.finish_message();
 }
@@ -1732,6 +1737,7 @@ void TilesFramework::_send_everything()
             json_write_string("msg", "menu");
             json_write_string("type", "crt");
             json_write_string("tag", frame.crt_tag);
+            json_write_bool("ui-centred", frame.centred);
             json_close_object();
         }
         else

@@ -28,6 +28,7 @@ void read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
+bool player_has_available_spells();
 bool learn_spell();
 bool learn_spell(spell_type spell, bool wizard = false);
 

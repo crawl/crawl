@@ -23,6 +23,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_title_indent()
     {
         if (!options.get("tile_menu_icons")
+            || options.get("tile_display_mode") !== "tiles"
             || !(menu.tag === "ability" || menu.tag === "spell"))
             return 0;
         return 32 + 2; // menu <ol> has a 2px margin
@@ -95,7 +96,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             // Custom-drawn CRT menu
             menu_div.removeClass("menu").addClass("menu_txt");
-            ui.show_popup(menu_div);
+            ui.show_popup(menu_div, menu["ui-centred"]);
             return;
         }
 
@@ -127,7 +128,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (client.is_watching())
             menu.following_player_scroll = true;
 
-        ui.show_popup(menu_div);
+        ui.show_popup(menu_div, menu["ui-centred"]);
         handle_size_change();
 
         if (menu.flags & enums.menu_flag.START_AT_END)
@@ -538,13 +539,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 36: // home
-            if (menu.tag !== "help")
-            {
-                scroll_to_item(0);
-                event.preventDefault();
-                return false;
-            }
-            else break;
+            scroll_to_item(0);
+            event.preventDefault();
+            return false;
         case 38: // up
             line_up();
             event.preventDefault();

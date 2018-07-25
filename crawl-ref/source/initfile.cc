@@ -3373,6 +3373,12 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "tiles" || field == "glyphs" || field == "hybrid")
             tile_display_mode = field;
+        else
+        {
+            mprf(MSGCH_ERROR, "Unknown value for tile_display_mode: '%s'"
+                              " (possible values: tiles/glyphs/hybrid",
+                                                                field.c_str());
+        }
     }
 #endif
 #endif // USE_TILE
