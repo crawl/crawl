@@ -244,7 +244,9 @@ For the graphical version:
 Building on Windows (MSYS2)
 ---------------------------
 
-This is the only currently recommended windows build process.
+This is the only currently recommended process for building Crawl on windows.
+It is also possible to cross-compile windows builds; see the release guide
+for instructions.
 
 MSYS2 is a Cygwin-derived software distro for Windows that can build
 native applications; you will interact with the build process in a unix-like
