@@ -1,0 +1,36 @@
+X-crawl Philosophy : 
+
+
+How development happens :
+
+- Anyone with commit access may modify the repository to their desire.
+- Contributors without commit access may propose ideas and have them be voted on. (If the idea is NOT antithetical to the design philosophy)
+- A version plan must be made after each successive release to have a certain and true direction for development.
+- The planned features from the version plan may be implemented without a vote.
+- Anything that doesn't work well may be reverted.
+- Purely beneficial changes which largely do not affect gameplay (e.g UI changes, bug fixes, vaults) will be merged into X-Crawl from the main Crawl repository without a vote.
+
+Guiding Principle :
+
+"A player, having played both DCSS and X-Crawl over a significant and varied number of games, must feel that X-crawl provides a meaningfully different experience from the base game."
+
+Restraints : 
+
+- No major development decisions should be based purely on 'flavour'.
+- Gameplay, as a minimum, must be more challenging than Vanilla Crawl
+- Purely random phenomena should not decide whether a particular run ends or not.
+- When possible, Overall player strength should not be increased.
+- The player is not allowed to have an advantage where the only downside is boredom.
+
+
+Desirable, but not required, design goals : 
+
+- High replayability (either through species, backgrounds, gods, branches etc.)
+- Re-works of existing content is more desirable than adding new content, when possible.
+
+
+
+
+
+
+
