@@ -118,6 +118,7 @@ void set_more_autoclear(bool on);
 string get_last_messages(int mcount, bool full = false);
 void get_recent_messages(vector<string> &messages,
                          vector<msg_channel_type> &channels);
+bool recent_error_messages();
 
 int channel_to_colour(msg_channel_type channel, int param = 0);
 bool strip_channel_prefix(string &text, msg_channel_type &channel,

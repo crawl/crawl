@@ -1991,6 +1991,25 @@ void get_recent_messages(vector<string> &mess,
     }
 }
 
+bool recent_error_messages()
+{
+    // TODO: track whether player has seen error messages so this can be
+    // more generally useful?
+    flush_prev_message();
+
+    const store_t& msgs = buffer.get_store();
+    int mcount = NUM_STORED_MESSAGES;
+    for (int i = -1; mcount > 0; --i, --mcount)
+    {
+        const message_line msg = msgs[i];
+        if (!msg)
+            break;
+        if (msg.channel == MSGCH_ERROR)
+            return true;
+    }
+    return false;
+}
+
 // We just write out the whole message store including empty/unused
 // messages. They'll be ignored when restoring.
 void save_messages(writer& outf)

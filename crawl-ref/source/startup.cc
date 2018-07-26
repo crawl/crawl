@@ -811,7 +811,13 @@ void UIStartupMenu::_allocate_region()
     }
 
     descriptor->render();
-    descriptor->override_description(crawl_state.last_game_exit.message);
+    if (recent_error_messages())
+    {
+        descriptor->override_description(
+            "Errors during initialization; press ctrl-p to view.");
+    }
+    else
+        descriptor->override_description(crawl_state.last_game_exit.message);
 
 }
 
