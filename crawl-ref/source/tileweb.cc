@@ -212,9 +212,6 @@ void TilesFramework::finish_message()
                     {
                         // Wait for half a second at first (up to five), then
                         // try again.
-<<<<<<< HEAD
-                        usleep(retries <= 10 ? 5000 * 1000 : 500 * 1000);
-=======
                         const int sleep_time = retries > 25 ? 2 * 1000
                                              : retries > 10 ? 500 * 1000
                                              : 5000 * 1000;
@@ -223,7 +220,6 @@ void TilesFramework::finish_message()
                                                     errmsg, sleep_time / 1000);
 #endif
                         usleep(sleep_time);
->>>>>>> d5849c758a... Make socket write retries more aggressive
                     }
                     else if (errno == ECONNREFUSED || errno == ENOENT)
                     {
