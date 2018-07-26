@@ -516,12 +516,12 @@ private:
     virtual bool process_key(int keyin) override
     {
         bool entries_changed = false;
-        if (keyin == '!'
-#ifdef TOUCH_UI
-            || keyin == CK_TOUCH_DUMMY
-#endif
-           )
+        switch (keyin)
         {
+        case '!':
+#ifdef TOUCH_UI
+        case CK_TOUCH_DUMMY:
+#endif
             switch (current_action)
             {
                 case action::memorise:
@@ -540,8 +540,9 @@ private:
             }
             update_title();
             update_more();
-        }
-        else if (keyin == CONTROL('F'))
+            break;
+
+        case CONTROL('F'):
         {
             char linebuf[80] = "";
             const bool validline = title_prompt(linebuf, sizeof linebuf,
@@ -552,11 +553,25 @@ private:
             else
                 search_text = "";
             entries_changed = old_search != search_text;
+            break;
         }
-        else if (keyin == '?')
+
+        case '?':
             show_spell_library_help();
-        else
+            break;
+        case CK_MOUSE_B2:
+        case CK_MOUSE_CMD:
+        CASE_ESCAPE
+            if (search_text.size())
+            {
+                search_text = "";
+                entries_changed = true;
+                break;
+            }
+            // intentional fallthrough if search is empty
+        default:
             return Menu::process_key(keyin);
+        }
 
         if (entries_changed)
             update_entries();
