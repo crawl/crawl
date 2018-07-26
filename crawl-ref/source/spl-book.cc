@@ -488,17 +488,13 @@ private:
     spell_list& spells;
     string more_str;
     string search_text;
+    int hidden_count;
 
     void update_more()
     {
-        int hidden = 0;
-        for (spell_type& spell : spells)
-            if (you.hidden_spells.get(spell))
-                hidden++;
-
         string hidden_str = make_stringf("  %d spell%s hidden",
-                                         hidden,
-                                         hidden > 1 ? "s" : "");
+                                         hidden_count,
+                                         hidden_count > 1 ? "s" : "");
 
         set_more(formatted_string::parse_string(more_str
                   + make_stringf("  <w>!</w>: %s%s  <w>?</w>: help",
@@ -509,7 +505,7 @@ private:
                         current_action == action::hide ?
                             "Memorise|Describe|<w>Hide</w>|Show" :
                             "Memorise|Describe|Hide|<w>Show</w>",
-                        hidden ? hidden_str.c_str() : "")
+                        hidden_count ? hidden_str.c_str() : "")
                 ));
     }
 
@@ -528,7 +524,9 @@ private:
                     current_action = action::describe;
                     entries_changed = true; // need to add hotkeys
                     break;
-                case action::describe: current_action = action::hide; break;
+                case action::describe:
+                    current_action = action::hide;
+                    break;
                 case action::hide:
                     current_action = action::unhide;
                     entries_changed = true;
@@ -574,7 +572,10 @@ private:
         }
 
         if (entries_changed)
+        {
             update_entries();
+            update_more();
+        }
         return true;
     }
 
@@ -583,20 +584,26 @@ private:
     void update_entries()
     {
         deleteAll(items);
+        hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
         for (spell_type& spell : spells)
         {
-            if (you.hidden_spells.get(spell) != show_hidden)
-                continue;
-
             if (!search_text.empty()
                 && !pat.matches(spell_title(spell))
                 && !pat.matches(spell_schools_string(spell)))
             {
                 continue;
             }
+
+            const bool spell_hidden = you.hidden_spells.get(spell);
+
+            if (spell_hidden)
+                hidden_count++;
+
+            if (spell_hidden != show_hidden)
+                continue;
 
             ostringstream desc;
 
@@ -654,7 +661,8 @@ public:
                | MF_ALLOW_FILTER, "spell"),
         current_action(action::memorise),
         spells(list),
-        more_str(more_str_)
+        more_str(more_str_),
+        hidden_count(0)
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
@@ -666,8 +674,8 @@ public:
         m_ui.vbox->min_size() = {38 + title_width + 10, 0};
 #endif
 
-        update_more();
         update_entries();
+        update_more();
         on_single_selection = [this](const MenuEntry& item)
         {
             const spell_type spell = *static_cast<spell_type*>(item.data);
