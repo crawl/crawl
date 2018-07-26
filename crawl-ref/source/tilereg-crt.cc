@@ -9,11 +9,7 @@
 #include "tilefont.h"
 #include "viewgeom.h"
 
-<<<<<<< HEAD
-CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(nullptr)
-=======
 CRTRegion::CRTRegion(FontWrapper *font_arg) : TextRegion(font_arg)
->>>>>>> 39eee7d011... Merge the UI overhaul
 {
 }
 
