@@ -626,7 +626,7 @@ static void _decrement_durations()
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
-        
+
         bool safe_recast = false;
         if(you.form == transformation::spider)
             safe_recast = calc_spell_power(SPELL_SPIDER_FORM,
@@ -634,7 +634,7 @@ static void _decrement_durations()
         if(you.form == transformation::statue)
             safe_recast = calc_spell_power(SPELL_STATUE_FORM,
                 true, false, false) >= 50;
-        if(you.form == transformation::ice)
+        if(you.form == transformation::ice_beast)
             safe_recast = calc_spell_power(SPELL_ICE_FORM,
                 true, false, false) >= 25;
         if(you.form == transformation::lich)
