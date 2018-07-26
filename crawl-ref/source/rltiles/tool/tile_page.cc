@@ -89,28 +89,6 @@ bool tile_page::place_images()
         ycur += tileh;
     }
 
-    return pad_texture();
-}
-
-// sanity check, this is just a made up number that seems very large relative
-// to our current texture sizes
-#define MAX_TEXTURE_HEIGHT 1 << 16
-
-bool tile_page::pad_texture()
-{
-    // Find the next largest power of two from current m_height.
-    // This pads only height, with width fixed at 1024.
-    int power_of_two = 16;
-    while (m_height > power_of_two)
-    {
-        power_of_two = power_of_two << 1;
-        if (power_of_two > MAX_TEXTURE_HEIGHT)
-        {
-            fprintf(stderr, "Texture too large (%d)!", power_of_two);
-            return false;
-        }
-    }
-    m_height = power_of_two;
     return true;
 }
 
