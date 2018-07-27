@@ -492,21 +492,33 @@ private:
 
     void update_more()
     {
-        string hidden_str = make_stringf("  %d spell%s hidden",
-                                         hidden_count,
-                                         hidden_count > 1 ? "s" : "");
+        // TODO: standardize notation with the similar lines in the skill menu
+        // TODO: sanitize search_text?
+        const string search_info = search_text.size()
+                ? make_stringf("  Showing spells matching: '<w>%s</w>'",
+                                                        search_text.c_str())
+                : "";
+        const string hidden_info = hidden_count ?
+                      make_stringf("%2d %s hidden", hidden_count,
+                                    hidden_count > 1 ? "spells" : "spell")
+                    : "";
+        const string filter_line = "<w>?</w>: help  <w>Ctrl-f</w>: search" +
+                                    search_info;
 
-        set_more(formatted_string::parse_string(more_str
-                  + make_stringf("  <w>!</w>: %s%s  <w>?</w>: help",
+        const string status_line =
+                      more_str
+                    + make_stringf(
+                        "     <w>!</w>: %s      ",
                         current_action == action::memorise ?
                             "<w>Memorise</w>|Describe|Hide|Show" :
                         current_action == action::describe ?
                             "Memorise|<w>Describe</w>|Hide|Show" :
                         current_action == action::hide ?
                             "Memorise|Describe|<w>Hide</w>|Show" :
-                            "Memorise|Describe|Hide|<w>Show</w>",
-                        hidden_count ? hidden_str.c_str() : "")
-                ));
+                            "Memorise|Describe|Hide|<w>Show</w>")
+                    + hidden_info;
+        set_more(formatted_string::parse_string(filter_line + "\n"
+                                                            + status_line));
     }
 
     virtual bool process_key(int keyin) override
@@ -713,11 +725,14 @@ static spell_type _choose_mem_spell()
             spells.push_back(spell);
     sort(spells.begin(), spells.end(), _sort_mem_spells);
 
-    string more_str = make_stringf("<lightgreen>%d spell level%s left"
+    string more_str = make_stringf("<lightgreen>%d spell level%s"
                                    "</lightgreen>",
                                    player_spell_levels(),
                                    (player_spell_levels() > 1
-                                    || player_spell_levels() == 0) ? "s" : "");
+                                    || player_spell_levels() == 0)
+                                                ? "s left" : " left ");
+    if (player_spell_levels() < 9)
+        more_str += " ";
 
     MemoriseMenu spell_menu(spells, more_str);
 
