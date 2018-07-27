@@ -124,8 +124,10 @@ slowing down their movement somewhat.
 %%%%
 dagger "Morg"
 
-An ugly rusty dagger. Many years ago it was the property of a powerful mage
-called Boris. He got lost in the Dungeon while seeking the Orb.
+An ugly rusty dagger. Many years ago it was crafted a powerful mage called
+Boris in search of the secrets of life and death. He got lost in the Dungeon
+while seeking the Orb. The wounds it inflicts are exceptionally painful to
+living creatures. It increases damage dealt and taken.
 %%%%
 scythe "Finisher"
 

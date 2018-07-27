@@ -377,13 +377,13 @@ BOOL:    poison, skip_ego, nogen
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+INSCRIP:  biting pain, Harm
 PLUS:     +4
 COLOUR:   LIGHTRED
 TILE:     urand_morg
 TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
-INT:      5
-MAGIC:    1
+BOOL:     drain, skip_ego
 
 NAME:    scythe "Finisher"
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE

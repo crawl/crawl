@@ -545,8 +545,13 @@ void attack::pain_affects_defender()
     actor* user = _pain_weapon_user(attacker);
     if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
     {
+        int effective_skill = 0;
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_MORG))
+            effective_skill = user->skill_rdiv(SK_NECROMANCY, 3, 2);
+        else
+            effective_skill = user->skill_rdiv(SK_NECROMANCY);
         special_damage += resist_adjust_damage(defender, BEAM_NEG,
-                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+                              random2(1 + effective_skill));
 
         if (special_damage && defender_visible)
         {
