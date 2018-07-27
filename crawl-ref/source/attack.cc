@@ -1790,7 +1790,15 @@ void attack::player_stab_check()
         return;
     }
 
-    const stab_type st = find_stab_type(&you, *defender);
+    stab_type st = find_stab_type(&you, *defender);
+    // Find stab type is also used for displaying information about monsters,
+    // so we need to upgrade the stab type for the Spriggan's Knife here
+    if (using_weapon()
+        && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
+        && st != STAB_NO_STAB)
+    {
+        st = STAB_SLEEPING;
+    }
     stab_attempt = st != STAB_NO_STAB;
     stab_bonus = stab_bonus_denom(st);
 
