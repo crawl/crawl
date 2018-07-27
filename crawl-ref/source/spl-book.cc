@@ -699,7 +699,7 @@ private:
 
 public:
     MemoriseMenu(spell_list& list, string more_str_)
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NOWRAP
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
                // To have the ctrl-f menu show up in webtiles
                | MF_ALLOW_FILTER, "spell"),
