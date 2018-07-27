@@ -516,25 +516,42 @@ protected:
 
 private:
     spell_list& spells;
-    string more_str;
+    string spell_levels_str;
     string search_text;
     int hidden_count;
 
     void update_more()
     {
-        // TODO: standardize notation with the similar lines in the skill menu
-        // TODO: sanitize search_text?
+        // TODO: convert this all to widgets
         ostringstream desc;
 
         // line 1
-        desc << "<w>?</w>: help  <w>Ctrl-f</w>: search";
+        desc << spell_levels_str << "     ";
         if (search_text.size())
-            desc << "  Showing spells matching: '<w>" << search_text << "</w>'";
+        {
+            // TODO: couldn't figure out how to do this in pure c++
+            const string match_text = make_stringf("  Matches: '<w>%.20s</w>'",
+                            replace_all(search_text, "<", "<<").c_str());
+            int escaped_count = (int) std::count(search_text.begin(),
+                                                    search_text.end(), '<');
+            // the width here is a bit complicated because it needs to ignore
+            // any color codes and escaped '<'s.
+            desc << std::left << std::setw(42 + escaped_count) << match_text;
+        }
+        else
+            desc << std::setw(35) << "";
+        if (hidden_count)
+        {
+            desc << hidden_count
+                 << (hidden_count > 1 ? " spells" : " spell")
+                 << " hidden";
+        }
         desc << "\n";
 
         // line 2
-        desc << more_str;
-        desc << "     <w>!</w>: ";
+        desc << "[<yellow>?</yellow>] help  "
+                "[<yellow>Ctrl-f</yellow>] search  "
+                "[<yellow>!</yellow>] ";
         desc << (  current_action == action::memorise
                             ? "<w>Memorise</w>|Describe|Hide|Show"
                  : current_action == action::describe
@@ -542,13 +559,6 @@ private:
                  : current_action == action::hide
                             ? "Memorise|Describe|<w>Hide</w>|Show"
                  : "Memorise|Describe|Hide|<w>Show</w>");
-        desc << "      ";
-        if (hidden_count)
-        {
-            desc << std::setw(2) << hidden_count << " "
-                 << (hidden_count > 1 ? "spells" : "spell")
-                 << " hidden";
-        }
 
         set_more(formatted_string::parse_string(desc.str()));
     }
@@ -699,20 +709,26 @@ private:
     }
 
 public:
-    MemoriseMenu(spell_list& list, string more_str_)
+    MemoriseMenu(spell_list& list)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NOWRAP
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
                // To have the ctrl-f menu show up in webtiles
                | MF_ALLOW_FILTER, "spell"),
         current_action(action::memorise),
         spells(list),
-        more_str(more_str_),
         hidden_count(0)
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
 
-        set_more(formatted_string::parse_string(more_str));
+        spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
+                    "</lightgreen>", player_spell_levels(),
+                    (player_spell_levels() > 1 || player_spell_levels() == 0)
+                                                ? "s left" : " left ");
+        if (player_spell_levels() < 9)
+            spell_levels_str += " ";
+
+        set_more(formatted_string::parse_string(spell_levels_str + "\n"));
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();
         int title_width = font->string_width(calc_title());
@@ -752,16 +768,7 @@ static spell_type _choose_mem_spell(spell_list &spells)
     // If we've gotten this far, we know that at least one spell here is
     // memorisable, which is enough.
 
-    string more_str = make_stringf("<lightgreen>%d spell level%s"
-                                   "</lightgreen>",
-                                   player_spell_levels(),
-                                   (player_spell_levels() > 1
-                                    || player_spell_levels() == 0)
-                                                ? "s left" : " left ");
-    if (player_spell_levels() < 9)
-        more_str += " ";
-
-    MemoriseMenu spell_menu(spells, more_str);
+    MemoriseMenu spell_menu(spells);
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
