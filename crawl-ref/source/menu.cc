@@ -822,6 +822,7 @@ Menu::~Menu()
 void Menu::clear()
 {
     deleteAll(items);
+    m_ui.menu->_queue_allocation();
     last_selected = -1;
 }
 

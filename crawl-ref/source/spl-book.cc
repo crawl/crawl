@@ -637,7 +637,7 @@ private:
     // ones; otherwise, show only non-hidden ones.
     void update_entries()
     {
-        deleteAll(items);
+        clear();
         hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
