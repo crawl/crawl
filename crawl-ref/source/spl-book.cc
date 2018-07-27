@@ -51,7 +51,43 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
-typedef vector<spell_type>                     spell_list;
+struct sortable_spell
+{
+    sortable_spell(spell_type s) : spell(s),
+                raw_fail(raw_spell_fail(s)),
+                fail_rate(failure_rate_to_int(raw_fail)),
+                fail_rate_colour(failure_rate_colour(s)),
+                level(spell_levels_required(s)),
+                difficulty(spell_difficulty(s)),
+                name(spell_title(s)),
+                school(spell_schools_string(s))
+    {
+    }
+
+    spell_type spell;
+    int raw_fail;
+    int fail_rate;
+    int fail_rate_colour;
+    int level;
+    int difficulty;
+    string name;
+    string school; // TODO: set?
+};
+
+bool operator==(const sortable_spell& x, const sortable_spell& y)
+{
+    return x.spell == y.spell;
+}
+
+struct hash_sortable_spell
+{
+    spell_type operator()(const sortable_spell& s) const
+    {
+        return s.spell;
+    }
+};
+
+typedef vector<sortable_spell>                 spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
 
 static const map<wand_type, spell_type> _wand_spells =
@@ -332,9 +368,9 @@ static void _list_available_spells(spell_set &available_spells)
         available_spells.insert(gift);
 }
 
-static void _get_mem_list(spell_list &mem_spells,
-                          bool just_check = false)
+static spell_list _get_mem_list(bool just_check = false)
 {
+    spell_list mem_spells;
     spell_set available_spells;
     _list_available_spells(available_spells);
 
@@ -342,7 +378,7 @@ static void _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
             mprf(MSGCH_PROMPT, "Your library has no spells.");
-        return;
+        return mem_spells;
     }
 
     int num_known      = 0;
@@ -365,16 +401,16 @@ static void _get_mem_list(spell_list &mem_spells,
         }
         else
         {
-            mem_spells.push_back(spell);
+            mem_spells.emplace_back(spell);
 
             const int avail_slots = player_spell_levels();
 
             // don't filter out spells that are too high-level for us; we
             // probably still want to see them. (since that's temporary.)
 
-            if (spell_difficulty(spell) > you.experience_level)
+            if (mem_spells.back().difficulty > you.experience_level)
                 num_low_xl++;
-            else if (avail_slots < spell_levels_required(spell))
+            else if (avail_slots < mem_spells.back().level)
                 num_low_levels++;
             else
                 num_memable++;
@@ -409,60 +445,53 @@ static void _get_mem_list(spell_list &mem_spells,
 
     if (!just_check && *unavail_reason)
         mprf(MSGCH_PROMPT, "%s", unavail_reason);
+    return mem_spells;
 }
 
 bool has_spells_to_memorise(bool silent)
 {
-    spell_list      mem_spells;
-
-    _get_mem_list(mem_spells, silent);
+    // TODO: this is a bit dumb
+    spell_list mem_spells(_get_mem_list(silent));
     return !mem_spells.empty();
 }
 
-static bool _sort_mem_spells(spell_type a, spell_type b)
+static bool _sort_mem_spells(sortable_spell &a, sortable_spell &b)
 {
     // List the Vehumet gifts at the very top.
-    bool offering_a = vehumet_is_offering(a);
-    bool offering_b = vehumet_is_offering(b);
+    bool offering_a = vehumet_is_offering(a.spell);
+    bool offering_b = vehumet_is_offering(b.spell);
     if (offering_a != offering_b)
         return offering_a;
 
     // List spells we can memorise right away first.
-    if (player_spell_levels() >= spell_levels_required(a)
-        && player_spell_levels() < spell_levels_required(b))
-    {
+    const int player_levels = player_spell_levels();
+    if (player_levels >= a.level && player_spell_levels() < b.level)
         return true;
-    }
-    else if (player_spell_levels() < spell_levels_required(a)
-             && player_spell_levels() >= spell_levels_required(b))
-    {
+    else if (player_spell_levels() < a.level && player_spell_levels() >= b.level)
         return false;
-    }
 
     // Don't sort by failure rate beyond what the player can see in the
     // success descriptions.
-    const int fail_rate_a = failure_rate_to_int(raw_spell_fail(a));
-    const int fail_rate_b = failure_rate_to_int(raw_spell_fail(b));
-    if (fail_rate_a != fail_rate_b)
-        return fail_rate_a < fail_rate_b;
+    if (a.fail_rate != b.fail_rate)
+        return a.fail_rate < b.fail_rate;
 
-    if (spell_difficulty(a) != spell_difficulty(b))
-        return spell_difficulty(a) < spell_difficulty(b);
+    if (a.difficulty != b.difficulty)
+        return a.difficulty < b.difficulty;
 
-    return strcasecmp(spell_title(a), spell_title(b)) < 0;
+    return strcasecmp(spell_title(a.spell), spell_title(b.spell)) < 0;
 }
 
 vector<spell_type> get_mem_spell_list()
 {
-    spell_list      mem_spells;
-    _get_mem_list(mem_spells);
-
-    if (mem_spells.empty())
-        return spell_list();
+    spell_list mem_spells(_get_mem_list());
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
-    return mem_spells;
+    vector<spell_type> result;
+    for (auto s : mem_spells)
+        result.push_back(s.spell);
+
+    return result;
 }
 
 class MemoriseMenu : public Menu
@@ -494,31 +523,33 @@ private:
     {
         // TODO: standardize notation with the similar lines in the skill menu
         // TODO: sanitize search_text?
-        const string search_info = search_text.size()
-                ? make_stringf("  Showing spells matching: '<w>%s</w>'",
-                                                        search_text.c_str())
-                : "";
-        const string hidden_info = hidden_count ?
-                      make_stringf("%2d %s hidden", hidden_count,
-                                    hidden_count > 1 ? "spells" : "spell")
-                    : "";
-        const string filter_line = "<w>?</w>: help  <w>Ctrl-f</w>: search" +
-                                    search_info;
+        ostringstream desc;
 
-        const string status_line =
-                      more_str
-                    + make_stringf(
-                        "     <w>!</w>: %s      ",
-                        current_action == action::memorise ?
-                            "<w>Memorise</w>|Describe|Hide|Show" :
-                        current_action == action::describe ?
-                            "Memorise|<w>Describe</w>|Hide|Show" :
-                        current_action == action::hide ?
-                            "Memorise|Describe|<w>Hide</w>|Show" :
-                            "Memorise|Describe|Hide|<w>Show</w>")
-                    + hidden_info;
-        set_more(formatted_string::parse_string(filter_line + "\n"
-                                                            + status_line));
+        // line 1
+        desc << "<w>?</w>: help  <w>Ctrl-f</w>: search";
+        if (search_text.size())
+            desc << "  Showing spells matching: '<w>" << search_text << "</w>'";
+        desc << "\n";
+
+        // line 2
+        desc << more_str;
+        desc << "     <w>!</w>: ";
+        desc << (  current_action == action::memorise
+                            ? "<w>Memorise</w>|Describe|Hide|Show"
+                 : current_action == action::describe
+                            ? "Memorise|<w>Describe</w>|Hide|Show"
+                 : current_action == action::hide
+                            ? "Memorise|Describe|<w>Hide</w>|Show"
+                 : "Memorise|Describe|Hide|<w>Show</w>");
+        desc << "      ";
+        if (hidden_count)
+        {
+            desc << std::setw(2) << hidden_count << " "
+                 << (hidden_count > 1 ? "spells" : "spell")
+                 << " hidden";
+        }
+
+        set_more(formatted_string::parse_string(desc.str()));
     }
 
     virtual bool process_key(int keyin) override
@@ -600,16 +631,16 @@ private:
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
-        for (spell_type& spell : spells)
+        for (auto& spell : spells)
         {
             if (!search_text.empty()
-                && !pat.matches(spell_title(spell))
-                && !pat.matches(spell_schools_string(spell)))
+                && !pat.matches(spell.name)
+                && !pat.matches(spell.school))
             {
                 continue;
             }
 
-            const bool spell_hidden = you.hidden_spells.get(spell);
+            const bool spell_hidden = you.hidden_spells.get(spell.spell);
 
             if (spell_hidden)
                 hidden_count++;
@@ -620,46 +651,47 @@ private:
             ostringstream desc;
 
             int colour = LIGHTGRAY;
-            if (vehumet_is_offering(spell))
+            if (vehumet_is_offering(spell.spell))
                 colour = LIGHTBLUE;
             else
             {
                 bool transient = false;
                 bool memcheck = true;
-                colour = spell_highlight_by_utility(spell, COL_UNKNOWN, transient, memcheck);
+                colour = spell_highlight_by_utility(spell.spell, COL_UNKNOWN,
+                                                        transient, memcheck);
             }
 
 
             desc << "<" << colour_to_str(colour) << ">";
 
             desc << left;
-            desc << chop_string(spell_title(spell), 30);
-            desc << spell_schools_string(spell);
+            desc << chop_string(spell.name, 30);
+            desc << spell.school;
 
             int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
             if (so_far < 60)
                 desc << string(60 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
-            colour = failure_rate_colour(spell);
+            colour = spell.fail_rate_colour;
             desc << "<" << colour_to_str(colour) << ">";
-            desc << chop_string(failure_rate_to_string(raw_spell_fail(spell)), 12);
+            desc << chop_string(failure_rate_to_string(spell.raw_fail), 12);
             desc << "</" << colour_to_str(colour) << ">";
-            desc << spell_difficulty(spell);
+            desc << spell.difficulty;
 
             MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
             // don't add a hotkey if you can't memorise it
-                    (current_action == action::memorise && !you_can_memorise(spell)) ?
-                    ' ' : char(hotkey));
+                    (current_action == action::memorise &&
+                        !you_can_memorise(spell.spell)) ? ' ' : char(hotkey));
             // But do increment hotkeys anyway, to keep the memorise and
             // describe hotkeys consistent.
             ++hotkey;
 
 #ifdef USE_TILE
-            me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+            me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
 #endif
 
-            me->data = &spell;
+            me->data = &(spell.spell);
             add_entry(me);
         }
         update_menu(true);
@@ -713,17 +745,10 @@ public:
     }
 };
 
-static spell_type _choose_mem_spell()
+static spell_type _choose_mem_spell(spell_list &spells)
 {
     // If we've gotten this far, we know that at least one spell here is
     // memorisable, which is enough.
-    spell_set available_spells;
-    _list_available_spells(available_spells);
-    spell_list spells;
-    for (spell_type spell : available_spells)
-        if (!you.has_spell(spell))
-            spells.push_back(spell);
-    sort(spells.begin(), spells.end(), _sort_mem_spells);
 
     string more_str = make_stringf("<lightgreen>%d spell level%s"
                                    "</lightgreen>",
@@ -777,13 +802,13 @@ bool learn_spell()
     if (!can_learn_spell())
         return false;
 
-    spell_list      mem_spells;
-    _get_mem_list(mem_spells);
-
-    if (mem_spells.empty())
+    spell_list spells(_get_mem_list(false));
+    if (spells.empty())
         return false;
 
-    spell_type specspell = _choose_mem_spell();
+    sort(spells.begin(), spells.end(), _sort_mem_spells);
+
+    spell_type specspell = _choose_mem_spell(spells);
 
     if (specspell == SPELL_NO_SPELL)
     {
