@@ -717,6 +717,7 @@ public:
         int title_width = font->string_width(calc_title());
         m_ui.vbox->min_size() = {38 + title_width + 10, 0};
 #endif
+        m_ui.scroller->expand_v = true; // TODO: doesn't work on webtiles
 
         update_entries();
         update_more();
