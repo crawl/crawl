@@ -294,6 +294,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_ANGRY,                 prop_note::plain },
         { ARTP_CAUSE_TELEPORTATION,   prop_note::plain },
         { ARTP_NOISE,                 prop_note::plain },
+        { ARTP_HARM,                  prop_note::plain },
         { ARTP_CORRODE,               prop_note::plain },
         { ARTP_DRAIN,                 prop_note::plain },
         { ARTP_SLOW,                  prop_note::plain },
@@ -564,6 +565,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
+        { ARTP_HARM, "It increases damage dealt and taken.", false},
     };
 
     // Give a short description of the base type, for base types with no
