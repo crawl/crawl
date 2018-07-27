@@ -72,12 +72,13 @@ struct sortable_spell
     int difficulty;
     string name;
     string school; // TODO: set?
+
+    friend bool operator==(const sortable_spell& x, const sortable_spell& y)
+    {
+        return x.spell == y.spell;
+    }
 };
 
-bool operator==(const sortable_spell& x, const sortable_spell& y)
-{
-    return x.spell == y.spell;
-}
 
 struct hash_sortable_spell
 {
@@ -455,11 +456,11 @@ bool has_spells_to_memorise(bool silent)
     return !mem_spells.empty();
 }
 
-static bool _sort_mem_spells(sortable_spell &a, sortable_spell &b)
+static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
 {
     // List the Vehumet gifts at the very top.
-    bool offering_a = vehumet_is_offering(a.spell);
-    bool offering_b = vehumet_is_offering(b.spell);
+    const bool offering_a = vehumet_is_offering(a.spell);
+    const bool offering_b = vehumet_is_offering(b.spell);
     if (offering_a != offering_b)
         return offering_a;
 
