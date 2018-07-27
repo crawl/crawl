@@ -526,31 +526,32 @@ private:
         ostringstream desc;
 
         // line 1
-        desc << spell_levels_str << "     ";
+        desc << spell_levels_str << "    ";
         if (search_text.size())
         {
             // TODO: couldn't figure out how to do this in pure c++
-            const string match_text = make_stringf("  Matches: '<w>%.20s</w>'",
+            const string match_text = make_stringf("Matches: '<w>%.20s</w>'",
                             replace_all(search_text, "<", "<<").c_str());
             int escaped_count = (int) std::count(search_text.begin(),
                                                     search_text.end(), '<');
             // the width here is a bit complicated because it needs to ignore
             // any color codes and escaped '<'s.
-            desc << std::left << std::setw(42 + escaped_count) << match_text;
+            desc << std::left << std::setw(43 + escaped_count) << match_text;
         }
         else
-            desc << std::setw(35) << "";
+            desc << std::setw(36) << "";
         if (hidden_count)
         {
-            desc << hidden_count
+            desc << std::right << std::setw(hidden_count == 1 ? 3 : 2)
+                 << hidden_count
                  << (hidden_count > 1 ? " spells" : " spell")
                  << " hidden";
         }
         desc << "\n";
 
         // line 2
-        desc << "[<yellow>?</yellow>] help  "
-                "[<yellow>Ctrl-f</yellow>] search  "
+        desc << "[<yellow>?</yellow>] help                "
+                "[<yellow>Ctrl-f</yellow>] search      "
                 "[<yellow>!</yellow>] ";
         desc << (  current_action == action::memorise
                             ? "<w>Memorise</w>|Describe|Hide|Show"
