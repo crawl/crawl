@@ -572,14 +572,13 @@ BOOL:    poison, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+INSCRIP:  stab,
 TYPE:     knife
 PLUS:     +7
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
 EV:       4
-DEX:      4
-MAGIC:    1
 STEALTH:  1
 
 NAME:    plutonium sword
