@@ -339,6 +339,27 @@ body {
 .simplebar-content > :last-child {
     margin-bottom: 0 !important;
 }
+.simplebar-track.vertical > .simplebar-scrollbar {
+    width: 2px;
+    border-left: 4px solid #040204;
+    border-right: 5px solid #040204;
+    background: #7d623c;
+    opacity: 1 !important;
+    background-radius: 0;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+}
+.simplebar-track {
+    background: #040204;
+}
+.simplebar-track.horizontal {
+    display: none;
+}
+[data-simplebar="init"] {
+    margin-right: -20px; /* matched in scroller.js */
+    padding-right: 20px; /* matched in scroller.js */
+}
 .scroller-lhd {
     visibility: hidden;
     position: absolute;
@@ -348,7 +369,7 @@ body {
 .paneset {
     display: -ms-inline-grid;
     display: inline-grid;
-    overflow: hidden;
+    min-height: 0;
 }
 .paneset > .pane {
     -ms-grid-row: 1;
@@ -359,6 +380,10 @@ body {
 }
 .paneset > .pane.current {
     visibility: visible;
+}
+
+.paneset > .pane:not(.current) .simplebar-track {
+    visibility: unset !important;
 }
 
 /* menus */
@@ -751,7 +776,7 @@ body {
 .describe-god .desc, .describe-god .god-favour, .describe-god .god-powers {
     margin: 1em 0;
 }
-.describe-god > body, .describe-god .pane {
+.describe-god > body, .describe-god > .body .pane {
     width: 80ch; /* for IE11 */
 }
 
@@ -909,8 +934,12 @@ body {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    overflow: hidden;
     max-height: calc(100vh - 100px - 46px); /* for IE11 */
+}
+.ui-popup-inner:after {
+    display: block;
+    content: "";
+    clear:both;
 }
 
 #game .ui-popup-inner .bg0 {
