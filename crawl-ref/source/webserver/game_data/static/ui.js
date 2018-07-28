@@ -101,7 +101,8 @@ function ($, comm, client, options) {
             $("#ui-stack").css("font-family", family);
         }
 
-        $("#ui-stack").data('display-mode', options.get("tile_display_mode"));
+        $("#ui-stack").attr('data-display-mode',
+                options.get("tile_display_mode"));
     });
 
     $(document).off("game_init.ui")
