@@ -1325,7 +1325,8 @@ void Popup::_allocate_region()
     region[3] = max(vsr.min, min(region[3], vsr.nat));
 
     region[0] += pad + (m_region[2]-2*pad-region[2])/2;
-    region[1] += pad + (m_centred ? (m_region[3]-2*pad-region[3])/2 : 0);
+    region[1] += pad + (m_centred ? (m_region[3]-2*pad-region[3])/2
+            : m_depth*m_depth_indent);
 
     m_buf.add(region[0] - m_padding, region[1] - m_padding,
             region[0] + region[2] + m_padding,
