@@ -133,6 +133,8 @@ int formatted_scroller::show()
             return true;
         if (vbox->on_event(ev))
             return true;
+        if (m_flags & FS_EASY_EXIT)
+            return done = true;
         return false;
     });
 
@@ -169,7 +171,7 @@ bool formatted_scroller::process_key(int ch)
         CASE_ESCAPE
             return false;
         default:
-            return !(m_flags & FS_EASY_EXIT);
+            return true;
     }
 }
 
