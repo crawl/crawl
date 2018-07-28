@@ -851,6 +851,11 @@ bool UIStartupMenu::on_event(const wm_event& ev)
         return false;
     int keyn = ev.key.keysym.sym;
 
+    // XXX: these keys are effectively broken on the main menu; there's a new
+    // menu implementation on the way, but until it's ready, disable them
+    if (keyn == CK_PGUP || keyn == CK_PGDN)
+        return true;
+
     _expose();
 
     if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
