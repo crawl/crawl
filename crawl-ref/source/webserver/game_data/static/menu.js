@@ -539,13 +539,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 36: // home
-            if (menu.tag !== "help")
-            {
-                scroll_to_item(0);
-                event.preventDefault();
-                return false;
-            }
-            else break;
+            scroll_to_item(0);
+            event.preventDefault();
+            return false;
         case 38: // up
             line_up();
             event.preventDefault();

@@ -552,13 +552,15 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 return "<span class=highlight>" + line + "</span>";
             });
         }
+        $popup.attr("data-tag", desc.tag);
         $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
         var s = scroller($body[0]);
         var scroll_elem = s.scrollElement;
         scroll_elem.addEventListener("scroll", scroller_onscroll);
         $popup.on("keydown", function (event) {
-            scroller_handle_key(s, event);
+            if (event.which !== 36 || desc.tag !== "help")
+                scroller_handle_key(s, event);
         });
         return $popup;
     }

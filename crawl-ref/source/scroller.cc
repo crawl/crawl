@@ -141,6 +141,7 @@ int formatted_scroller::show()
 #ifdef USE_TILE_WEB
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
+    tiles.json_write_string("tag", m_tag);
     tiles.json_write_string("text", contents.to_colour_string());
     tiles.json_write_string("highlight", highlight);
     tiles.json_write_string("more", m_more.to_colour_string());

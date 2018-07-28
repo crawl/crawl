@@ -1219,6 +1219,7 @@ class help_popup : public formatted_scroller
 {
 public:
     help_popup(int key) : formatted_scroller(FS_PREWRAPPED_TEXT) {
+        set_tag("help");
         process_key(key);
     };
 private:
