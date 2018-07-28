@@ -32,6 +32,7 @@
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "nearby-danger.h" // For the Singing Sword.
 #include "player.h"
 #include "player-stats.h"
 #include "spl-cast.h"      // For evokes
@@ -321,15 +322,14 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
-    int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
     bool silent = silenced(you.pos());
+    bool monsters = there_are_monsters_nearby();
 
     string old_name = get_artefact_name(*item);
     string new_name;
     if (silent)
         new_name = "Sulking Sword";
-    else if (tier < 2)
+    else if (!monsters)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -339,29 +339,43 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
         you.wield_change = true;
     }
 
-    // not as spammy at low tension
-    if (!x_chance_in_y(7, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
+    // the sword will start making noise when monsters are around, but only
+    // does damage when swung. otherwise isn't very spammy.
+    if (!x_chance_in_y(7, (!silent && monsters) ? 50 : 1000))
         return;
 
-    // it will still struggle more with higher tension
-    if (silent)
-        tier = 0;
+    int tier = silent ? 0 : !monsters ? 1 : 2;
 
-    if (tier == 3 && one_chance_in(10))
-        tier++; // SCREAM -- double damage
-
-    const char *tenname[] =  {"silenced", "no_tension", "low_tension",
-                              "high_tension", "SCREAM"};
+    const char *tenname[] = {"silenced", "no_tension", "low_tension"};
     const string key = tenname[tier];
     string msg = getSpeakString("singing sword " + key);
 
-    const int loudness[] = {0, 0, 15, 25, 35};
+    const int loudness[] = {0, 0, 15};
     item_noise(*item, msg, loudness[tier]);
+}
 
-    if (tier < 3)
-        return; // no damage on low tiers
+static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
+                                         actor* defender, bool mondied, int dam)
+{
+    bool silent = silenced(attacker->pos());
+    int tier = silent ? 0 : 1;
 
-    sonic_damage(tier == 4);
+    if (!silent && one_chance_in(3))
+        tier++; // SCREAM -- double damage
+
+    // don't sing every time
+    if (one_chance_in(3))
+        return;
+
+    const char *tenname[] =  {"silenced", "high_tension", "SCREAM"};
+    const string key = tenname[tier];
+    string msg = getSpeakString("singing sword " + key);
+
+    const int loudness[] = {0, 25, 35};
+    item_noise(*weapon, msg, loudness[tier]);
+
+    if (!silent)
+        sonic_damage(tier == 2);
 }
 
 ////////////////////////////////////////////////////
