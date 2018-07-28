@@ -295,8 +295,7 @@ static void _beogh_spread_experience(int exp)
     for (monster_near_iterator mi(&you); mi; ++mi)
         if (is_orcish_follower(**mi))
         {
-            _give_monster_experience(exp * mi->get_experience_level() / total_hd,
-                                         mi->mindex());
+            _give_monster_experience(exp, mi->mindex());
         }
 }
 
