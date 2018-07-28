@@ -428,19 +428,10 @@ body {
     line-height: 1.2em;
     min-width: 20em; /* can override this with a tag-specific class */
     white-space: pre;
-}
 
-#input_dialog span {
-    display: table-cell;
-}
-
-.input_dialog_box {
-    display: table-cell;
-    width: 90%;
-}
-
-#input_dialog input {
-    width: 90%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
 }
 
 .input_skill_target input {
