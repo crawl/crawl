@@ -23,6 +23,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_title_indent()
     {
         if (!options.get("tile_menu_icons")
+            || options.get("tile_display_mode") !== "tiles"
             || !(menu.tag === "ability" || menu.tag === "spell"))
             return 0;
         return 32 + 2; // menu <ol> has a 2px margin
