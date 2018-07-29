@@ -1265,7 +1265,7 @@ bool Scroller::on_event(const wm_event& event)
         }
     }
     else if (event.type == WME_MOUSEWHEEL)
-        delta = event.mouse_event.py * line_delta;
+        delta = -1 * event.mouse_event.py * line_delta;
     else if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == MouseEvent::LEFT)
         delta = line_delta;
     if (delta != 0)
