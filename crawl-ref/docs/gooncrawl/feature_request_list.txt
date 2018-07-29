@@ -15,7 +15,7 @@ Post angrily at me if I missed something.
 "my city now"
        - tolly
       
-jokes aside, current feature requests from crawl thread as of may 04. current list is not in proper chronological order in any way, but is sorted by rough topics
+jokes aside, current feature requests from crawl thread as of jul 28. current list is not in proper chronological order in any way, but is sorted by rough topics
 
 
 general/miscellaneous
@@ -29,6 +29,21 @@ general/miscellaneous
 - give gourmand an aux bite attack
 - make waterbreathing available via mutation
 - crazy yiuf is secret sixteenth rune
+- dadlang
+- ye olde mutation shoppe
+- nerf shafts
+- combo entry vaults (lair/orc, lair branches, idk what else)
+- mutation pools combined into one universal pool
+- asylum/gaol portal vault w yiuf post-steroids at end if not yet killed
+- walls turning into bees as a gimmick for something
+- more labyrinth minivaults
+- smaller labyrinth
+- have labyrinth grow more difficult over time w exits to the abyss (wouldnt the abyss just send you back when you got out? unsure as to the why of this suggestion here)
+- make all walls in labyrinth diggable
+- remove labyrinth maprot
+- labyrinth fills player nutrition on entry, doesnt allow eating
+- labyrinth reworked as a banishment-like effect, made more dangerous/dynamic, minotaur buffed/made more consistently dangerous and made into a wandering threat? give frequent messages indicating distance/direction or allow player to sense them through walls ash style (big red face)?
+- slacken portal vault timers, make portal vaults somewhat more dangerous as needed
 
 gods
 
@@ -41,6 +56,9 @@ gods
 - allow conversion to gozag in shops
 - faded altar guaranteed on d1
 - make norris a follower of chei who surfs to cheat the speed conduct
+- trog/okawaru/wu jian council alliance a la ely/tso/zin
+- trog piety/-cast equipment causes magic draining monsters to take damage and explode if they die from it
+- make animate skeleton guaranteed in kiku’s first book gift
 
 species
 
@@ -54,6 +72,7 @@ species
 - mummy felid species
 
 - ogre-size species can 1 hand the lighter 2-handers (including arbalest?)
+- ogres evolve into 2-headed ogres at xl 14, gain additional hat/amulet slots for doing so. 2-headed ogres gain some kind of bizarre casting effect like copied spells or random spells but miscast has chance to cause confusion? or faster casting speed but every spell has a small fixed chance for miscast effects. bitheistic (with looser conduct due to loopholes?), doubled spit/breath mutation abilities? shout in stereo (louder)
 - give trolls/ogres semi-usable apts for crossbows
 - give felids pounce again
 - to more accurately describe the killing power of an angry/terrified cornered cat, give felids cleave at level 9 and riposte at level 18
@@ -67,12 +86,26 @@ species
 - have ghouls auto-eat chunks before they rot when safe
 - mummies curse living things that hit them in melee
 - even out the skill apts curve a little on species w one obvious weapon skill choice
+- allow player minotaurs to map labyrinth
+- player minotaur spawns in labyrinth next to an exit
+- nagas get constriction at earlier xl (scales over time?)
+- give nagas a tail-slap and constriction at xl 1, they start w/o arms and only gain them later (lmao)
+- remove felid xp-loss mechanic
+- octopode bite/peck attack that procs on constricted enemies
+- octopode gains ability at tbd xl to send a kraken-style tentacle after a monster and drag it closer
 
 monsters
+
+- add threat level icons to monsters
+- make it clear things that heal by draining magic continue to do so if you have no mp/just remove that wrinkle
+- boulder beetles/zombies/skeletons/earth elementals in labyrinth
+- any of the following: give shrikes impale attack/barbs ranged attack a la manticore/put barbed shrikes in extended/give shrikes bat-style movement
+- change monster poisoning to work like player poisoning
 
 - bat-type creature that hits for no damage but inflicts corona debuff
 - bring back ballistomycetes and giant spores except spores cant reproduce
 - bring back giant eyes in early-ish dungeon but with petrification
+- replace labyrinth minotaur w unrandart goblin named ziggy
 
 spells
 
@@ -90,11 +123,18 @@ spells
 - reimplement delayed fireball/rework into a delayed conjuration spell
 - increase access to irradiate
 - increase access to blades of disaster
-- rename blades of disaster maxwell’s silver hammer
+- rename blades of disaster maxwell’s silver hammer, drop blades of disaster/maxwell's silver hammer to level 5? prisms cause gozag-like distraction?
 - change ozo’s downside (ongoing noise? damage over time? 3x3 area of effect player must stay within?)
 - reimplement stoneskin, give it ozo’s former movement penalty
 - remove spell hunger
-- singularity nerf proposals: it shouldnt affect things out of los, it should have a chance of being clogged any time it kills an enemy
+- singularity nerf proposals: it shouldnt affect things out of los, it should have a chance of being clogged any time it kills an enemy, dissipates when center out of los; impair player movement, center no longer impassible, center is player character
+- make it easier to destroy walls w lrd, give harder walls fun consequences (creates golems on deep floors?) or make harder walls much louder when they explode
+- lrd always explodes walls, tells you if you dont have the spellpower to make it happen yet.
+- lrd dig laser
+- change alistair’s intoxication to tmut/hexes or hexes/poison
+- level 9 spell summoning/fire/necromancy: crabocalypse
+- poison spell: ring of flames but w acid
+- level 9 poison spell: contagious plague that corrodes enemies, amplifies poison over time
 
 weapons/items
 
@@ -113,20 +153,23 @@ weapons/items
 - weaken *corrode property
 - add shield bashing aux attack
 - give ranged weapons being their own slot, no weapon switching involved
-- variations of the above: shields still block 2h ranged weapons on non-formicids, firing weapon sets SH to 0 for 1 or more turns, 
+- variations of the above: shields still block 2h ranged weapons on non-formicids, firing weapon sets SH to 0 for 1 or more turns,
 - give ranged weapons large to-hit penalties if hostile monsters are adjacent
 - give weapons unique combinations of weapon abilities
+- chained weapons for various weapon classes (rope dart, meteor hammer, ?) (tolly note: a 3-4 range v high-delay weapon? weaker-but-ranged stabs could be a reason to skill into short blades past what it takes to hit rapier mindelay)
 - weapon chance-to-hit/damage comparison tool
 
 - scrolls of brand armour/jewelry or scroll of bless equipment
 - roll berserk potions and might potions together, make equally high risk-high reward versions of brilliance and agility
 - rename potion of cancellation to potion of refreshment
 - nerf healing harp evocable
+- hurdy-gurdy or crank-powered gramophone evocable that raises/summons undead, noisy, continues playing as long as player remains still (possibly plays on its own for a few turns after), xp evocable
+- combine rings of noise+slaying and/or add +ev or damage shaving or universal miss chance to all creatures in los to amulets of inaccuracy
+- scarf of resistance gains relec, scarf of cloud immunity renamed to breathtaking + gives deep water movement, scarf of guardian spirit gains mp regen, invisibility ego moves from cloaks to scarves
 
 - implement sympathetic effigy magic evocable
 - unique(?) evocations consumable generates friendly merc
 - implement helmets of magical power / helmets of headbutt
-- rename cloud immunity scarf to breathtaking scarf and let wearers travel through deep water
 - unrandart short blade that has cleave (and can stab on cleaves) and is called occam's razor
 - unrandart scimitar named grayswandir (nethack reference?)
 - unrandart armour that causes enemies who hit you in melee to suffer distortion effects/carries monsters with you when you teleport/blink
@@ -140,4 +183,5 @@ weapons/items
 - unrandart javelin of returning (alternatively penetration/electrocution) that never mulches
 - helmet with an arbalest attached
 - notched stationary crossbow shield
-
+- gloves unrandart that gives reaching to all melee weapons held
+- guaranteed/possibly unique rewards for completing portal vaults instead of or in addition to usual loot. example unique reward ideas: universal weapon manual (bailey), dispel undead xp evocable (ossuary), middling tier rpois unrandart ring,
