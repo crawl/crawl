@@ -979,12 +979,12 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     }
     // we had a significant action!
     vector<MenuItem*> selected = menu.get_selected_items();
+    menu.clear_selections();
     if (selected.empty())
     {
         // Uninteresting action, poll a new key
         return true;
     }
-    menu.clear_selections();
 
     int id = selected.at(0)->get_id();
     switch (id)
