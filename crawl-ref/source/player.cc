@@ -2740,7 +2740,7 @@ int xp_to_level_diff(int xp, int scale)
     ASSERT(xp >= 0);
     const int adjusted_xp = you.experience + xp;
     int projected_level = you.experience_level;
-    while (you.experience >= (int) exp_needed(projected_level + 1))
+    while (you.experience >= exp_needed(projected_level + 1))
         projected_level++; // handle xl 27 chars
     int adjusted_level = projected_level;
 
