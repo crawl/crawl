@@ -2695,28 +2695,35 @@ void recalc_and_scale_hp()
 int xp_to_level_diff(int xp, int scale)
 {
     ASSERT(xp >= 0);
-    int adjusted_xp = you.experience + xp;
-    int level = you.experience_level;
-    while (adjusted_xp >= (int) exp_needed(level + 1))
-        level++;
+    const int adjusted_xp = you.experience + xp;
+    int projected_level = you.experience_level;
+    while (you.experience >= (int) exp_needed(projected_level + 1))
+        projected_level++; // handle xl 27 chars
+    int adjusted_level = projected_level;
+
+    // closest whole number level, rounding down
+    while (adjusted_xp >= (int) exp_needed(adjusted_level + 1))
+        adjusted_level++;
     if (scale > 1)
     {
-        //variables for calculating the remainder after the last level
-        unsigned int remainder = adjusted_xp - (int) exp_needed(level);
-        unsigned int denom = exp_needed(level + 1) - (int) exp_needed(level);
+        // TODO: what is up with all the casts here?
 
-        //variables for calculating the experience needed to hit the first level
-        unsigned int exp_to_first_level =
-                    (int) exp_needed(you.experience_level + 1) - you.experience;
-        unsigned int total_exp_for_first_level =
-                    (int) exp_needed(you.experience_level + 1)
-                    - (int) exp_needed(you.experience_level);
+        // decimal scaled version of current level including whatever fractional
+        // part scale can handle
+        const int cur_level_scaled = projected_level * scale
+                + (you.experience - (int) exp_needed(projected_level)) * scale /
+                    ((int) exp_needed(projected_level + 1)
+                                    - (int) exp_needed(projected_level));
 
-        return (level - you.experience_level - 1) * scale
-                + (exp_to_first_level * scale / total_exp_for_first_level)
-                + (remainder * scale / denom);
+        // decimal scaled version of what adjusted_xp would get you
+        const int adjusted_level_scaled = adjusted_level * scale
+                + (adjusted_xp - (int) exp_needed(adjusted_level)) * scale /
+                    ((int) exp_needed(adjusted_level + 1)
+                                    - (int) exp_needed(adjusted_level));
+        // TODO: this would be more usable with better rounding behavior
+        return adjusted_level_scaled - cur_level_scaled;
     } else
-        return level - you.experience_level;
+        return adjusted_level - projected_level;
 }
 
 /**
