@@ -271,12 +271,7 @@ function setup_xom_dancing_weapon(e)
     -- Progress the base type of weapons so that it's more reasonable as reward
     -- as depth increases. The very rare weapons only show up at all in later
     -- depths and always with lower weight.
-    if you.absdepth() < 6 then
-        base_weapons = {"dagger", "short sword", "falchion", "club", "whip",
-                        "hand axe", "spear"}
-        good_weapons = {"rapier", "long sword",  "mace", "flail", "war axe",
-                        "trident", "quarterstaff"}
-    elseif you.absdepth() < 9 then
+    if you.absdepth() < 9 then
         base_weapons = {"dagger", "short sword", "rapier", "falchion",
                         "long sword", "whip", "mace", "hand axe", "spear",
                         "trident"}
