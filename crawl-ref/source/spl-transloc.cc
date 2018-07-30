@@ -1011,11 +1011,6 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int gravitas_range(int pow, int strength)
-{
-    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
-}
-
 #define GRAVITY "by gravitational forces"
 
 static void _attract_actor(const actor* agent, actor* victim,
