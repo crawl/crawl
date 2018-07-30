@@ -78,7 +78,6 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -127,7 +126,6 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_arena
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -195,7 +193,6 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
-WEIGHT:  5 (D:3-7)
 ORIENT:  float
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
@@ -241,7 +238,7 @@ ccnn===nncc
 ENDMAP
 
 NAME:   ebering_ghost_inner_flame
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
 KITEM:  O = scroll of immolation ident:all
@@ -261,7 +258,7 @@ ENDMAP
 
 NAME:   ebering_ghost_gozag
 DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 5 (D:3-7)
 ORIENT: float
 : kitem("DE = " .. ghost_loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
@@ -601,7 +598,6 @@ ENDMAP
 
 NAME:   gammafunk_ghost_mausoleum
 DEPTH:  D:3-, Swamp, Crypt, Depths, Zot
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
@@ -836,7 +832,6 @@ ENDMAP
 
 NAME:   muffindrake_ghost_dual_entry
 DEPTH:  D:10-, Depths
-WEIGHT: 5 (D:10-11)
 ORIENT: float
 KMONS:  O = player_ghost
 : if you.in_branch("D") then
@@ -1089,7 +1084,6 @@ ENDMAP
 
 NAME:   gammafunk_ghost_icy
 DEPTH:  D:3-, Lair, Depths
-WEIGHT: 5 (D:3-7)
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   simulacrum, white imp, ice beast, rime drake, ice devil
@@ -1159,7 +1153,6 @@ ENDMAP
 NAME:   maelrawn_ghost_labyrinth_escape
 # Same depths where labs can place
 DEPTH:  D:11-, Lair, Orc:$
-WEIGHT: 5
 ORIENT: float
 KPROP:  x = bloody
 KMONS:  O = player ghost
@@ -1203,7 +1196,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
@@ -1279,7 +1272,6 @@ ENDMAP
 
 NAME:   ploomutoo_gammafunk_ghost_potion_laboratory
 DEPTH:  D:8-, Elf, Depths
-WEIGHT: 5
 ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(ghost_loot_potions)
