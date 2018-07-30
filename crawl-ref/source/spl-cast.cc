@@ -1172,8 +1172,11 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                              range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
-                                           gravitas_range(pow, 2),
-                                           gravitas_range(pow));
+                                           pow >= 80 ? 3 : 2,
+                                           pow >= 80 ? 3 : 2,
+                                           false,
+                                           [](const coord_def& p) -> bool {
+                                              return you.pos() != p; });
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
     case SPELL_RANDOM_BOLT:
