@@ -17,6 +17,7 @@
 #include "describe.h"
 #include "env.h"
 #include "files.h"
+#include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -597,7 +598,22 @@ void show_skill_menu_help()
 
 void show_spell_library_help()
 {
-    show_specific_help("spell-library");
+    if (crawl_state.game_is_hints_tutorial())
+    {
+        const string help1 = hints_memorise_info() + "\n\n";
+        vector<formatted_string> formatted_lines;
+        for (const string &line : split_string("\n", help1, false, true))
+        {
+            formatted_lines.push_back(formatted_string::parse_string(line,
+                                        channel_to_colour(MSGCH_TUTORIAL)));
+        }
+        const string help2 = getHelpString("spell-library");
+        for (const string &line : split_string("\n", help2, false, true))
+            formatted_lines.push_back(formatted_string::parse_string(line));
+        show_keyhelp_menu(formatted_lines);
+    }
+    else
+        show_specific_help("spell-library");
 }
 
 static void _add_command(column_composer &cols, const int column,
@@ -778,9 +794,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     string item_types = "<lightcyan>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
-        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+        "</lightcyan> : books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
+        "    pick up to add to library)";
     _add_insert_commands(cols, 0, item_types,
-                         { CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                            CMD_FORCE_CAST_SPELL });
     _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
                          { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
@@ -804,7 +821,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_USE_ABILITY });
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
-    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all memorized spells", 2);
+    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a spell from your library", 2);
 
     _add_insert_commands(cols, 0, 2, CMD_SHOUT,
                          "tell allies (<w>%t</w> to shout)",
@@ -860,6 +878,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
+    _add_command(cols, 1, CMD_MEMORISE_SPELL, "show your spell library", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
     _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
@@ -898,24 +917,40 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Item Interaction (inventory):\n");
+            "<h>Inventory management:\n");
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
-    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
+    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
+    cols.add_formatted(
+            1,
+            "    (press twice for pick up menu)\n",
+            false);
 
+    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
+    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+                         { CMD_DROP });
+    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
+
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction:\n");
+
+    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     {
-        string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
+        const bool vampire = you.species == SP_VAMPIRE;
+        string butcher = vampire ? "bottle blood from"
+                                 : "Chop up";
+        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse on floor", 2);
+        string interact = (you.species == SP_VAMPIRE ? "drain corpses"
                                                      : "Eat food");
         interact += " (tries floor first)\n";
         _add_command(cols, 1, CMD_EAT, interact, 2);
     }
-
+    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be Quivered", 2);
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
-    _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
-    _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
+    _add_command(cols, 1, CMD_READ, "Read a scroll (or book on floor)", 2);
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
@@ -929,32 +964,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-
-    cols.add_formatted(
-            1,
-            "<h>Item Interaction (floor):\n");
-
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-    cols.add_formatted(
-            1,
-            "    (press twice for pick up menu)\n",
-            false);
-
-    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
-                         { CMD_DROP });
-    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
-    {
-        const bool vampire = you.species == SP_VAMPIRE;
-        string butcher = vampire ? "Bottle blood from"
-                                 : "Chop up";
-        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse", 2);
-
-        string eat = vampire ? "Drain corpses on"
-                             : "Eat food from";
-        eat += " floor\n";
-        _add_command(cols, 1, CMD_EAT, eat, 2);
-    }
 
     cols.add_formatted(
             1,
@@ -1040,12 +1049,12 @@ static void _add_formatted_hints_help(column_composer &cols)
                                   "(<w>%?/%</w> lists spells)",
                          { CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL,
                            CMD_DISPLAY_SPELLS });
-    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a new spell", 2);
-    _add_command(cols, 0, CMD_READ, "read a book to see spell descriptions", 2);
+    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise spells and view spell\n"
+                                              "    library (get books to add to it)", 2);
 
     // Second column.
     cols.add_formatted(
-            1, "<h>Item types (and common commands)\n",
+            1, "<h>Item types and inventory management\n",
             false);
 
     _add_insert_commands(cols, 1,
@@ -1091,9 +1100,10 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : </console>"
-        "books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+        "books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
+        "    pick up to add to spell library)";
     _add_insert_commands(cols, 1, item_types,
-                         { CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                            CMD_FORCE_CAST_SPELL });
 
     item_types =
@@ -1106,7 +1116,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
 
     cols.add_formatted(1, " ", false);
-    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "inventory (select item to view)", 2);
     _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
     _add_command(cols, 1, CMD_DROP, "drop item", 2);
     _add_command(cols, 1, CMD_DROP_LAST, "drop the last item(s) you picked up", 2);

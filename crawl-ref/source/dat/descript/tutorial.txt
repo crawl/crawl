@@ -506,11 +506,12 @@ In this lesson you're going to learn how to memorize and cast spells.
 %%%%
 tutorial4 spellbook
 
-You can memorise a spell from a carried spellbook with
+You can memorise a spell from your spell library with
 <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
 <input>clicking</input> on the memorisation tab and selecting the spell
 tile</localtiles>. At experience level 1, only level 1 spells are available to
-you. This will change as you gain experience.
+you. This will change as you gain experience. To find new spells, find and pick
+up spellbooks, and the spells will be added to your library.
 %%%%
 tutorial4 spellcasting
 
@@ -639,7 +640,6 @@ tutorial4 exit
   You can also learn new spells via the <w>memorisation tab</w>.
   You can cast memorised spells via <input>leftclick</input>, and read their descriptions and check your spell proficiency by <input>mouseover</input> or <input>rightclick</input></localtiles>
 
-  <input>$cmd[CMD_READ]</input>  read a book to see spell descriptions
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
   <input>$cmd[CMD_REMOVE_ARMOUR]</input>  take off armour

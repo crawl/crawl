@@ -369,6 +369,25 @@ static void _list_available_spells(spell_set &available_spells)
         available_spells.insert(gift);
 }
 
+bool player_has_available_spells()
+{
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+
+    const int avail_slots = player_spell_levels();
+
+    for (const spell_type spell : available_spells)
+    {
+        if (!you.has_spell(spell) && you_can_memorise(spell)
+            && spell_difficulty(spell) <= avail_slots
+            && spell_difficulty(spell) <= you.experience_level)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static spell_list _get_mem_list(bool just_check = false)
 {
     spell_list mem_spells;

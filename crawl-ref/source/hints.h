@@ -174,6 +174,7 @@ formatted_string hints_abilities_info();
 string hints_skills_info();
 string hints_skill_training_info();
 string hints_skills_description_info();
+string hints_memorise_info();
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
