@@ -956,6 +956,8 @@ ITEM:       staff of death, scroll of summoning
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
+KPROP:      -FGHIJKPR = no_tele_into
+SUBST:      - = ., F = 1, G = 2, H = 3, I = 4, J = 6, K = 7, P = !, R = W
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 1, size_buildup_amnt = 10, \
@@ -999,22 +1001,22 @@ epilogue{{
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccjjjcccc|cccccccccccAccccccccccccWWWW~5hcccc
-c|...|c....|ccc...ccc+cccccccccccWh~~~.45hccc
-c|8........|cc.4...m...m..ccccccW~.....845hcc
-c.&5.......cc...2..m.7.m.1.cccccW~........hcc
-c.8........cc...3..m...m.4..ccccW~.......~Wcc
-c|.........cc.cccccm...mc...ccccc.......~Wccc
-c|...|ccc+ccccc..cccc+cccccccccccc.....hWcccc
-ccjjjccc..cccc444.cm...m..3..ccccc+cccccccccc
-cccccccc..ccc..!...m.7.m.1..cccccc""ccccccccc
-cceecccc..ccc.444..m...m...ccccccc""cc$$g$$cc
-ceddecc...cccc....cm...m.cccWccccc""c...c...c
-cedde+...cccccc..cccc+cccc...Wcccc""c...c...c
-ceddec...ccccccccc.m...m.77...Wccc""ccc+c+ccc
-cceccccc+cccccccc..m.7.m...4..Wccc""c...9...c
-ccccccc...cccc...1.m...m....7.ccgc""c...6...c
-cccc.........c..2..m...mc....cc$$c""c..6669.c
-c.67...ccc...cc..cccc+cccc..ccc+cc""c..66..cc
+c|...|c....|ccc---ccc+cccccccccccWh~~~.45hccc
+c|8........|cc-I---m...m--ccccccW~.....845hcc
+c.&5.......cc---G--m.7.m-F-cccccW~........hcc
+c.8........cc---H--m...m-I--ccccW~.......~Wcc
+c|.........cc-cccccm...mc---ccccc.......~Wccc
+c|...|ccc+ccccc--cccc+cccccccccccc.....hWcccc
+ccjjjccc..ccccIII-cm...m--H--ccccc+cccccccccc
+cccccccc..ccc--P---m.7.m-F--cccccc""ccccccccc
+cceecccc..ccc-III--m...m---ccccccc""cc$$g$$cc
+ceddecc...cccc----cm...m-cccRccccc""c...c...c
+cedde+...cccccc--cccc+cccc---Rcccc""c...c...c
+ceddec...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
+cceccccc+cccccccc--m.7.m---I--Rccc""c...9...c
+ccccccc...cccc---F-m...m----K-ccgc""c...6...c
+cccc.........c--G--m...mc----cc$$c""c..6669.c
+c.67...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
 c...ccccccc+cccccc.m.....cccc.666c""+.....ccc
 cc...ccccc'''cccc..m.....4cc9.666c""ccccccccc
 cc...ccc''''''cc.!.m.....<4c9....+"""""""""cc
@@ -1029,10 +1031,10 @@ c..cccccccccccc.....c.c.....cccccccccccccc""c
 c...76........+......?......+"""""ccc"""""""c
 c...76........c.....c.c.....c""""""c"""""""cc
 ccmmmccccmmmcccc...........cccccc""c""ccccccc
-c.....cc.....cccWW.......WWcc""""""c""""""ccc
-cc.66cccc444cccccWW..0..WWcc""""""ccc""""""cc
-cc66.cccc.1.ccccccWWWWWWWccc""ccccccccccc""cc
-cc.3cccccc44ccccccccWWWccccc"""""""""""""""cc
+c-----cc-----cccWW.......WWcc""""""c""""""ccc
+cc-JJccccIIIcccccWW..0..WWcc""""""ccc""""""cc
+ccJJ-cccc-F-ccccccWWWWWWWccc""ccccccccccc""cc
+cc-HccccccIIccccccccWWWccccc"""""""""""""""cc
 ccccccccccccccccccccccccccccc"""""""""""""ccc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
