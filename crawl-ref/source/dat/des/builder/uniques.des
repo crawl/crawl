@@ -297,7 +297,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_jorgrun
-DEPTH:  Depths, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Tomb
+DEPTH:  D:12-15, Orc, Elf:1-2, Snake:1-3, Shoals:1-3, Spider:1-3
 : place_unique(_G, "Jorgrun")
 
 NAME:   uniq_jory
