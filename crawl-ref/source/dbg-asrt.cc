@@ -486,8 +486,9 @@ static void _debug_dump_markers()
         if (marker == nullptr || marker->get_type() == MAT_LUA_MARKER)
             continue;
 
-        mprf(MSGCH_DIAGNOSTICS, "Marker %d at (%d, %d): %s",
-             i, marker->pos.x, marker->pos.y,
+        mprf(MSGCH_DIAGNOSTICS, "Marker #%d, type %d at (%d, %d): %s",
+             i, marker->get_type(),
+             marker->pos.x, marker->pos.y,
              marker->debug_describe().c_str());
     }
 }
