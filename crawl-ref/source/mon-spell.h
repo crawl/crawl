@@ -2067,8 +2067,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HAROLD,
       {
-       { SPELL_HARPOON_SHOT, 30, MON_SPELL_WIZARD },
-       { SPELL_SENTINEL_MARK, 30, MON_SPELL_WIZARD },
+       { SPELL_HARPOON_SHOT, 20, MON_SPELL_WIZARD },
+       { SPELL_SENTINEL_MARK, 20, MON_SPELL_WIZARD },
       }
     },
 
