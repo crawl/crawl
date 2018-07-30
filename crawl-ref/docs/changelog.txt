@@ -1,5 +1,11 @@
-Stone Soup 0.22 (through 0.22-a0-617-g6d95e9e505)
+Stone Soup 0.22 (through 0.22-a0-900-g8945bfbd8a)
 -------------------------------------------------
+
+Highlights
+----------
+* Player ghosts now only appear in sealed ghost vaults
+* New spell library interface
+* User interface revamp for Tiles and WebTiles
 
 Branches, Environment
 ---------------------
@@ -17,6 +23,7 @@ Branches, Environment
 Character
 ---------
 * The player can use wands in all forms.
+* The player can't order allies while confused.
 * The MP-powered wand mutation allows use of wands at 0 MP and is now
   considered a good mutation.
 
@@ -29,6 +36,7 @@ Gods
     spells, items, and abilities.
   - Dithmenos is now an evil god, hence is hated by the good gods and holy
     monsters.
+* Fedhas' Sunlight is now the 1* ability and Evolution is now the 2* ability.
 * Makhleb's Major Destruction has its range increased to 7 and Minor
   Destruction has its range reduced to 5.
 * Yredelemnul's Enslave Soul ability is now smite-targeted.
@@ -50,6 +58,8 @@ Items
   for non-attacking movement and rest actions.
 * The Mace of Variability is reworked to sometimes create arcs of chaos that
   harm nearby monsters, but not the wielder. The enchantment is now a fixed +7.
+* The Vampire's Tooth is now a +12 quick blade instead of a +4 dagger.
+* Maxwell's Thermic Engine no longer has rC- and rF-.
 * All fog types from Scrolls of Fog now spread like grey and black fog.
 
 Monsters
@@ -59,6 +69,9 @@ Monsters
   with armour and either tomahawks or javelins.
 * Swamp worms and Iron Giants now have Harpoon Shot: a range 6 ability
   that fires a shot which pulls the player adjacent.
+* Harold has better melee damage and armour, and he places earlier. His Bolt
+  of Fire and Blink spells are replaced with Harpoon Shot and Sentinel's Mark.
+* Jorgrun has Iron Shot instead of Shatter and places earlier.
 * Ilsuiw spawns on Shoals:2-4 with chances similar to other branch-specific
   uniques instead of nearly always spawning on Shoals:4.
 * Engulf status from Water Elementals now blocks god abilities but no longer
