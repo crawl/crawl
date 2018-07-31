@@ -121,6 +121,11 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
 %%%%
+Oni
+
+Demonic in nature with the appearance of Ogres, albeit smaller. 
+They discover spells as they gain experience and ignore schools of magic.
+%%%%
 Sand Dwarf
 
 Sand Dwarves are hardy, skilled with axes and maces, and can use magic

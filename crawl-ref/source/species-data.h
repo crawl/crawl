@@ -20,6 +20,25 @@
 static const map<species_type, species_def> species_data =
 {
 
+{ SP_ONI, {
+    "On",
+    "Oni", nullptr, nullptr,
+    SPF_NONE,
+    0, 1, 2, 3,
+    MONS_ONI,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    11, 9, 6, // 26
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_HORNS, 1, 1 }, { MUT_CLAWS, 1, 1 }, { MUT_FANGS, 1, 1 } },
+    { "You learn spells by gaining experience, not through books or religion.",
+      "You only train spellcasting to practice magic." },
+    { "oni magic" },
+    { JOB_SKALD, JOB_WARPER, JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, 
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_UNARMED_COMBAT },
+} },
+
 { SP_BARACHI, {
     "Ba",
     "Barachi", "Barachian", "Frog",

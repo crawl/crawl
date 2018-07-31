@@ -56,6 +56,7 @@ enum species_type
     SP_FAIRY,
     SP_DUSK_WALKER,
     SP_SAND_DWARF,
+    SP_ONI,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

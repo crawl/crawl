@@ -89,6 +89,10 @@ vine_stalker_f VINE_STALKER
 vine_stalker_m
 faerie_dragon FAERIE_DRAGON
 dusk_walker DUSK_WALKER
+oni_f ONI
+oni_m
+oni2_f
+oni2_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

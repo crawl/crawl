@@ -1747,6 +1747,10 @@ oklob sapling
 A young oklob plant. It is more fragile than the mature specimen, but the acid
 it sprays is just as deadly.
 %%%%
+oni
+
+A demonic creature from a strange land.
+%%%%
 ooze
 
 A glob of grey sludge that has somehow developed a rudimentary awareness and

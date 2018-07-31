@@ -401,7 +401,8 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_HELMET] ? -1 : you.equip[EQ_HELMET];
         if (item != -1)
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
-        else if (you.get_mutation_level(MUT_HORNS) > 0)
+        else if (you.get_mutation_level(MUT_HORNS)
+                 > (int)is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_ONI))
         {
             if (you.species == SP_FELID)
             {

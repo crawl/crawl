@@ -1745,6 +1745,16 @@ Fairies
   doing so. Their small size furthers their ability to be evasive, but they
   are frail and cannot wear any form of body armour.
 
+Oni
+    Standing a head taller than humans, Oni are a feared and monstrous race.
+    Demonic in nature, they are easily spotted for their red or blue skin,
+    razor-sharp teeth, pointed fingernails, and horns made of black ivory.
+    True to their appearance, Oni are a strong and robust species,
+
+    They do not subscribe to usual schools of magic, instead preferring
+    to self-teach. As an Oni ages, it will discover a small handful of spells,
+    and need only practice spellcasting to cast them.
+
 The Undead
 ========================================
 

@@ -2183,11 +2183,12 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         get_gold(it, quant_got, quiet);
         return true;
     }
-    if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+    if (you.species != SP_ONI && it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
     {
         _get_book(it, quiet, true);
         return true;
     }
+
     // Runes are also massless.
     if (it.base_type == OBJ_RUNES)
     {
