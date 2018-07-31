@@ -85,7 +85,6 @@ bool vehumet_supports_spell(spell_type spell);
 
 void sif_do_channel_energy(int pow);
 
-bool trog_burn_spellbooks();
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
