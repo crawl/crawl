@@ -510,7 +510,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN
         && !is_monster)
     {
-        pbolt.origin_spell = SPELL_SEARING_BREATH;
+        pbolt.origin_spell = SPELL_FLAMING_BREATH;
     }
 
     if (pbolt.loudness == 0)
@@ -2505,9 +2505,32 @@ void bolt::affect_endpoint()
     }
 
     case SPELL_SEARING_BREATH:
+    {
+        // Xtahua's searing breath applies fire vulnerability for 21-50 auts
+        if (pos() == you.pos()
+            && you.res_fire() <= 3
+            && !you.duration[DUR_FIRE_VULN])
+        {
+            mpr("The searing breath burns away your fire resistance.");
+            you.increase_duration(DUR_FIRE_VULN, 21 + random2avg(30, 2), 50);
+        }
+        monster *mon = monster_at(pos());
+        if (mon && !mon->has_ench(ENCH_FIRE_VULN))
+        {
+            if (you.can_see(*mon))
+            {
+                mprf("The searing breath burns away %s fire resistance.",
+                     mon->name(DESC_ITS).c_str());
+            }
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, nullptr,
+                                      21 + random2avg(30, 2)));
+        }
+    }
+    // fall-through
+    case SPELL_FLAMING_BREATH:
         if (!path_taken.empty())
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
-
+        break;
     default:
         break;
     }

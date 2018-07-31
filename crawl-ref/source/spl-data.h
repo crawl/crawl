@@ -1999,6 +1999,19 @@ static const struct spell_desc spelldata[] =
     TILEG_FIRE_BREATH,
 },
 
+#if TAG_MAJOR_VERSION > 34
+{
+    SPELL_FLAMING_BREATH, "Flaming Breath",
+    SPTYP_CONJURATION | SPTYP_FIRE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    5, 5,
+    5, 0,
+    TILEG_FIRE_BREATH,
+},
+#endif
+
 {
     SPELL_CHAOS_BREATH, "Chaos Breath",
     SPTYP_CONJURATION | SPTYP_RANDOM,
@@ -3970,6 +3983,19 @@ static const struct spell_desc spelldata[] =
     3, 0,
     TILEG_PIERCING_SHOT,
 },
+
+#if TAG_MAJOR_VERSION == 34
+{
+    SPELL_FLAMING_BREATH, "Flaming Breath",
+    SPTYP_CONJURATION | SPTYP_FIRE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    5, 5,
+    5, 0,
+    TILEG_FIRE_BREATH,
+},
+#endif
 
 {
     SPELL_NO_SPELL, "nonexistent spell",

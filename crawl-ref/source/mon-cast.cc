@@ -1443,6 +1443,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_FIRE_BREATH:
     case SPELL_SEARING_BREATH:
+    case SPELL_FLAMING_BREATH:
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
         beam.short_name = "flames";
@@ -1455,9 +1456,13 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         {
             beam.name        = "searing blast";
             beam.aux_source  = "blast of searing breath";
-            if (mons->type != MONS_XTAHUA)
-                beam.damage.size = 65 * beam.damage.size / 100;
         }
+        else if (real_spell == SPELL_FLAMING_BREATH)
+        {
+            beam.aux_source  = "blast of flaming breath";
+            beam.damage.size = 65 * beam.damage.size / 100;
+        }
+
         break;
 
     case SPELL_CHAOS_BREATH:
