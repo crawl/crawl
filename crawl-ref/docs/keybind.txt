@@ -36,6 +36,10 @@ Attacking in a given direction without moving:
 ^U        CMD_ATTACK_UP_RIGHT
 ^Y        CMD_ATTACK_UP_LEFT
 
+Autofight commands:
+Tab       CMD_AUTOFIGHT
+Shift+Tab CMD_AUTOFIGHT_NOMOVE
+
 Inventory management
 --------------------
 d         CMD_DROP
