@@ -375,6 +375,7 @@ protected:
     int num_pages;
 
     formatted_string more;
+    bool m_keyhelp_more;
 
     vector<MenuEntry*>  items;
     vector<MenuEntry*>  sel;
