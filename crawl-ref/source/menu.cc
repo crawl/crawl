@@ -498,6 +498,7 @@ void UIMenu::_allocate_region()
     do_layout(m_region[2], m_num_columns);
 #endif
 
+#ifndef USE_TILE_LOCAL
     // change more visibility
     bool can_toggle_more = !m_menu->is_set(MF_ALWAYS_SHOW_MORE)
         && !m_menu->m_ui.more->get_text().ops.empty();
@@ -512,6 +513,22 @@ void UIMenu::_allocate_region()
             throw RestartAllocation();
         }
     }
+
+    if (m_menu->m_keyhelp_more && m_menu->m_ui.more_bin->get_visible())
+    {
+        ASSERT(m_height > viewport_height);
+
+        int scroll = m_menu->m_ui.scroller->get_scroll();
+        int scroll_percent = scroll*100/(m_height-viewport_height);
+        string perc = scroll_percent <= 0 ? "top"
+            : scroll_percent >= 100 ? "bot"
+            : make_stringf("%2.d%%", scroll_percent);
+
+        string scroll_more = m_menu->more.to_colour_string();
+        scroll_more = replace_all(scroll_more, "XXX", perc);
+        m_menu->m_ui.more->set_text(formatted_string::parse_string(scroll_more));
+    }
+#endif
 
     // adjust maximum height
 #ifdef USE_TILE_LOCAL
@@ -765,12 +782,16 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
 
     m_ui.vbox->add_child(m_ui.title);
     m_ui.vbox->add_child(m_ui.scroller);
+#ifndef USE_TILE_LOCAL
+    m_ui.scroller->flex_grow = 100000; /* can only show 52 rows anyway */
+    m_ui.vbox->add_child(make_shared<Box>(Widget::VERT, Box::Expand::EXPAND_V));
+#endif
     m_ui.vbox->add_child(m_ui.more_bin);
     m_ui.more_bin->set_child(m_ui.more);
     m_ui.scroller->set_child(m_ui.menu);
 
     set_flags(flags);
-    more = formatted_string::parse_string("<blue>-more-</blue>");
+    set_more();
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
@@ -838,23 +859,20 @@ void Menu::set_flags(int new_flags, bool use_options)
 
 void Menu::set_more(const formatted_string &fs)
 {
+    m_keyhelp_more = false;
     more = fs;
     update_more();
 }
 
 void Menu::set_more()
 {
-    set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-        "<cyan>[ <w>+</w>, <w>></w>, <w>Space</w> or <w>L-click</w>: Page down."
-        "   <w>-</w> or <w><<</w>: Page up."
-        "   <w>Esc</w> or <w>R-click</w> exits.]"
-#else
-        "<cyan>[ <w>+</w>, <w>></w> or <w>Space</w>: Page down."
-        "   <w>-</w> or <w><<</w>: Page up."
-        "                       <w>Esc</w> exits.]"
-#endif
-    ));
+    m_keyhelp_more = true;
+    more = formatted_string::parse_string(
+        "<lightgrey>[<w>+</w>|<w>></w>|<w>Space</w>]: page down        "
+        "[<w>-</w>|<w><<</w>]: page up        "
+        "[<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>"
+    );
+    update_more();
 }
 
 void Menu::set_highlighter(MenuHighlighter *mh)
@@ -1816,13 +1834,20 @@ void Menu::update_more()
     if (crawl_state.doing_prev_cmd_again)
         return;
     m_ui.more->set_text(more);
-    m_ui.more_bin->set_visible(!more.ops.empty());
+
+    bool show_more = !more.ops.empty();
+#ifdef USE_TILE_LOCAL
+    show_more = show_more && !m_keyhelp_more;
+#endif
+    m_ui.more_bin->set_visible(show_more);
+
+#ifdef USE_TILE_WEB
     if (!alive)
         return;
-#ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
-    tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_write_string("more",
+            m_keyhelp_more ? "" : more.to_colour_string());
     tiles.json_close_object();
     tiles.finish_message();
 #endif
@@ -1964,7 +1989,8 @@ void Menu::webtiles_write_menu(bool replace) const
 
     webtiles_write_title();
 
-    tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_write_string("more",
+            m_keyhelp_more ? "" : more.to_colour_string());
 
     int count = items.size();
     int start = 0;
