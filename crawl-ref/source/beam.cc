@@ -2506,13 +2506,13 @@ void bolt::affect_endpoint()
 
     case SPELL_SEARING_BREATH:
     {
-        // Xtahua's searing breath applies fire vulnerability for 21-50 auts
+        // Xtahua's searing breath applies fire vulnerability for 5-11 turns
         if (pos() == you.pos()
             && you.res_fire() <= 3
             && !you.duration[DUR_FIRE_VULN])
         {
             mpr("The searing breath burns away your fire resistance.");
-            you.increase_duration(DUR_FIRE_VULN, 21 + random2avg(30, 2), 50);
+            you.increase_duration(DUR_FIRE_VULN, 5 + random2avg(7, 2), 11);
         }
         monster *mon = monster_at(pos());
         if (mon && !mon->has_ench(ENCH_FIRE_VULN))
@@ -2523,7 +2523,7 @@ void bolt::affect_endpoint()
                      mon->name(DESC_ITS).c_str());
             }
             mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, nullptr,
-                                      21 + random2avg(30, 2)));
+                                      5 + random2avg(7, 2)));
         }
     }
     // fall-through
