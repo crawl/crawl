@@ -1062,8 +1062,8 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed steam dragon scales | mundane not_cursed swamp dragon scales |\
             mundane not_cursed pearl dragon scales | mundane not_cursed acid dragon scales |\
             mundane not_cursed troll leather armour | mundane not_cursed crystal plate armour |\
-            mundane not_cursed plate armour | mundane not_cursed naga barding |\
-            mundane not_cursed centaur barding | mundane not_cursed cloak |\
+            mundane not_cursed plate armour |\
+            mundane not_cursed barding | mundane not_cursed cloak |\
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
 KFEAT:  M = food shop count:17 type:Delicious suffix:Food greed:4 ; ration q:2

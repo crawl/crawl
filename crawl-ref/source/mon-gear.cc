@@ -1923,7 +1923,7 @@ int make_mons_armour(monster_type type, int level)
                        /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_CENTAUR_BARDING;
+            item.sub_type  = ARM_BARDING;
         }
         else
             return NON_ITEM; // ???
@@ -1941,7 +1941,7 @@ int make_mons_armour(monster_type type, int level)
                                                     :  200))
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_NAGA_BARDING;
+            item.sub_type  = ARM_BARDING;
         }
         else if (type == MONS_NAGARAJA
                  || type == MONS_NAGA_RITUALIST
@@ -1956,7 +1956,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_VASHNIA:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_NAGA_BARDING;
+        item.sub_type  = ARM_BARDING;
         level = ISPEC_GOOD_ITEM;
         break;
 
@@ -2075,7 +2075,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_NESSOS:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_CENTAUR_BARDING;
+        item.sub_type  = ARM_BARDING;
         break;
 
     case MONS_NIKOLA:

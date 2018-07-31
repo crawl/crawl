@@ -332,11 +332,11 @@ FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
 KITEM:  ' = q:1 arrow
-KITEM:  $ = centaur barding / nothing, q:30 arrow / any good_item
+KITEM:  $ = barding / nothing, q:30 arrow / any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
 KITEM:  ' = q:1 bolt
-KITEM:  $ = centaur barding / nothing, q:30 bolt / any good_item
+KITEM:  $ = barding / nothing, q:30 bolt / any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W

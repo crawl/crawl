@@ -993,7 +993,7 @@ BRAND:    SPWPN_VORPAL
 BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
-OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
+OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +6
 TILE:     urand_lightning_scales
 TILE_EQ:  lightning_scales
@@ -1003,7 +1003,7 @@ BOOL:     elec
 
 ENUM:     BLACK_KNIGHT_HORSE
 NAME:     Black Knight's horse barding
-OBJ:      OBJ_ARMOUR/ARM_CENTAUR_BARDING
+OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +10
 TILE:     urand_bk_barding
 TILE_EQ:  black_knight

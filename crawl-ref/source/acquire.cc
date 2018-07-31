@@ -122,10 +122,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
 {
     if (you.species == SP_NAGA || you.species == SP_CENTAUR)
     {
-        const armour_type bard =
-            (you.species == SP_NAGA) ? ARM_NAGA_BARDING
-                                     : ARM_CENTAUR_BARDING;
-        if (one_chance_in(you.seen_armour[bard] ? 4 : 2))
+        if (one_chance_in(you.seen_armour[ARM_BARDING] ? 4 : 2))
             return EQ_BOOTS;
     }
 
@@ -170,9 +167,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
             switch (you.species)
             {
                 case SP_NAGA:
-                    return ARM_NAGA_BARDING;
                 case SP_CENTAUR:
-                    return ARM_CENTAUR_BARDING;
+                    return ARM_BARDING;
                 default:
                     return ARM_BOOTS;
             }
@@ -321,14 +317,9 @@ static armour_type _useless_armour_type()
     switch (slot)
     {
         case EQ_BOOTS:
-            // Boots-wearers get bardings, bardings-wearers get the wrong
-            // barding, everyone else gets boots.
+            // Boots-wearers get bardings; everyone else gets boots.
             if (you_can_wear(EQ_BOOTS) == MB_TRUE)
-                return random_choose(ARM_CENTAUR_BARDING, ARM_NAGA_BARDING);
-            if (you.species == SP_NAGA)
-                return ARM_CENTAUR_BARDING;
-            if (you.species == SP_CENTAUR)
-                return ARM_NAGA_BARDING;
+                return ARM_BARDING;
             return ARM_BOOTS;
         case EQ_GLOVES:
             return ARM_GLOVES;

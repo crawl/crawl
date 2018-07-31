@@ -72,7 +72,7 @@
        "manual of bows", "buckler" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",
-       "club", "book of changes", "book of conjurations", "centaur barding",
+       "club", "book of changes", "book of conjurations", "barding",
        "chain mail", "crystal ball of energy", "cloak", "crystal plate armour",
        "potion of cancellation", "book of clouds", "staff of cold",
        "staff of conjuration", "manual of crossbows", "manual of conjurations",
@@ -126,7 +126,7 @@
        "ring of magical power", "amulet of magic regeneration", "potion of might",
        "potion of mutation", "scroll of magic mapping", }
 
-      elseif s == "N" then i = { "book of necromancy", "naga barding",
+      elseif s == "N" then i = { "book of necromancy", "barding",
        "necronomicon", "needle", "scroll of noise", "manual of necromancy" }
 
       elseif s == "O" then i = { "any" }

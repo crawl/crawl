@@ -242,7 +242,7 @@ dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
  -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
 dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
    .. 'arrow good_item, ration / nothing, '
-   .. 'helmet / centaur barding / pair of gloves' )
+   .. 'helmet / barding / pair of gloves' )
 
  -- Dwarven artificer. 3 items.
 dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
