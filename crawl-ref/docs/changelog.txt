@@ -45,7 +45,7 @@ Gods
 Interface
 ---------
 * In the Tiles minimap, the exploration horizon has a distinct colour.
-* WebTiles chat improvements:
+* WebTiles chat improvements (server support may vary):
   - The player can use `/mute' and `/unmute' commands on chatters.
   - The `/mutelist' command shows the current mute list.
   - The chat window has a minimize button that removes message notification.
