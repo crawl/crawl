@@ -3532,6 +3532,8 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
 
+    if (pick.type == MONS_ORB_OF_FIRE && crawl_state.is_orb_of_ice_game)
+        pick.type = MONS_ORB_OF_ICE;
     return pick;
 }
 
@@ -3553,7 +3555,10 @@ mons_spec mons_list::get_monster(int slot_index, int list_index) const
     if (list_index < 0 || list_index >= (int)list.size())
         return mons_spec(RANDOM_MONSTER);
 
-    return list[list_index];
+    mons_spec ret = list[list_index];
+    if (ret.type == MONS_ORB_OF_FIRE && crawl_state.is_orb_of_ice_game)
+        ret.type = MONS_ORB_OF_ICE;
+    return ret;
 }
 
 void mons_list::clear()
@@ -4105,6 +4110,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     mon_str.c_str());
             }
         }
+
+        if (mspec.type == MONS_ORB_OF_FIRE && crawl_state.is_orb_of_ice_game)
+            mspec.type = MONS_ORB_OF_ICE;
 
         slot.mlist.push_back(mspec);
     }

@@ -237,8 +237,11 @@ monster_type get_monster_by_name(string name, bool substring)
 
     size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
                                      always_true<size_t>, _mon_entry_name);
-    return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
-                                   : (monster_type) mondata[idx].mc;
+    monster_type mon = idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
+                                               : (monster_type) mondata[idx].mc;
+    if (mon == MONS_ORB_OF_FIRE && crawl_state.is_orb_of_ice_game)
+        mon = MONS_ORB_OF_ICE;
+    return mon;
 }
 
 void init_monsters()

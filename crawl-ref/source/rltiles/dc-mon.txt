@@ -250,6 +250,7 @@ twister2
 twister3
 twister4
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+orb_of_ice MONS_ORB_OF_ICE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3
@@ -1074,7 +1075,6 @@ murray MONS_MURRAY
 %sdir mon/sprint
 dimme MONS_DIMME
 %rim 0
-orb_of_ice MONS_ORB_OF_ICE
 orb_of_electricity MONS_ORB_OF_ELECTRICITY
 %rim 1
 

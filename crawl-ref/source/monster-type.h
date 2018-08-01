@@ -288,6 +288,7 @@ enum monster_type                      // menv[].type
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
+    MONS_ORB_OF_ICE,
     MONS_ELEMENTAL,             // genus
 #endif
     MONS_EARTH_ELEMENTAL,
@@ -1050,6 +1051,7 @@ enum monster_type                      // menv[].type
     MONS_BULTUNGIN,             // remove this someday
     MONS_TEST_STATUE,
     MONS_ONI,
+    MONS_ORB_OF_ICE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

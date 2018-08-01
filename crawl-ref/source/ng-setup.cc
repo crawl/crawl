@@ -506,6 +506,7 @@ void setup_game(const newgame_def& ng)
 {
     crawl_state.type = ng.type;
     crawl_state.map  = ng.map;
+    crawl_state.is_orb_of_ice_game = coinflip();
 
     switch (crawl_state.type)
     {

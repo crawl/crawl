@@ -1809,6 +1809,8 @@ static void tag_construct_you_dungeon(writer &th)
                       marshallString);
     marshallMap(th, you.vault_list, marshall_level_id, marshallStringVector);
 
+    marshallBoolean(th, crawl_state.is_orb_of_ice_game);
+
     write_level_connectivity(th);
 }
 
@@ -4179,6 +4181,11 @@ static void tag_read_you_dungeon(reader &th)
 #endif
     unmarshallMap(th, you.vault_list, unmarshall_level_id,
                   unmarshallStringVector);
+
+    if (th.getMinorVersion() >= TAG_MINOR_OOI_IN_ZOT)
+        crawl_state.is_orb_of_ice_game = unmarshallBoolean(th);
+    else
+        crawl_state.is_orb_of_ice_game = false;
 
     read_level_connectivity(th);
 }
