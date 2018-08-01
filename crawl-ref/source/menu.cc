@@ -131,6 +131,8 @@ protected:
 
     static constexpr int item_pad = 2;
     static constexpr int pad_right = 10;
+#else
+    int m_shown_height {0};
 #endif
 };
 
@@ -421,7 +423,7 @@ SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
     if (!dim)
         return {0, 80};
     else
-        return {1, max(1, (int)m_menu->items.size())};
+        return {1, max({1, (int)m_menu->items.size(), m_shown_height})};
 #endif
 }
 
@@ -1929,8 +1931,12 @@ bool Menu::page_down()
 {
     int dy = m_ui.scroller->get_region()[3];
     int y = m_ui.scroller->get_scroll();
-    bool at_bottom = dy+y == m_ui.menu->get_region()[3];
+    bool at_bottom = y+dy >= m_ui.menu->get_region()[3];
     m_ui.scroller->set_scroll(y+dy);
+#ifndef USE_TILE_LOCAL
+    if (!at_bottom)
+        m_ui.menu->set_showable_height(y+dy+dy);
+#endif
     return !at_bottom;
 }
 
@@ -1939,6 +1945,9 @@ bool Menu::page_up()
     int dy = m_ui.scroller->get_region()[3];
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
+#ifndef USE_TILE_LOCAL
+    m_ui.menu->set_showable_height(y);
+#endif
     return y > 0;
 }
 
@@ -1971,6 +1980,10 @@ bool Menu::line_up()
         int y;
         m_ui.menu->get_item_region(index-1, &y, nullptr);
         m_ui.scroller->set_scroll(y);
+#ifndef USE_TILE_LOCAL
+        int dy = m_ui.scroller->get_region()[3];
+        m_ui.menu->set_showable_height(y+dy);
+#endif
         return true;
     }
     return false;
