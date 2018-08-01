@@ -1451,6 +1451,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                  you.can_see(*defender) ? ", but do no damage" : "");
         }
     }
+    else // defender was just alive, so this call should be ok?
+        player_announce_aux_hit();
 
     if (defender->as_monster()->hit_points < 1)
     {
