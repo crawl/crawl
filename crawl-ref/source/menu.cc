@@ -96,6 +96,14 @@ public:
     void get_visible_item_range(int *vis_min, int *vis_max);
     void get_item_region(int index, int *y1, int *y2);
 
+#ifndef USE_TILE_LOCAL
+    void set_showable_height(int h)
+    {
+        m_shown_height = h;
+        _invalidate_sizereq();
+    }
+#endif
+
 protected:
     Menu *m_menu;
     int m_height; // set by do_layout()
