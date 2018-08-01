@@ -781,10 +781,13 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.more->set_margin_for_sdl({10, 0, 0, 0});
 
     m_ui.vbox->add_child(m_ui.title);
+#ifdef USE_TILE_LOCAL
     m_ui.vbox->add_child(m_ui.scroller);
-#ifndef USE_TILE_LOCAL
-    m_ui.scroller->flex_grow = 100000; /* can only show 52 rows anyway */
-    m_ui.vbox->add_child(make_shared<Box>(Widget::VERT, Box::Expand::EXPAND_V));
+#else
+    auto scroller_wrap = make_shared<Box>(Widget::VERT, Box::Expand::EXPAND_V);
+    scroller_wrap->align_items = Widget::STRETCH;
+    scroller_wrap->add_child(m_ui.scroller);
+    m_ui.vbox->add_child(scroller_wrap);
 #endif
     m_ui.vbox->add_child(m_ui.more_bin);
     m_ui.more_bin->set_child(m_ui.more);
