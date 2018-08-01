@@ -1491,7 +1491,7 @@ NAME:       wizlab_cloud
 TAGS:       no_rotate
 MONS:       air elemental w:20 / shock serpent w:5 / spark wasp w:5 \
             / wind drake w:5
-MONS:       fire crab w:5 / ghost crab / death drake / apocalypse crab
+MONS:       ghost crab / death drake / apocalypse crab
 MONS:       spriggan air mage / blizzard demon
 {{
 wizname = crawl.make_name()
@@ -1532,8 +1532,8 @@ LFLOORTILE: floor_rough_lightblue
 {{
             set_border_fill_type('open_sea')
             set_random_mon_list("air elemental w:40 / shock serpent \
-                / spark wasp / wind drake / fire crab / ghost crab \
-                / apocalypse crab / spriggan air mage / blizzard demon")
+                / spark wasp / wind drake / ghost crab / apocalypse crab \
+                / spriggan air mage / blizzard demon")
             wizlab_setup(_G)
             set_feature_name("floor", "damp floor")
             set_feature_name("crystal_wall", "wall of white crystal")
