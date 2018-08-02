@@ -68,6 +68,15 @@ using namespace ui;
 
 static void _cio_init();
 
+static void _loading_message(string m)
+{
+    mpr(m.c_str());
+#ifdef USE_TILE_LOCAL
+    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
+        loading_screen_update_msg(m.c_str());
+#endif
+}
+
 // Initialise a whole lot of stuff...
 static void _initialize()
 {
@@ -119,28 +128,20 @@ static void _initialize()
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-    {
         loading_screen_open();
-        loading_screen_update_msg("Loading databases...");
-    }
 #endif
 
     // Initialise internal databases.
+    _loading_message("Loading databases...");
     databaseSystemInit();
-#ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_update_msg("Loading spells and features...");
-#endif
 
+    _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
-#ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_update_msg("Loading maps...");
-#endif
 
     // Read special levels and vaults.
+    _loading_message("Loading maps...");
     read_maps();
     run_map_global_preludes();
 
