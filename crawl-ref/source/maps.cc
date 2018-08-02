@@ -1429,6 +1429,8 @@ static void _parse_maps(const string &s)
 #ifdef DEBUG_DIAGNOSTICS
     printf("Regenerating des: %s\n", s.c_str());
 #endif
+    // won't be seen by the user unless they look for it
+    mprf(MSGCH_PLAIN, "Regenerating des: %s", s.c_str());
 
     time_t mtime = file_modtime(dat);
     _reset_map_parser();

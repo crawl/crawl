@@ -262,12 +262,20 @@ bool TextDB::_needs_update() const
 void TextDB::_regenerate_db()
 {
     shutdown();
-#ifdef DEBUG_DIAGNOSTICS
     if (_parent)
+    {
+#ifdef DEBUG_DIAGNOSTICS
         printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
+#endif
+        mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
+    }
     else
+    {
+#ifdef DEBUG_DIAGNOSTICS
         printf("Regenerating db: %s\n", _db_name);
 #endif
+        mprf(MSGCH_PLAIN, "Regenerating db: %s", _db_name);
+    }
 
     string db_path = _db_cache_path(_db_name, lang());
     string full_db_path = db_path + ".db";
