@@ -3689,20 +3689,8 @@ void game_options::report_error(const char* format, ...)
     string error = vmake_stringf(format, args);
     va_end(args);
 
-    // If called before game starts, log a startup error,
-    // otherwise spam the warning channel.
-    if (crawl_state.need_save)
-    {
-        mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
-             basefilename.c_str(), line_num);
-    }
-    else
-    {
-        crawl_state.add_startup_error(make_stringf("%s (%s:%d)",
-                                                   error.c_str(),
-                                                   basefilename.c_str(),
-                                                   line_num));
-    }
+    mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
+         basefilename.c_str(), line_num);
 }
 
 static string check_string(const char *s)

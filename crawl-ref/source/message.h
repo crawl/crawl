@@ -112,6 +112,7 @@ void clear_message_store();
 bool any_messages();
 
 void replay_messages();
+void replay_messages_during_startup();
 
 void set_more_autoclear(bool on);
 

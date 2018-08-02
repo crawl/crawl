@@ -815,7 +815,7 @@ void UIStartupMenu::_allocate_region()
     if (recent_error_messages())
     {
         descriptor->override_description(
-            "Errors during initialization; press ctrl-p to view.");
+            "Errors during initialization; press ctrl-p to view the full log.");
     }
     else
         descriptor->override_description(crawl_state.last_game_exit.message);
@@ -883,7 +883,7 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     }
     else if (keyn == CONTROL('P'))
     {
-        replay_messages();
+        replay_messages_during_startup();
         MenuItem *active = menu.get_active_item();
         if (active && active->get_id() >= NUM_GAME_TYPE)
             startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
@@ -1176,6 +1176,9 @@ bool startup_step()
 
 
 #ifndef DGAMELAUNCH
+
+    if (recent_error_messages() && !Options.suppress_startup_errors)
+        replay_messages_during_startup();
 
     // startup
 
