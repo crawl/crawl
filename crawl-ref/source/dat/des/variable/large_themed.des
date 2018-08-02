@@ -1089,7 +1089,7 @@ MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
 MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 : end
 ITEM:   any book / w:20 any randbook
-ITEM:   w:18 any magical staff / any rod w:5 / any jewellery
+ITEM:   w:18 any magical staff / any wand good_item w:5 / any jewellery
 ITEM:   any randbook / gold
 SUBST:  " = .
 MAP

@@ -1434,7 +1434,7 @@ KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
 KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
-             plane papyrus w:5 / manual of translocations w:5 / \
+             manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria&passage_of_golubria
@@ -1597,13 +1597,13 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:cloud_resistance / book of clouds / fan of gales \
+ITEM:       scarf ego:cloud_immunity / book of clouds / fan of gales \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.
 ITEM:       any w:20 / star_item / superb_item / any book w:5
-ITEM:       randart ring of flight / good_item boots ego:flying \
-            / good_item boots ego:running / good_item quick blade \
+ITEM:       randart ring of flight / pair of boots ego:flying \
+            / pair of boots ego:running / good_item quick blade \
             / good_item ring of evasion
 ITEM:       randbook disc:air
 KFEAT:      #6 = deep_water
