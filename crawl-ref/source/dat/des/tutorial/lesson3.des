@@ -66,13 +66,15 @@ MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson3", \
 MARKER:  [ = lua:one_way_stair { dst  = "tutorial_lesson3", \
                                  onclimb = "tutorial3.exit" }
 epilogue{{
- crawl.tutorial_hint("HINT_MULTI_PICKUP")
- crawl.tutorial_hint("HINT_CHOOSE_STAT")
- crawl.tutorial_hint("HINT_YOU_CURSED")
- crawl.tutorial_hint("HINT_REMOVED_CURSE")
- crawl.clear_messages(true)
- crawl.tutorial_msg("tutorial3 start")
- tutorial_intro()
+  if crawl.game_started() then
+    crawl.tutorial_hint("HINT_MULTI_PICKUP")
+    crawl.tutorial_hint("HINT_CHOOSE_STAT")
+    crawl.tutorial_hint("HINT_YOU_CURSED")
+    crawl.tutorial_hint("HINT_REMOVED_CURSE")
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial3 start")
+    tutorial_intro()
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -134,8 +136,10 @@ MARKER:  h = lua:tutorial3.msg("amulet")
 MARKER:  i = lua:tutorial3.msg("scroll_remove_curse")
 MARKER:  B = lua:tutorial3.msg("drop")
 epilogue{{
- crawl.clear_messages(true)
- crawl.tutorial_msg("tutorial3 command_help")
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial3 command_help")
+  end
 }}
 MAP
 cccccccccccccccccccccc
@@ -209,8 +213,10 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson3", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial3.win" }
 epilogue{{
- crawl.clear_messages(true)
- crawl.tutorial_msg("tutorial3 command_help")
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial3 command_help")
+  end
 }}
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttt

@@ -57,9 +57,11 @@ MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
              size_max = 2, spread_rate = 0 }
 epilogue{{
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial1 start")
-  tutorial_intro()
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial1 start")
+    tutorial_intro()
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxttttttttttttttttttxxxxxxxxxxxxxx
@@ -114,8 +116,10 @@ MARKER:  B = lua:tutorial1.msg("close_door")
 MARKER:  C = lua:tutorial1.msg("water")
 MARKER:  { = lua:tutorial1.msg("upstairs")
 epilogue{{
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial1 newlevel");
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial1 newlevel");
+  end
 }}
 MAP
 vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
