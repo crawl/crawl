@@ -1508,11 +1508,14 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_STAVES,     "Staff " },
         { OBJ_MISCELLANY, "Evocable" },
         { OBJ_FOOD,       0 }, // amended below
-        { OBJ_GOLD,       "Gold" },
+        { OBJ_GOLD,       0 },
     };
     ASSERT(acq_classes[6].type == OBJ_FOOD);
     acq_classes[6].name = you.species == SP_VAMPIRE ? "Blood":
                                                       "Food";
+    string gold_text = make_stringf("Gold (you have $%d)", you.gold);
+    ASSERT(acq_classes[7].type == OBJ_GOLD);
+    acq_classes[7].name = gold_text.c_str();
 
     int thing_created = NON_ITEM;
 
