@@ -59,6 +59,9 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
 static void clear_text_region(i4 region);
 #endif
 
+// must be before ui_root declaration for correct destruction order
+vector<Widget*> prev_hover_path;
+
 static struct UIRoot
 {
 public:
@@ -98,8 +101,6 @@ protected:
     Stack m_root;
     bool m_needs_layout{false};
 } ui_root;
-
-static vector<Widget*> prev_hover_path;
 
 static stack<i4> scissor_stack;
 
