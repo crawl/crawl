@@ -33,6 +33,7 @@
 #include "randbook.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -1482,7 +1483,7 @@ int acquirement_create_item(object_class_type class_wanted,
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index, bool debug)
+                 bool quiet, int* item_index, bool debug, bool known_scroll)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1547,17 +1548,21 @@ bool acquirement(object_class_type class_wanted, int agent,
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire? (\\ to view known items)");
+        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire?"
+                "<lightgrey> [<w>\\</w>] known items [<w>$</w>] shopping list"
+                "</lightgrey>");
 
         const int keyin = toalower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))
             class_wanted = acq_classes[keyin - 'a'].type;
         else if (keyin == '\\')
             check_item_knowledge(), redraw_screen();
+        else if (keyin == '$' && !shopping_list.empty())
+            shopping_list.display(true), redraw_screen();
         else
         {
             // Lets wizards escape out of accidentally choosing acquirement.
-            if (agent == AQ_WIZMODE)
+            if (agent == AQ_WIZMODE || known_scroll)
             {
                 canned_msg(MSG_OK);
                 return false;
