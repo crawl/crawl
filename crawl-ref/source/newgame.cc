@@ -681,10 +681,6 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 
     clrscr();
 
-    // XXX: this should be somewhere else.
-    if (!crawl_state.startup_errors.empty() && !Options.suppress_startup_errors)
-        crawl_state.show_startup_errors();
-
     textcolour(LIGHTGREY);
 
     ng.name = choice.name;

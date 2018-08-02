@@ -3959,8 +3959,8 @@ void init_item_name_cache()
                 }
                 else if (name.find("buggy") != string::npos)
                 {
-                    crawl_state.add_startup_error("Bad name for item name"
-                                                  " cache: " + name);
+                    mprf(MSGCH_ERROR, "Bad name for item name cache: %s",
+                                                                name.c_str());
                     continue;
                 }
 
