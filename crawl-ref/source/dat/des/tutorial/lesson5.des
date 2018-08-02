@@ -64,9 +64,11 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial5.win" }
 epilogue{{
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial5 start")
-  tutorial_intro()
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial5 start")
+    tutorial_intro()
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
