@@ -8,6 +8,7 @@
 #include "item-use.h"
 
 #include "ability.h"
+#include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -2636,7 +2637,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
 #endif
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
-           || scroll == SCR_MAGIC_MAPPING;
+           || scroll == SCR_MAGIC_MAPPING
+           || scroll == SCR_ACQUIREMENT;
 }
 
 /**
@@ -2925,7 +2927,10 @@ void read_scroll(item_def& scroll)
 
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
+        {
+            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
+        }
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -2942,7 +2947,11 @@ void read_scroll(item_def& scroll)
             // IDing scrolls. (Not an interesting ID game mechanic!)
         }
 
-        run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
+        if (!alreadyknown)
+            run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
+        else
+            cancel_scroll = !acquirement(OBJ_RANDOM, AQ_SCROLL, false, nullptr,
+                    false, true);
         break;
 
     case SCR_FEAR:

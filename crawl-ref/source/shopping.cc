@@ -2162,6 +2162,7 @@ class ShoppingListMenu : public Menu
 {
 public:
     ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
+    bool view_only {false};
 
 protected:
     virtual formatted_string calc_title() override;
@@ -2179,6 +2180,12 @@ formatted_string ShoppingListMenu::calc_title()
                 total_cost);
 
     string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    if (view_only)
+    {
+        fs += formatted_string::parse_string(s + "<w>examine</w>");
+        return fs;
+    }
 
     switch (menu_action)
     {
@@ -2262,15 +2269,16 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     }
 }
 
-void ShoppingList::display()
+void ShoppingList::display(bool view_only)
 {
     if (list->empty())
         return;
 
     ShoppingListMenu shopmenu;
+    shopmenu.view_only = view_only;
     shopmenu.set_tag("shop");
-    shopmenu.menu_action  = Menu::ACT_EXECUTE;
-    shopmenu.action_cycle = Menu::CYCLE_CYCLE;
+    shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
+    shopmenu.action_cycle = view_only ? Menu::CYCLE_NONE : Menu::CYCLE_CYCLE;
     string title          = "item";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
