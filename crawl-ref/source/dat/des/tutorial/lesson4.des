@@ -54,10 +54,12 @@ MARKER:  g = lua:tutorial4.msg("spell_hunger")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial4.exit" }
 epilogue{{
-  crawl.tutorial_hint("HINT_NEW_LEVEL")
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial4 start")
-  tutorial_intro()
+  if crawl.game_started() then
+    crawl.tutorial_hint("HINT_NEW_LEVEL")
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial4 start")
+    tutorial_intro()
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
