@@ -543,10 +543,14 @@ static actor* _pain_weapon_user(actor* attacker)
 void attack::pain_affects_defender()
 {
     actor* user = _pain_weapon_user(attacker);
-    if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
+    int skill = user->is_player() && you.species == SP_ONI
+                ? user->skill_rdiv(SK_SPELLCASTING, 1, 2) + 1
+                : user->skill_rdiv(SK_NECROMANCY) + 1;
+
+    if (!one_chance_in(skill))
     {
         special_damage += resist_adjust_damage(defender, BEAM_NEG,
-                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+                                               random2(skill));
 
         if (special_damage && defender_visible)
         {
