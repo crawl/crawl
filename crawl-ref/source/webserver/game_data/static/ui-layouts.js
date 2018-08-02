@@ -422,34 +422,32 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var handled = true;
 
-        switch (event.which)
-        {
-            case 33: // page up
-                scroller_scroll_page(scroller, -1);
-                break;
-            case 34: // page down
-                scroller_scroll_page(scroller, 1);
-                break;
-            case 35: // end
-                scroller_scroll_to_line(scroller, 2147483647);
-                break;
-            case 36: // home
-                scroller_scroll_to_line(scroller, 0);
-                break;
-            case 38: // up
-                scroller_scroll_line(scroller, -1);
-                break;
-            case 40: // down
-                scroller_scroll_line(scroller, 1);
-                break;
-            default:
-                handled = false;
-                break;
-        }
-
-        if (!handled)
-        {
-            handled = true;
+        if (event.type === "keydown")
+            switch (event.which)
+            {
+                case 33: // page up
+                    scroller_scroll_page(scroller, -1);
+                    break;
+                case 34: // page down
+                    scroller_scroll_page(scroller, 1);
+                    break;
+                case 35: // end
+                    scroller_scroll_to_line(scroller, 2147483647);
+                    break;
+                case 36: // home
+                    scroller_scroll_to_line(scroller, 0);
+                    break;
+                case 38: // up
+                    scroller_scroll_line(scroller, -1);
+                    break;
+                case 40: // down
+                    scroller_scroll_line(scroller, 1);
+                    break;
+                default:
+                    handled = false;
+                    break;
+            }
+        else if (event.type === "keypress")
             switch (String.fromCharCode(event.which))
             {
                 case " ": case ">": case "+": case '\'':
@@ -462,7 +460,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     handled = false;
                     break;
             }
-        }
+        else
+            handled = false;
 
         if (handled)
         {
