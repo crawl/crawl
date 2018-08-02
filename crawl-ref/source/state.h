@@ -102,8 +102,6 @@ struct game_state
 
     bool            simulating_xp_gain; // is the skill menu in xp potion mode?
 
-    vector<string> startup_errors;
-
     bool level_annotation_shown;
     bool viewport_monster_hp;
     bool viewport_weapons;
@@ -152,7 +150,6 @@ public:
     void reset_game();
 
     void add_startup_error(const string &error);
-    void show_startup_errors();
 
     bool is_replaying_keys() const;
 
