@@ -127,6 +127,8 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
+//#define DEBUG_TRAVEL
+
 /*
  * Warn if interlevel travel is going to take you outside levels in
  * the range [src,dest].
@@ -947,6 +949,12 @@ command_type travel()
     // need to figure out where to travel to next.
     if (you.running == RMODE_INTERLEVEL && !you.running.pos.x)
     {
+#ifdef DEBUG_TRAVEL
+        dprf("continuing translevel travel, branch %d depth %d, pos %d,%d",
+            level_target.id.branch, level_target.id.depth, level_target.pos.x,
+            level_target.pos.y);
+#endif
+
         if (!_find_transtravel_square(level_target) || !you.running.pos.x)
             stop_running();
         else
@@ -2298,7 +2306,10 @@ static level_pos _find_entrance(const level_pos &from)
                 pos = stair.position;
                 break;
             }
-
+#ifdef DEBUG_TRAVEL
+        dprf("found entrance in %d depth %d at %d,%d", new_lid.branch,
+            new_lid.depth, pos.x, pos.y);
+#endif
         return level_pos(new_lid, pos);
     }
     else
@@ -2311,7 +2322,10 @@ static level_pos _find_entrance(const level_pos &from)
                 pos = stair.position;
                 break;
             }
-
+#ifdef DEBUG_TRAVEL
+        dprf("found entrance in %d depth %d at %d,%d", lid.branch, lid.depth,
+            pos.x, pos.y);
+#endif
         return level_pos(lid, pos);
     }
 }
@@ -2473,6 +2487,11 @@ level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
     if (target.id.depth > -1 && remember_targ)
         dest_name = _get_trans_travel_dest(target);
 
+#ifdef DEBUG_TRAVEL
+    dprf("level target is %d depth %d, pos %d,%d", target.id.branch,
+        target.id.branch, target.pos.x, target.pos.y);
+#endif
+
     return target;
 }
 
@@ -2487,6 +2506,12 @@ static void _start_translevel_travel()
         mpr("You're already here!");
         return ;
     }
+
+#ifdef DEBUG_TRAVEL
+    dprf("starting translevel travel, branch %d depth %d, pos %d,%d",
+        level_target.id.branch, level_target.id.depth, level_target.pos.x,
+        level_target.pos.y);
+#endif
 
     if (level_target.id.depth > 0)
     {
@@ -2526,6 +2551,11 @@ void start_translevel_travel(const level_pos &pos)
     you.travel_x = pos.pos.x;
     you.travel_y = pos.pos.y;
     you.travel_z = pos.id;
+
+#ifdef DEBUG_TRAVEL
+    dprf("going to %d depth %d, pos %d,%d", pos.id.branch, pos.id.depth,
+        pos.pos.x, pos.pos.y);
+#endif
 
     if (!can_travel_interlevel())
     {
@@ -2614,7 +2644,8 @@ static int _find_transtravel_stair(const level_id &cur,
                                     const coord_def &stair,
                                     level_id &closest_level,
                                     int &best_level_distance,
-                                    coord_def &best_stair)
+                                    coord_def &best_stair,
+                                    int search_depth = 0)
 {
     int local_distance = -1;
     level_id player_level = level_id::current();
@@ -2707,7 +2738,6 @@ static int _find_transtravel_stair(const level_id &cur,
             if (!deltadist && you.pos() != si.position)
                 deltadist = -1;
         }
-
         // deltadist == 0 is legal (if this_stair is nullptr), since the player
         // may be standing on the stairs. If two stairs are disconnected,
         // deltadist has to be negative.
@@ -2770,6 +2800,21 @@ static int _find_transtravel_stair(const level_id &cur,
             if (!dest.is_valid())
                 continue;
 
+            // Don't try hell branches if we are not already in one or targeting
+            // one. When you actually enter the vestibule, the branch entry
+            // point is adjusted to be the portal you entered through, but
+            // autotravel needs to simulate this somehow, or it can find (fake)
+            // paths through hell that are shortcuts in depths, because the
+            // vestibule side of the portals do map to particular portals
+            // scattered throughout depths, even if those mappings won't be
+            // used while exiting from the vestibule.
+            if (is_hell_branch(dest.id.branch)
+                            && !(is_hell_branch(target.id.branch)
+                                 || is_hell_branch(cur.branch)))
+            {
+                continue;
+            }
+
             // We need to get the stairs at the new location and set the
             // distance on them as well.
             LevelInfo &lo = travel_cache.get_level_info(dest.id);
@@ -2780,12 +2825,19 @@ static int _find_transtravel_stair(const level_id &cur,
                 else
                     continue;   // We've already been here.
             }
+#ifdef DEBUG_TRAVEL
+            string indent(search_depth, '.');
+            dprf("%strying stairs at %d,%d, dest is %d depth %d, pos %d,%d",
+                indent.c_str(), si.position.x, si.position.y, dest.id.branch,
+                dest.id.depth, dest.pos.x, dest.pos.y);
+#endif
 
             // Okay, take these stairs and keep going.
             const int newdist =
                 _find_transtravel_stair(dest.id, target,
                                         dist2stair, dest.pos, closest_level,
-                                        best_level_distance, best_stair);
+                                        best_level_distance, best_stair,
+                                        search_depth + 1);
             if (newdist != -1
                 && (local_distance == -1 || local_distance > newdist))
             {
@@ -2850,6 +2902,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         _find_transtravel_stair(current, target,
                                 0, cur_stair, closest_level,
                                 best_level_distance, best_stair);
+        dprf("found stair at %d,%d", best_stair.x, best_stair.y);
     }
     // even without _find_transtravel_stair called, the values are initalized
     // enough for the rest of this to go forward.
