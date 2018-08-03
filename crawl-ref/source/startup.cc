@@ -247,7 +247,7 @@ static void _post_init(bool newc)
     // Load macros
     macro_init();
 
-    crawl_state.need_save = true;
+    crawl_state.need_save = crawl_state.game_started = true;
     crawl_state.last_type = crawl_state.type;
     crawl_state.marked_as_won = false;
 
@@ -1238,6 +1238,7 @@ bool startup_step()
     }
     else
     {
+        clear_message_store();
         setup_game(ng);
         newchar = true;
         write_newgame_options_file(choice);
