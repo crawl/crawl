@@ -94,6 +94,7 @@ const Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
+bool is_hell_branch(branch_type branch);
 bool is_random_subbranch(branch_type branch);
 bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);

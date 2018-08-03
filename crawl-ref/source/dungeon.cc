@@ -3496,11 +3496,8 @@ static void _place_branch_entrances(bool use_vaults)
     {
         // Vestibule and hells are placed by other means.
         // Likewise, if we already have an entrance, keep going.
-        if (it->id >= BRANCH_VESTIBULE && it->id <= BRANCH_LAST_HELL
-            || branch_entrance_placed[it->id])
-        {
+        if (is_hell_branch(it->id) || branch_entrance_placed[it->id])
             continue;
-        }
 
         if (it->entry_stairs != NUM_FEATURES
             && player_in_branch(parent_branch(it->id))
