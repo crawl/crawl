@@ -46,7 +46,8 @@ struct game_state
     time_t last_winch;       // Time of last resize, for crash dumps.
 
     bool io_inited;         // Is curses or the equivalent initialised?
-    bool need_save;         // Set to true when game has started.
+    bool need_save;         // Set to true when game can be saved, false when the game ends.
+    bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
     const char* no_gdb;     // reason for not running gdb

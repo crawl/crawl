@@ -799,7 +799,7 @@ public:
         // of space and have to display --more-- instead
         unwind_bool dontsend(send_ignore_one, true);
 #endif
-        if (crawl_state.io_inited)
+        if (crawl_state.io_inited && crawl_state.game_started)
             msgwin.add_item(msg.full_text(), p, _temporary);
     }
 
@@ -869,6 +869,7 @@ public:
         prev_msg = message_line();
         last_of_turn = false;
         temp = 0;
+        unsent = 0;
     }
 
 #ifdef USE_TILE_WEB
@@ -909,6 +910,11 @@ void webtiles_send_messages()
 }
 void webtiles_send_last_messages(int n)
 {
+    // defer sending any messages to client in this form until a game is
+    // started up. It's still possible to send them as a popup. When this is
+    // eventually called, it'll send any queued messages.
+    if (!crawl_state.io_inited || !crawl_state.game_started)
+        return;
     tiles.json_open_object();
     tiles.json_write_string("msg", "msgs");
     tiles.json_treat_as_empty();
@@ -1416,6 +1422,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     if (domore)
         more(true);
+
     if (do_flash_screen)
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
 
