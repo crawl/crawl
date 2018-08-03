@@ -869,7 +869,9 @@ public:
         prev_msg = message_line();
         last_of_turn = false;
         temp = 0;
+#ifdef USE_TILE_WEB
         unsent = 0;
+#endif
     }
 
 #ifdef USE_TILE_WEB
