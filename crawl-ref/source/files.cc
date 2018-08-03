@@ -877,6 +877,9 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
+    // TODO: dest_pos here seems wrong, it's initialized to you.pos() before
+    // the level change, and so is meaningless on the new level. This can come
+    // up if there are multiple hell entrance portals on a level, for example.
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
                                      hatch_name));
 }

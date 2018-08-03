@@ -28,6 +28,7 @@
 #include "directn.h"
 #include "delay.h"
 #include "dgn-overview.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
@@ -2756,7 +2757,35 @@ static int _find_transtravel_stair(const level_id &cur,
             if (local_distance != -1 && dist2stair >= local_distance)
                 continue;
 
-            const level_pos &dest = si.destination;
+            // if the player is in hell, exiting will take them to the
+            // hell entrance portal on the target level stored in brentry. This
+            // replicates the logic that actual level changes use to calculate
+            // the destination (see files.cc:_place_player_on_stairs and its
+            // calling functions). One caveat is that the behavior may differ
+            // when there are multiple hell entrance portals on a level.
+            //
+            // TODO: find some way to unify this logic with the actual level
+            // transition logic.
+            //
+            // TODO: this probably isn't the only quirk of actual stair
+            // transition logic...
+            level_pos dest;
+            if (is_hell_branch(you.where_are_you)
+                                && cur.branch == BRANCH_VESTIBULE
+                                && !is_hell_branch(si.destination.id.branch))
+            {
+                dest.id = brentry[BRANCH_VESTIBULE];
+                dest.pos = dgn_find_nearby_stair(DNGN_ENTER_HELL, coord_def(),
+                    false);
+                if (!in_bounds(dest.pos))
+                {
+                    mprf(MSGCH_ERROR, "Missing hell portal on level %d:%d",
+                                                dest.id.branch, dest.id.depth);
+                    dest = si.destination;
+                }
+            }
+            else
+                dest = si.destination;
 
             // Never use escape hatches as the last leg of the trip, since
             // that will leave the player unable to retrace their path.
