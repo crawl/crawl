@@ -3998,6 +3998,17 @@ static const struct spell_desc spelldata[] =
 #endif
 
 {
+    SPELL_FREEZING_BLAST, "Freezing Blast",
+    SPTYP_CONJURATION | SPTYP_ICE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
+    5,
+    200,
+    5, 5,
+    5, 0,
+    TILEG_ICEBLAST,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

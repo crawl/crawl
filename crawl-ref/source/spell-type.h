@@ -471,5 +471,6 @@ enum spell_type : int
 #if TAG_MAJOR_VERSION == 34
     SPELL_FLAMING_BREATH,
 #endif
+    SPELL_FREEZING_BLAST,
     NUM_SPELLS
 };

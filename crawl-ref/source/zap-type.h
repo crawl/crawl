@@ -74,7 +74,7 @@ enum zap_type
     ZAP_ICEBLAST,
     ZAP_SLUG_DART,
     ZAP_BLINKBOLT,
-    ZAP_FREEZING_BLAST, // monster freezing cloud (!?)
+    ZAP_MON_FREEZING_CLOUD, // monster freezing cloud (!?)
     ZAP_DIMENSION_ANCHOR,
     ZAP_VULNERABILITY,
     ZAP_SENTINEL_MARK,
@@ -86,5 +86,6 @@ enum zap_type
     ZAP_MALMUTATE,
     ZAP_VILE_CLUTCH,
     ZAP_HARPOON_SHOT,
+    ZAP_FREEZING_BLAST,
     NUM_ZAPS
 };

@@ -74,6 +74,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SAP_MAGIC, ZAP_SAP_MAGIC },
     { SPELL_DRAIN_MAGIC, ZAP_DRAIN_MAGIC },
     { SPELL_HARPOON_SHOT, ZAP_HARPOON_SHOT},
+    { SPELL_FREEZING_BLAST, ZAP_FREEZING_BLAST },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },

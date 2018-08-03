@@ -293,6 +293,24 @@ _mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
 },
 
 {
+    ZAP_FREEZING_BLAST,
+    "freezing blast",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 10>,
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_COLD,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
+{
     ZAP_TELEPORT_OTHER,
     "",
     100,
@@ -1190,8 +1208,8 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_FREEZING_BLAST,
-    "freezing blast",
+    ZAP_MON_FREEZING_CLOUD,
+    "freezing cloud",
     200,
     nullptr,
     nullptr,

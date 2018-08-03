@@ -585,6 +585,10 @@ Freeze spell
 Freezes an adjacent creature, dealing damage that bypasses any armour the
 target may have. This may temporarily slow cold-blooded creatures.
 %%%%
+Freezing Blast spell
+
+Hurls an explosive blast of cold.
+%%%%
 Freezing Cloud spell
 
 Conjures up a large cloud of lethally cold vapour.

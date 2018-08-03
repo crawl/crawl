@@ -1006,6 +1006,8 @@ int spell_effect_noise(spell_type spell)
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
     case SPELL_IGNITION:
+    case SPELL_ICEBLAST:
+    case SPELL_FREEZING_BLAST:
         expl_size = 1;
         break;
 

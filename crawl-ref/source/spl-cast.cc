@@ -1139,6 +1139,9 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_FIREBALL:
         return make_unique<targeter_beam>(&you, range, ZAP_FIREBALL, pow,
                                           1, 1);
+    case SPELL_FREEZING_BLAST:
+        return make_unique<targeter_beam>(&you, range, ZAP_FREEZING_BLAST, pow,
+                                          1, 1);
     case SPELL_ICEBLAST:
         return make_unique<targeter_beam>(&you, range, ZAP_ICEBLAST, pow,
                                           1, 1);

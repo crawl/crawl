@@ -520,7 +520,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WIZARD_III,
       {
-       { SPELL_BOLT_OF_COLD, 14, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
        { SPELL_SLOW, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
@@ -814,7 +814,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_FROST_GIANT,
       {
-       { SPELL_BOLT_OF_COLD, 66, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_COLD, 29, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_BLAST, 29, MON_SPELL_WIZARD },
       }
     },
 
@@ -1675,7 +1676,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ORB_OF_ICE,
       {
        { SPELL_BOLT_OF_COLD, 32, MON_SPELL_MAGICAL },
-//       { SPELL_FIREBALL, 32, MON_SPELL_MAGICAL },
+       { SPELL_FREEZING_BLAST, 32, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 16, MON_SPELL_MAGICAL },
       }
     },

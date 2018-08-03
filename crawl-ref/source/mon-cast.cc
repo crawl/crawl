@@ -1278,6 +1278,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_FIREBALL:
+    case SPELL_FREEZING_BLAST:
     case SPELL_ICEBLAST:
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
     case SPELL_BOLT_OF_DRAINING:
@@ -1308,7 +1309,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FREEZING_CLOUD: // battlesphere special-case
-        zappy(ZAP_FREEZING_BLAST, power, true, beam);
+        zappy(ZAP_MON_FREEZING_CLOUD, power, true, beam);
         break;
 
     case SPELL_DISPEL_UNDEAD:
