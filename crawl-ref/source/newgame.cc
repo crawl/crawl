@@ -567,6 +567,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     }
 }
 
+#ifndef DGAMELAUNCH
 /**
  * Attempt to generate a random name for a character that doesn't collide with
  * an existing save name.
@@ -587,7 +588,6 @@ static string _random_name()
     return "";
 }
 
-#ifndef DGAMELAUNCH
 static void _choose_name(newgame_def& ng, newgame_def& choice)
 {
     char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
