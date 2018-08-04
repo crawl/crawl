@@ -1922,7 +1922,7 @@ void skill_menu(int flag, int exp)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "skills");
+    tiles_crt_popup show_as_popup("skills");
 #endif
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
     // XXX: this is, in theory, an arbitrary initial height. In practice,
