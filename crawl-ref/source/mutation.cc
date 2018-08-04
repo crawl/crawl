@@ -931,7 +931,6 @@ void display_mutations()
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("mutations", mutation_s);
     if (you.species == SP_VAMPIRE)

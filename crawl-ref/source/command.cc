@@ -219,7 +219,6 @@ static void _print_version()
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("information", info);
     tiles.json_write_string("features", feats);

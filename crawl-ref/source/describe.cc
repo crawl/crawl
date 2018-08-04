@@ -2452,7 +2452,6 @@ void describe_feature_wide(const coord_def& pos)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_open_array("feats");
     for (const auto &feat : feats)
@@ -2834,7 +2833,6 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("title", name);
     desc_without_spells += "SPELLSET_PLACEHOLDER";
@@ -4602,7 +4600,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control disable_crt(false);
     tiles.json_open_object();
     tiles.json_write_string("title", inf.title);
     formatted_string needle;

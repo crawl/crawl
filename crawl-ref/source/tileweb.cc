@@ -68,8 +68,7 @@ static unsigned int get_milliseconds()
 
 TilesFramework tiles;
 
-TilesFramework::TilesFramework()
-    : m_crt_mode(CRT_NORMAL),
+TilesFramework::TilesFramework() :
       m_controlled_from_web(false),
       m_last_ui_state(UI_INIT),
       m_view_loaded(false),
@@ -78,7 +77,6 @@ TilesFramework::TilesFramework()
       m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
       m_need_full_map(true),
-      m_text_crt("crt"),
       m_text_menu("menu_txt"),
       m_print_fg(15)
 {
@@ -1692,7 +1690,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
@@ -1760,13 +1757,11 @@ void TilesFramework::_send_everything()
 
     update_input_mode(mouse_control::current_mode());
 
-    m_text_crt.send(true);
     m_text_menu.send(true);
 }
 
 void TilesFramework::clrscr()
 {
-    m_text_crt.clear();
     m_text_menu.clear();
 
     cgotoxy(1, 1);
@@ -1783,32 +1778,9 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
     m_print_y = y - 1;
-    switch (region)
-    {
-    case GOTO_CRT:
-        switch (m_crt_mode)
-        {
-        case CRT_DISABLED:
-            m_print_area = nullptr;
-            break;
-        case CRT_NORMAL:
-            set_ui_state(UI_CRT);
-            m_print_area = &m_text_crt;
-            break;
-        case CRT_MENU:
-            m_print_area = &m_text_menu;
-            break;
-        }
-        break;
-    case GOTO_STAT:
-    case GOTO_MSG:
-        set_ui_state(UI_NORMAL);
-        m_print_area = nullptr;
-        break;
-    default:
-        m_print_area = nullptr;
-        break;
-    }
+    bool crt_popup = region == GOTO_CRT && !m_menu_stack.empty() &&
+            m_menu_stack.back().type == UIStackFrame::CRT;
+    m_print_area = crt_popup ? &m_text_menu : nullptr;
     m_cursor_region = region;
 }
 
@@ -1842,7 +1814,6 @@ void TilesFramework::redraw()
         m_last_ui_state = m_ui_state;
     }
 
-    m_text_crt.send();
     m_text_menu.send();
 
     _send_player();
