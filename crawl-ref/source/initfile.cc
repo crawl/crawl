@@ -3707,7 +3707,7 @@ void get_system_environment()
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
-#if defined(TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX) && !defined(DGAMELAUNCH)
     if (SysEnv.crawl_dir.empty())
     {
         SysEnv.crawl_dir
