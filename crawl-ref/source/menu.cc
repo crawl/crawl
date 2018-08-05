@@ -309,6 +309,7 @@ void UIMenu::do_layout(int mw, int num_columns)
             int item_height = max(text_height, !entry.tiles.empty() ? 32 : 0);
 
             // Split menu entries that don't fit into a single line into two lines.
+            if (!m_menu->is_set(MF_NO_WRAP_ROWS))
             if ((text_width > max_column_width-entry.x-pad_right))
             {
                 formatted_string text;
@@ -738,7 +739,8 @@ void UIMenu::pack_buffers()
 
             // Line wrap and render the remaining text
             int w = entry_ex-text_sx - pad_right;
-            int h = m_font_entry->char_height() * 2;
+            int h = m_font_entry->char_height();
+            h *= m_menu->is_set(MF_NO_WRAP_ROWS) ? 1 : 2;
             formatted_string split = m_font_entry->split(text, w, h);
             int string_height = m_font_entry->string_height(split);
             text_sy = entry.y + (entry_h - string_height)/2;
