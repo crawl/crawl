@@ -3906,7 +3906,7 @@ ORIENT: float
 : if you.branch() == "Elf" then
 MONS: deep elf sorcerer / deep elf annihilator
 : else
-MONS: wizard / orc sorcerer
+MONS: kobold demonologist / deep elf mage / tengu conjurer / orc sorcerer
 : end
 SHUFFLE: AB / CD / EF
 SUBST: A = ., B = W, CDEF = w
