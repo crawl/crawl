@@ -66,8 +66,6 @@
 
 using namespace ui;
 
-static void _cio_init();
-
 static void _loading_message(string m)
 {
     mpr(m.c_str());
@@ -174,7 +172,7 @@ static void _initialize()
     if (!crawl_state.test_list)
     {
         if (!crawl_state.io_inited)
-            _cio_init();
+            cio_init();
         clrscr();
     }
 
@@ -1252,7 +1250,7 @@ bool startup_step()
 
 
 
-static void _cio_init()
+void cio_init()
 {
     crawl_state.io_inited = true;
     console_startup();
