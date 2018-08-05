@@ -286,15 +286,9 @@ class UIShowHide;
 
 #define NUMBUFSIZ 10
 
-// FIXME: MenuEntry is a large object, and shouldn't be used for
-// showing text files.
-
 class Menu
 {
     friend class UIMenu;
-#ifdef USE_TILE_LOCAL
-    friend class menu_filter_line_reader;
-#endif
 public:
     Menu(int flags = MF_MULTISELECT, const string& tagname = "", KeymapContext kmc = KMC_MENU);
 
@@ -343,8 +337,6 @@ public:
 
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
     int get_entry_index(const MenuEntry *e) const;
-
-    int get_first_visible() const;
 
     virtual int item_colour(const MenuEntry *me) const;
 
@@ -438,6 +430,7 @@ protected:
     virtual int post_process(int key);
 
     bool in_page(int index) const;
+    int get_first_visible() const;
 
     void deselect_all(bool update_view = true);
     virtual void select_items(int key, int qty = -1);
