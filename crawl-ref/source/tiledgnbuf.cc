@@ -100,6 +100,13 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
     }
     else if (t0 >= TILE_MAIN_MAX)
         m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
+    else if (t0 && t0 <= TILE_MAIN_MAX)
+    {
+        const tileidx_t base_idx = tileidx_known_base_item(t0);
+        if (base_idx)
+            m_buf_main.add(base_idx, x, y);
+        m_buf_main.add(t0, x, y);
+    }
 
     // hijack pack_foreground() to draw status icons
     packed_cell fake_cell;
