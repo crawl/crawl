@@ -137,6 +137,7 @@ protected:
     FontBuffer m_text_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 
+public:
     static constexpr int item_pad = 2;
     static constexpr int pad_right = 10;
 #else
@@ -1918,7 +1919,10 @@ void Menu::update_title()
         fs = indented;
     }
 
-    m_ui.title->set_margin_for_sdl({0, 0, 10, m_indent_title ? 38 : 0});
+#ifdef USE_TILE_LOCAL
+    m_ui.title->set_margin_for_sdl({0, 0, 10,
+            UIMenu::item_pad + (m_indent_title ? 38 : 0)});
+#endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB
     webtiles_set_title(fs);
