@@ -26,6 +26,7 @@
 #include "misc.h"
 #include "prompt.h"
 #include "religion.h"
+#include "startup.h"
 #include "state.h"
 #include "stringutil.h"
 #include "view.h"
@@ -82,48 +83,76 @@ static void _clear_globals_on_exit()
     destroy_abyss();
 }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-// Print error message on the screen.
-// Ugly, but better than not showing anything at all. (jpeg)
-static bool _print_error_screen(const char *message, ...)
+bool fatal_error_notification(string error_msg)
 {
-    if (!crawl_state.io_inited || crawl_state.seen_hups)
-        return false;
-
-    // Get complete error message.
-    string error_msg;
-    {
-        va_list arg;
-        va_start(arg, message);
-        char buffer[1024];
-        vsnprintf(buffer, sizeof buffer, message, arg);
-        va_end(arg);
-
-        error_msg = string(buffer);
-    }
     if (error_msg.empty())
         return false;
 
+    // for local tiles, if there is no available ui, it's possible that wm
+    // initialisation has failed and there's nothing that can be done, so we
+    // don't try. On other builds, though, it's just probably early in the
+    // initialisation process, and cio_init should be fairly safe.
+#ifndef USE_TILE_LOCAL
+    if (!ui::is_available())
+        cio_init(); // this, however, should be fairly safe
+#endif
+
+    mprf(MSGCH_ERROR, "%s", error_msg.c_str());
+
+    if (!ui::is_available() || crawl_state.test || crawl_state.script)
+        return false;
+
+    // do the linebreak here so webtiles has it, but it's needed below as well
+    linebreak_string(error_msg, 79);
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("error", error_msg);
+#endif
+
+    // this is a bit heavy to continue past here in the face of a real crash.
+    if (crawl_state.seen_hups)
+        return false;
+
+#if (!defined(DGAMELAUNCH)) || defined(DGL_PAUSE_AFTER_ERROR)
+#ifdef USE_TILE_WEB
+    tiles_crt_popup show_as_popup;
+    tiles.set_ui_state(UI_CRT);
+#endif
+
+    // TODO: better formatting, maybe use a formatted_scroller?
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain
     //       any formatting!
-    error_msg = replace_all(error_msg, "<", "<<");
-    error_msg += "\n\nHit any key to exit...";
+    error_msg = string("Fatal error:\n\n<lightred>")
+                       + replace_all(error_msg, "<", "<<");
+    error_msg += "</lightred>\n\n<cyan>Hit any key to exit, "
+                 "ctrl-p for the full log.</cyan>";
 
-    auto prompt_ui = make_shared<Text>(error_msg);
+    auto prompt_ui =
+                make_shared<Text>(formatted_string::parse_string(error_msg));
     bool done = false;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
-        return done = ev.type == WME_KEYDOWN;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type == WME_KEYDOWN)
+        {
+            if (ev.key.keysym.sym == CONTROL('P'))
+            {
+                done = false;
+                replay_messages();
+            }
+            else
+                done = true;
+        }
+        else
+            done = false;
+        return done;
     });
 
     mouse_control mc(MOUSE_MODE_MORE);
     auto popup = make_shared<ui::Popup>(prompt_ui);
     ui::run_layout(move(popup), done);
+#endif
 
     return true;
 }
-#endif
 
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.
 // Not a part of crawl_state, since that's a global C++ instance which is
@@ -134,12 +163,11 @@ bool CrawlIsCrashing = false;
 
 NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
-    bool need_pause = true;
     disable_other_crashes();
 
     // Let "error" go out of scope for valgrind's sake.
     {
-        string error = print_error? strerror(errno) : "";
+        string error = print_error ? strerror(errno) : "";
         if (format)
         {
             va_list arg;
@@ -157,14 +185,8 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
                 error += "\n";
         }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-        if (exit_code && !error.empty())
-        {
-            if (_print_error_screen("%s", error.c_str()))
-                need_pause = false;
-        }
-#endif
+        if (exit_code)
+            fatal_error_notification(error);
 
 #ifdef USE_TILE_WEB
         tiles.shutdown();
@@ -183,22 +205,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 #ifdef __ANDROID__
             __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
 #endif
-            fprintf(stderr, "%s", error.c_str());
             error.clear();
         }
     }
-
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-    if (need_pause && exit_code && !crawl_state.game_is_arena()
-        && !crawl_state.seen_hups && !crawl_state.test)
-    {
-        fprintf(stderr, "Hit Enter to continue...\n");
-        getchar();
-    }
-#else
-    UNUSED(need_pause);
-#endif
 
     CrawlIsExiting = true;
     if (exit_code)

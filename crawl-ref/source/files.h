@@ -48,6 +48,7 @@ vector<string> get_dir_files_recursive(const string &dirname,
                                        int recursion_depth = -1,
                                        bool include_directories = false);
 
+void validate_basedirs();
 string datafile_path(string basename, bool croak_on_fail = true,
                      bool test_base_path = false,
                      bool (*thing_exists)(const string&) = file_exists);

@@ -458,6 +458,77 @@ static vector<string> _get_base_dirs()
     return bases;
 }
 
+void validate_basedirs()
+{
+    // TODO: could use this to pick a single data directory?
+    vector<string> bases(_get_base_dirs());
+    bool found;
+
+    // there are a few others, but this should be enough to minimally run something
+    const vector<string> data_subfolders =
+    {
+#ifdef CLUA_BINDINGS
+        "clua",
+#endif
+        "database",
+        "defaults",
+        "des",
+        "descript",
+        "dlua"
+#ifdef USE_TILE_LOCAL
+        , "tiles"
+#endif
+    };
+
+    for (const string &d : bases)
+    {
+        if (dir_exists(d))
+        {
+            bool everything = true;
+            bool something = false;
+            for (auto subdir : data_subfolders)
+            {
+                if (dir_exists(d + subdir))
+                    something = true;
+                else
+                    everything = false;
+            }
+            if (everything)
+            {
+                mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
+                found = true;
+            }
+            else if (something)
+            {
+                // give an error for this case because this incomplete data
+                // directory will be checked before others, possibly leading
+                // to a weird mix of data files.
+                if (!found)
+                {
+                    mprf(MSGCH_ERROR,
+                        "Incomplete or corrupted data directory '%s'",
+                                d.c_str());
+                }
+            }
+        }
+    }
+
+    // can't proceed if nothing complete was found.
+    if (!found)
+    {
+        string err = "Missing DCSS data directory; tried: \n";
+        for (const string &d : bases)
+            err += d + ", ";
+        if (err.size() > 2)
+        {
+            err.pop_back();
+            err.pop_back();
+        }
+
+        end(1, false, "%s", err.c_str());
+    }
+}
+
 string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
                      bool (*thing_exists)(const string&))
 {

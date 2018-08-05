@@ -1085,9 +1085,8 @@ static FILE * _open_stat_file(string stat_file)
     stat_fh = fopen(stat_file.c_str(), "w");
     if (!stat_fh)
     {
-        fprintf(stderr, "Unable to open objstat output file: %s\n"
+        end(1, false, "Unable to open objstat output file: %s\n"
                 "Error: %s", stat_file.c_str(), strerror(errno));
-        end(1);
     }
     return stat_fh;
 }
