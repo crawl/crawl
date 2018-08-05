@@ -620,8 +620,23 @@ static void _sdump_notes(dump_params &par)
     {
         if (note.hidden())
             continue;
-        text += note.describe();
-        text += "\n";
+
+        string prefix = note.describe(true, true, false);
+        string suffix = note.describe(false, false, true);
+        if (suffix.empty())
+            continue;
+        int spaceleft = 80 - prefix.length() - 1; // Use 100 cols
+        if (spaceleft <= 0)
+            return;
+
+        linebreak_string(suffix, spaceleft);
+        vector<string> parts = split_string("\n", suffix);
+        if (parts.empty()) // Disregard pure-whitespace notes.
+            continue;
+
+        text += prefix + parts[0] + "\n";
+        for (unsigned int j = 1; j < parts.size(); ++j)
+            text += string(prefix.length()-2, ' ') + string("| ") + parts[j] + "\n";
     }
     text += "\n";
 }
