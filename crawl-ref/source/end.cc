@@ -93,14 +93,19 @@ bool fatal_error_notification(string error_msg)
     // don't try. On other builds, though, it's just probably early in the
     // initialisation process, and cio_init should be fairly safe.
 #ifndef USE_TILE_LOCAL
-    if (!ui::is_available())
+    if (!ui::is_available() && !crawl_state.build_db)
+    {
         cio_init(); // this, however, should be fairly safe
+    }
 #endif
 
     mprf(MSGCH_ERROR, "%s", error_msg.c_str());
 
-    if (!ui::is_available() || crawl_state.test || crawl_state.script)
+    if (!ui::is_available() || crawl_state.test || crawl_state.script
+        || crawl_state.build_db)
+    {
         return false;
+    }
 
     // do the linebreak here so webtiles has it, but it's needed below as well
     linebreak_string(error_msg, 79);
