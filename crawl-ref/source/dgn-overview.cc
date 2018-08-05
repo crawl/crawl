@@ -479,7 +479,7 @@ static string _get_shops(bool display)
     // items from level). That makes a total of 17 characters per shop:
     //       1...5....0....5..
     // "D:8 *   Vaults:2 **([+   D:24 +";
-    const int maxcolumn = get_number_of_cols() - 17;
+    const int maxcolumn = 79 - 17;
     int column_count = 0;
 
     for (const auto &entry : shops_present)

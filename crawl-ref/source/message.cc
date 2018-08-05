@@ -1972,7 +1972,11 @@ string get_last_messages(int mcount, bool full)
         if (!msg)
             break;
         if (full || is_channel_dumpworthy(msg.channel))
-            text = msg.pure_text_with_repeats() + "\n" + text;
+        {
+            string line = msg.pure_text_with_repeats();
+            string wrapped = wordwrap_line(line, 79, false, true);
+            text = wrapped + "\n" + text;
+        }
         mcount--;
     }
 
