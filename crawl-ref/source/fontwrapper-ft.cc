@@ -9,6 +9,7 @@
 #include FT_FREETYPE_H
 
 #include "defines.h"
+#include "end.h"
 #include "errno.h"
 #include "files.h"
 #include "format.h"
@@ -181,28 +182,31 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
     // 1KB: fontconfig if we are not scared of hefty libraries
+
+    // TODO: probably don't want to end here, but try a fallback font in
+    // the calling function.
     string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
-        die_noline("Could not find font '%s'\n", font_name);
+        end(1, false, "Could not find font '%s'", font_name);
 
     // Certain versions of freetype have problems reading files on Windows,
     // do that ourselves.
     FILE *f = fopen_u(font_path.c_str(), "rb");
     if (!f)
-        die_noline("Could not read font '%s'\n", font_name);
+        end(1, false, "Could not read font '%s'\n", font_name);
     unsigned long size = file_size(f);
     ttf = new FT_Byte[size];
     ASSERT(ttf);
     if (fread(ttf, 1, size, f) != size)
-        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+        end(1, false, "Could not read font '%s': %s\n", font_name, strerror(errno));
     fclose(f);
 
     error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
-        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
+        end(1, false, "Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
     {
-        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+        end(1, false, "Invalid font from file '%s' (size %lu): 0x%0x\n",
                    font_path.c_str(), size, error);
     }
 

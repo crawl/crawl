@@ -610,4 +610,6 @@ i4 get_scissor();
 // because there's no way to query TilesFramework for the current screen size
 void resize(int w, int h);
 
+bool is_available();
+
 }

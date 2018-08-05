@@ -283,7 +283,7 @@ void TextDB::_regenerate_db()
     {
         string output_dir = get_parent_directory(db_path);
         if (!check_mkdir("DB directory", &output_dir))
-            end(1);
+            end(1, false, "Cannot create db directory '%s'.", output_dir.c_str());
     }
 
     file_lock lock(db_path + ".lk", "wb");

@@ -146,6 +146,7 @@ public:
 
     bool is_fullscreen() { return m_fullscreen; }
 
+    bool fonts_initialized();
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }

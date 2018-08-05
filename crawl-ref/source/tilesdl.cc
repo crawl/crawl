@@ -164,6 +164,10 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
+    m_crt_font(-1),
+    m_msg_font(-1),
+    m_tip_font(-1),
+    m_lbl_font(-1),
     m_mouse(-1, -1),
     m_last_tick_moved(0),
     m_last_tick_redraw(0)
@@ -172,6 +176,13 @@ TilesFramework::TilesFramework() :
 
 TilesFramework::~TilesFramework()
 {
+}
+
+bool TilesFramework::fonts_initialized()
+{
+    // TODO should in principle check the m_fonts vector as well
+    return !(m_crt_font == -1 || m_msg_font == -1
+                                    || m_tip_font == -1 || m_lbl_font == -1);
 }
 
 static void _init_consoles()
@@ -369,6 +380,9 @@ bool TilesFramework::initialise()
 
     GLStateManager::init();
 
+    // TODO: what is the minimal startup here needed so that an error dialog
+    // can be shown on not found files?
+
     m_image = new ImageManager();
 
     // If the window size is less than the view height, the textures will
@@ -391,11 +405,8 @@ bool TilesFramework::initialise()
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true);
 
-    if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
-        || m_tip_font == -1 || m_lbl_font == -1)
-    {
+    if (!fonts_initialized() || stat_font == -1)
         return false;
-    }
 
     if (tiles.is_using_small_layout())
         m_init = TileRegionInit(m_image, m_fonts[m_crt_font].font, TILE_X, TILE_Y);
@@ -489,7 +500,14 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     {
         delete font;
         if (default_on_fail)
+        {
+            // TODO: this never happens because load_font will die on a missing
+            // font file. This setup needs to be smoothed out, but also maybe
+            // MONOSPACE_FONT needs to be validated first.
+            mprf(MSGCH_ERROR, "Couldn't find font '%s', falling back on '%s'",
+                                            font_file, MONOSPACED_FONT);
             return load_font(MONOSPACED_FONT, 12, false);
+        }
         else
             return -1;
     }

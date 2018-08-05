@@ -584,7 +584,7 @@ static void _dump_options(FILE *file)
     fprintf(file, "\n\n");
 }
 
-// Defined in stuff.cc. Not a part of crawl_state, since that's a
+// Defined in end.cc. Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
 extern bool CrawlIsExiting;

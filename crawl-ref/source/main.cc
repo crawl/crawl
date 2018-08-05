@@ -306,6 +306,14 @@ int main(int argc, char *argv[])
     init_properties();
     init_item_name_cache();
 
+#ifdef USE_TILE
+    if (!tiles.initialise())
+        return -1;
+#endif
+
+    // make sure all the expected data directories exist
+    validate_basedirs();
+
     // Read the init file.
     read_init_file();
 
@@ -325,11 +333,6 @@ int main(int argc, char *argv[])
         // score listings.
         SysEnv.scorefile.clear();
     }
-
-#ifdef USE_TILE
-    if (!tiles.initialise())
-        return -1;
-#endif
 
     _launch_game_loop();
     if (crawl_state.last_game_exit.message.size())
