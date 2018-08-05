@@ -1230,6 +1230,8 @@ void ShopMenu::purchase_selected()
 
     if (outside_items)
     {
+        update_help();
+        const formatted_string next_more = more;
         more = formatted_string::parse_string(make_stringf(
             "<%s>I'll put %s outside for you.</%s>\n",
             col.c_str(),
@@ -1237,7 +1239,8 @@ void ShopMenu::purchase_selected()
       (int) bought_indices.size() == outside_items ? "them"
                                                    : "some of them",
             col.c_str()));
-        more += old_more;
+        more += next_more;
+        update_more();
     }
     else
         update_help();
