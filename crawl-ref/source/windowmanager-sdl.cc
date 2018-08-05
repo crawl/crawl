@@ -1010,7 +1010,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     }
 
     unsigned int bpp = img->format->BytesPerPixel;
-    glmanager->pixelstore_unpack_alignment(bpp);
+    glmanager->pixelstore_unpack_alignment(1);
 
     // Determine texture format
     unsigned char *pixels = (unsigned char*)img->pixels;
