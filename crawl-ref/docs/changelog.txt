@@ -99,6 +99,21 @@ Spells
 * Passwall now has better range scaling, a lower max spellpower and a targeter
   to show its range.
 
+Stone Soup 0.21.2 (20180805)
+----------------------------
+
+Bugfix Release
+--------------
+
+* Shock serpent retaliation now properly checks rElec.
+* No more errors on autofight commands when using ranged weapons or polearms.
+* Fix a bug that led to Ru sacrifices not consistently giving promised piety.
+* Fix many cases of "mid cache bogosity" errors involving Beogh followers.
+* Training xl estimates in item descriptions are now more accurate.
+* Compilation under Msys2 is now *really* fixed.
+* Autotravel will no longer try to take shortcuts through hell.
+* 70 other bugfixes and cleanups.
+
 Stone Soup 0.21.1 (20180201)
 ----------------------------
 
