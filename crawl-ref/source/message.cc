@@ -1360,8 +1360,12 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         die_noline("%s", text.c_str());
 #endif
 
-    if (!crawl_state.io_inited && channel == MSGCH_ERROR)
+    if (channel == MSGCH_ERROR &&
+        (!crawl_state.io_inited || crawl_state.test || crawl_state.script
+         || crawl_state.build_db))
+    {
         fprintf(stderr, "%s\n", text.c_str());
+    }
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
