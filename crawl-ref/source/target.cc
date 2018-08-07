@@ -571,19 +571,33 @@ bool targeter_dig::valid_aim(coord_def a)
         return notify_fail("Please select a direction to dig.");
     if ((origin - a).rdist() > range || !in_bounds(a))
         return notify_fail("Out of range.");
-    // TODO: calling set_aim here is really inefficient
-    if (!set_aim(a))
-        return false;
-    int possible_squares_affected = 0;
-    for (auto p : path_taken)
-        if (beam.can_affect_wall(p) ||
-                in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
+    int possible_squares_affected;
+    if (aim_test_cache.count(a))
+        possible_squares_affected = aim_test_cache[a];
+    else
+    {
+        // TODO: maybe shouldn't use set_aim? ugly side-effect, but it does take
+        // care of all the beam management.
+        if (!set_aim(a))
+            possible_squares_affected = -1; // can't happen?
+        else
         {
-            possible_squares_affected++;
+            possible_squares_affected = 0;
+            for (auto p : path_taken)
+                if (beam.can_affect_wall(p) ||
+                        in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
+                {
+                    possible_squares_affected++;
+                }
         }
+        aim_test_cache[a] = possible_squares_affected;
+    }
     if (possible_squares_affected == 0)
         return notify_fail("Digging in that direction won't affect any walls.");
-    return true;
+    else if (possible_squares_affected < 0)
+        return false;
+    else
+        return true;
 }
 
 bool targeter_dig::can_affect_unseen()

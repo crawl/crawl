@@ -321,4 +321,6 @@ public:
     bool can_affect_unseen() override;
     bool can_affect_walls() override;
     bool affects_monster(const monster_info& mon) override;
+private:
+    map<coord_def, int> aim_test_cache;
 };
