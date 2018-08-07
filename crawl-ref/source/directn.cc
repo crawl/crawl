@@ -2049,7 +2049,7 @@ bool direction_chooser::choose_direction()
     need_text_redraw = false;
 
 #ifndef USE_TILE_LOCAL
-    redraw_screen();
+    redraw_console_sidebar();
 #endif
 
     do_redraws();
