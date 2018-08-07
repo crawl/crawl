@@ -276,7 +276,9 @@ enum MenuFlag
 };
 
 class UIMenu;
+class UIMenuPopup;
 class UIShowHide;
+class UIMenuMore;
 
 ///////////////////////////////////////////////////////////////////////
 // NOTE
@@ -289,6 +291,7 @@ class UIShowHide;
 class Menu
 {
     friend class UIMenu;
+    friend class UIMenuPopup;
 public:
     Menu(int flags = MF_MULTISELECT, const string& tagname = "", KeymapContext kmc = KMC_MENU);
 
@@ -392,7 +395,7 @@ protected:
         shared_ptr<UIMenu> menu;
         shared_ptr<ui::Scroller> scroller;
         shared_ptr<ui::Text> title;
-        shared_ptr<ui::Text> more;
+        shared_ptr<UIMenuMore> more;
         shared_ptr<UIShowHide> more_bin;
         shared_ptr<ui::Box> vbox;
     } m_ui;
