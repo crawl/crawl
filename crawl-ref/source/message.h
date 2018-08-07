@@ -102,7 +102,6 @@ private:
 };
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined
-void webtiles_send_last_messages(int n = 20); // does nothing unless USE_TILE_WEB is defined
 
 void save_messages(writer& outf);
 void load_messages(reader& inf);
