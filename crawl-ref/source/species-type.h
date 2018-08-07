@@ -5,9 +5,7 @@ enum species_type
     SP_HUMAN,
 #if TAG_MAJOR_VERSION == 34
     SP_HIGH_ELF,
-#endif
     SP_DEEP_ELF,
-#if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
     SP_HALFLING,
 #endif
@@ -38,7 +36,9 @@ enum species_type
     SP_MINOTAUR,
     SP_DEMONSPAWN,
     SP_GHOUL,
+#if TAG_MAJOR_VERSION == 34
     SP_TENGU,
+#endif
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,
@@ -57,6 +57,7 @@ enum species_type
     SP_DUSK_WALKER,
     SP_SAND_DWARF,
     SP_ONI,
+    SP_CLOUD_ELF,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

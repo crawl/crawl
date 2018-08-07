@@ -576,8 +576,9 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
 #if TAG_MAJOR_VERSION == 34
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
-#endif
     case SP_DEEP_ELF:
+#endif
+    case SP_CLOUD_ELF:
         return TILEP_BASE_DEEP_ELF;
 #if TAG_MAJOR_VERSION == 34
     case SP_HALFLING:
@@ -620,8 +621,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DEMONSPAWN;
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
+#if TAG_MAJOR_VERSION == 34
     case SP_TENGU:
         return TILEP_BASE_TENGU;
+#endif
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
     case SP_VAMPIRE:
@@ -689,8 +692,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_SLUDGE_ELF:
             hair = TILEP_HAIR_ELF_YELLOW;
             break;
-#endif
         case SP_DEEP_ELF:
+#endif
+        case SP_CLOUD_ELF:
             hair = TILEP_HAIR_ELF_WHITE;
             break;
         case SP_TROLL:

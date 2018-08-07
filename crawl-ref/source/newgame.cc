@@ -175,7 +175,7 @@ void choose_tutorial_character(newgame_def& ng_choice)
 static const species_type species_order[] =
 {
     // comparatively human-like looks
-    SP_HUMAN,          SP_DEEP_ELF,
+    SP_HUMAN,          SP_CLOUD_ELF,
     SP_DEEP_DWARF,     SP_HILL_ORC,
     SP_DUSK_WALKER,
     // small species
@@ -186,7 +186,7 @@ static const species_type species_order[] =
     // significantly different body type from human ("monstrous")
     SP_NAGA,           SP_CENTAUR,
     SP_MERFOLK,        SP_MINOTAUR,
-    SP_TENGU,          SP_BASE_DRACONIAN,
+    SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
     SP_BARACHI,        SP_GNOLL,
     // mostly human shape but made of a strange substance
@@ -1060,8 +1060,7 @@ static species_group species_groups[] =
             SP_CENTAUR,
             SP_SAND_DWARF,
             SP_SPRIGGAN,
-            SP_TENGU,
-            SP_DEEP_ELF,
+            SP_CLOUD_ELF,
             SP_OGRE,
             SP_DEEP_DWARF,
             SP_DUSK_WALKER,

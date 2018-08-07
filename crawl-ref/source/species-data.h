@@ -101,15 +101,14 @@ static const map<species_type, species_def> species_data =
     0, -2, 2, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    6, 13, 8, // 28
+    6, 13, 8, // 27
     { STAT_INT }, 4,
+    { { MUT_TENGU_FLIGHT, 2, 9 } },  // this is still called tengu flight
+    { },                             // for legacy reasons
     { },
-    { },
-    { },
-    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
-      JOB_WANDERER },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+    { JOB_BERSERKER, JOB_SKALD, JOB_ARCANE_MARKSMAN, JOB_WIZARD, JOB_SUMMONER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 
@@ -149,24 +148,6 @@ static const map<species_type, species_def> species_data =
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_NECROMANCER,
       JOB_EARTH_ELEMENTALIST },
     { SK_MACES_FLAILS, SK_AXES, SK_LONG_BLADES, SK_CROSSBOWS, SK_SLINGS },
-} },
-
-{ SP_DEEP_ELF, {
-    "DE",
-    "Deep Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    -1, -2, 2, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    5, 12, 10, // 27
-    { STAT_INT }, 4,
-    {},
-    {},
-    {},
-    { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
-      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
-      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
-    { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_DEMIGOD, {
@@ -644,25 +625,6 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_SLINGS },
 } },
 
-{ SP_TENGU, {
-    "Te",
-    "Tengu", nullptr, nullptr,
-    SPF_NO_HAIR,
-    0, -2, 1, 3,
-    MONS_TENGU,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 9, // 25
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 },
-      { MUT_TENGU_FLIGHT, 1, 5 }, { MUT_TENGU_FLIGHT, 1, 14 }, },
-    {},
-    {},
-    { JOB_BERSERKER, JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER,
-      JOB_FIRE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS },
-} },
-
 { SP_TROLL, {
     "Tr",
     "Troll", "Trollish", nullptr,
@@ -838,6 +800,44 @@ static const map<species_type, species_def> species_data =
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
 } },
+
+{ SP_DEEP_ELF, {
+    "DE",
+    "Deep Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -2, 2, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    5, 12, 10, // 27
+    { STAT_INT }, 4,
+    {},
+    {},
+    {},
+    { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
+      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
+} },
+
+{ SP_TENGU, {
+    "Te",
+    "Tengu", nullptr, nullptr,
+    SPF_NO_HAIR,
+    0, -2, 1, 3,
+    MONS_TENGU,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    8, 8, 9, // 25
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 },
+      { MUT_TENGU_FLIGHT, 1, 5 }, /* { MUT_TENGU_FLIGHT, 1, 14 }, */ },
+    {},
+    {},
+    { JOB_BERSERKER, JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER,
+      JOB_FIRE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS },
+} },
+
 #endif
 // Ideally this wouldn't be necessary...
 { SP_UNKNOWN, { // Line 1: enum

@@ -250,12 +250,12 @@ static species_type _get_hints_species(unsigned int type)
     case HINT_BERSERK_CHAR:
         return SP_MINOTAUR;
     case HINT_MAGIC_CHAR:
-        return SP_DEEP_ELF;
+        return SP_FAIRY;
     case HINT_RANGER_CHAR:
         return SP_CENTAUR;
     default:
         // Use something fancy for debugging.
-        return SP_TENGU;
+        return SP_CLOUD_ELF;
     }
 }
 
