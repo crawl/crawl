@@ -66,6 +66,7 @@ using namespace ui;
 
 class UIMenu : public Widget
 {
+    friend class UIMenuPopup;
 public:
     UIMenu(Menu *menu) : m_menu(menu)
 
@@ -88,6 +89,12 @@ public:
     virtual void _allocate_region() override;
 #ifdef USE_TILE_LOCAL
     virtual bool on_event(const wm_event& event) override;
+    int get_num_columns() const { return m_num_columns; };
+    void set_num_columns(int n) {
+        m_num_columns = n;
+        _invalidate_sizereq();
+        _queue_allocation();
+    };
 #endif
 
     void update_item(int index);
@@ -448,6 +455,20 @@ public:
     };
 };
 
+class UIMenuMore : public Text
+{
+public:
+    virtual ~UIMenuMore() {};
+    void set_text_immediately(const formatted_string &fs)
+    {
+        m_text.clear();
+        m_text += fs;
+        _expose();
+        m_wrapped_size = { -1, -1 };
+        wrap_text_to_size(m_region[2], m_region[3]);
+    };
+};
+
 class UIShowHide : public Bin
 {
 public:
@@ -479,35 +500,47 @@ protected:
     bool m_visible = false;
 };
 
-void UIMenu::_allocate_region()
+class UIMenuPopup : public ui::Popup
 {
+public:
+    UIMenuPopup(shared_ptr<Widget> child, Menu *menu) : ui::Popup(child), m_menu(menu) {};
+    virtual ~UIMenuPopup() {};
+
+    virtual void _allocate_region() override;
+
+private:
+    Menu *m_menu;
+};
+
+void UIMenuPopup::_allocate_region()
+{
+    Popup::_allocate_region();
+
     int max_height = m_menu->m_ui.popup->get_max_child_size()[1];
     max_height -= m_menu->m_ui.title->get_region()[3];
     max_height -= m_menu->m_ui.title->margin[2];
     int viewport_height = m_menu->m_ui.scroller->get_region()[3];
 
-#ifdef USE_TILE_LOCAL
-    do_layout(m_region[2], 1);
-#else
-    m_height = m_menu->items.size();
-#endif
+    int menu_height = m_menu->m_ui.menu->get_region()[3];
 
 #ifdef USE_TILE_LOCAL
-    int more_height = m_menu->m_ui.more_bin->_get_preferred_size(Widget::VERT,
-            m_region[2]).nat;
+    int menu_w = m_menu->m_ui.menu->get_region()[2];
+    m_menu->m_ui.menu->do_layout(menu_w, 1);
+    int m_height = m_menu->m_ui.menu->m_height;
+
+    int more_height = m_menu->m_ui.more_bin->get_region()[3];
     // switch number of columns
-    if (m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS))
+    int num_cols = m_menu->m_ui.menu->get_num_columns();
+    if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS))
     {
-        if ((m_num_columns == 1 && m_height+more_height > max_height)
-         || (m_num_columns == 2 && m_height+more_height <= max_height))
+        if ((num_cols == 1 && m_height+more_height > max_height)
+         || (num_cols == 2 && m_height+more_height <= max_height))
         {
-            m_num_columns = 3 - m_num_columns;
-            _invalidate_sizereq();
-            _queue_allocation();
+            m_menu->m_ui.menu->set_num_columns(3 - num_cols);
             throw RestartAllocation();
         }
     }
-    do_layout(m_region[2], m_num_columns);
+    m_menu->m_ui.menu->do_layout(menu_w, num_cols);
 #endif
 
 #ifndef USE_TILE_LOCAL
@@ -517,46 +550,51 @@ void UIMenu::_allocate_region()
     if (can_toggle_more)
     {
         bool more_visible = m_menu->m_ui.more_bin->get_visible();
-        if (more_visible ? m_height <= max_height : m_height > max_height)
+        if (more_visible ? menu_height <= max_height : menu_height > max_height)
         {
             m_menu->m_ui.more_bin->set_visible(!more_visible);
             _invalidate_sizereq();
-            _queue_allocation();
+            m_menu->m_ui.more_bin->_queue_allocation();
             throw RestartAllocation();
         }
     }
 
     if (m_menu->m_keyhelp_more && m_menu->m_ui.more_bin->get_visible())
     {
-        ASSERT(m_height > viewport_height);
-
         int scroll = m_menu->m_ui.scroller->get_scroll();
-        int scroll_percent = scroll*100/(m_height-viewport_height);
+        int scroll_percent = scroll*100/(menu_height-viewport_height);
         string perc = scroll <= 0 ? "top"
             : scroll_percent >= 100 ? "bot"
             : make_stringf("%2d%%", scroll_percent);
 
         string scroll_more = m_menu->more.to_colour_string();
         scroll_more = replace_all(scroll_more, "XXX", perc);
-        m_menu->m_ui.more->set_text(formatted_string::parse_string(scroll_more));
+        m_menu->m_ui.more->set_text_immediately(formatted_string::parse_string(scroll_more));
     }
 #endif
 
     // adjust maximum height
 #ifdef USE_TILE_LOCAL
-    const int max_viewport_height = get_max_viewport_height();
+    const int max_viewport_height = m_menu->m_ui.menu->get_max_viewport_height();
 #else
     const int max_viewport_height = 52;
 #endif
     m_menu->m_ui.scroller->max_size() = { INT_MAX, max_viewport_height };
     if (max_viewport_height < viewport_height)
     {
-        _invalidate_sizereq();
-        _queue_allocation();
+        m_menu->m_ui.scroller->_invalidate_sizereq();
+        m_menu->m_ui.scroller->_queue_allocation();
         throw RestartAllocation();
     }
+}
 
-#ifdef USE_TILE_LOCAL
+void UIMenu::_allocate_region()
+{
+#ifndef USE_TILE_LOCAL
+    // XXX: is this needed?
+    m_height = m_menu->items.size();
+#else
+    do_layout(m_region[2], m_num_columns);
     update_hovered_entry();
     pack_buffers();
 #endif
@@ -608,6 +646,7 @@ bool UIMenu::on_event(const wm_event& event)
 
     if (event.type == WME_MOUSEENTER)
     {
+        do_layout(m_region[2], m_num_columns);
         update_hovered_entry();
         pack_buffers();
         _expose();
@@ -621,6 +660,7 @@ bool UIMenu::on_event(const wm_event& event)
         m_mouse_y = -1;
         m_mouse_pressed = false;
         m_mouse_idx = -1;
+        do_layout(m_region[2], m_num_columns);
         pack_buffers();
         _expose();
         return false;
@@ -628,6 +668,7 @@ bool UIMenu::on_event(const wm_event& event)
 
     if (event.type == WME_MOUSEMOTION)
     {
+        do_layout(m_region[2], m_num_columns);
         update_hovered_entry();
         pack_buffers();
         _expose();
@@ -785,7 +826,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.menu = make_shared<UIMenu>(this);
     m_ui.scroller = make_shared<UIMenuScroller>();
     m_ui.title = make_shared<Text>();
-    m_ui.more = make_shared<Text>();
+    m_ui.more = make_shared<UIMenuMore>();
     m_ui.more_bin = make_shared<UIShowHide>();
     m_ui.vbox = make_shared<Box>(Widget::VERT);
     m_ui.vbox->align_items = Widget::STRETCH;
@@ -952,7 +993,7 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 void Menu::do_menu()
 {
     bool done = false;
-    m_ui.popup = make_shared<ui::Popup>(m_ui.vbox);
+    m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
     m_ui.menu->on(Widget::slots.event, [this, &done](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
