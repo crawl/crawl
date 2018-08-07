@@ -94,9 +94,9 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_CLOUD_ELF, {
-    "Cl",
-    "Cloud Elf", "Elven", "Elf",
+{ SP_AVARIEL, {
+    "Av",
+    "Avariel", "Elven", "Elf",
     SPF_NONE,
     0, -2, 2, 4,
     MONS_ELF,

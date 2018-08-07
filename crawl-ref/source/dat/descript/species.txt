@@ -1,4 +1,9 @@
 %%%%
+Avariel
+
+Avariel are winged elves that learn to fly swiftly as they develop. They are
+frail but love to fight, mostly with spells, but also with weapons.
+%%%%
 Barachi
 
 Barachim are amphibious humanoids who rebelled against the gods. They're fast

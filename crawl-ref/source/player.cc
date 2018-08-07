@@ -5008,7 +5008,7 @@ void float_player()
     else
         mpr("You fly up into the air.");
 
-    if (you.species == SP_CLOUD_ELF || you.species == SP_FAIRY)
+    if (you.species == SP_AVARIEL || you.species == SP_FAIRY)
         you.redraw_evasion = true;
 }
 
@@ -5068,7 +5068,7 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.species == SP_CLOUD_ELF || you.species == SP_FAIRY)
+    if (you.species == SP_AVARIEL || you.species == SP_FAIRY)
         you.redraw_evasion = true;
 
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -6592,7 +6592,7 @@ bool player::tengu_flight() const
 #if TAG_MAJOR_VERSION == 34
         species == SP_TENGU ||
 #endif
-        species == SP_CLOUD_ELF) && airborne();
+        species == SP_AVARIEL) && airborne();
 }
 
 bool player::fairy_flight() const

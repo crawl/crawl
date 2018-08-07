@@ -255,7 +255,7 @@ static species_type _get_hints_species(unsigned int type)
         return SP_CENTAUR;
     default:
         // Use something fancy for debugging.
-        return SP_CLOUD_ELF;
+        return SP_AVARIEL;
     }
 }
 
