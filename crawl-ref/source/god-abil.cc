@@ -5305,6 +5305,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain += 20; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
+            break;
         case ABIL_RU_SACRIFICE_ESSENCE:
             if (mut == MUT_LOW_MAGIC)
             {
