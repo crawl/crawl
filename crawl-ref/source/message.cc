@@ -908,10 +908,6 @@ bool _more = false, _last_more = false;
 
 void webtiles_send_messages()
 {
-    webtiles_send_last_messages(0);
-}
-void webtiles_send_last_messages(int n)
-{
     // defer sending any messages to client in this form until a game is
     // started up. It's still possible to send them as a popup. When this is
     // eventually called, it'll send any queued messages.
@@ -931,7 +927,6 @@ void webtiles_send_last_messages(int n)
 }
 #else
 void webtiles_send_messages() { }
-void webtiles_send_last_messages(int n) { }
 #endif
 
 static FILE* _msg_dump_file = nullptr;

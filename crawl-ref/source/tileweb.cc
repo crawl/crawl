@@ -70,6 +70,7 @@ TilesFramework tiles;
 
 TilesFramework::TilesFramework() :
       m_controlled_from_web(false),
+      _send_lock(false),
       m_last_ui_state(UI_INIT),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
@@ -264,6 +265,10 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
+    if (_send_lock)
+        return;
+    unwind_bool no_rentry(_send_lock, true);
+
     if (m_need_flush)
     {
         send_message("*{\"msg\":\"flush_messages\"}");
@@ -1447,6 +1452,12 @@ void TilesFramework::_mcache_ref(bool inc)
 
 void TilesFramework::_send_map(bool force_full)
 {
+    // TODO: prevent in some other / better way?
+    if (_send_lock)
+        return;
+
+    unwind_bool no_rentry(_send_lock, true);
+
     map<uint32_t, coord_def> new_monster_locs;
 
     force_full = force_full || m_need_full_map;
@@ -1693,6 +1704,15 @@ void TilesFramework::resize()
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
+void TilesFramework::_send_messages()
+{
+    if (_send_lock)
+        return;
+    unwind_bool no_rentry(_send_lock, true);
+
+    webtiles_send_messages();
+}
+
 /*
   Send everything a newly joined spectator needs
  */
@@ -1753,7 +1773,7 @@ void TilesFramework::_send_everything()
     json_close_object();
     finish_message();
 
-    webtiles_send_last_messages();
+    _send_messages();
 
     update_input_mode(mouse_control::current_mode());
 
@@ -1817,7 +1837,7 @@ void TilesFramework::redraw()
     m_text_menu.send();
 
     _send_player();
-    webtiles_send_messages();
+    _send_messages();
 
     if (m_need_redraw && m_view_loaded)
     {

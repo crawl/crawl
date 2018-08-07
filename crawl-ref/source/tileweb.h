@@ -217,6 +217,8 @@ protected:
     bool m_controlled_from_web;
     bool m_need_flush;
 
+    bool _send_lock; // not thread safe
+
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, string data);
     wint_t _receive_control_message();
@@ -318,6 +320,7 @@ protected:
     void _send_player(bool force_full = false);
     void _send_item(item_info& current, const item_info& next,
                     bool force_full);
+    void _send_messages();
 };
 
 // Main interface for tiles functions
