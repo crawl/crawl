@@ -954,7 +954,7 @@ static bool _id_floor_item(item_def &item)
         if (item_needs_autopickup(item))
             item.props["needs_autopickup"] = true;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        if (runes)
+        if (item.base_type != OBJ_BOOKS)
             mpr("You use a rune to identify the item.");
         return true;
     }
