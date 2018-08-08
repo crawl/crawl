@@ -19,24 +19,21 @@
  */
 static const map<species_type, species_def> species_data =
 {
-
-{ SP_ONI, {
-    "On",
-    "Oni", nullptr, nullptr,
+{ SP_AVARIEL, {
+    "Av",
+    "Avariel", "Elven", "Elf",
     SPF_NONE,
-    0, 1, 2, 3,
-    MONS_ONI,
+    0, -2, 2, 4,
+    MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 9, 6, // 26
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_HORNS, 1, 1 }, { MUT_CLAWS, 1, 1 }, { MUT_FANGS, 1, 1 } },
-    { "You learn spells by gaining experience, not through books or religion.",
-      "You only train spellcasting to practice magic." },
-    { "oni magic" },
-    { JOB_SKALD, JOB_WARPER, JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, 
-      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_UNARMED_COMBAT },
+    6, 13, 8, // 27
+    { STAT_INT }, 4,
+    { { MUT_TENGU_FLIGHT, 2, 9 } },  // this is still called tengu flight
+    { },                             // for legacy reasons
+    { },
+    { JOB_BERSERKER, JOB_SKALD, JOB_ARCANE_MARKSMAN, JOB_WIZARD, JOB_SUMMONER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_BARACHI, {
@@ -55,62 +52,6 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
-
-{ SP_FAIRY, {
-    "Fr",
-    "Fairy", nullptr, nullptr,
-    SPF_NO_HAIR,
-    0, -1, 2, 4,
-    MONS_ACID_DRAGON,
-    HT_LAND, US_ALIVE, SIZE_SMALL,
-    6, 11, 7, // 24
-    { STAT_INT, STAT_DEX }, 4,
-    { { MUT_FAIRY_FLIGHT, 1, 1 }, },
-    { "Your spells do not cause hunger and MP costs are reduced by 1.",
-      "Your bright wings attract enemies. (Stealth-)",
-      "You cannot fit into any form of body armour." },
-    { "magic attunement", "unstealthy", "unfitting armour" },
-    { JOB_AIR_ELEMENTALIST, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-      JOB_CONJURER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE, JOB_WIZARD,
-      JOB_NECROMANCER },
-    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_SLINGS },
-} },
-
-{ SP_GNOLL, {
-    "Gn",
-    "Gnoll", nullptr, nullptr,
-    SPF_NONE,
-    0, 0, 0, 3,
-    MONS_GNOLL,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 10, 10, // 30
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, },
-    { "Your experience applies equally to all skills."},
-    { "distributed training", },
-    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
-      JOB_WANDERER },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
-} },
-
-{ SP_AVARIEL, {
-    "Av",
-    "Avariel", "Elven", "Elf",
-    SPF_NONE,
-    0, -2, 2, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    6, 13, 8, // 27
-    { STAT_INT }, 4,
-    { { MUT_TENGU_FLIGHT, 2, 9 } },  // this is still called tengu flight
-    { },                             // for legacy reasons
-    { },
-    { JOB_BERSERKER, JOB_SKALD, JOB_ARCANE_MARKSMAN, JOB_WIZARD, JOB_SUMMONER,
-      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
-} },
-
 
 { SP_CENTAUR, {
     "Ce",
@@ -356,6 +297,25 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_DUSK_WALKER, {
+    "DW",
+    "Dusk Walker", nullptr, nullptr,
+    SPF_NONE,
+    -1, -1, 0, 6,
+    MONS_SHADOW,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    12, 8, 8, // 28
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    {{ MUT_NIGHTSTALKER, 1, 4}, { MUT_FANGS, 2, 1 },
+    { MUT_FANGS, 1, 8 }, { MUT_NIGHTSTALKER, 1, 12}, { MUT_NIGHTSTALKER, 1, 20}},
+    {"Your attacks drain your enemies",
+    "You move stealthily even while encumbered by armour"},
+    {"draining touch" , "unencumbered stealth"},
+    { JOB_VENOM_MAGE, JOB_GLADIATOR, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_ASSASSIN, JOB_EARTH_ELEMENTALIST },
+    { SK_STAVES, SK_SHORT_BLADES},
+} },
+
 { SP_FELID, {
     "Fe",
     "Felid", "Feline", "Cat",
@@ -398,24 +358,24 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_GARGOYLE, {
-    "Gr",
-    "Gargoyle", nullptr, nullptr,
+{ SP_FAIRY, {
+    "Fr",
+    "Fairy", nullptr, nullptr,
     SPF_NO_HAIR,
-    0, -2, 0, 3,
-    MONS_GARGOYLE,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 8, 5, // 24
-    { STAT_STR, STAT_INT }, 4,
-    { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
-      { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
-      { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
-    { "You are resistant to torment." },
-    {},
-    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
-      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
-      JOB_VENOM_MAGE },
-    { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
+    0, -1, 2, 4,
+    MONS_ACID_DRAGON,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    6, 11, 7, // 24
+    { STAT_INT, STAT_DEX }, 4,
+    { { MUT_FAIRY_FLIGHT, 1, 1 }, },
+    { "Your spells do not cause hunger and MP costs are reduced by 1.",
+      "Your bright wings attract enemies. (Stealth-)",
+      "You cannot fit into any form of body armour." },
+    { "magic attunement", "unstealthy", "unfitting armour" },
+    { JOB_AIR_ELEMENTALIST, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+      JOB_CONJURER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE, JOB_WIZARD,
+      JOB_NECROMANCER },
+    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_SLINGS },
 } },
 
 { SP_GHOUL, {
@@ -437,6 +397,44 @@ static const map<species_type, species_def> species_data =
     { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
       JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
     { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+{ SP_GNOLL, {
+    "Gn",
+    "Gnoll", nullptr, nullptr,
+    SPF_NONE,
+    0, 0, 0, 3,
+    MONS_GNOLL,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    10, 10, 10, // 30
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, },
+    { "Your experience applies equally to all skills."},
+    { "distributed training", },
+    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
+      JOB_WANDERER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+{ SP_GARGOYLE, {
+    "Gr",
+    "Gargoyle", nullptr, nullptr,
+    SPF_NO_HAIR,
+    0, -2, 0, 3,
+    MONS_GARGOYLE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    11, 8, 5, // 24
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
+      { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
+    { "You are resistant to torment." },
+    {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_HILL_ORC, {
@@ -587,6 +585,25 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_AXES },
 } },
 
+{ SP_ONI, {
+    "On",
+    "Oni", nullptr, nullptr,
+    SPF_NONE,
+    0, 1, 2, 3,
+    MONS_ONI,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    11, 9, 6, // 26
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_HORNS, 1, 1 }, { MUT_CLAWS, 1, 1 }, { MUT_FANGS, 1, 1 } },
+    { "You learn spells by gaining experience, not through books or religion.",
+      "You only train spellcasting to practice magic." },
+    { "oni magic" },
+    { JOB_SKALD, JOB_WARPER, JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_UNARMED_COMBAT },
+} },
+
 { SP_OCTOPODE, {
     "Op",
     "Octopode", "Octopoid", "Octopus",
@@ -605,6 +622,23 @@ static const map<species_type, species_def> species_data =
       JOB_VENOM_MAGE },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+{ SP_SAND_DWARF, {
+    "SD",
+    "Sand Dwarf", "Dwarven", nullptr,
+    SPF_NONE,
+    0, 1, 0, 5,
+    MONS_DWARF,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
+    12, 8, 6, // 26
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_SLOW, 1, 1 }, { MUT_NO_ARMOUR_CAST_PENALTY, 1, 1} },
+    {},
+    {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_BERSERKER,
+      JOB_SKALD, JOB_WIZARD, JOB_EARTH_ELEMENTALIST, JOB_ARTIFICER },
+    { SK_MACES_FLAILS, SK_AXES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_SPRIGGAN, {
@@ -642,42 +676,6 @@ static const map<species_type, species_def> species_data =
     { JOB_FIGHTER, JOB_MONK, JOB_HUNTER, JOB_BERSERKER, JOB_WARPER,
       JOB_EARTH_ELEMENTALIST, JOB_WIZARD },
     { SK_UNARMED_COMBAT, SK_MACES_FLAILS },
-} },
-
-{ SP_DUSK_WALKER, {
-    "DW",
-    "Dusk Walker", nullptr, nullptr,
-    SPF_NONE,
-    -1, -1, 0, 6,
-    MONS_SHADOW,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    12, 8, 8, // 28
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    {{ MUT_NIGHTSTALKER, 1, 4}, { MUT_FANGS, 2, 1 },
-    { MUT_FANGS, 1, 8 }, { MUT_NIGHTSTALKER, 1, 12}, { MUT_NIGHTSTALKER, 1, 20}},
-    {"Your attacks drain your enemies",
-    "You move stealthily even while encumbered by armour"},
-    {"draining touch" , "unencumbered stealth"},
-    { JOB_VENOM_MAGE, JOB_GLADIATOR, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
-      JOB_ASSASSIN, JOB_EARTH_ELEMENTALIST },
-    { SK_STAVES, SK_SHORT_BLADES},
-} },
-
-{ SP_SAND_DWARF, {
-    "SD",
-    "Sand Dwarf", "Dwarven", nullptr,
-    SPF_NONE,
-    0, 1, 0, 5,
-    MONS_DWARF,
-    HT_LAND, US_ALIVE, SIZE_SMALL,
-    12, 8, 6, // 26
-    { STAT_STR, STAT_INT }, 4,
-    { { MUT_SLOW, 1, 1 }, { MUT_NO_ARMOUR_CAST_PENALTY, 1, 1} },
-    {},
-    {},
-    { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_BERSERKER,
-      JOB_SKALD, JOB_WIZARD, JOB_EARTH_ELEMENTALIST, JOB_ARTIFICER },
-    { SK_MACES_FLAILS, SK_AXES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_VAMPIRE, {
