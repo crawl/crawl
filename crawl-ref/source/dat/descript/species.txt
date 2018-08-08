@@ -1,8 +1,8 @@
 %%%%
 Avariel
 
-Avariel are winged elves that learn to fly swiftly as they develop. They are
-frail but love to fight, mostly with spells, but also with weapons.
+Avariel are winged elves that learn to fly swiftly as they age. They are frail
+but love to fight, mostly with spells, but also with weapons.
 %%%%
 Barachi
 

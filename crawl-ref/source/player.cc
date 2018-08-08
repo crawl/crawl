@@ -5008,8 +5008,14 @@ void float_player()
     else
         mpr("You fly up into the air.");
 
-    if (you.species == SP_AVARIEL || you.species == SP_FAIRY)
+    if (you.species == SP_AVARIEL
+#if TAG_MAJOR_VERSION == 34
+        || you.species == SP_TENGU
+#endif
+        || you.species == SP_FAIRY)
+    {
         you.redraw_evasion = true;
+    }
 }
 
 // Fairies start the game flying.
@@ -5068,8 +5074,14 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.species == SP_AVARIEL || you.species == SP_FAIRY)
+    if (you.species == SP_AVARIEL
+#if TAG_MAJOR_VERSION == 34
+        || you.species == SP_TENGU
+#endif
+        || you.species == SP_FAIRY)
+    {
         you.redraw_evasion = true;
+    }
 
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
