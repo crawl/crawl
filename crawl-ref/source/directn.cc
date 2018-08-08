@@ -2048,10 +2048,6 @@ bool direction_chooser::choose_direction()
     show_initial_prompt();
     need_text_redraw = false;
 
-#ifndef USE_TILE_LOCAL
-    redraw_console_sidebar();
-#endif
-
     do_redraws();
 
     while (!do_main_loop())
