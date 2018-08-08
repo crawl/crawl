@@ -733,8 +733,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mon)
         return nullptr;
 
-    if (mg.props.exists("map"))
-        mon->set_originating_map(mg.props["map"].get_string());
+    if (mg.props.exists(MAP_KEY))
+        mon->set_originating_map(mg.props[MAP_KEY].get_string());
 
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR
