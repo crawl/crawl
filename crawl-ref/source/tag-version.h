@@ -222,6 +222,7 @@ enum tag_minor_version
     TAG_MINOR_NO_ACTOR_HELD,       // Remove actor.held.
     TAG_MINOR_GOLDIFY_BOOKS,       // Spellbooks disintegrate when picked up, like gold/runes/orbs
     TAG_MINOR_VETO_DISINT,         // Replace veto_disintegrate map markers
+    TAG_MINOR_LEVEL_XP_VAULTS,     // XP tracking now tracks vaults, not spawns.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

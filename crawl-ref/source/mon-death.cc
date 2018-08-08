@@ -362,15 +362,15 @@ static void _give_player_experience(int experience, killer_type killer,
     LevelXPInfo& curr_xp_info = you.get_level_xp_info();
     LevelXPInfo xp_delta;
 
-    if (xp_tracking == XP_SPAWNED)
+    if (xp_tracking == XP_NON_VAULT)
     {
-        xp_delta.spawn_xp += exp_gain;
-        xp_delta.spawn_count++;
+        xp_delta.non_vault_xp += exp_gain;
+        xp_delta.non_vault_count++;
     }
-    else if (xp_tracking == XP_GENERATED)
+    else if (xp_tracking == XP_VAULT)
     {
-        xp_delta.generated_xp += exp_gain;
-        xp_delta.generated_count++;
+        xp_delta.vault_xp += exp_gain;
+        xp_delta.vault_count++;
     }
 
     you.global_xp_info += xp_delta;

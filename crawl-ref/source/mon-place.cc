@@ -334,7 +334,6 @@ void spawn_random_monsters()
     }
 
     mgen_data mg(WANDERING_MONSTER);
-    mg.xp_tracking = XP_SPAWNED;
     if (player_in_branch(BRANCH_PANDEMONIUM)
         && !env.properties.exists("vault_mon_weights")
         && !one_chance_in(40))
