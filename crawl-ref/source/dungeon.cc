@@ -4788,6 +4788,9 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.hp        = mspec.hp;
     mg.props     = mspec.props;
 
+    if (mg.props.exists(MAP_KEY))
+        mg.xp_tracking = XP_VAULT;
+
     // Marking monsters as summoned
     mg.abjuration_duration = mspec.abjuration_duration;
     mg.summon_type         = mspec.summon_type;

@@ -1743,11 +1743,10 @@ static void marshallLevelXPInfo(writer &th, LevelXPInfo xp_info)
 {
     marshall_level_id(th, xp_info.level);
 
-    marshallInt(th, xp_info.spawn_xp);
-    marshallInt(th, xp_info.generated_xp);
-    marshallInt(th, xp_info.spawn_count);
-    marshallInt(th, xp_info.generated_count);
-    marshallInt(th, xp_info.turns);
+    marshallInt(th, xp_info.non_vault_xp);
+    marshallInt(th, xp_info.non_vault_count);
+    marshallInt(th, xp_info.vault_xp);
+    marshallInt(th, xp_info.vault_count);
 }
 
 static void tag_construct_you_dungeon(writer &th)
@@ -3974,13 +3973,30 @@ static LevelXPInfo unmarshallLevelXPInfo(reader &th)
 
     xp_info.level = unmarshall_level_id(th);
 
-    xp_info.spawn_xp        = unmarshallInt(th);
-    xp_info.generated_xp    = unmarshallInt(th);
-
-    xp_info.spawn_count     = unmarshallInt(th);
-    xp_info.generated_count = unmarshallInt(th);
-
-    xp_info.turns           = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    // Track monster placement from vaults instead of tracking spawns.
+    if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS)
+    {
+        // Spawned/generated xp and counts have to be combined as non-vault
+        // info. We have no vault info on dead monsters, so this is the best we
+        // can do.
+        xp_info.non_vault_xp     = unmarshallInt(th);
+        xp_info.non_vault_xp    += unmarshallInt(th);
+        xp_info.non_vault_count  = unmarshallInt(th);
+        xp_info.non_vault_count += unmarshallInt(th);
+        // turns spent on level, which we don't need.
+        unmarshallInt(th);
+    }
+    else
+    {
+#endif
+    xp_info.non_vault_xp    = unmarshallInt(th);
+    xp_info.non_vault_count = unmarshallInt(th);
+    xp_info.vault_xp        = unmarshallInt(th);
+    xp_info.vault_count     = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     return xp_info;
 }
@@ -5995,7 +6011,13 @@ void unmarshallMonster(reader &th, monster& m)
     {
         // This was monster::is_spawn before the level XP info fix.
         if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_INFO_FIX)
-            m.xp_tracking = unmarshallByte(th) ? XP_SPAWNED : XP_GENERATED;
+        {
+            // We no longer track spawns but instead whether the monster comes
+            // from a vault. This gets determined from props below for
+            // transferred games.
+            unmarshallByte(th);
+            m.xp_tracking = XP_NON_VAULT;
+        }
         else
 #endif
     m.xp_tracking     = static_cast<xp_tracking_type>(unmarshallUByte(th));
@@ -6397,6 +6419,12 @@ void unmarshallMonster(reader &th, monster& m)
     {
         m.props.erase("given beogh weapon");
         m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS
+        && m.props.exists("map"))
+    {
+        m.xp_tracking = XP_VAULT;
     }
 #endif
 

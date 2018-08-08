@@ -128,7 +128,7 @@ struct mgen_data
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
           extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
-          initial_shifter(RANDOM_MONSTER), xp_tracking(XP_GENERATED)
+          initial_shifter(RANDOM_MONSTER), xp_tracking(XP_NON_VAULT)
     { }
 
     mgen_data &set_non_actor_summoner(string nas)
