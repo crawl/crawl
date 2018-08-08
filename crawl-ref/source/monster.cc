@@ -4802,20 +4802,20 @@ bool monster::is_location_safe(const coord_def &place)
 
 bool monster::has_originating_map() const
 {
-    return props.exists("map");
+    return props.exists(MAP_KEY);
 }
 
 string monster::originating_map() const
 {
     if (!has_originating_map())
         return "";
-    return props["map"].get_string();
+    return props[MAP_KEY].get_string();
 }
 
 void monster::set_originating_map(const string &map_name)
 {
     if (!map_name.empty())
-        props["map"].get_string() = map_name;
+        props[MAP_KEY].get_string() = map_name;
 }
 
 #define MAX_PLACE_NEAR_DIST 8

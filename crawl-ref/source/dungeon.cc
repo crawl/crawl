@@ -4900,7 +4900,7 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    mspec.props["map"].get_string() = place.map_name_at(where);
+    mspec.props[MAP_KEY].get_string() = place.map_name_at(where);
     return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
 }
 
