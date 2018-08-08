@@ -1050,6 +1050,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
       can_purchase(_can_purchase)
 {
     menu_action = can_purchase ? ACT_EXECUTE : ACT_EXAMINE;
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
 
     set_tag("shop");
 
