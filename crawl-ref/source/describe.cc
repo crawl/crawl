@@ -1730,7 +1730,13 @@ static string _describe_armour(const item_def &item, bool verbose)
             break;
 
         case SPARM_CLOUD_IMMUNE:
-            description += "It completely protects its wearer from the effects of clouds.";
+            description += "It completely protects its wearer from the effects"
+                           " of clouds.";
+            break;
+
+        case SPARM_STASIS:
+            description += "It prevents the wearer from the effects of slow,"
+                           " paralysis, haste, berserk and teleportation.";
             break;
         }
     }
