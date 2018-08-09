@@ -1826,6 +1826,12 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
     m_print_y = y - 1;
+
+    // XXX: an ugly hack necessary for webtiles X to work properly
+    // when showing message prompts (e.g. X!, XG)
+    if (region == GOTO_STAT || region == GOTO_MSG)
+        set_ui_state(UI_NORMAL);
+
     bool crt_popup = region == GOTO_CRT && !m_menu_stack.empty() &&
             m_menu_stack.back().type == UIStackFrame::CRT;
     m_print_area = crt_popup ? &m_text_menu : nullptr;
