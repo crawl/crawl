@@ -1181,7 +1181,7 @@ bool Menu::process_key(int keyin)
     case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
-        if (!page_down() && !is_set(MF_NOWRAP))
+        if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
     case CK_PGUP: case '<': case ';':
