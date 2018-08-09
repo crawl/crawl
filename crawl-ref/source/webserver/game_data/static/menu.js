@@ -500,6 +500,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_keydown_handler(event)
     {
         if (!menu || menu.type === "crt") return;
+        // can't check `hidden` class, which is on a 3x containing div
+        if (ui.top_popup().is(":hidden")) return;
         if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
