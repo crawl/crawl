@@ -51,6 +51,8 @@ Interface
   - The chat window has a minimize button that removes message notification.
   - The `/hide' and `/hide forever` commands minimize/remove the chat window.
 * Wands of digging now have a targeter showing the dig range.
+* Updated visual theme for Tiles and WebTiles.
+* Tiles and WebTiles informational screens now show tiles where appropriate.
 
 Items
 -----
