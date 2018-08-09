@@ -766,9 +766,6 @@ body {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     overflow: hidden;
-    white-space: nowrap;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
 }
 .describe-god .god-powers > .power > :last-child {
     white-space: pre;
