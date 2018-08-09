@@ -532,9 +532,9 @@ void UIMenu::_allocate_region()
 
         int scroll = m_menu->m_ui.scroller->get_scroll();
         int scroll_percent = scroll*100/(m_height-viewport_height);
-        string perc = scroll_percent <= 0 ? "top"
+        string perc = scroll <= 0 ? "top"
             : scroll_percent >= 100 ? "bot"
-            : make_stringf("%2.d%%", scroll_percent);
+            : make_stringf("%2d%%", scroll_percent);
 
         string scroll_more = m_menu->more.to_colour_string();
         scroll_more = replace_all(scroll_more, "XXX", perc);
