@@ -521,8 +521,6 @@ void UIMenuPopup::_allocate_region()
     max_height -= m_menu->m_ui.title->margin[2];
     int viewport_height = m_menu->m_ui.scroller->get_region()[3];
 
-    int menu_height = m_menu->m_ui.menu->get_region()[3];
-
 #ifdef USE_TILE_LOCAL
     int menu_w = m_menu->m_ui.menu->get_region()[2];
     m_menu->m_ui.menu->do_layout(menu_w, 1);
@@ -544,6 +542,8 @@ void UIMenuPopup::_allocate_region()
 #endif
 
 #ifndef USE_TILE_LOCAL
+    int menu_height = m_menu->m_ui.menu->get_region()[3];
+
     // change more visibility
     bool can_toggle_more = !m_menu->is_set(MF_ALWAYS_SHOW_MORE)
         && !m_menu->m_ui.more->get_text().ops.empty();
