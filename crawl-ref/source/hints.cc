@@ -3629,22 +3629,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
         {
             god_type altar_god = feat_altar_god(feat);
 
-            // I think right now Sif Muna is the only god for whom
-            // you can find altars early and who may refuse to accept
-            // worship by one of the hint mode characters. (jpeg)
             // TODO: mention Gozag here?
-            if (altar_god == GOD_SIF_MUNA
-                && !player_can_join_god(altar_god))
-            {
-                ostr << "As praying with <w>></w> on the altar will tell you, "
-                     << god_name(altar_god) << " only accepts worship from "
-                        "those who have already dabbled in magic. You can "
-                        "find out more about this god by searching the "
-                        "database with <w>?/g</w>.\n"
-                        "For other gods, you'll be able to join the faith "
-                        "by praying with <w>></w> at their altar.";
-            }
-            else if (you_worship(GOD_NO_GOD))
+            if (you_worship(GOD_NO_GOD))
             {
                 ostr << "This is your chance to join a religion! In "
                         "general, the gods will help their followers, "
