@@ -1036,6 +1036,10 @@ bool show_map(level_pos &lpos,
                 if (!allow_offlevel)
                     break;
 
+#ifdef USE_TILE_WEB
+                tiles_ui_control ui_control(UI_NORMAL);
+#endif
+
                 string name;
                 const level_pos pos
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name);
