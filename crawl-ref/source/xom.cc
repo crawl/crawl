@@ -473,19 +473,12 @@ static int _exploration_estimate(bool seen_only = false)
     return seen;
 }
 
-static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
+static bool _teleportation_check()
 {
     if (crawl_state.game_is_sprint())
         return false;
 
-    switch (spell)
-    {
-    case SPELL_BLINK:
-    case SPELL_TELEPORT_SELF:
-        return !you.no_tele(false, false, spell == SPELL_BLINK);
-    default:
-        return true;
-    }
+    return !you.no_tele(false, false);
 }
 
 static bool _transformation_check(const spell_type spell)
