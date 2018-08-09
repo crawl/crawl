@@ -1,5 +1,5 @@
-Stone Soup 0.22 (through 0.22-a0-900-g8945bfbd8a)
--------------------------------------------------
+Stone Soup 0.22 (20180810)
+--------------------------
 
 Highlights
 ----------
@@ -19,6 +19,7 @@ Branches, Environment
 * Players on Abyss:1-4 will sometimes be drawn a level deeper, with the chance
   increasing based on XL and decreasing based on current depth.
 * The Hall of the Hellbinder WizLab has fewer higher-tier demons.
+* Two-headed ogres are less common in earlier dungeon levels.
 
 Character
 ---------
@@ -74,8 +75,7 @@ Monsters
 * Harold has better melee damage and armour, and he places earlier. His Bolt
   of Fire and Blink spells are replaced with Harpoon Shot and Sentinel's Mark.
 * Jorgrun has Iron Shot instead of Shatter and places earlier.
-* Ilsuiw spawns on Shoals:2-4 with chances similar to other branch-specific
-  uniques instead of nearly always spawning on Shoals:4.
+* Ilsuiw spawns on Shoals:2-4 instead of nearly always spawning on Shoals:4.
 * Engulf status from Water Elementals now blocks god abilities but no longer
   slows movement.
 * The Barb status from manticore barbs now counts any non-movement actions
