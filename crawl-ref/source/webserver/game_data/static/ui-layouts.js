@@ -239,7 +239,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $footer.remove();
         }
 
-        $popup.on("keydown keypress", function (event) {
+        $popup.on("keydown", function (event) {
             if (event.key === "!" || event.key === "^")
             {
                 paneset_cycle($body);
@@ -302,7 +302,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             scroller_handle_key(s, event);
         });
 
-        $popup.on("keydown keypress", function (event) {
+        $popup.on("keydown", function (event) {
             if (event.key === "!" || event.key === "^")
             {
                 paneset_cycle($body);
