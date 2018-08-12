@@ -1671,6 +1671,7 @@ source: removeold prebuildyacc
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
 	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
+	cp build/LICENSE build/crawl-ref/LICENSE
 	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source
@@ -1685,7 +1686,7 @@ package-zipball-deps: source
 	fi
 
 package-tarball-nodeps: source
-	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib --exclude simplebar.js $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 	rm -rf build
