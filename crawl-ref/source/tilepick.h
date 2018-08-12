@@ -12,6 +12,7 @@
 #include "tiledef_defines.h"
 #include "job-type.h"
 #include "species-type.h"
+#include "status.h"
 
 #define TILE_NUM_KEY "tile_num"
 
@@ -57,6 +58,9 @@ tileidx_t tileidx_ability(const ability_type ability);
 tileidx_t tileidx_branch(const branch_type br);
 tileidx_t tileidx_player_job(const job_type job, bool recommended);
 tileidx_t tileidx_player_species(const species_type species, bool recommended);
+tileidx_t tileidx_status(string name);
+
+void init_status_name_cache();
 
 tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_corpse_brand(const item_def &item);

@@ -2,6 +2,8 @@
 
 #include "tilepick.h"
 
+#include <unordered_map>
+
 #include "artefact.h"
 #include "art-enum.h"
 #include "cloud.h"
@@ -3874,6 +3876,155 @@ tileidx_t tileidx_player_job(const job_type job, bool recommended)
 {
     tileidx_t off = recommended ? -TILEG_LAST_JOB+TILEG_LAST_RECOMMENDED_JOB: 0;
     return _tileidx_player_job_base(job) + off;
+}
+
+static unordered_map<string, tileidx_t> status_name_cache;
+
+void init_status_name_cache()
+{
+    struct entry_type { const char *name; tileidx_t tile; };
+    static const entry_type entries[] {
+        { "none",          TILEG_STATUS_NONE },
+        { "+cast",          TILEG_STATUS_PLUS_CAST },
+        { "-cast",        TILEG_STATUS_MINUS_CAST },
+        { "-potion",      TILEG_STATUS_MINUS_POTION },
+        { "-swift",   TILEG_STATUS_SWIFT_MINUS },
+        { "-tele",    TILEG_STATUS_MINUS_TELE },
+        { "abj",           TILEG_STATUS_ABJ },
+        { "alive",           TILEG_STATUS_ALIVE },
+        { "agi",           TILEG_STATUS_AGI },
+        { "ambros",        TILEG_STATUS_AMBROS },
+        { "app",           TILEG_STATUS_APP },
+        { "aug",           TILEG_STATUS_AUG },
+        { "barbs",           TILEG_STATUS_BARBS },
+        { "bat",           TILEG_STATUS_BAT },
+        { "berserk",       TILEG_STATUS_BERSERK },
+        { "blade",         TILEG_STATUS_BLADE },
+        { "blood",         TILEG_STATUS_BLOOD },
+        { "brainless",     TILEG_STATUS_BRAINLESS },
+        { "breath",        TILEG_STATUS_BREATH },
+        { "brill",         TILEG_STATUS_BRILL },
+        { "channel",       TILEG_STATUS_CHANNEL },
+        { "cleave",        TILEG_STATUS_CLEAVE },
+        { "clumsy",        TILEG_STATUS_CLUMSY },
+        { "collapse",      TILEG_STATUS_COLLAPSE },
+        { "conf",          TILEG_STATUS_CONF },
+        { "constr",        TILEG_STATUS_CONSTR },
+        { "contam",        TILEG_STATUS_CONTAM },
+        { "corona",        TILEG_STATUS_CORONA },
+        { "corr",          TILEG_STATUS_CORR },
+        { "dark",         TILEG_STATUS_DARK },
+        { "ddoor",         TILEG_STATUS_DDOOR },
+        { "disjoin",       TILEG_STATUS_DISJOIN },
+        { "dmsl",          TILEG_STATUS_DMSL },
+        { "dragon",        TILEG_STATUS_DRAGON },
+        { "dragoncall",    TILEG_STATUS_DRAGONCALL },
+        { "drain",         TILEG_STATUS_DRAIN },
+        { "engorged",      TILEG_STATUS_ENGORGED },
+        { "engulf",        TILEG_STATUS_ENGULF },
+        { "fainting",      TILEG_STATUS_FAINTING },
+        { "fast",          TILEG_STATUS_FAST },
+        { "fear",          TILEG_STATUS_FEAR },
+        { "finesse",       TILEG_STATUS_FINESSE },
+        { "fire",          TILEG_STATUS_FIRE },
+        { "flay",          TILEG_STATUS_FLAY },
+        { "fly",           TILEG_STATUS_FLY },
+        { "forest",        TILEG_STATUS_FOREST },
+        { "frozen",        TILEG_STATUS_FROZEN },
+        { "full",          TILEG_STATUS_FULL },
+        { "fungus",        TILEG_STATUS_FUNGUS },
+        { "held",          TILEG_STATUS_HELD },
+        { "hero",          TILEG_STATUS_HERO },
+        { "hevn",          TILEG_STATUS_HEVN },
+        { "horr",          TILEG_STATUS_HORR },
+        { "howl",          TILEG_STATUS_HOWL },
+        { "hungry",        TILEG_STATUS_HUNGRY },
+        { "hydra",         TILEG_STATUS_HYDRA },
+        { "ice",           TILEG_STATUS_ICE },
+        { "infus",         TILEG_STATUS_INFUS },
+        { "invis",         TILEG_STATUS_INVIS },
+        { "lash",          TILEG_STATUS_LASH },
+        { "lich",          TILEG_STATUS_LICH },
+        { "liquid",        TILEG_STATUS_LIQUID },
+        { "mark",          TILEG_STATUS_MARK },
+        { "mesm",          TILEG_STATUS_MESM },
+        { "might",         TILEG_STATUS_MIGHT },
+        { "mirror",        TILEG_STATUS_MIRROR },
+        { "mr++",          TILEG_STATUS_MR_PLUS },
+        { "mr/2",          TILEG_STATUS_MR_MINUS },
+        { "near starving", TILEG_STATUS_NEAR_STARVING },
+        { "near bloodless", TILEG_STATUS_NEAR_BLOODLESS },
+        { "orb",           TILEG_STATUS_ORB },
+        { "para",          TILEG_STATUS_PARA },
+        { "petr",          TILEG_STATUS_PETR },
+        { "pig",           TILEG_STATUS_PIG },
+        { "pois",          TILEG_STATUS_POIS },
+        { "pproj",         TILEG_STATUS_PPROJ },
+        { "prot",          TILEG_STATUS_PROT },
+        { "quad",          TILEG_STATUS_QUAD },
+        { "ray",           TILEG_STATUS_RAY },
+        { "rc+",           TILEG_STATUS_RC_PLUS },
+        { "recite",        TILEG_STATUS_RECITE },
+        { "regen",         TILEG_STATUS_REGEN },
+        { "relec+",        TILEG_STATUS_RELEC_PLUS },
+        { "resist",        TILEG_STATUS_RESIST },
+        { "rf+",           TILEG_STATUS_RF_PLUS },
+        { "rf-",           TILEG_STATUS_RF_MINUS },
+        { "rmsl",          TILEG_STATUS_RMSL },
+        { "rof",           TILEG_STATUS_ROF },
+        { "roots",         TILEG_STATUS_ROOTS },
+        { "rp-",           TILEG_STATUS_RP_MINUS },
+        { "sap",          TILEG_STATUS_SAP },
+        { "scry",          TILEG_STATUS_SCRY },
+        { "shadow",        TILEG_STATUS_SHADOW },
+        { "shroud",        TILEG_STATUS_SHROUD },
+        { "sick",          TILEG_STATUS_SICK },
+        { "sil",           TILEG_STATUS_SIL },
+        { "slay",          TILEG_STATUS_SLAY },
+        { "sleep",         TILEG_STATUS_SLEEP },
+        { "slime",         TILEG_STATUS_SLIME },
+        { "slow",          TILEG_STATUS_SLOW },
+        { "spider",        TILEG_STATUS_SPIDER },
+        { "starving",      TILEG_STATUS_STARVING },
+        { "statue",        TILEG_STATUS_STATUE },
+        { "stealth",       TILEG_STATUS_STEALTH },
+        { "stone",         TILEG_STATUS_STONE },
+        { "surge",         TILEG_STATUS_SURGE },
+        { "swift",         TILEG_STATUS_SWIFT },
+        { "tele",          TILEG_STATUS_TELE },
+        { "thirsty",       TILEG_STATUS_THIRSTY },
+        { "tornado",       TILEG_STATUS_TORNADO },
+        { "touch",         TILEG_STATUS_TOUCH },
+        { "toxic",         TILEG_STATUS_TOXIC },
+        { "tree",          TILEG_STATUS_TREE },
+        { "very full",     TILEG_STATUS_VERY_FULL },
+        { "very hungry",   TILEG_STATUS_VERY_HUNGRY },
+        { "very thirsty",  TILEG_STATUS_VERY_THIRSTY },
+        { "vit",           TILEG_STATUS_VIT },
+        { "wisp",          TILEG_STATUS_WISP },
+        { "slowm",         TILEG_STATUS_SLOWM },
+        { "engorged",      TILEG_STATUS_ALIVE },
+        { "beogh",         TILEG_STATUS_BEOGH },
+        { "bloodless",     TILEG_STATUS_BLOODLESS },
+        { "bribe",         TILEG_STATUS_BRIBE },
+        { "cloud",         TILEG_STATUS_CLOUD },
+        { "-clouds",      TILEG_STATUS_MINUS_CLOUDS },
+        { "dig",           TILEG_STATUS_DIG },
+        { "elixir",        TILEG_STATUS_ELIXIR },
+        { "fast+slow",     TILEG_STATUS_FAST_SLOW },
+        { "lava",          TILEG_STATUS_LAVA },
+        { "water",         TILEG_STATUS_WATER },
+        { "-wiz",         TILEG_STATUS_MINUS_WIZ },
+    };
+
+    for (const auto& entry : entries)
+        status_name_cache.insert({ entry.name, entry.tile });
+}
+
+tileidx_t tileidx_status(string name)
+{
+    lowercase(name);
+    return lookup(status_name_cache, name, TILEG_STATUS_NONE);
 }
 
 tileidx_t tileidx_known_brand(const item_def &item)

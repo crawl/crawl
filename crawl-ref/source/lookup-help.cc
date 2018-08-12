@@ -772,6 +772,17 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
+/**
+ * Generate a ?/T menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _status_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+#ifdef USE_TILE
+    me->add_tile(tile_def(tileidx_status(str), TEX_GUI));
+#endif
+    return me;
+}
 
 /**
  * How should this type be expressed in the prompt string?
@@ -1094,6 +1105,27 @@ static int _describe_cloud(const string &key, const string &suffix,
 }
 
 /**
+ * Describe the status with the given name.
+ *
+ * @param key       The name of the status in question.
+ * @param suffix    A suffix to trim from the key when making the title.
+ * @param footer    A footer to append to the end of descriptions.
+ * @return          The keypress the user made to exit.
+ */
+static int _describe_status(const string &key, const string &suffix,
+                           string footer)
+{
+#ifdef USE_TILE
+    const string status_name = key.substr(0, key.size() - suffix.size());
+    tile_def tile = tile_def(tileidx_status(status_name), TEX_GUI);
+    return _describe_key(key, suffix, footer, "", &tile);
+#else
+    return _describe_key(key, suffix, footer, "");
+#endif
+}
+
+
+/**
  * Describe the item with the given name.
  *
  * @param key       The name of the item in question.
@@ -1285,8 +1317,8 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud, lookup_type::db_suffix),
     LookupType('T', "status", nullptr, _status_filter,
-               nullptr, nullptr, _simple_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               nullptr, nullptr, _status_menu_gen,
+               _describe_status, lookup_type::db_suffix),
 };
 
 /**

@@ -140,6 +140,7 @@ static void _initialize()
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
+    init_status_name_cache();
 
     // Read special levels and vaults.
     _loading_message("Loading maps...");

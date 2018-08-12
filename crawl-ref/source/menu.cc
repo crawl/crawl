@@ -310,11 +310,19 @@ void UIMenu::do_layout(int mw, int num_columns)
         }
         else
         {
-            const int text_indent = m_draw_tiles ? 38 : 0;
+            int tile_w = 0, tile_h = 0;
+            if (!entry.tiles.empty())
+            {
+                tile_def tile = entry.tiles[0];
+                const tile_info &ti = tiles.get_image_manager()->tile_def_info(tile);
+                tile_w = ti.width;
+                tile_h = ti.height;
+            }
+            const int text_indent = m_draw_tiles ? tile_w + 6 : 0;
 
             entry.x = text_indent;
             int text_sx = text_indent;
-            int item_height = max(text_height, !entry.tiles.empty() ? 32 : 0);
+            int item_height = max(text_height, tile_h);
 
             // Split menu entries that don't fit into a single line into two lines.
             if (!m_menu->is_set(MF_NO_WRAP_ROWS))
@@ -751,7 +759,16 @@ void UIMenu::pack_buffers()
         }
         else
         {
-            const int ty = entry.y + max(entry_h-32, 0)/2;
+            int tile_w = 0, tile_h = 0;
+            if (!entry.tiles.empty())
+            {
+                tile_def tile = entry.tiles[0];
+                const tile_info &ti = tiles.get_image_manager()->tile_def_info(tile);
+                tile_w = ti.width;
+                tile_h = ti.height;
+            }
+
+            const int ty = entry.y + max(entry_h-tile_h, 0)/2;
             for (const tile_def &tile : entry.tiles)
             {
                 // NOTE: This is not perfect. Tiles will be drawn
@@ -761,7 +778,7 @@ void UIMenu::pack_buffers()
                 m_tile_buf[tex].add(tile.tile, entry_x + item_pad, ty, 0, 0, false, tile.ymax, 1, 1);
             }
 
-            const int text_indent = m_draw_tiles ? 38 : 0;
+            const int text_indent = m_draw_tiles ? tile_w + 6 : 0;
             int text_sx = entry_x + text_indent + item_pad;
             int text_sy = entry.y + (entry_h - m_font_entry->char_height())/2;
 
