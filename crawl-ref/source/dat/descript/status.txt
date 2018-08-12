@@ -705,3 +705,92 @@ Hevn status
 Heavenly clouds are boosting your damage and precision. Performing martial
 attacks against multiple enemies prevents the storm from settling.
 %%%%
+SlowM status
+
+Your movement is slowed on this liquid ground.
+%%%%
+Alive status
+
+You can't drink any more for now.
+%%%%
+Aug status
+
+You receive spellcasting and slaying bonuses that scale with your health.
+%%%%
+Beogh status
+
+You can swear fealty to Beogh, the god of cave orcs, through a nearby priest.
+%%%%
+Bloodless status
+
+Your body is entirely devoid of blood. You are are immune to poison and
+negative energy, significantly resist cold, resist torment, and do not
+heal.
+%%%%
+Bribe status
+
+You are bribing the inhabitants of the current branch.
+%%%%
+Cloud status
+
+You are standing in a cloud.
+%%%%
+-Clouds status
+
+The air is too still for clouds to form.
+%%%%
+Dig status
+
+You are digging.
+%%%%
+Elixir status
+
+Your health and/or magic are being rapidly restored, as well as the health of
+your allies.
+%%%%
+Fast+Slow status
+
+You are under both slowing and hasting effects.
+%%%%
+Lava status
+
+You are currently flying over lava.
+%%%%
+Near Bloodless status
+
+Your body is almost entirely devoid of blood. You resist poison and
+cold, significantly resist negative engergy, have a slow metabolism, and
+heal slowly.
+%%%%
+Recall status
+
+You are recalling your allies.
+%%%%
+Thirsty status
+
+You are thirsty. You resist poison and cold, significantly resist
+negative engergy, have a slow metabolism, and heal slowly.
+%%%%
+Very Thirsty status
+
+You are very thirsty. You resist poison and cold, significantly resist
+negative engergy, have a slow metabolism, and heal slowly.
+%%%%
+Water status
+{{
+    local verb = you.flying() and "flying over" or
+                 you.race() == "Merfolk" and "swimming in" or "standing in"
+    local feat = view.feature_at(0, 0):gsub("_", " ")
+
+    if feat ~= "deep water" and feat ~= "shallow water" then
+        feat = "water"
+        verb = "over"
+    end
+
+    return "You are currently " .. verb .. " " .. feat .. "."
+}}
+%%%%
+-Wiz status
+
+Your control over your magic has been sapped.
+%%%%
