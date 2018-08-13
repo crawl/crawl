@@ -3246,7 +3246,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
                     const item_def* item, bool show_booklist)
 {
     string desc;
-    bool can_mem = _get_spell_description(spell, mon_owner, desc, item);
+    const bool can_mem = _get_spell_description(spell, mon_owner, desc, item);
     if (show_booklist)
         desc += _spell_sources(spell);
 
@@ -3296,11 +3296,11 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&done, &lastch](wm_event ev) {
+    popup->on(Widget::slots.event, [&done, &lastch, &can_mem](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
-        done = (toupper(lastch) == 'M' || lastch == CK_ESCAPE);
+        done = (toupper(lastch) == 'M' && can_mem || lastch == CK_ESCAPE);
         return done;
     });
 
@@ -3325,7 +3325,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     tiles.pop_ui_layout();
 #endif
 
-    if (toupper(lastch) == 'M')
+    if (toupper(lastch) == 'M' && can_mem)
     {
         redraw_screen(); // necessary to ensure stats is redrawn (!?)
         if (!learn_spell(spell) || !you.turn_is_over)
