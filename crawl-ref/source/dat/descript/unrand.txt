@@ -687,3 +687,9 @@ A small wrinkle in the very fabric of reality, magically bound to a shaft by
 some mad acolyte of Lugonu. It possesses an unusually large reach that
 teleports its attack directly to its victim.
 %%%%
+large shield "Forest's Gift"
+
+The thick planks of wood making up this shield embed a forest spirit that can
+convert blocked attacks into magical power. The original owner of the shield
+never spoke of where they found it.
+%%%%

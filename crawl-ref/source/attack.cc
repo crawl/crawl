@@ -1403,6 +1403,17 @@ bool attack::attack_shield_blocked(bool verbose)
                                       : atk_name(DESC_ITS).c_str());
         }
 
+        if (player_equip_unrand(UNRAND_FOREST_GIFT))
+        {
+            // Average MP per block: XL1: 1.125, XL27: 3.875
+            const int mp_regen = random2(div_rand_round(you.experience_level, 4) + 2);
+            if (mp_regen > 0)
+            {
+                inc_mp(mp_regen);
+                mpr("Magical power flows into you from your shield hand.");
+            }
+        }
+
         defender->shield_block_succeeded(attacker);
 
         return true;

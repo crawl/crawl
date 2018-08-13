@@ -1320,6 +1320,15 @@ TILE:     urand_rift
 TILE_EQ:  rift
 BRAND:    SPWPN_DISTORTION
 
+ENUM:    FOREST_GIFT
+NAME:    large shield "Forest's Gift"
+OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
+COLOUR:  GREEN
+TILE:    urand_ignorance
+TILE_EQ: lshield_of_ignorance
+BRAND:   SPARM_SPIRIT_SHIELD
+INSCRIP: MPOnHit,
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
