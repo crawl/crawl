@@ -130,6 +130,7 @@
     Floodkiller
     Brett Foster
     Kyle Fox
+    freepotion
     Chris Galardi
     Benoît Giannangeli
     Ben Goetter
