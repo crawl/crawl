@@ -3300,7 +3300,8 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
-        done = (toupper(lastch) == 'M' && can_mem || lastch == CK_ESCAPE);
+        done = (toupper(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
+            || lastch == CK_ENTER || lastch == ' ');
         return done;
     });
 
