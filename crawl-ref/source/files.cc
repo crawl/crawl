@@ -763,8 +763,12 @@ static vector<player_save_info> _find_saved_characters()
             {
                 dprf("%s: %s", filename.c_str(), E.what());
             }
+            catch (game_ended_condition &E) // another process is using the save
+            {
+                if (E.exit_reason != game_exit::abort)
+                    throw;
+            }
         }
-
     }
 
     sort(chars.begin(), chars.end());
