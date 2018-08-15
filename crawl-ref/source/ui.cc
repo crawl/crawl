@@ -1371,7 +1371,7 @@ bool Scroller::on_event(const wm_event& event)
     return false;
 }
 
-Popup::Popup(shared_ptr<Widget> child)
+Layout::Layout(shared_ptr<Widget> child)
 {
 #ifdef USE_TILE_LOCAL
     m_depth = ui_root.num_children();
@@ -1379,6 +1379,21 @@ Popup::Popup(shared_ptr<Widget> child)
     child->_set_parent(this);
     m_child = move(child);
     expand_h = expand_v = true;
+}
+
+void Layout::_render()
+{
+    m_child->render();
+}
+
+SizeReq Layout::_get_preferred_size(Direction dim, int prosp_width)
+{
+    return m_child->get_preferred_size(dim, prosp_width);
+}
+
+void Layout::_allocate_region()
+{
+    m_child->allocate_region(m_region);
 }
 
 void Popup::_render()
@@ -1680,9 +1695,10 @@ bool UIRoot::on_event(const wm_event& event)
             if (!layer_idx)
                 return false;
             Widget* layer_root = m_root.get_child(layer_idx-1).get();
-            if (layer_root->on_event(event))
+            Layout* layout = dynamic_cast<Layout*>(layer_root);
+            if (layout && layout->event_filters.emit(layout, event))
                 return true;
-            for (Widget* w = focused_widget; w && w != layer_root; w = w->_get_parent())
+            for (Widget* w = focused_widget; w; w = w->_get_parent())
                 if (w->on_event(event))
                     return true;
             break;

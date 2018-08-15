@@ -564,10 +564,30 @@ protected:
 #endif
 };
 
-class Popup : public Bin
+class Layout : public Bin
+{
+    friend struct UIRoot;
+public:
+    Layout(shared_ptr<Widget> child);
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+    void add_event_filter(function<bool (const wm_event&)> handler)
+    {
+        event_filters.on(this, handler);
+    }
+protected:
+#ifdef USE_TILE_LOCAL
+    int m_depth;
+#endif
+    Slot<Widget, bool (const wm_event&)> event_filters;
+};
+
+class Popup : public Layout
 {
 public:
-    Popup(shared_ptr<Widget> child);
+    Popup(shared_ptr<Widget> child) : Layout(move(child)) {};
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
@@ -577,7 +597,6 @@ public:
 protected:
 #ifdef USE_TILE_LOCAL
     ShapeBuffer m_buf;
-    int m_depth;
     static constexpr int m_depth_indent = 20;
     static constexpr int m_base_margin = 50;
     static constexpr int m_padding = 23;
