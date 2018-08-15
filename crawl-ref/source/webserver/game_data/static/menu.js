@@ -305,7 +305,15 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         var $contents = menu.elem.find(".menu_contents");
         var container_rect = $contents.children()[0].getBoundingClientRect();
-        var top = container_rect.top, bottom = container_rect.bottom, i;
+        var top = Math.max(container_rect.top, 0);
+        var bottom = Math.min(container_rect.bottom,
+                                $(window).scrollTop() + $(window).height());
+        var i;
+
+        // initialize these to ensure that they are never NaN, even if we have
+        // strange values for the bounding boxes
+        menu.first_visible = 0;
+        menu.last_visible = 0;
 
         for (i = 0; i < menu.items.length; i++)
         {
