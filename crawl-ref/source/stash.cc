@@ -726,8 +726,8 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        if (shop_matches
-            || search.matches(prefix + " " + ann + " " + sname)
+        if (search.matches(prefix + " " + ann + " " + sname +
+                                                    " {" + shoptitle + "}")
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
