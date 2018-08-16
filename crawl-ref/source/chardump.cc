@@ -521,8 +521,7 @@ static void _sdump_xp_by_level(dump_params &par)
 " C = Vault XP percentage of total XP\n"
 " D = Non-vault monster count\n"
 " E = Vault monster count\n"
-" F = Vault count percentage of total count\n\n"
-" G = Total turns spent on level\n\n";
+" F = Vault count percentage of total count\n\n";
 
     text += "            ";
     text += "     A         B        C        D         E        F   \n";
