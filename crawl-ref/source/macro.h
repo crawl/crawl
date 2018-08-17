@@ -70,6 +70,8 @@ int macro_buf_get();
 
 void macro_buf_add_cmd(command_type cmd, bool reverse = false);
 
+void process_command_on_record(command_type cmd);
+
 bool is_userfunction(int key);
 bool is_synthetic_key(int key);
 
