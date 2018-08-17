@@ -32,6 +32,7 @@
 #include <vector>
 
 #include "cio.h"
+#include "command.h"
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -650,6 +651,15 @@ int macro_buf_get()
         recorder->add_key(key);
 
     return key;
+}
+
+void process_command_on_record(command_type cmd)
+{
+    const int key = command_to_key(cmd);
+    if (key != '\0')
+        for (key_recorder *recorder : recorders)
+            recorder->add_key(key);
+    process_command(cmd);
 }
 
 static void write_map(FILE *f, const macromap &mp, const char *key)
