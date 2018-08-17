@@ -388,7 +388,8 @@ bool player_has_available_spells()
     return false;
 }
 
-static spell_list _get_mem_list(bool just_check = false)
+static spell_list _get_spell_list(bool just_check = false,
+                                  bool memorise_only = true)
 {
     spell_list mem_spells;
     spell_set available_spells;
@@ -414,6 +415,9 @@ static spell_list _get_mem_list(bool just_check = false)
             num_known++;
         else if (!you_can_memorise(spell))
         {
+            if (!memorise_only)
+                mem_spells.emplace_back(spell);
+
             if (cannot_use_schools(get_spell_disciplines(spell)))
                 num_restricted++;
             else
@@ -471,12 +475,18 @@ static spell_list _get_mem_list(bool just_check = false)
 bool has_spells_to_memorise(bool silent)
 {
     // TODO: this is a bit dumb
-    spell_list mem_spells(_get_mem_list(silent));
+    spell_list mem_spells(_get_spell_list(silent, true));
     return !mem_spells.empty();
 }
 
 static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
 {
+    // Put unmemorisable spells last
+    const bool mem_a = you_can_memorise(a.spell);
+    const bool mem_b = you_can_memorise(b.spell);
+    if (mem_a != mem_b)
+        return mem_a;
+
     // List the Vehumet gifts at the very top.
     const bool offering_a = vehumet_is_offering(a.spell);
     const bool offering_b = vehumet_is_offering(b.spell);
@@ -501,9 +511,9 @@ static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
     return strcasecmp(spell_title(a.spell), spell_title(b.spell)) < 0;
 }
 
-vector<spell_type> get_mem_spell_list()
+vector<spell_type> get_sorted_spell_list(bool silent, bool memorise_only)
 {
-    spell_list mem_spells(_get_mem_list());
+    spell_list mem_spells(_get_spell_list(silent, memorise_only));
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
@@ -831,7 +841,7 @@ bool learn_spell()
     if (!can_learn_spell())
         return false;
 
-    spell_list spells(_get_mem_list(false));
+    spell_list spells(_get_spell_list(false, true));
     if (spells.empty())
         return false;
 
