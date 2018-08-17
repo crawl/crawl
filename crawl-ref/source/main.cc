@@ -1677,6 +1677,8 @@ static void _do_list_gold()
 
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
+// calling this directly will not record the command for later replay; if you
+// want to ensure that it's recorded, see macro.cc:process_command_on_record.
 void process_command(command_type cmd)
 {
     you.apply_berserk_penalty = true;
