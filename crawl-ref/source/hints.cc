@@ -227,11 +227,19 @@ void pick_hints(newgame_def& choice)
     auto sub_items = make_shared<OuterMenu>(false, 1, 2);
     vbox->add_child(sub_items);
 
+    int keyn;
     bool done = false;
     auto menu_item_activated = [&](int id) {
-        Hints.hints_type = id - 'a';
-        _fill_newgame_choice_for_hints(choice,
-                static_cast<hints_types>(id - 'a'));
+        if (id == CK_ESCAPE)
+        {
+            keyn = CK_ESCAPE;
+            done = true;
+            return;
+        }
+        else if (id == '*')
+            id = random2(HINT_TYPES_NUM);
+        Hints.hints_type = id;
+        _fill_newgame_choice_for_hints(choice, static_cast<hints_types>(id));
         done = true;
     };
 
@@ -245,37 +253,30 @@ void pick_hints(newgame_def& choice)
         auto btn = make_shared<MenuButton>();
         btn->set_child(move(label));
         btn->hotkey = CK_ESCAPE;
+        btn->id = CK_ESCAPE;
         sub_items->add_button(btn, 0, 0);
     }
     {
         auto label = make_shared<Text>(formatted_string("  * - Random hints mode character", BROWN));
         auto btn = make_shared<MenuButton>();
         btn->set_child(move(label));
+        btn->hotkey = '*';
+        btn->id = '*';
         sub_items->add_button(btn, 0, 1);
     }
 
     auto popup = make_shared<ui::Popup>(vbox);
 
-    int keyn;
     popup->on(Widget::slots.event, [&](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         keyn = ev.key.keysym.sym;
-
+        if (keyn == 'X')
+            return done = true;
         // Random choice.
-        if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
-        {
-            ev.key.keysym.sym = 'a' + random2(HINT_TYPES_NUM);
-            return false;
-        }
-
-        switch (keyn)
-        {
-            case 'X': CASE_ESCAPE
-                return done = true;
-            default:
-                return false;
-        }
+        if (keyn == '+' || keyn == '!' || keyn == '#')
+            ev.key.keysym.sym = '*';
+        return false;
     });
     ui::run_layout(move(popup), done);
 
