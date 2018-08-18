@@ -1500,7 +1500,6 @@ static void _choose_arena_teams(newgame_def& choice,
         return done = true;
     });
 
-    ui::set_focused_widget(popup.get());
     ui::push_layout(move(popup));
     while (!done && !crawl_state.seen_hups)
     {

@@ -17,7 +17,7 @@
 #include "version.h"
 
 // Eventually, this should be something more grand. {dlb}
-string opening_screen()
+formatted_string opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
@@ -55,7 +55,7 @@ string opening_screen()
 
     msg += "\n";
 
-    return msg;
+    return formatted_string::parse_string(msg);
 }
 
 bool is_good_name(const string& name, bool blankOK)
