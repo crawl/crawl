@@ -164,3 +164,6 @@ misc/error ERROR
 
 prompt_yes PROMPT_YES
 prompt_no PROMPT_NO
+
+tutorial/movement.png TUT_MOVEMENT
+tutorial/combat.png TUT_COMBAT

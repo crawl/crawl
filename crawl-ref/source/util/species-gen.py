@@ -152,9 +152,9 @@ SpeciesGroup = collections.namedtuple('SpeciesGroup',
 SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
                                             ['priority', 'enum'])
 SPECIES_GROUPS_TEMPLATE = {
-    'Simple': SpeciesGroup('coord_def(0, 0)', '20', []),
-    'Intermediate': SpeciesGroup('coord_def(25, 0)', '20', []),
-    'Advanced': SpeciesGroup('coord_def(50, 0)', '20', []),
+    'Simple': SpeciesGroup('coord_def(0, 0)', '50', []),
+    'Intermediate': SpeciesGroup('coord_def(1, 0)', '20', []),
+    'Advanced': SpeciesGroup('coord_def(2, 0)', '20', []),
 }
 SPECIES_GROUP_TEMPLATE = """
     {{
