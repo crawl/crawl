@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mutation.h"
+#include "outer-menu.h"
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
@@ -40,6 +41,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tilepick-p.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -157,9 +159,18 @@ static string _print_hints_menu(hints_types type)
         break;
     }
 
-    return make_stringf("%c - %s %s %s\n",
+    return make_stringf("%c - %s %s %s",
             letter, species_name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
+}
+
+static void _fill_newgame_choice_for_hints(newgame_def& choice, hints_types type)
+{
+    choice.species  = _get_hints_species(type);
+    choice.job = _get_hints_job(type);
+    // easiest choice for fighters
+    choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
+                                                : WPN_HAND_AXE;
 }
 
 // Hints mode selection screen and choice.
@@ -167,17 +178,84 @@ void pick_hints(newgame_def& choice)
 {
     string prompt = "<white>You must be new here indeed!</white>"
         "\n\n"
-        "<cyan>You can be:</cyan>"
-        "\n";
-    for (int i = 0; i < HINT_TYPES_NUM; i++)
-        prompt += _print_hints_menu((hints_types)i);
-    prompt += "<brown>\nEsc - Quit"
-        "\n* - Random hints mode character"
-        "</brown>";
+        "<cyan>You can be:</cyan>";
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
-    auto popup = make_shared<ui::Popup>(prompt_ui);
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->align_items = Widget::Align::STRETCH;
+    vbox->add_child(prompt_ui);
+
+    auto main_items = make_shared<OuterMenu>(true, 1, 3);
+    main_items->set_margin_for_sdl({15, 0, 15, 0});
+    main_items->set_margin_for_crt({1, 0, 1, 0});
+    vbox->add_child(main_items);
+
+    for (int i = 0; i < 3; i++)
+    {
+        auto label = make_shared<Text>();
+        label->set_text(_print_hints_menu(static_cast<hints_types>(i)));
+
+#ifdef USE_TILE_LOCAL
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->align_items = Widget::Align::CENTER;
+        dolls_data doll;
+        newgame_def tng = choice;
+        _fill_newgame_choice_for_hints(tng, static_cast<hints_types>(i));
+        fill_doll_for_newgame(doll, tng);
+        auto tile = make_shared<ui::PlayerDoll>(doll);
+        tile->set_margin_for_sdl({0, 6, 0, 0});
+        hbox->add_child(move(tile));
+        hbox->add_child(label);
+#endif
+
+        auto btn = make_shared<MenuButton>();
+#ifdef USE_TILE_LOCAL
+        hbox->set_margin_for_sdl({4,8,4,8});
+        btn->set_child(move(hbox));
+#else
+        btn->set_child(move(label));
+#endif
+        btn->id = i;
+        btn->hotkey = 'a' + i;
+
+        if (i == 0)
+            main_items->set_initial_focus(btn.get());
+
+        main_items->add_button(btn, 0, i);
+    }
+
+    auto sub_items = make_shared<OuterMenu>(false, 1, 2);
+    vbox->add_child(sub_items);
 
     bool done = false;
+    auto menu_item_activated = [&](int id) {
+        Hints.hints_type = id - 'a';
+        _fill_newgame_choice_for_hints(choice,
+                static_cast<hints_types>(id - 'a'));
+        done = true;
+    };
+
+    main_items->on_button_activated = menu_item_activated;
+    sub_items->on_button_activated = menu_item_activated;
+    main_items->linked_menus[2] = sub_items;
+    sub_items->linked_menus[0] = main_items;
+
+    {
+        auto label = make_shared<Text>(formatted_string("Esc - Quit", BROWN));
+        auto btn = make_shared<MenuButton>();
+        btn->set_child(move(label));
+        btn->hotkey = CK_ESCAPE;
+        sub_items->add_button(btn, 0, 0);
+    }
+    {
+        auto label = make_shared<Text>(formatted_string("  * - Random hints mode character", BROWN));
+        auto btn = make_shared<MenuButton>();
+        btn->set_child(move(label));
+        sub_items->add_button(btn, 0, 1);
+    }
+
+    auto popup = make_shared<ui::Popup>(vbox);
+
     int keyn;
     popup->on(Widget::slots.event, [&](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
@@ -186,19 +264,9 @@ void pick_hints(newgame_def& choice)
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
-            keyn = 'a' + random2(HINT_TYPES_NUM);
-
-        // Choose character for hints mode game and set starting values.
-        if (keyn >= 'a' && keyn <= 'a' + HINT_TYPES_NUM - 1)
         {
-            Hints.hints_type = keyn - 'a';
-            choice.species  = _get_hints_species(Hints.hints_type);
-            choice.job = _get_hints_job(Hints.hints_type);
-            // easiest choice for fighters
-            choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
-                                                     : WPN_HAND_AXE;
-
-            return done = true;
+            ev.key.keysym.sym = 'a' + random2(HINT_TYPES_NUM);
+            return false;
         }
 
         switch (keyn)
@@ -206,7 +274,7 @@ void pick_hints(newgame_def& choice)
             case 'X': CASE_ESCAPE
                 return done = true;
             default:
-                return true;
+                return false;
         }
     });
     ui::run_layout(move(popup), done);
