@@ -419,7 +419,7 @@ public:
 
 protected:
     tile_def m_tile = {TILEG_ERROR, TEX_GUI};
-    int m_tw, m_th;
+    int m_tw {0}, m_th {0};
 
 #ifdef USE_TILE_LOCAL
     GenericTexture m_img;
