@@ -167,3 +167,190 @@ prompt_no PROMPT_NO
 
 tutorial/movement.png TUT_MOVEMENT
 tutorial/combat.png TUT_COMBAT
+
+%texture backgrounds/enabled-fg
+backgrounds/Fi.png JOB_RECOMMENDED_FIGHTER
+backgrounds/Gl.png JOB_RECOMMENDED_GLADIATOR
+backgrounds/Mo.png JOB_RECOMMENDED_MONK
+backgrounds/Hu.png JOB_RECOMMENDED_HUNTER
+backgrounds/As.png JOB_RECOMMENDED_ASSASSIN
+backgrounds/Ar.png JOB_RECOMMENDED_ARTIFICER
+backgrounds/Wn.png JOB_RECOMMENDED_WANDERER
+backgrounds/Be.png JOB_RECOMMENDED_BERSERKER
+backgrounds/AK.png JOB_RECOMMENDED_ABYSSAL_KNIGHT
+backgrounds/CK.png JOB_RECOMMENDED_CHAOS_KNIGHT
+backgrounds/Sk.png JOB_RECOMMENDED_SKALD
+backgrounds/Tm.png JOB_RECOMMENDED_TRANSMUTER
+backgrounds/AM.png JOB_RECOMMENDED_ARCANE_MARKSMAN
+backgrounds/Wr.png JOB_RECOMMENDED_WARPER
+backgrounds/En.png JOB_RECOMMENDED_ENCHANTER
+backgrounds/Wz.png JOB_RECOMMENDED_WIZARD
+backgrounds/Cj.png JOB_RECOMMENDED_CONJURER
+backgrounds/Su.png JOB_RECOMMENDED_SUMMONER
+backgrounds/Ne.png JOB_RECOMMENDED_NECROMANCER
+backgrounds/FE.png JOB_RECOMMENDED_FIRE_ELEMENTALIST
+backgrounds/IE.png JOB_RECOMMENDED_ICE_ELEMENTALIST
+backgrounds/AE.png JOB_RECOMMENDED_AIR_ELEMENTALIST
+backgrounds/EE.png JOB_RECOMMENDED_EARTH_ELEMENTALIST
+backgrounds/VM.png JOB_RECOMMENDED_VENOM_MAGE
+%syn LAST_RECOMMENDED_JOB
+
+%texture backgrounds/disabled-fg
+backgrounds/Fi.png JOB_FIGHTER
+backgrounds/Gl.png JOB_GLADIATOR
+backgrounds/Mo.png JOB_MONK
+backgrounds/Hu.png JOB_HUNTER
+backgrounds/As.png JOB_ASSASSIN
+backgrounds/Ar.png JOB_ARTIFICER
+backgrounds/Wn.png JOB_WANDERER
+backgrounds/Be.png JOB_BERSERKER
+backgrounds/AK.png JOB_ABYSSAL_KNIGHT
+backgrounds/CK.png JOB_CHAOS_KNIGHT
+backgrounds/Sk.png JOB_SKALD
+backgrounds/Tm.png JOB_TRANSMUTER
+backgrounds/AM.png JOB_ARCANE_MARKSMAN
+backgrounds/Wr.png JOB_WARPER
+backgrounds/En.png JOB_ENCHANTER
+backgrounds/Wz.png JOB_WIZARD
+backgrounds/Cj.png JOB_CONJURER
+backgrounds/Su.png JOB_SUMMONER
+backgrounds/Ne.png JOB_NECROMANCER
+backgrounds/FE.png JOB_FIRE_ELEMENTALIST
+backgrounds/IE.png JOB_ICE_ELEMENTALIST
+backgrounds/AE.png JOB_AIR_ELEMENTALIST
+backgrounds/EE.png JOB_EARTH_ELEMENTALIST
+backgrounds/VM.png JOB_VENOM_MAGE
+%syn LAST_JOB
+
+
+%texture none
+../player/felids/cat3.png SP_RECOMMENDED_FELID
+%start
+%compose ../player/base/centaur_lightgrey_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_CENTAUR
+%start
+%compose ../player/base/deep_dwarf_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_DEEP_DWARF
+%start
+%compose ../player/base/deep_elf_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_DEEP_ELF
+%start
+%compose ../player/base/demigod_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_DEMIGOD
+%start
+%compose ../player/base/demonspawn_pink.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_DEMONSP_RECOMMENDEDAWN
+%start
+%compose ../player/base/draconian_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_BASE_DRACONIAN
+%start
+%compose ../player/base/formicid.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_FORMICID
+%start
+%compose ../player/base/frog_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_BARACHI
+%start
+%compose ../player/base/gargoyle_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_GARGOYLE
+%start
+%compose ../player/base/ghoul_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_GHOUL
+%start
+%compose ../player/base/gnoll_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_GNOLL
+%start
+%compose ../player/base/halfling_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_HALFLING
+%start
+%compose ../player/base/human_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_HuMAN
+%start
+%compose ../player/base/kobold_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_KOBOLD
+%start
+%compose ../player/base/merfolk_water_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_MERFOLK
+%start
+%compose ../player/base/minotaur_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_MINOTAUR
+../player/base/mummy_m.png SP_RECOMMENDED_MUMMY
+%start
+%compose ../player/base/naga_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_NAGA
+../player/base/octopode1.png SP_RECOMMENDED_OCTOPODE
+%start
+%compose ../player/base/ogre_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_OGRE
+%start
+%compose ../player/base/orc_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_HILL_ORC
+%start
+%compose ../player/base/spriggan_m.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_SP_RECOMMENDEDRIGGAN
+%start
+%compose ../player/base/tengu_winged_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_TENGU
+%start
+%compose ../player/base/troll_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_TROLL
+%start
+%compose ../player/base/vampire_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_VAMPIRE
+%start
+%compose ../player/base/vine_stalker_f.png
+%compose ../player/body/animal_skin.png
+%finish SP_RECOMMENDED_VINE_STALKER
+%syn LAST_RECOMMENDED_SPECIES
+
+%texture backgrounds/disabled-fg
+../player/felids/cat3.png SP_FELID
+../player/base/centaur_lightgrey_f.png SP_CENTAUR
+../player/base/deep_dwarf_m.png SP_DEEP_DWARF
+../player/base/deep_elf_f.png SP_DEEP_ELF
+../player/base/demigod_f.png SP_DEMIGOD
+../player/base/demonspawn_pink.png SP_DEMONSPAWN
+../player/base/draconian_f.png SP_DRACONIAN
+../player/base/formicid.png SP_FORMICID
+../player/base/frog_m.png SP_BARACHI
+../player/base/gargoyle_m.png SP_GARGOYLE
+../player/base/ghoul_m.png SP_GHOUL
+../player/base/gnoll_m.png SP_GNOLL
+../player/base/halfling_m.png SP_HALFLING
+../player/base/human_f.png SP_HUMAN
+../player/base/kobold_m.png SP_KOBOLD
+../player/base/merfolk_water_f.png SP_MERFOLK
+../player/base/minotaur_m.png SP_MINOTAUR
+../player/base/mummy_m.png SP_MUMMY
+../player/base/naga_f.png SP_NAGA
+../player/base/octopode1.png SP_OCTOPODE
+../player/base/ogre_m.png SP_OGRE
+../player/base/orc_f.png SP_HILL_ORC
+../player/base/spriggan_m.png SP_SPRIGGAN
+../player/base/tengu_wingless_f.png SP_TENGU
+../player/base/troll_f.png SP_TROLL
+../player/base/vampire_f.png SP_VAMPIRE
+../player/base/vine_stalker_f.png SP_VINE_STALKER
+%syn LAST_SPECIES

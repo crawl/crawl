@@ -1064,11 +1064,24 @@ protected:
                                 int id,
                                 int item_status,
                                 string item_name,
+#ifdef USE_TILE_LOCAL
+                                tile_def item_tile,
+#endif
                                 bool is_active_item,
                                 coord_def position)
 
     {
         auto label = make_shared<Text>();
+
+#ifdef USE_TILE_LOCAL
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->align_items = Widget::Align::CENTER;
+        auto tile = make_shared<Image>();
+        tile->set_tile(item_tile);
+        tile->set_margin_for_sdl({0, 6, 0, 0});
+        hbox->add_child(move(tile));
+        hbox->add_child(label);
+#endif
 
         COLOURS fg, hl;
 
@@ -1098,8 +1111,12 @@ protected:
         trim_string(desc);
 
         auto btn = make_shared<MenuButton>();
-        label->set_margin_for_sdl({2,2,2,2});
+#ifdef USE_TILE_LOCAL
+        hbox->set_margin_for_sdl({2,10,2,2});
+        btn->set_child(move(hbox));
+#else
         btn->set_child(move(label));
+#endif
         btn->id = id;
         btn->description = desc;
         btn->hotkey = letter;
@@ -1373,6 +1390,10 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             job,
             item_status,
             get_job_name(job),
+#ifdef USE_TILE_LOCAL
+            tile_def(tileidx_player_job(job,
+                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
+#endif
             is_active_item,
             pos
         );
@@ -1419,6 +1440,10 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             this_species,
             item_status,
             species_name(this_species),
+#ifdef USE_TILE_LOCAL
+            tile_def(tileidx_player_species(this_species,
+                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
+#endif
             is_active_item,
             pos
         );

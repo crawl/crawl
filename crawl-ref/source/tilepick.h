@@ -10,6 +10,8 @@
 #include "game-type.h"
 #include "trap-type.h"
 #include "tiledef_defines.h"
+#include "job-type.h"
+#include "species-type.h"
 
 #define TILE_NUM_KEY "tile_num"
 
@@ -53,6 +55,8 @@ tileidx_t tileidx_command(const command_type cmd);
 tileidx_t tileidx_gametype(const game_type gtype);
 tileidx_t tileidx_ability(const ability_type ability);
 tileidx_t tileidx_branch(const branch_type br);
+tileidx_t tileidx_player_job(const job_type job, bool recommended);
+tileidx_t tileidx_player_species(const species_type species, bool recommended);
 
 tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_corpse_brand(const item_def &item);
