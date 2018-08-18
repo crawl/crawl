@@ -46,6 +46,7 @@ enslavement ENSLAVEMENT
 haste HASTE
 infusion INFUSION
 invisibility INVISIBILITY
+mass_confusion MASS_CONFUSION
 slow SLOW
 song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
