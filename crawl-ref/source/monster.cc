@@ -1036,7 +1036,7 @@ bool monster::unequip(item_def &item, bool msg, bool force)
 
     case OBJ_JEWELLERY:
         unequip_jewellery(item, msg);
-    break;
+        break;
 
     default:
         break;
@@ -6401,14 +6401,16 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
 
     // Drop the item already in the slot (including the shield
     // if it's a two-hander).
+    // TODO: fail conditions here have an awkward ordering with the steal msgs
     if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
         && inv[MSLOT_SHIELD] != NON_ITEM
-        && hands_reqd(new_item) == HANDS_TWO)
+        && hands_reqd(new_item) == HANDS_TWO
+        && !drop_item(MSLOT_SHIELD, observable()))
     {
-        drop_item(MSLOT_SHIELD, observable());
+        return nullptr;
     }
-    if (inv[mslot] != NON_ITEM)
-        drop_item(mslot, observable());
+    if (inv[mslot] != NON_ITEM && !drop_item(mslot, observable()))
+        return nullptr;
 
     // Set the item as unlinked.
     new_item.pos.reset();
