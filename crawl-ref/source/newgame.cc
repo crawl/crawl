@@ -1158,33 +1158,50 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
 static job_group jobs_order[] =
 {
     {
-        "Warrior",
-        coord_def(0, 0), 15,
-        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
+        "Strong Start",
+        coord_def(0, 0),
+        20,
+        {
+            JOB_BERSERKER,
+            JOB_ICE_ELEMENTALIST,
+            JOB_FIGHTER,
+            JOB_ENCHANTER,
+            JOB_FIRE_ELEMENTALIST,
+            JOB_NECROMANCER,
+        }
     },
     {
-        "Adventurer",
-        coord_def(0, 7), 15,
-        { JOB_ARTIFICER, JOB_WANDERER }
+        "Average Start",
+        coord_def(25, 0),
+        20,
+        {
+            JOB_AIR_ELEMENTALIST,
+            JOB_EARTH_ELEMENTALIST,
+            JOB_GLADIATOR,
+            JOB_ARTIFICER,
+            JOB_CONJURER,
+            JOB_ABYSSAL_KNIGHT,
+            JOB_VENOM_MAGE,
+            JOB_ASSASSIN,
+            JOB_HUNTER,
+        }
     },
     {
-        "Zealot",
-        coord_def(15, 0), 20,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+        "Weak Start",
+        coord_def(50, 0),
+        20,
+        {
+            JOB_WIZARD,
+            JOB_TRANSMUTER,
+            JOB_ARCANE_MARKSMAN,
+            JOB_SUMMONER,
+            JOB_SKALD,
+            JOB_WANDERER,
+            JOB_WARPER,
+            JOB_MONK,
+            JOB_CHAOS_KNIGHT,
+        }
     },
-    {
-        "Warrior-mage",
-        coord_def(35, 0), 21,
-        { JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-          JOB_ENCHANTER }
-    },
-    {
-        "Mage",
-        coord_def(56, 0), 22,
-        { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
-          JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
-    }
 };
 
 bool is_starting_job(job_type job)
