@@ -1462,6 +1462,11 @@ void Popup::_allocate_region()
             region[0] + region[2] + m_padding - 3,
             region[1] + region[3] + m_padding - 3,
             VColour(4, 2, 4));
+#else
+    SizeReq hsr = m_child->get_preferred_size(HORZ, -1);
+    region[2] = max(hsr.min, min(region[2], hsr.nat));
+    SizeReq vsr = m_child->get_preferred_size(VERT, region[2]);
+    region[3] = max(vsr.min, min(region[3], vsr.nat));
 #endif
     m_child->allocate_region(region);
 }
