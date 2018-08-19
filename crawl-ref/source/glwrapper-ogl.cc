@@ -51,7 +51,8 @@ namespace opengl
         {
             mprf(MSGCH_ERROR,
                 "Texture %s is bigger than maximum driver texture size "
-                "(%d,%d vs. %d)",
+                "(%d,%d vs. %d). Sprites from this texture will not display "
+                "properly.",
                 name, width, height, max_texture_size);
             return false;
         }
