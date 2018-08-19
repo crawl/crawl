@@ -22,6 +22,7 @@ public:
     int id = 0;
     int hotkey = 0;
     COLOURS highlight_colour = LIGHTGREY;
+    string description;
 
 protected:
     bool focused = false;
@@ -62,6 +63,7 @@ public:
     function<void(int)> on_button_activated;
 
     weak_ptr<OuterMenu> linked_menus[4];
+    shared_ptr<ui::Switcher> descriptions;
 
 protected:
     bool scroller_event_hook(const wm_event& ev);
@@ -70,6 +72,7 @@ protected:
     shared_ptr<ui::Grid> m_grid;
     shared_ptr<ui::Widget> m_root;
     vector<MenuButton*> m_buttons;
+    vector<int> m_description_indexes;
     int m_width;
     int m_height;
     MenuButton* m_initial_focus {nullptr};

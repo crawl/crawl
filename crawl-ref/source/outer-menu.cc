@@ -105,6 +105,7 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     m_width = width;
     m_height = height;
     m_buttons.resize(width * height, nullptr);
+    m_description_indexes.resize(width * height, -1);
 }
 
 void OuterMenu::_render()
@@ -175,6 +176,8 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
             this->on_button_activated(btn_id);
             return ev.type == WME_KEYDOWN; // button needs to catch clicks
         }
+        if (ev.type == WME_FOCUSIN && m_description_indexes[y*this->m_width+x] != -1)
+            descriptions->current() = m_description_indexes[y*this->m_width+x];
 #ifndef USE_TILE_LOCAL
         if (ev.type == WME_FOCUSIN || ev.type == WME_FOCUSOUT)
         {
@@ -185,6 +188,14 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
 #endif
         return false;
     });
+
+    if (descriptions)
+    {
+        auto desc_text = make_shared<Text>(formatted_string(btn->description, WHITE));
+        desc_text->wrap_text = true;
+        descriptions->add_child(move(desc_text));
+        m_description_indexes[y*m_width + x] = descriptions->num_children()-1;
+    }
 
     m_grid->add_child(move(btn), x, y);
 }
