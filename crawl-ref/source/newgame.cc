@@ -27,6 +27,7 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "prompt.h"
+#include "skills.h"
 #include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1497,81 +1498,62 @@ static void _construct_weapon_menu(const newgame_def& ng,
                                    shared_ptr<OuterMenu>& main_items,
                                    shared_ptr<OuterMenu>& sub_items)
 {
-    string text;
-    const char *thrown_name = nullptr;
+    struct weapon_menu_item {
+        skill_type skill;
+        string label;
+        tileidx_t tile;
+        weapon_menu_item(skill_type _skill, string _label, tileidx_t _tile)
+            : skill(move(_skill)), label(move(_label)), tile(move(_tile)) {};
+        weapon_menu_item(skill_type _skill, string _label)
+            : skill(move(_skill)), label(move(_label)) {};
+    };
+    vector<weapon_menu_item> choices;
+
+    string thrown_name;
 
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
         weapon_type wpn_type = weapons[i].first;
-        char_choice_restriction wpn_restriction = weapons[i].second;
 
-        auto label = make_shared<Text>();
-
-#ifdef USE_TILE_LOCAL
-        auto hbox = make_shared<Box>(Box::HORZ);
-        hbox->align_items = Widget::Align::CENTER;
-        auto tile_stack = make_shared<Stack>();
-        tile_stack->set_margin_for_sdl({0, 6, 0, 0});
-        hbox->add_child(tile_stack);
-        hbox->add_child(label);
-#endif
-
-        text.clear();
-
-        const char letter = 'a' + i;
-
-        text += make_stringf(" %c - ", letter);
         switch (wpn_type)
         {
         case WPN_UNARMED:
-            text += species_has_claws(ng.species) ? "claws" : "unarmed";
-#ifdef USE_TILE_LOCAL
-            tile_stack->min_size() = { TILE_Y, TILE_Y };
-#endif
+            choices.emplace_back(SK_UNARMED_COMBAT, species_has_claws(ng.species) ? "claws" : "unarmed");
             break;
         case WPN_THROWN:
+        {
             // We don't support choosing among multiple thrown weapons.
-            ASSERT(!thrown_name);
-#ifdef USE_TILE_LOCAL
-            tile_stack->add_child(make_shared<Image>(
-                    tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT)));
-#endif
+            tileidx_t tile = 0;
             if (species_can_throw_large_rocks(ng.species))
             {
                 thrown_name = "large rocks";
-#ifdef USE_TILE_LOCAL
-                tile_stack->add_child(make_shared<Image>(
-                        tile_def(TILE_MI_LARGE_ROCK, TEX_DEFAULT)));
+#ifdef USE_TILE
+                tile = TILE_MI_LARGE_ROCK;
 #endif
             }
             else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
             {
                 thrown_name = "boomerangs";
-#ifdef USE_TILE_LOCAL
-                tile_stack->add_child(make_shared<Image>(
-                        tile_def(TILE_MI_BOOMERANG, TEX_DEFAULT)));
+#ifdef USE_TILE
+                tile = TILE_MI_BOOMERANG;
 #endif
             }
             else
             {
                 thrown_name = "javelins";
-#ifdef USE_TILE_LOCAL
-                tile_stack->add_child(make_shared<Image>(
-                        tile_def(TILE_MI_JAVELIN, TEX_DEFAULT)));
+#ifdef USE_TILE
+                tile = TILE_MI_JAVELIN;
 #endif
             }
-            text += thrown_name;
-            text += " and throwing nets";
+            choices.emplace_back(SK_THROWING,
+                    thrown_name + " and throwing nets", tile);
             break;
+        }
         default:
-            text += weapon_base_name(wpn_type);
-#ifdef USE_TILE_LOCAL
+            string text = weapon_base_name(wpn_type);
             item_def dummy;
             dummy.base_type = OBJ_WEAPONS;
             dummy.sub_type = wpn_type;
-            tile_stack->add_child(make_shared<Image>(
-                    tile_def(tileidx_item(dummy), TEX_DEFAULT)));
-#endif
             if (is_ranged_weapon_type(wpn_type))
             {
                 text += " and ";
@@ -1579,18 +1561,68 @@ static void _construct_weapon_menu(const newgame_def& ng,
                                                       : ammo_name(wpn_type);
                 text += "s";
             }
+            choices.emplace_back(item_attack_skill(dummy), text
+#ifdef USE_TILE_LOCAL
+                    , tileidx_item(dummy)
+#endif
+            );
             break;
         }
+    }
+
+    int max_text_width = 0;
+    for (const auto& choice : choices)
+        max_text_width = max(max_text_width, strwidth(choice.label));
+
+    for (unsigned int i = 0; i < weapons.size(); ++i)
+    {
+        const auto& choice = choices[i];
+
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->align_items = Widget::Align::CENTER;
+        hbox->set_margin_for_sdl({2,10,2,2});
+
+#ifdef USE_TILE
+        auto tile_stack = make_shared<Stack>();
+        tile_stack->set_margin_for_sdl({0, 6, 0, 0});
+        tile_stack->flex_grow = 0;
+        hbox->add_child(tile_stack);
+
+        if (choice.skill == SK_THROWING)
+        {
+            tile_stack->add_child(make_shared<Image>(
+                    tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT)));
+        }
+        if (choice.skill == SK_UNARMED_COMBAT)
+            tile_stack->min_size() = { TILE_Y, TILE_Y };
+        else
+            tile_stack->add_child(make_shared<Image>(
+                    tile_def(choice.tile, TEX_DEFAULT)));
+#endif
+
+        auto label = make_shared<Text>();
+        hbox->add_child(label);
+
+        const char letter = 'a' + i;
+
+        string text = make_stringf(" %c - %s", letter,
+                chop_string(choice.label, max_text_width, true).c_str()
+                );
+
+        weapon_type wpn_type = weapons[i].first;
+        char_choice_restriction wpn_restriction = weapons[i].second;
         label->set_text(formatted_string(text,
                     wpn_restriction == CC_UNRESTRICTED ? WHITE : LIGHTGREY));
 
+        hbox->justify_items = Widget::Align::STRETCH;
+        string apt_text = make_stringf("(%+d apt)",
+                species_apt(choice.skill, ng.species));
+        auto suffix = make_shared<Text>(formatted_string(apt_text,
+                wpn_restriction == CC_UNRESTRICTED ? WHITE : LIGHTGREY));
+        hbox->add_child(suffix);
+
         auto btn = make_shared<MenuButton>();
-#ifdef USE_TILE_LOCAL
-        hbox->set_margin_for_sdl({2,10,2,2});
         btn->set_child(move(hbox));
-#else
-        btn->set_child(move(label));
-#endif
         btn->id = wpn_type;
         btn->hotkey = letter;
 
@@ -1619,9 +1651,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
     if (defweapon != WPN_UNKNOWN)
     {
-        text = "Tab - ";
+        string text = "Tab - ";
 
-        ASSERT(defweapon != WPN_THROWN || thrown_name);
+        ASSERT(defweapon != WPN_THROWN || thrown_name != "");
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Recommended" :
                 defweapon == WPN_UNARMED ? "unarmed" :
