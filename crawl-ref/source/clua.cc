@@ -753,10 +753,37 @@ void CLua::init_lua()
 
     lua_atpanic(_state, _clua_panic);
 
-    luaopen_base(_state);
-    luaopen_string(_state);
-    luaopen_table(_state);
-    luaopen_math(_state);
+    // Selectively load some, but not all Lua core libraries.
+    //
+    // In Lua 5.1, these library setup calls are not supposed to be called
+    // directly from C. If the lua version changes, this may need to be changed:
+    // recommended practice is (apparently) checking the lua version's linit.cc
+    // and seeing how that does the full library setup.
+    //
+    // This doesn't seem to *obviously* impact the libraries we use by default,
+    // but some of the libraries we don't use will panic if not called
+    // correctly; since someone writing a bot (for example) might want to
+    // expand this, do things "correctly". The core lua libraries in 5.1 we are
+    // not loading are:
+    //
+    // {LUA_LOADLIBNAME, luaopen_package},    // (require etc)
+    // {LUA_IOLIBNAME, luaopen_io},           // 
+    // {LUA_OSLIBNAME, luaopen_os},
+    // {LUA_DBLIBNAME, luaopen_debug},
+    const vector<pair<string, lua_CFunction>> lua_core_libs =
+    {
+        {"", luaopen_base}, // XX: why no name? but this is how linit.cc does it
+        {LUA_TABLIBNAME, luaopen_table},
+        {LUA_STRLIBNAME, luaopen_string},
+        {LUA_MATHLIBNAME, luaopen_math},
+    };
+
+    for (auto l : lua_core_libs)
+    {
+        lua_pushcfunction(_state, l.second);
+        lua_pushstring(_state, l.first.c_str());
+        lua_call(_state, 1, 0);
+    }
 
     // Open Crawl bindings
     cluaopen_kills(_state);
