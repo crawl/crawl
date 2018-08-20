@@ -101,8 +101,7 @@ public:
     bool needs_paint;
     vector<KeymapContext> keymap_stack;
     vector<int> cutoff_stack;
-
-    Widget* focused_widget = nullptr;
+    vector<Widget*> focus_stack;
 
 protected:
     int m_w, m_h;
@@ -119,7 +118,7 @@ struct Widget::slots Widget::slots = {};
 Widget::~Widget()
 {
     Widget::slots.event.remove_by_target(this);
-    if (get_focused_widget() == this)
+    if (m_parent && get_focused_widget() == this)
         set_focused_widget(nullptr);
     _set_parent(nullptr);
 }
@@ -887,31 +886,19 @@ SizeReq Image::_get_preferred_size(Direction dim, int prosp_width)
 
 void Stack::add_child(shared_ptr<Widget> child)
 {
-    bool adjust_focus = ui_root.widget_is_in_layout(get_focused_widget());
-
-    if (adjust_focus)
-        set_focused_widget(nullptr);
-    Widget* child_ui = child.get();
     child->_set_parent(this);
     m_children.push_back(move(child));
     _invalidate_sizereq();
     _queue_allocation();
-    if (adjust_focus || ui_root.num_children() == 0)
-        set_focused_widget(child_ui);
 }
 
 void Stack::pop_child()
 {
     if (!m_children.size())
         return;
-    bool adjust_focus = ui_root.widget_is_in_layout(m_children.back().get());
-    if (adjust_focus)
-        set_focused_widget(nullptr);
     m_children.pop_back();
     _invalidate_sizereq();
     _queue_allocation();
-    if (adjust_focus && !m_children.empty())
-        set_focused_widget(m_children.front().get());
 }
 
 shared_ptr<Widget> Stack::get_child_at_offset(int x, int y)
@@ -1496,6 +1483,10 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int prosp_width)
 
 void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
 {
+    if (auto popup = dynamic_cast<Popup*>(ch.get()))
+        focus_stack.push_back(popup->get_child().get());
+    else
+        focus_stack.push_back(ch.get());
     m_root.add_child(move(ch));
     m_needs_layout = true;
     keymap_stack.push_back(km);
@@ -1513,6 +1504,7 @@ void UIRoot::pop_child()
     m_root.pop_child();
     m_needs_layout = true;
     keymap_stack.pop_back();
+    focus_stack.pop_back();
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 0)
         clrscr();
@@ -1698,7 +1690,7 @@ bool UIRoot::on_event(const wm_event& event)
             Layout* layout = dynamic_cast<Layout*>(layer_root);
             if (layout && layout->event_filters.emit(layout, event))
                 return true;
-            for (Widget* w = focused_widget; w; w = w->_get_parent())
+            for (Widget* w = focus_stack.back(); w; w = w->_get_parent())
                 if (w->on_event(event))
                     return true;
             break;
@@ -2159,23 +2151,28 @@ void set_focused_widget(Widget* w)
     static bool sent_focusout;
     static Widget* new_focus;
 
-    if (w == ui_root.focused_widget)
+    if (!ui_root.num_children())
+        return;
+
+    auto current_focus = ui_root.focus_stack.back();
+
+    if (w == current_focus)
         return;
 
     new_focus = w;
 
-    if (ui_root.focused_widget && !sent_focusout)
+    if (current_focus && !sent_focusout)
     {
         sent_focusout = true;
         wm_event ev = {0};
         ev.type = WME_FOCUSOUT;
-        ui_root.focused_widget->on_event(ev);
+        current_focus->on_event(ev);
     }
 
     if (new_focus != w)
         return;
 
-    ui_root.focused_widget = new_focus;
+    ui_root.focus_stack.back() = new_focus;
 
     sent_focusout = false;
 
@@ -2189,7 +2186,7 @@ void set_focused_widget(Widget* w)
 
 Widget* get_focused_widget()
 {
-    return ui_root.focused_widget;
+    return ui_root.focus_stack.empty() ? nullptr : ui_root.focus_stack.back();
 }
 
 }
