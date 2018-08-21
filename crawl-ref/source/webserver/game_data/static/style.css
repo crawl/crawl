@@ -512,6 +512,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%; /* for IE11 */
+    max-height: inherit;
 }
 .describe-generic > .header {
     display: -webkit-box;
@@ -544,6 +545,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%; /* for IE11 */
+    max-height: inherit;
 }
 .describe-feature-feat {
     margin: 20px 0;
@@ -569,6 +571,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%; /* for IE11 */
+    max-height: inherit;
 }
 .describe-item > .header {
     display: -webkit-box;
@@ -602,6 +605,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%; /* for IE11 */
+    max-height: inherit;
 }
 .describe-spell > .header {
     display: -webkit-box;
@@ -634,6 +638,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%; /* for IE11 */
+    max-height: inherit;
 }
 .describe-card {
     margin: 20px 0;
@@ -661,6 +666,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     min-width: 40em;
+    max-height: inherit;
 }
 .mutations > .header {
     margin-bottom: 15px;
@@ -718,6 +724,7 @@ body {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+    max-height: inherit;
 }
 .describe-god > .header {
     margin-bottom: 15px;
@@ -787,6 +794,7 @@ body {
     -ms-flex-direction: column;
     flex-direction: column;
     white-space: pre;
+    max-height: inherit;
 }
 .formatted-scroller > .body .highlight {
     background: rgba(255,255,0,0.196);
