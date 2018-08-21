@@ -1385,6 +1385,10 @@ void shadow_monster_reset(monster *mon)
 {
     if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
         destroy_item(mon->inv[MSLOT_WEAPON]);
+    // in case the shadow unwields for some reason, e.g. you clumsily bash with
+    // a ranged weapon:
+    if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_ALT_WEAPON]); 
     if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
         destroy_item(mon->inv[MSLOT_MISSILE]);
 
