@@ -282,6 +282,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $panes.eq(0).find(".desc").html(desc.description);
         $panes.eq(0).find(".god-favour td.title").addClass("fg"+desc.colour).html(desc.title);
         $panes.eq(0).find(".god-favour td.favour").addClass("fg"+desc.colour).html(desc.favour);
+        if (desc.bondage)
+            $panes.eq(0).find(".god-favour")
+                .after("<div class=tbl>" + util.formatted_string_to_html(desc.bondage) + "</div>");
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(.*\.) *( \(.*\))?$/;
@@ -292,8 +295,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $powers.append("<div class=power><div>"+power+"</div><div>"+cost+"</div></div>");
         }
 
-        $panes.eq(1).html(fmt_body_txt(util.formatted_string_to_html(desc.powers)));
+        desc.powers = fmt_body_txt(util.formatted_string_to_html(desc.powers));
+        if (desc.info_table.length !== "")
+            desc.powers += "<div class=tbl>" + util.formatted_string_to_html(desc.info_table) + "</div>";
+        $panes.eq(1).html(desc.powers);
+
         $panes.eq(2).html(fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
+
         for (var i = 0; i < 3; i++)
             scroller($panes.eq(i)[0]);
 
