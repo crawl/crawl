@@ -287,12 +287,15 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 .after("<div class=tbl>" + util.formatted_string_to_html(desc.bondage) + "</div>");
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
-        var re = /^(.*\.) *( \(.*\))?$/;
+        var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
         for (var i = 0; i < powers_list.length; i++)
         {
             var matches = powers_list[i].match(re);
-            var power = matches[1], cost = matches[2] || "";
-            $powers.append("<div class=power><div>"+power+"</div><div>"+cost+"</div></div>");
+            var colour = (matches.length == 4 && matches[1] === "<darkgrey>")
+                ? 8 : desc.colour;
+            var power = matches[2], cost = matches[3] || "";
+            $powers.append("<div class='power fg"+colour+"'><div>"
+                +power+"</div><div>"+cost+"</div></div>");
         }
 
         desc.powers = fmt_body_txt(util.formatted_string_to_html(desc.powers));

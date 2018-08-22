@@ -1085,7 +1085,8 @@ static void _send_god_ui(god_type god, bool is_altar)
     }
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
-    tiles.json_write_string("powers_list", _describe_god_powers(god));
+    tiles.json_write_string("powers_list",
+            _describe_god_powers(god).to_colour_string());
     tiles.json_write_string("info_table", _get_god_specific_table(god));
 
     tiles.json_write_string("powers",
