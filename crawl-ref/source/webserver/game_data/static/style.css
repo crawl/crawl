@@ -589,6 +589,7 @@ body {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
+    white-space: pre;
 }
 .describe-item > .actions {
     margin-top: 15px;
@@ -783,6 +784,9 @@ body {
 }
 .describe-god > body, .describe-god > .body .pane {
     width: 80ch; /* for IE11 */
+}
+.describe-god .body .tbl {
+    white-space: pre;
 }
 
 .formatted-scroller {
