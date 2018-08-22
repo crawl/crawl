@@ -753,6 +753,11 @@ void CLua::init_lua()
 
     lua_atpanic(_state, _clua_panic);
 
+#ifdef CLUA_UNRESTRICTED_LIBS
+    // open all libs -- this is not safe for public servers or releases!
+    // Intended for people writing bots and the like.
+    luaL_openlibs(_state);
+#else
     // Selectively load some, but not all Lua core libraries.
     //
     // In Lua 5.1, these library setup calls are not supposed to be called
@@ -784,6 +789,7 @@ void CLua::init_lua()
         lua_pushstring(_state, l.first.c_str());
         lua_call(_state, 1, 0);
     }
+#endif
 
     // Open Crawl bindings
     cluaopen_kills(_state);
@@ -805,6 +811,13 @@ void CLua::init_lua()
 
     lua_register(_state, "loadfile", _clua_loadfile);
     lua_register(_state, "dofile", _clua_dofile);
+
+#ifdef CLUA_UNRESTRICTED_LIBS
+    // provide an unshadowed version of the full require; lua require isn't
+    // normally loaded at all so shadowing isn't an issue.
+    lua_getglobal(_state, "require");
+    lua_setglobal(_state, "lua_require");
+#endif
 
     lua_register(_state, "require", _clua_require);
 
