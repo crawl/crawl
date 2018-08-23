@@ -812,14 +812,7 @@ void CLua::init_lua()
     lua_register(_state, "loadfile", _clua_loadfile);
     lua_register(_state, "dofile", _clua_dofile);
 
-#ifdef CLUA_UNRESTRICTED_LIBS
-    // provide an unshadowed version of the full require; lua require isn't
-    // normally loaded at all so shadowing isn't an issue.
-    lua_getglobal(_state, "require");
-    lua_setglobal(_state, "lua_require");
-#endif
-
-    lua_register(_state, "require", _clua_require);
+    lua_register(_state, "crawl_require", _clua_require);
 
     execfile("dlua/util.lua", true, true);
     execfile("dlua/iter.lua", true, true);

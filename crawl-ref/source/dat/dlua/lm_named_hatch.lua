@@ -8,7 +8,7 @@ chosen destination will that of destination marker instead of a random
 destination.
 --]]
 
-require('dlua/util.lua')
+crawl_require('dlua/util.lua')
 
 -- A subclass of PortalDescriptor that sets the _hatch_name property
 -- with a unique name.

@@ -52,7 +52,7 @@
 -- events. However, we don't need that much flexibility yet, so it's
 -- all handled inside of the Triggerable class.
 
-require('dlua/lm_mslav.lua')
+crawl_require('dlua/lm_mslav.lua')
 
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable

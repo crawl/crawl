@@ -3,7 +3,7 @@
 ##############################################
 
 {{
-require("dlua/tutorial.lua")
+crawl_require("dlua/tutorial.lua")
 
 tutorial5 = {}
 

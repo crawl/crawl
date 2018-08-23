@@ -8,8 +8,8 @@ geoelf.rooms        = {}    -- Namespace for room drawing functions
 geoelf.rooms.mirror = {}    -- Namespace for room mirroring constants
 geoelf.rooms.shape  = {}    -- Namespace for room shape constants
 
-require("dlua/layout/geoelf_directions.lua")
-require("dlua/layout/geoelf_glyphs.lua")
+crawl_require("dlua/layout/geoelf_directions.lua")
+crawl_require("dlua/layout/geoelf_glyphs.lua")
 
 ----------------
 --

@@ -15,10 +15,10 @@ geoelf = {}          -- Main namespace for engine
 --  command-line.
 geoelf.debug = false
 
-require("dlua/layout/geoelf_directions.lua")
-require("dlua/layout/geoelf_glyphs.lua")
-require("dlua/layout/geoelf_rooms.lua")
-require("dlua/layout/geoelf_corridors.lua")
+crawl_require("dlua/layout/geoelf_directions.lua")
+crawl_require("dlua/layout/geoelf_glyphs.lua")
+crawl_require("dlua/layout/geoelf_rooms.lua")
+crawl_require("dlua/layout/geoelf_corridors.lua")
 
 ----------------------------------------------------------------
 --

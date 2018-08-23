@@ -59,7 +59,7 @@
 default-depth: Vaults
 
 # Include layout code
-: require("dlua/v_layouts.lua")
+: crawl_require("dlua/v_layouts.lua")
 
 ################################################################################
 # Ring Layout

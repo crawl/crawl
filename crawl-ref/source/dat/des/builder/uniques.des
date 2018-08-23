@@ -54,7 +54,7 @@
 ################################################################################
 
 {{
-require('dlua/vault.lua')
+crawl_require('dlua/vault.lua')
 
 function place_unique(e, monster)
    e.mons(monster)

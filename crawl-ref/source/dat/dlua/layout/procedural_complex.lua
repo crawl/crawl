@@ -4,7 +4,7 @@
 -- These use base primitives to build up more complex shapes
 ------------------------------------------------------------------------------
 
-require("dlua/layout/procedural.lua")
+crawl_require("dlua/layout/procedural.lua")
 
 complex = {}
 

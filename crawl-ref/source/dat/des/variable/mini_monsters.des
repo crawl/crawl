@@ -23,7 +23,7 @@
 # best or else delegate to Random or Others. Be picky with Guardians, please.
 ###############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 # Functionality for some Grunt vaults.
 {{

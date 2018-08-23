@@ -11,7 +11,7 @@
 # vaults.des.
 ###############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 default-depth: D:12-, !D:$, Depths, !Depths:$
 

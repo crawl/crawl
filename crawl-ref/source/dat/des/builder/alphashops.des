@@ -10,7 +10,7 @@
 # new items at some point in the future.
 
 {{
-   require("dlua/util.lua")
+   crawl_require("dlua/util.lua")
 
    function ownername(s)
      -- The string.lower and .gsub calls are to crunch names with spaces down

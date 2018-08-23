@@ -1,4 +1,4 @@
-require('dlua/lm_trig.lua')
+crawl_require('dlua/lm_trig.lua')
 
 function dgn.activate_item_decay(data, triggerable, trigger, marker, ev)
   local items = dgn.items_at(marker:pos())

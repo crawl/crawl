@@ -15,7 +15,7 @@
 --  your piety!
 ------------------------------------------------------------------------------
 
-require('dlua/lm_1way.lua')
+crawl_require('dlua/lm_1way.lua')
 
 TroveMarker = util.subclass(OneWayStair)
 TroveMarker.CLASS = "TroveMarker"

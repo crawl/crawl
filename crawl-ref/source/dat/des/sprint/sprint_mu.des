@@ -1,4 +1,4 @@
-: require("dlua/sprint.lua")
+: crawl_require("dlua/sprint.lua")
 
 {{
 function sprint_mu_zot_mons_gen(data, triggerable, triggerer, marker, ev)

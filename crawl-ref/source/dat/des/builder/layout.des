@@ -6,9 +6,9 @@
 #
 ###############################################################################
 
-: require("dlua/layout/zonify.lua")
-: require("dlua/layout/theme.lua")
-: require("dlua/layout/minimum_map_area.lua")
+: crawl_require("dlua/layout/zonify.lua")
+: crawl_require("dlua/layout/theme.lua")
+: crawl_require("dlua/layout/minimum_map_area.lua")
 
 {{
     -- Call func num times around a circle of radius centered at (x, y)

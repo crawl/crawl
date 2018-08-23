@@ -10,7 +10,7 @@
 #  * Maybe send the player back to the entrance?
 #
 {{
-require("dlua/tutorial.lua")
+crawl_require("dlua/tutorial.lua")
 
 tutorial1 = {}
 

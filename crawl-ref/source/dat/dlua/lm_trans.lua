@@ -1,7 +1,7 @@
 -- lm_trans.lua: Between-vault transporter markers. See the syntax guide for
 -- details on usage.
 
-require('dlua/util.lua')
+crawl_require('dlua/util.lua')
 
 -- A subclass of PortalDescriptor that sets the _transporter_name property with
 -- a unique name.

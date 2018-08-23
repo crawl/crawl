@@ -8,7 +8,7 @@
 -- (which should either go into a caves include or just layout_caves.des);
 -- and a few misc functions and of course floor vault.
 
-require("dlua/layout/procedural.lua")
+crawl_require("dlua/layout/procedural.lua")
 
 hyper.shapes = {}
 hyper.floors = {}

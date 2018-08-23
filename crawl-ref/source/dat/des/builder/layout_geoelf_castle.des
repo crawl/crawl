@@ -5,7 +5,7 @@
 ###############################################################################
 
 # Required file contains overview of geoelf room placement
-: require("dlua/layout/geoelf.lua")
+: crawl_require("dlua/layout/geoelf.lua")
 
 {{
   --

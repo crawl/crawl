@@ -5,7 +5,7 @@
 -- If TAG_MAJOR_VERSION > 34 this file should be removed.
 ------------------------------------------------------------------------------
 
-require("dlua/lm_1way.lua")
+crawl_require("dlua/lm_1way.lua")
 
 TollStair = util.subclass(OneWayStair)
 TollStair.CLASS = "TollStair"

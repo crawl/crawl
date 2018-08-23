@@ -23,11 +23,11 @@
 
 hypervaults = {}  -- Old namespace, gradually moving everything into hyper.*
 
-require("dlua/v_debug.lua")
-require("dlua/v_paint.lua")
-require("dlua/v_rooms.lua")
-require("dlua/v_shapes.lua")
-require("dlua/ghost.lua")
+crawl_require("dlua/v_debug.lua")
+crawl_require("dlua/v_paint.lua")
+crawl_require("dlua/v_rooms.lua")
+crawl_require("dlua/v_shapes.lua")
+crawl_require("dlua/ghost.lua")
 
 _VAULTS_DEBUG = false
 

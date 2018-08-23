@@ -2,11 +2,11 @@
 # layout_forest.des: Enchanted Forest layouts
 ###############################################################################
 
-: require("dlua/util.lua")
-: require("dlua/layout/procedural.lua")
-: require("dlua/layout/zonify.lua")
-: require("dlua/layout/hyper.lua")
-: require("dlua/layout/theme.lua")
+: crawl_require("dlua/util.lua")
+: crawl_require("dlua/layout/procedural.lua")
+: crawl_require("dlua/layout/zonify.lua")
+: crawl_require("dlua/layout/hyper.lua")
+: crawl_require("dlua/layout/theme.lua")
 
 ##############################################################
 # layout_forest

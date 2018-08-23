@@ -3,7 +3,7 @@
 -- Portal descriptor markers.
 ------------------------------------------------------------------------------
 
-require('dlua/util.lua')
+crawl_require('dlua/util.lua')
 
 util.defclass("PortalDescriptor")
 

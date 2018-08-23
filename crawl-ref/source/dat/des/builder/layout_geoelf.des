@@ -6,7 +6,7 @@
 ###############################################################################
 
 # Required file contains overview
-: require("dlua/layout/geoelf.lua")
+: crawl_require("dlua/layout/geoelf.lua")
 
 ##############################################################
 # layout_geoelf_grid

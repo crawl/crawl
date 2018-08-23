@@ -8,7 +8,7 @@
 -- architecture.
 ------------------------------------------------------------------------------
 
-require("dlua/hyper_city.lua")
+crawl_require("dlua/hyper_city.lua")
 
 hyper.fort = {}
 

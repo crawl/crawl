@@ -8,8 +8,8 @@
 #  with some of the rooms connected into open areas.
 #
 
-: require("dlua/layout/zonify.lua")
-: require("dlua/layout/minimum_map_area.lua")
+: crawl_require("dlua/layout/zonify.lua")
+: crawl_require("dlua/layout/minimum_map_area.lua")
 
 NAME:   layout_overlapping_boxes
 DEPTH:  Dis:1-6

@@ -10,7 +10,7 @@
 --    and then places buildings specifically within those zones.
 ------------------------------------------------------------------------------
 
-require("dlua/v_main.lua")
+crawl_require("dlua/v_main.lua")
 
 hyper.city = {}
 hyper.city.default_strategy = hyper.place.strategy_inner_or_carve

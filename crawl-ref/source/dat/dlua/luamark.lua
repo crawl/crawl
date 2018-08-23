@@ -3,7 +3,7 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
-require('dlua/fnwrap.lua')
+crawl_require('dlua/fnwrap.lua')
 
 -- Every marker class must register its class name keyed to its reader
 -- function in this table.
@@ -16,21 +16,21 @@ function dlua_register_marker_table(table, reader)
   MARKER_UNMARSHALL_TABLE[table.CLASS] = reader
 end
 
-require('dlua/lm_trig.lua')
-require('dlua/lm_pdesc.lua')
-require('dlua/lm_1way.lua')
-require('dlua/lm_timed.lua')
-require('dlua/lm_toll.lua') -- remove upon TAG_MAJOR_VERSION bump
-require('dlua/lm_fog.lua')
-require('dlua/lm_props.lua')
-require('dlua/lm_mon_prop.lua')
-require('dlua/lm_monst.lua')
-require('dlua/lm_trove.lua')
-require('dlua/lm_door.lua')
-require('dlua/lm_items.lua')
-require('dlua/lm_named_hatch.lua')
-require('dlua/fnwrap.lua')
-require('dlua/lm_trans.lua')
+crawl_require('dlua/lm_trig.lua')
+crawl_require('dlua/lm_pdesc.lua')
+crawl_require('dlua/lm_1way.lua')
+crawl_require('dlua/lm_timed.lua')
+crawl_require('dlua/lm_toll.lua') -- remove upon TAG_MAJOR_VERSION bump
+crawl_require('dlua/lm_fog.lua')
+crawl_require('dlua/lm_props.lua')
+crawl_require('dlua/lm_mon_prop.lua')
+crawl_require('dlua/lm_monst.lua')
+crawl_require('dlua/lm_trove.lua')
+crawl_require('dlua/lm_door.lua')
+crawl_require('dlua/lm_items.lua')
+crawl_require('dlua/lm_named_hatch.lua')
+crawl_require('dlua/fnwrap.lua')
+crawl_require('dlua/lm_trans.lua')
 
 function dlua_marker_reader_name(table)
   -- Check that the reader is actually registered for this table.

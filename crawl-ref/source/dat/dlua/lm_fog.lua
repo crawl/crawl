@@ -64,7 +64,7 @@
 --
 ------------------------------------------------------------------------------
 
-require('dlua/lm_trig.lua')
+crawl_require('dlua/lm_trig.lua')
 
 FogMachine       = util.subclass(Triggerable)
 FogMachine.CLASS = "FogMachine"

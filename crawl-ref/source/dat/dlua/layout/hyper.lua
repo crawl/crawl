@@ -12,17 +12,17 @@ hyper.debug = false
 -- Outputs some profiling information on the layout build
 hyper.profile = false
 
-require("dlua/layout/vector.lua")
-require("dlua/layout/hyper_usage.lua")
-require("dlua/layout/hyper_paint.lua")
-require("dlua/layout/hyper_place.lua")
-require("dlua/layout/hyper_strategy.lua")
-require("dlua/layout/hyper_rooms.lua")
-require("dlua/layout/hyper_shapes.lua")
-require("dlua/layout/hyper_decor.lua")
-require("dlua/layout/rooms_primitive.lua")
-require("dlua/layout/hyper_debug.lua")
-require("dlua/profiler.lua")
+crawl_require("dlua/layout/vector.lua")
+crawl_require("dlua/layout/hyper_usage.lua")
+crawl_require("dlua/layout/hyper_paint.lua")
+crawl_require("dlua/layout/hyper_place.lua")
+crawl_require("dlua/layout/hyper_strategy.lua")
+crawl_require("dlua/layout/hyper_rooms.lua")
+crawl_require("dlua/layout/hyper_shapes.lua")
+crawl_require("dlua/layout/hyper_decor.lua")
+crawl_require("dlua/layout/rooms_primitive.lua")
+crawl_require("dlua/layout/hyper_debug.lua")
+crawl_require("dlua/profiler.lua")
 
 -- The four directions and their associated vector normal and name.
 -- This helps us manage orientation of rooms.

@@ -4,7 +4,7 @@
 --
 ------------------------------------------------------------------------------
 
-require("dlua/layout/vector.lua")
+crawl_require("dlua/layout/vector.lua")
 
 zonify = {}
 

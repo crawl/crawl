@@ -20,7 +20,7 @@
 # For serial vaults, read dat/des/serial/serial_guide.txt.
 ############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 default-depth: D, Depths, Elf, Crypt
 

@@ -8,7 +8,7 @@
 #  * potion of experience gives too much skills - find another way for Meph?
 #
 {{
-require("dlua/tutorial.lua")
+crawl_require("dlua/tutorial.lua")
 
 tutorial4 = {}
 

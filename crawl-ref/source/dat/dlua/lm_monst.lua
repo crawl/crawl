@@ -28,7 +28,7 @@
 --  * Place monster displaced from marker.
 --  * Be triggered more than once.
 
-require('dlua/lm_trig.lua')
+crawl_require('dlua/lm_trig.lua')
 
 MonsterOnTrigger       = util.subclass(Triggerable)
 MonsterOnTrigger.CLASS = "MonsterOnTrigger"

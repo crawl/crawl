@@ -18,7 +18,7 @@
 # monsters. For more thematic vaults, put them in <<2>>.
 ###############################################################################
 
-: require("dlua/ghost.lua")
+: crawl_require("dlua/ghost.lua")
 
 {{
 -- Set up the non-flaming edged weapon "left" by the ghost in

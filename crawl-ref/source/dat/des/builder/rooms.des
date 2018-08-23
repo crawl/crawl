@@ -11,7 +11,7 @@
 
 lua {{
 
-require('dlua/vault.lua')
+crawl_require('dlua/vault.lua')
 
 function fill_special_room(e, mon, lord_mon, pack)
     if type(mon) == "table" then

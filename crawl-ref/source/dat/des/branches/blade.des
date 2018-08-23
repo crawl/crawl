@@ -5,7 +5,7 @@
 # TAG_MAJOR_VERSION >= 35. (i.e, it is only necessary if the TAG_MAJOR_VERSION
 # is 34)
 ##############################################################################
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 # Main layout
 NAME:    hall_of_blades

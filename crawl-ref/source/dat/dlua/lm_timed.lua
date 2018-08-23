@@ -3,8 +3,8 @@
 -- Lua timed map feature markers.
 ------------------------------------------------------------------------------
 
-require('dlua/lm_tmsg.lua')
-require('dlua/lm_1way.lua')
+crawl_require('dlua/lm_tmsg.lua')
+crawl_require('dlua/lm_1way.lua')
 
 TimedMarker = util.subclass(OneWayStair)
 TimedMarker.CLASS = "TimedMarker"

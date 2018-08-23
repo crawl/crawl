@@ -4,7 +4,7 @@
 -- These procedurals can be used as a base to build up more complex objects
 ------------------------------------------------------------------------------
 
--- require("dlua/layout/procedural.lua")
+-- crawl_require("dlua/layout/procedural.lua")
 
 primitive = {}
 

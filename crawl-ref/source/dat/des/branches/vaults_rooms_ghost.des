@@ -13,7 +13,7 @@
 # common.
 ################################################################################
 
-: require("dlua/ghost.lua")
+: crawl_require("dlua/ghost.lua")
 
 NAME:   advil_vaults_ghost_guards
 KITEM:  12 = superb_item / star_item

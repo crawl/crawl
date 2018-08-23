@@ -4,7 +4,7 @@
 #          Coc (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 {{
 function coc_setup(e)

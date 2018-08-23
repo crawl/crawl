@@ -16,7 +16,7 @@
 # or very generic monsters, opt for <3>, otherwise use <2>.
 ###############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 {{
 function zot_entry_setup(e)

@@ -4,7 +4,7 @@
 #          Tar (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
-: require('dlua/vault.lua')
+: crawl_require('dlua/vault.lua')
 
 {{
 function tar_setup(e)

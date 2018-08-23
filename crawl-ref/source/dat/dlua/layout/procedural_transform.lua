@@ -3,7 +3,7 @@
 --
 ------------------------------------------------------------------------------
 
-require("dlua/layout/procedural.lua")
+crawl_require("dlua/layout/procedural.lua")
 
 procedural.transform = {}
 

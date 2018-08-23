@@ -10,8 +10,8 @@
 ------------------------------------------------------------------------------
 
 procedural = {}
-require("dlua/layout/procedural_primitives.lua")
-require("dlua/util.lua")
+crawl_require("dlua/layout/procedural_primitives.lua")
+crawl_require("dlua/util.lua")
 ------------------------------------------------------------------------------
 -- Aggregate functions
 --

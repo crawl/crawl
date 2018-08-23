@@ -12,7 +12,7 @@
 ###############################################################################
 
 lua {{
-require('dlua/vault.lua')
+crawl_require('dlua/vault.lua')
 
 MAX_RANDOM_SHOPS = 5
 

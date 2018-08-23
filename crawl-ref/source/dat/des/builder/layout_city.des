@@ -4,12 +4,12 @@
 # TODO: Move layout_regular_city and layout_chaotic_city here?
 ###############################################################################
 
-: require("dlua/util.lua")
-: require("dlua/layout/layout.lua")
-: require("dlua/layout/procedural.lua")
-: require("dlua/layout/zonify.lua")
-: require("dlua/layout/omnigrid.lua")
-: require("dlua/layout/theme.lua")
+: crawl_require("dlua/util.lua")
+: crawl_require("dlua/layout/layout.lua")
+: crawl_require("dlua/layout/procedural.lua")
+: crawl_require("dlua/layout/zonify.lua")
+: crawl_require("dlua/layout/omnigrid.lua")
+: crawl_require("dlua/layout/theme.lua")
 
 {{
   -- TODO: Also used in layout_grids, maybe move to a library?
