@@ -18,7 +18,7 @@ show_more = false
 :     crawl.enable_more(false)
 :     crawl.set_sendkeys_errors(true)
 :     crawl.process_keys("&Y" .. esc)
-:     crawl.call_dlua("require('dlua/stress.lua');" ..
+:     crawl.call_dlua("crawl_require('dlua/stress.lua');" ..
 :                     "stress.entomb();" ..
 :                     "stress.awaken_level()")
 :     crawl.sendkeys("5")

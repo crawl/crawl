@@ -31,7 +31,7 @@ show_more = false
 :     crawl.sendkeys("&" .. string.char(20) ..
 :                    "debug.disable('confirmations')" .. eol ..
 :                    "debug.disable('death')" .. eol ..
-:                    "require('dlua/stress.lua')" .. eol ..
+:                    "crawl_require('dlua/stress.lua')" .. eol ..
 :                    "stress.fill_level('floor')" .. eol ..
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol .. esc)
@@ -43,7 +43,7 @@ show_more = false
 :     end
 :   end
 :   if (you.turns() % 7) == 1 then
-:     crawl.call_dlua("require('dlua/stress.lua')" .. eol ..
+:     crawl.call_dlua("crawl_require('dlua/stress.lua')" .. eol ..
 :                     "stress.boost_monster_hp()" .. eol ..
 :                     "you.piety(200)")
 :     crawl.sendkeys("&corb" .. eol .. eol)
