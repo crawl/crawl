@@ -4741,8 +4741,8 @@ void BoxMenuHighlighter::_place_items()
     if (tmp != nullptr)
     {
         const VColour& c = term_colours[tmp->get_highlight_colour()];
-        const VColour bg_colour(c.r, c.b, c.g, 17);
-        const VColour line_colour(c.r, c.b, c.g, 71);
+        const VColour bg_colour(c.r, c.g, c.b, 17);
+        const VColour line_colour(c.r, c.g, c.b, 71);
         const coord_def tl = tmp->get_min_coord() + coord_def(1, 1);
         const coord_def br = tmp->get_max_coord();
         m_line_buf.add_square(tl.x, tl.y, br.x, br.y, line_colour);
