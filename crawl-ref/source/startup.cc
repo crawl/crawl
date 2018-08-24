@@ -382,7 +382,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_NORMAL);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -401,7 +401,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "Tutorial for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_TUTORIAL);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -420,7 +420,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "Hints Mode for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_HINTS);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -439,7 +439,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "Dungeon Sprint";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_SPRINT);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -457,7 +457,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "Instructions";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_INSTRUCTIONS);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -475,7 +475,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "The Arena";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_ARENA);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -493,7 +493,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     text = "High Scores";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     tmp->set_id(GAME_TYPE_HIGH_SCORES);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
@@ -514,7 +514,7 @@ static void _add_newgame_button(MenuScroller* menu, int num_chars)
     tmp->set_text("New Game");
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
     tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
     // unique id
     tmp->set_id(NUM_GAME_TYPE + num_chars);
     menu->attach_item(tmp);
@@ -534,7 +534,7 @@ static void _construct_save_games_menu(MenuScroller* menu,
         tmp->set_text(chars.at(i).short_desc());
         tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
         tmp->set_fg_colour(chars.at(i).save_loadable ? WHITE : RED);
-        tmp->set_highlight_colour(WHITE);
+        tmp->set_highlight_colour(LIGHTGREY);
         // unique id
         tmp->set_id(NUM_GAME_TYPE + i);
 #ifdef USE_TILE_LOCAL
