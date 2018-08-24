@@ -43,6 +43,18 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
 
+#ifdef USE_TILE_LOCAL
+#  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_CONTROL LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_GOOD LIGHTGREEN
+#else
+#  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_BAD BLUE
+#  define STARTUP_HIGHLIGHT_CONTROL BLUE
+#  define STARTUP_HIGHLIGHT_GOOD GREEN
+#endif
+
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
 //
@@ -789,7 +801,7 @@ static void _add_choice_menu_options(int choice_type,
     }
     else
         tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random recommended " + other_choice_name + " based on your current " + choice_name + " choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -804,7 +816,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Shuffles through random recommended character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -820,7 +832,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -835,7 +847,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Opens the help screen.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -850,7 +862,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random " + choice_name + ".");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -865,7 +877,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_id(M_RANDOM_CHAR);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -894,7 +906,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -911,7 +923,7 @@ static void _add_choice_menu_options(int choice_type,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
         tmp->set_description_text("Play a new game with your previous choice.");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -949,17 +961,17 @@ static void _attach_group_item(MenuFreeform* menu,
     if (item_status == ITEM_STATUS_UNKNOWN)
     {
         tmp->set_fg_colour(LIGHTGRAY);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
     }
     else if (item_status == ITEM_STATUS_RESTRICTED)
     {
         tmp->set_fg_colour(DARKGRAY);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_BAD);
     }
     else
     {
         tmp->set_fg_colour(WHITE);
-        tmp->set_highlight_colour(GREEN);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
     }
 
     string text;
@@ -1546,12 +1558,12 @@ static void _construct_weapon_menu(const newgame_def& ng,
         if (wpn_restriction == CC_UNRESTRICTED)
         {
             tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
+            tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
         }
         else
         {
             tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
+            tmp->set_highlight_colour(STARTUP_HIGHLIGHT_BAD);
         }
         const char letter = 'a' + i;
         tmp->add_hotkey(letter);
@@ -1644,7 +1656,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     tmp->set_id(M_VIABLE);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random recommended weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1659,7 +1671,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1674,7 +1686,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1689,7 +1701,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(WPN_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1706,7 +1718,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1734,7 +1746,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
         tmp->set_description_text("Select your old weapon");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -2109,7 +2121,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text.clear();
 
         tmp->set_fg_colour(LIGHTGREY);
-        tmp->set_highlight_colour(GREEN);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
 
         const char letter = 'a' + i;
         text += letter;
@@ -2159,7 +2171,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('%');
         tmp->set_id(M_APTITUDES);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -2174,7 +2186,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('?');
         tmp->set_id(M_HELP);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Opens the help screen");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -2189,7 +2201,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('*');
         tmp->set_id(M_RANDOM);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Picks a random sprint map");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -2232,7 +2244,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Select your previous sprint map and character");
         menu->attach_item(tmp);
         tmp->set_visible(true);
