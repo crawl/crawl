@@ -1208,7 +1208,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
-                + (ash_id ? " " : "")
+                + (ash_id && mweap[0] != ' ' ? " " : "")
                 + mweap + ".";
         }
 
