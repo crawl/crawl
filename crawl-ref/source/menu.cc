@@ -690,10 +690,6 @@ bool UIMenu::on_event(const wm_event& event)
         int entry = m_mouse_idx;
         if (entry != -1 && m_menu->items[entry]->hotkeys.size() > 0)
             key = m_menu->items[entry]->hotkeys[0];
-#ifdef TOUCH_UI
-        else if (y < 0 || y >= m_region[3])
-            key = CK_TOUCH_DUMMY;
-#endif
         m_mouse_pressed = false;
         _queue_allocation();
     }
@@ -1013,6 +1009,19 @@ void Menu::do_menu()
         done = !process_key(ev.key.keysym.sym);
         return true;
     });
+#ifdef TOUCH_UI
+    auto menu_wrap_click = [this, &done](const wm_event& ev) {
+        if (!m_filter && ev.type == WME_MOUSEBUTTONDOWN
+                && ev.mouse_event.button == MouseEvent::LEFT)
+        {
+            done = !process_key(CK_TOUCH_DUMMY);
+            return true;
+        }
+        return false;
+    };
+    m_ui.title->on(Widget::slots.event, menu_wrap_click);
+    m_ui.more_bin->on(Widget::slots.event, menu_wrap_click);
+#endif
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
