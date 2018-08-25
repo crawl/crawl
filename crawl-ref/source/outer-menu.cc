@@ -297,7 +297,7 @@ void OuterMenu::scroll_button_into_view(MenuButton *btn)
     scroller->set_scroll(scroller->get_scroll() + delta);
 }
 
-bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy)
+bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy, int limit)
 {
     MenuButton* btn = nullptr;
     int nx, ny;
@@ -308,7 +308,8 @@ bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy)
         if (m_buttons[ny*m_width + nx])
         {
             btn = m_buttons[ny*m_width + nx];
-            break;
+            if (--limit == 0)
+                break;
         }
     }
 
@@ -321,7 +322,7 @@ bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy)
         {
             int lfx = dx == 0 ? min(fx, linked->m_width-1) : dx < 0 ? linked->m_width : -1;
             int lfy = dy == 0 ? min(fy, linked->m_height-1) : dy < 0 ? linked->m_height : -1;
-            return linked->move_button_focus(lfx, lfy, dx, dy);
+            return linked->move_button_focus(lfx, lfy, dx, dy, 1);
         }
     }
     return btn != nullptr;
@@ -329,18 +330,18 @@ bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy)
 
 bool OuterMenu::scroller_event_hook(const wm_event& ev)
 {
-    MenuButton::focus_on_mouse = ev.type == WME_MOUSEWHEEL
-            || ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_PGDN
-            || ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_PGUP;
+    MenuButton::focus_on_mouse = ev.type == WME_MOUSEWHEEL;
 
     if (ev.type != WME_KEYDOWN)
         return false;
     int key = ev.key.keysym.sym;
 
-    if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT)
+    if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT
+            || key == CK_HOME || key == CK_END || key == CK_PGUP || key == CK_PGDN)
     {
         const int dx = key == CK_LEFT ? -1 : key == CK_RIGHT ? 1 : 0;
-        const int dy = key == CK_UP ? -1 : key == CK_DOWN ? 1 : 0;
+        const int dy = key == CK_UP || key == CK_PGUP || key == CK_HOME ? -1
+            : key == CK_DOWN || key == CK_PGDN || key == CK_END ? 1 : 0;
         ASSERT((dx == 0) != (dy == 0));
 
         const Widget* focus = ui::get_focused_widget();
@@ -355,7 +356,11 @@ bool OuterMenu::scroller_event_hook(const wm_event& ev)
                 }
         ASSERT(fx >= 0 && fy >= 0);
 
-        return move_button_focus(fx, fy, dx, dy);
+        const int pagesz = m_root->get_region()[3] / focus->get_region()[3] - 1;
+        const int limit = (key == CK_HOME || key == CK_END) ? INT_MAX
+            : (key == CK_PGUP || key == CK_PGDN) ? pagesz : 1;
+
+        return move_button_focus(fx, fy, dx, dy, limit);
     }
 
     return false;

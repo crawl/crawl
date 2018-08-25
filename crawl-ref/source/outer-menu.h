@@ -78,7 +78,7 @@ public:
 
 protected:
     bool scroller_event_hook(const wm_event& ev);
-    bool move_button_focus(int fx, int fy, int dx, int dy);
+    bool move_button_focus(int fx, int fy, int dx, int dy, int limit);
 
     shared_ptr<ui::Grid> m_grid;
     shared_ptr<ui::Widget> m_root;
