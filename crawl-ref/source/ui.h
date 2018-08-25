@@ -279,6 +279,8 @@ public:
     }
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
     size_t num_children() const { return m_children.size(); }
+    shared_ptr<Widget>& operator[](size_t pos) { return m_children[pos]; };
+    const shared_ptr<Widget>& operator[](size_t pos) const { return m_children[pos]; };
 private:
     typedef Container::iterator I;
 
