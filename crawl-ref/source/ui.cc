@@ -108,10 +108,7 @@ struct Widget::slots Widget::slots = {};
 
 bool Widget::on_event(const wm_event& event)
 {
-    if (event.type == WME_KEYDOWN || event.type == WME_KEYUP)
-        return Widget::slots.event.emit(this, event);
-    else
-        return false;
+    return Widget::slots.event.emit(this, event);
 }
 
 static inline bool _maybe_propagate_event(wm_event event, shared_ptr<Widget> &child)
