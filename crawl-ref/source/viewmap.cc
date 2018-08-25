@@ -159,13 +159,11 @@ bool is_feature(char32_t feature, const coord_def& where)
         // feat_is_altar doesn't include it in the first place.
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
                 && !feat_is_altar(grid)
-                && !feat_is_portal_exit(grid)
                 && grid != DNGN_ENTER_SHOP
                 && grid != DNGN_TRANSPORTER;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
                 && !feat_is_altar(grid)
-                && !feat_is_portal_entrance(grid)
                 && grid != DNGN_ENTER_SHOP
                 && grid != DNGN_TRANSPORTER;
     case '^':
@@ -185,15 +183,13 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        return feat_is_portal_exit(grd(where))
-               || grd(where) == DNGN_EXIT_ABYSS
+        return grd(where) == DNGN_EXIT_ABYSS
                || grd(where) == DNGN_EXIT_PANDEMONIUM
                || grd(where) == DNGN_ENTER_HELL && player_in_hell();
     }
     else if (glyph == '>')
     {
-        return feat_is_portal_entrance(grd(where))
-               || grd(where) == DNGN_TRANSIT_PANDEMONIUM
+        return grd(where) == DNGN_TRANSIT_PANDEMONIUM
                || grd(where) == DNGN_TRANSPORTER;
     }
 
