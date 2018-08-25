@@ -717,6 +717,130 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.children(".body")[0].textContent = msg.text;
     }
 
+    function focus_button($button)
+    {
+        var $popup = $button.closest(".newgame-choice");
+        var menu_id = $button.closest("[menu_id]").attr("menu_id");
+        $popup.find(".button.selected").removeClass("selected");
+        $button.addClass("selected");
+        var $scr = $button.closest(".simplebar-scroll-content");
+        if ($scr.length === 1)
+        {
+            var br = $button[0].getBoundingClientRect();
+            var gr = $scr.parent()[0].getBoundingClientRect();
+            console.log(br.bottom, gr.bottom);
+            var delta = br.top < gr.top ? br.top - gr.top :
+                    br.bottom > gr.bottom ? br.bottom - gr.bottom : 0;
+            console.log("delta: ", delta);
+            $scr[0].scrollTop += delta;
+        }
+
+        var $descriptions = $popup.find(".descriptions");
+        paneset_cycle($descriptions, $button.attr("data-description-index"));
+        comm.send_message("outer_menu_focus", {
+            hotkey: parseInt($button.attr("data-hotkey"), 10),
+            menu_id: menu_id,
+        });
+    }
+
+    function newgame_choice(msg)
+    {
+        var $popup = $(".templates > .newgame-choice").clone();
+        if (msg.doll)
+        {
+            var $canvas = $("<canvas>");
+            var $title = $("<span>");
+            var $prompt = $("<div class=header>");
+            $popup.children(".header").append($canvas).append($title).after($prompt);
+            $title.html(util.formatted_string_to_html(msg.title));
+            $prompt.html(util.formatted_string_to_html(msg.prompt));
+            var renderer = new cr.DungeonCellRenderer();
+            util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+            renderer.init($canvas[0]);
+            $.each(msg.doll, function (i, doll_part) {
+                renderer.draw_player(doll_part[0], 0, 0, 0, 0, doll_part[1]);
+            });
+        }
+        else
+            $popup.children(".header").html(util.formatted_string_to_html(msg.title));
+        var renderer = new cr.DungeonCellRenderer();
+        var $descriptions = $popup.find(".descriptions");
+
+        function build_item_grid(data, $container, fat)
+        {
+            $container.attr("menu_id", data.menu_id);
+            $.each(data.buttons, function (i, button) {
+                var $button = $("<div class=button>");
+                if ((button.tile || []).length > 0 || fat)
+                {
+                    var $canvas = $("<canvas class='glyph-mode-hidden'>");
+                    util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+                    renderer.init($canvas[0]);
+
+                    $.each(button.tile || [], function (_, tile) {
+                        renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax, false);
+                    });
+                    $button.append($canvas);
+                }
+                $.each(button.labels || [button.label], function (i, label) {
+                    var $lbl = $(util.formatted_string_to_html(label)).css("flex-grow", "1");
+                    $button.append($lbl);
+                });
+                $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
+                $descriptions.append("<span class='pane'> " + button.description + "</span>");
+                $button.attr("data-description-index", $descriptions.children().length - 1);
+                $button.attr("data-hotkey", button.hotkey);
+                $button.addClass("hlc-" + button.highlight_colour);
+                $container.append($button);
+
+                $button.on("click", function () {
+                    comm.send_message("key", { keycode: button.hotkey });
+                }).on('hover', function () { focus_button($(this)) });
+            });
+            $.each(data.labels, function (i, button) {
+                var $button = $("<div class=label>");
+                $button.append(util.formatted_string_to_html(button.label));
+                $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
+                $container.append($button);
+            });
+        }
+
+        var $main = $popup.find(".main-items");
+        build_item_grid(msg["main-items"], $main, true);
+        build_item_grid(msg["sub-items"], $popup.find(".sub-items"));
+        scroller($main.parent()[0]);
+        focus_button($popup.find(".main-items").eq(0));
+
+        return $popup;
+    }
+
+    function newgame_choice_update(msg)
+    {
+        if (!client.is_watching() && msg.from_client)
+            return;
+        var $popup = ui.top_popup();
+        if (!$popup || !$popup.hasClass("newgame-choice"))
+            return;
+        focus_button($popup.find("[data-hotkey='"+msg.button_focus+"']"));
+    }
+
+    function newgame_random_combo(msg)
+    {
+        var $popup = $(".templates > .describe-generic").clone();
+        $popup.find(".header > span").html(util.formatted_string_to_html(msg.prompt));
+        $popup.find(".body").html("Do you want to play this combination? [Y/n/q]");
+
+        var $canvas = $popup.find(".header > canvas");
+        var renderer = new cr.DungeonCellRenderer();
+        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+        renderer.init($canvas[0]);
+        $.each(msg.doll, function (i, doll_part) {
+            renderer.draw_player(doll_part[0], 0, 0, 0, 0, doll_part[1]);
+        });
+
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -730,6 +854,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "formatted-scroller" : formatted_scroller,
         "progress-bar" : progress_bar,
         "msgwin-get-line" : msgwin_get_line,
+        "newgame-choice": newgame_choice,
+        "newgame-random-combo": newgame_random_combo,
     };
 
     function register_ui_handlers(dict)
@@ -766,6 +892,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "formatted-scroller" : formatted_scroller_update,
             "msgwin-get-line" : msgwin_get_line_update,
             "progress-bar" : progress_bar_update,
+            "newgame-choice" : newgame_choice_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

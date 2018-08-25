@@ -1036,3 +1036,102 @@ body {
 #ui-stack:not([data-display-mode="tiles"]) .glyph-mode-hidden {
     display: none !important;
 }
+
+.newgame-choice {
+     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.newgame-choice .header
+{
+    margin-bottom: 15px;
+    white-space: pre;
+    display: flex;
+    align-items: center;
+    flex: 1 0 auto;
+}
+
+.newgame-choice .header > canvas
+{
+    margin-right: 10px;
+}
+
+.newgame-choice > .body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.newgame-choice .grid
+{
+    display: grid;
+    list-style: none;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+.newgame-choice .sub-items
+{
+    flex: 1 0 auto;
+}
+
+.newgame-choice .grid .button {
+    background: black;
+    white-space: pre;
+    padding: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.001);
+}
+
+.newgame-choice .grid .button.selected
+{
+    background: black;
+    border: 1px solid #222;
+}
+
+.newgame-choice .grid .button.selected.hlc-7 { border: 1px solid #babdb6; } /* lightgrey */
+.newgame-choice .grid .button.selected.hlc-1 { border: 1px solid #204a87; } /* blue */
+.newgame-choice .grid .button.selected.hlc-2 { border: 1px solid #4e9a06; } /* green */
+
+.newgame-choice .grid .button.selected:hover {
+    cursor: pointer;
+}
+
+.newgame-choice .grid .button:active
+{
+    background: black;
+    border: 1px solid #222 !important;
+}
+
+.newgame-choice .grid .button
+{
+    display: flex;
+    align-items: center;
+    padding-right: 1em;
+}
+
+.newgame-choice .grid .button > span
+{
+    margin-left: 6px;
+}
+
+#ui-stack[data-display-mode="tiles"] .newgame-choice .grid .label {
+    align-self: end;
+    margin-bottom: 0.75em;
+    margin-left: 2px;
+}
+
+#ui-stack[data-display-mode="tiles"] .newgame-choice .grid .label::before {
+    content: " ";
+    display: inline-block;
+    margin-left: 32px;
+}
+
+.newgame-choice .descriptions
+{
+    margin: 15px 0;
+    max-width: 70ch;
+    flex: 1 0 auto;
+}

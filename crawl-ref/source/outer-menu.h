@@ -24,6 +24,10 @@ public:
     COLOURS highlight_colour = LIGHTGREY;
     string description;
 
+#ifdef USE_TILE_WEB
+    void serialize();
+#endif
+
 protected:
     bool focused = false;
     bool active = false;
@@ -38,6 +42,12 @@ class OuterMenu : public ui::Widget
 {
 public:
     OuterMenu(bool can_shrink, int width, int height);
+
+#ifdef USE_TILE_WEB
+    ~OuterMenu();
+    void serialize(string name);
+    static void recv_outer_menu_focus(const char *menu_id, int hotkey);
+#endif
 
     virtual void _render() override;
     virtual ui::SizeReq _get_preferred_size(ui::Widget::Direction, int) override;
@@ -64,6 +74,7 @@ public:
 
     weak_ptr<OuterMenu> linked_menus[4];
     shared_ptr<ui::Switcher> descriptions;
+    const char *menu_id {nullptr};
 
 protected:
     bool scroller_event_hook(const wm_event& ev);
@@ -72,6 +83,7 @@ protected:
     shared_ptr<ui::Grid> m_grid;
     shared_ptr<ui::Widget> m_root;
     vector<MenuButton*> m_buttons;
+    vector<pair<formatted_string, coord_def>> m_labels;
     vector<int> m_description_indexes;
     int m_width;
     int m_height;

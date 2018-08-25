@@ -31,9 +31,10 @@
 #include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 #include "tilereg-crt.h"
 #include "tilepick.h"
+#include "tilepick-p.h"
 #include "tilefont.h"
 #include "tiledef-main.h"
 #include "tiledef-feat.h"
@@ -380,25 +381,49 @@ static bool _reroll_random(newgame_def& ng)
     string specs = chop_string(species_name(ng.species), 79, false);
 
     formatted_string prompt;
-    prompt.cprintf("You are a%s %s %s.\n",
+    prompt.cprintf("You are a%s %s %s.",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
             get_job_name(ng.job));
-    prompt.cprintf("\nDo you want to play this combination? (ynq) [y]");
 
-    auto prompt_ui = make_shared<Text>();
-    prompt_ui->set_text(prompt);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl({0, 10, 0, 0});
+    title_hbox->add_child(move(tile));
+#endif
+#endif
+    title_hbox->add_child(make_shared<Text>(prompt));
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->add_child(move(title_hbox));
+    vbox->add_child(make_shared<Text>("Do you want to play this combination? [Y/n/q]"));
+    auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
     char c;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
             return false;
         c = ev.key.keysym.sym;
         return done = true;
     });
 
-    auto popup = make_shared<ui::Popup>(prompt_ui);
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("prompt", prompt.to_colour_string());
+    tiles.send_doll(doll, false, false);
+    tiles.push_ui_layout("newgame-random-combo", 0);
+#endif
     ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
         game_ended(game_exit::abort);
@@ -581,8 +606,36 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     bool good_name = true;
     bool cancel = false;
 
+    string specs = chop_string(species_name(ng.species), 79, false);
+
+    formatted_string title;
+    title.cprintf("You are a%s %s %s.",
+            (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
+            get_job_name(ng.job));
+
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl({0, 10, 0, 0});
+    title_hbox->add_child(move(tile));
+#endif
+#endif
+    title_hbox->add_child(make_shared<Text>(title));
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->add_child(move(title_hbox));
     auto prompt_ui = make_shared<Text>();
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+    vbox->add_child(prompt_ui);
+
+    auto popup = make_shared<ui::Popup>(move(vbox));
+
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
@@ -621,17 +674,12 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         return true;
     });
 
-    auto popup = make_shared<ui::Popup>(prompt_ui);
     ui::push_layout(move(popup));
     while (!done && !crawl_state.seen_hups)
     {
         formatted_string prompt;
-        string specs = chop_string(species_name(ng.species), 79, false);
-        prompt.cprintf("You are a%s %s %s.\n",
-                (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
-                get_job_name(ng.job));
         prompt.textcolour(CYAN);
-        prompt.cprintf("\nWhat is your name today? ");
+        prompt.cprintf("What is your name today? ");
         prompt.textcolour(LIGHTGREY);
         prompt.cprintf("%s", buf);
         prompt.cprintf("\n\nLeave blank for a random name, or use Escape to cancel this character.\n\n");
@@ -822,7 +870,6 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults)
 {
 #ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
     tiles.set_ui_state(UI_CRT);
 #endif
 
@@ -986,7 +1033,6 @@ public:
         m_vbox->_set_parent(this);
         m_vbox->align_items = Widget::Align::STRETCH;
 
-        formatted_string welcome;
         welcome.textcolour(BROWN);
         welcome.cprintf("%s", _welcome(m_ng).c_str());
         welcome.textcolour(YELLOW);
@@ -997,6 +1043,8 @@ public:
         descriptions = make_shared<Switcher>();
 
         m_main_items = make_shared<OuterMenu>(true, 3, 20);
+        m_main_items->menu_id = m_choice_type == C_JOB ?
+            "background-main" : "species-main";
         m_main_items->set_margin_for_crt({1, 0, 1, 0});
         m_main_items->set_margin_for_sdl({15, 0, 15, 0});
         m_main_items->descriptions = descriptions;
@@ -1019,6 +1067,8 @@ public:
             _construct_species_menu(m_ng, m_defaults, this);
 
         m_sub_items = make_shared<OuterMenu>(false, 2, 4);
+        m_sub_items->menu_id = m_choice_type == C_JOB ?
+            "background-sub" : "species-sub";
         m_sub_items->descriptions = descriptions;
         m_vbox->add_child(m_sub_items);
         _add_choice_menu_options(m_choice_type, m_ng, m_defaults);
@@ -1052,6 +1102,10 @@ public:
     virtual void _allocate_region() override;
     virtual bool on_event(const wm_event& event) override;
 
+#ifdef USE_TILE_WEB
+    void serialize();
+#endif
+
     void menu_item_activated(int id);
 
     bool done = false;
@@ -1065,7 +1119,7 @@ protected:
                                 int id,
                                 int item_status,
                                 string item_name,
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
                                 tile_def item_tile,
 #endif
                                 bool is_active_item,
@@ -1074,7 +1128,7 @@ protected:
     {
         auto label = make_shared<Text>();
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->align_items = Widget::Align::CENTER;
         auto tile = make_shared<Image>();
@@ -1112,7 +1166,7 @@ protected:
         trim_string(desc);
 
         auto btn = make_shared<MenuButton>();
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         hbox->set_margin_for_sdl({2,10,2,2});
         btn->set_child(move(hbox));
 #else
@@ -1223,6 +1277,7 @@ private:
         return false;
     }
 
+    formatted_string welcome;
     int m_choice_type;
     newgame_def& m_ng;
     newgame_def& m_ng_choice;
@@ -1284,6 +1339,16 @@ bool UINewGameMenu::on_event(const wm_event& ev)
 
     return false;
 }
+
+
+#ifdef USE_TILE_WEB
+void UINewGameMenu::serialize()
+{
+    tiles.json_write_string("title", welcome.to_colour_string());
+    m_main_items->serialize("main-items");
+    m_sub_items->serialize("sub-items");
+}
+#endif
 
 void UINewGameMenu::menu_item_activated(int id)
 {
@@ -1391,7 +1456,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             job,
             item_status,
             get_job_name(job),
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
             tile_def(tileidx_player_job(job,
                     item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
 #endif
@@ -1441,7 +1506,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             this_species,
             item_status,
             species_name(this_species),
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
             tile_def(tileidx_player_species(this_species,
                     item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
 #endif
@@ -1467,11 +1532,21 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
     auto newgame_ui = make_shared<UINewGameMenu>(choice_type, ng, ng_choice, defaults);
     auto popup = make_shared<ui::Popup>(newgame_ui);
 
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    newgame_ui->serialize();
+    tiles.push_ui_layout("newgame-choice", 1);
+#endif
+
     ui::push_layout(move(popup));
     ui::set_focused_widget(newgame_ui.get());
     while (!newgame_ui->done)
         ui::pump_events();
     ui::pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     if (newgame_ui->end_game)
         end(0);
@@ -1562,7 +1637,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
                 text += "s";
             }
             choices.emplace_back(item_attack_skill(dummy), text
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
                     , tileidx_item(dummy)
 #endif
             );
@@ -1674,22 +1749,36 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 {
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    formatted_string welcome;
-    welcome.textcolour(BROWN);
-    welcome.cprintf("%s\n", _welcome(ng).c_str());
-    welcome.textcolour(CYAN);
-    welcome.cprintf("\nYou have a choice of weapons:");
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl({0, 10, 0, 0});
+    title_hbox->add_child(move(tile));
+#endif
+#endif
+    auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
+    title_hbox->add_child(title);
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->align_items = Widget::Align::STRETCH;
-    vbox->add_child(make_shared<Text>(welcome));
+    vbox->add_child(title_hbox);
+    auto prompt = make_shared<Text>(formatted_string("You have a choice of weapons.", CYAN));
+    vbox->add_child(prompt);
 
     auto main_items = make_shared<OuterMenu>(true, 1, weapons.size());
+    main_items->menu_id = "weapon-main";
     main_items->set_margin_for_sdl({15, 0, 15, 0});
     main_items->set_margin_for_crt({1, 0, 1, 0});
     vbox->add_child(main_items);
 
     auto sub_items = make_shared<OuterMenu>(false, 2, 3);
+    sub_items->menu_id = "weapon-sub";
     vbox->add_child(sub_items);
 
     main_items->linked_menus[2] = sub_items;
@@ -1762,7 +1851,21 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
         return false;
     });
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", title->get_text().to_colour_string());
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string());
+    main_items->serialize("main-items");
+    sub_items->serialize("sub-items");
+    tiles.send_doll(doll, false, false);
+    tiles.push_ui_layout("newgame-choice", 1);
+#endif
     ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
     return ret;
 }
 
@@ -1906,7 +2009,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
     return true;
 }
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 static tile_def tile_for_map_name(string name)
 {
     if (starts_with(name, "Lesson "))
@@ -1965,7 +2068,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text += " - ";
         text += map_name;
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->align_items = Widget::Align::CENTER;
         auto tile = make_shared<Image>();
@@ -1978,7 +2081,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         label->set_text(formatted_string(text, LIGHTGREY));
 
         auto btn = make_shared<MenuButton>();
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         hbox->set_margin_for_sdl({2,10,2,2});
         btn->set_child(move(hbox));
 #else
@@ -2065,11 +2168,13 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     vbox->add_child(make_shared<Text>(welcome));
 
     auto main_items = make_shared<OuterMenu>(true, 1, maps.size());
+    main_items->menu_id = "map-main";
     main_items->set_margin_for_sdl({15, 0, 15, 0});
     main_items->set_margin_for_crt({1, 0, 1, 0});
     vbox->add_child(main_items);
 
     auto sub_items = make_shared<OuterMenu>(false, 2, 2);
+    sub_items->menu_id = "map-sub";
     vbox->add_child(sub_items);
 
     main_items->linked_menus[2] = sub_items;
@@ -2135,7 +2240,17 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 
         return false;
     });
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", welcome.to_colour_string());
+    main_items->serialize("main-items");
+    sub_items->serialize("sub-items");
+    tiles.push_ui_layout("newgame-choice", 1);
+#endif
     ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);

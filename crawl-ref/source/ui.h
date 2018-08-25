@@ -409,6 +409,7 @@ public:
     Image(tile_def tile) { set_tile(tile); };
     virtual ~Image() {}
     void set_tile(tile_def tile);
+    tile_def get_tile() const { return m_tile; };
 
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;

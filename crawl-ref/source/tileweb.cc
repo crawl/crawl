@@ -27,6 +27,7 @@
 #include "libutil.h"
 #include "map-knowledge.h"
 #include "menu.h"
+#include "outer-menu.h"
 #include "message.h"
 #include "mon-util.h"
 #include "notes.h"
@@ -430,6 +431,14 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper scroll = json_find_member(obj.node, "scroll");
         scroll.check(JSON_NUMBER);
         recv_formatted_scroller_scroll((int)scroll->number_);
+    }
+    else if (msgtype == "outer_menu_focus")
+    {
+        JsonWrapper menu_id = json_find_member(obj.node, "menu_id");
+        JsonWrapper hotkey = json_find_member(obj.node, "hotkey");
+        menu_id.check(JSON_STRING);
+        hotkey.check(JSON_NUMBER);
+        OuterMenu::recv_outer_menu_focus(menu_id->string_, (int)hotkey->number_);
     }
 
     return c;

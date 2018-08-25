@@ -5,9 +5,12 @@
 
 #include "AppHdr.h"
 
+#include <unordered_map>
+
 #include "cio.h"
 #include "outer-menu.h"
 #include "tileweb.h"
+#include "unwind.h"
 
 using namespace ui;
 
@@ -82,6 +85,49 @@ bool MenuButton::on_event(const wm_event& event)
     return old_active != active;
 }
 
+#ifdef USE_TILE_WEB
+static void serialize_image(const Image* image)
+{
+    tile_def tile = image->get_tile();
+    tiles.json_open_object();
+    tiles.json_write_int("t", tile.tile);
+    tiles.json_write_int("tex", tile.tex);
+    if (tile.ymax != TILE_Y)
+        tiles.json_write_int("ymax", tile.ymax);
+    tiles.json_close_object();
+}
+
+void MenuButton::serialize()
+{
+    tiles.json_write_string("description", description);
+    tiles.json_write_int("hotkey", hotkey);
+    tiles.json_write_int("highlight_colour", highlight_colour);
+    if (auto text = dynamic_cast<Text*>(m_child.get()))
+        tiles.json_write_string("label", text->get_text().to_colour_string());
+    else if (auto box = dynamic_cast<Box*>(m_child.get()))
+    {
+        if (box->num_children() <= 1)
+            return;
+        tiles.json_open_array("tile");
+        if (auto tile = dynamic_cast<Image*>((*box)[0].get()))
+            serialize_image(tile);
+        else if (auto tilestack = dynamic_cast<Stack*>(((*box)[0].get())))
+        {
+            for (const auto it : *tilestack)
+                if (auto t = dynamic_cast<Image*>(it.get()))
+                    serialize_image(t);
+        }
+        tiles.json_close_array();
+
+        tiles.json_open_array("labels");
+        for (size_t i = 1; i < box->num_children(); i++)
+            if (auto text2 = dynamic_cast<Text*>((*box)[i].get()))
+                tiles.json_write_string(text2->get_text().to_colour_string());
+        tiles.json_close_array();
+    }
+}
+#endif
+
 OuterMenu::OuterMenu(bool can_shrink, int width, int height)
 {
     m_grid = make_shared<Grid>();
@@ -107,6 +153,17 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     m_buttons.resize(width * height, nullptr);
     m_description_indexes.resize(width * height, -1);
 }
+
+#ifdef USE_TILE_WEB
+static bool from_client {false};
+static unordered_map<string, OuterMenu*> open_menus;
+
+OuterMenu::~OuterMenu()
+{
+    if (menu_id)
+        open_menus.erase(string(menu_id));
+}
+#endif
 
 void OuterMenu::_render()
 {
@@ -138,6 +195,10 @@ void OuterMenu::_allocate_region()
                 }
             return false;
         });
+#ifdef USE_TILE_WEB
+        if (menu_id)
+            open_menus.emplace(menu_id, this);
+#endif
         if (m_initial_focus)
             scroll_button_into_view(m_initial_focus);
     }
@@ -154,6 +215,7 @@ void OuterMenu::add_label(shared_ptr<Text> label, int x, int y)
     ASSERT(x >= 0 && x < m_width);
     ASSERT(y >= 0 && y < m_height);
     ASSERT(m_buttons[y*m_width + x] == nullptr);
+    m_labels.emplace_back(label->get_text(), coord_def(x, y));
     m_grid->add_child(move(label), x, y);
 }
 
@@ -203,6 +265,18 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
 void OuterMenu::scroll_button_into_view(MenuButton *btn)
 {
     ui::set_focused_widget(btn);
+
+#ifdef USE_TILE_WEB
+    if (menu_id)
+    {
+        tiles.json_open_object();
+        tiles.json_write_bool("from_client", from_client);
+        tiles.json_write_string("menu_id", menu_id);
+        tiles.json_write_int("button_focus", btn->hotkey);
+        tiles.ui_state_change("newgame-choice", 0);
+    }
+#endif
+
     Widget* gp = btn->_get_parent()->_get_parent();
     Scroller* scroller = dynamic_cast<Scroller*>(gp);
     if (!scroller)
@@ -300,3 +374,50 @@ MenuButton* OuterMenu::get_button_by_id(int id)
             [id](MenuButton*& btn) { return btn && btn->id == id; });
     return it == m_buttons.end() ? nullptr : *it;
 }
+
+#ifdef USE_TILE_WEB
+void OuterMenu::serialize(string name)
+{
+    tiles.json_open_object(name);
+    tiles.json_write_string("menu_id", menu_id);
+    tiles.json_write_int("width", m_width);
+    tiles.json_write_int("height", m_height);
+    tiles.json_open_array("buttons");
+    for (size_t i = 0; i < m_buttons.size(); i++)
+    {
+        if (!m_buttons[i])
+            continue;
+        tiles.json_open_object();
+        tiles.json_write_int("x", i % m_width);
+        tiles.json_write_int("y", i / m_width);
+        m_buttons[i]->serialize();
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.json_open_array("labels");
+    for (auto label : m_labels)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("x", label.second.x);
+        tiles.json_write_int("y", label.second.y);
+        tiles.json_write_string("label", label.first.to_colour_string());
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.json_close_object();
+}
+
+void OuterMenu::recv_outer_menu_focus(const char *menu_id, int hotkey)
+{
+    auto open_menu = open_menus.find(menu_id);
+    if (open_menu == open_menus.end())
+        return;
+
+    unwind_bool tmp(from_client, true);
+
+    auto menu = open_menu->second;
+    for (auto btn : menu->m_buttons)
+        if (btn && btn->hotkey == hotkey)
+            menu->scroll_button_into_view(btn);
+}
+#endif

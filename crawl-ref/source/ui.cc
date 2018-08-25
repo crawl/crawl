@@ -859,12 +859,14 @@ void Text::set_bg_colour(COLOURS colour)
 
 void Image::set_tile(tile_def tile)
 {
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     m_tile = tile;
+#ifdef USE_TILE_LOCAL
     const tile_info &ti = tiles.get_image_manager()->tile_def_info(m_tile);
     m_tw = ti.width;
     m_th = ti.height;
     _invalidate_sizereq();
+#endif
 #endif
 }
 
