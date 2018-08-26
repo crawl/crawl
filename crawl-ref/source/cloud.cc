@@ -929,6 +929,13 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
+    if (player && you.species == SP_DJINNI
+        && (cloud.type == CLOUD_FIRE
+            || cloud.type == CLOUD_FOREST_FIRE))
+    {
+        return true;
+    }
+
     return false;
 }
 

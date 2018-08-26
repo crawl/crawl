@@ -143,7 +143,7 @@ void butchery(item_def* specific_corpse)
         mprf("There isn't anything to %s here.", butcher_verb);
         return;
     }
-    if (you_foodless(false))
+    if (you_foodless(false, true))
     {
         mprf("You can't eat.");
         return;

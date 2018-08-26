@@ -764,23 +764,27 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
     {}, // not a starting race
 } },
-
+#endif
 { SP_DJINNI, {
     "Dj",
     "Djinni", "Djinn", nullptr,
     SPF_NONE,
     -1, -1, 0, 3,
-    MONS_DJINNI,
+    MONS_EFREET,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    {},
-    {},
-    {},
-    {}, // not a starting race
-    {}, // not a starting race
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
+    { "You are immune to all types of fire, even holy.",
+      "You are vulnerable to cold.",
+      "You need no food.",
+      "You have no legs." },
+    { "fire immunity", "cold vulnerability" },
+    { JOB_FIGHTER, JOB_ENCHANTER, JOB_CONJURER, JOB_AIR_ELEMENTALIST, 
+      JOB_FIRE_ELEMENTALIST, JOB_ARTIFICER },
+    { SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_CROSSBOWS },
 } },
-#endif
+
 // Ideally this wouldn't be necessary...
 { SP_UNKNOWN, { // Line 1: enum
     "??", // Line 2: abbrev

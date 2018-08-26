@@ -462,12 +462,15 @@ public:
 };
 
 static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
+static colour_bar EP_Bar(LIGHTMAGENTA, MAGENTA, BLUE, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
 static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
 static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
+
+colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
 static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
@@ -709,6 +712,9 @@ static void _print_stats_gold(int x, int y, colour_t colour)
 
 static void _print_stats_mp(int x, int y)
 {
+    if (you.species == SP_DJINNI)
+        return;
+
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
 
@@ -751,9 +757,56 @@ static void _print_stats_mp(int x, int y)
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
+static void _print_stats_contam(int x, int y)
+{
+    if (you.species != SP_DJINNI)
+        return;
+     const int max_contam = 8000;
+    int contam = min(you.magic_contamination, max_contam);
+     // Calculate colour
+    if (you.magic_contamination > 15000)
+    {
+        Contam_Bar.m_default = RED;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
+    }
+    else if (you.magic_contamination > 5000) // harmful
+    {
+        Contam_Bar.m_default = LIGHTRED;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
+    }
+    else if (you.magic_contamination > 3333)
+    {
+        Contam_Bar.m_default = YELLOW;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = BROWN;
+    }
+    else if (you.magic_contamination > 1666)
+    {
+        Contam_Bar.m_default = LIGHTGREY;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
+    }
+    else
+    {
+#ifdef USE_TILE_LOCAL
+        Contam_Bar.m_default = LIGHTGREY;
+#else
+        Contam_Bar.m_default = DARKGREY;
+#endif
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
+    }
+ #ifdef TOUCH_UI
+    if (tiles.is_using_small_layout())
+        Contam_Bar.vdraw(6, 10, contam, max_contam);
+    else
+#endif
+    Contam_Bar.draw(19, y, contam, max_contam);
+}
+
 static void _print_stats_hp(int x, int y)
 {
     int max_max_hp = get_real_hp(true, true);
+
+    if (you.species == SP_DJINNI)
+        max_max_hp += get_real_mp(true);
 
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOUR;
@@ -776,7 +829,14 @@ static void _print_stats_hp(int x, int y)
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    if (you.species == SP_DJINNI)
+    {
+        CPRINTF(player_rotted() ? "EP: " : "Essence: ");
+    }
+    else
+    {
+        CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    }
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -793,10 +853,37 @@ static void _print_stats_hp(int x, int y)
 
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
-        HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
+    {
+        if (you.species == SP_DJINNI)
+        {
+            EP_Bar.vdraw(2, 10, you.hp, you.hp_max);
+        }
+        else
+        {
+            HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
+        }
+    }
     else
-#endif
+    {
+        if (you.species == SP_DJINNI)
+        {
+            EP_Bar.draw(19, y, you.hp, you.hp_max);
+        }
+        else
+        {
+            HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+        }
+    }
+#else
+    if (you.species == SP_DJINNI)
+    {
+        EP_Bar.draw(19, y, you.hp, you.hp_max);
+    }
+    else
+    {
         HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+    }
+#endif
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -1328,6 +1415,8 @@ void print_stats()
         _print_stats_mp(1, 4);
     }
 
+    _print_stats_contam(1, 4);
+
     if (you.redraw_armour_class)
     {
         you.redraw_armour_class = false;
@@ -1469,6 +1558,8 @@ void draw_border()
 
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
     CGOTOXY(1, mp_pos, GOTO_STAT);
+    if (you.species == SP_DJINNI)
+        CPRINTF("Contam:");
     CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
     CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");

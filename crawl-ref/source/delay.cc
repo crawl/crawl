@@ -1325,7 +1325,9 @@ bool interrupt_activity(activity_interrupt_type ai,
     if (ai == AI_FULL_HP && !you.running.notified_hp_full)
     {
         you.running.notified_hp_full = true;
-        mpr("HP restored.");
+        mprf("%s restored.",
+                you.species == SP_DJINNI ? "EP" :
+                "HP");
     }
     else if (ai == AI_FULL_MP && !you.running.notified_mp_full)
     {
