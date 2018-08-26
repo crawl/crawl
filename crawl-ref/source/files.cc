@@ -2660,7 +2660,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 }
 
 #define GHOST_PERMASTORE_SIZE 10
-#define GHOST_PERMASTORE_REPLACE_CHANCE 100
+#define GHOST_PERMASTORE_REPLACE_CHANCE 5
 
 static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 {
