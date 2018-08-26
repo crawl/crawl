@@ -230,3 +230,77 @@ enum tag_minor_version
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
+
+struct save_version
+{
+    save_version(int _major, int _minor) : major(_major), minor(_minor)
+    {
+    }
+
+    save_version() : save_version(-1,-1)
+    {
+    }
+
+    static save_version current()
+    {
+        return save_version(TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
+    }
+
+    bool valid()
+    {
+        return major > 0 && minor > -1;
+    }
+
+    inline friend bool operator==(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return lhs.major == rhs.major && lhs.minor == rhs.minor;
+    }
+
+    inline friend bool operator!=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator==(lhs, rhs);
+    }
+
+    inline friend bool operator< (const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return lhs.major < rhs.major || lhs.major == rhs.major &&
+                                                    lhs.minor < rhs.minor;
+    }
+    inline friend bool operator> (const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return  operator< (rhs, lhs);
+    }
+    inline friend bool operator<=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator> (lhs, rhs);
+    }
+    inline friend bool operator>=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator< (lhs,rhs);
+    }
+
+
+    const bool is_future()
+    {
+        return valid() && *this > save_version::current();
+    }
+
+    const bool is_past()
+    {
+        return valid() && *this < save_version::current();
+    }
+
+    const bool is_current()
+    {
+        return valid() && *this == save_version::current();
+    }
+
+    int major;
+    int minor;
+};
