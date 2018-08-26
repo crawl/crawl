@@ -197,7 +197,7 @@ static const species_type species_order[] =
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
-    SP_DEMONSPAWN,
+    SP_DEMONSPAWN,    SP_DJINNI,
     // undead species
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
@@ -993,6 +993,7 @@ static species_group species_groups[] =
             SP_FELID,
             SP_BARACHI,
             SP_MUMMY,
+            SP_DJINNI,
         }
     },
 };

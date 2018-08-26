@@ -1185,6 +1185,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    // Djinni are made of fire, so their fire resistance cannot be modified
+    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE ||
+        mutat == MUT_HEAT_VULNERABILITY))
+    {
+        return true;
+    }
+
     // Hermit Crabs are unable to gain drastic body slot mutations or deformation.
     if (you.species == SP_HERMIT_CRAB && (mutat == MUT_FANGS || 
         mutat == MUT_BEAK || mutat == MUT_ANTENNAE || mutat == MUT_HORNS || 

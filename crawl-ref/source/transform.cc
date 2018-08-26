@@ -1430,6 +1430,9 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
+    if (which_trans == transformation::ice_beast && you.species == SP_DJINNI)
+        return false; // melting is fatal...
+
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 

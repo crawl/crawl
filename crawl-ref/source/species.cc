@@ -99,7 +99,9 @@ string species_walking_verb(species_type sp)
     case SP_VINE_STALKER:
         return "Stalk";
     case SP_HERMIT_CRAB:
-        return "Scuttle";
+        return "Scuttl";
+    case SP_DJINNI:
+        return "Float";
     default:
         return "Walk";
     }

@@ -397,6 +397,18 @@ bool can_wield(const item_def *weapon, bool say_reason,
         else
             return false;
     }
+    else if (you.species == SP_DJINNI
+             && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
+             && (item_type_known(*weapon) || !only_known))
+    {
+        if (say_reason)
+        {
+            mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
+            id_brand = true;
+        }
+        else
+            return false;
+    }
     if (id_brand)
     {
         auto wwpn = const_cast<item_def*>(weapon);
@@ -922,7 +934,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA)
+        if (you.species == SP_NAGA
+            || you.species == SP_DJINNI)
         {
             if (verbose)
                 mpr("You have no legs!");
@@ -2173,7 +2186,7 @@ static bool _drink_fountain()
 
 void drink(item_def* potion)
 {
-    if (you_foodless())
+    if (you_foodless(true, true))
     {
         mpr("You can't drink.");
         return;

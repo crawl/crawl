@@ -277,6 +277,12 @@ static bool _evoke_horn_of_geryon()
 
 static bool _check_crystal_ball()
 {
+    if (you.species == SP_DJINNI)
+    {
+        mpr("You can only see your reflection. ");
+        return false;
+    }
+
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
@@ -1940,6 +1946,11 @@ bool evoke_item(int slot, bool check_range)
         else if (you.magic_points >= you.max_magic_points)
         {
             canned_msg(MSG_FULL_MAGIC);
+            return false;
+        }
+        else if (you.species == SP_DJINNI)
+        {
+            mpr("The staff remains inert.");
             return false;
         }
         else if (x_chance_in_y(apply_enhancement(

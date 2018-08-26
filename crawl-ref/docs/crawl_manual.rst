@@ -1791,6 +1791,20 @@ Hermit Crabs
   the magic of Transmutation is often ignored for other pursuits, and their bodies
   have learned to reject any mutation that would otherwise mar their perfect forms.
 
+Djinni
+  Djinni are magical beings born of pure fire. Their essence is made of a combination
+  of their vitality and magic, serving as both their life and magical sources. Instead of
+  hungering, actions that cause heavy exertion will subject them to magical contamination 
+  as they struggle to hold their form. Although a common myth, Djinni do not grant wishes.
+  
+  Djinni can be adequate fighters or magicians. Their magical abilities are very polarized:
+  they excel with Fire and Air Magic (their domain) but struggle with Earth and Ice Magic.
+  They also have a knack for Hexes and Evocations.
+
+  They are immune to all types of fire, including holy. Their lack of a physical body also
+  immunizes them to negative energy. However, they are especially susceptible to ice and water.
+  Finally, they continuously float through the air, lacking the ability to form feet. 
+
 The Undead
 ========================================
 

@@ -1105,6 +1105,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
 
+    if (you.species == SP_DJINNI)
+    {
+        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
+            return "you're too hot.";
+         if (spell == SPELL_LEDAS_LIQUEFACTION)
+            return "you can't cast this while perpetually flying.";
+    }
+
     switch (spell)
     {
     case SPELL_BLINK:
@@ -1242,6 +1250,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.species == SP_GARGOYLE
             || you.species == SP_GHOUL
             || you.species == SP_MUMMY
+            || you.species == SP_DJINNI
             || (temp && !form_can_bleed(you.form)))
         {
             return "you have no blood to sublime.";

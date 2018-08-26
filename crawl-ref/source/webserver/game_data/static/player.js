@@ -71,6 +71,23 @@ function ($, comm, enums, map_knowledge, messages, options) {
             .css("width", 0);
     }
 
+    function update_bar_contam()
+    {
+        player.contam_max = 16000;
+        update_bar("contam");
+         // Calculate level for the colour
+        var contam_level = 0;
+         if (player.contam > 25000)
+            contam_level = 4;
+        else if (player.contam > 15000)
+            contam_level = 3;
+        else if (player.contam > 5000)
+            contam_level = 2;
+        else if (player.contam > 0)
+            contam_level = 1;
+         $("#stats_contamline").attr("data-contam", contam_level);
+    }
+
     function update_bar_noise()
     {
         player.noise_max = 1000;
@@ -327,6 +344,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_titleline").text(player.name + " " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
+        var do_contam = false;
+
         // Setup species
         // TODO: Move to a proper initialisation task
         if ($("#stats").attr("data-species") != player.species)
@@ -373,8 +392,18 @@ function ($, comm, enums, map_knowledge, messages, options) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
-        $("#stats_hpline > .stats_caption").text(
+        if (player.species == "Djinni")
+        {
+            $("#stats_hpline > .stats_caption").text(
+            (player.real_hp_max != player.hp_max) ? "EP:" : "Essence:");
+            do_contam = true;
+        }
+        else
+        {
+            $("#stats_hpline > .stats_caption").text(
             (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
+        }
+        
 
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
@@ -384,7 +413,10 @@ function ($, comm, enums, map_knowledge, messages, options) {
         percentage_color("hp");
         percentage_color("mp");
         update_bar("hp");
-        update_bar("mp");
+        if (do_contam)
+            update_bar_contam();
+        else
+            update_bar("mp");
 
         update_defense("ac");
         update_defense("ev");
