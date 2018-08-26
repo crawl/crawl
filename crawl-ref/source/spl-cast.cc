@@ -165,15 +165,15 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
-    string hungerstring = you.species == SP_DJINNI ? "Glow  " : "Hunger ";
+    string hungerstring = you.species == SP_DJINNI ? "Glow    " : "Hunger  ";
 #ifdef USE_TILE_LOCAL
     {
         // [enne] - Hack. Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " " + titlestring + "         Type          "
-                "                Failure  Level",
-                " " + titlestring + "         Power        "
+                " " + titlestring + "     Type          "
+                "                Failure     Level",
+                " " + titlestring + "     Power        "
                 "Range    " + hungerstring + "Noise          ",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -182,9 +182,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 #else
     spell_menu.set_title(
         new ToggleableMenuEntry(
-            " " + titlestring + "         Type          "
-            "                Failure  Level",
-            " " + titlestring + "         Power        "
+            " " + titlestring + "     Type          "
+            "                Failure     Level",
+            " " + titlestring + "     Power        "
             "Range    " + hungerstring + "Noise          ",
             MEL_TITLE));
 #endif

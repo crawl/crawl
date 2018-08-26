@@ -3147,7 +3147,7 @@ int choose_ability_menu(const vector<talent>& talents)
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(" Ability - do what?                  "
+            new ToggleableMenuEntry(" Ability - do what?              "
                                     "Cost                          Failure",
                                     " Ability - describe what?            "
                                     "Cost                          Failure",
@@ -3157,7 +3157,7 @@ int choose_ability_menu(const vector<talent>& talents)
     }
 #else
     abil_menu.set_title(
-        new ToggleableMenuEntry(" Ability - do what?                  "
+        new ToggleableMenuEntry(" Ability - do what?              "
                                 "Cost                          Failure",
                                 " Ability - describe what?            "
                                 "Cost                          Failure",
