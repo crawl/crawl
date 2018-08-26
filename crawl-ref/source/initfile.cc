@@ -3869,11 +3869,11 @@ static void _print_save_version(char *name)
         package save(filename.c_str(), false);
         reader chrf(&save, "chr");
 
-        int major, minor;
-        if (!get_save_version(chrf, major, minor))
+        save_version v = get_save_version(chrf);
+        if (!v.valid())
             fail("Save file is invalid.");
         else
-            printf("Save file version for %s is %d.%d\n", name, major, minor);
+            printf("Save file version for %s is %d.%d\n", name, v.major, v.minor);
     }
     catch (ext_fail_exception &fe)
     {
