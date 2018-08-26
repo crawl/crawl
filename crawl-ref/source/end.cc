@@ -35,6 +35,7 @@
 #include "view.h"
 #include "xom.h"
 #include "ui.h"
+#include "tiledef-feat.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -450,13 +451,29 @@ NORETURN void end_game(scorefile_entry &se)
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    tile_def death_tile(TILEG_ERROR, TEX_GUI);
+    if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
+        death_tile = tile_def(TILE_DNGN_EXIT_DUNGEON, TEX_FEAT);
+    else
+        death_tile = tile_def(TILE_DNGN_GRAVESTONE+1, TEX_FEAT);
+
+    auto tile = make_shared<Image>(death_tile);
+    tile->set_margin_for_sdl({0, 10, 0, 0});
+    title_hbox->add_child(move(tile));
 #endif
+    string goodbye_title = make_stringf("Goodbye, %s.", you.your_name.c_str());
+    title_hbox->add_child(make_shared<Text>(goodbye_title));
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->add_child(move(title_hbox));
 
     string goodbye_msg;
-    goodbye_msg += make_stringf("Goodbye, %s.", you.your_name.c_str());
-    goodbye_msg += "\n\n    "; // Space padding where # would go in list format
+    goodbye_msg += "    "; // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
 
@@ -477,15 +494,34 @@ NORETURN void end_game(scorefile_entry &se)
 #endif
 
     mouse_control mc(MOUSE_MODE_MORE);
-    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
-    auto popup = make_shared<ui::Popup>(prompt_ui);
+
+    auto goodbye_txt = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
+    vbox->add_child(goodbye_txt);
+    auto popup = make_shared<ui::Popup>(move(vbox));
     bool done = false;
     popup->on(Widget::slots.event, [&](wm_event ev)  {
         return done = ev.type == WME_KEYDOWN;
     });
 
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_open_object("tile");
+    tiles.json_write_int("t", death_tile.tile);
+    tiles.json_write_int("tex", death_tile.tex);
+    tiles.json_close_object();
+    tiles.json_write_string("title", goodbye_title);
+    tiles.json_write_string("body", goodbye_msg);
+    tiles.push_ui_layout("game-over", 0);
+#endif
+
         ui::run_layout(move(popup), done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+    }
 
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);

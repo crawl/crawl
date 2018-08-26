@@ -841,6 +841,25 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         return $popup;
     }
 
+    function game_over(desc)
+    {
+        var $popup = $(".templates > .game-over").clone();
+        $popup.find(".header > span").html(desc.title);
+        $popup.children(".body").html(fmt_body_txt(desc.body));
+        var s = scroller($popup.children(".body")[0]);
+        $popup.on("keydown keypress", function (event) {
+            scroller_handle_key(s, event);
+        });
+
+        var canvas = $popup.find(".header > canvas");
+        var renderer = new cr.DungeonCellRenderer();
+        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+        renderer.init(canvas[0]);
+        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
+
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -856,6 +875,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "msgwin-get-line" : msgwin_get_line,
         "newgame-choice": newgame_choice,
         "newgame-random-combo": newgame_random_combo,
+        "game-over" : game_over,
     };
 
     function register_ui_handlers(dict)
