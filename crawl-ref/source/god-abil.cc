@@ -30,6 +30,7 @@
 #include "english.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "food.h"
 #include "format.h" // formatted_string
 #include "god-blessing.h"
@@ -6714,7 +6715,15 @@ spret_type uskayaw_grand_finale(bool fail)
     ASSERT(mons);
 
     // kill the target
-    mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+    if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
+    {
+        // need to do this here, because react_to_damage is never called
+        mprf("%s explodes violently into a cloud of jellies!",
+                                        mons->name(DESC_THE, false).c_str());
+        trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
+    }
+    else
+        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
