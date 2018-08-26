@@ -89,7 +89,7 @@ void save_game(bool leave_game, const char *bye = nullptr);
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-bool get_save_version(reader &file, int &major, int &minor);
+save_version get_save_version(reader &file);
 
 bool save_exists(const string& filename);
 bool restore_game(const string& filename);
