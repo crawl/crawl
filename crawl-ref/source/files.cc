@@ -2539,7 +2539,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 {
     ASSERT(reason);
 
-    save_version version = get_save_version(inf);
+    const save_version version = get_save_version(inf);
 
     if (!version.valid())
     {
@@ -2548,32 +2548,31 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
         return false;
     }
 
-    if (version.major != TAG_MAJOR_VERSION
-#if TAG_MAJOR_VERSION == 34
-        && (version.major != 33 || version.minor != 17)
-#endif
-       )
+    if (!version.is_compatible())
     {
-        if (Version::ReleaseType)
+        const save_version current = save_version::current();
+        if (version.is_ancient())
         {
-            *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
-                       "save files from older versions. You can continue your "
-                       "game with the appropriate older version, or you can "
-                       "delete it and start a new game.");
+            if (Version::ReleaseType)
+            {
+                *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
+                           "save files from older versions. You can continue your "
+                           "game with the appropriate older version, or you can "
+                           "delete it and start a new game.");
+            }
+            else
+            {
+                *reason = make_stringf("Major version mismatch: %d (want %d).",
+                                       version.major, current.major);
+            }
         }
-        else
+        else if (version.is_future())
         {
-            *reason = make_stringf("Major version mismatch: %d (want %d).",
-                                   version.major, TAG_MAJOR_VERSION);
-        }
-        return false;
-    }
-
-    if (version.minor > TAG_MINOR_VERSION)
-    {
-        *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
+            *reason = make_stringf("Version mismatch: %d.%d (want <= %d.%d). "
                                "The save is from a newer version.",
-                               version.minor, TAG_MINOR_VERSION);
+                               version.major, version.minor,
+                               current.major, current.minor);
+        }
         return false;
     }
 
@@ -2615,12 +2614,11 @@ static bool _ghost_version_compatible(save_version &version)
 {
     if (!version.valid())
         return false;
-    if (version.major != TAG_MAJOR_VERSION
-        || version.minor > TAG_MINOR_VERSION)
+    if (!version.is_compatible())
     {
-        dprf("Ghost version mismatch: ghost was %d.%d; wanted %d.%d",
+        _ghost_dprf("Ghost version mismatch: ghost was %d.%d; current is %d.%d",
              version.major, version.minor,
-             TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
+             save_version::current().major, save_version::current().minor);
         return false;
     }
     return true;

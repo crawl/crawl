@@ -233,7 +233,7 @@ COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
 
 struct save_version
 {
-    save_version(int _major, int _minor) : major(_major), minor(_minor)
+    save_version(int _major, int _minor) : major{_major}, minor{_minor}
     {
     }
 
@@ -246,7 +246,7 @@ struct save_version
         return save_version(TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
     }
 
-    bool valid()
+    bool valid() const
     {
         return major > 0 && minor > -1;
     }
@@ -286,17 +286,32 @@ struct save_version
     }
 
 
-    const bool is_future()
+    bool is_future() const
     {
         return valid() && *this > save_version::current();
     }
 
-    const bool is_past()
+    bool is_past() const
     {
         return valid() && *this < save_version::current();
     }
 
-    const bool is_current()
+    bool is_ancient() const
+    {
+        return valid() &&
+#if TAG_MAJOR_VERSION == 34
+            (major < 33 && minor < 17);
+#else
+            major < TAG_MAJOR_VERSION;
+#endif
+    }
+
+    bool is_compatible() const
+    {
+        return (valid() && !is_ancient() && !is_future());
+    }
+
+    bool is_current() const
     {
         return valid() && *this == save_version::current();
     }
