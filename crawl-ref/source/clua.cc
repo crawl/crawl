@@ -772,7 +772,7 @@ void CLua::init_lua()
     // not loading are:
     //
     // {LUA_LOADLIBNAME, luaopen_package},    // (require etc)
-    // {LUA_IOLIBNAME, luaopen_io},           // 
+    // {LUA_IOLIBNAME, luaopen_io},           //
     // {LUA_OSLIBNAME, luaopen_os},
     // {LUA_DBLIBNAME, luaopen_debug},
     const vector<pair<string, lua_CFunction>> lua_core_libs =
