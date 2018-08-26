@@ -16,6 +16,7 @@
 #include "unwind.h"
 #include "windowmanager.h"
 #ifdef USE_TILE_LOCAL
+# include "tiledoll.h"
 # include "tilesdl.h"
 # include "tilebuf.h"
 # include "tiledgnbuf.h"
@@ -619,6 +620,25 @@ public:
 protected:
     DungeonCellBuffer m_buf;
     bool m_dirty;
+};
+
+class PlayerDoll : public Widget
+{
+public:
+    PlayerDoll(dolls_data doll);
+    virtual ~PlayerDoll();
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
+
+protected:
+    void _pack_doll();
+    dolls_data m_save_doll;
+
+    vector<tile_def> m_tiles;
+    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
 #endif
 

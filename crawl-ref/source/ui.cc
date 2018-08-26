@@ -24,6 +24,11 @@
 # include "view.h"
 # include "stringutil.h"
 #endif
+#ifdef USE_TILE_LOCAL
+# include "tilepick.h"
+# include "tilepick-p.h"
+# include "tile-player-flag-cut.h"
+#endif
 
 namespace ui {
 
@@ -1480,6 +1485,121 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int prosp_width)
     int sz = (dim ? height : width)*32;
     return {sz, sz};
 }
+
+PlayerDoll::PlayerDoll(dolls_data doll)
+{
+    m_save_doll = doll;
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+    _pack_doll();
+}
+
+PlayerDoll::~PlayerDoll()
+{
+    for (int t = 0; t < TEX_MAX; t++)
+        m_tile_buf[t].clear();
+}
+
+void PlayerDoll::_pack_doll()
+{
+    m_tiles.clear();
+    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
+    int p_order[TILEP_PART_MAX] =
+    {
+        TILEP_PART_SHADOW,  //  0
+        TILEP_PART_HALO,
+        TILEP_PART_ENCH,
+        TILEP_PART_DRCWING,
+        TILEP_PART_CLOAK,
+        TILEP_PART_BASE,    //  5
+        TILEP_PART_BOOTS,
+        TILEP_PART_LEG,
+        TILEP_PART_BODY,
+        TILEP_PART_ARM,
+        TILEP_PART_HAIR,
+        TILEP_PART_BEARD,
+        TILEP_PART_DRCHEAD,  // 15
+        TILEP_PART_HELM,
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
+    };
+
+    int flags[TILEP_PART_MAX];
+    tilep_calc_flags(m_save_doll, flags);
+
+    // For skirts, boots go under the leg armour. For pants, they go over.
+    if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
+    {
+        p_order[6] = TILEP_PART_BOOTS;
+        p_order[7] = TILEP_PART_LEG;
+    }
+
+    // Special case bardings from being cut off.
+    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
+        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    bool is_cent = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
+        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+    {
+        const int p   = p_order[i];
+        const tileidx_t idx = m_save_doll.parts[p];
+        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
+
+        int ymax = TILE_Y;
+
+        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
+            || flags[p] == TILEP_FLAG_CUT_NAGA)
+        {
+            ymax = 18;
+        }
+
+        m_tiles.emplace_back(idx, TEX_PLAYER, ymax);
+    }
+}
+
+void PlayerDoll::_render()
+{
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].draw();
+}
+
+SizeReq PlayerDoll::_get_preferred_size(Direction dim, int prosp_width)
+{
+    return { TILE_Y, TILE_Y };
+}
+
+void PlayerDoll::_allocate_region()
+{
+    for (int t = 0; t < TEX_MAX; t++)
+        m_tile_buf[t].clear();
+    for (const tile_def &tdef : m_tiles)
+    {
+        int tile      = tdef.tile;
+        TextureID tex = tdef.tex;
+        m_tile_buf[tex].add_unscaled(tile, m_region[0], m_region[1], tdef.ymax);
+    }
+}
+
+bool PlayerDoll::on_event(const wm_event& event)
+{
+    return false;
+}
+
 #endif
 
 void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
