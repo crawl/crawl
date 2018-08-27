@@ -1323,18 +1323,28 @@ void TilesFramework::layout_statcol()
         // region extends ~1/2-tile beyond window (rendered area touches right edge)
         m_region_tab->resize(m_region_tab->mx+1, min_inv_height);
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
-
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
+        bool resized_inventory = false;
 
         for (const string &str : Options.tile_layout_priority)
         {
             if (str == "inventory")
+            {
                 resize_inventory();
+                resized_inventory = true;
+            }
             else if (str == "minimap" || str == "map")
+            {
+                if (!resized_inventory)
+                {
+                    resize_inventory();
+                    resized_inventory = true;
+                }
                 place_minimap();
+            }
             else if (!(str == "gold_turn" || str == "gold_turns")) // gold_turns no longer does anything
                 place_tab(m_region_tab->find_tab(str));
         }
