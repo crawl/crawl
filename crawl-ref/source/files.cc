@@ -1811,7 +1811,60 @@ static string _make_ghost_filename(bool store=false)
 
 static string _bones_permastore_file()
 {
-    return _get_bonefile_directory() + _make_ghost_filename(true);
+    string filename = _make_ghost_filename(true);
+    string full_path = _get_bonefile_directory() + filename;
+    if (file_exists(full_path))
+        return full_path;
+
+    string dist_full_path = datafile_path(
+            string("dist_bones") + FILE_SEPARATOR + filename, false, false);
+    if (dist_full_path.empty())
+        return dist_full_path;
+
+    // no matching permastore is in the player's bones file, but one exists in
+    // the crawl distribution. Install it.
+
+    FILE *src = fopen(dist_full_path.c_str(), "rb");
+    if (!src)
+    {
+        mprf(MSGCH_ERROR, "Bones file exists but can't be opened: %s",
+            dist_full_path.c_str());
+        return "";
+    }
+    FILE *target = lk_open("wb", full_path);
+    if (!target)
+    {
+        mprf(MSGCH_ERROR, "Unable to open bones file %s for writing",
+            full_path.c_str());
+        fclose(src);
+        return "";
+    }
+
+    _ghost_dprf("Copying %s to %s", dist_full_path.c_str(), full_path.c_str());
+
+    char buf[BUFSIZ];
+
+    size_t size;
+    while ((size = fread(buf, sizeof(char), BUFSIZ, src)) > 0)
+        fwrite(buf, sizeof(char), size, target);
+
+    lk_close(target, full_path);
+
+    if (!feof(src))
+    {
+        mprf(MSGCH_ERROR, "Error installing bones file to %s",
+                                                    full_path.c_str());
+        if (unlink(full_path.c_str()) != 0)
+        {
+            mprf(MSGCH_ERROR,
+                "Failed to unlink probably corrupt bones file: %s",
+                full_path.c_str());
+        }
+        fclose(src);
+        return "";
+    }
+    fclose(src);
+    return full_path;
 }
 
 // Bones files
