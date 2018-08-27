@@ -16,7 +16,6 @@
 #include "viewgeom.h"
 
 MapRegion::MapRegion(int pixsz) :
-    m_buf(nullptr),
     m_dirty(true),
     m_far_view(false)
 {
@@ -30,11 +29,7 @@ MapRegion::MapRegion(int pixsz) :
 
 void MapRegion::on_resize()
 {
-    delete[] m_buf;
-
-    int size = mx * my;
-    m_buf    = new unsigned char[size];
-    memset(m_buf, 0, sizeof(unsigned char) * size);
+    m_buf.fill(0);
 }
 
 void MapRegion::init_colours()
@@ -70,11 +65,6 @@ void MapRegion::init_colours()
     m_colours[MF_EXPLORE_HORIZON] = Options.tile_explore_horizon_col;
 }
 
-MapRegion::~MapRegion()
-{
-    delete[] m_buf;
-}
-
 void MapRegion::pack_buffers()
 {
     m_buf_map.clear();
@@ -83,7 +73,7 @@ void MapRegion::pack_buffers()
     for (int x = m_min_gx; x <= m_max_gx; x++)
         for (int y = m_min_gy; y <= m_max_gy; y++)
         {
-            map_feature f = (map_feature)m_buf[x + y * mx];
+            map_feature f = (map_feature)m_buf[x + y * GXM];
 
             float pos_x = x - m_min_gx;
             float pos_y = y - m_min_gy;
@@ -135,7 +125,7 @@ void MapRegion::recenter()
 void MapRegion::set(const coord_def &gc, map_feature f)
 {
     ASSERT((unsigned int)f <= (unsigned char)~0);
-    m_buf[gc.x + gc.y * mx] = f;
+    m_buf[gc.x + gc.y * GXM] = f;
 
     if (f == MF_UNSEEN)
         return;
@@ -164,7 +154,7 @@ void MapRegion::update_bounds()
     for (int x = min_gx; x <= max_gx; x++)
         for (int y = min_gy; y <= max_gy; y++)
         {
-            map_feature f = (map_feature)m_buf[x + y * mx];
+            map_feature f = (map_feature)m_buf[x + y * GXM];
             if (f == MF_UNSEEN)
                 continue;
 
@@ -199,9 +189,7 @@ void MapRegion::clear()
 
     recenter();
 
-    if (m_buf)
-        memset(m_buf, 0, sizeof(*m_buf) * mx * my);
-
+    m_buf.fill(0);
     m_buf_map.clear();
     m_buf_lines.clear();
 }
