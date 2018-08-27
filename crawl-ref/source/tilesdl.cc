@@ -1159,6 +1159,8 @@ void TilesFramework::autosize_minimap()
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
     m_region_map->dx = m_region_map->dy = min(horiz, vert);
+    if (Options.tile_map_pixels)
+        m_region_map->dx = min(m_region_map->dx, Options.tile_map_pixels);
 }
 
 void TilesFramework::place_minimap()
@@ -1339,8 +1341,7 @@ void TilesFramework::layout_statcol()
         // We stretch the minimap so it is centered in the space left.
         if (m_region_map)
         {
-            if (!Options.tile_map_pixels)
-                autosize_minimap();
+            autosize_minimap();
 
             m_region_map->place(m_region_stat->sx, m_region_stat->ey,
                                 m_region_stat->ex, m_statcol_bottom,
