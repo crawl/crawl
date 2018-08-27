@@ -1,6 +1,8 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
+#include <array>
+
 #include "map-feature.h"
 #include "tilebuf.h"
 #include "tilereg.h"
@@ -9,7 +11,6 @@ class MapRegion : public Region
 {
 public:
     MapRegion(int pixsz);
-    ~MapRegion();
 
     virtual void render() override;
     virtual void clear() override;
@@ -30,7 +31,7 @@ protected:
     int m_min_gx, m_max_gx, m_min_gy, m_max_gy;
     coord_def m_win_start;
     coord_def m_win_end;
-    unsigned char *m_buf;
+    array<unsigned char, GXM*GYM> m_buf;
 
     ShapeBuffer m_buf_map;
     LineBuffer m_buf_lines;
