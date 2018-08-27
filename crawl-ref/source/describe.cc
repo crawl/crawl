@@ -3724,7 +3724,6 @@ static string _monster_attacks_description(const monster_info& mi)
                          _flavour_effect(attack.flavour, mi.hd).c_str()));
     }
 
-
     if (!attack_descs.empty())
     {
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
@@ -3732,6 +3731,13 @@ static string _monster_attacks_description(const monster_info& mi)
                                                   attack_descs.end(),
                                                   "; and ", "; ");
         result << ".\n";
+    }
+
+    if (mi.type == MONS_ROYAL_JELLY)
+    {
+        result << "It will release varied jellies when damaged or killed, with"
+            " the number of jellies proportional to the amount of damage.\n";
+        result << "It will release all of its jellies when polymorphed.\n";
     }
 
     return result.str();
