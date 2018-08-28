@@ -917,7 +917,7 @@ static void _print_stats_wp(int y)
         item_def wpn = *you.weapon(); // copy
 
         if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
-            wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
+            wpn.plus -= you.props["corrosion_amount"].get_int();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }

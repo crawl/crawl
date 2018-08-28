@@ -6145,7 +6145,7 @@ int player::armour_class(bool /*calc_unid*/) const
         AC += 700;
 
     if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
+        AC -= 100 * you.props["corrosion_amount"].get_int();
 
     AC += sanguine_armour_bonus();
 
@@ -6751,28 +6751,21 @@ bool player::rot(actor *who, int amount, bool quiet, bool /*no_cleanup*/)
 
 bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
-    // rCorr protects against 50% of corrosion.
-    if (res_corr())
-    {
-        degree = binomial(degree, 50);
-        if (!degree)
-        {
-            dprf("rCorr protects.");
-            return false;
-        }
-    }
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
                       make_stringf("%s corrodes you!",
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
-    int prev_corr = props["corrosion_amount"].get_int();
+    int prev_corr = props["corrosion_amount"].get_int() / 4;
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)
         if (!x_chance_in_y(prev_corr, prev_corr + 7))
         {
-            props["corrosion_amount"].get_int()++;
+            if (res_corr())
+                props["corrosion_amount"].get_int() += 2;
+            else
+                props["corrosion_amount"].get_int() += 4;
             prev_corr++;
             did_corrode = true;
         }
