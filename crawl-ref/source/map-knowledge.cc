@@ -199,8 +199,7 @@ bool is_explore_horizon(const coord_def& c)
             const auto& cell = env.map_knowledge(*ai);
             dungeon_feature_type feat = cell.feat();
             if (feat != DNGN_UNSEEN
-                && !feat_is_solid(feat)
-                && !feat_is_door(feat)
+                && (!feat_is_solid(feat) || feat_is_door(feat))
                 && !(cell.flags & MAP_MAGIC_MAPPED_FLAG))
             {
                 return true;
