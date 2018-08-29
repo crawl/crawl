@@ -2,6 +2,7 @@
 {{
 
 function line_setup(e)
+  crawl.set_max_runes(17)
   e.tags("no_rotate no_hmirror no_vmirror no_trap_gen")
   e.tags("no_pool_fixup")
 -- TODO make these doors immune to disint
