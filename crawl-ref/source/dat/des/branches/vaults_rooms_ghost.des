@@ -104,7 +104,7 @@ KMONS:   p = withered plant
 SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
          ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz
 : ghost_good_loot(_G)
-# 1.5 items per ghost. One 'd' glyphs and one 'e' glyph are used by the good
+# 1.5 items per ghost. One 'd' glyph and one 'e' glyph are used by the good
 # loot items, so we don't replace those.
 NSUBST:  d = d / |*.., e = e / |*.., f = |* / |*.., h = 2=|* / |*..
 SUBST:   qrs = G, Z = ., y = p, z = V, t : tp
@@ -113,16 +113,15 @@ TILE:    t = dngn_tree_dead
 : set_feature_name("granite_statue", "a gravestone")
 : vaults_ghost_setup(_G)
 MAP
-qd--frf--eq
-dD---F---De
------------
------------
-h---------h
-sH-------Hs
-h---------h
-xxnn===nnxx
-...........
-...........
+qd-frf-eq
+dD--F--De
+---------
+h-------h
+sH-----Hs
+h-------h
+xnn===nnx
+.........
+.........
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_necromancy

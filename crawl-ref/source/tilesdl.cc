@@ -1159,6 +1159,8 @@ void TilesFramework::autosize_minimap()
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
     m_region_map->dx = m_region_map->dy = min(horiz, vert);
+    if (Options.tile_map_pixels)
+        m_region_map->dx = min(m_region_map->dx, Options.tile_map_pixels);
 }
 
 void TilesFramework::place_minimap()
@@ -1321,26 +1323,35 @@ void TilesFramework::layout_statcol()
         // region extends ~1/2-tile beyond window (rendered area touches right edge)
         m_region_tab->resize(m_region_tab->mx+1, min_inv_height);
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
-
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
+        bool resized_inventory = false;
 
         for (const string &str : Options.tile_layout_priority)
         {
             if (str == "inventory")
+            {
                 resize_inventory();
+                resized_inventory = true;
+            }
             else if (str == "minimap" || str == "map")
+            {
+                if (!resized_inventory)
+                {
+                    resize_inventory();
+                    resized_inventory = true;
+                }
                 place_minimap();
+            }
             else if (!(str == "gold_turn" || str == "gold_turns")) // gold_turns no longer does anything
                 place_tab(m_region_tab->find_tab(str));
         }
         // We stretch the minimap so it is centered in the space left.
         if (m_region_map)
         {
-            if (!Options.tile_map_pixels)
-                autosize_minimap();
+            autosize_minimap();
 
             m_region_map->place(m_region_stat->sx, m_region_stat->ey,
                                 m_region_stat->ex, m_statcol_bottom,

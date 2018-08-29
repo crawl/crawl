@@ -241,10 +241,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function page_up()
     {
-        var previous = menu.first_visible - 1;
+        var pagesz = menu.elem.find(".menu_contents").innerHeight();
+        var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
+        var delta = Math.floor(pagesz/itemsz)
+        var previous = menu.first_visible - delta;
         if (previous < 0)
             previous = 0;
-        scroll_bottom_to_item(previous);
+        scroll_to_item(previous);
     }
 
     function line_down()
@@ -292,7 +295,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top + item.elem.height()
-                           - baseline - contents.innerHeight());
+                - baseline - menu.elem.find(".menu_contents").innerHeight());
 
         menu.anchor_last = true;
         menu_scroll_handler(was_server_initiated);
@@ -302,7 +305,15 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         var $contents = menu.elem.find(".menu_contents");
         var container_rect = $contents.children()[0].getBoundingClientRect();
-        var top = container_rect.top, bottom = container_rect.bottom, i;
+        var top = Math.max(container_rect.top, 0);
+        var bottom = Math.min(container_rect.bottom,
+                                $(window).scrollTop() + $(window).height());
+        var i;
+
+        // initialize these to ensure that they are never NaN, even if we have
+        // strange values for the bounding boxes
+        menu.first_visible = 0;
+        menu.last_visible = 0;
 
         for (i = 0; i < menu.items.length; i++)
         {
@@ -320,7 +331,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             var item_bottom = item.elem[0].getBoundingClientRect().bottom;
             if (item_bottom >= bottom)
             {
-                menu.last_visible = i;
+                menu.last_visible = i-1;
                 break;
             }
         }

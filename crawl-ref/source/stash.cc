@@ -700,7 +700,6 @@ vector<stash_search_result> ShopInfo::matches_search(
     vector<stash_search_result> results;
 
     no_notes nx;
-    bool shop_matches = false;
 
     const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
     if (search.matches(shoptitle + " " + prefix + " {shop}"))
@@ -717,7 +716,6 @@ vector<stash_search_result> ShopInfo::matches_search(
         {
             return results;
         }
-        shop_matches = true;
     }
 
     for (const item_def &item : shop.stock)
@@ -726,8 +724,8 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        if (shop_matches
-            || search.matches(prefix + " " + ann + " " + sname)
+        if (search.matches(prefix + " " + ann + " " + sname +
+                                                    " {" + shoptitle + "}")
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;

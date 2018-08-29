@@ -31,6 +31,7 @@ Notes:
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "end.h"
 #include "endianness.h"
 #include "errors.h"
 #include "syscalls.h"
@@ -113,7 +114,10 @@ package::package(const char* file, bool writeable, bool empty)
         try
         {
             if (!lock_file(fd, writeable))
-                fail("Another game is already in progress using this save!");
+            {
+                game_ended(game_exit::abort,
+                    "Another game is already in progress using this save!");
+            }
 
             load();
         }

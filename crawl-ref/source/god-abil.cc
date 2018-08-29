@@ -30,6 +30,7 @@
 #include "english.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "food.h"
 #include "format.h" // formatted_string
 #include "god-blessing.h"
@@ -1625,10 +1626,42 @@ bool beogh_gift_item()
                               && is_range_weapon(gift) !=
                                  is_range_weapon(*mons_weapon);
 
-    mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
+    const auto mslot = body_armour ? MSLOT_ARMOUR :
                                     shield ? MSLOT_SHIELD :
                               use_alt_slot ? MSLOT_ALT_WEAPON :
-                                             MSLOT_WEAPON);
+                                             MSLOT_WEAPON;
+
+    // need to remove any curses so that drop_item won't fail
+    item_def* item_to_drop = mons->mslot_item(mslot);
+    if (item_to_drop && item_to_drop->cursed())
+    {
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                item_to_drop->name(DESC_THE).c_str());
+        do_uncurse_item(*item_to_drop);
+    }
+
+    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && shield_slot
+        && mons->hands_reqd(gift) == HANDS_TWO
+        && shield_slot->cursed())
+    {
+        // TODO: this doesn't seem to describe the shield as uncursed to the
+        // player. The weapon case works properly.
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                shield_slot->name(DESC_THE).c_str());
+        do_uncurse_item(*shield_slot);
+    }
+
+    item_def *floor_item = mons->take_item(item_slot, mslot);
+    if (!floor_item)
+    {
+        // this probably means move_to_grid in drop_item failed?
+        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
+                                        mons->name(DESC_THE, false).c_str(),
+                                        gift.name(DESC_THE, false).c_str());
+        return false;
+    }
     if (use_alt_slot)
         mons->swap_weapons();
 
@@ -6682,7 +6715,15 @@ spret_type uskayaw_grand_finale(bool fail)
     ASSERT(mons);
 
     // kill the target
-    mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+    if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
+    {
+        // need to do this here, because react_to_damage is never called
+        mprf("%s explodes violently into a cloud of jellies!",
+                                        mons->name(DESC_THE, false).c_str());
+        trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
+    }
+    else
+        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {

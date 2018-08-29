@@ -45,6 +45,7 @@
 #include "scroller.h"
 #include "showsymb.h"
 #include "skills.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -521,8 +522,7 @@ static void _sdump_xp_by_level(dump_params &par)
 " C = Vault XP percentage of total XP\n"
 " D = Non-vault monster count\n"
 " E = Vault monster count\n"
-" F = Vault count percentage of total count\n\n"
-" G = Total turns spent on level\n\n";
+" F = Vault count percentage of total count\n\n";
 
     text += "            ";
     text += "     A         B        C        D         E        F   \n";
@@ -620,8 +620,23 @@ static void _sdump_notes(dump_params &par)
     {
         if (note.hidden())
             continue;
-        text += note.describe();
-        text += "\n";
+
+        string prefix = note.describe(true, true, false);
+        string suffix = note.describe(false, false, true);
+        if (suffix.empty())
+            continue;
+        int spaceleft = 80 - prefix.length() - 1; // Use 100 cols
+        if (spaceleft <= 0)
+            return;
+
+        linebreak_string(suffix, spaceleft);
+        vector<string> parts = split_string("\n", suffix);
+        if (parts.empty()) // Disregard pure-whitespace notes.
+            continue;
+
+        text += prefix + parts[0] + "\n";
+        for (unsigned int j = 1; j < parts.size(); ++j)
+            text += string(prefix.length()-2, ' ') + string("| ") + parts[j] + "\n";
     }
     text += "\n";
 }
@@ -910,57 +925,56 @@ static void _sdump_spells(dump_params &par)
         text += "Your spell library " + verb + " the following spells:\n\n";
         text += " Spells                   Type           Power        Failure   Level  Hunger" "\n";
 
-        FixedBitVector<NUM_SPELLS> memorizable = you.spell_library;
+        auto const library = get_sorted_spell_list(true, false);
 
-        for (int j = 0; j < 52; j++)
+        for (const spell_type spell : library)
         {
-            const spell_type spell  = get_spell_by_letter(index_to_letter(j));
-            if (spell != SPELL_NO_SPELL)
-                memorizable.set(spell, false);
-        }
+            const bool memorisable = you_can_memorise(spell);
 
-        for (int j = 0; j < NUM_SPELLS; j++)
-        {
-            const spell_type spell  = static_cast<spell_type>(j);
+            string spell_line;
 
-            if (memorizable.get(spell))
+            spell_line += ' ';
+            spell_line += spell_title(spell);
+
+            spell_line = chop_string(spell_line, 24);
+            spell_line += "  ";
+
+            bool already = false;
+
+            for (const auto bit : spschools_type::range())
             {
-                string spell_line;
-
-                spell_line += ' ';
-                spell_line += spell_title(spell);
-
-                spell_line = chop_string(spell_line, 24);
-                spell_line += "  ";
-
-                bool already = false;
-
-                for (const auto bit : spschools_type::range())
+                if (spell_typematch(spell, bit))
                 {
-                    if (spell_typematch(spell, bit))
-                    {
-                        spell_line += spell_type_shortname(bit, already);
-                        already = true;
-                    }
+                    spell_line += spell_type_shortname(bit, already);
+                    already = true;
                 }
-
-                spell_line = chop_string(spell_line, 41);
-
-                spell_line += spell_power_string(spell);
-
-                spell_line = chop_string(spell_line, 54);
-
-                spell_line += failure_rate_to_string(raw_spell_fail(spell));
-
-                spell_line = chop_string(spell_line, 66);
-
-                spell_line += make_stringf("%-5d", spell_difficulty(spell));
-
-                spell_line += spell_hunger_string(spell);
-                spell_line += "\n";
-
-                text += spell_line;
             }
+
+            spell_line = chop_string(spell_line, 41);
+
+            if (memorisable)
+                spell_line += spell_power_string(spell);
+            else
+                spell_line += "Unusable";
+
+            spell_line = chop_string(spell_line, 54);
+
+            if (memorisable)
+                spell_line += failure_rate_to_string(raw_spell_fail(spell));
+            else
+                spell_line += "N/A";
+
+            spell_line = chop_string(spell_line, 66);
+
+            spell_line += make_stringf("%-5d", spell_difficulty(spell));
+
+            if (memorisable)
+                spell_line += spell_hunger_string(spell);
+            else
+                spell_line += "N/A";
+            spell_line += "\n";
+
+            text += spell_line;
         }
         text += "\n\n";
     }

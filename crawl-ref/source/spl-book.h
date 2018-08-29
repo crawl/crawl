@@ -40,4 +40,5 @@ vector<spell_type> spells_in_book(const item_def &book);
 
 bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true);
-vector<spell_type> get_mem_spell_list();
+vector<spell_type> get_sorted_spell_list(bool silent = false,
+                                         bool memorise_only = true);

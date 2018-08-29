@@ -408,7 +408,7 @@ static int crawl_process_keys(lua_State *ls)
     for (int i = 1, len = strlen(keys); i < len; i++)
         macro_sendkeys_end_add_expanded(keys[i]);
 
-    process_command(cmd);
+    process_command_on_record(cmd);
 
     return 0;
 }
@@ -480,7 +480,7 @@ static int crawl_do_commands(lua_State *ls)
     for (auto c : cmd_seq)
         macro_buf_add_cmd(c, true);
 
-    process_command(firstcmd);
+    process_command_on_record(firstcmd);
 
     return 0;
 }

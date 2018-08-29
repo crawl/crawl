@@ -21,10 +21,12 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "stringutil.h"
 #include "transform.h"
 #include "tilepick.h"
 #include "view.h"
@@ -163,10 +165,21 @@ int cast_selective_amnesia(const string &pre_msg)
 
         if (spell != SPELL_NO_SPELL)
         {
-            if (!pre_msg.empty())
-                mpr(pre_msg);
-            del_spell_from_memory_by_slot(slot);
-            return 1;
+            const string prompt = make_stringf(
+                    "Forget %s, freeing %d spell level%s for a total of %d?%s",
+                    spell_title(spell), spell_levels_required(spell),
+                    spell_levels_required(spell) != 1 ? "s" : "",
+                    player_spell_levels() + spell_levels_required(spell),
+                    you.spell_library[spell] ? "" :
+                    " This spell is not in your library!");
+
+            if (yesno(prompt.c_str(), true, 'n', false))
+            {
+                if (!pre_msg.empty())
+                    mpr(pre_msg);
+                del_spell_from_memory_by_slot(slot);
+                return 1;
+            }
         }
     }
 

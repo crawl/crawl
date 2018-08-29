@@ -377,7 +377,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    TILEG_ERROR,
+    TILEG_MASS_CONFUSION,
 },
 
 {
@@ -857,7 +857,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_TWISTED_RESURRECTION,
 },
 
 {

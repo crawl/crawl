@@ -580,26 +580,27 @@ static string _get_god_misc_info(god_type which_god)
     if (!info.empty())
         info += "\n\n";
 
+    return info;
+}
+
+static string _get_god_specific_table(god_type which_god)
+{
     switch (which_god)
     {
         case GOD_ASHENZARI:
             if (have_passive(passive_t::bondage_skill_boost))
-                info += _describe_ash_skill_boost();
-            break;
+                return _describe_ash_skill_boost();
+            return "";
 
         case GOD_GOZAG:
-            info += _describe_branch_bribability();
-            break;
+            return _describe_branch_bribability();
 
         case GOD_HEPLIAKLQANA:
-            info += _describe_ancestor_upgrades();
-            break;
+            return _describe_ancestor_upgrades();
 
         default:
-            break;
+            return "";
     }
-
-    return info;
 }
 
 /**
@@ -607,12 +608,14 @@ static string _get_god_misc_info(god_type which_god)
  *
  * @param god       The god in question.
  */
-static formatted_string _detailed_god_description(god_type which_god)
+static formatted_string _detailed_god_description(god_type which_god, bool for_web = false)
 {
     formatted_string desc;
     _add_par(desc, getLongDescription(god_name(which_god) + " powers"));
     _add_par(desc, get_god_likes(which_god));
     _add_par(desc, _get_god_misc_info(which_god));
+    if (!for_web)
+        _add_par(desc, _get_god_specific_table(which_god));
     return desc;
 }
 
@@ -1075,15 +1078,19 @@ static void _send_god_ui(god_type god, bool is_altar)
 
     tiles.json_write_string("description", getLongDescription(god_name(god)));
     if (you_worship(god))
+    {
         tiles.json_write_string("title", god_title(god, you.species, you.piety));
+        if (god == GOD_ASHENZARI)
+            tiles.json_write_string("bondage", ash_describe_bondage(ETF_ALL, true));
+    }
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
-    tiles.json_write_string("powers_list", _describe_god_powers(god));
+    tiles.json_write_string("powers_list",
+            _describe_god_powers(god).to_colour_string());
+    tiles.json_write_string("info_table", _get_god_specific_table(god));
 
-    tiles.json_write_string("overview",
-            _god_overview_description(god).to_colour_string());
     tiles.json_write_string("powers",
-            _detailed_god_description(god).to_colour_string());
+            _detailed_god_description(god, true).to_colour_string());
     tiles.json_write_string("wrath",
             _god_wrath_description(god).to_colour_string());
     tiles.push_ui_layout("describe-god", 1);
