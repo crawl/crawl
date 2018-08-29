@@ -313,6 +313,7 @@ function general_item_setup(e)
 end
 
 function general_setup(e)
+  crawl.set_max_runes(3)
   e.tags("no_rotate no_hmirror no_vmirror")
   e.tags("no_item_gen no_trap_gen no_pool_fixup")
   e.kfeat("& = closed_door")

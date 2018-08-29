@@ -920,6 +920,10 @@ ORDER:      6
 ORIENT:     encompass
 LROCKTILE:  wall_hall
 {{
+    -- Yes, 15 is the same as the normal game but it's nice to be explicit
+    -- in Sprint maps since they don't typically place exactly 15.
+    crawl.set_max_runes(15)
+
     local arena_marker = TriggerableFunction:new {
         data = {
             num_killed = 0,
