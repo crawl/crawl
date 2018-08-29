@@ -1424,9 +1424,9 @@ MARKER: # = lua:props_marker({ \
 MARKER: # = lua:restrict_door()
 SUBST: . = ..........2233445
 MARKER: ! = lua:fog_machine { \
-                pow_max = 1000, delay_min = 1, delay_max = 1, \
-                size = 1000, size_buildup_amnt = 111, \
-                size_buildup_time = 1, cloud_type = "purple smoke" }
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 2, size_buildup_amnt = 3, \
+                size_buildup_time = 25, cloud_type = "purple smoke" }
 MAP
 ccccccc#cccccc
 c!..c....c..!c
