@@ -369,7 +369,7 @@ enum rune_type
     RUNE_SNAKE,
     RUNE_SHOALS,
     RUNE_SLIME,
-    RUNE_ELF, // unused
+    RUNE_ELF, // only used in sprints
     RUNE_VAULTS,
     RUNE_TOMB,
 
@@ -389,7 +389,7 @@ enum rune_type
     RUNE_GLOORX_VLOQ,
 
     RUNE_SPIDER,
-    RUNE_FOREST, // unused
+    RUNE_FOREST, // only used in sprints
     NUM_RUNE_TYPES
 };
 

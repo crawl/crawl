@@ -6,6 +6,8 @@
 # The boss arrives at turn 150.
 {{
 
+  crawl.set_max_runes(1)
+
   local bag_of_meat =
     "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom " ..
     "col:red generate_awake ; ring of slaying plus:30 " ..
