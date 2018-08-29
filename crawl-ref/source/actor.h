@@ -168,7 +168,8 @@ public:
     }
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
-    virtual bool go_berserk(bool intentional, bool potion = false) = 0;
+    virtual bool go_berserk(bool intentional, bool potion = false,
+                            bool divine = false) = 0;
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible(bool calc_unid = true) const = 0;
     virtual bool invisible() const = 0;

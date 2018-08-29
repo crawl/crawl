@@ -941,7 +941,6 @@ ability_type fixup_ability(ability_type ability)
         return ability;
 
     case ABIL_EVOKE_BERSERK:
-    case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead(false)
             || you.species == SP_FORMICID)
         {
@@ -1294,12 +1293,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    if ((abil.ability == ABIL_EVOKE_BERSERK
-         || abil.ability == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true, false, quiet))
-    {
-        return false;
-    }
+    if (abil.ability == ABIL_EVOKE_BERSERK)
+        return you.can_go_berserk(true, false, quiet);
+
+    if (abil.ability == ABIL_TROG_BERSERK)
+        return you.can_go_berserk(true, false, quiet, nullptr, true, true);
 
     if ((abil.ability == ABIL_EVOKE_FLIGHT
          || abil.ability == ABIL_TRAN_BAT
@@ -1566,11 +1564,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
              mpr(no_tele_reason);
         return false;
     }
-
-    case ABIL_EVOKE_BERSERK:
-    case ABIL_TROG_BERSERK:
-        return you.can_go_berserk(true, false, true)
-               && (quiet || berserk_check_wielded_weapon());
 
     case ABIL_EVOKE_FOG:
         if (cloud_at(you.pos()))
@@ -2444,7 +2437,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_TROG_BERSERK:
         fail_check();
         // Trog abilities don't use or train invocations.
-        you.go_berserk(true);
+        you.go_berserk(true, false, true);
         break;
 
     case ABIL_TROG_REGEN_MR:

@@ -2763,7 +2763,7 @@ bool monster::go_frenzy(actor *source)
     return true;
 }
 
-bool monster::go_berserk(bool intentional, bool /* potion */)
+bool monster::go_berserk(bool intentional, bool /* potion */, bool /* divine */)
 {
     if (!can_go_berserk())
         return false;

@@ -710,13 +710,15 @@ static bool _god_prevents_berserk_haste(bool intentional)
  * @param potion      If true, this was caused by the player quaffing !berserk;
  *                    and we get the same additional messages as when
  *                    intentional is true.
+ * @param divine      If true, this was caused by divine action, and works even
+ *                    for species that can't usually go berserk.
  * @return            True if we went berserk, false otherwise.
  */
-bool player::go_berserk(bool intentional, bool potion)
+bool player::go_berserk(bool intentional, bool potion, bool divine)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!you.can_go_berserk(intentional, potion))
+    if (!you.can_go_berserk(intentional, potion, false, nullptr, true, divine))
         return false;
 
     if (crawl_state.game_is_hints())
@@ -764,8 +766,23 @@ bool player::can_go_berserk() const
     return can_go_berserk(false);
 }
 
+/*
+ * Check the player can go berserk, and possibly print an explanation why not.
+ *
+ * @param intentional Did the player deliberately try to go berserk? If true,
+ *   failure will be messaged to the player.
+ * @param potion Did the player quaff a potion of berserk rage? If true,
+ *   failure will be messaged to the player.
+ * @param quiet Suppress any player messaging.
+ * @param reason If the player cannot go berserk, get any failure reason as
+ *   this string.
+ * @param temp Check temporary reasons why berserk could fail (already
+ *   berserk, etc)
+ * @param divine Is the source of berserk a divine power?
+ * @returns If the player can go berserk or not.
+ */
 bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
-                            string *reason, bool temp) const
+                            string *reason, bool temp, bool divine) const
 {
     const bool verbose = (intentional || potion) && !quiet;
     string msg;
@@ -783,9 +800,9 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You are too terrified to rage.";
     else if (!intentional && !potion && clarity() && temp)
         msg = "You're too calm and focused to rage.";
-    else if (is_lifeless_undead(temp))
+    else if (is_lifeless_undead(temp) && !divine)
         msg = "You cannot raise a blood rage in your lifeless body.";
-    else if (stasis())
+    else if (stasis() && !divine)
         msg = "Your stasis prevents you from going berserk.";
     else
         success = true;

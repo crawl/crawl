@@ -675,8 +675,9 @@ public:
     bool can_go_berserk() const override;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false, string *reason = nullptr,
-                        bool temp = true) const;
-    bool go_berserk(bool intentional, bool potion = false) override;
+                        bool temp = true, bool divine = false) const;
+    bool go_berserk(bool intentional, bool potion = false,
+                    bool divine = false) override;
     bool berserk() const override;
     bool can_mutate() const override;
     bool can_safely_mutate(bool temp = true) const override;
