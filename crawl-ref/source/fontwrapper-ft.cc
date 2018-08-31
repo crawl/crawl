@@ -490,7 +490,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 unsigned int FTFontWrapper::string_height(const formatted_string &str, bool logical) const
 {
     string temp = str.tostring();
-    return string_height(temp.c_str());
+    return string_height(temp.c_str(), logical);
 }
 
 unsigned int FTFontWrapper::string_height(const char *text, bool logical) const
@@ -574,7 +574,8 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
                                       unsigned int max_str_width,
                                       unsigned int max_str_height)
 {
-    int max_lines = max_str_height / char_height();
+    int max_lines = display_density.logical_to_device(max_str_height)
+                                                        / char_height(false);
 
     if (max_lines < 1)
         return formatted_string();
