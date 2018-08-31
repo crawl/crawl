@@ -1,7 +1,5 @@
 # X-Crawl fork of Dungeon Crawl Stone Soup
 
-**Development of X-Crawl is currently on hold as a result of mainline Crawl's 0.22 tournament. We encourage everyone to take part in the tournament, and wish you the best of luck. The tournament home page can be found here: http://dobrazupa.org/tournament/0.22/.**
-
 X-Crawl is a fork of the game Dungeon Crawl Stone Soup, developed and maintained primarily by Vajrapani, NormalPerson7 and krfreak. For the majority of changes, we consult with the community through voting on Discord to determine whether they agree. The overall goal of X-Crawl is to make a fairer game that the community is happier with, while not making the game easier than it is already.
 
 You can play X-Crawl online on https://crawl.project357.org (CPO) and https://x-crawl.de (XCD)
