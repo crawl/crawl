@@ -2983,18 +2983,16 @@ MAP
 ENDMAP
 
 NAME:   minmay_acid_items
-TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
-DEPTH:  Depths, !Depths:$
-MONS:   ooze / jelly w:30 / death ooze / azure jelly
+TAGS:   no_monster_gen no_trap_gen transparent
+DEPTH:  Depths
+MONS:   slime creature w:30 / death ooze / azure jelly / acid blob w:5
 MONS:   acid blob
-KPROP:  |' = no_tele_into
-MARKER: + = lua:props_marker({ door_restrict="veto" })
 MAP
   ...........
  ..nnnnnnnnn..
 ..nn1112111nn..
 .nn11nnnnn11nn.
-.+111+|||nn11n.
+.=111+|||nn11n.
 .nn11nnnnn11nn.
 ..nn1112111nn..
  ..nnnnnnnnn..
