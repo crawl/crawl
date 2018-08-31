@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
 // DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
@@ -231,6 +233,18 @@ enum tag_minor_version
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
 
+// tags that affect loading bones files. If you do save compat that affects
+// ghosts, these must be updated in addition to the enum above.
+const set<int> bones_minor_tags =
+        {TAG_MINOR_RESET,
+#if TAG_MAJOR_VERSION == 34
+         TAG_MINOR_NO_GHOST_SPELLCASTER,
+         TAG_MINOR_MON_COLOUR_LOOKUP,
+         TAG_MINOR_GHOST_ENERGY,
+         TAG_MINOR_BOOL_FLIGHT,
+#endif
+        };
+
 struct save_version
 {
     save_version(int _major, int _minor) : major{_major}, minor{_minor}
@@ -244,6 +258,11 @@ struct save_version
     static save_version current()
     {
         return save_version(TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
+    }
+
+    static save_version current_bones()
+    {
+        return save_version(TAG_MAJOR_VERSION, *bones_minor_tags.crbegin());
     }
 
     bool valid() const
@@ -314,6 +333,11 @@ struct save_version
     bool is_current() const
     {
         return valid() && *this == save_version::current();
+    }
+
+    bool is_bones_version() const
+    {
+        return valid() && is_compatible() && bones_minor_tags.count(minor) > 0;
     }
 
     int major;
