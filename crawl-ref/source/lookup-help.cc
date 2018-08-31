@@ -50,6 +50,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #endif
+#include "ui.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -1314,13 +1315,13 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
         make_stringf(" Enter a single letter to list %s displayed by that"
                      " symbol.", pluralise(type).c_str()) :
         "";
-    mprf(MSGCH_PROMPT,
-         "Describe a %s; partial names and regexps are fine.%s",
+    const string prompt = make_stringf(
+         "Describe a %s; partial names and regexps are fine.%s\n"
+         "Describe what? ",
          type.c_str(), extra.c_str());
 
-    mprf(MSGCH_PROMPT, "Describe what? ");
     char buf[80];
-    if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    if (msgwin_get_line(prompt, buf, sizeof(buf)) || buf[0] == '\0')
     {
         err = "Okay, then.";
         return "";
@@ -1374,6 +1375,58 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     return "";
 }
 
+static int _lookup_prompt()
+{
+    // TODO: show this + the regex prompt in the same menu?
+#ifdef TOUCH_UI
+    bool use_popup = true;
+#else
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+#endif
+
+    int ch = -1;
+    const string lookup_type_prompts =
+        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
+                           mem_fn(&LookupType::prompt_string), " or ");
+    if (use_popup)
+    {
+        string prompt = make_stringf("Describe a %s? ",
+                                                lookup_type_prompts.c_str());
+        linebreak_string(prompt, 72);
+
+#ifdef USE_TILE_WEB
+        tiles_crt_popup show_as_popup;
+        tiles.set_ui_state(UI_CRT);
+#endif
+        auto prompt_ui =
+                make_shared<ui::Text>(formatted_string::parse_string(prompt));
+        bool done = false;
+
+        prompt_ui->on(ui::Widget::slots.event, [&](wm_event ev) {
+            if (ev.type == WME_KEYDOWN)
+            {
+                ch = ev.key.keysym.sym;
+                done = true;
+            }
+            return done;
+        });
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
+    }
+    else
+    {
+        mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
+
+        {
+            cursor_control con(true);
+            ch = getchm();
+        }
+    }
+    return toupper(ch);
+}
+
 /**
  * Run an iteration of ?/.
  *
@@ -1383,18 +1436,7 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
  */
 static bool _find_description(string &response)
 {
-
-    const string lookup_type_prompts =
-        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
-                           mem_fn(&LookupType::prompt_string), " or ");
-    mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
-
-    int ch;
-    {
-        cursor_control con(true);
-        ch = toupper(getchm());
-    }
-
+    int ch = _lookup_prompt();
     const LookupType * const *lookup_type_ptr
         = map_find(_lookup_types_by_symbol, ch);
     if (!lookup_type_ptr)

@@ -1477,6 +1477,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
         reader.read_line(fill);
         reader.putkey(CK_END);
 
+        linebreak_string(prompt, 79);
         msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
         const string colour_prompt = colour_string(prompt, colour_msg(colour));
 
