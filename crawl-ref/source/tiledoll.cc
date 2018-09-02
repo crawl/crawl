@@ -7,7 +7,11 @@
 #include <sys/stat.h>
 
 #include "files.h"
+#include "jobs.h"
+#include "makeitem.h"
 #include "mon-info.h"
+#include "newgame.h"
+#include "ng-setup.h"
 #include "options.h"
 #include "syscalls.h"
 #include "tile-player-flag-cut.h"
@@ -19,6 +23,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "transform.h"
+#include "unwind.h"
 
 dolls_data::dolls_data()
 {
@@ -497,6 +502,36 @@ void fill_doll_equipment(dolls_data &result)
     for (int i = 0; i < TILEP_PART_MAX; i++)
         if (result.parts[i] == TILEP_SHOW_EQUIP)
             result.parts[i] = 0;
+}
+
+void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
+{
+    for (int j = 0; j < TILEP_PART_MAX; j++)
+        result.parts[j] = TILEP_SHOW_EQUIP;
+
+    unwind_var<player> unwind_you(you);
+    you = player();
+
+    // The following is part of the new game setup code from _setup_generic()
+    you.your_name  = ng.name;
+    you.species    = ng.species;
+    you.char_class = ng.job;
+    you.chr_class_name = get_job_name(you.char_class);
+
+    species_stat_init(you.species);
+    update_vision_range();
+    job_stat_init(you.char_class);
+    give_basic_mutations(you.species);
+    give_items_skills(ng);
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        auto &item = you.inv[i];
+        if (item.defined())
+            item_colour(item);
+    }
+
+    fill_doll_equipment(result);
 }
 
 // Writes equipment information into per-character doll file.
