@@ -141,6 +141,7 @@ static function<bool(const monster&)> _setup_hex_check(spell_type spell);
 static bool _worth_hexing(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(actor* victim);
 static function<bool(const monster&)> _should_selfench(enchant_type ench);
+static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 
 enum spell_logic_flag
 {
@@ -459,6 +460,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot, bolt&) {
             caster.add_ench(ENCH_RING_OF_THUNDER);
     } } },
+    { SPELL_GRASPING_ROOTS, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            return foe && caster.can_constrict(foe, false);
+        }, _cast_grasping_roots, } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -773,6 +780,28 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
 
     foe->hurt(&caster, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
               "", "by divine providence");
+}
+
+static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    const int turns = 4 + random2avg(div_rand_round(
+                mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
+    dprf("Grasping roots turns: %d", turns);
+    mpr("Roots burst forth from the earth!");
+    if (foe->is_player())
+    {
+        you.increase_duration(DUR_GRASPING_ROOTS, turns);
+        caster.start_constricting(you);
+        mprf(MSGCH_WARN, "The grasping roots grab you!");
+    }
+    else
+    {
+        caster.add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 0, foe,
+                    turns * BASELINE_DELAY));
+    }
 }
 
 /// Is the given full-LOS attack spell worth casting for the given monster?

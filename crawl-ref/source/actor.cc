@@ -470,34 +470,47 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     constrictee->clear_constricted();
 
     monster * const mons = monster_by_mid(whom);
+    bool roots = constrictee->is_player() && you.duration[DUR_GRASPING_ROOTS]
+        || mons && mons->has_ench(ENCH_GRASPING_ROOTS);
     bool vile_clutch = mons && mons->has_ench(ENCH_VILE_CLUTCH);
 
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
         string attacker_desc;
-        string attacker_pronoun;
+        const string verb = intentional ? "release" : "lose";
+        bool force_plural = false;
 
         if (vile_clutch)
         {
             attacker_desc = "The zombie hands";
-            attacker_pronoun = "their";
+            force_plural = true;
+        }
+        else if (roots)
+        {
+            attacker_desc = "The roots";
+            force_plural = true;
         }
         else
-        {
             attacker_desc = name(DESC_THE);
-            attacker_pronoun = pronoun(PRONOUN_POSSESSIVE);
-        }
 
         mprf("%s %s %s grip on %s.",
              attacker_desc.c_str(),
-             conj_verb(intentional ? "release" : "lose").c_str(),
-             attacker_pronoun.c_str(),
+             force_plural ? verb.c_str()
+                          : conj_verb(verb).c_str(),
+             force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
              constrictee->name(DESC_THE).c_str());
     }
 
     if (vile_clutch)
         mons->del_ench(ENCH_VILE_CLUTCH);
+    else if (roots)
+    {
+        if (mons)
+            mons->del_ench(ENCH_GRASPING_ROOTS);
+        else
+            you.duration[DUR_GRASPING_ROOTS] = 0;
+    }
 
     if (constrictee->is_player())
         you.redraw_evasion = true;
@@ -686,8 +699,10 @@ bool actor::is_constricted() const
 bool actor::is_directly_constricted() const
 {
     return is_constricted()
-        && (is_player()
-            || !as_monster()->has_ench(ENCH_VILE_CLUTCH));
+        && (is_player() && !you.duration[DUR_GRASPING_ROOTS]
+            || is_monster()
+               && !as_monster()->has_ench(ENCH_VILE_CLUTCH)
+               && !as_monster()->has_ench(ENCH_GRASPING_ROOTS));
 }
 
 void actor::accum_has_constricted()
@@ -739,6 +754,8 @@ bool actor::can_constrict(const actor* defender, bool direct) const
 void actor::constriction_damage_defender(actor &defender, int duration)
 {
     const bool direct = defender.is_directly_constricted();
+    const bool vile_clutch = !direct && defender.as_monster()
+        && defender.as_monster()->has_ench(ENCH_VILE_CLUTCH);
     int damage = constriction_damage(direct);
 
     DIAG_ONLY(const int basedam = damage);
@@ -769,15 +786,25 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     if (is_player() || you.can_see(*this))
     {
         string attacker_desc;
-        if (!direct)
+        bool force_plural = false;
+        if (vile_clutch)
+        {
             attacker_desc = "The zombie hands";
+            force_plural = true;
+        }
+        else if (!direct)
+        {
+            attacker_desc = "The grasping roots";
+            force_plural = true;
+        }
         else if (is_player())
             attacker_desc = "You";
         else
             attacker_desc = name(DESC_THE);
 
         mprf("%s %s %s%s%s", attacker_desc.c_str(),
-             conj_verb("constrict").c_str(),
+             force_plural ? "constrict"
+                          : conj_verb("constrict").c_str(),
              defender.name(DESC_THE).c_str(),
 #ifdef DEBUG_DIAGNOSTICS
              make_stringf(" for %d", damage).c_str(),

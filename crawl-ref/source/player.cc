@@ -1956,9 +1956,6 @@ int player_movement_speed()
     if (you.duration[DUR_FROZEN])
         mv += 3;
 
-    if (you.duration[DUR_GRASPING_ROOTS])
-        mv += 3;
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
@@ -2152,8 +2149,6 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
-    else if (you.duration[DUR_GRASPING_ROOTS])
-        prescaled_ev = prescaled_ev * 2 / 3;
 
     // Merfolk get a 25% evasion bonus in water.
     if (you.fishtail)
@@ -4873,11 +4868,6 @@ bool flight_allowed(bool quiet, string *fail_reason)
         msg = "You can't fly while stuck in liquid ground.";
         success = false;
     }
-    else if (you.duration[DUR_GRASPING_ROOTS])
-    {
-        msg = "The grasping roots prevent you from becoming airborne.";
-        success = false;
-    }
 
     if (!success)
     {
@@ -5377,7 +5367,7 @@ player::~player()
 bool player::airborne() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
-    if (you.duration[DUR_GRASPING_ROOTS] || get_form()->forbids_flight())
+    if (get_form()->forbids_flight())
         return false;
 
     if (duration[DUR_FLIGHT]
@@ -7433,14 +7423,18 @@ bool player::attempt_escape(int attempts)
     ASSERT(themonst);
     escape_attempts += attempts;
 
+    const bool direct = is_directly_constricted();
+    const string object = direct ? themonst->name(DESC_ITS, true)
+                                 : "the roots'";
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
     if (roll_dice(4 + escape_attempts, 13)
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
-        mprf("You escape %s grasp.", themonst->name(DESC_ITS, true).c_str());
+        mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
-        themonst->speed_increment -= 5;
+        if (direct)
+            themonst->speed_increment -= 5;
 
         stop_being_constricted(true);
 
@@ -7449,7 +7443,7 @@ bool player::attempt_escape(int attempts)
     else
     {
         mprf("%s grasp on you weakens, but your attempt to escape fails.",
-             themonst->name(DESC_ITS, true).c_str());
+             object.c_str());
         turn_is_over = true;
         return false;
     }

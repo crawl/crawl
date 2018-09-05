@@ -327,10 +327,15 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_VILE_CLUTCH:
-        you.start_constricting(*this);
-        mprf(MSGCH_WARN, "Zombie hands grab %s.",
-             name(DESC_THE).c_str());
+    case ENCH_GRASPING_ROOTS:
+    {
+        actor *source_actor = actor_by_mid(ench.source, true);
+        const string noun = ench.ench == ENCH_VILE_CLUTCH ? "Zombie hands" :
+                                                            "Roots";
+        source_actor->start_constricting(*this);
+        mprf(MSGCH_WARN, "%s grab %s.", noun.c_str(), name(DESC_THE).c_str());
         break;
+    }
 
     default:
         break;
@@ -867,16 +872,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
         break;
 
-    case ENCH_GRASPING_ROOTS_SOURCE:
-        if (!quiet && you.see_cell(pos()))
-            mpr("The grasping roots settle back into the ground.");
-
-        // Done here to avoid duplicate messages
-        if (you.duration[DUR_GRASPING_ROOTS])
-            check_grasping_roots(you, true);
-
-        break;
-
     case ENCH_FIRE_VULN:
         if (!quiet)
             simple_monster_message(*this, " is no longer more vulnerable to fire.");
@@ -980,18 +975,23 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_VILE_CLUTCH:
+    case ENCH_GRASPING_ROOTS:
+    {
+        const string noun = me.ench == ENCH_VILE_CLUTCH ? "zombie hands"
+                                                        : "roots";
         if (is_constricted())
         {
             // We handle the end-of-enchantment message here since the method
             // of constriction is no longer detectable.
             if (!quiet && you.can_see(*this))
             {
-                mprf("The zombie hands release their grip on %s.",
+                mprf("The %s release their grip on %s.", noun.c_str(),
                         name(DESC_THE).c_str());
             }
             stop_being_constricted(true);
         }
         break;
+    }
 
     case ENCH_STILL_WINDS:
         end_still_winds();
@@ -1133,85 +1133,6 @@ bool monster::clear_far_engulf(void)
     if (nonadj)
         del_ench(ENCH_WATER_HOLD);
     return nonadj;
-}
-
-static void _entangle_actor(actor* act)
-{
-    if (act->is_player())
-    {
-        you.duration[DUR_GRASPING_ROOTS] = 10;
-        you.redraw_evasion = true;
-        if (you.duration[DUR_FLIGHT] || you.attribute[ATTR_PERM_FLIGHT])
-        {
-            you.attribute[ATTR_LAST_FLIGHT_STATUS] =
-                you.attribute[ATTR_PERM_FLIGHT];
-            you.duration[DUR_FLIGHT] = 0;
-            you.attribute[ATTR_PERM_FLIGHT] = 0;
-            land_player(true);
-        }
-    }
-    else
-    {
-        monster* mact = act->as_monster();
-        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, nullptr, INFINITE_DURATION));
-    }
-}
-
-// Returns true if there are any affectable hostiles are in range of the effect
-// (whether they were affected or not this round)
-static bool _apply_grasping_roots(monster* mons)
-{
-    if (you.see_cell(mons->pos()) && one_chance_in(12))
-    {
-        mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
-                "Tangled roots snake along the ground.",
-                "The ground creaks as gnarled roots bulge its surface.",
-                "A root reaches out and grasps at passing movement."));
-    }
-
-    bool found_hostile = false;
-    for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (mons_aligned(mons, *ai) || ai->is_insubstantial())
-            continue;
-
-        found_hostile = true;
-
-        // Roots can't reach things over deep water or lava
-        if (!feat_has_solid_floor(grd(ai->pos())))
-            continue;
-
-        // Some messages are suppressed for monsters, to reduce message spam.
-        if (ai->airborne())
-        {
-            if (x_chance_in_y(3, 5))
-                continue;
-
-            if (x_chance_in_y(10, 50 - ai->evasion()))
-            {
-                if (ai->is_player())
-                    mpr("Roots rise up to grasp you, but you nimbly evade.");
-                continue;
-            }
-
-            if (you.can_see(**ai))
-            {
-                mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
-                     ai->name(DESC_THE).c_str(),
-                     ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                     ai->is_monster() ? "" : "back ");
-            }
-        }
-        else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
-        {
-            mprf("Roots grasp at your %s, making movement difficult.",
-                 you.foot_name(true).c_str());
-        }
-
-        _entangle_actor(*ai);
-    }
-
-    return found_hostile;
 }
 
 // Returns true if you resist the merfolk avatar's call.
@@ -1482,6 +1403,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_RING_OF_THUNDER:
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
+    case ENCH_GRASPING_ROOTS:
         decay_enchantment(en);
         break;
 
@@ -1922,15 +1844,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TOXIC_RADIANCE:
         toxic_radiance_effect(this, 1);
         decay_enchantment(en);
-        break;
-
-    case ENCH_GRASPING_ROOTS_SOURCE:
-        if (!_apply_grasping_roots(this))
-            decay_enchantment(en);
-        break;
-
-    case ENCH_GRASPING_ROOTS:
-        check_grasping_roots(*this);
         break;
 
     case ENCH_TORNADO_COOLDOWN:

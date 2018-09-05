@@ -2918,10 +2918,6 @@ void monster_cleanup(monster* mons)
     if (mons->has_ench(ENCH_AWAKEN_VINES))
         unawaken_vines(mons, false);
 
-    // So proper messages are printed
-    if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
-        mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
-
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius()
         || mons->umbra_radius()

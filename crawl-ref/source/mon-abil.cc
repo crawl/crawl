@@ -961,39 +961,6 @@ void treant_release_fauna(monster& mons)
     }
 }
 
-void check_grasping_roots(actor& act, bool quiet)
-{
-    bool source = false;
-    for (monster_near_iterator mi(act.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mons_aligned(&act, *mi) && mi->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
-        {
-            source = true;
-            break;
-        }
-    }
-
-    if (!source || !feat_has_solid_floor(grd(act.pos())))
-    {
-        if (act.is_player())
-        {
-            if (!quiet)
-                mpr("You escape the reach of the grasping roots.");
-            you.duration[DUR_GRASPING_ROOTS] = 0;
-            you.redraw_evasion = true;
-            if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
-                && (you.racial_permanent_flight()
-                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)))
-           {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                float_player();
-           }
-        }
-        else
-            act.as_monster()->del_ench(ENCH_GRASPING_ROOTS);
-    }
-}
-
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -1180,24 +1147,6 @@ bool mon_special_ability(monster* mons)
             treant_release_fauna(*mons);
             // Intentionally takes no energy; the creatures are flying free
             // on their own time.
-        }
-
-        if (!mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE) && x_chance_in_y(2, 3))
-        {
-            // Duration does not decay while there are hostiles around
-            mons->add_ench(mon_enchant(ENCH_GRASPING_ROOTS_SOURCE, 1, mons,
-                                       random_range(3, 7) * BASELINE_DELAY));
-            if (you.can_see(*mons))
-            {
-                mprf(MSGCH_MONSTER_SPELL, "%s reaches out with a gnarled limb.",
-                     mons->name(DESC_THE).c_str());
-                mprf("Grasping roots rise from the ground around %s!",
-                     mons->name(DESC_THE).c_str());
-            }
-            else if (you.see_cell(mons->pos()))
-                mpr("Grasping roots begin to rise from the ground!");
-
-            used = true;
         }
     }
     break;

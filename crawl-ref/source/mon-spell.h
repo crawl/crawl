@@ -256,6 +256,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SHAMBLING_MANGROVE,
+      {
+       { SPELL_GRASPING_ROOTS, 40, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('g') Small humanoids.
     {  MST_GNOLL_SHAMAN,
       {

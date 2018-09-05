@@ -2952,15 +2952,22 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage(bool /* direct */) const
+int monster::constriction_damage(bool direct) const
 {
-    for (int i = 0; i < 4; ++i)
+    if (direct)
     {
-        const mon_attack_def attack = mons_attack_spec(*this, i);
-        if (attack.type == AT_CONSTRICT)
-            return attack.damage;
+        for (int i = 0; i < 4; ++i)
+        {
+            const mon_attack_def attack = mons_attack_spec(*this, i);
+            if (attack.type == AT_CONSTRICT)
+                return attack.damage;
+        }
+        return -1;
     }
-    return -1;
+
+    // The only monster spell that's a source of indirect constriction.
+    return roll_dice(2, div_rand_round(40 +
+                mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
 }
 
 bool monster::constriction_does_damage(bool direct) const
@@ -3464,7 +3471,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 
     if (caught() || is_constricted())
         ev /= (body_size(PSIZE_BODY) + 2);
-    else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
+    else if (confused())
         ev /= 2;
 
     return max(ev, 0);
@@ -5725,9 +5732,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
         energy_loss /= 2;
     }
 
-    if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
-        energy_loss += 4;
-
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
 
@@ -6516,10 +6520,12 @@ bool monster::attempt_escape(int attempts)
     }
     else
     {
-        randfact = roll_dice(1, 5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
-        randfact += roll_dice(1, themonst->get_hit_dice());
+
+        // Monsters use the same escape formula for all forms of constriction.
+        randfact = 5 + roll_dice(1, 5)
+            + roll_dice(1, themonst->get_hit_dice());
     }
 
     if (attfactor > randfact)

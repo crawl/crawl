@@ -625,6 +625,12 @@ caster. Those hit by the blast are encased in ice, slowing their movement, and
 those killed by the blast may be frozen into solid blocks of ice. A significant
 portion of its damage bypasses cold resistance.
 %%%%
+Grasping Roots spell
+
+Calls giant grasping roots from deep underground that hold and constrict their
+victim. The roots will retreat if the victim breaks free or if the caller moves
+out of view.
+%%%%
 Greater Servant of Makhleb spell
 
 <Greater Servant of Makhleb ability>

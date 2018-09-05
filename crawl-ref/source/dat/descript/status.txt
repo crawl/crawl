@@ -236,11 +236,6 @@ Weak status
 
 Your physical attacks do less damage.
 %%%%
-Roots status
-
-You are held to the ground by animated roots. Your movement speed is slower,
-your evasion is reduced, and you are unable to fly.
-%%%%
 Frozen status
 
 You are covered in ice, and your movement speed is reduced.
