@@ -161,7 +161,7 @@ DEPTH:  D:2-3
 
 NAME:   uniq_jorgrun
 DEPTH:  D:12-, Orc, Elf, !Elf:$, Snake, !Snake:$, Shoals, !Shoals:$
-DEPTH:  Spider, !Spider:$
+DEPTH:  Spider, !Spider:$, Swamp, !Swamp:$
 : place_unique(_G, "Jorgrun")
 
 NAME:   uniq_joseph
