@@ -182,6 +182,7 @@ fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
 ghostly_fireball GHOSTLY_FIREBALL
+grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
 call_down_damnation CALL_DOWN_DAMNATION
 ink_cloud INK_CLOUD
