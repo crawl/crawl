@@ -464,12 +464,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         power *= 10 + 4 * augmentation_amount();
         power /= 10;
     }
-	
+
     // Being a plasma aspect Bodach boosts spell power
-    if (!fail_rate_check)
+    if (!fail_rate_check
+        && you.species == SP_BODACH
+        && you.attribute[ATTR_BODACH_ASPECT] == 3)
     {
-		if (you.species == SP_BODACH && you.attribute[ATTR_BODACH_ASPECT] == 3)
-        power *= 11 + you.experience_level / 3;
+		    power *= 11 + you.experience_level / 3;
         power /= 10;
     }
 
@@ -856,7 +857,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     // Silently take MP before the spell.
     if(you.species == SP_OBSIDIAN_DWARF)
         dec_hp(cost, true);
-    else 
+    else
         dec_mp(cost, true);
 
     const spret_type cast_result = your_spells(spell, 0, true);
@@ -866,7 +867,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         // Return the MP since the spell is aborted.
         if(you.species == SP_OBSIDIAN_DWARF)
             inc_hp(cost);
-        else 
+        else
             inc_mp(cost, true);
         return false;
     }
