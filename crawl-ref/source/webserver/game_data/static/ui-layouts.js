@@ -569,9 +569,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             var rexp = '[^\n]*('+desc.highlight+')[^\n]*\n?';
             var re = new RegExp(rexp, 'g');
-            console.log(rexp);
             body_html = body_html.replace(re, function (line) {
-                console.log(line)
                 return "<span class=highlight>" + line + "</span>";
             });
         }
