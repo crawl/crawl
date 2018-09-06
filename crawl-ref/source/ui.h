@@ -447,6 +447,7 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
+    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
 protected:
     int m_current;

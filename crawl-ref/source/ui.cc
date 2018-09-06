@@ -1012,6 +1012,18 @@ void Switcher::_allocate_region()
     }
 }
 
+shared_ptr<Widget> Switcher::get_child_at_offset(int x, int y)
+{
+    if (m_children.size() == 0)
+        return nullptr;
+
+    int c = max(0, min(m_current, (int)m_children.size()));
+    const auto region = m_children[c]->get_region();
+    bool inside = (x > region[0] && x < region[0] + region[2])
+        && (y > region[1] && y < region[1] + region[3]);
+    return inside ? m_children[c] : nullptr;
+}
+
 shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
 {
     int lx = x - m_region[0];
