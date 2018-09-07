@@ -6968,7 +6968,10 @@ static vector<ghost_demon> tag_read_ghost(reader &th)
     int nghosts = unmarshallShort(th);
 
     if (nghosts < 1 || nghosts > MAX_GHOSTS)
-        return result;
+    {
+        string error = "Bones file has an invalid ghost count " + nghosts;
+        throw corrupted_save(error);
+    }
 
     for (int i = 0; i < nghosts; ++i)
         result.push_back(unmarshallGhost(th));
