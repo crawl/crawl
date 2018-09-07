@@ -827,7 +827,7 @@ string get_prefs_filename()
 #endif
 }
 
-static void _write_ghost_version(writer &outf)
+void write_ghost_version(writer &outf)
 {
     // this may be distinct from the current save version
     auto bones_version = save_version::current_bones();
@@ -1992,7 +1992,7 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
     return true;
 }
 
-static save_version _read_ghost_header(reader &inf)
+save_version read_ghost_header(reader &inf)
 {
     auto version = get_save_version(inf);
     if (!version.valid())
@@ -2030,8 +2030,7 @@ static save_version _read_ghost_header(reader &inf)
     return version;
 }
 
-static vector<ghost_demon> _load_bones_file(string ghost_filename,
-                                                            bool backup=false)
+vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
 {
     vector<ghost_demon> result;
 
@@ -2047,7 +2046,7 @@ static vector<ghost_demon> _load_bones_file(string ghost_filename,
     }
 
     inf.set_safe_read(true); // don't die on 0-byte bones
-    save_version version = _read_ghost_header(inf);
+    save_version version = read_ghost_header(inf);
     if (!_ghost_version_compatible(version))
     {
         string error = "Incompatible bones file: " + ghost_filename;
@@ -2085,7 +2084,7 @@ static vector<ghost_demon> _load_ghosts_core(string filename,
     vector<ghost_demon> results;
     try
     {
-        results = _load_bones_file(filename, backup_on_upgrade);
+        results = load_bones_file(filename, backup_on_upgrade);
     }
     catch (corrupted_save &err)
     {
@@ -2099,7 +2098,7 @@ static vector<ghost_demon> _load_ghosts_core(string filename,
             {
                 _ghost_dprf("Loading ghost from backup bones file %s",
                                                         old_bones.c_str());
-                return _load_bones_file(old_bones, false);
+                return load_bones_file(old_bones, false);
             }
             else
                 mprf(MSGCH_ERROR, "Mismatch between bones backup "
@@ -2779,7 +2778,7 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
             if (inf.valid())
             {
                 inf.set_safe_read(true); // don't die on 0-byte bones
-                save_version version = _read_ghost_header(inf);
+                save_version version = read_ghost_header(inf);
                 if (version.valid() && version.is_future())
                 {
                     permastore_file = _old_bones_filename(permastore_file,
@@ -2803,7 +2802,7 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
         _ghost_dprf("Rewriting ghost permastore %s with %u ghosts",
                     permastore_file.c_str(), (unsigned int) permastore.size());
         writer outw(permastore_file, ghost_file);
-        _write_ghost_version(outw);
+        write_ghost_version(outw);
         tag_write_ghosts(outw, permastore);
 
         lk_close(ghost_file, permastore_file);
@@ -2819,7 +2818,6 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
  *
  * @param force   Forces ghost generation even in otherwise-disallowed levels.
  **/
-
 void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 {
     // n.b. this is not called in the normal course of events for wizmode
@@ -2859,7 +2857,7 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 
     writer outw(g_file_name, ghost_file);
 
-    _write_ghost_version(outw);
+    write_ghost_version(outw);
     tag_write_ghosts(outw, leftovers);
 
     lk_close(ghost_file, g_file_name);
