@@ -113,6 +113,9 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false,
                                                     bool use_store = true);
 bool load_ghosts(int max_ghosts, bool creating_level);
 bool define_ghost_from_bones(monster& mons);
+vector<ghost_demon> load_bones_file(string ghost_filename, bool backup=false);
+void write_ghost_version(writer &outf);
+save_version read_ghost_header(reader &inf);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);
