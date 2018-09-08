@@ -447,6 +447,8 @@ public:
     void add_child(shared_ptr<Widget> child);
     int& current();
 
+    Widget::Align align_x = START, align_y = START;
+
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;

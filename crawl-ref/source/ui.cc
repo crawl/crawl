@@ -1008,6 +1008,29 @@ void Switcher::_allocate_region()
         cr[2] = min(max(pw.min, m_region[2]), pw.nat);
         SizeReq ph = child->get_preferred_size(Widget::VERT, cr[2]);
         cr[3] = min(max(ph.min, m_region[3]), ph.nat);
+        int xo, yo;
+        switch (align_x)
+        {
+            case Widget::START:   xo = 0; break;
+            case Widget::CENTER:  xo = (m_region[2] - cr[2])/2; break;
+            case Widget::END:     xo = m_region[2] - cr[2]; break;
+            case Widget::STRETCH: xo = 0; break;
+            default: ASSERT(0);
+        }
+        switch (align_y)
+        {
+            case Widget::START:   yo = 0; break;
+            case Widget::CENTER:  yo = (m_region[3] - cr[3])/2; break;
+            case Widget::END:     yo = m_region[3] - cr[3]; break;
+            case Widget::STRETCH: yo = 0; break;
+            default: ASSERT(0);
+        }
+        cr[2] += xo;
+        cr[3] += yo;
+        if (align_x == Widget::STRETCH)
+            cr[2] = m_region[2];
+        if (align_y == Widget::STRETCH)
+            cr[3] = m_region[3];
         child->allocate_region(cr);
     }
 }
