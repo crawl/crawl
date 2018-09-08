@@ -1,3 +1,5 @@
+require("dlua/dungeon.lua")
+
 -- Integer value from 0 to 100 giving the chance that a ghost-allowing level
 -- will attempt to place a ghost vault.
 _GHOST_CHANCE_PERCENT = 10
@@ -128,19 +130,6 @@ function lone_ghost_guarded_loot(e, ghost_glyph)
     end
 end
 
--- Some scroll and potions with weights that are used as nice loot.
-ghost_loot_scrolls = "scroll of teleportation w:15 / scroll of fog w:15 / " ..
-    "scroll of fear w:15 / scroll of blinking w:10 / " ..
-    "scroll of enchant weapon w:5 / scroll of enchant armour w:5 / " ..
-    "scroll of brand weapon w:3 / scroll of magic mapping w:10 / " ..
-    "scroll of acquirement w:1"
-ghost_loot_potions = "potion of haste w:15 / potion of might w:10 / " ..
-    "potion of invisibility w:10 / potion of agility w:10 / " ..
-    "potion of brilliance w:5 / potion of magic w:10 / " ..
-    "potion of heal wounds w:15 / potion of mutation w:10 / " ..
-    "potion of cancellation w:10 / potion of resistance w:5 / " ..
-    "potion of experience w:1"
-
 function ghost_good_loot(e)
     -- Possible loot items.
     jewellery = "any jewellery"
@@ -221,13 +210,13 @@ function ghost_good_loot(e)
     end
 
     -- Define loot tables of potential item defs.
-    first_loot = { {name = "scrolls", def = ghost_loot_scrolls, weight = 20},
-                   {name = "potions", def = ghost_loot_potions, weight = 20},
+    first_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 20},
+                   {name = "potions", def = dgn.loot_potions, weight = 20},
                    {name = "aux", def = aux, weight = 10},
                    {name = "jewellery", def = jewellery, weight = 10},
                    {name = "manual", def = "any manual", weight = 5} }
-    second_loot = { {name = "scrolls", def = ghost_loot_scrolls, weight = 10},
-                    {name = "potions", def = ghost_loot_potions, weight = 10} }
+    second_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 10},
+                    {name = "potions", def = dgn.loot_potions, weight = 10} }
 
     -- If we're upgrading the first item , choose a class, define the item
     -- slot, otherwise the slot becomes the usual '|*' definition.

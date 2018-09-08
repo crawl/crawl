@@ -260,7 +260,7 @@ NAME:   ebering_ghost_gozag
 DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
 WEIGHT: 5 (D:3-7)
 ORIENT: float
-: kitem("DE = " .. ghost_loot_potions)
+: kitem("DE = " .. dgn.loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
 KMONS:  O = player_ghost
 # D and F place an 8 monster plus potion or shop, E and H place the potion/shop
@@ -363,7 +363,7 @@ NAME:   hellmonk_ghost_happy_afterlife
 DEPTH:  D:3-, Lair
 ORIENT: float
 ITEM:   ration, any potion
-: item(ghost_loot_potions)
+: item(dgn.loot_potions)
 KMONS:  O = player ghost
 : if you.absdepth() < 6 then
 SUBST:  g = -
@@ -1274,7 +1274,7 @@ NAME:   ploomutoo_gammafunk_ghost_potion_laboratory
 DEPTH:  D:8-, Elf, Depths
 ORIENT: float
 ITEM:   potion of mutation ident:type q:1
-: item(ghost_loot_potions)
+: item(dgn.loot_potions)
 ITEM:   hat / robe good_item / gloves / boots / cloak
 ITEM:   hat good_item / robe good_item / gloves good_item / boots good_item / \
         cloak good_item

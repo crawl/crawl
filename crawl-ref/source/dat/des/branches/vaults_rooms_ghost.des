@@ -282,7 +282,7 @@ xnn==nnx
 ENDMAP
 
 NAME:   ebering_vaults_ghost_gozag
-: kitem("D = " .. ghost_loot_potions)
+: kitem("D = " .. dgn.loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
 KMONS:  O = player_ghost
 # D and F place an 8 monster plus potion or shop, respectively. D and J place
@@ -338,7 +338,7 @@ TAGS:   vaults_orient_s
 ITEM:   boots good_item / helmet good_item / hat good_item / \
         gloves good_item / cloak good_item
 ITEM:   any armour good_item, any weapon good_item, any jewellery good_item
-: item(ghost_loot_potions .. " / " .. ghost_loot_scrolls)
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 KMONS:  O = player ghost
 MONS:   orc, orc warrior, orc knight, orc high priest, stone giant, orc warlord
 : setup_armoury_orcs(_G)
@@ -362,7 +362,7 @@ NAME:   ploomutoo_gammafunk_vaults_potion_laboratory
 TAGS:   vaults_orient_s
 WEIGHT: 5
 ITEM:   potion of mutation ident:type q:1
-: item(ghost_loot_potions)
+: item(dgn.loot_potions)
 ITEM:   hat randart / robe randart / gloves randart / boots randart / \
         cloak randart
 KITEM:  O = potion of cancellation q:2 ident:type
