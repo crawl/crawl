@@ -1791,19 +1791,24 @@ void save_game_state()
         save_game(true);
 }
 
-static string _make_ghost_filename(bool store=false)
+static bool _bones_save_individual_levels(bool store)
 {
     // Only use level-numbered bones files for places where players die a lot.
     // For the permastore, go even coarser (just D and Lair use level numbers).
     // n.b. some branches here may not currently generate ghosts.
     // TODO: further adjustments? Make Zot coarser?
-    const bool with_number = store ? player_in_branch(BRANCH_DUNGEON) ||
-                                     player_in_branch(BRANCH_LAIR)
-                                   : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                                       player_in_branch(BRANCH_CRYPT) ||
-                                       player_in_branch(BRANCH_TOMB) ||
-                                       player_in_branch(BRANCH_ABYSS) ||
-                                       player_in_branch(BRANCH_SLIME));
+    return store ? player_in_branch(BRANCH_DUNGEON) ||
+                   player_in_branch(BRANCH_LAIR)
+                 : !(player_in_branch(BRANCH_ZIGGURAT) ||
+                     player_in_branch(BRANCH_CRYPT) ||
+                     player_in_branch(BRANCH_TOMB) ||
+                     player_in_branch(BRANCH_ABYSS) ||
+                     player_in_branch(BRANCH_SLIME));
+}
+
+static string _make_ghost_filename(bool store=false)
+{
+    const bool with_number = _bones_save_individual_levels(store);
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
     const string level_desc = player_in_hell(true) ? "Hells" :
@@ -2726,6 +2731,14 @@ static FILE* _make_bones_file(string * return_gfilename)
 #define GHOST_PERMASTORE_SIZE 10
 #define GHOST_PERMASTORE_REPLACE_CHANCE 5
 
+static int _ghost_permastore_size()
+{
+    if (_bones_save_individual_levels(true))
+        return GHOST_PERMASTORE_SIZE;
+    else
+        return GHOST_PERMASTORE_SIZE * 2;
+}
+
 static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 {
     if (ghosts.empty())
@@ -2737,7 +2750,8 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 
     bool rewrite = false;
     unsigned int i = 0;
-    while (permastore.size() < GHOST_PERMASTORE_SIZE && i < ghosts.size())
+    const int max_ghosts = _ghost_permastore_size();
+    while (permastore.size() < max_ghosts && i < ghosts.size())
     {
         // TODO: heuristics to make this as distinct as possible; maybe
         // create a new name?
