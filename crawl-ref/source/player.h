@@ -925,7 +925,7 @@ void move_player_to_grid(const coord_def& p, bool stepped);
 
 bool is_map_persistent();
 bool player_in_connected_branch();
-bool player_in_hell();
+bool player_in_hell(bool vestibule=false);
 bool player_in_starting_abyss();
 
 static inline bool player_in_branch(int branch)
