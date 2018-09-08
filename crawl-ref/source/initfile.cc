@@ -3930,7 +3930,7 @@ static edit_command<eb_command_type> eb_commands[] =
     { EB_LS,       "ls",      false, 0, 2, },
     { EB_MERGE,    "merge",   false, 1, 1, },
     { EB_RM,       "rm",      true,  1, 1 },
-    { EB_REWRITE,  "rewrite", true,  0, 0 },
+    { EB_REWRITE,  "rewrite", true,  0, 1 },
 };
 
 #define FAIL(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
@@ -4191,27 +4191,39 @@ static void _bones_ls(const string &filename, const string name_match,
         cout << count << " ghosts total\n";
 }
 
-static void _bones_rewrite(const string filename, const string remove)
+static void _bones_rewrite(const string filename, const string remove, bool dedup)
 {
     const vector<ghost_demon> ghosts = load_bones_file(filename, false);
 
     vector<ghost_demon> out;
     bool matched = false;
     const string remove_lower = lowercase_string(remove);
+    map<string, int> ghosts_by_name;
+    int dups = 0;
+
     for (auto g : ghosts)
     {
+        if (dedup && ghosts_by_name.count(g.name)
+                                            && ghosts_by_name[g.name] == g.xl)
+        {
+            dups++;
+            continue;
+        }
         if (lowercase_string(g.name) == remove_lower)
         {
             matched = true;
             continue;
         }
         out.push_back(g);
+        ghosts_by_name[g.name] = g.xl;
     }
     if (matched || remove.size() == 0)
     {
         cout << "Rewriting '" << filename << "'";
         if (matched)
             cout << " without ghost '" << remove_lower << "'";
+        if (dups)
+            cout << ", " << dups << " duplicates removed";
         cout << "\n";
         unlink(filename.c_str());
         _write_bones(filename, out);
@@ -4247,7 +4259,7 @@ static void _edit_bones(int argc, char **argv)
                "                              --long shows full monster descriptions\n"
                "  merge <file1> <file2>       merge two bones files together, rewriting into <file2>\n"
                "  rm <file> <name>            rewrite a ghost file without <name>\n"
-               "  rewrite <file>              rewrite a ghost file, fixing up version etc.\n"
+               "  rewrite <file> [--dedup]    rewrite a ghost file, fixing up version etc.\n"
              );
         return;
     }
@@ -4289,18 +4301,22 @@ static void _edit_bones(int argc, char **argv)
             _bones_ls(name, lowercase_string(name_match), long_out);
         }
         else if (cmd == EB_REWRITE)
-            _bones_rewrite(name, "");
+        {
+            const bool dedup = argc == 3 && !strcmp(argv[2], "--dedup");
+            if (argc == 3 && !dedup)
+                FAIL("Unknown extra argument to rewrite: '%s'\n", argv[2]);
+            _bones_rewrite(name, "", dedup);
+        }
         else if (cmd == EB_RM)
         {
             const string name_match = argv[2];
-            _bones_rewrite(name, name_match);
+            _bones_rewrite(name, name_match, false);
         }
         else if (cmd == EB_MERGE)
         {
             const string out_name = argv[2];
             _bones_merge({name, out_name}, out_name);
         }
-
     }
     catch (corrupted_save &err)
     {
