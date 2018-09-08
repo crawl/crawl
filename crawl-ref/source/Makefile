@@ -1145,6 +1145,16 @@ LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
+RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
+
+DIST_BONES_LOC := https://github.com/crawl/crawl/releases/download/$(RECENT_TAG)/dist_bones.tar.gz
+
+ifneq (,$(shell which wget))
+	DOWNLOADER := wget -O -
+else ifneq (,$(shell which curl))
+	DOWNLOADER := curl -L
+endif
+# otherwise, DOWNLOADER is empty -- any rule that uses it needs to check for this.
 
 export SRC_VERSION
 
@@ -1359,6 +1369,17 @@ ifdef ANDROID
   shareddir_fp =
 endif
 
+clean-bones-dist:
+	$(RM) -r dat/dist_bones
+
+install-bones-dist: clean-bones-dist
+ifeq (,$(DOWNLOADER))
+	@echo Neither curl nor wget is installed -- cannot download the bones distribution.
+else
+	@echo Attempting to install bones files from $(DIST_BONES_LOC)
+	@$(DOWNLOADER) $(DIST_BONES_LOC) | tar xz dat/dist_bones/* || echo Downloading bones distribution failed!
+endif
+
 install-data: $(GENERATED_FILES)
 ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
@@ -1450,7 +1471,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
-clean: clean-rltiles clean-webserver clean-android clean-monster
+clean: clean-rltiles clean-webserver clean-android clean-monster clean-bones-dist
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
