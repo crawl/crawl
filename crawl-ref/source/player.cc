@@ -539,9 +539,10 @@ bool is_map_persistent()
            || env.properties.exists(FORCE_MAPPABLE_KEY);
 }
 
-bool player_in_hell()
+bool player_in_hell(bool vestibule)
 {
-    return is_hell_subbranch(you.where_are_you);
+    return vestibule ? is_hell_branch(you.where_are_you) :
+                       is_hell_subbranch(you.where_are_you);
 }
 
 /**
