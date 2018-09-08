@@ -473,7 +473,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     // going up; everything else is going down. This mostly affects which way you
     // fall if confused.
     if (feat_is_bidirectional_portal(how))
-        going_up = (how == DNGN_ENTER_HELL && player_in_hell());
+        going_up = (how == DNGN_ENTER_HELL && player_in_hell(false));
 
     if (_stair_moves_pre(how))
         return dest;

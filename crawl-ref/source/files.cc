@@ -1806,7 +1806,7 @@ static string _make_ghost_filename(bool store=false)
                                        player_in_branch(BRANCH_SLIME));
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell() ? "Hells" :
+    const string level_desc = player_in_hell(true) ? "Hells" :
         replace_all(level_id::current().describe(false, with_number), ":", "-");
     return string("bones.") + (store ? "store." : "") + level_desc;
 }
