@@ -4149,13 +4149,13 @@ static void _bones_ls(const string &filename, const string name_match,
         m.type = MONS_PROGRAM_BUG;
         m.base_monster = MONS_PHANTOM;
     }
-    bool listed = false;
+    int count = 0;
     for (auto g : ghosts)
     {
         // TODO: partial name matching?
         if (name_match.size() && name_match != lowercase_string(g.name))
             continue;
-        listed = true;
+        count++;
         if (long_output)
         {
             // TOOD: line wrapping, some elements of this aren't meaningful at
@@ -4174,19 +4174,21 @@ static void _bones_ls(const string &filename, const string name_match,
         }
         else
         {
-            cout << std::setw(10) << std::left << g.name
-                 << "XL" << std::setw(2) << g.xl << " "
+            cout << std::setw(12) << std::left << g.name
+                 << " XL" << std::setw(2) << g.xl << " "
                  << combo_type{species_type(g.species), job_type(g.job)}.abbr()
                  << "\n";
         }
     }
-    if (!listed)
+    if (!count)
     {
         if (name_match.size())
             cout << "No matching ghosts for " << name_match << ".\n";
         else
             cout << "Empty ghost file.\n";
     }
+    else
+        cout << count << " ghosts total\n";
 }
 
 static void _bones_rewrite(const string filename, const string remove)
@@ -4195,9 +4197,10 @@ static void _bones_rewrite(const string filename, const string remove)
 
     vector<ghost_demon> out;
     bool matched = false;
+    const string remove_lower = lowercase_string(remove);
     for (auto g : ghosts)
     {
-        if (g.name == remove)
+        if (lowercase_string(g.name) == remove_lower)
         {
             matched = true;
             continue;
@@ -4208,13 +4211,13 @@ static void _bones_rewrite(const string filename, const string remove)
     {
         cout << "Rewriting '" << filename << "'";
         if (matched)
-            cout << " without ghost '" << remove << "'";
+            cout << " without ghost '" << remove_lower << "'";
         cout << "\n";
         unlink(filename.c_str());
         _write_bones(filename, out);
     }
     else
-        cout << "No matching ghosts for '" << remove << "'\n";
+        cout << "No matching ghosts for '" << remove_lower << "'\n";
 }
 
 static void _bones_merge(const vector<string> files, const string out_name)
