@@ -633,7 +633,72 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     auto prompt_ui = make_shared<Text>();
     vbox->add_child(prompt_ui);
 
+    auto sub_items = make_shared<OuterMenu>(false, 3, 1);
+    vbox->add_child(sub_items);
+
+    _add_menu_sub_item(sub_items, 0, 0,
+            "Esc - Quit", "", CK_ESCAPE, CK_ESCAPE);
+    _add_menu_sub_item(sub_items, 1, 0,
+            "* - Random name", "", '*', '*');
+
+    auto ok_switcher = make_shared<Switcher>();
+    ok_switcher->align_y = Widget::STRETCH;
+    {
+        auto tmp = make_shared<Text>();
+        tmp->set_text(formatted_string("Enter - Begin!", BROWN));
+
+        auto btn = make_shared<MenuButton>();
+        tmp->set_margin_for_sdl({4,8,4,8});
+        tmp->set_margin_for_crt({0,2,0,0});
+        btn->set_child(move(tmp));
+        btn->id = CK_ENTER;
+        btn->description = "";
+        btn->hotkey = CK_ENTER;
+        btn->highlight_colour = STARTUP_HIGHLIGHT_CONTROL;
+
+        auto err = make_shared<Text>(
+                formatted_string("That's a silly name!", LIGHTRED));
+        err->set_margin_for_sdl({0,0,0,10});
+        auto box = make_shared<Box>(Box::HORZ);
+        box->align_items = Widget::CENTER;
+        box->add_child(err);
+
+        ok_switcher->add_child(btn);
+        ok_switcher->add_child(box);
+        sub_items->add_button(btn, 2, 0);
+    }
+
     auto popup = make_shared<ui::Popup>(move(vbox));
+
+    sub_items->on_button_activated = [&](int id) {
+        switch (id)
+        {
+            case '*':
+                reader.putkey(CK_END);
+                reader.putkey(CONTROL('U'));
+                for (char ch : _random_name())
+                    reader.putkey(ch);
+                return;
+            case CK_ENTER:
+                choice.name = buf;
+                trim_string(choice.name);
+                if (choice.name.empty())
+                    choice.name = _random_name();
+                if (good_name)
+                {
+                    ng.name = choice.name;
+                    ng.filename = get_save_filename(choice.name);
+                    overwrite_prompt = save_exists(ng.filename);
+                    if (!overwrite_prompt)
+                        done = true;
+                }
+                return;
+            case CK_ESCAPE:
+                done = cancel = true;
+                return;
+        }
+
+    };
 
     popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
@@ -644,26 +709,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         {
             key = reader.putkey(key);
             good_name = is_good_name(buf, true);
-            if (key != -1)
-            {
-                if (key_is_escape(key))
-                    return done = cancel = true;
-
-                choice.name = buf;
-                trim_string(choice.name);
-
-                if (choice.name.empty())
-                    choice.name = _random_name();
-
-                if (good_name)
-                {
-                    ng.name = choice.name;
-                    ng.filename = get_save_filename(choice.name);
-                    overwrite_prompt = save_exists(ng.filename);
-                    if (!overwrite_prompt)
-                        return done = true;
-                }
-            }
+            ok_switcher->current() = good_name ? 0 : 1;
         }
         else
         {
@@ -675,18 +721,16 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     });
 
     ui::push_layout(move(popup));
+    ui::set_focused_widget(sub_items.get());
     while (!done && !crawl_state.seen_hups)
     {
         formatted_string prompt;
         prompt.textcolour(CYAN);
         prompt.cprintf("What is your name today? ");
         prompt.textcolour(LIGHTGREY);
-        prompt.cprintf("%s", buf);
-        prompt.cprintf("\n\nLeave blank for a random name, or use Escape to cancel this character.\n\n");
+        prompt.cprintf("%s\n", buf);
         prompt.textcolour(LIGHTRED);
-        if (!good_name)
-            prompt.cprintf("That's a silly name!");
-        else if (overwrite_prompt)
+        if (overwrite_prompt)
             prompt.cprintf("You have an existing game under this name; really overwrite? [Y/n]");
         prompt_ui->set_text(prompt);
 
