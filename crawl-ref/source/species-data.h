@@ -748,23 +748,24 @@ static const map<species_type, species_def> species_data =
       JOB_EARTH_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
     { SK_UNARMED_COMBAT, SK_STAVES },
 } },
-#if TAG_MAJOR_VERSION == 34
+
 { SP_LAVA_ORC, {
     "LO",
     "Lava Orc", "Orcish", "Orc",
     SPF_ORCISH | SPF_NO_HAIR,
     -1, 1, 0, 3,
-    MONS_LAVA_ORC,
+    MONS_ORC,
     HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     { STAT_INT, STAT_DEX }, 5,
     {},
     {},
     {},
-    {}, // not a starting race
-    {}, // not a starting race
+    { JOB_FIGHTER, JOB_MONK, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
+      JOB_FIRE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES },
 } },
-#endif
+
 { SP_DJINNI, {
     "Dj",
     "Djinni", "Djinn", nullptr,

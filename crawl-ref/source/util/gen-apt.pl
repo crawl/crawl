@@ -125,7 +125,6 @@ sub aptitude_table
     for my $sp (sort_species(@SPECIES))
     {
         next if $sp eq 'Mottled Draconian';
-        next if $sp eq 'Lava Orc';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);

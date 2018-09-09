@@ -40,9 +40,7 @@ enum species_type
     SP_FELID,
     SP_OCTOPODE,
     SP_DJINNI,
-#if TAG_MAJOR_VERSION == 34
     SP_LAVA_ORC,
-#endif
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,

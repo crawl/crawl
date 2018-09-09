@@ -366,6 +366,8 @@ public:
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
+    // Being heated by a heat aura?
+    virtual bool heated() const;
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Silence radius.
@@ -373,6 +375,7 @@ public:
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
+    virtual int heat_radius() const = 0;
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

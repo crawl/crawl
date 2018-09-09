@@ -1406,6 +1406,10 @@ void TilesFramework::layout_statcol()
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
+        // Lava orc temperature bar
+        if (you.species == SP_LAVA_ORC)
+            ++crawl_view.hudsz.y;
+
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
 

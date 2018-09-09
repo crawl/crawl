@@ -2159,7 +2159,7 @@ static bool _convert_obsolete_species()
 {
     // At this point the character has been loaded but not resaved, but the grid, lua, stashes, etc have not been.
     
-    //There was a Djinni and Lava Orc save conversionn was here, it's gone now.
+    //There was a Djinni and Lava Orc save conversion was here, it's gone now.
     return false;
 }
 

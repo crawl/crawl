@@ -1409,9 +1409,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_INVOCATIONS,    -1),
     APT(SP_DJINNI,          SK_EVOCATIONS,      1),
 
-    // It seems that we need to keep this as long as SP_LAVAORC
-    // is still around.
-#if TAG_MAJOR_VERSION == 34
     // SP_LAVA_ORC
     APT(SP_LAVA_ORC,        SK_FIGHTING,        2),
     APT(SP_LAVA_ORC,        SK_SHORT_BLADES,    0),
@@ -1427,9 +1424,13 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_ARMOUR,          1),
     APT(SP_LAVA_ORC,        SK_DODGING,        -2),
     APT(SP_LAVA_ORC,        SK_STEALTH,        -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
     APT(SP_LAVA_ORC,        SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
     APT(SP_LAVA_ORC,        SK_UNARMED_COMBAT,  1),
     APT(SP_LAVA_ORC,        SK_SPELLCASTING,   -3),
     APT(SP_LAVA_ORC,        SK_CONJURATIONS,    0),
@@ -1446,7 +1447,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_POISON_MAGIC,   -1),
     APT(SP_LAVA_ORC,        SK_INVOCATIONS,     3),
     APT(SP_LAVA_ORC,        SK_EVOCATIONS,      0),
-#endif
 
     // SP_FORMICID
     APT(SP_FORMICID,        SK_FIGHTING,        1),
