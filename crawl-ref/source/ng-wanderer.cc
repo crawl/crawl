@@ -727,6 +727,8 @@ void create_sorcerer()
         break;
     }
 	newgame_make_item(OBJ_BOOKS, book);
+	if(book == BOOK_GEOMANCY)
+		newgame_make_item(OBJ_MISSILES, MI_STONE, 30);
     you.skills[magic_skill] += 3;
 }
 
