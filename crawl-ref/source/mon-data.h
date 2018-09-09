@@ -1742,6 +1742,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_LEOPARD_GECK
     {TILEP_MONS_ORC_HIGH_PRIEST}, TILE_ERROR
 },
 
+//Leaving MONS_LAVA_ORC commented out for the moment to simplify re-adding
 #if TAG_MAJOR_VERSION == 34
 {
     MONS_LAVA_ORC, 'o', RED, "lava orc",

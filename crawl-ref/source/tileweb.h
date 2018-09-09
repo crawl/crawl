@@ -55,6 +55,7 @@ struct player_info
     int hp, hp_max, real_hp_max, poison_survival;
     int mp, mp_max;
     int contam;
+    int heat;
     int noise;
     int adjusted_noise;
 
