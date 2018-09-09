@@ -3350,7 +3350,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
-        || you.species != SP_DJINNI)
+        && you.species != SP_DJINNI)
     {
         // Tengu can fly, but only from the ground
         // (until level 14, when it becomes permanent until revoked).
