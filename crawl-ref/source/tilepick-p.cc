@@ -692,29 +692,29 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             break;
         case SP_LAVA_ORC:
-            // This should respect the player's choice of base tile, if possible.
+            // TODO: HACK ALERT, make this recognize player tile gender
+            // instead of hardcoding the offsets.
             switch (temperature_colour(you.temperature))
             {
                 case LIGHTRED:
-                    result = TILEP_BASE_LAVA_ORC_HEAT + 5;
+                    result = result + 12;
                     break;
                 case RED:
-                    result = TILEP_BASE_LAVA_ORC_HEAT + 4;
+                    result = result + 10;
                     break;
                 case YELLOW:
-                    result = TILEP_BASE_LAVA_ORC_HEAT + 3;
+                    result = result + 8;
                     break;
                 case WHITE:
-                    result = TILEP_BASE_LAVA_ORC_HEAT + 2;
+                    result = result + 6;
                     break;
                 case LIGHTCYAN:
-                    result = TILEP_BASE_LAVA_ORC_HEAT + 1;
+                    result = result + 4;
                     break;
                 case LIGHTBLUE:
-                    result = TILEP_BASE_LAVA_ORC_HEAT;
+                    result = result + 2;
                     break;
                 default:
-                    result = TILEP_BASE_LAVA_ORC;
                     break;
             }
             hair = 0;
