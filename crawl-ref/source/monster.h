@@ -32,6 +32,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define DROPPER_MID_KEY "dropper_mid"
 
+#define MAP_KEY "map"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;

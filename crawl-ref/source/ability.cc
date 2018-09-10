@@ -500,10 +500,10 @@ static const ability_def Ability_List[] =
     // Fedhas
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_FEDHAS_EVOLUTION, "Evolution",
-      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::rations_or_piety },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
       2, 0, 50, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
+    { ABIL_FEDHAS_EVOLUTION, "Evolution",
+      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::rations_or_piety },
     { ABIL_FEDHAS_PLANT_RING, "Growth",
       2, 0, 0, 0, {fail_basis::invo, 40, 5, 20}, abflag::rations },
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction",
@@ -533,7 +533,7 @@ static const ability_def Ability_List[] =
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
-      4, 0, 0, 5, {fail_basis::invo, 30, 6, 20}, abflag::none },
+      4, 80, 0, 5, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
       9, 0, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::skill_drain },
 
@@ -1100,7 +1100,7 @@ static string _sacrifice_desc(const ability_type ability)
 }
 
 // XXX: should this be in describe.cc?
-string get_ability_desc(const ability_type ability)
+string get_ability_desc(const ability_type ability, bool need_title)
 {
     const string& name = ability_name(ability);
 
@@ -1119,8 +1119,9 @@ string get_ability_desc(const ability_type ability)
     }
 
     ostringstream res;
-    res << name << "\n\n" << lookup << "\n"
-        << _detailed_cost_description(ability);
+    if (need_title)
+        res << name << "\n\n";
+    res << lookup << "\n" << _detailed_cost_description(ability);
 
     const string quote = getQuoteString(name + " ability");
     if (!quote.empty())
@@ -1131,7 +1132,7 @@ string get_ability_desc(const ability_type ability)
 
 static void _print_talent_description(const talent& tal)
 {
-    show_description(get_ability_desc(tal.which));
+    describe_ability(tal.which);
 }
 
 void no_ability_msg()
@@ -3103,28 +3104,28 @@ static void _pay_ability_costs(const ability_def& abil)
 int choose_ability_menu(const vector<talent>& talents)
 {
     ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                             | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
 
     abil_menu.set_highlighter(nullptr);
 #ifdef USE_TILE_LOCAL
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(" Ability - do what?                  "
+            new ToggleableMenuEntry("Ability - do what?                  "
                                     "Cost                          Failure",
-                                    " Ability - describe what?            "
+                                    "Ability - describe what?            "
                                     "Cost                          Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
-        abil_menu.add_entry(me);
+        abil_menu.set_title(me, true, true);
     }
 #else
     abil_menu.set_title(
-        new ToggleableMenuEntry(" Ability - do what?                  "
+        new ToggleableMenuEntry("Ability - do what?                  "
                                 "Cost                          Failure",
-                                " Ability - describe what?            "
+                                "Ability - describe what?            "
                                 "Cost                          Failure",
-                                MEL_TITLE));
+                                MEL_TITLE), true, true);
 #endif
     abil_menu.set_tag("ability");
     abil_menu.add_toggle_key('!');
@@ -3248,7 +3249,7 @@ string describe_talent(const talent& tal)
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 30)
          << chop_string(failure, 12);
-    return desc.str();
+    return trimmed_string(desc.str());
 }
 
 static void _add_talent(vector<talent>& vec, const ability_type ability,

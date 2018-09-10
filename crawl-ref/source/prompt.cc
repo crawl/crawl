@@ -11,18 +11,17 @@
 #include "delay.h"
 #include "libutil.h"
 #include "macro.h"
-#ifdef TOUCH_UI
 #include "menu.h"
-#endif
 #include "message.h"
 #include "options.h"
 #include "output.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef TOUCH_UI
+#ifdef USE_TILE
 #include "tiledef-gui.h"
 #endif
 #include "viewchar.h"
+#include "ui.h"
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
@@ -66,38 +65,53 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
 #ifdef TOUCH_UI
-    Popup pop{prompt};
-    MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y');
-    y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
-    MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 0, 'N');
-    n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-
-    pop.push_entry(new MenuEntry(prompt, MEL_TITLE));
-    pop.push_entry(status);
-    pop.push_entry(y_me);
-    pop.push_entry(n_me);
+    bool use_popup = true;
+#else
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+    use_popup = use_popup && str;
 #endif
+
+    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
+    MenuEntry *status = nullptr;
+
+    if (use_popup)
+    {
+        status = new MenuEntry("", MEL_SUBTITLE);
+        MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
+        MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+#ifdef USE_TILE
+        y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
+        n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+#endif
+
+        pop.set_title(new MenuEntry(prompt, MEL_TITLE));
+        pop.add_entry(status);
+        pop.add_entry(y_me);
+        pop.add_entry(n_me);
+    }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
     {
         int tmp = ESCAPE;
         if (!crawl_state.seen_hups)
         {
-#ifdef TOUCH_UI
-            tmp = pop.pop();
-#else
-            if (!noprompt)
+            if (use_popup)
             {
-                if (message)
-                    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
-                else
-                    cprintf("%s", prompt.c_str());
+                pop.show();
+                tmp = pop.getkey();
             }
+            else
+            {
+                if (!noprompt)
+                {
+                    if (message)
+                        mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+                    else
+                        cprintf("%s", prompt.c_str());
+                }
 
-            while ((tmp = getchm(KMC_CONFIRM)) == CK_REDRAW)
-                redraw_screen();
-#endif
+                tmp = ui::getch(KMC_CONFIRM);
+            }
         }
 
         // If no safe answer exists, we still need to abort when a HUP happens.
@@ -138,14 +152,12 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
                              || crawl_state.game_is_hints_tutorial());
             const string pr = make_stringf("%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
-#ifdef TOUCH_UI
-            status->text = pr;
-#else
-            if (message)
+            if (use_popup && status) // redundant, but will quiet a warning
+                status->text = pr;
+            else if (message)
                 mpr(pr);
             else
                 cprintf("%s\n", pr.c_str());
-#endif
         }
     }
 }
@@ -220,7 +232,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
     {
         mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
-        int tmp = getchm(KMC_CONFIRM);
+        int tmp = ui::getch(KMC_CONFIRM);
 
         if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
             || crawl_state.seen_hups)

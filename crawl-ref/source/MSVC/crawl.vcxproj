@@ -402,6 +402,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\loading-screen.cc" />
     <ClCompile Include="..\los.cc" />
     <ClCompile Include="..\los-def.cc" />
     <ClCompile Include="..\losparam.cc" />
@@ -461,6 +462,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\rltiles\tiledef-icons.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
     <ClCompile Include="..\rot.cc" />
+    <ClCompile Include="..\scroller.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
     <ClCompile Include="..\show.cc" />
@@ -589,6 +591,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\traps.cc" />
     <ClCompile Include="..\travel.cc" />
     <ClCompile Include="..\tutorial.cc" />
+    <ClCompile Include="..\ui.cc" />
     <ClCompile Include="..\uncancel.cc" />
     <ClCompile Include="..\unicode.cc" />
     <ClCompile Include="..\version.cc" />
@@ -785,6 +788,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\libunix.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
+    <ClInclude Include="..\loading-screen.h" />
     <ClInclude Include="..\lookup-help.h" />
     <ClInclude Include="..\los-def.h" />
     <ClInclude Include="..\los-type.h" />
@@ -914,6 +918,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\sacrifice-data.h" />
     <ClInclude Include="..\score-format-type.h" />
     <ClInclude Include="..\screen-mode.h" />
+    <ClInclude Include="..\scroller.h" />
     <ClInclude Include="..\SDLMain.h" />
     <ClInclude Include="..\seen-context-type.h" />
     <ClInclude Include="..\sense-type.h" />
@@ -1026,6 +1031,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\travel-defs.h" />
     <ClInclude Include="..\travel.h" />
     <ClInclude Include="..\tutorial.h" />
+    <ClInclude Include="..\ui.h" />
     <ClInclude Include="..\uncancel.h" />
     <ClInclude Include="..\uncancellable-type.h" />
     <ClInclude Include="..\undead-state-type.h" />

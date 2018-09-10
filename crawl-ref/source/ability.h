@@ -27,7 +27,7 @@ unsigned int ability_mp_cost(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();
-string get_ability_desc(const ability_type ability);
+string get_ability_desc(const ability_type ability, bool need_title = true);
 int choose_ability_menu(const vector<talent>& talents);
 string describe_talent(const talent& tal);
 skill_type abil_skill(ability_type abil);

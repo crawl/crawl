@@ -33,11 +33,84 @@
 #endif
 
 #include "options.h"
+#include "stringutil.h"
 #include "tilesdl.h"
 
 #ifdef __ANDROID__
 # include <android/log.h>
 #endif
+
+// TODO: if this gets big enough, pull out into opengl-utils.cc/h or sth
+namespace opengl
+{
+    bool check_texture_size(const char *name, int width, int height)
+    {
+        int max_texture_size;
+        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+        if (width > max_texture_size || height > max_texture_size)
+        {
+            mprf(MSGCH_ERROR,
+                "Texture %s is bigger than maximum driver texture size "
+                "(%d,%d vs. %d). Sprites from this texture will not display "
+                "properly.",
+                name, width, height, max_texture_size);
+            return false;
+        }
+        return true;
+    }
+
+    static string _gl_error_to_string(GLenum e)
+    {
+        switch (e)
+        {
+        case GL_NO_ERROR:
+            return "GL_NO_ERROR";
+        case GL_INVALID_ENUM:
+            return "GL_INVALID_ENUM";
+        case GL_INVALID_VALUE:
+            return "GL_INVALID_VALUE";
+        case GL_INVALID_OPERATION:
+            return "GL_INVALID_OPERATION";
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            return "GL_INVALID_FRAMEBUFFER_OPERATION";
+        case GL_OUT_OF_MEMORY:
+            return "GL_OUT_OF_MEMORY (fatal)";
+        case GL_STACK_UNDERFLOW:
+            return "GL_STACK_UNDERFLOW";
+        case GL_STACK_OVERFLOW:
+            return "GL_STACK_OVERFLOW";
+        default:
+            return make_stringf("Unknown OpenGL error %d", e);
+        }
+    }
+
+    /**
+     * Log any opengl errors to console. Will crash if a really bad one occurs.
+     *
+     * @return true if there were any errors.
+     */
+    bool flush_opengl_errors()
+    {
+        GLenum e = GL_NO_ERROR;
+        bool fatal = false;
+        bool errors = false;
+        do
+        {
+            e = glGetError();
+            if (e != GL_NO_ERROR)
+            {
+                errors = true;
+                if (e == GL_OUT_OF_MEMORY)
+                    fatal = true;
+                mprf(MSGCH_ERROR, "OpenGL error %s",
+                                        _gl_error_to_string(e).c_str());
+            }
+        } while (e != GL_NO_ERROR);
+        if (fatal)
+            die("Fatal OpenGL error; giving up");
+        return errors;
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Static functions from GLStateManager

@@ -588,7 +588,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = hash_rand(100, seed, y * GXM + x);
+            cache[x][y] = hash_with_seed(100, seed, y * GXM + x);
 
     return cache;
 }
@@ -1444,10 +1444,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
     you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
-#ifdef USE_TILE_WEB
-    tiles_crt_control crt(false);
-#endif
-
     if (!tiles_only)
     {
         puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);

@@ -104,7 +104,7 @@ KMONS:   p = withered plant
 SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
          ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz
 : ghost_good_loot(_G)
-# 1.5 items per ghost. One 'd' glyphs and one 'e' glyph are used by the good
+# 1.5 items per ghost. One 'd' glyph and one 'e' glyph are used by the good
 # loot items, so we don't replace those.
 NSUBST:  d = d / |*.., e = e / |*.., f = |* / |*.., h = 2=|* / |*..
 SUBST:   qrs = G, Z = ., y = p, z = V, t : tp
@@ -113,16 +113,15 @@ TILE:    t = dngn_tree_dead
 : set_feature_name("granite_statue", "a gravestone")
 : vaults_ghost_setup(_G)
 MAP
-qd--frf--eq
-dD---F---De
------------
------------
-h---------h
-sH-------Hs
-h---------h
-xxnn===nnxx
-...........
-...........
+qd-frf-eq
+dD--F--De
+---------
+h-------h
+sH-----Hs
+h-------h
+xnn===nnx
+.........
+.........
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_necromancy
@@ -170,14 +169,39 @@ ENDMAP
 NAME:   gammafunk_vaults_ghost_fury_of_okawaru
 TAGS:   vaults_orient_s
 KFEAT:  O = altar_okawaru
-KMONS:  O = player ghost
+KMONS:  OP = player ghost
+# Bad Oka gift.
+KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
+        animal skin cursed ident:all / robe cursed ident:all / \
+        leather armour cursed ident:all / whip cursed ident:all / \
+        spear cursed ident:all / short sword cursed ident:all / \
+        dagger cursed ident:all / hand axe cursed ident:all / \
+        scythe cursed ident:all / club cursed ident:all / \
+        hunting sling cursed ident:all
+: if you.unrands("robe_of_misfortune") then
+KITEM:  P = robe cursed plus:-8 randart ident:all
+: else
+KITEM:  P = robe_of_misfortune ident:all
+: end
+# An "Oka weapon gift" using the more useful types on 'd'
+ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
+        double sword good_item w:5 / demon blade good_item w:5 / \
+        triple sword good_item w:5 /  morningstar good_item / \
+        eveningstar good_item w:5 / demon whip good_item w:5 \
+        dire flail good_item / great mace good_item / broad axe good_item / \
+        battleaxe good_item / executioner's axe good_item w:5 / \
+        demon trident good_item w:5 / glaive good_item / \
+        bardiche good_item w:5 / lajatang good_item w:5
+# An "Oka armour gift" on 'e'
+ITEM:   any armour good_item / any armour randart
 MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
         merfolk impaler / merfolk javelineer / deep elf knight / \
         deep elf archer
 MONS:   minotaur / stone giant / orc warlord
 MONS:   fire giant / frost giant / deep elf blademaster / \
         deep elf master archer / titan
-SUBST:  defgh = |*, i = *%, j = %$..
+# Rarely place the robe of misfortune or a bad randart robe.
+SUBST:  O = O:49 P:1, fgh = |*, i = *%, j = %$..
 NSUBST: - = 3=1 / 4=1. / 2=2 / 2=2. / 2=3. / 3... / .
 : vaults_ghost_setup(_G)
 MAP

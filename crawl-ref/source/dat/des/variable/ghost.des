@@ -78,7 +78,6 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -127,7 +126,6 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_arena
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -195,7 +193,6 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
-WEIGHT:  5 (D:3-7)
 ORIENT:  float
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
@@ -229,10 +226,9 @@ FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 : ghost_setup(_G)
 MAP
-   ccccc
-  ccfrfcc
- ccd-F-ecc
-ccq-----qcc
+  ccccccc
+ ccdfrfecc
+ccq--F--qcc
 cd-D---D-ec
 ch-------hc
 csH-----Hsc
@@ -242,7 +238,7 @@ ccnn===nncc
 ENDMAP
 
 NAME:   ebering_ghost_inner_flame
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
 KITEM:  O = scroll of immolation ident:all
@@ -262,7 +258,7 @@ ENDMAP
 
 NAME:   ebering_ghost_gozag
 DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 5 (D:3-7)
 ORIENT: float
 : kitem("DE = " .. ghost_loot_potions)
 # If ghost selectors ever happen this should be a gozag ghost
@@ -602,7 +598,6 @@ ENDMAP
 
 NAME:   gammafunk_ghost_mausoleum
 DEPTH:  D:3-, Swamp, Crypt, Depths, Zot
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
 ORIENT: float
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
@@ -753,20 +748,46 @@ NAME:   gammafunk_ghost_fury_of_okawaru
 DEPTH:  D:12-, Orc, Elf, Crypt
 ORIENT: float
 KFEAT:  O = altar_okawaru
-KMONS:  O = player ghost
+KMONS:  OP = player ghost
+# Bad Oka gift.
+KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
+        animal skin cursed ident:all / robe cursed ident:all / \
+        leather armour cursed ident:all / whip cursed ident:all / \
+        spear cursed ident:all / short sword cursed ident:all / \
+        dagger cursed ident:all / hand axe cursed ident:all / \
+        scythe cursed ident:all / club cursed ident:all / \
+        hunting sling cursed ident:all
+: if you.unrands("robe_of_misfortune") then
+KITEM:  P = robe cursed plus:-8 randart ident:all
+: else
+KITEM:  P = robe_of_misfortune ident:all
+: end
+# An "Oka weapon gift" using the more useful types on 'd'
+ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
+        double sword good_item w:5 / demon blade good_item w:5 / \
+        triple sword good_item w:5 /  morningstar good_item / \
+        eveningstar good_item w:5 / demon whip good_item w:5 \
+        dire flail good_item / great mace good_item / broad axe good_item / \
+        battleaxe good_item / executioner's axe good_item w:5 / \
+        demon trident good_item w:5 / glaive good_item / \
+        bardiche good_item w:5 / lajatang good_item w:5
+# An "Oka armour gift" on 'e'
+ITEM:   any armour good_item / any armour randart
+# Rarely place the robe of misfortune or a bad randart robe.
+SUBST:  O = O:49 P:1
 : if you.in_branch("D") then
 :      if you.depth() < 14 then
 MONS:   orc warrior / centaur warrior / tengu warrior
 MONS:   orc knight / naga warrior / merfolk impaler
 MONS:   merfolk javelineer / deep elf knight / deep elf archer
-SUBST:  def = |*, g = *, h = %$, ij = -
+SUBST:  e = |*e, f = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 2=1 / 4=1- / 12-- / 2 / 2=2- / 3- / -
 :      else
 MONS:   orc warrior / centaur warrior / tengu warrior / orc knight / \
         naga warrior / merfolk impaler
 MONS:   merfolk javelineer / deep elf knight / deep elf archer
 MONS:   stone giant / minotaur / fire giant / frost giant / orc warlord
-SUBST:  def = |*, g = *, h = %$, ij = -
+SUBST:  e = |*ee, f = |*, g = *, h = %$, ij = -
 NSUBST: - = 3=1 / 3=1- / 2 / 3=2- / 333- / -
 :      end
 : elseif you.in_branch("Orc") then
@@ -774,6 +795,7 @@ MONS:   orc warrior / centaur warrior / tengu warrior / orc knight
 MONS:   naga warrior / merfolk impaler / merfolk javelineer / \
         deep elf knight / deep elf archer
 MONS:   minotaur / stone giant / orc warlord
+SUBST:  e = |*e, f = |*, g = *, h = %$--, ij = -
 NSUBST: - = 2=1 / 4=1- / 12-- / 2 / 2=2- / 3- / -
 : elseif you.in_branch("Elf") then
 MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
@@ -782,7 +804,7 @@ MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
 MONS:   minotaur / stone giant / orc warlord
 MONS:   fire giant / frost giant / deep elf blademaster / \
         deep elf master archer / titan
-SUBST:  defgh = |*, i = *%, j = %$..
+SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: - = 3=1 / 4=1- / 2=2 / 2=2- / 2=3- / 3--- / -
 # Crypt
 : else
@@ -791,7 +813,7 @@ MONS:   centaur warrior / tengu warrior / naga warrior / merfolk impaler / \
 MONS:   minotaur / stone giant / orc warlord / fire giant / frost giant / \
         deep elf blademaster / deep elf master archer
 MONS:   titan
-SUBST:  defgh = |*, i = *%, j = %$..
+SUBST:  fgh = |*, i = *%, j = %$..
 NSUBST: - = 3=1 / 4=1- / 12-- / 2=2 / 2=2- / 3 / 3- / -
 : end
 : ghost_setup(_G)
@@ -810,7 +832,6 @@ ENDMAP
 
 NAME:   muffindrake_ghost_dual_entry
 DEPTH:  D:10-, Depths
-WEIGHT: 5 (D:10-11)
 ORIENT: float
 KMONS:  O = player_ghost
 : if you.in_branch("D") then
@@ -1063,7 +1084,6 @@ ENDMAP
 
 NAME:   gammafunk_ghost_icy
 DEPTH:  D:3-, Lair, Depths
-WEIGHT: 5 (D:3-7)
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   simulacrum, white imp, ice beast, rime drake, ice devil
@@ -1090,17 +1110,17 @@ SUBST:  e = *, f = %$, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
 :     elseif you.depth() < 14 then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 6''' / '
+SUBST:  f = *, g = %$, hij = -
+NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67'''''' / '
 :     else
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
 SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 3=1 / 4=1' / 3 / 2=3' / 45 / 3=45'' / 67 / D''' / '
+NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = |*, g = *%, h = %$--, ij = -
-NSUBST: - = 4=1 / 6=1' / 2=4 / 2=4' / 7''' / '
+SUBST:  f = *%, h = %$--, ij = -
+NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
 KITEM:  O = ring of fire randart ident:type
@@ -1117,8 +1137,8 @@ MAP
     ..cnn===nnc..
    ..cc'''''''cc.
    .cc'''''''''c..
-   .c''''''''''cc.
-   cc''''xxxx'''c..
+  ..c''''''''''cc.
+  .cc''''xxxx'''c..
   .c'''xxxdexx''cc.
   .c''xxhfijgxx''c.
  ..n''x---O---x''n.
@@ -1133,7 +1153,6 @@ ENDMAP
 NAME:   maelrawn_ghost_labyrinth_escape
 # Same depths where labs can place
 DEPTH:  D:11-, Lair, Orc:$
-WEIGHT: 5
 ORIENT: float
 KPROP:  x = bloody
 KMONS:  O = player ghost
@@ -1177,7 +1196,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
-WEIGHT: 2 (D:3-7), 5 (D:8-11)
+WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
@@ -1251,9 +1270,8 @@ MAP
  ccccccccccc
 ENDMAP
 
-NAME:   ploomutoo_gammafunk_potion_laboratory
+NAME:   ploomutoo_gammafunk_ghost_potion_laboratory
 DEPTH:  D:8-, Elf, Depths
-WEIGHT: 5
 ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(ghost_loot_potions)
@@ -1350,4 +1368,194 @@ Wc..'sWsWWs..cW
 WccG.....'.GccW
 WWcnnn===nnncWW
  WW....@....WW
+ENDMAP
+
+NAME:   gammafunk_ghost_stat_death
+DEPTH:  D:3-, Orc
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   quasit, neqoxec
+NSUBST: R = R / -
+: ghost_good_loot(_G)
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+KITEM:  O = ring of dexterity ident:type
+SUBST:  d = *%, e = %$, fgh = -
+NSUBST: - = 2=1 / 2=1- / -
+:     elseif you.depth() < 9 then
+KITEM:  O = ring of dexterity ident:type / \
+            ring of dexterity good_item ident:type w:5
+SUBST:  d = *, e = *%, f = %$--, gh = -
+NSUBST: - = 2=1 / 4=1- / -
+:     elseif you.depth() < 12 then
+KITEM:  O = ring of dexterity ident:type / \
+            ring of dexterity good_item ident:type w:5 / \
+            ring of intelligence ident:type / \
+            ring of intelligence good_item ident:type w:5
+SUBST:  e = *, f = %$, gh = -
+NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / -
+:     elseif you.depth() < 14 then
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type w:5 / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type w:5
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
+:     else
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type
+SUBST:  f = |*, g = *%, h = %$--
+NSUBST: - = 2=1 / 2=1- / 3=2 / 4=2- / -
+:     end
+: elseif you.in_branch("Orc") then
+KITEM:  O = ring of dexterity good_item ident:type / \
+            ring of dexterity randart ident:type w:5 / \
+            ring of intelligence good_item ident:type / \
+            ring of intelligence randart ident:type w:5
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
+: end
+MARKER: P = lua:transp_loc("stat_death_entry")
+MARKER: Q = lua:transp_dest_loc("stat_death_entry")
+MARKER: R = lua:transp_loc("stat_death_exit")
+MARKER: S = lua:transp_dest_loc("stat_death_exit")
+: ghost_setup(_G)
+MAP
+    ....@.....
+   ..cncScccc.....
+  ..ccRccc--cccnc.
+  .cc------x---Rc..
+  .c----x---x---cc.
+  .c--xx--x------c.
+ ..nR--x--Q--xx-Rn.
+ .cc-x-----x-----c.
+ .c----xxxO--xx-cc.
+ .cc--x-gedfh---c..
+ ..ccc--cnnnc--cc.
+  ...cccc.P.cccc..
+    ......@......
+ENDMAP
+
+NAME:   gammafunk_ghost_smash
+DEPTH:  D:3-, Orc
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   ogre, ogre ; dire flail good_item | dire flail randart | \
+        great mace good_item | great mace randart
+MONS:   two-headed ogre, two-headed ogre ; dire flail good_item | \
+            dire flail randart | great mace good_item | great mace randart \
+            . dire flail good_item | dire flail randart | \
+            great mace good_item | great mace randart
+MONS:   ettin, ettin ; great mace good_item | great mace randart \
+            .  great mace good_item | great mace randart
+MONS:   fire giant ; great mace ego:flaming randart
+KMONS:  D = frost giant ; great mace ego:freezing randart
+# Use one of the two inner wall patterns.
+SHUFFLE: xv
+SUBST: v = -, x : xcbv
+NSUBST: R = R / -
+: ghost_good_loot(_G)
+# Only one of the highest-tier monsters gets a fancy weapon (or two).
+: if you.in_branch("D") then
+:     if you.depth() < 6 then
+SUBST:  d = *%, e = %$, fgh = -
+NSUBST: - = 2=1- / 2 / -
+:     elseif you.depth() < 9 then
+SUBST:  d = *, e = *%, f = %$--, gh = -
+NSUBST: - = 1 / 2=1- / 24 / -
+:     elseif you.depth() < 12 then
+SUBST:  e = *, f = %$, gh = -
+NSUBST: - = 1 / 2=1- / 2=3- / 4 / -
+:     elseif you.depth() < 14 then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 1 / 2=1- / 2=3 / 2=3- / 4444467D / -
+:     else
+SUBST:  f = |*, g = *%, h = %$--
+NSUBST: - = 1 / 2=1- / 2=3 / 35 / 2=3- / 67D / -
+:     end
+: elseif you.in_branch("Orc") then
+SUBST:  f = *, g = %$, h = -
+NSUBST: - = 1 / 2=1- / 2=3 / 2=3- / 46 / -
+: end
+MARKER: P = lua:transp_loc("smash_entry")
+MARKER: Q = lua:transp_dest_loc("smash_entry")
+MARKER: R = lua:transp_loc("smash_exit")
+MARKER: S = lua:transp_dest_loc("smash_exit")
+: ghost_setup(_G)
+MAP
+     .@.
+.....P.S.....
+nnnnnnnnnnnnn
+cR--gedfh--Rc
+c-vxxvOvxxv-c
+c-xvvx-xvvx-c
+c-xvvx-xvvx-c
+c-vxxv-vxxv-c
+cR----Q----Rc
+ccccccccccccc
+ENDMAP
+
+NAME:   gammafunk_ghost_nasty_kobolds
+DEPTH:  D:3-13
+KMONS:  pq = plant / fungus
+KFEAT:  q = W
+KMONS:  O = player ghost
+MONS:   kobold, big kobold, kobold demonologist
+KMONS:  D = kobold ; blowgun . needle ego:curare | needle ego:poisoned . dagger
+KMONS:  E = big kobold ; blowgun . needle ego:curare | \
+                needle ego:poisoned w:5 . dagger | short sword | whip
+KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger
+KMONS:  H = big kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger | short sword | whip
+KMONS:  J = kobold ; dagger ego:distortion
+KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
+                whip ego:distortion
+# Define some kobolds with more general nasty ego weapons.
+{{
+    weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
+    egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
+            ["pain"] = 5, ["electrocution"] = 5}
+    basic_def = random_item_def(weapons, egos, "", "|")
+    quality = crawl.coinflip() and "randart" or "good_item"
+    good_def = random_item_def(weapons, egos, "good_item", "|")
+    kmons("L = kobold ; " .. basic_def)
+    kmons("M = big kobold ; " .. basic_def)
+    kmons("N = kobold ; " .. good_def)
+    kmons("P = big kobold ; " .. good_def)
+}}
+# 50% of time put statue/tree/fountain with plants and vertical wall, otherwise
+# add some diagonal wall instead. The second shuffle makes any statue sometimes
+# be fountain + water plants.
+SHUFFLE: Gprs / Zrsr, Gp / Tq
+SUBST: r = -, Z = T, s = x, G : GGt, T : TTUV, x : xcbv
+: ghost_good_loot(_G)
+: if you.depth() < 6 then
+SUBST:  d = *%, e = %$, fg = -
+NSUBST: - = 2=1 / 4=1. / DEFH / DF.. / NP / JK / 2=JL.. / .
+: elseif you.depth() < 9 then
+SUBST:  d = *, e = *%, f = %$--, g = -
+NSUBST: - = 2=2 / 4=2. / EH / EH.. / P / K / 3=KM.. / 3. / .
+: elseif you.depth() < 12 then
+SUBST:  e = *, f = %$, g = -
+NSUBST: - = 2=2 / 2=2. / EH / 2=EH.. / P / K / 3=KM.. / 3 / 2=3. / .
+: else
+SUBST:  f = *, g = %$
+NSUBST: - = E / H / 2=EH.. / 2=P / 2=K / 3=KM.. / 2=3 / 4=3. / .
+: end
+: ghost_setup(_G)
+MAP
+  ccccc
+ ccedfcc
+cc--g--cc
+cprs-srpc
+cG-xOx-Gc
+cprs-srpc
+cn-----nc
+.nn===nn.
+....@....
 ENDMAP

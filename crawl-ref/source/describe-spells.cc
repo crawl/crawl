@@ -24,7 +24,11 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "state.h"
+#include "tileweb.h"
 #include "unicode.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 
 /**
  * Returns a spellset containing the spells for the given item.
@@ -446,19 +450,25 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
  */
-vector<spell_type> map_chars_to_spells(const spellset &spells,
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
                                        const item_def* const source_item)
 {
+    char next_ch = 'a';
     const vector<spell_type> flat_spells = _spellset_contents(spells);
+    vector<pair<spell_type,char>> ret;
     if (!_list_spells_doublecolumn(source_item))
-        return flat_spells;
-
-    vector<spell_type> column_spells;
-    for (size_t i = 0; i < flat_spells.size(); i += 2)
-        column_spells.emplace_back(flat_spells[i]);
-    for (size_t i = 1; i < flat_spells.size(); i += 2)
-        column_spells.emplace_back(flat_spells[i]);
-    return column_spells;
+    {
+        for (auto spell : flat_spells)
+            ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
+    }
+    else
+    {
+        for (size_t i = 0; i < flat_spells.size(); i += 2)
+            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
+        for (size_t i = 1; i < flat_spells.size(); i += 2)
+            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
+    }
+    return ret;
 }
 
 /**
@@ -466,7 +476,7 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  *
  * @param book              A labeled set of spells, corresponding to a book
  *                          or monster spellbook.
- * @param spell_letters     The letters to use for each spell.
+ * @param spell_map         The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
  * @param mon_owner         If this spellset is being examined from a monster's
@@ -474,7 +484,7 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  *                          it's null.
  */
 static void _describe_book(const spellbook_contents &book,
-                           map<spell_type, char> &spell_letters,
+                           vector<pair<spell_type,char>> &spell_map,
                            const item_def* const source_item,
                            formatted_string &description,
                            const monster_info *mon_owner)
@@ -500,10 +510,9 @@ static void _describe_book(const spellbook_contents &book,
         description.textcolour(_spell_colour(spell, source_item));
 
         // don't crash if we have more spells than letters.
-        const char *spell_letter_index = map_find(spell_letters, spell);
-        const char spell_letter = spell_letter_index ?
-                                  index_to_letter(*spell_letter_index) :
-                                  ' ';
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
+        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
@@ -564,18 +573,65 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description,
                        const monster_info *mon_owner)
 {
-    // make a map of characters to spells...
-    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
-                                                               source_item);
-    // .. and spells to characters.
-    map<spell_type, char> spell_letters;
-    // TODO: support more than 26 spells
-    for (size_t c = 0; c < flat_spells.size() && c < 26; c++)
-        spell_letters[flat_spells[c]] = (char) c;
-
+    auto spell_map = map_chars_to_spells(spells, source_item);
     for (auto book : spells)
-        _describe_book(book, spell_letters, source_item, description, mon_owner);
+        _describe_book(book, spell_map, source_item, description, mon_owner);
 }
+
+#ifdef USE_TILE_WEB
+static void _write_book(const spellbook_contents &book,
+                           vector<pair<spell_type,char>> &spell_map,
+                           const item_def* const source_item,
+                           const monster_info *mon_owner)
+{
+    tiles.json_open_object();
+    tiles.json_write_string("label", book.label);
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
+    tiles.json_open_array("spells");
+    for (auto spell : book.spells)
+    {
+        tiles.json_open_object();
+        tiles.json_write_string("title", spell_title(spell));
+        tiles.json_write_int("colour", _spell_colour(spell, source_item));
+        tiles.json_write_name("tile");
+        tiles.write_tileidx(tileidx_spell(spell));
+
+        // don't crash if we have more spells than letters.
+        auto entry = find_if(spell_map.begin(), spell_map.end(),
+                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
+        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
+        tiles.json_write_string("letter", string(1, spell_letter));
+
+        if (hd > 0 && crawl_state.need_save
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        {
+            tiles.json_write_int("hex_chance", hex_chance(spell, hd));
+        }
+
+        string schools = (source_item && source_item->base_type == OBJ_RODS) ?
+                "Evocations" : _spell_schools(spell);
+        tiles.json_write_string("schools", schools);
+        tiles.json_write_int("level", spell_difficulty(spell));
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.json_close_object();
+}
+
+void write_spellset(const spellset &spells,
+                       const item_def* const source_item,
+                       const monster_info *mon_owner)
+{
+    auto spell_map = map_chars_to_spells(spells, source_item);
+    tiles.json_open_array("spellset");
+    for (auto book : spells)
+        _write_book(book, spell_map, source_item, mon_owner);
+    tiles.json_close_array();
+}
+#endif
 
 /**
  * Return a description of the spells in the given item.
@@ -590,77 +646,3 @@ string describe_item_spells(const item_def &item)
     describe_spellset(item_spellset(item), &item, description);
     return description.tostring();
 }
-
-/**
- * List a given set of spells & allow the player to select them for further
- * information/interaction.
- *
- * @param spells            The set of spells to be listed.
- * @param mon_owner         If this spell is being examined from a monster's
- *                          description, 'mon_owner' is that monster. Else,
- *                          it's null.
- * @param source_item       The physical item holding the spells. May be null.
- * @param initial_desc      A description to prefix the spellset with.
- */
-void list_spellset(const spellset &spells, const monster_info *mon_owner,
-                   const item_def *source_item, formatted_string &initial_desc)
-{
-    const bool can_memorise = source_item
-                              && source_item->base_type == OBJ_BOOKS
-                              && (in_inventory(*source_item)
-                                  || source_item->pos == you.pos()
-                                     && !is_shop_item(*source_item));
-
-    formatted_string &description = initial_desc;
-    describe_spellset(spells, source_item, description, mon_owner);
-
-    description.textcolour(LIGHTGREY);
-
-    description.cprintf("Select a spell to read its description");
-    if (can_memorise)
-        description.cprintf(" or to memorise it");
-    description.cprintf(".\n");
-
-    spell_scroller ssc(spells, mon_owner, source_item);
-    ssc.wrap_formatted_string(description);
-    ssc.show();
-}
-
-/**
- * Handle a keypress while looking at a scrollable list of spells.
- *
- * @param keyin     The character corresponding to the pressed key.
- * @return          True if the menu should continue running; false if the
- *                  menu should exit & return control to its caller.
- */
-bool spell_scroller::process_key(int keyin)
-{
-    lastch = keyin;
-
-    if (keyin == ' ')
-        return false; // in ?/m, indicates you're looking for an inexact match
-
-    // TOOD: support more than 26 spells
-    if (keyin < 'a' || keyin > 'z')
-        return formatted_scroller::process_key(keyin);
-
-    // make a map of characters to spells.
-    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
-                                                               source_item);
-
-    const int spell_index = letter_to_index(keyin);
-    ASSERT(spell_index >= 0);
-    if ((size_t) spell_index >= flat_spells.size())
-        return formatted_scroller::process_key(keyin);
-
-    const spell_type chosen_spell = flat_spells[spell_index];
-    describe_spell(chosen_spell, mon_owner, source_item);
-
-    if (already_learning_spell()) // player began (M)emorizing
-        return false; // time to leave the menu
-
-    draw_menu();
-    return true; // loop
-}
-
-spell_scroller::~spell_scroller() { }

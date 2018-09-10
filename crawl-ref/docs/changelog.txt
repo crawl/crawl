@@ -1,3 +1,140 @@
+Stone Soup 0.22 (20180810)
+--------------------------
+
+Highlights
+----------
+* Player ghosts now only appear in sealed ghost vaults
+* New spell library interface
+* User interface revamp for Tiles and WebTiles
+
+Branches, Environment
+---------------------
+* Player ghost vaults:
+  - Ghosts now only appear in vaults sealed by runed doors or transporters.
+  - The ghost is always visible from outside the vault through clear walls.
+  - Dozens of new ghost vaults with a variety of themes. All contain loot, and
+    many place other monsters with extra loot.
+  - Each level from Dungeon:3 onwards has a fixed chance of placing a ghost
+    vault in most connected branches.
+* Players on Abyss:1-4 will sometimes be drawn a level deeper, with the chance
+  increasing based on XL and decreasing based on current depth.
+* The Hall of the Hellbinder WizLab has fewer higher-tier demons.
+* Two-headed ogres are less common in earlier dungeon levels.
+
+Character
+---------
+* The player can use wands in all forms.
+* The player can't order allies while confused.
+* The MP-powered wand mutation allows use of wands at 0 MP and is now
+  considered a good mutation.
+
+Gods
+----
+* Dithmenos revamp:
+  - Dithmenos's Shadow Step ability no longer requires the target monster to
+    be 'still' and has an HP cost of 8% max HP.
+  - Dithmenos no longer has an anti-fire conduct and allows use of fire-themed
+    spells, items, and abilities.
+  - Dithmenos is now an evil god, hence is hated by the good gods and holy
+    monsters.
+* Fedhas' Sunlight is now the 1* ability and Evolution is now the 2* ability.
+* Makhleb's Major Destruction has its range increased to 7 and Minor
+  Destruction has its range reduced to 5.
+* Yredelemnul's Enslave Soul ability is now smite-targeted.
+* Trog no longer has a Burn Spellbook ability.
+
+Interface
+---------
+* In the Tiles minimap, the exploration horizon has a distinct colour.
+* WebTiles chat improvements (server support may vary):
+  - The player can use `/mute' and `/unmute' commands on chatters.
+  - The `/mutelist' command shows the current mute list.
+  - The chat window has a minimize button that removes message notification.
+  - The `/hide' and `/hide forever` commands minimize/remove the chat window.
+* Wands of digging now have a targeter showing the dig range.
+* Updated visual theme for Tiles and WebTiles.
+* Tiles and WebTiles informational screens now show tiles where appropriate.
+
+Items
+-----
+* New Amulet: the Amulet of the Acrobat, which boosts the wearer's EV by 15
+  for non-attacking movement and rest actions.
+* The Mace of Variability is reworked to sometimes create arcs of chaos that
+  harm nearby monsters, but not the wielder. The enchantment is now a fixed +7.
+* The Vampire's Tooth is now a +12 quick blade instead of a +4 dagger.
+* Maxwell's Thermic Engine no longer has rC- and rF-.
+* All fog types from Scrolls of Fog now spread like grey and black fog.
+
+Monsters
+--------
+* Player ghosts can now follow the player through stairs.
+* Minotaur monsters have increased health, defenses, and HD. They also spawn
+  with armour and either tomahawks or javelins.
+* Swamp worms and Iron Giants now have Harpoon Shot: a range 6 ability
+  that fires a shot which pulls the player adjacent.
+* Harold has better melee damage and armour, and he places earlier. His Bolt
+  of Fire and Blink spells are replaced with Harpoon Shot and Sentinel's Mark.
+* Jorgrun has Iron Shot instead of Shatter and places earlier.
+* Ilsuiw spawns on Shoals:2-4 instead of nearly always spawning on Shoals:4.
+* Engulf status from Water Elementals now blocks god abilities but no longer
+  slows movement.
+* The Barb status from manticore barbs now counts any non-movement actions
+  towards removing the status.
+* Swamp worms no longer spawn submerged in water.
+* Sojobo, air elementals, ball lightnings, and twisters have resistance to
+  Tornado instead of resistance to all wind attacks.
+* Shock serpent retaliation now properly checks rElec.
+
+Spells
+------
+* Spell Library:
+  - Spells from books are automatically added to a global library upon pickup.
+  - Library spells can be memorized from anywhere through the 'M' screen.
+  - Spellbooks are destroyed after their spells are added to the library.
+  - Vehumet won't offer you a spell you already have in your library.
+* Borgnjor's Vile Clutch constriction damage is reduced by 25% and the spell
+  is no longer in the Necromancer starting book (the Book of Necromancy).
+* Lee's Rapid Deconstruction can no longer destroy walls.
+* Ozocubu's Armour now expires immediately upon movement.
+* Spellcasting success rates no longer use a step-down, making L9 spells
+  slightly easier to cast.
+* Passwall now has better range scaling, a lower max spellpower and a targeter
+  to show its range.
+
+Stone Soup 0.21.2 (20180805)
+----------------------------
+
+Bugfix Release
+--------------
+
+* Shock serpent retaliation now properly checks rElec.
+* No more errors on autofight commands when using ranged weapons or polearms.
+* Fix a bug that led to Ru sacrifices not consistently giving promised piety.
+* Fix many cases of "mid cache bogosity" errors involving Beogh followers.
+* Training xl estimates in item descriptions are now more accurate.
+* Compilation under Msys2 is now *really* fixed.
+* Autotravel will no longer try to take shortcuts through hell.
+* 70 other bugfixes and cleanups.
+
+Stone Soup 0.21.1 (20180201)
+----------------------------
+
+Bugfix Release
+--------------
+* Dith shadow mimic of launcher attacks no longer copies the enchant and ego
+  of the launcher.
+* Monsters lose constriction by Borgnjor's Vile Clutch when they are moved by
+  any means.
+* Formicids can now manually cancel digging, allowing them to use Wu Jian's
+  Wall Jump ability after digging.
+* Wu Jian's Wall Jump ability now works under silence.
+* New splash screen art.
+* Numlock on Windows systems no longer causes unpredictable repeating
+  movement.
+* Alt-F4 no longer causes freezing in Tiles on Windows systems.
+* Resizing the local Tiles window during prompts no longer causes crashes.
+* SDL 2 contrib updated to 2.0.7, which fixes compilation under Msys2.
+
 Stone Soup 0.21 (20180105)
 --------------------------
 
@@ -122,6 +259,19 @@ Spells
 * Removed:
   - Control Undead.
   - Cigotuvi's Embrace.
+
+Stone Soup 0.20.1 (20170701)
+----------------------------
+
+Bugfix Release
+--------------
+
+* Restore 5 base damage to kick aux attacks, which had been missing since
+  0.16.0.
+* Don't let equipped weapon accuracy affect throwing accuracy.
+* Ignore negative relative window sizes in fullscreen mode. Not ignoring these
+  settings caused fullscreen issues on Windows platforms in particular.
+* 41 other bugfixes and cleanups.
 
 Stone Soup 0.20 (20170525)
 --------------------------
@@ -283,6 +433,49 @@ Modding/contribution support
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
 
+Stone Soup 0.19.5 (20170228)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix save compatibility when loading games from version 0.18.
+* Macros now work in map mode in Tiles.
+* Autopickup is now smarter about whether items are permanently or temporarily
+  useless.
+* 22 other bug-fixes and cleanups.
+
+Stone Soup 0.19.4 (20170130)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix mouse lag experienced by trackpad users on Mac systems.
+* Fix to allow the Temple entrance to place as part of a vault instead of
+  always by itself.
+
+Stone Soup 0.19.3 (20170121)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Work around an AMD driver bug where the game crashes when loading 512x512
+  images.
+
+Stone Soup 0.19.2 (20170120)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix a long-standing Tiles mouse lag bug. Now there is no lag when updating
+  cursor information upon mouse movement to a new tile.
+* Fix to allow helmets as armour acquirement gifts.
+* Fix to prevent Infestation death scarabs becoming hostile when killing their
+  host in an explosion.
+* 24 other bug-fixes and cleanups.
 
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------
@@ -524,7 +717,6 @@ Spells
 * Various other spellbooks have had minor adjustments.
 * Removed: Cure Poison, Haste, and Warp Weapon.
 
-
 Stone Soup 0.18 (20160504)
 --------------------------------------------
 
@@ -750,6 +942,21 @@ Interface
   default init.txt.
 * New character dump option: skill_gains, which shows when skills were gained.
 * A s(T)atus effect lookup has been added to ?/.
+
+Stone Soup 0.17.1 (20151210)
+----------------------------
+* Fix insect monsters never berserking. This bug prevented queen bees from
+  berserking their hive bees and moths of wrath berserking insects in Spider.
+* Prevent the Gell's Gravitas spell from moving monsters into deep water or
+  lava.
+* Fix resting to stop properly when MP don't regenerate.
+* Properly warn when a beam might poison a monster while worshiping the Shining
+  One.
+* Put hunter's swords in slot 'a' or 'b' at game start to allow easier
+  switching between ranged and melee weapons.
+* Put EE starting stones on the 'b' slot.
+* Update the manual for 0.17.
+* Many other bug fixes for game crashes, to vaults, and to in-game text.
 
 Stone Soup 0.17 (20151106)
 --------------------------

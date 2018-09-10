@@ -34,6 +34,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "religion.h"
+#include "scroller.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
@@ -45,7 +46,6 @@
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
-#include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
@@ -56,6 +56,8 @@
 #include "version.h"
 #include "viewgeom.h"
 #include "view.h"
+
+//#define DEBUG_WEBSOCKETS
 
 static unsigned int get_milliseconds()
 {
@@ -68,9 +70,9 @@ static unsigned int get_milliseconds()
 
 TilesFramework tiles;
 
-TilesFramework::TilesFramework()
-    : m_crt_mode(CRT_NORMAL),
+TilesFramework::TilesFramework() :
       m_controlled_from_web(false),
+      _send_lock(false),
       m_last_ui_state(UI_INIT),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
@@ -78,7 +80,6 @@ TilesFramework::TilesFramework()
       m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
       m_need_full_map(true),
-      m_text_crt("crt"),
       m_text_menu("menu_txt"),
       m_print_fg(15)
 {
@@ -175,6 +176,10 @@ void TilesFramework::finish_message()
 {
     if (m_msg_buf.size() == 0)
         return;
+#ifdef DEBUG_WEBSOCKETS
+    const int initial_buf_size = m_msg_buf.size();
+    fprintf(stderr, "websocket: About to send %d bytes.\n", initial_buf_size);
+#endif
 
     if (m_sock_name.empty())
     {
@@ -185,11 +190,13 @@ void TilesFramework::finish_message()
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
     const char* data_end = m_msg_buf.data() + m_msg_buf.size();
+    int fragments = 0;
     while (fragment_start < data_end)
     {
         int fragment_size = data_end - fragment_start;
         if (fragment_size > m_max_msg_size)
             fragment_size = m_max_msg_size;
+        fragments++;
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
@@ -200,6 +207,10 @@ void TilesFramework::finish_message()
                 ssize_t retval = sendto(m_sock, fragment_start + sent,
                     fragment_size - sent, 0, (sockaddr*) &m_dest_addrs[i],
                     sizeof(sockaddr_un));
+#ifdef DEBUG_WEBSOCKETS
+                fprintf(stderr,
+                            "    trying to send fragment to client %d...", i);
+#endif
                 if (retval <= 0)
                 {
                     const char *errmsg = retval == 0 ? "No bytes sent"
@@ -212,11 +223,22 @@ void TilesFramework::finish_message()
                     {
                         // Wait for half a second at first (up to five), then
                         // try again.
-                        usleep(retries <= 10 ? 5000 * 1000 : 500 * 1000);
+                        const int sleep_time = retries > 25 ? 2 * 1000
+                                             : retries > 10 ? 500 * 1000
+                                             : 5000 * 1000;
+#ifdef DEBUG_WEBSOCKETS
+                        fprintf(stderr, "failed (%s), sleeping for %dms.\n",
+                                                    errmsg, sleep_time / 1000);
+#endif
+                        usleep(sleep_time);
                     }
                     else if (errno == ECONNREFUSED || errno == ENOENT)
                     {
                         // the other side is dead
+#ifdef DEBUG_WEBSOCKETS
+                        fprintf(stderr,
+                            "failed (%s), breaking.\n", errmsg);
+#endif
                         m_dest_addrs.erase(m_dest_addrs.begin() + i);
                         i--;
                         break;
@@ -225,7 +247,12 @@ void TilesFramework::finish_message()
                         die("Socket write error: %s", errmsg);
                 }
                 else
+                {
+#ifdef DEBUG_WEBSOCKETS
+                    fprintf(stderr, "fragment size %d sent.\n", fragment_size);
+#endif
                     sent += retval;
+                }
             }
         }
 
@@ -233,6 +260,10 @@ void TilesFramework::finish_message()
     }
     m_msg_buf.clear();
     m_need_flush = true;
+#ifdef DEBUG_WEBSOCKETS
+    fprintf(stderr, "websocket: Sent %d bytes in %d fragments.\n",
+                                                initial_buf_size, fragments);
+#endif
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -259,6 +290,10 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
+    if (_send_lock)
+        return;
+    unwind_bool no_rentry(_send_lock, true);
+
     if (m_need_flush)
     {
         send_message("*{\"msg\":\"flush_messages\"}");
@@ -313,6 +348,9 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     JsonWrapper msg = json_find_member(obj.node, "msg");
     msg.check(JSON_STRING);
     string msgtype(msg->string_);
+#ifdef DEBUG_WEBSOCKETS
+    fprintf(stderr, "websocket: Received control message '%s' in %d byte.\n", msgtype.c_str(), (int) data.size());
+#endif
 
     int c = 0;
 
@@ -343,7 +381,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         first.check(JSON_NUMBER);
         // last visible item is sent too, but currently unused
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
             m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
     }
     else if (msgtype == "*request_menu_range")
@@ -353,7 +391,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper end = json_find_member(obj.node, "end");
         end.check(JSON_NUMBER);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
         {
             m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
                                                                    (int) end->number_);
@@ -384,6 +422,12 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
             process_command((command_type) c);
         }
         c = CK_MOUSE_CMD;
+    }
+    else if (msgtype == "formatted_scroller_scroll")
+    {
+        JsonWrapper scroll = json_find_member(obj.node, "scroll");
+        scroll.check(JSON_NUMBER);
+        recv_formatted_scroller_scroll((int)scroll->number_);
     }
 
     return c;
@@ -521,54 +565,117 @@ void TilesFramework::_send_layout()
 
 void TilesFramework::push_menu(Menu* m)
 {
-    MenuInfo mi;
-    mi.menu = m;
-    m_menu_stack.push_back(mi);
+    UIStackFrame frame;
+    frame.type = UIStackFrame::MENU;
+    frame.menu = m;
+    frame.centred = !crawl_state.need_save;
+    m_menu_stack.push_back(frame);
     m->webtiles_write_menu();
     tiles.finish_message();
 }
 
 void TilesFramework::push_crt_menu(string tag)
 {
-    MenuInfo mi;
-    mi.menu = nullptr;
-    mi.tag = tag;
-    m_menu_stack.push_back(mi);
+    UIStackFrame frame;
+    frame.type = UIStackFrame::CRT;
+    frame.crt_tag = tag;
+    frame.centred = !crawl_state.need_save;
+    m_menu_stack.push_back(frame);
 
     json_open_object();
     json_write_string("msg", "menu");
     json_write_string("type", "crt");
     json_write_string("tag", tag);
+    json_write_bool("ui-centred", frame.centred);
     json_close_object();
     finish_message();
 }
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return is_in_menu(nullptr);
+    return !m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::CRT;
 }
 
 bool TilesFramework::is_in_menu(Menu* m)
 {
-    return !m_menu_stack.empty() && m_menu_stack.back().menu == m;
+    return !m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU
+        && m_menu_stack.back().menu == m;
 }
 
 void TilesFramework::pop_menu()
 {
     if (m_menu_stack.empty()) return;
-    MenuInfo mi = m_menu_stack.back();
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"close_menu\"}");
 }
 
-void TilesFramework::close_all_menus()
+void TilesFramework::pop_all_ui_layouts()
 {
-    while (m_menu_stack.size())
-        pop_menu();
+    for (auto it = m_menu_stack.crbegin(); it != m_menu_stack.crend(); it++)
+    {
+        if (it->type == UIStackFrame::UI)
+            send_message("{\"msg\":\"ui-pop\"}");
+        else
+            send_message("{\"msg\":\"close_menu\"}");
+    }
+    m_menu_stack.clear();
+
     // This is a bit of a hack, in case the client-side menu stack ever gets
     // out of sync with m_menu_stack. (This can maybe happen for reasons that I
     // don't fully understand, on spectator join.)
     send_message("{\"msg\":\"close_all_menus\"}");
+}
+
+void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots)
+{
+    ASSERT(m_json_stack.size() == 1);
+    ASSERT(m_json_stack.back().type == '}'); // enums, schmenums
+    tiles.json_write_string("msg", "ui-push");
+    tiles.json_write_string("type", type);
+    tiles.json_write_bool("ui-centred", !crawl_state.need_save);
+    tiles.json_close_object();
+    UIStackFrame frame;
+    frame.type = UIStackFrame::UI;
+    frame.ui_json.resize(num_state_slots+1);
+    frame.ui_json[0] = m_msg_buf;
+    frame.centred = !crawl_state.need_save;
+    m_menu_stack.push_back(frame);
+    tiles.finish_message();
+}
+
+void TilesFramework::pop_ui_layout()
+{
+    if (m_menu_stack.empty()) return;
+    m_menu_stack.pop_back();
+    send_message("{\"msg\":\"ui-pop\"}");
+}
+
+void TilesFramework::ui_state_change(const string& type, unsigned state_slot)
+{
+    ASSERT(!m_menu_stack.empty());
+    UIStackFrame &top = m_menu_stack.back();
+    ASSERT(top.type == UIStackFrame::UI);
+    ASSERT(m_json_stack.size() == 1);
+    ASSERT(m_json_stack.back().type == '}');
+    tiles.json_write_string("msg", "ui-state");
+    tiles.json_write_string("type", type);
+    tiles.json_close_object();
+    top.ui_json[state_slot+1] = m_msg_buf;
+    tiles.finish_message();
+}
+
+void TilesFramework::push_ui_cutoff()
+{
+    int cutoff = static_cast<int>(m_menu_stack.size());
+    m_ui_cutoff_stack.push_back(cutoff);
+    send_message("{\"msg\":\"ui_cutoff\",\"cutoff\":%d}", cutoff);
+}
+
+void TilesFramework::pop_ui_cutoff()
+{
+    m_ui_cutoff_stack.pop_back();
+    int cutoff = m_ui_cutoff_stack.empty() ? 0 : m_ui_cutoff_stack.back();
+    send_message("{\"msg\":\"ui_cutoff\",\"cutoff\":%d}", cutoff);
 }
 
 static void _send_text_cursor(bool enabled)
@@ -1035,8 +1142,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
     tiles.json_close_array();
 }
 
-static void _send_mcache(mcache_entry *entry, bool submerged,
-                         bool send_doll = true)
+void TilesFramework::send_mcache(mcache_entry *entry, bool submerged, bool send_doll)
 {
     bool trans = entry->transparent();
     if (trans && send_doll)
@@ -1099,7 +1205,7 @@ static inline unsigned _get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 
-static inline void _write_tileidx(tileidx_t t)
+void TilesFramework::write_tileidx(tileidx_t t)
 {
     // JS can only handle signed ints
     const int lo = t & 0xFFFFFFFF;
@@ -1160,7 +1266,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             fg_changed = true;
 
             json_write_name("fg");
-            _write_tileidx(next_pc.fg);
+            write_tileidx(next_pc.fg);
             if (fg_idx && fg_idx <= TILE_MAIN_MAX)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
         }
@@ -1168,13 +1274,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.bg != current_pc.bg)
         {
             json_write_name("bg");
-            _write_tileidx(next_pc.bg);
+            write_tileidx(next_pc.bg);
         }
 
         if (next_pc.cloud != current_pc.cloud)
         {
             json_write_name("cloud");
-            _write_tileidx(next_pc.cloud);
+            write_tileidx(next_pc.cloud);
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)
@@ -1241,7 +1347,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    _send_mcache(entry, in_water);
+                    send_mcache(entry, in_water);
                 else
                 {
                     json_write_comma();
@@ -1282,7 +1388,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
-                        _send_mcache(entry, in_water, false);
+                        send_mcache(entry, in_water, false);
                     else
                         json_write_null("mcache");
                 }
@@ -1374,6 +1480,12 @@ void TilesFramework::_mcache_ref(bool inc)
 
 void TilesFramework::_send_map(bool force_full)
 {
+    // TODO: prevent in some other / better way?
+    if (_send_lock)
+        return;
+
+    unwind_bool no_rentry(_send_lock, true);
+
     map<uint32_t, coord_def> new_monster_locs;
 
     force_full = force_full || m_need_full_map;
@@ -1617,8 +1729,16 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+}
+
+void TilesFramework::_send_messages()
+{
+    if (_send_lock)
+        return;
+    unwind_bool no_rentry(_send_lock, true);
+
+    webtiles_send_messages();
 }
 
 /*
@@ -1650,36 +1770,46 @@ void TilesFramework::_send_everything()
 
     // Menus
     json_open_object();
-    json_write_string("msg", "init_menus");
-    json_open_array("menus");
-    for (MenuInfo &menu : m_menu_stack)
+    json_write_string("msg", "ui-stack");
+    json_open_array("items");
+    for (UIStackFrame &frame : m_menu_stack)
     {
-        if (menu.menu)
-            menu.menu->webtiles_write_menu();
-        else
+        if (frame.type == UIStackFrame::MENU)
+            frame.menu->webtiles_write_menu();
+        else if (frame.type == UIStackFrame::CRT)
         {
             json_open_object();
             json_write_string("msg", "menu");
             json_write_string("type", "crt");
-            json_write_string("tag", menu.tag);
+            json_write_string("tag", frame.crt_tag);
+            json_write_bool("ui-centred", frame.centred);
             json_close_object();
         }
+        else
+        {
+            for (const auto& json : frame.ui_json)
+                if (!json.empty())
+                {
+                    m_msg_buf.append(json);
+                    json_write_comma();
+                }
+            continue;
+        }
+        json_write_comma();
     }
     json_close_array();
     json_close_object();
     finish_message();
 
-    webtiles_send_last_messages();
+    _send_messages();
 
     update_input_mode(mouse_control::current_mode());
 
-    m_text_crt.send(true);
     m_text_menu.send(true);
 }
 
 void TilesFramework::clrscr()
 {
-    m_text_crt.clear();
     m_text_menu.clear();
 
     cgotoxy(1, 1);
@@ -1696,32 +1826,15 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
     m_print_y = y - 1;
-    switch (region)
-    {
-    case GOTO_CRT:
-        switch (m_crt_mode)
-        {
-        case CRT_DISABLED:
-            m_print_area = nullptr;
-            break;
-        case CRT_NORMAL:
-            set_ui_state(UI_CRT);
-            m_print_area = &m_text_crt;
-            break;
-        case CRT_MENU:
-            m_print_area = &m_text_menu;
-            break;
-        }
-        break;
-    case GOTO_STAT:
-    case GOTO_MSG:
+
+    // XXX: an ugly hack necessary for webtiles X to work properly
+    // when showing message prompts (e.g. X!, XG)
+    if (region == GOTO_STAT || region == GOTO_MSG)
         set_ui_state(UI_NORMAL);
-        m_print_area = nullptr;
-        break;
-    default:
-        m_print_area = nullptr;
-        break;
-    }
+
+    bool crt_popup = region == GOTO_CRT && !m_menu_stack.empty() &&
+            m_menu_stack.back().type == UIStackFrame::CRT;
+    m_print_area = crt_popup ? &m_text_menu : nullptr;
     m_cursor_region = region;
 }
 
@@ -1755,11 +1868,10 @@ void TilesFramework::redraw()
         m_last_ui_state = m_ui_state;
     }
 
-    m_text_crt.send();
     m_text_menu.send();
 
     _send_player();
-    webtiles_send_messages();
+    _send_messages();
 
     if (m_need_redraw && m_view_loaded)
     {

@@ -306,7 +306,7 @@ static int l_you_mem_spells(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    vector<spell_type> mem_spells = get_mem_spell_list();
+    vector<spell_type> mem_spells = get_sorted_spell_list(true);
 
     for (size_t i = 0; i < mem_spells.size(); ++i)
     {

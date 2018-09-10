@@ -924,8 +924,7 @@ void bolt::affect_wall()
             finish_beam();
 
         // potentially warn about offending your god by burning trees
-        const bool god_relevant = (you.religion == GOD_DITHMENOS
-                                   || you.religion == GOD_FEDHAS)
+        const bool god_relevant = you.religion == GOD_FEDHAS
                                   && can_burn_trees();
         const bool vetoed = env.markers.property_at(pos(), MAT_ANY, "veto_fire")
                             == "veto";

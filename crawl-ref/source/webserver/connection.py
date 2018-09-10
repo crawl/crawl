@@ -36,6 +36,14 @@ class WebtilesSocketConnection(object):
         fcntl.fcntl(self.socket.fileno(), flags | fcntl.FD_CLOEXEC)
 
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if (self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF) < 2048):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
+        # on linux, the following may have no effect (setting SO_RCVBUF is
+        # often documented as having no effect), but on other unixes, it
+        # matters quite a bit. The choice of 212992 is based on the linux
+        # default.
+        if (self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF) < 212992):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 212992)
 
         # Bind to a temp path
         # Ignore the security warning about tempnam; in this case,

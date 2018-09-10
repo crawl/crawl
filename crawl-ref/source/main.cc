@@ -306,6 +306,9 @@ int main(int argc, char *argv[])
     init_properties();
     init_item_name_cache();
 
+    // make sure all the expected data directories exist
+    validate_basedirs();
+
     // Read the init file.
     read_init_file();
 
@@ -899,9 +902,6 @@ static void _update_place_info()
     delta.turns_total++;
     delta.elapsed_total += you.time_taken;
 
-    LevelXPInfo  xp_delta;
-    xp_delta.turns++;
-
     switch (you.running)
     {
     case RMODE_INTERLEVEL:
@@ -954,17 +954,9 @@ static void _update_place_info()
     you.global_info += delta;
     you.global_info.assert_validity();
 
-
     PlaceInfo& curr_PlaceInfo = you.get_place_info();
     curr_PlaceInfo += delta;
     curr_PlaceInfo.assert_validity();
-
-    you.global_xp_info += xp_delta;
-    you.global_xp_info.assert_validity();
-
-    LevelXPInfo& curr_LevelXPInfo = you.get_level_xp_info();
-    curr_LevelXPInfo += xp_delta;
-    curr_LevelXPInfo.assert_validity();
 }
 
 //
@@ -1685,6 +1677,8 @@ static void _do_list_gold()
 
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
+// calling this directly will not record the command for later replay; if you
+// want to ensure that it's recorded, see macro.cc:process_command_on_record.
 void process_command(command_type cmd)
 {
     you.apply_berserk_penalty = true;
@@ -1889,7 +1883,7 @@ void process_command(command_type cmd)
 
         // Informational commands.
     case CMD_DISPLAY_CHARACTER_STATUS: display_char_status();          break;
-    case CMD_DISPLAY_COMMANDS:         list_commands(0); clrscr(); redraw_screen(); break;
+    case CMD_DISPLAY_COMMANDS:         show_help(); redraw_screen(); break;
     case CMD_DISPLAY_INVENTORY:        display_inventory();            break;
     case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
@@ -1908,7 +1902,7 @@ void process_command(command_type cmd)
 
     case CMD_DISPLAY_RELIGION:
     {
-        describe_god(you.religion, true);
+        describe_god(you.religion);
         redraw_screen();
         break;
     }

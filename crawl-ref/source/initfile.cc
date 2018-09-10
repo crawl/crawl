@@ -17,6 +17,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <iomanip>
 #include <set>
 #include <string>
 
@@ -26,12 +27,14 @@
 #include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
+#include "describe.h"
 #include "directn.h"
 #include "dlua.h"
 #include "end.h"
 #include "errors.h"
 #include "files.h"
 #include "game-options.h"
+#include "ghost.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -43,6 +46,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "newgame.h"
 #include "options.h"
 #include "playable.h"
@@ -196,7 +200,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
         new BoolGameOption(SIMPLE_NAME(show_player_species), false),
         new BoolGameOption(SIMPLE_NAME(use_modifier_prefix_keys), true),
-        new BoolGameOption(SIMPLE_NAME(easy_exit_menu), false),
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
@@ -365,6 +368,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
+        new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -1938,13 +1942,13 @@ void game_options::fixup_options()
 {
     // Validate save_dir
     if (!check_mkdir("Save directory", &save_dir))
-        end(1);
+        end(1, false, "Cannot create save directory '%s'", save_dir.c_str());
 
     if (!SysEnv.morgue_dir.empty())
         morgue_dir = SysEnv.morgue_dir;
 
     if (!check_mkdir("Morgue directory", &morgue_dir))
-        end(1);
+        end(1, false, "Cannot create morgue directory '%s'", morgue_dir.c_str());
 }
 
 static int _str_to_killcategory(const string &s)
@@ -3374,6 +3378,12 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "tiles" || field == "glyphs" || field == "hybrid")
             tile_display_mode = field;
+        else
+        {
+            mprf(MSGCH_ERROR, "Unknown value for tile_display_mode: '%s'"
+                              " (possible values: tiles/glyphs/hybrid",
+                                                                field.c_str());
+        }
     }
 #endif
 #endif // USE_TILE
@@ -3684,20 +3694,8 @@ void game_options::report_error(const char* format, ...)
     string error = vmake_stringf(format, args);
     va_end(args);
 
-    // If called before game starts, log a startup error,
-    // otherwise spam the warning channel.
-    if (crawl_state.need_save)
-    {
-        mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
-             basefilename.c_str(), line_num);
-    }
-    else
-    {
-        crawl_state.add_startup_error(make_stringf("%s (%s:%d)",
-                                                   error.c_str(),
-                                                   basefilename.c_str(),
-                                                   line_num));
-    }
+    mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
+         basefilename.c_str(), line_num);
 }
 
 static string check_string(const char *s)
@@ -3714,7 +3712,7 @@ void get_system_environment()
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
-#if defined(TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX) && !defined(DGAMELAUNCH)
     if (SysEnv.crawl_dir.empty())
     {
         SysEnv.crawl_dir
@@ -3801,6 +3799,7 @@ enum commandline_option_type
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
+    CLO_EDIT_BONES,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3819,6 +3818,7 @@ static const char *cmd_ops[] =
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
     "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
+    "bones",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -3875,11 +3875,11 @@ static void _print_save_version(char *name)
         package save(filename.c_str(), false);
         reader chrf(&save, "chr");
 
-        int major, minor;
-        if (!get_save_version(chrf, major, minor))
+        save_version v = get_save_version(chrf);
+        if (!v.valid())
             fail("Save file is invalid.");
         else
-            printf("Save file version for %s is %d.%d\n", name, major, minor);
+            printf("Save file version for %s is %d.%d\n", name, v.major, v.minor);
     }
     catch (ext_fail_exception &fe)
     {
@@ -3898,13 +3898,24 @@ enum es_command_type
     NUM_ES
 };
 
-static struct es_command
+enum eb_command_type
 {
-    es_command_type cmd;
+    EB_LS,
+    EB_MERGE,
+    EB_RM,
+    EB_REWRITE,
+    NUM_EB
+};
+
+template <typename T> struct edit_command
+{
+    T cmd;
     const char* name;
     bool rw;
     int min_args, max_args;
-} es_commands[] =
+};
+
+static edit_command<es_command_type> es_commands[] =
 {
     { ES_LS,      "ls",      false, 0, 0, },
     { ES_GET,     "get",     false, 1, 2, },
@@ -3912,6 +3923,14 @@ static struct es_command
     { ES_RM,      "rm",      true,  1, 1, },
     { ES_REPACK,  "repack",  false, 0, 0, },
     { ES_INFO,    "info",    false, 0, 0, },
+};
+
+static edit_command<eb_command_type> eb_commands[] =
+{
+    { EB_LS,       "ls",      false, 0, 2, },
+    { EB_MERGE,    "merge",   false, 1, 1, },
+    { EB_RM,       "rm",      true,  1, 1 },
+    { EB_REWRITE,  "rewrite", true,  0, 1 },
 };
 
 #define FAIL(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
@@ -3935,7 +3954,7 @@ static void _edit_save(int argc, char **argv)
     es_command_type cmd = NUM_ES;
     bool rw;
 
-    for (const es_command &ec : es_commands)
+    for (const auto &ec : es_commands)
         if (!strcmp(ec.name, cmdn))
         {
             if (argc < ec.min_args + 2)
@@ -4079,6 +4098,247 @@ static void _edit_save(int argc, char **argv)
         fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
+
+static save_version _read_bones_version(const string &filename)
+{
+    reader inf(filename);
+    if (!inf.valid())
+    {
+        string error = "File doesn't exist: " + filename;
+        throw corrupted_save(error);
+    }
+
+    inf.set_safe_read(true); // don't die on 0-byte bones
+    // use lower-level call here, because read_ghost_header fixes up the version
+    save_version version = get_save_version(inf);
+    inf.close();
+    return version;
+}
+
+static void _write_bones(const string &filename, vector<ghost_demon> ghosts)
+{
+    // TODO: duplicates some logic in files.cc
+    FILE* ghost_file = lk_open_exclusive(filename);
+    if (!ghost_file)
+    {
+        string error = "Couldn't write to bones file " + filename;
+        throw corrupted_save(error);
+    }
+    writer outw(filename, ghost_file);
+
+    write_ghost_version(outw);
+    tag_write_ghosts(outw, ghosts);
+
+    lk_close(ghost_file, filename);
+}
+
+static void _bones_ls(const string &filename, const string name_match, 
+                                                            bool long_output)
+{
+    save_version v = _read_bones_version(filename);
+    cout << "Bones file '" << filename << "', version " << v.major << "."
+         << v.minor << ":\n";
+    const vector<ghost_demon> ghosts = load_bones_file(filename, false);
+    monster m;
+    if (long_output)
+    {
+        init_monsters(); // no monster is valid without this
+        init_spell_descs();
+        init_spell_name_cache();
+        m.reset();
+        m.type = MONS_PROGRAM_BUG;
+        m.base_monster = MONS_PHANTOM;
+    }
+    int count = 0;
+    for (auto g : ghosts)
+    {
+        // TODO: partial name matching?
+        if (name_match.size() && name_match != lowercase_string(g.name))
+            continue;
+        count++;
+        if (long_output)
+        {
+            // TOOD: line wrapping, some elements of this aren't meaningful at
+            // the command line
+            describe_info inf;
+            m.set_ghost(g);
+            m.ghost_init(false);
+            m.type = MONS_PLAYER_GHOST;
+            monster_info mi(&m);
+            bool has_stat_desc = false;
+            get_monster_db_desc(mi, inf, has_stat_desc, true);
+            cout << "#######################\n"
+                 << inf.title << "\n"
+                 << inf.body.str() << "\n"
+                 << inf.footer << "\n";
+        }
+        else
+        {
+            cout << std::setw(12) << std::left << g.name
+                 << " XL" << std::setw(2) << g.xl << " "
+                 << combo_type{species_type(g.species), job_type(g.job)}.abbr()
+                 << "\n";
+        }
+    }
+    if (!count)
+    {
+        if (name_match.size())
+            cout << "No matching ghosts for " << name_match << ".\n";
+        else
+            cout << "Empty ghost file.\n";
+    }
+    else
+        cout << count << " ghosts total\n";
+}
+
+static void _bones_rewrite(const string filename, const string remove, bool dedup)
+{
+    const vector<ghost_demon> ghosts = load_bones_file(filename, false);
+
+    vector<ghost_demon> out;
+    bool matched = false;
+    const string remove_lower = lowercase_string(remove);
+    map<string, int> ghosts_by_name;
+    int dups = 0;
+
+    for (auto g : ghosts)
+    {
+        if (dedup && ghosts_by_name.count(g.name)
+                                            && ghosts_by_name[g.name] == g.xl)
+        {
+            dups++;
+            continue;
+        }
+        if (lowercase_string(g.name) == remove_lower)
+        {
+            matched = true;
+            continue;
+        }
+        out.push_back(g);
+        ghosts_by_name[g.name] = g.xl;
+    }
+    if (matched || remove.size() == 0)
+    {
+        cout << "Rewriting '" << filename << "'";
+        if (matched)
+            cout << " without ghost '" << remove_lower << "'";
+        if (dups)
+            cout << ", " << dups << " duplicates removed";
+        cout << "\n";
+        unlink(filename.c_str());
+        _write_bones(filename, out);
+    }
+    else
+        cout << "No matching ghosts for '" << remove_lower << "'\n";
+}
+
+static void _bones_merge(const vector<string> files, const string out_name)
+{
+    vector<ghost_demon> out;
+    for (auto filename : files)
+    {
+        auto ghosts = load_bones_file(filename, false);
+        out.insert(out.end(), ghosts.begin(), ghosts.end());
+    }
+    if (file_exists(out_name))
+        unlink(out_name.c_str());
+    if (out.size() == 0)
+        cout << "Writing empty bones file";
+    else
+        cout << "Writing " << out.size() << " ghosts";
+    cout << " to " << out_name << "\n";
+    _write_bones(out_name, out);
+}
+
+static void _edit_bones(int argc, char **argv)
+{
+    if (argc <= 1 || !strcmp(argv[1], "help"))
+    {
+        printf("Usage: crawl --bones <command> ARGS, where <command> may be:\n"
+               "  ls <file> [<name>] [--long] list the ghosts in <file>\n"
+               "                              --long shows full monster descriptions\n"
+               "  merge <file1> <file2>       merge two bones files together, rewriting into <file2>\n"
+               "  rm <file> <name>            rewrite a ghost file without <name>\n"
+               "  rewrite <file> [--dedup]    rewrite a ghost file, fixing up version etc.\n"
+             );
+        return;
+    }
+    const char *cmdn = argv[0];
+    const char *name = argv[1];
+
+    eb_command_type cmd = NUM_EB;
+    bool rw;
+
+    for (const auto &ec : eb_commands)
+        if (!strcmp(ec.name, cmdn))
+        {
+            if (argc < ec.min_args + 2)
+                FAIL("Too few arguments for %s.\n", cmdn);
+            else if (argc > ec.max_args + 2)
+                FAIL("Too many arguments for %s.\n", cmdn);
+            cmd = ec.cmd;
+            rw = ec.rw;
+            break;
+        }
+    if (cmd == NUM_EB)
+        FAIL("Unknown command: %s.\n", cmdn);
+
+    try
+    {
+        if (!file_exists(name))
+            FAIL("'%s' doesn't exist!\n", name);
+
+        if (cmd == EB_LS)
+        {
+            const bool long_out = 
+                           argc == 3 && !strcmp(argv[2], "--long")
+                        || argc == 4 && !strcmp(argv[3], "--long");
+            if (argc == 4 && !long_out)
+                FAIL("Unknown extra option to ls: '%s'\n", argv[3]);
+            const string name_match = argc == 3 && !long_out || argc == 4
+                                    ? string(argv[2])
+                                    : "";
+            _bones_ls(name, lowercase_string(name_match), long_out);
+        }
+        else if (cmd == EB_REWRITE)
+        {
+            const bool dedup = argc == 3 && !strcmp(argv[2], "--dedup");
+            if (argc == 3 && !dedup)
+                FAIL("Unknown extra argument to rewrite: '%s'\n", argv[2]);
+            _bones_rewrite(name, "", dedup);
+        }
+        else if (cmd == EB_RM)
+        {
+            const string name_match = argv[2];
+            _bones_rewrite(name, name_match, false);
+        }
+        else if (cmd == EB_MERGE)
+        {
+            const string out_name = argv[2];
+            _bones_merge({name, out_name}, out_name);
+        }
+    }
+    catch (corrupted_save &err)
+    {
+        // not a corrupted save per se, just from the future. Try to load the
+        // versioned bones file if it exists.
+        if (err.version.valid() && err.version.is_future())
+        {
+            FAIL("Bones file '%s' is from the future (%d.%d), this instance of "
+                 "crawl needs %d.%d.\n", name,
+                    err.version.major, err.version.minor,
+                    save_version::current_bones().major,
+                    save_version::current_bones().minor);
+        }
+        else
+            FAIL("Error: %s\n", err.what());
+    }
+    catch (ext_fail_exception &fe)
+    {
+        FAIL("Error: %s\n", fe.what());
+    }
+}
+
 #undef FAIL
 
 #ifdef USE_TILE_WEB
@@ -4404,30 +4664,24 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 }
                 catch (const bad_level_id &err)
                 {
-                    fprintf(stderr, "Error parsing depths: %s\n", err.what());
-                    end(1);
+                    end(1, false, "Error parsing depths: %s\n", err.what());
                 }
                 nextUsed = true;
             }
             break;
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
-            end(1);
+            end(1, false, "%s", dbg_stat_err);
 #endif
         case CLO_MAPSTAT_DUMP_DISCONNECT:
 #ifdef DEBUG_STATISTICS
             crawl_state.map_stat_dump_disconnect = true;
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
-            end(1);
+            end(1, false, "%s", dbg_stat_err);
 #endif
         case CLO_ITERATIONS:
 #ifdef DEBUG_STATISTICS
             if (!next_is_param || !isadigit(*next_arg))
-            {
-                fprintf(stderr, "Integer argument required for -%s\n", arg);
-                end(1);
-            }
+                end(1, false, "Integer argument required for -%s\n", arg);
             else
             {
                 SysEnv.map_gen_iters = atoi(next_arg);
@@ -4438,26 +4692,21 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
-            end(1);
+            end(1, false, "%s", dbg_stat_err);
 #endif
             break;
 
         case CLO_FORCE_MAP:
 #ifdef DEBUG_STATISTICS
             if (!next_is_param)
-            {
-                fprintf(stderr, "String argument required for -%s\n", arg);
-                end(1);
-            }
+                end(1, false, "String argument required for -%s\n", arg);
             else
             {
                 crawl_state.force_map = next_arg;
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
-            end(1);
+            end(1, false, "%s", dbg_stat_err);
 #endif
             break;
 
@@ -4619,6 +4868,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_EDIT_SAVE:
             // Always parse.
             _edit_save(argc - current - 1, argv + current + 1);
+            end(0);
+
+        case CLO_EDIT_BONES:
+            _edit_bones(argc - current - 1, argv + current + 1);
             end(0);
 
         case CLO_SEED:

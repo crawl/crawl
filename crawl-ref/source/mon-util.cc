@@ -4175,12 +4175,12 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
     if (only_in_sight && !you.see_cell_no_trans(p))
         return false;
 
-    if ((grd(p) == DNGN_CLOSED_DOOR
-        || grd(p) == DNGN_SEALED_DOOR)
-            && _mons_can_pass_door(&mon, p))
-    {
+    if (cell_is_runed(p))
+        return false;
+
+    // Includes sealed doors.
+    if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
         return true;
-    }
 
     if (!mon.is_habitable(p))
         return false;
@@ -5641,7 +5641,7 @@ void throw_monster_bits(const monster& mon)
 
         // Because someone will get a kick out of this some day.
         if (mons_class_flag(mons_base_type(mon), M_ACID_SPLASH))
-            target->corrode_equipment("flying bits", 1);
+            target->corrode_equipment("a flying bit", 1);
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());
         target->hurt(&you, damage);

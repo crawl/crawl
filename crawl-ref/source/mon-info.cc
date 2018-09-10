@@ -1484,7 +1484,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_TOXIC_RADIANCE))
         v.emplace_back("radiating toxic energy");
     if (is(MB_GRASPING_ROOTS))
-        v.emplace_back("movement impaired by roots");
+        v.emplace_back("constricted by roots");
     if (is(MB_FIRE_VULN))
         v.emplace_back("more vulnerable to fire");
     if (is(MB_TORNADO))

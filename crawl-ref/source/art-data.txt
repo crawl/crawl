@@ -232,9 +232,9 @@ TILE_EQ: wucad_mu
 VALUE:   1000
 
 NAME:    Vampire's Tooth
-OBJ:     OBJ_WEAPONS/WPN_DAGGER
-# it's a dagger made from a tooth -> no TYPE
-PLUS:    +4
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+# it's a quick blade made from a tooth -> no TYPE
+PLUS:    +12
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
@@ -1058,7 +1058,7 @@ BOOL:     nogen
 
 ENUM:     OCTOPUS_KING_RING
 NAME:     ring of the Octopus King
-OBJ:      OBJ_JEWELLERY/RING_LOUDNESS
+OBJ:      OBJ_JEWELLERY/RING_ATTENTION
 COLOUR:   ETC_WATER
 TILE:     urand_octoring
 AC:       1
@@ -1304,8 +1304,6 @@ COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
 TILE_EQ:  thermic_engine
 BRAND:    SPWPN_FLAMING
-FIRE:     -1
-COLD:     -1
 
 # This entry must always be last.
 ENUM:   DUMMY2

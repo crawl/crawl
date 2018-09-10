@@ -24,6 +24,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "scroller.h"
 #include "stairs.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -478,7 +479,7 @@ static string _get_shops(bool display)
     // items from level). That makes a total of 17 characters per shop:
     //       1...5....0....5..
     // "D:8 *   Vaults:2 **([+   D:24 +";
-    const int maxcolumn = get_number_of_cols() - 17;
+    const int maxcolumn = 79 - 17;
     int column_count = 0;
 
     for (const auto &entry : shops_present)
@@ -610,12 +611,9 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
     string disp = overview_description_string(true);
-    linebreak_string(disp, get_number_of_cols());
-    int flags = MF_ANYPRINTABLE | MF_NOSELECT;
-    if (Options.easy_exit_menu)
-        flags |= MF_EASY_EXIT;
+    linebreak_string(disp, 80);
+    int flags = FS_PREWRAPPED_TEXT; // TODO: add ANYPRINTABLE
     formatted_scroller(flags, disp).show();
-    redraw_screen();
 }
 
 static void _seen_staircase(const coord_def& pos)
@@ -851,7 +849,7 @@ void remove_unique_annotation(monster* mons)
         // the same unique_name elsewhere.
         if ((mons->type != MONS_PLAYER_GHOST
              || i->second == level_id::current()
-             || you.can_see(*mons))
+             || you.can_see(*mons) && testbits(mons->flags, MF_TAKING_STAIRS))
             && i->first == name)
         {
             affected_levels.insert(i->second);

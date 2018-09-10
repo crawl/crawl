@@ -6,6 +6,8 @@
 
 #include <cerrno>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "files.h"
 #include "format.h"

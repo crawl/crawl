@@ -222,8 +222,8 @@ Yredelemnul (for undead allies). Also, while unreliable, Xom can be a lot of
 fun.
 
 Whenever you encounter an altar, be sure to read the corresponding god's
-description (by 'p'raying on the altar) and take your time in deciding whether
-to pick this deity or not. As a follower, you can reread your god's
+description (by praying on the altar with '>') and take your time in deciding
+whether to pick this deity or not. As a follower, you can reread your god's
 description, now more detailed via the '!' toggle, on the '^' screen.
 
 You're guaranteed to find altars to almost every god on the first nine levels
@@ -237,11 +237,9 @@ A:ghosts
 
 A: There isn't any such option, and we're not planning to add one, either.
 
-For a more constructive answer, once a ghost has been loaded onto a level, it
-won't be loaded again - unless you happen to die on that level, thus creating a
-bones file featuring more than one ghost. Keep in mind that you don't
-absolutely have to fight every monster you meet, and with ghosts it's even
-easier: they cannot leave the level they were created on.
+Keep in mind that you don't absolutely have to fight every monster you
+meet, and with ghosts it's even easier: they are generated in sealed
+vaults, and it is your choice whether to open each ghost vault.
 
 Alternatively, you could play a couple characters of strong species/background
 combinations for the sole purpose of busting those ghosts, e.g. Troll

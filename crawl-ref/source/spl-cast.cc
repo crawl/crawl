@@ -125,6 +125,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
     desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
+    desc << " ";
 
     return desc.str();
 }
@@ -146,7 +147,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     desc << chop_string(spell_power_string(spell), 13)
          << chop_string(rangestring, 9 + tagged_string_tag_length(rangestring))
          << chop_string(spell_hunger_string(spell), 8)
-         << chop_string(spell_noise_string(spell, 10), 15);
+         << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -163,30 +164,19 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         toggle_with_I = false;
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+            | MF_NO_WRAP_ROWS | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
-#ifdef USE_TILE_LOCAL
     {
-        // [enne] - Hack. Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " " + titlestring + "         Type          "
-                "                Failure  Level",
-                " " + titlestring + "         Power        "
-                "Range    " + "Hunger  " + "Noise          ",
-                MEL_ITEM);
+                titlestring + "         Type                          Failure  Level  ",
+                titlestring + "         Power        Range    Hunger  Noise           ",
+                MEL_TITLE);
+#ifdef USE_TILE_LOCAL
         me->colour = BLUE;
-        spell_menu.add_entry(me);
-    }
-#else
-    spell_menu.set_title(
-        new ToggleableMenuEntry(
-            " " + titlestring + "         Type          "
-            "                Failure  Level",
-            " " + titlestring + "         Power        "
-            "Range    " + "Hunger  " + "Noise          ",
-            MEL_TITLE));
 #endif
+        spell_menu.set_title(me, true, true);
+    }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');

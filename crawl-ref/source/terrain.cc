@@ -425,6 +425,14 @@ bool feat_is_sealed(dungeon_feature_type feat)
            || feat == DNGN_SEALED_DOOR;
 }
 
+/** Is this feature runed, as in a runed door?
+ */
+bool cell_is_runed(const coord_def &p)
+{
+    // the orig_terrain call will check the actual terrain if there's no change
+    return orig_terrain(p) == DNGN_RUNED_DOOR;
+}
+
 /** Is this feature a type of statue, i.e., granite or an idol?
  */
 bool feat_is_statuelike(dungeon_feature_type feat)

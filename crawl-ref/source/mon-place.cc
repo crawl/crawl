@@ -334,7 +334,6 @@ void spawn_random_monsters()
     }
 
     mgen_data mg(WANDERING_MONSTER);
-    mg.xp_tracking = XP_SPAWNED;
     if (player_in_branch(BRANCH_PANDEMONIUM)
         && !env.properties.exists("vault_mon_weights")
         && !one_chance_in(40))
@@ -733,8 +732,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mon)
         return nullptr;
 
-    if (mg.props.exists("map"))
-        mon->set_originating_map(mg.props["map"].get_string());
+    if (mg.props.exists(MAP_KEY))
+        mon->set_originating_map(mg.props[MAP_KEY].get_string());
 
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR

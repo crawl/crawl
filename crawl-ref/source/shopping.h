@@ -71,7 +71,7 @@ public:
     void move_things(const coord_def &src, const coord_def &dst);
     void forget_pos(const level_pos &pos);
 
-    void display();
+    void display(bool view_only = false);
 
     void refresh();
 

@@ -920,7 +920,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_CLOUD_IMMUNE:
-            mpr("You feel immune to the effects of clouds.");
+            // player::cloud_immunity checks the scarf + passives, so can't
+            // call it here.
+            if (have_passive(passive_t::cloud_immunity))
+                mpr("Your immunity to the effects of clouds is unaffected.");
+            else
+                mpr("You feel immune to the effects of clouds.");
             break;
         }
     }
@@ -1086,7 +1091,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_CLOUD_IMMUNE:
-        mpr("You feel vulnerable to the effects of clouds.");
+        if (!you.cloud_immune())
+            mpr("You feel vulnerable to the effects of clouds.");
         break;
 
     default:
@@ -1349,7 +1355,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     switch (item.sub_type)
     {
     case RING_FIRE:
-    case RING_LOUDNESS:
+    case RING_ATTENTION:
     case RING_ICE:
     case RING_LIFE_PROTECTION:
     case RING_POISON_RESISTANCE:

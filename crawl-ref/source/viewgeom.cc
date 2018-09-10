@@ -2,6 +2,7 @@
 
 #include "viewgeom.h"
 
+#include "dungeon.h"
 #include "end.h"
 #include "options.h"
 #include "state.h"
@@ -258,8 +259,8 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
     resize(rhs.m_size);
     if (rhs.m_buffer)
     {
-        size_t count = sizeof(m_buffer[0]) * m_size.x * m_size.y;
-        memcpy(m_buffer, rhs.m_buffer, count);
+        size_t count = m_size.x * m_size.y;
+        copy(rhs.m_buffer, rhs.m_buffer+count, m_buffer);
     }
     return *this;
 }
@@ -291,7 +292,13 @@ void crawl_view_geometry::init_view()
 {
     viewhalfsz = viewsz / 2;
     vbuf.resize(viewsz);
-    set_player_at(you.pos(), true);
+    if (!crawl_state.game_is_arena())
+        set_player_at(you.pos(), true);
+    else
+    {
+        coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
+        crawl_view.set_player_at(yplace);
+    }
 }
 
 void crawl_view_geometry::shift_player_to(const coord_def &c)

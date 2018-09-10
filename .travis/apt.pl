@@ -9,6 +9,10 @@ retry(qw(sudo apt-get update -qq));
 
 my @common_libs = qw(xorg-dev);
 
+if ($ENV{CROSSCOMPILE}) {
+    retry(qw(sudo apt-get install -qq mingw32 mingw32-binutils mingw32-runtime g++-mingw-w64-i686 gcc-mingw-w64-i686 nsis));
+}
+
 if ($ENV{CXX} eq "clang++") {
     retry(qw(sudo apt-get install -qq libstdc++6-4.7-dev), @common_libs);
 }

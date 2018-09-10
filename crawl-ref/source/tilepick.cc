@@ -3635,6 +3635,8 @@ tileidx_t tileidx_ability(const ability_type ability)
    case ABIL_USKAYAW_GRAND_FINALE:
         return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
      // Wu Jian
+    case ABIL_WU_JIAN_WALLJUMP:
+        return TILEG_ABILITY_WU_JIAN_WALL_JUMP;
     case ABIL_WU_JIAN_SERPENTS_LASH:
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
     case ABIL_WU_JIAN_HEAVENLY_STORM:

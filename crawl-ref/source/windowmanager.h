@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef USE_TILE_LOCAL
-
-#include "tiletex.h"
-#include "tiles-build-specific.h"
+# include "tiletex.h"
+# include "tiles-build-specific.h"
+#endif
 
 enum wm_event_type
 {
@@ -15,6 +15,8 @@ enum wm_event_type
     WME_MOUSEBUTTONUP,
     WME_MOUSEBUTTONDOWN,
     WME_MOUSEWHEEL,
+    WME_MOUSEENTER,
+    WME_MOUSELEAVE,
     WME_QUIT,
     WME_CUSTOMEVENT,
     WME_RESIZE,
@@ -43,6 +45,42 @@ struct wm_keyboard_event
     unsigned char type;
     unsigned char state;
     wm_keysym keysym;
+};
+
+struct MouseEvent
+{
+    enum mouse_event_type
+    {
+        PRESS,
+        RELEASE,
+        MOVE,
+        WHEEL,
+    };
+
+    enum mouse_event_button
+    {
+        NONE        = 0x00,
+        LEFT        = 0x01,
+        MIDDLE      = 0x02,
+        RIGHT       = 0x04,
+        SCROLL_UP   = 0x08,
+        SCROLL_DOWN = 0x10,
+    };
+
+    // Padding for ui_event
+    unsigned char type;
+
+    // kind of event
+    mouse_event_type event;
+    // if PRESS or RELEASE, the button pressed
+    mouse_event_button button;
+    // bitwise-or of buttons currently pressed
+    unsigned short held;
+    // bitwise-or of key mods currently pressed
+    unsigned char mod;
+    // location of events in pixels and in window coordinate space
+    unsigned int px;
+    unsigned int py;
 };
 
 struct wm_resize_event
@@ -82,6 +120,15 @@ struct wm_event
     wm_custom_event custom;
 };
 
+#ifdef USE_TILE_LOCAL
+
+enum mouse_cursor_type
+{
+    MOUSE_CURSOR_ARROW = 0,
+    MOUSE_CURSOR_POINTER,
+    NUM_MOUSE_CURSORS,
+};
+
 // custom timer callback function
 typedef unsigned int (*wm_timer_callback)(unsigned int interval, void* param);
 
@@ -105,6 +152,8 @@ public:
     virtual bool set_window_icon(const char* icon_name) = 0;
     virtual tiles_key_mod get_mod_state() const = 0;
     virtual void set_mod_state(tiles_key_mod mod) = 0;
+    virtual void set_mouse_cursor(mouse_cursor_type id) = 0;
+    virtual unsigned short get_mouse_state(int *x, int *y) const = 0;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
@@ -115,7 +164,7 @@ public:
 
     // Event functions
     virtual int raise_custom_event() = 0;
-    virtual int wait_event(wm_event *event) = 0;
+    virtual int wait_event(wm_event *event, int timeout) = 0;
     virtual unsigned int get_event_count(wm_event_type type) = 0;
     virtual void show_keyboard() = 0;
 

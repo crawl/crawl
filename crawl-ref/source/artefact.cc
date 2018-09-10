@@ -169,12 +169,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_DITHMENOS:
-        // No fiery weapons.
-        if (item.base_type == OBJ_WEAPONS
-            && brand == SPWPN_FLAMING)
-        {
-            return false;
-        }
         // No reducing stealth.
         if (artefact_property(item, ARTP_STEALTH) < 0)
             return false;
@@ -379,7 +373,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
-    { RING_LOUDNESS, { { ARTP_STEALTH, -1 } } },
+    { RING_ATTENTION, { { ARTP_STEALTH, -1 } } },
 
     { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
@@ -1530,7 +1524,7 @@ static bool _randart_is_conflicting(const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_LOUDNESS:
+    case RING_ATTENTION:
         conflicts = ARTP_STEALTH;
         break;
 

@@ -23,13 +23,15 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "unwind.h"
 
 game_state::game_state()
     : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
-      need_save(false), saving_game(false), updating_scores(false),
+      need_save(false), game_started(false), saving_game(false),
+      updating_scores(false),
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
@@ -47,7 +49,8 @@ game_state::game_state()
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
-      stat_gain_prompt(false), level_annotation_shown(false),
+      stat_gain_prompt(false), simulating_xp_gain(false),
+      level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
       tiles_disabled(false),
       title_screen(true),
@@ -73,34 +76,13 @@ game_state::game_state()
  */
 void game_state::reset_game()
 {
-    // Unset by death, but not by saving with restart_after_save.
+    game_started = false;
+    // need_save is unset by death, but not by saving with restart_after_save.
     need_save = false;
     type = GAME_TYPE_UNSPECIFIED;
     updating_scores = false;
     reset_cmd_repeat();
     reset_cmd_again();
-}
-
-void game_state::add_startup_error(const string &err)
-{
-    startup_errors.push_back(err);
-}
-
-void game_state::show_startup_errors()
-{
-    formatted_scroller error_menu;
-    error_menu.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP
-                         | MF_EASY_EXIT);
-    error_menu.set_more(
-        formatted_string::parse_string(
-                           "<cyan>[ + : Page down.   - : Page up."
-                           "                    Esc or Enter to continue.]"));
-    error_menu.set_title(
-        new MenuEntry("Warning: Crawl encountered errors during startup:",
-                      MEL_TITLE));
-    for (const string &err : startup_errors)
-        error_menu.add_entry(new MenuEntry(err));
-    error_menu.show();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -507,14 +489,6 @@ void game_state::dump()
     // to asserts.
     unwind_var<game_type> _type(type, GAME_TYPE_NORMAL);
     unwind_bool _arena_suspended(arena_suspended, false);
-
-    if (!startup_errors.empty())
-    {
-        fprintf(stderr, "Startup errors:\n");
-        for (const string &err : startup_errors)
-            fprintf(stderr, "%s\n", err.c_str());
-        fprintf(stderr, "\n");
-    }
 
     fprintf(stderr, "prev_cmd = %s\n", command_to_name(prev_cmd).c_str());
 

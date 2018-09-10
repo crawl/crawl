@@ -674,7 +674,7 @@ NAME:   minmay_temple_entry_from_below_a
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-      @
+      @.
 ccccccncc
 c.......c
 c.O.c.}.c
@@ -687,7 +687,7 @@ NAME:   minmay_temple_entry_from_below_b
 WEIGHT: 2
 : temple_entry(_G)
 MAP
-         @
+         @.
 cccccccccnccc
 cG.........Gc
 c....T.T....c

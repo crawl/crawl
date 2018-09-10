@@ -313,6 +313,7 @@ function general_item_setup(e)
 end
 
 function general_setup(e)
+  crawl.set_max_runes(3)
   e.tags("no_rotate no_hmirror no_vmirror")
   e.tags("no_item_gen no_trap_gen no_pool_fixup")
   e.kfeat("& = closed_door")
@@ -496,7 +497,6 @@ function coven_setup(e)
           ring of see invisible randart ident:all not_cursed /\
           ring of poison resistance randart ident:all not_cursed /\
           ring of slaying plus:5 ident:all not_cursed /\
-          ring of invisibility randart ident:all not_cursed /\
           ring of protection plus:6 randart ident:all not_cursed /\
           ring of evasion plus:6 randart ident:all not_cursed /\
           ring of strength plus:6 randart ident:all not_cursed /\

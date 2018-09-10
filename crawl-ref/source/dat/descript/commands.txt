@@ -193,7 +193,7 @@ Memorise spell
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-Memorises a chosen spell from a book you are carrying or standing on.
+Memorises a chosen spell from your spell library.
 %%%%
 CMD_LOOKUP_HELP
 

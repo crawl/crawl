@@ -32,6 +32,7 @@
 #include <vector>
 
 #include "cio.h"
+#include "command.h"
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -652,6 +653,15 @@ int macro_buf_get()
     return key;
 }
 
+void process_command_on_record(command_type cmd)
+{
+    const int key = command_to_key(cmd);
+    if (key != '\0')
+        for (key_recorder *recorder : recorders)
+            recorder->add_key(key);
+    process_command(cmd);
+}
+
 static void write_map(FILE *f, const macromap &mp, const char *key)
 {
     for (const auto &entry : mp)
@@ -754,12 +764,16 @@ int getchm(KeymapContext mc, int (*rgetch)())
 
     // Read some keys...
     keyseq keys = _getch_mul(rgetch);
+    macro_buf_add_with_keymap(keys, mc);
+    return macro_buf_get();
+}
+
+void macro_buf_add_with_keymap(keyseq keys, KeymapContext mc)
+{
     if (mc == KMC_NONE)
         macro_buf_add(keys, false, false);
     else
         macro_buf_add_long(keys, Keymaps[mc]);
-
-    return macro_buf_get();
 }
 
 /**

@@ -105,7 +105,6 @@
     Cedor
     Cerol
     Rahul Chandra
-    Gregory D. Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
@@ -131,6 +130,7 @@
     Floodkiller
     Brett Foster
     Kyle Fox
+    freepotion
     Chris Galardi
     Benoît Giannangeli
     Ben Goetter

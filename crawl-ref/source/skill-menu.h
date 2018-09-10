@@ -137,7 +137,7 @@ public:
     SkillMenu();
 
     void clear_flag(int flag);
-    void init(int flag);
+    void init(int flag, int region_height);
     void clear() override;
     bool is_set(int flag) const;
     void set_flag(int flag);
@@ -145,7 +145,7 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    bool exit();
+    bool exit(bool just_reset = false);
 #ifdef USE_TILE_LOCAL
     int get_line_height();
 #endif
@@ -159,6 +159,9 @@ public:
     int read_skill_target(skill_type sk, int keyn);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
+
+    void init_experience();
+    void finish_experience(bool experience_change);
 
 private:
     MenuFreeform*        m_ff;

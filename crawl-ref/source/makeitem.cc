@@ -1722,7 +1722,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     {
         make_item_randart(item);
     }
-    else if (item.sub_type == RING_LOUDNESS
+    else if (item.sub_type == RING_ATTENTION
              || item.sub_type == RING_TELEPORTATION
              || item.sub_type == AMU_INACCURACY
              || one_chance_in(50))

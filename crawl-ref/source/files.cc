@@ -119,7 +119,7 @@ static void _ghost_dprf(const char *format, ...)
 
 static void _save_level(const level_id& lid);
 
-static bool _ghost_version_compatible(reader &ghost_reader);
+static bool _ghost_version_compatible(const save_version &version);
 
 static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
@@ -458,6 +458,77 @@ static vector<string> _get_base_dirs()
     return bases;
 }
 
+void validate_basedirs()
+{
+    // TODO: could use this to pick a single data directory?
+    vector<string> bases(_get_base_dirs());
+    bool found;
+
+    // there are a few others, but this should be enough to minimally run something
+    const vector<string> data_subfolders =
+    {
+#ifdef CLUA_BINDINGS
+        "clua",
+#endif
+        "database",
+        "defaults",
+        "des",
+        "descript",
+        "dlua"
+#ifdef USE_TILE_LOCAL
+        , "tiles"
+#endif
+    };
+
+    for (const string &d : bases)
+    {
+        if (dir_exists(d))
+        {
+            bool everything = true;
+            bool something = false;
+            for (auto subdir : data_subfolders)
+            {
+                if (dir_exists(d + subdir))
+                    something = true;
+                else
+                    everything = false;
+            }
+            if (everything)
+            {
+                mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
+                found = true;
+            }
+            else if (something)
+            {
+                // give an error for this case because this incomplete data
+                // directory will be checked before others, possibly leading
+                // to a weird mix of data files.
+                if (!found)
+                {
+                    mprf(MSGCH_ERROR,
+                        "Incomplete or corrupted data directory '%s'",
+                                d.c_str());
+                }
+            }
+        }
+    }
+
+    // can't proceed if nothing complete was found.
+    if (!found)
+    {
+        string err = "Missing DCSS data directory; tried: \n";
+        for (const string &d : bases)
+            err += d + ", ";
+        if (err.size() > 2)
+        {
+            err.pop_back();
+            err.pop_back();
+        }
+
+        end(1, false, "%s", err.c_str());
+    }
+}
+
 string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
                      bool (*thing_exists)(const string&))
 {
@@ -692,8 +763,12 @@ static vector<player_save_info> _find_saved_characters()
             {
                 dprf("%s: %s", filename.c_str(), E.what());
             }
+            catch (game_ended_condition &E) // another process is using the save
+            {
+                if (E.exit_reason != game_exit::abort)
+                    throw;
+            }
         }
-
     }
 
     sort(chars.begin(), chars.end());
@@ -752,10 +827,12 @@ string get_prefs_filename()
 #endif
 }
 
-static void _write_ghost_version(writer &outf)
+void write_ghost_version(writer &outf)
 {
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    // this may be distinct from the current save version
+    auto bones_version = save_version::current_bones();
+    marshallUByte(outf, bones_version.major);
+    marshallUByte(outf, bones_version.minor);
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
@@ -1714,29 +1791,87 @@ void save_game_state()
         save_game(true);
 }
 
-static string _make_ghost_filename(bool store=false)
+static bool _bones_save_individual_levels(bool store)
 {
     // Only use level-numbered bones files for places where players die a lot.
     // For the permastore, go even coarser (just D and Lair use level numbers).
     // n.b. some branches here may not currently generate ghosts.
     // TODO: further adjustments? Make Zot coarser?
-    const bool with_number = store ? player_in_branch(BRANCH_DUNGEON) ||
-                                     player_in_branch(BRANCH_LAIR)
-                                   : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                                       player_in_branch(BRANCH_CRYPT) ||
-                                       player_in_branch(BRANCH_TOMB) ||
-                                       player_in_branch(BRANCH_ABYSS) ||
-                                       player_in_branch(BRANCH_SLIME));
+    return store ? player_in_branch(BRANCH_DUNGEON) ||
+                   player_in_branch(BRANCH_LAIR)
+                 : !(player_in_branch(BRANCH_ZIGGURAT) ||
+                     player_in_branch(BRANCH_CRYPT) ||
+                     player_in_branch(BRANCH_TOMB) ||
+                     player_in_branch(BRANCH_ABYSS) ||
+                     player_in_branch(BRANCH_SLIME));
+}
+
+static string _make_ghost_filename(bool store=false)
+{
+    const bool with_number = _bones_save_individual_levels(store);
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell() ? "Hells" :
+    const string level_desc = player_in_hell(true) ? "Hells" :
         replace_all(level_id::current().describe(false, with_number), ":", "-");
     return string("bones.") + (store ? "store." : "") + level_desc;
 }
 
 static string _bones_permastore_file()
 {
-    return _get_bonefile_directory() + _make_ghost_filename(true);
+    string filename = _make_ghost_filename(true);
+    string full_path = _get_bonefile_directory() + filename;
+    if (file_exists(full_path))
+        return full_path;
+
+    string dist_full_path = datafile_path(
+            string("dist_bones") + FILE_SEPARATOR + filename, false, false);
+    if (dist_full_path.empty())
+        return dist_full_path;
+
+    // no matching permastore is in the player's bones file, but one exists in
+    // the crawl distribution. Install it.
+
+    FILE *src = fopen(dist_full_path.c_str(), "rb");
+    if (!src)
+    {
+        mprf(MSGCH_ERROR, "Bones file exists but can't be opened: %s",
+            dist_full_path.c_str());
+        return "";
+    }
+    FILE *target = lk_open("wb", full_path);
+    if (!target)
+    {
+        mprf(MSGCH_ERROR, "Unable to open bones file %s for writing",
+            full_path.c_str());
+        fclose(src);
+        return "";
+    }
+
+    _ghost_dprf("Copying %s to %s", dist_full_path.c_str(), full_path.c_str());
+
+    char buf[BUFSIZ];
+
+    size_t size;
+    while ((size = fread(buf, sizeof(char), BUFSIZ, src)) > 0)
+        fwrite(buf, sizeof(char), size, target);
+
+    lk_close(target, full_path);
+
+    if (!feof(src))
+    {
+        mprf(MSGCH_ERROR, "Error installing bones file to %s",
+                                                    full_path.c_str());
+        if (unlink(full_path.c_str()) != 0)
+        {
+            mprf(MSGCH_ERROR,
+                "Failed to unlink probably corrupt bones file: %s",
+                full_path.c_str());
+        }
+        fclose(src);
+        return "";
+    }
+    fclose(src);
+    return full_path;
 }
 
 // Bones files
@@ -1761,7 +1896,8 @@ static vector<string> _list_bones()
     vector<string> filenames = get_dir_files(bonefile_dir);
     vector<string> bonefiles;
     for (const auto &filename : filenames)
-        if (starts_with(filename, underscored_filename))
+        if (starts_with(filename, underscored_filename)
+                                            && !ends_with(filename, ".backup"))
         {
             bonefiles.push_back(bonefile_dir + filename);
             _ghost_dprf("bonesfile %s", (bonefile_dir + filename).c_str());
@@ -1790,7 +1926,116 @@ static string _find_ghost_file()
     return bonefiles[ui_random(bonefiles.size())];
 }
 
-static vector<ghost_demon> _load_bones_file(string ghost_filename)
+static string _old_bones_filename(string ghost_filename, const save_version &v)
+{
+    // TODO: a way of looking for any backup with a version earlier than v
+    if (ends_with(ghost_filename, ".backup"))
+        return ghost_filename; // already an old bones file
+
+    string new_filename = make_stringf("%s-v%d.%d.backup", ghost_filename.c_str(),
+                                        v.major, v.minor);
+    return new_filename;
+}
+
+static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
+{
+    // Copy the bones file to a versioned name, so that non-upgraded saves can
+    // load it. Copying would be cleaner with c++ ios stuff, but we need to
+    // interact with the lock system.
+
+    if (ghost_filename.empty())
+        return false;
+    if (ends_with(ghost_filename, ".backup"))
+        return false; // already an old bones file
+
+    string upgrade_filename = _old_bones_filename(ghost_filename, v);
+    if (file_exists(upgrade_filename))
+        return false;
+    _ghost_dprf("Backing up bones file %s to %s before upgrade to %d.%d",
+                            ghost_filename.c_str(), upgrade_filename.c_str(),
+                            save_version::current_bones().major,
+                            save_version::current_bones().minor);
+
+    FILE *backup_src = lk_open("rb", ghost_filename);
+    if (!backup_src)
+    {
+        mprf(MSGCH_ERROR, "Bones file to back up doesn't exist: %s",
+            ghost_filename.c_str());
+        return false;
+    }
+    FILE *backup_target = lk_open("wb", upgrade_filename);
+    if (!backup_target)
+    {
+        mprf(MSGCH_ERROR, "Unable to open bones backup file %s for writing",
+            upgrade_filename.c_str());
+        lk_close(backup_src, ghost_filename);
+        return false;
+    }
+
+    char buf[BUFSIZ];
+
+    size_t size;
+    while ((size = fread(buf, sizeof(char), BUFSIZ, backup_src)) > 0)
+        fwrite(buf, sizeof(char), size, backup_target);
+
+    lk_close(backup_target, upgrade_filename);
+
+    if (!feof(backup_src))
+    {
+        mprf(MSGCH_ERROR, "Error backing up bones file to %s",
+                                                    upgrade_filename.c_str());
+        if (unlink(upgrade_filename.c_str()) != 0)
+        {
+            mprf(MSGCH_ERROR,
+                "Failed to unlink probably corrupt bones file: %s",
+                upgrade_filename.c_str());
+        }
+        lk_close(backup_src, ghost_filename);
+        return false;
+    }
+    lk_close(backup_src, ghost_filename);
+    return true;
+}
+
+save_version read_ghost_header(reader &inf)
+{
+    auto version = get_save_version(inf);
+    if (!version.valid())
+        return version;
+
+#if TAG_MAJOR_VERSION == 34
+    // downgrade bones files saved before the bones sub-versioning system
+    if (version > save_version::current_bones() && version.is_compatible())
+    {
+        _ghost_dprf("Setting bones file version from %d.%d to %d.%d on load",
+            version.major, version.minor,
+            save_version::current_bones().major,
+            save_version::current_bones().minor);
+        version = save_version::current_bones();
+    }
+#endif
+
+    try
+    {
+        // Check for the DCSS ghost signature.
+        if (unmarshallShort(inf) != GHOST_SIGNATURE)
+            return save_version(); // version was valid, but this isn't a bones file
+
+        // Discard three more 32-bit words of padding.
+        inf.read(nullptr, 3*4);
+    }
+    catch (short_read_exception &E)
+    {
+        mprf(MSGCH_ERROR,
+             "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
+             inf.filename().c_str());
+        return save_version();
+    }
+
+    return version;
+}
+
+vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
 {
     vector<ghost_demon> result;
 
@@ -1800,16 +2045,22 @@ static vector<ghost_demon> _load_bones_file(string ghost_filename)
     reader inf(ghost_filename);
     if (!inf.valid())
     {
+        // file doesn't exist
         _ghost_dprf("Ghost file '%s' invalid before read.", ghost_filename.c_str());
         return result;
     }
 
     inf.set_safe_read(true); // don't die on 0-byte bones
-    if (!_ghost_version_compatible(inf))
+    save_version version = read_ghost_header(inf);
+    if (!_ghost_version_compatible(version))
     {
         string error = "Incompatible bones file: " + ghost_filename;
-        throw corrupted_save(error);
+        throw corrupted_save(error, version);
     }
+    inf.setMinorVersion(version.minor);
+    if (backup && version < save_version::current_bones())
+        _backup_bones_for_upgrade(ghost_filename, version);
+
     try
     {
         result = tag_read_ghosts(inf);
@@ -1818,17 +2069,61 @@ static vector<ghost_demon> _load_bones_file(string ghost_filename)
     catch (short_read_exception &short_read)
     {
         string error = "Broken bones file: " + ghost_filename;
-        throw corrupted_save(error);
+        throw corrupted_save(error, version);
     }
     inf.close();
 
     if (!debug_check_ghosts(result))
     {
         string error = "Bones file is buggy: " + ghost_filename;
-        throw corrupted_save(error);
+        throw corrupted_save(error, version);
     }
 
     return result;
+}
+
+
+static vector<ghost_demon> _load_ghosts_core(string filename,
+                                                        bool backup_on_upgrade)
+{
+    vector<ghost_demon> results;
+    try
+    {
+        results = load_bones_file(filename, backup_on_upgrade);
+    }
+    catch (corrupted_save &err)
+    {
+        // not a corrupted save per se, just from the future. Try to load the
+        // versioned bones file if it exists.
+        if (err.version.valid() && err.version.is_future())
+        {
+            string old_bones =
+                        _old_bones_filename(filename, save_version::current());
+            if (old_bones != filename)
+            {
+                _ghost_dprf("Loading ghost from backup bones file %s",
+                                                        old_bones.c_str());
+                return load_bones_file(old_bones, false);
+            }
+            else
+                mprf(MSGCH_ERROR, "Mismatch between bones backup "
+                    "filename '%s' and version %d.%d!", filename.c_str(),
+                    err.version.major, err.version.minor);
+            // intentional fallthrough -- unlink the misnamed file
+        }
+        else
+            mprf(MSGCH_ERROR, "%s", err.what());
+        string report;
+        // if we get to this point the bones file is unreadable and needs to
+        // be scrapped
+        if (unlink(filename.c_str()) != 0)
+            report = "Failed to unlink bad bones file";
+        else
+            report = "Clearing bad bones file";
+        mprf(MSGCH_ERROR, "%s: %s", report.c_str(), filename.c_str());
+    }
+    return results;
+
 }
 
 static vector<ghost_demon> _load_ephemeral_ghosts()
@@ -1838,18 +2133,11 @@ static vector<ghost_demon> _load_ephemeral_ghosts()
     string ghost_filename = _find_ghost_file();
     if (ghost_filename.empty())
     {
-        _ghost_dprf("%s", "No ghost files for this level.");
+        _ghost_dprf("%s", "No ephemeral ghost files for this level.");
         return results; // no such ghost.
     }
 
-    try
-    {
-        results = _load_bones_file(ghost_filename);
-    }
-    catch (corrupted_save &err)
-    {
-        mprf(MSGCH_ERROR, "%s", err.what());
-    }
+    results = _load_ghosts_core(ghost_filename, true);
 
     if (unlink(ghost_filename.c_str()) != 0)
     {
@@ -1859,28 +2147,9 @@ static vector<ghost_demon> _load_ephemeral_ghosts()
     return results;
 }
 
-static vector<ghost_demon> _load_permastore_ghosts()
+static vector<ghost_demon> _load_permastore_ghosts(bool backup_on_upgrade=false)
 {
-    string ghost_filename = _bones_permastore_file();
-    vector<ghost_demon> results;
-    try
-    {
-        results = _load_bones_file(ghost_filename);
-    }
-    catch (corrupted_save &err)
-    {
-        mprf(MSGCH_ERROR, "%s", err.what());
-        string report;
-        // if we get to this point the permastore is unreadable and needs to
-        // be scrapped
-        if (unlink(ghost_filename.c_str()) != 0)
-            report = "Failed to unlink bad ghost permastore";
-        else
-            report = "Clearing bad ghost permastore";
-        mprf(MSGCH_ERROR, "%s: %s", report.c_str(), ghost_filename.c_str());
-    }
-    // otherwise, don't do anything to the permastore
-    return results;
+    return _load_ghosts_core(_bones_permastore_file(), backup_on_upgrade);
 }
 
 /**
@@ -2017,12 +2286,10 @@ static bool _restore_game(const string& filename)
     if (Options.no_save)
         return false;
 
-#ifdef USE_TILE_WEB
-    // a more before the player is loaded will crash when it tries to send
-    // enough information to the webtiles client to render the display.
-    // TODO: is there a good way to do any mores in load_messages?
+    // In webtiles, a more before the player is loaded will crash when it tries
+    // to send enough information to the webtiles client to render the display.
+    // This is just cosmetic for other build targets.
     unwind_bool save_more(crawl_state.show_more_prompt, false);
-#endif
 
     clear_message_store();
 
@@ -2057,7 +2324,7 @@ static bool _restore_game(const string& filename)
         && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno(("This game comes from a previous release of Crawl (" +
-                    you.prev_save_version + "). If you load it now,"
+                    you.prev_save_version + ").\n\nIf you load it now,"
                     " you won't be able to go back. Continue?").c_str(),
                     true, 'n'))
         {
@@ -2226,7 +2493,7 @@ level_excursion::~level_excursion()
     }
 }
 
-bool get_save_version(reader &file, int &major, int &minor)
+save_version get_save_version(reader &file)
 {
     // Read first two bytes.
     uint8_t buf[2];
@@ -2237,14 +2504,9 @@ bool get_save_version(reader &file, int &major, int &minor)
     catch (short_read_exception& E)
     {
         // Empty file?
-        major = minor = -1;
-        return false;
+        return save_version(-1, -1);
     }
-
-    major = buf[0];
-    minor = buf[1];
-
-    return true;
+    return save_version(buf[0], buf[1]);
 }
 
 static bool _convert_obsolete_species()
@@ -2346,52 +2608,46 @@ static bool _read_char_chunk(package *save)
 
 static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 {
-    int major = 0, minor = TAG_MINOR_INVALID;
     ASSERT(reason);
 
-    if (!get_save_version(inf, major, minor))
+    const save_version version = get_save_version(inf);
+
+    if (!version.valid())
     {
-        *reason = "File is corrupt.";
+        *reason = make_stringf("File is corrupt (found version %d,%d).",
+                                version.major, version.minor);
         return false;
     }
 
-    if (major != TAG_MAJOR_VERSION
-#if TAG_MAJOR_VERSION == 34
-        && (major != 33 || minor != 17)
-#endif
-       )
+    if (!version.is_compatible())
     {
-        if (Version::ReleaseType)
+        const save_version current = save_version::current();
+        if (version.is_ancient())
         {
-            *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
-                       "save files from older versions. You can continue your "
-                       "game with the appropriate older version, or you can "
-                       "delete it and start a new game.");
+            if (Version::ReleaseType)
+            {
+                *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
+                           "save files from older versions. You can continue your "
+                           "game with the appropriate older version, or you can "
+                           "delete it and start a new game.");
+            }
+            else
+            {
+                *reason = make_stringf("Major version mismatch: %d (want %d).",
+                                       version.major, current.major);
+            }
         }
-        else
+        else if (version.is_future())
         {
-            *reason = make_stringf("Major version mismatch: %d (want %d).",
-                                   major, TAG_MAJOR_VERSION);
-        }
-        return false;
-    }
-
-    if (minor < 0)
-    {
-        *reason = make_stringf("Minor version %d is negative!",
-                               minor);
-        return false;
-    }
-
-    if (minor > TAG_MINOR_VERSION)
-    {
-        *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
+            *reason = make_stringf("Version mismatch: %d.%d (want <= %d.%d). "
                                "The save is from a newer version.",
-                               minor, TAG_MINOR_VERSION);
+                               version.major, version.minor,
+                               current.major, current.minor);
+        }
         return false;
     }
 
-    inf.setMinorVersion(minor);
+    inf.setMinorVersion(version.minor);
     return true;
 }
 
@@ -2425,36 +2681,15 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     return true;
 }
 
-static bool _ghost_version_compatible(reader &inf)
+static bool _ghost_version_compatible(const save_version &version)
 {
-    try
+    if (!version.valid())
+        return false;
+    if (!version.is_compatible())
     {
-        const int majorVersion = unmarshallUByte(inf);
-        const int minorVersion = unmarshallUByte(inf);
-
-        if (majorVersion != TAG_MAJOR_VERSION
-            || minorVersion > TAG_MINOR_VERSION)
-        {
-            dprf("Ghost version mismatch: ghost was %d.%d; wanted %d.%d",
-                 majorVersion, minorVersion,
-                 TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
-            return false;
-        }
-
-        inf.setMinorVersion(minorVersion);
-
-        // Check for the DCSS ghost signature.
-        if (unmarshallShort(inf) != GHOST_SIGNATURE)
-            return false;
-
-        // Discard three more 32-bit words of padding.
-        inf.read(nullptr, 3*4);
-    }
-    catch (short_read_exception &E)
-    {
-        mprf(MSGCH_ERROR,
-             "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
-             inf.filename().c_str());
+        _ghost_dprf("Ghost version mismatch: ghost was %d.%d; current is %d.%d",
+             version.major, version.minor,
+             save_version::current().major, save_version::current().minor);
         return false;
     }
     return true;
@@ -2496,17 +2731,27 @@ static FILE* _make_bones_file(string * return_gfilename)
 #define GHOST_PERMASTORE_SIZE 10
 #define GHOST_PERMASTORE_REPLACE_CHANCE 5
 
-static bool _update_permastore(const vector<ghost_demon> &ghosts)
+static int _ghost_permastore_size()
+{
+    if (_bones_save_individual_levels(true))
+        return GHOST_PERMASTORE_SIZE;
+    else
+        return GHOST_PERMASTORE_SIZE * 2;
+}
+
+static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 {
     if (ghosts.empty())
-        return false;
+        return ghosts;
 
     // this read is not locked...
     vector<ghost_demon> permastore = _load_permastore_ghosts();
+    vector<ghost_demon> leftovers;
 
     bool rewrite = false;
     unsigned int i = 0;
-    while (permastore.size() < GHOST_PERMASTORE_SIZE && i < ghosts.size())
+    const int max_ghosts = _ghost_permastore_size();
+    while (permastore.size() < max_ghosts && i < ghosts.size())
     {
         // TODO: heuristics to make this as distinct as possible; maybe
         // create a new name?
@@ -2520,19 +2765,43 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts)
     }
     if (i > 0)
         _ghost_dprf("Permastoring %d ghosts", i);
-    if (!rewrite && x_chance_in_y(GHOST_PERMASTORE_REPLACE_CHANCE, 100))
+    if (!rewrite && x_chance_in_y(GHOST_PERMASTORE_REPLACE_CHANCE, 100)
+                                                        && i < ghosts.size())
     {
         int rewrite_i = random2(permastore.size());
-        permastore[rewrite_i] = ghosts[0];
+        permastore[rewrite_i] = ghosts[i];
 #ifdef DGAMELAUNCH
         permastore[rewrite_i].name = make_name();
 #endif
         rewrite = true;
     }
+    while (i < ghosts.size())
+    {
+        leftovers.push_back(ghosts[i]);
+        i++;
+    }
 
     if (rewrite)
     {
         string permastore_file = _bones_permastore_file();
+
+        // the following is to ensure that an old game doesn't overwrite a
+        // permastore that has a version in the future relative to that game.
+        {
+            reader inf(permastore_file);
+            if (inf.valid())
+            {
+                inf.set_safe_read(true); // don't die on 0-byte bones
+                save_version version = read_ghost_header(inf);
+                if (version.valid() && version.is_future())
+                {
+                    permastore_file = _old_bones_filename(permastore_file,
+                                                    save_version::current());
+                }
+                inf.close();
+            }
+        }
+
         FILE *ghost_file = lk_open("wb", permastore_file);
 
         if (!ghost_file)
@@ -2541,19 +2810,18 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts)
             // TODO: better lock system for servers?
             _ghost_dprf("Could not open ghost permastore: %s",
                                                     permastore_file.c_str());
-            return false;
+            return ghosts;
         }
 
         _ghost_dprf("Rewriting ghost permastore %s with %u ghosts",
                     permastore_file.c_str(), (unsigned int) permastore.size());
         writer outw(permastore_file, ghost_file);
-        _write_ghost_version(outw);
+        write_ghost_version(outw);
         tag_write_ghosts(outw, permastore);
 
         lk_close(ghost_file, permastore_file);
-        return true;
     }
-    return false;
+    return leftovers;
 }
 
 /**
@@ -2564,7 +2832,6 @@ static bool _update_permastore(const vector<ghost_demon> &ghosts)
  *
  * @param force   Forces ghost generation even in otherwise-disallowed levels.
  **/
-
 void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 {
     // n.b. this is not called in the normal course of events for wizmode
@@ -2583,8 +2850,8 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
         return;
     }
 
-    // TODO: fill temp store with ghosts unused by this
-    if (_update_permastore(ghosts))
+    vector<ghost_demon> leftovers = _update_permastore(ghosts);
+    if (leftovers.size() == 0)
         return;
 
     if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
@@ -2604,8 +2871,8 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
 
     writer outw(g_file_name, ghost_file);
 
-    _write_ghost_version(outw);
-    tag_write_ghosts(outw, ghosts);
+    write_ghost_version(outw);
+    tag_write_ghosts(outw, leftovers);
 
     lk_close(ghost_file, g_file_name);
 

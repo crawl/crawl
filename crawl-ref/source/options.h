@@ -404,7 +404,6 @@ public:
 
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
-    bool        easy_exit_menu;     // Menus are easier to get out of
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1
 
@@ -521,6 +520,7 @@ public:
     string      tile_font_stat_file;
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
+    bool        tile_single_column_menus;
 #endif
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;

@@ -26,14 +26,18 @@
 #include "misc.h"
 #include "prompt.h"
 #include "religion.h"
+#include "startup.h"
 #include "state.h"
 #include "stringutil.h"
 #include "view.h"
 #include "xom.h"
+#include "ui.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
+
+using namespace ui;
 
 /**
  * Should crawl restart on game end, depending on restart options and options
@@ -79,52 +83,79 @@ static void _clear_globals_on_exit()
     destroy_abyss();
 }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-// Print error message on the screen.
-// Ugly, but better than not showing anything at all. (jpeg)
-static bool _print_error_screen(const char *message, ...)
+bool fatal_error_notification(string error_msg)
 {
-    if (!crawl_state.io_inited || crawl_state.seen_hups)
-        return false;
-
-    // Get complete error message.
-    string error_msg;
-    {
-        va_list arg;
-        va_start(arg, message);
-        char buffer[1024];
-        vsnprintf(buffer, sizeof buffer, message, arg);
-        va_end(arg);
-
-        error_msg = string(buffer);
-    }
     if (error_msg.empty())
         return false;
 
+    // for local tiles, if there is no available ui, it's possible that wm
+    // initialisation has failed and there's nothing that can be done, so we
+    // don't try. On other builds, though, it's just probably early in the
+    // initialisation process, and cio_init should be fairly safe.
+#ifndef USE_TILE_LOCAL
+    if (!ui::is_available() && !crawl_state.build_db)
+        cio_init(); // this, however, should be fairly safe
+#endif
+
+    mprf(MSGCH_ERROR, "%s", error_msg.c_str());
+
+    if (!ui::is_available() || crawl_state.test || crawl_state.script
+        || crawl_state.build_db)
+    {
+        return false;
+    }
+
+    // do the linebreak here so webtiles has it, but it's needed below as well
+    linebreak_string(error_msg, 79);
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("error", error_msg);
+#endif
+
+    // this is a bit heavy to continue past here in the face of a real crash.
+    if (crawl_state.seen_hups)
+        return false;
+
+#if (!defined(DGAMELAUNCH)) || defined(DGL_PAUSE_AFTER_ERROR)
+#ifdef USE_TILE_WEB
+    tiles_crt_popup show_as_popup;
+    tiles.set_ui_state(UI_CRT);
+#endif
+
+    // TODO: better formatting, maybe use a formatted_scroller?
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain
     //       any formatting!
-    error_msg = replace_all(error_msg, "<", "<<");
+    error_msg = string("Fatal error:\n\n<lightred>")
+                       + replace_all(error_msg, "<", "<<");
+    error_msg += "</lightred>\n\n<cyan>Hit any key to exit, "
+                 "ctrl-p for the full log.</cyan>";
 
-    error_msg += "\n\n\nHit any key to exit...\n";
+    auto prompt_ui =
+                make_shared<Text>(formatted_string::parse_string(error_msg));
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type == WME_KEYDOWN)
+        {
+            if (ev.key.keysym.sym == CONTROL('P'))
+            {
+                done = false;
+                replay_messages();
+            }
+            else
+                done = true;
+        }
+        else
+            done = false;
+        return done;
+    });
 
-    // Break message into correctly sized lines.
-    int width = 80;
-#ifdef USE_TILE_LOCAL
-    width = crawl_view.msgsz.x;
-#else
-    width = min(80, get_number_of_cols());
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
 #endif
-    linebreak_string(error_msg, width);
 
-    // And finally output the message.
-    clrscr();
-    formatted_string::parse_string(error_msg).display();
-    getchm();
     return true;
 }
-#endif
 
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.
 // Not a part of crawl_state, since that's a global C++ instance which is
@@ -135,12 +166,11 @@ bool CrawlIsCrashing = false;
 
 NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
-    bool need_pause = true;
     disable_other_crashes();
 
     // Let "error" go out of scope for valgrind's sake.
     {
-        string error = print_error? strerror(errno) : "";
+        string error = print_error ? strerror(errno) : "";
         if (format)
         {
             va_list arg;
@@ -158,14 +188,8 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
                 error += "\n";
         }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-        if (exit_code && !error.empty())
-        {
-            if (_print_error_screen("%s", error.c_str()))
-                need_pause = false;
-        }
-#endif
+        if (exit_code)
+            fatal_error_notification(error);
 
 #ifdef USE_TILE_WEB
         tiles.shutdown();
@@ -184,22 +208,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 #ifdef __ANDROID__
             __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
 #endif
-            fprintf(stderr, "%s", error.c_str());
             error.clear();
         }
     }
-
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
-|| defined(DGL_PAUSE_AFTER_ERROR)
-    if (need_pause && exit_code && !crawl_state.game_is_arena()
-        && !crawl_state.seen_hups && !crawl_state.test)
-    {
-        fprintf(stderr, "Hit Enter to continue...\n");
-        getchar();
-    }
-#else
-    UNUSED(need_pause);
-#endif
 
     CrawlIsExiting = true;
     if (exit_code)
@@ -236,12 +247,16 @@ NORETURN void screen_end_game(string text)
 
     if (!text.empty())
     {
-        clrscr();
-        linebreak_string(text, get_number_of_cols());
-        display_tagged_block(text);
+        auto prompt_ui = make_shared<Text>(
+                formatted_string::parse_string(text));
+        bool done = false;
+        prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+            return done = ev.type == WME_KEYDOWN;
+        });
 
-        if (!crawl_state.seen_hups)
-            get_ch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
     }
 
     game_ended(game_exit::abort); // TODO: is this the right exit condition?
@@ -373,12 +388,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
-    {
         mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
 #ifdef USE_TILE_WEB
     else
         tiles.send_dump_info("morgue", fname);
@@ -408,31 +418,43 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
-    clrscr();
-    cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf("\n\n    "); // Space padding where # would go in list format
+#ifdef USE_TILE_WEB
+    tiles_crt_popup show_as_popup;
+#endif
+
+    string goodbye_msg;
+    goodbye_msg += make_stringf("Goodbye, %s.", you.your_name.c_str());
+    goodbye_msg += "\n\n    "; // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, "\n") + 1;
 
-    cprintf("%s", hiscore.c_str());
+    goodbye_msg += hiscore;
 
-    cprintf("\nBest Crawlers - %s\n",
+    goodbye_msg += make_stringf("\nBest Crawlers - %s\n",
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+    goodbye_msg += hiscores_print_list(24 - lines - 5, SCORE_TERSE,
                         hiscore_index);
 
 #ifndef DGAMELAUNCH
-    cprintf("\nYou can find your morgue file in the '%s' directory.",
+    goodbye_msg += make_stringf("\nYou can find your morgue file in the '%s' directory.",
             morgue_directory().c_str());
 #endif
 
-    // just to pause, actual value returned does not matter {dlb}
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
-        get_ch();
+        ui::run_layout(move(popup), done);
 
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason(reason, hiscore);

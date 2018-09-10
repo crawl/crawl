@@ -15,6 +15,7 @@
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
+#include "item-name.h" // make_name
 #include "item-prop.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -33,11 +34,31 @@
 #include "tilefont.h"
 #endif
 #include "version.h"
+#include "ui.h"
+
+using namespace ui;
 
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
+
+#ifdef USE_TILE_LOCAL
+#  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_CONTROL LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_GOOD LIGHTGREEN
+#elif defined(USE_TILE_WEB)
+#  define STARTUP_HIGHLIGHT_NORMAL BLUE
+#  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_CONTROL BLUE
+#  define STARTUP_HIGHLIGHT_GOOD GREEN
+#else
+#  define STARTUP_HIGHLIGHT_NORMAL DARKGRAY
+#  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
+#  define STARTUP_HIGHLIGHT_CONTROL BLUE
+#  define STARTUP_HIGHLIGHT_GOOD GREEN
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -154,13 +175,6 @@ static string _welcome(const newgame_def& ng)
         text = ", " + text;
     text = "Welcome" + text + ".";
     return text;
-}
-
-static void _print_character_info(const newgame_def& ng)
-{
-    clrscr();
-    textcolour(BROWN);
-    cprintf("%s\n", _welcome(ng).c_str());
 }
 
 void choose_tutorial_character(newgame_def& ng_choice)
@@ -405,17 +419,30 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
 // reroll characters until the player accepts one of them or quits.
 static bool _reroll_random(newgame_def& ng)
 {
-    clrscr();
-
     string specs = chop_string(species_name(ng.species), 79, false);
 
-    cprintf("You are a%s %s %s.\n",
+    formatted_string prompt;
+    prompt.cprintf("You are a%s %s %s.\n",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
             get_job_name(ng.job));
+    prompt.cprintf("\nDo you want to play this combination? (ynq) [y]");
 
-    cprintf("\nDo you want to play this combination? (ynq) [y]");
-    char c = getchm();
-    if (key_is_escape(c) || toalower(c) == 'q')
+    auto prompt_ui = make_shared<Text>();
+    prompt_ui->set_text(prompt);
+
+    bool done = false;
+    char c;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        c = ev.key.keysym.sym;
+        return done = true;
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
+
+    if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
@@ -556,21 +583,120 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     }
 }
 
+#ifndef DGAMELAUNCH
+/**
+ * Attempt to generate a random name for a character that doesn't collide with
+ * an existing save name.
+ *
+ * @return  A random name, or the empty string if no good name could be
+ *          generated after several tries.
+ */
+static string _random_name()
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        const string name = make_name();
+        const string filename = get_save_filename(name);
+        if (!save_exists(filename))
+            return name;
+    }
+
+    return "";
+}
+
+static void _choose_name(newgame_def& ng, newgame_def& choice)
+{
+    char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
+    buf[0] = '\0';
+    resumable_line_reader reader(buf, sizeof(buf));
+
+    bool done = false;
+    bool overwrite_prompt = false;
+    bool good_name = true;
+    bool cancel = false;
+
+    auto prompt_ui = make_shared<Text>();
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+
+        if (!overwrite_prompt)
+        {
+            key = reader.putkey(key);
+            good_name = is_good_name(buf, true);
+            if (key != -1)
+            {
+                if (key_is_escape(key))
+                    return done = cancel = true;
+
+                choice.name = buf;
+                trim_string(choice.name);
+
+                if (choice.name.empty())
+                    choice.name = _random_name();
+
+                if (good_name)
+                {
+                    ng.name = choice.name;
+                    ng.filename = get_save_filename(choice.name);
+                    overwrite_prompt = save_exists(ng.filename);
+                    if (!overwrite_prompt)
+                        return done = true;
+                }
+            }
+        }
+        else
+        {
+            overwrite_prompt = false;
+            if (key == 'Y')
+                return done = true;
+        }
+        return true;
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::push_layout(move(popup));
+    while (!done && !crawl_state.seen_hups)
+    {
+        formatted_string prompt;
+        string specs = chop_string(species_name(ng.species), 79, false);
+        prompt.cprintf("You are a%s %s %s.\n",
+                (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
+                get_job_name(ng.job));
+        prompt.textcolour(CYAN);
+        prompt.cprintf("\nWhat is your name today? ");
+        prompt.textcolour(LIGHTGREY);
+        prompt.cprintf("%s", buf);
+        prompt.cprintf("\n\nLeave blank for a random name, or use Escape to cancel this character.\n\n");
+        prompt.textcolour(LIGHTRED);
+        if (!good_name)
+            prompt.cprintf("That's a silly name!");
+        else if (overwrite_prompt)
+            prompt.cprintf("Really overwrite? [Y/n]");
+        prompt_ui->set_text(prompt);
+
+        ui::pump_events();
+    }
+    ui::pop_layout();
+
+    if (cancel || crawl_state.seen_hups)
+        game_ended(game_exit::abort);
+}
+#endif
+
 // Read a choice of game into ng.
 // Returns false if a game (with name ng.name) should
 // be restored instead of starting a new character.
 bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults)
 {
-    clrscr();
+#ifdef USE_TILE_WEB
+    tiles_crt_popup show_as_popup;
+    tiles.set_ui_state(UI_CRT);
+#endif
 
-    // XXX: this should be somewhere else.
-    if (!crawl_state.startup_errors.empty()
-        && !Options.suppress_startup_errors)
-    {
-        crawl_state.show_startup_errors();
-        clrscr();
-    }
+    clrscr();
 
     textcolour(LIGHTGREY);
 
@@ -593,33 +719,13 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
     if (choice.name.empty())
-    {
-        clrscr();
-
-        string specs = chop_string(species_name(ng.species), 79, false);
-
-        cprintf("You are a%s %s %s.\n",
-                (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
-                get_job_name(ng.job));
-
-        enter_player_name(choice);
-        ng.name = choice.name;
-        ng.filename = get_save_filename(choice.name);
-
-        if (save_exists(ng.filename))
-        {
-            cprintf("\nDo you really want to overwrite your old game? ");
-            char c = getchm();
-            if (c != 'Y' && c != 'y')
-                return true;
-        }
-    }
+        _choose_name(ng, choice);
 #endif
 
     if (ng.name.empty())
         end(1, false, "No player name specified.");
 
-    ASSERT(is_good_name(ng.name, false, false)
+    ASSERT(is_good_name(ng.name, false)
            && job_allowed(ng.species, ng.job)
            && ng.type != NUM_GAME_TYPE);
 
@@ -701,7 +807,7 @@ static void _add_choice_menu_options(int choice_type,
     }
     else
         tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random recommended " + other_choice_name + " based on your current " + choice_name + " choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -716,7 +822,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Shuffles through random recommended character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -732,7 +838,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -747,7 +853,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Opens the help screen.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -762,7 +868,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random " + choice_name + ".");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -777,7 +883,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_id(M_RANDOM_CHAR);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -806,7 +912,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -823,7 +929,7 @@ static void _add_choice_menu_options(int choice_type,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
         tmp->set_description_text("Play a new game with your previous choice.");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -861,17 +967,17 @@ static void _attach_group_item(MenuFreeform* menu,
     if (item_status == ITEM_STATUS_UNKNOWN)
     {
         tmp->set_fg_colour(LIGHTGRAY);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
     }
     else if (item_status == ITEM_STATUS_RESTRICTED)
     {
         tmp->set_fg_colour(DARKGRAY);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_BAD);
     }
     else
     {
         tmp->set_fg_colour(WHITE);
-        tmp->set_highlight_colour(GREEN);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
     }
 
     string text;
@@ -1129,50 +1235,101 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
     _add_choice_menu_options(C_JOB, ng, defaults, menu);
 }
 
-/**
- * Prompt for job or species menu
- * Saves the choice to ng_choice, doesn't resolve random choices.
- *
- * ng should be const, but we need to reset it for _resolve_species_job
- * to work correctly in view of fully random characters.
- */
-static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
-                        const newgame_def& defaults)
+class UINewGameMenu : public Widget
 {
+public:
+    UINewGameMenu(int _choice_type, newgame_def& _ng, newgame_def& _ng_choice, const newgame_def& _defaults) : done(false), end_game(false), cancel(false), choice_type(_choice_type), ng(_ng), ng_choice(_ng_choice), defaults(_defaults) {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
+
+    bool done;
+    bool end_game;
+    bool cancel;
+private:
     PrecisionMenu menu;
+
+    int choice_type;
+    newgame_def& ng;
+    newgame_def& ng_choice;
+    const newgame_def& defaults;
+};
+
+void UINewGameMenu::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    menu.draw_menu();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
+}
+
+SizeReq UINewGameMenu::_get_preferred_size(Direction dim, int prosp_width)
+{
+    SizeReq ret;
+    if (!dim)
+        ret = { 80, 80 };
+    else
+        ret = { 24, 24 };
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+#endif
+    return ret;
+}
+
+void UINewGameMenu::_allocate_region()
+{
+    menu.clear();
+
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int num_cols = m_region[2]/font->char_width();
+    const int num_lines = m_region[3]/font->char_height();
+#else
+    const int num_cols = m_region[2], num_lines = m_region[3];
+#endif
+
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() + 1,
-                   get_number_of_lines() + 1), "freeform");
+    freeform->init(coord_def(0,0), coord_def(num_cols + 1, num_lines + 1), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
-    int keyn;
+    auto welcome_text = new FormattedTextItem();
+    formatted_string welcome;
+    welcome.textcolour(BROWN);
+    welcome.cprintf("%s", _welcome(ng).c_str());
 
-    clrscr();
-
-    // TODO: attach these to the menu in a NoSelectTextItem
-    textcolour(BROWN);
-    cprintf("%s", _welcome(ng).c_str());
-
-    textcolour(YELLOW);
-
+    welcome.textcolour(YELLOW);
     if (choice_type == C_JOB)
     {
-        cprintf(" Please select your background.");
+        welcome.cprintf(" Please select your background.");
         _construct_backgrounds_menu(ng, defaults, freeform);
     }
     else
     {
-        cprintf(" Please select your species.");
+        welcome.cprintf(" Please select your species.");
         _construct_species_menu(ng, defaults, freeform);
     }
+
+    welcome_text->set_text(welcome.to_colour_string());
+    welcome_text->set_bounds(coord_def(1, 1), coord_def(num_cols+1, 2));
+    welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
+    freeform->attach_item(welcome_text);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(
         coord_def(X_MARGIN, CHAR_DESC_START_Y),
-        coord_def(get_number_of_cols(),
-        CHAR_DESC_START_Y + CHAR_DESC_HEIGHT),
+        coord_def(num_cols, CHAR_DESC_START_Y + CHAR_DESC_HEIGHT),
         "descriptor"
     );
     menu.attach_object(descriptor);
@@ -1185,144 +1342,184 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
     if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
     freeform->set_visible(true);
     descriptor->set_visible(true);
     highlighter->set_visible(true);
+}
 
-    textcolour(LIGHTGREY);
-
-    // Poll input until we have a conclusive escape or pick
-    while (true)
+bool UINewGameMenu::on_event(const wm_event& ev)
+{
+#ifdef USE_TILE_LOCAL
+    if (ev.type == WME_MOUSEMOTION
+     || ev.type == WME_MOUSEBUTTONDOWN
+     || ev.type == WME_MOUSEWHEEL)
     {
-        menu.draw_menu();
+        MouseEvent mouse_ev = ev.mouse_event;
+        mouse_ev.px -= m_region[0];
+        mouse_ev.py -= m_region[1];
 
-        keyn = getch_ck();
-
-        // First process all the menu entries available
-        if (!menu.process_key(keyn))
+        int key = menu.handle_mouse(mouse_ev);
+        if (key && key != CK_NO_KEY)
         {
-            // Process all the other keys that are not assigned to the menu
-            switch (keyn)
-            {
-            case 'X':
-            case CONTROL('Q'):
-                cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                end(0);
-                return;
-            CASE_ESCAPE
-            case CK_MOUSE_CMD:
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                game_ended(game_exit::abort);
-            case CK_BKSP:
-                if (choice_type == C_JOB)
-                    ng_choice.job = JOB_UNKNOWN;
-                else
-                    ng_choice.species = SP_UNKNOWN;
-                return;
-            default:
-                // if we get this far, we did not get a significant selection
-                // from the menu, nor did we get an escape character
-                // continue the while loop from the beginning and poll a new key
-                continue;
-            }
+            wm_event fake_key = {0};
+            fake_key.type = WME_KEYDOWN;
+            fake_key.key.keysym.sym = key;
+            on_event(fake_key);
         }
-        // We have had a significant input key event
-        // construct the return vector
-        vector<MenuItem*> selection = menu.get_selected_items();
-        if (!selection.empty())
+
+        if (ev.type == WME_MOUSEMOTION)
+            _expose();
+        return true;
+    }
+#endif
+
+    if (ev.type != WME_KEYDOWN)
+        return false;
+    int keyn = ev.key.keysym.sym;
+
+    _expose();
+
+    // First process all the menu entries available
+    if (!menu.process_key(keyn))
+    {
+        // Process all the other keys that are not assigned to the menu
+        switch (keyn)
         {
-            // we have a selection!
-            // we only care about the first selection (there should be only one)
-            int selection_key = selection.at(0)->get_id();
+        case 'X':
+        case CONTROL('Q'):
+            cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
+            return done = end_game = true;
+        CASE_ESCAPE
+        case CK_MOUSE_CMD:
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
+            return done = cancel = true;
+        case CK_BKSP:
+            if (choice_type == C_JOB)
+                ng_choice.job = JOB_UNKNOWN;
+            else
+                ng_choice.species = SP_UNKNOWN;
+            return done = true;
+        default:
+            // if we get this far, we did not get a significant selection
+            // from the menu, nor did we get an escape character
+            // continue the while loop from the beginning and poll a new key
+            return true;
+        }
+    }
+    // We have had a significant input key event
+    // construct the return vector
+    vector<MenuItem*> selection = menu.get_selected_items();
+    menu.clear_selections();
+    if (!selection.empty())
+    {
+        // we have a selection!
+        // we only care about the first selection (there should be only one)
+        int selection_key = selection.at(0)->get_id();
 
-            bool viable = false;
-            switch (selection_key)
+        bool viable = false;
+        switch (selection_key)
+        {
+        case M_VIABLE_CHAR:
+            viable = true;
+            // intentional fall-through
+        case M_RANDOM_CHAR:
+            _mark_fully_random(ng, ng_choice, viable);
+            return done = true;
+        case M_DEFAULT_CHOICE:
+            if (_char_defined(defaults))
             {
-            case M_VIABLE_CHAR:
-                viable = true;
-                // intentional fall-through
-            case M_RANDOM_CHAR:
-                _mark_fully_random(ng, ng_choice, viable);
-                return;
-            case M_DEFAULT_CHOICE:
-                if (_char_defined(defaults))
+                _set_default_choice(ng, ng_choice, defaults);
+                return done = true;
+            }
+            else
+            {
+                // ignore default because we don't have previous start options
+                return true;
+            }
+        case M_ABORT:
+            ng.species = ng_choice.species = SP_UNKNOWN;
+            ng.job     = ng_choice.job     = JOB_UNKNOWN;
+            return done = true;
+        case M_HELP:
+                // access to the help files
+            if (choice_type == C_JOB)
+                show_help('2');
+            else
+                show_help('1');
+            return true;
+        case M_APTITUDES:
+            show_help('%', _highlight_pattern(ng));
+            return true;
+        case M_VIABLE:
+            if (choice_type == C_JOB)
+                ng_choice.job = JOB_VIABLE;
+            else
+                ng_choice.species = SP_VIABLE;
+            return done = true;
+        case M_RANDOM:
+            if (choice_type == C_JOB)
+                ng_choice.job = JOB_RANDOM;
+            else
+                ng_choice.species = SP_RANDOM;
+            return done = true;
+        default:
+            // we have a selection
+            if (choice_type == C_JOB)
+            {
+                job_type job = static_cast<job_type> (selection_key);
+                if (ng.species == SP_UNKNOWN
+                    || job_allowed(ng.species, job) != CC_BANNED)
                 {
-                    _set_default_choice(ng, ng_choice, defaults);
-                    return;
+                    ng_choice.job = job;
+                    return done = true;
                 }
                 else
                 {
-                    // ignore default because we don't have previous start options
-                    continue;
+                    selection.at(0)->select(false);
+                    return true;
                 }
-            case M_ABORT:
-                ng.species = ng_choice.species = SP_UNKNOWN;
-                ng.job     = ng_choice.job     = JOB_UNKNOWN;
-                return;
-            case M_HELP:
-                 // access to the help files
-                if (choice_type == C_JOB)
-                    list_commands('2');
-                else
-                    list_commands('1');
-
-                return _prompt_choice(choice_type, ng, ng_choice, defaults);
-            case M_APTITUDES:
-                list_commands('%', _highlight_pattern(ng));
-                return _prompt_choice(choice_type, ng, ng_choice, defaults);
-            case M_VIABLE:
-                if (choice_type == C_JOB)
-                    ng_choice.job = JOB_VIABLE;
-                else
-                    ng_choice.species = SP_VIABLE;
-                return;
-            case M_RANDOM:
-                if (choice_type == C_JOB)
-                    ng_choice.job = JOB_RANDOM;
-                else
-                    ng_choice.species = SP_RANDOM;
-                return;
-            default:
-                // we have a selection
-                if (choice_type == C_JOB)
+            }
+            else
+            {
+                species_type species = static_cast<species_type> (selection_key);
+                if (ng.job == JOB_UNKNOWN
+                    || species_allowed(ng.job, species) != CC_BANNED)
                 {
-                    job_type job = static_cast<job_type> (selection_key);
-                    if (ng.species == SP_UNKNOWN
-                        || job_allowed(ng.species, job) != CC_BANNED)
-                    {
-                        ng_choice.job = job;
-                        return;
-                    }
-                    else
-                    {
-                        selection.at(0)->select(false);
-                        continue;
-                    }
+                    ng_choice.species = species;
+                    return done = true;
                 }
                 else
-                {
-                    species_type species = static_cast<species_type> (selection_key);
-                    if (ng.job == JOB_UNKNOWN
-                        || species_allowed(ng.job, species) != CC_BANNED)
-                    {
-                        ng_choice.species = species;
-                        return;
-                    }
-                    else
-                        continue;
-                }
+                    return true;
             }
         }
     }
+    return true;
+}
+
+/**
+ * Prompt for job or species menu
+ * Saves the choice to ng_choice, doesn't resolve random choices.
+ *
+ * ng should be const, but we need to reset it for _resolve_species_job
+ * to work correctly in view of fully random characters.
+ */
+static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
+                        const newgame_def& defaults)
+{
+    auto newgame_ui = make_shared<UINewGameMenu>(choice_type, ng, ng_choice, defaults);
+    auto popup = make_shared<ui::Popup>(newgame_ui);
+
+    ui::run_layout(move(popup), newgame_ui->done);
+
+    if (newgame_ui->end_game)
+        end(0);
+    if (newgame_ui->cancel || crawl_state.seen_hups)
+        game_ended(game_exit::abort);
 }
 
 typedef pair<weapon_type, char_choice_restriction> weapon_choice;
@@ -1368,12 +1565,12 @@ static void _construct_weapon_menu(const newgame_def& ng,
         if (wpn_restriction == CC_UNRESTRICTED)
         {
             tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
+            tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
         }
         else
         {
             tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
+            tmp->set_highlight_colour(STARTUP_HIGHLIGHT_BAD);
         }
         const char letter = 'a' + i;
         tmp->add_hotkey(letter);
@@ -1466,7 +1663,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     tmp->set_id(M_VIABLE);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random recommended weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1481,7 +1678,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1496,7 +1693,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1511,7 +1708,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(WPN_RANDOM);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     tmp->set_description_text("Picks a random weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1528,7 +1725,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(BLUE);
+    tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1556,11 +1753,80 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(BLUE);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_CONTROL);
         tmp->set_description_text("Select your old weapon");
         menu->attach_item(tmp);
         tmp->set_visible(true);
     }
+}
+
+class UIPrecisionMenuWrapper : public Widget
+{
+public:
+    UIPrecisionMenuWrapper(int _w, int _h, PrecisionMenu &_menu) : w(_w), h(_h), menu(_menu) {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual bool on_event(const wm_event& event) override;
+private:
+    int w, h;
+    PrecisionMenu& menu;
+};
+
+SizeReq UIPrecisionMenuWrapper::_get_preferred_size(Direction dim, int prosp_width)
+{
+    SizeReq ret;
+    if (!dim)
+        ret = { w, w };
+    else
+        ret = { h, h };
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+#endif
+    return ret;
+}
+
+void UIPrecisionMenuWrapper::_render()
+{
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    menu.draw_menu();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
+}
+
+bool UIPrecisionMenuWrapper::on_event(const wm_event& ev)
+{
+#ifdef USE_TILE_LOCAL
+    if (ev.type == WME_MOUSEMOTION
+     || ev.type == WME_MOUSEBUTTONDOWN
+     || ev.type == WME_MOUSEWHEEL)
+    {
+        MouseEvent mouse_ev = ev.mouse_event;
+        mouse_ev.px -= m_region[0];
+        mouse_ev.py -= m_region[1];
+
+        int key = menu.handle_mouse(mouse_ev);
+        if (key && key != CK_NO_KEY)
+        {
+            wm_event fake_key = {0};
+            fake_key.type = WME_KEYDOWN;
+            fake_key.key.keysym.sym = key;
+            on_event(fake_key);
+        }
+
+        if (ev.type == WME_MOUSEMOTION)
+            _expose();
+        return true;
+    }
+#endif
+    return Widget::on_event(ev);
 }
 
 /**
@@ -1570,11 +1836,11 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults,
                            const vector<weapon_choice>& weapons)
 {
+    const int ui_w = 80, ui_h = 24;
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
+    freeform->init(coord_def(1,1), coord_def(ui_w+1, ui_h+1), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
@@ -1589,23 +1855,28 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     // Did we have a previous weapon?
     if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
-    _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
+    auto welcome_text = new FormattedTextItem();
+    formatted_string welcome;
+    welcome.textcolour(BROWN);
+    welcome.cprintf("%s\n", _welcome(ng).c_str());
+    welcome.textcolour(CYAN);
+    welcome.cprintf("\nYou have a choice of weapons:  ");
+    welcome_text->set_text(welcome.to_colour_string());
+    welcome_text->set_bounds(coord_def(1, 1), coord_def(ui_w+1, 5));
+    welcome_text->set_visible(true);
+    freeform->attach_item(welcome_text);
 
     freeform->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolour(CYAN);
-    cprintf("\nYou have a choice of weapons:  ");
-
-    while (true)
-    {
-        menu.draw_menu();
-
-        int keyn = getch_ck();
+    bool done = false, ret = false;
+    auto prompt_ui = make_shared<UIPrecisionMenuWrapper>(ui_w, ui_h, menu);
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int keyn = ev.key.keysym.sym;
+        prompt_ui->_expose();
 
         // First process menu entries
         if (!menu.process_key(keyn))
@@ -1624,22 +1895,24 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
             case ' ':
             CASE_ESCAPE
             case CK_MOUSE_CMD:
-                return false;
+                ret = false;
+                return done = true;
             default:
                 // if we get this far, we did not get a significant selection
                 // from the menu, nor did we get an escape character
                 // continue the while loop from the beginning and poll a new key
-                continue;
+                return true;
             }
         }
         // We have a significant key input!
         // Construct selection vector
         vector<MenuItem*> selection = menu.get_selected_items();
+        menu.clear_selections();
         // There should only be one selection, otherwise something broke
         if (selection.size() != 1)
         {
             // poll a new key
-            continue;
+            return true;
         }
 
         // Get the stored id from the selection
@@ -1647,36 +1920,45 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
         switch (selection_ID)
         {
         case M_ABORT:
-            return false;
+            ret = false;
+            return done = true;
         case M_APTITUDES:
-            list_commands('%', _highlight_pattern(ng));
-            return _prompt_weapon(ng, ng_choice, defaults, weapons);
+            show_help('%', _highlight_pattern(ng));
+            return true;
         case M_HELP:
-            list_commands('?');
-            return _prompt_weapon(ng, ng_choice, defaults, weapons);
+            show_help('?');
+            return true;
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
             {
                 ng_choice.weapon = defweapon;
-                return true;
+                ret = true;
+                return done = true;
             }
             // No default weapon defined.
             // This case should never happen in those cases but just in case
-            continue;
+            return true;
         case M_VIABLE:
             ng_choice.weapon = WPN_VIABLE;
-            return true;
+            ret = true;
+            return done = true;
         case M_RANDOM:
             ng_choice.weapon = WPN_RANDOM;
-            return true;
+            ret = true;
+            return done = true;
         default:
             // We got an item selection
             ng_choice.weapon = static_cast<weapon_type> (selection_ID);
-            return true;
+            ret = true;
+            return done = true;
         }
-    }
-    // This should never happen
-    return false;
+
+        return true;
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
+    return ret;
 }
 
 static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
@@ -1846,7 +2128,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text.clear();
 
         tmp->set_fg_colour(LIGHTGREY);
-        tmp->set_highlight_colour(GREEN);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_GOOD);
 
         const char letter = 'a' + i;
         text += letter;
@@ -1896,7 +2178,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('%');
         tmp->set_id(M_APTITUDES);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1911,7 +2193,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('?');
         tmp->set_id(M_HELP);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Opens the help screen");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1926,7 +2208,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('*');
         tmp->set_id(M_RANDOM);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Picks a random sprint map");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1969,7 +2251,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(STARTUP_HIGHLIGHT_NORMAL);
         tmp->set_description_text("Select your previous sprint map and character");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1987,11 +2269,11 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults,
                                  mapref_vector maps)
 {
+    const int ui_w = 53, ui_h = 24;
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
+    freeform->init(coord_def(1,1), coord_def(ui_w+1, ui_h+1), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
@@ -2006,25 +2288,29 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
-    _print_character_info(ng); // calls clrscr() so needs to be before attach()
-
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
+    auto welcome_text = new FormattedTextItem();
+    formatted_string welcome;
+    welcome.textcolour(BROWN);
+    welcome.cprintf("%s\n", _welcome(ng).c_str());
+    welcome.textcolour(CYAN);
+    welcome.cprintf("\nYou have a choice of %s:\n\n",
+            ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons" : "maps");
+    welcome_text->set_text(welcome.to_colour_string());
+    welcome_text->set_bounds(coord_def(1, 1), coord_def(ui_w+1, 5));
+    welcome_text->set_visible(true);
+    welcome_text->allow_highlight(false);
+    freeform->attach_item(welcome_text);
 
     freeform->set_visible(true);
     highlighter->set_visible(true);
 
-    textcolour(CYAN);
-    cprintf("\nYou have a choice of %s:\n\n",
-            ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons"
-                                                  : "maps");
-
-    while (true)
-    {
-        menu.draw_menu();
-
-        int keyn = getch_ck();
+    bool done = false, cancel = false;
+    auto prompt_ui = make_shared<UIPrecisionMenuWrapper>(ui_w, ui_h, menu);
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int keyn = ev.key.keysym.sym;
+        prompt_ui->_expose();
 
         // First process menu entries
         if (!menu.process_key(keyn))
@@ -2044,25 +2330,26 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
-                game_ended(game_exit::abort);
+                return done = cancel = true;
                 break;
             case ' ':
-                return;
+                return done = true;
             default:
                 // if we get this far, we did not get a significant selection
                 // from the menu, nor did we get an escape character
                 // continue the while loop from the beginning and poll a new key
-                continue;
+                return true;
             }
         }
         // We have a significant key input!
         // Construct selection vector
         vector<MenuItem*> selection = menu.get_selected_items();
+        menu.clear_selections();
         // There should only be one selection, otherwise something broke
         if (selection.size() != 1)
         {
             // poll a new key
-            continue;
+            return true;
         }
 
         // Get the stored id from the selection
@@ -2071,26 +2358,34 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
         {
         case M_ABORT:
             // TODO: fix
-            return;
+            return done = true;
         case M_APTITUDES:
-            list_commands('%', _highlight_pattern(ng));
-            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
+            show_help('%', _highlight_pattern(ng));
+            return true;
         case M_HELP:
-            list_commands('?');
-            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
+            show_help('?');
+            return true;
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);
-            return;
+            return done = true;
         case M_RANDOM:
             // FIXME setting this to "random" is broken
             ng_choice.map.clear();
-            return;
+            return done = true;
         default:
             // We got an item selection
             ng_choice.map = maps.at(selection_ID)->name;
-            return;
+            return done = true;
         }
-    }
+
+        return true;
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
+
+    if (cancel || crawl_state.seen_hups)
+        game_ended(game_exit::abort);
 }
 
 static void _resolve_gamemode_map(newgame_def& ng, const newgame_def& ng_choice,

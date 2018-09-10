@@ -73,7 +73,7 @@ monster::monster()
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(), xp_tracking(XP_GENERATED), experience(0),
+      enchantments(), flags(), xp_tracking(XP_NON_VAULT), experience(0),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
       foe_memory(0), god(GOD_NO_GOD), ghost(), seen_context(SC_NONE),
       client_id(0), hit_dice(0)
@@ -1036,7 +1036,7 @@ bool monster::unequip(item_def &item, bool msg, bool force)
 
     case OBJ_JEWELLERY:
         unequip_jewellery(item, msg);
-    break;
+        break;
 
     default:
         break;
@@ -2952,15 +2952,22 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage(bool /* direct */) const
+int monster::constriction_damage(bool direct) const
 {
-    for (int i = 0; i < 4; ++i)
+    if (direct)
     {
-        const mon_attack_def attack = mons_attack_spec(*this, i);
-        if (attack.type == AT_CONSTRICT)
-            return attack.damage;
+        for (int i = 0; i < 4; ++i)
+        {
+            const mon_attack_def attack = mons_attack_spec(*this, i);
+            if (attack.type == AT_CONSTRICT)
+                return attack.damage;
+        }
+        return -1;
     }
-    return -1;
+
+    // The only monster spell that's a source of indirect constriction.
+    return roll_dice(2, div_rand_round(40 +
+                mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
 }
 
 bool monster::constriction_does_damage(bool direct) const
@@ -3464,7 +3471,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 
     if (caught() || is_constricted())
         ev /= (body_size(PSIZE_BODY) + 2);
-    else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
+    else if (confused())
         ev /= 2;
 
     return max(ev, 0);
@@ -4802,20 +4809,20 @@ bool monster::is_location_safe(const coord_def &place)
 
 bool monster::has_originating_map() const
 {
-    return props.exists("map");
+    return props.exists(MAP_KEY);
 }
 
 string monster::originating_map() const
 {
     if (!has_originating_map())
         return "";
-    return props["map"].get_string();
+    return props[MAP_KEY].get_string();
 }
 
 void monster::set_originating_map(const string &map_name)
 {
     if (!map_name.empty())
-        props["map"].get_string() = map_name;
+        props[MAP_KEY].get_string() = map_name;
 }
 
 #define MAX_PLACE_NEAR_DIST 8
@@ -5725,9 +5732,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
         energy_loss /= 2;
     }
 
-    if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
-        energy_loss += 4;
-
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
 
@@ -6154,9 +6158,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         if (observable())
         {
-            mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
-                 name(DESC_THE).c_str());
+            mprf(MSGCH_WARN,
+                "%s roars in fury and transforms into a fierce dragon!",
+                name(DESC_THE).c_str());
         }
+        if (caught())
+            check_net_will_hold_monster(this);
 
         add_ench(ENCH_RING_OF_THUNDER);
     }
@@ -6398,14 +6405,16 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
 
     // Drop the item already in the slot (including the shield
     // if it's a two-hander).
+    // TODO: fail conditions here have an awkward ordering with the steal msgs
     if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
         && inv[MSLOT_SHIELD] != NON_ITEM
-        && hands_reqd(new_item) == HANDS_TWO)
+        && hands_reqd(new_item) == HANDS_TWO
+        && !drop_item(MSLOT_SHIELD, observable()))
     {
-        drop_item(MSLOT_SHIELD, observable());
+        return nullptr;
     }
-    if (inv[mslot] != NON_ITEM)
-        drop_item(mslot, observable());
+    if (inv[mslot] != NON_ITEM && !drop_item(mslot, observable()))
+        return nullptr;
 
     // Set the item as unlinked.
     new_item.pos.reset();
@@ -6511,10 +6520,12 @@ bool monster::attempt_escape(int attempts)
     }
     else
     {
-        randfact = roll_dice(1, 5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
-        randfact += roll_dice(1, themonst->get_hit_dice());
+
+        // Monsters use the same escape formula for all forms of constriction.
+        randfact = 5 + roll_dice(1, 5)
+            + roll_dice(1, themonst->get_hit_dice());
     }
 
     if (attfactor > randfact)

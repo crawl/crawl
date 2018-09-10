@@ -804,10 +804,9 @@ on its degree of enchantment.
 %%%%
 ring of resist corrosion
 
-A ring that protects the wearer from acid damage and from corrosion caused by
-acids, although not infallibly so.
+A ring that provides partial protection from all sources of acid and corrosion.
 %%%%
-ring of loudness
+ring of attention
 
 A ring that makes the player less stealthy.
 %%%%

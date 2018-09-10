@@ -53,8 +53,8 @@ The contents of this text are:
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
                 allow_self_target, auto_butcher, confirm_butcher,
-                easy_eat_chunks, easy_quit_item_prompts, easy_exit_menu,
-                ability_menu, sort_menus, spell_slot, item_slot, ability_slot,
+                easy_eat_chunks, easy_quit_item_prompts, ability_menu,
+                sort_menus, spell_slot, item_slot, ability_slot,
                 autofight_stop, autofight_warning, autofight_hunger_stop,
                 autofight_hunger_stop_undead, autofight_throw,
                 autofight_throw_nomove, autofight_fire_stop, autofight_caught,
@@ -102,15 +102,15 @@ The contents of this text are:
                 tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
                 tile_tag_pref, tile_full_screen, tile_window_width,
                 tile_window_height, tile_map_pixels, tile_cell_pixels,
-                tile_force_overlay, tile_font_crt_file, tile_font_stat_file,
-                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
-                tile_font_crt_family, tile_font_stat_family,
-                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_font_ft_light,
-                tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
-                tile_realtime_anim, tile_show_player_species,
+                tile_force_overlay, tile_single_column_menus,
+                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
+                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
+                tile_font_stat_family, tile_font_msg_family,
+                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
+                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_font_ft_light, tile_show_minihealthbar,
+                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
+                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
                 tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
@@ -1037,10 +1037,6 @@ easy_quit_item_prompts = true
         are essentially all of those that are requesting an inventory
         item and accept '?' and '*'. The identify list will never easy
         quit.
-
-easy_exit_menu = false
-        In multidrop (and pickup) menus, paging past the end will drop
-        out of the menu if easy_exit_menu is true.
 
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
@@ -2027,6 +2023,14 @@ tile_full_screen = auto
         on or off. Setting it to anything else will put it in auto mode, which
         enables full screen mode only if the screen resolution is smaller than
         width 1200, or height 800.
+
+tile_single_column_menus = true
+        If enabled, all in-game menus will list items in a single column,
+        regardless of the current screen size or the number of items in the
+        menu. If disabled, some in-game menus will use two columns if there is
+        insufficient space to show all items in a single column. This option
+        is only available on local tiles; all menus on console and on WebTiles
+        always list items in a single column, as if this option were enabled.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf

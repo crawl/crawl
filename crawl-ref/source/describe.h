@@ -47,8 +47,9 @@ string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool lookup = false);
 
 void describe_feature_wide(const coord_def& pos);
-string get_cloud_desc(cloud_type cloud);
-void get_feature_desc(const coord_def &gc, describe_info &inf);
+void describe_feature_type(dungeon_feature_type feat);
+string get_cloud_desc(cloud_type cloud, bool include_title = true);
+void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
 
 bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
@@ -67,7 +68,8 @@ string player_spell_desc(spell_type spell);
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled,
                     const monster_info *mon_owner = nullptr,
-                    const item_def* item = nullptr);
+                    const item_def* item = nullptr,
+                    bool show_booklist = false);
 
 void describe_ability(ability_type ability);
 
@@ -82,9 +84,9 @@ int hex_chance(const spell_type spell, const int hd);
 
 string get_command_description(const command_type cmd, bool terse);
 
-int show_description(const string &body);
-int show_description(const describe_info &inf);
-string process_description(const describe_info &inf);
+int show_description(const string &body, const tile_def *tile = nullptr);
+int show_description(const describe_info &inf, const tile_def *tile = nullptr);
+string process_description(const describe_info &inf, bool include_title = true);
 
 const char* get_size_adj(const size_type size, bool ignore_medium = false);
 

@@ -2983,18 +2983,16 @@ MAP
 ENDMAP
 
 NAME:   minmay_acid_items
-TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
-DEPTH:  Depths, !Depths:$
-MONS:   ooze / jelly w:30 / death ooze / azure jelly
+TAGS:   no_monster_gen no_trap_gen transparent
+DEPTH:  Depths
+MONS:   slime creature w:30 / death ooze / azure jelly / acid blob w:5
 MONS:   acid blob
-KPROP:  |' = no_tele_into
-MARKER: + = lua:props_marker({ door_restrict="veto" })
 MAP
   ...........
  ..nnnnnnnnn..
 ..nn1112111nn..
 .nn11nnnnn11nn.
-.+111+|||nn11n.
+.=111+|||nn11n.
 .nn11nnnnn11nn.
 ..nn1112111nn..
  ..nnnnnnnnn..
@@ -6249,12 +6247,19 @@ MAP
    .........
 ENDMAP
 
-
 NAME:    minmay_guarded_unrand_vampires_tooth
-DEPTH:   D:4-6
-MONS:    bat, vampire bat
+DEPTH:   D:10-, Crypt, Depths
+: if you.in_branch("D") then
+:   if you.depth() < 13 then
+MONS:    vampire mosquito / tyrant leech w:5, vampire
+:   else
+MONS:    vampire mosquito / tyrant leech / vampire, vampire knight
+:   end
+: else
+MONS:    vampire knight, vampire mage
+: end
 : if you.unrands("vampires_tooth") then
-ITEM:    dagger randart no_pickup
+ITEM:    quick blade randart no_pickup
 : else
 ITEM:    vampires_tooth no_pickup
 : end
@@ -6264,7 +6269,7 @@ MAP
 .1c...c1.
 .cc...cc.
 .1c2Y2c1.
-.ccd..cc.
+.cc.d.cc.
 .1c...c1.
 .ccccccc.
 .........

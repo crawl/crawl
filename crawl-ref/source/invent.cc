@@ -986,7 +986,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
+        new_flags |= MF_ALLOW_FORMATTING;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
@@ -1177,11 +1177,7 @@ static unsigned char _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    int flags = MF_SINGLESELECT;
-    if (you.pending_revival || crawl_state.updating_scores)
-        flags |= MF_EASY_EXIT;
-
-    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(MT_INVLIST);
 
@@ -1884,8 +1880,7 @@ int prompt_invent_item(const char *prompt,
                         mtype,
                         current_type_expected,
                         -1,
-                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
-                            | MF_EASY_EXIT,
+                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY,
                         nullptr,
                         &items);
 

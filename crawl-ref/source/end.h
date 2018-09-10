@@ -17,6 +17,7 @@ NORETURN void game_ended(game_exit exit, const string &message = "");
 NORETURN void game_ended_with_error(const string &message);
 NORETURN void screen_end_game(string text);
 void cio_cleanup();
+bool fatal_error_notification(string error_msg);
 
 struct game_ended_condition : public exception
 {

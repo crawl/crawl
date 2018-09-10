@@ -17,6 +17,7 @@
 #include "describe.h"
 #include "env.h"
 #include "files.h"
+#include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -26,6 +27,7 @@
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "sound.h"
 #include "state.h"
@@ -35,6 +37,12 @@
 #include "version.h"
 #include "viewchar.h"
 #include "view.h"
+
+using namespace ui;
+
+#ifdef USE_TILE
+ #include "tiledef-gui.h"
+#endif
 
 static const char *features[] =
 {
@@ -77,7 +85,7 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    return string("This is <w>" CRAWL " ") + Version::Long + "</w>\n";
+    return string("This is <w>" CRAWL " ") + Version::Long + "</w>";
 }
 
 static string _get_version_features()
@@ -94,10 +102,6 @@ static string _get_version_features()
 
     return result;
 }
-
-static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
-                                  int first_hotkey  = 0,
-                                  bool auto_hotkeys = false);
 
 static string _get_version_changes()
 {
@@ -164,27 +168,69 @@ static string _get_version_changes()
                   "directory.";
     }
 
-    result += "\n\n";
-
     return result;
 }
 
 //#define DEBUG_FILES
 static void _print_version()
 {
-    formatted_scroller cmd_version;
+    const string info = _get_version_information(),
+          feats = _get_version_features(),
+          changes = _get_version_changes();
 
-    // Set flags.
-    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP | MF_EASY_EXIT;
-    cmd_version.set_flags(flags, false);
-    cmd_version.set_tag("version");
-    cmd_version.set_more();
+    auto vbox = make_shared<Box>(Widget::VERT);
 
-    cmd_version.add_text(_get_version_information(), true);
-    cmd_version.add_text(_get_version_features(), true);
-    cmd_version.add_text(_get_version_changes(), true);
+#ifdef USE_TILE_LOCAL
+    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+#endif
 
-    cmd_version.show();
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    auto icon = make_shared<Image>();
+    icon->set_tile(tile_def(TILEG_STARTUP_STONESOUP, TEX_GUI));
+    title_hbox->add_child(move(icon));
+#endif
+
+    auto title = make_shared<Text>(formatted_string::parse_string(info));
+    title->set_margin_for_crt({0, 0, 0, 0});
+    title->set_margin_for_sdl({0, 0, 0, 10});
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_items = Widget::CENTER;
+    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
+    vbox->add_child(move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto content = formatted_string::parse_string(feats + "\n\n" + changes);
+    auto text = make_shared<Text>(move(content));
+    text->wrap_text = true;
+    scroller->set_child(move(text));
+    vbox->add_child(scroller);
+
+    auto popup = make_shared<ui::Popup>(vbox);
+
+    bool done = false;
+    popup->on(Widget::slots.event, [&done, &vbox](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        done = !vbox->on_event(ev);
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("information", info);
+    tiles.json_write_string("features", feats);
+    tiles.json_write_string("changes", changes);
+    tiles.push_ui_layout("version", 0);
+#endif
+
+    ui::run_layout(move(popup), done);
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
 }
 
 void list_armour()
@@ -358,53 +404,6 @@ static const char *targeting_help_2 =
     "<w>i</w> : choose from Inventory.\n"
 ;
 
-// Add the contents of the file fp to the scroller menu m.
-// If first_hotkey is nonzero, that will be the hotkey for the
-// start of the contents of the file.
-// If auto_hotkeys is true, the function will try to identify
-// sections and add appropriate hotkeys.
-static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
-                                  int first_hotkey, bool auto_hotkeys)
-{
-    bool next_is_hotkey = false;
-    bool is_first = true;
-    char buf[200];
-
-    // Bracket with MEL_END_OF_SECTION, so that you won't scroll into it or above it.
-    m.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
-    for (int i = 0; i < get_number_of_lines(); ++i)
-        m.add_entry(new MenuEntry(string()));
-    m.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
-
-    while (fgets(buf, sizeof buf, fp))
-    {
-        MenuEntry* me = new MenuEntry(buf);
-        if (next_is_hotkey && (isaupper(buf[0]) || isadigit(buf[0]))
-            || is_first && first_hotkey)
-        {
-            int hotkey = (is_first ? first_hotkey : buf[0]);
-            if (!is_first && buf[0] == 'X'
-                && strlen(buf) >= 3 && isadigit(buf[2]))
-            {
-                // X.# is hotkeyed to the #
-                hotkey = buf[2];
-            }
-            me->add_hotkey(hotkey);
-            if (isaupper(hotkey))
-                me->add_hotkey(toalower(hotkey));
-            me->level  = MEL_SUBTITLE;
-            me->colour = WHITE;
-        }
-        m.add_entry(me);
-        // FIXME: There must be a better way to identify sections!
-        next_is_hotkey =
-            (auto_hotkeys
-                && (strstr(buf, "------------------------------------------"
-                                "------------------------------") == buf));
-        is_first = false;
-    }
-}
-
 struct help_file
 {
     const char* name;
@@ -420,30 +419,26 @@ static help_file help_files[] =
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
 #ifdef USE_TILE_LOCAL
-    { "tiles_help.txt",    'T', false },
+    { "tiles_help.txt",    't', false },
 #endif
     { nullptr, 0, false }
 };
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
 // a selectable menu and prints the corresponding answer for a chosen question.
-static bool _handle_FAQ()
+static void _handle_FAQ()
 {
     vector<string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
     {
         mpr("No questions found in FAQ! Please submit a bug report!");
-        return false;
+        return;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
 
-#ifdef USE_TILE_LOCAL
-    // Ensure we get the full screen size when calling get_number_of_cols()
-    cgotoxy(1, 1);
-#endif
     const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
@@ -477,7 +472,7 @@ static bool _handle_FAQ()
     {
         vector<MenuEntry*> sel = FAQmenu.show();
         if (sel.empty())
-            return false;
+            return;
         else
         {
             ASSERT(sel.size() == 1);
@@ -495,63 +490,7 @@ static bool _handle_FAQ()
         }
     }
 
-    return true;
-}
-
-static int _keyhelp_keyfilter(int ch)
-{
-    switch (ch)
-    {
-    case ':':
-        // If the game has begun, show notes.
-        if (crawl_state.need_save)
-        {
-            display_notes();
-            return -1;
-        }
-        break;
-
-    case CK_HOME:
-        list_commands(0);
-        clrscr();
-        redraw_screen();
-        return -1;
-
-    case '#':
-        // If the game has begun, show dump.
-        if (crawl_state.need_save)
-        {
-            display_char_dump();
-            return -1;
-        }
-        break;
-
-    case '/':
-        keyhelp_query_descriptions();
-        return -1;
-
-    case 'q':
-    case 'Q':
-    {
-        bool again;
-        do
-        {
-            // resets 'again'
-            again = _handle_FAQ();
-            if (again)
-                clear_messages();
-        }
-        while (again);
-
-        return -1;
-    }
-
-    case 'v':
-    case 'V':
-        _print_version();
-        return -1;
-    }
-    return ch;
+    return;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -591,108 +530,19 @@ string help_highlighter::get_species_key() const
 ////////////////////////////////////////////////////////////////////////////
 
 int show_keyhelp_menu(const vector<formatted_string> &lines,
-                      bool with_manual, bool easy_exit,
                       int hotkey, string highlight_string)
 {
-    formatted_scroller cmd_help;
-
-    // Set flags, and use easy exit if necessary.
-    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
-    if (easy_exit)
-        flags |= MF_EASY_EXIT;
-    cmd_help.set_flags(flags, false);
+    int flags = FS_PREWRAPPED_TEXT | FS_EASY_EXIT;
+    formatted_scroller cmd_help(flags);
     cmd_help.set_tag("help");
     cmd_help.set_more();
 
-    if (with_manual)
-    {
-        cmd_help.set_highlighter(new help_highlighter(highlight_string));
-        cmd_help.f_keyfilter = _keyhelp_keyfilter;
-        column_composer cols(2, 40);
-
-        cols.add_formatted(
-            0,
-            "<h>Dungeon Crawl Help\n"
-            "\n"
-            "Press one of the following keys to\n"
-            "obtain more information on a certain\n"
-            "aspect of Dungeon Crawl.\n"
-
-            "<w>?</w>: List of commands\n"
-            "<w>^</w>: Quickstart Guide\n"
-            "<w>:</w>: Browse character notes\n"
-            "<w>#</w>: Browse character dump\n"
-            "<w>~</w>: Macros help\n"
-            "<w>&</w>: Options help\n"
-            "<w>%</w>: Table of aptitudes\n"
-            "<w>/</w>: Lookup description\n"
-            "<w>Q</w>: FAQ\n"
-#ifdef USE_TILE_LOCAL
-            "<w>T</w>: Tiles key help\n"
-#endif
-            "<w>V</w>: Version information\n"
-            "<w>Home</w>: This screen\n");
-
-        cols.add_formatted(
-            1,
-            "<h>Manual Contents\n\n"
-            "<w>*</w>       Table of contents\n"
-            "<w>A</w>.      Overview\n"
-            "<w>B</w>.      Starting Screen\n"
-            "<w>C</w>.      Attributes and Stats\n"
-            "<w>D</w>.      Exploring the Dungeon\n"
-            "<w>E</w>.      Experience and Skills\n"
-            "<w>F</w>.      Monsters\n"
-            "<w>G</w>.      Items\n"
-            "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      Targeting\n"
-            "<w>J</w>.      Religion\n"
-            "<w>K</w>.      Mutations\n"
-            "<w>L</w>.      Licence, Contact, History\n"
-            "<w>M</w>.      Macros, Options, Performance\n"
-            "<w>N</w>.      Philosophy\n"
-            "<w>1</w>.      List of Character Species\n"
-            "<w>2</w>.      List of Character Backgrounds\n"
-            "<w>3</w>.      List of Skills\n"
-            "<w>4</w>.      List of Keys and Commands\n"
-            "<w>5</w>.      Inscriptions\n");
-
-        vector<formatted_string> blines = cols.formatted_lines();
-        unsigned i;
-        for (i = 0; i < blines.size(); ++i)
-            cmd_help.add_item_formatted_string(blines[i]);
-
-        // unscrollable
-        cmd_help.add_entry(new MenuEntry(string(), MEL_END_OF_SECTION));
-    }
-
     for (unsigned i = 0; i < lines.size(); ++i)
-        cmd_help.add_item_formatted_string(lines[i], (i == 0 ? '?' : 0));
-
-    if (with_manual)
-    {
-        for (int i = 0; help_files[i].name != nullptr; ++i)
-        {
-            // Attempt to open this file, skip it if unsuccessful.
-            string fname = canonicalise_file_separator(help_files[i].name);
-            FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
-
-            if (fp)
-            {
-                _add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
-                                    help_files[i].auto_hotkey);
-                fclose(fp);
-            }
-
-        }
-    }
-
-    if (hotkey)
-        cmd_help.jump_to_hotkey(hotkey);
+        cmd_help.add_formatted_string(lines[i], true);
 
     cmd_help.show();
 
-    return cmd_help.getkey();
+    return cmd_help.get_lastch();
 }
 
 void show_specific_help(const string &key)
@@ -701,7 +551,7 @@ void show_specific_help(const string &key)
     vector<formatted_string> formatted_lines;
     for (const string &line : split_string("\n", help, false, true))
         formatted_lines.push_back(formatted_string::parse_string(line));
-    show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
+    show_keyhelp_menu(formatted_lines);
 }
 
 void show_levelmap_help()
@@ -718,7 +568,7 @@ void show_targeting_help()
         cols.add_formatted(0, targeting_help_wiz, true);
 #endif
     cols.add_formatted(1, targeting_help_2, true);
-    show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
+    show_keyhelp_menu(cols.formatted_lines());
 }
 void show_interlevel_travel_branch_help()
 {
@@ -747,7 +597,22 @@ void show_skill_menu_help()
 
 void show_spell_library_help()
 {
-    show_specific_help("spell-library");
+    if (crawl_state.game_is_hints_tutorial())
+    {
+        const string help1 = hints_memorise_info() + "\n\n";
+        vector<formatted_string> formatted_lines;
+        for (const string &line : split_string("\n", help1, false, true))
+        {
+            formatted_lines.push_back(formatted_string::parse_string(line,
+                                        channel_to_colour(MSGCH_TUTORIAL)));
+        }
+        const string help2 = getHelpString("spell-library");
+        for (const string &line : split_string("\n", help2, false, true))
+            formatted_lines.push_back(formatted_string::parse_string(line));
+        show_keyhelp_menu(formatted_lines);
+    }
+    else
+        show_specific_help("spell-library");
 }
 
 static void _add_command(column_composer &cols, const int column,
@@ -788,6 +653,58 @@ static void _add_insert_commands(column_composer &cols, const int column,
     insert_commands(desc, cmd_vector);
     desc += "\n";
     cols.add_formatted(column, desc.c_str(), false);
+}
+
+static void _add_formatted_help_menu(column_composer &cols)
+{
+    cols.add_formatted(
+        0,
+        "<h>Dungeon Crawl Help\n"
+        "\n"
+        "Press one of the following keys to\n"
+        "obtain more information on a certain\n"
+        "aspect of Dungeon Crawl.\n"
+
+        "<w>?</w>: List of commands\n"
+        "<w>^</w>: Quickstart Guide\n"
+        "<w>:</w>: Browse character notes\n"
+        "<w>#</w>: Browse character dump\n"
+        "<w>~</w>: Macros help\n"
+        "<w>&</w>: Options help\n"
+        "<w>%</w>: Table of aptitudes\n"
+        "<w>/</w>: Lookup description\n"
+        "<w>Q</w>: FAQ\n"
+#ifdef USE_TILE_LOCAL
+        "<w>T</w>: Tiles key help\n"
+#endif
+        "<w>V</w>: Version information\n"
+        "<w>Home</w>: This screen\n");
+
+    // TODO: generate this from the manual somehow
+    cols.add_formatted(
+        1,
+        "<h>Manual Contents\n\n"
+        "<w>*</w>       Table of contents\n"
+        "<w>A</w>.      Overview\n"
+        "<w>B</w>.      Starting Screen\n"
+        "<w>C</w>.      Attributes and Stats\n"
+        "<w>D</w>.      Exploring the Dungeon\n"
+        "<w>E</w>.      Experience and Skills\n"
+        "<w>F</w>.      Monsters\n"
+        "<w>G</w>.      Items\n"
+        "<w>H</w>.      Spellcasting\n"
+        "<w>I</w>.      Targeting\n"
+        "<w>J</w>.      Religion\n"
+        "<w>K</w>.      Mutations\n"
+        "<w>L</w>.      Licence, Contact, History\n"
+        "<w>M</w>.      Macros, Options, Performance\n"
+        "<w>N</w>.      Philosophy\n"
+        "<w>1</w>.      List of Character Species\n"
+        "<w>2</w>.      List of Character Backgrounds\n"
+        "<w>3</w>.      List of Skills\n"
+        "<w>4</w>.      List of Keys and Commands\n"
+        "<w>5</w>.      Inscriptions\n"
+        "<w>6</w>.      Dungeon sprint modes\n");
 }
 
 static void _add_formatted_keyhelp(column_composer &cols)
@@ -876,9 +793,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     string item_types = "<lightcyan>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
-        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+        "</lightcyan> : books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
+        "    pick up to add to library)";
     _add_insert_commands(cols, 0, item_types,
-                         { CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                            CMD_FORCE_CAST_SPELL });
     _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
                          { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
@@ -902,7 +820,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_USE_ABILITY });
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
-    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all memorized spells", 2);
+    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a spell from your library", 2);
 
     _add_insert_commands(cols, 0, 2, CMD_SHOUT,
                          "tell allies (<w>%t</w> to shout)",
@@ -958,6 +877,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
+    _add_command(cols, 1, CMD_MEMORISE_SPELL, "show your spell library", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
     _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
@@ -996,24 +916,40 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Item Interaction (inventory):\n");
+            "<h>Inventory management:\n");
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
-    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
+    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
+    cols.add_formatted(
+            1,
+            "    (press twice for pick up menu)\n",
+            false);
 
+    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
+    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+                         { CMD_DROP });
+    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
+
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction:\n");
+
+    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     {
-        string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
+        const bool vampire = you.species == SP_VAMPIRE;
+        string butcher = vampire ? "bottle blood from"
+                                 : "Chop up";
+        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse on floor", 2);
+        string interact = (you.species == SP_VAMPIRE ? "drain corpses"
                                                      : "Eat food");
         interact += " (tries floor first)\n";
         _add_command(cols, 1, CMD_EAT, interact, 2);
     }
-
+    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be Quivered", 2);
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
-    _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
-    _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
+    _add_command(cols, 1, CMD_READ, "Read a scroll (or book on floor)", 2);
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
@@ -1027,32 +963,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-
-    cols.add_formatted(
-            1,
-            "<h>Item Interaction (floor):\n");
-
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-    cols.add_formatted(
-            1,
-            "    (press twice for pick up menu)\n",
-            false);
-
-    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
-                         { CMD_DROP });
-    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
-    {
-        const bool vampire = you.species == SP_VAMPIRE;
-        string butcher = vampire ? "Bottle blood from"
-                                 : "Chop up";
-        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse", 2);
-
-        string eat = vampire ? "Drain corpses on"
-                             : "Eat food from";
-        eat += " floor\n";
-        _add_command(cols, 1, CMD_EAT, eat, 2);
-    }
 
     cols.add_formatted(
             1,
@@ -1138,12 +1048,12 @@ static void _add_formatted_hints_help(column_composer &cols)
                                   "(<w>%?/%</w> lists spells)",
                          { CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL,
                            CMD_DISPLAY_SPELLS });
-    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a new spell", 2);
-    _add_command(cols, 0, CMD_READ, "read a book to see spell descriptions", 2);
+    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise spells and view spell\n"
+                                              "    library (get books to add to it)", 2);
 
     // Second column.
     cols.add_formatted(
-            1, "<h>Item types (and common commands)\n",
+            1, "<h>Item types and inventory management\n",
             false);
 
     _add_insert_commands(cols, 1,
@@ -1189,9 +1099,10 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : </console>"
-        "books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+        "books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
+        "    pick up to add to spell library)";
     _add_insert_commands(cols, 1, item_types,
-                         { CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                            CMD_FORCE_CAST_SPELL });
 
     item_types =
@@ -1204,7 +1115,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
 
     cols.add_formatted(1, " ", false);
-    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "inventory (select item to view)", 2);
     _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
     _add_command(cols, 1, CMD_DROP, "drop item", 2);
     _add_command(cols, 1, CMD_DROP_LAST, "drop the last item(s) you picked up", 2);
@@ -1231,16 +1142,159 @@ static void _add_formatted_hints_help(column_composer &cols)
             false);
 }
 
-void list_commands(int hotkey, string highlight_string)
+static formatted_string _col_conv(void (*func)(column_composer &))
 {
-    // 2 columns, split at column 40.
-    column_composer cols(2, 41);
+    column_composer cols(2, 42);
+    func(cols);
+    formatted_string contents;
+    for (const auto& line : cols.formatted_lines())
+    {
+        contents += line;
+        contents += formatted_string("\n");
+    }
+    contents.ops.pop_back();
+    return contents;
+}
 
-    if (crawl_state.game_is_hints_tutorial())
-        _add_formatted_hints_help(cols);
-    else
-        _add_formatted_keyhelp(cols);
+static int _get_help_section(int section, formatted_string &header_out, formatted_string &text_out, int &scroll_out)
+{
+    static map<int, int> hotkeys;
+    static map<int, formatted_string> page_text;
+    static map<int, string> headers = {
+        {'*', "Manual"}, {'%', "Aptitudes"}, {'^', "Quickstart"},
+        {'~', "Macros"}, {'&', "Options"}, {'t', "Tiles"},
+        {'?', "Key help"}
+    };
 
-    show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
-                       hotkey, highlight_string);
+    if (!page_text.size())
+    {
+        for (int i = 0; help_files[i].name != nullptr; ++i)
+        {
+            formatted_string text;
+            bool next_is_hotkey = false;
+            char buf[200];
+            string fname = canonicalise_file_separator(help_files[i].name);
+            FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
+            while (fgets(buf, sizeof buf, fp))
+            {
+                text += formatted_string(buf);
+                if (next_is_hotkey && (isaupper(buf[0]) || isadigit(buf[0])))
+                {
+                    int hotkey = tolower(buf[0]);
+                    hotkeys[hotkey] = count_occurrences(text.tostring(), "\n");
+                }
+
+                next_is_hotkey =
+                    strstr(buf, "------------------------------------------"
+                                        "------------------------------") == buf;
+            }
+            trim_string_right(text.ops.back().text);
+            page_text[help_files[i].hotkey] = text;
+        }
+    }
+
+    // All hotkeys are currently on *-page
+    const int page = hotkeys.count(section) ? '*' : section;
+
+    string header = headers.count(page) ? ": "+headers[page] : "";
+    header_out = formatted_string::parse_string(
+                    "<yellow>Dungeon Crawl Help"+header+"</yellow>");
+    scroll_out = 0;
+    switch (section)
+    {
+        case '?':
+            if (crawl_state.game_is_hints_tutorial())
+                text_out = _col_conv(_add_formatted_hints_help);
+            else
+                text_out = _col_conv(_add_formatted_keyhelp);
+            return page;
+        case CK_HOME:
+            text_out = _col_conv(_add_formatted_help_menu);
+            return page;
+        default:
+            if (hotkeys.count(section))
+                scroll_out = hotkeys[section];
+            if (page_text.count(page))
+            {
+                text_out = page_text[page];
+                return page;
+            }
+            break;
+    }
+    return 0;
+}
+
+class help_popup : public formatted_scroller
+{
+public:
+    help_popup(int key) : formatted_scroller(FS_PREWRAPPED_TEXT) {
+        set_tag("help");
+        process_key(key);
+    };
+private:
+    bool process_key(int ch) override
+    {
+        int key = toalower(ch);
+
+#ifdef USE_TILE_LOCAL
+        const int line_height = tiles.get_crt_font()->char_height();
+#else
+        const int line_height = 1;
+#endif
+
+        int scroll, page;
+        formatted_string header_text, help_text;
+        switch (key)
+        {
+            case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v':
+                return false;
+            default:
+                if (!(page = _get_help_section(key, header_text, help_text, scroll)))
+                    break;
+                if (page != prev_page)
+                {
+                    contents = help_text;
+                    m_contents_dirty = true;
+                    prev_page = page;
+                }
+                scroll = scroll ? (scroll-2)*line_height : 0;
+                set_scroll(scroll);
+                return true;
+        }
+
+        return formatted_scroller::process_key(ch);
+    };
+    int prev_page{0};
+};
+
+void show_help(int section, string highlight_string)
+{
+    help_popup help(section);
+    help.highlight = highlight_string;
+    int key = toalower(help.show());
+
+    switch (key)
+    {
+        case ':':
+            // If the game has begun, show notes.
+            if (crawl_state.need_save)
+                display_notes();
+            break;
+        case '#':
+            // If the game has begun, show dump.
+            if (crawl_state.need_save)
+                display_char_dump();
+            break;
+        case '/':
+            keyhelp_query_descriptions();
+            break;
+        case 'q':
+            _handle_FAQ();
+            break;
+        case 'v':
+            _print_version();
+            break;
+        default:
+            break;
+    }
 }

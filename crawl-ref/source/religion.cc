@@ -235,8 +235,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Fedhas
     {
       { 0, ABIL_FEDHAS_FUNGAL_BLOOM, "turn corpses into toadstools" },
-      { 1, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
-      { 2, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
+      { 1, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
+      { 2, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
       { 3, ABIL_FEDHAS_PLANT_RING, "cause a ring of plants to grow" },
       { 4, ABIL_FEDHAS_SPAWN_SPORES, "spawn explosive spores" },
       { 5, ABIL_FEDHAS_RAIN, "control the weather" },
@@ -267,9 +267,9 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Dithmenos
     { { 2, ABIL_DITHMENOS_SHADOW_STEP, "step into the shadows of nearby creatures" },
-      { 3, "You now sometimes bleed smoke when heavily injured by enemies.",
+      { 3, "You sometimes bleed smoke when heavily injured by enemies.",
            "You no longer bleed smoke." },
-      { 4, "Your shadow now sometimes tangibly mimics your actions.",
+      { 4, "Your shadow sometimes tangibly mimics your actions.",
            "Your shadow no longer tangibly mimics your actions." },
       { 5, ABIL_DITHMENOS_SHADOW_FORM, "transform into a swirling mass of shadows" },
     },
@@ -392,7 +392,8 @@ bool is_evil_god(god_type god)
            || god == GOD_MAKHLEB
            || god == GOD_YREDELEMNUL
            || god == GOD_BEOGH
-           || god == GOD_LUGONU;
+           || god == GOD_LUGONU
+           || god == GOD_DITHMENOS;
 }
 
 bool is_good_god(god_type god)
@@ -2394,9 +2395,9 @@ static void _gain_piety_point()
                                "Slime Pits.");
             dlua.callfn("dgn_set_persistent_var", "sb",
                         "fix_slime_vaults", true);
-            // If we're on Slime:6, pretend we just entered the level
+            // If we're on Slime:$, pretend we just entered the level
             // in order to bring down the vault walls.
-            if (level_id::current() == level_id(BRANCH_SLIME, 6))
+            if (level_id::current() == level_id(BRANCH_SLIME, brdepth[BRANCH_SLIME]))
                 dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
             you.one_time_ability_used.set(you.religion);

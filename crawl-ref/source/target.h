@@ -232,7 +232,6 @@ enum shadow_step_block_reason
     BLOCKED_MOVE,
     BLOCKED_PATH,
     BLOCKED_NO_TARGET,
-    BLOCKED_MOBILE,
 };
 
 class targeter_shadow_step : public targeter
@@ -322,4 +321,6 @@ public:
     bool can_affect_unseen() override;
     bool can_affect_walls() override;
     bool affects_monster(const monster_info& mon) override;
+private:
+    map<coord_def, int> aim_test_cache;
 };

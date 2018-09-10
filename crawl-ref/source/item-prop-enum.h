@@ -198,7 +198,7 @@ enum jewellery_type
     RING_SLAYING,
     RING_SEE_INVISIBLE,
     RING_RESIST_CORROSION,
-    RING_LOUDNESS,
+    RING_ATTENTION,
     RING_TELEPORTATION,
     RING_EVASION,
 #if TAG_MAJOR_VERSION == 34
@@ -369,7 +369,7 @@ enum rune_type
     RUNE_SNAKE,
     RUNE_SHOALS,
     RUNE_SLIME,
-    RUNE_ELF, // unused
+    RUNE_ELF, // only used in sprints
     RUNE_VAULTS,
     RUNE_TOMB,
 
@@ -389,7 +389,7 @@ enum rune_type
     RUNE_GLOORX_VLOQ,
 
     RUNE_SPIDER,
-    RUNE_FOREST, // unused
+    RUNE_FOREST, // only used in sprints
     NUM_RUNE_TYPES
 };
 

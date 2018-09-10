@@ -2010,6 +2010,10 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
+#ifdef USE_TILE
+    ui::cutoff_point ui_cutoff_point;
+#endif
+
     if (restricts == DIR_DIR)
         return choose_compass();
 

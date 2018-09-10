@@ -475,6 +475,16 @@ void player_reacts_to_monsters()
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awaken();
+
+    if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
+        && you.is_constricted())
+    {
+        // We handle the end-of-enchantment message here since the method
+        // of constriction is no longer detectable.
+        mprf("The grasping roots release their grip on you.");
+        you.stop_being_constricted(true);
+    }
+
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -800,9 +810,6 @@ static void _decrement_durations()
         if (old_recite != new_recite)
             _handle_recitation(new_recite);
     }
-
-    if (you.duration[DUR_GRASPING_ROOTS])
-        check_grasping_roots(you);
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);

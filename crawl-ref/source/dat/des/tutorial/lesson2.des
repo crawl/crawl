@@ -50,12 +50,14 @@ MARKER:  } = lua:tutorial2.msg("downstairs")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial2.exit" }
 epilogue{{
-  -- Make the tutoree hungry for the chopping tutorial.
-  crawl.tutorial_hunger(2700)
-  crawl.tutorial_hint("HINT_NEW_LEVEL")
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial2 start")
-  tutorial_intro()
+  if crawl.game_started() then
+    -- Make the tutoree hungry for the chopping tutorial.
+    crawl.tutorial_hunger(2700)
+    crawl.tutorial_hint("HINT_NEW_LEVEL")
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial2 start")
+    tutorial_intro()
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -126,8 +128,10 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial2.win" }
 epilogue{{
-  crawl.clear_messages(true)
-  crawl.tutorial_msg("tutorial2 newlevel")
+  if crawl.game_started() then
+    crawl.clear_messages(true)
+    crawl.tutorial_msg("tutorial2 newlevel")
+  end
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

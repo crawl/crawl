@@ -571,19 +571,33 @@ bool targeter_dig::valid_aim(coord_def a)
         return notify_fail("Please select a direction to dig.");
     if ((origin - a).rdist() > range || !in_bounds(a))
         return notify_fail("Out of range.");
-    // TODO: calling set_aim here is really inefficient
-    if (!set_aim(a))
-        return false;
-    int possible_squares_affected = 0;
-    for (auto p : path_taken)
-        if (beam.can_affect_wall(p) ||
-                in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
+    int possible_squares_affected;
+    if (aim_test_cache.count(a))
+        possible_squares_affected = aim_test_cache[a];
+    else
+    {
+        // TODO: maybe shouldn't use set_aim? ugly side-effect, but it does take
+        // care of all the beam management.
+        if (!set_aim(a))
+            possible_squares_affected = -1; // can't happen?
+        else
         {
-            possible_squares_affected++;
+            possible_squares_affected = 0;
+            for (auto p : path_taken)
+                if (beam.can_affect_wall(p) ||
+                        in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
+                {
+                    possible_squares_affected++;
+                }
         }
+        aim_test_cache[a] = possible_squares_affected;
+    }
     if (possible_squares_affected == 0)
         return notify_fail("Digging in that direction won't affect any walls.");
-    return true;
+    else if (possible_squares_affected < 0)
+        return false;
+    else
+        return true;
 }
 
 bool targeter_dig::can_affect_unseen()
@@ -603,7 +617,6 @@ bool targeter_dig::can_affect_walls()
 
 aff_type targeter_dig::is_affected(coord_def loc)
 {
-    coord_def c;
     aff_type current = AFF_YES;
     bool hit_barrier = false;
     for (auto pc : path_taken)
@@ -1176,8 +1189,6 @@ bool targeter_shadow_step::valid_aim(coord_def a)
             return notify_fail("There's something in the way.");
         case BLOCKED_NO_TARGET:
             return notify_fail("There isn't a shadow there.");
-        case BLOCKED_MOBILE:
-            return notify_fail("That shadow isn't sufficiently still.");
         case BLOCKED_NONE:
             die("buggy no_landing_reason");
         }
@@ -1248,9 +1259,10 @@ aff_type targeter_shadow_step::is_affected(coord_def loc)
     return aff;
 }
 
-// If something unseen either occupies the aim position or blocks the shadow_step path,
-// indicate that with step_is_blocked, but still return true so long there is at
-// least one valid landing position from the player's perspective.
+// If something unseen either occupies the aim position or blocks the
+// shadow_step path, indicate that with step_is_blocked, but still return true
+// so long there is at least one valid landing position from the player's
+// perspective.
 bool targeter_shadow_step::set_aim(coord_def a)
 {
     if (a == origin)
@@ -1260,8 +1272,8 @@ bool targeter_shadow_step::set_aim(coord_def a)
 
     step_is_blocked = false;
 
-    // Find our set of landing sites, choose one at random to be the destination
-    // and see if it's actually blocked.
+    // Find our set of landing sites, choose one at random to be the
+    // destination and see if it's actually blocked.
     set_additional_sites(aim);
     if (additional_sites.size())
     {
@@ -1298,13 +1310,6 @@ void targeter_shadow_step::get_additional_sites(coord_def a)
         || !victim->umbraed())
     {
         no_landing_reason = BLOCKED_NO_TARGET;
-        return;
-    }
-    if (!victim->is_stationary()
-        && !victim->cannot_move()
-        && !victim->asleep())
-    {
-        no_landing_reason = BLOCKED_MOBILE;
         return;
     }
 

@@ -28,8 +28,8 @@
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
-// Max ghosts on a level.
-const int MAX_GHOSTS = 10;
+// Max ghosts in a bones file.
+const int MAX_GHOSTS = 127;
 
 enum extra_monster_index_type
 {

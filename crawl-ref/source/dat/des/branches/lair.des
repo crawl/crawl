@@ -290,16 +290,18 @@ ENDMAP
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen
 ORIENT: float
-MONS:   hell hound
+WEIGHT: 1
+MONS:   fire dragon
 KFEAT:  O = enter_lair
+NSUBST: M = 1 / L
 SUBST:  L = l.
 MAP
 .........
 ...lLll..
 ..llllll.
-..ll1LlL.
-.LlLO1ll.
-.ll.Llll.
+..llMMlL.
+.LlMOMll.
+.llMMlll.
 .l.llll..
 ..lllL...
 .........

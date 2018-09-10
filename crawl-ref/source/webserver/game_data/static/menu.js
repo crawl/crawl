@@ -1,9 +1,7 @@
-define(["jquery", "comm", "client", "./enums", "./cell_renderer",
-        "./util", "./options"],
-function ($, comm, client, enums, cr, util, options) {
+define(["jquery", "comm", "client", "./ui", "./enums", "./cell_renderer",
+        "./util", "./options", "./scroller"],
+function ($, comm, client, ui, enums, cr, util, options, scroller) {
     "use strict";
-
-    var chunk_size = 50;
 
     // Helpers
 
@@ -25,6 +23,7 @@ function ($, comm, client, enums, cr, util, options) {
     function menu_title_indent()
     {
         if (!options.get("tile_menu_icons")
+            || options.get("tile_display_mode") !== "tiles"
             || !(menu.tag === "ability" || menu.tag === "spell"))
             return 0;
         return 32 + 2; // menu <ol> has a 2px margin
@@ -89,73 +88,48 @@ function ($, comm, client, enums, cr, util, options) {
 
     function display_menu()
     {
-        var menu_div = $("<div>");
+        var menu_div = $(".templates > .menu").clone();
         menu_div.addClass("menu_" + menu.tag);
         menu.elem = menu_div;
-
-        $("#menu").html(menu_div);
 
         if (menu.type === "crt")
         {
             // Custom-drawn CRT menu
-            menu_div.attr("id", "menu_txt");
-            client.show_dialog("#menu");
-            menu_div.bind("text_update", function () {
-                client.center_element($("#menu"));
-            });
+            menu_div.removeClass("menu").addClass("menu_txt");
+            ui.show_popup(menu_div, menu["ui-centred"]);
             return;
         }
 
         // Normal menu
-        menu_div.prepend("<div id='menu_title'>");
+        menu_div.prepend("<div class='menu_title'>");
         update_title();
 
-        var content_div= $("<div id='menu_contents'>");
-        content_div.css({
-            "max-height": $(window).height() - 100
-        });
+        var content_div= $("<div class='menu_contents'>");
         menu_div.append(content_div);
 
-        var items_inner = $("<div id='menu_contents_inner'>");
+        var items_inner = $("<div class='menu_contents_inner'>");
         content_div.append(items_inner);
 
         var container = $("<ol>");
         items_inner.append(container);
 
-        if (!menu.created)
-        {
-            var chunk = menu.items;
-            menu.items = { length: menu.total_items };
-            menu.first_present = 999999;
-            menu.last_present = -999999;
-            prepare_item_range(menu.chunk_start,
-                               menu.chunk_start + chunk.length - 1,
-                               true, container);
-            update_item_range(menu.chunk_start, chunk);
-        }
-        else
-        {
-            for (var i = menu.first_present; i <= menu.last_present; ++i)
-            {
-                var item = menu.items[i];
-                if (!item) continue;
-                item.elem = $("<li>...</li>");
-                item.elem.data("item", item);
-                item.elem.addClass("placeholder");
-                container.append(item.elem);
-                set_item_contents(item, item.elem);
-            }
-        }
+        var chunk = menu.items;
+        menu.items = { length: menu.total_items };
+        menu.first_present = 999999;
+        menu.last_present = -999999;
+        update_item_range(menu.chunk_start, chunk);
 
-        menu_div.append("<div id='menu_more'>" + util.formatted_string_to_html(menu.more)
+        menu.scroller = scroller(content_div[0]);
+        menu.scroller.scrollElement.addEventListener('scroll', menu_scroll_handler);
+
+        menu_div.append("<div class='menu_more'>" + util.formatted_string_to_html(menu.more)
                         + "</div>");
 
-        content_div.scroll(menu_scroll_handler);
+        if (client.is_watching())
+            menu.following_player_scroll = true;
 
-        menu.server_scroll = true;
-        menu.created = true;
-
-        client.show_dialog("#menu");
+        ui.show_popup(menu_div, menu["ui-centred"]);
+        handle_size_change();
 
         if (menu.flags & enums.menu_flag.START_AT_END)
         {
@@ -169,11 +143,10 @@ function ($, comm, client, enums, cr, util, options) {
         }
     }
 
-    function prepare_item_range(start, end, no_request, container)
+    function prepare_item_range(start, end, container)
     {
         // Guarantees that the given (inclusive) range of item indices
-        // exists; requests them from the server if necessary, except
-        // if no_request is true.
+        // exists
 
         if (start < 0) start = 0;
         if (end >= menu.total_items)
@@ -192,26 +165,7 @@ function ($, comm, client, enums, cr, util, options) {
         while (menu.items[end] !== undefined && start <= end)
             end--;
 
-        // Extend to chunk_size, but only if we are actually
-        // requesting items (otherwise we would end up with
-        // placeholders for which items are never requested).
-        if (!no_request)
-        {
-            while (end - start + 1 < chunk_size
-                   && menu.items[end + 1] === undefined
-                   && end < menu.total_items - 1)
-            {
-                end++;
-            }
-            while (end - start + 1 < chunk_size
-                   && menu.items[start - 1] === undefined
-                   && start > 0)
-            {
-                start--;
-            }
-        }
-
-        container = container || $("#menu_contents_inner ol");
+        container = container || menu.elem.find(".menu_contents_inner ol");
 
         // Find the place where we add the new elements
         var present_index = end;
@@ -249,14 +203,11 @@ function ($, comm, client, enums, cr, util, options) {
             menu.first_present = start;
         if (end > menu.last_present)
             menu.last_present = end;
-
-        // Request the actual elements
-        if (!no_request)
-            comm.send_message("*request_menu_range", { start: start, end: end });
     }
 
     function update_item_range(chunk_start, items_list)
     {
+        prepare_item_range(0, menu.total_items-1);
         for (var i = 0; i < items_list.length; ++i)
         {
             var real_index = i + chunk_start;
@@ -290,10 +241,13 @@ function ($, comm, client, enums, cr, util, options) {
 
     function page_up()
     {
-        var previous = menu.first_visible - 1;
+        var pagesz = menu.elem.find(".menu_contents").innerHeight();
+        var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
+        var delta = Math.floor(pagesz/itemsz)
+        var previous = menu.first_visible - delta;
         if (previous < 0)
             previous = 0;
-        scroll_bottom_to_item(previous);
+        scroll_to_item(previous);
     }
 
     function line_down()
@@ -318,19 +272,15 @@ function ($, comm, client, enums, cr, util, options) {
                      item_or_index.index : item_or_index);
         if (menu.first_visible == index) return;
 
-        prepare_item_range(index, index + chunk_size - 1);
-
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
-        var baseline = contents.children().offset().top;
-
-        contents.scrollTop(item.elem.offset().top - baseline);
+        var contents = $(menu.scroller.scrollElement);
+        var baseline = contents.children()[0].getBoundingClientRect().top;
+        var elem_y = item.elem[0].getBoundingClientRect().top;
+        contents[0].scrollTop = elem_y - baseline;
 
         menu.anchor_last = false;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-        menu_scroll_handler();
+        menu_scroll_handler(was_server_initiated);
     }
 
     function scroll_bottom_to_item(item_or_index, was_server_initiated)
@@ -339,60 +289,52 @@ function ($, comm, client, enums, cr, util, options) {
                      item_or_index.index : item_or_index);
         if (menu.last_visible == index) return;
 
-        prepare_item_range(index - chunk_size + 1, index);
-
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
+        var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top + item.elem.height()
-                           - baseline - contents.innerHeight());
+                - baseline - menu.elem.find(".menu_contents").innerHeight());
 
         menu.anchor_last = true;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-        menu_scroll_handler();
+        menu_scroll_handler(was_server_initiated);
     }
 
     function update_visible_indices()
     {
-        var contents = $("#menu_contents");
-        var top = contents.offset().top;
-        var bottom = top + contents.innerHeight();
-        menu.first_visible = null;
-        menu.last_visible = null;
-        for (var i in menu.items)
+        var $contents = menu.elem.find(".menu_contents");
+        var container_rect = $contents.children()[0].getBoundingClientRect();
+        var top = Math.max(container_rect.top, 0);
+        var bottom = Math.min(container_rect.bottom,
+                                $(window).scrollTop() + $(window).height());
+        var i;
+
+        // initialize these to ensure that they are never NaN, even if we have
+        // strange values for the bounding boxes
+        menu.first_visible = 0;
+        menu.last_visible = 0;
+
+        for (i = 0; i < menu.items.length; i++)
         {
-            if (!menu.items.hasOwnProperty(i) || i == "length") continue;
             var item = menu.items[i];
-            var item_top = item.elem.offset().top;
-            var item_bottom = item_top + item.elem.outerHeight();
-            if (item_top <= top && item_bottom >= top)
+            var item_top = item.elem[0].getBoundingClientRect().top;
+            if (item_top >= top)
             {
-                var candidate = Number(i) + 1;
-                while (menu.items[candidate] == null &&
-                       candidate <= menu.last_present)
-                {
-                    candidate++;
-                }
-                menu.first_visible = candidate;
-                if (menu.last_visible !== null) return;
-            }
-            if (item_top <= bottom && item_bottom >= bottom)
-            {
-                var candidate = Number(i) - 1;
-                while (menu.items[candidate] == null &&
-                       candidate >= menu.first_present)
-                {
-                    candidate--;
-                }
-                menu.last_visible = candidate;
-                if (menu.first_visible !== null) return;
+                menu.first_visible = i;
+                break;
             }
         }
-        menu.first_visible = menu.first_visible || menu.first_present;
-        menu.last_visible = menu.last_visible || menu.last_present;
+        for (; i < menu.items.length; i++)
+        {
+            var item = menu.items[i];
+            var item_bottom = item.elem[0].getBoundingClientRect().bottom;
+            if (item_bottom >= bottom)
+            {
+                menu.last_visible = i-1;
+                break;
+            }
+        }
     }
 
     function update_server_scroll()
@@ -405,6 +347,7 @@ function ($, comm, client, enums, cr, util, options) {
 
         if (!menu) return;
 
+        update_visible_indices();
         comm.send_message("menu_scroll", {
             first: menu.first_visible,
             last: menu.last_visible
@@ -413,23 +356,20 @@ function ($, comm, client, enums, cr, util, options) {
 
     function schedule_server_scroll()
     {
-        if (update_server_scroll_timeout)
-        {
-            clearTimeout(update_server_scroll_timeout);
-            update_server_scroll_timeout = null;
-        }
-        update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
+        if (!update_server_scroll_timeout)
+            update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
     }
 
     function update_title()
     {
-        $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
-        $("#menu_title").css("padding-left", menu_title_indent()+"px");
+        var title = menu.elem.find(".menu_title")
+        title.html(util.formatted_string_to_html(menu.title.text));
+        title.css("padding-left", menu_title_indent()+"px");
     }
 
     function pattern_select()
     {
-        var title = $("#menu_title");
+        var title = menu.elem.find(".menu_title")
         title.html("Select what? (regex) ");
         var input = $("<input class='text pattern_select' type='text'>");
         title.append(input);
@@ -468,7 +408,11 @@ function ($, comm, client, enums, cr, util, options) {
 
     function open_menu(data)
     {
-        if (data.replace) menu_stack.pop();
+        if (data.replace)
+        {
+            menu_stack.pop();
+            ui.hide_popup();
+        }
         menu_stack.push(data);
         menu = data;
 
@@ -478,26 +422,8 @@ function ($, comm, client, enums, cr, util, options) {
     function close_menu()
     {
         menu_stack.pop();
-
-        if (menu_stack.length == 0)
-        {
-            menu = null;
-            // Delay closing the dialog a bit to prevent flickering
-            // if the game immediately opens another one
-            // (e.g. when looking at an item from the inventory)
-            if (menu_close_timeout)
-                clearTimeout(menu_close_timeout);
-            menu_close_timeout = setTimeout(function () {
-                menu_close_timeout = null;
-                if (menu_stack.length == 0)
-                    client.hide_dialog();
-            }, 50);
-        }
-        else
-        {
-            menu = menu_stack[menu_stack.length - 1];
-            display_menu();
-        }
+        ui.hide_popup();
+        menu = menu_stack[menu_stack.length - 1];
     }
 
     function close_all_menus()
@@ -524,41 +450,22 @@ function ($, comm, client, enums, cr, util, options) {
             });
         }
         update_title();
-        $("#menu_more").html(util.formatted_string_to_html(menu.more));
-
-        client.center_element($("#menu"));
+        menu.elem.find(".menu_more").html(util.formatted_string_to_html(menu.more));
     }
 
     function update_menu_items(data)
     {
-        prepare_item_range(data.chunk_start,
-                           data.chunk_start + data.items.length - 1,
-                           true);
-
         update_item_range(data.chunk_start, data.items);
-
         handle_size_change();
     }
 
     function server_menu_scroll(data)
     {
+        if (!client.is_watching())
+            return;
         menu.server_first_visible = data.first;
-        if (menu.server_scroll)
+        if (menu.following_player_scroll)
             scroll_to_item(data.first, true);
-    }
-
-    function init_menus(data)
-    {
-        if (menu_stack.length > 0) return;
-
-        menu_stack = data.menus;
-        if (menu_stack.length > 0)
-        {
-            menu = menu_stack[menu_stack.length - 1];
-            display_menu();
-        }
-        else
-            menu = null;
     }
 
     comm.register_handlers({
@@ -568,7 +475,6 @@ function ($, comm, client, enums, cr, util, options) {
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
-        "init_menus": init_menus
     });
 
     // Event handlers
@@ -577,38 +483,37 @@ function ($, comm, client, enums, cr, util, options) {
     {
         if (!menu) return;
 
-        var items = $("#menu_contents");
-        items.css({
-            "max-height": $(window).height() - 100
-        });
-        client.center_element($("#menu"));
         if (menu.anchor_last)
             scroll_bottom_to_item(menu.last_visible, true);
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
-        // scrolling might not call this, but still need to show/hide more
-        menu_scroll_handler();
+
+        if (menu.type != "crt" && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
+        {
+            var contents_height = menu.elem.find(".menu_contents_inner").height();
+            var contents = $(menu.scroller.scrollElement);
+            var more = menu.elem.find(".menu_more");
+            var avail_height = contents.height() + more.height();
+            more[0].classList.toggle("hidden", contents_height <= avail_height);
+        }
     }
 
-    function menu_scroll_handler()
+    function menu_scroll_handler(was_server_initiated)
     {
-        var contents = $("#menu_contents");
+        // XXX: punt on detecting user-initiated scrolling for now
+        if (was_server_initiated === false)
+            menu.following_player_scroll = false;
+
         update_visible_indices();
         schedule_server_scroll();
-        if (menu.last_visible >= menu.items.length - 1
-            && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
-        {
-            $("#menu_more").css("visibility", "hidden");
-        }
-        else
-        {
-            $("#menu_more").css("visibility", "visible");
-        }
     }
 
     function menu_keydown_handler(event)
     {
         if (!menu || menu.type === "crt") return;
+        // can't check `hidden` class, which is on a 3x containing div
+        if (ui.top_popup().is(":hidden")) return;
+        if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
             if (update_server_scroll_timeout)
@@ -647,13 +552,9 @@ function ($, comm, client, enums, cr, util, options) {
             event.preventDefault();
             return false;
         case 36: // home
-            if (menu.tag !== "help")
-            {
-                scroll_to_item(0);
-                event.preventDefault();
-                return false;
-            }
-            else break;
+            scroll_to_item(0);
+            event.preventDefault();
+            return false;
         case 38: // up
             line_up();
             event.preventDefault();
@@ -671,6 +572,7 @@ function ($, comm, client, enums, cr, util, options) {
     function menu_keypress_handler(event)
     {
         if (!menu || menu.type === "crt") return;
+        if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         var chr = String.fromCharCode(event.which);
 
@@ -714,13 +616,13 @@ function ($, comm, client, enums, cr, util, options) {
         if (options.get("tile_font_crt_size") === 0)
         {
             $("#crt").css("font-size", "");
-            $("#menu").css("font-size", "");
+            $(".menu").css("font-size", "");
         }
         else
         {
             $("#crt").css("font-size",
                 options.get("tile_font_crt_size") + "px");
-            $("#menu").css("font-size",
+            $(".menu").css("font-size",
                 options.get("tile_font_crt_size") + "px");
         }
 
@@ -729,7 +631,7 @@ function ($, comm, client, enums, cr, util, options) {
         {
             family += ", monospace";
             $("#crt").css("font-family", family);
-            $("#menu").css("font-family", family);
+            $(".menu").css("font-family", family);
         }
 
         handle_size_change();

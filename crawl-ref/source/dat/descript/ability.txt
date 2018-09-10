@@ -63,7 +63,7 @@ Transforms the user into a swift-moving vampire bat, increasing evasion but
 substantially weakening melee attacks.
 
 While tranformed, any equipped weapons, armour and rings are melded, and the
-user becomes unable to evoke wands or to cast spells.
+user becomes unable to cast spells.
 %%%%
 Fly ability
 
@@ -560,7 +560,7 @@ Aborts an ongoing skill transfer.
 Shadow Step ability
 
 Allows you to step into the shadow of any hostile creature within your umbra,
-as long as they are immobile or asleep, landing adjacent to the target.
+landing on a random spot adjacent to the target.
 %%%%
 Shadow Form ability
 

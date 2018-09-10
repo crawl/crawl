@@ -1743,11 +1743,10 @@ static void marshallLevelXPInfo(writer &th, LevelXPInfo xp_info)
 {
     marshall_level_id(th, xp_info.level);
 
-    marshallInt(th, xp_info.spawn_xp);
-    marshallInt(th, xp_info.generated_xp);
-    marshallInt(th, xp_info.spawn_count);
-    marshallInt(th, xp_info.generated_count);
-    marshallInt(th, xp_info.turns);
+    marshallInt(th, xp_info.non_vault_xp);
+    marshallInt(th, xp_info.non_vault_count);
+    marshallInt(th, xp_info.vault_xp);
+    marshallInt(th, xp_info.vault_count);
 }
 
 static void tag_construct_you_dungeon(writer &th)
@@ -2197,7 +2196,8 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     // be forward-compatible. We validate them only on an actual restore.
     you.your_name         = unmarshallString2(th);
     you.prev_save_version = unmarshallString2(th);
-    dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
+    dprf("Saved character %s, version: %s", you.your_name.c_str(),
+                                            you.prev_save_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));
@@ -3973,13 +3973,30 @@ static LevelXPInfo unmarshallLevelXPInfo(reader &th)
 
     xp_info.level = unmarshall_level_id(th);
 
-    xp_info.spawn_xp        = unmarshallInt(th);
-    xp_info.generated_xp    = unmarshallInt(th);
-
-    xp_info.spawn_count     = unmarshallInt(th);
-    xp_info.generated_count = unmarshallInt(th);
-
-    xp_info.turns           = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    // Track monster placement from vaults instead of tracking spawns.
+    if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS)
+    {
+        // Spawned/generated xp and counts have to be combined as non-vault
+        // info. We have no vault info on dead monsters, so this is the best we
+        // can do.
+        xp_info.non_vault_xp     = unmarshallInt(th);
+        xp_info.non_vault_xp    += unmarshallInt(th);
+        xp_info.non_vault_count  = unmarshallInt(th);
+        xp_info.non_vault_count += unmarshallInt(th);
+        // turns spent on level, which we don't need.
+        unmarshallInt(th);
+    }
+    else
+    {
+#endif
+    xp_info.non_vault_xp    = unmarshallInt(th);
+    xp_info.non_vault_count = unmarshallInt(th);
+    xp_info.vault_xp        = unmarshallInt(th);
+    xp_info.vault_count     = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     return xp_info;
 }
@@ -4638,9 +4655,10 @@ void unmarshallItem(reader &th, item_def &item)
         }
 
         // Make sure no weird fake-rap combinations are produced by the upgrade
-        // from rings of sustenance/hunger with {Stlth} to stealth/loudness
+        // from rings of sustenance/hunger with {Stlth} to stealth/attention
         if (item.base_type == OBJ_JEWELLERY
-            && (item.sub_type == RING_STEALTH || item.sub_type == RING_LOUDNESS))
+            && (item.sub_type == RING_STEALTH
+                || item.sub_type == RING_ATTENTION))
         {
             artefact_set_property(item, ARTP_STEALTH, 0);
         }
@@ -5993,7 +6011,13 @@ void unmarshallMonster(reader &th, monster& m)
     {
         // This was monster::is_spawn before the level XP info fix.
         if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_INFO_FIX)
-            m.xp_tracking = unmarshallByte(th) ? XP_SPAWNED : XP_GENERATED;
+        {
+            // We no longer track spawns but instead whether the monster comes
+            // from a vault. This gets determined from props below for
+            // transferred games.
+            unmarshallByte(th);
+            m.xp_tracking = XP_NON_VAULT;
+        }
         else
 #endif
     m.xp_tracking     = static_cast<xp_tracking_type>(unmarshallUByte(th));
@@ -6396,6 +6420,12 @@ void unmarshallMonster(reader &th, monster& m)
         m.props.erase("given beogh weapon");
         m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS
+        && m.props.exists("map"))
+    {
+        m.xp_tracking = XP_VAULT;
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -6439,6 +6469,33 @@ static void tag_read_level_monsters(reader &th)
         if (!m.alive())
             continue;
 
+        monster *dup_m = monster_by_mid(m.mid);
+
+#if TAG_MAJOR_VERSION == 34
+        // clear duplicates of followers who got their god cleared as the result
+        // of a bad polymorph prior to e6d7efa92cb0. This only fires on level
+        // load *when there are duplicate mids*, because otherwise the clones
+        // aren't uniquely identifiable. This fix may still result in duplicate
+        // mid errors from time to time, but should never crash; saving and
+        // loading will fix up the duplicate errors. A similar check also
+        // happens in follower::place (since that runs after the level is
+        // loaded).
+        if (dup_m)
+        {
+            if (maybe_bad_priest_monster(*dup_m))
+                fixup_bad_priest_monster(*dup_m);
+            else if (maybe_bad_priest_monster(m))
+            {
+                fixup_bad_priest_monster(m);
+                env.mid_cache[dup_m->mid] = dup_m->mindex();
+                // dup_m should already be placed, so nothing else is needed.
+                continue;
+            }
+            // we could print an error on the else case, but this is already
+            // going to be handled by debug_mons_scan.
+        }
+#endif
+
         // companion_is_elsewhere checks the mid cache
         env.mid_cache[m.mid] = i;
         if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
@@ -6447,6 +6504,13 @@ static void tag_read_level_monsters(reader &th)
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
             monster_die(m, KILL_RESET, -1, true, false);
+            // avoid "mid cache bogosity" if there's an unhandled clone bug
+            if (dup_m && dup_m->alive())
+            {
+                mprf(MSGCH_ERROR, "elsewhere companion has duplicate mid %d: %s",
+                    dup_m->mid, dup_m->full_name(DESC_PLAIN).c_str());
+                env.mid_cache[dup_m->mid] = dup_m->mindex();
+            }
             continue;
         }
 
@@ -6803,6 +6867,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
+    // save compat changes with minor tags here must be added to bones_minor_tags
     marshallString(th, ghost.name);
 
     marshallShort(th, ghost.species);
@@ -6830,6 +6895,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
 
 static ghost_demon unmarshallGhost(reader &th)
 {
+    // save compat changes with minor tags here must be added to bones_minor_tags
     ghost_demon ghost;
 
     ghost.name             = unmarshallString(th);
@@ -6902,7 +6968,11 @@ static vector<ghost_demon> tag_read_ghost(reader &th)
     int nghosts = unmarshallShort(th);
 
     if (nghosts < 1 || nghosts > MAX_GHOSTS)
-        return result;
+    {
+        string error = "Bones file has an invalid ghost count (" +
+                                                    to_string(nghosts) + ")";
+        throw corrupted_save(error);
+    }
 
     for (int i = 0; i < nghosts; ++i)
         result.push_back(unmarshallGhost(th));

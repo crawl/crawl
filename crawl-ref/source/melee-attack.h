@@ -62,7 +62,7 @@ private:
     bool handle_phase_end() override;
 
     /* Combat Calculations */
-    bool using_weapon() override;
+    bool using_weapon() const override;
     int weapon_damage() override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage, int damage_max) override;
@@ -143,7 +143,6 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
-    bool defender_wjc_distracted() const;
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);

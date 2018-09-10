@@ -692,7 +692,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_LOUDNESS:
+                case RING_ATTENTION:
                 case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
@@ -1050,6 +1050,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
       can_purchase(_can_purchase)
 {
     menu_action = can_purchase ? ACT_EXECUTE : ACT_EXAMINE;
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
 
     set_tag("shop");
 
@@ -1103,7 +1104,12 @@ void ShopMenu::update_help()
                          you.gold - total_cost,
                          (you.gold - total_cost != 1) ? "s" : "");
     }
-    top_line += "</yellow>\n";
+    top_line += "</yellow>";
+
+    // Ensure length >= 80ch, which prevents the local tiles menu from resizing
+    // as the player selects/deselects entries. Blegh..
+    int top_line_width = strwidth(formatted_string::parse_string(top_line).tostring());
+    top_line += string(max(0, 80 - top_line_width), ' ') + '\n';
 
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //You have 0 gold pieces.
@@ -1161,7 +1167,7 @@ void ShopMenu::purchase_selected()
                    col.c_str(),
                    col.c_str()));
         more += old_more;
-        draw_more();
+        update_more();
         return;
     }
     more = formatted_string::parse_string(make_stringf(
@@ -1171,11 +1177,11 @@ void ShopMenu::purchase_selected()
                cost,
                col.c_str()));
     more += old_more;
-    draw_more();
+    update_more();
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         more = old_more;
-        draw_more();
+        update_more();
         return;
     }
     sort(begin(selected), end(selected),
@@ -1225,6 +1231,8 @@ void ShopMenu::purchase_selected()
 
     if (outside_items)
     {
+        update_help();
+        const formatted_string next_more = more;
         more = formatted_string::parse_string(make_stringf(
             "<%s>I'll put %s outside for you.</%s>\n",
             col.c_str(),
@@ -1232,12 +1240,13 @@ void ShopMenu::purchase_selected()
       (int) bought_indices.size() == outside_items ? "them"
                                                    : "some of them",
             col.c_str()));
-        more += old_more;
+        more += next_more;
+        update_more();
     }
     else
         update_help();
 
-    draw_menu(true);
+    update_menu(true);
 }
 
 // Doesn't handle redrawing itself.
@@ -1301,7 +1310,7 @@ bool ShopMenu::process_key(int keyin)
             else
                 menu_action = ACT_EXECUTE;
             update_help();
-            draw_more();
+            update_more();
         }
         return true;
     case ' ':
@@ -1330,14 +1339,14 @@ bool ShopMenu::process_key(int keyin)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
-        draw_menu(true);
+        update_menu(true);
         return true;
     }
     case '/':
         ++order;
         resort();
         update_help();
-        draw_menu(true);
+        update_menu(true);
         return true;
     default:
         break;
@@ -1364,7 +1373,6 @@ bool ShopMenu::process_key(int keyin)
             }
             describe_item(item);
         }
-        draw_menu();
         return true;
     }
     else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
@@ -1377,7 +1385,7 @@ bool ShopMenu::process_key(int keyin)
             shopping_list.del_thing(item, &pos);
         else
             shopping_list.add_thing(item, item_price(item, shop), &pos);
-        draw_menu(true);
+        update_menu(true);
         return true;
     }
 
@@ -1387,7 +1395,7 @@ bool ShopMenu::process_key(int keyin)
     {
         // Update the footer to display the new $$$ info.
         update_help();
-        draw_menu(true);
+        update_menu(true);
     }
     return ret;
 }
@@ -2156,6 +2164,7 @@ class ShoppingListMenu : public Menu
 {
 public:
     ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
+    bool view_only {false};
 
 protected:
     virtual formatted_string calc_title() override;
@@ -2173,6 +2182,12 @@ formatted_string ShoppingListMenu::calc_title()
                 total_cost);
 
     string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    if (view_only)
+    {
+        fs += formatted_string::parse_string(s + "<w>examine</w>");
+        return fs;
+    }
 
     switch (menu_action)
     {
@@ -2256,15 +2271,16 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     }
 }
 
-void ShoppingList::display()
+void ShoppingList::display(bool view_only)
 {
     if (list->empty())
         return;
 
     ShoppingListMenu shopmenu;
+    shopmenu.view_only = view_only;
     shopmenu.set_tag("shop");
-    shopmenu.menu_action  = Menu::ACT_EXECUTE;
-    shopmenu.action_cycle = Menu::CYCLE_CYCLE;
+    shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
+    shopmenu.action_cycle = view_only ? Menu::CYCLE_NONE : Menu::CYCLE_CYCLE;
     string title          = "item";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -2345,6 +2361,7 @@ void ShoppingList::display()
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
+            shopmenu.update_menu(true);
         }
         else
             die("Invalid menu action type");

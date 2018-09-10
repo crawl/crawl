@@ -13,6 +13,7 @@
   });
 </script>
 <link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/style.css">
+<link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/simplebar.css">
 
 <div id="crt" style="display: none;"></div>
 
@@ -106,8 +107,130 @@
   <div id="tooltip" style="display: none;"></div>
 </div>
 
-<div id="menu" style="display: none;" class="floating_dialog"></div>
-<div id="input_dialog" style="display: none;" class="floating_dialog"></div>
+<div class="templates" style="display: none;">
+    <div class="menu"></div>
+    <div id="input_dialog"></div>
+    <div class="ui-popup">
+        <div class=ui-popup-overlay></div>
+        <div class=ui-popup-outer>
+            <div class=ui-popup-inner>
+            </div>
+        </div>
+    </div>
+
+    <div class="describe-generic">
+        <div class=header>
+            <canvas class="glyph-mode-hidden"></canvas>
+            <span></span>
+        </div>
+        <div class="body fg7"></div>
+    </div>
+
+    <div class="describe-feature">
+    </div>
+
+    <div class="describe-item">
+        <div class=header>
+            <canvas class="glyph-mode-hidden"></canvas>
+            <span></span>
+        </div>
+        <div class="body fg7"></div>
+        <div class=actions></div>
+    </div>
+
+    <div class="describe-spell">
+        <div class=header>
+            <canvas class="glyph-mode-hidden"></canvas>
+            <span></span>
+        </div>
+        <div class="body fg7"></div>
+        <div class="actions hidden">(M)emorise this spell.</div>
+    </div>
+
+    <div class="describe-cards">
+    </div>
+
+    <div class="mutations">
+        <div class=header>Innate Abilities, Weirdnesses & Mutations</div>
+        <div class="body paneset">
+            <div class="pane">
+            </div>
+            <div class="pane">
+                <table class="vamp-attrs pane">
+                    <thead>
+                        <tr><td></td><th class=fg2>Full</th><th>Satiated</th><th class=fg14>Thirsty</th><th class=fg12>Bloodless</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th>Metabolism</th><td>fast</td><td>normal</td><td>slow</td><td>none</td></tr>
+                        <tr><td>Regeneration</td><td>fast</td><td>normal</td><td>slow</td><td>none</td></tr>
+                        <tr><td>Stealth boost</td><td>none</td><td>none</td><td>minor</td><td>major</td></tr>
+                        <tr><td>Hunger costs</td><td>full</td><td>full</td><td>halved</td><td>none</td></tr>
+                        <tr class=group><th>Resistances</th><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>Poison resistance</td><td></td><td></td><td>+</td><td>immune</td></tr>
+                        <tr><td>Cold resistance</td><td></td><td></td><td>+</td><td>++</td></tr>
+                        <tr><td>Negative resistance</td><td></td><td>+</td><td>++</td><td>+++</td></tr>
+                        <tr><td>Rot resistance</td><td></td><td></td><td>+</td><td>+</td></tr>
+                        <tr><td>Torment resistance</td><td></td><td></td><td></td><td>+</td></tr>
+                        <tr class=group><th>Transformations</th><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>Bat form</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
+                        <tr><td>Other forms / berserk</td><td>yes</td><td>yes</td><td>no</td><td>no</td></tr>
+                    </tbody>
+                </table>
+                <style></style>
+            </div>
+        </div>
+        <div class="footer paneset">
+            <div class="pane">[!/^]: Mutations | Blood properties</div>
+            <div class=pane>[!/^]: Mutations | Blood properties</div>
+        </div>
+    </div>
+    <div class="describe-god fg7">
+        <div class=header>
+            <canvas class="glyph-mode-hidden"></canvas>
+            <span></span>
+        </div>
+        <div class="body paneset">
+            <div class="pane">
+                <div class=desc></div>
+                <table class="god-favour">
+                    <tr><td>Title</td><td> - </td><td class=title></td></tr>
+                    <tr><td>Favour</td><td> - </td><td class=favour></td></tr>
+                </table>
+                <div class="god-powers">
+                    <div class=power><div>Granted powers</div><div>(Cost)</div></div>
+                </div>
+            </div>
+            <div class="pane">
+            </div>
+            <div class="pane">
+            </div>
+        </div>
+        <div class="footer">
+            <div><b class=fg3>!</b>/<b class=fg3>^</b>:&nbsp;</div>
+            <div class=paneset>
+                <div class=pane><b class=fg15>Overview</b> | Powers | Wrath
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
+                </div>
+                <div class=pane>Overview | <b class=fg15>Powers</b> | Wrath
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
+                </div>
+                <div class=pane>Overview | Powers | <b class=fg15>Wrath</b>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=formatted-scroller>
+        <div class="body fg7"></div>
+        <div class=more></div>
+    </div>
+    <div class=msgwin-get-line>
+        <div class=header></div>
+        <div class="body fg7"></div>
+    </div>
+</div>
+
+<div id="ui-stack"></div>
 
 <!-- Tile images -->
 <div style="display: none;">

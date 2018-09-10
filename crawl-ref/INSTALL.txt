@@ -244,10 +244,14 @@ For the graphical version:
 Building on Windows (MSYS2)
 ---------------------------
 
-MSYS2 which is a Cygwin-derived software distro for Windows that can build
-native applications. We recommend Windows users try this method first for
-compiling crawl, since it is tested by our active Windows developers. You can
-download the MSYS2 installer from the following website:
+This is the only currently recommended process for building Crawl on windows.
+It is also possible to cross-compile windows builds; see the release guide
+for instructions.
+
+MSYS2 is a Cygwin-derived software distro for Windows that can build
+native applications; you will interact with the build process in a unix-like
+shell interface. You can download the MSYS2 installer from the following
+website:
 
 https://msys2.github.io/
 
@@ -255,18 +259,24 @@ You generally want to install the 64-bit version of MSYS2 unless you have a
 specific reason to build a 32-bit version of crawl. Follow all of the steps you
 see on that page to install MSYS2, but please read the additional notes below.
 In particular, when starting the MSYS2 Shell, be sure to run the 64-bit MinGW
-version of MSYS2 and *not* the version labeled 'MSYS2 MSYS'.
+version of the MSYS2 shell and *not* the version labeled 'MSYS2 MSYS' or the
+32-bit version.
 
 * The installer will put all MSYS2/MinGW files into a folder of your choice,
   which defaults to 'C:\msys64'. If you have crawl-related work files from
   other directories that you'd like to carry over, you can copy them into
   'C:\msys64\home\<Username>', where <Username> is your Windows username. This
-  is the path to your home directory in this new MSYS2 installation.
+  is the path to your MSYS2 home directory. From the MSYS2 shell you can always
+  get back to here with `cd ~`.
 
-* After the installer finishes, you'll want to start the MSYS2 Shell to follow
-  steps 5-7 in order to update your installation. Be sure to use the menu entry
-  that's labeled MSYS2 MinGW 64-bit and *not* the one labeled 'MSYS2 MSYS'.
-  After each update step, restart the MSYS2 shell before the next step.
+* After the installer finishes, start the MSYS2 shell ("MSYS2 MinGW 64-bit")
+  and do steps 5-6 from the MSYS2 install instructions in order to update your
+  installation. These steps are repeated here:
+
+    5. At the command line, run `pacman -Syu` to update the core packages.
+       Then restart your MSYS2 shell. (The installer will force you to restart.)
+
+    6. At the command line, run `pacman -Su` to update all packages.
 
 After MSYS2 is fully installed and updated, follow steps below to install
 development packages and compile Crawl. The commands shown below should be run
@@ -284,41 +294,53 @@ from within the MSYS2 Shell.
 
   pacman -S mingw-w64-x86_64-toolchain
 
-  At this point you may need to add the newly installed toolchain to your path.
-  You can do this with the following line, either at the command line (for that
-  shell instance only) or in the file `~/.bashrc` to make it permanent:
+* At this point on current MSYS2 versions, your development environment should
+  be complete. You can test it by running:
+  
+  gcc -v
+  
+  If this works, you're all set. If it doesn't, you may be an an older version
+  of MSYS2 and need to manually add the newly installed toolchain to your
+  path. To do so, run the following line, either at the command line (for
+  that shell instance only) or in the file `~/.bashrc` to make it permanent:
 
   export PATH=$PATH:/mingw64/bin
 
-  To test that this worked, run:
-
-  gcc -v
-
   After the packages are installed and gcc runs, you're ready to build crawl!
 
-* To get the Crawl source, you can follow the steps in the Source Code Checkout
-  section above to clone Crawl into your MSYS2 home directory. If you've
-  downloaded the source elsewhere, first 'cd' to that Crawl source directory.
-  For example, if you have the Crawl sources in c:\crawl\source, you would run:
+* To get the Crawl source, follow the steps in the Source Code Checkout
+  section above to clone Crawl into your MSYS2 home directory. We recommend
+  using the MSYS2-installed version of git for these steps. In brief:
 
-  cd /c/crawl/source
+  1. `cd` to the location where you would like the crawl repository to be. It
+     will clone into a folder named `crawl`. Your home directory (`cd ~`) is
+     a reasonable choice.
+  2. Run `git clone https://github.com/crawl/crawl.git`.
+  3. Run `cd crawl/crawl-ref-source`.
+  4. Run `git submodule update --init`.
 
 * Build the console version of Crawl by simply running:
 
   make
 
-  If you want a graphical build, you will need to run add 'TILES=y':
+  If you want a graphical build, you will need to add 'TILES=y':
 
   make TILES=y
 
+  If you want a debug build, add the target `debug` to the above commands.
+  For building packages, see instructions in the release guide.
+
 * When the build process finishes, you can run crawl.exe directly from the
-  source directory in the MSYS2 shell. For Tiles, type './crawl', and for
-  console, type 'start crawl', which will open Crawl in a new console window
-  (necessary for it to run properly). Both versions can also be started by
+  source directory in the MSYS2 shell. For Tiles, type './crawl.exe', and for
+  console, type 'start crawl', which will open Crawl in a new command.exe
+  window (the Windows version of Crawl requires a command.exe shell and will
+  not run in an MSYS2 shell). Both versions can also be started by
   double-clicking crawl.exe using the graphical file explorer.
 
 Building on Windows (Cygwin)
 ----------------------------
+
+* This build process is not currently supported.
 
 * Get Cygwin from http://www.cygwin.com/. When installing, ensure that the
   following packages are selected: gcc, g++, make, flex, bison,
@@ -356,7 +378,7 @@ Building on Windows 10 (Linux Subsystem)
 Building on Windows (MSVC)
 --------------------------
 
-* This build process is not currently maintained and is unlikely to be
+* This build process is not currently supported and is unlikely to be
   straightforward in versions of MSVC besides those explicitly mentioned
   here. If you get it to work on a more recent version, please let us know
   and submit a patch!

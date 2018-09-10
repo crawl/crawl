@@ -45,6 +45,9 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
+#include "ui.h"
+
+using namespace ui;
 
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
@@ -134,7 +137,7 @@ void init_hints()
     Hints.hints_seen_invisible = 0;
 }
 
-static void _print_hints_menu(hints_types type)
+static string _print_hints_menu(hints_types type)
 {
     char letter = 'a' + type;
     char desc[100];
@@ -155,7 +158,7 @@ static void _print_hints_menu(hints_types type)
         break;
     }
 
-    cprintf("%c - %s %s %s\n",
+    return make_stringf("%c - %s %s %s\n",
             letter, species_name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
@@ -163,31 +166,23 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def& choice)
 {
-again:
-    clrscr();
-
-    cgotoxy(1,1);
-    formatted_string::parse_string(
-        "<white>You must be new here indeed!</white>"
+    string prompt = "<white>You must be new here indeed!</white>"
         "\n\n"
         "<cyan>You can be:</cyan>"
-        "\n").display();
-
-    textcolour(LIGHTGREY);
-
+        "\n";
     for (int i = 0; i < HINT_TYPES_NUM; i++)
-        _print_hints_menu((hints_types)i);
-
-    formatted_string::parse_string(
-        "<brown>\nEsc - Quit"
+        prompt += _print_hints_menu((hints_types)i);
+    prompt += "<brown>\nEsc - Quit"
         "\n* - Random hints mode character"
-        "</brown>\n").display();
+        "</brown>";
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
 
-    while (true)
-    {
-        int keyn = getch_ck();
-        if (keyn == CK_REDRAW)
-            goto again;
+    bool done = false;
+    int keyn;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        keyn = ev.key.keysym.sym;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -203,24 +198,35 @@ again:
             choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
                                                      : WPN_HAND_AXE;
 
-            return;
+            return done = true;
         }
 
         switch (keyn)
         {
-        CASE_ESCAPE
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            game_ended(game_exit::abort);
-        case 'X':
-            cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            end(0);
-            return;
+            case 'X': CASE_ESCAPE
+                return done = true;
+            default:
+                return true;
         }
+    });
+
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
+
+    switch (keyn)
+    {
+    CASE_ESCAPE
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        game_ended(game_exit::abort);
+    case 'X':
+        cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        end(0);
+        return;
     }
 }
 
@@ -339,29 +345,26 @@ static void _replace_static_tags(string &text)
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
-    cgotoxy(1, 1);
-    clrscr();
-
-    int width = _get_hints_cols();
-#ifdef USE_TILE_LOCAL
-    // Use a more sensible screen width.
-    if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
-        width = crawl_view.msgsz.x + crawl_view.hudsz.x;
-    if (width > 80)
-        width = 80;
-#endif
-
     string text = getHintString("welcome");
     _replace_static_tags(text);
+    trim_string(text);
 
-    linebreak_string(text, width);
-    display_tagged_block(text);
+    auto prompt_ui = make_shared<Text>(formatted_string::parse_string(text));
+    prompt_ui->wrap_text = true;
+#ifdef USE_TILE_LOCAL
+    prompt_ui->max_size()[0] = 800;
+#else
+    prompt_ui->max_size()[0] = 80;
+#endif
 
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        getchm();
-    }
-    redraw_screen();
+    bool done = false;
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
+
+    mouse_control mc(MOUSE_MODE_MORE);
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    ui::run_layout(move(popup), done);
 }
 
 // Called each turn from _input. Better name welcome.
@@ -625,7 +628,7 @@ static void _hints_healing_reminder()
                         "health in the first place. To use your abilities type "
                         "<w>a</w>.";
             }
-            mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
@@ -919,11 +922,9 @@ void hints_monster_seen(const monster& mon)
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
     {
         text =  "However, as a conjurer you will want to deal with it using "
-                "magic. If you have a look at your spellbook from your "
-                "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this."
-                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
-                "book in your inventory to read its description.</tiles>";
+                "magic. If you look at the help entry for the "
+                "<w>M</w>emorisation screen you'll find an explanation of how "
+                "to do this.";
         mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
@@ -995,7 +996,7 @@ static string _describe_portal(const coord_def &gc)
             "<console>another <w>"
           + stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
           + "</w> - but NOT the ancient stone arch you'll start "
-            "out on!</console>.";
+            "out on!</console>";
 
     return text;
 }
@@ -1158,19 +1159,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up a book"
                 "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
-             << "'</w>) "
-                "If it's a spellbook, you'll be able to memorise spells from "
-                "it via <w>%</w>, and cast them with <w>%</w>.</console>"
-                "<tiles>. If it's a spellbook, you can memorise spells from "
-                "it with <w>left-click</w>.</tiles>";
+             << "'</w>) </console>"
+                "If it's a spellbook, you can pick it up to add its spells "
+                "to your library. You'll be able to memorise spells from "
+                "it via <w>%</w>, and cast them with <w>%</w>.</console>";
         cmd.push_back(CMD_MEMORISE_SPELL);
         cmd.push_back(CMD_CAST_SPELL);
 
         if (you_worship(GOD_TROG))
         {
             text << god_name(GOD_TROG)
-                 << " hates it when you memorize magic, and prefers you to "
-                    "burn books with the corresponding <w>%</w>bility.";
+                 << " hates it when you memorise or study magic, though.";
             cmd.push_back(CMD_USE_ABILITY);
         }
         break;
@@ -1206,7 +1205,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
              << "</w>') </console>"
-                "you've picked up. Missiles like tomahwaks and throwing nets "
+                "you've picked up. Missiles like tomahawks and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
                 "really effective. "
@@ -2809,6 +2808,62 @@ static string _hints_target_mode(bool spells = false)
     return result;
 }
 
+string hints_memorise_info()
+{
+    // TODO: this should probably be in z or I, but adding it to the memorise
+    // menu was easier for the moment.
+    //textcolour(channel_to_colour(MSGCH_TUTORIAL));
+    ostringstream text;
+    vector<command_type> cmd;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    string m = "This screen shows the spells in your spell library. From here "
+               "you can memorise spells by selecting them, as well as view "
+               "spell descriptions, search for them, and organize them. As a "
+               "conjurer, you start with five memorisable spells, and one "
+               "already memorised: Magic Dart. (To view memorised spells, you "
+               "can exit this menu and select <w>I</w>.)";
+
+    if (player_has_available_spells())
+    {
+        m += "\n\nA spell that isn't <darkgray>grayed out</darkgray> or "
+             "<lightred>forbidden</lightred> can be "
+             "memorised right away by selecting it at at this menu.";
+    }
+    else
+    {
+        m += "\n\nYou cannot memorise any ";
+        m += (you.spell_no ? "more " : "");
+        m += "spells right now. This will change as you grow in levels and "
+             "Spellcasting proficiency. ";
+    }
+
+    if (you.spell_no)
+    {
+        m += "\n\nTo use magic, ";
+#ifdef USE_TILE
+        m += "you can <w>left mouse click</w> on the monster you wish to "
+             "target (or on your player character to cast a spell on "
+             "yourself) while pressing the <w>Control key</w>, and then select "
+             "a spell from the menu. Or you can switch to the spellcasting "
+             "display by <w>clicking on the</w> corresponding <w>tab</w>."
+             "\n\nAlternatively, ";
+#endif
+        m += "you can type <w>%</w> and choose a spell, e.g. <w>a</w> (check "
+             "with <w>?</w>). For attack spells you'll ";
+        cmd.push_back(CMD_CAST_SPELL);
+    }
+
+    linebreak_string(m, _get_hints_cols());
+    if (!cmd.empty())
+        insert_commands(m, cmd);
+    text << m;
+    if (you.spell_no)
+        text << _hints_target_mode(true);
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    return text.str();
+}
+
 static string _hints_abilities(const item_def& item)
 {
     string str = "To do this, ";
@@ -2849,9 +2904,18 @@ static string _hints_throw_stuff(const item_def &item)
 {
     string result;
 
-    result  = "To do this, type <w>%</w> to fire, then <w>";
-    result += item.slot;
-    result += "</w> for ";
+    result  = "To do this, type <w>%</w> to fire, then ";
+    if (!item.slot)
+    {
+        result += "<w>";
+        result += item.slot;
+        result += "</w> for";
+    }
+    else
+    {
+        // you don't have this/these stuff(s) at present
+        result += "select ";
+    }
     result += (item.quantity > 1 ? "these" : "this");
     result += " ";
     result += item_base_name(item);
@@ -3087,7 +3151,7 @@ string hints_describe_item(const item_def &item)
                         "them off again with <w>%</w>"
 #ifdef USE_TILE
                         ", or, alternatively, simply click on their tiles to "
-                        "perform either action."
+                        "perform either action"
 #endif
                         ".";
                 cmd.push_back(CMD_WEAR_ARMOUR);
@@ -3276,78 +3340,10 @@ string hints_describe_item(const item_def &item)
             }
             else // It's a spellbook!
             {
-                if (you_worship(GOD_TROG))
-                {
-                    if (!item_ident(item, ISFLAG_KNOW_TYPE))
-                    {
-                        ostr << "\nIt's a book, you can <w>%</w>ead it.";
-                        cmd.push_back(CMD_READ);
-                    }
-                    else
-                    {
-                        ostr << "\nA spellbook! You could <w>%</w>emorise some "
-                                "spells and then cast them with <w>%</w>.";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                        cmd.push_back(CMD_CAST_SPELL);
-                    }
-                    ostr << "\nAs a worshipper of "
-                         << god_name(GOD_TROG)
-                         << ", though, you might instead wish to burn this "
-                            "tome of hated magic by using the corresponding "
-                            "<w>%</w>bility. "
-                            "Note that this only works on books that are lying "
-                            "on the floor and not on your current square. ";
-                    cmd.push_back(CMD_USE_ABILITY);
-                }
-                else if (!item_ident(item, ISFLAG_KNOW_TYPE))
-                {
-                    // XXX: can this happen?
-                    ostr << "\nIt's a book, you can <w>%</w>ead it"
-#ifdef USE_TILE
-                            ", something that can also be achieved by clicking "
-                            "on its tile in your inventory."
-#endif
-                            ".";
-                    cmd.push_back(CMD_READ);
-                }
-                else
-                {
-                    if (player_can_memorise(item))
-                    {
-                        ostr << "\nSuch a <lightblue>highlighted "
-                                "spell</lightblue> can be <w>%</w>emorised "
-                                "right away. ";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                    }
-                    else
-                    {
-                        ostr << "\nYou cannot memorise any "
-                             << (you.spell_no ? "more " : "")
-                             << "spells right now. This will change as you "
-                                "grow in levels and Spellcasting proficiency. ";
-                    }
-
-                    if (you.spell_no)
-                    {
-                        ostr << "\n\nTo use magic, ";
-#ifdef USE_TILE
-                        ostr << "you can <w>left mouse click</w> on the "
-                                "monster you wish to target (or on your "
-                                "player character to cast a spell on "
-                                "yourself) while pressing the <w>Control "
-                                "key</w>, and then select a spell from the "
-                                "menu. Or you can switch to the spellcasting "
-                                "display by <w>clicking on the</w> "
-                                "corresponding <w>tab</w>."
-                                "\n\nAlternatively, ";
-#endif
-                        ostr << "you can type <w>%</w> and choose a "
-                                "spell, e.g. <w>a</w> (check with <w>?</w>). "
-                                "For attack spells you'll ";
-                        cmd.push_back(CMD_CAST_SPELL);
-                        ostr << _hints_target_mode(true);
-                    }
-                }
+                ostr << "\nIt's a book, you can pick it up to add its "
+                        "spells to your spell library. (View your spell "
+                        " library with <w>%</w>";
+                cmd.push_back(CMD_MEMORISE_SPELL);
             }
             ostr << "\n";
             Hints.hints_events[HINT_SEEN_SPBOOK] = false;
@@ -3489,12 +3485,15 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
 
 string hints_describe_pos(int x, int y)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
     _hints_describe_disturbance(x, y, ostr);
     _hints_describe_cloud(x, y, ostr);
     _hints_describe_feature(x, y, ostr);
-    return ostr.str();
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 static void _hints_describe_feature(int x, int y, ostringstream& ostr)
@@ -3502,7 +3501,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     const dungeon_feature_type feat = grd[x][y];
     const coord_def            where(x, y);
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     bool boring = false;
 
@@ -3629,22 +3629,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
         {
             god_type altar_god = feat_altar_god(feat);
 
-            // I think right now Sif Muna is the only god for whom
-            // you can find altars early and who may refuse to accept
-            // worship by one of the hint mode characters. (jpeg)
             // TODO: mention Gozag here?
-            if (altar_god == GOD_SIF_MUNA
-                && !player_can_join_god(altar_god))
-            {
-                ostr << "As <w>p</w>raying on the altar will tell you, "
-                     << god_name(altar_god) << " only accepts worship from "
-                        "those who have already dabbled in magic. You can "
-                        "find out more about this god by searching the "
-                        "database with <w>?/g</w>.\n"
-                        "For other gods, you'll be able to join the faith "
-                        "by <w>p</w>raying at their altar.";
-            }
-            else if (you_worship(GOD_NO_GOD))
+            if (you_worship(GOD_NO_GOD))
             {
                 ostr << "This is your chance to join a religion! In "
                         "general, the gods will help their followers, "
@@ -3653,7 +3639,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                         "tributes or entertainment in return.\n"
                         "You can get information about <w>"
                      << god_name(altar_god)
-                     << "</w> by pressing <w>p</w> while standing on the "
+                     << "</w> by pressing <w>></w> while standing on the "
                         "altar. Before taking up the responding faith "
                         "you'll be asked for confirmation.";
             }
@@ -3669,7 +3655,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                         "but having a look won't hurt: to get information "
                         "on <w>";
                 ostr << god_name(altar_god);
-                ostr << "</w>, press <w>p</w> while standing on the "
+                ostr << "</w>, press <w>></w> while standing on the "
                         "altar. Before taking up the responding faith (and "
                         "abandoning your current one!) you'll be asked for "
                         "confirmation."
@@ -3712,8 +3698,6 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                 "or vampires, can smell blood from a distance and may come "
                 "looking.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
@@ -3725,7 +3709,8 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
     const string cname = cloud->cloud_name(true);
     const cloud_type ctype = cloud->type;
 
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    if (!ostr.str().empty())
+        ostr << "\n\n";
 
     ostr << "The " << cname << " ";
 
@@ -3756,24 +3741,19 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
                 "you and a square, you won't be able to see anything in that "
                 "square.";
     }
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static void _hints_describe_disturbance(int x, int y, ostringstream& ostr)
 {
     if (!_water_is_disturbed(x, y))
         return;
-
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
+    if (!ostr.str().empty())
+        ostr << "\n\n";
     ostr << "The strange disturbance means that there's a monster hiding "
             "under the surface of the shallow water. Submerged monsters will "
             "not be autotargeted when doing a ranged attack while there are "
             "other, visible targets in sight. Of course you can still target "
             "it manually if you wish to.";
-
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 }
 
 static bool _water_is_disturbed(int x, int y)
@@ -3802,10 +3782,7 @@ bool hints_monster_interesting(const monster* mons)
 
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
-    cgotoxy(1, wherey());
     ostringstream ostr;
-    ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
     bool dangerous = false;
     if (mons_is_unique(mi.type))
     {
@@ -3918,11 +3895,11 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                 "important clues as to how to deal with them.";
     }
 
-    ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    string broken = ostr.str();
-    linebreak_string(broken, _get_hints_cols());
-    return broken;
+    if (ostr.str().empty())
+        return "";
+    return "\n<" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">"
+            + ostr.str()
+            + "</" + colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) + ">";
 }
 
 void hints_observe_cell(const coord_def& gc)

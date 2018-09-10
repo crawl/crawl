@@ -716,7 +716,7 @@ i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
 i-r-corrosion RING_RESIST_CORROSION
-i-loudness RING_LOUDNESS
+i-attention RING_ATTENTION
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
 # Remove sustat when TAG_MAJOR_VERSION > 34

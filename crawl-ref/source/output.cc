@@ -40,6 +40,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "skills.h"
 #include "state.h"
@@ -871,10 +872,10 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolour(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
-              || you.cannot_move() ? RED :
-              _boosted_ev()
-              ? LIGHTBLUE : HUD_VALUE_COLOUR);
+    textcolour(you.duration[DUR_PETRIFYING]
+               || you.cannot_move() ? RED
+                                    : _boosted_ev() ? LIGHTBLUE
+                                                    : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", you.evasion());
 }
 
@@ -1479,6 +1480,40 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
+#ifndef USE_TILE_LOCAL
+void redraw_console_sidebar()
+{
+    // TODO: this is super hacky and merges stuff from redraw_screen and
+    // viewwindow. It won't do nothing for webtiles, but should be basically
+    // benign there.
+    draw_border();
+
+    you.redraw_title        = true;
+    you.redraw_hit_points   = true;
+    you.redraw_magic_points = true;
+    you.redraw_stats.init(true);
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.wield_change         = true;
+    you.redraw_quiver        = true;
+    you.redraw_status_lights = true;
+
+    print_stats();
+
+    {
+        no_notes nx;
+        print_stats_level();
+        update_turn_count();
+    }
+    puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+    update_monster_pane();
+
+    you.flash_colour = BLACK;
+    you.flash_where = 0;
+}
+#endif
+
 void redraw_screen(bool show_updates)
 {
     if (!crawl_state.need_save)
@@ -1489,7 +1524,8 @@ void redraw_screen(bool show_updates)
     }
 
 #ifdef USE_TILE_WEB
-    tiles.close_all_menus();
+    if (!ui::has_layout())
+        tiles.pop_all_ui_layouts();
 #endif
 
     draw_border();
@@ -2370,7 +2406,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
-    out += _stealth_bar(get_number_of_cols()) + "\n";
+    out += _stealth_bar(20) + "\n";
 
     const int regen = player_regen(); // round up
     out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
@@ -2441,41 +2477,51 @@ static vector<formatted_string> _get_overview_resistances(
     return cols.formatted_lines();
 }
 
-// New scrollable status overview screen, including stats, mutations etc.
-static char _get_overview_screen_results()
+class overview_popup : public formatted_scroller
 {
-    bool calc_unid = false;
-    formatted_scroller overview;
+public:
+    overview_popup() {};
+    vector<char> equip_chars;
+private:
+    bool process_key(int ch) override
+    {
+        if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
+        {
+            item_def& item = you.inv[letter_to_index(ch)];
+            describe_item(item);
+            return true;
+        }
+        return formatted_scroller::process_key(ch);
+    };
+};
 
-    overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
+void print_overview_screen()
+{
+    // TODO: this should handle window resizes
+    constexpr int num_cols = 80;
+    bool calc_unid = false;
+    overview_popup overview;
+
     overview.set_more();
     overview.set_tag("resists");
 
-    overview.add_text(_overview_screen_title(get_number_of_cols()));
+    overview.add_text(_overview_screen_title(num_cols));
 
     for (const formatted_string &bline : _get_overview_stats())
-        overview.add_item_formatted_string(bline);
-    overview.add_text(" ");
+        overview.add_formatted_string(bline, true);
+    overview.add_text("\n");
 
     {
-        vector<char> equip_chars;
         vector<formatted_string> blines =
-            _get_overview_resistances(equip_chars, calc_unid, get_number_of_cols());
+            _get_overview_resistances(overview.equip_chars, calc_unid, num_cols);
 
         for (unsigned int i = 0; i < blines.size(); ++i)
-        {
-            // Kind of a hack -- we don't really care what items these
-            // hotkeys go to. So just pick the first few.
-            const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
-            overview.add_item_formatted_string(blines[i], hotkey);
-        }
+            overview.add_text(blines[i].to_colour_string() + "\n");
     }
 
-    overview.add_text(" ");
-    overview.add_text(_status_mut_rune_list(get_number_of_cols()));
-
-    vector<MenuEntry *> results = overview.show();
-    return (!results.empty()) ? results[0]->hotkeys[0] : 0;
+    overview.add_text("\n");
+    overview.add_text(_status_mut_rune_list(num_cols));
+    overview.show();
 }
 
 string dump_overview_screen(bool full_id)
@@ -2508,22 +2554,6 @@ string dump_overview_screen(bool full_id)
     text += "\n";
 
     return text;
-}
-
-void print_overview_screen()
-{
-    while (true)
-    {
-        char c = _get_overview_screen_results();
-        if (!c)
-            break;
-
-        item_def& item = you.inv[letter_to_index(c)];
-        if (!describe_item(item))
-            break;
-        // loop around for another go.
-    }
-    redraw_screen();
 }
 
 static string _annotate_form_based(string desc, bool suppressed)

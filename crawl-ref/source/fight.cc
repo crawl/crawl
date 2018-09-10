@@ -742,11 +742,19 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number,
                            wu_jian_attack_type wu_jian_attack)
 {
-    if (wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
-        || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
-        || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
+    if (attacker.is_player())
     {
-        return; // WJC AOE attacks don't cleave.
+        const item_def* weap = attacker.weapon(attack_number);
+
+        if ((wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
+             || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
+             || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
+            && !(weap && is_unrandom_artefact(*weap, UNRAND_GYRE)))
+        {
+            return; // WJC AOE attacks don't cleave, but G&G use cleaving
+            // XXX: If a player under Xom wrath gets cleaving while using G&G and
+            // worshiping Wu they'll be able to cleave their Wu attacks.
+        }
     }
 
     while (attacker.alive() && !targets.empty())
