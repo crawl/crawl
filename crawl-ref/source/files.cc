@@ -2731,7 +2731,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 #define GHOST_PERMASTORE_SIZE 10
 #define GHOST_PERMASTORE_REPLACE_CHANCE 5
 
-static int _ghost_permastore_size()
+static size_t _ghost_permastore_size()
 {
     if (_bones_save_individual_levels(true))
         return GHOST_PERMASTORE_SIZE;
@@ -2750,7 +2750,7 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 
     bool rewrite = false;
     unsigned int i = 0;
-    const int max_ghosts = _ghost_permastore_size();
+    const size_t max_ghosts = _ghost_permastore_size();
     while (permastore.size() < max_ghosts && i < ghosts.size())
     {
         // TODO: heuristics to make this as distinct as possible; maybe
