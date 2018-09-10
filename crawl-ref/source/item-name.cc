@@ -3388,7 +3388,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.undead_or_demonic() && is_holy_item(item, false))
         {
             if (!temp && you.form == transformation::lich
-                && you.species != SP_DEMONSPAWN && you.species != SP_ONI)
+                && you.species != SP_DEMONSPAWN)
             {
                 return false;
             }

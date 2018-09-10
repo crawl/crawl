@@ -1732,9 +1732,9 @@ Gnolls
 
 Oni
     Standing a head taller than humans, Oni are a feared and monstrous race.
-    Demonic in nature, they are easily spotted for their red or blue skin,
-    razor-sharp teeth, pointed fingernails, and horns made of black ivory.
-    True to their appearance, Oni are a strong and robust species,
+    Demonic in appearance, but not in personality, they are easily spotted for 
+    their red or blue skin, razor-sharp teeth, pointed fingernails, and 
+    horns made of black ivory. Oni are a strong and robust species.
 
     They do not subscribe to usual schools of magic, instead preferring
     to self-teach. As an Oni ages, it will discover a small handful of spells,

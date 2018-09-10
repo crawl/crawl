@@ -2998,8 +2998,8 @@ void level_change(bool skip_attribute_increase)
 
             case SP_ONI:
             {
-                int const min_lev[] = {1,2,2,3,3,4,5,6,6,6,7,8,9};
-                int const max_lev[] = {1,2,3,4,4,5,6,7,7,8,8,9,9};
+                int const min_lev[] = {1,2,2,3,4,5,6,6,6,7,7,8,9};
+                int const max_lev[] = {1,2,3,4,5,5,6,7,7,8,8,9,9};
 
                 if (!(you.experience_level % 2))
                 {
@@ -3035,18 +3035,21 @@ void level_change(bool skip_attribute_increase)
                         you.spell_library.set(spell, true);
 
                         mprf(MSGCH_INTRINSIC_GAIN,
-                             "You have discovered the spell %s.", spell_title(spell));
+                             "You have discovered the spell %s.", 
+                             spell_title(spell));
 
                         goto finish;
                     }
 
-                    mprf(MSGCH_INTRINSIC_GAIN, "You were unable to discover any spells.");
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You were unable to discover any spells.");
+
+                finish:
                     break;
                 }
             }
 
             default:
-            finish:
                 break;
             }
 
@@ -6151,7 +6154,7 @@ mon_holy_type player::holiness(bool temp) const
     if (is_good_god(religion))
         holi |= MH_HOLY;
 
-    if (is_evil_god(religion) || species == SP_DEMONSPAWN || species == SP_ONI)
+    if (is_evil_god(religion) || species == SP_DEMONSPAWN)
         holi |= MH_EVIL;
 
     // possible XXX: Monsters get evil/unholy bits set on spell selection
@@ -6162,7 +6165,7 @@ mon_holy_type player::holiness(bool temp) const
 bool player::undead_or_demonic() const
 {
     // This is only for TSO-related stuff, so demonspawn and oni are included.
-    return undead_state() || species == SP_DEMONSPAWN || species == SP_ONI;
+    return undead_state() || species == SP_DEMONSPAWN;
 }
 
 bool player::is_holy(bool check_spells) const
