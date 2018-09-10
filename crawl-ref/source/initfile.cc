@@ -4267,7 +4267,6 @@ static void _edit_bones(int argc, char **argv)
     const char *name = argv[1];
 
     eb_command_type cmd = NUM_EB;
-    bool rw;
 
     for (const auto &ec : eb_commands)
         if (!strcmp(ec.name, cmdn))
@@ -4277,7 +4276,6 @@ static void _edit_bones(int argc, char **argv)
             else if (argc > ec.max_args + 2)
                 FAIL("Too many arguments for %s.\n", cmdn);
             cmd = ec.cmd;
-            rw = ec.rw;
             break;
         }
     if (cmd == NUM_EB)
