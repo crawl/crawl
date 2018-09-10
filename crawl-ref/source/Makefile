@@ -1380,7 +1380,7 @@ else
 	@$(DOWNLOADER) $(DIST_BONES_LOC) | tar xz dat/dist_bones/* || echo Downloading bones distribution failed!
 endif
 
-install-data: $(GENERATED_FILES)
+install-data: $(GENERATED_FILES) install-bones-dist
 ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
@@ -1414,6 +1414,11 @@ endif
 	for LANG in $(LANGUAGES); \
 		do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
 	done
+	@if [ -e dat/dist_bones ]; then \
+	    mkdir -p $(datadir_fp)/dat/dist_bones; \
+	    $(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/; \
+	    echo Bones files installed to $(datadir_fp)/dat/dist_bones/; \
+	else echo Warning: distribution does not include bones files; fi
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
@@ -1761,10 +1766,10 @@ endif
 # Building Mac app bundles
 #
 
-mac-app-tiles: all
+mac-app-tiles: all install-bones-dist
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles
 
-mac-app-console: all
+mac-app-console: all install-bones-dist
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
 
 #############################################################################
