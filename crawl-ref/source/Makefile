@@ -1377,7 +1377,7 @@ ifeq (,$(DOWNLOADER))
 	@echo Neither curl nor wget is installed -- cannot download the bones distribution.
 else
 	@echo Attempting to install bones files from $(DIST_BONES_LOC)
-	@$(DOWNLOADER) $(DIST_BONES_LOC) | tar xz dat/dist_bones/* || echo Downloading bones distribution failed!
+	@$(DOWNLOADER) $(DIST_BONES_LOC) | tar xz dat/dist_bones/ || echo Downloading bones distribution failed!
 endif
 
 install-data: $(GENERATED_FILES) install-bones-dist
