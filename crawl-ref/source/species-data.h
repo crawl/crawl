@@ -426,10 +426,11 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR }, 5,
     {},
-    {},
-    {},
-    { JOB_FIGHTER, JOB_MONK, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
-      JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST },
+    { "You learn spells by gaining experience, not through books or gods.",
+      "You only train spellcasting to practice magic." },
+    { "shaman" },
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
+      JOB_TRANSMUTER, JOB_WIZARD },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES },
 } },
 
@@ -554,14 +555,15 @@ static const map<species_type, species_def> species_data =
     0, 3, 0, 4,
     MONS_OGRE,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    11, 9, 4, // 24
+    11, 8, 5, // 24
     { STAT_STR }, 3,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
-    {},
-    {},
-    { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
-      JOB_FIRE_ELEMENTALIST },
-    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_AXES },
+    { "You learn spells by gaining experience, not through books or gods.",
+      "You only train spellcasting to practice magic." },
+    { "shaman" },
+    { JOB_GLADIATOR, JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, 
+      JOB_TRANSMUTER, JOB_WIZARD },
+    { SK_MACES_FLAILS, SK_STAVES, SK_AXES, SK_POLEARMS },
 } },
 
 { SP_OCTOPODE, {
@@ -628,15 +630,16 @@ static const map<species_type, species_def> species_data =
     -1, 3, -1, 3,
     MONS_TROLL,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    15, 4, 5, // 24
+    12, 7, 5, // 24
     { STAT_STR }, 3,
-    { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 1, 1 }, { MUT_CLAWS, 3, 1 },
+    { { MUT_REGENERATION, 1, 1 }, { MUT_CLAWS, 3, 1 },
       { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, },
-    {},
-    {},
+    { "You learn spells by gaining experience, not through books or gods.",
+      "You only train spellcasting to practice magic." },
+    { "shaman" },
     { JOB_FIGHTER, JOB_MONK, JOB_HUNTER, JOB_BERSERKER, JOB_WARPER,
-      JOB_EARTH_ELEMENTALIST, JOB_WIZARD },
+      JOB_TRANSMUTER, JOB_WIZARD },
     { SK_UNARMED_COMBAT, SK_MACES_FLAILS },
 } },
 

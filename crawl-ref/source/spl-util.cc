@@ -405,6 +405,9 @@ int spell_hunger(spell_type which_spell)
     if (player_energy())
         return 0;
 
+    if (PUBBY_MAGIC)
+        return 0;
+
     const int level = spell_difficulty(which_spell);
 
     const int basehunger[] = { 50, 100, 150, 250, 400, 550, 700, 850, 1000 };
