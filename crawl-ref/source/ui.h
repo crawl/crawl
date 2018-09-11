@@ -316,12 +316,6 @@ protected:
 class Box : public ContainerVec
 {
 public:
-    enum Justify {
-        START = 0,
-        CENTER,
-        END,
-    };
-
     enum Expand {
         NONE = 0x0,
         EXPAND_H = 0x1,
@@ -339,7 +333,7 @@ public:
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
     bool horz;
-    Justify justify_items = START;
+    Widget::Align justify_items = START;
     Widget::Align align_items = UNSET;
 
     virtual void _render() override;

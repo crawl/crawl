@@ -311,6 +311,8 @@ vector<int> Box::layout_main_axis(vector<SizeReq>& ch_psz, int main_sz)
     {
         ch_sz[i] = ch_psz[i].min;
         extra -= ch_psz[i].min;
+        if (justify_items == Align::STRETCH)
+            ch_psz[i].nat = INT_MAX;
     }
     ASSERT(extra >= 0);
 
@@ -406,7 +408,15 @@ void Box::_allocate_region()
     ASSERT(extra_main_space >= 0);
 
     // main axis offset
-    int mo = extra_main_space*(justify_items - Box::Justify::START)/2;
+    int mo;
+    switch (justify_items)
+    {
+        case Widget::START:   mo = 0; break;
+        case Widget::CENTER:  mo = extra_main_space/2; break;
+        case Widget::END:     mo = extra_main_space; break;
+        case Widget::STRETCH: mo = 0; break;
+        default: ASSERT(0);
+    }
     int ho = m_region[0] + (horz ? mo : 0);
     int vo = m_region[1] + (!horz ? mo : 0);
 
