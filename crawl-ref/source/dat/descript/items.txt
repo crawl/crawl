@@ -1000,6 +1000,7 @@ of those beings found within the reader's immediate vicinity.
 scroll of teleportation
 
 A scroll that translocates the reader to a random position after a short delay.
+Reading this scroll while waiting for a teleportation will instead cancel it.
 %%%%
 scroll of torment
 
