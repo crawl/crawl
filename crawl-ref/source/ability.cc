@@ -923,7 +923,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nIt has a chance of reducing your maximum magic capacity "
                "when used.";
     }
-	
+
     if(abil.ability == ABIL_FULL_HEAL || abil.ability == ABIL_REALIGN)
     {
         ret << "\nIt will reduce your maximum magic capacity when used.";
@@ -1001,17 +1001,17 @@ ability_type fixup_ability(ability_type ability)
         }
         else if (you.attribute[ATTR_DIVINE_ENERGY])
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
-        else 
+        else
             return ability;
-		
+
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         if (you.species == SP_OBSIDIAN_DWARF)
         {
             return ABIL_NON_ABILITY;
         }
-        else 
+        else
             return ability;
-		
+
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         if (you.species == SP_GNOLL)
             return ABIL_NON_ABILITY;
@@ -1613,8 +1613,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mpr("You don't have enough innate magic capacity.");
             return false;
         }
-        return true;   
-		
+        return true;
+
 
     case ABIL_SHAFT_SELF:
         return you.can_do_shaft_ability(quiet);
@@ -1772,7 +1772,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_SPIT_POISON:
         range = 5;
         break;
-    case ABIL_LASER: 
+    case ABIL_LASER:
     case ABIL_BREATHE_MEPHITIC:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_POISON:
@@ -1855,7 +1855,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         rot_mp(1);
         inc_hp(9999);
         break;
-		
+
     case ABIL_REALIGN:
         fail_check();
         mpr("You align yourself with a new aspect.");
@@ -1895,7 +1895,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return frog_hop(fail);
         else
             return SPRET_ABORT;
-		
+
     case ABIL_CHARM:
         if(you.duration[DUR_EXHAUSTED])
         {
@@ -1966,13 +1966,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                           3 + random2(10) + random2(30 - you.experience_level));
         break;
     }
-	
+
     case ABIL_LASER:
     {
 	    int power = you.experience_level * 5;
         mpr("You prepare to fire your disintegration ray.");
-            if (!your_spells(SPELL_DISINTEGRATE, power, false))
+        fail_check();
+            if (your_spells(SPELL_DISINTEGRATE, power, false) == SPRET_ABORT)
+            {
                 return SPRET_ABORT;
+            }
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
             break;
@@ -1998,7 +2001,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         switch (abil.ability)
         {
-                  
+
         case ABIL_BREATHE_FIRE:
         {
             int power = you.experience_level;
@@ -3404,10 +3407,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Species-based abilities.
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_HEAL_WOUNDS, check_confused);
-	
+
     if (you.species == SP_WATER_SPRITE)
         _add_talent(talents, ABIL_FULL_HEAL, check_confused);
-	
+
     if (you.species == SP_BODACH && you.experience_level >= 8)
         _add_talent(talents, ABIL_REALIGN, check_confused);
 
@@ -3421,7 +3424,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
-	
+
     if (you.species == SP_KITSUNE)
         _add_talent(talents, ABIL_CHARM, check_confused);
 
@@ -3471,7 +3474,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
-	
+
     if(you.get_mutation_level(MUT_LASER_BREATH))
         _add_talent(talents, ABIL_LASER, check_confused);
 
