@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "files.h"
 #include "fprop.h"
@@ -850,6 +851,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 void up_stairs(dungeon_feature_type force_stair, bool update_travel_cache)
 {
     take_stairs(force_stair, true, false, update_travel_cache);
+    stairs_to_hatches();
 }
 
 // Find the other end of the stair or portal at location pos on the current
@@ -1010,6 +1012,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool update_travel_cache)
 {
     take_stairs(force_stair, false, force_known_shaft, update_travel_cache);
+    stairs_to_hatches();
 }
 
 static bool _any_glowing_mold()

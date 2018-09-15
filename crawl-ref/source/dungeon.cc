@@ -538,6 +538,20 @@ bool dgn_make_transporters_from_markers()
     return no_errors;
 }
 
+void stairs_to_hatches()
+{
+  for(rectangle_iterator ri(0) ; ri ; ++ri)
+  {
+    if(grd(*ri) == DNGN_STONE_STAIRS_UP_I || grd(*ri) == DNGN_STONE_STAIRS_UP_II
+      || grd(*ri) == DNGN_STONE_STAIRS_UP_III)
+      grd(*ri) = DNGN_ESCAPE_HATCH_UP;
+
+    if(grd(*ri) == DNGN_STONE_STAIRS_DOWN_I || grd(*ri) == DNGN_STONE_STAIRS_DOWN_II
+      || grd(*ri) == DNGN_STONE_STAIRS_DOWN_III)
+      grd(*ri) = DNGN_ESCAPE_HATCH_DOWN;
+  }
+
+}
 // Should be called after a level is constructed to perform any final
 // fixups.
 static void _dgn_postprocess_level()
