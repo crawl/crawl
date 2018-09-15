@@ -1098,7 +1098,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
     }
 }
 
-static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
+void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
     // Ordered from back to front.
     // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
@@ -1192,17 +1192,17 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
     tiles.json_close_array();
 }
 
-void TilesFramework::send_mcache(mcache_entry *entry, bool submerged, bool send_doll)
+void TilesFramework::send_mcache(mcache_entry *entry, bool submerged, bool send)
 {
     bool trans = entry->transparent();
-    if (trans && send_doll)
+    if (trans && send)
         tiles.json_write_int("trans", 1);
 
     const dolls_data *doll = entry->doll();
-    if (send_doll)
+    if (send)
     {
         if (doll)
-            _send_doll(*doll, submerged, trans);
+            send_doll(*doll, submerged, trans);
         else
         {
             tiles.json_write_comma();
@@ -1425,7 +1425,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             }
             if (fg_changed || player_doll_changed)
             {
-                _send_doll(last_player_doll, in_water, false);
+                send_doll(last_player_doll, in_water, false);
                 if (Options.tile_use_monster != MONS_0)
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
