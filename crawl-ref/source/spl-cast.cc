@@ -847,6 +847,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         inc_mp(cost, true);
+        redraw_screen();
         return false;
     }
 
