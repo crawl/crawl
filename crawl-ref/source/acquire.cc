@@ -1549,8 +1549,8 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
         mprf(MSGCH_PROMPT, "What kind of item would you like to acquire?"
-                "<lightgrey> [<w>\\</w>] known items [<w>$</w>] shopping list"
-                "</lightgrey>");
+                "<lightgrey> [<w>\\</w>] known items %s</lightgrey>",
+                shopping_list.empty() ? "" : "[<w>$</w>] shopping list");
 
         const int keyin = toalower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))
