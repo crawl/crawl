@@ -41,6 +41,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "unwind.h"
+#include "ui.h"
 
 static equipment_type _acquirement_armour_slot(bool);
 static armour_type _acquirement_armour_for_slot(equipment_type, bool);
@@ -1524,6 +1525,10 @@ bool acquirement(object_class_type class_wanted, int agent,
         item_index = &thing_created;
 
     *item_index = NON_ITEM;
+
+#ifdef USE_TILE_WEB
+    ui::cutoff_point ui_cutoff_point;
+#endif
 
     while (class_wanted == OBJ_RANDOM)
     {
