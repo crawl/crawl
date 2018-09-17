@@ -1215,9 +1215,12 @@ void Scroller::_allocate_region()
         const int h = m_region[3]*min(max(0.05f, h_percent), 1.0f);
         const float scroll_percent = m_scroll/(float)(ch_reg[3]-m_region[3]);
         const int y = m_region[1] + (m_region[3]-h)*scroll_percent;
-        GLWPrim rect(x+10, y, x+12, y+h);
-        rect.set_col(VColour(158,124,75,200));
-        m_scrollbar_buf.add_primitive(rect);
+        GLWPrim bg_rect(x+10, m_region[1], x+12, m_region[1]+m_region[3]);
+        bg_rect.set_col(VColour(41,41,41));
+        m_scrollbar_buf.add_primitive(bg_rect);
+        GLWPrim fg_rect(x+10, y, x+12, y+h);
+        fg_rect.set_col(VColour(125, 98, 60));
+        m_scrollbar_buf.add_primitive(fg_rect);
     }
 #endif
 }
