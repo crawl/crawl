@@ -1,3 +1,16 @@
+Stone Soup 0.22.1 (20180916)
+----------------------------
+
+Bugfix Release
+--------------
+* Support for distributing player ghosts files with releases. Now local games
+  will have a starting set of ghosts available for ghost vaults.
+* New tiles for Azrael, shock serpents, dream sheep, mana vipers, and the Robe
+  of Vines.
+* An additional set of Gnoll player dolls tiles.
+* Fix WebTiles menus for older versions of Firefox.
+* 81 bugfixes, adjustments, and cleanups in total.
+
 Stone Soup 0.22 (20180810)
 --------------------------
 
@@ -101,7 +114,7 @@ Spells
 * Passwall now has better range scaling, a lower max spellpower and a targeter
   to show its range.
 
-Stone Soup 0.21.2 (20180805)
+Stone Soup 0.21.2 (20180916)
 ----------------------------
 
 Bugfix Release
@@ -114,7 +127,7 @@ Bugfix Release
 * Training xl estimates in item descriptions are now more accurate.
 * Compilation under Msys2 is now *really* fixed.
 * Autotravel will no longer try to take shortcuts through hell.
-* 70 other bugfixes and cleanups.
+* 73 other bugfixes and cleanups.
 
 Stone Soup 0.21.1 (20180201)
 ----------------------------
