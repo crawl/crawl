@@ -1297,6 +1297,15 @@ void Popup::_render()
 
 SizeReq Popup::_get_preferred_size(Direction dim, int prosp_width)
 {
+#ifdef USE_TILE_LOCAL
+    // can be called with a prosp_width that is narrower than the child's
+    // minimum width, since our returned SizeReq has a minimum of 0
+    if (dim == VERT)
+    {
+        SizeReq hsr = m_child->get_preferred_size(HORZ, -1);
+        prosp_width = max(prosp_width, hsr.min);
+    }
+#endif
     SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
 #ifdef USE_TILE_LOCAL
     constexpr int pad = m_base_margin + m_padding;
