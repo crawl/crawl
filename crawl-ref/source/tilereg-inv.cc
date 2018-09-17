@@ -24,6 +24,7 @@
 #include "rot.h"
 #include "spl-book.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
@@ -332,7 +333,7 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         if (item_is_stationary_net(item))
         {
-            actor *trapped = actor_at(net.pos);
+            actor *trapped = actor_at(item.pos);
             tip += make_stringf(" (holding %s)",
                             trapped ? trapped->name(DESC_A).c_str()
                                     : "nobody"); // buggy net, but don't crash
