@@ -1148,6 +1148,8 @@ MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).
 RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
 
 DIST_BONES_LOC := https://github.com/crawl/crawl/releases/download/$(RECENT_TAG)/dist_bones.tar.gz
+LOCAL_BONES_LOC := ./dist_bones.tar.gz
+USE_LOCAL_BONES := $(shell test -e $(LOCAL_BONES_LOC) && echo "$(LOCAL_BONES_LOC)")
 
 ifneq (,$(shell which wget))
 	DOWNLOADER := wget -O -
@@ -1373,7 +1375,10 @@ clean-bones-dist:
 	$(RM) -r dat/dist_bones
 
 install-bones-dist: clean-bones-dist
-ifeq (,$(DOWNLOADER))
+ifneq (,$(USE_LOCAL_BONES))
+	@echo Installing bones files from local file $(USE_LOCAL_BONES)
+	@tar xzf $(USE_LOCAL_BONES) dat/dist_bones/
+else ifeq (,$(DOWNLOADER))
 	@echo Neither curl nor wget is installed -- cannot download the bones distribution.
 else
 	@echo Attempting to install bones files from $(DIST_BONES_LOC)
