@@ -1036,22 +1036,6 @@ bool item_is_stationary_net(const item_def &item)
     return item.is_type(OBJ_MISSILES, MI_THROWING_NET) && item.net_placed;
 }
 
-/**
- * Get the actor held in a stationary net.
- *
- * @param net A stationary net item.
- * @return  A pointer to the actor in the net, guaranteed to be non-null.
- */
-actor *net_holdee(const item_def &net)
-{
-    ASSERT(item_is_stationary_net(net));
-    // Stationary nets should not be in inventory etc.
-    ASSERT_IN_BOUNDS(net.pos);
-    actor * const a = actor_at(net.pos);
-    ASSERTM(a, "No actor in stationary net at (%d,%d)", net.pos.x, net.pos.y);
-    return a;
-}
-
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.

@@ -40,6 +40,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
  #include "tiledef-icons.h"
@@ -84,8 +85,10 @@ InvEntry::InvEntry(const item_def &i)
 
     if (item_is_stationary_net(i))
     {
+        actor *trapped = actor_at(i.pos);
         text += make_stringf(" (holding %s)",
-                             net_holdee(i)->name(DESC_A).c_str());
+                            trapped ? trapped->name(DESC_A).c_str()
+                                    : "nobody"); // buggy net, but don't crash
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))

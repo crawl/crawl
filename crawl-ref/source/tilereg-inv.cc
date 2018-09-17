@@ -332,8 +332,10 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         if (item_is_stationary_net(item))
         {
+            actor *trapped = actor_at(net.pos);
             tip += make_stringf(" (holding %s)",
-                                net_holdee(item)->name(DESC_A).c_str());
+                            trapped ? trapped->name(DESC_A).c_str()
+                                    : "nobody"); // buggy net, but don't crash
         }
 
         if (!item_is_stationary(item))
