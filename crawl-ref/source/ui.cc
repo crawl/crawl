@@ -526,6 +526,8 @@ void Text::_render()
     if (region[2] <= 0 || region[3] <= 0)
         return;
 
+    wrap_text_to_size(m_region[2], m_region[3]);
+
 #ifdef USE_TILE_LOCAL
     const int line_height = tiles.get_crt_font()->char_height();
     const unsigned line_min = (region[1]-m_region[1]) / line_height;
