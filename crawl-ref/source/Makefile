@@ -1703,6 +1703,18 @@ source: removeold prebuildyacc
 	find build -name .gitignore -execdir rm -f '{}' +
 	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
 	cp build/LICENSE build/crawl-ref/LICENSE
+# don't mess with USE_LOCAL_BONES for this rule, if you want to avoid using a
+# downloader, just put the tarbell in the source directory as dist_bones.tar.gz.
+ifneq (,$(shell test -e ./dist_bones.tar.gz && echo "Y"))
+	@echo Using local bones distribution for packaging source
+	cp ./dist_bones.tar.gz build/crawl-ref/source/
+else ifeq (,$(DOWNLOADER))
+	@echo Neither curl nor wget is installed -- cannot download the bones distribution.
+else
+	@echo Attempting to install bones files from $(DIST_BONES_LOC)
+	@$(DOWNLOADER) $(DIST_BONES_LOC) > build/crawl-ref/source/dist_bones.tar.gz || echo Downloading bones distribution failed!
+endif
+
 	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source
