@@ -388,7 +388,7 @@ static const map<job_type, job_def> job_data =
 { JOB_MERCHANT, {
     "Me", "Merchant",
     4, 4, 4,
-    { SP_HILL_ORC, SP_MINOTAUR },
+    { SP_HILL_ORC, SP_MINOTAUR, SP_LEPRECHAUN },
     { "robe", "pair of boots", "hat" },
     WCHOICE_PLAIN,
     { { SK_STEALTH, 1 }, { SK_DODGING, 1 }, { SK_WEAPON, 2 }, },
