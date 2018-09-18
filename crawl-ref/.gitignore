@@ -61,7 +61,6 @@ DEADJOE
 /source/luadoc/
 
 # Crawl generated junk
-/source/dat/dist_bones/
 arena.result
 saves
 morgue

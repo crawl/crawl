@@ -1,0 +1,15 @@
+This folder contains precompiled bones permastore files that are drawn upon if
+there are no regular bones files for a level. This comes up for two cases: when
+playing offline, and when playing online for certain servers that don't preserve
+bones files across trunk version updates.
+
+To compile a new set of bones files:
+1. Collect bones folders from some set of servers.
+2. Use the --bones commands to the crawl binary to:
+   a. Merge permastores from different servers together.
+   b. Merge regular bones files into permastores as needed.
+   c. Filter out some of the more common combos (e.g. mibe).
+   d. Filter out inappropriate names, for bones files where names are not
+      randomized.
+   e. Filter out repeated names, at least to some degree.
+
