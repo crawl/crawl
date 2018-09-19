@@ -2003,10 +2003,10 @@ static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (gained %d charges)",
+            mprf_nocap("%s (gained %d charge%s)",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
-                        it.charges);
+                        it.charges, it.charges == 1 ? "" : "s");
         }
 
         return true;
