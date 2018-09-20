@@ -5736,6 +5736,7 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
         energy_loss += 4;
 
     // Randomize interval between servitor spellcasts
+    // TODO: is there a more transparent way to implement this than energy?
     if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
         energy_loss += random2(16);
 
