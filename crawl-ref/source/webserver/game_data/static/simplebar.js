@@ -2563,6 +2563,7 @@
       this.isRtl = this.options.direction === 'rtl';
       this.classNames = this.options.classNames;
       this.offsetSize = 20;
+      this.recalculateImmediate = this.recalculate.bind(this);
       this.recalculate = lodash_throttle(this.recalculate.bind(this), 1000);
       this.onMouseMove = lodash_throttle(this.onMouseMove.bind(this), 100);
       this.init();

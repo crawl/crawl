@@ -103,7 +103,7 @@ function ($, comm, client, options) {
             });
 
             $("#ui-stack [data-simplebar]").each(function (i, el) {
-                $(el).data("scroller").recalculate();
+                $(el).data("scroller").recalculateImmediate();
             });
         }
     }

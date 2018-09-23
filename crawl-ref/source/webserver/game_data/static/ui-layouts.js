@@ -637,6 +637,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             var $body = $(s.contentElement);
             $body.html(util.formatted_string_to_html(msg.text));
+            var ss = $popup.find(".body").eq(0).data("scroller");
+            ss.recalculateImmediate();
         }
         if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
         {
