@@ -24,8 +24,6 @@ function ($, simplebar) {
                 bot.css("opacity", (ch - sh - dy)/100/4);
             };
             scrollElement.addEventListener("scroll", update_shades);
-            var $se = $(scrollElement);
-            $se.css("padding-right", parseFloat($se.css("padding-right"))+20);
             update_shades();
         }
         return {

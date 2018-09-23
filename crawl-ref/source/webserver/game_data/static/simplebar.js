@@ -2800,13 +2800,14 @@
       key: "hideNativeScrollbar",
       value: function hideNativeScrollbar() {
         // Recalculate scrollbarWidth in case it's a zoom
+        var offset = 20; // matched in style.css: [data-simplebar="init"] {...}
         this.scrollbarWidth = scrollbarWidth();
-        this.scrollContentEl.style[this.isRtl ? 'paddingLeft' : 'paddingRight'] = "".concat(this.scrollbarWidth || this.offsetSize, "px");
+        this.scrollContentEl.style[this.isRtl ? 'paddingLeft' : 'paddingRight'] = "".concat((this.scrollbarWidth || this.offsetSize)+offset, "px");
         this.scrollContentEl.style.marginBottom = "-".concat(this.scrollbarWidth * 2 || this.offsetSize, "px");
         this.contentEl.style.paddingBottom = "".concat(this.scrollbarWidth || this.offsetSize, "px");
 
         if (this.scrollbarWidth !== 0) {
-          this.contentEl.style[this.isRtl ? 'marginLeft' : 'marginRight'] = "-".concat(this.scrollbarWidth, "px");
+          this.contentEl.style[this.isRtl ? 'marginLeft' : 'marginRight'] = "-".concat(offset, "px");
         }
       }
       /**

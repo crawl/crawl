@@ -353,12 +353,13 @@ body {
 .simplebar-track {
     background: #040204;
 }
+.simplebar-track .simplebar-scrollbar::before,
 .simplebar-track.horizontal {
     display: none;
 }
 [data-simplebar="init"] {
-    margin-right: -20px; /* matched in scroller.js */
-    padding-right: 20px; /* matched in scroller.js */
+    margin-right: -20px; /* matched in simplebar.js */
+    padding-right: 20px; /* matched in simplebar.js */
 }
 .scroller-lhd {
     visibility: hidden;
