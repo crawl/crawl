@@ -424,7 +424,7 @@ class CrawlProcessHandlerBase(object):
         self.update_watcher_description()
 
     def watcher_count(self):
-        return len([w for w in self._receivers if w.watched_game])
+        return len([w for w in self._receivers if w.watched_game and not w.chat_hidden])
 
     def send_client_to_all(self):
         for receiver in self._receivers:
