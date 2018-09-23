@@ -36,7 +36,7 @@ public:
     void filter_lang();
 
     void clear();
-    bool empty();
+    bool empty() const;
 
     void swap(formatted_string& other);
 

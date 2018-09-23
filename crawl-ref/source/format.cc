@@ -508,7 +508,7 @@ void formatted_string::clear()
     ops.clear();
 }
 
-bool formatted_string::empty()
+bool formatted_string::empty() const
 {
     return ops.empty();
 }
