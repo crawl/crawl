@@ -12,7 +12,10 @@ These include:
 * 3-clause BSD: MSVC/stdint.h
 * 2-clause BSD: all contributions by Steve Noonan and Jesse Luehrs
 * Public Domain|CC0: most of tiles, perlin.cc, perlin.h
-* MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
+* MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/,
+	   simplebar.css and simplebar.js in webserver/game_data/static/ and its
+	   (pre-combined) dependency node.js packages: can-use-dom, lodash.throttle,
+	   resize-observer-polyfill, and scrollbarwidth
        worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
 * Apache v2: pcg.cc
