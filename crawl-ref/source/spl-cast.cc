@@ -1172,8 +1172,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                              range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
-                                           pow >= 80 ? 3 : 2,
-                                           pow >= 80 ? 3 : 2,
+                                           gravitas_range(pow),
+                                           gravitas_range(pow),
                                            false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });

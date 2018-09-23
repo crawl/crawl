@@ -25,6 +25,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 
 spret_type cast_dispersal(int pow, bool fail);
 
+int gravitas_range(int pow);
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret_type cast_gravitas(int pow, const coord_def& where, bool fail);
 
