@@ -3,6 +3,12 @@
  * Scrollbars, simpler.
  * https://grsmto.github.io/simplebar/
  *
+ * Includes the following embedded node package dependencies:
+ *  - can-use-dom
+ *  - lodash-throttle
+ *  - resize-observer-polyfill
+ *  - scrollbarwidth
+ *
  * Made by Adrien Denat from a fork by Jonathan Nicol
  * Under MIT License
  */
