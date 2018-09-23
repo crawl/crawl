@@ -225,7 +225,10 @@ public:
 class Bin : public Container
 {
 public:
-    virtual ~Bin() {}
+    virtual ~Bin() {
+        if (m_child)
+            m_child->_set_parent(nullptr);
+    };
     virtual bool on_event(const wm_event& event) override;
     void set_child(shared_ptr<Widget> child);
     virtual shared_ptr<Widget> get_child() { return m_child; };
@@ -263,7 +266,11 @@ protected:
 class ContainerVec : public Container
 {
 public:
-    virtual ~ContainerVec() {}
+    virtual ~ContainerVec() {
+        for (auto& child : m_children)
+            if (child)
+                child->_set_parent(nullptr);
+    }
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
     size_t num_children() const { return m_children.size(); }
 private:
@@ -439,7 +446,11 @@ protected:
 class Grid : public Container
 {
 public:
-    virtual ~Grid() {};
+    virtual ~Grid() {
+        for (auto& child : m_child_info)
+            if (child.widget)
+                child.widget->_set_parent(nullptr);
+    };
     void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
     const int column_flex_grow(int x) const { return m_col_info[x].flex_grow; }
     const int row_flex_grow(int y) const { return m_row_info[y].flex_grow; }
