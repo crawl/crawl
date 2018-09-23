@@ -789,6 +789,47 @@ body {
     white-space: pre;
 }
 
+.describe-monster {
+    width: 80ch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    max-height: inherit;
+}
+.describe-monster > .header {
+    margin-bottom: 20px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.describe-monster > .header > canvas {
+    margin-right: 10px;
+}
+.describe-monster > .body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+.describe-monster > .footer {
+    margin-top: 20px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
 .formatted-scroller {
     display: -webkit-box;
     display: -ms-flexbox;

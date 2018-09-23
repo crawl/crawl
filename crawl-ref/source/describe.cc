@@ -4571,26 +4571,49 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     title_hbox->set_margin_for_sdl({0, 0, 20, 0});
     vbox->add_child(move(title_hbox));
 
-    auto scroller = make_shared<Scroller>();
-    auto text = make_shared<Text>();
     desc += formatted_string(inf.body.str());
     if (crawl_state.game_is_hints())
         desc += formatted_string(hints_describe_monster(mi, has_stat_desc));
     desc += formatted_string(inf.footer);
     desc = formatted_string::parse_string(trimmed_string(desc));
 
-    text->set_text(desc);
-    text->wrap_text = true;
-    scroller->set_child(text);
-    vbox->add_child(scroller);
+    const formatted_string quote = formatted_string(trimmed_string(inf.quote));
 
-    if (!inf.quote.empty())
+    auto desc_sw = make_shared<Switcher>();
+    auto more_sw = make_shared<Switcher>();
+    desc_sw->current() = 0;
+    more_sw->current() = 0;
+
+#ifdef USE_TILE_LOCAL
+# define MORE_PREFIX "[<w>!</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>" "]: "
+#endif
+
+    const char* mores[2] = {
+        MORE_PREFIX "<w>Description</w>|Quote",
+        MORE_PREFIX "Description|<w>Quote</w>",
+    };
+
+    for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
     {
-        auto more = make_shared<Text>(_toggle_message);
-        more->set_margin_for_crt({1, 0, 0, 0});
-        more->set_margin_for_sdl({20, 0, 0, 0});
-        vbox->add_child(move(more));
+        const formatted_string *content[2] = { &desc, &quote };
+        auto scroller = make_shared<Scroller>();
+        auto text = make_shared<Text>(content[i]->trim());
+        text->wrap_text = true;
+        scroller->set_child(text);
+        desc_sw->add_child(move(scroller));
+
+        more_sw->add_child(make_shared<Text>(
+                formatted_string::parse_string(mores[i])));
     }
+
+    more_sw->set_margin_for_sdl({20, 0, 0, 0});
+    more_sw->set_margin_for_crt({1, 0, 0, 0});
+    desc_sw->expand_h = false;
+    vbox->add_child(desc_sw);
+    if (!inf.quote.empty())
+        vbox->add_child(more_sw);
 
 #ifdef USE_TILE_LOCAL
     vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
@@ -4599,7 +4622,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
-    bool show_quote = false;
     int lastch;
     popup->on(Widget::slots.event, [&](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
@@ -4609,8 +4631,13 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         done = key == CK_ESCAPE;
         if (!inf.quote.empty() && (key == '!' || key == CK_MOUSE_CMD))
         {
-            show_quote = !show_quote;
-            text->set_text(show_quote ? formatted_string(trimmed_string(inf.quote)) : desc);
+            int n = (desc_sw->current() + 1) % 2;
+            desc_sw->current() = more_sw->current() = n;
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_int("pane", n);
+            tiles.ui_state_change("describe-monster", 0);
+#endif
         }
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
@@ -4633,6 +4660,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
                 needle, "SPELLSET_PLACEHOLDER");
     }
     tiles.json_write_string("body", desc_without_spells);
+    tiles.json_write_string("quote", quote);
     write_spellset(spells, nullptr, &mi);
 
     {
@@ -4670,7 +4698,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             tiles.json_write_null("mcache");
         }
     }
-    tiles.push_ui_layout("describe-monster", 0);
+    tiles.push_ui_layout("describe-monster", 1);
 #endif
 
     ui::run_layout(move(popup), done);
