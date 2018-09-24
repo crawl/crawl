@@ -3725,9 +3725,11 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
+        if (you.species == SP_ONI && item.sub_type != BOOK_MANUAL)
+            return true;
         if (!item_type_known(item))
             return false;
-        if (item_type_known(item) && item.sub_type != BOOK_MANUAL)
+        if (item.sub_type != BOOK_MANUAL)
         {
             // Spellbooks are useless if all spells are either in the library
             // already or are uncastable.

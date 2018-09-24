@@ -2549,6 +2549,12 @@ void random_uselessness()
 
 static void _handle_read_book(item_def& book)
 {
+    if (you.species == SP_ONI)
+    {
+        mpr("You don't believe in learning magic that way.");
+        return;
+    }
+
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);

@@ -62,6 +62,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -3007,6 +3008,59 @@ void level_change(bool skip_attribute_increase)
             case SP_FELID:
                 _felid_extra_life();
                 break;
+
+            case SP_ONI:
+            {
+                int const min_lev[] = {1,2,2,3,4,5,6,6,6,7,7,8,9};
+                int const max_lev[] = {1,2,3,4,5,5,6,7,7,8,8,9,9};
+
+                if (!(you.experience_level % 2))
+                {
+                    int const g = (you.experience_level / 2) - 1;
+
+                    vector<spell_type> possible_spells;
+                    for (int s = 0; s < NUM_SPELLS; ++s)
+                    {
+                        const spell_type spell = static_cast<spell_type>(s);
+
+                        // Pain brand is useless without necromancy skill.
+                        if (spell == SPELL_EXCRUCIATING_WOUNDS)
+                            continue;
+
+                        if (!is_player_spell(spell) || you.has_spell(spell))
+                            continue;
+
+                        const int lev = spell_difficulty(spell);
+                        if (lev >= min_lev[g] && lev <= max_lev[g])
+                            possible_spells.push_back(spell);
+                    }
+
+                    shuffle_array(possible_spells);
+
+                    while (possible_spells.size())
+                    {
+                        const spell_type spell = possible_spells.back();
+                        possible_spells.pop_back();
+
+                        if (you.spell_library[spell])
+                            continue;
+
+                        you.spell_library.set(spell, true);
+
+                        mprf(MSGCH_INTRINSIC_GAIN,
+                             "You have discovered the spell %s.", 
+                             spell_title(spell));
+
+                        goto finish;
+                    }
+
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You were unable to discover any spells.");
+
+                finish:
+                    break;
+                }
+            }
 
             default:
                 break;
@@ -6118,7 +6172,7 @@ mon_holy_type player::holiness(bool temp) const
 
 bool player::undead_or_demonic() const
 {
-    // This is only for TSO-related stuff, so demonspawn are included.
+    // This is only for TSO-related stuff, so demonspawn and oni are included.
     return undead_state() || species == SP_DEMONSPAWN;
 }
 
