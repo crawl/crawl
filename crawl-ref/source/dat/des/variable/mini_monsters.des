@@ -2891,38 +2891,6 @@ ENDMAP
 #
 ###################################################################
 
-# This is probably a get-off-the-level vault. -LP
-NAME:  aerie_lemuel
-DEPTH: D:12-, Depths, !Depths:$
-MONS:  insubstantial wisp, ball lightning, wind drake, air elemental
-TAGS:  no_monster_gen
-SUBST: .:..w
-SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
-MAP
-    bbbbbbbbbb
-  bbb11211211bbb
- bb.12bbbbbb21.bb
-bb..bbb2323bbb..bb
-b..bb...bb...bb.1b
-b.bb..bbbbbb..bb.b
-b.b..bb2323bb..b1b
-b.b.bb23bb23bb.b.b
-b.b.b..bbbb..b.b1b
-b.b.b.bb44bb.b.b.b
-b2b2b3b4444b3b2b2b
-b.b.b.b4444b.b.b.b
-b.b.b.bb44bb.b.b1b
-b.b.b2323bb..b.b.b
-b.b.bbbbbb..bb.b1b
-b.b..bbb...bb..b.b
-b.bb..bb.bbb..bb1b
-b..bb....b...bb..b
-bb..bbbbbb.bbb..bb
- bb.12bbbb2b111bb
-  bbb123321b.bbb
-    bbbbbbbb@b
-ENDMAP
-
 NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
