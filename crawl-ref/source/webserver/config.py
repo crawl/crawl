@@ -127,6 +127,28 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
+allow_password_reset = False # Set to true to allow users to request a password reset email. Some settings must be properly configured for this to work
+
+# Set to the primary URL where a player would reach the main lobby
+# For example: "http://crawl.akrasiac.org/"
+# This is required for for password reset, as it will be the base URL for
+# recovery URLs.
+lobby_url = None
+
+# Proper SMTP settings are required for password reset to function properly.
+# if smtp_host is anything other than `localhost`, you may need to adjust the
+# timeout settings (see server.py, calls to ioloop.set_blocking_log_threshold).
+# Ideally, test out these settings carefully in a non-production setting
+# before enabling this, as there's a bunch of ways for this to go wrong and you
+# don't want to get your SMTP server blacklisted.
+smtp_host = "localhost"
+smtp_port = 25
+smtp_use_ssl = False
+smtp_user = "" # set to None for no auth
+smtp_password = ""
+smtp_from_addr = "noreply@crawl.example.org" # The address from which automated
+                                             # emails will be sent
+
 # crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
 # false, use traditional DES (but then only the first eight characters of the
 # password are significant). If set to "broken", use traditional DES with

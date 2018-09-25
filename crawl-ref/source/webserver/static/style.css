@@ -145,6 +145,32 @@ body {
     float: right;
 }
 
+#forgot label {
+    width: 200px;
+    float: left;
+}
+
+#forgot_cancel {
+    float: left;
+}
+
+#forgot_submit {
+    float: right;
+}
+
+#reset_pw label {
+    width: 200px;
+    float: left;
+}
+
+#reset_pw_cancel {
+    float: left;
+}
+
+#reset_pw_submit {
+    float: right;
+}
+
 .text {
     background-color: black;
     color: white;
