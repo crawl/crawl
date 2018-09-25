@@ -733,7 +733,7 @@ static const map<species_type, species_def> species_data =
     {},
     {"You are lucky with gold and items."},
     {"luck"},
-    { JOB_SKALD, JOB_WARPER, JOB_WIZARD},
+    { JOB_SKALD, JOB_WARPER, JOB_WIZARD, JOB_MERCHANT },
     { SK_MACES_FLAILS, SK_LONG_BLADES, SK_CROSSBOWS },
 } },
 
