@@ -8,9 +8,9 @@ import hashlib
 
 from base64 import urlsafe_b64encode
 
+import config
 from config import (max_passwd_length, nick_regex, password_db,
-                    crypt_algorithm, crypt_salt_length,
-                    lobby_url)
+                    crypt_algorithm, crypt_salt_length)
 
 from util import (send_email, validate_email_address)
 
@@ -266,9 +266,9 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
             conn.commit()
 
             # send email
-            url_text = lobby_url + "?ResetToken=" + token
+            url_text = config.lobby_url + "?ResetToken=" + token
      
-            msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
+            msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + config.lobby_url + """.
 
 If you initiated this request, please use this link to reset your password:
 
@@ -280,7 +280,7 @@ If you did not ask to reset your password, feel free to ignore this email.
             msg_body_html = """<html>
   <head></head>
   <body>
-    <p>Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.<br /><br />
+    <p>Someone (hopefully you) has requested to reset the password for your account at """ + config.lobby_url + """.<br /><br />
        If you initiated this request, please use this link to reset your password:<br /><br />
        &emsp;<a href='""" + url_text + """'>""" + url_text + """</a><br /><br />
        If you did not ask to reset your password, feel free to ignore this email.
