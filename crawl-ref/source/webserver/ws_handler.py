@@ -149,6 +149,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
+            "forgot_password": self.forgot_password,
+            "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
@@ -540,6 +542,31 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
+    def forgot_password(self, email):
+        if not config.allow_password_reset: return
+        sent, error = userdb.send_forgot_password(email)
+        if error is None:
+            if sent:
+                self.logger.info("Sent password reset email to %s.", email)
+            else:
+                self.logger.info("User requested a password reset, but email is not registered (%s).", email)
+            self.send_message("forgot_password_done")
+        else:
+            self.logger.info("Failed to generate forgot password email for %s: %s",
+                             email, error)
+            self.send_message("forgot_password_fail", reason = error)
+
+    def reset_password(self, token, password):
+        if not config.allow_password_reset: return
+        username, error = userdb.update_user_password_from_token(token, password)
+        if error is None:
+            self.logger.info("User %s has completed their password reset.", username)
+            self.send_message("reload_url")
+        else:
+            if username is None: self.logger.info("Failed to update password for token %s: %s", token, error)
+            else: self.logger.info("Failed to update password for user %s: %s", username, error)
+            self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):
         if not config.dgl_mode: return

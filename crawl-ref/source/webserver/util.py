@@ -4,6 +4,13 @@ import tornado.template
 import tornado.ioloop
 import os.path
 import time
+import smtplib
+
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+from config import (smtp_use_ssl, smtp_host, smtp_port,
+                    smtp_user, smtp_password, smtp_from_addr)
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):
@@ -85,3 +92,41 @@ def parse_where_data(data):
         field, _, value = entry.partition("=")
         where[field.strip()] = value.strip().replace("::", ":")
     return where
+
+def send_email(to_address, subject, body_plaintext, body_html):
+    if not to_address: return
+
+    # establish connection
+    if smtp_use_ssl:
+        email_server = smtplib.SMTP_SSL(smtp_host, smtp_port)
+    else:
+        email_server = smtplib.SMTP(smtp_host, smtp_port)
+
+    try:
+        # authenticate
+        email_server.login(smtp_user, smtp_password)
+
+        # build multipart message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = smtp_from_addr
+        msg['To'] = to_address
+
+        part1 = MIMEText(body_plaintext, 'plain')
+        part2 = MIMEText(body_html, 'html')
+
+        msg.attach(part1)
+        msg.attach(part2)
+
+        # send
+        email_server.sendmail(smtp_from_addr, to_address, msg.as_string())
+    finally:
+        # end connection
+        if email_server: email_server.quit()
+
+def validate_email_address(address): # Returns an error string describing the problem, or None
+    if not address: return "Email address can't be empty"
+    if " " in address: return "Email address can't contain a space"
+    if "@" not in address: return "Expected email address to contain the @ symbol"
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", address): return "Invalid email address"
+    return None
