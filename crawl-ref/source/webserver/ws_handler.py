@@ -550,22 +550,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if sent:
                 self.logger.info("Sent password reset email to %s.", email)
             else:
-                self.logger.info("User requested a password reset, but email is not registered (%s).", email)
+                self.logger.info("User requested a password reset, but email "
+                                 "is not registered (%s).", email)
             self.send_message("forgot_password_done")
         else:
-            self.logger.info("Failed to generate forgot password email for %s: %s",
+            self.logger.info("Failed to send password reset email for %s: %s",
                              email, error)
             self.send_message("forgot_password_fail", reason = error)
 
     def reset_password(self, token, password):
         if not config.allow_password_reset: return
-        username, error = userdb.update_user_password_from_token(token, password)
+        username, error = userdb.update_user_password_from_token(token,
+                                                                 password)
         if error is None:
-            self.logger.info("User %s has completed their password reset.", username)
+            self.logger.info("User %s has completed their password reset.",
+                             username)
             self.send_message("reload_url")
         else:
-            if username is None: self.logger.info("Failed to update password for token %s: %s", token, error)
-            else: self.logger.info("Failed to update password for user %s: %s", username, error)
+            if username is None:
+                self.logger.info("Failed to update password for token %s: %s",
+                                 token, error)
+            else:
+                self.logger.info("Failed to update password for user %s: %s",
+                                 username, error)
             self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):

@@ -9,8 +9,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from config import (smtp_use_ssl, smtp_host, smtp_port,
-                    smtp_user, smtp_password, smtp_from_addr)
+import config
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):
@@ -94,22 +93,29 @@ def parse_where_data(data):
     return where
 
 def send_email(to_address, subject, body_plaintext, body_html):
-    if not to_address: return
+    if not to_address:
+        return
 
-    # establish connection
-    if smtp_use_ssl:
-        email_server = smtplib.SMTP_SSL(smtp_host, smtp_port)
-    else:
-        email_server = smtplib.SMTP(smtp_host, smtp_port)
-
+    logging.info("Sending email to '%s' with subject '%s'" %
+                                                (to_address, subject))
+    email_server = None
     try:
+        # establish connection
+        # n.b. if this times out, you may need to adjust the call to
+        # ioloop.set_blocking_log_threshold in server.py.
+        if config.smtp_use_ssl:
+            email_server = smtplib.SMTP_SSL(config.smtp_host, config.smtp_port)
+        else:
+            email_server = smtplib.SMTP(config.smtp_host, config.smtp_port)
+
         # authenticate
-        email_server.login(smtp_user, smtp_password)
+        if config.smtp_user:
+            email_server.login(config.smtp_user, config.smtp_password)
 
         # build multipart message
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From'] = smtp_from_addr
+        msg['From'] = config.smtp_from_addr
         msg['To'] = to_address
 
         part1 = MIMEText(body_plaintext, 'plain')
@@ -119,7 +125,7 @@ def send_email(to_address, subject, body_plaintext, body_html):
         msg.attach(part2)
 
         # send
-        email_server.sendmail(smtp_from_addr, to_address, msg.as_string())
+        email_server.sendmail(config.smtp_from_addr, to_address, msg.as_string())
     finally:
         # end connection
         if email_server: email_server.quit()

@@ -203,7 +203,6 @@ def check_config():
         success = False
     return success
 
-
 if __name__ == "__main__":
     if chroot:
         os.chroot(chroot)

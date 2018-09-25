@@ -261,8 +261,8 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
             token_hash_obj = hashlib.sha256(token)
             token_hash = token_hash_obj.hexdigest()
             # store hash in db
-            c.execute("insert into recovery_tokens(token, token_time, user_id) values (?,datetime('now'),?)",
-                      (token_hash, userid))
+            c.execute("insert into recovery_tokens(token, token_time, user_id) "
+                      "values (?,datetime('now'),?)", (token_hash, userid))
             conn.commit()
 
             # send email
@@ -288,7 +288,8 @@ If you did not ask to reset your password, feel free to ignore this email.
   </body>
 </html>"""
 
-            send_email(email, 'Request to reset your password', msg_body_plaintext, msg_body_html)
+            send_email(email, 'Request to reset your password',
+                        msg_body_plaintext, msg_body_html)
 
             return True, None
 
