@@ -544,8 +544,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("register_fail", reason = error)
 
     def forgot_password(self, email):
-        import server
-        if not server.allow_password_reset():
+        if not getattr(config, "allow_password_reset", False):
             return
         sent, error = userdb.send_forgot_password(email)
         if error is None:
@@ -561,8 +560,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("forgot_password_fail", reason = error)
 
     def reset_password(self, token, password):
-        import server
-        if not server.allow_password_reset():
+        if not getattr(config, "allow_password_reset", False):
             return
         username, error = userdb.update_user_password_from_token(token,
                                                                  password)

@@ -26,7 +26,7 @@ class MainHandler(tornado.web.RequestHandler):
         recovery_token = None
         recovery_token_error = None
 
-        if allow_password_reset():
+        if getattr(config, "allow_password_reset", False):
             recovery_token = self.get_argument("ResetToken",None)
             if recovery_token:
                 recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
@@ -40,16 +40,6 @@ class NoCacheHandler(tornado.web.StaticFileHandler):
         self.set_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.set_header("Pragma", "no-cache")
         self.set_header("Expires", "0")
-
-def allow_password_reset():
-    # handle configs that don't have any value at all for allow_password_reset
-    # TODO: general-purpose config wrapper for cases like this
-    allow_reset = False
-    try:
-        allow_reset = config.allow_password_reset
-    except:
-        config.allow_password_reset = False # set so that client.html has it
-    return allow_reset
 
 def err_exit(errmsg):
     logging.error(errmsg)
@@ -208,7 +198,7 @@ def check_config():
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
 
-    if allow_password_reset() and not config.lobby_url:
+    if getattr(config, "allow_password_reset", False) and not config.lobby_url:
         logging.warning("Lobby URL needs to be defined!")
         success = False
     return success

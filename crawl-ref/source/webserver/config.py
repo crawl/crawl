@@ -1,3 +1,19 @@
+# Warning! Servers will not update or merge with the version controlled copy of
+# this file, so any parameters here, and code that uses them, need to come
+# without the assumption that they will be present in any given config.py on a
+# server. Furthermore, on a typical rebuild in a production server, a running
+# webtiles server *will not restart*, so you can't even assume that any config-
+# specific code that you've added will be consistently present. This
+# particularly impacts templated html files, which are loaded and called
+# dynamically, so *do* get updated immediately on a rebuild. If something like
+# client.html raises an exception, this will trigger 500 errors across the whole
+# server.
+#
+# One useful workaround for all this is to get config paramters with the builtin
+# `getattr` function: e.g. `getattr(config, "dgl_mode", False) will safely get
+# this variable from the module, defaulting to False if it doesn't exist (and
+# not raising an exception). `hasattr` is also safe.
+
 import logging
 try:
     from collections import OrderedDict
