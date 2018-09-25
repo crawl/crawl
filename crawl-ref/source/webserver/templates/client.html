@@ -27,6 +27,9 @@
           <label for="remember_me">Stay logged in</label>
           <span class="extra_links">|
           <a id="reg_link" href="javascript:">Register</a>
+{% if config.allow_password_reset %}
+          <a id="forgot_link" href="javascript:">Forgot Password</a>
+{% end %}
           <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
         </div>
       </div>
@@ -52,6 +55,53 @@
           <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
         </form>
       </div>
+
+{% if config.allow_password_reset %}
+      <div id="forgot" class="floating_dialog" style="display: none;">
+        <span id="forgot_message"></span>
+        <form action="#" id="forgot_form">
+          <label for="forgot_email">Email address:</label>
+          <input class="text" type="text" name="forgot_email" id="forgot_email">
+          <br>
+          <input class="button" type="button" name="cancel" id="forgot_cancel"
+                 value="Cancel">
+          <input class="button" type="submit" name="submit" id="forgot_submit" value="Submit">
+        </form>
+      </div>
+
+      <div id="forgot_2" class="floating_dialog" style="display: none;">
+        <span>If a matching account was found, then an email was sent to reset your password.</span>
+        <input class="button" type="submit" name="submit" value="OK">
+      </div>
+{% end %}
+
+{% if config.allow_password_reset and reset_token %}
+      <div id="reset_pw" class="floating_dialog" style="display: none;">
+  {% if reset_token_error %}
+        <form action="#" id="reset_pw_form">
+          <span>{{ reset_token_error }}</span>
+          <br><br>
+          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+        </form>
+  {% else %}
+        <span>Please choose a new password.</span>
+        <br>
+        <span id="reset_pw_message"></span>
+        <form action="#" id="reset_pw_form">
+          <input class="text" type="hidden" readonly="readonly" name="reset_pw_token" id="reset_pw_token" value="{{ reset_token }}">
+          <br>
+          <label for="reset_pw_password">Password:</label>
+          <input class="text" type="password" name="reset_pw_password" id="reset_pw_password">
+          <br>
+          <label for="reset_pw_repeat_password">Repeat password:</label>
+          <input class="text" type="password" name="reset_pw_repeat_password" id="reset_pw_repeat_password">
+          <br>
+          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+          <input class="button" type="submit" name="submit" id="reset_pw_submit" value="Submit">
+        </form>
+  {% end %}
+      </div>
+{% end %}
 
       <div id="rc_edit" class="floating_dialog" style="display: none;">
         <form action="#" id="rc_edit_form">
