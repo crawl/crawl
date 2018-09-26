@@ -3028,17 +3028,6 @@ MAP
 .....
 ENDMAP
 
-# Remember, the 9s can usually escape without the door opening
-NAME: minmay_the_grid_square_5x5_megaminivault
-TAGS: the_grid_square_5x5 unrand
-MAP
-.....
-.=nn.
-.n9nn
-.nn|9
-..n9|
-ENDMAP
-
 NAME: minmay_the_grid_square_5x5_moneybag
 TAGS: the_grid_square_5x5 unrand
 SUBST: 0 = 0.
