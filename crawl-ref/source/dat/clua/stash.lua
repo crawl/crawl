@@ -52,6 +52,7 @@ function ch_stash_search_annotate_item(it)
 
   local skill = it.weap_skill
   if skill then
+    annot = annot .. "{" .. skill .. "} "
     local hands = it.hands
     local hands_adj
     if hands == 2 then
@@ -59,7 +60,6 @@ function ch_stash_search_annotate_item(it)
     else
       hands_adj = "one-handed"
     end
-    annot = annot .. "{" .. skill .. "} "
     if skill ~= "Throwing" then
       annot = annot .. "{" .. hands_adj .. "} "
     end
