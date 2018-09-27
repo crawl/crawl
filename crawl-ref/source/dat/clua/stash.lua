@@ -9,6 +9,7 @@
 -- {artefact} for artefacts.
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
+-- { <num>-handed } - the handedness of the weapon for weapons.
 -- { <class> } - item class: gold, weapon, missile, wand, carrion, food,
 --               scroll, jewellery, potion, book, magical staff, orb, misc,
 --               <armourtype> armour
@@ -51,7 +52,17 @@ function ch_stash_search_annotate_item(it)
 
   local skill = it.weap_skill
   if skill then
+    local hands = it.hands
+    local hands_adj
+    if hands == 2 then
+      hands_adj = "two-handed"
+    else
+      hands_adj = "one-handed"
+    end
     annot = annot .. "{" .. skill .. "} "
+    if skill ~= "Throwing" then
+      annot = annot .. "{" .. hands_adj .. "} "
+    end
   end
 
   if it.ego_type_terse ~= "" and it.ego_type_terse ~= "unknown" then
