@@ -1339,4 +1339,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     0 // No additional effect noise.
 },
+
+{
+    ZAP_SONIC_WAVE,
+    "sonic wave",
+    200,
+    new calcdice_calculator<2, 5, 1, 10>,
+    new tohit_calculator<40>,
+    new calcdice_calculator<2, 5, 1, 10>,
+    new tohit_calculator<40>,
+    YELLOW,
+    false,
+    BEAM_MMISSILE,
+    NUM_DCHAR_TYPES,
+    true,
+    false,
+    false,
+    0 // No additional effect noise.
+},
 };

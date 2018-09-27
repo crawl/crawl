@@ -430,7 +430,7 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
 }
 
 static int _los_spell_damage_monster(const actor* agent, monster* target,
-                                     bolt &beam, bool actual)
+                                     bolt &beam, bool actual, bool wounds)
 {
 
     beam.thrower = (agent && agent->is_player()) ? KILL_YOU :
@@ -454,7 +454,7 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
                             agent ? agent->pos() : coord_def(0, 0));
         }
 
-        if (target->alive() && you.can_see(*target))
+        if (target->alive() && you.can_see(*target) && wounds)
             print_wounds(*target);
 
         if (agent && agent->is_player()
@@ -479,8 +479,9 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
 }
 
 
-static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
-                                         actor* agent, bool actual, bool fail,
+static spret_type _cast_los_attack_spell(spell_type spell, int pow,
+                                         const actor* agent, actor* defender,
+                                         bool actual, bool fail,
                                          int* damage_done)
 {
     const monster* mons = agent ? agent->as_monster() : nullptr;
@@ -529,6 +530,17 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
             mons_invis_msg = "The surrounding life force dissipates!";
             verb = "drained of life";
             vulnerable = &_drain_lifeable;
+            break;
+
+        case SPELL_SONIC_WAVE:
+            player_msg = "You send a blast of sound all around you.";
+            global_msg = "Something sends a blast of sound all around you.";
+            mons_vis_msg = " sends a blast of sound all around you!";
+            mons_invis_msg = "Sound blasts the surrounding area!";
+            verb = "blasted";
+            vulnerable = [](const actor *caster, const actor *act) {
+                return !act->is_player();
+            };
             break;
 
         default: return SPRET_ABORT;
@@ -615,7 +627,8 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
         if (!m->alive())
             continue;
 
-        this_damage = _los_spell_damage_monster(agent, m, beam, actual);
+        this_damage = _los_spell_damage_monster(agent, m, beam, actual,
+                                                m != defender);
         total_damage += this_damage;
 
         if (!actual && mons)
@@ -643,75 +656,15 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
 
 spret_type trace_los_attack_spell(spell_type spell, int pow, const actor* agent)
 {
-    return _cast_los_attack_spell(spell, pow, agent, false, false, nullptr);
+    return _cast_los_attack_spell(spell, pow, agent, nullptr, false, false,
+                                  nullptr);
 }
 
 spret_type fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
-                                 bool fail, int* damage_done)
+                                 actor *defender, bool fail, int* damage_done)
 {
-    return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
-}
-
-// Screaming Sword
-void sonic_damage(bool scream)
-{
-    if (is_sanctuary(you.pos()))
-        return;
-
-    // First build the message.
-    counted_monster_list affected_monsters;
-
-    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
-        if (!silenced(mi->pos()))
-            affected_monsters.add(*mi);
-
-    /* dpeg sez:
-       * damage applied to everyone but the wielder (reasoning: the sword
-         does not like competitors, so no allies)
-       -- so sorry, Beoghites, Jiyvaites and the rest.
-    */
-
-    if (!affected_monsters.empty())
-    {
-        const string message =
-            make_stringf("%s %s hurt by the noise.",
-                         affected_monsters.describe().c_str(),
-                         conjugate_verb("be", affected_monsters.count() > 1).c_str());
-        if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
-        else
-        {
-            // Exclamation mark to suggest that a lot of creatures were
-            // affected.
-            mpr("The monsters around you reel from the noise!");
-        }
-    }
-
-    // Now damage the creatures.
-    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
-    {
-        if (silenced(mi->pos()))
-            continue;
-        int hurt = (random2(2) + 1) * (random2(2) + 1) * (random2(3) + 1)
-                 + (random2(3) + 1) + 1;
-        if (scream)
-            hurt = max(hurt * 2, 16);
-        int cap = scream ? mi->max_hit_points / 2 : mi->max_hit_points * 3 / 10;
-        hurt = min(hurt, max(cap, 1));
-        // not so much damage if you're a n00b
-        hurt = div_rand_round(hurt * you.experience_level, 27);
-        // scale by time taken, so multiple quick actions don't hurt more
-        hurt = div_rand_round(hurt * you.time_taken, BASELINE_DELAY);
-        /* per dpeg:
-         * damage is universal (well, only to those who can hear, but not sure
-           we can determine that in-game), i.e. smiting, no resists
-        */
-        dprf("damage done: %d", hurt);
-        mi->hurt(&you, hurt);
-
-        if (is_sanctuary(mi->pos()))
-            remove_sanctuary(true);
-    }
+    return _cast_los_attack_spell(spell, pow, agent, defender, true, fail,
+                                  damage_done);
 }
 
 spret_type vampiric_drain(int pow, monster* mons, bool fail)

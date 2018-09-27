@@ -338,32 +338,41 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
         set_artefact_name(*item, new_name);
         you.wield_change = true;
     }
+}
 
-    // not as spammy at low tension
-    if (!x_chance_in_y(7, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
-        return;
+static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
+                                         actor* defender, bool mondied,
+                                         int dam)
+{
+    int tension = get_tension(GOD_NO_GOD);
+    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
+    dprf(DIAG_COMBAT, "Singing sword tension: %d; tier: %d", tension, tier);
 
-    // it will still struggle more with higher tension
-    if (silent)
+    if (silenced(you.pos()))
         tier = 0;
 
+    // not as spammy at low tension
+    if (!x_chance_in_y(5, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
+        return;
+
     if (tier == 3 && one_chance_in(10))
-        tier++; // SCREAM -- double damage
+        tier++; // Loudest scream -- 50% more spellpower and 40 noise.
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
     const string key = tenname[tier];
     string msg = getSpeakString("singing sword " + key);
 
-    const int loudness[] = {0, 0, 15, 25, 35};
-    item_noise(*item, msg, loudness[tier]);
+    const int loudness[] = {0, 0, 20, 30, 40};
+
+    item_noise(*weapon, msg, loudness[tier]);
 
     if (tier < 3)
         return; // no damage on low tiers
 
-    sonic_damage(tier == 4);
+    fire_los_attack_spell(SPELL_SONIC_WAVE, 120 + (tier == 4) * 60, &you,
+            defender);
 }
-
 ////////////////////////////////////////////////////
 
 static void _PRUNE_equip(item_def *item, bool *show_msgs, bool unmeld)

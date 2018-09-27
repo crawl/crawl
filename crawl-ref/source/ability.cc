@@ -2281,7 +2281,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         const spret_type result =
             fire_los_attack_spell(SPELL_DRAIN_LIFE,
                                   you.skill_rdiv(SK_INVOCATIONS),
-                                  &you, fail, &damage);
+                                  &you, nullptr, fail, &damage);
         if (result != SPRET_SUCCESS)
             return result;
 

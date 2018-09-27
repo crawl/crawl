@@ -88,5 +88,6 @@ enum zap_type
     ZAP_HARPOON_SHOT,
     ZAP_REFRIGERATE,
     ZAP_DRAIN_LIFE,
+    ZAP_SONIC_WAVE,
     NUM_ZAPS
 };

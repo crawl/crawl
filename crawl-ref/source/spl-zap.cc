@@ -63,6 +63,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_DEBUGGING_RAY, ZAP_DEBUGGING_RAY },
     { SPELL_OZOCUBUS_REFRIGERATION, ZAP_REFRIGERATE},
     { SPELL_DRAIN_LIFE, ZAP_DRAIN_LIFE},
+    { SPELL_SONIC_WAVE, ZAP_SONIC_WAVE},
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
