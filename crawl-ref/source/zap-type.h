@@ -86,5 +86,7 @@ enum zap_type
     ZAP_MALMUTATE,
     ZAP_VILE_CLUTCH,
     ZAP_HARPOON_SHOT,
+    ZAP_REFRIGERATE,
+    ZAP_DRAIN_LIFE,
     NUM_ZAPS
 };
