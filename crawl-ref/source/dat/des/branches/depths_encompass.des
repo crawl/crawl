@@ -236,8 +236,8 @@ NSUBST:  C = 1:+ / *:b, D = 1:+ / *:b
 NSUBST:  E = 1:+ / *:x, N = 1:= / *:n
 SUBST:   ' : ''l. , ' = l.
 SUBST:   " : ""W. , " = Ww..
-NSUBST:  * = 1:f / *:*
-SUBST:   * = * % % $ $ e
+NSUBST:  * = 1:e / *:*
+SUBST:   * = * % % $ $ d
 SUBST:   ; = 9 0
 SUBST:   ! = %$, & = *%
 KITEM:   V = *
