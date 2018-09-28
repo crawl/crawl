@@ -545,8 +545,13 @@ void attack::pain_affects_defender()
     actor* user = _pain_weapon_user(attacker);
     if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
     {
+        int effective_skill = 0;
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_MORG))
+            effective_skill = user->skill_rdiv(SK_NECROMANCY, 3, 2);
+        else
+            effective_skill = user->skill_rdiv(SK_NECROMANCY);
         special_damage += resist_adjust_damage(defender, BEAM_NEG,
-                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+                              random2(1 + effective_skill));
 
         if (special_damage && defender_visible)
         {
@@ -1790,7 +1795,15 @@ void attack::player_stab_check()
         return;
     }
 
-    const stab_type st = find_stab_type(&you, *defender);
+    stab_type st = find_stab_type(&you, *defender);
+    // Find stab type is also used for displaying information about monsters,
+    // so we need to upgrade the stab type for the Spriggan's Knife here
+    if (using_weapon()
+        && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
+        && st != STAB_NO_STAB)
+    {
+        st = STAB_SLEEPING;
+    }
     stab_attempt = st != STAB_NO_STAB;
     stab_bonus = stab_bonus_denom(st);
 

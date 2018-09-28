@@ -124,8 +124,10 @@ slowing down their movement somewhat.
 %%%%
 dagger "Morg"
 
-An ugly rusty dagger. Many years ago it was the property of a powerful mage
-called Boris. He got lost in the Dungeon while seeking the Orb.
+An ugly rusty dagger. Many years ago it was crafted a powerful mage called
+Boris in search of the secrets of life and death. He got lost in the Dungeon
+while seeking the Orb. The wounds it inflicts are exceptionally painful to
+living creatures. It increases damage dealt and taken.
 %%%%
 scythe "Finisher"
 
@@ -235,9 +237,8 @@ harder it will be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
-A dainty little knife which was made by Spriggans, or for Spriggans, or
-possibly from Spriggans. Anyway, it's in some way associated with those fey
-folk.
+A dainty little knife which was made by Spriggans. It carves into the world of
+dreams, and stabs any unaware enemy as if it were asleep.
 %%%%
 plutonium sword
 

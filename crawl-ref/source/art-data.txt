@@ -377,13 +377,13 @@ BOOL:    poison, skip_ego, nogen
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+INSCRIP:  biting pain, Harm
 PLUS:     +4
 COLOUR:   LIGHTRED
 TILE:     urand_morg
 TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
-INT:      5
-MAGIC:    1
+BOOL:     drain, skip_ego
 
 NAME:    scythe "Finisher"
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -572,14 +572,13 @@ BOOL:    poison, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+INSCRIP:  stab,
 TYPE:     knife
 PLUS:     +7
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
 EV:       4
-DEX:      4
-MAGIC:    1
 STEALTH:  1
 
 NAME:    plutonium sword

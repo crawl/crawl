@@ -286,7 +286,10 @@ bool actor::reflection(bool calc_unid, bool items) const
 
 bool actor::extra_harm(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_HARM, calc_unid);
+    const item_def *wp = primary_weapon();
+    return items &&
+           (wearing(EQ_AMULET, AMU_HARM, calc_unid)
+            || wp && is_unrandom_artefact(*wp, UNRAND_MORG));
 }
 
 bool actor::rmut_from_item(bool calc_unid) const
