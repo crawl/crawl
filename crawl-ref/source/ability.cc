@@ -1623,6 +1623,42 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_WU_JIAN_WALLJUMP:
+    {
+        // TODO: Add check for whether there is any valid landing spot
+        if (you.is_nervous())
+        {
+            if (!quiet)
+                mpr("You are too terrified to wall jump!");
+            return false;
+        }
+        if (you.attribute[ATTR_HELD])
+        {
+            if (!quiet)
+            {
+                mprf("You cannot wall jump while caught in a %s.",
+                     get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+            }
+            return false;
+        }
+        // Is there a valid place to wall jump?
+        bool has_targets = false;
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+            if (feat_can_wall_jump_against(grd(*ai)))
+            {
+                has_targets = true;
+                break;
+            }
+
+        if (!has_targets)
+        {
+            if (!quiet)
+                mpr("There is nothing to wall jump against here.");
+            return false;
+        }
+        return true;
+    }
+
     default:
         return true;
     }
