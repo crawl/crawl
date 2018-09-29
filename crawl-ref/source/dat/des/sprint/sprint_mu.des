@@ -744,7 +744,7 @@ MARKER:  ! = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "foul pestilence" \
              }
-COLOUR: t = darkgrey, w:8 lightgrey
+COLOUR: t = darkgrey / w:8 lightgrey
 : elseif swamprnd == 2 then
 MONS: swamp drake simulacrum, ice dragon, hydra, hydra simulacrum
 MARKER:  ! = lua:fog_machine { \
