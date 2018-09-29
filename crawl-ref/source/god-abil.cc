@@ -7263,6 +7263,13 @@ bool wu_jian_wall_jump_ability()
         return false;
     }
 
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You cannot wall jump while caught in a %s.",
+             get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+        return false;
+    }
+
     // query for location:
     dist beam;
 
