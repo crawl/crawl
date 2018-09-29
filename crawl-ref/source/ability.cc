@@ -114,6 +114,7 @@ enum class abflag
     sacrifice           = 0x00200000, // sacrifice (Ru)
     hostile             = 0x00400000, // failure summons a hostile (Makhleb)
     starve_ok           = 0x00800000, // can use even if starving
+    berserk_ok          = 0x01000000, // can use even if berserk
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -641,9 +642,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
     // Lunge and Whirlwind abilities aren't menu abilities but currently need
     // to exist for action counting, hence need enums/entries.
-    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::none },
-    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::none },
-    { ABIL_WU_JIAN_WALLJUMP, "Wall Jump", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, 0, {}, abflag::berserk_ok },
+    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::berserk_ok },
+    { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
+        0, 0, 0, 0, {}, abflag::starve_ok | abflag::berserk_ok },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1251,7 +1253,7 @@ static bool _can_hop(bool quiet)
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
-    if (you.berserk())
+    if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
         if (!quiet)
             canned_msg(MSG_TOO_BERSERK);
