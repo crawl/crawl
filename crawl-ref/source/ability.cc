@@ -1162,21 +1162,11 @@ void no_ability_msg()
 
 bool activate_ability()
 {
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        crawl_state.zero_turns_taken();
-        return false;
-    }
+    vector<talent> talents = your_talents(false);
 
-    const bool confused = you.confused();
-    vector<talent> talents = your_talents(confused);
     if (talents.empty())
     {
-        if (confused)
-            canned_msg(MSG_TOO_CONFUSED);
-        else
-            no_ability_msg();
+        no_ability_msg();
         crawl_state.zero_turns_taken();
         return false;
     }
