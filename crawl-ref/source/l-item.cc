@@ -856,7 +856,7 @@ IDEF(spells)
 
 /*** Artefact properties
  * Full list in `artefact-prop-type.h`
- * @field table artefact property table
+ * @field artprops table artefact property table
  */
 IDEF(artprops)
 {
