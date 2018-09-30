@@ -194,4 +194,4 @@ void hepliaklqana_choose_identity();
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
 bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ, bool ability);
-bool wu_jian_wall_jump_ability();
+spret_type wu_jian_wall_jump_ability();

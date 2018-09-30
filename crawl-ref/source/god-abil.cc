@@ -7218,7 +7218,7 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
     return true;
 }
 
-bool wu_jian_wall_jump_ability()
+spret_type wu_jian_wall_jump_ability()
 {
     // This needs to be kept in sync with direct walljumping via movement.
     // TODO: Refactor to call the same code.
@@ -7229,11 +7229,11 @@ bool wu_jian_wall_jump_ability()
         crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return false;
+        return SPRET_ABORT;
     }
 
     if (cancel_barbed_move())
-        return false;
+        return SPRET_ABORT;
 
     if (you.digging)
     {
@@ -7254,21 +7254,24 @@ bool wu_jian_wall_jump_ability()
     if (!has_targets)
     {
         mpr("There is nothing to wall jump against here.");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (you.is_nervous())
     {
         mpr("You are too terrified to wall jump!");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (you.attribute[ATTR_HELD])
     {
         mprf("You cannot wall jump while caught in a %s.",
              get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
-        return false;
+        return SPRET_ABORT;
     }
+
+    if (!you.attempt_escape())
+        return SPRET_FAIL;
 
     // query for location:
     dist beam;
@@ -7295,23 +7298,23 @@ bool wu_jian_wall_jump_ability()
         {
             clear_messages();
             mpr("Cancelling wall jump due to HUP.");
-            return false;
+            return SPRET_ABORT;
         }
 
         if (!beam.isValid || beam.target == you.pos())
-            return false; // early return
+            return SPRET_ABORT; // early return
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
     }
 
     if (!wu_jian_do_wall_jump(beam.target, true))
-        return false;
+        return SPRET_ABORT;
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
     apply_barbs_damage();
     remove_ice_armour_movement();
-    return true;
+    return SPRET_SUCCESS;
 }

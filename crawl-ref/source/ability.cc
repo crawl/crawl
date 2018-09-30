@@ -3042,7 +3042,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_WU_JIAN_WALLJUMP:
         fail_check();
-        return wu_jian_wall_jump_ability() ? SPRET_SUCCESS : SPRET_ABORT;
+        return wu_jian_wall_jump_ability();
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
