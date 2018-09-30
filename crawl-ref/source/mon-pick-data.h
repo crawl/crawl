@@ -238,8 +238,8 @@ static const pop_entry pop_lair[] =
   {  1,  6,  515, FLAT, MONS_YAK },
   {  1,  7,  188, PEAK, MONS_WYVERN },
   {  1,  8,  380, SEMI, MONS_BLINK_FROG },
-  {  1,  6,  900, FLAT, MONS_SPINY_FROG },
-  {  7, 10,  160, FLAT, MONS_SPINY_FROG },
+  {  1,  6,  900, FLAT, MONS_CANE_TOAD },
+  {  7, 10,  160, FLAT, MONS_CANE_TOAD },
   {  1,  6,  515, FLAT, MONS_KOMODO_DRAGON },
   {  7, 10,  160, FLAT, MONS_KOMODO_DRAGON },
   {  2,  5,    8, PEAK, MONS_HORNET },
@@ -271,7 +271,7 @@ static const pop_entry pop_swamp[] =
   { -1,  4,  480, SEMI, MONS_SPRIGGAN_RIDER },
   { -1,  5,   40, PEAK, MONS_UGLY_THING },
   {  0,  3, 1000, FLAT, MONS_ALLIGATOR },
-  {  0,  3, 1000, FLAT, MONS_SPINY_FROG },
+  {  0,  3, 1000, FLAT, MONS_CANE_TOAD },
   {  0,  3,  925, FLAT, MONS_BOG_BODY },
   {  0,  3,  925, FLAT, MONS_SWAMP_DRAKE },
   {  0,  3,  915, FLAT, MONS_HYDRA },
@@ -1145,7 +1145,7 @@ static const pop_entry pop_generic_late_zombie[] =
   {  1,  27,   80, FLAT, MONS_QUICKSILVER_DRAGON },
   {  1,  27,   65, FLAT, MONS_GOLDEN_DRAGON },
   {  1,  27,   80, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,  27,   45, FLAT, MONS_SPINY_FROG },
+  {  1,  27,   45, FLAT, MONS_CANE_TOAD },
   {  1,  27,   25, FLAT, MONS_CATOBLEPAS },
   {  1,  27,   90, FLAT, MONS_HYDRA },
   {  1,  27,   30, FLAT, MONS_SWAMP_DRAGON },
@@ -1280,7 +1280,7 @@ static const pop_entry pop_water_snake[] =
 
 static const pop_entry pop_water_hell[] =
 { // Hell branch water monsters
-  {  1,  7,   150, FLAT, MONS_SPINY_FROG },
+  {  1,  7,   150, FLAT, MONS_CANE_TOAD },
   {  1,  7,   120, FLAT, MONS_ALLIGATOR },
   {  1,  7,   130, FLAT, MONS_ANACONDA },
   {  1,  7,   230, FLAT, MONS_HYDRA },

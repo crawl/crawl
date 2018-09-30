@@ -94,7 +94,7 @@ enum monster_type                      // menv[].type
     MONS_FROG,                  // genus
 #endif
     MONS_BULLFROG,
-    MONS_SPINY_FROG,
+    MONS_CANE_TOAD,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
     MONS_BARACHI,

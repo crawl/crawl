@@ -710,6 +710,11 @@ cacodemon
 A hideously ugly demon of rage and legendary power, it disables its foes before
 blasting them to pieces.
 %%%%
+cane toad
+
+A larger and even more aggressive species of bullfrog. It secretes countless
+deadly toxins, and is highly resistant to venom itself.
+%%%%
 catoblepas
 
 A sluggish black buffalo, its hide encrusted with dull scales. It carries its
@@ -2218,10 +2223,6 @@ sphinx
 
 A fearsome hybrid with a woman's head, a lion's body and the wings of an eagle,
 able to cloud the minds of its foes and wield fell magics.
-%%%%
-spiny frog
-
-A frog the size of a wolf, covered in small spines and spurs which drip venom.
 %%%%
 spriggan
 

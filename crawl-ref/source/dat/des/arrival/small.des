@@ -2757,7 +2757,7 @@ SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   bullfrog / spiny frog / yak / death yak w:1 / elephant
+MONS:   bullfrog / cane toad / yak / death yak w:1 / elephant
 MAP
           ccccccccc
        cccctccccctcccc

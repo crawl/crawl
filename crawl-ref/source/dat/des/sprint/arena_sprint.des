@@ -247,7 +247,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 merfolk / w:5 merfolk siren / hippogriff w:15 / centaur /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 tyrant leech / insubstantial wisp / w:5 swamp drake /\
-                    bullfrog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",
+                    bullfrog / w:2 cane toad / w:2 hydra / w:2 vampire mosquito",
                 "w:20 scorpion / w:14 jumping spider /\
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
@@ -271,7 +271,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
                 "jackal w:1 / hound w:5 / wolf w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
-                "bullfrog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
+                "bullfrog w:20 / blink frog w:6 / cane toad w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
                 -- Gimmicks
                 "neqoxec", "orc priest", "vampire bat",

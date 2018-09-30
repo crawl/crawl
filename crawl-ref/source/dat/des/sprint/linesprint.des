@@ -321,7 +321,7 @@ KMONS:    1 = wolf w:15 / warg / hell hound w:8
 KMONS:    2 = yak / death yak w:15 / catoblepas w:5
 KMONS:    3 = worm w:15 / lindwurm / tyrant leech
 KMONS:    4 = black bear / polar bear
-KMONS:    5 = spiny frog / blink frog / vampire mosquito / bullfrog /\
+KMONS:    5 = cane toad / blink frog / vampire mosquito / bullfrog /\
               tyrant leech
 KMONS:    6 = elephant / dire elephant w:2
 COLOUR:   123456 = green

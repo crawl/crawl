@@ -4923,7 +4923,7 @@ static const pop_entry _invitation_lair[] =
 { // Lair enemies
   {  1,   1,   60, FLAT, MONS_BLINK_FROG },
   {  1,   1,   40, FLAT, MONS_DREAM_SHEEP },
-  {  1,   1,   20, FLAT, MONS_SPINY_FROG },
+  {  1,   1,   20, FLAT, MONS_CANE_TOAD },
   { 0,0,0,FLAT,MONS_0 }
 };
 

@@ -30,7 +30,7 @@ function hell_water_abbrev(e, type, baseweight)
 end
 
 function hell_water_spawns(e)
-    e.kmons("P = " .. hell_water_abbrev(_G, "spiny frog", 150) ..
+    e.kmons("P = " .. hell_water_abbrev(_G, "cane toad", 150) ..
                " / " .. hell_water_abbrev(_G, "alligator", 120) ..
                " / " .. hell_water_abbrev(_G, "anaconda", 130) ..
                " / " .. hell_water_abbrev(_G, "hydra", 230) ..

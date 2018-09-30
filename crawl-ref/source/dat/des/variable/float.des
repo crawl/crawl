@@ -4434,7 +4434,7 @@ NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / $
 :   elseif you.depth() <= 12 then
 :     cloud_types = {"flame", "poison gas", "acidic fog"}
 MONS: fire bat / fire elemental, hell hound w:20 / fire crab
-MONS: water moccasin w:40 / spiny frog / black mamba
+MONS: water moccasin w:40 / cane toad / black mamba
 KMONS: 4 = two-headed ogre zombie \
                ; dire flail ego:venom | great mace ego:venom \
                . giant club ego:venom | giant spiked club ego:venom \
@@ -4459,7 +4459,7 @@ MONS: fire bat / fire elemental, hell hound / fire crab
 MONS: simulacrum place:Lair
 MONS: dire elephant simulacrum / anaconda simulacrum / wolf spider simulacrum \
       / hydra simulacrum
-MONS: spiny frog / black mamba, swamp dragon
+MONS: cane toad / black mamba, swamp dragon
 NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / * / $
 : end
 # Any ' not replace with floor or wall above become cloud squares

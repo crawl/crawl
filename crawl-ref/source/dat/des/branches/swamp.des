@@ -1494,7 +1494,7 @@ MONS:    spectral hydra / spectral swamp dragon, death drake, necromancer
 MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
          w:1 freezing wraith
 KMONS:   5 = bog body / spriggan zombie w:4 / troll zombie w:4
-KMONS:   6 = large abomination w:2 / swamp worm zombie / spiny frog zombie / \
+KMONS:   6 = large abomination w:2 / swamp worm zombie / cane toad zombie / \
              tyrant leech zombie w:6 / alligator zombie w:6
 KMONS:   q = withered plant
 KFEAT:   56 = W
@@ -1671,7 +1671,7 @@ NAME: cheibrodos_swamp_heart_of_darkness
 DEPTH: Swamp:2-, !Swamp:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: northeast
-MONS: spiny frog / ugly thing / hydra / hornet
+MONS: cane toad / ugly thing / hydra / hornet
 MONS: spriggan rider, spriggan berserker, deep elf knight, spriggan druid
 KMONS: P = plant
 KFEAT: P = W

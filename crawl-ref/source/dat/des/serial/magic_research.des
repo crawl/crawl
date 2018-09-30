@@ -133,7 +133,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
-MONS:    spiny frog / black mamba, redback
+MONS:    cane toad / black mamba, redback
 MONS:    sea snake / redback, hornet
 MONS:    mana viper / tarantella
 KMONS:   D = death drake

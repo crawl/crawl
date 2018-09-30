@@ -94,11 +94,11 @@ function beast_lair_populate_mons_small(e)
         local monster_list = {}
         if you.depth() < 4 then
             monster_list = { "porcupine", "porcupine", "bullfrog", "wolf",
-                             "yak", "komodo dragon", "spiny frog",
+                             "yak", "komodo dragon", "cane toad",
                              "crocodile" }
         else
             monster_list = { "yak", "yak", "polar bear", "death yak",
-                             "elephant", "spiny frog", "komodo dragon",
+                             "elephant", "cane toad", "komodo dragon",
                              "wyvern" }
         end
         e.mons(plant)
@@ -208,7 +208,7 @@ ORIENT:  float
 MONS:    yak, death yak
 MONS:    iguana w:20 / crocodile w:20 / komodo dragon / basilisk w:5
 MONS:    river rat / porcupine / hell rat / quokka / rat
-MONS:    bullfrog w:40 / blink frog / spiny frog
+MONS:    bullfrog w:40 / blink frog / cane toad
 SHUFFLE: 1345
 NSUBST:  1 = 2:11112 / * = 1..
 NSUBST:  3 = 1:2 / * = 2.., 5 = 1:4 / * = 4:5 .:9
@@ -1988,7 +1988,7 @@ NAME:   minmay_lair_venomous_thicket
 TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
-MONS:   black mamba / spiny frog / wolf spider
+MONS:   black mamba / cane toad / wolf spider
 MONS:   basilisk / komodo dragon / hornet
 MONS:   adder
 KMONS:  P = plant / fungus w:3
@@ -2019,7 +2019,7 @@ DEPTH:  Lair
 TAGS:   no_monster_gen no_item_gen
 MONS:   ice dragon / fire dragon / swamp dragon / anaconda w:5
 MONS:   swamp dragon / hydra / catoblepas
-MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
+MONS:   swamp drake / w:20 cane toad / w:20 komodo dragon /\
         w:20 basilisk / w:20 black mamba
 KMONS:  P = plant
 : if you.absdepth() > 14 then
@@ -2432,7 +2432,7 @@ NAME: cheibrodos_lair_overgrown_chateau
 TAGS: no_item_gen no_monster_gen
 DEPTH: Lair:2-, !Lair:$
 ORIENT: float
-MONS: water moccasin / porcupine, hornet, crocodile, bullfrog / spiny frog
+MONS: water moccasin / porcupine, hornet, crocodile, bullfrog / cane toad
 MONS: black mamba / komodo dragon / w:3 rime drake, hydra / lindwurm
 KMONS: PA = plant
 KFEAT: A = W
@@ -2469,7 +2469,7 @@ TAGS: no_item_gen no_monster_gen
 DEPTH: Lair
 ORIENT: northeast
 KMONS: P = plant
-MONS: bullfrog / spiny frog, water moccasin / black mamba, hydra
+MONS: bullfrog / cane toad, water moccasin / black mamba, hydra
 FTILE: _ = floor_dirt
 SUBST: P = ..P, - = .:1 x
 NSUBST: " = 1:3 / 4:P / 3=P. / 2:. / 2=.W / *:W
@@ -2656,7 +2656,7 @@ MONS:    wolf / blink frog / yak / hell rat w:2
 MONS:    basilisk, rime drake, lindwurm
 MONS:    hippogriff, manticore, catoblepas
 KMONS:   8 = water moccasin
-KMONS:   9 : spiny frog w:90 / hornet
+KMONS:   9 : cane toad w:90 / hornet
 KMONS:   0 : black mamba w:90 / wolf spider
 KMONS:   A = elephant
 KMONS:   B = death yak
@@ -2696,7 +2696,7 @@ ENDMAP
 NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
-MONS:    water moccasin / wyvern, hornet, spiny frog
+MONS:    water moccasin / wyvern, hornet, cane toad
 MONS:    black mamba, redback, wolf spider, guardian serpent
 KMONS:   f = fungus
 KMONS:   P = plant
@@ -2867,7 +2867,7 @@ TAGS:    no_monster_gen
 PLACE:   Lair:$
 ORIENT:  float
 KMONS:   1 = bullfrog
-KMONS:   2 = spiny frog
+KMONS:   2 = cane toad
 KMONS:   3 = vampire mosquito
 KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
@@ -2876,7 +2876,7 @@ KMONS:   7 = electric eel
 KMONS:   p = plant
 ITEM:    any good_item
 KFEAT:   12367p = W
-# Previously 11.6 bullfrogs, 16.6 spiny frogs,
+# Previously 11.6 bullfrogs, 16.6 cane toads,
 # and 7.1 vampire mosquitoes on average.
 NSUBST:  XW = 6:1 / 8:2 / 6:3 / 12 = 11WWW / 16 = 22WWW / 8 = 44WWW
 NSUBST:  W = 3 = 667 / *:W, 5 = 1:5 / *:4
@@ -3082,7 +3082,7 @@ PLACE:   Lair:$
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  float
 KMONS:   ~ = plant
-KMONS:   1 = water moccasin / crocodile / hornet / wyvern / spiny frog
+KMONS:   1 = water moccasin / crocodile / hornet / wyvern / cane toad
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / wind drake / harpy
 KMONS:   4 = dire elephant / hydra

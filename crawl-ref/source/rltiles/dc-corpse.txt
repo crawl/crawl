@@ -119,7 +119,7 @@ death_scarab CORPSE_DEATH_SCARAB
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
-spiny_frog CORPSE_SPINY_FROG
+cane_toad CORPSE_CANE_TOAD
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
