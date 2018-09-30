@@ -623,16 +623,13 @@ void update_vision_range()
 
     // Barachi have +1 base LOS.
     if (you.species == SP_BARACHI)
-    {
-        nom *= LOS_DEFAULT_RANGE + 1;
-        denom *= LOS_DEFAULT_RANGE;
-    }
+        you.normal_vision += 1;
 
     // Nightstalker gives -1/-2/-3.
     if (you.get_mutation_level(MUT_NIGHTSTALKER))
     {
-        nom *= LOS_DEFAULT_RANGE - you.get_mutation_level(MUT_NIGHTSTALKER);
-        denom *= LOS_DEFAULT_RANGE;
+        nom *= you.normal_vision - you.get_mutation_level(MUT_NIGHTSTALKER);
+        denom *= you.normal_vision;
     }
 
     // the Darkness spell.
