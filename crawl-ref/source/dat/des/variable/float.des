@@ -4130,54 +4130,60 @@ NAME:   gammafunk_beogh_shrine
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:7-, Orc
 ORIENT: float
-KFEAT:  _ = altar_beogh
-KITEM:  _ = $
-: if you.in_branch("Orc") then
-MONS: orc / orc wizard / orc priest
-MONS: orc warrior / two-headed ogre / w:5 orc knight
-MONS: orc high priest / orc sorcerer, ettin / orc warlord / stone giant
-NSUBST: 1 = 6=1 / 6=12.. / ., 3 = 2=2 / 2=3 / 2=23.. / 1=4 / 2=4... / .
-NSUBST: " = 3=|*$ / 3=|*$...
-: elseif you.depth() <= 9 then
+: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:   cloak good_item / scarf good_item / helmet good_item \
+        / hat good_item / gloves good_item / pair of boots good_item
+ITEM:   cloak randart / helmet randart / hat randart / gloves randart \
+        / pair of boots randart
+NSUBST: R = R / -
+: if you.in_branch("D") then
+:   if you.depth() < 10 then
 MONS: orc, ogre / w:40 orc warrior / w:5 troll / w:5 two-headed ogre
 MONS: orc wizard / orc priest
 MONS: cyclops / ogre mage / orc knight
-NSUBST: 1 = 6=1 / 3=2 / 2=112... / ., 3 = 4=3 / 2=3. / 1=4... / .
-: elseif you.depth() <= 12 then
+NSUBST: - = 4=1 / 4=1. / 2=2 / 2=2. / 3=3 / 4=3. / 4... / .
+NSUBST: ' = 3=|* / *% / 3=$
+:   elseif you.depth() < 13 then
 MONS: orc / orc wizard / orc priest
 MONS: ogre / w:30 orc warrior / two-headed ogre / cyclops / troll
-MONS: orc sorcerer / orc high priest / w:5 ogre mage
+MONS: orc sorcerer / orc high priest / ogre mage
 MONS: w:20 orc knight / ettin / orc warlord / stone giant
-NSUBST: 1 = 6=1 / 4=12.. / ., 3 = 4=2 / 1=3 / 1=334... / .
-NSUBST: " = 1=|*$ / 1=|*$...
-: else
-MONS: orc warrior / two-headed ogre / troll / cyclops, orc knight
-MONS: orc sorcerer / orc high priest / w:5 ogre mage
+NSUBST: - = 6=1 / 6=1. / 3=2 / 3=2. / 3 / 3. / 4... / .
+NSUBST: ' = de / 2=|* / * / %$.. / 3=$
+:   else
+MONS: orc priest / orc warrior / cyclops, two-headed ogre / orc knight w:20
+MONS: orc sorcerer / orc high priest / ogre mage
 MONS: ettin / orc warlord / stone giant
-NSUBST: 1 = 6=1 / 4=12.. / ., 3 = 4=2 / 2=3 / 1=4 / 1=34.. / .
-NSUBST: " = 2=|*$ / 2=|*$...
+NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 3=3. / 4 / 2=4. / ..
+NSUBST: ' = d / f / 2=|* / *% / %$.. / 3=$
+:   end
+# Orc
+: else
+MONS: orc / orc wizard / orc priest
+MONS: orc warrior / two-headed ogre / orc knight
+MONS: orc high priest / orc sorcerer, ettin / orc warlord / stone giant
+NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 2=3. / 4 / 4. / ..
+NSUBST: ' = d / e / 2=|* / %$ / 3=$
 : end
-NSUBST: R = R / .
+KFEAT:  _ = altar_beogh
 MARKER: P = lua:transp_loc("beogh_ambush_entry")
 MARKER: Q = lua:transp_dest_loc("beogh_ambush_entry")
 MARKER: R = lua:transp_loc("beogh_ambush_exit")
 MARKER: S = lua:transp_dest_loc("beogh_ambush_exit")
 MAP
-   ccccccccccccc
-  ccccccccccccccc
-  ccc...1R1..1ccc
-  cc...ccccc.11cc
-  cc...3c3c3...cc
-  cc.c."13""3c.cc
- .cc.cc*I$I"cc1cc.
-@PnnQn|||_"33cRccS@
- .cc.cc*I$I"cc1cc.
-  cc.c."13""3c.cc
-  cc...3c3c3...cc
-  cc...ccccc.11cc
-  ccc...1R1..1ccc
-  ccccccccccccccc
-   ccccccccccccc
+   ccccccccccc
+  cc----R--..cc
+  c---ncncn...c
+  c---'c'c'...c
+ .c-n'-----'n.c.
+ .n-cc-I-I-cc.n.
+@PnRn'--_--'nQnS@
+ .n-cc-I-I-cc.n.
+ .c-n'-----'n.c.
+  c---'c'c'...c
+  c---ncncn...c
+  cc----R--..cc
+   ccccccccccc
 ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
