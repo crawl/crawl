@@ -3993,82 +3993,82 @@ txxxq'''.m....s....m.```qxxxt
    ..........@@@..........
 ENDMAP
 
-NAME: gammafunk_sealed_library
-TAGS: no_monster_gen no_trap_gen
-DEPTH: Crypt, D:12-, Depths, Elf, Snake, Zot
-ORIENT: float
-ITEM: any book, any manual, any jewellery good_item
-ITEM: robe good_item / cloak good_item / scarf good_item \
+NAME:    gammafunk_sealed_library
+TAGS:    no_monster_gen no_trap_gen
+DEPTH:   Crypt, D:12-, Depths, Elf, Snake, Zot
+ORIENT:  float
+ITEM:    any book, any manual, any jewellery good_item
+ITEM:    robe good_item / cloak good_item / scarf good_item \
       / pair of boots good_item / hat good_item
 # Do this nsubst now so some branches can adjust monster placement.
-NSUBST: 4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
-NSUBST: ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
+NSUBST:  4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
+NSUBST:  ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
 # Monster glyph counts after these nsubst:
 # 1:0-2 (ave 1.0), 2:6-12 (ave 7.5), 3:3-6 (ave 3.75), 4:1-3 (ave 1.66)
 # 5:0-2 (ave 1)
 : if you.in_branch("Crypt") then
-MONS: phantasmal warrior
-MONS: necromancer / vampire mage / vampire knight / deep elf death mage \
-      / eidolon
-MONS: revenant / ancient champion / lich, ancient lich
+MONS:    phantasmal warrior
+MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
+         / eidolon
+MONS:    revenant / ancient champion / lich, ancient lich
 SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS: eye of draining
-MONS: boggart / kobold demonologist / deep elf mage / tengu conjurer
-MONS: wizard / necromancer / orc sorcerer / ogre mage
-MONS: deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
+MONS:    eye of draining
+MONS:    boggart / kobold demonologist / deep elf mage / tengu conjurer
+MONS:    wizard / necromancer / orc sorcerer / ogre mage
+MONS:    deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
 SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("Depths") then
-MONS: floating eye / phantasmal warrior
-MONS: boggart / ogre mage / wizard / necromancer
-MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
+MONS:    floating eye / phantasmal warrior
+MONS:    boggart / ogre mage / wizard / necromancer
+MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
       / deep elf death mage / deep troll earth mage / spriggan air mage \
       / vampire mage / hell knight
-MONS: sphinx / tengu reaver / lich / fire giant / frost giant
-MONS: titan / ancient lich
+MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
+MONS:    titan / ancient lich
 : elseif you.in_branch("Elf") then
-MONS: water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
-MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
+MONS:    water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
+MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
       / deep elf death mage
-MONS: glowing shapeshifter
+MONS:    glowing shapeshifter
 SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("Snake") then
-MONS: mana viper / guardian serpent
-MONS: naga mage / naga ritualist / salamander mystic, nagaraja
-SUBST: 5 = 4, 4 = 23
+MONS:    mana viper / guardian serpent
+MONS:    naga mage / naga ritualist / salamander mystic, nagaraja
+SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
-MONS: ghost moth / death cob / curse toe
-MONS: nonbase draconian
-MONS: ancient lich, orb of fire
-SUBST: 3 = 2, 4 = 3, 5 = 4
+MONS:    ghost moth / death cob / curse toe
+MONS:    nonbase draconian
+MONS:    ancient lich, orb of fire
+SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
-KFEAT: _ = altar_sif_muna / altar_vehumet
+KFEAT:   _ = altar_sif_muna / altar_vehumet
 SHUFFLE: efg
-NSUBST: R = R / tGT
-MARKER: P = lua:transp_loc("sealed_library_entry")
-MARKER: Q = lua:transp_dest_loc("sealed_library_entry")
-MARKER: R = lua:transp_loc("sealed_library_exit")
-MARKER: S = lua:transp_dest_loc("sealed_library_exit")
+NSUBST:  R = R / tGT
+MARKER:  P = lua:transp_loc("sealed_library_entry")
+MARKER:  Q = lua:transp_dest_loc("sealed_library_entry")
+MARKER:  R = lua:transp_loc("sealed_library_exit")
+MARKER:  S = lua:transp_dest_loc("sealed_library_exit")
 MAP
- ccccccccccccccccccccccccc
- ccccccccccccccccccccccccc
- ccc.3c'c'c'c'c'c'c3..$Rcc
- ccG4...............b4$*cc
- ccT..bb2bb2bb2..2..bb..cc
- ccG4..........bbb.....Gcc
- cccc3.Gc...bbbb...2.b3.cc
- cccc+cccc+ccT...bbbbb..cc
-...nnedUnG..c.....G.G.$tcc
-@SPnnfd_nQ..+........4|Ucc
-...nngdUnG..c.....G.G.$tcc
- cccc+cccc+ccT...bbbbb..cc
- cccc3.Gc...bbbb...2.b3.cc
- ccG4..........bbb.....Gcc
- ccT..bb2bb2bb2..2..bb..cc
- ccG4...............b4$*cc
- ccc.3c'c'c'c'c'c'c3..$Rcc
- ccccccccccccccccccccccccc
- ccccccccccccccccccccccccc
+.........................
+.cccccccccncncnccccccccc.
+.cG.3c'c'c'c'c'c'c3..$Rc.
+.n.4...............b4$*c.
+.nT..bb2bb2bb2..2..bb..c.
+.n.4..........bbb.....Gn.
+.cG.3.Gc...bbbb...2.b3.c.
+.ccc+cccc+ccT...bbbbb..c.
+...nedUnG..c.....G.G.$tn..
+@.Pnfd_nQ..+........4|UnS@
+...ngdUnG..c.....G.G.$tn..
+.ccc+cccc+ccT...bbbbb..c.
+.cG.3.Gc...bbbb...2.b3.c.
+.n.4..........bbb.....Gn.
+.nT..bb2bb2bb2..2..bb..c.
+.n.4...............b4$*c.
+.cG.3c'c'c'c'c'c'c3..$Rc.
+.cccccccccncncnccccccccc.
+.........................
 ENDMAP
 
 NAME:   gammafunk_jiyva_shrine
