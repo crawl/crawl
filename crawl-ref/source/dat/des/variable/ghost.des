@@ -964,7 +964,8 @@ G...@...G
 ENDMAP
 
 NAME:   ebering_ghost_funeral_grove
-DEPTH:  D:8-, Lair, Swamp
+# Don't place on Swamp:$ since Lerny can knock down the trees.
+DEPTH:  D:8-, Lair, Swamp, !Swamp:$
 ORIENT: float
 # Monsters and loot
 KITEM:  O = potion of lignification ident:all
