@@ -4,7 +4,7 @@ This document gives new team members some general guidance for DCSS development 
 
 ## Setup
 
-Other team members will help you get the items in the [*new dev checklist*](../team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](../config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
+Other team members will help you get the items in the [*new dev checklist*](../team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](../git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
