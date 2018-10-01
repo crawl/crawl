@@ -4071,51 +4071,59 @@ MAP
 .........................
 ENDMAP
 
-NAME:   gammafunk_jiyva_shrine
-TAGS:   no_monster_gen no_trap_gen
-DEPTH:  D:8-, Depths
-ORIENT: float
-KFEAT:  _ = altar_jiyva
-NSUBST: " = R / ', * = 3:| / 2:* / $
-: if you.in_branch("Depths") then
-MONS: slime creature / acid blob / azure jelly / death ooze
-MONS: floating eye / glowing orange brain / shining eye / golden eye band \
-      / eye of devastation
-NSUBST: ' = 4=|*$ / 4=|*$... / 6:1 / 2:2 / 4=1112....
-: elseif you.depth() <= 9 then
-MONS: slime creature, glowing orange brain / great orb of eyes
-NSUBST: ' = 4:1 / 2=1. / 1=2...
-: elseif you.depth() <= 12 then
-MONS: slime creature
-MONS: glowing orange brain / great orb of eyes / w:5 eye of devastation
-NSUBST: ' = |*$ / |*$... / 5:1 / 4=1. / 2=2.
+NAME:    gammafunk_jiyva_shrine
+TAGS:    no_monster_gen no_trap_gen
+DEPTH:   D:8-, Depths
+ORIENT:  float
+: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:    any jewellery good_item, any jewellery randart
+# Choose random landing site with exit placed far from this.
+SHUFFLE: Qq / Rr / Ss
+NSUBST:  q = q / '
+SUBST:   RSrs = '
+: if you.in_branch("D") then
+:   if you.depth() < 10 then
+MONS:    slime creature, glowing orange brain / great orb of eyes
+NSUBST:  ' = 3=|* / *% / -, - = 4=1 / 2=1. / 1=2... / .
+:   elseif you.depth() < 13 then
+MONS:    slime creature
+MONS:    glowing orange brain / great orb of eyes / eye of devastation
+NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 5=1 / 2=1. / 2=2. / .
+:   else
+MONS:    slime creature
+MONS:    glowing orange brain / great orb of eyes / eye of devastation \
+         / golden eye / shining eye
+MONS:    azure jelly / death ooze / acid blob w:5
+NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
+NSUBST:  - = 6=1 / 4=1. / 1=2 / 2=2. / 2=3. / .
+:   end
+# Depths
 : else
-MONS: slime creature
-MONS: glowing orange brain / great orb of eyes / w:5 shining eye \
-      / w:5 golden eye / w:5 eye of devastation
-MONS: azure jelly / death ooze
-NSUBST: ' = 2=|*$ / 2=|*$... / 6:1 / 4=1. / 1:2 / 2=2. / 2=3...
+MONS:    slime creature
+MONS:    glowing orange brain / shining eye / floating eye / golden eye \
+         / eye of devastation
+MONS:    acid blob / azure jelly / death ooze
+NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
+NSUBST:  - = 6=1 / 4=1. / 2=2 / 3=2. / 5=3 / 5=3. / .
 : end
-MARKER: P = lua:transp_loc("jiyva_chamber_entry")
-MARKER: Q = lua:transp_dest_loc("jiyva_chamber_entry")
-MARKER: R = lua:transp_loc("jiyva_chamber_exit")
-MARKER: S = lua:transp_dest_loc("jiyva_chamber_exit")
-COLOUR: c = green
-COLOUR: n = lightgreen
+MARKER:  P = lua:transp_loc("jiyva_chamber_entry")
+MARKER:  Q = lua:transp_dest_loc("jiyva_chamber_entry")
+MARKER:  q = lua:transp_loc("jiyva_chamber_exit")
+MARKER:  Z = lua:transp_dest_loc("jiyva_chamber_exit")
+COLOUR:  c = green
+COLOUR:  n = lightgreen
 MAP
-    ccccccccc
-   ccccccccccc
-  cccc'ccc'cccc
-  ccc''c.c''ccc
-  cc''.....'"cc
- .cccc.***.cccc.
-@PnnnQ.*_*..nnnS@
- .cccc.***.cccc.
-  cc''.....'"cc
-  ccc''c.c''ccc
-  cccc'ccc'cccc
-   ccccccccccc
-    ccccccccc
+    ccccccc
+   ccscccscc
+  cc''cRc''cc
+ .cq'-----''c.
+ .ncc-----ccn.
+@Pnn---_--QnnZ@
+ .ncc-----ccn.
+ .cq'-----''c.
+  cc''cSc''cc
+   ccrcccrcc
+    ccccccc
 ENDMAP
 
 NAME:   gammafunk_beogh_shrine
