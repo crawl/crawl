@@ -462,7 +462,7 @@ void validate_basedirs()
 {
     // TODO: could use this to pick a single data directory?
     vector<string> bases(_get_base_dirs());
-    bool found;
+    bool found = false;
 
     // there are a few others, but this should be enough to minimally run something
     const vector<string> data_subfolders =
