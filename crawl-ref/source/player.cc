@@ -1006,8 +1006,7 @@ bool player_equip_unrand(int unrand_index)
 
 bool player_can_hear(const coord_def& p, int hear_distance)
 {
-    return in_bounds(you.pos())
-           && !silenced(p)
+    return !silenced(p)
            && !silenced(you.pos())
            && you.pos().distance_from(p) <= hear_distance;
 }
