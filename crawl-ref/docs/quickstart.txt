@@ -89,9 +89,9 @@ There are several different types of items:
    limited uses (scrolls and potions can only be used once each, wands contain
    only a certain number of charges). Wands are e'V'oked, scrolls are 'r'ead
    and potions are 'q'uaffed. Unfortunately, you won't at first know what a
-   wand, scroll or potion does; it will only be described by its physical
-   appearance. But once you have used, for example, a potion of curing, you
-   will in future recognise all potions of curing.
+   scroll or potion does; it will only be described by its physical appearance.
+   But once you have used, for example, a potion of curing, you will in future
+   recognise all potions of curing.
 
  - Rings (=) and Amulets (") provide various mostly-helpful effects. They are
    put on with 'P' (put on) and can be removed with 'R'. They can, like

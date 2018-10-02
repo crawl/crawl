@@ -391,7 +391,6 @@ static int _banished_depth(const int power)
 void banished(const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
-    push_features_to_abyss();
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
@@ -730,8 +729,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
-    if (env.map_forgotten.get())
-        (*env.map_forgotten.get())(p).clear();
+    if (env.map_forgotten)
+        (*env.map_forgotten)(p).clear();
     env.map_seen.set(p, false);
 #ifdef USE_TILE
     tile_forget_map(p);
@@ -1069,7 +1068,7 @@ static level_id _get_random_level()
         return level_id(static_cast<branch_type>(BRANCH_DUNGEON), 1);
     }
 
-    return levels[hash_rand(levels.size(), abyssal_state.seed)];
+    return levels[hash_with_seed(levels.size(), abyssal_state.seed)];
 }
 
 /**************************************************************/
@@ -1663,14 +1662,44 @@ void abyss_morph()
     los_changed();
 }
 
+// Force the player one level deeper in the abyss during an abyss teleport with
+// probability:
+//   (XL + 4 - Depth)^2 / (27^2 * (Depth + 5))
+//
+// Consequences of this formula:
+// - Chance to be pulled deeper increases with XL and decreases with current
+//   abyss depth.
+// - Characters at XL 1 have about a 0.1% chance of getting pulled from A:1.
+// - Characters at XL 13 have chances for getting pulled from A:1/A:2/A:3/A:4
+//   of about 5.9%/4.4%/3.3%/2.6%.
+// - Characters at XL 27 have chances for getting pulled from A:1/A:2/A:3/A:4
+//   of about 20.6%/16.5%/13.4%/11.1%.
+static bool _abyss_force_descent()
+{
+    const int depth = level_id::current().depth;
+    const int xl_factor = you.experience_level + 4 - depth;
+    return x_chance_in_y(xl_factor * xl_factor, 729 * (5 + depth));
+}
+
 void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
-    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
+
+    if (level_id::current().depth < brdepth[BRANCH_ABYSS]
+        && _abyss_force_descent())
+    {
+        down_stairs(DNGN_ABYSSAL_STAIR);
+        more();
+        return;
+    }
+
+    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of"
+        " the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+
     stop_delay(true);
     forget_map(false);
     clear_excludes();

@@ -14,7 +14,7 @@ import zlib
 
 import config
 import checkoutput
-from userdb import *
+import userdb
 from util import *
 
 sockets = set()
@@ -134,6 +134,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.subprotocol = None
 
+        self.chat_hidden = False
+
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg
 
@@ -147,6 +149,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
+            "forgot_password": self.forgot_password,
+            "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
@@ -302,6 +306,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             self.send_message("game_started")
+            self.restore_mutelist()
 
             if config.dgl_mode:
                 if self.process.where == {}:
@@ -382,7 +387,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_game_links()
 
     def login(self, username, password):
-        real_username = user_passwd_match(username, password)
+        real_username = userdb.user_passwd_match(username, password)
         if real_username:
             self.logger.info("User %s logged in.", real_username)
             self.do_login(real_username)
@@ -424,6 +429,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 del login_tokens[(token, username)]
         except ValueError:
             return
+
+    def restore_mutelist(self):
+        if not self.username:
+            return
+        receiver = None
+        if self.process:
+            receiver = self.process
+        elif self.watched_game:
+            receiver = self.watched_game
+
+        if not receiver:
+            return
+
+        db_string = userdb.get_mutelist(self.username)
+        if db_string is None:
+            db_string = ""
+        # list constructor here is for forward compatibility with python 3.
+        muted = list(filter(None, db_string.strip().split(' ')))
+        receiver.restore_mutelist(self.username, muted)
+
+    def save_mutelist(self, muted):
+        db_string = " ".join(muted).strip()
+        userdb.set_mutelist(self.username, db_string)
 
     def pong(self):
         self.received_pong = True
@@ -502,10 +530,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   = 'You need to log in to send messages!')
                 return
 
-            receiver.handle_chat_message(self.username, text)
+            if not receiver.handle_chat_command(self, text):
+                receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
-        error = register_user(username, password, email)
+        error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)
             self.do_login(username)
@@ -513,6 +542,40 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
+    def forgot_password(self, email):
+        if not getattr(config, "allow_password_reset", False):
+            return
+        sent, error = userdb.send_forgot_password(email)
+        if error is None:
+            if sent:
+                self.logger.info("Sent password reset email to %s.", email)
+            else:
+                self.logger.info("User requested a password reset, but email "
+                                 "is not registered (%s).", email)
+            self.send_message("forgot_password_done")
+        else:
+            self.logger.info("Failed to send password reset email for %s: %s",
+                             email, error)
+            self.send_message("forgot_password_fail", reason = error)
+
+    def reset_password(self, token, password):
+        if not getattr(config, "allow_password_reset", False):
+            return
+        username, error = userdb.update_user_password_from_token(token,
+                                                                 password)
+        if error is None:
+            self.logger.info("User %s has completed their password reset.",
+                             username)
+            self.send_message("reload_url")
+        else:
+            if username is None:
+                self.logger.info("Failed to update password for token %s: %s",
+                                 token, error)
+            else:
+                self.logger.info("Failed to update password for user %s: %s",
+                                 username, error)
+            self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):
         if not config.dgl_mode: return

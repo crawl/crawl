@@ -538,38 +538,51 @@ bool bolt::can_affect_actor(const actor *act) const
     return !act->submerged();
 }
 
+// Choose the beam effect for BEAM_CHAOS that's analogous to the effect used by
+// SPWPN_CHAOS, with weightings similar to those use by that brand. XXX: Rework
+// this and SPWPN_CHAOS to use the same tables.
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
     beam_type flavour;
-    do
-    {
-        flavour = random_choose_weighted(
-            10, BEAM_FIRE,
-            10, BEAM_COLD,
-            10, BEAM_ELECTRICITY,
-            10, BEAM_POISON,
-            10, BEAM_NEG,
-            10, BEAM_ACID,
-            10, BEAM_DAMNATION,
-            10, BEAM_STICKY_FLAME,
-            10, BEAM_SLOW,
-            10, BEAM_HASTE,
-            10, BEAM_MIGHT,
-            10, BEAM_BERSERK,
-            10, BEAM_HEALING,
-            10, BEAM_PARALYSIS,
-            10, BEAM_CONFUSION,
-            10, BEAM_INVISIBILITY,
-            10, BEAM_POLYMORPH,
-            10, BEAM_BANISH,
-            10, BEAM_DISINTEGRATION,
-            10, BEAM_PETRIFY,
-            10, BEAM_AGILITY,
-             2, BEAM_ENSNARE);
-    }
-    while (beam->origin_spell == SPELL_CHAIN_OF_CHAOS
-           && (flavour == BEAM_BANISH
-               || flavour == BEAM_POLYMORPH));
+    flavour = random_choose_weighted(
+         // SPWPN_CHAOS randomizes to brands analogous to these beam effects
+         // with similar weights.
+         70, BEAM_FIRE,
+         70, BEAM_COLD,
+         70, BEAM_ELECTRICITY,
+         70, BEAM_POISON,
+         // Combined weight from drain + vamp.
+         70, BEAM_NEG,
+         35, BEAM_HOLY,
+         14, BEAM_CONFUSION,
+         // We don't have a distortion beam, so choose from the three effects
+         // we can use, based on the lower weight distortion has.
+          5, BEAM_BANISH,
+          5, BEAM_BLINK,
+          5, BEAM_TELEPORT,
+         // From here are beam effects analogous to effects that happen when
+         // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
+         // Weights similar to those from chaos_effects in attack.cc
+         10, BEAM_SLOW,
+         10, BEAM_HASTE,
+         10, BEAM_INVISIBILITY,
+          5, BEAM_PARALYSIS,
+          5, BEAM_PETRIFY,
+          5, BEAM_BERSERK,
+         // Combined weight for poly, clone, and "shapeshifter" effects.
+          5, BEAM_POLYMORPH,
+         // Seen through miscast effects.
+          5, BEAM_ACID,
+          5, BEAM_DAMNATION,
+          5, BEAM_STICKY_FLAME,
+          5, BEAM_DISINTEGRATION,
+         // These are not actualy used by SPWPN_CHAOS, but are here to augment
+         // the list of effects, since not every SPWN_CHAOS effect has an
+         // analogous BEAM_ type.
+          4, BEAM_MIGHT,
+          4, BEAM_HEALING,
+          4, BEAM_AGILITY,
+          4, BEAM_ENSNARE);
 
     return flavour;
 }
@@ -694,15 +707,6 @@ void bolt::apply_beam_conducts()
         case BEAM_DAMNATION:
             did_god_conduct(DID_EVIL, 2 + random2(3), god_cares());
             break;
-        case BEAM_FIRE:
-        case BEAM_STICKY_FLAME:
-        case BEAM_LAVA:
-        case BEAM_INNER_FLAME:
-            did_god_conduct(DID_FIRE,
-                            pierce || is_explosion ? 6 + random2(3)
-                                                   : 2 + random2(3),
-                            god_cares());
-            break;
         default:
             break;
         }
@@ -814,7 +818,7 @@ void bolt::fake_flavour()
 
 void bolt::digging_wall_effect()
 {
-    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_dig") == "veto")
     {
         finish_beam();
         return;
@@ -887,10 +891,7 @@ void bolt::burn_wall_effect()
     else if (you.can_smell())
         emit_message("You smell burning wood.");
     if (whose_kill() == KC_YOU)
-    {
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
-        did_god_conduct(DID_FIRE, 6, god_cares()); // guaranteed penance
-    }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
 
@@ -919,12 +920,11 @@ void bolt::affect_wall()
 {
     if (is_tracer)
     {
-        if (!can_affect_wall(pos()))
+        if (!in_bounds(pos()) || !can_affect_wall(pos(), true))
             finish_beam();
 
         // potentially warn about offending your god by burning trees
-        const bool god_relevant = (you.religion == GOD_DITHMENOS
-                                   || you.religion == GOD_FEDHAS)
+        const bool god_relevant = you.religion == GOD_FEDHAS
                                   && can_burn_trees();
         const bool vetoed = env.markers.property_at(pos(), MAT_ANY, "veto_fire")
                             == "veto";
@@ -1185,7 +1185,9 @@ void bolt::do_fire()
             // Well, we warned them.
         }
 
-        if (feat_is_solid(feat) && !can_affect_wall(pos()))
+        // digging is taken care of in affect_cell
+        if (feat_is_solid(feat) && !can_affect_wall(pos())
+                                                    && flavour != BEAM_DIGGING)
         {
             if (is_bouncy(feat))
             {
@@ -1233,8 +1235,9 @@ void bolt::do_fire()
         // through find_ray and setup_retrace, but they didn't
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
+        // Dig tracers continue through unseen cells.
         ASSERT(!cell_is_solid(pos())
-               || is_tracer && can_affect_wall(pos())
+               || is_tracer && can_affect_wall(pos(), true)
                || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
@@ -2508,7 +2511,9 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return is_explosion || is_big_cloud() || aimed_at_spot;
+    // the pos check is to avoid a ray.cc assert for a ray that goes nowhere
+    return is_explosion || is_big_cloud() ||
+            (aimed_at_spot && (pos() == source || flavour != BEAM_DIGGING));
 }
 
 void bolt::drop_object()
@@ -2632,9 +2637,16 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_INNER_FLAME;
 }
 
-bool bolt::can_affect_wall(const coord_def& p) const
+bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
 {
     dungeon_feature_type wall = grd(p);
+
+    // digging might affect unseen squares, as far as the player knows
+    if (map_knowledge && flavour == BEAM_DIGGING &&
+                                        !env.map_knowledge(pos()).seen())
+    {
+        return true;
+    }
 
     // Temporary trees (from Summon Forest) can't be burned/distintegrated.
     if (feat_is_tree(wall) && is_temp_terrain(p))
@@ -3870,6 +3882,7 @@ void bolt::affect_player()
     extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, hurted);
+    pull_actor(&you, hurted);
 
     if (origin_spell == SPELL_FLASH_FREEZE
         || name == "blast of ice"
@@ -4403,7 +4416,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
 void bolt::knockback_actor(actor *act, int dam)
 {
-    if (!can_knockback(act, dam))
+    if (!act || !can_knockback(*act, dam))
         return;
 
     const int distance =
@@ -4479,6 +4492,57 @@ void bolt::knockback_actor(actor *act, int dam)
     // knocked back at all
     if (act->is_monster())
         act->as_monster()->speed_increment -= random2(6) + 4;
+
+    act->apply_location_effects(oldpos, killer(),
+                                actor_to_death_source(agent()));
+}
+
+void bolt::pull_actor(actor *act, int dam)
+{
+    if (!act || !can_pull(*act, dam))
+        return;
+
+    // How far we'll try to pull the actor to make them adjacent to the source.
+    const int distance = (act->pos() - source).rdist() - 1;
+    ASSERT(distance > 0);
+
+    const coord_def oldpos = act->pos();
+    ASSERT(ray.pos() == oldpos);
+
+    coord_def newpos = oldpos;
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
+    {
+        const ray_def oldray(ray);
+
+        ray.regress();
+
+        newpos = ray.pos();
+        if (newpos == oldray.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
+        {
+            ray = oldray;
+            break;
+        }
+
+        act->move_to_pos(newpos);
+        if (act->is_player())
+            stop_delay(true);
+    }
+
+    if (newpos == oldpos)
+        return;
+
+    if (you.can_see(*act))
+    {
+        mprf("%s %s yanked forward by the %s.", act->name(DESC_THE).c_str(),
+             act->conj_verb("are").c_str(), name.c_str());
+    }
+
+    if (act->pos() != newpos)
+        act->collide(newpos, agent(), ench_power);
 
     act->apply_location_effects(oldpos, killer(),
                                 actor_to_death_source(agent()));
@@ -5961,8 +6025,15 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
     bool at_wall = false;
 
-    // Check to see if we're blocked by a wall.
+    // Check to see if we're blocked by a wall or a tree. Can't use
+    // feat_is_solid here, since that includes statues which are a separate
+    // check, nor feat_is_opaque, since that excludes transparent walls, which
+    // we want. -ebering
+    // XXX: We could just include trees as wall features, but this currently
+    // would have some unintended side-effects. Would be ideal to deal with
+    // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
+        || feat_is_tree(dngn_feat)
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue
@@ -5971,7 +6042,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         if (stop_at_walls && !(delta.origin() && can_affect_wall(loc)))
             return;
         // But remember that we are at a wall.
-        at_wall = true;
+        if (flavour != BEAM_DIGGING)
+            at_wall = true;
     }
 
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
@@ -6357,21 +6429,42 @@ string bolt::get_source_name() const
 /**
  * Can this bolt knock back an actor?
  *
- * The bolts that knockback flying actors or actors only when damage
- * is dealt will return when.
+ * The bolts that knockback flying actors or actors only when damage is dealt
+ * will return true when conditions are met.
  *
- * @param act The target actor. If not-nullptr, check if the actor is flying for
- *            bolts that knockback flying actors.
+ * @param act The target actor. Check if the actor is flying for bolts that
+ *            knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
  *             like force bolt that only push back upon damage.
  * @return True if the bolt could knockback the actor, false otherwise.
 */
-bool bolt::can_knockback(const actor *act, int dam) const
+bool bolt::can_knockback(const actor &act, int dam) const
 {
+    if (act.is_stationary())
+        return false;
+
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH
-              && (!act || act->airborne())
+           || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
            || origin_spell == SPELL_FORCE_LANCE && dam;
+}
+
+/**
+ * Can this bolt pull an actor?
+ *
+ * If a bolt is capable of pulling actors and the given actor can be pulled,
+ * return true.
+ *
+ * @param act The target actor. Check if the actor is non-stationary and not
+ *            already adjacent.
+ * @param dam The damage dealt. Check that dam > 0.
+ * @return True if the bolt could pull the actor, false otherwise.
+*/
+bool bolt::can_pull(const actor &act, int dam) const
+{
+    if (act.is_stationary() || adjacent(source, act.pos()))
+        return false;
+
+    return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
 
 void clear_zap_info_on_exit()

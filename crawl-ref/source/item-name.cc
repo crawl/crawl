@@ -760,7 +760,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
         case RING_RESIST_CORROSION:      return "resist corrosion";
-        case RING_LOUDNESS:              return "loudness";
+        case RING_ATTENTION:             return "attention";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
 #if TAG_MAJOR_VERSION == 34
@@ -814,7 +814,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_SLAYING:               return "Slay";
         case RING_SEE_INVISIBLE:         return "sInv";
         case RING_RESIST_CORROSION:      return "rCorr";
-        case RING_LOUDNESS:              return "Stlth-";
+        case RING_ATTENTION:             return "Stlth-";
         case RING_EVASION:               return "EV";
         case RING_STEALTH:               return "Stlth+";
         case RING_DEXTERITY:             return "Dex";
@@ -2274,11 +2274,6 @@ protected:
         return "known-menu";
     }
 
-    bool allow_easy_exit() const override
-    {
-        return true;
-    }
-
     bool process_key(int key) override
     {
         bool resetting = (lastch == CONTROL('D'));
@@ -2286,7 +2281,6 @@ protected:
         {
             //return the menu title to its previous text.
             set_title(temp_title);
-            draw_title();
             num = -2;
 
             // Disarm ^D here, because process_key doesn't always set lastch.
@@ -2323,7 +2317,6 @@ protected:
                 lastch = CONTROL('D');
                 temp_title = title->text;
                 set_title("Select to reset item to default: ");
-                draw_title();
             }
 
             return true;
@@ -2604,8 +2597,7 @@ void check_item_knowledge(bool unknown_items)
 
     string prompt = "(_ for help)";
     //TODO: when the menu is opened, the text is not justified properly.
-    stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
-                                                         - strwidth(prompt)),
+    stitle = stitle + string(max(0, 80 - strwidth(stitle) - strwidth(prompt)),
                              ' ') + prompt;
 
     menu.set_preselect(&selected_items);
@@ -2693,7 +2685,6 @@ void display_runes()
     auto title = make_stringf("<white>Runes of Zot (</white>"
                               "<%s>%d</%s><white> collected) & Orbs of Power</white>",
                               col, runes_in_pack(), col);
-    title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
     InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
 
@@ -3266,7 +3257,7 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
-        case RING_LOUDNESS:
+        case RING_ATTENTION:
             return true;
         case RING_TELEPORTATION:
             return !(you.stasis() || crawl_state.game_is_sprint());
@@ -3971,8 +3962,8 @@ void init_item_name_cache()
                 }
                 else if (name.find("buggy") != string::npos)
                 {
-                    crawl_state.add_startup_error("Bad name for item name"
-                                                  " cache: " + name);
+                    mprf(MSGCH_ERROR, "Bad name for item name cache: %s",
+                                                                name.c_str());
                     continue;
                 }
 

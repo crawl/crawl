@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Grid and dungeon_feature_type-related bindings.
-**/
-
+/***
+ * @module dgn
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

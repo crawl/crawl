@@ -31,7 +31,11 @@ struct random_element_colour_calc : public element_colour_calc
                                vector< pair<int, int> > _rand_vals)
         : element_colour_calc(_type, _name, (element_colour_calculator)_randomized_element_colour),
           rand_vals(_rand_vals)
-        {};
+    {
+        rand_max = 0;
+        for (const auto &pair : rand_vals)
+            rand_max += pair.first;
+    };
 
     virtual int get(const coord_def& loc = coord_def(),
                     bool non_random = false) override;
@@ -42,7 +46,7 @@ protected:
 
 int element_colour_calc::rand(bool non_random)
 {
-    return non_random ? 0 : ui_random(120);
+    return non_random ? 0 : ui_random(rand_max);
 }
 
 int element_colour_calc::get(const coord_def& loc, bool non_random)
@@ -159,7 +163,7 @@ static int _etc_waves(int, const coord_def& loc)
 {
     // Shouldn't have this outside of Shoals, but it can happen.
     // See !lg lakren crash 8 .
-    if (!env.heightmap.get())
+    if (!env.heightmap)
         return CYAN;
     short height = dgn_height_at(loc);
     int cycle_point = you.num_turns % 20;
@@ -629,8 +633,8 @@ void init_element_colours()
 #endif
     add_element_colour(new random_element_colour_calc(
                             ETC_AWOKEN_FOREST, "awoken_forest",
-                            { {40, GREEN},
-                              {40, LIGHTGREEN},
+                            { {40, RED},
+                              {20, LIGHTRED},
                             }));
     add_element_colour(new random_element_colour_calc(
                             ETC_WU_JIAN, "wu_jian",

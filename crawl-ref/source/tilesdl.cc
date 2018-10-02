@@ -18,6 +18,7 @@
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "state.h"
 #include "tiledef-dngn.h"
@@ -33,18 +34,16 @@
 #include "tilereg-inv.h"
 #include "tilereg-map.h"
 #include "tilereg-mem.h"
-#include "tilereg-menu.h"
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
-#include "tilereg-popup.h"
 #include "tilereg-skl.h"
 #include "tilereg-spl.h"
 #include "tilereg-stat.h"
 #include "tilereg-tab.h"
 #include "tilereg-text.h"
-#include "tilereg-title.h"
 #include "tileview.h"
 #include "travel.h"
+#include "ui.h"
 #include "unwind.h"
 #include "version.h"
 #include "viewgeom.h"
@@ -165,8 +164,10 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
-    m_buttons_held(0),
-    m_key_mod(0),
+    m_crt_font(-1),
+    m_msg_font(-1),
+    m_tip_font(-1),
+    m_lbl_font(-1),
     m_mouse(-1, -1),
     m_last_tick_moved(0),
     m_last_tick_redraw(0)
@@ -175,6 +176,13 @@ TilesFramework::TilesFramework() :
 
 TilesFramework::~TilesFramework()
 {
+}
+
+bool TilesFramework::fonts_initialized()
+{
+    // TODO should in principle check the m_fonts vector as well
+    return !(m_crt_font == -1 || m_msg_font == -1
+                                    || m_tip_font == -1 || m_lbl_font == -1);
 }
 
 static void _init_consoles()
@@ -240,7 +248,6 @@ void TilesFramework::shutdown()
     delete m_region_cmd_meta;
     delete m_region_cmd_map;
     delete m_region_crt;
-    delete m_region_menu;
 
     m_region_tile  = nullptr;
     m_region_stat  = nullptr;
@@ -256,7 +263,6 @@ void TilesFramework::shutdown()
     m_region_cmd_meta = nullptr;
     m_region_cmd_map  = nullptr;
     m_region_crt   = nullptr;
-    m_region_menu  = nullptr;
 
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
         delete it->second;
@@ -280,67 +286,10 @@ void TilesFramework::shutdown()
     _shutdown_console();
 }
 
-/**
- * Creates a new title region and sets it active
- * Remember to call hide_title() when you're done
- * showing the title.
- */
-void TilesFramework::draw_title()
-{
-    TitleRegion* reg = new TitleRegion(m_windowsz.x, m_windowsz.y,
-                                       m_fonts[m_msg_font].font);
-
-    m_layers[LAYER_TILE_CONTROL].m_regions.push_back(reg);
-    m_active_layer = LAYER_TILE_CONTROL;
-    redraw();
-}
-
-/**
- * Updates the loading message text on the title
- * screen
- * Assumes that we only have one region on the layer
- * If at some point it's possible to have multiple regions
- * open while the title screen shows, the .at(0) will need
- * to be changed and saved on a variable somewhere instead
- */
-void TilesFramework::update_title_msg(string message)
-{
-    ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
-    ASSERT(m_active_layer == LAYER_TILE_CONTROL);
-    TitleRegion* reg = dynamic_cast<TitleRegion*>(
-            m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
-    reg->update_message(message);
-    redraw();
-}
-
-/**
- * Deletes the dynamically reserved Titlescreen memory
- * at end. Runs reg->run to get one key input from the user
- * so that the title screen stays ope until any input is given.
- * Assumes that we only have one region on the layer
- * If at some point it's possible to have multiple regions
- * open while the title screen shows, the .at(0) will need
- * to be changed and saved on a variable somewhere instead
- */
-void TilesFramework::hide_title()
-{
-    ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
-    ASSERT(m_active_layer == LAYER_TILE_CONTROL);
-    TitleRegion* reg = dynamic_cast<TitleRegion*>(
-            m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
-    redraw();
-    if (!Options.tile_skip_title)
-        reg->run();
-    delete reg;
-    m_layers[LAYER_TILE_CONTROL].m_regions.clear();
-}
-
 void TilesFramework::draw_doll_edit()
 {
-    DollEditRegion* reg = new DollEditRegion(m_image,
-                                             m_fonts[m_msg_font].font);
-    use_control_region(reg);
-    delete reg;
+    DollEditRegion reg(m_image, m_fonts[m_msg_font].font);
+    reg.run();
 }
 
 void TilesFramework::set_map_display(const bool display)
@@ -359,38 +308,6 @@ void TilesFramework::do_map_display()
 {
     m_map_mode_enabled = true;
     m_region_tab->activate_tab(TAB_NAVIGATION);
-}
-
-int TilesFramework::draw_popup(Popup *popup)
-{
-    PopupRegion reg(m_image, m_fonts[m_crt_font].font);
-    // place popup region to cover screen
-    reg.place(0, 0, 0);
-    reg.resize_to_fit(m_windowsz.x, m_windowsz.y);
-
-    // get menu items to draw
-    int col = 0;
-    while (MenuEntry *me = popup->next_entry())
-    {
-        reg.set_entry(col, me->get_text(true), me->colour, me, false);
-        col++;
-    }
-    // fetch a return value
-    use_control_region(&reg, false);
-    return reg.get_retval();
-}
-
-void TilesFramework::use_control_region(ControlRegion *reg,
-                                        bool use_control_layer)
-{
-    LayerID new_layer = use_control_layer ? LAYER_TILE_CONTROL : m_active_layer;
-    LayerID old_layer = m_active_layer;
-    m_layers[new_layer].m_regions.push_back(reg);
-    m_active_layer = new_layer;
-    set_need_redraw();
-    reg->run();
-    m_layers[new_layer].m_regions.pop_back();
-    m_active_layer = old_layer;
 }
 
 void TilesFramework::calculate_default_options()
@@ -463,6 +380,9 @@ bool TilesFramework::initialise()
 
     GLStateManager::init();
 
+    // TODO: what is the minimal startup here needed so that an error dialog
+    // can be shown on not found files?
+
     m_image = new ImageManager();
 
     // If the window size is less than the view height, the textures will
@@ -485,11 +405,8 @@ bool TilesFramework::initialise()
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true);
 
-    if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
-        || m_tip_font == -1 || m_lbl_font == -1)
-    {
+    if (!fonts_initialized() || stat_font == -1)
         return false;
-    }
 
     if (tiles.is_using_small_layout())
         m_init = TileRegionInit(m_image, m_fonts[m_crt_font].font, TILE_X, TILE_Y);
@@ -546,15 +463,12 @@ bool TilesFramework::initialise()
     m_fonts[stat_font].font->char_width();
     m_region_crt  = new CRTRegion(m_fonts[m_crt_font].font);
 
-    m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
-
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
-    m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
 
     cgotoxy(1, 1, GOTO_CRT);
 
@@ -586,7 +500,14 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     {
         delete font;
         if (default_on_fail)
+        {
+            // TODO: this never happens because load_font will die on a missing
+            // font file. This setup needs to be smoothed out, but also maybe
+            // MONOSPACE_FONT needs to be validated first.
+            mprf(MSGCH_ERROR, "Couldn't find font '%s', falling back on '%s'",
+                                            font_file, MONOSPACED_FONT);
             return load_font(MONOSPACED_FONT, 12, false);
+        }
         else
             return -1;
     }
@@ -642,7 +563,18 @@ void TilesFramework::resize()
     update_dpi();
     calculate_default_options();
     do_layout();
+    ui::resize(m_windowsz.x, m_windowsz.y);
+    wm->resize(m_windowsz);
+}
 
+void TilesFramework::resize_event(int w, int h)
+{
+    m_windowsz.x = w;
+    m_windowsz.y = h;
+
+    update_dpi();
+    calculate_default_options();
+    do_layout();
     wm->resize(m_windowsz);
 }
 
@@ -728,7 +660,7 @@ int TilesFramework::getch_ck()
 
         unsigned int ticks = 0;
 
-        if (wm->wait_event(&event))
+        if (wm->wait_event(&event, INT_MAX))
         {
             ticks = wm->get_ticks();
             if (!mouse_target_mode && event.type != WME_CUSTOMEVENT)
@@ -778,7 +710,6 @@ int TilesFramework::getch_ck()
 #endif
                 break;
             case WME_KEYDOWN:
-                m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
@@ -788,14 +719,6 @@ int TilesFramework::getch_ck()
                 break;
 
             case WME_KEYUP:
-                m_key_mod &= ~event.key.keysym.key_mod;
-                m_last_tick_moved = UINT_MAX;
-                break;
-
-            case WME_KEYPRESS:
-                key = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
-
                 m_last_tick_moved = UINT_MAX;
                 break;
 
@@ -819,9 +742,6 @@ int TilesFramework::getch_ck()
                     }
                     m_mouse.x = event.mouse_event.px;
                     m_mouse.y = event.mouse_event.py;
-
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
 
                     // Find the new mouse location
                     m_cur_loc.reg = nullptr;
@@ -861,9 +781,6 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONUP:
                 {
-                    m_buttons_held  &= ~(event.mouse_event.button);
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
@@ -871,9 +788,6 @@ int TilesFramework::getch_ck()
 
             case WME_MOUSEBUTTONDOWN:
                 {
-                    m_buttons_held  |= event.mouse_event.button;
-                    event.mouse_event.held = m_buttons_held;
-                    event.mouse_event.mod  = m_key_mod;
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
@@ -1155,9 +1069,6 @@ void TilesFramework::do_layout()
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
-    m_region_menu->place(0, 0, 0);
-    m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
-
     crawl_view.init_view();
 }
 
@@ -1248,6 +1159,8 @@ void TilesFramework::autosize_minimap()
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
     m_region_map->dx = m_region_map->dy = min(horiz, vert);
+    if (Options.tile_map_pixels)
+        m_region_map->dx = min(m_region_map->dx, Options.tile_map_pixels);
 }
 
 void TilesFramework::place_minimap()
@@ -1410,26 +1323,35 @@ void TilesFramework::layout_statcol()
         // region extends ~1/2-tile beyond window (rendered area touches right edge)
         m_region_tab->resize(m_region_tab->mx+1, min_inv_height);
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
-
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
+        bool resized_inventory = false;
 
         for (const string &str : Options.tile_layout_priority)
         {
             if (str == "inventory")
+            {
                 resize_inventory();
+                resized_inventory = true;
+            }
             else if (str == "minimap" || str == "map")
+            {
+                if (!resized_inventory)
+                {
+                    resize_inventory();
+                    resized_inventory = true;
+                }
                 place_minimap();
+            }
             else if (!(str == "gold_turn" || str == "gold_turns")) // gold_turns no longer does anything
                 place_tab(m_region_tab->find_tab(str));
         }
         // We stretch the minimap so it is centered in the space left.
         if (m_region_map)
         {
-            if (!Options.tile_map_pixels)
-                autosize_minimap();
+            autosize_minimap();
 
             m_region_map->place(m_region_stat->sx, m_region_stat->ey,
                                 m_region_stat->ex, m_statcol_bottom,
@@ -1449,8 +1371,6 @@ void TilesFramework::clrscr()
         m_region_msg->clear();
     if (m_region_crt)
         m_region_crt->clear();
-    if (m_region_menu)
-        m_region_menu->clear();
 
     cgotoxy(1,1);
 
@@ -1477,6 +1397,25 @@ int TilesFramework::get_number_of_cols()
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
+    set_cursor_region(region);
+    TextRegion::cgotoxy(x, y);
+}
+
+GotoRegion TilesFramework::get_cursor_region() const
+{
+    if (TextRegion::text_mode == m_region_crt)
+        return GOTO_CRT;
+    if (TextRegion::text_mode == m_region_msg)
+        return GOTO_MSG;
+    if (TextRegion::text_mode == m_region_stat)
+        return GOTO_STAT;
+
+    die("Bogus region");
+    return GOTO_CRT;
+}
+
+void TilesFramework::set_cursor_region(GotoRegion region)
+{
     switch (region)
     {
     case GOTO_CRT:
@@ -1495,21 +1434,6 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         die("invalid cgotoxy region in tiles: %d", region);
         break;
     }
-
-    TextRegion::cgotoxy(x, y);
-}
-
-GotoRegion TilesFramework::get_cursor_region() const
-{
-    if (TextRegion::text_mode == m_region_crt)
-        return GOTO_CRT;
-    if (TextRegion::text_mode == m_region_msg)
-        return GOTO_MSG;
-    if (TextRegion::text_mode == m_region_stat)
-        return GOTO_STAT;
-
-    die("Bogus region");
-    return GOTO_CRT;
 }
 
 // #define DEBUG_TILES_REDRAW
@@ -1542,6 +1466,16 @@ void TilesFramework::redraw()
 #endif
 
     m_last_tick_redraw = wm->get_ticks();
+}
+
+void TilesFramework::render_current_regions()
+{
+    // need to call with show_updates=false, which is passed to viewwindow
+    if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
+        redraw_screen(false);
+
+    for (Region *region : m_layers[m_active_layer].m_regions)
+        region->render();
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)

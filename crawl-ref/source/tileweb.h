@@ -18,17 +18,11 @@
 #include "status.h"
 #include "text-tag-type.h"
 #include "tiledoll.h"
+#include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
 
 class Menu;
-
-enum WebtilesCRTMode
-{
-    CRT_DISABLED,
-    CRT_NORMAL,
-    CRT_MENU
-};
 
 enum WebtilesUIState
 {
@@ -139,7 +133,12 @@ public:
     bool is_in_crt_menu();
     bool is_in_menu(Menu* m);
     void pop_menu();
-    void close_all_menus();
+    void push_ui_layout(const string& type, unsigned num_state_slots);
+    void pop_ui_layout();
+    void pop_all_ui_layouts();
+    void ui_state_change(const string& type, unsigned state_slot);
+    void push_ui_cutoff();
+    void pop_ui_cutoff();
 
     void send_exit_reason(const string& type, const string& message = "");
     void send_dump_info(const string& type, const string& filename);
@@ -198,16 +197,16 @@ public:
     string m_sock_name;
     bool m_await_connection;
 
-    WebtilesCRTMode m_crt_mode;
-
-    void clear_crt_menu() { m_text_menu.clear(); }
-
     void set_text_cursor(bool enabled);
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
     void dump();
     void update_input_mode(mouse_mode mode);
+
+    void send_mcache(mcache_entry *entry, bool submerged,
+                     bool send_doll = true);
+    void write_tileidx(tileidx_t t);
 
 protected:
     int m_sock;
@@ -217,6 +216,8 @@ protected:
 
     bool m_controlled_from_web;
     bool m_need_flush;
+
+    bool _send_lock; // not thread safe
 
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, string data);
@@ -233,15 +234,19 @@ protected:
     void json_open(const string& name, char opener, char type);
     void json_close(bool erase_if_empty, char type);
 
-    struct MenuInfo
+    struct UIStackFrame
     {
-        string tag;
+        enum { MENU, CRT, UI, } type;
         Menu* menu;
+        string crt_tag;
+        vector<string> ui_json;
+        bool centred;
     };
-    vector<MenuInfo> m_menu_stack;
+    vector<UIStackFrame> m_menu_stack;
 
     WebtilesUIState m_ui_state;
     WebtilesUIState m_last_ui_state;
+    vector<int> m_ui_cutoff_stack;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
@@ -281,7 +286,6 @@ protected:
 
     bool m_has_overlays;
 
-    WebTextArea m_text_crt;
     WebTextArea m_text_menu;
 
     GotoRegion m_cursor_region;
@@ -316,41 +320,24 @@ protected:
     void _send_player(bool force_full = false);
     void _send_item(item_info& current, const item_info& next,
                     bool force_full);
+    void _send_messages();
 };
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
-class tiles_crt_control
+class tiles_crt_popup
 {
 public:
-    tiles_crt_control(bool crt_enabled)
-        : m_old_mode(tiles.m_crt_mode)
+    tiles_crt_popup(string tag = "")
     {
-        tiles.m_crt_mode = crt_enabled ? CRT_NORMAL : CRT_DISABLED;
+        tiles.push_crt_menu(tag);
     }
 
-    tiles_crt_control(WebtilesCRTMode mode,
-                      string tag = "")
-        : m_old_mode(tiles.m_crt_mode)
+    ~tiles_crt_popup()
     {
-        tiles.m_crt_mode = mode;
-        if (mode == CRT_MENU)
-            tiles.push_crt_menu(tag);
+        tiles.pop_menu();
     }
-
-    ~tiles_crt_control()
-    {
-        if (tiles.m_crt_mode == CRT_MENU)
-        {
-            tiles.pop_menu();
-            tiles.clear_crt_menu();
-        }
-        tiles.m_crt_mode = m_old_mode;
-    }
-
-private:
-    WebtilesCRTMode m_old_mode;
 };
 
 class tiles_ui_control

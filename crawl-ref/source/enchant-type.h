@@ -122,7 +122,9 @@ enum enchant_type
 #endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
     ENCH_TOXIC_RADIANCE,
+#if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
+#endif
     ENCH_GRASPING_ROOTS,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,

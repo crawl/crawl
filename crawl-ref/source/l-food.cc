@@ -1,3 +1,6 @@
+/*** Interact with food and eating.
+ * @module food
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -8,9 +11,11 @@
 #include "item-prop.h"
 #include "player.h"
 
-/////////////////////////////////////////////////////////////////////
-// Food information.
-
+/*** Eat food.
+ * Tries to eat.
+ * @treturn boolean returns true if we did
+ * @function do_eat
+ */
 static int food_do_eat(lua_State *ls)
 {
     bool eaten = false;
@@ -20,6 +25,10 @@ static int food_do_eat(lua_State *ls)
     return 1;
 }
 
+/*** Prompt the player to eat chunks.
+ * @treturn boolean true if the player ate chunks or if they cancel
+ * @function prompt_eat_chunks
+ */
 static int food_prompt_eat_chunks(lua_State *ls)
 {
     int eaten = 0;
@@ -30,6 +39,10 @@ static int food_prompt_eat_chunks(lua_State *ls)
     return 1;
 }
 
+/*** Prompt the player to eat directly from the inventory menu.
+ * @treturn boolean true if we ate
+ * @function prompt_inventory_menu
+ */
 static int food_prompt_inventory_menu(lua_State *ls)
 {
     bool eaten = false;
@@ -39,6 +52,12 @@ static int food_prompt_inventory_menu(lua_State *ls)
     return 1;
 }
 
+/*** Can we eat this (in our current hunger state)?
+ * @tparam items.Item morsel
+ * @tparam[opt=true] boolean hungercheck
+ * @treturn boolean
+ * @function can_eat
+ */
 static int food_can_eat(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
@@ -52,6 +71,11 @@ static int food_can_eat(lua_State *ls)
     return 1;
 }
 
+/*** Eat this item.
+ * @tparam items.Item morsel
+ * @treturn boolean If we succeeded
+ * @function eat
+ */
 static int food_eat(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
@@ -75,6 +99,11 @@ static int food_dangerous(lua_State *ls)
     return 1;
 }
 
+/*** Is this food a chunk?
+ * @tparam items.Item morsel
+ * @treturn boolean
+ * @function ischunk
+ */
 static int food_ischunk(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
@@ -90,6 +119,11 @@ static int food_isfruit(lua_State *ls)
     return 1;
 }
 
+/*** Is this food meaty?
+ * @tparam items.Item morsel
+ * @treturn boolean
+ * @function ismeaty
+ */
 static int food_ismeaty(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
@@ -103,6 +137,11 @@ static int food_isveggie(lua_State *ls)
     return 1;
 }
 
+/*** Can we bottle blood from this?
+ * @tparam items.Item body
+ * @treturn boolean if we succeed
+ * @function bottleable
+ */
 static int food_bottleable(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
@@ -111,7 +150,12 @@ static int food_bottleable(lua_State *ls)
     return 1;
 }
 
-// differs from food_can_eat in several respects
+/*** Is this edible?
+ * Differs from can_eat in that it checks temporary forms?
+ * @tparam items.Item morsel
+ * @treturn boolean
+ * @function edible
+ */
 static int food_edible(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);

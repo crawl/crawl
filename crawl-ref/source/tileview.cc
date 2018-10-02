@@ -464,8 +464,8 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     uint32_t seed = you.birth_time + you.where_are_you +
         (you.depth << 8) + (gc.x << 16) + (gc.y << 24);
 
-    int rand1 = hash_rand(INT_MAX, seed, 0);
-    int rand2 = hash_rand(INT_MAX, seed, 1);
+    int rand1 = hash_with_seed(INT_MAX, seed, 0);
+    int rand2 = hash_with_seed(INT_MAX, seed, 1);
 
     if (!env.tile_flv(gc).floor)
     {
@@ -554,7 +554,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
             env.tile_flv(gc).special = 0;
     }
     else if (!env.tile_flv(gc).special)
-        env.tile_flv(gc).special = hash_rand(256, seed, 10);
+        env.tile_flv(gc).special = hash_with_seed(256, seed, 10);
 }
 
 enum SpecialIdx

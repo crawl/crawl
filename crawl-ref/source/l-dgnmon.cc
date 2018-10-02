@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Monster-related functions in lua library "dgn".
-**/
-
+/***
+ * @module dgn
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

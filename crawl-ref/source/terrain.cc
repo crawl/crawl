@@ -425,6 +425,14 @@ bool feat_is_sealed(dungeon_feature_type feat)
            || feat == DNGN_SEALED_DOOR;
 }
 
+/** Is this feature runed, as in a runed door?
+ */
+bool cell_is_runed(const coord_def &p)
+{
+    // the orig_terrain call will check the actual terrain if there's no change
+    return orig_terrain(p) == DNGN_RUNED_DOOR;
+}
+
 /** Is this feature a type of statue, i.e., granite or an idol?
  */
 bool feat_is_statuelike(dungeon_feature_type feat)
@@ -770,7 +778,7 @@ static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {
-    map_mask_boolean &mask(*_slime_wall_precomputed_neighbour_mask.get());
+    map_mask_boolean &mask(*_slime_wall_precomputed_neighbour_mask);
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         if (grd(*ri) == DNGN_SLIMY_WALL)
@@ -787,7 +795,7 @@ unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
     if (!(env.level_state & LSTATE_SLIMY_WALL))
         return;
 
-    if (docompute && !_slime_wall_precomputed_neighbour_mask.get())
+    if (docompute && !_slime_wall_precomputed_neighbour_mask)
     {
         did_compute_mask = true;
         _slime_wall_precomputed_neighbour_mask.reset(
@@ -807,7 +815,7 @@ bool slime_wall_neighbour(const coord_def& c)
     if (!(env.level_state & LSTATE_SLIMY_WALL))
         return false;
 
-    if (_slime_wall_precomputed_neighbour_mask.get())
+    if (_slime_wall_precomputed_neighbour_mask)
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
     // Not using count_adjacent_slime_walls because the early return might
@@ -1302,7 +1310,6 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
 
     const bool notable_seen1 = is_notable_terrain(feat1) && you.see_cell(pos1);
     const bool notable_seen2 = is_notable_terrain(feat2) && you.see_cell(pos2);
-    coord_def orig_pos, dest_pos;
 
     if (notable_seen1 && notable_seen2)
     {
@@ -1650,6 +1657,13 @@ dungeon_feature_type feat_by_desc(string desc)
 
     if (desc[desc.size() - 1] != '.')
         desc += ".";
+
+#if TAG_MAJOR_VERSION == 34
+    // hard-coded because all the dry fountain variants match this description,
+    // and they have a lower enum value, so the first is incorrectly returned
+    if (desc == "a dry fountain.")
+        return DNGN_DRY_FOUNTAIN;
+#endif
 
     return lookup(feat_desc_cache, desc, DNGN_UNSEEN);
 }

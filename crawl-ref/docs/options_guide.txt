@@ -53,8 +53,8 @@ The contents of this text are:
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
                 allow_self_target, auto_butcher, confirm_butcher,
-                easy_eat_chunks, easy_quit_item_prompts, easy_exit_menu,
-                ability_menu, sort_menus, spell_slot, item_slot, ability_slot,
+                easy_eat_chunks, easy_quit_item_prompts, ability_menu,
+                sort_menus, spell_slot, item_slot, ability_slot,
                 autofight_stop, autofight_warning, autofight_hunger_stop,
                 autofight_hunger_stop_undead, autofight_throw,
                 autofight_throw_nomove, autofight_fire_stop, autofight_caught,
@@ -67,12 +67,12 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
-                equip_bar, item_stack_summary_minimum, mlist_min_height,
-                mlist_allow_alternate_layout, msg_min_height, msg_max_height,
-                messages_at_top, skill_focus, msg_condense_repeats,
-                msg_condense_short, show_travel_trail, monster_list_colour,
-                view_delay, force_more_message, flash_screen_message,
-                use_animations, darken_beyond_range
+                equip_bar, animate_equip_bar, item_stack_summary_minimum,
+                mlist_min_height, mlist_allow_alternate_layout, msg_min_height,
+                msg_max_height, messages_at_top, skill_focus,
+                msg_condense_repeats, msg_condense_short, show_travel_trail,
+                monster_list_colour, view_delay, force_more_message,
+                flash_screen_message, use_animations, darken_beyond_range
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -102,15 +102,15 @@ The contents of this text are:
                 tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
                 tile_tag_pref, tile_full_screen, tile_window_width,
                 tile_window_height, tile_map_pixels, tile_cell_pixels,
-                tile_force_overlay, tile_font_crt_file, tile_font_stat_file,
-                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
-                tile_font_crt_family, tile_font_stat_family,
-                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_font_ft_light,
-                tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
-                tile_realtime_anim, tile_show_player_species,
+                tile_force_overlay, tile_single_column_menus,
+                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
+                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
+                tile_font_stat_family, tile_font_msg_family,
+                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
+                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_font_ft_light, tile_show_minihealthbar,
+                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
+                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
                 tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
@@ -1038,10 +1038,6 @@ easy_quit_item_prompts = true
         item and accept '?' and '*'. The identify list will never easy
         quit.
 
-easy_exit_menu = false
-        In multidrop (and pickup) menus, paging past the end will drop
-        out of the menu if easy_exit_menu is true.
-
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
         in the message area, and the menu can be seen with '?' or '*'.
@@ -1443,6 +1439,10 @@ equip_bar = false
         "equipment bar" showing the glyphs of all currently equipped items,
         with gaps for available but currently unfilled equipment slots.
 
+animate_equip_bar = false
+        When set to true, any items displayed in the equipment bar that have a
+        variable colour will be animated.
+
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in
         it, the first description line will contain a summary of all the
@@ -1467,7 +1467,8 @@ mlist_allow_alternate_layout = false
 
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
-        minimum value is 5.
+        minimum value is 5. In console, if this value is large enough
+        that the map won't fit, crawl will not start.
 
 msg_max_height = 10
         In console, if there is extra space available after the monster list
@@ -1475,6 +1476,14 @@ msg_max_height = 10
         The monster list will get the rest.
         In tiles, control the maximum size of the message area. The viewport
         will get the rest.
+
+msg_webtiles_height = -1
+        This will set the height of the messages pane in (only) webtiles,
+        scaling the map accordingly. Values less than `msg_min_height` will
+        have no impact; in this case the height of the message pane is
+        inherited from console (and so will typically be 7). One of these
+        lines may be reserved for `more` messages depending on other
+        settings.
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
@@ -2003,7 +2012,7 @@ tile_cell_pixels = 32
         the screen.
 
 tile_filter_scaling = false
-        Used in conjunction with tile_cell_pixels. Setting it to true filter
+        Used in conjunction with tile_cell_pixels. Setting it to true filters
         the textures resulting in a smoother but blurrier image.
 
 tile_force_overlay = false
@@ -2018,6 +2027,14 @@ tile_full_screen = auto
         on or off. Setting it to anything else will put it in auto mode, which
         enables full screen mode only if the screen resolution is smaller than
         width 1200, or height 800.
+
+tile_single_column_menus = true
+        If enabled, all in-game menus will list items in a single column,
+        regardless of the current screen size or the number of items in the
+        menu. If disabled, some in-game menus will use two columns if there is
+        insufficient space to show all items in a single column. This option
+        is only available on local tiles; all menus on console and on WebTiles
+        always list items in a single column, as if this option were enabled.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
@@ -2401,13 +2418,13 @@ display_char = <dungeon_character_name : symbol>
            item_rune, item_weapon, item_armour, item_wand, item_food,
            item_scroll, item_ring, item_potion, item_missile, item_book,
            item_staff, item_rod, item_miscellany, item_corpse, item_skeleton,
-           item_gold, item_amulet, cloud, tree, teleporter, space,
-           fired_bolt, fired_zap, fired_burst, fired_debug, fired_missile,
-           fired_missile, explosion, frame_horiz, frame_vert, frame_top_left,
-           frame_top_right, frame_bottom_left, frame_bottom_right, draw_horiz,
-           draw_vert, draw_slash, draw_backslash, draw_top_left,
-           draw_top_right, draw_bottom_left, draw_bottom_right, draw_down,
-           draw_up, draw_right, draw_left
+           item_gold, item_amulet, cloud, tree, transporter,
+           transporter_landing, space, fired_bolt, fired_zap, fired_burst,
+           fired_debug, fired_missile, fired_missile, explosion, frame_horiz,
+           frame_vert, frame_top_left, frame_top_right, frame_bottom_left,
+           frame_bottom_right, draw_horiz, draw_vert, draw_slash,
+           draw_backslash, draw_top_left, draw_top_right, draw_bottom_left,
+           draw_bottom_right, draw_down, draw_up, draw_right, draw_left
         Most of these are self-explanatory. "arch" is used for shops and
         portals. "floor_magic" and "wall_magic" are used to display
         magic-mapped squares on the level map. "invis_exposed" is the

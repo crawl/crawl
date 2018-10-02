@@ -76,6 +76,7 @@
 #include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
+#include "unwind.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -85,7 +86,6 @@ static bool _valid_mon_spells[NUM_SPELLS];
 static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
 static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
-static int _mons_spellpower(spell_type spell, const monster &mons);
 static monster* _get_allied_target(const monster &caster, bolt &tracer);
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
 static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
@@ -141,6 +141,7 @@ static function<bool(const monster&)> _setup_hex_check(spell_type spell);
 static bool _worth_hexing(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(actor* victim);
 static function<bool(const monster&)> _should_selfench(enchant_type ench);
+static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 
 enum spell_logic_flag
 {
@@ -249,10 +250,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                        || player_prot_life(false) >= 3);
         },
         [](monster &caster, mon_spell_slot slot, bolt&) {
-            const int splpow = _mons_spellpower(slot.spell, caster);
+            const int splpow = mons_spellpower(caster, slot.spell);
 
             int damage = 0;
-            fire_los_attack_spell(slot.spell, splpow, &caster, false, &damage);
+            fire_los_attack_spell(slot.spell, splpow, &caster, nullptr, false,
+                                  &damage);
             if (damage > 0 && caster.heal(damage))
                 simple_monster_message(caster, " is healed.");
         },
@@ -266,8 +268,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                    && (!caster.friendly() || !you.visible_to(&caster));
         },
         [](monster &caster, mon_spell_slot slot, bolt&) {
-            const int splpow = _mons_spellpower(slot.spell, caster);
-            fire_los_attack_spell(slot.spell, splpow, &caster, false);
+            const int splpow = mons_spellpower(caster, slot.spell);
+            fire_los_attack_spell(slot.spell, splpow, &caster, nullptr, false);
         },
         nullptr,
         MSPELL_LOGIC_NONE,
@@ -346,7 +348,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot slot, bolt&) {
             enchant_actor_with_flavour(caster.get_foe(), &caster,
                                        BEAM_DRAIN_MAGIC,
-                                       _mons_spellpower(slot.spell, caster));
+                                       mons_spellpower(caster, slot.spell));
         },
     } },
     { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
@@ -379,7 +381,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_LRD, {
         _always_worthwhile,
         [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
-            const int splpow = _mons_spellpower(slot.spell, caster);
+            const int splpow = mons_spellpower(caster, slot.spell);
             cast_fragmentation(splpow, &caster, pbolt.target, false);
         },
         _target_beam_setup(_mons_fragment_target),
@@ -390,7 +392,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return !(env.level_state & LSTATE_STILL_WINDS);
         },
         [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
-            const int splpow = _mons_spellpower(slot.spell, caster);
+            const int splpow = mons_spellpower(caster, slot.spell);
             if ((!in_bounds(pbolt.target)
                  || conjure_flame(&caster, splpow, pbolt.target, false)
                     != SPRET_SUCCESS)
@@ -459,6 +461,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot, bolt&) {
             caster.add_ench(ENCH_RING_OF_THUNDER);
     } } },
+    { SPELL_GRASPING_ROOTS, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            return foe && caster.can_constrict(foe, false);
+        }, _cast_grasping_roots, } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -775,10 +783,32 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
               "", "by divine providence");
 }
 
+static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    const int turns = 4 + random2avg(div_rand_round(
+                mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
+    dprf("Grasping roots turns: %d", turns);
+    mpr("Roots burst forth from the earth!");
+    if (foe->is_player())
+    {
+        you.increase_duration(DUR_GRASPING_ROOTS, turns);
+        caster.start_constricting(you);
+        mprf(MSGCH_WARN, "The grasping roots grab you!");
+    }
+    else
+    {
+        caster.add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 0, foe,
+                    turns * BASELINE_DELAY));
+    }
+}
+
 /// Is the given full-LOS attack spell worth casting for the given monster?
 static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 {
-    return trace_los_attack_spell(spell, _mons_spellpower(spell, mons), &mons)
+    return trace_los_attack_spell(spell, mons_spellpower(mons, spell), &mons)
            == SPRET_SUCCESS;
 }
 
@@ -1105,7 +1135,7 @@ int mons_power_for_hd(spell_type spell, int hd, bool random)
  * @return          A spellpower value for the spell.
  *                  May vary from call to call for certain weird spells.
  */
-static int _mons_spellpower(spell_type spell, const monster &mons)
+int mons_spellpower(const monster &mons, spell_type spell)
 {
     return mons_power_for_hd(spell, mons.spell_hd(spell));
 }
@@ -1122,12 +1152,12 @@ static int _mons_spellpower(spell_type spell, const monster &mons)
 static int _ench_power(spell_type spell, const monster &mons)
 {
     const int cap = 200;
-    return min(cap, _mons_spellpower(spell, mons) / ENCH_POW_FACTOR);
+    return min(cap, mons_spellpower(mons, spell) / ENCH_POW_FACTOR);
 }
 
-static int _mons_spell_range(spell_type spell, const monster &mons)
+static int _mons_spell_range(const monster &mons, spell_type spell)
 {
-    return mons_spell_range(spell, _mons_spellpower(spell, mons));
+    return mons_spell_range_for_hd(spell, mons.spell_hd());
 }
 
 /**
@@ -1138,7 +1168,7 @@ static int _mons_spell_range(spell_type spell, const monster &mons)
  * @param hd        The monster's effective HD for spellcasting purposes.
  * @return          -1 if the spell has an undefined range; else its range.
  */
-int mons_spell_range(spell_type spell, int hd)
+int mons_spell_range_for_hd(spell_type spell, int hd)
 {
     switch (spell)
     {
@@ -1229,7 +1259,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.is_explosion = false;
     beam.attitude     = mons_attitude(*mons);
 
-    beam.range = _mons_spell_range(spell_cast, *mons);
+    beam.range = _mons_spell_range(*mons, spell_cast);
 
     spell_type real_spell = spell_cast;
 
@@ -1298,6 +1328,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STEAM_BALL:
     case SPELL_TELEPORT_OTHER:
     case SPELL_SANDBLAST:
+    case SPELL_HARPOON_SHOT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1834,7 +1865,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_EPHEMERAL_INFUSION:
 #endif
-    case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_GRAND_AVATAR:
@@ -1906,7 +1936,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    const int power = _mons_spellpower(spell_cast, *mons);
+    const int power = mons_spellpower(*mons, spell_cast);
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
@@ -2238,6 +2268,18 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
     }
 }
 
+static int _tension_door_closed(set<coord_def> door,
+                                                dungeon_feature_type old_feat)
+{
+    // this unwind is a bit heavy, but because out-of-los clouds dissipate
+    // instantly, they can be wiped out by these door tests.
+    unwind_var<map<coord_def, cloud_struct>> cloud_state(env.cloud);
+    _set_door(door, DNGN_CLOSED_DOOR);
+    const int new_tension = get_tension(GOD_NO_GOD);
+    _set_door(door, old_feat);
+    return new_tension;
+}
+
 /**
  * Can any actors and items be pushed out of a doorway? An actor can be pushed
  * for purposes of this check if there is a habitable target location and the
@@ -2318,9 +2360,7 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
         dungeon_feature_type old_feat = grd(pos);
 
         act->move_to_pos(c);
-        _set_door(all_door, DNGN_CLOSED_DOOR);
-        int new_tension = get_tension(GOD_NO_GOD);
-        _set_door(all_door, old_feat);
+        int new_tension = _tension_door_closed(all_door, old_feat);
         act->move_to_pos(pos);
 
         if (new_tension == max_tension)
@@ -2374,9 +2414,7 @@ static bool _should_force_door_shut(const coord_def& door)
         you.move_to_pos(newpos);
     }
 
-    _set_door(all_door, DNGN_CLOSED_DOOR);
-    const int new_tension = get_tension(GOD_NO_GOD);
-    _set_door(all_door, old_feat);
+    const int new_tension = _tension_door_closed(all_door, old_feat);
 
     if (player_in_door)
         you.move_to_pos(oldpos);
@@ -3208,11 +3246,6 @@ static bool _mutation_vulnerable(actor* victim)
     return victim->can_mutate();
 }
 
-static bool _dummy_vulnerable(actor* victim)
-{
-    return true;
-}
-
 static void _cast_black_mark(monster* agent)
 {
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
@@ -3366,7 +3399,7 @@ static coord_def _mons_conjure_flame_pos(const monster &mons)
     const coord_def a = foe_pos - mon->pos();
     vector<coord_def> targets;
 
-    const int range = _mons_spell_range(SPELL_CONJURE_FLAME, *mon);
+    const int range = _mons_spell_range(*mon, SPELL_CONJURE_FLAME);
     for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
     {
         // Our target needs to be in LOS, and we can't have a creature or
@@ -3622,7 +3655,7 @@ static bool _worth_hexing(const monster &caster, spell_type spell)
     // We'll estimate the target's resistance to magic, by first getting
     // the actual value and then randomising it.
     const int est_magic_resist = foe->res_magic() + random2(60) - 30; // +-30
-    const int power = ench_power_stepdown(_mons_spellpower(spell, caster));
+    const int power = ench_power_stepdown(mons_spellpower(caster, spell));
 
     // Determine the amount of chance allowed by the benefit from
     // the spell. The estimated difficulty is the probability
@@ -3901,7 +3934,7 @@ static bool _target_and_justify_spell(monster &mons,
             break;
         case SPELL_DAZZLING_SPRAY:
             if (!mons.get_foe()
-                || !_spray_tracer(&mons, _mons_spellpower(spell, mons),
+                || !_spray_tracer(&mons, mons_spellpower(mons, spell),
                                   beem, spell))
             {
                 return false;
@@ -3920,7 +3953,7 @@ static bool _target_and_justify_spell(monster &mons,
     // Don't knockback something we're trying to constrict.
     const actor *victim = actor_at(beem.target);
     if (victim &&
-        beem.can_knockback(victim)
+        beem.can_knockback(*victim)
         && mons.is_constricting()
         && mons.constricting->count(victim->mid))
     {
@@ -4252,7 +4285,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
     if (actual)
         mpr("Send 'em back where they came from!");
 
-    const int pow = _mons_spellpower(SPELL_ABJURATION, *caster);
+    const int pow = mons_spellpower(*caster, SPELL_ABJURATION);
 
     for (monster_near_iterator mi(caster->pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -4442,7 +4475,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
     if (grid_distance(mons.pos(), target->pos()) > 1)
         return;
 
-    const int pow = _mons_spellpower(slot.spell, mons);
+    const int pow = mons_spellpower(mons, slot.spell);
     int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
@@ -4508,7 +4541,7 @@ static bool _mons_cast_freeze(monster* mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    const int pow = _mons_spellpower(SPELL_FREEZE, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_FREEZE);
 
     const int base_damage = roll_dice(1, 3 + pow / 6);
     int damage = 0;
@@ -4798,7 +4831,7 @@ static coord_def _mons_fragment_target(const monster &mon)
 {
     coord_def target(GXM+1, GYM+1);
     const monster *mons = &mon; // TODO: rewriteme
-    const int pow = _mons_spellpower(SPELL_LRD, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_LRD);
 
     // Shadow casting should try to affect the same tile as the player.
     if (mons_is_player_shadow(*mons))
@@ -4806,14 +4839,14 @@ static coord_def _mons_fragment_target(const monster &mon)
         bool temp;
         bolt beam;
         if (!setup_fragmentation_beam(beam, pow, mons, mons->target, true,
-                                      nullptr, temp, temp))
+                                      nullptr, temp))
         {
             return target;
         }
         return mons->target;
     }
 
-    const int range = _mons_spell_range(SPELL_LRD, *mons);
+    const int range = _mons_spell_range(*mons, SPELL_LRD);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
@@ -4824,7 +4857,7 @@ static coord_def _mons_fragment_target(const monster &mon)
 
         bolt beam;
         if (!setup_fragmentation_beam(beam, pow, mons, *di, true, nullptr,
-                                      temp, temp))
+                                      temp))
         {
             continue;
         }
@@ -5733,7 +5766,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     const god_type god = _find_god(*mons, slot_flags);
-    const int splpow = _mons_spellpower(spell_cast, *mons);
+    const int splpow = mons_spellpower(*mons, spell_cast);
 
     switch (spell_cast)
     {
@@ -6372,7 +6405,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_CHAIN_LIGHTNING:
-    case SPELL_CHAIN_OF_CHAOS:
         cast_chain_spell(spell_cast, splpow, mons);
         return;
 
@@ -7594,7 +7626,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target)
     for (fair_adjacent_iterator ai(target, false); ai; ++ai)
     {
         if (!_feat_is_awakenable(grd(*ai))
-            || env.markers.property_at(*ai, MAT_ANY, "veto_disintegrate")
+            || env.markers.property_at(*ai, MAT_ANY, "veto_dig")
                == "veto")
         {
             continue;
@@ -7958,6 +7990,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_THROW_BARBS:
+    case SPELL_HARPOON_SHOT:
         // Don't fire barbs in melee range.
         return !foe || adjacent(mon->pos(), foe->pos());
 
@@ -8016,8 +8049,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHAIN_LIGHTNING:
         return !_trace_los(mon, _elec_vulnerable)
                 || you.visible_to(mon) && friendly; // don't zap player
-    case SPELL_CHAIN_OF_CHAOS:
-        return !_trace_los(mon, _dummy_vulnerable);
     case SPELL_CORRUPTING_PULSE:
         return !_trace_los(mon, _mutation_vulnerable)
                || you.visible_to(mon)
@@ -8049,12 +8080,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_GLACIATE:
         return !foe
-               || !_glaciate_tracer(mon, _mons_spellpower(monspell, *mon),
+               || !_glaciate_tracer(mon, mons_spellpower(*mon, monspell),
                                     foe->pos());
 
     case SPELL_CLOUD_CONE:
         return !foe || no_clouds
-               || !mons_should_cloud_cone(mon, _mons_spellpower(monspell, *mon),
+               || !mons_should_cloud_cone(mon, mons_spellpower(*mon, monspell),
                                           foe->pos());
 
     case SPELL_MALIGN_GATEWAY:
@@ -8077,7 +8108,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_SCATTERSHOT:
         return !foe
-               || !scattershot_tracer(mon, _mons_spellpower(monspell, *mon),
+               || !scattershot_tracer(mon, mons_spellpower(*mon, monspell),
                                       foe->pos());
 
     case SPELL_CLEANSING_FLAME:

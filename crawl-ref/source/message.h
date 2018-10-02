@@ -102,7 +102,6 @@ private:
 };
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined
-void webtiles_send_last_messages(int n = 20); // does nothing unless USE_TILE_WEB is defined
 
 void save_messages(writer& outf);
 void load_messages(reader& inf);
@@ -112,12 +111,14 @@ void clear_message_store();
 bool any_messages();
 
 void replay_messages();
+void replay_messages_during_startup();
 
 void set_more_autoclear(bool on);
 
 string get_last_messages(int mcount, bool full = false);
 void get_recent_messages(vector<string> &messages,
                          vector<msg_channel_type> &channels);
+bool recent_error_messages();
 
 int channel_to_colour(msg_channel_type channel, int param = 0);
 bool strip_channel_prefix(string &text, msg_channel_type &channel,

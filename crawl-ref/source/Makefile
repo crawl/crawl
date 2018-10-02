@@ -83,7 +83,8 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows docs greet api android FORCE monster
+        build-windows package-windows docs greet api api-dev android FORCE \
+	monster
 
 include Makefile.obj
 
@@ -717,13 +718,16 @@ DEFINES_L += -DUSE_SOUND
 endif
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
-CFWARN_L += $(shell w=-Wno-format-zero-length;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+# For `no-` options, gcc will only emit an error if there are other errors, so
+# we need to check positive forms (applies to array-bounds, format-zero-length,
+# and tautological-unsigned-enum-zero-compare.)
+CFWARN_L += $(shell w=array-bounds;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
+CFWARN_L += $(shell w=format-zero-length;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
 CFWARN_L += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 CFWARN_L  += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 # Avoid warnings about safety checks that might be necessary on other compilers
 # where the same enum is assigned a signed underlying type.
-CFWARN_L  += $(shell w=-Wno-tautological-unsigned-enum-zero-compare;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L  += $(shell w=tautological-unsigned-enum-zero-compare;echo|$(GXX) -E -x c++ - -Werror -W$$w >/dev/null 2>&1 && echo -Wno-$$w)
 
 CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
@@ -1142,6 +1146,7 @@ LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
+RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
 
 export SRC_VERSION
 
@@ -1301,11 +1306,16 @@ $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
 
-CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
-api: $(CLUA_MODULE_SOURCES)
-	mkdir -p luadoc
-	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
+api:
+	mkdir -p $(DOC_BASE)/develop/lua/
+	# need abspath here because ldoc is fragile
+	ldoc --config util/config.ld --dir $(abspath $(DOC_BASE)/lua/) .
 
+api-dev:
+	mkdir -p $(DOC_BASE)/develop/lua/
+	# need abspath here because ldoc is fragile
+	ldoc --config util/config.ld --dir $(abspath $(DOC_BASE)/develop/lua/) \
+	     --all .
 
 ##########################################################################
 # The level compiler
@@ -1390,6 +1400,8 @@ endif
 	for LANG in $(LANGUAGES); \
 		do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
 	done
+	mkdir -p $(datadir_fp)/dat/dist_bones
+	$(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
@@ -1668,6 +1680,7 @@ source: removeold prebuildyacc
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
 	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
+	cp build/LICENSE build/crawl-ref/LICENSE
 	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source
@@ -1682,7 +1695,7 @@ package-zipball-deps: source
 	fi
 
 package-tarball-nodeps: source
-	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib --exclude simplebar.js $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 	rm -rf build
@@ -1716,7 +1729,7 @@ endif
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
 
-ZIP_DOCS=../licence.txt
+ZIP_DOCS=../../LICENSE
 package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false

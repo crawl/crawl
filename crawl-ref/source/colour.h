@@ -88,13 +88,15 @@ struct element_colour_calc
     virtual ~element_colour_calc() {};
 
 protected:
+    int rand_max {120}; // 0-119 is the range of randomness promised to
+                        // Lua colour functions.
     int rand(bool non_random);
 
     element_colour_calculator calc;
 };
 
 int str_to_colour(const string &str, int default_colour = -1,
-                  bool accept_number = true, bool accept_elemental = true);
+                  bool accept_number = true, bool accept_elemental = false);
 const string colour_to_str(colour_t colour);
 
 void init_element_colours();

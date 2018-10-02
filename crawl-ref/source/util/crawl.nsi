@@ -38,7 +38,7 @@ XPStyle on
 Section ""
   SetOutPath $INSTDIR
   File /r /x "*~" "build-win\*"
-  File /oname=LICENCE.txt ..\licence.txt
+  File /oname=LICENSE.txt ..\..\LICENSE
 
   # clean after previous versions; crawl-console.exe used to be named crawl.exe
   # but that made sense on Unix but not really on Windows.

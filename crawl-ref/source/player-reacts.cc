@@ -476,6 +476,16 @@ void player_reacts_to_monsters()
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awaken();
+
+    if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
+        && you.is_constricted())
+    {
+        // We handle the end-of-enchantment message here since the method
+        // of constriction is no longer detectable.
+        mprf("The grasping roots release their grip on you.");
+        you.stop_being_constricted(true);
+    }
+
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -802,9 +812,6 @@ static void _decrement_durations()
             _handle_recitation(new_recite);
     }
 
-    if (you.duration[DUR_GRASPING_ROOTS])
-        check_grasping_roots(you);
-
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
@@ -854,28 +861,6 @@ static void _decrement_durations()
     }
 }
 
-
-// For worn items; weapons do this on melee attacks.
-static void _check_equipment_conducts()
-{
-    if (you_worship(GOD_DITHMENOS) && one_chance_in(10))
-    {
-        bool fiery = false;
-        const item_def* item;
-        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
-        {
-            item = you.slot_item(static_cast<equipment_type>(i));
-            if (item && is_fiery_item(*item))
-            {
-                fiery = true;
-                break;
-            }
-        }
-        if (fiery)
-            did_god_conduct(DID_FIRE, 1, true);
-    }
-}
-
 /**
  * Handles player ghoul rotting over time.
  */
@@ -887,7 +872,6 @@ static void _rot_ghoul_players()
     int resilience = 400;
     if (have_passive(passive_t::slow_metabolism))
         resilience = resilience * 3 / 2;
-
 
     // Faster rotting when hungry.
     if (you.hunger_state < HS_SATIATED)
@@ -990,8 +974,6 @@ void player_reacts()
 
     if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
-
-    _check_equipment_conducts();
 
     if (you.unrand_reacts.any())
         unrand_reacts();

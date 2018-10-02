@@ -8,6 +8,7 @@
 #include "item-use.h"
 
 #include "ability.h"
+#include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -1302,6 +1303,12 @@ static int _prompt_ring_to_remove(int new_ring)
         slot_chars.push_back(index_to_letter(rings.back()->link));
     }
 
+    if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
+    {
+        // force a menu rather than a more().
+        return EQ_NONE;
+    }
+
     clear_messages();
 
     mprf(MSGCH_PROMPT,
@@ -1581,8 +1588,18 @@ static bool _swap_rings(int ring_slot)
         if (!all_same || Options.jewellery_prompt)
             unwanted = _prompt_ring_to_remove(ring_slot);
 
+        if (unwanted == EQ_NONE)
+        {
+            // do this here rather than in remove_ring so that the custom
+            // message is visible.
+            unwanted = prompt_invent_item(
+                    "You're wearing all the rings you can. Remove which one?",
+                    MT_INVLIST, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
+                    invprompt_flag::no_warning | invprompt_flag::hide_known);
+        }
+
         // Cancelled:
-        if (unwanted < -1)
+        if (unwanted < 0)
         {
             canned_msg(MSG_OK);
             return false;
@@ -1730,7 +1747,8 @@ static bool _can_puton_jewellery(int item_slot)
 }
 
 // Put on a particular ring or amulet
-static bool _puton_item(int item_slot, bool prompt_slot)
+static bool _puton_item(int item_slot, bool prompt_slot,
+                        bool check_for_inscriptions)
 {
     item_def& item = you.inv[item_slot];
 
@@ -1754,8 +1772,9 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 
     // It looks to be possible to equip this item. Before going any further,
     // we should prompt the user with any warnings that come with trying to
-    // put it on.
-    if (!check_warning_inscriptions(item, OPER_PUTON))
+    // put it on, except when they have already been prompted with them
+    // from switching rings.
+    if (check_for_inscriptions && !check_warning_inscriptions(item, OPER_PUTON))
     {
         canned_msg(MSG_OK);
         return false;
@@ -1863,7 +1882,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 }
 
 // Put on a ring or amulet. (If slot is -1, first prompt for which item to put on)
-bool puton_ring(int slot, bool allow_prompt)
+bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
 {
     int item_slot;
 
@@ -1893,7 +1912,7 @@ bool puton_ring(int slot, bool allow_prompt)
 
     bool prompt = allow_prompt ? Options.jewellery_prompt : false;
 
-    return _puton_item(item_slot, prompt);
+    return _puton_item(item_slot, prompt, check_for_inscriptions);
 }
 
 // Remove the amulet/ring at given inventory slot (or, if slot is -1, prompt
@@ -2178,16 +2197,6 @@ bool god_hates_brand(const int brand)
     {
         return true;
     }
-
-    if (you_worship(GOD_DITHMENOS)
-        && (brand == SPWPN_FLAMING
-            || brand == SPWPN_CHAOS))
-    {
-        return true;
-    }
-
-    if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
-        return true;
 
     if (you_worship(GOD_CHEIBRIADOS) && (brand == SPWPN_CHAOS
                                          || brand == SPWPN_SPEED))
@@ -2648,7 +2657,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
 #endif
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
-           || scroll == SCR_MAGIC_MAPPING;
+           || scroll == SCR_MAGIC_MAPPING
+           || scroll == SCR_ACQUIREMENT;
 }
 
 /**
@@ -2939,7 +2949,10 @@ void read_scroll(item_def& scroll)
 
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
+        {
+            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
+        }
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -2956,7 +2969,11 @@ void read_scroll(item_def& scroll)
             // IDing scrolls. (Not an interesting ID game mechanic!)
         }
 
-        run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
+        if (!alreadyknown)
+            run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
+        else
+            cancel_scroll = !acquirement(OBJ_RANDOM, AQ_SCROLL, false, nullptr,
+                    false, true);
         break;
 
     case SCR_FEAR:
@@ -3004,9 +3021,6 @@ void read_scroll(item_def& scroll)
 
     case SCR_IMMOLATION:
     {
-        // Dithmenos hates trying to play with fire, even if it does nothing.
-        did_god_conduct(DID_FIRE, 2 + random2(3), item_type_known(scroll));
-
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {

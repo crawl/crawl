@@ -1,12 +1,9 @@
 ------------------------------------------------------------------------------
--- init.lua
--- Common CLua initializtion.
+-- @module crawl
 ------------------------------------------------------------------------------
 
------
--- Set up echoing function for interpreter.
------
-
+--- Echoing function for the interpreter.
+-- @local
 function echoall(...)
   util.foreach({...}, function(x)
       crawl.mpr(tostring(x))
@@ -15,8 +12,11 @@ end
 
 __echo = echoall
 
--- A wrapper for the low-level sequence of commands needed to produce
+--- A wrapper for the low-level sequence of commands needed to produce
 -- message output.
+-- @tparam string message
+-- @tparam int channel messge channel number
+-- @see crawl.mpr, crawl.msgch_name, crawl.msgch_num
 function crawl.message(message, channel)
   crawl.mpr(message, channel)
   crawl.flush_prev_message()

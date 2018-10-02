@@ -71,18 +71,6 @@ function ice_cave_difficulty()
   return true
 end
 
--- Remove this function when TAG_MAJOR > 34
--- Find the slave of the teleporter and move to it.
-function callback.ice_cave_statue_garden_teleporter(data, triggerable,
-                                                     triggerer, marker, ev)
-  local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-    data.teleport_spot)
-
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different!")
-end
-
 -- For destination (not entry) vaults, use the following line after all
 -- substitutions have been performed:
 -- : ice_cave_appearance(_G)
@@ -1125,8 +1113,8 @@ ENDMAP
 #
 # These rely on devious placement of ice statues and forcing players to face
 # them (if they want loot, that is).
-
-NAME:   ice_cave_statue_garden_teleport
+# Was called ice_cave_statue_garden_teleport
+NAME:   ice_cave_statue_garden_transporter
 veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
@@ -1134,27 +1122,25 @@ ORIENT: encompass
 MONS:   ice beast, ice statue
 KMONS:  34 = white ugly thing
 KITEM:  *! = *
-MARKER: M = lua:transp_loc("statue_garden")
-MARKER: m = lua:transp_dest_loc("statue_garden")
-FTILE:  m = floor_pebble_lightblue
-KPROP:  -24!|m_| = no_tele_into
-SUBST:  m- = .
-SUBST:  _ = <
+MARKER: P = lua:transp_loc("statue_garden_first")
+MARKER: Q = lua:transp_dest_loc("statue_garden_first")
+MARKER: R = lua:transp_loc("statue_garden_second")
+MARKER: S = lua:transp_dest_loc("statue_garden_second")
 : ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx...GMG...xxxxxxxxxxxccccccccccccc---!-!---ccc
-xx...%.%.%...xxxxxxxxxxcccccccccccc---G-|-G---cc
-xx....*.*....xxxxxxxxxxcccccccccccc----!-!----cc
-x......*......xxxxxxxxxccccccccccc------!------c
-x.1..G.3.G..1.xxxxxxxxxccccccccccc----2---2----c
-x.............xxxxxxxxxccccccccccc------4------c
-xx..1.....1..xxxxxxxxxxcccccccccccc-----------cc
-xx...........xxxxxxxxxxcccccccccccc-----------cc
-xx.1...A...1.xxxxxxxxxxcccccccccccc-----m-----cc
-xxx.........xxxxxxxxxxxccccccccccccc---------ccc
-xxxx...<...xxxxxxxxxxxxcccccccccccccc---_---cccc
-xxxxx.....xxxxxxxxxxxxxccccccccccccccc-----ccccc
+xxx...GPG...xxxxxxxxxxxccccccccccccc...!R!...ccc
+xx...%.%.%...xxxxxxxxxxcccccccccccc...G.|.G...cc
+xx....*S*....xxxxxxxxxxcccccccccccc....!.!....cc
+x......*......xxxxxxxxxccccccccccc......!......c
+x.1..G.3.G..1.xxxxxxxxxccccccccccc....2...2....c
+x.............xxxxxxxxxccccccccccc......4......c
+xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
+xx...........xxxxxxxxxxcccccccccccc...........cc
+xx.1...A...1.xxxxxxxxxxcccccccccccc.....Q.....cc
+xxx.........xxxxxxxxxxxccccccccccccc.........ccc
+xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
+xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 

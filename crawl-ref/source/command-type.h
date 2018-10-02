@@ -214,6 +214,7 @@ enum command_type
     CMD_MAP_EXPLORE,
 
     CMD_MAP_WIZARD_TELEPORT,
+    CMD_MAP_WIZARD_FORGET,
 
     CMD_MAP_DESCRIBE,
 

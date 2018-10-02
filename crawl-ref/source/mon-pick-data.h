@@ -53,7 +53,7 @@ static const pop_entry pop_d[] =
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
   {  7, 17,  192, PEAK, MONS_CROCODILE },
   {  7, 17,  192, PEAK, MONS_HORNET },
-  {  8, 17,  750, FLAT, MONS_TWO_HEADED_OGRE },
+  {  8, 17,  675, SEMI, MONS_TWO_HEADED_OGRE },
   {  8, 18,  335, SEMI, MONS_WYVERN },
   {  8, 18,  230, PEAK, MONS_EYE_OF_DRAINING },
   {  9, 14,  825, SEMI, MONS_YAK },
@@ -1256,7 +1256,9 @@ static const pop_entry pop_water_depths[] =
 
 static const pop_entry pop_water_swamp[] =
 { // Swamp water monsters
-  {  1,  4,   600, FLAT, MONS_SWAMP_WORM },
+  {  1,  4,   400, FLAT, MONS_SWAMP_WORM },
+  {  1,  4,   100, FLAT, MONS_TYRANT_LEECH },
+  {  1,  4,   100, FLAT, MONS_ALLIGATOR },
   {  1,  4,  1050, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };

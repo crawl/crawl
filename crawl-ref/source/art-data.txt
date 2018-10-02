@@ -167,12 +167,14 @@ COLOUR: BLACK
 
 NAME:    Singing Sword
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
+INSCRIP: sonic wave
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1000
 BOOL:    special
+BRAND:   SPWPN_VORPAL
 
 NAME:    Wrath of Trog
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
@@ -186,12 +188,13 @@ BRAND:   SPWPN_ANTIMAGIC
 
 NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
-PLUS:    +0   # Set on generation
+INSCRIP: chain chaos
+PLUS:    +7
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   600
-BOOL:    special, no_upgrade
+BOOL:    skip_ego
 BRAND:   SPWPN_CHAOS
 
 NAME:    glaive of Prune
@@ -231,9 +234,9 @@ TILE_EQ: wucad_mu
 VALUE:   1000
 
 NAME:    Vampire's Tooth
-OBJ:     OBJ_WEAPONS/WPN_DAGGER
-# it's a dagger made from a tooth -> no TYPE
-PLUS:    +4
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+# it's a quick blade made from a tooth -> no TYPE
+PLUS:    +12
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
@@ -571,14 +574,13 @@ BOOL:    poison, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+INSCRIP:  stab,
 TYPE:     knife
 PLUS:     +7
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
 EV:       4
-DEX:      4
-MAGIC:    1
 STEALTH:  1
 
 NAME:    plutonium sword
@@ -1057,7 +1059,7 @@ BOOL:     nogen
 
 ENUM:     OCTOPUS_KING_RING
 NAME:     ring of the Octopus King
-OBJ:      OBJ_JEWELLERY/RING_LOUDNESS
+OBJ:      OBJ_JEWELLERY/RING_ATTENTION
 COLOUR:   ETC_WATER
 TILE:     urand_octoring
 AC:       1
@@ -1303,8 +1305,6 @@ COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
 TILE_EQ:  thermic_engine
 BRAND:    SPWPN_FLAMING
-FIRE:     -1
-COLD:     -1
 
 # This entry must always be last.
 ENUM:   DUMMY2

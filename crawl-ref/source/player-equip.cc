@@ -301,9 +301,25 @@ static void _unequip_invis()
     }
 }
 
+static void _unequip_fragile_artefact(item_def& item, bool meld)
+{
+    ASSERT(is_artefact(item));
+
+    artefact_properties_t proprt;
+    artefact_known_props_t known;
+    artefact_properties(item, proprt, known);
+
+    if (proprt[ARTP_FRAGILE] && !meld)
+    {
+        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
+        dec_inv_item_quantity(item.link, 1);
+    }
+}
+
 static void _unequip_artefact_effect(item_def &item,
                                      bool *show_msgs, bool meld,
-                                     equipment_type slot)
+                                     equipment_type slot,
+                                     bool weapon)
 {
     ASSERT(is_artefact(item));
 
@@ -367,12 +383,10 @@ static void _unequip_artefact_effect(item_def &item,
             you.unrand_reacts.set(slot, false);
     }
 
-    // this must be last!
-    if (proprt[ARTP_FRAGILE] && !meld)
-    {
-        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
-        dec_inv_item_quantity(item.link, 1);
-    }
+    // If the item is a weapon, then we call it from unequip_weapon_effect
+    // separately, to make sure the message order makes sense.
+    if (!weapon)
+        _unequip_fragile_artefact(item, meld);
 }
 
 static void _equip_use_warning(const item_def& item)
@@ -389,8 +403,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a chaotic item like this.");
     else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_fiery_item(item) && you_worship(GOD_DITHMENOS))
-        mpr("You really shouldn't be using a fiery item like this.");
     else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
         mpr("You really shouldn't be trying to channel magic like this.");
 }
@@ -644,7 +656,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
-        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON);
+    {
+        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
+                                 true);
+    }
 
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -753,6 +768,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
         calc_mp();
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    if (is_artefact(item))
+        _unequip_fragile_artefact(item, meld);
 
     // Unwielding dismisses an active spectral weapon
     monster *spectral_weapon = find_spectral_weapon(&you);
@@ -910,7 +928,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_CLOUD_IMMUNE:
-            mpr("You feel immune to the effects of clouds.");
+            // player::cloud_immunity checks the scarf + passives, so can't
+            // call it here.
+            if (have_passive(passive_t::cloud_immunity))
+                mpr("Your immunity to the effects of clouds is unaffected.");
+            else
+                mpr("You feel immune to the effects of clouds.");
             break;
         }
     }
@@ -1076,7 +1099,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_CLOUD_IMMUNE:
-        mpr("You feel vulnerable to the effects of clouds.");
+        if (!you.cloud_immune())
+            mpr("You feel vulnerable to the effects of clouds.");
         break;
 
     default:
@@ -1084,7 +1108,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, nullptr, meld, slot);
+        _unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1159,6 +1183,16 @@ static void _equip_amulet_of_the_acrobat()
         mpr("Your injuries prevent the amulet from attuning itself.");
         you.props[ACROBAT_AMULET_ACTIVE] = 0;
     }
+}
+
+bool acrobat_boost_visible()
+{
+    // If you have an active amulet of the acrobat and just moved, show the
+    // boost. We also display this bonus if the duration isn't in effect but
+    // it was during the last move. It's a little hacky.
+    return you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
+           && (you.duration[DUR_ACROBAT]
+               || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool());
 }
 
 static void _equip_amulet_of_mana_regeneration()
@@ -1329,7 +1363,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     switch (item.sub_type)
     {
     case RING_FIRE:
-    case RING_LOUDNESS:
+    case RING_ATTENTION:
     case RING_ICE:
     case RING_LIFE_PROTECTION:
     case RING_POISON_RESISTANCE:
@@ -1401,7 +1435,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld, slot);
+        _unequip_artefact_effect(item, &mesg, meld, slot, false);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();

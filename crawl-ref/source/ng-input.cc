@@ -17,7 +17,7 @@
 #include "version.h"
 
 // Eventually, this should be something more grand. {dlb}
-void opening_screen()
+string opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
@@ -55,106 +55,16 @@ void opening_screen()
 
     msg += "\n";
 
-    formatted_string::parse_string(msg).display();
-    textcolour(LIGHTGREY);
+    return msg;
 }
 
-static void _show_name_prompt(int where)
-{
-    cgotoxy(1, where);
-    textcolour(CYAN);
-
-    cprintf("\nWhat is your name today? (Leave blank for a random name, or use Escape to cancel this character.) ");
-
-    textcolour(LIGHTGREY);
-}
-
-bool is_good_name(const string& name, bool blankOK, bool verbose)
+bool is_good_name(const string& name, bool blankOK)
 {
     // verification begins here {dlb}:
     // Disallow names that would result in a save named just ".cs".
     if (strip_filename_unsafe_chars(name).empty())
-    {
-        if (blankOK && name.empty())
-            return true;
-
-        if (verbose)
-            cprintf("\nThat's a silly name!\n");
-        return false;
-    }
-
-    return validate_player_name(name, verbose);
-}
-
-static bool _read_player_name(string &name)
-{
-    const int name_x = wherex(), name_y = wherey();
-    char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
-    // XXX: Prompt displays garbage otherwise, but don't really know why.
-    //      Other places don't do this. --rob
-    buf[0] = '\0';
-    line_reader reader(buf, sizeof(buf));
-
-    while (true)
-    {
-        cgotoxy(name_x, name_y);
-        if (name_x <= 80)
-            cprintf("%-*s", 80 - name_x + 1, "");
-
-        cgotoxy(name_x, name_y);
-        int ret = reader.read_line(false);
-        if (!ret)
-        {
-            name = buf;
-            return true;
-        }
-
-        if (key_is_escape(ret))
-            return false;
-
-        // Go back and prompt the user.
-    }
-}
-
-/**
- * Attempt to generate a random name for a character that doesn't collide with
- * an existing save name.
- *
- * @return  A random name, or the empty string if no good name could be
- *          generated after several tries.
- */
-static string _random_name()
-{
-    for (int i = 0; i < 100; ++i)
-    {
-        const string name = make_name();
-        const string filename = get_save_filename(name);
-        if (!save_exists(filename))
-            return name;
-    }
-
-    return "";
-}
-
-// Reads a valid name from the player, writing it to ng.name.
-void enter_player_name(newgame_def& ng)
-{
-    int prompt_start = wherey();
-
-    do
-    {
-        // Prompt for a new name if current one unsatisfactory {dlb}:
-        _show_name_prompt(prompt_start);
-
-        // If the player wants out, we bail out.
-        if (!_read_player_name(ng.name))
-            game_ended(game_exit::abort);
-        trim_string(ng.name);
-
-        if (ng.name.empty())
-            ng.name = _random_name();
-    }
-    while (!is_good_name(ng.name, false, true));
+        return blankOK && name.empty();
+    return validate_player_name(name, false);
 }
 
 bool validate_player_name(const string &name, bool verbose)

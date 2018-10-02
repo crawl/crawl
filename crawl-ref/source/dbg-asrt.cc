@@ -486,8 +486,9 @@ static void _debug_dump_markers()
         if (marker == nullptr || marker->get_type() == MAT_LUA_MARKER)
             continue;
 
-        mprf(MSGCH_DIAGNOSTICS, "Marker %d at (%d, %d): %s",
-             i, marker->pos.x, marker->pos.y,
+        mprf(MSGCH_DIAGNOSTICS, "Marker #%d, type %d at (%d, %d): %s",
+             i, marker->get_type(),
+             marker->pos.x, marker->pos.y,
              marker->debug_describe().c_str());
     }
 }
@@ -583,7 +584,7 @@ static void _dump_options(FILE *file)
     fprintf(file, "\n\n");
 }
 
-// Defined in stuff.cc. Not a part of crawl_state, since that's a
+// Defined in end.cc. Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
 extern bool CrawlIsExiting;
@@ -703,6 +704,7 @@ void do_crash_dump()
 
     // Dumping the player state and crawl state is next least likely to cause
     // another crash, so do that next.
+    fprintf(file, "\nVersion history:\n%s\n", Version::history().c_str());
     crawl_state.dump();
     _dump_player(file);
 
@@ -827,7 +829,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         vsnprintf(detail, sizeof(detail), text, args);
         va_end(args);
         // Build the final result
-        char final_mesg[1024];
+        char final_mesg[1026];
         snprintf(final_mesg, sizeof(final_mesg), "%s (%s)", mesg, detail);
         _assert_msg = final_mesg;
         _BreakStrToDebugger(final_mesg, true);
@@ -844,7 +846,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
 NORETURN void die(const char *file, int line, const char *format, ...)
 {
     char tmp[2048] = {};
-    char mesg[2048] = {};
+    char mesg[2071] = {};
 
     va_list args;
 
@@ -863,7 +865,7 @@ NORETURN void die(const char *file, int line, const char *format, ...)
 NORETURN void die_noline(const char *format, ...)
 {
     char tmp[2048] = {};
-    char mesg[2048] = {};
+    char mesg[2055] = {};
 
     va_list args;
 

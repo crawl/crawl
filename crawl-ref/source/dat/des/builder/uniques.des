@@ -148,7 +148,7 @@ DEPTH:  D:3-6
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold
-DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
+DEPTH:  D:7-11, Orc:1, Lair:1-2
 : place_unique(_G, "Harold")
 
 NAME:   uniq_ijyb
@@ -158,6 +158,11 @@ DEPTH:  D:3-5
 NAME:   uniq_jessica
 DEPTH:  D:2-3
 : place_unique(_G, "Jessica")
+
+NAME:   uniq_jorgrun
+DEPTH:  D:12-, Orc, Elf, !Elf:$, Snake, !Snake:$, Shoals, !Shoals:$
+DEPTH:  Spider, !Spider:$, Swamp, !Swamp:$
+: place_unique(_G, "Jorgrun")
 
 NAME:   uniq_joseph
 DEPTH:  D:7-10, Lair:1
@@ -247,7 +252,7 @@ DEPTH:  D:10-14, Lair:3-, Orc
 : place_unique(_G, "Snorg")
 
 NAME:   uniq_sonja
-DEPTH:  D:10-, Orc:$, Lair:1-4
+DEPTH:  D:10-13, Orc, Lair
 : place_unique(_G, "Sonja")
 
 NAME:   uniq_terence
@@ -255,7 +260,7 @@ DEPTH:  D:2-3
 : place_unique(_G, "Terence")
 
 NAME:   uniq_urug
-DEPTH:  D:10-, Orc, !Orc:$, Lair:2-5
+DEPTH:  D:10-13, Orc, Lair
 : place_unique(_G, "Urug")
 
 NAME:   uniq_agnes
@@ -267,7 +272,8 @@ DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 ################################################################################
 
 NAME:   uniq_aizul
-DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-4, Crypt:1
+DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
+DEPTH:  Crypt:1
 WEIGHT: 50(Snake), 10
 : place_unique(_G, "Aizul")
 
@@ -276,7 +282,8 @@ DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
 
 NAME:   uniq_bai_suzhen
-DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt
+DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
+DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
 # Do *not* change the name of this vault (uniq_boris) without changing the
@@ -296,10 +303,6 @@ NAME:   uniq_frederick
 DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Frederick")
 
-NAME:   uniq_jorgrun
-DEPTH:  Depths, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Tomb
-: place_unique(_G, "Jorgrun")
-
 NAME:   uniq_jory
 DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Jory")
@@ -309,7 +312,8 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Margery band")
 
 NAME:   uniq_mara
-DEPTH:  Depths:1-4, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths, !Depths:$, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-
+DEPTH:  Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Mara")
 
 NAME:   uniq_mennas
@@ -350,7 +354,8 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 ################################################################################
 
 NAME:   uniq_donald
-DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt:1-2, Elf, Orc:$
+DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults, !Vaults:$
+DEPTH:  Crypt, !Crypt:$, Elf, Orc:$
 : place_unique(_G, "Donald")
 
 NAME:   uniq_vashnia
@@ -364,7 +369,10 @@ WEIGHT: 50
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
-DEPTH:  Shoals:3-
+# Her placement on Shoals:$ is handled through the shoal_guardian tagged
+# vaults.
+DEPTH:  Shoals:2-, !Shoals:$
+WEIGHT: 50
 : place_unique(_G, "Ilsuiw band")
 
 NAME:   uniq_arachne

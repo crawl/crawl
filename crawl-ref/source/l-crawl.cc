@@ -1,13 +1,6 @@
-/**
- * @file
- * @brief General game bindings.
-**/
-
-/*
---- General game bindings
-
-module "crawl"
-*/
+/*** General crawl related functions, including interaction.
+ * @module crawl
+ */
 
 #include "AppHdr.h"
 
@@ -50,15 +43,15 @@ module "crawl"
 # include <time.h>
 #endif
 
-/////////////////////////////////////////////////////////////////////
-// User accessible
+//
+// User accessible (clua) functions
 //
 
-/*
---- Print a message.
--- @param message message to print
--- @channel channel to print on; defaults to 0 (<code>MSGCH_PLAIN</code>)
-function mpr(message, channel) */
+/*** Print a message.
+ * @tparam string message message to print
+ * @param channel channel to print on; defaults to 0 (<code>MSGCH_PLAIN</code>)
+ * @function mpr
+ */
 static int crawl_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -85,9 +78,11 @@ static int crawl_mpr(lua_State *ls)
     return 0;
 }
 
-/*
----
-function formatted_mpr(message, channel) */
+/*** Print a formatted message.
+ * @tparam string message message to print
+ * @param channel channel to print on; defaults to 0 (<code>MSGCH_PLAIN</code>)
+ * @function formatted_mpr
+ */
 static int crawl_formatted_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -115,9 +110,10 @@ static int crawl_formatted_mpr(lua_State *ls)
     return 0;
 }
 
-/*
---- Print to stderr for debugging hooks.
-function stderr(text) */
+/*** Print to stderr for debugging hooks.
+ * @tparam string text
+ * @function stderr
+ */
 LUAFN(crawl_stderr)
 {
     const char *text = luaL_checkstring(ls, 1);
@@ -125,9 +121,10 @@ LUAFN(crawl_stderr)
     return 0;
 }
 
-/*
---- Debugging spew.
-function dpr(text) */
+/*** Print to the debugging channel, which is desplayed only for debug builds.
+ * @tparam string text
+ * @function dpr
+ */
 LUAFN(crawl_dpr)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -138,31 +135,33 @@ LUAFN(crawl_dpr)
     return 0;
 }
 
-/*
----
-function delay(ms) */
+/*** Delay the display.
+ * @tparam int ms delay in milliseconds
+ * @function delay
+ */
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
-/*
----
-function more() */
+/*** Display a `--- more ---` prompt
+ * @function more
+ */
 LUAWRAP(crawl_more, more())
-/*
----
-function flush_prev_message() */
+/*** Flush the previous message to the window.
+ * @function flush_prev_message
+ */
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
-/*
----
-function clear_messages(force) */
+/*** Clear the message window.
+ * @tparam boolean force
+ * @function clear_messages
+ * */
 LUAWRAP(crawl_clear_messages,
 clear_messages(lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
-/*
----
-function redraw_screen() */
+/*** Redraw the screen.
+ * @function redraw_screen */
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
-/*
----
-function set_more_autoclear(flag) */
+/*** Toggle autoclearing of `--- more ---` prompts.
+ * @tparam boolean flag
+ * @function set_more_autoclear
+ */
 static int crawl_set_more_autoclear(lua_State *ls)
 {
     if (lua_isnone(ls, 1))
@@ -175,9 +174,10 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return 0;
 }
 
-/*
----
-function enable_more(flag) */
+/*** Toggle the use of `--- more ---` prompts.
+ * @tparam boolean flag
+ * @function enable_more
+ */
 static int crawl_enable_more(lua_State *ls)
 {
     if (lua_isnone(ls, 1))
@@ -190,12 +190,11 @@ static int crawl_enable_more(lua_State *ls)
     return 0;
 }
 
-/*
---- Wrapper for <code>cancellable_get_line()</code>. Since that takes
--- a pre-allocated buffer, an arbitrary 500-character limit is
--- currently imposed.
--- @return Either a string if one is input, or nil if input is cancelled
-function c_input_line() */
+/*** Cancellably prompt the user for a line of input.
+ * The line is limited to 500 characters.
+ * @treturn string|nil a string if one is input or nil if input is cancelled
+ * @function c_input_line
+ */
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -208,19 +207,18 @@ static int crawl_c_input_line(lua_State *ls)
     return 1;
 }
 
-/*
---- Get input key (combo).
--- @return integer representing the key (combo) input
-function getch() */
+/*** Get input key (combo).
+ * @treturn int the key (combo) input
+ * @function getch */
 LUARET1(crawl_getch, number, getchm())
-/*
---- Check for pending input.
--- @return 1 if there is, 0 otherwise
-function kbhit() */
+/*** Check for pending input.
+ * @return int 1 if there is, 0 otherwise
+ * function kbhit
+ */
 LUARET1(crawl_kbhit, number, kbhit())
-/*
---- Flush the input buffer (typeahead).
-function flush_input() */
+/*** Flush the input buffer (typeahead).
+ * @function flush_input
+ */
 LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 
 static char _lua_char(lua_State *ls, int ndx, char defval = 0)
@@ -229,15 +227,20 @@ static char _lua_char(lua_State *ls, int ndx, char defval = 0)
            : lua_tostring(ls, ndx)[0];
 }
 
-/*
---- Ask the player a yes/no question.
--- The player is supposed to answer by pressing Y or N.
--- @param prompt question for the user
--- @param safe accept lowercase answers?
--- @param safeanswer if a letter, this will be considered a safe default
--- @param clear_after clear the question after the user answers?
--- @param noprompt if true, skip asking the question; just wait for the answer
-function yesno(prompt, safe, safeanswer, clear_after, interrupt_delays, noprompt) */
+/*** Ask the player a yes/no question.
+ * The player is supposed to answer by pressing Y or N.
+ * @tparam string prompt question for the user
+ * @tparam boolean safe accept lowercase answers
+ * @tparam[opt] string|nil safeanswer if a letter, this will be considered a
+ * safe default
+ * @tparam[optchain=true] boolean clear_after clear the question after the user
+ * answers
+ * @tparam[optchain=true] boolean interrupt_delays interrupt any ongoing delays
+ * to ask the question
+ * @tparam[optchain=false] boolean noprompt skip asking the question;
+ * just wait for the answer
+ * @function yesno
+ */
 static int crawl_yesno(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -255,12 +258,19 @@ static int crawl_yesno(lua_State *ls)
     return 1;
 }
 
-/*
---- Ask the player a yes/no/quit question.
--- Mostly like <code>yesno()</code>, but doesn't yet support as many
--- parameters in this Lua binding.
--- @param allow_all actually ask a yes/no/quit/all question
-function yesnoquit(prompt, safe, safeanswer, allow_all, clear_after) */
+/*** Ask the player a yes/no/quit question.
+ * Mostly like yesno(), but doesn't support as many
+ * parameters in this Lua binding.
+ * @tparam string prompt question for the user
+ * @tparam boolean safe accept lowercase answers
+ * @tparam[opt] string|nil safeanswer if a letter, this will be considered a
+ * safe default
+ * @tparam[optchain=false] boolean allow_all actually ask a yes/no/quit/all
+ * question
+ * @tparam[optchain=true] boolean clear_after clear the question after the user
+ * answers
+ * @function yesnoquit
+ */
 static int crawl_yesnoquit(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -312,10 +322,14 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         macro_sendkeys_end_add_expanded(luaL_checkint(ls, argi));
 }
 
-/*
---- XXX vararg function
---
-function sendkeys() */
+/*** Send keypresses to crawl.
+ * A flexible variadic function to send input to crawl. Will process any number
+ * of arguments. Each argument can be a string, keycode number, or array of the
+ * previous two types. They are processed in left-to-right order.
+ * @tparam string|int|array keys
+ * @param[opt] ...
+ * @function sendkeys
+ */
 static int crawl_sendkeys(lua_State *ls)
 {
     int top = lua_gettop(ls);
@@ -324,10 +338,10 @@ static int crawl_sendkeys(lua_State *ls)
     return 0;
 }
 
-/*
---- Tell Crawl to process one command.
--- @return whether it will actually do so?
-function process_command() */
+/*** Tell crawl to process a current macro delay.
+ * @return boolean whether it will actually do so
+ * @function process_command
+ */
 static int crawl_process_command(lua_State *ls)
 {
     const bool will_process =
@@ -365,13 +379,29 @@ static bool _check_can_do_command(lua_State *ls)
     return true;
 }
 
-/*
----
-function process_keys() */
+/*** Process a string of input keys
+ * The first key of the first argument must be a command key in the default key
+ * context. The subsequent keys are processed as in sendkeys().
+ * @tparam string keys
+ * @tparam[opt=false] boolean hide hide targeter while processing
+ * @function process_keys
+ */
 static int crawl_process_keys(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
         return 0;
+
+    // if there's pending input, pushing to the end of the buffer may separate
+    // the first element of the sequence from the rest. TODO: should this be
+    // changed to push the key sequence to the beginning of the buffer? See
+    // crawl_do_commands below.
+    if (has_pending_input())
+    {
+        luaL_error(ls,
+                "Cannot currently process new keys (there is pending input)");
+        return 0;
+    }
+
 
     const char* keys = luaL_checkstring(ls, 1);
 
@@ -396,11 +426,32 @@ static int crawl_process_keys(lua_State *ls)
     for (int i = 1, len = strlen(keys); i < len; i++)
         macro_sendkeys_end_add_expanded(keys[i]);
 
-    process_command(cmd);
+    process_command_on_record(cmd);
 
     return 0;
 }
 
+/*** Enable or disable crashing on an incomplete buffer.
+ * Used for tests, not generally useful in real life. Crashing only happens in
+ * wizmode.
+ * @tparam boolean param
+ * @function set_sendkeys_errors
+ */
+static int crawl_set_sendkeys_errors(lua_State *ls)
+{
+    const bool errors = lua_toboolean(ls, 1);
+    crawl_state.nonempty_buffer_flush_errors = errors;
+    return 0;
+}
+
+/*** Execute a sequence of named crawl commands
+ * The array must be the command names as they appear in cmd-name.h, they are
+ * processed in order by the macro internal command buffer. The input buffer is
+ * flushed before execution.
+ * @tparam array commands
+ * @tparam[opt=false] boolean hide hide targeter while processing
+ * @function do_commands
+ */
 static int crawl_do_commands(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
@@ -429,10 +480,10 @@ static int crawl_do_commands(lua_State *ls)
         lua_pop(ls, 1);
     }
 
-    flush_input_buffer(FLUSH_BEFORE_COMMAND);
-
     bool first = true;
     command_type firstcmd = CMD_NO_CMD;
+    deque<command_type> cmd_seq;
+
     for (const auto& command : commands)
     {
         command_type cmd = name_to_command(command);
@@ -448,19 +499,27 @@ static int crawl_do_commands(lua_State *ls)
             first = false;
         }
         else
-            macro_sendkeys_end_add_expanded(command_to_key(cmd));
+            cmd_seq.push_front(cmd); // reverse order for adding below
     }
 
-    process_command(firstcmd);
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
+    // insert commands to the front of the macro buffer so that they are
+    // guaranteed to be processed adjacent to firstcmd
+    for (auto c : cmd_seq)
+        macro_buf_add_cmd(c, true);
+
+    process_command_on_record(firstcmd);
 
     return 0;
 }
 
 #ifdef USE_SOUND
-/*
---- Play a sound.
--- @param sf filename of sound to play
-function playsound(sf) */
+/*** Play a sound.
+ * Only available when crawl is compiled with sound.
+ * @tparam string sf filename of sound to play
+ * @function playsound
+ */
 static int crawl_playsound(lua_State *ls)
 {
     const char *sf = luaL_checkstring(ls, 1);
@@ -471,10 +530,10 @@ static int crawl_playsound(lua_State *ls)
 }
 #endif
 
-/*
---- Run a macro.
--- @param macroname name of macro to run
-function runmacro(macroname) */
+/*** Run a macro.
+ * @tparam string macroname name of macro to run
+ * @function runmacro
+ */
 static int crawl_runmacro(lua_State *ls)
 {
     const char *macroname = luaL_checkstring(ls, 1);
@@ -484,10 +543,10 @@ static int crawl_runmacro(lua_State *ls)
     return 0;
 }
 
-/*
---- Set user options from string.
--- @param s string of options to set, in same format as <tt>init.txt</tt>/<tt>.crawlrc</tt>.
-function setopt(s) */
+/*** Set user options from string.
+ * @tparam string opt an option string in the same format as <tt>init.txt</tt>/<tt>.crawlrc</tt>
+ * @function setopt
+ */
 static int crawl_setopt(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -503,10 +562,9 @@ static int crawl_setopt(lua_State *ls)
     return 0;
 }
 
-/*
---- Read options from file.
--- @param filename name of file to read from
-function read_options(filename) */
+/*** Read options from file.
+ * @tparam string filename name of file to read from
+ * @function read_options */
 static int crawl_read_options(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -533,10 +591,16 @@ static int crawl_bindkey(lua_State *ls)
         fprintf(stderr, "Stack top has changed!\n");
         lua_settop(ls, 2);
     }
+    // TODO: This function is a stub, so this whole binding is.
     macro_userfn(s, name.c_str());
     return 0;
 }
 
+/*** Get the number of a message channel.
+ * @tparam string name channel name
+ * @treturn int channel number
+ * @function msgch_num
+ */
 static int crawl_msgch_num(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -550,6 +614,11 @@ static int crawl_msgch_num(lua_State *ls)
     return 1;
 }
 
+/*** Get the name of a message channel.
+ * @tparam int num channel number
+ * @treturn string channel name
+ * @function msgch_name
+ */
 static int crawl_msgch_name(lua_State *ls)
 {
     int num = luaL_checkint(ls, 1);
@@ -558,6 +627,10 @@ static int crawl_msgch_name(lua_State *ls)
     return 1;
 }
 
+/*** Make a note.
+ * @tparam string note
+ * @function take_note
+ */
 static int crawl_take_note(lua_State *ls)
 {
     const char* msg = luaL_checkstring(ls, 1);
@@ -565,6 +638,11 @@ static int crawl_take_note(lua_State *ls)
     return 0;
 }
 
+/*** Retrieve the message buffer.
+ * @tparam int num how many lines back to go
+ * @treturn strong
+ * @function messages
+ */
 static int crawl_messages(lua_State *ls)
 {
     const int count = luaL_checkint(ls, 1);
@@ -575,6 +653,11 @@ static int crawl_messages(lua_State *ls)
 #define REGEX_METATABLE "crawl.regex"
 #define MESSF_METATABLE "crawl.messf"
 
+/*** Compile a regular expression
+ * @tparam string pat the pattern string (PCRE)
+ * @treturn Regex|nil
+ * @function regex
+ */
 static int crawl_regex(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -591,6 +674,17 @@ static int crawl_regex(lua_State *ls)
     return 0;
 }
 
+
+/*** Regular expression objects
+ * @type Regex
+ */
+/*** Test against a string.
+ * Returns nil if the pattern object does not exist or if a non-string is
+ * passed.
+ * @tparam string s
+ * @treturn boolean|nil
+ * @function Regex:find
+ */
 static int crawl_regex_find(lua_State *ls)
 {
     text_pattern **pattern =
@@ -606,6 +700,12 @@ static int crawl_regex_find(lua_State *ls)
     return 1;
 }
 
+/*** Test equality
+ * Tests if the two lua variables are the same underlying compiled pattern
+ * @tparam regex pat
+ * @treturn boolean
+ * @function Regex:equals
+ */
 static int crawl_regex_equals(lua_State *ls)
 {
     text_pattern **pattern =
@@ -615,14 +715,24 @@ static int crawl_regex_equals(lua_State *ls)
     lua_pushboolean(ls, pattern && arg && **pattern == **arg);
     return 1;
 }
-
 static const luaL_reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
     { "equals",         crawl_regex_equals },
     { nullptr, nullptr }
 };
+/*** @section end
+ */
 
+/*** Create a message filter
+ * @tparam string pat filter pattern
+ * @tparam[opt=-1] int ch channel number, -1 for anu
+ * @treturn MessageFilter|nil
+ * @function message_filter
+ */
+/*** Message filter object.
+ * @type MessageFilter
+ */
 static int crawl_message_filter(lua_State *ls)
 {
     const char *pattern = luaL_checkstring(ls, 1);
@@ -640,6 +750,12 @@ static int crawl_message_filter(lua_State *ls)
     return 0;
 }
 
+/*** Check a message against a filter.
+ * @tparam string msg
+ * @tparam int ch message channel
+ * @treturn boolean
+ * @function MessageFilter:matches
+ */
 static int crawl_messf_matches(lua_State *ls)
 {
     message_filter **mf =
@@ -658,6 +774,12 @@ static int crawl_messf_matches(lua_State *ls)
     return 0;
 }
 
+/*** Test equality
+ * Tests if the two lua variables are the same underlying compiled pattern
+ * @tparam regex pat
+ * @treturn boolean
+ * @function MessageFilter:equals
+ */
 static int crawl_messf_equals(lua_State *ls)
 {
     message_filter **mf =
@@ -674,7 +796,14 @@ static const luaL_reg crawl_messf_ops[] =
     { "equals",         crawl_messf_equals },
     { nullptr, nullptr }
 };
+/*** @section end
+ */
 
+/*** Trim newlines and trailing whitespace.
+ * @tparam string s
+ * @treturn string
+ * @function trim
+ */
 static int crawl_trim(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -686,6 +815,12 @@ static int crawl_trim(lua_State *ls)
     return 1;
 }
 
+/*** Split a string at a token.
+ * @tparam string s
+ * @tparam string split
+ * @treturn {string,...}
+ * @function split
+ */
 static int crawl_split(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1),
@@ -705,16 +840,42 @@ static int crawl_split(lua_State *ls)
     return 1;
 }
 
+/*** Grammatically describe something.
+ * Crawl provides the following description types:
+ *
+ *  - "plain": just give the name
+ *  - "the": use the definite article
+ *  - "a": use the indefinite article
+ *  - "your": use the second person posessive
+ *  - "its": use the third person posessive
+ *  - "worn": how it is equipped
+ *  - "inv": describe something carried
+ *  - "none": return the empty string
+ *
+ * And some specific types for partial item naming:
+ *
+ *  - "base": base name of the item subtype
+ *  - "qualname": name without articles, quantities, or enchantments
+ *
+ * These are used as the allowable values for how.
+ * @tparam string what thing to describe
+ * @tparam[opt="plain"] string how crawl description type
+ * @treturn string grammatical description
+ * @function grammar
+ */
 static int _crawl_grammar(lua_State *ls)
 {
     description_level_type ndesc = DESC_PLAIN;
     if (lua_isstring(ls, 2))
         ndesc = description_type_by_name(lua_tostring(ls, 2));
-    PLUARET(string,
-            thing_do_grammar(ndesc, false,
-                             false, luaL_checkstring(ls, 1)).c_str());
-}
+    PLUARET(string, thing_do_grammar(ndesc, false, false, luaL_checkstring(ls, 1)).c_str()); }
 
+/*** Correctly attach the article 'a'.
+ * @tparam string s
+ * @tparam[opt=true] bool lowercase
+ * @treturn string
+ * @function article_a
+ */
 static int crawl_article_a(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -728,31 +889,107 @@ static int crawl_article_a(lua_State *ls)
     return 1;
 }
 
+/*** Has the game started?
+ * @treturn boolean
+ * @function game_started
+ */
 LUARET1(crawl_game_started, boolean, crawl_state.need_save
                                      || crawl_state.map_stat_gen
                                      || crawl_state.obj_stat_gen
                                      || crawl_state.test)
+/*** Is crawl asking us to choose a stat?
+ * @treturn boolean
+ * @function stat_gain_prompt
+ */
 LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
+/*** Return a random number from [0, max).
+ * @tparam int max
+ * @treturn int
+ * @function random2
+ * */
 LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
+/*** Perform a weighted coinflip.
+ * @tparam int in
+ * @treturn boolean
+ * @function one_chance_in
+ */
 LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
+/*** Average num random rolls from [0, max).
+ * @tparam int max
+ * @tparam int num
+ * @treturn int
+ * @function random2avg
+ */
 LUARET1(crawl_random2avg, number,
         random2avg(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+/*** Random number in a range.
+ * @tparam int min
+ * @tparam int max
+ * @tparam[opt=1] int rolls Average over multiple rolls
+ * @function random_range
+ */
 LUARET1(crawl_random_range, number,
         random_range(luaL_checkint(ls, 1), luaL_checkint(ls, 2),
                       lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1))
+/*** Flip a coin.
+ * @treturn boolean
+ * @function coinflip
+ */
 LUARET1(crawl_coinflip, boolean, coinflip())
+/*** Roll dice.
+ * @tparam[opt=1] int num_dice
+ * @tparam int sides
+ * @treturn int
+ * @function roll_dice
+ */
 LUARET1(crawl_roll_dice, number,
         lua_gettop(ls) == 1
         ? roll_dice(1, luaL_checkint(ls, 1))
         : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+/*** Do a random draw.
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function x_chance_in_y
+ */
 LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
                                                     luaL_checkint(ls, 2)))
+/*** Random-round integer division.
+ * @tparam int numerator
+ * @tparam int denominator
+ * @treturn int
+ * @function div_rand_round
+ */
 LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
                                                      luaL_checkint(ls, 2)))
+/*** A random floating point number in [0,1.0)
+ * @treturn number
+ * @function random_real
+ */
 LUARET1(crawl_random_real, number, random_real())
+/*** Check if the player really wants to use their weapon.
+ * @treturn boolean
+ * @function weapon_check
+ */
 LUARET1(crawl_weapon_check, boolean, wielded_weapon_check(you.weapon()))
 
-// Get the full worley noise datum for a given point
+/*** Get the full Worley noise datum for a given point
+ * @tparam number px
+ * @tparam number py
+ * @tparam number pz
+ * @treturn number distance1
+ * @treturn number distance2
+ * @treturn number id1
+ * @treturn number id2
+ * @treturn number id1
+ * @treturn number pos1x
+ * @treturn number pos1y
+ * @treturn number pos1z
+ * @treturn number pos2x
+ * @treturn number pos2y
+ * @treturn number pos2z
+ * @function worley
+ */
 static int crawl_worley(lua_State *ls)
 {
     double px = lua_tonumber(ls,1);
@@ -773,9 +1010,14 @@ static int crawl_worley(lua_State *ls)
     return 10;
 }
 
-// Simpler return value for normal situations where we just
-// want the difference between the nearest point distances.
-// Also returns the id in case we want a per-node number.
+/*** Difference between nearest point Worley distances.
+ * @tparam number px
+ * @tparam number py
+ * @tparam number pz
+ * @treturn number diff
+ * @treturn number id1
+ * @function worley_diff
+ */
 static int crawl_worley_diff(lua_State *ls)
 {
     double px = lua_tonumber(ls,1);
@@ -789,9 +1031,16 @@ static int crawl_worley_diff(lua_State *ls)
     return 2;
 }
 
-// Splits a 32-bit integer into four bytes. This is useful
-// in conjunction with worley ids to get four random numbers
-// instead of one from the current node id.
+/*** Splits a 32-bit integer into four bytes.
+ * This is useful in conjunction with worley ids to get four random numbers
+ * instead of one from the current node id.
+ * @tparam int num
+ * @treturn byte
+ * @treturn byte
+ * @treturn byte
+ * @treturn byte
+ * @function split_bytes
+ */
 static int crawl_split_bytes(lua_State *ls)
 {
     uint32_t val = lua_tonumber(ls,1);
@@ -809,8 +1058,16 @@ static int crawl_split_bytes(lua_State *ls)
     return 4;
 }
 
-// Supports 2D-4D Simplex noise. The first two parameters are required
-// for 2D noise, the next two are optional for 3D or 4D.
+/*** 2D-4D Simplex noise.
+ * The first two parameters are required for 2D noise, the next two are
+ * optional for and specify 3D or 4D, respectively.
+ * @tparam number x
+ * @tparam number y
+ * @tparam[opt] number z
+ * @tparam[optchain] number w
+ * @treturn number
+ * @function simplex
+ */
 // TODO: Could support octaves here but maybe it can be handled more
 // flexibly in lua
 static int crawl_simplex(lua_State *ls)
@@ -858,6 +1115,10 @@ static int crawl_simplex(lua_State *ls)
     return 1;
 }
 
+/*** Are we running under tiles?
+ * @treturn boolean
+ * @function is_tiles
+ */
 static int crawl_is_tiles(lua_State *ls)
 {
     lua_pushboolean(ls, is_tiles());
@@ -865,6 +1126,12 @@ static int crawl_is_tiles(lua_State *ls)
     return 1;
 }
 
+/*** Are we running under webtiles?
+ * Note: returns true if the crawl binary is a webtiles build, even if the
+ * player is currently using console.
+ * @treturn boolean
+ * @function is_webtiles
+ */
 static int crawl_is_webtiles(lua_State *ls)
 {
 #ifdef USE_TILE_WEB
@@ -876,6 +1143,10 @@ static int crawl_is_webtiles(lua_State *ls)
     return 1;
 }
 
+/*** Are we using the touch ui?
+ * @treturn boolean
+ * @function is_touch_ui
+ */
 static int crawl_is_touch_ui(lua_State *ls)
 {
 #ifdef TOUCH_UI
@@ -887,6 +1158,11 @@ static int crawl_is_touch_ui(lua_State *ls)
     return 1;
 }
 
+/*** Look up the current key bound to a command.
+ * @tparam string name Name as in cmd-name.h
+ * @treturn string|nil
+ * @function get_command
+ */
 static int crawl_get_command(lua_State *ls)
 {
     if (lua_gettop(ls) == 0)
@@ -911,15 +1187,14 @@ LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_c
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
 
-/**
- * A random choice function crawl.random_element for clua.
- *
- * @param[in] list A lua array or table of elements to choose from. If list is
- * an array, a random element is chosen from list. If list is a table, the
- * values should be numeric or convertible to numeric and give the weights for
- * their corresponding keys. A value with no key will default to a weight of
- * 1. A random key is then returned based on these weights.
- * @returns A random element from list.
+/*** Choose a random element from a table.
+ * If passed an array, a random element is chosen from the array. If passed a
+ * table, the values should be numeric or convertible to numeric and give the
+ * weights for their corresponding keys. A value with no key will default to a
+ * weight of 1. A random key is then returned based on these weights.
+ * @tparam table in
+ * @return a random element from in.
+ * @function random_element
 */
 static int crawl_random_element(lua_State *ls)
 {
@@ -973,6 +1248,14 @@ static int crawl_random_element(lua_State *ls)
     return 1;
 }
 
+/*** Lua error trace a call
+ * Attempts to call-trace a lua function that is producing an error.
+ * Returns normally if the function runs normally, otherwise sends
+ * @param function
+ * @param args
+ * @return the result of the call if successful
+ * @function err_trace
+ */
 static int crawl_err_trace(lua_State *ls)
 {
     const int nargs = lua_gettop(ls);
@@ -1014,8 +1297,17 @@ static int crawl_tutorial_msg(lua_State *ls)
     return 0;
 }
 
+/*** Produce a character dump
+ * @function dump_char
+ */
 LUAWRAP(crawl_dump_char, dump_char(you.your_name, true))
 
+/*** Call lua in dungeon (dlua) context.
+ *
+ * @tparam string chunk code run
+ * @return a scalar return value from dlua context
+ * @function call_dlua
+ */
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
 {
@@ -1068,12 +1360,13 @@ static int crawl_call_dlua(lua_State *ls)
 }
 #endif
 
-/**
- Implements the clua function crawl.version()
-
- The optional lua argument is a string from "long", "major", or "short" to
- determine which version type to return. The default is "long", and argument
- check is case-insensitive.
+/*** Get the crawl version
+ * The optional argument is a string from "long", "major", or "short" to
+ * determine which version type to return. The argument * check is
+ * case-insensitive.
+ * @tparam[opt="long"] string fmt
+ * @treturn string
+ * @function version
  */
 static int crawl_version(lua_State *ls)
 {
@@ -1094,8 +1387,7 @@ static int crawl_version(lua_State *ls)
     else
     {
         luaL_argerror(ls, 1,
-                      "must be a string \"long\", \"short\", or \"major\"");
-        return 0;
+                      "must be a string \"long\", \"short\", or \"major\""); return 0;
     }
     return 1;
 }
@@ -1137,6 +1429,7 @@ static const struct luaL_reg crawl_clib[] =
     { "sendkeys",           crawl_sendkeys },
     { "process_command",    crawl_process_command },
     { "process_keys",       crawl_process_keys },
+    { "set_sendkeys_errors", crawl_set_sendkeys_errors },
     { "do_commands",        crawl_do_commands },
 #ifdef USE_SOUND
     { "playsound",          crawl_playsound },
@@ -1183,15 +1476,28 @@ void cluaopen_crawl(lua_State *ls)
     luaL_openlib(ls, "crawl", crawl_clib, 0);
 }
 
-/////////////////////////////////////////////////////////////////////
+//
 // Non-user-accessible bindings (dlua).
 //
 
+/*** Get the commandline arguments
+ * @within dlua
+ * @treturn table
+ * @function args
+ */
 LUAFN(_crawl_args)
 {
     return clua_stringtable(ls, SysEnv.cmd_args);
 }
 
+/*** Mark a milestone
+ * Register a dgl milestone. No op if not a dgl game.
+ * @within dlua
+ * @tparam string type
+ * @tparam string milestone
+ * @tparam string origin
+ * @function milestone
+ */
 LUAFN(_crawl_milestone)
 {
     mark_milestone(luaL_checkstring(ls, 1),
@@ -1200,12 +1506,24 @@ LUAFN(_crawl_milestone)
     return 0;
 }
 
+/*** Redraw the viewwindow.
+ * You probably want @{redraw_screen} unless you specifically want only the
+ * view window.
+ * @within dlua
+ * @function redraw_view
+ */
 LUAFN(_crawl_redraw_view)
 {
     viewwindow();
     return 0;
 }
 
+/*** Redraw the player stats.
+ * You probably want @{redraw_screen} unless you specifically want only the
+ * player stats.
+ * @within dlua
+ * @function redraw_stats
+ */
 LUAFN(_crawl_redraw_stats)
 {
     you.wield_change         = true;
@@ -1223,6 +1541,12 @@ LUAFN(_crawl_redraw_stats)
     return 0;
 }
 
+/*** Current milliseconds.
+ * Gives the current milliseconds of the time of day.
+ * @within dlua
+ * @treturn int
+ * @function millis
+ */
 LUAFN(_crawl_millis)
 {
 #ifdef TARGET_OS_WINDOWS
@@ -1242,16 +1566,21 @@ LUAFN(_crawl_millis)
 #endif
     return 1;
 }
-
 static string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name.
     return make_name();
 }
 
+
+/*** Make an item name at random.
+ * @within dlua
+ * @treturn string
+ * @function make_name
+ */
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
-/** Check that a Lua argument is a god name, and store that god's enum in
+/* Check that a Lua argument is a god name, and store that god's enum in
  *  a variable.
  *
  *  @param argno  The Lua argument number of the god name. Evaluated once.
@@ -1281,6 +1610,14 @@ LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
         }                                                                \
     } while (0)
 
+/*** Check if a god is still available.
+ * For gods that are no longer appearing in new games, and Jiyva if its been
+ * killed by the player.
+ * @within dlua
+ * @tparam string godname
+ * @treturn boolean
+ * @function unavailable_god
+ */
 LUAFN(_crawl_unavailable_god)
 {
     god_type god = GOD_NO_GOD;
@@ -1289,6 +1626,12 @@ LUAFN(_crawl_unavailable_god)
     return 1;
 }
 
+/*** Divine voices.
+ * @within dlua
+ * @tparam string Name of a current crawl god.
+ * @tparam string Speach
+ * @function god_speaks
+ */
 LUAFN(_crawl_god_speaks)
 {
     if (!crawl_state.io_inited)
@@ -1305,6 +1648,12 @@ LUAFN(_crawl_god_speaks)
     return 0;
 }
 
+/*** Set Max Runes
+ * Modify the total number of obtainable runes.
+ * @within dlua
+ * @tparam int nrune
+ * @function set_max_runes
+ */
 LUAFN(_crawl_set_max_runes)
 {
     int max_runes = luaL_checkinteger(ls, 1);

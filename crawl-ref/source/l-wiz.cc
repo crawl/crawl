@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Wizmode-specific bindings
-**/
-
 /*
 --- General game bindings
 
@@ -20,11 +15,7 @@ module "crawl"
 
 #ifdef WIZARD
 
-/////////////////////////////////////////////////////////////////////
-// User accessible
 //
-
-/////////////////////////////////////////////////////////////////////
 // Non-user-accessible bindings (dlua).
 //
 
@@ -45,7 +36,7 @@ LUAFN(wiz_quick_fsim)
     Options.fsim_rounds = fsim_rounds;
 
     fight_data fdata = wizard_quick_fsim_raw(false);
-    PLUARET(number, fdata.av_eff_dam);
+    PLUARET(number, fdata.player.av_eff_dam);
 }
 
 static const struct luaL_reg wiz_dlib[] =

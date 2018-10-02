@@ -32,6 +32,7 @@
 #include <vector>
 
 #include "cio.h"
+#include "command.h"
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -103,8 +104,6 @@ typedef map<int, int> cmd_to_key_map;
 
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
-
-static KeymapContext _context_for_command(command_type cmd);
 
 static inline int userfunc_index(int key)
 {
@@ -424,6 +423,19 @@ static void _macro_inject_sent_keys()
 }
 
 /*
+ * Safely add a command to the end of the sendkeys keybuffer.
+ */
+void macro_sendkeys_end_add_cmd(command_type cmd)
+{
+    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
+
+    // There should be plenty of room between the synthetic keys
+    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
+    // command_type to fit (currently 1000 through 2069).
+    macro_sendkeys_end_add_expanded(-((int) cmd));
+}
+
+/*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
  */
@@ -641,6 +653,15 @@ int macro_buf_get()
     return key;
 }
 
+void process_command_on_record(command_type cmd)
+{
+    const int key = command_to_key(cmd);
+    if (key != '\0')
+        for (key_recorder *recorder : recorders)
+            recorder->add_key(key);
+    process_command(cmd);
+}
+
 static void write_map(FILE *f, const macromap &mp, const char *key)
 {
     for (const auto &entry : mp)
@@ -743,12 +764,16 @@ int getchm(KeymapContext mc, int (*rgetch)())
 
     // Read some keys...
     keyseq keys = _getch_mul(rgetch);
+    macro_buf_add_with_keymap(keys, mc);
+    return macro_buf_get();
+}
+
+void macro_buf_add_with_keymap(keyseq keys, KeymapContext mc)
+{
     if (mc == KMC_NONE)
         macro_buf_add(keys, false, false);
     else
         macro_buf_add_long(keys, Keymaps[mc]);
-
-    return macro_buf_get();
 }
 
 /**
@@ -816,6 +841,13 @@ void flush_input_buffer(int reason)
         || reason == FLUSH_REPLAY_SETUP_FAILURE
         || reason == FLUSH_REPEAT_SETUP_DONE)
     {
+        if (crawl_state.nonempty_buffer_flush_errors)
+        {
+            if (you.wizard) // crash -- intended for tests
+                ASSERT(Buffer.empty());
+            else if (!Buffer.empty())
+                mprf(MSGCH_ERROR, "Flushing non-empty key buffer");
+        }
         while (!Buffer.empty())
         {
             const int key = Buffer.front();
@@ -1274,7 +1306,7 @@ void init_keybindings()
         default_binding &data = _default_binding_list[i];
         ASSERT(VALID_BIND_COMMAND(data.cmd));
 
-        KeymapContext context = _context_for_command(data.cmd);
+        KeymapContext context = context_for_command(data.cmd);
 
         ASSERT(context < KMC_CONTEXT_COUNT);
 
@@ -1306,8 +1338,8 @@ command_type key_to_command(int key, KeymapContext context)
 {
     if (-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
     {
-        command_type  cmd         = (command_type) -key;
-        KeymapContext cmd_context = _context_for_command(cmd);
+        const command_type  cmd         = (command_type) -key;
+        const KeymapContext cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
             return CMD_NO_CMD;
@@ -1316,9 +1348,9 @@ command_type key_to_command(int key, KeymapContext context)
         {
             mprf(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
-                 "context",
+                 "context %d",
                  command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
-                 CMD_MAX_CMD + key);
+                 CMD_MAX_CMD + key, (int) context);
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
             if (crawl_state.is_replaying_keys()
@@ -1327,24 +1359,22 @@ command_type key_to_command(int key, KeymapContext context)
                 flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
             }
             flush_input_buffer(FLUSH_BEFORE_COMMAND);
-
             return CMD_NO_CMD;
         }
-
         return cmd;
     }
 
     const auto cmd = static_cast<command_type>(lookup(_keys_to_cmds[context],
                                                       key, CMD_NO_CMD));
 
-    ASSERT(cmd == CMD_NO_CMD || _context_for_command(cmd) == context);
+    ASSERT(cmd == CMD_NO_CMD || context_for_command(cmd) == context);
 
     return cmd;
 }
 
 int command_to_key(command_type cmd)
 {
-    KeymapContext context = _context_for_command(cmd);
+    KeymapContext context = context_for_command(cmd);
 
     if (context == KMC_NONE)
         return '\0';
@@ -1352,7 +1382,7 @@ int command_to_key(command_type cmd)
     return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
-static KeymapContext _context_for_command(command_type cmd)
+KeymapContext context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
         return KMC_DEFAULT;
@@ -1373,7 +1403,7 @@ static KeymapContext _context_for_command(command_type cmd)
 
 void bind_command_to_key(command_type cmd, int key)
 {
-    KeymapContext context = _context_for_command(cmd);
+    KeymapContext context = context_for_command(cmd);
     string   command_name = command_to_name(cmd);
 
     if (context == KMC_NONE || command_name == "CMD_NO_CMD"

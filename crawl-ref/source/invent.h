@@ -45,6 +45,7 @@ enum object_selector
 #if TAG_MAJOR_VERSION == 34
     OSEL_DIVINE_RECHARGE         = -18,
 #endif
+    OSEL_UNCURSED_WORN_RINGS     = -19,
 };
 
 /// Behaviour flags for prompt_invent_item().
@@ -234,6 +235,10 @@ void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);
 const char *item_slot_name(equipment_type type);
+
+#ifdef USE_TILE
+bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background);
+#endif
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);

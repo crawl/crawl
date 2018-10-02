@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Tiles-specific dungeon builder functions.
-**/
-
+/***
+ * @module dgn
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

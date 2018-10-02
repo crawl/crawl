@@ -326,7 +326,7 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
-bool ranged_attack::using_weapon()
+bool ranged_attack::using_weapon() const
 {
     return weapon && (launch_type == launch_retval::LAUNCHED
                      || launch_type == launch_retval::BUGGY // not initialized
@@ -651,8 +651,6 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_FIRE, 2);
         if (defender->is_player())
             maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
-
-        attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
         calc_elemental_brand_damage(BEAM_COLD, "freeze",

@@ -130,7 +130,7 @@ void MemoriseRegion::update()
 
     const unsigned int max_spells = mx * my;
 
-    vector<spell_type> spells = get_mem_spell_list();
+    vector<spell_type> spells = get_sorted_spell_list(); // TODO: should this be silent?
     for (unsigned int i = 0; m_items.size() < max_spells && i < spells.size();
          ++i)
     {

@@ -125,6 +125,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
     desc << failure_rate << string(12-width, ' ');
     desc << spell_difficulty(spell);
+    desc << " ";
 
     return desc.str();
 }
@@ -146,7 +147,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     desc << chop_string(spell_power_string(spell), 13)
          << chop_string(rangestring, 9 + tagged_string_tag_length(rangestring))
          << chop_string(spell_hunger_string(spell), 8)
-         << chop_string(spell_noise_string(spell, 10), 15);
+         << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -163,30 +164,19 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         toggle_with_I = false;
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+            | MF_NO_WRAP_ROWS | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
-#ifdef USE_TILE_LOCAL
     {
-        // [enne] - Hack. Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " " + titlestring + "         Type          "
-                "                Failure  Level",
-                " " + titlestring + "         Power        "
-                "Range    " + "Hunger  " + "Noise          ",
-                MEL_ITEM);
+                titlestring + "         Type                          Failure  Level  ",
+                titlestring + "         Power        Range    Hunger  Noise           ",
+                MEL_TITLE);
+#ifdef USE_TILE_LOCAL
         me->colour = BLUE;
-        spell_menu.add_entry(me);
-    }
-#else
-    spell_menu.set_title(
-        new ToggleableMenuEntry(
-            " " + titlestring + "         Type          "
-            "                Failure  Level",
-            " " + titlestring + "         Power        "
-            "Range    " + "Hunger  " + "Noise          ",
-            MEL_TITLE));
 #endif
+        spell_menu.set_title(me, true, true);
+    }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
@@ -344,7 +334,7 @@ int raw_spell_fail(spell_type spell)
 
         200,
         260,
-        330,
+        340,
     };
     const int spell_level = spell_difficulty(spell);
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
@@ -438,52 +428,46 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     power += you.skill(SK_SPELLCASTING, 50);
 
-    // Brilliance boosts spell power a bit (equivalent to three
-    // spell school levels).
-    if (!fail_rate_check && you.duration[DUR_BRILLIANCE])
-        power += 600;
+    if (fail_rate_check)
+    {
+        // Scale appropriately.
+        // The stepdown performs this step in the else block.
+        power *= scale;
+        power /= 100;
+    }
+    else
+    {
+        // Brilliance boosts spell power a bit (equivalent to three
+        // spell school levels).
+        if (you.duration[DUR_BRILLIANCE])
+            power += 600;
 
-    if (apply_intel)
-        power = (power * you.intel()) / 10;
+        if (apply_intel)
+            power = (power * you.intel()) / 10;
 
-    // [dshaligram] Enhancers don't affect fail rates any more, only spell
-    // power. Note that this does not affect Vehumet's boost in castability.
-    if (!fail_rate_check)
+        // [dshaligram] Enhancers don't affect fail rates any more, only spell
+        // power. Note that this does not affect Vehumet's boost in castability.
         power = apply_enhancement(power, _spell_enhancement(spell));
 
-    // Wild magic boosts spell power but decreases success rate.
-    if (!fail_rate_check)
-    {
+        // Wild magic boosts spell power but decreases success rate.
         power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
         power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-    }
 
-    // Augmentation boosts spell power at high HP.
-    if (!fail_rate_check)
-    {
+        // Augmentation boosts spell power at high HP.
         power *= 10 + 4 * augmentation_amount();
         power /= 10;
-    }
 
-    // Being a plasma aspect Bodach boosts spell power
-    if (!fail_rate_check
-        && you.species == SP_BODACH
-        && you.attribute[ATTR_BODACH_ASPECT] == 3)
-    {
-		    power *= 11 + you.experience_level / 3;
-        power /= 10;
-    }
+        // Each level of horror reduces spellpower by 10%
+        if (you.duration[DUR_HORROR])
+        {
+            power *= 10;
+            power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+        }
 
-    // Each level of horror reduces spellpower by 10%
-    if (you.duration[DUR_HORROR] && !fail_rate_check)
-    {
-        power *= 10;
-        power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+        // at this point, `power` is assumed to be basically in centis.
+        // apply a stepdown, and scale.
+        power = stepdown_spellpower(power, scale);
     }
-
-    // at this point, `power` is assumed to be basically in centis.
-    // apply a stepdown, and scale.
-    power = stepdown_spellpower(power, scale);
 
     const int cap = spell_power_cap(spell);
     if (cap > 0 && cap_power)
@@ -869,6 +853,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             inc_hp(cost);
         else
             inc_mp(cost, true);
+        redraw_screen();
         return false;
     }
 
@@ -930,11 +915,6 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     if (is_corpse_violating_spell(spell))
         did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
-
-    // not is_fiery_spell since the other ones handle the conduct themselves.
-    // need to handle ignite poison separately since it's not handled elsewhere.
-    if (spell == SPELL_IGNITE_POISON)
-        did_god_conduct(DID_FIRE, conduct_level);
 
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)
@@ -1199,8 +1179,11 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                              range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
-                                           gravitas_range(pow, 2),
-                                           gravitas_range(pow));
+                                           gravitas_range(pow),
+                                           gravitas_range(pow),
+                                           false,
+                                           [](const coord_def& p) -> bool {
+                                              return you.pos() != p; });
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
     case SPELL_RANDOM_BOLT:
@@ -1215,7 +1198,10 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
-
+    case SPELL_PASSWALL:
+        return make_unique<targeter_passwall>(range);
+    case SPELL_DIG:
+        return make_unique<targeter_dig>(range);
     default:
         break;
     }
@@ -1395,6 +1381,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         args.needs_path = needs_path;
         args.target_prefix = prompt;
         args.top_prompt = title;
+        if (hitfunc && hitfunc->can_affect_walls())
+        {
+            args.show_floor_desc = true;
+            args.show_boring_feats = false; // don't show "The floor."
+        }
         if (testbits(flags, SPFLAG_NOT_SELF))
             args.self = CONFIRM_CANCEL;
         else
@@ -1666,7 +1657,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return fire_los_attack_spell(spell, powc, &you, fail);
+        return fire_los_attack_spell(spell, powc, &you, nullptr, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return cast_toxic_radiance(&you, powc, fail);
@@ -1881,7 +1872,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
         return conjure_flame(&you, powc, beam.target, fail);
 
     case SPELL_PASSWALL:
-        return cast_passwall(spd.delta, powc, fail);
+        return cast_passwall(beam.target, powc, fail);
 
     case SPELL_APPORTATION:
         return cast_apportation(powc, beam, fail);

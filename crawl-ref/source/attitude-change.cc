@@ -74,14 +74,11 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
     // For followers of Beogh, decide whether orcs will join you.
     if (will_have_passive(passive_t::convert_orcs)
-        && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
         && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly()
-        && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(*mons) && !mons->paralysed())
+        && !mons->friendly())
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -485,4 +482,12 @@ void gozag_break_bribe(monster* victim)
     for (monster_iterator mi; mi; ++mi)
         if (mi->can_see(*victim))
             gozag_break_bribe(*mi);
+}
+
+// Conversions and bribes.
+void do_conversions(monster* target)
+{
+        beogh_follower_convert(target);
+        gozag_check_bribe(target);
+        slime_convert(target);
 }

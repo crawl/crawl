@@ -973,7 +973,7 @@ class vault_chance_roll_iterator
 {
 public:
     vault_chance_roll_iterator(const mapref_vector &_maps)
-        : maps(_maps), place(level_id::current()),
+        : place(level_id::current()),
           current(_maps.begin()), end(_maps.end())
     {
         find_valid();
@@ -1005,7 +1005,6 @@ private:
     }
 
 private:
-    const vector<const map_def *> &maps;
     level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;
@@ -1430,6 +1429,8 @@ static void _parse_maps(const string &s)
 #ifdef DEBUG_DIAGNOSTICS
     printf("Regenerating des: %s\n", s.c_str());
 #endif
+    // won't be seen by the user unless they look for it
+    mprf(MSGCH_PLAIN, "Regenerating des: %s", s.c_str());
 
     time_t mtime = file_modtime(dat);
     _reset_map_parser();

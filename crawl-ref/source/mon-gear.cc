@@ -1754,11 +1754,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_HAROLD:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_RING_MAIL;
-        break;
-
     case MONS_GNOLL_SHAMAN:
     case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
@@ -1785,6 +1780,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_TERENCE:
     case MONS_URUG:
+    case MONS_HAROLD:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(1, ARM_RING_MAIL,
                                                 3, ARM_SCALE_MAIL,

@@ -692,7 +692,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_LOUDNESS:
+                case RING_ATTENTION:
                 case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
@@ -1050,6 +1050,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
       can_purchase(_can_purchase)
 {
     menu_action = can_purchase ? ACT_EXECUTE : ACT_EXAMINE;
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
 
     set_tag("shop");
 
@@ -1103,7 +1104,12 @@ void ShopMenu::update_help()
                          you.gold - total_cost,
                          (you.gold - total_cost != 1) ? "s" : "");
     }
-    top_line += "</yellow>\n";
+    top_line += "</yellow>";
+
+    // Ensure length >= 80ch, which prevents the local tiles menu from resizing
+    // as the player selects/deselects entries. Blegh..
+    int top_line_width = strwidth(formatted_string::parse_string(top_line).tostring());
+    top_line += string(max(0, 80 - top_line_width), ' ') + '\n';
 
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //You have 0 gold pieces.
@@ -1161,7 +1167,7 @@ void ShopMenu::purchase_selected()
                    col.c_str(),
                    col.c_str()));
         more += old_more;
-        draw_more();
+        update_more();
         return;
     }
     more = formatted_string::parse_string(make_stringf(
@@ -1171,11 +1177,11 @@ void ShopMenu::purchase_selected()
                cost,
                col.c_str()));
     more += old_more;
-    draw_more();
+    update_more();
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         more = old_more;
-        draw_more();
+        update_more();
         return;
     }
     sort(begin(selected), end(selected),
@@ -1225,6 +1231,8 @@ void ShopMenu::purchase_selected()
 
     if (outside_items)
     {
+        update_help();
+        const formatted_string next_more = more;
         more = formatted_string::parse_string(make_stringf(
             "<%s>I'll put %s outside for you.</%s>\n",
             col.c_str(),
@@ -1232,12 +1240,13 @@ void ShopMenu::purchase_selected()
       (int) bought_indices.size() == outside_items ? "them"
                                                    : "some of them",
             col.c_str()));
-        more += old_more;
+        more += next_more;
+        update_more();
     }
     else
         update_help();
 
-    draw_menu(true);
+    update_menu(true);
 }
 
 // Doesn't handle redrawing itself.
@@ -1301,7 +1310,7 @@ bool ShopMenu::process_key(int keyin)
             else
                 menu_action = ACT_EXECUTE;
             update_help();
-            draw_more();
+            update_more();
         }
         return true;
     case ' ':
@@ -1330,14 +1339,14 @@ bool ShopMenu::process_key(int keyin)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
-        draw_menu(true);
+        update_menu(true);
         return true;
     }
     case '/':
         ++order;
         resort();
         update_help();
-        draw_menu(true);
+        update_menu(true);
         return true;
     default:
         break;
@@ -1364,7 +1373,6 @@ bool ShopMenu::process_key(int keyin)
             }
             describe_item(item);
         }
-        draw_menu();
         return true;
     }
     else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
@@ -1377,7 +1385,7 @@ bool ShopMenu::process_key(int keyin)
             shopping_list.del_thing(item, &pos);
         else
             shopping_list.add_thing(item, item_price(item, shop), &pos);
-        draw_menu(true);
+        update_menu(true);
         return true;
     }
 
@@ -1387,7 +1395,7 @@ bool ShopMenu::process_key(int keyin)
     {
         // Update the footer to display the new $$$ info.
         update_help();
-        draw_menu(true);
+        update_menu(true);
     }
     return ret;
 }
@@ -1649,11 +1657,6 @@ ShoppingList::ShoppingList()
         pos = level_pos::current(); \
     ASSERT(pos.is_valid());
 
-#define SETUP_THING()                             \
-    CrawlHashTable *thing = new CrawlHashTable();  \
-    (*thing)[SHOPPING_THING_COST_KEY] = cost; \
-    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
-
 bool ShoppingList::add_thing(const item_def &item, int cost,
                              const level_pos* _pos)
 {
@@ -1662,14 +1665,16 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (find_thing(item, pos) != -1)
+    if (!find_thing(item, pos).empty()) // TODO: this check isn't working?
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
              item.name(DESC_THE).c_str());
         return false;
     }
 
-    SETUP_THING();
+    CrawlHashTable *thing = new CrawlHashTable();
+    (*thing)[SHOPPING_THING_COST_KEY] = cost;
+    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
     (*thing)[SHOPPING_THING_ITEM_KEY] = item;
     list->push_back(*thing);
     refresh();
@@ -1677,51 +1682,37 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
     return true;
 }
 
-bool ShoppingList::add_thing(string desc, string buy_verb, int cost,
-                             const level_pos* _pos)
-{
-    ASSERT(!desc.empty());
-    ASSERT(!buy_verb.empty());
-    ASSERT(cost > 0);
-
-    SETUP_POS();
-
-    if (find_thing(desc, pos) != -1)
-    {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             desc.c_str());
-        return false;
-    }
-
-    SETUP_THING();
-    (*thing)[SHOPPING_THING_DESC_KEY] = desc;
-    (*thing)[SHOPPING_THING_VERB_KEY] = buy_verb;
-    list->push_back(*thing);
-    refresh();
-
-    return true;
-}
-
-#undef SETUP_THING
-
 bool ShoppingList::is_on_list(const item_def &item, const level_pos* _pos) const
 {
     SETUP_POS();
 
-    return find_thing(item, pos) != -1;
+    return !find_thing(item, pos).empty();
 }
 
 bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 {
     SETUP_POS();
 
-    return find_thing(desc, pos) != -1;
+    return !find_thing(desc, pos).empty();
 }
 
 void ShoppingList::del_thing_at_index(int idx)
 {
     ASSERT_RANGE(idx, 0, list->size());
     list->erase(idx);
+    refresh();
+}
+
+template <typename C>
+void ShoppingList::del_thing_at_indices(C const &idxs)
+{
+    set<int,greater<int>> indices(idxs.begin(), idxs.end());
+
+    for (auto idx : indices)
+    {
+        ASSERT_RANGE(idx, 0, list->size());
+        list->erase(idx);
+    }
     refresh();
 }
 
@@ -1742,16 +1733,16 @@ bool ShoppingList::del_thing(const item_def &item,
 {
     SETUP_POS();
 
-    int idx = find_thing(item, pos);
+    auto indices = find_thing(item, pos);
 
-    if (idx == -1)
+    if (indices.empty())
     {
         mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
              item.name(DESC_THE).c_str());
         return false;
     }
 
-    del_thing_at_index(idx);
+    del_thing_at_indices(indices);
     return true;
 }
 
@@ -1759,16 +1750,16 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 {
     SETUP_POS();
 
-    int idx = find_thing(desc, pos);
+    auto indices = find_thing(desc, pos);
 
-    if (idx == -1)
+    if (indices.empty())
     {
         mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
              desc.c_str());
         return false;
     }
 
-    del_thing_at_index(idx);
+    del_thing_at_indices(indices);
     return true;
 }
 
@@ -1831,7 +1822,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         return 0;
 
     // Item is already on shopping-list.
-    const bool on_list = find_thing(item, level_pos::current()) != -1;
+    const bool on_list = !find_thing(item, level_pos::current()).empty();
 
     const bool do_prompt = item.base_type == OBJ_JEWELLERY
                            && !jewellery_is_amulet(item)
@@ -1996,6 +1987,42 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     refresh();
 }
 
+void ShoppingList::spells_added_to_library(const vector<spell_type>& spells, bool quiet)
+{
+    if (!list) /* let's not make book starts crash instantly... */
+        return;
+
+    unordered_set<int> indices_to_del;
+    for (CrawlHashTable &thing : *list)
+    {
+        if (!thing_is_item(thing)) // ???
+            continue;
+        const item_def& book = get_thing_item(thing);
+        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
+            continue;
+
+        const auto item_spells = spells_in_book(book);
+        if (any_of(item_spells.begin(), item_spells.end(), [&spells](const spell_type st) {
+                    return find(spells.begin(), spells.end(), st) != spells.end();
+                }) && is_useless_item(book, false))
+        {
+            level_pos pos = thing_pos(thing); // TODO: unreliable?
+            auto thing_indices = find_thing(get_thing_item(thing), pos);
+            indices_to_del.insert(thing_indices.begin(), thing_indices.end());
+        }
+    }
+    if (!quiet)
+    {
+        for (auto idx : indices_to_del)
+        {
+            ASSERT_RANGE(idx, 0, list->size());
+            mprf("Shopping list: removing %s",
+                describe_thing((*list)[idx], DESC_A).c_str());
+        }
+    }
+    del_thing_at_indices(indices_to_del);
+}
+
 void ShoppingList::remove_dead_shops()
 {
     // Only restore the excursion at the very end.
@@ -2137,6 +2164,7 @@ class ShoppingListMenu : public Menu
 {
 public:
     ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
+    bool view_only {false};
 
 protected:
     virtual formatted_string calc_title() override;
@@ -2154,6 +2182,12 @@ formatted_string ShoppingListMenu::calc_title()
                 total_cost);
 
     string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    if (view_only)
+    {
+        fs += formatted_string::parse_string(s + "<w>examine</w>");
+        return fs;
+    }
 
     switch (menu_action)
     {
@@ -2210,9 +2244,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
 
-        if (cost > you.gold)
-            me->colour = DARKGREY;
-        else if (thing_is_item(thing))
+        if (thing_is_item(thing))
         {
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
@@ -2221,24 +2253,34 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
+#ifdef USE_TILE
+            vector<tile_def> item_tiles;
+            get_tiles_for_item(item, item_tiles, true);
+            for (const auto &tile : item_tiles)
+                me->add_tile(tile);
+#endif
+
             if (col != -1)
                 me->colour = col;
         }
+        if (cost > you.gold)
+            me->colour = DARKGREY;
 
         shopmenu.add_entry(me);
         ++hotkey;
     }
 }
 
-void ShoppingList::display()
+void ShoppingList::display(bool view_only)
 {
     if (list->empty())
         return;
 
     ShoppingListMenu shopmenu;
+    shopmenu.view_only = view_only;
     shopmenu.set_tag("shop");
-    shopmenu.menu_action  = Menu::ACT_EXECUTE;
-    shopmenu.action_cycle = Menu::CYCLE_CYCLE;
+    shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
+    shopmenu.action_cycle = view_only ? Menu::CYCLE_NONE : Menu::CYCLE_CYCLE;
     string title          = "item";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -2294,9 +2336,7 @@ void ShoppingList::display()
                              "%s with an entry fee of %d gold pieces.",
                              describe_thing(*thing, DESC_A).c_str(),
                              (int) thing_cost(*thing));
-
-                print_description(info.c_str());
-                getchm();
+                show_description(info.c_str());
             }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
@@ -2321,6 +2361,7 @@ void ShoppingList::display()
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
+            shopmenu.update_menu(true);
         }
         else
             die("Invalid menu action type");
@@ -2382,15 +2423,16 @@ void ShoppingList::refresh()
     you.props[SHOPPING_LIST_COST_KEY].get_int() = total_cost;
 }
 
-int ShoppingList::find_thing(const item_def &item,
+unordered_set<int> ShoppingList::find_thing(const item_def &item,
                              const level_pos &pos) const
 {
+    unordered_set<int> result;
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
         const level_pos       _pos  = thing_pos(thing);
 
-        if (pos != _pos)
+        if (pos != _pos) // TODO: using thing_pos above seems to make this unreliable?
             continue;
 
         if (!thing_is_item(thing))
@@ -2399,14 +2441,15 @@ int ShoppingList::find_thing(const item_def &item,
         const item_def &_item = get_thing_item(thing);
 
         if (item_name_simple(item) == item_name_simple(_item))
-            return i;
+            result.insert(i);
     }
 
-    return -1;
+    return result;
 }
 
-int ShoppingList::find_thing(const string &desc, const level_pos &pos) const
+unordered_set<int> ShoppingList::find_thing(const string &desc, const level_pos &pos) const
 {
+    unordered_set<int> result;
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
@@ -2419,10 +2462,10 @@ int ShoppingList::find_thing(const string &desc, const level_pos &pos) const
             continue;
 
         if (desc == name_thing(thing))
-            return i;
+            result.insert(i);
     }
 
-    return -1;
+    return result;
 }
 
 bool ShoppingList::thing_is_item(const CrawlHashTable& thing)
@@ -2478,10 +2521,9 @@ string ShoppingList::name_thing(const CrawlHashTable& thing,
 string ShoppingList::describe_thing(const CrawlHashTable& thing,
                                     description_level_type descrip)
 {
-    const level_pos pos = thing_pos(thing);
-
     string desc = name_thing(thing, descrip) + " on ";
 
+    const level_pos pos = thing_pos(thing);
     if (pos.id == level_id::current())
         desc += "this level";
     else

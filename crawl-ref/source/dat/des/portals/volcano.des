@@ -179,7 +179,7 @@ function setup_loot (e)
     e.item(make_fiery_armour(e, {"leather armour w:65", "ring mail w:25",
                                  "scale mail w:25", "chain mail w:40",
                                  "plate armour w:25", "cloak w:11",
-                                 "large shield w:1", "shield w:2", "buckler w:1"}) ..
+                                 "large shield w:1", "shield w:2", "buckler w:1"}) .. " / " ..
                                  "pair of gloves good_item w:6 / helmet good_item w:4 / " ..
                                  "hat good_item w:2 / pair of boots good_item w:6 / " ..
                                  "fire dragon scales w:8")

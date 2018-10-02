@@ -53,7 +53,6 @@ extern const struct luaL_reg dgn_mons_dlib[];
 extern const struct luaL_reg dgn_subvault_dlib[];
 extern const struct luaL_reg dgn_tile_dlib[];
 extern const struct luaL_reg feat_dlib[];
-extern const struct luaL_reg spells_dlib[];
 extern const struct luaL_reg los_dlib[];
 extern const struct luaL_reg mapmarker_dlib[];
 

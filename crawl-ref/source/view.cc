@@ -149,10 +149,6 @@ void seen_monsters_react(int stealth)
         if (!mi->visible_to(&you))
             continue;
 
-        beogh_follower_convert(*mi);
-        gozag_check_bribe(*mi);
-        slime_convert(*mi);
-
         if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
         {
             // Trigger Duvessa & Dowan upgrades
@@ -588,7 +584,7 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
 
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = hash_rand(100, seed, y * GXM + x);
+            cache[x][y] = hash_with_seed(100, seed, y * GXM + x);
 
     return cache;
 }
@@ -1101,7 +1097,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 #endif
 }
 
-static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
+static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
+                                    const coord_def &ep)
 {
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
@@ -1109,6 +1106,10 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
+    // this is just for out-of-los rays, but I don't see a more efficient way..
+    if (in_bounds(ep))
+        cell->tile.bg = env.tile_bg(ep);
+
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #endif
 }
@@ -1439,10 +1440,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
     you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
-#ifdef USE_TILE_WEB
-    tiles_crt_control crt(false);
-#endif
-
     if (!tiles_only)
     {
         puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
@@ -1478,7 +1475,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     if (!map_bounds(gc))
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, coord_def());
     else if (gc == you.pos() && you.on_current_level
              && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
@@ -1489,7 +1486,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     else if (you.see_cell(gc) && you.on_current_level)
         _draw_los(cell, gc, ep, anim_updates);
     else
-        _draw_outside_los(cell, gc);
+        _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
     cell->flash_colour = BLACK;
 

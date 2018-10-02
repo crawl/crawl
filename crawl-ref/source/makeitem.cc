@@ -1048,19 +1048,19 @@ static armour_type _get_random_armour_type(int item_level)
     // Secondary armours.
     if (one_chance_in(5))
     {
-        // Total weight is 30, each slot has a weight of 6
-        armtype = random_choose_weighted(6, ARM_BOOTS,
-                                         6, ARM_GLOVES,
+        // Total weight is 60, each slot has a weight of 12
+        armtype = random_choose_weighted(12, ARM_BOOTS,
+                                         12, ARM_GLOVES,
                                          // Cloak slot
-                                         3, ARM_CLOAK,
-                                         1, ARM_SCARF,
+                                         9, ARM_CLOAK,
+                                         3, ARM_SCARF,
                                          // Head slot
-                                         5, ARM_HELMET,
-                                         1, ARM_HAT,
+                                         10, ARM_HELMET,
+                                         2, ARM_HAT,
                                          // Shield slot
-                                         2, ARM_SHIELD,
-                                         3, ARM_BUCKLER,
-                                         1, ARM_LARGE_SHIELD);
+                                         4, ARM_SHIELD,
+                                         6, ARM_BUCKLER,
+                                         2, ARM_LARGE_SHIELD);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
@@ -1722,7 +1722,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     {
         make_item_randart(item);
     }
-    else if (item.sub_type == RING_LOUDNESS
+    else if (item.sub_type == RING_ATTENTION
              || item.sub_type == RING_TELEPORTATION
              || item.sub_type == AMU_INACCURACY
              || one_chance_in(50))

@@ -13,6 +13,7 @@ Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their selection of
 Air Magic spells provides them with the flexibility to survive.
+
 %%%%
 Alchemist
 
@@ -23,6 +24,7 @@ Annihilator
 
 Annihilators follow the destructive magical god Vehumet. They know the Magic
 Dart spell and eventually learn new spells directly from their god.
+
 %%%%
 Arcane Marksman
 
@@ -57,11 +59,13 @@ god's constantly changing moods.
 Conjurer
 
 Conjurers confront problems with damaging spells.
+
 %%%%
 Deprived
 
 Deprived start with nothing but a ration and almost no skills. Survival may prove...
 difficult.
+
 %%%%
 Earth Elementalist
 
@@ -131,6 +135,7 @@ Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
 the Charms school.
+
 %%%%
 Slime Priest
 
@@ -165,26 +170,31 @@ Librarian
 
 Librarians come to the Dungeon in search of new books for their collection. They bring
 a few random books along with them and know the Apportation spell.
+
 %%%%
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with
 other Summonings spells in their library.
+
 %%%%
 Torpor Knight
 
 Torpor Knights follow Cheibriados and wear heavy, ponderous armour to gain
 their god's favour more quickly.
+
 %%%%
 Transmuter
 
 Transmuters learn spells to shift their form, as well as to turn sticks into
 snakes.
+
 %%%%
 Understudy
 
 It's opening night for "The Orb of Zot" and the hero is sick! The Understudy
 must learn their role quickly if they want to make it through the final act.   
+
 %%%%
 Venom Mage
 

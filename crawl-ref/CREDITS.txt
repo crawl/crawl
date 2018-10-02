@@ -72,6 +72,7 @@
     Mike Adams
     Aj Adamson
     Nikhil Addleman
+    Alcon
     Brandon Allbery
     Warwick Allison
     Austin Appleby
@@ -85,7 +86,6 @@
     Max Bane
     Bill Beher
     Alexander Beisig
-    Edgar A. Bering IV
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -104,7 +104,6 @@
     Cedor
     Cerol
     Rahul Chandra
-    Gregory D. Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
@@ -130,6 +129,7 @@
     Floodkiller
     Brett Foster
     Kyle Fox
+    freepotion
     Chris Galardi
     Benoît Giannangeli
     Ben Goetter
@@ -202,6 +202,7 @@
     Naruni
     neofelis
     nicolae
+    Nikolai Lavsky
     NormalPerson7
     Erkki Nurmi
     Mattias Nyberg
@@ -239,6 +240,7 @@
     ShadyAmish
     Evan Shaw
     Aditya Shevade
+    Alexandra Shields
     Robert Shimmin
     Sigurd
     Edgar Simo
@@ -281,6 +283,7 @@
 The Dungeon Crawl Stone Soup development team is:
     advil
     Peter Berger
+    Edgar A. Bering IV
     Adam Borowski
     Samuel Bronson
     Jude Brown

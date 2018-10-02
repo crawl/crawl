@@ -13,6 +13,7 @@
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "bloodspatter.h"
 #include "butcher.h"
 #include "clua.h"
@@ -42,6 +43,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -728,7 +730,7 @@ void JewelleryOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(WEAR_JEWELLERY_SOUND);
 #endif
-    puton_ring(jewellery.link, false);
+    puton_ring(jewellery.link, false, false);
 }
 
 void ArmourOnDelay::finish()
@@ -758,6 +760,11 @@ void ArmourOnDelay::finish()
     equip_item(eq_slot, armour.link);
 
     check_item_hint(armour, old_talents);
+}
+
+bool ArmourOffDelay::invalidated()
+{
+    return !armour.defined();
 }
 
 void ArmourOffDelay::finish()
@@ -1119,6 +1126,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
     {
         ash_id_monster_equipment(mon);
         mark_mon_equipment_seen(mon);
+        do_conversions(mon);
 
         string text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
@@ -1202,7 +1210,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
-                + (ash_id ? " " : "")
+                + (ash_id && mweap[0] != ' ' ? " " : "")
                 + mweap + ".";
         }
 
@@ -1238,7 +1246,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         {
             yell(mon);
         }
-        mon->seen_context = SC_JUST_SEEN;
+        mons_set_just_seen(mon);
     }
 
     if (crawl_state.game_is_hints())

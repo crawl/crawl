@@ -188,7 +188,7 @@ void butchery(item_def* specific_corpse)
     {
         if (edible_corpses.size() == 1)
         {
-            mprf("It would be a sin to %s the %s!", butcher_verb,
+            mprf("It would be a sin to %s %s!", butcher_verb,
                                 edible_corpses[0]->name(DESC_THE).c_str());
         }
         else
@@ -377,35 +377,25 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter)
     init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
 }
 
-static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_chunks)
+static void _turn_corpse_into_skeleton_and_chunks(item_def &item)
 {
     item_def copy = item;
 
-    // Complicated logic, but unless we use the original, both could fail if
-    // mitm[] is overstuffed.
-    if (prefer_chunks)
-    {
-        turn_corpse_into_chunks(item);
-        turn_corpse_into_skeleton(copy);
-    }
-    else
-    {
-        turn_corpse_into_chunks(copy);
-        turn_corpse_into_skeleton(item);
-    }
+    turn_corpse_into_chunks(item);
+    turn_corpse_into_skeleton(copy);
 
     copy_item_to_grid(copy, item_pos(item));
 }
 
-void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
+void butcher_corpse(item_def &item, bool skeleton, bool chunks)
 {
     item_was_destroyed(item);
     if (!mons_skeleton(item.mon_type))
-        skeleton = MB_FALSE;
-    if (skeleton == MB_TRUE || skeleton == MB_MAYBE && one_chance_in(3))
+        skeleton = false;
+    if (skeleton)
     {
         if (chunks)
-            _turn_corpse_into_skeleton_and_chunks(item, skeleton != MB_TRUE);
+            _turn_corpse_into_skeleton_and_chunks(item);
         else
         {
             _bleed_monster_corpse(item);

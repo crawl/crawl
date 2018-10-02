@@ -6,6 +6,7 @@
 #pragma once
 
 #include <list>
+#include <functional>
 
 #include "target.h"
 #include "wu-jian-attack-type.h"
@@ -71,7 +72,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         bool check_landing_only = false);
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
-                        bool (*affects)(const actor *victim) = 0,
+                        function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr);
 
 bool actor_collision_immune(const actor *agent);						

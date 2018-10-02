@@ -30,7 +30,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_TELEPORT,
 },
 
 {
@@ -411,7 +411,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MASS_ABJURATION,
 },
 
 {
@@ -536,7 +536,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BLINK,
 },
 
 {
@@ -547,7 +547,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BLINK,
 },
 
 {
@@ -558,7 +558,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BLINK,
 },
 
 // The following name was found in the hack.exe file of an early version
@@ -857,7 +857,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_TWISTED_RESURRECTION,
 },
 
 {
@@ -1342,10 +1342,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PASSWALL, "Passwall",
     SPTYP_TRANSMUTATION | SPTYP_EARTH,
-    SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
+    SPFLAG_TARGET | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
     2,
-    200,
-    1, 9,
+    120,
+    1, 7,
     0, 0, // make silent to keep passwall a viable stabbing spell [rob]
     TILEG_PASSWALL,
 },
@@ -1928,7 +1928,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BLINK_OTHER,
 },
 
 {
@@ -2279,7 +2279,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MIGHT,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3426,7 +3426,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_LIGHTNING_BOLT,
 },
 
 {
@@ -3622,7 +3622,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THROW_ALLY, "Throw Ally",
     SPTYP_TRANSLOCATION,
-    SPFLAG_MONSTER | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_MONSTER | SPFLAG_NOT_SELF,
     2,
     50,
     LOS_RADIUS, LOS_RADIUS,
@@ -3798,7 +3798,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ABILITY_MAKHLEB_GREATER_SERVANT,
 },
 
 {
@@ -3887,7 +3887,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ABILITY_QAZLAL_UPHEAVAL,
 },
 
 {
@@ -3943,6 +3943,28 @@ static const struct spell_desc spelldata[] =
     5, 5,
     5, 4,
     TILEG_BORGNJORS_VILE_CLUTCH,
+},
+
+{
+    SPELL_HARPOON_SHOT, "Harpoon Shot",
+    SPTYP_CONJURATION | SPTYP_EARTH,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    4,
+    200,
+    6, 6,
+    4, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_GRASPING_ROOTS, "Grasping Roots",
+    SPTYP_EARTH,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GRASPING_ROOTS,
 },
 
 {

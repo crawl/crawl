@@ -165,6 +165,7 @@ bolt_random RANDOM_BOLT
 scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
+bolt_energy ENERGY_BOLT
 
 # spells normally only used by monsters
 %back gui/spells/bg
@@ -180,15 +181,27 @@ fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
+ghostly_fireball GHOSTLY_FIREBALL
+grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
 call_down_damnation CALL_DOWN_DAMNATION
+ink_cloud INK_CLOUD
 iron_elementals IRON_ELEMENTALS
+malmutate MALMUTATE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH
+might MIGHT
+noxious_cloud NOXIOUS_CLOUD
+orb_of_electricity ORB_OF_ELECTRICITY
+petrifying_cloud PETRIFYING_CLOUD
+phantom_mirror PHANTOM_MIRROR
+>>>>>>> 77505739eec8c106f216a006422d484a1898bacc
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
 # Remove when TAG_MAJOR_VERSION > 34
+sleep SLEEP
+spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
 steam_ball STEAM_BALL
@@ -201,6 +214,8 @@ summon_mushrooms SUMMON_MUSHROOMS
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
+teleport TELEPORT
+twisted_resurrection TWISTED_RESURRECTION
 water_elementals WATER_ELEMENTALS
 %back none
 

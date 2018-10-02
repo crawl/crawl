@@ -379,7 +379,12 @@ GotoRegion get_cursor_region()
 {
     return _current_region;
 }
-#endif // USE_TILE_LOCAL
+
+void set_cursor_region(GotoRegion region)
+{
+    _current_region = region;
+}
+#endif // !USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
 {

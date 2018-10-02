@@ -6,3 +6,4 @@
 #pragma once
 
 bool startup_step();
+void cio_init();

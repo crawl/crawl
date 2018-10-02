@@ -110,21 +110,15 @@ opacity_type opacity_no_actor::operator()(const coord_def& p) const
         return OPC_CLEAR;
 }
 
-static opacity_type _feat_opacity(dungeon_feature_type feat)
-{
-    return feat_is_opaque(feat) ? OPC_OPAQUE
-         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
-}
-
 opacity_type opacity_excl::operator()(const coord_def& p) const
 {
     map_cell& cell = env.map_knowledge(p);
     if (!cell.seen())
         return OPC_CLEAR;
     else if (!cell.changed())
-        return _feat_opacity(env.grid(p));
+        return feat_is_opaque(env.grid(p)) ? OPC_OPAQUE : OPC_CLEAR;
     else if (cell.feat() != DNGN_UNSEEN)
-        return _feat_opacity(cell.feat());
+        return feat_is_opaque(cell.feat()) ? OPC_OPAQUE : OPC_CLEAR;
     else
         return OPC_CLEAR;
 }
