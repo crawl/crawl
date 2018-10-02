@@ -47,7 +47,7 @@ larger project that's in need of outside ideas
 
 An alternative to the Doku wiki is github wiki system. You can fork the crawl
 repository if you haven't done so already and create wiki pages in that fork.
-By default, github users who aren't collaborators for you repo can't edit wiki
+By default, github users who aren't collaborators for your repo can't edit wiki
 pages. You can allow other github users to edit your repository's wiki without
 allowing them commit access to the repository itself by going to the Settings
 tab of the repository and unchecking the box "Restrict editing to collaborators
@@ -58,18 +58,19 @@ commit access in your repo.
 ## Development documentation and references
 
 Before you start development, you'll want to look through the game's
-documentation (in docs/develop/, where you already are) for guidelines, as well
-as compare your ideas and work against previous changes to Crawl and current
-Crawl features.
+documentation (in [docs/develop/](/crawl-ref/docs/develop), where this file is
+located) for guidelines, as well as compare your ideas and work against previous
+changes to Crawl and current Crawl features.
 
 If you're coding, then you'll want to read the setup process outlined in
-/crawl-ref/docs/develop/git/quickstart.txt as well as set up an IDE or editor
-to make your changes to the Crawl codebase. Crawl is coded primarily in C++,
-with Lua used for level layout and vault definitions as well as for some
-aspects of controlling the client. The WebTiles server is coded in python2 and
-uses the Tornado framework (version 2.3 to 3.x). The WebTiles browser client is
-written in JavaScript using the jQuery and other JS libraries. The local Tiles
-version uses the SDL2 graphics library.
+[docs/develop/git/quickstart.txt](/crawl-ref/docs/develop/git/quickstart.txt)
+as well as set up an IDE or editor to make your changes to the Crawl codebase.
+Crawl is coded primarily in C++, with Lua used for level layout and vault
+definitions as well as for some aspects of controlling the client. The WebTiles
+server is coded in python2 and uses the Tornado framework (version 2.3 to 3.x;
+modern Tornado will not work). The WebTiles browser client is written in
+JavaScript using the jQuery and other JS libraries. The local Tiles version uses
+the SDL2 graphics library.
 
 If you're doing tiles art, or splash screen art, then it's recommended to look
 at previous artwork and try to match the general style presented there. This is
@@ -94,8 +95,7 @@ would prefer this to be limited to small changes like vaults or artwork.
       char width, line between title and body, bug # or reporter in title).
     * Include a commit message with meaningful content for every commit. It's
       fine if a PR comment duplicates this, but the priority for explaining the
-      changes should be in the commit messages themselves.  (A common mistake
-      is to put the motivation only in the PR comment.)
+      changes should be in the commit messages themselves.
 2. You open a PR in the main repository based on your branch.
 3. Some member(s) of the devteam reviews the commit, probably asking some
    questions and making some suggestions for changes. This happens at the pace
@@ -121,7 +121,10 @@ would prefer this to be limited to small changes like vaults or artwork.
   members, especially if you are new to the dcss codebase or to game design.
   The best place for this is in the ##crawl-dev IRC channel on freenode.
 * PRs that have good commit messages and conform to style guidelines tend to
-  get merged faster, all things being equal.
+  get merged faster, all things being equal. A *very common* mistake is to
+  put a lot of text in the PR first comment, and leave the commit message blank.
+  Usually, this will require a devteam member to manually copy information
+  from the PR and reformat for a commit message, slowing the process.
 * PRs that fix bugs are very likely to get merged in some form (though you may
   receive suggestions for alternative strategies for fixing the bug).
 * PRs that change gameplay in particular need to be carefully thought out, and
@@ -163,13 +166,18 @@ If your goal is getting something into stable (see below for a definition of
 * You will need to be prepared for the latter parts of the acceptance process
   being rather detail-oriented, making sure all the UI elements work as
   expected, checking all the special cases you can think of, etc. If you don't
-  do this part some devteam member would need to.
+  do this part some devteam member would need to, which will substantially slow,
+  or even prevent, acceptance into the game.
+* Major contributions will very much be tied to the alpha/beta/release cycle
+  for the game: they are very unlikely to be accepted close to a release target.
+  (This can go for smaller contributions as well, if they are likely to require
+  a fair amount of testing for one reason or another.)
 
 N.b. this is open-source software, your goal doesn't have to be getting a
 change into stable! Many devteam members are happy to talk to fork developers,
 or people just developing something for fun.
 
-#### Branches, experimentals, trunk, stable
+#### Definitions: branches, experimentals, trunk, stable
 
 One potential path for a new major-ish contribution (and some contributions
 from inside the devteam) is branch -> experimental -> trunk -> stable.
