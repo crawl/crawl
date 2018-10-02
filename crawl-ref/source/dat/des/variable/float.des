@@ -4084,18 +4084,18 @@ SUBST:   RSrs = '
 : if you.in_branch("D") then
 :   if you.depth() < 10 then
 MONS:    slime creature, glowing orange brain / great orb of eyes
-NSUBST:  ' = 3=|* / *% / -, - = 4=1 / 2=1. / 1=2... / .
+NSUBST:  ' = de / 2=|* / *% / -, - = 4=1 / 5=1. / 2. / .
 :   elseif you.depth() < 13 then
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation
-NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 5=1 / 2=1. / 2=2. / .
+NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 4=1 / 6=1. / 2=2. / .
 :   else
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation \
          / golden eye / shining eye
-MONS:    azure jelly / death ooze / acid blob w:5
+MONS:    acid blob / azure jelly / death ooze
 NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
-NSUBST:  - = 6=1 / 4=1. / 1=2 / 2=2. / 2=3. / .
+NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 :   end
 # Depths
 : else
@@ -4104,7 +4104,7 @@ MONS:    glowing orange brain / shining eye / floating eye / golden eye \
          / eye of devastation
 MONS:    acid blob / azure jelly / death ooze
 NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
-NSUBST:  - = 6=1 / 4=1. / 2=2 / 3=2. / 5=3 / 5=3. / .
+NSUBST:  - = 4=1 / 6=1. / 2 / 2=2. / 3=3 / 4=3. / .
 : end
 MARKER:  P = lua:transp_loc("jiyva_chamber_entry")
 MARKER:  Q = lua:transp_dest_loc("jiyva_chamber_entry")
@@ -4142,28 +4142,28 @@ MONS: orc, ogre / w:40 orc warrior / w:5 troll / w:5 two-headed ogre
 MONS: orc wizard / orc priest
 MONS: cyclops / ogre mage / orc knight
 NSUBST: - = 4=1 / 4=1. / 2=2 / 2=2. / 3=3 / 4=3. / 4... / .
-NSUBST: ' = 3=|* / *% / 3=$
+NSUBST: ' = de / 2=|* / *% / 3=$ / .
 :   elseif you.depth() < 13 then
 MONS: orc / orc wizard / orc priest
 MONS: ogre / w:30 orc warrior / two-headed ogre / cyclops / troll
 MONS: orc sorcerer / orc high priest / ogre mage
 MONS: w:20 orc knight / ettin / orc warlord / stone giant
 NSUBST: - = 6=1 / 6=1. / 3=2 / 3=2. / 3 / 3. / 4... / .
-NSUBST: ' = de / 2=|* / * / %$.. / 3=$
+NSUBST: ' = de / 2=|* / * / %$.. / 3=$ / .
 :   else
 MONS: orc priest / orc warrior / cyclops, two-headed ogre / orc knight w:20
 MONS: orc sorcerer / orc high priest / ogre mage
 MONS: ettin / orc warlord / stone giant
-NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 3=3. / 4 / 2=4. / ..
-NSUBST: ' = d / f / 2=|* / *% / %$.. / 3=$
+NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 3=3. / 4 / 2=4. / .
+NSUBST: ' = d / f / 2=|* / *% / %$.. / 3=$ / .
 :   end
 # Orc
 : else
 MONS: orc / orc wizard / orc priest
 MONS: orc warrior / two-headed ogre / orc knight
 MONS: orc high priest / orc sorcerer, ettin / orc warlord / stone giant
-NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 2=3. / 4 / 4. / ..
-NSUBST: ' = d / e / 2=|* / %$ / 3=$
+NSUBST: - = 5=1 / 5=1. / 3=2 / 4=2. / 3 / 2=3. / 4 / 4. / .
+NSUBST: ' = d / e / 2=|* / %$ / 3=$ / .
 : end
 KFEAT:  _ = altar_beogh
 MARKER: P = lua:transp_loc("beogh_ambush_entry")
