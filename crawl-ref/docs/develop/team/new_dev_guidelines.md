@@ -4,7 +4,7 @@ This document gives new team members some general guidance for DCSS development 
 
 ## Setup
 
-Other team members will help you get the items in the [*new dev checklist*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
+Other team members will help you get the items in the [*new dev checklist*](../team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](../git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
@@ -26,7 +26,7 @@ Significant changes that affect the gameplay should be documented in the [*chang
 
 ## Save Compatibility
 
-Each trunk commit creates a new version, and we try hard to not break trunk games when a save is transferred to a new version. Making changes that force users to abandon a game they have in-progress is frustrating for players and creates problems for server administrators as well. There’s a [*document*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/save_compatibility.txt) in the source tree that discusses basic save compatibility and the technical reasons behind it. In general, if you’re not sure if a change will create a save compatibility issue or how to address it, ask another team member before pushing your changes.
+Each trunk commit creates a new version, and we try hard to not break trunk games when a save is transferred to a new version. Making changes that force users to abandon a game they have in-progress is frustrating for players and creates problems for server administrators as well. There’s a [*document*](../save_compatibility.txt) in the source tree that discusses basic save compatibility and the technical reasons behind it. In general, if you’re not sure if a change will create a save compatibility issue or how to address it, ask another team member before pushing your changes.
 
 ## Bug Reports and Community Contributions
 
