@@ -84,6 +84,7 @@ for (@files)
     next if -l $_;
     -f $_ or (print(STDERR "Can't read $_\n"), next);
     next if /webserver\/static\/scripts\/contrib\//i;
+    next if /dat\/dist_bones\//i;
     next if /\.(png|gif|xpm|ttf|ico|icns|fig|tex|eps|pdf|psd)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist|csproj|config|cs)$/i;
     next if /\.(vcproj|vcproj\.user|vcxproj|vcxproj\.filters|terminal)$/i;
