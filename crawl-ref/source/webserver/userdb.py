@@ -267,7 +267,7 @@ def send_forgot_password(email): # Returns a tuple where item 1 is a truthy valu
 
             # send email
             url_text = config.lobby_url + "?ResetToken=" + token
-     
+
             msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + config.lobby_url + """.
 
 If you initiated this request, please use this link to reset your password:

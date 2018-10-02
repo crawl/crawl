@@ -354,13 +354,13 @@ body {
     background: #040204;
 }
 .simplebar-track.vertical::before {
-	position: absolute;
-	top: 0;
-	left: 4px;
-	right: 5px;
-	bottom: 0;
-	background: #292929;
-	content: ' ';
+        position: absolute;
+        top: 0;
+        left: 4px;
+        right: 5px;
+        bottom: 0;
+        background: #292929;
+        content: ' ';
 }
 .simplebar-track .simplebar-scrollbar::before,
 .simplebar-track.horizontal {
