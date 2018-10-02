@@ -725,6 +725,7 @@ void wizard_fight_sim(bool double_scale)
             break;
         default:
             canned_msg(MSG_OK);
+            fclose(o);
             _uninit_fsim(mon);
             return;
         }
