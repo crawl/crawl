@@ -4188,33 +4188,48 @@ ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
 TAGS:   no_monster_gen no_trap_gen
-DEPTH:  Abyss, D:7-, Depths
+DEPTH:  D:7-, Depths, Abyss
 ORIENT: float
-KFEAT:  _ = altar_lugonu
-: if you.in_branch("Abyss") then
-MONS: lurking horror / ancient zyme / worldbinder
-MONS: tentacled starspawn / starcursed mass / wretched star
-NSUBST: " = R / 4=|*$ / 4=|*$... / ', ' = 6=0 / 4=0. / 1=1. / 2=2 / 4=2.
+: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:    any jewellery good_item, any jewellery randart
+SUBST:  p = b.
+NSUBST: ' = R / '
+: if you.in_branch("D") then
+:   if you.depth() < 10 then
+MONS:   small abomination, unseen horror / ancient zyme, ugly thing
+MONS:   raiju / large abomination / shapeshifter
+NSUBST: ' = 3=|* / *% / -, - = 3=1 / 3=1. / 2. / 2=3 / 2=3. / 4... / .
+:   elseif you.depth() < 13 then
+MONS:   small abomination / ugly thing
+MONS:   unseen horror / ancient zyme / worldbinder
+MONS:   large abomination / raiju / shapeshifter
+MONS:   very ugly thing / thrashing horror
+NSUBST: ' = de / 2=|* / * / %$-- / -, - = 3=1 / 3=1. / 2. / 2=3 / 3=3. / 4. / .
+:   else
+MONS:   ugly thing / large abomination / shapeshifter / raiju
+MONS:   unseen horror / ancient zyme / worldbinder / lurking horror w:5
+MONS:   thrashing horror / very ugly thing
+MONS:   glowing shapeshifter / apocalypse crab / tentacled starspawn
+NSUBST: ' = d / f / 2=|* / *% / %$-- / -
+NSUBST: - = 3=1 / 4=1. / 2=2. / 2=3 / 4=3. / 2=4. / .
+:   end
 : elseif you.in_branch("Depths") then
-MONS: very ugly thing / thrashing horror / large abomination
-MONS: lurking horror / ancient zyme / worldbinder
-MONS: tentacled starspawn / glowing shapeshifter / w:5 rakshasa
-MONS: starcursed mass / wretched star
-NSUBST: " = R / 3=|*$ / 3=|*$... / '
-NSUBST: ' = 4=1 / 4=1. / 1=2 / 1=2. / 2=3 / 2=3. / 1=4 / 2=4...
-: elseif you.depth() <= 9 then
-MONS: small abomination, unseen horror, ugly thing, raiju / large abomination
-NSUBST: " = R / ', ' = 6=1 / 1=2. / 3=3 / 4=13.. / 1=4...
-: elseif you.depth() <= 12 then
-MONS: ugly thing, unseen horror / w:5 ancient zyme, large abomination / raiju
-MONS: thrashing horror / shapeshifter / very ugly thing / worldbinder
-NSUBST: " = R / |*$ / |*$... / ', ' = 4=1 / 4=1. / 1=2. / 2=3 / 2=3. / 1=4...
+MONS:   very ugly thing / thrashing horror / large abomination
+MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab
+MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
+MONS:   starcursed mass / wretched star
+NSUBST: ' = 2=d / f / 3=|* / *% / %$-- / -
+NSUBST: - = 4=1 / 5=1. / 2 / 2. / 3=3 / 4=3. / 4 / 2=4. / .
+# Abyss
 : else
-MONS: ugly thing, unseen horror / ancient zyme , raiju / large abomination
-MONS: thrashing horror / very ugly thing / worldbinder / shapeshifter
-NSUBST: " = R / 2=|*$ / 2=|*$... / '
-NSUBST: ' = 6=1 / 4=1. / 1=2. / 3=3 / 4=3. / 1=4 / 2=4...
+MONS:   very ugly thing / thrashing horror / large abomination
+MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab
+MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
+MONS:   starcursed mass / wretched star
+NSUBST: ' = 2=d / f / 3=|* / * / %$ / -
+NSUBST: - = 5=0 / 5=0. / 2 / 2. / 3=3 / 4=3. / 4 / 2=4. / .
 : end
+KFEAT:  _ = altar_lugonu
 MARKER: P = lua:transp_loc("corrupted_shrine_entry")
 MARKER: Q = lua:transp_dest_loc("corrupted_shrine_entry")
 MARKER: R = lua:transp_loc("corrupted_shrine_exit")
@@ -4222,23 +4237,21 @@ MARKER: S = lua:transp_dest_loc("corrupted_shrine_exit")
 COLOUR: bc = magenta
 COLOUR: n = lightmagenta
 MAP
- cccccc.@.cccccc
-ccccccccPcccccccc
-ccc..nnn.ccc""ccc
-cc.Q..ccnccbb""cc
-cc....ccncc''b"cc
-ccc....cnc.''bccc
-ccccc.......ccccc
- ccccc.$$$.ccccc
-   ccc.*_*.ccc
- ccccc.|||.ccccc
-ccccc.......ccccc
-cccb''.cnc.''bccc
-cc"b''ccncc''b"cc
-cc""bbccnccbb""cc
-ccc""ccc.ccc""ccc
-ccccccccScccccccc
- cccccc.@.cccccc
+ cccc..@..cccc
+cc''nc...cn''cc
+c''pbc...cbp''c
+c'p--nnPnn--p'c
+ccb---nnn---bcc
+ ccc-------ccc
+   cc-----cc
+    c--_--c
+   cc-----cc
+ ccc---Q---ccc
+ccb---nnn---bcc
+c'p--nnSnn--p'c
+c''pbc...cbp''c
+cc''nc...cn''cc
+ cccc..@..cccc
 ENDMAP
 
 NAME:   gammafunk_steamed_eel
