@@ -4945,21 +4945,22 @@ bool qazlal_disaster_area()
 
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
+    // TODO: should count get a cap proportional to targets.size()?
     int count = max(1, min((int)targets.size(),
                             max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
                                 random2avg(you.skill(SK_INVOCATIONS, 2), 2))));
-    vector<coord_def> victims;
+
     for (int i = 0; i < count; i++)
     {
         if (targets.size() == 0)
             break;
         int which = choose_random_weighted(weights.begin(), weights.end());
-        unsigned int j = 0;
-        for (; j < victims.size(); j++)
-            if (adjacent(targets[which], victims[j]))
-                break;
-        if (j == victims.size())
-            qazlal_upheaval(targets[which], true);
+        // Downweight adjacent potential targets (but don't rule them out
+        // entirely).
+        for (unsigned int j = 0; j < targets.size(); j++)
+            if (adjacent(targets[which], targets[j]))
+                weights[j] = max(weights[j] / 2, 1);
+        qazlal_upheaval(targets[which], true);
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
