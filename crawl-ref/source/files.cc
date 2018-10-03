@@ -519,11 +519,11 @@ void validate_basedirs()
         string err = "Missing DCSS data directory; tried: \n";
         //for (const string &d : bases)
         //    err += d + ", ";
-        if (err.size() > 2)
-        {
-            err.pop_back();
-            err.pop_back();
-        }
+        // if (err.size() > 2)
+        // {
+        //     err.pop_back();
+        //     err.pop_back();
+        // }
 
         end(1, false, "%s", err.c_str());
     }
