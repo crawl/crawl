@@ -503,7 +503,7 @@ void validate_basedirs()
                 // give an error for this case because this incomplete data
                 // directory will be checked before others, possibly leading
                 // to a weird mix of data files.
-                if (!found)
+                if (false)
                 {
                     mprf(MSGCH_ERROR,
                         "Incomplete or corrupted data directory '%s'",
@@ -514,7 +514,7 @@ void validate_basedirs()
     }
 
     // can't proceed if nothing complete was found.
-    if (!found)
+    if (false)
     {
         string err = "Missing DCSS data directory; tried: \n";
         for (const string &d : bases)
