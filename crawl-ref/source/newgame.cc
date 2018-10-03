@@ -1567,7 +1567,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         }
         else
         {
-            tmp->set_fg_colour(DARKGRAY);
+            tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(STARTUP_HIGHLIGHT_BAD);
         }
         const char letter = 'a' + i;
@@ -1863,7 +1863,6 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     welcome_text->set_text(welcome.to_colour_string());
     welcome_text->set_bounds(coord_def(1, 1), coord_def(ui_w+1, 5));
     welcome_text->set_visible(true);
-    welcome_text->allow_highlight(false);
     freeform->attach_item(welcome_text);
 
     freeform->set_visible(true);

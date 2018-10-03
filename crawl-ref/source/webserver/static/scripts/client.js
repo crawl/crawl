@@ -825,7 +825,7 @@ function (exports, $, key_conversion, chat, comm) {
         exit_message = null;
         exit_dump = null;
 
-        if ( $("#reset_pw").length )
+        if( $("#reset_pw").length )
         {
             show_dialog("#reset_pw");
         }
@@ -1286,7 +1286,7 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#forgot_2 input").bind("click", hide_dialog);
 
-        if ( $("#reset_pw").length )
+        if( $("#reset_pw").length )
         {
             $("#reset_pw_cancel").bind("click", cancel_reset_password);
             $("#reset_pw_form").bind("submit", reset_password);

@@ -4133,7 +4133,7 @@ static void _write_bones(const string &filename, vector<ghost_demon> ghosts)
     lk_close(ghost_file, filename);
 }
 
-static void _bones_ls(const string &filename, const string name_match,
+static void _bones_ls(const string &filename, const string name_match, 
                                                             bool long_output)
 {
     save_version v = _read_bones_version(filename);
@@ -4289,7 +4289,7 @@ static void _edit_bones(int argc, char **argv)
 
         if (cmd == EB_LS)
         {
-            const bool long_out =
+            const bool long_out = 
                            argc == 3 && !strcmp(argv[2], "--long")
                         || argc == 4 && !strcmp(argv[3], "--long");
             if (argc == 4 && !long_out)

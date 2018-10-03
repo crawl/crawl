@@ -517,8 +517,7 @@ void handle_behaviour(monster* mon)
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
-                if (afoe && (mons_foe_is_marked(*mon)
-                                            || mon->has_ench(ENCH_HAUNTING)))
+                if (mons_foe_is_marked(*mon) || mon->has_ench(ENCH_HAUNTING))
                 {
                     mon->target = afoe->pos();
                     try_pathfind(mon);

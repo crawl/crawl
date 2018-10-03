@@ -216,8 +216,8 @@ bool melee_attack::handle_phase_attempted()
         xom_is_stimulated(100);
 
     // Any attack against a monster we're afraid of has a chance to fail
-    if (attacker->is_player() && defender &&
-        you.afraid_of(defender->as_monster()) && one_chance_in(3))
+    if (attacker->is_player() && you.afraid_of(defender->as_monster())
+        && one_chance_in(3))
     {
         mprf("You attempt to attack %s, but flinch away in fear!",
              defender->name(DESC_THE).c_str());
@@ -245,7 +245,7 @@ bool melee_attack::handle_phase_attempted()
     attack_occurred = true;
 
     // Check for player practicing dodging
-    if (defender && defender->is_player())
+    if (defender->is_player())
         practise_being_attacked();
 
     return true;
