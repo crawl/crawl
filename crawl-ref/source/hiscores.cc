@@ -1999,7 +1999,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         {
             if (god == GOD_XOM)
             {
-                desc + make_stringf("Was a %sPlaything of Xom.",
+                desc += make_stringf("Was a %sPlaything of Xom.",
                                     (lvl >= 20) ? "Favourite " : "");
 
                 desc += _hiscore_newline_string();

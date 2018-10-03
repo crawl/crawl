@@ -1020,7 +1020,7 @@ command_type travel()
         return CMD_NO_CMD;
 
     if (result != CMD_NO_CMD)
-        return result;
+        return result; // TODO: apparently unreachable?
 
     return direction_to_command(*move_x, *move_y);
 }

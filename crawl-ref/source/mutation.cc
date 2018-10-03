@@ -542,9 +542,6 @@ void validate_mutations(bool debug_msg)
                 mutation_name(mut), you.mutation[mut],
                 you.innate_mutation[mut], you.temp_mutation[mut]);
         }
-        ASSERT(you.mutation[mut] >= 0);
-        ASSERT(you.innate_mutation[mut] >= 0);
-        ASSERT(you.temp_mutation[mut] >= 0);
         ASSERT(you.get_base_mutation_level(mut) == you.mutation[mut]);
         ASSERT(you.mutation[i] >= you.innate_mutation[mut] + you.temp_mutation[mut]);
         total_temp += you.temp_mutation[mut];
