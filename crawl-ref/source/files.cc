@@ -462,7 +462,7 @@ void validate_basedirs()
 {
     // TODO: could use this to pick a single data directory?
     vector<string> bases(_get_base_dirs());
-    bool found;
+    bool found = false;
 
     // there are a few others, but this should be enough to minimally run something
     const vector<string> data_subfolders =
@@ -517,13 +517,7 @@ void validate_basedirs()
     if (!found)
     {
         string err = "Missing DCSS data directory; tried: \n";
-        for (const string &d : bases)
-            err += d + ", ";
-        if (err.size() > 2)
-        {
-            err.pop_back();
-            err.pop_back();
-        }
+        err += comma_separated_line(bases.begin(), bases.end());
 
         end(1, false, "%s", err.c_str());
     }
