@@ -514,11 +514,11 @@ void validate_basedirs()
     }
 
     // can't proceed if nothing complete was found.
-    if (false)
+    if (true)
     {
         string err = "Missing DCSS data directory; tried: \n";
-        for (const string &d : bases)
-            err += d + ", ";
+        //for (const string &d : bases)
+        //    err += d + ", ";
         if (err.size() > 2)
         {
             err.pop_back();
