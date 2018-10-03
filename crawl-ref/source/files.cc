@@ -458,27 +458,28 @@ static vector<string> _get_base_dirs()
     return bases;
 }
 
+// there are a few others, but this should be enough to minimally run something
+const vector<string> crawl_data_subfolders =
+{
+#ifdef CLUA_BINDINGS
+    "clua",
+#endif
+    "database",
+    "defaults",
+    "des",
+    "descript",
+    "dlua"
+#ifdef USE_TILE_LOCAL
+    , "tiles"
+#endif
+};
+
+
 void validate_basedirs()
 {
     // TODO: could use this to pick a single data directory?
     vector<string> bases(_get_base_dirs());
-    bool found;
-
-    // there are a few others, but this should be enough to minimally run something
-    const vector<string> data_subfolders =
-    {
-#ifdef CLUA_BINDINGS
-        "clua",
-#endif
-        "database",
-        "defaults",
-        "des",
-        "descript",
-        "dlua"
-#ifdef USE_TILE_LOCAL
-        , "tiles"
-#endif
-    };
+    bool found = false;
 
     for (const string &d : bases)
     {
@@ -486,7 +487,7 @@ void validate_basedirs()
         {
             bool everything = true;
             bool something = false;
-            for (auto subdir : data_subfolders)
+            for (auto subdir : crawl_data_subfolders)
             {
                 if (dir_exists(d + subdir))
                     something = true;
