@@ -458,29 +458,27 @@ static vector<string> _get_base_dirs()
     return bases;
 }
 
-// there are a few others, but this should be enough to minimally run something
-const vector<string> crawl_data_subfolders =
-{
-#ifdef CLUA_BINDINGS
-    "clua",
-#endif
-    "database",
-    "defaults",
-    "des",
-    "descript",
-    "dlua"
-#ifdef USE_TILE_LOCAL
-    , "tiles"
-#endif
-};
-
-
 void validate_basedirs()
 {
-    bool base_dir_found;
     // TODO: could use this to pick a single data directory?
     vector<string> bases(_get_base_dirs());
-    base_dir_found = false;
+    bool found = false;
+
+    // there are a few others, but this should be enough to minimally run something
+    const vector<string> data_subfolders =
+    {
+#ifdef CLUA_BINDINGS
+        "clua",
+#endif
+        "database",
+        "defaults",
+        "des",
+        "descript",
+        "dlua"
+#ifdef USE_TILE_LOCAL
+        , "tiles"
+#endif
+    };
 
     for (const string &d : bases)
     {
@@ -488,7 +486,7 @@ void validate_basedirs()
         {
             bool everything = true;
             bool something = false;
-            for (auto subdir : crawl_data_subfolders)
+            for (auto subdir : data_subfolders)
             {
                 if (dir_exists(d + subdir))
                     something = true;
@@ -498,14 +496,14 @@ void validate_basedirs()
             if (everything)
             {
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
-                base_dir_found = true;
+                found = true;
             }
             else if (something)
             {
                 // give an error for this case because this incomplete data
                 // directory will be checked before others, possibly leading
                 // to a weird mix of data files.
-                if (!base_dir_found)
+                if (!found)
                 {
                     mprf(MSGCH_ERROR,
                         "Incomplete or corrupted data directory '%s'",
@@ -516,7 +514,7 @@ void validate_basedirs()
     }
 
     // can't proceed if nothing complete was found.
-    if (!base_dir_found)
+    if (!found)
     {
         string err = "Missing DCSS data directory; tried: \n";
         for (const string &d : bases)
