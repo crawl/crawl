@@ -477,9 +477,10 @@ const vector<string> crawl_data_subfolders =
 
 void validate_basedirs()
 {
+    bool base_dir_found;
     // TODO: could use this to pick a single data directory?
     vector<string> bases(_get_base_dirs());
-    bool found = false;
+    base_dir_found = false;
 
     for (const string &d : bases)
     {
@@ -497,14 +498,14 @@ void validate_basedirs()
             if (everything)
             {
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
-                found = true;
+                base_dir_found = true;
             }
             else if (something)
             {
                 // give an error for this case because this incomplete data
                 // directory will be checked before others, possibly leading
                 // to a weird mix of data files.
-                if (!found)
+                if (!base_dir_found)
                 {
                     mprf(MSGCH_ERROR,
                         "Incomplete or corrupted data directory '%s'",
@@ -515,7 +516,7 @@ void validate_basedirs()
     }
 
     // can't proceed if nothing complete was found.
-    if (!found)
+    if (!base_dir_found)
     {
         string err = "Missing DCSS data directory; tried: \n";
         for (const string &d : bases)
