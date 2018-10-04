@@ -1,175 +1,254 @@
-# A set of loot vaults that show the player their reward, but requires them to
-# transport into the vault without seeing what's further inside.
+# A subvaulted transporter vaults that places 098 monsters and loot that scales
+# counts of each with depth. The loot contains some more focused consumables
+# and good_item or artefact jewellery or aux armour.
 
 {{
--- Transporter entry and exit setup. Note that only one exit glyph is used.
+-- Common setup needed for all the_bubble subvaults.
 function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
+    -- Subvault transporter entry/exit and monster setup. Only one instance of
+    -- exit_glyph is used; the rest become floor.
     e.lua_marker(entry_glyph, transp_dest_loc("the_bubble_entry"))
     e.nsubst(exit_glyph .. " = " .. exit_glyph .. " / .")
     e.lua_marker(exit_glyph, transp_loc("the_bubble_exit"))
+
+    -- Scale up monsters by depth.
+    if you.in_branch("D") then
+        if you.depth() < 10 then
+            e.nsubst(". = 5=0 / 6=0. / 2=9 / 4=9. / 8... / .")
+        elseif you.depth() < 13 then
+            e.nsubst(". = 5=0 / 6=0. / 3=9 / 3=9. / 8. / .")
+        else
+            e.nsubst(". = 6=0 / 6=0. / 3=9 / 4=9. / 2=8. / .")
+        end
+    elseif you.in_branch("Shoals")
+           or you.in_branch("Swamp")
+           or you.in_branch("Snake")
+           or you.in_branch("Spider") then
+        e.nsubst(". = 6=0 / 7=0. / 3=9 / 5=9. / 2=8. / .")
+    elseif you.in_branch("Elf") then
+        e.nsubst(". = 6=0 / 8=0. / 3=9 / 5=9. / 8 / 8. / .")
+    elseif you.in_branch("Crypt") then
+        e.nsubst(". = 6=0 / 8=0. / 4=9 / 4=9. / 8 / 2=8. / .")
+    elseif you.in_branch("Depths") then
+        e.nsubst(". = 7=0 / 8=0. / 4=9 / 4=9. / 8 / 2=8. / .")
+    else
+        e.nsubst(". = 7=0 / 8=0. / 4=9 / 5=9. / 8 / 3=8. / .")
+    end
+
+    -- Add some more specific monsters among the 8s for the very late branches
+    -- a good out-of-depth monster set.
+    if you.in_branch("Crypt") then
+       e.kmons("2 = ancient lich")
+       e.nsubst("8 = 2 / 8")
+    elseif you.in_branch("Zot") then
+       e.kmons("2 = ancient lich / orb of fire / curse toe")
+       e.subst("8 = 28")
+    elseif you.in_branch("Pandemonium") then
+       -- 8 and 9 spawns both aren't a thing in Pan, so make these ourself.
+       e.kmons("2 = greater demon / nonbase demonspawn")
+       e.kmons("3 = executioner / brimstone fiend / ice fiend / tzitzimitl" ..
+               "    / hell sentinel")
+       e.subst("8 = 39")
+       e.subst("9 = 02")
+    end
+
+    -- Metal is a bit out of place in these branches.
+    if you.in_branch("Swamp") or you.in_branch("Spider") then
+       e.subst("v = c")
+    end
 end
 }}
 
-NAME: gammafunk_the_bubble
-TAGS: no_monster_gen no_trap_gen
-DEPTH: Crypt, D:7-, Depths, Elf, Zot
-ITEM: any randart jewellery
+NAME:   gammafunk_the_bubble
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:7-, Shoals, Snake, Swamp, Spider, Elf, Crypt, Depths, Zot, Pan
 ORIENT: float
+: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:   any jewellery good_item, any jewellery randart
+ITEM:   cloak good_item / scarf good_item / helmet good_item \
+        / hat good_item / pair of gloves good_item / pair of boots good_item
+ITEM:   cloak randart / helmet randart / hat randart / pair of gloves randart \
+        / pair of boots randart
+# Set up increasing loot count and quality with depth.
+: if you.in_branch("D") then
+:   if you.depth() < 10 then
+NSUBST: ' = ddeg / 3=|* / * / *% / 2=$ / .
+:   elseif you.depth() < 13 then
+NSUBST: ' = d / eg / 3=|* / * / %$.. / 2=$ / .
+:   else
+NSUBST: ' = 2=d / eg / 3=|* / *% / %$.. / 2=$ / .
+:   end
+: elseif you.in_branch("Shoals") or you.in_branch("Swamp")
+:        or you.in_branch("Snake") or you.in_branch("Spider") then
+NSUBST: ' = 2=d / eg / 3=|* / * / %$ / 2=$ / .
+: elseif you.in_branch("Elf") then
+NSUBST: ' = 2=d / fh / 4=|* / *% / %$.. / 2=$ / .
+: elseif you.in_branch("Crypt") then
+NSUBST: ' = 2=d / fh / 4=|* / * / %$ / 2=$ / .
+: elseif you.in_branch("Depths") then
+NSUBST: ' = 2=d / f / h / 4=|* / *% / %$.. / 2=$ / .
+: else
+NSUBST: ' = 2=d / f / h / 4=|* / *% / %$ / 2=$ / .
+: end
+# Statue decorations.
+: if not you.in_branch("Shoals") and not you.in_branch("Spider") then
+SUBST:  G : GGGTTUttt, H : GGGTTUttt
+: elseif you.in_branch("Swamp") then
+SUBST:  G : Gt, H : Gt
+: else
+SUBST:  G : GGGTTUttt, H : GGGTTUttt
+: end
 SUBVAULT: A : the_bubble
-NSUBST: | = d / |
-MARKER: D = lua:transp_loc("the_bubble_entry")
-MARKER: E = lua:transp_dest_loc("the_bubble_exit")
-SUBST: c : bcv
+MARKER:   D = lua:transp_loc("the_bubble_entry")
+MARKER:   E = lua:transp_dest_loc("the_bubble_exit")
+
 MAP
-   ccccccc ccccccc
-  ccccccccccccccccc
- cccccAAcccccAAAcccc
-.nnn$xAAAAAAAAAAAccc
-.nn*$xAAAAAAAAAAAAcc
-.nn|*+AAAAAAAAAAAAcc
-.nn*$xAAAAAAAAAAAAcc
-.nnn$xAAAAAAAAAAAccc
-.cccccAAAAAAAAAAAccc.
-@DccccAAAAAAAAAAAccE@
-.cccccAAAAAAAAAAAccc.
-.nnn$xAAAAAAAAAAAccc
-.nn*$xAAAAAAAAAAAAcc
-.nn|*+AAAAAAAAAAAAcc
-.nn*$xAAAAAAAAAAAAcc
-.nnn$xAAAAAAAAAAAccc
- cccccAAcccccAAAcccc
-  ccccccccccccccccc
-   ccccccc ccccccc
+   ......@.......
+ ...cccc...ccccc..
+..cccAAnnnnnAAAcc..
+.ccHcAAAAAAAAAAAcc.
+.n''cAAAAAAAAAAAAc.
+.n''+AAAAAAAAAAAAc.
+.n''cAAAAAAAAAAAAc.
+.ccccAAAAAAAAAAAnc.
+.G..nAAAAAAAAAAAn..
+@..DnAAAAAAAAAAAnE@
+.G..nAAAAAAAAAAAn..
+.ccccAAAAAAAAAAAnc.
+.n''cAAAAAAAAAAAAc.
+.n''+AAAAAAAAAAAAc.
+.n''cAAAAAAAAAAAAc.
+.ccHcAAAAAAAAAAAcc.
+..cccAAnnnnnAAAcc..
+ ...cccc...ccccc..
+   ......@.......
 ENDMAP
 
 NAME: the_bubble_gammafunk_split
 TAGS: the_bubble unrand
-NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
 SUBST: x : bcvx
 : gammafunk_the_bubble_setup(_G, "R", "S")
 MAP
-0S     ...
-.....0..x..
-.xx..x......
-.0xx0.0xx.x.
-...xx.xx0...
-0x.x0.0xxx.
-..0xx.xx...
-S.xx0.0xx.R
-..0xx.xx...
-0x.x0.0xxx.
-...xx.xx0...
-.0xx0.0xx.x.
-.xx..x......
-.....0..x..
-0S     ...
+.S     ..-
+........x-.
+.xx..x...-..
+..xx...xx-x-
+...xx.xx.---
+.x.x...xxx-
+...xx.xx---
+S.xx...xx-R
+...xx.xx---
+.x.x...xxx-
+...xx.xx.---
+..xx...xx-x-
+.xx..x...-..
+........x-.
+.S     ..-
 ENDMAP
 
 NAME: the_bubble_gammafunk_plus_minus
 TAGS: the_bubble unrand
-NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
 SUBST: x : bcvx
 : gammafunk_the_bubble_setup(_G, "R", "S")
 MAP
-0S     0..
-...........
-.0x0.x.0x...
-.xxx0x.xxx..
-.0x0.x..x...
-...........
-..x.0x0.x..
-S0x.xxx.x.R
-..x.0x0.x..
-...........
-.0x0.x..x...
-.xxx0x.xxx..
-.0x0.x.0x...
-...........
-0S     0..
+.S     ..-
+.........--
+..x..x..x---
+.xxx.x-xxx--
+..x..x--x---
+.......----
+..x..x..x--
+S.x.xxx.x-R
+..x..x..x--
+.......----
+..x..x--x---
+.xxx.x-xxx--
+..x..x..x---
+.........--
+.S     ..-
 ENDMAP
 
 NAME: the_bubble_gammafunk_crates
 TAGS: the_bubble unrand
-SUBST: A = a0, D = d0, E = e0, F = f0, H = h0, J = j0,  P = p0, Q = q0, R = r0
-SUBST: S = s0, a : bcvx, d : bcvx, e : bcvx, f : bcvx, h : bcvx, j : bcvx
+SUBST: A = a., D = d., E = e., F = f., H = h., J = j.,  P = p., Q = q., R = r.
+SUBST: S = s., a : bcvx, d : bcvx, e : bcvx, f : bcvx, h : bcvx, j : bcvx
 SUBST: k : bcvx, p : bcvx, q : bcvx, r : bcvx, s : bcvx, u = u.., u = bcvx
-NSUBST: 0 = Z / 6=0 / 2=9 / 8=009. / .
+NSUBST: . = Z / .
 : gammafunk_the_bubble_setup(_G, "y", "Z")
 MAP
-uu     u0.
-0.0.u...Ee.
-.a.a.Dd0ee.u
-0.Aa.dd.S..u
-.Aaa.0..ss.u
-u..0.hHh.s.
-0fFf.hhh..u
-.Fff......y
-u....kk.r.u
-.jj0.Kk.rr.
-0Jjj.kk.Rr.u
-.Jj.P.0.0..u
-0jj.ppp.qq.u
-..0u.0..Qq.
-uu     u0.
+uu     u.-
+....u...Ee-
+.a.a.Dd.ee-u
+..Aa.dd.S--u
+.Aaa...-ss-u
+u....hHh-s-
+.fFf-hhh--u
+.Fff------y
+u...-kk-r-u
+.jj..Kk.rr-
+.Jjj.kk.Rr-u
+.Jj.P....--u
+.jj.ppp.qq-u
+...u....Qq-
+uu     u.-
 ENDMAP
 
 NAME: the_bubble_gammafunk_roulette
 TAGS: the_bubble unrand
-NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
-SUBST:  x : bcvx
-# Randomize sides on which transporters appear and randomize destinations.
-SHUFFLE: DFJL / EHKM, DE / FH / JK / LM
-NSUBST: S = S / .
+# Randomize orientation of transporter/landing site pairs, then where each pair
+# resides, then were the exit transporter resides.
+SHUFFLE: DFJM / LEHK, DL / FE / JH / MK, MD, MF, MJ
 # Make transporter markers. Glyphs are set up so that each transporter takes
-# you to a landing site other than the one next to the transporter you took.
+# you to a landing site other than the closest one. The shuffles above respect
+# this property.
 {{
-local trans_glyphs = "DFJL"
-local dest_glyphs = "HKME"
+local trans_glyphs = "DFJ"
+local dest_glyphs = "EHK"
 for i = 1, #trans_glyphs do
   lua_marker(trans_glyphs:sub(i,i), transp_loc("roulette_" .. tostring(i)))
   lua_marker(dest_glyphs:sub(i,i), transp_dest_loc("roulette_" .. tostring(i)))
 end
 }}
-: gammafunk_the_bubble_setup(_G, "R", "S")
+SUBST:  x : bcvx
+: gammafunk_the_bubble_setup(_G, "L", "M")
 MAP
-0.     ...
-.S..xxx..S0
-....D.E....0
-.00.....00.0
-.00x...x00..
-..xx...xx..
-M.........F
-.....R.....
-L.........H
-..xx...xx..
-.00x...x00..
-.00.....00.0
-....K.J....0
-.S..xxx..S0
-0.     ...
+..     ...
+...-----...
+...-E-F-....
+...-----....
+...x...x....
+--xx...xx--
+D-..x.x..-H
+--...x...--
+L-..x.x..-J
+--xx...xx--
+...x...x....
+...-----....
+...-M-K-....
+...-----...
+..     ...
 ENDMAP
 
 NAME: the_bubble_gammafunk_grid
 TAGS: the_bubble unrand
 SHUFFLE: AB
-SUBST: A = b, B = 0, C : 0b, D : 0b, E : 0b
+SUBST: A = b, B = ., C : .b, D : .b, E : .b
 SHUFFLE: bv
-NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
 : gammafunk_the_bubble_setup(_G, "R", "S")
 MAP
-0S     0v0
-.v0v.v0v.vE
-0.v.v.v.vDv0
-.v.vAv.vCv.v
-0.vAAAv.v.v0
-.vBvAvBv.v.
-vAvBvBvAv.v
+.S     .v.
+.v.v-v.v.vE
+..v.v-v.vDv.
+.v.vAv-vCv.v
+..vAAAv-v.v.
+.vBvAvBv-v.
+vAvBvBvAv-v
 AAAvBvAAAvR
-vAvBvBvAv.v
-.vBvAvBv.v.
-0.vAAAv.v.v0
-.v.vAv.vCv.v
-0.v.v.v.vDv0
-.v0v.v0v.vE
-0S     0v0
+vAvBvBvAv-v
+.vBvAvBv-v.
+..vAAAv-v.v.
+.v.vAv-vCv.v
+..v.v-v.vDv.
+.v.v-v.v.vE
+.S     .v.
 ENDMAP
