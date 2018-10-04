@@ -518,7 +518,6 @@ void validate_basedirs()
     {
         string err = "Missing DCSS data directory; tried: \n";
         err += comma_separated_line(bases.begin(), bases.end());
-        err.push_back("x");
         err.pop_back();
 
         end(1, false, "%s", err.c_str());
