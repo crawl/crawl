@@ -16,7 +16,7 @@ when removed.
 amulet of guardian spirit
 
 An amulet containing a protective spirit which will cause any damage taken to
-be divided between the wearer's reserves of health and magic.
+be divided between the wearer's reserves of health and magic. When you hold the amulet to your ear, the spirit inside reassures you that you'll come to no harm.
 %%%%
 amulet of harm
 
@@ -28,26 +28,26 @@ magical backlash significantly drains the wearer.
 amulet of inaccuracy
 
 An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells.
+targeting monsters via ranged attacks or spells. Holding it makes your hand tremble.
 %%%%
 amulet of magic regeneration
 
 An amulet that substantially increases the wearer's normal rate of magic
 regeneration. In order to function, it must first attune itself to the wearer's
-body with full reserves of magic.
+body with full reserves of magic. Elvish runes encircle the amulet's perimeter.
 %%%%
 amulet of nothing
 
-An amulet with no special properties.
+An amulet with no special properties. Often worn by humans.
 %%%%
 amulet of rage
 
-An amulet that enables its wearer to attempt to enter a state of berserk rage.
+A possessed amulet that enables its wearer to attempt to enter a state of berserk rage. The observant adventurer will hear the amulet growling during battle.
 %%%%
 amulet of reflection
 
 An amulet which exerts a force that blocks some incoming attacks, and can even
-reflect any blocked ranged attacks back towards the attacker.
+reflect any blocked ranged attacks back towards the attacker. The amulet is well polished.
 %%%%
 amulet of regeneration
 
@@ -58,7 +58,7 @@ amulet of the gourmand
 
 An amulet that allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
-digestion are cumulative over time and are initially small.
+digestion are cumulative over time and are initially small. The amulet is distended, as if it were full.
 %%%%
 amulet of the acrobat
 
@@ -131,13 +131,13 @@ and other miscellaneous larceny.
 book of callings
 
 An introductory text on the magical summoning of beasts and beings from other
-realms.
+realms. The front cover shows an apprentice being mobbed by a horde of imps.
 %%%%
 book of cantrips
 
 A book containing a small selection of very basic magic spells, intended for
 beginners who wish to learn the rudiments of one of the featured magical
-schools.
+schools. The backbone of magical academies above ground everywhere.
 %%%%
 book of changes
 
@@ -180,7 +180,7 @@ sparkles and shimmers as the pages are flipped.
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
-the secret college of the djinn.
+the secret college of the djinn. The tome is warm to the touch.
 %%%%
 book of fixed level
 
@@ -193,20 +193,20 @@ A book of magic spells.
 book of flames
 
 The standard text used in arcane academies by students of the elemental magic
-of Fire.
+of Fire. The tome is slightly warm to the touch.
 %%%%
 book of frost
 
 A book of magic spells, often used as an introduction to the elemental magics
-of Ice.
+of Ice. The tome is slightly cold to the touch.
 %%%%
 book of geomancy
 
-A book containing basic spells involving the element of Earth.
+A book containing basic spells involving the element of Earth. After perusing the tome’s contents your fingers come away caked in dirt.
 %%%%
 book of ice
 
-A book of advanced magical spells using the element of Ice.
+A book of advanced magical spells using the element of Ice. The tome is cold to the touch.
 %%%%
 book of maledictions
 
@@ -226,7 +226,7 @@ subtle at best.
 %%%%
 book of necromancy
 
-A macabre book containing basic Necromancy spells.
+A macabre book containing basic Necromancy spells. The mere presence of this tome makes nearby corpses twitch.
 %%%%
 book of party tricks
 
@@ -250,15 +250,15 @@ binding creatures from all manners of realms.
 book of the dragon
 
 A magical book of spells which allow some command over dragons and their
-aspects.
+aspects. The cover is illustrated with a wizard riding a drake.
 %%%%
 book of the earth
 
-A textbook of advanced Earth magic.
+A textbook of advanced Earth magic. The tome is as heavy as stone.
 %%%%
 book of the sky
 
-A magical book containing powerful elemental spells of Air.
+A magical book containing powerful elemental spells of Air. The tome, through thick, weighs less than a feather.
 %%%%
 book of the tempests
 
@@ -312,7 +312,7 @@ An armour made for centaurs, to wear over their equine half.
 %%%%
 chain mail
 
-A suit of armour made entirely out of tiny metal rings.
+A suit of armour laboriously assembled out of tiny metal rings.
 %%%%
 chunk of flesh
 
@@ -346,11 +346,11 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 
-A double-edged fighting knife with a sharp point.
+A double-edged fighting knife with a sharp point. A favourite of backstabbers throughout history.
 %%%%
 decaying skeleton
 
-A decaying skeleton.
+A decaying skeleton. Particularly tough sinews cling to the bones.
 %%%%
 deck of destruction
 
@@ -425,7 +425,7 @@ A collection of spells once used by the great swamp civilizations.
 figurine of a ziggurat
 
 A small figurine made of some strange material, shaped like a stepped pyramid.
-It is remarkably detailed – almost like a real, vast structure, shrunk somehow
+It is remarkably detailed – almost like a real, vast structure, somehow shrunk
 smaller than a human hand.
 %%%%
 fire dragon scales
@@ -445,11 +445,11 @@ rather than stones found on the floor.
 %%%%
 giant club
 
-A giant lump of wood.
+A giant lump of wood. Simple, but effective.
 %%%%
 giant spiked club
 
-A giant lump of wood with sharp spikes at one end.
+A giant lump of wood ornamented with sharp spikes at one end.
 %%%%
 glaive
 
@@ -462,7 +462,7 @@ and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
-A pile of glittering gold coins.
+A pile of glittering gold coins. They depict various monarchs, all long since dead.
 %%%%
 grand grimoire
 
@@ -486,7 +486,7 @@ shaft.
 %%%%
 hand axe
 
-A small axe.
+A small axe, useful for hacking branches, limbs, and bones.
 %%%%
 hand crossbow
 
@@ -520,7 +520,7 @@ while rendering its wearer more susceptible to fire.
 %%%%
 inedible chunk of flesh
 
-<chunk of flesh>
+Unappetising even for a chunk of flesh.
 %%%%
 javelin
 
@@ -578,7 +578,7 @@ area.
 %%%%
 long sword
 
-A sword with a long, slashing blade.
+A sword with a long, slashing blade. A staple of knights and brigands everywhere.
 %%%%
 longbow
 
@@ -591,7 +591,7 @@ A short club with a metal head.
 manual
 
 A valuable book which allows one to practise a certain skill more efficiently
-when carried.
+when carried. It is as detailed as it is dry.
 %%%%
 morningstar
 
@@ -654,7 +654,7 @@ and greaves. It provides excellent protection.
 potion of agility
 
 A potion which greatly increases the dexterity and evasiveness of one who
-drinks it.
+drinks it. The liquid eddies within the phial in all directions.
 %%%%
 potion of ambrosia
 
@@ -664,16 +664,16 @@ fundamentally linked – the regeneration ends the moment the confusion does.
 %%%%
 potion of berserk rage
 
-A potion which can send one into an incoherent rage.
+A potion which can send one into an incoherent rage, distilled from little more than blood and alcohol.
 %%%%
 potion of blood
 
-A potion containing the essence of life.
+A potion containing the essence of life. It takes great self-control not to quaff it at once.
 %%%%
 potion of brilliance
 
 A potion which greatly increases the intelligence and magical power of one who
-drinks it.
+drinks it. More than one spell has been invented under the influence of this beverage.
 %%%%
 potion of cancellation
 
@@ -687,7 +687,7 @@ It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
-A noxious concotion which reduces strength, intelligence and dexterity.
+A noxious concoction which reduces strength, intelligence and dexterity.
 %%%%
 potion of experience
 
@@ -743,7 +743,7 @@ as well.
 %%%%
 quarterstaff
 
-A sturdy wooden pole, meant for fighting.
+A sturdy wooden pole, used for fighting while young and hobbling while old.
 %%%%
 quicksilver dragon scales
 
@@ -974,7 +974,7 @@ A scroll that reveals the surroundings of the one who reads it.
 %%%%
 scroll of noise
 
-A prank scroll that creates a loud noise when read.
+A prank scroll that creates a loud noise when read, akin to that of a thunderous raspberry.
 %%%%
 scroll of random uselessness
 
@@ -1061,7 +1061,7 @@ and Ice Magic, they can freeze those struck by it.
 %%%%
 staff of conjuration
 
-A staff that increases the power of conjurations cast by its wielder.
+A staff that increases the power of conjurations cast by its wielder. The weapon vibrates with raw power.
 %%%%
 staff of death
 
@@ -1096,7 +1096,7 @@ the victims are normally resistant.
 %%%%
 staff of power
 
-A staff that provides an increased reservoir of magical power to its wielder.
+A staff that provides an increased reservoir of magical power to its wielder. Holding it makes one’s hair stand on end.
 %%%%
 staff of summoning
 
@@ -1104,7 +1104,7 @@ A staff that increases the power of summonings cast by its wielder.
 %%%%
 staff of wizardry
 
-A staff that increases the ability of its wielder to use magical spells.
+A staff that increases the ability of its wielder to use magical spells. The weapon is engraved with strings of runes, many of which are simple mnemonics.
 %%%%
 steam dragon scales
 
@@ -1205,7 +1205,7 @@ creatures resistant to cold.
 wand of paralysis
 
 A magical device which can render a creature immobile, incapable of moving any
-of its limbs.
+of its limbs. Holding it makes your hand stiff.
 %%%%
 wand of polymorph
 
@@ -1214,7 +1214,7 @@ form. It is especially effective against shape-changing creatures.
 %%%%
 wand of random effects
 
-A magical device which can produce a variety of effects.
+A magical device which can produce a variety of effects. Reliably entertaining in even the most dire of circumstances.
 %%%%
 wand of scattershot
 
