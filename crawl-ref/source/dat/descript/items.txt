@@ -687,7 +687,7 @@ It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
-A noxious concotion which reduces strength, intelligence and dexterity.
+A noxious concoction which reduces strength, intelligence and dexterity.
 %%%%
 potion of experience
 
