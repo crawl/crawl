@@ -1032,9 +1032,9 @@ ENDMAP
 
 NAME:   biasface_ghost_orc_armoury
 DEPTH:  D:3-, Orc
-ITEM:   boots / helmet / hat / gloves / cloak
-ITEM:   boots good_item / helmet good_item / hat good_item / \
-        gloves good_item / cloak good_item
+ITEM:   pair of boots / helmet / hat / pair of gloves / cloak
+ITEM:   pair of boots good_item / helmet good_item / hat good_item / \
+        pair of gloves good_item / cloak good_item
 ITEM:   any armour, any armour good_item, any weapon, any weapon good_item
 ITEM:   any jewellery, any jewellery good_item
 KMONS:  O = player ghost
@@ -1276,11 +1276,11 @@ DEPTH:  D:8-, Elf, Depths
 ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(dgn.loot_potions)
-ITEM:   hat / robe good_item / gloves / boots / cloak
-ITEM:   hat good_item / robe good_item / gloves good_item / boots good_item / \
-        cloak good_item
-ITEM:   hat randart / robe randart / gloves randart / boots randart / \
-        cloak randart
+ITEM:   hat / robe good_item / pair of gloves / pair of boots / cloak
+ITEM:   hat good_item / robe good_item / pair of gloves good_item \
+        / pair of boots good_item / cloak good_item
+ITEM:   hat randart / robe randart / pair of gloves randart \
+        / pair of boots randart / cloak randart
 KITEM:  O = potion of cancellation q:2 ident:type
 KMONS:  O = player ghost
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain

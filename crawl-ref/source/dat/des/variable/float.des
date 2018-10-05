@@ -3999,7 +3999,7 @@ DEPTH:   Crypt, D:12-, Depths, Elf, Snake, Zot
 ORIENT:  float
 ITEM:    any book, any manual, any jewellery good_item
 ITEM:    robe good_item / cloak good_item / scarf good_item \
-      / pair of boots good_item / hat good_item
+         / pair of boots good_item / pair of gloves good_item / hat good_item
 # Do this nsubst now so some branches can adjust monster placement.
 NSUBST:  4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
 NSUBST:  ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
@@ -4132,8 +4132,8 @@ DEPTH:  D:7-, Orc
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   cloak good_item / scarf good_item / helmet good_item \
-        / hat good_item / gloves good_item / pair of boots good_item
-ITEM:   cloak randart / helmet randart / hat randart / gloves randart \
+        / hat good_item / pair of gloves good_item / pair of boots good_item
+ITEM:   cloak randart / helmet randart / hat randart / pair of gloves randart \
         / pair of boots randart
 NSUBST: R = R / -
 : if you.in_branch("D") then
@@ -4426,7 +4426,7 @@ KMASK: -'DE12 = no_item_gen
 ITEM: potion of resistance ident:type, potion of cancellation ident:type q:2
 # Replaces a gold pile in late Dungeon
 ITEM: cloak good_item / scarf good_item / pair of boots good_item \
-      / hat good_item
+      / pair of gloves good_item / hat good_item
 # Monsters appropriate for the cloud type must be defined in order of
 # cloud_types and come in pairs. Some levels define a more difficult monster on
 # '2', otherwise the monster is repeated.

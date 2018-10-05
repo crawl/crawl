@@ -135,9 +135,9 @@ function ghost_good_loot(e)
     jewellery = "any jewellery"
     good_jewellery = "any jewellery good_item"
     randart_jewellery = "any jewellery randart"
-    aux = "cloak / scarf / helmet / hat / gloves / pair of boots"
+    aux = "cloak / scarf / helmet / hat / pair of gloves / pair of boots"
     good_aux = "cloak good_item / scarf good_item / helmet good_item / " ..
-        "hat good_item / gloves good_item / pair of boots good_item"
+        "hat good_item / pair of gloves good_item / pair of boots good_item"
     randart_aux = good_aux:gsub("good_item", "randart")
 
     first_item = true
