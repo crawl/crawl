@@ -3023,7 +3023,7 @@ w:50
 
 @The_monster@ says, "You stick out like a sore thumb. Or at least, a shining one."
 
-@The_monster@ says, "Won't need this ring of poison resistance, then, will I?"
+@The_monster@ says, "Won't need this ring of positive energy, then, will I?"
 
 @The_monster@ says, "Can you turn the glow down a bit? I can't see you to hit you."
 
