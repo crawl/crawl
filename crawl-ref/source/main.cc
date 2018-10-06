@@ -226,7 +226,6 @@ static void _do_prev_cmd_again();
 static void _update_replay_state();
 
 static void _show_commandline_options_help();
-static void _wanderer_startup_message();
 static void _announce_goal_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
@@ -433,9 +432,6 @@ NORETURN static void _launch_game()
     viewwindow();
 #endif
 
-    if (game_start && you.char_class == JOB_WANDERER)
-        _wanderer_startup_message();
-
     if (game_start)
        _announce_goal_message();
 
@@ -567,22 +563,6 @@ static void _show_commandline_options_help()
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
 #endif
-}
-
-static void _wanderer_startup_message()
-{
-    int skill_levels = 0;
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        skill_levels += you.skills[ i ];
-
-    if (skill_levels <= 2)
-    {
-        // Some wanderers stand to not be able to see any of their
-        // skills at the start of the game (one or two skills should be
-        // easily guessed from starting equipment). Anyway, we'll give
-        // the player a message to warn them (and a reason why). - bwr
-        mpr("You wake up in a daze, and can't recall much.");
-    }
 }
 
 static void _wanderer_note_items()
