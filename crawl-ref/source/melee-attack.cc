@@ -1513,7 +1513,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
-    if (you.duration[DUR_CONFUSING_TOUCH] && wpn_skill == SK_UNARMED_COMBAT)
+    if (you.duration[DUR_CONFUSING_TOUCH])
         return 0;
 
     return damage;
@@ -2255,11 +2255,12 @@ int melee_attack::calc_to_hit(bool random)
 {
     int mhit = attack::calc_to_hit(random);
 
+    // Just trying to touch is easier than trying to damage.
+    if (you.duration[DUR_CONFUSING_TOUCH])
+        mhit += maybe_random2(you.dex(), random);
+
     if (attacker->is_player() && !weapon)
     {
-        // Just trying to touch is easier than trying to damage.
-        if (you.duration[DUR_CONFUSING_TOUCH])
-            mhit += maybe_random2(you.dex(), random);
 
         // TODO: Review this later (transformations getting extra hit
         // almost across the board seems bad) - Cryp71c

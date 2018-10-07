@@ -3055,7 +3055,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
 
-    if (you.duration[DUR_CONFUSING_TOUCH] && !you.weapon()
+    if (you.duration[DUR_CONFUSING_TOUCH]
         || you.form == transformation::fungus && !mons_is_unbreathing(mi.type))
     {
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",

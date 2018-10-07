@@ -206,6 +206,10 @@ int player::damage_type(int)
  */
 brand_type player::damage_brand(int)
 {
+    // confusing touch always overrides
+    if (duration[DUR_CONFUSING_TOUCH])
+        return SPWPN_CONFUSE;
+
     const int wpn = equip[EQ_WEAPON];
     if (wpn != -1 && !melded[EQ_WEAPON])
     {
@@ -215,9 +219,6 @@ brand_type player::damage_brand(int)
     }
 
     // unarmed
-
-    if (duration[DUR_CONFUSING_TOUCH])
-        return SPWPN_CONFUSE;
 
     return get_form()->get_uc_brand();
 }
