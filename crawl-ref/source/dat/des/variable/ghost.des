@@ -747,7 +747,7 @@ ENDMAP
 NAME:   gammafunk_ghost_fury_of_okawaru
 DEPTH:  D:12-, Orc, Elf, Crypt
 ORIENT: float
-KFEAT:  O = altar_okawaru
+KFEAT:  OP = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
 KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
