@@ -2877,7 +2877,8 @@ ENDMAP
 NAME:  minmay_gold_behind_fungi
 TAGS:  extra no_monster_gen
 DEPTH: D, Depths
-MONS:  fungus
+MONS:  toadstool, fungi
+SUBST: 1 = 1222
 MAP
 11111
 1$$$1
