@@ -1580,14 +1580,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mpr("You don't have enough innate magic capacity.");
             return false;
         }
-<<<<<<< HEAD
         return true;   
-		
-=======
-        return true;
 
-
->>>>>>> a14d16000e8d299107b84b03d44a6f4d421c14f6
     case ABIL_SHAFT_SELF:
         return you.can_do_shaft_ability(quiet);
 
