@@ -1,94 +1,85 @@
-[![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
+# Bloatcrawl
 
-# Dungeon Crawl Stone Soup
+This is a fork of [Dungeon Crawl Stone Stoup](https://github.com/crawl/crawl), adding a lot of new content, most of it terrible.
 
-Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, involving characters of diverse skills, worshipping deities of great power and caprice. To win, you'll need to be a master of tactics and strategy, and prevail against overwhelming odds.
+# New Species
 
-## Contents
+**Golem** Formed from clay, Golems are robust constructs that cannot use equipment. They begin with incredible attributes that do not increase as they grow.
 
-1. [How to Play](#how-to-play)
-3. [Community](#community)
-5. [How you can help](#how-you-can-help)
-4. [License and history information](#license-and-history-information)
+**Grue** Grues are strange, stealthy predators that are adapted to life in the darkness. They slip further into the shadows as they grow.
 
-## How to Play
+**Crystal Dwarf** Crystal Dwarves have reflective, crystalline skin that naturally shields them. Though less robust than other dwarves, they are skilled at elemental magic.
 
-If you'd like to dive in immediately, we suggest one of:
+**Robot** Robots are metallic humanoids crafted by Dwarves. They break equipment when uninstalling it and have a poor grasp of religion, but can shoot lasers.
 
-* Start a game and pick a tutorial (select tutorial in the game menu),
-* Read [quickstart.txt](crawl-ref/docs/quickstart.txt) (in the [docs/](crawl-ref/docs/) directory), or
-* For the studious, [read Crawl's full manual](crawl-ref/docs/crawl_manual.rst).
+**Bodach** Bodach are mortal descendants of an ancient celestial species. They change between four distinct aspects, but have limited control over the process.
 
-There is also an ingame list of frequently asked questions which you can access by typing
-`?Q`.
+**Ember Elf** Ember Elves have depleted magical reserves, but regenerate magical power quickly. As they develop, their magic becomes more powerful but harder to control.
 
-#### Internet Play
+**Werewolf** Though the moon does not shine inside the dungeon, Werewolves' uncontrollable lycanthropy is sometimes triggered by their bloodlust.
 
-You can play Crawl online, competing with other players or watching them. Click "Play Online Now!" on [the Crawl homepage](https://crawl.develz.org/) to find your closest server. You can play in your browser or over SSH.
+**Obsidian Dwarf** An ancient species in which the fire of magic has cooled, Obsidian Dwarves must expend their lifeforce to cast spells. They both cause and receive extra harm.
 
-#### Offline Play
+**Angel** Angels are graceful, holy beings created by the Shining One. Most angels continue to serve their maker, but they are free to follow another god if they wish.
 
-Both classical ASCII and tiles (GUI) versions of Crawl are available to [download for Linux, Windows and OS X](https://crawl.develz.org/download.htm).
+**Kitsune** Kitsune are enthralling fox spirits that take on human shapes. They are poor at most skills and frailer than humans, but can charm their foes.
 
-## Community
+**Flan** Flans are gelatinous and slightly corrosive beings. Their fluid shape lets them fit easily into any body armour, but they cannot wear other armour types.
 
-### Web
-Our official homepage is [https://crawl.develz.org](https://crawl.develz.org/). You can find online play, offline downloads, a community forum and the development bug tracker/wiki.
+**Yeti** Yeti are large, seldom-seen creatures that live on frozen mountain peaks. Sufficiently mature Yeti passively freeze their foes.
 
-### IRC
-Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freenode.net/?channels=##crawl), or talk development in [##crawl-dev](https://webchat.freenode.net/?channels=##crawl-dev).
+**Hedgehog** Rolling around at the speed of sound, Hedgehogs have got places to go and gotta follow their rainbow.
 
-## How you can help
+**Ratling** Ratlings are verminous humanoids that mature at an incredible pace, but learn very slowly. They have an affinity for poison magic.
 
-If you like the game and you want to help make it better, there are a number
-of ways to do so:
+**Leprechaun** Leprechauns are small and frail but versatile. Their intrinsic luck gives them a knack for finding better items and more gold than other species.
 
-### Reporting bugs
+**Chaoskin** Created by Xom for reasons unknown, Chaoskin constantly evolve. They are better than average at everything, but can't escape Xom's attention for long.
 
-At any time, there will be bugs -- finding and reporting them is a great help.
-Many of the online servers host the regularly updated development version. Bugs
-should be reported to [our bug tracker](https://crawl.develz.org/mantis/). Besides pointing out bugs, new ideas on how to improve interface or gameplay are welcome. These can be added to [the development wiki](https://crawl.develz.org/wiki/).
+**Profound Elf** Deeper than a Deep Elf and twice as elven, Profound Elves are extremely frail magical experts.
 
-### Map making
-Crawl creates levels by combining many hand-made (but often randomised) maps, known as *vaults*. Making them is fun and
-easy. It's best to start with simple entry vaults: see [simple.des](crawl-ref/source/dat/des/arrival/simple.des) for examples. You can also read [the level-design manual](crawl-ref/docs/develop/levels/introduction.txt) for more help.
+**Unipode** Unipodes are distantly related to Octopodes, but have a single tentacle instead of eight. They can only wear one ring and cannot use two-handed weapons.
 
-If you're ambitious, you can create new vaults for anywhere in the game. If you've
-made some vaults, you can test them on your own system (no compiling needed) and
-submit them to [our bug tracker](https://crawl.develz.org/mantis/).
+**Fungoid** Fungoids are mushroom-like humanoids with roots instead of feet. They move exceptionally slowly but can release confusing spores at enemies when they attack.
 
-### Monster Speech & Item Descriptions
-Monster speech provides a lot of flavour. Just like vaults, varied speech depends
-upon a large set of entries. Speech syntax is effective but unusual, so you may want to read [the formatting guide](crawl-ref/docs/develop/monster_speech.txt).
+**Water Sprite** Water Sprites are slow, extremely frail, and cannot read scrolls in the presence of monsters. However, they instantly heal themselves when alone.
 
-Current item descriptions can be read in-game with `?/` or out-of-game
-them in [dat/descript/](crawl-ref/source/dat/descript/). The following conventions should be more or less obeyed:
-* Descriptions ought to contain flavour text, ideally pointing out major weaknesses/strengths.
-* No numbers, please.
-* Citations are okay, but try to stay away from the most generic ones.
+**Felid Mummy** Felid Mummies are undead Felids whose lives have run out. It would take a true display of skill for one of these beings to snatch the Orb.
 
-### Tiles
-We're always open to improvements to existing tiles or variants of often-used tiles (eg floor tiles). If you want to give this a shot, please [contact us](#community) via forums or IRC. In case you drew some tiles of your own, you can submit them to [our bug tracker](https://crawl.develz.org/mantis/).
+# New Backgrounds
 
-### Patches
-For developers (both existing & aspiring!), you can download/fork the source code and write patches. Bug fixes as well as new features are very much welcome.
+**Noble** Nobles are wealthy elites who enter the Dungeon looking for adventure. They have poor attributes but bring the best equipment money can buy.
 
-For large changes, it's always a good idea to [talk with the dev team](#community) first, to see if any plans already exist and if your suggestion is likely to be accepted.
+**Understudy** It's opening night for "The Orb of Zot" and the hero is sick! The Understudy must learn their role quickly if they want to make it through the final act.
 
-Please be sure to read [docs/develop/coding_conventions.txt](crawl-ref/docs/develop/coding_conventions.txt) too.
+**Deprived** Deprived start with nothing but a ration and almost no skills. Survival may prove... difficult.
 
-## License and history information
+**Slime Priest** Slime Priests follow the shapeless slime god Jiyva and are sent into the dungeon to spread slime and jellies.
 
-Crawl is licensed as GPLv2+. See [licence.txt](crawl-ref/licence.txt) for the full text.
+**Annihilator** Annihilators follow the destructive magical god Vehumet. They know the Magic Dart spell and eventually learn new spells directly from their god.
 
-Crawl is a descendant of Linley's Dungeon Crawl. Development of the main branch stalled at version 4.0.0b26, with a final alpha of 4.1 being released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team has continued development. [CREDITS.txt](crawl-ref/CREDITS.txt) contains a full list of contributors.
+**Blood Knight** Blood Knights follow the chaotic and destructive god Makhleb. They start with little skill in their chosen weapon but soon learn to invoke Makhleb's power.
 
-Crawl gladly uses the following open source packages; thanks to their developers:
+**Torpor Knight** Torpor Knights follow Cheibriados and wear heavy, ponderous armour to gain their god's favour more quickly.
 
-* The Lua scripting language, for in-game functionality and user macros ([license](crawl-ref/docs/license/lualicense.txt)).
-* The PCRE library, for regular expressions ([license](crawl-ref/docs/license/pcre_license.txt)).
-* The SQLite library, as a database engine ([license](https://www.sqlite.org/copyright.html)).
-* The SDL and SDL_image libraries, for tiles display ([license](crawl-ref/docs/license/lgpl.txt)).
-* The libpng library, for tiles image loading ([license](crawl-ref/docs/license/libpng-LICENSE.txt)).
+**Storm Cleric** Storm clerics spread destruction in the name of Qazlal.
 
-Thank you, and have fun crawling!
+**Accursed** Accursed serve Ashenzari, the god of curses, and come to the dungeon partially bound with cursed equipment.
+
+**Gambler** Followers of Nemelex Xobeh who have lost everything in a run of bad luck sometimes venture into the Dungeon. They'll need Nemelex's help to turn things around.
+
+**Merchant** Merchants are followers of Gozag. Whether newly established or unsuccessful on the surface world, they enter the Dungeon desperate for a source of income.
+
+**Redneck** Rednecks bring their trusty wand of scattershot and a potion of degeneration to the Dungeon. They aren't good at much besides fighting.
+
+**Alchemist** Alchemists carry a variety of helpful potions and a dagger but are inexperienced with combat.
+
+**Entomologist** Entomologists study insects and related creatures. They bring along a net and a sack of spiders, and can also summon butterflies. 
+
+**Farmer** Farmers carry a sharp, trusty scythe and have great attributes, but little else.
+
+**Chef** Chefs know the basics of magically cooking and freezing monsters (though oddly they prefer butchered chunks raw). They are well supplied with food.
+
+**Sorcerer** Sorcerers start with a random destructive spellbook and a (well-worn) robe of archmagi.
+
+**Librarian** Librarians come to the Dungeon in search of new books for their collection. They bring a few random books along with them and know the Apportation spell.

@@ -401,8 +401,6 @@ static spell_list _get_spell_list(bool just_check = false,
             mprf(MSGCH_PROMPT, "Your library has no spells.");
         return mem_spells;
     }
-
->>>>>>> 77505739eec8c106f216a006422d484a1898bacc
     int num_known      = 0;
     int num_misc       = 0;
     int num_restricted = 0;

@@ -4098,7 +4098,6 @@ NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
 NSUBST:  - = 6=1 / 4=1. / 1=2 / 2=2. / 2=3. / .
 :   end
 # Depths
->>>>>>> 77505739eec8c106f216a006422d484a1898bacc
 : else
 MONS:    slime creature
 MONS:    glowing orange brain / shining eye / floating eye / golden eye \

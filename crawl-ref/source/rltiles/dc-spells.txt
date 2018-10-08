@@ -195,7 +195,6 @@ noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
 petrifying_cloud PETRIFYING_CLOUD
 phantom_mirror PHANTOM_MIRROR
->>>>>>> 77505739eec8c106f216a006422d484a1898bacc
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT

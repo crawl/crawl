@@ -1149,7 +1149,7 @@ bool Menu::process_key(int keyin)
             menu_action = ACT_EXECUTE;
 
         sel.clear();
-        draw_title();
+        update_title();
         return true;
     }
 #ifdef TOUCH_UI
@@ -1161,7 +1161,7 @@ bool Menu::process_key(int keyin)
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
-        draw_title();
+        update_title();
         return true;
     }
 
