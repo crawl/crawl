@@ -16,6 +16,7 @@ show_more = false
 :   if you.turns() == 0 and bot_start then
 :     bot_start = false
 :     crawl.enable_more(false)
+:     crawl.set_sendkeys_errors(true)
 :     crawl.sendkeys("&Y" .. esc)
 :     crawl.sendkeys("&_nemelex" .. eol)
 :     crawl.sendkeys("&~T")

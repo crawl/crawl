@@ -45,11 +45,10 @@ class LevelXPInfo
 public:
     level_id level;
 
-    unsigned int spawn_xp;
-    unsigned int spawn_count;
-    unsigned int generated_xp;
-    unsigned int generated_count;
-    unsigned int turns;
+    unsigned int non_vault_xp;
+    unsigned int non_vault_count;
+    unsigned int vault_xp;
+    unsigned int vault_count;
 
 public:
     LevelXPInfo();

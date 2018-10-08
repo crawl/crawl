@@ -910,6 +910,9 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg = "", bool *prompted = nullptr);
 bool check_moveto_cloud(const coord_def& p, const string &move_verb = "step",
                         bool *prompted = nullptr);
+bool check_moveto_exclusions(const vector<coord_def> &areas,
+                             const string &move_verb = "step",
+                             bool *prompted = nullptr);
 bool check_moveto_exclusion(const coord_def& p,
                             const string &move_verb = "step",
                             bool *prompted = nullptr);
@@ -922,7 +925,7 @@ void move_player_to_grid(const coord_def& p, bool stepped);
 
 bool is_map_persistent();
 bool player_in_connected_branch();
-bool player_in_hell();
+bool player_in_hell(bool vestibule=false);
 bool player_in_starting_abyss();
 
 static inline bool player_in_branch(int branch)

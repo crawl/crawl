@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
         "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
-        "./player", "./mouse_control"],
+        "./player", "./mouse_control", "./ui", "./ui-layouts"],
 function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
           options) {
     "use strict";
@@ -170,7 +170,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         {
             msg_height = data.message_pane.height
                          + (data.message_pane.small_more ? 0 : -1);
+            messages.message_pane_height = msg_height;
         }
+        else
+            msg_height = messages.message_pane_height;
 
         if (layout_parameters == null)
             layout({});
@@ -184,6 +187,14 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     function handle_set_ui_state(data)
     {
         set_ui_state(data.state);
+    }
+
+    function handle_set_ui_cutoff(data)
+    {
+        var popups = document.querySelectorAll("#ui-stack > .ui-popup");
+        Array.from(popups).forEach(function (p, i) {
+            p.classList.toggle("hidden", i <= data.cutoff);
+        });
     }
 
     function set_input_mode(mode)
@@ -235,6 +246,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         "version": handle_version,
         "layout": handle_set_layout,
         "ui_state": handle_set_ui_state,
+        "ui_cutoff": handle_set_ui_cutoff,
         "input_mode": handle_set_input_mode,
     });
 });

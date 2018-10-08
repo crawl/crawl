@@ -53,12 +53,11 @@ DEADJOE
 /docs/aptitudes-wide.txt
 /docs/FAQ.html
 /docs/crawl_manual.txt
+/docs/lua/
+/docs/develop/lua/
 
 # Doxygen documentation
 /source/html/
-
-# Luadoc stuff
-/source/luadoc/
 
 # Crawl generated junk
 arena.result
@@ -183,6 +182,7 @@ Thumbs.db
 
 # Webtiles stuff
 passwd.db3
+user_settings.db3
 *.ttyrec
 /source/rcs
 

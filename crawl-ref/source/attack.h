@@ -130,7 +130,7 @@ protected:
     virtual bool handle_phase_end();
 
     /* Combat Calculations */
-    virtual bool using_weapon() = 0;
+    virtual bool using_weapon() const = 0;
     virtual int weapon_damage() = 0;
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage();
@@ -170,7 +170,6 @@ protected:
 
     /* Output */
     string debug_damage_number();
-    string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
     virtual void set_attack_verb(int damage) = 0;
@@ -201,3 +200,5 @@ protected:
     virtual int  player_stab(int damage);
     virtual void player_stab_check();
 };
+
+string attack_strength_punctuation(int dmg);

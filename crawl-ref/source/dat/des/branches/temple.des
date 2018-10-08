@@ -114,10 +114,10 @@ ENDMAP
 # Vault compression here randomly lops off one entrance.
 NAME:    temple_doors_ab
 WEIGHT:  2
-SHUFFLE: Y'"C& / ZD~~~
-NSUBST:  XY = 1:+ / * = m+
-SUBST:   Z = m, cD : cxxx
-SUBST:   ? : ?:40 T:30 U, ? = T:30 U
+SHUFFLE: Y'"E& / ZD~~~
+NSUBST:  XY = + / m+
+SUBST:   Z = m, cCD : cxxx
+SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
@@ -133,9 +133,9 @@ ENDMAP
 NAME:    temple_doors_cd
 WEIGHT:  2
 SHUFFLE: Y'"C& / ZD~~~
-NSUBST:  XY = 1:+ / * = m+
+NSUBST:  XY = + / m+
 SUBST:   Z = m, cCD : cxxx
-SUBST:   ? : ?:40 T:30 U, ? = T:30 U
+SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
@@ -674,7 +674,7 @@ NAME:   minmay_temple_entry_from_below_a
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-      @
+      @.
 ccccccncc
 c.......c
 c.O.c.}.c
@@ -687,7 +687,7 @@ NAME:   minmay_temple_entry_from_below_b
 WEIGHT: 2
 : temple_entry(_G)
 MAP
-         @
+         @.
 cccccccccnccc
 cG.........Gc
 c....T.T....c
@@ -3237,7 +3237,7 @@ SUBST:     " : " .:3,  " = .c, ' : ' .:3,  ' = .S
 SUBST:     - = --.
 LFLOORCOL: green
 COLOUR:    - = lightgray
-FTILE:     .J = floor_slime
+FTILE:     .JB = floor_slime
 : set_feature_name("stone_wall", "rune-carved stone wall")
 MAP
 SSSSSSSSSSSSSSSSSSSSSSSSSSSS

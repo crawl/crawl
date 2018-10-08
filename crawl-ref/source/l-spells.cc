@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Spell-related functions lua library "spells".
-**/
-
+/*** Information about spells.
+ * @module spells
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"
@@ -14,12 +12,22 @@
 #include "spl-damage.h"
 #include "spl-util.h"
 
+/*** Is this spell memorised?
+ * @tparam string spellname
+ * @treturn boolean
+ * @function memorised
+ */
 LUAFN(l_spells_memorised)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(boolean, you.has_spell(spell));
 }
 
+/*** What letter is this spell assigned to?
+ * @tparam string name
+ * @treturn string|nil the spell letter or nil if not memorised
+ * @function letter
+ */
 LUAFN(l_spells_letter)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -34,65 +42,122 @@ LUAFN(l_spells_letter)
     PLUARET(string, buf);
 }
 
+/*** The level of the named spell.
+ * @tparam string name
+ * @treturn int
+ * @function level
+ */
 LUAFN(l_spells_level)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_difficulty(spell));
 }
 
+/*** The MP cost of the spell.
+ * @tparam string name
+ * @treturn int
+ * @function mana_cost
+ */
 LUAFN(l_spells_mana_cost)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_mana(spell));
 }
 
+/*** The current range of the spell.
+ * @tparam string name
+ * @treturn int
+ * @function range
+ */
 LUAFN(l_spells_range)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_range(spell, calc_spell_power(spell, true)));
 }
 
+/*** The maximum range of the spell.
+ * @tparam string name
+ * @treturn int
+ * @function max_range
+ */
 LUAFN(l_spells_max_range)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_range(spell, spell_power_cap(spell)));
 }
 
+/*** The minimum range of the spell.
+ * @tparam string name
+ * @treturn int
+ * @function min_range
+ */
 LUAFN(l_spells_min_range)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_range(spell, 0));
 }
 
+/*** The failure rate of the spell as a number in [0,100].
+ * @tparam string name
+ * @treturn int
+ * @function fail
+ */
 LUAFN(l_spells_fail)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, failure_rate_to_int(raw_spell_fail(spell)));
 }
+
+/*** The failure severity of the spell.
+ * TODO: Document these numbers
+ * @tparam string name
+ * @treturn int
+ * @function fail_severity
+ */
 LUAFN(l_spells_fail_severity)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, fail_severity(spell));
 }
 
+/*** The current hunger of the spell.
+ * @tparam string name
+ * @treturn int number of hunger bars
+ * @function hunger
+ */
 LUAFN(l_spells_hunger)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, hunger_bars(spell_hunger(spell)));
 }
 
+/*** The current spellpower (in bars).
+ * @tparam string name
+ * @treturn int
+ * @function power
+ */
 LUAFN(l_spells_power)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, power_to_barcount(calc_spell_power(spell, true)));
 }
 
+/*** The maximum spellpower (in bars).
+ * @tparam string name
+ * @treturn int
+ * @function max_power
+ */
 LUAFN(l_spells_max_power)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, power_to_barcount(spell_power_cap(spell)));
 }
 
+/*** Does this spell take a direction or target?
+ * @tparam string name
+ * @treturn boolean
+ * @function dir_or_target
+ */
 LUAFN(l_spells_dir_or_target)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -100,6 +165,11 @@ LUAFN(l_spells_dir_or_target)
     PLUARET(boolean, flags & SPFLAG_DIR_OR_TARGET);
 }
 
+/*** Is this spell targetable?
+ * @tparam string name
+ * @treturn boolean
+ * @function target
+ */
 LUAFN(l_spells_target)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -107,6 +177,11 @@ LUAFN(l_spells_target)
     PLUARET(boolean, flags & SPFLAG_TARGET);
 }
 
+/*** Is this spell castable in a direction?
+ * @tparam string name
+ * @treturn boolean
+ * @function dir
+ */
 LUAFN(l_spells_dir)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -114,6 +189,11 @@ LUAFN(l_spells_dir)
     PLUARET(boolean, flags & SPFLAG_DIR);
 }
 
+/*** Can this spell target objects?
+ * @tparam string name
+ * @treturn boolean
+ * @function targ_obj
+ */
 LUAFN(l_spells_targ_obj)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -121,6 +201,11 @@ LUAFN(l_spells_targ_obj)
     PLUARET(boolean, flags & SPFLAG_OBJ);
 }
 
+/*** Does our god like this spell?
+ * @tparam string name
+ * @treturn boolean
+ * @function god_likes
+ */
 LUAFN(l_spells_god_likes)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -133,6 +218,12 @@ LUAFN(l_spells_god_likes)
     PLUARET(boolean, god_likes_spell(spell, god));
 }
 
+/*** Does our god hate this spell?
+ * Casting this will result in pennance or excommunication.
+ * @tparam string name
+ * @treturn boolean
+ * @function god_hates
+ */
 LUAFN(l_spells_god_hates)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -145,6 +236,12 @@ LUAFN(l_spells_god_hates)
     PLUARET(boolean, god_hates_spell(spell, god));
 }
 
+/*** Does our god loathe this spell?
+ * Casting this will result in excommunication.
+ * @tparam string name
+ * @treturn boolean
+ * @function god_loathes
+ */
 LUAFN(l_spells_god_loathes)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -185,17 +282,3 @@ void cluaopen_spells(lua_State *ls)
 {
     luaL_openlib(ls, "spells", spells_clib, 0);
 }
-
-LUAWRAP(_refrigeration,
-        fire_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION,
-                              luaL_checkint(ls, 1), nullptr))
-LUAWRAP(_toxic_radiance,
-        fire_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE,
-                              luaL_checkint(ls, 1), nullptr))
-
-const struct luaL_reg spells_dlib[] =
-{
-{ "refrigeration", _refrigeration },
-{ "toxic_radiance", _toxic_radiance },
-{ nullptr, nullptr }
-};

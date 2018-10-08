@@ -44,4 +44,6 @@ monster* hepliaklqana_ancestor_mon();
 
 #if TAG_MAJOR_VERSION == 34
 void fixup_bad_companions();
+bool maybe_bad_priest_monster(monster &mons);
+void fixup_bad_priest_monster(monster &mons);
 #endif

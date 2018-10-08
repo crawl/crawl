@@ -525,7 +525,7 @@ static int _issue_orders_prompt()
         mprf(" t - %s!", cap_shout.c_str());
     }
 
-    if (!you.berserk())
+    if (!you.berserk() && !you.confused())
     {
         string previous;
         if (_can_target_prev())
@@ -559,9 +559,9 @@ static int _issue_orders_prompt()
  */
 static bool _issue_order(int keyn, int &mons_targd)
 {
-    if (you.berserk())
+    if (you.berserk() || you.confused())
     {
-        canned_msg(MSG_TOO_BERSERK);
+        canned_msg(MSG_OK);
         return false;
     }
 

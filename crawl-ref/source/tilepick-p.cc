@@ -624,7 +624,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VAMPIRE;
     
     case SP_CRYSTAL_DWARF:
-	return TILEP_BASE_CRYSTAL_DWARF;
+	      return TILEP_BASE_CRYSTAL_DWARF;
     case SP_DEEP_DWARF:
     case SP_OBSIDIAN_DWARF:
         return TILEP_BASE_DEEP_DWARF;
@@ -647,7 +647,9 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_BARACHI:
         return TILEP_BASE_BARACHI;
     case SP_KITSUNE:
- 	return TILEP_BASE_KITSUNE
+ 	    return TILEP_BASE_KITSUNE;
+    case SP_GNOLL:
+        return TILEP_BASE_GNOLL;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -720,15 +722,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair   = 0;
             break;
         }
-        case SP_MINOTAUR:
-            hair = 0;
-            break;
-        case SP_DEMONSPAWN:
-            hair = 0;
-            break;
-        case SP_GHOUL:
-            hair = 0;
-            break;
         case SP_MERFOLK:
             result = you.fishtail ? TILEP_BASE_MERFOLK_WATER
                                   : TILEP_BASE_MERFOLK;
@@ -748,7 +741,17 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             beard = TILEP_BEARD_MEDIUM_GREEN;
             break;
+        case SP_MINOTAUR:
+        case SP_DEMONSPAWN:
+        case SP_GHOUL:
+        case SP_HILL_ORC:
+        case SP_KOBOLD:
+        case SP_MUMMY:
         case SP_FORMICID:
+        case SP_BARACHI:
+        case SP_GNOLL:
+        case SP_GARGOYLE:
+        case SP_VINE_STALKER:
             hair = 0;
             break;
         default:

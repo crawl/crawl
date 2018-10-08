@@ -21,6 +21,7 @@
 #include "describe-spells.h"
 #include "directn.h"
 #include "env.h"
+#include "files.h"
 #include "feature.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -45,6 +46,9 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewmap.h"
+#ifdef USE_TILE
+# include "tilepick.h"
+#endif
 
 // Global
 StashTracker StashTrack;
@@ -696,7 +700,6 @@ vector<stash_search_result> ShopInfo::matches_search(
     vector<stash_search_result> results;
 
     no_notes nx;
-    bool shop_matches = false;
 
     const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
     if (search.matches(shoptitle + " " + prefix + " {shop}"))
@@ -713,7 +716,6 @@ vector<stash_search_result> ShopInfo::matches_search(
         {
             return results;
         }
-        shop_matches = true;
     }
 
     for (const item_def &item : shop.stock)
@@ -722,8 +724,8 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        if (shop_matches
-            || search.matches(prefix + " " + ann + " " + sname)
+        if (search.matches(prefix + " " + ann + " " + sname +
+                                                    " {" + shoptitle + "}")
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
@@ -1162,7 +1164,6 @@ void StashTracker::load(reader& inf)
 void StashTracker::update_visible_stashes()
 {
     LevelStashes *lev = find_current_level();
-    coord_def c;
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
@@ -1502,6 +1503,11 @@ void StashTracker::search_stashes()
         return;
     }
 
+    dedup_results.erase(remove_if(dedup_results.begin(), dedup_results.end(),
+        [](const stash_search_result res) {
+            return res.item.defined() && is_useless_item(res.item, false);
+        }), dedup_results.end());
+
     bool sort_by_dist = true;
     bool filter_useless = true;
     bool default_execute = true;
@@ -1520,7 +1526,8 @@ void StashTracker::search_stashes()
                                                       default_execute,
                                                       search,
                                                       csearch == "."
-                                                      || csearch == "..");
+                                                      || csearch == "..",
+                                                      results.size());
         }
         else
         {
@@ -1530,7 +1537,8 @@ void StashTracker::search_stashes()
                                                       default_execute,
                                                       search,
                                                       csearch == "."
-                                                      || csearch == "..");
+                                                      || csearch == "..",
+                                                      dedup_results.size());
         }
         if (!again)
             break;
@@ -1585,18 +1593,26 @@ protected:
 
 formatted_string StashSearchMenu::calc_title()
 {
+    const int num_matches = items.size();
+    const int num_alt_matches = title->quantity;
     formatted_string fs;
     fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s",
-                title->quantity, title->text.c_str(),
-                title->quantity == 1 ? "" : "es");
-    if (title->quantity == 0 && filtered)
+    string prefixes[] = {
+        make_stringf("%d match%s",
+            num_alt_matches, num_alt_matches == 1 ? "" : "es"),
+        make_stringf("%d match%s",
+            num_matches, num_matches == 1 ? "" : "es"),
+    };
+    const bool f = num_matches != num_alt_matches;
+    fs.cprintf(prefixes[f]);
+    if (num_matches == 0 && filtered)
     {
         // TODO: it might be better to just force filtered=false in the
         // display loop if only useless items are found.
         fs += formatted_string::parse_string(
             "<lightgrey>"
             ": only useless items found; press <w>=</w> to show."
+            "                    "
             "</lightgrey>");
     } else {
         fs += formatted_string::parse_string(make_stringf(
@@ -1608,6 +1624,7 @@ formatted_string StashSearchMenu::calc_title()
             menu_action == ACT_EXECUTE ? "travel" : "view  ",
             sort_style, filtered));
     }
+    fs.cprintf(string(max(0, strwidth(prefixes[!f])-strwidth(prefixes[f])), ' '));
     return fs;
 }
 
@@ -1627,20 +1644,6 @@ bool StashSearchMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static vector<stash_search_result> _stash_filter_useless(const vector<stash_search_result> &in)
-{
-    // Creates search results vector with useless items filtered
-    vector<stash_search_result> out;
-    out.clear();
-    out.reserve(in.size());
-    for (const stash_search_result &res : in)
-    {
-        if (!res.item.defined() || !is_useless_item(res.item, false))
-            out.push_back(res);
-    }
-    return out;
-}
-
 // Returns true to request redisplay if display method was toggled
 bool StashTracker::display_search_results(
     vector<stash_search_result> &results_in,
@@ -1648,21 +1651,10 @@ bool StashTracker::display_search_results(
     bool& filter_useless,
     bool& default_execute,
     base_pattern* search,
-    bool nohl)
+    bool nohl,
+    size_t num_alt_results)
 {
-    if (results_in.empty())
-        return false;
-
-    vector<stash_search_result> * results;
-    vector<stash_search_result> results_filtered;
-
-    if (filter_useless)
-    {
-        results_filtered = _stash_filter_useless(results_in);
-        results = &results_filtered;
-    }
-    else
-        results = &results_in;
+    vector<stash_search_result> * results = &results_in;
 
     if (sort_by_dist)
         stable_sort(results->begin(), results->end(), _compare_by_distance);
@@ -1678,7 +1670,7 @@ bool StashTracker::display_search_results(
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
-    mtitle->quantity = results->size();
+    mtitle->quantity = num_alt_results;
     stashmenu.set_title(mtitle);
 
     menu_letter hotkey;
@@ -1720,6 +1712,24 @@ bool StashTracker::display_search_results(
                 me->colour = itemcol;
         }
 
+#ifdef USE_TILE
+        if (res.item.defined())
+        {
+            vector<tile_def> item_tiles;
+            get_tiles_for_item(res.item, item_tiles, false);
+            for (const auto &tile : item_tiles)
+                me->add_tile(tile);
+        }
+        else if (res.shop)
+            me->add_tile(tile_def(tileidx_shop(&res.shop->shop), TEX_FEAT));
+        else
+        {
+            const dungeon_feature_type feat = feat_by_desc(res.match);
+            const tileidx_t idx = tileidx_feature_base(feat);
+            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+        }
+#endif
+
         stashmenu.add_entry(me);
         if (!res.in_inventory)
             ++hotkey;
@@ -1744,6 +1754,12 @@ bool StashTracker::display_search_results(
             }
             else if (res->shop)
                 res->shop->show_menu(res->pos);
+            else
+            {
+                level_excursion le;
+                le.go_to(res->pos.id);
+                describe_feature_wide(res->pos.pos);
+            }
         }
         else
         {

@@ -10,6 +10,7 @@
 #include "attack.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -980,7 +981,7 @@ string attack::debug_damage_number()
  *
  * Used in player / monster (both primary and aux) attacks
  */
-string attack::attack_strength_punctuation(int dmg)
+string attack_strength_punctuation(int dmg)
 {
     if (dmg < HIT_WEAK)
         return ".";
@@ -989,16 +990,7 @@ string attack::attack_strength_punctuation(int dmg)
     else if (dmg < HIT_STRONG)
         return "!!";
     else
-    {
-        string ret = "!!!";
-        int tmpdamage = dmg;
-        while (tmpdamage >= 2*HIT_STRONG)
-        {
-            ret += "!";
-            tmpdamage >>= 1;
-        }
-        return ret;
-    }
+        return string(3 + (int) log2(dmg / HIT_STRONG), '!');
 }
 
 /* Returns evasion adverb
@@ -1491,7 +1483,6 @@ bool attack::apply_damage_brand(const char *what)
         defender->expose_to_element(BEAM_FIRE, 2);
         if (defender->is_player())
             maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
-        attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
@@ -1801,7 +1792,15 @@ void attack::player_stab_check()
         return;
     }
 
-    const stab_type st = find_stab_type(&you, *defender);
+    stab_type st = find_stab_type(&you, *defender);
+    // Find stab type is also used for displaying information about monsters,
+    // so we need to upgrade the stab type for the Spriggan's Knife here
+    if (using_weapon()
+        && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
+        && st != STAB_NO_STAB)
+    {
+        st = STAB_SLEEPING;
+    }
     stab_attempt = st != STAB_NO_STAB;
     stab_bonus = stab_bonus_denom(st);
 

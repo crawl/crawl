@@ -1007,10 +1007,11 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int gravitas_range(int pow, int strength)
+int gravitas_range(int pow)
 {
-    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
+    return pow >= 80 ? 3 : 2;
 }
+
 
 #define GRAVITY "by gravitational forces"
 
@@ -1034,6 +1035,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         return;
     }
 
+    const coord_def starting_pos = victim->pos();
     for (int i = 0; i < strength; i++)
     {
         ray.advance();
@@ -1053,7 +1055,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         else if (!victim->is_habitable(newpos))
             break;
         else
-            victim->move_to_pos(newpos, false);
+            victim->move_to_pos(newpos);
 
         if (auto mons = victim->as_monster())
         {
@@ -1063,6 +1065,12 @@ static void _attract_actor(const actor* agent, actor* victim,
 
         if (victim->pos() == pos)
             break;
+    }
+    if (starting_pos != victim->pos())
+    {
+        victim->apply_location_effects(starting_pos);
+        if (victim->is_monster())
+            mons_relocated(victim->as_monster());
     }
 }
 
@@ -1075,10 +1083,10 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
             continue;
 
         const int range = (pos - ai->pos()).rdist();
-        const int strength =
-            min(LOS_RADIUS, ((pow + 100) / 20) / (range*range));
-        if (strength <= 0)
+        if (range > gravitas_range(pow))
             continue;
+
+        const int strength = ((pow + 100) / 20) / (range*range);
 
         affected = true;
         _attract_actor(agent, *ai, pos, pow, strength);

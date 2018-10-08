@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "cloud.h"
 #include "database.h"
+#include "dbg-util.h"
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
@@ -49,6 +50,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #endif
+#include "ui.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -553,49 +555,6 @@ static void _recap_card_keys(vector<string> &keys)
 }
 
 /**
- * Make a list of all books that contain a given spell.
- *
- * @param spell_type spell      The spell in question.
- * @return                      A formatted list of books containing
- *                              the spell, e.g.:
- *    \n\nThis spell can be found in the following books: dreams, burglary.
- *    or
- *    \n\nThis spell is not found in any books.
- */
-static string _spell_sources(const spell_type spell)
-{
-    item_def item;
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-    vector<string> books;
-
-    item.base_type = OBJ_BOOKS;
-    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-    {
-        if (item_type_removed(OBJ_BOOKS, i))
-            continue;
-        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
-            if (sp == spell)
-            {
-                item.sub_type = i;
-                books.push_back(item.name(DESC_PLAIN));
-            }
-    }
-
-    if (books.empty())
-        return "\n\nThis spell is not found in any books.";
-
-    string desc;
-
-    desc += "\n\nThis spell can be found in the following book";
-    if (books.size() > 1)
-        desc += "s";
-    desc += ":\n ";
-    desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
-
-    return desc;
-}
-
-/**
  * Make a basic, no-frills ?/<foo> menu entry.
  *
  * @param letter    The letter for the entry. (E.g. 'e' for the fifth entry.)
@@ -693,8 +652,7 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        me->add_tile(tile_def(pick_dngn_tile(idx, ui_random(INT_MAX)),
-                                             get_dngn_tex(idx)));
+        me->add_tile(tile_def(idx, get_dngn_tex(idx)));
     }
 #endif
 
@@ -881,7 +839,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-            | MF_USE_TWO_COLUMNS , toggleable_sort());
+            | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS , toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
@@ -981,7 +939,8 @@ int LookupType::describe(const string &key, bool exact_match) const
  * @return              The keypress the user made to exit.
  */
 static int _describe_key(const string &key, const string &suffix,
-                         string footer, const string &extra_info)
+                         string footer, const string &extra_info,
+                         const tile_def *tile = nullptr)
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
@@ -999,12 +958,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.footer = footer;
     inf.title  = title;
 
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "description");
-#endif
-
-    print_description(inf);
-    return getchm();
+    return show_description(inf, tile);
 }
 
 /**
@@ -1070,12 +1024,27 @@ static int _describe_spell(const string &key, const string &suffix,
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
     ASSERT(spell != SPELL_NO_SPELL);
-
-    const string spell_info = player_spell_desc(spell);
-    const string source_info = _spell_sources(spell);
-    return _describe_key(key, suffix, footer, spell_info + source_info);
+    describe_spell(spell, nullptr, nullptr, true);
+    return 0;
 }
 
+static int _describe_skill(const string &key, const string &suffix,
+                             string footer)
+{
+    const string skill_name = key.substr(0, key.size() - suffix.size());
+    const skill_type skill = skill_from_name(skill_name.c_str());
+    describe_skill(skill);
+    return 0;
+}
+
+static int _describe_ability(const string &key, const string &suffix,
+                             string footer)
+{
+    const string abil_name = key.substr(0, key.size() - suffix.size());
+    const ability_type abil = ability_by_name(abil_name.c_str());
+    describe_ability(abil);
+    return 0;
+}
 
 /**
  * Describe the card with the given name.
@@ -1091,7 +1060,12 @@ static int _describe_card(const string &key, const string &suffix,
     const string card_name = key.substr(0, key.size() - suffix.size());
     const card_type card = name_to_card(card_name);
     ASSERT(card != NUM_CARDS);
+#ifdef USE_TILE
+    tile_def tile = tile_def(TILE_MISC_CARD, TEX_DEFAULT);
+    return _describe_key(key, suffix, footer, which_decks(card) + "\n", &tile);
+#else
     return _describe_key(key, suffix, footer, which_decks(card) + "\n");
+#endif
 }
 
 /**
@@ -1108,28 +1082,16 @@ static int _describe_cloud(const string &key, const string &suffix,
     const string cloud_name = key.substr(0, key.size() - suffix.size());
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
+#ifdef USE_TILE
+    cloud_info fake_cloud_info;
+    fake_cloud_info.type = cloud;
+    const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
+    tile_def tile = tile_def(idx, TEX_DEFAULT);
+    return _describe_key(key, suffix, footer, extra_cloud_info(cloud), &tile);
+#else
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
+#endif
 }
-
-
-/**
- * Describe the given spellbook.
- *
- * @param item      The item in question.
- * @return          0.
- *                  TODO: change to the last keypress (to allow exact match
- *                  support)
- */
-static int _describe_spellbook(const item_def &item)
-{
-    const string desc = get_item_description(item, true);
-    formatted_string fdesc;
-    fdesc.cprintf("%s", desc.c_str());
-
-    list_spellset(item_spellset(item), nullptr, &item, fdesc);
-    return 0; // XXX: this breaks exact match stuff
-}
-
 
 /**
  * Describe the item with the given name.
@@ -1145,17 +1107,17 @@ static int _describe_item(const string &key, const string &suffix,
     item_def item;
     if (!get_item_by_exact_name(item, key.c_str()))
         die("Unable to get item %s by name", key.c_str());
-    if (item.base_type == OBJ_BOOKS)
-    {
-        // spellbooks are interactive & so require special handling
-        item_colour(item);
-        return _describe_spellbook(item);
-    }
-    else
-    {
-        string stats = get_item_description(item, true, false, true);
-        return _describe_key(key, suffix, footer, stats);
-    }
+    describe_item(item);
+    return 0;
+}
+
+static int _describe_feature(const string &key, const string &suffix,
+                             string footer)
+{
+    const string feat_name = key.substr(0, key.size() - suffix.size());
+    const dungeon_feature_type feat = feat_by_desc(feat_name);
+    describe_feature_type(feat);
+    return 0;
 }
 
 /**
@@ -1169,11 +1131,7 @@ static int _describe_god(const string &key, const string &/*suffix*/,
 {
     const god_type which_god = str_to_god(key);
     ASSERT(which_god != GOD_NO_GOD);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
-#endif
-    describe_god(which_god, true);
+    describe_god(which_god);
 
     return 0; // no exact matches for gods, so output doesn't matter
 }
@@ -1286,7 +1244,12 @@ static int _describe_branch(const string &key, const string &suffix,
             + "\n\n"
             + branch_rune_desc(branch, false);
 
+#ifdef USE_TILE
+    tile_def tile = tile_def(tileidx_branch(branch), TEX_FEAT);
+    return _describe_key(key, suffix, footer, info, &tile);
+#else
     return _describe_key(key, suffix, footer, info);
+#endif
 }
 
 /// All types of ?/ queries the player can enter.
@@ -1299,10 +1262,10 @@ static const vector<LookupType> lookup_types = {
                _describe_spell, lookup_type::db_suffix),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_skill, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_ability, lookup_type::db_suffix),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
@@ -1311,7 +1274,7 @@ static const vector<LookupType> lookup_types = {
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_feature, lookup_type::none),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god, lookup_type::none),
@@ -1354,13 +1317,13 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
         make_stringf(" Enter a single letter to list %s displayed by that"
                      " symbol.", pluralise(type).c_str()) :
         "";
-    mprf(MSGCH_PROMPT,
-         "Describe a %s; partial names and regexps are fine.%s",
+    const string prompt = make_stringf(
+         "Describe a %s; partial names and regexps are fine.%s\n"
+         "Describe what? ",
          type.c_str(), extra.c_str());
 
-    mprf(MSGCH_PROMPT, "Describe what? ");
     char buf[80];
-    if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    if (msgwin_get_line(prompt, buf, sizeof(buf)) || buf[0] == '\0')
     {
         err = "Okay, then.";
         return "";
@@ -1414,6 +1377,58 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     return "";
 }
 
+static int _lookup_prompt()
+{
+    // TODO: show this + the regex prompt in the same menu?
+#ifdef TOUCH_UI
+    bool use_popup = true;
+#else
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+#endif
+
+    int ch = -1;
+    const string lookup_type_prompts =
+        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
+                           mem_fn(&LookupType::prompt_string), " or ");
+    if (use_popup)
+    {
+        string prompt = make_stringf("Describe a %s? ",
+                                                lookup_type_prompts.c_str());
+        linebreak_string(prompt, 72);
+
+#ifdef USE_TILE_WEB
+        tiles_crt_popup show_as_popup;
+        tiles.set_ui_state(UI_CRT);
+#endif
+        auto prompt_ui =
+                make_shared<ui::Text>(formatted_string::parse_string(prompt));
+        bool done = false;
+
+        prompt_ui->on(ui::Widget::slots.event, [&](wm_event ev) {
+            if (ev.type == WME_KEYDOWN)
+            {
+                ch = ev.key.keysym.sym;
+                done = true;
+            }
+            return done;
+        });
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
+    }
+    else
+    {
+        mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
+
+        {
+            cursor_control con(true);
+            ch = getchm();
+        }
+    }
+    return toupper(ch);
+}
+
 /**
  * Run an iteration of ?/.
  *
@@ -1423,18 +1438,7 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
  */
 static bool _find_description(string &response)
 {
-
-    const string lookup_type_prompts =
-        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
-                           mem_fn(&LookupType::prompt_string), " or ");
-    mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
-
-    int ch;
-    {
-        cursor_control con(true);
-        ch = toupper(getchm());
-    }
-
+    int ch = _lookup_prompt();
     const LookupType * const *lookup_type_ptr
         = map_find(_lookup_types_by_symbol, ch);
     if (!lookup_type_ptr)

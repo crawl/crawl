@@ -4,6 +4,7 @@ function ($, comm, client, textinput, util, options) {
 
     var more = false;
     var old_scroll_top;
+    var message_pane_height = 7; // default value, overridden by client
 
     function hide()
     {
@@ -37,7 +38,7 @@ function ($, comm, client, textinput, util, options) {
 
     /**
     * Remove all message elements from the player messages window save for the
-    * last 15.
+    * last height + 10.
 
     * This is necessary to prevent <div> elements from messages no longer in
     * view from pilling up over longer WebTiles session and thus slowing down
@@ -46,9 +47,10 @@ function ($, comm, client, textinput, util, options) {
     function remove_old_messages()
     {
         var all_messages = $("#messages .game_message");
-        if (all_messages.length > 15)
+        var keep = message_pane_height + 10;
+        if (all_messages.length > keep)
         {
-            var messages_to_remove = all_messages.slice(0, -15);
+            var messages_to_remove = all_messages.slice(0, -keep);
             messages_to_remove.remove();
         }
     }

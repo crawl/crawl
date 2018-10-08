@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Subvault routines (library "dgn").
-**/
-
 #include "AppHdr.h"
 
 #include "l-libs.h"

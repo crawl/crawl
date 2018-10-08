@@ -565,7 +565,7 @@ void debug_stethoscope(int mon)
 
     if (mons_is_ghost_demon(mons.type))
     {
-        ASSERT(mons.ghost.get());
+        ASSERT(mons.ghost);
         const ghost_demon &ghost = *mons.ghost;
         mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d; att_type: %d; "
                                 "att_flav: %d",
@@ -757,7 +757,7 @@ static void _move_monster(const coord_def& where, int idx1)
 {
     dist moves;
     direction_chooser_args args;
-    args.needs_path = false;
+    args.unrestricted = true;
     args.top_prompt = "Move monster to where?";
     args.default_place = where;
     direction(moves, args);
@@ -780,6 +780,11 @@ static void _move_monster(const coord_def& where, int idx1)
     {
         mon2->moveto(where);
         mon1->check_redraw(where);
+    }
+    if (!you.see_cell(moves.target))
+    {
+        mon1->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
+        mon1->seen_context = SC_NONE;
     }
 }
 
@@ -1188,11 +1193,13 @@ void debug_miscast(int target_index)
 #ifdef DEBUG_BONES
 void debug_ghosts()
 {
-    mprf(MSGCH_PROMPT, "(C)reate or (L)oad bones file?");
+    mprf(MSGCH_PROMPT, "(C)reate, create (T)emporary, or (L)oad bones file?");
     const char c = toalower(getchm());
 
     if (c == 'c')
-        save_ghosts(ghost_demon::find_ghosts(), true);
+        save_ghosts(ghost_demon::find_ghosts(), true, true);
+    else if (c == 't')
+        save_ghosts(ghost_demon::find_ghosts(), true, false);
     else if (c == 'l')
         load_ghosts(ghost_demon::max_ghosts_per_level(env.absdepth0), false);
     else

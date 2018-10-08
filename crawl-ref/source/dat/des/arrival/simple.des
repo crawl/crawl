@@ -1606,23 +1606,6 @@ xxx.{.xx.x
   xxx++xxx
 ENDMAP
 
-NAME:   saegor_arrival_simple_f
-TAGS:   arrival
-ORIENT: float
-MAP
-  xxx
-  x.@
-  x.xxxxxxx
-  x.x.....x
-  x....xx@x
-x@x..{..x
-x.xx....x
-x.....x.x
-xxxxxxx.x
-      @.x
-      xxx
-ENDMAP
-
 ##############################################################################
 
 NAME:   scummos_arrival_simple_fountains
@@ -2054,24 +2037,24 @@ NAME: nzn_arrival_water_spiral
 ORIENT: float
 TAGS: arrival no_monster_gen no_pool_fixup
 MAP
-      @
-    wwwWwwwwww
-   wwwwwWwwwwwww
-  wwwwwwwWwwwwwww
- wwwGwwwwwWwwGwww
- wwwww.wwwwWwwwww
- wwww.w.wwwwWwwww@
- www.www.wwWwwww.
- ww.wwww.}Wwwww.w
- w.wwwwW{.wwww.ww
- .wwwwWww.www.www
-@wwwwWwwww.w.wwww
- wwwwwWwwww.wwwww
- wwwGwwWwwwwwGwww
-  wwwwwwWwwwwwwww
-   wwwwwwWwwwwww
-    wwwwwwWwwww
            @
+    wwwwwwWwww
+   wwwwwwWwwwww
+  wwwwwwwWwwwwww
+ wwwGwwwwwWwwGwww
+ wwwwwwwwwwWwwwww
+@wwww...wwwWwwwww
+ .ww.www.wwWwwwww
+ w..wwww.}Wwwwwww
+ wwwwwwW{.wwww..w
+ wwwwwWww.www.ww.
+ wwwwwWwww...wwww@
+ wwwwwWwwwwwwwwww
+ wwwGwwWwwwwwGwww
+  wwwwwwWwwwwwww
+   wwwwwWwwwwww
+    wwwWwwwwww
+      @
 ENDMAP
 
 NAME: nzn_arrival_depleted_hourglass
@@ -2166,4 +2149,60 @@ ttt...ss.............ss...ttt
  tt..G..G...........G..G..tt
  tt.......................tt
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   ebering_hopf_link
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+.........
+.xxxxxxx.
+.x.....x.
+.x..........
+.x..xxxxxxx.
+.x..x.....x.
+.x....{x..x.
+.xxxxxxx..x.
+..........x.
+   .x.....x.
+   .xxxxxxx.
+   .........
+ENDMAP
+
+NAME:   ebering_trefoil_3fold
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+         .@.
+        ..x..
+       ..x.x..
+       .x...x.
+       .x...x.
+     .......x...
+    ..xxxxx.x.x.
+  ...x....{.x..x...
+...xx....x......xx..
+..x.......xxxx....x..
+...xxxxx......xxxx...
+@...................@
+ENDMAP
+
+NAME:   ebering_trefoil_twist
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST: x:xwWbl
+MAP
+............
+.xxxxxxxxxx.
+.x........x....
+.x.....xx.x.xx.
+.x.....x.{x..x.
+.x..xx.x.xx..x.
+.x..x>.x.....x.
+.xx.x.xx.....x.
+....x........x.
+   .xxxxxxxxxx.
+   ............
 ENDMAP

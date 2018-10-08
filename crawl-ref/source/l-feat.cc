@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Boolean feat-related functions lua library "feat".
-**/
-
+/*** Dungeon building interface to feature information (dlua only).
+ * @module feat
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

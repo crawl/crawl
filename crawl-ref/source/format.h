@@ -28,13 +28,15 @@ public:
     void textcolour(int colour);
     formatted_string chop(int length) const;
     formatted_string chop_bytes(int length) const;
+    formatted_string substr_bytes(int pos, int length) const;
+    formatted_string trim() const;
     void del_char();
     void all_caps();
     void capitalise();
     void filter_lang();
 
     void clear();
-    bool empty();
+    bool empty() const;
 
     void swap(formatted_string& other);
 

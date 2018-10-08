@@ -1401,7 +1401,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     {
         if (atk == UNAT_CONSTRICT)
             attacker->start_constricting(*defender);
-            
+
         if (damage_done > 0 || atk == UNAT_CONSTRICT)
         {
             player_announce_aux_hit();
@@ -1468,6 +1468,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                  you.can_see(*defender) ? ", but do no damage" : "");
         }
     }
+    else // defender was just alive, so this call should be ok?
+        player_announce_aux_hit();
 
     if (defender->as_monster()->hit_points < 1)
     {
@@ -1854,8 +1856,6 @@ void melee_attack::player_weapon_upsets_god()
     {
         did_god_conduct(god_hates_item_handling(*weapon), 2);
     }
-    else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
-        did_god_conduct(DID_FIRE, 1);
 }
 
 /* Apply player-specific effects as well as brand damage.
@@ -3577,7 +3577,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     return your_to_hit;
 }
 
-bool melee_attack::using_weapon()
+bool melee_attack::using_weapon() const
 {
     return weapon && is_melee_weapon(*weapon);
 }

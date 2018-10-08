@@ -465,13 +465,10 @@ void zap_wand(int slot)
     // Spend MP.
     if (mp_cost)
     {
+        dec_mp(mp_cost, false);
         mprf("You feel a %ssurge of power%s",
              mp_cost < 3 ? "slight " : "",
              mp_cost < 3 ? "."       : "!");
-        if(you.species == SP_OBSIDIAN_DWARF)
-            dec_hp(mp_cost, false);
-        else
-            dec_mp(mp_cost, false);
     }
 
     // Take off a charge.
@@ -621,10 +618,6 @@ static bool _box_of_beasts(item_def &box)
                  MG_AUTOFOE);
     mg.set_summoned(&you, 3 + random2(3), 0);
 
-    auto &avoids = mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector();
-    for (int facet = BF_FIRST; facet <= BF_LAST; ++facet)
-        if (god_hates_beast_facet(you.religion, static_cast<beast_facet>(facet)))
-            avoids.push_back(facet);
     mg.hd = beast_tiers[tier];
     dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
     const monster* mons = create_monster(mg);
@@ -1015,7 +1008,6 @@ static bool _lamp_of_fire()
 
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);
-        did_god_conduct(DID_FIRE, 6 + random2(3));
 
         mpr("The flames dance!");
 

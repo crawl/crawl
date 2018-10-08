@@ -13,6 +13,8 @@
 #include "mutant-beast.h"
 #include "species-type.h"
 
+#define MIRRORED_GHOST_KEY "mirrored_ghost"
+
 class ghost_demon
 {
 public:
@@ -51,7 +53,7 @@ public:
 
 
 public:
-    static const vector<ghost_demon> find_ghosts();
+    static const vector<ghost_demon> find_ghosts(bool include_player=true);
     static int max_ghosts_per_level(int absdepth);
     static bool ghost_eligible();
 

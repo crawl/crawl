@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
 // DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
@@ -221,6 +223,8 @@ enum tag_minor_version
     TAG_MINOR_XP_SCALING,          // scale exp_available and total_experience
     TAG_MINOR_NO_ACTOR_HELD,       // Remove actor.held.
     TAG_MINOR_GOLDIFY_BOOKS,       // Spellbooks disintegrate when picked up, like gold/runes/orbs
+    TAG_MINOR_VETO_DISINT,         // Replace veto_disintegrate map markers
+    TAG_MINOR_LEVEL_XP_VAULTS,     // XP tracking now tracks vaults, not spawns.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -228,3 +232,114 @@ enum tag_minor_version
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
+
+// tags that affect loading bones files. If you do save compat that affects
+// ghosts, these must be updated in addition to the enum above.
+const set<int> bones_minor_tags =
+        {TAG_MINOR_RESET,
+#if TAG_MAJOR_VERSION == 34
+         TAG_MINOR_NO_GHOST_SPELLCASTER,
+         TAG_MINOR_MON_COLOUR_LOOKUP,
+         TAG_MINOR_GHOST_ENERGY,
+         TAG_MINOR_BOOL_FLIGHT,
+#endif
+        };
+
+struct save_version
+{
+    save_version(int _major, int _minor) : major{_major}, minor{_minor}
+    {
+    }
+
+    save_version() : save_version(-1,-1)
+    {
+    }
+
+    static save_version current()
+    {
+        return save_version(TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
+    }
+
+    static save_version current_bones()
+    {
+        return save_version(TAG_MAJOR_VERSION, *bones_minor_tags.crbegin());
+    }
+
+    bool valid() const
+    {
+        return major > 0 && minor > -1;
+    }
+
+    inline friend bool operator==(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return lhs.major == rhs.major && lhs.minor == rhs.minor;
+    }
+
+    inline friend bool operator!=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator==(lhs, rhs);
+    }
+
+    inline friend bool operator< (const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return lhs.major < rhs.major || lhs.major == rhs.major &&
+                                                    lhs.minor < rhs.minor;
+    }
+    inline friend bool operator> (const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return  operator< (rhs, lhs);
+    }
+    inline friend bool operator<=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator> (lhs, rhs);
+    }
+    inline friend bool operator>=(const save_version& lhs,
+                                                    const save_version& rhs)
+    {
+        return !operator< (lhs,rhs);
+    }
+
+
+    bool is_future() const
+    {
+        return valid() && *this > save_version::current();
+    }
+
+    bool is_past() const
+    {
+        return valid() && *this < save_version::current();
+    }
+
+    bool is_ancient() const
+    {
+        return valid() &&
+#if TAG_MAJOR_VERSION == 34
+            (major < 33 && minor < 17);
+#else
+            major < TAG_MAJOR_VERSION;
+#endif
+    }
+
+    bool is_compatible() const
+    {
+        return (valid() && !is_ancient() && !is_future());
+    }
+
+    bool is_current() const
+    {
+        return valid() && *this == save_version::current();
+    }
+
+    bool is_bones_version() const
+    {
+        return valid() && is_compatible() && bones_minor_tags.count(minor) > 0;
+    }
+
+    int major;
+    int minor;
+};

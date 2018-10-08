@@ -63,7 +63,7 @@ Transforms the user into a swift-moving vampire bat, increasing evasion but
 substantially weakening melee attacks.
 
 While tranformed, any equipped weapons, armour and rings are melded, and the
-user becomes unable to evoke wands or to cast spells.
+user becomes unable to cast spells.
 %%%%
 Fly ability
 
@@ -570,7 +570,7 @@ Aborts an ongoing skill transfer.
 Shadow Step ability
 
 Allows you to step into the shadow of any hostile creature within your umbra,
-as long as they are immobile or asleep, landing adjacent to the target.
+landing on a random spot adjacent to the target.
 %%%%
 Shadow Form ability
 
@@ -765,8 +765,8 @@ Accepting a sacrifice will reset the timer to the standard length.
 Stomp ability
 
 Stomps down in time with the rhythm of the dance, sending a shockwave through
-all adjacent creatures. The shockwave damages each creature by a percentage of
-its maximum health, with the percentage increasing with Invocations skill.
+all adjacent creatures. The shockwave damages each creature by a fraction of
+its current health, plus damage increasing with Invocations skill.
 %%%%
 Line Pass ability
 

@@ -69,7 +69,7 @@ class ColourGameOption : public GameOption
 {
 public:
     ColourGameOption(unsigned &val, std::set<std::string> _names,
-                     unsigned _default, bool _elemental = true)
+                     unsigned _default, bool _elemental = false)
         : GameOption(_names), value(val), default_value(_default),
           elemental(_elemental) { }
     void reset() const override;

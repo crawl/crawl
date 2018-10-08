@@ -46,6 +46,7 @@
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
@@ -158,12 +159,7 @@ static void _escape_water_hold(monster& mons)
 {
     if (mons.has_ench(ENCH_WATER_HOLD))
     {
-        if (mons_habitat(mons) != HT_AMPHIBIOUS
-            && mons_habitat(mons) != HT_WATER)
-        {
-            mons.speed_increment -= 5;
-        }
-        simple_monster_message(mons, " pulls free of the water.");
+        simple_monster_message(mons, " slips free of the water.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
@@ -1530,6 +1526,17 @@ static void _pre_monster_move(monster& mons)
     }
 
     mons.check_speed();
+
+    // spellforged servitors lose an extra random2(16) energy per turn, often
+    // causing them to skip a turn. Show this message to give the player some
+    // feedback on what is going on when a servitor skips an attack due to
+    // random energy loss (otherwise, it just sits there silently).
+    // TODO: could this effect be implemented in some way other than energy?
+    if (mons.type == MONS_SPELLFORGED_SERVITOR && mons.foe != MHITNOT
+        && !mons.has_action_energy())
+    {
+        simple_monster_message(mons, " hums quietly as it recharges.");
+    }
 }
 
 void handle_monster_move(monster* mons)
@@ -2131,6 +2138,7 @@ static void _ancient_zyme_sicken(monster* mons)
         return;
 
     if (!is_sanctuary(you.pos())
+        && !mons->wont_attack()
         && you.res_rotting() <= 0
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
@@ -2139,7 +2147,8 @@ static void _ancient_zyme_sicken(monster* mons)
         {
             if (!you.duration[DUR_SICKENING])
             {
-                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
+                mprf(MSGCH_WARN, "You feel yourself growing ill in the "
+                                 "presence of %s.",
                     mons->name(DESC_THE).c_str());
             }
 
@@ -2160,7 +2169,8 @@ static void _ancient_zyme_sicken(monster* mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+        if (m && !mons_aligned(mons, m)
+            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
             && !is_sanctuary(*ri))
         {
             m->sicken(2 * you.time_taken);
@@ -2332,6 +2342,34 @@ static void _update_monster_attitude(monster *mon)
     }
 }
 
+vector<monster *> just_seen_queue;
+
+void mons_set_just_seen(monster *mon)
+{
+    mon->seen_context = SC_JUST_SEEN;
+    just_seen_queue.push_back(mon);
+}
+
+static void _display_just_seen()
+{
+    // these are monsters that were marked as SC_JUST_SEEN at some point since
+    // last time this was called. We announce any that leave all at once so
+    // as to handle monsters that may move multiple times per world_reacts.
+    for (auto m : just_seen_queue)
+    {
+        if (!m || invalid_monster(m) || !m->alive())
+            continue;
+        // can't use simple_monster_message here, because m is out of view.
+        // The monster should be visible to be in this queue.
+        if (in_bounds(m->pos()) && !you.see_cell(m->pos()))
+        {
+            mprf(MSGCH_PLAIN, "%s moves out of view.",
+                m->name(DESC_THE, true).c_str());
+        }
+    }
+    just_seen_queue.clear();
+}
+
 /**
  * Get all monsters to make an action, if they can/want to.
  *
@@ -2390,6 +2428,7 @@ void handle_monsters(bool with_noise)
             break;
         }
     }
+    _display_just_seen();
 
     // Process noises now (before clearing the sleep flag).
     if (with_noise)
@@ -3241,7 +3280,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         }
     }
 
-    if (grd(f) == DNGN_CLOSED_DOOR || grd(f) == DNGN_SEALED_DOOR)
+    ASSERT(!cell_is_runed(f)); // should be checked in mons_can_traverse
+
+    if (feat_is_closed_door(grd(f)))
     {
         if (mons_can_destroy_door(mons, f))
         {
@@ -3291,8 +3332,6 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (mons.seen_context == SC_JUST_SEEN && !you.see_cell(f))
-        simple_monster_message(mons, " moves out of view.");
     else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
              && !you.see_cell(f))
     {
@@ -3328,6 +3367,11 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     mons.check_redraw(mons.pos() - delta);
     mons.apply_location_effects(mons.pos() - delta);
+    if (!invalid_monster(&mons) && you.can_see(mons))
+    {
+        handle_seen_interrupt(&mons);
+        seen_monster(&mons);
+    }
 
     _handle_manticore_barbs(mons);
 

@@ -2474,7 +2474,7 @@ xxxxxxxxxccccccccc+.$|*|$.+cccccccccxxxxxx
 xxxxxxxxcc.......7c.|$|$|.c7.......ccxxxxx
 xxxxxxccc.........cc$|$|$cc.........cccxxx
 xxxxxxc.....3.3....ccccccc....1.1.....cxxx
-xxxxxcc..............cxc..............ccxx
+xxxxxcc..............ccc..............ccxx
 xxxxcc...............ccc...............ccx
 xxxxc...2...BQB...4...c...5...CRC...2...cx
 xxxxc......BBqBB......U......CCrCC......cx
@@ -2484,13 +2484,13 @@ xxxcc.....BBqqqBB.....U.....CCrrrCC.....cc
 xxxcc.7....BBqBB....6.U.6....CCrCC....7.cc
 xxxcc.......BQB.......c.......CRC.......cc
 xxxccc...1.......5...ccc...4.......3...ccc
-xxxc$c+....1...5....ccxcc....4...3....+c$c
-xxxc$$c.............cxxxc.............c$$c
-xxxc*$ccc...........cxxxc...........ccc$*c
+xxxc$c+....1...5....ccccc....4...3....+c$c
+xxxc$$c.............ccccc.............c$$c
+xxxc*$ccc...........ccccc...........ccc$*c
 xxxc*$$$cc.......cscccccccsc.......cc$$$*c
 xxxc**$ccc+ccccccc.6.....6.ccccccc+ccc$**c
-xxxc**cc..3ccxxc.............cxxcc5..cc**c
-xxxc*cc.....ccxc......3......cxcc.....cc*c
+xxxc**cc..3ccccc.............ccccc5..cc**c
+xxxc*cc.....cccc......3......cccc.....cc*c
 xxxc*c.......ccc..3.......3..ccc.......c*c
 xxxccc..5.1..cc.4...........4.cc..2.4..ccc
 xxxxcc.......t.......APA.......t.......ccx

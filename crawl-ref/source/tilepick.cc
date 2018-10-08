@@ -112,10 +112,8 @@ static tileidx_t _tileidx_trap(trap_type type)
     }
 }
 
-static tileidx_t _tileidx_shop(coord_def where)
+tileidx_t tileidx_shop(const shop_struct *shop)
 {
-    const shop_struct *shop = shop_at(where);
-
     if (!shop)
         return TILE_DNGN_ERROR;
 
@@ -578,7 +576,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         return TILE_DNGN_TRAP_WEB;
     }
     case DNGN_ENTER_SHOP:
-        return _tileidx_shop(gc);
+        return tileidx_shop(shop_at(gc));
+
     case DNGN_DEEP_WATER:
         if (env.map_knowledge(gc).feat_colour() == GREEN
             || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
@@ -898,6 +897,10 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     // Detected info is just stored in map_knowledge and doesn't get
     // written to what the player remembers. We'll feather that in here.
 
+    // save any rays, which will get overwritten by mapped terrain
+    auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
+                        | TILE_FLAG_LANDING);
+
     const map_cell &cell = env.map_knowledge(gc);
 
     // Override terrain for magic mapping.
@@ -906,8 +909,10 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     else
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
-    // Don't draw rays out of los.
-    *bg &= ~(TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
+
+    // if out-of-los rays are getting shown that shouldn't be, the bug isn't
+    // here -- fix it in the targeter
+    *bg |= rays;
 
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
@@ -1354,7 +1359,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 // for when they have a bow.
 static bool _bow_offset(const monster_info& mon)
 {
-    if (!mon.inv[MSLOT_WEAPON].get())
+    if (!mon.inv[MSLOT_WEAPON])
         return true;
 
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
@@ -1689,7 +1694,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return base + (_bow_offset(mon) ? 1 : 0);
 
         case MONS_CEREBOV:
-            return base + (mon.inv[MSLOT_WEAPON].get() == nullptr ? 1 : 0);
+            return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);
 
         case MONS_SLAVE:
             return base + (mon.mname == "freed slave" ? 1 : 0);
@@ -1707,7 +1712,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // but will use a regular stance if she picks up a shield
             // (enhancer staves are compatible with those).
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
-            if (!mon.inv[MSLOT_SHIELD].get() && weapon
+            if (!mon.inv[MSLOT_SHIELD] && weapon
                 && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
@@ -1755,7 +1760,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_SPECTRAL_WEAPON:
         {
-            if (!mon.inv[MSLOT_WEAPON].get())
+            if (!mon.inv[MSLOT_WEAPON])
                 return TILEP_MONS_SPECTRAL_SBL;
 
             // Tiles exist for each class of weapon.
@@ -3631,6 +3636,8 @@ tileidx_t tileidx_ability(const ability_type ability)
    case ABIL_USKAYAW_GRAND_FINALE:
         return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
      // Wu Jian
+    case ABIL_WU_JIAN_WALLJUMP:
+        return TILEG_ABILITY_WU_JIAN_WALL_JUMP;
     case ABIL_WU_JIAN_SERPENTS_LASH:
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
     case ABIL_WU_JIAN_HEAVENLY_STORM:

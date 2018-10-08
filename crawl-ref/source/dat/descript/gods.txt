@@ -31,9 +31,9 @@ Dithmenos
 
 Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
 a strange and otherwordly affinity to the shadows of their environment. This
-god despises fire, which long ago freed mortals from the tyranny of shadow; its
-use is forbidden by worshippers. Dithmenos favours those who would instead
-destroy sources of fire.
+god despises the physical world and constantly seeks to encroach on it.
+Dithmenos therefore rewards those who wield death and destruction while
+gradually consuming them with darkness.
 %%%%
 Elyvilon
 
@@ -250,11 +250,10 @@ Dithmenos powers
 Followers of Dithmenos are constantly surrounded in an aura of shadow, the
 extent of which is reflective of their level of devotion. Dithmenos grants
 followers the ability to instantly step into the shadow of nearby creatures,
-provided the shadow is still enough to do so. Dithmenos protects followers by
-occasionally shrouding those struck by attacks in dark smoke. Sufficiently
-pious followers of Dithmenos will find their own shadow will begin to attack on
-its own, and eventually gain the ability to assume the form of a shadow
-themself.
+and protects followers by occasionally shrouding those struck by attacks in
+dark smoke. Sufficiently pious followers of Dithmenos will find their own
+shadow will begin to attack on its own, and eventually gain the ability to
+assume the form of a shadow themself.
 %%%%
 Elyvilon powers
 

@@ -30,6 +30,7 @@
 #include "english.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "food.h"
 #include "format.h" // formatted_string
 #include "god-blessing.h"
@@ -59,6 +60,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "movement.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -76,9 +78,9 @@
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
-#include "spl-wpnench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -745,13 +747,6 @@ bool zin_check_able_to_recite(bool quiet)
     {
         if (!quiet)
             mpr("You're not ready to recite again yet.");
-        return false;
-    }
-
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        if (!quiet)
-            mpr("You cannot recite while unable to breathe!");
         return false;
     }
 
@@ -1469,114 +1464,6 @@ bool vehumet_supports_spell(spell_type spell)
     return false;
 }
 
-// Returns false if the invocation fails (no spellbooks in sight, etc.).
-bool trog_burn_spellbooks()
-{
-    if (!you_worship(GOD_TROG))
-        return false;
-
-    god_acting gdact;
-
-    // XXX: maybe this should be allowed with less than immunity.
-    if (player_res_fire(false) <= 3)
-    {
-        for (stack_iterator si(you.pos()); si; ++si)
-        {
-            if (item_is_spellbook(*si))
-            {
-                mprf("Burning your own %s might not be such a smart idea!",
-                        you.foot_name(true).c_str());
-                return false;
-            }
-        }
-    }
-
-    int totalpiety = 0;
-    int totalblocked = 0;
-    vector<coord_def> mimics;
-
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        cloud_struct* cloud = cloud_at(*ri);
-        int count = 0;
-        for (stack_iterator si(*ri); si; ++si)
-        {
-            if (!item_is_spellbook(*si))
-                continue;
-
-            // If a grid is blocked, books lying there will be ignored.
-            // Allow bombing of monsters.
-            if (cell_is_solid(*ri)
-                || cloud && cloud->type != CLOUD_FIRE)
-            {
-                totalblocked++;
-                continue;
-            }
-
-            if (si->flags & ISFLAG_MIMIC)
-            {
-                totalblocked++;
-                mimics.push_back(*ri);
-                continue;
-            }
-
-            // Ignore {!D} inscribed books.
-            if (!check_warning_inscriptions(*si, OPER_DESTROY))
-            {
-                mpr("Won't ignite {!D} inscribed spellbook.");
-                continue;
-            }
-
-            totalpiety += 2;
-            item_was_destroyed(*si);
-            destroy_item(si.index());
-            count++;
-        }
-
-        if (count)
-        {
-            if (cloud)
-            {
-                // Reinforce the cloud.
-                mpr("The fire blazes with new energy!");
-                const int extra_dur = count + random2(6);
-                cloud->decay += extra_dur * 5;
-                cloud->set_whose(KC_YOU);
-                continue;
-            }
-
-            const int duration = min(4 + count + random2(6), 20);
-            place_cloud(CLOUD_FIRE, *ri, duration, &you);
-
-            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
-                 count == 1 ? ""  : "s",
-                 count == 1 ? "s" : "");
-        }
-    }
-
-    if (totalpiety)
-    {
-        simple_god_message(" is delighted!", GOD_TROG);
-        gain_piety(totalpiety);
-    }
-    else if (totalblocked)
-    {
-        mprf("The spellbook%s fail%s to ignite!",
-             totalblocked == 1 ? ""  : "s",
-             totalblocked == 1 ? "s" : "");
-        for (auto c : mimics)
-            discover_mimic(c);
-        return !mimics.empty();
-    }
-    else
-    {
-        mpr("You cannot see a spellbook to ignite!");
-        return false;
-    }
-
-    return true;
-}
-
 void trog_do_trogs_hand(int pow)
 {
     you.increase_duration(DUR_TROGS_HAND,
@@ -1739,10 +1626,42 @@ bool beogh_gift_item()
                               && is_range_weapon(gift) !=
                                  is_range_weapon(*mons_weapon);
 
-    mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
+    const auto mslot = body_armour ? MSLOT_ARMOUR :
                                     shield ? MSLOT_SHIELD :
                               use_alt_slot ? MSLOT_ALT_WEAPON :
-                                             MSLOT_WEAPON);
+                                             MSLOT_WEAPON;
+
+    // need to remove any curses so that drop_item won't fail
+    item_def* item_to_drop = mons->mslot_item(mslot);
+    if (item_to_drop && item_to_drop->cursed())
+    {
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                item_to_drop->name(DESC_THE).c_str());
+        do_uncurse_item(*item_to_drop);
+    }
+
+    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && shield_slot
+        && mons->hands_reqd(gift) == HANDS_TWO
+        && shield_slot->cursed())
+    {
+        // TODO: this doesn't seem to describe the shield as uncursed to the
+        // player. The weapon case works properly.
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                shield_slot->name(DESC_THE).c_str());
+        do_uncurse_item(*shield_slot);
+    }
+
+    item_def *floor_item = mons->take_item(item_slot, mslot);
+    if (!floor_item)
+    {
+        // this probably means move_to_grid in drop_item failed?
+        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
+                                        mons->name(DESC_THE, false).c_str(),
+                                        gift.name(DESC_THE, false).c_str());
+        return false;
+    }
     if (use_alt_slot)
         mons->swap_weapons();
 
@@ -3422,8 +3341,9 @@ spret_type fedhas_evolve_flora(bool fail)
 
         return SPRET_ABORT;
     }
-
-    monster_conversion upgrade = *map_find(conversions, plant->type);
+    auto upgrade_ptr = map_find(conversions, plant->type);
+    ASSERT(upgrade_ptr);
+    monster_conversion upgrade = *upgrade_ptr;
 
     vector<pair<int, int> > collected_rations;
     if (upgrade.ration_cost)
@@ -4454,13 +4374,11 @@ static void _gozag_place_shop(int index)
     ASSERT(grd(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
-    if (!kmspec.get_feat().shop.get())
-        die("Invalid shop spec?");
 
     feature_spec feat = kmspec.get_feat();
-    shop_spec *spec = feat.shop.get();
-    ASSERT(spec);
-    place_spec_shop(you.pos(), *spec, you.experience_level);
+    if (!feat.shop)
+        die("Invalid shop spec?");
+    place_spec_shop(you.pos(), *feat.shop, you.experience_level);
 
     link_items();
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
@@ -4953,6 +4871,7 @@ spret_type qazlal_elemental_force(bool fail)
     mg.summon_type = MON_SUMM_AID;
     mg.abjuration_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
+    mg.summoner = &you;
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < targets.size(); i++)
     {
@@ -4961,7 +4880,12 @@ spret_type qazlal_elemental_force(bool fail)
         const cloud_struct &cl = *cloud_at(pos);
         mg.behaviour = BEH_FRIENDLY;
         mg.pos       = pos;
-        mg.cls = *map_find(elemental_clouds, cl.type);
+        auto mons_type = map_find(elemental_clouds, cl.type);
+        // it is not impossible that earlier placements caused new clouds not
+        // in the map.
+        if (!mons_type)
+            continue;
+        mg.cls = *mons_type;
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
@@ -5423,6 +5347,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain += 20; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
+            break;
         case ABIL_RU_SACRIFICE_ESSENCE:
             if (mut == MUT_LOW_MAGIC)
             {
@@ -5968,6 +5893,8 @@ bool ru_do_sacrifice(ability_type sac)
     // get confirmation that the sacrifice is desired.
     if (!_execute_sacrifice(sac, offer_text.c_str()))
         return false;
+    // save piety gain, since sacrificing skills can lower the piety gain
+    const int piety_gain = _ru_get_sac_piety_gain(sac);
     // Apply the sacrifice, starting by mutating the player.
     if (variable_sac)
     {
@@ -6028,8 +5955,7 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    set_piety(min(piety_breakpoint(5),
-                  you.piety + _ru_get_sac_piety_gain(sac)));
+    set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
 
     if (you.piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
@@ -6794,7 +6720,15 @@ spret_type uskayaw_grand_finale(bool fail)
     ASSERT(mons);
 
     // kill the target
-    mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+    if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
+    {
+        // need to do this here, because react_to_damage is never called
+        mprf("%s explodes violently into a cloud of jellies!",
+                                        mons->name(DESC_THE, false).c_str());
+        trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
+    }
+    else
+        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -7162,7 +7096,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
 {
     if (target.distance_from(you.pos()) != 1)
     {
-        error_ret = "You can only wall jump against adjacent positions.";
+        error_ret = "Please select an adjacent position to wall jump against.";
         return false;
     }
 
@@ -7289,9 +7223,10 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
     return true;
 }
 
-bool wu_jian_wall_jump_ability()
+spret_type wu_jian_wall_jump_ability()
 {
     // This needs to be kept in sync with direct walljumping via movement.
+    // TODO: Refactor to call the same code.
     ASSERT(!crawl_state.game_is_arena());
 
     if (crawl_state.is_repeating_cmd())
@@ -7299,8 +7234,18 @@ bool wu_jian_wall_jump_ability()
         crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return false;
+        return SPRET_ABORT;
     }
+
+    if (cancel_barbed_move())
+        return SPRET_ABORT;
+
+    if (you.digging)
+    {
+        you.digging = false;
+        mpr("You retract your mandibles.");
+    }
+
     string wj_error;
     bool has_targets = false;
 
@@ -7314,14 +7259,24 @@ bool wu_jian_wall_jump_ability()
     if (!has_targets)
     {
         mpr("There is nothing to wall jump against here.");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (you.is_nervous())
     {
         mpr("You are too terrified to wall jump!");
-        return false;
+        return SPRET_ABORT;
     }
+
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You cannot wall jump while caught in a %s.",
+             get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+        return SPRET_ABORT;
+    }
+
+    if (!you.attempt_escape())
+        return SPRET_FAIL;
 
     // query for location:
     dist beam;
@@ -7348,21 +7303,23 @@ bool wu_jian_wall_jump_ability()
         {
             clear_messages();
             mpr("Cancelling wall jump due to HUP.");
-            return false;
+            return SPRET_ABORT;
         }
 
         if (!beam.isValid || beam.target == you.pos())
-            return false; // early return
+            return SPRET_ABORT; // early return
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
     }
 
     if (!wu_jian_do_wall_jump(beam.target, true))
-        return false;
+        return SPRET_ABORT;
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    return true;
+    apply_barbs_damage();
+    remove_ice_armour_movement();
+    return SPRET_SUCCESS;
 }

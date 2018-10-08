@@ -325,6 +325,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
+    mon_enchant insanity  = mons->get_ench(ENCH_INSANE);
 
     mons->number       = 0;
 
@@ -354,7 +355,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Make sure we have a god if we've been polymorphed into a priest.
-    mons->god = mons->is_priest() ? GOD_NAMELESS : god;
+    mons->god = (mons->is_priest() && god == GOD_NO_GOD) ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
@@ -366,6 +367,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->add_ench(vines);
     mons->add_ench(forest);
     mons->add_ench(hexed);
+    mons->add_ench(insanity);
 
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.

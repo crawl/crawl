@@ -2,6 +2,7 @@
 {{
 
 function line_setup(e)
+  crawl.set_max_runes(17)
   e.tags("no_rotate no_hmirror no_vmirror no_trap_gen")
   e.tags("no_pool_fixup")
 -- TODO make these doors immune to disint
@@ -16,8 +17,7 @@ function line_setup(e)
   e.kfeat("x = permarock_wall")
   e.colour("x = brown")
   e.kfeat("# = permarock_wall")
-  e.lua_marker('t', props_marker { veto_fragmentation="veto",
-                                   veto_disintegrate="veto",
+  e.lua_marker('t', props_marker { veto_dig="veto",
                                    veto_shatter="veto",
                                    veto_fire="veto" })
 end

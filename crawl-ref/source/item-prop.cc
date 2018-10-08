@@ -1036,22 +1036,6 @@ bool item_is_stationary_net(const item_def &item)
     return item.is_type(OBJ_MISSILES, MI_THROWING_NET) && item.net_placed;
 }
 
-/**
- * Get the actor held in a stationary net.
- *
- * @param net A stationary net item.
- * @return  A pointer to the actor in the net, guaranteed to be non-null.
- */
-actor *net_holdee(const item_def &net)
-{
-    ASSERT(item_is_stationary_net(net));
-    // Stationary nets should not be in inventory etc.
-    ASSERT_IN_BOUNDS(net.pos);
-    actor * const a = actor_at(net.pos);
-    ASSERTM(a, "No actor in stationary net at (%d,%d)", net.pos.x, net.pos.y);
-    return a;
-}
-
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -1630,18 +1614,20 @@ bool is_offensive_wand(const item_def& item)
     switch (item.sub_type)
     {
     // Monsters don't use those, so no need to warn the player about them.
-    case WAND_ENSLAVEMENT:
+    case WAND_CLOUDS:
+    case WAND_ICEBLAST:
     case WAND_RANDOM_EFFECTS:
+    case WAND_SCATTERSHOT:
+    // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
 
+    case WAND_ENSLAVEMENT:
     case WAND_FLAME:
     case WAND_PARALYSIS:
-    case WAND_ICEBLAST:
     case WAND_POLYMORPH:
     case WAND_ACID:
     case WAND_DISINTEGRATION:
-    case WAND_CLOUDS:
         return true;
     }
     return false;
@@ -2260,7 +2246,7 @@ bool ring_has_stackable_effect(const item_def &item)
     case RING_PROTECTION_FROM_COLD:
     case RING_LIFE_PROTECTION:
     case RING_STEALTH:
-    case RING_LOUDNESS:
+    case RING_ATTENTION:
     case RING_WIZARDRY:
     case RING_FIRE:
     case RING_ICE:

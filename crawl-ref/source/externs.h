@@ -548,7 +548,8 @@ struct item_def
     {
         // These must all be the same size!
         short plus2;        ///< legacy/generic name for this union
-        short used_count;   ///< the # of times a deck was used
+        short used_count;   ///< the # of times a deck was used.
+                            //   negative for stacked deck. #remaining
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short stash_freshness; ///< where stash.cc stores corpse freshness

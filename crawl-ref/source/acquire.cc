@@ -33,6 +33,7 @@
 #include "randbook.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -40,6 +41,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "unwind.h"
+#include "ui.h"
 
 static equipment_type _acquirement_armour_slot(bool);
 static armour_type _acquirement_armour_for_slot(equipment_type, bool);
@@ -856,7 +858,7 @@ static bool _skill_useless_with_god(int skill)
     case GOD_ELYVILON:
         return skill == SK_NECROMANCY;
     case GOD_XOM:
-    case GOD_NEMELEX_XOBEH:
+    case GOD_RU:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
     case GOD_ASHENZARI:
@@ -1390,7 +1392,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 acq_item.plus = max(abs((int) acq_item.plus), 1);
                 break;
 
-            case RING_LOUDNESS:
+            case RING_ATTENTION:
             case RING_TELEPORTATION:
             case AMU_INACCURACY:
                 // These are the only truly bad pieces of jewellery.
@@ -1484,7 +1486,7 @@ int acquirement_create_item(object_class_type class_wanted,
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index, bool debug)
+                 bool quiet, int* item_index, bool debug, bool known_scroll)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1510,11 +1512,14 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_STAVES,     "Staff " },
         { OBJ_MISCELLANY, "Evocable" },
         { OBJ_FOOD,       0 }, // amended below
-        { OBJ_GOLD,       "Gold" },
+        { OBJ_GOLD,       0 },
     };
     ASSERT(acq_classes[6].type == OBJ_FOOD);
     acq_classes[6].name = you.species == SP_VAMPIRE ? "Blood":
                                                       "Food";
+    string gold_text = make_stringf("Gold (you have $%d)", you.gold);
+    ASSERT(acq_classes[7].type == OBJ_GOLD);
+    acq_classes[7].name = gold_text.c_str();
 
     int thing_created = NON_ITEM;
 
@@ -1522,6 +1527,10 @@ bool acquirement(object_class_type class_wanted, int agent,
         item_index = &thing_created;
 
     *item_index = NON_ITEM;
+
+#ifdef USE_TILE_WEB
+    ui::cutoff_point ui_cutoff_point;
+#endif
 
     while (class_wanted == OBJ_RANDOM)
     {
@@ -1546,17 +1555,21 @@ bool acquirement(object_class_type class_wanted, int agent,
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire? (\\ to view known items)");
+        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire?"
+                "<lightgrey> [<w>\\</w>] known items %s</lightgrey>",
+                shopping_list.empty() ? "" : "[<w>$</w>] shopping list");
 
         const int keyin = toalower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))
             class_wanted = acq_classes[keyin - 'a'].type;
         else if (keyin == '\\')
             check_item_knowledge(), redraw_screen();
+        else if (keyin == '$' && !shopping_list.empty())
+            shopping_list.display(true), redraw_screen();
         else
         {
             // Lets wizards escape out of accidentally choosing acquirement.
-            if (agent == AQ_WIZMODE)
+            if (agent == AQ_WIZMODE || known_scroll)
             {
                 canned_msg(MSG_OK);
                 return false;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tag-version.h"
 #include <stdexcept>
 
 NORETURN void fail(PRINTF(0, ));
@@ -17,6 +18,12 @@ struct corrupted_save : public ext_fail_exception
 {
     corrupted_save(const string &msg) : ext_fail_exception(msg) {}
     corrupted_save(const char *msg) : ext_fail_exception(msg) {}
+    corrupted_save(const string &msg, save_version v) :
+                ext_fail_exception(msg), version(v)
+    {
+    }
+
+    save_version version; // defaults to -1,-1
 };
 
 extern bool CrawlIsCrashing;

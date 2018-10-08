@@ -22,6 +22,7 @@ function ready()
   if you.turns() == 0 and bot_start then
     bot_start = false
     crawl.enable_more(false)
+    crawl.set_sendkeys_errors(true)
     crawl.sendkeys("&yes" .. eol .. esc)
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('save_checkpoints')" .. eol ..

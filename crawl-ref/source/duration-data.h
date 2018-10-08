@@ -415,10 +415,6 @@ static const duration_def duration_data[] =
       "", "recite cooldown",
       "", D_NO_FLAGS,
       {{ "You are ready to recite again." }}},
-    { DUR_GRASPING_ROOTS,
-      BROWN, "Roots",
-      "grasped by roots", "grasping roots",
-      "Your movement is impeded by grasping roots.", D_NO_FLAGS},
     { DUR_FIRE_VULN,
       RED, "rF-",
       "fire vulnerable", "fire vulnerability",
@@ -616,6 +612,8 @@ static const duration_def duration_data[] =
       {{ "You regain access to your magic." }, {}, true }},
     { DUR_HEAVENLY_STORM, 0, "", "", "", "", D_NO_FLAGS,
       {{ "",  wu_jian_heaven_tick }}},
+    { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
+      "You are constricted by grasping roots.", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

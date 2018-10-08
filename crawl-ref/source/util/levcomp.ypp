@@ -20,12 +20,11 @@ extern int yylineno;
 
 static NORETURN void yyerror(const char *e)
 {
-    if (strstr(e, lc_desfile.c_str()) == e)
-        fprintf(stderr, "%s\n", e);
-    else
-        fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
-    end(1);
+    if (strstr(e, lc_desfile.c_str()) == e)
+        end(1, false, "%s\n", e);
+    else
+        end(1, false, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
 }
 
 %}

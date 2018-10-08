@@ -9,6 +9,7 @@
 #include FT_FREETYPE_H
 
 #include "defines.h"
+#include "end.h"
 #include "errno.h"
 #include "files.h"
 #include "format.h"
@@ -181,28 +182,31 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
     // 1KB: fontconfig if we are not scared of hefty libraries
+
+    // TODO: probably don't want to end here, but try a fallback font in
+    // the calling function.
     string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
-        die_noline("Could not find font '%s'\n", font_name);
+        end(1, false, "Could not find font '%s'", font_name);
 
     // Certain versions of freetype have problems reading files on Windows,
     // do that ourselves.
     FILE *f = fopen_u(font_path.c_str(), "rb");
     if (!f)
-        die_noline("Could not read font '%s'\n", font_name);
+        end(1, false, "Could not read font '%s'\n", font_name);
     unsigned long size = file_size(f);
     ttf = new FT_Byte[size];
     ASSERT(ttf);
     if (fread(ttf, 1, size, f) != size)
-        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+        end(1, false, "Could not read font '%s': %s\n", font_name, strerror(errno));
     fclose(f);
 
     error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
-        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
+        end(1, false, "Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
     {
-        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+        end(1, false, "Invalid font from file '%s' (size %lu): 0x%0x\n",
                    font_path.c_str(), size, error);
     }
 
@@ -486,7 +490,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 unsigned int FTFontWrapper::string_height(const formatted_string &str, bool logical) const
 {
     string temp = str.tostring();
-    return string_height(temp.c_str());
+    return string_height(temp.c_str(), logical);
 }
 
 unsigned int FTFontWrapper::string_height(const char *text, bool logical) const
@@ -508,7 +512,7 @@ unsigned int FTFontWrapper::string_width(const formatted_string &str, bool logic
 unsigned int FTFontWrapper::string_width(const char *text, bool logical)
 {
     unsigned int base_width = max(-m_min_offset, 0);
-    unsigned int max_width = 0;
+    unsigned int max_str_width = 0;
 
     unsigned int width = base_width;
     unsigned int adjust = 0;
@@ -516,7 +520,7 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
     {
         if (*itr == '\n')
         {
-            max_width = max(width + adjust, max_width);
+            max_str_width = max(width + adjust, max_str_width);
             width = base_width;
             adjust = 0;
         }
@@ -530,15 +534,16 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
         }
     }
 
-    max_width = max(width + adjust, max_width);
-    return logical ? display_density.device_to_logical(max_width) : max_width;
+    max_str_width = max(width + adjust, max_str_width);
+    return logical ? display_density.device_to_logical(max_str_width)
+                   : max_str_width;
 }
 
-int FTFontWrapper::find_index_before_width(const char *text, int max_width)
+int FTFontWrapper::find_index_before_width(const char *text, int max_str_width)
 {
     int width = max(-m_min_offset, 0);
 
-    max_width *= display_density.scale_to_device();
+    max_str_width *= display_density.scale_to_device();
 
     for (char *itr = (char *)text; *itr; itr = next_glyph(itr))
     {
@@ -552,7 +557,7 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
         GlyphInfo &glyph = get_glyph_info(ch);
         width += glyph.advance;
         int adjust = max(0, glyph.width - glyph.advance);
-        if (width + adjust > max_width)
+        if (width + adjust > max_str_width)
             return itr-text;
     }
 
@@ -566,10 +571,11 @@ static int _find_newline(const char *s)
 }
 
 formatted_string FTFontWrapper::split(const formatted_string &str,
-                                      unsigned int max_width,
-                                      unsigned int max_height)
+                                      unsigned int max_str_width,
+                                      unsigned int max_str_height)
 {
-    int max_lines = max_height / char_height();
+    int max_lines = display_density.logical_to_device(max_str_height)
+                                                        / char_height(false);
 
     if (max_lines < 1)
         return formatted_string();
@@ -584,7 +590,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     while (true)
     {
         int nl = _find_newline(line);
-        int line_end = find_index_before_width(line, max_width);
+        int line_end = find_index_before_width(line, max_str_width);
         if (line_end == INT_MAX && nl == INT_MAX)
             break;
 
@@ -594,7 +600,9 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
         else
         {
             space_idx = -1;
-            for (char *search = &line[line_end]; search > line; search = prev_glyph(search, line))
+            for (char *search = &line[line_end];
+                 search > line;
+                 search = prev_glyph(search, line))
             {
                 if (*search == ' ')
                 {

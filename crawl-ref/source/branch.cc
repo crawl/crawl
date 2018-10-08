@@ -168,7 +168,12 @@ bool is_hell_subbranch(branch_type branch)
 {
     return branch >= BRANCH_FIRST_HELL
            && branch <= BRANCH_LAST_HELL
-           && branch != BRANCH_VESTIBULE;
+           && branch != BRANCH_VESTIBULE; // XX not needed?
+}
+
+bool is_hell_branch(branch_type branch)
+{
+    return is_hell_subbranch(branch) || branch == BRANCH_VESTIBULE;
 }
 
 bool is_random_subbranch(branch_type branch)

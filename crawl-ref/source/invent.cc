@@ -40,6 +40,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
  #include "tiledef-icons.h"
@@ -84,8 +85,10 @@ InvEntry::InvEntry(const item_def &i)
 
     if (item_is_stationary_net(i))
     {
+        actor *trapped = actor_at(i.pos);
         text += make_stringf(" (holding %s)",
-                             net_holdee(i)->name(DESC_A).c_str());
+                            trapped ? trapped->name(DESC_A).c_str()
+                                    : "nobody"); // buggy net, but don't crash
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
@@ -454,6 +457,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying anything you can give to a follower.";
     case OSEL_CURSABLE:
         return "You don't have any cursable items.";
+    case OSEL_UNCURSED_WORN_RINGS:
+        return "You aren't wearing any uncursed rings.";
     }
 
     return "You aren't carrying any such object.";
@@ -474,30 +479,23 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 }
 
 #ifdef USE_TILE
-bool InvEntry::get_tiles(vector<tile_def>& tileset) const
+bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
-    if (!Options.tile_menu_icons)
-        return false;
-
-    // Runes + orb of zot have a special uncollected tile
-    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
-        return false;
-
-    tileidx_t idx = tileidx_item(get_item_info(*item));
+    tileidx_t idx = tileidx_item(get_item_info(item));
     if (!idx)
         return false;
 
-    if (in_inventory(*item))
+    if (in_inventory(item))
     {
-        const equipment_type eq = item_equip_slot(*item);
+        const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
-            if (item_known_cursed(*item))
+            if (item_known_cursed(item))
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
             else
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
         }
-        else if (item_known_cursed(*item))
+        else if (item_known_cursed(item))
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
@@ -511,11 +509,11 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     else
     {
         // Do we want to display the floor type or is that too distracting?
-        const coord_def c = item->held_by_monster()
-            ? item->holding_monster()->pos()
-            : item->pos;
+        const coord_def c = item.held_by_monster()
+            ? item.holding_monster()->pos()
+            : item.pos;
         tileidx_t ch = 0;
-        if (c != coord_def() && show_background)
+        if (c != coord_def() && show_background && item.link != ITEM_IN_SHOP)
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
@@ -540,25 +538,37 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
                 tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
         }
     }
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
-        || item->base_type == OBJ_ARMOUR
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
+        || item.base_type == OBJ_ARMOUR
 #if TAG_MAJOR_VERSION == 34
-        || item->base_type == OBJ_RODS
+        || item.base_type == OBJ_RODS
 #endif
        )
     {
-        tileidx_t brand = tileidx_known_brand(*item);
+        tileidx_t brand = tileidx_known_brand(item);
         if (brand)
             tileset.emplace_back(brand, TEX_DEFAULT);
     }
-    else if (item->base_type == OBJ_CORPSES)
+    else if (item.base_type == OBJ_CORPSES)
     {
-        tileidx_t brand = tileidx_corpse_brand(*item);
+        tileidx_t brand = tileidx_corpse_brand(item);
         if (brand)
             tileset.emplace_back(brand, TEX_DEFAULT);
     }
 
     return true;
+}
+
+bool InvEntry::get_tiles(vector<tile_def>& tileset) const
+{
+    if (!Options.tile_menu_icons)
+        return false;
+
+    // Runes + orb of zot have a special uncollected tile
+    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
+        return false;
+
+    return get_tiles_for_item(*item, tileset, show_background);
 }
 #else
 bool InvEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
@@ -979,7 +989,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
+        new_flags |= MF_ALLOW_FORMATTING;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
@@ -1077,6 +1087,10 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_CURSABLE:
         return item_is_cursable(i);
 
+    case OSEL_UNCURSED_WORN_RINGS:
+        return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
+            && !jewellery_is_amulet(i);
+
     default:
         return false;
     }
@@ -1166,11 +1180,7 @@ static unsigned char _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    int flags = MF_SINGLESELECT;
-    if (you.pending_revival || crawl_state.updating_scores)
-        flags |= MF_EASY_EXIT;
-
-    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(MT_INVLIST);
 
@@ -1875,8 +1885,7 @@ int prompt_invent_item(const char *prompt,
                         mtype,
                         current_type_expected,
                         -1,
-                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
-                            | MF_EASY_EXIT,
+                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY,
                         nullptr,
                         &items);
 

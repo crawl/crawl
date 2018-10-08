@@ -251,28 +251,29 @@ MONS:   orc / w:2 goblin / w:2 hobgoblin / nothing
 MONS:   orc warrior / orc priest / orc wizard / nothing
 MONS:   warg / ogre / nothing
 ORIENT: float
-SUBST:  ? = x . $:1
+SUBST: ; = . $:1
+SUBST: ? = x . $:1
 KFEAT: O = enter_orcish_mines
 MAP
-xxx.xxxxxxxxxxxxxxxxxxx
+xxx@xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
 xx..xxx..1.xxx....13xxx
 xx.x??x.x1xx?x.21xx?..x
-xx...x..xxx.2..1.x.x??.
+xx...x..xxx.2..1.x.x??@
 xx?x.....?x.x..x.x1?.xx
-xx..??12x?x.1.1?x.x??xx
+xx..??12x?x.1.1?x.x;?xx
 xxx..x..x??O.x..x.xx.xx
 x?..?x......x?.x.??x.xx
 xx.x??.x.x..?x..xx.x?xx
-x?xx?xx.x??...x.1x.1??x
+x?xx?xx.x??...x.1x.1;?x
 xx..xxx...x.x.x.1?1.xxx
-x?.2....xx2.x...xx.x??x
+x?.2....xx2.x...xx.x;?x
 xxx??xx..xx.xx.x?..xxxx
 xx..1.x.x.3...x2.x1..xx
-..x??x.xxx..xxxx??.??xx
-xx?.??.11.x?xxx..x..xxx
+..x??x.xxx..xxxx?;.??xx
+xx;.??.11.x;xxx..x..xxx
 x??xxxx???xx?xxx??x.?xx
-xxxxxxxxxxxxxxxxxxxx.xx
+xxxxxxxxxxxxxxxxxxxx@xx
 ENDMAP
 
 ##############################################################################

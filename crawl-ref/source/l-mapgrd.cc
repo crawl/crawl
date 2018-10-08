@@ -5,7 +5,6 @@
 #include "cluautil.h"
 #include "mapdef.h"
 
-/////////////////////////////////////////////////////////////////////
 // mapgrd and mapgrd_col handling (i.e. map_lines in a metatable)
 
 struct mapcolumn

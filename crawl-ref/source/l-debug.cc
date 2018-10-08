@@ -1,8 +1,6 @@
-/**
- * @file
- * @brief Various debugging bindings.
-**/
-
+/*** Debugging functions (dlua only).
+ * @module debug
+ */
 #include "AppHdr.h"
 
 #include "l-libs.h"

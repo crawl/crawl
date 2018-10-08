@@ -21,9 +21,10 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
-#include "process-desc.h"
 #include "rot.h"
 #include "spl-book.h"
+#include "stringutil.h"
+#include "terrain.h"
 #include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
@@ -335,8 +336,10 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         if (item_is_stationary_net(item))
         {
+            actor *trapped = actor_at(item.pos);
             tip += make_stringf(" (holding %s)",
-                                net_holdee(item)->name(DESC_A).c_str());
+                            trapped ? trapped->name(DESC_A).c_str()
+                                    : "nobody"); // buggy net, but don't crash
         }
 
         if (!item_is_stationary(item))
@@ -606,11 +609,7 @@ bool InventoryRegion::update_alt_text(string &alt)
     else
         get_item_desc(*item, inf);
 
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-
+    alt = process_description(inf);
     return true;
 }
 
@@ -639,7 +638,7 @@ void InventoryRegion::draw_tag()
 
 void InventoryRegion::activate()
 {
-    if (inv_count() < 1)
+    if (inv_count() < 1 && you.num_turns > 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         flush_prev_message();

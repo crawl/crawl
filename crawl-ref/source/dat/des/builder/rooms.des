@@ -282,6 +282,43 @@ function sroom_mythical_zoo(e)
             'box of beasts w:3 / nothing w:17')
 end
 
+function sroom_magic_class(e)
+
+    -- Return early if we're being called during map validation.
+    if e.is_validating() then return end
+
+    local mons = {}
+    mons[1] = "wizard w:35"
+    mons[2] = "deep troll earth mage w:35"
+    mons[3] = "vampire knight w:35"
+    mons[4] = "ogre mage w:30"
+    mons[5] = "spriggan air mage w:25"
+    mons[6] = "deep elf annihilator w:15"
+    mons[7] = "deep elf sorcerer w:15"
+    mons[8] = "deep elf demonologist w:5"
+    mons[9] = "deep elf death mage w:5"
+    mons[10] = "deep elf elementalist w:5"
+    mons[11] = "vampire mage w:5"
+
+    local absdepth = you.absdepth()
+    if absdepth == 27 then
+        mons[12] = "draconian annihilator w:5"
+        lord_mon = "draconian shifter / ancient lich / Jory w:1 / " ..
+                   "Frederick w:1 / Boris w:1, draconian shifter / " ..
+                   "ancient lich"
+    elseif crawl.x_chance_in_y(absdepth - 20, 5) then
+        lord_mon = "ancient lich / Jory w:1 / Frederick w:1 / Boris w:1" ..
+                   ", ancient lich"
+    else
+        lord_mon = "lich / tengu reaver"
+    end
+
+    fill_special_room(e, mons, lord_mon, true)
+
+    e.kitem('2 = any randbook')
+
+end
+
 function sroom_demon_pit(e)
 
     -- Return early if we're being called during map validation.
@@ -379,6 +416,13 @@ DEPTH:  D:14-, Depths, Lair:4-, Elf
 TAGS:   special_room allow_dup unrand
 WEIGHT: 20 (D:14-, Lair:4-5), 25 (Depths:1-3, Lair:$, Elf), 28
 : sroom_mythical_zoo(_G)
+MAP
+ENDMAP
+
+NAME:   special_room_magic_class
+DEPTH:  Depths
+TAGS:   special_room allow_dup unrand
+: sroom_magic_class(_G)
 MAP
 ENDMAP
 

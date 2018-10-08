@@ -10,8 +10,9 @@
 #include "stringutil.h"
 #include "tags.h"
 
-///////////////////////////////////////////////////////////
+//
 // User-accessible file operations
+//
 
 static const struct luaL_reg file_clib[] =
 {
@@ -24,8 +25,9 @@ void cluaopen_file(lua_State *ls)
     luaL_openlib(ls, "file", file_clib, 0);
 }
 
-///////////////////////////////////////////////////////////
+//
 // Non-user-accessible file operations
+//
 
 static int file_marshall(lua_State *ls)
 {

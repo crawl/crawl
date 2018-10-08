@@ -101,9 +101,9 @@ public:
     bool is_at(coord_def other) const { return shop.pos == other; }
     bool is_visited() const { return !shop.stock.empty(); }
 
-private:
     shop_struct shop;
 
+private:
     string shop_item_name(const item_def &it) const;
     string shop_item_desc(const item_def &it) const;
 
@@ -268,7 +268,8 @@ private:
                                 bool& filter_useless,
                                 bool& default_execute,
                                 base_pattern* search,
-                                bool nohl);
+                                bool nohl,
+                                size_t num_alt_matches);
     string stash_search_prompt();
 
 private:

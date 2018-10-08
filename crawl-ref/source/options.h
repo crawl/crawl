@@ -185,6 +185,7 @@ public:
     int         mlist_min_height;
     int         msg_min_height;
     int         msg_max_height;
+    int         msg_webtiles_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
     bool        msg_condense_repeats;
@@ -218,6 +219,7 @@ public:
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_time; // Show game time instead of player turns.
     bool        equip_bar; // Show equip bar instead of noise bar.
+    bool        animate_equip_bar; // Animate colours in equip bar.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
@@ -403,7 +405,6 @@ public:
 
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
-    bool        easy_exit_menu;     // Menus are easier to get out of
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1
 
@@ -520,6 +521,7 @@ public:
     string      tile_font_stat_file;
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
+    bool        tile_single_column_menus;
 #endif
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;
