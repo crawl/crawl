@@ -156,6 +156,8 @@ gargoyle_red_m
 gargoyle_red_f
 gargoyle_brown_m
 gargoyle_brown_f
+crystal_dwarf_m CRYSTAL_DWARF
+kitsune_m KITSUNE
 %sdir player/felids
 %rim 0
 cat1 FELID
