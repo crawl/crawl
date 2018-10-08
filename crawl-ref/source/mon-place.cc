@@ -303,7 +303,7 @@ void spawn_random_monsters()
     }
 
     if (player_on_orb_run())
-        rate = have_passive(passive_t::slow_orb_run) ? 16 : 8;
+        rate = have_passive(passive_t::slow_orb_run) ? 36 : 18;
 
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -324,7 +324,7 @@ void spawn_random_monsters()
              rate, env.turns_on_level);
 
         mgen_data mg(WANDERING_MONSTER);
-        mg.proximity = one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE;
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
         mg.foe = MHITYOU;
         // Don't count orb run spawns in the xp_by_level dump
         mg.xp_tracking = XP_UNTRACKED;
@@ -2518,11 +2518,16 @@ void debug_bands()
 
 static monster_type _pick_zot_exit_defender()
 {
-    if (one_chance_in(11))
+    // 10% Pan lord
+    //  - ~1% named pan lord / seraph
+    //  - ~9% random pan lord
+    // 15% Orb Guardian
+    // 40% Demon
+    //  - 25% greater demon
+    //  - 10% common demon
+    // 40% Pan spawn (can also include pan lords and demons)
+    if (one_chance_in(10))
     {
-#ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "Create a pandemonium lord!");
-#endif
         for (int i = 0; i < 4; i++)
         {
             // Sometimes pick an unique lord whose rune you've stolen.
@@ -2535,18 +2540,17 @@ static monster_type _pick_zot_exit_defender()
             }
         }
 
-        if (one_chance_in(11))
+        if (one_chance_in(10))
             return MONS_SERAPH;
 
         return MONS_PANDEMONIUM_LORD;
     }
 
     return random_choose_weighted(
-        30, RANDOM_DEMON_COMMON,
-        30, RANDOM_DEMON,
-        20, pick_monster_no_rarity(BRANCH_PANDEMONIUM),
         15, MONS_ORB_GUARDIAN,
-        5, RANDOM_DEMON_GREATER);
+        25, RANDOM_DEMON_GREATER,
+        10, RANDOM_DEMON_COMMON,
+        40, pick_monster_no_rarity(BRANCH_PANDEMONIUM));
 }
 
 monster* mons_place(mgen_data mg)
