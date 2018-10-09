@@ -2206,3 +2206,172 @@ MAP
    .xxxxxxxxxx.
    ............
 ENDMAP
+
+################################################################################
+NAME:       psy_arrival_basics
+TAGS:       arrival
+ORIENT:     float
+MAP
+xxxxxxxxxxxxm@
+x............@
+x.xxxxx...xxG@
+x.xxxx.....xx 
+x.xxxxx.{.xxx 
+x.xxxx.....xx 
+x.xxxxx...xxG@
+x............@
+xxxxxxxxxxxxm@
+ENDMAP
+
+NAME:       psy_arrival_conway
+TAGS:       arrival no_monster_gen no_pool_fixup
+ORIENT:     float
+KMONS:      P = plant / bush
+KFEAT:      P = W
+MAP
+xxxxxxxxxxxxxx
+xWPW.........x
+xWWPxx.xxx.{.x
+xPPPxx.xxx...x
+x.xxPWPxxxxx.x
+x.xxWPPxxxxx.x
+x...WPWxxxxx.x
+x.xxxxxWWP...x
+x.xxxxxPWPxx.x
+x.xxxxxWPPxx.x
+x...xxx.xxPWWx
+@...xxx.xxWPPx
+x.........PPWx
+xx@xxxxxxxxxxx
+ENDMAP
+
+NAME:       psy_arrival_dodecagon
+TAGS:       arrival no_monster_gen transparent
+ORIENT:     float
+SUBST:      p:Wmvb
+SUBST:      q:..xlm
+MAP
+           .           
+          .x.          
+         .x.x.         
+   ......x...x......   
+   .xxxxxxx.xxxxxxx.   
+   .xppx.......xppx.   
+   .xpx.........xpx.   
+   .xx...........xx.   
+   .x.............x.   
+  .xx.............xx.  
+ .xqx.............xqx. 
+.xqqq......{......qqqx.
+ .xqx.............xqx. 
+  .xx.............xx.  
+   .x.............x.   
+   .xx...........xx.   
+   .xpx.........xpx.   
+   .xppx.......xppx.   
+   .xxxxxxxqxxxxxxx.   
+   ......xqqqx......   
+         .xqx.         
+          .x.          
+           .           
+ENDMAP
+
+NAME:       psy_arrival_heroes
+TAGS:       arrival no_monster_gen
+WEIGHT:     5
+ORIENT:     float
+SUBST:      p : c@
+MAP
+        ppp                  
+        cGc                  
+        c.c                  
+      ccc.ccc                
+    ccc.....ccc              
+    c.........c cccccccccccc 
+   cc.........cccGccGccGccGc 
+   c........................@
+pccc........................@
+pG.......{..................@
+pccc........................@
+   c........................@
+   cc.........cccGccGccGccGc 
+    c.........c cccccccccccc 
+    ccc.....ccc              
+      ccc.ccc                
+        c.c                  
+        cGc                  
+        ppp                  
+ENDMAP
+
+NAME:       psy_arrival_radial01
+TAGS:       arrival no_monster_gen
+ORIENT:     float
+SHUFFLE:    pqr
+SUBST:      p:x, q:x, r:@
+MAP
+pxxxqqq rrxxxxxpp
+p..xx.xxx.x...x.x
+xx.x..x...x.x...x
+x..x.xx.xxx.xxxxx
+x.xx.x....x....xq
+x......xx.x.xx..q
+xxxxxxxx..x..xxxq
+r..x...x.xxx...x 
+rx.x.x..{..x.x.xr
+ x...xxx.x...x..r
+qxxx..x..xxxxxxxx
+q..xx.x.xx......x
+qx....x....x.xx.x
+xxxxx.xxx.xx.x..x
+x...x.x...x..x.xx
+x.x...x.xxx.xx..p
+ppxxxxxrr qqqxxxp
+ENDMAP
+
+NAME:       psy_arrival_radial02
+TAGS:       arrival no_monster_gen no_pool_fixup
+ORIENT:     float
+SHUFFLE:    JKLM
+SUBST:      JKL:x, M:@, p:llWWmvbx
+MAP
+pJxKxxxLxxxxMpppppppp
+p.x.x...x....p......J
+p.x.x.xxx.pppp.xxxxxx
+p.x.x.x...p.........K
+p.x.x.x.ppp.xxxxxxxxx
+p.x.x...p...........x
+p...x.ppp.ppppp.xxx.x
+ppp.x.p...p...p...x.L
+M.p.x.p.ppp.p.ppp.xxx
+x.p...p.....p...p...x
+x.ppp.ppp.{.ppp.ppp.x
+x...p...p.....p...p.x
+xxx.ppp.p.ppp.p.x.p.M
+L.x...p...p...p.x.ppp
+x.xxx.ppppp.ppp.x...p
+x...........p...x.x.p
+xxxxxxxxx.ppp.x.x.x.p
+K.........p...x.x.x.p
+xxxxxx.pppp.xxx.x.x.p
+J......p....x...x.x.p
+ppppppppMxxxxLxxxKxJp
+ENDMAP
+
+NAME:       psy_arrival_whirlpool
+TAGS:       arrival
+ORIENT:     float
+MAP
+ xxxxxxxxxx@ 
+xxWWWWWWWW.G@
+xWW.....WWW.x
+xW..WWW..WW.x
+x..WWWWW..W.x
+x.WW...WW.W.+
++.W..W{W..W.+
++.W.WW...WW.x
+x.W..WWWWW..x
+x.WW..WWW..Wx
+x.WWW.....WWx
+@G.WWWWWWWWxx
+ @xxxxxxxxxx 
+ENDMAP
