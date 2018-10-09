@@ -6710,6 +6710,9 @@ void player::paralyse(actor *who, int str, string source)
                                                : source;
     }
 
+    if (asleep())
+        you.awaken();
+
     mpr("You suddenly lose the ability to move!");
 
     paralysis = min(str, 13) * BASELINE_DELAY;
@@ -6733,6 +6736,10 @@ void player::petrify(actor *who, bool force)
         mpr("Your divine stamina protects you from petrification!");
         return;
     }
+
+    // Petrification always wakes you up
+    if (asleep())
+        you.awaken();
 
     if (petrifying())
     {
