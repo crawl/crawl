@@ -305,11 +305,12 @@ static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
 static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
                                bool placed_abyssal_rune)
 {
-    // During game start, number and level of items mustn't be higher than
-    // that on level 1.
-    int num_items = 150, items_level = 52;
+    int num_items = you.depth * 30;
+    int items_level = you.depth * 10 + 2;
     int items_placed = 0;
 
+    // During game start, number and level of items mustn't be higher than
+    // that on level 1.
     if (player_in_starting_abyss())
     {
         num_items   = 3 + roll_dice(3, 11);
@@ -371,6 +372,14 @@ static string _who_banished(const string &who)
     return who.empty() ? who : " (" + who + ")";
 }
 
+// Don't send low level players to their certain doom
+static int _cap_abyss_entry_depth(int depth)
+{
+    if (you.experience_level < 6) return min(2, depth);
+    if (you.experience_level < 11) return min(3, depth);
+    return depth;
+}
+
 static int _banished_depth(const int power)
 {
     // Linear, with the max going from (1,1) to (25,5)
@@ -385,7 +394,8 @@ static int _banished_depth(const int power)
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
     const int mindepth = (4 * power + 7) / 23;
-    return min(5, max(1, random_range(mindepth, maxdepth)));
+    int depth = min(5, max(1, random_range(mindepth, maxdepth)));
+    return _cap_abyss_entry_depth(depth);
 }
 
 void banished(const string &who, const int power)
@@ -417,6 +427,9 @@ void banished(const string &who, const int power)
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
                      level_id(BRANCH_ABYSS, depth), true);
+    // (Try to) Place an exit near banished players
+    _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 5, DNGN_FLOOR,
+                        DNGN_EXIT_ABYSS, 50, true);
     // This is an honest abyss entry, mark milestone
     mark_milestone("abyss.enter",
         "was cast into the Abyss!" + _who_banished(who), "parent");
@@ -1280,9 +1293,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
-                            : 7500 - 1250 * (you.depth - 1);
-
+    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250 : 3750;
     int exits_wanted  = 0;
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
@@ -1474,7 +1485,7 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    int num_monsters = 15 + you.depth * (1 + coinflip());
+    int num_monsters = 10 + you.depth * 3;
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
