@@ -1689,14 +1689,21 @@ void handle_monster_move(monster* mons)
             if (gozag_gold_in_los(mons))
             {
                 simple_monster_message(*mons,
-                    " is distracted by the nearby gold.");
+                    " becomes distracted by the nearby gold, dreaming of "
+                    "imaginary riches.");
             }
             else if (you.gold > 0)
-                simple_monster_message(*mons, " is distracted by your gold.");
-            // Just in case!
-            else
+            {
                 simple_monster_message(*mons,
-                                       " is distracted by imaginary riches.");
+                    " becomes distracted by your gold, dreaming of "
+                    "imaginary riches.");
+            }
+            else
+            {
+                // Just in case!
+                simple_monster_message(*mons,
+                            " is distracted by dreams of imaginary riches.");
+            }
 
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
