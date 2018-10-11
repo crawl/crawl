@@ -1560,3 +1560,63 @@ cn-----nc
 .nn===nn.
 ....@....
 ENDMAP
+
+NAME:   gammafunk_ghost_hive
+DEPTH:  D:5-, Lair
+KITEM:  ' = ration
+KMONS:  O = player ghost
+MONS:   killer bee, queen bee, hornet, meliai
+# Chance to make a partial wall in each of the full cells. Add 0-4 rations.
+NSUBST: p = x- / -, q = x- / -, r = x- / -, s = x- / -, - = 4='- / -
+: ghost_good_loot(_G)
+: if you.in_branch("D") then
+:   if you.depth() < 6 then
+SUBST:  de = *%, f = %$, ghi= -
+NSUBST: - = 4=1 / 4=1. / 3... / .
+:   elseif you.depth() < 9 then
+SUBST:  de = *, f = *%, g = %$--, hi= -
+NSUBST: - = 4=1 / 4=1. / 2. / 3. / .
+:   elseif you.depth() < 12 then
+SUBST:  e = |*, f = *, g = %$, hi= -
+NSUBST: - = 4=1 / 4=1. / 2 / 2=3. / 4... / .
+:   elseif you.depth() < 14 then
+SUBST:  f = |*, g = *, h = %$, i= -
+NSUBST: - = 4=1 / 4=1. / 2 / 3 / 2=3. / 2=4. / .
+:   else
+SUBST:  fg = |*, h = *%, i = %$--
+NSUBST: - = 4=1 / 4=1. / 2 / 3 / 2=3. / 4 / 2=4. / .
+:   end
+# Lair
+: else
+:   if you.depth() < 4 then
+SUBST:  f = |*, g = *, h = %$--, i= -
+NSUBST: - = 4=1 / 4=1. / 2 / 3 / 3. / 4. / .
+:   else
+SUBST:  f = |*, g = *, h = %$, i= -
+NSUBST: - = 4=1 / 4=1. / 2 / 3 / 2=3. / 2=4. / .
+:   end
+: end
+COLOUR: x = yellow
+TILE:   x = wall_wax
+: ghost_setup(_G)
+MARKER: P = lua:transp_loc("ghost_hive_entry")
+MARKER: Q = lua:transp_dest_loc("ghost_hive_entry")
+MARKER: R = lua:transp_loc("ghost_hive_exit")
+MARKER: S = lua:transp_dest_loc("ghost_hive_exit")
+MAP
+         @
+  .......P.......
+ ..cccccnnnccccc..
+..cnxxxfdRegxxxnc..
+.cnx-q-xhOix-p-xnc.
+.cx--x--xxx--x--xc.
+.cnx-q-x---x-p-xnc.
+@.ccxxx--x--xxxcc.@
+.cnx-r-x---x-s-xnc.
+.cx--x--xxx--x--xc.
+.cnx-r-x---x-s-xnc.
+..cnxxx--Q--xxxnc..
+ ..cccccnnnccccc..
+  .......S.......
+         @
+ENDMAP
