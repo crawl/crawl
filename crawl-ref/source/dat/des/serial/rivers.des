@@ -1,0 +1,202 @@
+# A serial layout focusing on little streams appearing through the
+# dungeon. Similar to bayou, but with less vegetation.
+
+NAME:   serial_rivers
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
+DEPTH:  D, Depths, Lair
+CHANCE: 1%
+{{
+  local c = 4 + crawl.random2(3)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_rivers", count=c}
+  end)
+}}
+
+NAME:   chequers_serial_rivers_micro_a
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+     @
+xxxx...xxxx
+xwwwWWWwwxx
+xxxx...xxxx
+ENDMAP
+
+NAME:   chequers_serial_rivers_micro_b
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+     @
+xxxx...x
+xwwwwWWx
+xxxx...x
+ENDMAP
+
+NAME:   chequers_serial_rivers_micro_c
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  W = W:8 .
+MAP
+ W.
+.W...
+.WWW.
+.WWW.
+.WWW.
+...W.
+  .W
+ENDMAP
+
+NAME:   chequers_serial_rivers_micro_d
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+  @
+ www
+ w.w
+ w.w
+ w@w
+ENDMAP
+
+NAME:   chequers_serial_rivers_micro_e
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  . = W., W = W:8 .
+MAP
+wwwwwww
+ .....
+ .....
+  .@.
+ENDMAP
+
+NAME:   chequers_serial_rivers_room_a
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+xxxxxx+
+xw....x
+xw....x
+xw....x
+xwwwwwx
++xxxxxx
+ENDMAP
+
+NAME:   chequers_serial_rivers_room_b
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+xxx+xxx
+xwwWwwx
+xwWwWwx
+xWwWwWx
+xwWwWwx
+xxx+xxx
+ENDMAP
+
+NAME:   chequers_serial_rivers_small_a
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  w = Ww
+MAP
+  w
+ www
+  wwww..w@
+@...WWwwww
+         www
+ENDMAP
+
+NAME:   chequers_serial_rivers_small_b
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+KPROP:  w = no_tele_into
+MAP
+@     w
+.ww   w
+ .ww. Www.
+.  Ww. ..wW@
+ .      ww
+  .   www
+ .  www
+w.
+ww@
+w .
+ENDMAP
+
+NAME:   chequers_serial_rivers_marsh
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  . = W. t:2 w:3
+MAP
+     @
+ ........
+..........
+   .......
+..........
+.... ...
+..........@
+   ......
+@.......
+.......
+ ........
+    @
+ENDMAP
+
+NAME:   chequers_serial_rivers_small_3
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  W = .:2 w:3 W, . = . W:4
+MAP
+       ..........   xxxx
+      ............  xwwx
+xxxx@..............xxwxx
+xxxwwwWWWWWWWWWWWwwwwwx
+xwwwwwWWWWWWWWWWWwwwwxx
+xxxx..............@xxxx
+       ..........
+ENDMAP
+
+NAME:   chequers_serial_rivers_large_a
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+SUBST:  W = .:1 w:2 W, - = W:5 .
+MAP
+  xxxxxxxx
+ xxxxxwwwWW--
+xxxxxwwwWWwW--
+xxxwwwwwWWwWW-
+ xxxxwwwwWWwW-
+  xxxxxxxWwWW-
+        -WWWW-
+        -WWWW-
+        -WWWW-
+        -WWWW-
+        -WWWW-
+        @WWWW@
+        -WWWW-
+        -WWWW-
+        -WWWW-
+        -WWWW-
+        -WWWWxxxxxxx
+        -WwWWwxxwwwxx
+        -WWwwwwxxwwxx
+        --Wwwwwwxwxxx
+         --Wwwwwwwxx
+            xxxxxxx
+ENDMAP
+
+NAME:   chequers_serial_rivers_large_b
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+DEPTH:  D, Depths, Lair
+MAP
+              xxxxxx
+   @..Wxx     xWWWWxx
+   xWWWWxxx   xxxWWWxxxxx
+   xxxWWWWxxxxxWWWWWWWWWxxx
+     xxxWWWWWWWWWxxxxxWWWWx
+       xxxxxWWWxxxxxxxWWxxx
+           xxxxxxxxxxxWWWx
+                xWWWWWxxxxxx
+           xxxxxxxxxxWWWWWx
+          @WWWWWWxxxxxxxWWxxx
+           xxxWWWWWWWWWWxWWWx
+             xxxxxxxxxxxxxxxx
+ENDMAP
