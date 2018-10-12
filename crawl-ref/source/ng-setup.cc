@@ -4,6 +4,8 @@
 
 #include "ability.h"
 #include "adjust.h"
+#include "artefact.h"
+#include "art-enum.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "end.h"
@@ -30,6 +32,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "tiledef-player.h"
 
 #define MIN_START_STAT       3
 
@@ -235,6 +238,97 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
+static skill_type _setup_archaeologist_crate(item_def& crate)
+{
+    item_def unrand;
+    int type;
+	const vector<int> unrands = archaeologist_unrands();
+	
+    do {
+        unrand = item_def();
+        type = unrands[random2(unrands.size())];
+        if (!make_item_unrandart(unrand, type))
+            continue;
+    } 
+	while ((!you.could_wield(unrand) && !can_wear_armour(unrand, false, true)));
+	
+    dprf("Initializing archaeologist crate with %s", 
+		unrand.name(DESC_A).c_str());
+		
+    crate.props[ARCHAEOLOGIST_CRATE_ITEM] = type;
+	
+    // Handle items unlocked through interesting skills.
+    // Jewellery only happens on felids.
+    switch (type)
+    {
+    case UNRAND_PONDERING:
+    case UNRAND_MAJIN:
+    case UNRAND_WUCAD_MU:
+    case UNRAND_ETHERIC_CAGE:
+        return SK_SPELLCASTING;
+    case UNRAND_DRAGONMASK:
+    case UNRAND_WAR:
+    case UNRAND_BEAR_SPIRIT:
+    case UNRAND_BLOODLUST:
+    case UNRAND_ROBUSTNESS:
+    case UNRAND_SHIELDING:
+    case UNRAND_VITALITY:
+        return SK_FIGHTING;
+    case UNRAND_PHASING:
+    case UNRAND_FENCERS:
+        return SK_DODGING;
+    case UNRAND_THIEF:
+    case UNRAND_BOOTS_ASSASSIN:
+    case UNRAND_NIGHT:
+    case UNRAND_SHADOWS:
+        return SK_STEALTH;
+    case UNRAND_ELEMENTAL_STAFF:
+    case UNRAND_OLGREB:
+        return SK_EVOCATIONS;
+    default:
+        break;
+    }
+
+    if (unrand.base_type == OBJ_JEWELLERY)
+        return SK_SPELLCASTING;
+    else if (unrand.base_type == OBJ_WEAPONS)
+        return item_attack_skill(unrand);
+    else if (is_shield(unrand))
+        return SK_SHIELDS;
+    else if (unrand.sub_type == ARM_ROBE || unrand.sub_type == ARM_ANIMAL_SKIN)
+        return coinflip() ? SK_SPELLCASTING : SK_DODGING;
+    else
+        return SK_ARMOUR;
+}
+
+static void _setup_archaeologist()
+{
+    for (uint8_t i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined())
+        {
+            if (you.inv[i].is_type(OBJ_ARMOUR, ARM_ROBE))
+                you.inv[i].props["worn_tile"] = (short)TILEP_BODY_SLIT_BLACK;
+            if (you.inv[i].is_type(OBJ_ARMOUR, ARM_GLOVES))
+                you.inv[i].props["worn_tile"] = (short)TILEP_ARM_GLOVE_BROWN;
+            if (you.inv[i].is_type(OBJ_ARMOUR, ARM_BOOTS))
+                you.inv[i].props["worn_tile"] = (short)TILEP_BOOTS_MESH_BLACK;
+            if (you.inv[i].is_type(OBJ_ARMOUR, ARM_HAT))
+                you.inv[i].props["worn_tile"] = (short)TILEP_HELM_HAT_BLACK;
+        }
+    skill_type manual_skill = SK_NONE;
+    for (uint8_t i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined() 
+			&& you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+		
+            manual_skill = _setup_archaeologist_crate(you.inv[i]);
+			
+    for (uint8_t i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined() 
+			&& you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
+		
+            you.inv[i].props[ARCHAEOLOGIST_TOME_SKILL] = manual_skill;
+}
+
 static void _give_items_skills(const newgame_def& ng)
 {
     switch (you.char_class)
@@ -333,6 +427,11 @@ static void _give_items_skills(const newgame_def& ng)
         if (!you_worship(GOD_XOM))
             you.piety_max[you.religion] = you.piety;
     }
+	
+    if (you.char_class == JOB_ARCHAEOLOGIST)
+	{
+        _setup_archaeologist();
+	}
 }
 
 static void _give_starting_food()

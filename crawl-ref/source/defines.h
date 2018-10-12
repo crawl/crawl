@@ -184,6 +184,11 @@ const int AGILITY_BONUS = 5;
 #define TORNADO_RADIUS 5
 #define VORTEX_RADIUS 3
 
+#define ARCHAEOLOGIST_CRATE_ITEM "archaeologist-crate-item"
+#define ARCHAEOLOGIST_TOME_SKILL "archaeologist-crate-manual"
+#define ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP "archaeologist-trigger-tome-on-pickup"
+#define ARCHAEOLOGIST_TRIGGER_CRATE_ON_PICKUP "archaeologist-trigger-crate-on-pickup"
+
 #define ZOT_ENTRY_RUNES 3
 #define ZIG_ENTRY_RUNES 2
 
