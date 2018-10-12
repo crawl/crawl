@@ -1,6 +1,8 @@
 # A serial layout focusing on little streams appearing through the
 # dungeon. Similar to bayou, but with less vegetation.
 
+# These vaults should KMASK any water with no_monster_gen but allow monster gen
+# otherwise.
 NAME:   serial_rivers
 TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
 DEPTH:  D, Depths, Lair
@@ -13,8 +15,9 @@ CHANCE: 1%
 }}
 
 NAME:   chequers_serial_rivers_micro_a
-TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 MAP
      @
 xxxx...xxxx
@@ -23,8 +26,9 @@ xxxx...xxxx
 ENDMAP
 
 NAME:   chequers_serial_rivers_micro_b
-TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 MAP
      @
 xxxx...x
@@ -33,8 +37,9 @@ xxxx...x
 ENDMAP
 
 NAME:   chequers_serial_rivers_micro_c
-TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 SUBST:  W = W:8 .
 MAP
  W.
@@ -47,8 +52,9 @@ MAP
 ENDMAP
 
 NAME:   chequers_serial_rivers_micro_d
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 MAP
   @
  www
@@ -58,8 +64,9 @@ MAP
 ENDMAP
 
 NAME:   chequers_serial_rivers_micro_e
-TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 SUBST:  . = W., W = W:8 .
 MAP
 wwwwwww
@@ -69,8 +76,9 @@ wwwwwww
 ENDMAP
 
 NAME:   chequers_serial_rivers_room_a
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 MAP
 xxxxxx+
 xw....x
@@ -81,8 +89,9 @@ xwwwwwx
 ENDMAP
 
 NAME:   chequers_serial_rivers_room_b
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 MAP
 xxx+xxx
 xwwWwwx
@@ -93,8 +102,9 @@ xxx+xxx
 ENDMAP
 
 NAME:   chequers_serial_rivers_small_a
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 SUBST:  w = Ww
 MAP
   w
@@ -105,13 +115,14 @@ MAP
 ENDMAP
 
 NAME:   chequers_serial_rivers_small_b
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
+TAGS:   no_tele_into
 DEPTH:  D, Depths, Lair
-KPROP:  w = no_tele_into
+KMASK:  Ww = no_monster_gen
 MAP
 @     w
 .ww   w
- .ww. Www.
+ .Ww. Www.
 .  Ww. ..wW@
  .      ww
   .   www
@@ -122,27 +133,29 @@ w .
 ENDMAP
 
 NAME:   chequers_serial_rivers_marsh
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
-SUBST:  . = W. t:2 w:3
+KMASK:  Ww = no_monster_gen
+SUBST:  . = W., - = W. t:4 w:6
 MAP
      @
- ........
-..........
-   .......
-..........
-.... ...
-..........@
-   ......
-@.......
-.......
- ........
+ -.-.-.-.
+-.-.-.-.-.
+   -.-.-.-
+-.-.-.-.-.
+.-.- -.-
+-.-.-.-.-.@
+   -.-.-.
+@.-.-.-.
+.-.-.-.
+ .-.-.-.-
     @
 ENDMAP
 
 NAME:   chequers_serial_rivers_small_3
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers allow_dup extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
+KMASK:  Ww = no_monster_gen
 SUBST:  W = .:2 w:3 W, . = . W:4
 MAP
        ..........   xxxx
@@ -155,27 +168,28 @@ xxxx..............@xxxx
 ENDMAP
 
 NAME:   chequers_serial_rivers_large_a
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers extra decor no_pool_fixup transparent
 DEPTH:  D, Depths, Lair
-SUBST:  W = .:1 w:2 W, - = W:5 .
+KMASK:  Ww = no_monster_gen
+SUBST:  W = .:1 w:4 W, ' = .:2 W, - = W:5 .
 MAP
-  xxxxxxxx
+  xxxxxxxx-
  xxxxxwwwWW--
 xxxxxwwwWWwW--
-xxxwwwwwWWwWW-
- xxxxwwwwWWwW-
-  xxxxxxxWwWW-
-        -WWWW-
-        -WWWW-
-        -WWWW-
-        -WWWW-
-        -WWWW-
-        @WWWW@
-        -WWWW-
-        -WWWW-
-        -WWWW-
-        -WWWW-
-        -WWWWxxxxxxx
+xxxwwwwwW'wWW-
+ xxxxwwwwW'wW-
+  xxxxxxx'wWW-
+        -W'W'-
+        -'W'W-
+        -W'W'-
+        -'W'W-
+        -W'W'-
+        @'W'W@
+        -W'W'-
+        -'W'W-
+        -W'W'-
+        -'W'W-
+        -W'W'xxxxxxx
         -WwWWwxxwwwxx
         -WWwwwwxxwwxx
         --Wwwwwwxwxxx
@@ -184,7 +198,7 @@ xxxwwwwwWWwWW-
 ENDMAP
 
 NAME:   chequers_serial_rivers_large_b
-TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen no_pool_fixup
+TAGS:   serial_rivers extra decor no_pool_fixup transparent no_monster_gen
 DEPTH:  D, Depths, Lair
 MAP
               xxxxxx
