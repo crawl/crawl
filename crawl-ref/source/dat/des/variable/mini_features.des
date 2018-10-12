@@ -2602,33 +2602,33 @@ ENDMAP
 NAME: chequers_mini_garden
 TAGS: decor extra
 DEPTH: D
-COLOUR: g = green
-FTILE:  g = floor_grass
-SUBST:  g = . t
-FTILE:  . = floor_dirt / floor_grass / none
+SUBST:  t = t-
+COLOUR: - = green
 COLOUR: . = brown / green / none
+FTILE:  . = floor_dirt / floor_grass / none
+FTILE:  t- = floor_grass
 MAP
 ....
-.gg.
-.gg.
+.tt.
+.tt.
 ....
 ENDMAP
 
 NAME: chequers_garden
 TAGS: decor extra
 DEPTH: D
-COLOUR: g = green
-FTILE:  g = floor_grass
-SUBST:  g = . t
-FTILE:  . = floor_dirt / floor_grass / none
+SUBST:  t = t-
+COLOUR: - = green
 COLOUR: . = brown / green / none
+FTILE:  . = floor_dirt / floor_grass / none
+FTILE:  t- = floor_grass
 MAP
 ........
 ........
-..gggg..
-..gg.g..
-..g.gg..
-..gggg..
+..ttt...
+..tt.t..
+..t.tt..
+...ttt..
 ........
 ........
 ENDMAP
@@ -2646,19 +2646,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   chequers_arboreum
-TAGS:   decor extra no_item_gen no_monster_gen
-PLACE:  D:1
+NAME:   chequers_arboretum
+TAGS:   decor extra
 DEPTH:  D
-FTILE:  . = floor_grass
+SUBST:  - = tt.
 COLOUR: . = green
-SUBST:  . = t.
+FTILE:  t. = floor_grass
 MAP
 xxx+xxx
-x.....x
-x.....x
-x.....x
-x.....x
+xt-.-tx
+x-.-.-x
+x.---.x
+xt.-.tx
 xxxxxxx
 ENDMAP
 
