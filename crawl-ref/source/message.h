@@ -91,6 +91,8 @@ void msgwin_new_cmd();
 // Tell the message window that a new turn has started.
 void msgwin_new_turn();
 
+bool msgwin_errors_to_stderr();
+
 class no_messages
 {
 public:

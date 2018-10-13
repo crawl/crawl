@@ -1330,6 +1330,13 @@ void msgwin_set_temporary(bool temp)
     }
 }
 
+bool msgwin_errors_to_stderr()
+{
+    return crawl_state.test || crawl_state.script
+            || crawl_state.build_db
+            || crawl_state.map_stat_gen || crawl_state.obj_stat_gen;
+}
+
 void msgwin_clear_temporary()
 {
     buffer.roll_back();
@@ -1356,8 +1363,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 #endif
 
     if (channel == MSGCH_ERROR &&
-        (!crawl_state.io_inited || crawl_state.test || crawl_state.script
-         || crawl_state.build_db))
+        (!crawl_state.io_inited || msgwin_errors_to_stderr()))
     {
         fprintf(stderr, "%s\n", text.c_str());
     }

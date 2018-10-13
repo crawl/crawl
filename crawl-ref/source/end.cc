@@ -93,14 +93,13 @@ bool fatal_error_notification(string error_msg)
     // don't try. On other builds, though, it's just probably early in the
     // initialisation process, and cio_init should be fairly safe.
 #ifndef USE_TILE_LOCAL
-    if (!ui::is_available() && !crawl_state.build_db)
+    if (!ui::is_available() && !msgwin_errors_to_stderr())
         cio_init(); // this, however, should be fairly safe
 #endif
 
     mprf(MSGCH_ERROR, "%s", error_msg.c_str());
 
-    if (!ui::is_available() || crawl_state.test || crawl_state.script
-        || crawl_state.build_db)
+    if (!ui::is_available() || msgwin_errors_to_stderr())
     {
         return false;
     }
