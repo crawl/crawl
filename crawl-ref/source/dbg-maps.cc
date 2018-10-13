@@ -111,12 +111,13 @@ static bool _do_build_level()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            if (grd[x][y] == DNGN_RUNED_DOOR)
-                grd[x][y] = DNGN_CLOSED_DOOR;
-            // objstat tallying of monsters and shop items.
+            // objstat tallying of features, monsters, and shop items.
             if (crawl_state.obj_stat_gen)
             {
-                coord_def pos(x, y);
+                const coord_def pos(x, y);
+
+                objstat_record_feature(grd[x][y], map_masked(pos, MMT_VAULT));
+
                 monster *mons = monster_at(pos);
                 if (mons)
                     objstat_record_monster(mons);
@@ -129,6 +130,9 @@ static bool _do_build_level()
                             objstat_record_item(item);
                 }
             }
+
+            if (grd[x][y] == DNGN_RUNED_DOOR)
+                grd[x][y] = DNGN_CLOSED_DOOR;
         }
 
 

@@ -175,6 +175,10 @@ static const vector<string> monster_fields = {
     "TotalGhoulNutr",
 };
 
+static const vector<string> feature_fields = {
+    "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD",
+};
+
 static map<monster_type, int> valid_monsters;
 static map<level_id, map<int, map <string, double> > > monster_recs;
 
@@ -190,6 +194,9 @@ static void _init_monsters()
     // For the all-monster summary
     valid_monsters[NUM_MONSTERS] = num_mons;
 }
+
+typedef map<dungeon_feature_type, map <string, double> > feature_stats;
+static map<level_id, feature_stats> feature_recs;
 
 static item_base_type _item_base_type(const item_def &item)
 {
@@ -466,6 +473,22 @@ static void _init_stats()
                 monster_recs[lev][mentry.second]["NumForIter"] = 0;
                 monster_recs[lev][mentry.second]["NumMin"] = INFINITY;
                 monster_recs[lev][mentry.second]["NumMax"] = -1;
+            }
+
+            for (int i = 0; i < NUM_FEATURES; i++)
+            {
+                const dungeon_feature_type feat_type =
+                    static_cast<dungeon_feature_type>(i);
+
+                if (!is_valid_feature_type(feat_type))
+                    continue;
+
+                for (const string &field : feature_fields)
+                    feature_recs[lev][feat_type][field] = 0;
+
+                feature_recs[lev][feat_type]["NumForIter"] = 0;
+                feature_recs[lev][feat_type]["NumMin"] = INFINITY;
+                feature_recs[lev][feat_type]["NumMax"] = -1;
             }
         }
     }
@@ -791,6 +814,31 @@ void objstat_record_monster(const monster *mons)
     }
 }
 
+static void _record_feature_stat(const level_id &lev,
+                                 dungeon_feature_type feat_type, string field,
+                                 double value)
+{
+    const level_id br_lev(lev.branch, -1);
+
+    feature_recs[lev][feat_type][field] += value;
+    feature_recs[br_lev][feat_type][field] += value;
+    feature_recs[all_lev][feat_type][field] += value;
+}
+
+void objstat_record_feature(dungeon_feature_type feat_type, bool vault)
+{
+    level_id lev = level_id::current();
+
+    _record_feature_stat(lev, feat_type, "Num", 1);
+
+    if (vault)
+        _record_feature_stat(lev, feat_type, "NumVault", 1);
+    else
+        _record_feature_stat(lev, feat_type, "NumNonVault", 1);
+
+    _record_feature_stat(lev, feat_type, "NumForIter", 1);
+}
+
 void objstat_iteration_stats()
 {
     for (const auto &entry : stat_branches)
@@ -808,6 +856,27 @@ void objstat_iteration_stats()
             }
             else
                 lev = (entry.second)[l];
+
+            for (int i = 0; i < NUM_FEATURES; i++)
+            {
+                dungeon_feature_type feat_type =
+                    static_cast<dungeon_feature_type>(i);
+
+                if (!is_valid_feature_type(feat_type))
+                    continue;
+
+                map<string, double> &stats = feature_recs[lev][feat_type];
+
+                if (stats["NumForIter"] > stats["NumMax"])
+                    stats["NumMax"] = stats["NumForIter"];
+
+                if (stats["NumForIter"] < stats["NumMin"])
+                    stats["NumMin"] = stats["NumForIter"];
+
+                stats["NumSD"] += stats["NumForIter"] * stats["NumForIter"];
+
+                stats["NumForIter"] = 0;
+            }
 
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
@@ -855,9 +924,10 @@ void objstat_iteration_stats()
     }
 }
 
-static void _write_stat_headers(const vector<string> &fields, bool items = true)
+static void _write_stat_headers(const vector<string> &fields, string desc)
 {
-    fprintf(stat_outf, "%s\tLevel", items ? "Item" : "Monster");
+    fprintf(stat_outf, "%s\tLevel", desc.c_str());
+
     for (const string &field : fields)
         fprintf(stat_outf, "\t%s", field.c_str());
 
@@ -1111,6 +1181,39 @@ static void _write_branch_monster_stats(branch_type br, monster_type mons_type,
     }
 }
 
+static void _write_branch_feature_stats(branch_type br,
+                                        dungeon_feature_type feat_type)
+{
+    const level_id br_lev(br, -1);
+    unsigned int level_count = 0;
+    const char *feat_name = get_feature_def(feat_type).name;
+
+    for (level_id lid : stat_branches[br])
+    {
+        ++level_count;
+        if (feature_recs[lid][feat_type]["Num"] < 1)
+            continue;
+
+        fprintf(stat_outf, "%s\t%s", feat_name, _level_name(lid).c_str());
+
+        for (const string &field : feature_fields)
+            _write_stat(feature_recs[lid][feat_type], field);
+
+        fprintf(stat_outf, "\n");
+    }
+
+    // If there are multiple levels for this branch, print a branch summary.
+    if (level_count > 1 && feature_recs[br_lev][feat_type]["Num"] > 0)
+    {
+        fprintf(stat_outf, "%s\t%s", feat_name, _level_name(br_lev).c_str());
+
+        for (const string &field : feature_fields)
+            _write_stat(feature_recs[br_lev][feat_type], field);
+
+        fprintf(stat_outf, "\n");
+    }
+}
+
 static FILE * _open_stat_file(string stat_file)
 {
     FILE *stat_fh = nullptr;
@@ -1127,11 +1230,10 @@ static FILE * _open_stat_file(string stat_file)
 
 static void _write_item_stats(item_base_type base_type)
 {
-    ostringstream out_file;
-    out_file << stat_out_prefix << _item_class_name(base_type).c_str()
-             << stat_out_ext;
-
-    stat_outf = _open_stat_file(out_file.str());
+    const string out_file = make_stringf("%s%s%s", stat_out_prefix,
+                                         _item_class_name(base_type).c_str(),
+                                         stat_out_ext);
+    stat_outf = _open_stat_file(out_file.c_str());
 
     vector<string> fields = item_fields[base_type];
     if (base_type == ITEM_WEAPONS || base_type == ITEM_ARMOUR)
@@ -1142,7 +1244,7 @@ static void _write_item_stats(item_base_type base_type)
     else if (base_type == ITEM_MISSILES)
         fields.push_back(missile_brand_field);
 
-    _write_stat_headers(fields);
+    _write_stat_headers(fields, "Item");
 
     // If there is more than one subtype, we have an additional entry for
     // the sum across subtypes.
@@ -1157,7 +1259,7 @@ static void _write_item_stats(item_base_type base_type)
 
     fclose(stat_outf);
     printf("Wrote %s item stats to %s.\n", _item_class_name(base_type).c_str(),
-           out_file.str().c_str());
+           out_file.c_str());
 }
 
 static void _write_stat_info()
@@ -1172,9 +1274,9 @@ static void _write_stat_info()
         all_desc = "Levels included in AllLevels: " + all_desc + "\n";
     }
 
-    ostringstream out_file;
-    out_file << stat_out_prefix << "Info" << stat_out_ext;
-    stat_outf = _open_stat_file(out_file.str());
+    const string out_file = make_stringf("%s%s%s", stat_out_prefix,
+                                         "Info", stat_out_ext);
+    stat_outf = _open_stat_file(out_file.c_str());
 
     fprintf(stat_outf, "Object Generation Stats\n"
             "Number of iterations: %d\n"
@@ -1185,7 +1287,7 @@ static void _write_stat_info()
             all_desc.c_str(), num_levels, Version::Long);
 
     fclose(stat_outf);
-    printf("Wrote Objstat Info to %s.\n", out_file.str().c_str());
+    printf("Wrote Objstat Info to %s.\n", out_file.c_str());
 }
 
 static void _write_object_stats()
@@ -1199,19 +1301,40 @@ static void _write_object_stats()
         _write_item_stats(base_type);
     }
 
-    ostringstream out_file;
-    out_file << stat_out_prefix << "Monsters" << stat_out_ext;
-    stat_outf = _open_stat_file(out_file.str());
-    _write_stat_headers(monster_fields, false);
+    string out_file = make_stringf("%s%s%s", stat_out_prefix, "Monsters",
+                                   stat_out_ext);
+    stat_outf = _open_stat_file(out_file.c_str());
+
+    _write_stat_headers(monster_fields, "Monster");
+
     for (const auto &entry : valid_monsters)
     {
         for (const auto &br : stat_branches)
             _write_branch_monster_stats(br.first, entry.first, entry.second);
     }
 
-    printf("Wrote Monster stats to %s.\n", out_file.str().c_str());
-    fclose(stat_outf);
+    printf("Wrote Monster stats to %s.\n", out_file.c_str());
 
+    out_file = make_stringf("%s%s%s", stat_out_prefix, "Features",
+                            stat_out_ext);
+    stat_outf = _open_stat_file(out_file.c_str());
+
+    _write_stat_headers(feature_fields, "Feature");
+
+    for (int i = 0; i < NUM_FEATURES; i++)
+    {
+        const dungeon_feature_type feat_type =
+            static_cast<dungeon_feature_type>(i);
+
+        if (!is_valid_feature_type(feat_type))
+            continue;
+
+        for (const auto &br : stat_branches)
+            _write_branch_feature_stats(br.first, feat_type);
+    }
+
+    printf("Wrote Feature stats to %s.\n", out_file.c_str());
+    fclose(stat_outf);
 }
 
 void objstat_generate_stats()
