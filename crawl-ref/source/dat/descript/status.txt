@@ -174,16 +174,14 @@ multiple times.
 Mesm status
 
 You are mesmerised and cannot move away from the monster mesmerising you. The
-effect can be broken by killing or confusing the responsible monster, breaking
-line of sight with them, or by hearing an extremely loud noise, such as those
-created by lightning or scrolls of noise.
+effect can be broken by killing or confusing the responsible monster or by
+breaking line of sight with them.
 %%%%
 Fear status
 
 You are overcome with fear and cannot move towards the monster causing fear in
-you. The effect can be broken by killing or confusing the responsible monster,
-breaking line of sight with them, or by hearing an extremely loud noise, such
-as those created by lightning or scrolls of noise.
+you. The effect can be broken by killing or confusing the responsible monster
+or by breaking line of sight with them.
 %%%%
 -Tele status
 
