@@ -695,13 +695,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_EMBER_ELF:
             hair = TILEP_HAIR_ELF_WHITE;
             break;
-        case SP_HILL_ORC:
-            hair = 0;
-            break;
-        case SP_KOBOLD:
-            hair = 0;
-            break;
-        case SP_MUMMY:
         case SP_FELID_MUMMY:
             hair = 0;
             break;
