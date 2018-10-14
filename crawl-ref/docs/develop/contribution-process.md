@@ -207,3 +207,20 @@ coinciding with a tournament; each stable release takes the form of a branch
 off of trunk at the time of release, and will receive mainly bugfix patches
 from that point. Online players play both stable and trunk, and offline
 players predominantly play stable.
+
+### After your contribution as been accepted
+
+Firstly, thank you for helping to improve and expand Crawl! After your
+patch is included, then it becomes part of Crawl, and as such will come under
+the jurisdiction of the dev team. Your contribution may be altered, sometimes
+even significantly, from what you originally envisioned for it. Sometimes this
+means a total rewrite of the code, other times it means an overhaul of how it
+works, and occasionally it might end up being removed one day.
+
+This is part of the natural process of developing and maintaining Crawl, to keep
+its design healthy and long-lasting. It won't be a reflection upon you or your
+ideas if it is altered.
+
+Of course, most of the time, especially when they were originally in line with
+general Crawl design philosophy, contributions and additions to Crawl won't be
+significantly altered.
