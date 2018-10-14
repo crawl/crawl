@@ -3324,7 +3324,7 @@ string get_monster_equipment_desc(const monster_info& mi,
     if (mi.wields_two_weapons())
         mon_alt = 0;
 
-    const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
+    const bool mon_has_wand = mon_wnd;
     const bool mon_carry = mon_alt || mon_has_wand;
 
     vector<string> item_descriptions;
@@ -3372,12 +3372,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         }
 
         if (mon_has_wand)
-        {
-            if (mi.props["wand_known"])
-                carried_desc += mon_wnd->name(DESC_A);
-            else
-                carried_desc += "a wand";
-        }
+            carried_desc += mon_wnd->name(DESC_A);
 
         item_descriptions.push_back(carried_desc);
     }

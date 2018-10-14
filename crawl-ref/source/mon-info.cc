@@ -182,7 +182,6 @@ static bool _blocked_ray(const coord_def &where,
 static bool _is_public_key(string key)
 {
     if (key == "helpless"
-     || key == "wand_known"
      || key == "feat_type"
      || key == "glyph"
      || key == "dbname"
@@ -688,10 +687,6 @@ monster_info::monster_info(const monster* m, int milev)
         else if (i == MSLOT_MISCELLANY)
             ok = false;
         else if (attitude == ATT_FRIENDLY)
-            ok = true;
-        else if (i == MSLOT_WAND)
-            ok = props.exists("wand_known") && props["wand_known"];
-        else if (m->props.exists("ash_id") && item_type_known(mitm[m->inv[i]]))
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)
             ok = wields_two_weapons();

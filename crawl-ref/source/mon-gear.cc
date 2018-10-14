@@ -2190,3 +2190,16 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
 }
+
+void view_monster_equipment(monster* mon)
+{
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (mon->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item = mitm[mon->inv[i]];
+        item.flags |= ISFLAG_SEEN;
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+    }
+}

@@ -13,3 +13,4 @@ void give_weapon(monster *mon, int level_number);
 int make_mons_armour(monster_type mtyp, int level);
 void give_armour(monster *mon, int level_number);
 void give_shield(monster *mon);
+void view_monster_equipment(monster* mon);

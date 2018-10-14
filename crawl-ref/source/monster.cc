@@ -1235,9 +1235,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         }
     }
 
-    if (props.exists("wand_known") && msg && was_wand)
-        props.erase("wand_known");
-
     inv[eslot] = NON_ITEM;
     return true;
 }
@@ -2009,11 +2006,7 @@ bool monster::pickup_wand(item_def &item, bool msg, bool force)
     }
 
     if (pickup(item, MSLOT_WAND, msg))
-    {
-        if (msg)
-            props["wand_known"] = item_type_known(item);
         return true;
-    }
     else
         return false;
 }

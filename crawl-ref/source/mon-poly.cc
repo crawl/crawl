@@ -634,7 +634,6 @@ void seen_monster(monster* mons)
     item_def* weapon = mons->weapon();
     if (weapon && is_range_weapon(*weapon))
         mons->flags |= MF_SEEN_RANGED;
-    mark_mon_equipment_seen(mons);
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;

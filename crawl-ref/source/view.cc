@@ -274,18 +274,17 @@ static string _monster_headsup(const vector<monster*> &monsters,
     string warning_msg = "";
     for (const monster* mon : monsters)
     {
-        const bool ash_ided = mon->props.exists("ash_id");
         const bool zin_ided = mon->props.exists("zin_id");
         const bool has_branded_weapon
             = _is_weapon_worth_listing(mon->weapon())
               || _is_weapon_worth_listing(mon->weapon(1));
-        if ((divine && !ash_ided && !zin_ided)
+        if ((divine && !zin_ided)
             || (!divine && !has_branded_weapon))
         {
             continue;
         }
 
-        if (!divine && (ash_ided || monsters.size() == 1))
+        if (!divine && monsters.size() == 1)
             continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
@@ -519,31 +518,6 @@ void update_monsters_in_view()
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;
         xom_is_stimulated(12 * num_hostile);
-    }
-}
-
-void mark_mon_equipment_seen(const monster *mons)
-{
-    // mark items as seen.
-    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
-    {
-        int item_id = mons->inv[slot];
-        if (item_id == NON_ITEM)
-            continue;
-
-        item_def &item = mitm[item_id];
-
-        item.flags |= ISFLAG_SEEN;
-
-        // ID brands of weapons held by enemies.
-        if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
-        {
-            if (is_artefact(item))
-                artefact_learn_prop(item, ARTP_BRAND);
-            else
-                item.flags |= ISFLAG_KNOW_TYPE;
-        }
     }
 }
 

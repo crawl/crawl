@@ -17,12 +17,5 @@
 
     monster keys
     public
-    "wand_known" For wands, we can't simply rely on item knowledge, because
-    if the player has already identified the wand type, item_type_known
-    returns true regarding player's knowledge of this specific wand.
-    Thus, we track wand knowledge using this key.
-    If the property exists, it means the player knows the monster has a wand.
-    If it's true, the player also knows it's type.
-
     private
 */

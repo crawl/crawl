@@ -849,40 +849,6 @@ bool god_id_item(item_def& item, bool silent)
     return false;
 }
 
-void ash_id_monster_equipment(monster* mon)
-{
-    if (!have_passive(passive_t::identify_items))
-        return;
-
-    bool id = false;
-
-    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
-    {
-        if (mon->inv[i] == NON_ITEM)
-            continue;
-
-        item_def &item = mitm[mon->inv[i]];
-        if ((i != MSLOT_WAND || !is_offensive_wand(item))
-            && !item_is_branded(item))
-        {
-            continue;
-        }
-
-        if (i == MSLOT_WAND)
-        {
-            set_ident_type(OBJ_WANDS, item.sub_type, true);
-            mon->props["wand_known"] = true;
-        }
-        else
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-
-        id = true;
-    }
-
-    if (id)
-        mon->props["ash_id"] = true;
-}
-
 static bool is_ash_portal(dungeon_feature_type feat)
 {
     if (feat_is_portal_entrance(feat))

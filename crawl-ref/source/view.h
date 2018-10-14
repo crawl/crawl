@@ -75,7 +75,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
 void flush_comes_into_view();
-void mark_mon_equipment_seen(const monster *mons);
 void toggle_show_terrain();
 void reset_show_terrain();
 
