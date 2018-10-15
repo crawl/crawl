@@ -177,13 +177,16 @@ static bool _advance_from_non_diamond(geom::ray *r)
 // The ray is in a legal state to be passed around externally.
 bool ray_def::_valid() const
 {
-    return on_corner && is_corner(r.start) && bad_corner(r)
-           || !on_corner && in_diamond_int(r.start);
+    return isfinite(r.start.x) && isfinite(r.start.y)
+           && isfinite(r.dir.x) && isfinite(r.dir.y)
+           && (on_corner && is_corner(r.start) && bad_corner(r)
+               || !on_corner && in_diamond_int(r.start));
 }
 
 static geom::vector _normalize(const geom::vector &v)
 {
     double n = sqrt(v.x*v.x + v.y*v.y);
+    ASSERT(isnormal(n));
     return (1.0 / n) * v;
 }
 
@@ -198,6 +201,7 @@ bool ray_def::advance()
         ASSERT(is_corner(r.start));
         on_corner = false;
         _to_grid(&r, true);
+        ASSERT(_valid());
     }
     else
     {
