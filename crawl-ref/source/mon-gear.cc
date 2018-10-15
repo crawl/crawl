@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
+#include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
@@ -2201,5 +2202,7 @@ void view_monster_equipment(monster* mon)
         item_def &item = mitm[mon->inv[i]];
         item.flags |= ISFLAG_SEEN;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+        if (item.base_type == OBJ_WANDS)
+            set_ident_type(item, true);
     }
 }

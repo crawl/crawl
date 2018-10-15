@@ -1200,7 +1200,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
             return false;
         was_unequipped = true;
     }
-    const bool was_wand = pitem.base_type == OBJ_WANDS;
 
     if (pitem.flags & ISFLAG_SUMMONED)
     {
