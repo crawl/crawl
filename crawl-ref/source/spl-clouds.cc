@@ -131,7 +131,9 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
+    // Currently no mobs have base cloud resist.  
+    // If this changes this will need updated.
+    if (get_mons_resist(*mons, MR_RES_POISON) && mons->observable())
     {
         mprf("But poisonous vapours would do no harm to %s!",
              mons->name(DESC_THE).c_str());
