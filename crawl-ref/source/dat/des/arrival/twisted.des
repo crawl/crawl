@@ -802,23 +802,24 @@ NSUBST:  C = AB / c
 SUBST:   H : G:60 T:5
 SUBST:   '" = .
 MAP
-       ccc
-    ccccGcccc
-   cc.......cc
-  cc.ccccccc.cc
- cc.cc.....cc.cc
- c.cc.ccccc.cc.c
- c.c.cc...cc.c.c
-cc.c.c.cc.Gc.c.cc
-cG.c.c.cG.cc.c.Gc
-cc.c.c.cc....c.cc
- c.c.cc.ccccGc.c
- c'cc.cc...ccc.c
- cc'cc.cccc...cc
-  cc'cc...ccGcc
-   cc'ccc.{ccc
-    cc@"ccccc
-       @@@
+       xxxxx
+    xxxxcccxxxx
+   xxccccGccccxx
+  xxcc.......ccxx
+ xxcc.ccccccc.ccxx
+ xcc.cc.....cc.ccx
+ xc.cc.ccccc.cc.cx
+xxc.c.cc...cc.c.cxx
+xcc.c.c.cc.Gc.c.ccx
+xcG.c.c.cG.cc.c.Gcx
+xcc.c.c.cc....c.ccx
+xxc.c.cc.ccccGc.cxx
+ xc'cc.cc...ccc.cx
+ xcc'cc.cccc...ccx
+ xxcc'cc...ccGccxx
+  xxcc'ccc.{cccxx
+   xxcc'"cccccxx
+    xxxx+xxxxxx
 ENDMAP
 
 ###############################################################################
