@@ -243,26 +243,22 @@ KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-KITEM:  d = unobtainable war axe / unobtainable battleaxe
+:   set_feature_name("granite_statue", "granite statue wielding a mighty axe")
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
+:   set_feature_name("granite_statue", "granite statue wielding a fearsome glaive")
 :   bailey_portal_polearm(_G)
 : end
 MAP
-.......ooo.......
-..ooo..odo..ooo..
-..odo..ooo..odo..
-..ooo.......ooo..
-.................
-ooo....;;;....ooo
-odo....;O;....odo
-ooo....;;;....ooo
-.................
-..ooo.......ooo..
-..odo..ooo..odo..
-..ooo..odo..ooo..
-.......ooo.......
+......G......
+..G.......G..
+.............
+.....;;;.....
+G....;O;....G
+.....;;;.....
+.............
+..G.......G..
+......G......
 ENDMAP
 
 # They were just having a party.
@@ -299,22 +295,20 @@ KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-KITEM:  d = unobtainable war axe / unobtainable battleaxe
+:   set_feature_name("granite_statue", "granite statue wielding a mighty axe")
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
+:   set_feature_name("granite_statue", "granite statue wielding a fearsome glaive")
 :   bailey_portal_polearm(_G)
 : end
 MAP
- xxxxxxxxxxxxxxxxxxx
- x.................@
- ccccccooocccccooocc
- c.....odo.....odoOc
- c.ooo.ooo.ooo.ooo.c
-@+.odo.....odo.....c
- ccooocccccooocccccc
- x.................@
- xxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxxx
+ x.........@
+ ccccGcccGcc
+@+........OG
+ ccGcccGcccc
+ x.........@
+ xxxxxxxxxxx
 ENDMAP
 
 NAME: lightli_bailey_entry_fortress
@@ -396,16 +390,7 @@ ITEM:   any good_item w:10 / nothing w:5
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
-#
-# Starting room flavour. You cannot actually get the axes.
-SHUFFLE: BC/BC/oF
-SHUFFLE: DE/DE/oF
-SUBST:   B = X, C = X, D = X, E = X
-KMASK:   F = no_item_gen
-KPROP:   F = no_tele_into
-KITEM:   F = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
-             unobtainable war axe / unobtainable good_item war axe w:5 /\
-             unobtainable good_item executioner's axe w:1
+: set_feature_name("granite_statue", "granite statue wielding a mighty axe")
 #
 # Yes, I want everyone to wake up.
 KFEAT: ~ : known alarm trap / floor
@@ -418,12 +403,11 @@ NSUBST: t = T / .
 KFEAT:  T = known permanent teleport trap
 : bailey_setup(_G)
 MAP
-  XXXXXXXXX
-  XXXXEXXXX
-  XXXXDXXXX
-  XXX.A.XXX
-  XCB~~~BCX
-  XXX.<.XXX
+     ccc
+    ccGcc
+   cc.A.cc
+   cG~~~Gc
+   cc.<.cc
 cccccc+cccccc
 c<1..w.w..1<c
 c+cccw.wccc+c
