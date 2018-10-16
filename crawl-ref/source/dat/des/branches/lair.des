@@ -149,7 +149,7 @@ end
 ################################################################################
 # Dummy Lair entry
 NAME:   lair_entry_dummy
-TAGS:   lair_entry extra
+TAGS:   lair_entry extra transparent
 WEIGHT: 30
 ORIENT: float
 KFEAT:  O = enter_lair
@@ -161,7 +161,7 @@ ENDMAP
 # Generic Lair entry.
 #
 NAME:    david_lair_generic
-TAGS:    lair_entry
+TAGS:    lair_entry transparent
 ORIENT:  float
 MONS:    crocodile / basilisk
 MONS:    hippogriff, yak / death yak w:2, elephant
@@ -183,7 +183,7 @@ ENDMAP
 
 # Shrubbed Lair entry
 NAME:   david_lair_shrubbed
-TAGS:   lair_entry
+TAGS:   lair_entry transparent
 ORIENT: float
 MONS:   komodo dragon
 KMONS:  P = plant
@@ -203,7 +203,7 @@ ENDMAP
 
 # Lair monsters near stair
 NAME:    dpeg_lair_monsters
-TAGS:    ruin lair_entry
+TAGS:    ruin lair_entry transparent
 ORIENT:  float
 MONS:    yak, death yak
 MONS:    iguana w:20 / crocodile w:20 / komodo dragon / basilisk w:5
@@ -228,7 +228,7 @@ ENDMAP
 
 # Obligatory Oklob Plant Lair Entry Vault
 NAME:   dpeg_oklobed_lair
-TAGS:   lair_entry no_monster_gen no_pool_fixup
+TAGS:   lair_entry no_monster_gen no_pool_fixup transparent
 ORIENT: float
 MONS:   fungus, plant, oklob plant
 KFEAT:  O = enter_lair
@@ -258,7 +258,7 @@ ENDMAP
 
 # Grove Lair entry
 NAME:   minmay_lair_entry_grove
-TAGS:   lair_entry no_monster_gen
+TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 MONS:   crocodile / basilisk w:4, yak, black bear / wolf
 MONS:   porcupine w:14 / iguana w:2 / scorpion w:2
@@ -288,7 +288,7 @@ ENDMAP
 
 # Lava Lair entry
 NAME:   minmay_lair_entry_lava
-TAGS:   lair_entry no_monster_gen
+TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 WEIGHT: 1
 MONS:   fire dragon
@@ -309,7 +309,7 @@ ENDMAP
 
 # Welcome to Lair Island. We make great pancakes.
 NAME:   erik_lair_island
-TAGS:   lair_entry
+TAGS:   lair_entry transparent
 ORIENT: float
 MONS:   troll, hound w:15 / wolf
 KFEAT:  O = enter_lair
@@ -359,7 +359,7 @@ ENDMAP
 
 # Orcish Takeover!
 NAME:   erik_lair_orcish_takeover
-TAGS:   lair_entry
+TAGS:   lair_entry transparent
 ORIENT: float
 MONS:   orc, warg, orc warrior / warg
 MONS:   orc priest / orc wizard / plant
@@ -378,7 +378,7 @@ ENDMAP
 
 # Plant/fungus spiral (due)
 NAME:   due_lair_maze_entry_diamond
-TAGS:   lair_entry
+TAGS:   lair_entry transparent
 ORIENT: float
 MONS:   porcupine w:50 / scorpion / bullfrog w:30 / \
         black bear w:25 / crocodile w:15 / yak
@@ -1970,6 +1970,7 @@ ENDMAP
 
 # Drake nest (minmay)
 NAME:   minmay_lair_drake_nest
+TAGS:   transparent
 DEPTH:  Lair:4-
 MONS:   rime drake, plant w:20 / fungus w:1 / bush w:1
 NSUBST: 1 = 2:1 / * = 1.., ' = 4:2 / * = ., . = 1:2 / 1:% / * = ..%2
@@ -2044,19 +2045,20 @@ ENDMAP
 
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type
-TAGS: extra no_pool_fixup
+TAGS: extra no_pool_fixup transparent
 DEPTH: Lair:4-
 MONS: w:1 generate_awake patrolling catoblepas / w:4 nothing
 SUBST: a = w W .
+SUBST: ' = W .
 MAP
-  aaa aa
- aawwwwaa
- aaw1.wa
-aaaw..ww
- aaw...Wa
-  awwwww@
-  a aaaa
-     aa
+  a'a aa
+ a'wwwWa
+ a'w1.wa
+a'aw..ww
+ a'w...Wa
+  'wwwww@
+  a''a''
+     'a
 ENDMAP
 
 # Two stream minivaults, combined.
@@ -2107,7 +2109,7 @@ ENDMAP
 
 # Contains food and one ok item to make the hell rats a little more worth it.
 NAME:   kennysheep_abandoned_house
-TAGS:   ruin
+TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
 KITEM:  d = ration
@@ -2158,6 +2160,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   kennysheep_basilisk_garden
+TAGS:   transparent
 DEPTH:  Lair:3-
 MONS:   basilisk
 NSUBST: . = 2:1 / 3 = 111G / *:.
@@ -2273,7 +2276,7 @@ Ettttt...WWwwwwWW....ptttE
 ENDMAP
 
 NAME:   nicolae_lair_yak_garden
-TAGS:   no_monster_gen no_item_gen no_trap_gen
+TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
 DEPTH:  Lair:4-
 KMONS:  Y = yak
 KMONS:  D = death yak
@@ -2347,7 +2350,7 @@ ZZxxxxxx%.9.xxxzx
 ENDMAP
 
 NAME:    cheibrodos_lair_reptile_den
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Lair, !Lair:$
 MONS:    adder / water moccasin, komodo dragon / black mamba
 KMONS:   P = plant / fungus w:5
@@ -2410,7 +2413,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   cheibrodos_lair_lostbears
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 DEPTH:  Lair
 MONS:   polar bear
 KMONS:  p = plant

@@ -101,6 +101,7 @@
 {{
 function the_grid_main_setup(e,no_doors)
   e.tags('uniq_thegrid')
+  e.tags('transparent')
   if no_doors then
     e.subst('" : x...')
   else

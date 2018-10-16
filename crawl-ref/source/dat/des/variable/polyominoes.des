@@ -9,6 +9,7 @@
 {{
 function polyominoes_setup(e)
   e.tags('uniq_minmay_polyomino')
+  e.tags('transparent')
   e.weight('4')
   e.subst('b : xcvbmGT%0 .:50')
   e.subst('" : xcvbmGT%0 .:120')

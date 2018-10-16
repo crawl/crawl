@@ -7,14 +7,14 @@
 ##############################################################################
 
 NAME:   dummy_snake_entry
-TAGS:   snake_entry
+TAGS:   snake_entry transparent
 KFEAT:  O = enter_snake_pit
 MAP
 O
 ENDMAP
 
 NAME:   minmay_snake_entry_guardpost_small
-TAGS:   snake_entry
+TAGS:   snake_entry transparent
 ORIENT: float
 MONS:   naga, naga / nothing w:3
 KFEAT:  O = enter_snake_pit
@@ -31,7 +31,7 @@ ccc.@.ccc
 ENDMAP
 
 NAME:   minmay_snake_entry_guardpost_medium
-TAGS:   snake_entry
+TAGS:   snake_entry transparent
 WEIGHT: 5
 ORIENT: float
 MONS:   naga, naga / nothing
@@ -49,7 +49,7 @@ cc2.......2cc
 ENDMAP
 
 NAME:   minmay_snake_entry_guardpost_large
-TAGS:   snake_entry
+TAGS:   snake_entry transparent
 WEIGHT: 2
 ORIENT: float
 MONS:   naga, naga / nothing
@@ -71,7 +71,7 @@ cc2..c1O2c..2cc
 ENDMAP
 
 NAME:   minmay_snake_entry_six_corridors
-TAGS:   snake_entry ruin_lair
+TAGS:   snake_entry ruin_lair transparent
 ORIENT: float
 MONS:   ball python, adder, water moccasin, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
@@ -101,7 +101,7 @@ xxxxxx.@.Pxxxxxxxx.@
 ENDMAP
 
 NAME:   minmay_snake_entry_spellcaster
-TAGS:   snake_entry
+TAGS:   snake_entry transparent
 ORIENT: float
 WEIGHT: 2
 MONS:   guardian serpent
@@ -113,7 +113,7 @@ MAP
 ENDMAP
 
 NAME:   guppyfry_snake_entry_island
-TAGS:   snake_entry patrolling no_monster_gen
+TAGS:   snake_entry patrolling no_monster_gen transparent
 ORIENT: float
 MONS:   naga / nothing, plant
 KFEAT:  O = enter_snake_pit
@@ -133,7 +133,7 @@ MAP
 ENDMAP
 
 NAME:   guppyfry_snake_entry_garden
-TAGS:   snake_entry patrolling no_monster_gen
+TAGS:   snake_entry patrolling no_monster_gen transparent
 ORIENT: float
 MONS:  naga / nothing, plant
 KFEAT:  O = enter_snake_pit
@@ -157,17 +157,18 @@ ENDMAP
 ##############################################################################
 
 NAME:   minmay_snake_pond
+TAGS:   transparent
 DEPTH:  Snake
 MONS:   ball python w:3 / adder / water moccasin
 SUBST:  w = wwWW.1
 MAP
   wwww
- wwwwww
-wwwwwwww
-wwwwwwww
-wwwwwwww
-wwwwwwww
- wwwwww
+ WwwWww
+wwWWwwWw
+wWwwWWww
+wWwwwwWw
+wwwWwWww
+ wWwWww
   wwww
 ENDMAP
 
@@ -190,7 +191,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   hangedman_venom_bottle
-TAGS:   patrolling
+TAGS:   patrolling transparent
 DEPTH:  Snake
 WEIGHT: 5
 KMONS:  123 = water moccasin / black mamba / nothing
@@ -225,6 +226,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_lava_pool
+TAGS:   transparent
 DEPTH:  Snake
 SUBST:  L = l1
 SUBST:  1 = 1.
@@ -251,6 +253,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_springs
+TAGS:   transparent
 DEPTH:  Snake
 SUBST:  W = w1
 SUBST:  1 = 1.
@@ -368,7 +371,7 @@ ENDMAP
 # demoted to watching the stairs.
 NAME:   nicolae_aizul_guard
 DEPTH:  Snake:2-3
-TAGS:   no_rotate no_hmirror no_vmirror
+TAGS:   no_rotate no_hmirror no_vmirror transparent
 ORIENT: float
 SHUFFLE: ]})>
 SUBST:  ) = )>
@@ -395,7 +398,7 @@ xx.B...B.xx
 ENDMAP
 
 NAME:   nicolae_snake_shapes
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup transparent
 DEPTH:  Snake
 NSUBST: 0 = 2:9 / 1:8 / *:0
 SUBST:  x : xcvmlwWb
@@ -492,6 +495,7 @@ x...0...xxx...9...xxx...9...xxx...0..x
 ENDMAP
 
 NAME: nicolae_snake_nest
+TAGS: transparent
 DEPTH: Snake
 ORIENT: float
 MAP
@@ -888,7 +892,7 @@ ENDMAP
 
 NAME: cheibrodos_snake_ritualist_ritual
 DEPTH: Snake, !Snake:$
-TAGS: no_item_gen no_monster_gen no_pool_fixup patrolling
+TAGS: no_item_gen no_monster_gen no_pool_fixup patrolling transparent
 ORIENT: float
 MONS: naga mage / mana viper
 KMONS: - = naga ritualist
@@ -995,7 +999,7 @@ ENDMAP
 
 NAME: cheibrodos_toxic_ritual
 DEPTH: Snake
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 ORIENT: float
 MONS: green death, naga ritualist, naga mage, naga
 NSUBST: - = 2:2 / *:.

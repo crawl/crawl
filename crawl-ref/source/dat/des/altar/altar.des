@@ -47,6 +47,7 @@ default-depth: D, Depths
 ##############################################################################
 
 NAME:    jmf_multi_god_temple
+TAGS:    transparent
 SHUFFLE: abc
 SUBST:   a:+, b:x, c:x
 DEPTH:   D:8-, Vaults
@@ -66,6 +67,7 @@ MAP
 ENDMAP
 
 NAME:  jmf_multi_god_temple2
+TAGS:  transparent
 DEPTH: D:8-, Vaults
 MAP
 ............
@@ -114,6 +116,7 @@ TAGS:   transparent no_monster_gen no_rotate decor
 TAGS:   transparent no_monster_gen no_pool_fixup no_rotate decor
 : end
 KPROP:  C = no_tele_into
+KMASK:  C = opaque
 : interest_check(_G)
 MAP
    .........
@@ -216,7 +219,7 @@ ENDMAP
 NAME:  david_defended_altar_elf
 DEPTH: D:7-14, Elf
 MONS:  patrolling deep elf mage / w:30 nothing
-TAGS:  uniq_defended_altar
+TAGS:  uniq_defended_altar transparent
 MAP
 ccccc...
 c1..c...
@@ -255,7 +258,7 @@ MONS:  patrolling Angel
 : end
 KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
 KPROP: >"1_ = no_tele_into
-SUBST: " = .
+KMASK: . = !opaque
 MAP
    .....
   ..cnc..
@@ -366,7 +369,7 @@ ENDMAP
 NAME:  david_defended_altar_orc
 DEPTH: D:7-14, Orc
 MONS:  patrolling orc priest
-TAGS:  uniq_defended_altar
+TAGS:  uniq_defended_altar transparent
 KFEAT: _ = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
 MAP
 ccccc...
@@ -380,6 +383,7 @@ ENDMAP
 ### Altars to Jiyva ##########################################################
 
 NAME:   jiyva_altar_1
+TAGS:   transparent
 DEPTH:  D:8-
 KFEAT:  _ = altar_jiyva
 : if you.depth() > 9 then
@@ -402,7 +406,7 @@ ENDMAP
 
 NAME:   chequers_ecumenical_altar_simple
 DEPTH:  D:2-3
-TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
 SUBST: G : Gbt x:5
@@ -416,7 +420,7 @@ ENDMAP
 
 NAME: chequers_ecumenical_altar_simple_redux
 DEPTH: D:2-3
-TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
 SUBST: G : Gbt x:5
@@ -432,7 +436,7 @@ ENDMAP
 
 NAME:   chequers_ecumenical_altar_grove
 DEPTH:  D:2-3
-TAGS:   uniq_ecumenical_altar chance_ecumenical_altar
+TAGS:   uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
@@ -490,7 +494,7 @@ ENDMAP
 
 NAME: chequers_ecumenical_altar_twisty
 DEPTH: D:2-3
-TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical

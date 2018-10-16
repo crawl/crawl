@@ -43,7 +43,7 @@ end
 
 # This is basically the dummy balancer.
 NAME:   swamp_mist
-TAGS:   swamp_entry
+TAGS:   swamp_entry transparent
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -54,7 +54,7 @@ ENDMAP
 
 # Scenery, no threat.
 NAME:   swamp_mist_pool
-TAGS:   swamp_entry no_pool_fixup
+TAGS:   swamp_entry no_pool_fixup transparent
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -97,7 +97,7 @@ tTTWW'WWTTt
 ENDMAP
 
 NAME:   minmay_swamp_entry_wisps
-TAGS:   swamp_entry
+TAGS:   swamp_entry transparent
 WEIGHT: 2
 MONS:   insubstantial wisp / nothing
 KFEAT:  O = enter_swamp
@@ -111,7 +111,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_swamp_entry_reptiles
-TAGS:   swamp_entry
+TAGS:   swamp_entry transparent
 WEIGHT: 5
 MONS:   swamp drake / komodo dragon / hydra / swamp dragon
 MONS:   crocodile / iguana
@@ -145,7 +145,7 @@ ttTTTtt
 ENDMAP
 
 NAME:   minmay_swamp_entry_eels
-TAGS:   swamp_entry
+TAGS:   swamp_entry transparent
 WEIGHT: 2
 KMONS:  w = electric eel / nothing w:40
 KFEAT:  w = w / W
@@ -166,7 +166,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_entry_splash_gauntlet
-TAGS: swamp_entry patrolling
+TAGS: swamp_entry patrolling transparent
 KFEAT: O = enter_swamp
 MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
    size = 2, walk_dist = 1, spread_rate = 33 }

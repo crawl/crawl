@@ -81,6 +81,7 @@ c@..@..@c
 ENDMAP
 
 NAME:   temple_fountains
+TAGS:   transparent
 SUBST:  ? : T:30 U
 : temple_entry(_G)
 MAP
@@ -92,12 +93,14 @@ MAP
 ENDMAP
 
 NAME:   temple_statues
+TAGS:   transparent
 : temple_entry(_G)
 MAP
 GOG
 ENDMAP
 
 NAME:   temple_green
+TAGS:   transparent
 NSUBST: ? = 1:+ / * = +bb
 : temple_entry(_G)
 MAP
@@ -113,6 +116,7 @@ ENDMAP
 # A set of encased glass and doors: they used to feature secret doors.
 # Vault compression here randomly lops off one entrance.
 NAME:    temple_doors_ab
+TAGS:    transparent
 WEIGHT:  2
 SHUFFLE: Y'"E& / ZD~~~
 NSUBST:  XY = + / m+
@@ -131,6 +135,7 @@ cccccccccCC
 ENDMAP
 
 NAME:    temple_doors_cd
+TAGS:    transparent
 WEIGHT:  2
 SHUFFLE: Y'"C& / ZD~~~
 NSUBST:  XY = + / m+
@@ -151,6 +156,7 @@ ccccc@cccCC
 ENDMAP
 
 NAME:   temple_doors_e
+TAGS:   transparent
 WEIGHT: 6
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
@@ -171,7 +177,7 @@ cccccc@cccccc
 ENDMAP
 
 NAME:    temple_pool_b
-TAGS:    no_pool_fixup no_monster_gen no_rotate
+TAGS:    no_pool_fixup no_monster_gen no_rotate transparent
 : if crawl.x_chance_in_y(3, 10) then
 SHUFFLE: XY
 SUBST:   X = ., ABCDEFGHIJKLMNPQY = w
@@ -198,12 +204,14 @@ ENDMAP
 
 # The garden of good and evil
 NAME:   temple_garden
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 WEIGHT: 1
 SUBST:  _ = 3., - = l.
 SUBST:  . = .:900 3:30, ' = .:400 3:30, ! = .:100 3:30
 SUBST:  ? = .:50  3:30 G:5 T:10 U:1 V:4
 MONS:   angel, rust devil, plant
+KMASK:  12 = opaque
+KPROP:  12 = no_tele_into
 : temple_entry(_G)
 MAP
             ............................xxxxxxxx
@@ -363,6 +371,7 @@ ccccccccccccc
 ENDMAP
 
 NAME:   minmay_temple_entry_overgrown
+TAGS:   transparent
 MONS:   plant, bush
 SUBST:  ? = .1, ! = ...1, 1 : 123, 2 = 2.., 3 = 12
 : temple_entry(_G)
@@ -375,6 +384,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_junction
+TAGS:   transparent
 SUBST:  T = TV U:1, X : xc v:1 b:1
 : temple_entry(_G)
 MAP
@@ -390,6 +400,7 @@ xxx...xxx
 ENDMAP
 
 NAME:   minmay_temple_entry_glass
+TAGS:   transparent
 SUBST:  m : mb
 : temple_entry(_G)
 MAP
@@ -407,6 +418,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_trees
+TAGS:   transparent
 SUBST:  t : t1
 MONS:   bush
 : temple_entry(_G)
@@ -419,6 +431,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_butterflies
+TAGS:   transparent
 MONS:   butterfly
 NSUBST: . = 1:1 / 1:1.. / *:.
 : temple_entry(_G)
@@ -429,6 +442,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_metal_lava
+TAGS:   transparent
 WEIGHT: 1
 KMASK:  l = no_monster_gen
 : temple_entry(_G)
@@ -462,6 +476,7 @@ ccBcccBcccBcc
 ENDMAP
 
 NAME:   minmay_temple_entry_mist
+TAGS:   transparent
 KFEAT:  ! = shallow_water
 MARKER: ! = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
@@ -479,6 +494,7 @@ WWWWWWW
 ENDMAP
 
 NAME:   minmay_temple_entry_grid
+TAGS:   transparent
 SUBST:  m : bm
 : temple_entry(_G)
 MAP
@@ -494,6 +510,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_hall
+TAGS:   transparent
 SUBST:  c : c:80 xv, T = T:80 UV
 : temple_entry(_G)
 MAP
@@ -507,6 +524,7 @@ ccc+ccc
 ENDMAP
 
 NAME:   minmay_temple_entry_purple_smoke
+TAGS:   transparent
 WEIGHT: 5
 MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
         pow_max = 3, delay_min = 1, delay_max = 10, start_clouds = 5,  \
@@ -521,6 +539,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_statues_fountains
+TAGS:   transparent
 : temple_entry(_G)
 MAP
 .......
@@ -533,6 +552,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_large_hall
+TAGS:   transparent
 SUBST:  x : xxxc, T = T:80 UV
 : temple_entry(_G)
 MAP
@@ -550,6 +570,7 @@ xx@xx@xx@xx
 ENDMAP
 
 NAME:   minmay_temple_entry_glassed_door
+TAGS:   transparent
 : temple_entry(_G)
 MAP
 xxx+xxx
@@ -562,6 +583,7 @@ xxx+xxx
 ENDMAP
 
 NAME:   minmay_temple_entry_steel_oval
+TAGS:   transparent
 WEIGHT: 2
 : temple_entry(_G)
 MAP
@@ -581,6 +603,7 @@ v.v.v...v.v.v
 ENDMAP
 
 NAME:   minmay_temple_entry_oklob
+TAGS:   transparent
 WEIGHT: 1
 MONS:   plant, oklob sapling
 : temple_entry(_G)
@@ -595,6 +618,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_crystal_x
+TAGS:   transparent
 WEIGHT: 5
 : temple_entry(_G)
 MAP
@@ -608,6 +632,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_junction_2
+TAGS:   transparent
 WEIGHT: 5
 SUBST:  x : xccbbmv, T = T:39 V U:1
 : temple_entry(_G)
@@ -626,7 +651,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_water_ring
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup transparent
 WEIGHT: 3
 SUBST:  x : xxcccvvbt
 KMASK:  W = no_monster_gen
@@ -659,6 +684,7 @@ xGGGx
 ENDMAP
 
 NAME:   minmay_temple_entry_statues_pillars
+TAGS:   transparent
 SUBST:  c : cccxxb
 KFEAT:  O = enter_temple
 : temple_entry(_G)

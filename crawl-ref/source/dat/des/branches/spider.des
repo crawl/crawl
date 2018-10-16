@@ -32,14 +32,14 @@ end
 ##############################################################################
 
 NAME:   dummy_spider_entry
-TAGS:   spider_entry
+TAGS:   spider_entry transparent
 KFEAT:  O = enter_spider_nest
 MAP
 O
 ENDMAP
 
 NAME:   spider_nest_entry_a
-TAGS:   spider_entry patrolling no_monster_gen
+TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
 MONS:   redback w:5 / jumping spider w:5 / nothing w:30
 MAP
@@ -55,7 +55,7 @@ W.WW.WW.W
 ENDMAP
 
 NAME:   spider_nest_entry_webs
-TAGS:   spider_entry patrolling no_monster_gen
+TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web
 MONS:   redback / nothing
@@ -94,7 +94,7 @@ xx^^^^^xx
 ENDMAP
 
 NAME:   spider_nest_entry_web_field
-TAGS:   spider_entry patrolling no_monster_gen
+TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = known web trap / floor
 KFEAT:  ~ = known web trap / w:20 floor
@@ -113,7 +113,7 @@ MAP
 ENDMAP
 
 NAME:   spider_nest_entry_rubble
-TAGS:   spider_entry patrolling no_monster_gen
+TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
 KMONS:  O = wolf spider / tarantella / redback / jumping spider
 SUBST:  x = ..xx^
@@ -156,7 +156,7 @@ xxXxXxXxXxx
 ENDMAP
 
 NAME: nicolae_spider_entry_non_spiders
-TAGS: spider_entry ruin_lair
+TAGS: spider_entry ruin_lair transparent
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
 KMONS: 1 = scorpion / worker ant / worm / giant cockroach

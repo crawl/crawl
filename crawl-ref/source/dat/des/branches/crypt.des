@@ -107,7 +107,7 @@ end
 ##############################################################################
 NAME:   dummy_crypt_entry
 WEIGHT: 50
-TAGS:   crypt_entry extra
+TAGS:   crypt_entry extra transparent
 KFEAT:  O = enter_crypt
 MAP
 O
@@ -115,6 +115,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_round
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 .........
@@ -132,6 +133,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_box
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 .......
@@ -145,6 +147,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_statues
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ...........
@@ -162,6 +165,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_sparse
+TAGS:   transparent
 ORIENT: float
 : crypt_entry(_G)
 MAP
@@ -180,6 +184,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_walls
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ..........
@@ -201,6 +206,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_corners
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ...........
@@ -218,6 +224,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_plaza
+TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ......................
@@ -233,6 +240,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
+TAGS:   transparent
 MONS:   skeleton w:20 / skeletal warrior
 : crypt_entry(_G)
 MAP
@@ -251,6 +259,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    minmay_crypt_entry_necro_gods
+TAGS:    transparent
 WEIGHT:  30
 SHUFFLE: AB
 KFEAT:   A = altar_kikubaaqudgha
@@ -272,6 +281,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
+TAGS:    transparent
 MONS:    bone dragon w:25 / lich / shadow dragon w:5
 : crypt_entry(_G)
 MAP
@@ -291,6 +301,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   minmay_crypt_entry_vampire_xt
+TAGS:   transparent
 MONS:   vampire, vampire knight / vampire mage
 SUBST:  V = VVVY
 : crypt_entry(_G)
@@ -315,6 +326,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
+TAGS:    transparent
 MONS:    death knight
 MONS:    shadow wraith / wraith / wight w:5
 : crypt_entry(_G)
@@ -470,7 +482,7 @@ ENDMAP
 ##############################################################################
 # tombs in the wall
 NAME:  tombwall_bobbens
-TAGS:  allow_dup
+TAGS:  allow_dup transparent
 DEPTH: Crypt
 MONS:  w:150 zombie / skeletal warrior / ghoul / \
        large abomination / small abomination / necrophage / \
@@ -509,6 +521,7 @@ ENDMAP
 ##############################################################################
 # death oozes - they're sort of like garden slugs
 NAME:   minigarden_bobbens
+TAGS:   transparent
 DEPTH:  Crypt
 MONS:   death ooze
 KFEAT:  f = .

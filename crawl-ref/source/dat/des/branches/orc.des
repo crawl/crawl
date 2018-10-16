@@ -10,7 +10,7 @@
 # Dummy Orc entry
 
 NAME:   orc_0_dummy
-TAGS:   orc_entry
+TAGS:   orc_entry transparent
 WEIGHT: 50
 ORIENT: float
 KFEAT:  O = enter_orcish_mines
@@ -54,7 +54,7 @@ ENDMAP
 # Generic Orc entry
 #
 NAME: david_orc_2
-TAGS: orc_entry no_rotate
+TAGS: orc_entry no_rotate transparent
 MONS: weight:50 orc / orc warrior / nothing
 ORIENT: float
 KFEAT: O = enter_orcish_mines
@@ -74,7 +74,7 @@ ENDMAP
 # Orcish monsters near stair
 #
 NAME: david_orc_3
-TAGS: orc_entry
+TAGS: orc_entry transparent
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
@@ -95,7 +95,7 @@ ENDMAP
 # The Orc Outfitter
 #
 NAME: orc_david_3
-TAGS: orc_entry
+TAGS: orc_entry transparent
 ORIENT: float
 #
 : if you.absdepth() >= 10 then
@@ -280,7 +280,7 @@ ENDMAP
 # Orc-henge
 #
 NAME: erik_orc_4
-TAGS: orc_entry no_rotate
+TAGS: orc_entry no_rotate transparent
 MONS: human / goblin / hobgoblin / w:2 orc
 MONS: orc priest
 MONS: orc
@@ -419,7 +419,7 @@ ENDMAP
 # Haunted orc entrance II
 #
 NAME:   zombieorc2_lemuel
-TAGS:   orc_entry
+TAGS:   orc_entry transparent
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
@@ -451,7 +451,7 @@ ENDMAP
 # Guarded by dogs
 #
 NAME:   minmay_orc_entry_guard_dogs
-TAGS:   orc_entry
+TAGS:   orc_entry transparent
 WEIGHT: 5
 ORIENT: float
 MONS:   patrolling warg / nothing w:2
@@ -597,7 +597,7 @@ ENDMAP
 ###################################
 # Beogh 1
 NAME:   mines1_david
-TAGS:   allow_dup
+TAGS:   allow_dup transparent
 KFEAT:  C = altar_beogh
 WEIGHT: 20
 MAP
@@ -617,7 +617,7 @@ ENDMAP
 ###################################
 # Beogh 2
 NAME:   mines2_david
-TAGS:   allow_dup
+TAGS:   allow_dup transparent
 KFEAT:  C = altar_beogh
 MONS:   orc / orc warrior w:1
 SUBST:  . = . 1:2
@@ -769,6 +769,7 @@ ENDMAP
 # Still another temple (minmay)
 #
 NAME:   minmay_orc_temple_c
+TAGS:   transparent
 DEPTH:  Orc
 MONS:   orc, orc priest, orc high priest
 SUBST:  . = 1 .:200
@@ -805,6 +806,7 @@ ENDMAP
 #######################
 # Yet Another Temple
 NAME:   bh_open_orc_temple
+TAGS:   transparent
 DEPTH:  Orc
 SUBST:  " = 1.......
 MONS:   orc w:8 / orc priest w:2 / orc warrior
@@ -833,6 +835,7 @@ ENDMAP
 # Treasure chamber (minmay)
 #
 NAME:   minmay_orc_treasury
+TAGS:   transparent
 DEPTH:  Orc
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
@@ -866,7 +869,7 @@ vv...................vv
 ENDMAP
 
 NAME:    guppyfry_orc_lava_fort
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Orc
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
@@ -932,7 +935,7 @@ ENDMAP
 ##################################################
 # The orcs piled up some loose rubble.
 NAME:   rock_pile
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen transparent
 DEPTH:  Orc
 MONS:   orc ; hunting sling . stone q:30
 KITEM:  d = w:3 stone / w:1 large rock q:1
@@ -1376,7 +1379,7 @@ xx...........xx
 ENDMAP
 
 NAME: cheibrodos_orc_guarddog
-TAGS: no_monster_gen
+TAGS: no_monster_gen transparent
 DEPTH: Orc
 ORIENT: float
 MONS: warg
@@ -1405,7 +1408,7 @@ ENDMAP
 default-depth:
 
 NAME:    st_orc_town
-TAGS:    no_rotate no_item_gen
+TAGS:    no_rotate no_item_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc / nothing
@@ -1446,7 +1449,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_ogre_mass
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre / nothing w:5, two-headed ogre / nothing w:5, ogre mage
@@ -1471,7 +1474,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_rangers
-TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc warrior w:1 ; arbalest . bolt . halberd | war axe | morningstar /\
@@ -1505,7 +1508,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_mages
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc / nothing, orc wizard / nothing, orc sorcerer
@@ -1538,7 +1541,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_pillars
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc / nothing, orc warrior / nothing, orc knight / nothing
@@ -1566,7 +1569,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_congregation
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc / nothing, orc warrior / nothing, orc priest / nothing
@@ -1611,7 +1614,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_open
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
@@ -1925,7 +1928,7 @@ ENDMAP
 # A lot of the opposition here comes from the band of orcs following the
 # leader; if it seems kind of sparse at first glance, think again.
 NAME:   grunt_orc_cross
-TAGS:   patrolling no_item_gen no_monster_gen
+TAGS:   patrolling no_item_gen no_monster_gen transparent
 PLACE:  Orc:$
 ORIENT: float
 MONS:   orc knight, orc high priest, orc sorcerer

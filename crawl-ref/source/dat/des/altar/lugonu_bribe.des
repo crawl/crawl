@@ -72,6 +72,7 @@ end
 
 
 NAME:   tgw_lugonu_bribe
+TAGS:   transparent
 DEPTH:  D:12-, Depths
 KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {slave_name="altar"}

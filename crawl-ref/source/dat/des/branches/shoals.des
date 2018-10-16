@@ -73,14 +73,14 @@ end
 ##############################################################################
 
 NAME:   shoals_dummy_entry
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 KFEAT:  O = enter_shoals
 MAP
 O
 ENDMAP
 
 NAME:   minmay_shoals_entry_lonely_mermaid
-TAGS:   shoals_entry no_monster_gen
+TAGS:   shoals_entry no_monster_gen transparent
 ORIENT: float
 KMONS:  1 = merfolk siren
 KFEAT:  1 = w
@@ -99,9 +99,9 @@ xxwwwxx       xxwwwxx
 ENDMAP
 
 NAME:   minmay_shoals_entry_hut
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 MONS:   snapping turtle
-SUBST:  W = WWWw, w = wwwW
+SUBST:  w = wwwW
 TILE:   x = wall_pebble_lightgray
 KFEAT:  O = enter_shoals
 MAP
@@ -119,7 +119,7 @@ WWwxxxxxwWW
 ENDMAP
 
 NAME:   minmay_shoals_entry_centaurs
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 MONS:   centaur / nothing w:5, plant / nothing w:20
 KFEAT:  O = enter_shoals
 MAP
@@ -139,7 +139,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_shoals_entry_beasts
-TAGS:    shoals_entry
+TAGS:    shoals_entry transparent
 MONS:    hippogriff, manticore, nothing, nothing, nothing, nothing, nothing
 KMONS:   8 = nothing
 SHUFFLE: 12345678
@@ -151,7 +151,7 @@ MAP
 ENDMAP
 
 NAME:   elwin_shoals_entry_rocks
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 KFEAT:  O = enter_shoals
 MAP
 .WW...W..
@@ -166,7 +166,7 @@ Wxx.WxxW.
 ENDMAP
 
 NAME:   elwin_shoals_entry_stream
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 KFEAT:  O = enter_shoals
 NSUBST: Z = 4:1 / *:W
 KFEAT:  1 = W
@@ -188,7 +188,7 @@ xZ..x
 ENDMAP
 
 NAME:   elwin_shoals_entry_rooms
-TAGS:   shoals_entry
+TAGS:   shoals_entry transparent
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
 KFEAT:  1 = W
@@ -238,10 +238,10 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   overgrown_tower
+TAGS:   transparent
 DEPTH:  Shoals
 WEIGHT: 2
 MONS:   plant, fungus
-SUBST:  + = x +
 SUBST:  x = x:60 . '
 SUBST:  ' = ' 1:5
 SUBST:  . = . 2:1
@@ -252,7 +252,7 @@ MAP
 ''xx...xx''
 'xx.....xx'
 'x.......x'
-'x...<...x'
+'x.......x'
 'x.......x'
 'xx.....xx'
 ''xx...xx''
@@ -261,6 +261,7 @@ MAP
 ENDMAP
 
 NAME:   overgrown_statue
+TAGS:   transparent
 DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
@@ -284,6 +285,7 @@ MAP
 ENDMAP
 
 NAME:   shoals_oasis
+TAGS:   transparent
 DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
@@ -302,6 +304,7 @@ MAP
 ENDMAP
 
 NAME:   yaktaur_hedge
+TAGS:   transparent
 DEPTH:  Shoals
 MONS:   bush
 MONS:   yaktaur
@@ -316,7 +319,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_shoal_volcano
-TAGS:    no_monster_gen no_item_gen patrolling
+TAGS:    no_monster_gen no_item_gen patrolling transparent
 DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
@@ -478,6 +481,7 @@ xxwwxxxxZxxxxwwxx
 ENDMAP
 
 NAME: nicolae_shoals_undead_eyrie
+TAGS: transparent
 DEPTH: Shoals
 SUBST: y = ..xx1
 NSUBST: . = 4:1 / *:.
@@ -760,6 +764,7 @@ xxxxxwwwwwwwxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_shoals_flooded_hall
+TAGS: transparent
 DEPTH: Shoals, !Shoals:$
 SHUFFLE: }}]]))>
 KPROP: .123wqx = no_tide

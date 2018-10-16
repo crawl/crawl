@@ -497,7 +497,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_elf_sorcery
-TAGS:  misc_elf_vault
+TAGS:  misc_elf_vault transparent
 DEPTH: Elf
 MONS:  deep elf mage w:30 / nothing
 KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
@@ -525,7 +525,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_elf_annihilation
-TAGS:  misc_elf_vault
+TAGS:  misc_elf_vault transparent
 DEPTH: Elf
 MONS:  deep elf mage / nothing
 KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
@@ -554,7 +554,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_elf_demonology
-TAGS:  misc_elf_vault
+TAGS:  misc_elf_vault transparent
 DEPTH: Elf
 MONS:  deep elf mage / nothing
 KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
@@ -707,6 +707,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_castle
+TAGS:  transparent
 DEPTH: Elf:2-
 MONS:  deep elf mage / deep elf knight / deep elf archer
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
@@ -729,6 +730,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_garden
+TAGS:  transparent
 DEPTH: Elf:2-
 MONS:  deep elf mage
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
@@ -776,6 +778,7 @@ xxxxx++xxxx
 ENDMAP
 
 NAME:  guppyfry_elf_lava
+TAGS:  transparent
 DEPTH: Elf:2-
 MONS:  deep elf mage
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
@@ -1219,7 +1222,7 @@ x+xx...xxxx.4.xxxxxx
 ENDMAP
 
 NAME:    hangedman_elf_represent
-TAGS:    no_monster_gen misc_elf_vault
+TAGS:    no_monster_gen misc_elf_vault transparent
 DEPTH:   Elf
 # Place two pairings of obvious descendents / ascendents.
 MONS:    deep elf mage, deep elf sorcerer
