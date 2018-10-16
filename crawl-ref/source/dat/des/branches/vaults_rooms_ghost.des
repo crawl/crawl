@@ -178,11 +178,7 @@ KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
         dagger cursed ident:all / hand axe cursed ident:all / \
         scythe cursed ident:all / club cursed ident:all / \
         hunting sling cursed ident:all
-: if you.unrands("robe_of_misfortune") then
 KITEM:  P = robe cursed plus:-8 randart ident:all
-: else
-KITEM:  P = robe_of_misfortune ident:all
-: end
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         double sword good_item w:5 / demon blade good_item w:5 / \
