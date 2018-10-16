@@ -68,7 +68,7 @@ sceptre of Torment
 
 An accursed golden sceptre, created by some unknown hellish power. When used in
 combat, it causes agonising pain in all those unfortunate enough to gaze upon
-it.
+it, save for the wielder.
 %%%%
 sword of Zonguldrok
 

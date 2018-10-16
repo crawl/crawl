@@ -396,7 +396,7 @@ static void _TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (coinflip())
+    if (one_chance_in(5))
         torment(attacker, TORMENT_SCEPTRE, attacker->pos());
 }
 
