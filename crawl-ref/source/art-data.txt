@@ -715,13 +715,12 @@ LIFE:     1
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
-PLUS:     -5
+PLUS:     5
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
-EV:       -5
-STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse
+EV:       5
+BOOL:     harm, mutate, drain, slow, corrode
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
