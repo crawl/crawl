@@ -201,7 +201,6 @@ bool ray_def::advance()
         ASSERT(is_corner(r.start));
         on_corner = false;
         _to_grid(&r, true);
-        ASSERT(_valid());
     }
     else
     {
