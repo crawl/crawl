@@ -8,7 +8,7 @@
 
 {{
 function coc_setup(e)
-   e.place("Coc:7")
+   e.place("Coc:$")
    e.tags("no_rotate")
    e.kitem("$ = $ no_pickup")
    e.kmask('O = no_item_gen')
