@@ -8,7 +8,7 @@
 
 {{
 function geh_setup(e)
-   e.place("Geh:7")
+   e.place("Geh:$")
    e.kmask('O = no_item_gen')
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")
