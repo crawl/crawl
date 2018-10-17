@@ -546,12 +546,16 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
     if (agent && agent->is_player())
     {
         ASSERT(actual);
+
         targeter_los hitfunc(&you, LOS_NO_TRANS);
+        // Singing Sword's spell shouldn't give a prompt at this time.
+        if (spell != SPELL_SONIC_WAVE)
         {
             if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
+
+            fail_check();
         }
-        fail_check();
 
         mpr(player_msg);
         flash_view(UA_PLAYER, beam.colour, &hitfunc);
