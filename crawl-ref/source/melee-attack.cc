@@ -109,10 +109,10 @@ bool melee_attack::handle_phase_attempted()
     {
         // Unrands with secondary effects that can harm nearby friendlies.
         if (weapon
-                && (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
-                    || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                    || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
-                    || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER))
+            && (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR)
+                || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
+                || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER)))
         {
 
             targeter *hitfunc;
