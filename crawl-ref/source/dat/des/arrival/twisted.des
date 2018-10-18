@@ -791,9 +791,9 @@ SUBST:   c : t:60 x:30 c:10
 SUBST:   . = W
 SUBST:   ' = WW.
 :   elseif crawl.one_chance_in(6) then
-SUBST:   c = l
+SUBST:   c = W
 :   end
-SUBST:   c : t:45 m:30 w:20 n:5
+SUBST:   c : t:45
 SUBST:   G : G:40 H:30 2:10 1:5 A:3 B:2
 : end
 KFEAT:   A = abandoned_shop
@@ -802,23 +802,23 @@ NSUBST:  C = AB / c
 SUBST:   H : G:60 T:5
 SUBST:   '" = .
 MAP
-       ccc
-    ccccGcccc
-   cc.......cc
-  cc.ccccccc.cc
- cc.cc.....cc.cc
- c.cc.ccccc.cc.c
- c.c.cc...cc.c.c
-cc.c.c.cc.Gc.c.cc
-cG.c.c.cG.cc.c.Gc
-cc.c.c.cc....c.cc
- c.c.cc.ccccGc.c
- c'cc.cc...ccc.c
- cc'cc.cccc...cc
-  cc'cc...ccGcc
-   cc'ccc.{ccc
-    cc@"ccccc
-       @@@
+        ccc
+     ccccGcccc
+    cc.......cc
+   cc.ccccccc.cc
+  cc.cc.....cc.cc
+  c.cc.ccccc.cc.c
+  c.c.cc...cc.c.c
+ cc.c.c.cc.Gc.c.cc
+ cG.c.c.cG.cc.c.Gc
+ cc.c.c.cc....c.cc
+  c.c.cc.ccccGc.c
+  c'cc.cc...ccc.c
+  cc'cc.cccc...cc
+   cc'cc...ccGcc
+    cc'ccc.{ccc
+     cc@"ccccc
+        @@@
 ENDMAP
 
 ###############################################################################
