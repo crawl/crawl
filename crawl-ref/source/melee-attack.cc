@@ -118,7 +118,6 @@ bool melee_attack::handle_phase_attempted()
             targeter *hitfunc;
             targeter_smite hitfunc_smite(attacker, 1, 1, 1, false);
             targeter_los hitfunc_los(&you, LOS_NO_TRANS);
-            bool (*vulnerable)(const actor *) = nullptr;
             if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
             {
                 hitfunc = &hitfunc_smite;
@@ -127,7 +126,7 @@ bool melee_attack::handle_phase_attempted()
             else
                 hitfunc = &hitfunc_los;
 
-            if (stop_attack_prompt(*hitfunc, "attack", vulnerable, nullptr,
+            if (stop_attack_prompt(*hitfunc, "attack", nullptr, nullptr,
                                    defender->as_monster()))
             {
                 cancel_attack = true;
