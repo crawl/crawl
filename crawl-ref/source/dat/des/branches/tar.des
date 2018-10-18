@@ -8,7 +8,7 @@
 
 {{
 function tar_setup(e)
-   e.place("Tar:7")
+   e.place("Tar:$")
    e.tags("no_rotate")
    e.kmask('O = no_item_gen')
    e.kitem('O = bone rune of Zot')
