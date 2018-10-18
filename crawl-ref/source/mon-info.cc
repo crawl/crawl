@@ -660,8 +660,12 @@ monster_info::monster_info(const monster* m, int milev)
 
     // book loading for player ghost and vault monsters
     spells.clear();
-    if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type))
+    if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type)
+        || type == MONS_PANDEMONIUM_LORD)
+    {
         spells = m->spells;
+    }
+
     if (m->is_priest())
         props["priest"] = true;
     else if (m->is_actual_spellcaster())
@@ -1735,14 +1739,13 @@ bool monster_info::has_spells() const
     const vector<mon_spellbook_type> books = get_spellbooks(*this);
 
     // Random pan lords don't display their spells.
-    if (books.size() == 0 || books[0] == MST_NO_SPELLS
-        || type == MONS_PANDEMONIUM_LORD)
+    if (books.size() == 0 || books[0] == MST_NO_SPELLS)
     {
         return false;
     }
 
     // Ghosts have a special book but may not have any spells anyways.
-    if (books[0] == MST_GHOST)
+    if (books[0] == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
         return spells.size() > 0;
 
     return true;

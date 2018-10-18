@@ -6628,7 +6628,7 @@ int monster::spell_hd(spell_type spell) const
 }
 
 /**
- * For pandemonium lords & monsters with random spellbooks, track which spells
+ * For monsters with random spellbooks, track which spells
  * the player has seen this monster cast.
  *
  * @param spell     The spell the player just saw the monster cast.
@@ -6636,7 +6636,7 @@ int monster::spell_hd(spell_type spell) const
 void monster::note_spell_cast(spell_type spell)
 {
     const monster_info mi(this);
-    if (type != MONS_PANDEMONIUM_LORD && get_spellbooks(mi).size() <= 1)
+    if (get_spellbooks(mi).size() <= 1)
         return;
 
     for (int old_spell : props[SEEN_SPELLS_KEY].get_vector())
