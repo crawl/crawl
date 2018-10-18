@@ -107,22 +107,28 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player() && defender && defender->is_monster())
     {
-        if (weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
+        // Unrands with secondary effects that can harm nearby friendlies.
+        if (weapon
+                && (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
+                    || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                    || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
+                    || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER))
         {
-            const char* verb = "attack";
-            string junk1, junk2;
-            bool junk3 = false;
-            if (defender)
+
+            targeter *hitfunc;
+            targeter_smite hitfunc_smite(attacker, 1, 1, 1, false);
+            targeter_los hitfunc_los(&you, LOS_NO_TRANS);
+            bool (*vulnerable)(const actor *) = nullptr;
+            if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
             {
-                verb = (bad_attack(defender->as_monster(),
-                                   junk1, junk2, junk3)
-                        ? "attack" : "attack near");
+                hitfunc = &hitfunc_smite;
+                hitfunc->set_aim(defender->pos());
             }
+            else
+                hitfunc = &hitfunc_los;
 
-            targeter_smite hitfunc(attacker, 1, 1, 1, false);
-            hitfunc.set_aim(defender->pos());
-
-            if (stop_attack_prompt(hitfunc, verb))
+            if (stop_attack_prompt(*hitfunc, "attack", vulnerable, nullptr,
+                                   defender->as_monster()))
             {
                 cancel_attack = true;
                 return false;

@@ -73,4 +73,5 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
-                        bool *prompted = nullptr);
+                        bool *prompted = nullptr,
+                        const monster *mons = nullptr);
