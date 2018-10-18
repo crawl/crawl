@@ -259,7 +259,7 @@ OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
-TILE_EQ: mace_ruby
+TILE_EQ: sceptre_of_torment
 BRAND:   SPWPN_PAIN
 VALUE:   1200
 BOOL:    special, evil
