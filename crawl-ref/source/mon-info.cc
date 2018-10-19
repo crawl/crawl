@@ -652,10 +652,12 @@ monster_info::monster_info(const monster* m, int milev)
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
-
-        // describe abnormal (branded) ghost weapons
-        if (ghost.brand != SPWPN_NORMAL)
-            props[SPECIAL_WEAPON_KEY] = ghost_brand_name(ghost.brand);
+    }
+    if ((mons_is_pghost(type) || type == MONS_PANDEMONIUM_LORD)
+        && m->ghost->brand != SPWPN_NORMAL)
+    {
+        // describe abnormal (branded) ghost or pan lord weapons
+        props[SPECIAL_WEAPON_KEY] = m->ghost->brand;
     }
 
     // book loading for player ghost and vault monsters
