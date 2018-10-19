@@ -242,6 +242,8 @@ public:
     void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void destroy_inventory();
     void load_ghost_spells();
+    brand_type ghost_brand() const;
+    bool has_ghost_brand() const;
 
     actor *get_foe() const;
 

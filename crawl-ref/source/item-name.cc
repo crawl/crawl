@@ -481,6 +481,10 @@ static const char *weapon_brands_adj[] =
     "debug",
 };
 
+// TODO: currently only for pghosts...expand?
+static const set<brand_type> brand_prefers_adj =
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL };
+
 /**
  * What's the name of a type of vorpal brand?
  *
@@ -519,7 +523,7 @@ static const char* _vorpal_brand_name(const item_def &item, bool terse)
  * @param bool              Whether to use a terse or verbose name.
  * @return                  The name of the given brand.
  */
-const char* brand_type_name(int brand, bool terse)
+const char* brand_type_name(brand_type brand, bool terse)
 {
     COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
     COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
@@ -530,7 +534,7 @@ const char* brand_type_name(int brand, bool terse)
     return (terse ? weapon_brands_terse : weapon_brands_verbose)[brand];
 }
 
-const char* brand_type_adj(int brand)
+const char* brand_type_adj(brand_type brand)
 {
     COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
     COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
@@ -551,9 +555,9 @@ const char* brand_type_adj(int brand)
  * @return                  The name of the given item's brand.
  */
 const char* weapon_brand_name(const item_def& item, bool terse,
-                              int override_brand)
+                              brand_type override_brand)
 {
-    const int brand = override_brand ? override_brand : get_weapon_brand(item);
+    const brand_type brand = override_brand ? override_brand : get_weapon_brand(item);
 
     if (brand == SPWPN_VORPAL)
         return _vorpal_brand_name(item, terse);
@@ -1266,28 +1270,29 @@ string sub_type_string(const item_def &item, bool known)
  * There's no actual weapon info, just brand, so we have to improvise...
  *
  * @param brand     The brand_type used by the ghost or pan lord.
- * @param weapon    Is the brand a (fake) weapon, or inherent to the monster?
+ * @param mtype     Monster type; determines whether the fake weapon is
+ *                  described as a `weapon` or a `touch`.
  * @return          The name of the ghost's weapon (e.g. "weapon of flaming",
- *                  "antimagic weapon")
+ *                  "antimagic weapon"). SPWPN_NORMAL returns "".
  */
-string ghost_brand_name(int brand, bool weapon)
+string ghost_brand_name(brand_type brand, monster_type mtype)
 {
+    if (brand == SPWPN_NORMAL)
+        return "";
+    const bool weapon = mtype != MONS_PANDEMONIUM_LORD;
     if (weapon)
     {
-        // XXX: deduplicate these special cases
-        if (brand == SPWPN_VAMPIRISM)
-            return "vampiric weapon";
-        if (brand == SPWPN_ANTIMAGIC)
-            return "antimagic weapon";
-        if (brand == SPWPN_VORPAL)
-            return "vorpal weapon"; // can't use brand_type_name
-        return make_stringf("weapon of %s", brand_type_name(brand, false));
+        // n.b. vorpal only works if it is adjectival
+        if (brand_prefers_adj.count(brand))
+            return make_stringf("%s weapon", brand_type_adj(brand));
+        else
+            return make_stringf("weapon of %s", brand_type_name(brand, false));
     }
     else
         return make_stringf("%s touch", brand_type_adj(brand));
 }
 
-string ego_type_string(const item_def &item, bool terse, int override_brand)
+string ego_type_string(const item_def &item, bool terse, brand_type override_brand)
 {
     switch (item.base_type)
     {
@@ -1296,7 +1301,7 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
     case OBJ_WEAPONS:
         if (!terse)
         {
-            int checkbrand = override_brand ? override_brand
+            brand_type checkbrand = override_brand ? override_brand
                                             : get_weapon_brand(item);
             // this is specialcased out of weapon_brand_name
             // ("vampiric hand axe", etc)

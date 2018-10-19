@@ -260,7 +260,7 @@ int Form::get_ac_bonus() const
 /**
  * (freeze)
  */
-static string _brand_suffix(int brand)
+static string _brand_suffix(brand_type brand)
 {
     if (brand == SPWPN_NORMAL)
         return "";
