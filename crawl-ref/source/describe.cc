@@ -1350,7 +1350,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         else
         {
             description += " weapon of "
-                        + ego_type_string(item, false, you.props[ORIGINAL_BRAND_KEY])
+                        + ego_type_string(item, false,
+                           (brand_type) you.props[ORIGINAL_BRAND_KEY].get_int())
                         + ".";
         }
     }
@@ -3692,15 +3693,15 @@ static string _monster_attacks_description(const monster_info& mi)
     {
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
-        const string weapon_note = info.weapon
-            ? make_stringf(" plus %s %s", mi.pronoun(PRONOUN_POSSESSIVE),
-                                          info.weapon->name(DESC_PLAIN).c_str())
-            : special_flavour != SPWPN_NORMAL
-              ? make_stringf(" plus %s %s",
-                    mi.pronoun(PRONOUN_POSSESSIVE),
-                    ghost_brand_name(special_flavour,
-                                    mi.type != MONS_PANDEMONIUM_LORD).c_str())
-              : "";
+
+        const string weapon_name =
+              info.weapon ? info.weapon->name(DESC_PLAIN).c_str()
+            : ghost_brand_name(special_flavour, mi.type).c_str();
+        const string weapon_note = weapon_name.size() ?
+            make_stringf(" plus %s %s",
+                        mi.pronoun(PRONOUN_POSSESSIVE), weapon_name.c_str())
+            : "";
+
         const string count_desc =
               attack_count.second == 1 ? "" :
               attack_count.second == 2 ? " twice" :

@@ -2981,8 +2981,8 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
 
     if (mi.props.exists(SPECIAL_WEAPON_KEY))
     {
-        name1 = article_a(ghost_brand_name(mi.props[SPECIAL_WEAPON_KEY].get_int(),
-            mi.type != MONS_PANDEMONIUM_LORD), true);
+        name1 = article_a(ghost_brand_name(
+            (brand_type) mi.props[SPECIAL_WEAPON_KEY].get_int(), mi.type));
     }
 
     if (name1.empty())

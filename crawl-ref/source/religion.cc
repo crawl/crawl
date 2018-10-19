@@ -1739,7 +1739,7 @@ static string _item_ego_name(object_class_type base_type, int brand)
         // reads better than 'flaming'
         const bool terse = brand == SPWPN_FLAMING
                            || brand == SPWPN_ANTIMAGIC;
-        return brand_type_name(brand, terse);
+        return brand_type_name((brand_type) brand, terse);
     }
     case OBJ_ARMOUR:
         // XXX: hack

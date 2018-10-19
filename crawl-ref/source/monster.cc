@@ -338,17 +338,34 @@ size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
     return mi.body_size();
 }
 
+/**
+ * Returns brand information from an associated ghost_demon, if any.
+ * Used for player ghosts, illusions, and pan lords. Safe to call if `ghost`
+ * is not set; will just return SPWPN_NORMAL for this case.
+ */
+brand_type monster::ghost_brand() const
+{
+    if (!ghost || !(type == MONS_PANDEMONIUM_LORD || mons_is_pghost(type)))
+        return SPWPN_NORMAL;
+    return ghost->brand;
+}
+
+/**
+ * Is there a ghost_demon associated with this monster that has a brand set?
+ * Used for player ghosts, illusions, and pan lords. Safe to call if `ghost`
+ * is not set.
+ */
+bool monster::has_ghost_brand() const
+{
+    return ghost_brand() != SPWPN_NORMAL;
+}
+
 brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
 
     if (!mweap)
-    {
-        if (mons_is_ghost_demon(type))
-            return ghost->brand;
-
-        return SPWPN_NORMAL;
-    }
+        return ghost_brand();
 
     return !is_range_weapon(*mweap) ? static_cast<brand_type>(get_weapon_brand(*mweap))
                                     : SPWPN_NORMAL;
