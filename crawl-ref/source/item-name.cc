@@ -456,6 +456,31 @@ static const char *weapon_brands_verbose[] =
     "debug",
 };
 
+static const char *weapon_brands_adj[] =
+{
+    "", "flaming", "freezing", "holy", "electric",
+#if TAG_MAJOR_VERSION == 34
+    "orc-killing", "dragon-slaying",
+#endif
+    "venomous", "protective", "draining", "fast", "vorpal",
+#if TAG_MAJOR_VERSION == 34
+    "flaming", "freezing",
+#endif
+    "vampiric", "painful", "antimagic", "distorting",
+#if TAG_MAJOR_VERSION == 34
+    "reaching", "returning",
+#endif
+    "chaotic",
+#if TAG_MAJOR_VERSION == 34
+    "evasive", "confusing",
+#endif
+    "penetrating", "reaping", "buggy-num", "acidic",
+#if TAG_MAJOR_VERSION > 34
+    "confusing",
+#endif
+    "debug",
+};
+
 /**
  * What's the name of a type of vorpal brand?
  *
@@ -503,6 +528,17 @@ const char* brand_type_name(int brand, bool terse)
         return terse ? "buggy" : "bugginess";
 
     return (terse ? weapon_brands_terse : weapon_brands_verbose)[brand];
+}
+
+const char* brand_type_adj(int brand)
+{
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+
+    if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
+        return "buggy";
+
+    return weapon_brands_adj[brand];
 }
 
 /**
@@ -1225,24 +1261,30 @@ string sub_type_string(const item_def &item, bool known)
 }
 
 /**
- * What's the name for the weapon used by a given ghost?
+ * What's the name for the weapon used by a given ghost / pan lord?
  *
  * There's no actual weapon info, just brand, so we have to improvise...
  *
- * @param brand     The brand_type used by the ghost.
- * @return          The name of the ghost's weapon (e.g. "a weapon of flaming",
- *                  "an antimagic weapon")
+ * @param brand     The brand_type used by the ghost or pan lord.
+ * @param weapon    Is the brand a (fake) weapon, or inherent to the monster?
+ * @return          The name of the ghost's weapon (e.g. "weapon of flaming",
+ *                  "antimagic weapon")
  */
-string ghost_brand_name(int brand)
+string ghost_brand_name(int brand, bool weapon)
 {
-    // XXX: deduplicate these special cases
-    if (brand == SPWPN_VAMPIRISM)
-        return "a vampiric weapon";
-    if (brand == SPWPN_ANTIMAGIC)
-        return "an antimagic weapon";
-    if (brand == SPWPN_VORPAL)
-        return "a vorpal weapon"; // can't use brand_type_name
-    return make_stringf("a weapon of %s", brand_type_name(brand, false));
+    if (weapon)
+    {
+        // XXX: deduplicate these special cases
+        if (brand == SPWPN_VAMPIRISM)
+            return "vampiric weapon";
+        if (brand == SPWPN_ANTIMAGIC)
+            return "antimagic weapon";
+        if (brand == SPWPN_VORPAL)
+            return "vorpal weapon"; // can't use brand_type_name
+        return make_stringf("weapon of %s", brand_type_name(brand, false));
+    }
+    else
+        return make_stringf("%s touch", brand_type_adj(brand));
 }
 
 string ego_type_string(const item_def &item, bool terse, int override_brand)

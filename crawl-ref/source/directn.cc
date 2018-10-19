@@ -2980,12 +2980,18 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     }
 
     if (mi.props.exists(SPECIAL_WEAPON_KEY))
-        name1 = mi.props[SPECIAL_WEAPON_KEY].get_string();
+    {
+        name1 = article_a(ghost_brand_name(mi.props[SPECIAL_WEAPON_KEY].get_int(),
+            mi.type != MONS_PANDEMONIUM_LORD), true);
+    }
 
     if (name1.empty())
         return desc;
 
-    desc += " wielding ";
+    if (mi.type == MONS_PANDEMONIUM_LORD)
+        desc += " armed with ";
+    else
+        desc += " wielding ";
     desc += name1;
 
     if (!name2.empty())

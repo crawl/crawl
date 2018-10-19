@@ -3662,6 +3662,13 @@ static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
     map<mon_attack_info, int> attack_counts;
+    brand_type special_flavour = SPWPN_NORMAL;
+
+    if (mi.props.exists(SPECIAL_WEAPON_KEY))
+    {
+        ASSERT(mi.type == MONS_PANDEMONIUM_LORD || mons_is_pghost(mi.type));
+        special_flavour = (brand_type) mi.props[SPECIAL_WEAPON_KEY].get_int();
+    }
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -3685,11 +3692,15 @@ static string _monster_attacks_description(const monster_info& mi)
     {
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
-        const string weapon_note
-            = info.weapon ? make_stringf(" plus %s %s",
-                                         mi.pronoun(PRONOUN_POSSESSIVE),
-                                         info.weapon->name(DESC_PLAIN).c_str())
-                          : "";
+        const string weapon_note = info.weapon
+            ? make_stringf(" plus %s %s", mi.pronoun(PRONOUN_POSSESSIVE),
+                                          info.weapon->name(DESC_PLAIN).c_str())
+            : special_flavour != SPWPN_NORMAL
+              ? make_stringf(" plus %s %s",
+                    mi.pronoun(PRONOUN_POSSESSIVE),
+                    ghost_brand_name(special_flavour,
+                                    mi.type != MONS_PANDEMONIUM_LORD).c_str())
+              : "";
         const string count_desc =
               attack_count.second == 1 ? "" :
               attack_count.second == 2 ? " twice" :
