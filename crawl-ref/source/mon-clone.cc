@@ -86,25 +86,12 @@ static void _mons_summon_monster_illusion(monster* caster,
         return;
 
     bool cloning_visible = false;
-    monster *clone = nullptr;
 
-    // [ds] Bind the original target's attitude before calling
-    // clone_mons, since clone_mons also updates arena bookkeeping.
-    //
     // If an enslaved caster creates a clone from a regular hostile,
     // the clone should still be friendly.
-    //
-    // This is all inside its own block so the unwind_var will be unwound
-    // before we use foe->name below.
-    {
-        const mon_attitude_type clone_att =
-            caster->friendly() ? ATT_FRIENDLY : caster->attitude;
-
-        unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
-        clone = clone_mons(foe, true, &cloning_visible);
-    }
-
-    if (clone)
+    if (monster *clone = clone_mons(foe, true, &cloning_visible,
+                                    caster->friendly() ?
+                                    ATT_FRIENDLY : caster->attitude))
     {
         const string clone_id = _monster_clone_id_for(foe);
         clone->props[CLONE_SLAVE_KEY] = clone_id;
@@ -268,37 +255,55 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     return true;
 }
 
+/*
+ * @param orig          The original monster to clone.
+ * @param quiet         If true, suppress messages
+ * @param obvious       If true, player can see the orig & cloned monster
+ * @return              Returns the cloned monster
+ */
+monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
+{
+    // Pass temp_attitude to handle enslaved monsters cloning monsters
+    return clone_mons(orig, quiet, obvious, orig->temp_attitude());
+}
+
+/**
+ * @param orig          The original monster to clone.
+ * @param quiet         If true, suppress messages
+ * @param obvious       If true, player can see the orig & cloned monster
+ * @param mon_att       The attitude to set for the cloned monster
+ * @return              Returns the cloned monster
+ */
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
-                    coord_def pos)
+                    mon_attitude_type mon_att)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
+    coord_def pos(0, 0);
 
     if (!mons)
         return nullptr;
 
-    if (!in_bounds(pos))
+    for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
     {
-        for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
+        if (in_bounds(*ai)
+            && !actor_at(*ai)
+            && monster_habitable_grid(orig, grd(*ai)))
         {
-            if (in_bounds(*ai)
-                && !actor_at(*ai)
-                && monster_habitable_grid(orig, grd(*ai)))
-            {
-                pos = *ai;
-            }
+            pos = *ai;
         }
-
-        if (!in_bounds(pos))
-            return nullptr;
     }
 
+    if (!in_bounds(pos))
+        return nullptr;
+
     ASSERT(!actor_at(pos));
-    ASSERT_IN_BOUNDS(pos);
 
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->move_to_pos(pos);
+    mons->attitude = mon_att;
+
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
