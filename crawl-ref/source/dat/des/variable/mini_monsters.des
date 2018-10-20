@@ -16,7 +16,8 @@
 # <<6>> Others             (slime denizens, insubstantial monsters)
 # <<7>> Random             (using 8,9,0 or too many monsters to categorise)
 # <<8>> Guardians          (thematic vaults centered around special items)
-# <<9>> Classics           (ancient minivaults and extensions)
+# <<9>> Manuals            (pre-lair vaults placing manuals with guardians)
+# <<10>> Classics           (ancient minivaults and extensions)
 #
 # Often, a vault will fit in two categories. Choose the one you think fits
 # best or else delegate to Random or Others. Be picky with Guardians, please.
@@ -6558,8 +6559,241 @@ ENDMAP
 
 ###################################################################
 #
-# <<9>> The classics.
-#      These are ancient minivaults, or expansions of them.
+# <<9>> Pre-Lair vaults with monsters guarding a manual
+#       Manuals are most interesting early in the game when your character may
+#       not yet be committed to a specific strategy. However, randomly
+#       generated manuals are extremely rare and biased towards deeper levels,
+#       and existing vaults that explicitly place manuals are all quite deep as
+#       well. So here are some shallow vaults that place manuals!
+#
+#       These all have a mean of five monsters and a minimum of two, with the
+#       exception of minmay_manual_mares which simply has 2 centaurs. There are
+#       currently 10 vaults, with a total weight of 50.
+
+NAME:   minmay_manual_maat
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:4-8
+ITEM:   any manual
+MONS:   hippogriff
+NSUBST: 0 = 0 / ...0
+SUBST:  0 = 0009
+SUBST:  x : xxxxccvb
+MAP
+ .......
+..xxxxx..
+.xx...xx.
+.x.xxxdx.
+.xx...xx.
+.x0xxxx..
+.xx00.1.
+.x0xxx.
+.xx00..
+.x0xxx.
+.xx00..
+.x0xxx.
+.xx00..
+.x0xxx.
+.xx....
+....
+ENDMAP
+
+NAME:   minmay_manual_macuahuitl
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+MAP
+       ................
+      ..cc.cc.cc.cc.c..
+...  ..xxxxxxxxxxxxxcc.
+.x...0xx.x.0x.0x.0xxx..
+.xxxxx00x.0x.0x.0x.dxc.
+.x...0xx.0x.0x.0x.0xx..
+...  ..xxxxxxxxxxxxxcc.
+      ..cc.cc.cc.cc.c..
+       ................
+ENDMAP
+
+NAME:   minmay_manual_mail
+TAGS:   transparent
+WEIGHT: 7
+DEPTH:  D:4-8
+# crawl can mirror the vault, so no need to randomize these
+ITEM:   any manual, ring mail
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+MAP
+ .........
+..vvv0vvv..
+.v...v...v..
+.v.0vvv0vvv..
+.v.v0v0v0v0v..
+..vvvdvvvevvv..
+ ..v0v0v0v0v.v.
+  ..vvv0vvv0.v.
+   ..v...v...v.
+    ..vvv0vvv..
+     .........
+ENDMAP
+
+NAME:   minmay_manual_mandibuliform
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:4-8
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+ITEM:   any manual
+MAP
+...
+.x..
+.xx..
+0cxx..
+0c.xx..
+00.cxx..
+0c0c.xx..
+0c0..cxx..
+.xxc000xx..
+..xxxc0cxx..
+ ...xxx00xx.
+   ...xxxdx.
+     ...xxx.
+       .....
+ENDMAP
+
+# this layout tries to be as merciful to autoexplore as centaurs can be
+NAME:   minmay_manual_mares
+TAGS:   transparent
+WEIGHT: 7
+DEPTH:  D:4-8
+ITEM:   any manual
+MONS:   centaur
+SUBST:  x : xxxxccvb
+MAP
+ .......
+..xx.xx..
+.xx...xx.
+.x..xx.x.
+...1d1...
+.x.xx..x.
+.xx...xx.
+..xx.xx..
+ .......
+ENDMAP
+
+NAME:   minmay_manual_mess
+TAGS:   transparent
+WEIGHT: 7
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = d / 2=0 / ...0
+SUBST:  0 = 0009
+SUBST:  x : xxxxccvb
+MAP
+..........
+.x.xx00xx..
+..x0xxx00x..
+ ..x00xxx0xx.
+  ..xx00xx0x.
+   .x0x000x..
+   ..xx.xx..
+    .......
+ENDMAP
+
+NAME:   minmay_manual_monolith
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+MAP
+..0.0.0.0.0.0.
+0ccccccdccccc.
+.cccccccccccc0
+.0.0.0.0.0.0..
+ENDMAP
+
+NAME:   minmay_manual_monstrance
+TAGS:   transparent
+WEIGHT: 7
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+SUBST:  x : xxxxccvb
+MAP
+    ...
+    .x.
+ ...0x0...
+ .x.x0x.x.
+...xx0xx...
+.xxx0d0xxx.
+...xx0xx...
+ .x.x0x.x.
+ ...x0x...
+   .x0x.
+  ..x0x..
+ ..xx0xx..
+ .xxx0xxx.
+ ....0....
+ENDMAP
+
+NAME:   minmay_manual_moon
+TAGS:   transparent
+WEIGHT: 7
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+SUBST:  b : xcvbG.....
+SUBST:  x : xxxxccvb
+MAP
+    ......
+  ...xxxx..
+ ..xxxxxxx..
+.0xx...xxxx.
+.x...00dxxx.
+....00.0.xx.
+ ..00b00.xx.
+  ...00..x..
+   ..0..xx.
+    ....x..
+     ..x0.
+      ...
+ENDMAP
+
+# The asymmetry is intentional
+NAME:   minmay_manual_mullet
+TAGS:   transparent no_monster_gen
+WEIGHT: 3
+DEPTH:  D:4-8
+ITEM:   any manual
+NSUBST: 0 = 2=0 / ...0
+SUBST:  0 = 0009
+SUBST:  x : xxxxcccv
+MAP
+              WWWW   WWWW
+             WWxxW  WWxxW
+       WWWWWWWxxWWWWWxxWW   WWWW
+   WWWWWxxxxxxxxxxxxxxWWWWWWWxxW
+ WWWxxxxx.W.x0W..xW..xxxxxxWxxWW
+WWxxx00..x.x.x.x..x0x0x.x.xxxWW
+Wxxd000b..x.W.x.W..x0..W.W..+W
+WWxxxx00...x.x.x.x.0x0x.x.xxxWW
+ WWWWxxxxxx.x0W.x.Wx.xxxxxxWxxWW
+    WWWWWWxxxxxxxxxxxxWWWWWWWxxW
+         WWxxWWWWWWWWxxWW   WWWW
+          WWxxW     WWxxW
+           WWWW      WWWW
+ENDMAP
+
+###################################################################
+#
+# <<10>> The classics.
+#        These are ancient minivaults, or expansions of them.
 #
 ###################################################################
 
