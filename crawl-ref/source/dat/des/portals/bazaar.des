@@ -1850,19 +1850,23 @@ TAGS:   no_pool_fixup
 ORIENT: encompass
 WEIGHT: 1
 KMONS:  1 = ophan
-SUBST:  m =.WWW
-SUBST:  d = wwW
-SUBST:  s = xxw
+SUBST:  m = .WWW, d = wwW, s = xxw
 KFEAT:  A = any shop
 KFEAT:  _- = .
 KFEAT:  s = w
 KFEAT:  m = W
+KFEAT:  g = n
 KFEAT:  x = open_sea
-FTILE:  _A>1+ = floor_pebble, - = floor_rough, .< = floor_sand
-TILE:   X = wall_brick_lightgray, n = dngn_transparent_stone
-COLOUR: . = brown, -_n+> = white, o = yellow, X = lightgrey
+FTILE:  _A>1+ = floor_pebble
+FTILE:  - = floor_rough
+FTILE:  .< = floor_sand
+TILE:   c = wall_brick_lightgray
+TILE:   gn = dngn_transparent_stone
+COLOUR: . = brown
+COLOUR: -_n+> = white
+COLOUR: g = yellow
 : set_border_fill_type("open_sea")
-: bazaar_setup(_G, false)
+: bazaar_setup(_G, false, false)
 MAP
               ssssssssssss
            sssswwwwwwwwwwsss
@@ -1874,21 +1878,21 @@ MAP
    ssswwwddWWWWWm.-...mWWWWWWWdwwwss
   sswwwwwdWWWWm...--.....WWmWWddwwws
   swwwwwddWWW...------.....WWWWdwwwss
-  swwwdddWW...--XnXnX---....mWWddwwws
-  swwddWWWm.--XXX___XXX--...WWWWdwwwsss
-  swwdWWWW.--Xn_______nX--...WWWddwwwwss
- sswwdW.m..-Xn_________nX-..mmWWWdwwwwws
-sswwwdWW..--X__A_____A__X--...WWWdddwwwss
-swwwwdWW..-XX___________Xn-....WWWWddwwws
-swwwddW..--n_____ooo_____X--..m.WWWWdwwss
-swwddW.m.--X_>___o1o_____+___.....WWddwws
-swwwdWWW.--n_____ooo_____X-.___<.WWWddwws
-sswwddWW..-XX___________Xn-.....mWWddwwss
-swwwddW...--X__A_____A__X--...m.WWWWdwwws
-swwddWW...--Xn_________nX-...mW.mWWWdwwss
-swwwddWm...--Xn_______nX---.m.WWWWWddwws
-swwwddWW....--XXX___XXX---..WWWWWWddwwss
-sswwwdWWWW....--XnXnX---.....WWWWWWddwws
+  swwwdddWW...--cncnc---....mWWddwwws
+  swwddWWWm.--ccc___ccc--...WWWWdwwwsss
+  swwdWWWW.--cn_______nc--...WWWddwwwwss
+ sswwdW.m..-cn_________nc-..mmWWWdwwwwws
+sswwwdWW..--c__A_____A__c--...WWWdddwwwss
+swwwwdWW..-cc___________cn-....WWWWddwwws
+swwwddW..--n_____ggg_____c--..m.WWWWdwwss
+swwddW.m.--c_>___g1g_____+___.....WWddwws
+swwwdWWW.--n_____ggg_____c-.___<.WWWddwws
+sswwddWW..-cc___________cn-.....mWWddwwss
+swwwddW...--c__A_____A__c--...m.WWWWdwwws
+swwddWW...--cn_________nc-...mW.mWWWdwwss
+swwwddWm...--cn_______nc---.m.WWWWWddwws
+swwwddWW....--ccc___ccc---..WWWWWWddwwss
+sswwwdWWWW....--cncnc---.....WWWWWWddwws
  swwwdWWW.m...--------..W.....WWWWWdwwws
  sswwddWWWWm...--......WWm.W..mWWWWddwws
   swwwdWWWW.......WW...WWWWWW.WWWWWdwwss
