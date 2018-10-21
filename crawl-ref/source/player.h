@@ -791,6 +791,7 @@ public:
     {
         return actor::incapacitated() || duration[DUR_CLUMSY];
     }
+    bool immune_to_hex(const spell_type hex) const;
 
     bool asleep() const override;
     void put_to_sleep(actor *, int power = 0, bool hibernate = false) override;
