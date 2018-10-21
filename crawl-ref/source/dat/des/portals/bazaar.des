@@ -1845,6 +1845,67 @@ x.......x     x.......x
 xxxxxxxxx     xxxxxxxxx
 ENDMAP
 
+NAME:   bazaar_kenran_lighthouse
+TAGS:   no_pool_fixup
+ORIENT: encompass
+WEIGHT: 1
+KMONS:  1 = ophan
+SUBST:  m = .WWW, d = wwW, s = xxw
+KFEAT:  A = any shop
+KFEAT:  _- = .
+KFEAT:  s = w
+KFEAT:  m = W
+KFEAT:  g = n
+KFEAT:  x = open_sea
+FTILE:  _A>1+ = floor_pebble
+FTILE:  - = floor_rough
+FTILE:  .< = floor_sand
+TILE:   c = wall_brick_lightgray
+TILE:   gn = dngn_transparent_stone
+COLOUR: . = brown
+COLOUR: -_n+> = white
+COLOUR: g = yellow
+: set_border_fill_type("open_sea")
+: bazaar_setup(_G, false, false)
+MAP
+              ssssssssssss
+           sssswwwwwwwwwwsss
+         ssswwwwwwwwwwwwwwwssss
+       ssswwwwwwwddddddwwwwwwwssss
+      sswwwwwwdddddWWWdddwwwwwwwws
+      swwwwwdddWWWWWWWWWddddwwwwwss
+     sswwwdddWWWWW.m..WWWWWddddwwws
+   ssswwwddWWWWWm.-...mWWWWWWWdwwwss
+  sswwwwwdWWWWm...--.....WWmWWddwwws
+  swwwwwddWWW...------.....WWWWdwwwss
+  swwwdddWW...--cncnc---....mWWddwwws
+  swwddWWWm.--ccc___ccc--...WWWWdwwwsss
+  swwdWWWW.--cn_______nc--...WWWddwwwwss
+ sswwdW.m..-cn_________nc-..mmWWWdwwwwws
+sswwwdWW..--c__A_____A__c--...WWWdddwwwss
+swwwwdWW..-cc___________cn-....WWWWddwwws
+swwwddW..--n_____ggg_____c--..m.WWWWdwwss
+swwddW.m.--c_>___g1g_____+___.....WWddwws
+swwwdWWW.--n_____ggg_____c-.___<.WWWddwws
+sswwddWW..-cc___________cn-.....mWWddwwss
+swwwddW...--c__A_____A__c--...m.WWWWdwwws
+swwddWW...--cn_________nc-...mW.mWWWdwwss
+swwwddWm...--cn_______nc---.m.WWWWWddwws
+swwwddWW....--ccc___ccc---..WWWWWWddwwss
+sswwwdWWWW....--cncnc---.....WWWWWWddwws
+ swwwdWWW.m...--------..W.....WWWWWdwwws
+ sswwddWWWWm...--......WWm.W..mWWWWddwws
+  swwwdWWWW.......WW...WWWWWW.WWWWWdwwss
+  swwwddWWWWWmm..WWW..WWWWWWWWWWWWddwwws
+  sswwwddddWWWWWWWWWWWWWWWWWWdWWWWdwwwss
+   swwwwwwddWWWWWdddWWWWddddddddWddwwws
+   sswwwwwwdddWWdddddddddwwwwwwdddwwwss
+    sssswwwwwddddwwwwwwwwwwwwwwwwwwwws
+       sswwwwwwwwwwwwwwwwwssswswwwwwss
+        ssswwwwwwwwssssssss sssssssss
+          ssssssssss
+ENDMAP
+
 ##########################################################################
 # Generated maps
 ##########################################################################
