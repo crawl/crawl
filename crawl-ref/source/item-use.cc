@@ -722,7 +722,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 	
-    if (you.species == SP_HEDGEHOG && slot != EQ_BOOTS)
+    if (you.species == SP_HEDGEHOG && slot != EQ_BOOTS && slot != EQ_GLOVES)
     {
         if (verbose)
             mpr("You can't wear that!");
