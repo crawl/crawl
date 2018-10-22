@@ -3150,9 +3150,13 @@ static bool _get_spell_description(const spell_type spell,
             if (you.wizard)
                 wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
 #endif
-            description += make_stringf("Chance to beat your MR: %d%%%s\n",
-                                        hex_chance(spell, hd),
-                                        wiz_info.c_str());
+            description += you.immune_to_hex(spell)
+                ? make_stringf("You cannot be affected by this "
+                               "spell right now. %s\n",
+                               wiz_info.c_str())
+                : make_stringf("Chance to beat your MR: %d%%%s\n",
+                               hex_chance(spell, hd),
+                               wiz_info.c_str());
         }
 
     }
