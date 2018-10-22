@@ -1721,6 +1721,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_ANGEL,           SK_INVOCATIONS,     3),
     APT(SP_ANGEL,           SK_EVOCATIONS,     -1),
 	
+	// SP_SERVITOR
+    APT(SP_SERVITOR,           SK_FIGHTING,        0),
+    APT(SP_SERVITOR,           SK_SHORT_BLADES,    0),
+    APT(SP_SERVITOR,           SK_LONG_BLADES,     0),
+    APT(SP_SERVITOR,           SK_AXES,           -2),
+    APT(SP_SERVITOR,           SK_MACES_FLAILS,    0),
+    APT(SP_SERVITOR,           SK_POLEARMS,        0),
+    APT(SP_SERVITOR,           SK_STAVES,          0),
+    APT(SP_SERVITOR,           SK_SLINGS,         -1),
+    APT(SP_SERVITOR,           SK_BOWS,           -1),
+    APT(SP_SERVITOR,           SK_CROSSBOWS,      -1),
+    APT(SP_SERVITOR,           SK_THROWING,       -1),
+    APT(SP_SERVITOR,           SK_ARMOUR,         -1),
+    APT(SP_SERVITOR,           SK_DODGING,         2),
+    APT(SP_SERVITOR,           SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_SERVITOR,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_SERVITOR,           SK_SHIELDS,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_SERVITOR,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_SERVITOR,           SK_UNARMED_COMBAT,  0),
+    APT(SP_SERVITOR,           SK_SPELLCASTING,    0),
+    APT(SP_SERVITOR,           SK_CONJURATIONS,    0),
+    APT(SP_SERVITOR,           SK_HEXES,           0),
+    APT(SP_SERVITOR,           SK_CHARMS,          0),
+    APT(SP_SERVITOR,           SK_SUMMONINGS,      0),
+    APT(SP_SERVITOR,           SK_NECROMANCY,     -4),
+    APT(SP_SERVITOR,           SK_TRANSLOCATIONS,  0),
+    APT(SP_SERVITOR,           SK_TRANSMUTATIONS,  0),
+    APT(SP_SERVITOR,           SK_FIRE_MAGIC,      0),
+    APT(SP_SERVITOR,           SK_ICE_MAGIC,      -1),
+    APT(SP_SERVITOR,           SK_AIR_MAGIC,       0),
+    APT(SP_SERVITOR,           SK_EARTH_MAGIC,    -1),
+    APT(SP_SERVITOR,           SK_POISON_MAGIC,   -2),
+    APT(SP_SERVITOR,           SK_INVOCATIONS,     3),
+    APT(SP_SERVITOR,           SK_EVOCATIONS,     -1),
+	
     // SP_MERFOLK
     APT(SP_MERFOLK,         SK_FIGHTING,        1),
     APT(SP_MERFOLK,         SK_SHORT_BLADES,    2),

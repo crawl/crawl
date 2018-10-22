@@ -39,6 +39,26 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS },
 } },
 
+//not accessible except by going Yred on an angel
+{ SP_SERVITOR, {
+    "PS",
+    "Profane Servitor", "Profane", nullptr,
+    SPF_NO_HAIR,
+    0, -1, 0, 4,
+    MONS_ANGEL,
+    HT_LAND, US_UNDEAD, SIZE_MEDIUM,
+    8, 8, 14, // 30
+    { STAT_DEX }, 4,
+    {{ MUT_POISON_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 7 },
+     { MUT_ACUTE_VISION, 1, 1 }, },
+    {"You can fly at any time."},
+    {"flight"},
+    { JOB_GLADIATOR, JOB_CONJURER, JOB_SUMMONER,
+      JOB_FIRE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS },
+} },
+
 { SP_BARACHI, {
     "Ba",
     "Barachi", "Barachian", "Frog",

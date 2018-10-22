@@ -294,19 +294,6 @@ from within the MSYS2 Shell.
 
   pacman -S mingw-w64-x86_64-toolchain
 
-<<<<<<< HEAD
-  At this point you may need to add the newly installed toolchain to your path.
-  You can do this with the following line, either at the command line (for that
-  shell instance only) or in the file `~/.bashrc` to make it permanent:
-
-  export PATH=$PATH:/mingw64/bin
-
-  To test that this worked, run:
-
-  gcc -v
-
-  After the packages are installed and gcc runs, you're ready to build crawl!
-=======
 * At this point on current MSYS2 versions, your development environment should
   be complete. You can test it by running:
   
@@ -316,7 +303,6 @@ from within the MSYS2 Shell.
   of MSYS2 and need to manually add the newly installed toolchain to your
   path. To do so, run the following line, either at the command line (for
   that shell instance only) or in the file `~/.bashrc` to make it permanent:
->>>>>>> 77505739eec8c106f216a006422d484a1898bacc
 
   export PATH=$PATH:/mingw64/bin
 

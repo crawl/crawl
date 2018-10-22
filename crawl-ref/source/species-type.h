@@ -74,6 +74,7 @@ enum species_type
     SP_HEDGEHOG,
     SP_BODACH,
     SP_FELID_MUMMY,
+	SP_SERVITOR,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
