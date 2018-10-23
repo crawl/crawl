@@ -527,14 +527,10 @@ SUBST:   A=|*, B=|*
 SUBST:   - = T
 SUBST:   _ = 5 ~:40 .:30
 SUBST:   T = ~ .
-TILE:    F = dngn_sarcophagus_pedestal_left
-COLOUR:  F = yellow
-SUBST:   F = G
 #
 : tomb_1_centre_setup(_G)
 SUBST:   t = ~ .:50
 #
-: set_feature_name("granite_statue", "sarcophagus")
 MAP
 ..ttttttttttc................ctt>
 ..ccccccccctc..3..........2..ct-t
