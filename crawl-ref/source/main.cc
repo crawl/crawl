@@ -572,11 +572,10 @@ static void _wanderer_note_equipment()
                                  return item.name(DESC_A, false, true);
                              }, ", ", ", ", mem_fn(&item_def::defined));
 
-    // XXX: Currently wanderers don't start with any of their spells memorised,
-    // so this never triggers.
+    // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spells memorised: "
+        "; and the following spell memorised: "
         + comma_separated_fn(begin(you.spells), end(you.spells),
                              [] (const spell_type spell) -> string
                              {
