@@ -525,7 +525,7 @@ TAGS:    tomb_1_centre unrand
 SHUFFLE: AB>, _-
 SUBST:   A=|*, B=|*
 SUBST:   - = T
-SUBST:   _ = F 5 ~:30 .:30
+SUBST:   _ = 5 ~:40 .:30
 SUBST:   T = ~ .
 TILE:    F = dngn_sarcophagus_pedestal_left
 COLOUR:  F = yellow
