@@ -822,6 +822,17 @@ static int _you_have_rune(lua_State *ls)
     return 1;
 }
 
+/*** Are you intrinsically immune to this particular hex spell?
+ * @treturn boolean
+ * @function you_immune_to_hex
+ */
+static int you_immune_to_hex(lua_State *ls)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    lua_pushboolean(ls, you.immune_to_hex(spell));
+    return 1;
+}
+
 /*** How many runes do you have?
  * @treturn int
  * @function num_runes
@@ -1195,6 +1206,7 @@ static const struct luaL_reg you_clib[] =
     { "antimagic",    you_antimagic },
 #endif
     { "status",       you_status },
+    { "immune_to_hex", you_immune_to_hex },
 
     { "can_consume_corpses",      you_can_consume_corpses },
 
