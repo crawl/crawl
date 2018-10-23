@@ -1677,22 +1677,19 @@ static void _druid_final_boon(const monster* mons)
     }
 }
 
-static bool _mons_reaped(actor *killer, monster* victim)
+static bool _mons_reaped(actor &killer, monster& victim)
 {
-    ASSERT(killer); // XXX: change to actor &killer
-    ASSERT(victim); // XXX: change to monster &victim
-
     beh_type beh;
     unsigned short hitting;
 
-    if (killer->is_player())
+    if (killer.is_player())
     {
         hitting = MHITYOU;
         beh     = BEH_FRIENDLY;
     }
     else
     {
-        monster* mon = killer->as_monster();
+        monster* mon = killer.as_monster();
 
         beh = SAME_ATTITUDE(mon);
 
@@ -1702,14 +1699,14 @@ static bool _mons_reaped(actor *killer, monster* victim)
     }
 
     monster *zombie = 0;
-    if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, killer, "",
+    if (animate_remains(victim.pos(), CORPSE_BODY, beh, hitting, &killer, "",
                         GOD_NO_GOD, true, true, true, &zombie) <= 0)
     {
         return false;
     }
 
-    if (you.can_see(*victim))
-        mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());
+    if (you.can_see(victim))
+        mprf("%s turns into a zombie!", victim.name(DESC_THE).c_str());
     else if (you.can_see(*zombie))
         mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 
@@ -1718,19 +1715,19 @@ static bool _mons_reaped(actor *killer, monster* victim)
     return true;
 }
 
-static bool _reaping(monster *mons)
+static bool _reaping(monster &mons)
 {
-    if (!mons->props.exists("reaping_damage"))
+    if (!mons.props.exists("reaping_damage"))
         return false;
 
-    int rd = mons->props["reaping_damage"].get_int();
-    dprf("Reaping chance: %d/%d", rd, mons->damage_total);
-    if (!x_chance_in_y(rd, mons->damage_total))
+    int rd = mons.props["reaping_damage"].get_int();
+    dprf("Reaping chance: %d/%d", rd, mons.damage_total);
+    if (!x_chance_in_y(rd, mons.damage_total))
         return false;
 
-    actor *killer = actor_by_mid(mons->props["reaper"].get_int());
+    actor *killer = actor_by_mid(mons.props["reaper"].get_int());
     if (killer)
-        return _mons_reaped(killer, mons);
+        return _mons_reaped(*killer, mons);
     return false;
 }
 
@@ -2754,7 +2751,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (fake)
     {
-        if (corpse && _reaping(&mons))
+        if (corpse && _reaping(mons))
             corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
                          pet_kill, was_visible, mons.xp_tracking);
@@ -2824,7 +2821,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         autotoggle_autopickup(false);
     }
 
-    if (corpse && _reaping(&mons))
+    if (corpse && _reaping(mons))
         corpse = nullptr;
 
     crawl_state.dec_mon_acting(&mons);
