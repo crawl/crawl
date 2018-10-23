@@ -1737,9 +1737,7 @@ bool monster_info::has_spells() const
     const vector<mon_spellbook_type> books = get_spellbooks(*this);
 
     if (books.size() == 0 || books[0] == MST_NO_SPELLS)
-    {
         return false;
-    }
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
     if (books[0] == MST_GHOST || type == MONS_PANDEMONIUM_LORD)

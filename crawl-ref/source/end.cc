@@ -100,9 +100,7 @@ bool fatal_error_notification(string error_msg)
     mprf(MSGCH_ERROR, "%s", error_msg.c_str());
 
     if (!ui::is_available() || msgwin_errors_to_stderr())
-    {
         return false;
-    }
 
     // do the linebreak here so webtiles has it, but it's needed below as well
     linebreak_string(error_msg, 79);
