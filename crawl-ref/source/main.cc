@@ -560,16 +560,53 @@ static void _show_commandline_options_help()
 #endif
 }
 
-static void _wanderer_note_items()
+// Announce to the message log and make a note of the player's starting items,
+// spells and spell library
+static void _wanderer_note_equipment()
 {
     const string equip_str =
-        you.your_name + " set off with: "
+        "the following items: "
         + comma_separated_fn(begin(you.inv), end(you.inv),
                              [] (const item_def &item) -> string
                              {
                                  return item.name(DESC_A, false, true);
                              }, ", ", ", ", mem_fn(&item_def::defined));
-    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str));
+
+    // XXX: Currently wanderers don't start with any of their spells memorised,
+    // so this never triggers.
+    const string spell_str =
+        !you.spell_no ? "" :
+        "; and the following spells memorised: "
+        + comma_separated_fn(begin(you.spells), end(you.spells),
+                             [] (const spell_type spell) -> string
+                             {
+                                 return spell_title(spell);
+                             },
+                             ", ", ", ",
+                             // Don't include empty spell slots
+                             [] (const spell_type spell) -> bool
+                             {
+                                 return spell != SPELL_NO_SPELL;
+                             });
+
+    auto const library = get_sorted_spell_list(true, true);
+    const string library_str =
+        !library.size() ? "" :
+        "; and the following spells available to memorise: "
+        + comma_separated_fn(library.begin(), library.end(),
+                             [] (const spell_type spell) -> string
+                             {
+                                 return spell_title(spell);
+                             }, ", ", ", ");
+
+    // Announce the starting equipment and spells, because it is otherwise
+    // not obvious if the player has any spells.
+    mprf("You begin with %s%s%s.", equip_str.c_str(),
+         spell_str.c_str(), library_str.c_str());
+
+    const string combined_str = you.your_name + " set off with "
+                                + equip_str + spell_str + library_str;
+    take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
 }
 
 /**
@@ -644,7 +681,7 @@ static void _take_starting_note()
 #endif
 
     if (you.char_class == JOB_WANDERER)
-        _wanderer_note_items();
+        _wanderer_note_equipment();
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
             << " MP: " << you.magic_points << "/" << you.max_magic_points;
