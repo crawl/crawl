@@ -5092,6 +5092,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
 static void tag_construct_level_items(writer &th)
 {
+    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     // how many traps?
     marshallShort(th, env.trap.size());
     for (const auto& entry : env.trap)
@@ -5591,6 +5592,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
 static void tag_construct_level_monsters(writer &th)
 {
+    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     int nm = 0;
     for (int i = 0; i < MAX_MONS_ALLOC; ++i)
         if (env.mons_alloc[i] != MONS_NO_MONSTER)

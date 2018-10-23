@@ -28,7 +28,8 @@
 #include "unwind.h"
 
 game_state::game_state()
-    : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
+    : game_crashed(false), crash_debug_scans_safe(true),
+      mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
       need_save(false), game_started(false), saving_game(false),
       updating_scores(false),

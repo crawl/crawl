@@ -37,6 +37,8 @@ struct game_state
 
     bool game_crashed;      // The game crashed and is now in the process of
                             // dumping crash info.
+    bool crash_debug_scans_safe; // should the crash handler run various debug
+                                 // scans?
 
     bool mouse_enabled;     // True if mouse input is currently relevant.
 
