@@ -747,3 +747,24 @@ void create_wanderer()
 
     _wanderer_cover_equip_holes();
 }
+
+void memorise_wanderer_spell()
+{
+    // If the player got only one level 1 spell, memorise it. Otherwise, let the
+    // player choose which spell(s) to memorise and don't memorise any.
+    auto const available_spells = get_sorted_spell_list(true, true);
+    if (available_spells.size())
+    {
+        int num_level_one_spells = 0;
+        spell_type which_spell;
+        for (spell_type spell : available_spells)
+            if (spell_difficulty(spell) == 1)
+            {
+                num_level_one_spells += 1;
+                which_spell = spell;
+            }
+
+        if (num_level_one_spells == 1)
+            add_spell_to_memory(which_spell);
+    }
+}
