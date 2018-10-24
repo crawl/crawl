@@ -755,7 +755,7 @@ void memorise_wanderer_spell()
     auto const available_spells = get_sorted_spell_list(true, true);
     if (available_spells.size())
     {
-        int num_level_one_spells;
+        int num_level_one_spells = 0;
         spell_type which_spell;
         for (spell_type spell : available_spells)
             if (spell_difficulty(spell) == 1)
