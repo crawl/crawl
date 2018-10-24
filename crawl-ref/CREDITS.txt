@@ -69,12 +69,14 @@
 
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
+    Brent Adams
     Mike Adams
     Aj Adamson
     Nikhil Addleman
     Alcon
     Brandon Allbery
     Warwick Allison
+    AndSDev
     Austin Appleby
     araganzar
     argonaut
@@ -86,6 +88,7 @@
     Max Bane
     Bill Beher
     Alexander Beisig
+    biasface
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -94,12 +97,14 @@
     Erik Inge Bolsø
     bones
     Peter Borgmann
+    Matthew Boeh
     Mike Boutin
     Daniel Mark Brownrigg
     Andre Bubel
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
+    Ian Caltabiano
     Edgar Carballo
     Cedor
     Cerol
@@ -116,6 +121,7 @@
     Lothar Dierkes
     Mark 'Palyth' Donahue
     Kevin Donnelly
+    Dosenty
     drachereborn
     Mike Drinen
     DrKe
@@ -127,6 +133,7 @@
     Carl-Oscar Erneholm
     Christopher Evenstar
     Floodkiller
+    floraline
     Brett Foster
     Kyle Fox
     freepotion
@@ -142,6 +149,7 @@
     Brian Haase
     Sophie Hamilton
     Chris Hamons
+    Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
     Alex Henry
@@ -150,6 +158,7 @@
     Sylvia 'Onia' Hörnke
     Benoit Hudson
     Iainuki
+    ICC
     Icy Lich
     Ilyak
     Implojin
@@ -158,6 +167,7 @@
     Jeekaroose
     Mikko Juola
     Kurt Kartaltepe
+    Dominic Kempf
     Dominic 'dk' Kexel
     Jarmo Kielosto
     Brandon Kime
@@ -188,13 +198,17 @@
     MainiacJoe
     Arien Malec
     Paul Maloney
+    Manderson
     Pablo Mansanet
     Wille Mäntylä
     James 'Eronarn' Meickle
+    Jacob Meigs
+    Johannes Maier
     mikee
     Andrew Minton
     Yer Mivvaggah
     Shawn M Moore
+    Muffindrake
     Akinori Musha
     Mushboom
     Eva Myers
@@ -203,6 +217,7 @@
     neofelis
     nicolae
     Nikolai Lavsky
+    Jonathon Nooner
     NormalPerson7
     Erkki Nurmi
     Mattias Nyberg
@@ -214,11 +229,16 @@
     Yuuma Oohara
     Julian Ospald
     Malwyn P
+    panicbit
     William Parker
     Pedro
+    Pekkekke
     Arlen Phillips
+    pikaro
     Lemuel Pitkin
+    Poroing
     Iago Porto
+    psywombats
     pubby
     Edward Randtke
     Derek Ray
@@ -227,6 +247,7 @@
     Remsleep
     Ryan Riegel
     RjY
+    Andy Roche
     rockygargoyle
     Will Rogers
     Nate Rook
@@ -244,7 +265,6 @@
     Robert Shimmin
     Sigurd
     Edgar Simo
-    Skrybe
     Alex Smith
     Keanan Smith
     Richard Soderberg
