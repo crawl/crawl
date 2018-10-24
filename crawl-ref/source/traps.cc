@@ -586,6 +586,8 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_ALARM:
         if (in_sight)
         {
+            // Don't let wandering monsters set off meaningless alarms.
+            trap_destroyed = true;
             if (you_trigger)
                 mprf("You set off the alarm!");
             else
