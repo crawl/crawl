@@ -413,54 +413,54 @@ map<string, GameOption*> game_options::build_options_map(
 
 object_class_type item_class_by_sym(char32_t c)
 {
-	switch (c)
-	{
-	case ')':
-		return OBJ_WEAPONS;
-	case '(':
-	case U'\x27b9':
-		return OBJ_MISSILES;
-	case '[':
-		return OBJ_ARMOUR;
-	case '/':
-		return OBJ_WANDS;
-	case '%':
-		return OBJ_FOOD;
-	case '?':
-		return OBJ_SCROLLS;
-	case '"': // Make the amulet symbol equiv to ring -- bwross
-	case '=':
-	case U'\xb0':
-		return OBJ_JEWELLERY;
-	case '!':
-		return OBJ_POTIONS;
-	case ':':
-	case '+': // ??? -- was the only symbol working for tile order up to 0.10,
-			  // so keeping it for compat purposes (user configs).
-	case U'\x221e':
-		return OBJ_BOOKS;
-	case '|':
-		return OBJ_STAVES;
-	case '0':
-		return OBJ_ORBS;
-	case '}':
-		return OBJ_MISCELLANY;
-	case '&':
-	case 'X':
-	case 'x':
-		return OBJ_CORPSES;
-	case '$':
-	case U'\x20ac':
-	case U'\xa3':
-	case U'\xa5': // FR: support more currencies
-		return OBJ_GOLD;
+    switch (c)
+    {
+    case ')':
+        return OBJ_WEAPONS;
+    case '(':
+    case U'\x27b9': //➹
+        return OBJ_MISSILES;
+    case '[':
+        return OBJ_ARMOUR;
+    case '/':
+        return OBJ_WANDS;
+    case '%':
+        return OBJ_FOOD;
+    case '?':
+        return OBJ_SCROLLS;
+    case '"': // Make the amulet symbol equiv to ring -- bwross
+    case '=':
+    case U'\xb0': //°
+        return OBJ_JEWELLERY;
+    case '!':
+        return OBJ_POTIONS;
+    case ':':
+    case '+': // ??? -- was the only symbol working for tile order up to 0.10,
+              // so keeping it for compat purposes (user configs).
+    case U'\x221e': //∞
+        return OBJ_BOOKS;
+    case '|':
+        return OBJ_STAVES;
+    case '0':
+        return OBJ_ORBS;
+    case '}':
+        return OBJ_MISCELLANY;
+    case '&':
+    case 'X':
+    case 'x':
+        return OBJ_CORPSES;
+    case '$':
+    case U'\x20ac': //€
+    case U'\xa3': //£
+    case U'\xa5': //¥ // FR: support more currencies
+        return OBJ_GOLD;
 #if TAG_MAJOR_VERSION == 34
-	case '\\': // Compat break: used to be staves (why not '|'?).
-		return OBJ_RODS;
+    case '\\': // Compat break: used to be staves (why not '|'?).
+        return OBJ_RODS;
 #endif
-	default:
-		return NUM_OBJECT_CLASSES;
-	}
+    default:
+        return NUM_OBJECT_CLASSES;
+    }
 }
 
 // Returns MSGCOL_NONE if unmatched else returns 0-15.
