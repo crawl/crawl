@@ -663,7 +663,7 @@ NAME:   lemuel_baited_zot_trap
 TAGS:   allow_dup extra luniq
 DEPTH:  Zot
 WEIGHT: 20
-KFEAT:  * = Zot trap
+KFEAT:  * = zot trap
 KITEM:  * = any good_item
 MAP
 *
