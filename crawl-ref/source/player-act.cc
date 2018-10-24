@@ -743,7 +743,7 @@ bool player::go_berserk(bool intentional, bool potion)
     calc_hp();
     set_hp(you.hp * 3 / 2);
 
-    deflate_hp(you.hp_max, false);
+    deflate_hp(you.hp_max);
 
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true);

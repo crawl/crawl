@@ -791,7 +791,6 @@ public:
     {
         return actor::incapacitated() || duration[DUR_CLUMSY];
     }
-    bool immune_to_hex(const spell_type hex) const;
 
     bool asleep() const override;
     void put_to_sleep(actor *, int power = 0, bool hibernate = false) override;
@@ -1069,10 +1068,10 @@ void rot_mp(int mp_loss);
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
-void deflate_hp(int new_level, bool floor);
+void deflate_hp(int new_level, bool floor = false);
 void set_hp(int new_amount);
 
-int get_real_hp(bool trans, bool rotted = false);
+int get_real_hp(bool trans, bool equips, bool rotted = true);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();

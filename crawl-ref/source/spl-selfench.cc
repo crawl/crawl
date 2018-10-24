@@ -45,7 +45,7 @@ spret_type cast_deaths_door(int pow, bool fail)
     mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
     set_hp(allowed_deaths_door_hp());
-    deflate_hp(you.hp_max, false);
+    deflate_hp(you.hp_max);
 
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                        + (random2(pow) / 10));

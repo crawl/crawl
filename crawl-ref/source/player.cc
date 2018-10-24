@@ -2700,7 +2700,7 @@ static void _gain_and_note_hp_mp()
 
     // Get "real" values for note-taking, i.e. ignore Berserk,
     // transformations or equipped items.
-    const int note_maxhp = get_real_hp(false, false);
+    const int note_maxhp = get_real_hp(false, false, true);
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
@@ -3635,8 +3635,9 @@ int player::scan_artefacts(artefact_prop_type which_property,
 void calc_hp()
 {
     int oldhp = you.hp, oldmax = you.hp_max;
-    you.hp_max = get_real_hp(true, false);
-    deflate_hp(you.hp_max, false);
+    you.hp_max = get_real_hp(true, true, true);
+    deflate_hp(you.hp_max);
+
     if (oldhp != you.hp || oldmax != you.hp_max)
         dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
     you.redraw_hit_points = true;
@@ -3817,7 +3818,7 @@ void rot_hp(int hp_loss)
     const int initial_rot = you.hp_max_adj_temp;
     you.hp_max_adj_temp -= hp_loss;
     // don't allow more rot than you have normal mhp
-    you.hp_max_adj_temp = max(-(get_real_hp(false, true) - 1),
+    you.hp_max_adj_temp = max(-(get_real_hp(false, false, false) - 1),
                               you.hp_max_adj_temp);
     if (initial_rot == you.hp_max_adj_temp)
         return;
@@ -3922,10 +3923,14 @@ void set_mp(int new_amount)
     you.redraw_magic_points = true;
 }
 
-// If trans is true, being berserk and/or transformed is taken into account
-// here. Else, the base hp is calculated. If rotted is true, calculate the
-// real max hp you'd have if the rotting was cured.
-int get_real_hp(bool trans, bool rotted)
+/**
+ * Get the player's max HP
+ * @param trans          Whether to include transformations/berserk.
+ * @param equips		 Whether to include artefact-related HP gain
+ * @param rotted         Whether to include the effects of rotting
+ * @return               The player's calculated max HP.
+ */
+int get_real_hp(bool trans, bool equips, bool rotted)
 {
     int hitp;
 
@@ -3952,17 +3957,17 @@ int get_real_hp(bool trans, bool rotted)
 
     hitp /= 100;
 
-    if (!rotted)
+    if (rotted)
         hitp += you.hp_max_adj_temp;
 
-    if (trans)
+    if (equips)
         hitp += you.scan_artefacts(ARTP_HP);
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
         hitp = hitp * 3 / 2;
 
-    if (trans) // Some transformations give you extra hp.
+    if (trans && you.props.exists(TRANSFORM_POW_KEY)) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
 #if TAG_MAJOR_VERSION == 34

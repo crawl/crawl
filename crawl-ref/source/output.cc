@@ -753,7 +753,7 @@ static void _print_stats_mp(int x, int y)
 
 static void _print_stats_hp(int x, int y)
 {
-    int max_max_hp = get_real_hp(true, true);
+    int max_max_hp = get_real_hp(true, true, false);
 
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOUR;
@@ -765,7 +765,7 @@ static void _print_stats_hp(int x, int y)
     else
     {
         const int hp_percent =
-            (you.hp * 100) / get_real_hp(true, false);
+            (you.hp * 100) / get_real_hp(true, true, true);
 
         for (const auto &entry : Options.hp_colour)
             if (hp_percent <= entry.first)
@@ -2172,7 +2172,7 @@ static vector<formatted_string> _get_overview_stats()
 
     entry.cprintf("%d/%d", you.hp, you.hp_max);
     if (player_rotted())
-        entry.cprintf(" (%d)", get_real_hp(true, true));
+        entry.cprintf(" (%d)", get_real_hp(true, true, false));
 
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();

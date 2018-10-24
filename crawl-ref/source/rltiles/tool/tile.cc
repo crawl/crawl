@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <memory.h>
+#include <algorithm>
 
 #ifdef USE_TILE
  #include <png.h>
@@ -458,7 +459,7 @@ bool tile::load(const string &new_filename)
     // pixels in exactly the format tile_colour expects them in, so we
     // can just cast the tile_colour* to png_bytep and everything
     // works; but it's admittedly a bit dangerous.
-    png_bytep row_pointers[h];
+	png_bytep row_pointers[3000]; //FIXME
     for (png_uint_32 i = 0; i < h; ++i)
         row_pointers[i] = ((png_bytep) m_pixels) + i * rowbytes;
 

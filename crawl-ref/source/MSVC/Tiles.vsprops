@@ -11,7 +11,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="SDL.lib SDL_image.lib SDLmain.lib libpng.lib zlib.lib freetype.lib opengl32.lib glu32.lib winmm.lib dxguid.lib"
+		AdditionalDependencies="SDL2.lib SDL2_image.lib SDLmain.lib libpng.lib zlib.lib freetype.lib opengl32.lib glu32.lib winmm.lib dxguid.lib"
 		AdditionalLibraryDirectories="&quot;$(SolutionDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
 	/>
 </VisualStudioPropertySheet>
