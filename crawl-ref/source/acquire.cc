@@ -95,7 +95,7 @@ M filtered_vector_select(vector<pair<M, int>> weights, Pred filter)
 {
     for (auto &weight : weights)
     {
-        if (filter && !filter(weight.first))
+        if (!filter(weight.first))
             weight.second = 0;
         else
             weight.second = max(weight.second, 0); // cleanup

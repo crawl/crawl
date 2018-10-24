@@ -72,11 +72,11 @@ spret_type cast_disjunction(int pow, bool fail)
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
     contaminate_player(750 + random2(500), true);
-    disjunction();
+    disjunction_spell();
     return SPRET_SUCCESS;
 }
 
-void disjunction()
+void disjunction_spell()
 {
     int steps = you.time_taken;
     invalidate_agrid(true);

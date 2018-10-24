@@ -2,8 +2,9 @@
  * @file
  * @brief Wizard mode command handling.
 **/
-#ifdef WIZARD
 #include "AppHdr.h"
+
+#ifdef WIZARD
 
 #include "wizard.h"
 

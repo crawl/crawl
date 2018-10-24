@@ -12,8 +12,8 @@
     #pragma comment (lib, "sqlite.lib")
         #ifdef USE_TILE_LOCAL
             #pragma comment (lib, "freetype.lib")
-            #pragma comment (lib, "SDL.lib")
-            #pragma comment (lib, "SDL_image.lib")
+            #pragma comment (lib, "SDL2.lib")
+            #pragma comment (lib, "SDL2_image.lib")
             #pragma comment (lib, "libpng.lib")
             #pragma comment (lib, "zlib.lib")
             #pragma comment (lib, "dxguid.lib")
