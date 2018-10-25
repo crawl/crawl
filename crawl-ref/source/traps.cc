@@ -1473,11 +1473,10 @@ void do_trap_effects()
 {
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
-
-    int trap_count = div_rand_round(num_traps_for_place(),5);
+    int trap_rate = trap_rate_for_place();
 
     // Chance to trigger a trap effect
-    if (x_chance_in_y(trap_count, env.density))
+    if (x_chance_in_y(trap_rate, 5 * env.density))
     {
         // Don't shaft the player when we can't, and also when it would be into a
         // dangerous end.
@@ -1508,16 +1507,16 @@ level_id generic_shaft_dest(coord_def pos, bool known = false)
 }
 
 /**
- * Get a number of traps to place on the current level.
+ * Get the trap effect rate for the current level.
  *
- * No traps are placed in either Temple or disconnected branches other than
- * Pandemonium. For other branches, we place 0-2 traps per level, averaged over
- * two dice. This value is increased for deeper levels; roughly one additional
- * trap for every 10 levels of absdepth, capping out at max 9 traps in a level.
+ * No traps effects occur in either Temple or disconnected branches other than
+ * Pandemonium. For other branches, this value starts at 1. It is increased for
+ * deeper levels; by one for every 10 levels of absdepth,
+ * capping out at max 9.
  *
- * @return  A number of traps to be placed.
+ * @return  The trap rate for the current level.
 */
-int num_traps_for_place()
+int trap_rate_for_place()
 {
     if (player_in_branch(BRANCH_TEMPLE)
         || (!player_in_connected_branch()
@@ -1526,8 +1525,7 @@ int num_traps_for_place()
         return 0;
     }
 
-    const int depth_bonus = div_rand_round(env.absdepth0, 5);
-    return random2avg(3 + depth_bonus, 2);
+    return 1 + env.absdepth0 / 10;
 }
 
 /**
