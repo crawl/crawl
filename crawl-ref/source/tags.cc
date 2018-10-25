@@ -5092,7 +5092,6 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
 static void tag_construct_level_items(writer &th)
 {
-    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     // how many traps?
     marshallShort(th, env.trap.size());
     for (const auto& entry : env.trap)
@@ -5592,7 +5591,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
 static void tag_construct_level_monsters(writer &th)
 {
-    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     int nm = 0;
     for (int i = 0; i < MAX_MONS_ALLOC; ++i)
         if (env.mons_alloc[i] != MONS_NO_MONSTER)
@@ -5917,6 +5915,7 @@ static spell_type _fixup_soh_breath(monster_type mtyp)
 
 static void tag_read_level_items(reader &th)
 {
+    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     env.trap.clear();
     // how many traps?
     const int trap_count = unmarshallShort(th);
@@ -6444,6 +6443,7 @@ void unmarshallMonster(reader &th, monster& m)
 
 static void tag_read_level_monsters(reader &th)
 {
+    unwind_bool dont_scan(crawl_state.crash_debug_scans_safe, false);
     int count;
 
     reset_all_monsters();
