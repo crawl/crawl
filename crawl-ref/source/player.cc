@@ -2713,13 +2713,13 @@ static void _gain_and_note_hp_mp()
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
-void recalc_and_scale_hp()
+void recalc_and_scale_hp(bool ignore_transformations)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
     int old_max = you.hp_max;
     int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
+    calc_hp(ignore_transformations);
     int new_max = you.hp_max;
     hp = hp * new_max / old_max;
     if (hp < 100)
@@ -3632,10 +3632,10 @@ int player::scan_artefacts(artefact_prop_type which_property,
     return retval;
 }
 
-void calc_hp()
+void calc_hp(bool ignore_transformations)
 {
     int oldhp = you.hp, oldmax = you.hp_max;
-    you.hp_max = get_real_hp(true, false);
+    you.hp_max = get_real_hp(true, false, ignore_transformations);
     deflate_hp(you.hp_max, false);
     if (oldhp != you.hp || oldmax != you.hp_max)
         dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
@@ -3922,10 +3922,18 @@ void set_mp(int new_amount)
     you.redraw_magic_points = true;
 }
 
-// If trans is true, being berserk and/or transformed is taken into account
-// here. Else, the base hp is calculated. If rotted is true, calculate the
-// real max hp you'd have if the rotting was cured.
-int get_real_hp(bool trans, bool rotted)
+
+/**
+ * Get the player's max HP
+ * @param temp_effects   Whether to include transformations, berserk and
+ *                       other temporary HP-altering effects
+ * @param rotted         Whether to calculate the base or rotted max HP
+ * @param ignore_forms   Whether to ignore transformations --
+ *                       This parameter is necessary to avoid double-scaling
+ *                       when melding HP artefacts {NormalPerson7}
+ * @return               The player's calculated max HP.
+ */
+int get_real_hp(bool temp_effects, bool rotted, bool ignore_forms)
 {
     int hitp;
 
@@ -3955,18 +3963,19 @@ int get_real_hp(bool trans, bool rotted)
     if (!rotted)
         hitp += you.hp_max_adj_temp;
 
-    if (trans)
+    if (temp_effects)
         hitp += you.scan_artefacts(ARTP_HP);
 
     // Being berserk makes you resistant to damage. I don't know why.
-    if (trans && you.berserk())
+    if (temp_effects && you.berserk())
         hitp = hitp * 3 / 2;
 
-    if (trans) // Some transformations give you extra hp.
+    // Some transformations give you extra hp.
+    if (temp_effects && !ignore_forms)
         hitp = hitp * form_hp_mod() / 10;
 
 #if TAG_MAJOR_VERSION == 34
-    if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
+    if (temp_effects && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
         hitp = hitp * 4 / 5;
 #endif
 
