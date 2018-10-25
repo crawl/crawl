@@ -1729,12 +1729,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
 
-    _remove_equipment(rem_stuff);
-
     // Update your status.
     you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, _transform_duration(which_trans, pow));
     update_player_symbol();
+
+    _remove_equipment(rem_stuff);
 
     you.props[TRANSFORM_POW_KEY] = pow;
 
@@ -1959,24 +1959,6 @@ void untransform(bool skip_move)
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
-    if (hp_downscale != 10 && you.hp != you.hp_max)
-    {
-        int hp = you.hp * 10 / hp_downscale;
-        if (hp < 1)
-            hp = 1;
-        else if (hp > you.hp_max)
-            hp = you.hp_max;
-        set_hp(hp);
-    }
-    calc_hp();
-
-    if (you.hp <= 0)
-    {
-        ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
-             make_stringf("losing the %s form",
-                          transform_name(old_form)).c_str());
-    }
-
     _unmeld_equipment(melded);
 
     if (!skip_move)
@@ -2021,6 +2003,24 @@ void untransform(bool skip_move)
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
+    }
+
+    if (hp_downscale != 10 && you.hp != you.hp_max)
+    {
+        int hp = you.hp * 10 / hp_downscale;
+        if (hp < 1)
+            hp = 1;
+        else if (hp > you.hp_max)
+            hp = you.hp_max;
+        set_hp(hp);
+    }
+    calc_hp();
+
+    if (you.hp <= 0)
+    {
+        ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
+             make_stringf("losing the %s form",
+                          transform_name(old_form)).c_str());
     }
 
     // Stop being constricted if we are now too large.
