@@ -1,7 +1,6 @@
-#include "AppHdr.h"
-
 #ifdef USE_TILE_LOCAL
 
+#include "AppHdr.h"
 #include "loading-screen.h"
 #include "files.h"
 #include "options.h"

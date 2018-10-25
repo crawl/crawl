@@ -3,7 +3,6 @@
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
-#include <algorithm>
 #ifdef USE_TILE
  #include <png.h>
 #endif

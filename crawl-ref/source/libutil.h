@@ -170,11 +170,11 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
 }
 
 // Delete when we upgrade to C++14!
-//template<typename T, typename... Args>
-//unique_ptr<T> make_unique(Args&&... args)
-//{
-//    return unique_ptr<T>(new T(forward<Args>(args)...));
-//}
+template<typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... args)
+{
+    return unique_ptr<T>(new T(forward<Args>(args)...));
+}
 
 /** Remove from a container all elements matching a predicate.
  *

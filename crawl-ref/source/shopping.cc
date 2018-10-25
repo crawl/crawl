@@ -2350,10 +2350,10 @@ void ShoppingList::display(bool view_only)
             }
 
             del_thing_at_index(index);
-            mtitle->quantity = ShoppingList::list->size();
+            mtitle->quantity = list->size();
             shopmenu.set_title(mtitle);
 
-            if (ShoppingList::list->empty())
+            if (list->empty())
             {
                 mpr("Your shopping list is now empty.");
                 return false;
