@@ -444,19 +444,30 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
 
     if (actual)
     {
+        god_conduct_trigger conducts[3];
+        disable_attack_conducts(conducts);
+
         if (hurted)
+        {
+            if (YOU_KILL(beam.thrower))
+            {
+                set_attack_conducts(conducts, target, you.can_see(*target));
+                enable_attack_conducts(conducts);
+            }
+
             target->hurt(agent, hurted, beam.flavour);
+        }
 
         if (target->alive())
         {
-            behaviour_event(target, ME_ANNOY, agent, // ME_WHACK?
-                            agent ? agent->pos() : coord_def(0, 0));
+            behaviour_event(target, ME_ANNOY, agent,
+                            agent ? agent->pos() : coord_def());
         }
 
         if (target->alive() && you.can_see(*target) && wounds)
             print_wounds(*target);
 
-        if (agent && agent->is_player()
+        if (YOU_KILL(beam.thrower)
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
         {
                 remove_sanctuary(true);
