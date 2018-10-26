@@ -108,25 +108,27 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player() && defender && defender->is_monster())
     {
         // Unrands with secondary effects that can harm nearby friendlies.
-        if (weapon
-            && (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR)
-                || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
-                || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER)))
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
         {
 
-            targeter *hitfunc;
-            targeter_smite hitfunc_smite(attacker, 1, 1, 1, false);
-            targeter_los hitfunc_los(&you, LOS_NO_TRANS);
-            if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
-            {
-                hitfunc = &hitfunc_smite;
-                hitfunc->set_aim(defender->pos());
-            }
-            else
-                hitfunc = &hitfunc_los;
+            targeter_smite hitfunc(attacker, 1, 1, 1, false);
+            hitfunc.set_aim(defender->pos());
 
-            if (stop_attack_prompt(*hitfunc, "attack", nullptr, nullptr,
+            if (stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
+                                   defender->as_monster()))
+            {
+                cancel_attack = true;
+                return false;
+            }
+        }
+        else if (weapon &&
+                (is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                 || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
+                 || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER)))
+        {
+            targeter_los hitfunc(&you, LOS_NO_TRANS);
+
+            if (stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
                                    defender->as_monster()))
             {
                 cancel_attack = true;
