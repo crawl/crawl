@@ -418,7 +418,7 @@ object_class_type item_class_by_sym(char32_t c)
     case ')':
         return OBJ_WEAPONS;
     case '(':
-    case U'➹':
+    case U'\x27b9': //➹
         return OBJ_MISSILES;
     case '[':
         return OBJ_ARMOUR;
@@ -430,14 +430,14 @@ object_class_type item_class_by_sym(char32_t c)
         return OBJ_SCROLLS;
     case '"': // Make the amulet symbol equiv to ring -- bwross
     case '=':
-    case U'°':
+    case U'\xb0': //°
         return OBJ_JEWELLERY;
     case '!':
         return OBJ_POTIONS;
     case ':':
     case '+': // ??? -- was the only symbol working for tile order up to 0.10,
               // so keeping it for compat purposes (user configs).
-    case U'∞':
+    case U'\x221e': //∞
         return OBJ_BOOKS;
     case '|':
         return OBJ_STAVES;
@@ -450,9 +450,9 @@ object_class_type item_class_by_sym(char32_t c)
     case 'x':
         return OBJ_CORPSES;
     case '$':
-    case U'€':
-    case U'£':
-    case U'¥': // FR: support more currencies
+    case U'\x20ac': //€
+    case U'\xa3': //£
+    case U'\xa5': //¥ // FR: support more currencies
         return OBJ_GOLD;
 #if TAG_MAJOR_VERSION == 34
     case '\\': // Compat break: used to be staves (why not '|'?).

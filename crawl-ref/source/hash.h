@@ -15,5 +15,5 @@ static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
     return x;
 }
 
-uint32_t hash32(const void *data, int len) PURE;
+uint32_t hash32(const void *data, int len);
 unsigned int hash_with_seed(int x, uint32_t seed, uint32_t id = 0);

@@ -108,5 +108,5 @@ FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 template <class TYPE, int SIZE>
 void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
-    fill(::begin(mData), ::end(mData), def);
+    fill(std::begin(mData), std::end(mData), def);
 }

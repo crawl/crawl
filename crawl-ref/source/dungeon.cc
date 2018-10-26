@@ -6017,7 +6017,7 @@ static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
     {
         coord_def dest_pos;
 
-        if (feat_is_escape_hatch(feat) and !hatch_name.empty())
+        if (feat_is_escape_hatch(feat) && !hatch_name.empty())
             dest_pos = _find_named_hatch_dest(hatch_name);
         else
         {

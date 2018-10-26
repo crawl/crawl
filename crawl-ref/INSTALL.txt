@@ -378,12 +378,54 @@ Building on Windows 10 (Linux Subsystem)
 Building on Windows (MSVC)
 --------------------------
 
-* Building on MSVC is not currently supported and was last maintained in 2012,
-  so it will not work straightforwardly except in Visual Studio 2012 and versions
-  of crawl from around then. See the source distribution for approximately dcss
-  0.12 for more details on how this build used to work. It is known not to work
-  on current versions. If you get it to work on a more recent version, please
-  let us know and submit a patch!
+* This build process is currently supported with glue and duct-tape and is unlikely to be
+  straightforward in versions of MSVC besides those explicitly mentioned
+  here. Support pending (possibly).
+
+* This build is tested on Visual Studio 2017 on Windows 8.1 and 10. 
+  Win32 Release-Tiles should work without any issues. Debug and x64 do not work as-is 
+  (errors stem from compatability with FreeType).
+
+* You'll need a perl environment, there are links to several Windows binaries
+  you can choose from at http://www.perl.org/get.html
+
+* In the Crawl source, run gen-all.cmd which is in source/util/. This step must
+  be executed any time you update to a new version of the source (or if you
+  have modified tile data or unrandarts).
+
+* The first time you compile, you need to build the Contribs solution. This
+  compiles various libraries which Crawl itself needs to build. This only needs
+  to be performed the first time you build, or if the contribs are ever updated
+  (extremely rare). To do this open and compile Contribs.sln in source/contrib.
+  Make sure to set Release and 32-Bit as the project types.
+
+* Open crawl-ref.sln in Visual Studio, this is in source/MSVC/.
+
+* You can now select Debug or Release from the drop-down build configurations
+  menu on the main toolbar (it should be next to "Local Windows Debugger");
+  crawl.exe can them be compiled by selecting "Build Solution" in the BUILD
+  menu. You can quickly run it by selecting "Start without Debugging" in the
+  debug menu (or debug with "Start Debugging"). Note: the Release build can 
+  still be debugged using the Visual Studio debugger. (Note as of writing this 
+  that debug does not compile).
+ 
+* Quirks: dll output duplicated for libpng in the main directory (one for tilegen
+  and 16-16 for crawl).
+  
+* Building the webserver and Lua (for the dat project) is untested as of now.
+
+* Better support for Python (for the webserver project) and Lua (for the dat
+  project) can be installed with these extensions:
+
+  Python Tools for Visual Studio
+  http://pytools.codeplex.com/releases
+
+  Ports of VsLua to Visual Studio 2012
+  http://www.dbfinteractive.com/forum/index.php?topic=5873.0
+  http://pouet.net/topic.php?which=9087
+
+  Try at your own risk, but the first one has been tested and found to be
+  effective.
 
 *****************************************************************************
 

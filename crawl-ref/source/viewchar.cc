@@ -12,28 +12,51 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
     // It must be limited to stuff present both in CP437 and WGL4.
     {
         // wall .. altar
-         '#', U'▓',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<', '#',  '_',
+         '#', U'\x2593', //▓
+            '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<', '#',  '_',
         // arch .. invis_exposed
-        U'∩', U'⌠', U'≈',  '8',  '{',
+         U'\x2229', //∩
+            U'\x2320', //⌠
+            U'\x2248', //≈
+            '8',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
-        U'⌂', // CP437 but "optional" in WGL4
+         U'\x2302', //⌂ // CP437 but "optional" in WGL4
 #else
-        U'∆', // WGL4 and DEC
+         U'\x2206', //∆ // WGL4 and DEC
 #endif
-         '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(', ':',  '|',
+         '0', U'\x3c6', //φ
+            ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(', ':',  '|',
 #if TAG_MAJOR_VERSION == 34
          '\\',
 #endif
-         '}', U'†', U'÷',  '$',  '"', U'§', U'♣',
+         '}', U'\x2020', //†
+            U'\xf7', //÷
+            '$',  '"', U'\xa7', //§
+            U'\x2663', //♣
 #if TAG_MAJOR_VERSION == 34
-        U'©',
+         U'\xa9', //©
 #endif
         // transporter .. frame_top_left
-        U'©', U'©',  ' ',  '#',  '*', U'÷',  'X',  '`',  '#', U'═', U'║', U'╔',
+         U'\xa9', //©
+            U'\xa9', //©
+            ' ',  '#',  '*', U'\xf7', //÷
+            'X',  '`',  '#', U'\x2550', //═
+            U'\x2551', //║
+            U'\x2554', //╔
         // frame_top_right .. draw_down
-        U'╗', U'╚', U'╝', U'─', U'│',  '/', '\\', U'┌', U'┐', U'└', U'┘',  'V',
+         U'\x2557', //╗
+            U'\x255a', //╚
+            U'\x255d', //╝
+            U'\x2500', //─
+            U'\x2502', //│
+            '/', '\\', U'\x250c', //┌
+            U'\x2510', //┐
+            U'\x2514', //└
+            U'\x2518', //┘
+            'V',
         // draw_up .. draw_left
-        U'Λ',  '>',  '<',
+         U'\x39b', //Λ
+            '>',  '<',
     },
     // CSET_ASCII
     {
