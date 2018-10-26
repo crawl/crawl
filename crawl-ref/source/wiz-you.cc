@@ -476,7 +476,7 @@ void wizard_set_all_skills()
 
         // We're not updating skill cost here since XP hasn't changed.
 
-        recalc_and_scale_hp();
+        validate_hp(true);
         calc_mp();
 
         you.redraw_armour_class = true;
@@ -802,13 +802,13 @@ static void debug_downtick_xl(int newxl)
     check_skill_cost_change();
     // restore maxhp loss
     you.hp_max_adj_perm -= 1000;
-    calc_hp();
+    validate_hp();
     if (you.hp_max <= 0)
     {
         // ... but remove it completely if unviable
         you.hp_max_adj_temp = max(you.hp_max_adj_temp, 0);
         you.hp_max_adj_perm = max(you.hp_max_adj_perm, 0);
-        calc_hp();
+        validate_hp();
     }
 
     set_hp(max(1, you.hp));

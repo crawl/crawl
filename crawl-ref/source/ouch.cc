@@ -351,7 +351,7 @@ void lose_level()
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    calc_hp();
+    validate_hp();
     calc_mp();
     _lose_level_abilities();
 
@@ -720,7 +720,7 @@ static void _wizard_restore_life()
     if (you.hp_max <= 0)
         unrot_hp(9999);
     while (you.hp_max <= 0)
-        you.hp_max_adj_perm++, calc_hp();
+        you.hp_max_adj_perm++, validate_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
 }

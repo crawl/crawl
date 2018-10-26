@@ -740,7 +740,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     you.increase_duration(DUR_BERSERK, berserk_duration);
 
-    calc_hp();
+    validate_hp();
     set_hp(you.hp * 3 / 2);
 
     deflate_hp(you.hp_max);

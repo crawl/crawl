@@ -611,7 +611,7 @@ void dec_penance(god_type god, int val)
             }
             else if (god == GOD_HEPLIAKLQANA)
             {
-                calc_hp(); // frailty ends
+                validate_hp(); // frailty ends
                 mprf(MSGCH_GOD, god, "Your full life essence returns.");
             }
         }
@@ -3460,7 +3460,7 @@ static void _join_hepliaklqana()
                                                          : GENDER_MALE;
     }
 
-    calc_hp(); // adjust for frailty
+    validate_hp(); // adjust for frailty
 
     // Complimentary ancestor upon joining.
     const mgen_data mg = hepliaklqana_ancestor_gen_data();

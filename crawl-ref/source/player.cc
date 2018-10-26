@@ -2692,7 +2692,7 @@ static void _gain_and_note_hp_mp()
     const int old_maxmp = you.max_magic_points;
 
     // recalculate for game
-    recalc_and_scale_hp();
+    validate_hp(true);
     calc_mp();
 
     set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
@@ -2713,19 +2713,30 @@ static void _gain_and_note_hp_mp()
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
-void recalc_and_scale_hp()
+void validate_hp(bool scale)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
+	int oldhp = you.hp;
     int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    set_hp(min(hp / 100, you.hp_max));
-    you.hit_points_regeneration = hp % 100;
+
+	you.hp_max = get_real_hp(true, true, true);
+	deflate_hp(you.hp_max);
+
+	if (oldhp != you.hp || old_max != you.hp_max)
+		dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
+
+	you.redraw_hit_points = true;
+
+	if (scale) {
+		int hp = you.hp * 100 + you.hit_points_regeneration;
+		int new_max = you.hp_max;
+		hp = hp * new_max / old_max;
+		if (hp < 100)
+			hp = 100;
+		set_hp(min(hp / 100, you.hp_max));
+		you.hit_points_regeneration = hp % 100;
+	}
 }
 
 int xp_to_level_diff(int xp, int scale)
@@ -3632,17 +3643,6 @@ int player::scan_artefacts(artefact_prop_type which_property,
     return retval;
 }
 
-void calc_hp()
-{
-    int oldhp = you.hp, oldmax = you.hp_max;
-    you.hp_max = get_real_hp(true, true, true);
-    deflate_hp(you.hp_max);
-
-    if (oldhp != you.hp || oldmax != you.hp_max)
-        dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
-    you.redraw_hit_points = true;
-}
-
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -3823,7 +3823,7 @@ void rot_hp(int hp_loss)
     if (initial_rot == you.hp_max_adj_temp)
         return;
 
-    calc_hp();
+    validate_hp();
 
     if (you.species != SP_GHOUL)
         xom_is_stimulated(hp_loss * 25);
@@ -3841,7 +3841,7 @@ int unrot_hp(int hp_recovered)
     }
     else
         you.hp_max_adj_temp += hp_recovered;
-    calc_hp();
+    validate_hp();
 
     you.redraw_hit_points = true;
     if (!player_rotted())
@@ -3866,7 +3866,7 @@ void inc_max_hp(int hp_gain)
 {
     you.hp += hp_gain;
     you.hp_max_adj_perm += hp_gain;
-    calc_hp();
+    validate_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     you.redraw_hit_points = true;
@@ -3875,7 +3875,7 @@ void inc_max_hp(int hp_gain)
 void dec_max_hp(int hp_loss)
 {
     you.hp_max_adj_perm -= hp_loss;
-    calc_hp();
+    validate_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     you.redraw_hit_points = true;
@@ -3967,7 +3967,8 @@ int get_real_hp(bool trans, bool equips, bool rotted)
     if (trans && you.berserk())
         hitp = hitp * 3 / 2;
 
-    if (trans && you.props.exists(TRANSFORM_POW_KEY)) // Some transformations give you extra hp.
+    if (trans && you.props.exists(TRANSFORM_POW_KEY)
+		      && you.props[TRANSFORM_POW_KEY].get_int() > 0) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
 #if TAG_MAJOR_VERSION == 34
@@ -8163,7 +8164,7 @@ void player_end_berserk()
 
     // 1KB: No berserk healing.
     set_hp((you.hp + 1) * 2 / 3);
-    calc_hp();
+    validate_hp();
 
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;

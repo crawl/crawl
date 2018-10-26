@@ -626,7 +626,7 @@ static void _hydra_devour(monster &victim)
         const int healing = 1 + victim.get_experience_level() * 3 / 4
                               + random2(victim.get_experience_level() * 3 / 4);
         you.heal(healing);
-        calc_hp();
+        validate_hp();
         canned_msg(MSG_GAIN_HEALTH);
         dprf("healed for %d (%d hd)", healing, victim.get_experience_level());
     }
