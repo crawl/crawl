@@ -1632,7 +1632,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     // other effects
     case SPELL_DISCHARGE:
-        return cast_discharge(powc, fail);
+        return cast_discharge(powc, you, fail);
 
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_spell(SPELL_CHAIN_LIGHTNING, powc, &you, fail);

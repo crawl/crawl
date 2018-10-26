@@ -1777,16 +1777,16 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int discharge_monsters(coord_def where, int pow, actor *agent)
+int discharge_monsters(const coord_def &where, int pow, const actor &agent)
 {
     actor* victim = actor_at(where);
 
     if (!victim)
         return 0;
 
-    int damage = (agent == victim) ? 1 + random2(3 + pow / 15)
-                                   : 3 + random2(5 + pow / 10
-                                                 + (random2(pow) / 10));
+    int damage = (&agent == victim) ? 1 + random2(3 + pow / 15)
+                                    : 3 + random2(5 + pow / 10
+                                                  + (random2(pow) / 10));
 
     bolt beam;
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
@@ -1803,16 +1803,17 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
 
     if (victim->is_player())
     {
-        mpr("You are struck by lightning.");
+        mpr("You are struck by an arc of lightning.");
         damage = 1 + random2(3 + pow / 15);
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        ouch(damage, KILLED_BY_BEAM, agent->mid, "by static electricity", true,
-             agent->is_player() ? "you" : agent->name(DESC_A).c_str());
+        ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
+             agent.is_player() ? "you" : agent.name(DESC_A).c_str());
         if (damage > 0)
             victim->expose_to_element(BEAM_ELECTRICITY, 2);
     }
+    // rEelec monsters don't allow arcs to continue.
     else if (victim->res_elec() > 0)
         return 0;
     else
@@ -1828,9 +1829,9 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
 
         if (damage)
         {
-            mprf("%s is struck by lightning.",
+            mprf("%s is struck by an arc of lightning.",
                  mons->name(DESC_THE).c_str());
-            if (agent->is_player())
+            if (agent.is_player())
             {
                 _player_hurt_monster(*mons, damage);
 
@@ -1838,7 +1839,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
                     remove_sanctuary(true);
             }
             else
-                mons->hurt(agent->as_monster(), damage);
+                mons->hurt(agent.as_monster(), damage);
         }
     }
 
@@ -1846,9 +1847,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     // Low power slight chance added for low power characters -- bwr
     if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
-        mpr("The lightning arcs!");
         pow /= random_range(2, 3);
-        damage += apply_random_around_square([pow, agent] (coord_def where2) {
+        damage += apply_random_around_square([pow, &agent] (coord_def where2) {
             return discharge_monsters(where2, pow, agent);
         }, where, true, 1);
     }
@@ -1862,25 +1862,29 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     return damage;
 }
 
-static bool _safe_discharge(coord_def where, vector<const monster *> &exclude)
+static bool _safe_discharge(coord_def where, vector<const actor *> &exclude)
 {
     for (adjacent_iterator ai(where); ai; ++ai)
     {
-        const monster *mon = monster_at(*ai);
-        if (!mon)
+        const actor *act = actor_at(*ai);
+        if (!act)
             continue;
 
-        if (find(exclude.begin(), exclude.end(), mon) == exclude.end())
+        if (find(exclude.begin(), exclude.end(), act) == exclude.end())
         {
-            // Harmless to these monsters, so don't prompt about hitting them
-            if (mon->res_elec() > 0)
-                continue;
+            if (act->is_monster())
+            {
+                // Harmless to these monsters, so don't prompt about them.
+                if (act->res_elec() > 0)
+                    continue;
 
-            if (stop_attack_prompt(mon, false, where))
-                return false;
+                if (stop_attack_prompt(act->as_monster(), false, where))
+                    return false;
+            }
+            // Don't prompt for the player, but always continue arcing.
 
-            exclude.push_back(mon);
-            if (!_safe_discharge(mon->pos(), exclude))
+            exclude.push_back(act);
+            if (!_safe_discharge(act->pos(), exclude))
                 return false;
         }
     }
@@ -1888,19 +1892,19 @@ static bool _safe_discharge(coord_def where, vector<const monster *> &exclude)
     return true;
 }
 
-spret_type cast_discharge(int pow, bool fail)
+spret_type cast_discharge(int pow, const actor &agent, bool fail)
 {
-    fail_check();
-
-    vector<const monster *> exclude;
-    if (!_safe_discharge(you.pos(), exclude))
+    vector<const actor *> exclude;
+    if (agent.is_player() && !_safe_discharge(you.pos(), exclude))
         return SPRET_ABORT;
+
+    fail_check();
 
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
     const int dam =
-        apply_random_around_square([pow] (coord_def where) {
-            return discharge_monsters(where, pow, &you);
-        }, you.pos(), true, num_targs);
+        apply_random_around_square([pow, &agent] (coord_def target) {
+            return discharge_monsters(target, pow, agent);
+        }, agent.pos(), true, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
@@ -1909,17 +1913,14 @@ spret_type cast_discharge(int pow, bool fail)
     else
     {
         if (coinflip())
-            mpr("The air around you crackles with electrical energy.");
+            mpr("The air crackles with electrical energy.");
         else
         {
             const bool plural = coinflip();
-            mprf("%s blue arc%s ground%s harmlessly %s you.",
+            mprf("%s blue arc%s ground%s harmlessly.",
                  plural ? "Some" : "A",
                  plural ? "s" : "",
-                 plural ? " themselves" : "s itself",
-                 plural ? "around" : random_choose_weighted(2, "beside",
-                                                            1, "behind",
-                                                            1, "before"));
+                 plural ? " themselves" : "s itself");
         }
     }
     return SPRET_SUCCESS;

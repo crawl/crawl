@@ -30,8 +30,8 @@ spret_type cast_irradiate(int powc, actor* who, bool fail);
 bool ignite_poison_affects(const actor* act);
 spret_type cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
-int discharge_monsters(coord_def where, int pow, actor *agent);
-spret_type cast_discharge(int pow, bool fail);
+int discharge_monsters(const coord_def &where, int pow, const actor &agent);
+spret_type cast_discharge(int pow, const actor &agent, bool fail = false);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole);
