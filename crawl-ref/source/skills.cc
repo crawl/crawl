@@ -2110,7 +2110,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
         // If reducing fighting would reduce your maxHP to 0 or below,
         // we cancel the last step and end the transfer.
-        if (fsk == SK_FIGHTING && get_real_hp(false, true) <= 0)
+        if (fsk == SK_FIGHTING && get_real_hp(false, false, false) <= 0)
         {
             change_skill_points(fsk, skp_lost, false);
             total_skp_lost -= skp_lost;

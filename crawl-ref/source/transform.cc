@@ -1000,8 +1000,6 @@ const Form* get_form(transformation xform)
 }
 
 
-static void _extra_hp(int amount_extra);
-
 /**
  * Get the wizmode name of a form.
  *
@@ -1747,7 +1745,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-    _extra_hp(form_hp_mod());
+	recalc_and_scale_hp(); //form_hp_mod()
+	
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
@@ -1946,6 +1945,8 @@ void untransform(bool skip_move)
         }
     }
 
+	recalc_and_scale_hp();
+
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
         mprf(MSGCH_DURATION, "%s", message.c_str());
@@ -2005,16 +2006,7 @@ void untransform(bool skip_move)
              armour->name(DESC_YOUR).c_str());
     }
 
-    if (hp_downscale != 10 && you.hp != you.hp_max)
-    {
-        int hp = you.hp * 10 / hp_downscale;
-        if (hp < 1)
-            hp = 1;
-        else if (hp > you.hp_max)
-            hp = you.hp_max;
-        set_hp(hp);
-    }
-    calc_hp();
+    
 
     if (you.hp <= 0)
     {
@@ -2034,16 +2026,6 @@ void untransform(bool skip_move)
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;
-}
-
-static void _extra_hp(int amount_extra) // must also set in calc_hp
-{
-    calc_hp();
-
-    you.hp *= amount_extra;
-    you.hp /= 10;
-
-    deflate_hp(you.hp_max, false);
 }
 
 void emergency_untransform()
