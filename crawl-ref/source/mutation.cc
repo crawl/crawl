@@ -1666,7 +1666,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         case MUT_FRAIL:
         case MUT_ROBUST:
         case MUT_RUGGED_BROWN_SCALES:
-            validate_hp();
+            calc_hp();
             break;
 
         case MUT_LOW_MAGIC:
@@ -1861,7 +1861,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
         || mutat == MUT_RUGGED_BROWN_SCALES)
     {
-        validate_hp();
+        calc_hp();
     }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();

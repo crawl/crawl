@@ -1409,7 +1409,7 @@ bool elyvilon_divine_vigour()
         you.set_duration(DUR_DIVINE_VIGOUR,
                          40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
 
-        validate_hp();
+        calc_hp();
         inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
         calc_mp();
         if (old_mp_max > 0)
@@ -1432,7 +1432,7 @@ void elyvilon_remove_divine_vigour()
     mprf(MSGCH_DURATION, "Your divine vigour fades away.");
     you.duration[DUR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
-    validate_hp();
+    calc_hp();
     calc_mp();
 }
 

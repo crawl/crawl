@@ -1049,7 +1049,7 @@ bool player_has_feet(bool temp = true, bool include_mutations = true);
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
-void validate_hp(bool scale = false);
+void calc_hp(bool scale = false, bool set = false);
 void calc_mp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
@@ -1068,10 +1068,9 @@ void rot_mp(int mp_loss);
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
-void deflate_hp(int new_level, bool floor = false);
 void set_hp(int new_amount);
 
-int get_real_hp(bool trans, bool equips, bool rotted = true);
+int get_real_hp(bool trans, bool rotted = true);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();

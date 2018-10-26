@@ -949,7 +949,7 @@ static void _heal_from_food(int hp_amt)
         unrot_hp(1);
     }
 
-    validate_hp();
+    calc_hp();
     calc_mp();
 }
 

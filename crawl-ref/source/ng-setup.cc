@@ -510,7 +510,7 @@ static void _setup_generic(const newgame_def& ng)
     add_held_books_to_library();
 
     if (you.char_class == JOB_WANDERER)
-    memorise_wanderer_spell();
+        memorise_wanderer_spell();
 
     initialise_item_descriptions();
 
@@ -550,7 +550,7 @@ static void _setup_generic(const newgame_def& ng)
 
     // We calculate hp and mp here; all relevant factors should be
     // finalised by now. (GDL)
-    validate_hp();
+    calc_hp();
     calc_mp();
 
     // Make sure the starting player is fully charged up.

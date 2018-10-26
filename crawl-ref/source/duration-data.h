@@ -272,7 +272,8 @@ static const duration_def duration_data[] =
       "death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
-            you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
+            you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30); 
+            calc_hp();
       }}, { "Your time is quickly running out!", 5 }}, 10},
     { DUR_DEATHS_DOOR_COOLDOWN,
       YELLOW, "-DDoor",

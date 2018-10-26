@@ -504,7 +504,7 @@ void change_species_to(species_type sp)
     // Sanitize skills.
     fixup_skills();
 
-    validate_hp();
+    calc_hp();
     calc_mp();
 
     // The player symbol depends on species.

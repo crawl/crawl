@@ -1284,7 +1284,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
 
 static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    validate_hp();
+    calc_hp();
 }
 
 static void _ETERNAL_TORMENT_world_reacts(item_def *item)
@@ -1296,7 +1296,7 @@ static void _ETERNAL_TORMENT_world_reacts(item_def *item)
 
 static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 {
-    validate_hp();
+    calc_hp();
 }
 
 ///////////////////////////////////////////////////

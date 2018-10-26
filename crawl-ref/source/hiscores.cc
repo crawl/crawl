@@ -1718,7 +1718,7 @@ void scorefile_entry::init(time_t dt)
 
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
-    final_max_max_hp = get_real_hp(true, true, false);
+    final_max_max_hp = get_real_hp(true, false);
 
     final_mp          = you.magic_points;
     final_max_mp      = you.max_magic_points;

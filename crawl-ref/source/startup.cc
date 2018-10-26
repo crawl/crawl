@@ -251,7 +251,7 @@ static void _post_init(bool newc)
 
     destroy_abyss();
 
-    validate_hp();
+    calc_hp();
     calc_mp();
     if (you.form != transformation::lich)
         food_change(true);

@@ -1745,7 +1745,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-    validate_hp(true); //form_hp_mod()
+    calc_hp(true, false); //form_hp_mod()
 
 
     if (you.digging && !form_keeps_mutations(which_trans))
@@ -1945,7 +1945,7 @@ void untransform(bool skip_move)
         }
     }
 
-    validate_hp(true);
+    calc_hp(true, false);
 
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
@@ -2005,8 +2005,6 @@ void untransform(bool skip_move)
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
     }
-
-
 
     if (you.hp <= 0)
     {
