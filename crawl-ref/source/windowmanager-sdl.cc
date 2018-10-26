@@ -20,7 +20,7 @@
 # else
 #  include <SDL2/SDL.h>
 # endif
-# include <SDL2/SDL_image.h>
+# include <SDL_image.h>
 # if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
 #  include <SDL2/SDL_mixer.h>
 # endif

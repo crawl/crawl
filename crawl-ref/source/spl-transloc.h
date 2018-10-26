@@ -3,7 +3,7 @@
 #include "spl-cast.h"
 
 spret_type cast_disjunction(int pow, bool fail);
-void disjunction();
+void disjunction_spell();
 
 spret_type cast_blink(bool fail = false);
 spret_type cast_controlled_blink(bool fail = false, bool safe = true);

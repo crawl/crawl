@@ -91,6 +91,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
 #define ASSERT(p)                         ((void) 0)
 #define ASSERTM(p, text,...)              ((void) 0)
 #define ASSERT_RANGE(x, a, b)             ((void) 0)
+#define ASSERT_LESS(x, xmax)              ((void) 0)
 
 #endif
 

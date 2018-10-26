@@ -4,6 +4,7 @@
 #include <string.h>
 #include <cassert>
 #include "tile.h"
+#include <algorithm>
 
 tile_page::tile_page() : m_width(1024), m_height(0)
 {

@@ -8,11 +8,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl\include;$(SolutionDir)\..\contrib\sdl-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\freetype\include;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\freetype\include;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_TILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDL_image.lib;SDLmain.lib;libpng.lib;zlib.lib;freetype.lib;opengl32.lib;glu32.lib;winmm.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;libpng.lib;zlib.lib;freetype.lib;opengl32.lib;glu32.lib;winmm.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\contrib\bin\8.0\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
