@@ -45,7 +45,7 @@ static void _mark_unseen_monsters();
  */
 static void _calc_hp_artefact()
 {
-    recalc_and_scale_hp();
+    calc_hp();
     if (you.hp_max <= 0) // Borgnjor's abusers...
         ouch(0, KILLED_BY_DRAINING);
 }

@@ -740,10 +740,8 @@ bool player::go_berserk(bool intentional, bool potion)
 
     you.increase_duration(DUR_BERSERK, berserk_duration);
 
-    calc_hp();
-    set_hp(you.hp * 3 / 2);
-
-    deflate_hp(you.hp_max, false);
+    //Apply Berserk's +50% Current/Max HP
+    calc_hp(true, false);
 
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true);

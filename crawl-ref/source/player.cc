@@ -63,6 +63,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-damage.h"
+#include "spl-selfench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
@@ -2692,7 +2693,7 @@ static void _gain_and_note_hp_mp()
     const int old_maxmp = you.max_magic_points;
 
     // recalculate for game
-    recalc_and_scale_hp();
+    calc_hp(true, false);
     calc_mp();
 
     set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
@@ -2700,7 +2701,7 @@ static void _gain_and_note_hp_mp()
 
     // Get "real" values for note-taking, i.e. ignore Berserk,
     // transformations or equipped items.
-    const int note_maxhp = get_real_hp(false, false);
+    const int note_maxhp = get_real_hp(false, true);
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
@@ -2713,19 +2714,34 @@ static void _gain_and_note_hp_mp()
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
-void recalc_and_scale_hp()
+void calc_hp(bool scale, bool set)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
+    int oldhp = you.hp;
     int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    set_hp(min(hp / 100, you.hp_max));
-    you.hit_points_regeneration = hp % 100;
+
+    you.hp_max = get_real_hp(true, true);
+
+    if (scale) {
+        int hp = you.hp * 100 + you.hit_points_regeneration;
+        int new_max = you.hp_max;
+        hp = hp * new_max / old_max;
+        if (hp < 100)
+            hp = 100;
+        set_hp(min(hp / 100, you.hp_max));
+        you.hit_points_regeneration = hp % 100;
+    }
+    if (set)
+        you.hp = you.hp_max;
+
+    you.hp = min(you.hp, you.hp_max);
+
+    if (oldhp != you.hp || old_max != you.hp_max)
+    {
+        dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
+        you.redraw_hit_points = true;
+    }
 }
 
 int xp_to_level_diff(int xp, int scale)
@@ -3632,16 +3648,6 @@ int player::scan_artefacts(artefact_prop_type which_property,
     return retval;
 }
 
-void calc_hp()
-{
-    int oldhp = you.hp, oldmax = you.hp_max;
-    you.hp_max = get_real_hp(true, false);
-    deflate_hp(you.hp_max, false);
-    if (oldhp != you.hp || oldmax != you.hp_max)
-        dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
-    you.redraw_hit_points = true;
-}
-
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -3817,7 +3823,7 @@ void rot_hp(int hp_loss)
     const int initial_rot = you.hp_max_adj_temp;
     you.hp_max_adj_temp -= hp_loss;
     // don't allow more rot than you have normal mhp
-    you.hp_max_adj_temp = max(-(get_real_hp(false, true) - 1),
+    you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
                               you.hp_max_adj_temp);
     if (initial_rot == you.hp_max_adj_temp)
         return;
@@ -3880,20 +3886,6 @@ void dec_max_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-// Use of floor: false = hp max, true = hp min. {dlb}
-void deflate_hp(int new_level, bool floor)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (floor && you.hp < new_level)
-        you.hp = new_level;
-    else if (!floor && you.hp > new_level)
-        you.hp = new_level;
-
-    // Must remain outside conditional, given code usage. {dlb}
-    you.redraw_hit_points = true;
-}
-
 void set_hp(int new_amount)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -3922,9 +3914,13 @@ void set_mp(int new_amount)
     you.redraw_magic_points = true;
 }
 
-// If trans is true, being berserk and/or transformed is taken into account
-// here. Else, the base hp is calculated. If rotted is true, calculate the
-// real max hp you'd have if the rotting was cured.
+/**
+ * Get the player's max HP
+ * @param trans          Whether to include transformations, berserk,
+ *                       items etc.
+ * @param rotted         Whether to include the effects of rotting.
+ * @return               The player's calculated max HP.
+ */
 int get_real_hp(bool trans, bool rotted)
 {
     int hitp;
@@ -3952,7 +3948,7 @@ int get_real_hp(bool trans, bool rotted)
 
     hitp /= 100;
 
-    if (!rotted)
+    if (rotted)
         hitp += you.hp_max_adj_temp;
 
     if (trans)
@@ -3962,13 +3958,17 @@ int get_real_hp(bool trans, bool rotted)
     if (trans && you.berserk())
         hitp = hitp * 3 / 2;
 
-    if (trans) // Some transformations give you extra hp.
+    // Some transformations give you extra hp.
+    if (trans)
         hitp = hitp * form_hp_mod() / 10;
 
 #if TAG_MAJOR_VERSION == 34
     if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
         hitp = hitp * 4 / 5;
 #endif
+
+    if (trans && you.duration[DUR_DEATHS_DOOR] > 0)
+        hitp = allowed_deaths_door_hp();
 
     return max(1, hitp);
 }
@@ -8156,9 +8156,8 @@ void player_end_berserk()
 
     slow_player(dur);
 
-    // 1KB: No berserk healing.
-    set_hp((you.hp + 1) * 2 / 3);
-    calc_hp();
+    //Un-apply Berserk's +50% Current/Max HP
+    calc_hp(true, false);
 
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
