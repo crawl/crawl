@@ -872,20 +872,26 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 static bool _player_hurt_monster(monster& m, int damage,
                                  beam_type flavour = BEAM_MISSILE)
 {
-    if (damage > 0)
-    {
-        m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
+    if (damage <= 0)
+        return false;
 
-        if (m.alive())
-        {
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, &m, you.can_see(m));
+    enable_attack_conducts(conducts);
+
+    m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
+
+    if (m.alive())
+    {
+        if (you.can_see(m))
             print_wounds(m);
-            behaviour_event(&m, ME_WHACK, &you);
-        }
-        else
-        {
-            monster_die(m, KILL_YOU, NON_MONSTER);
-            return true;
-        }
+
+        behaviour_event(&m, ME_WHACK, &you);
+    }
+    else
+    {
+        monster_die(m, KILL_YOU, NON_MONSTER);
+        return true;
     }
 
     return false;
