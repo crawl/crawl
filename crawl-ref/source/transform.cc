@@ -1745,8 +1745,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-	recalc_and_scale_hp(); //form_hp_mod()
-	
+    validate_hp(true); //form_hp_mod()
+
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
@@ -1945,7 +1945,7 @@ void untransform(bool skip_move)
         }
     }
 
-	recalc_and_scale_hp();
+    validate_hp(true);
 
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
@@ -2006,7 +2006,7 @@ void untransform(bool skip_move)
              armour->name(DESC_YOUR).c_str());
     }
 
-    
+
 
     if (you.hp <= 0)
     {

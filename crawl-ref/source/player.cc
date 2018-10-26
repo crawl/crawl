@@ -2717,26 +2717,27 @@ void validate_hp(bool scale)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
-	int oldhp = you.hp;
+    int oldhp = you.hp;
     int old_max = you.hp_max;
 
-	you.hp_max = get_real_hp(true, true, true);
-	deflate_hp(you.hp_max);
+    you.hp_max = get_real_hp(true, true, true);
 
-	if (oldhp != you.hp || old_max != you.hp_max)
-		dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
+    if (oldhp != you.hp || old_max != you.hp_max)
+        dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
 
-	you.redraw_hit_points = true;
+    you.redraw_hit_points = true;
 
-	if (scale) {
-		int hp = you.hp * 100 + you.hit_points_regeneration;
-		int new_max = you.hp_max;
-		hp = hp * new_max / old_max;
-		if (hp < 100)
-			hp = 100;
-		set_hp(min(hp / 100, you.hp_max));
-		you.hit_points_regeneration = hp % 100;
-	}
+    if (scale) {
+        int hp = you.hp * 100 + you.hit_points_regeneration;
+        int new_max = you.hp_max;
+        hp = hp * new_max / old_max;
+        if (hp < 100)
+            hp = 100;
+        set_hp(min(hp / 100, you.hp_max));
+        you.hit_points_regeneration = hp % 100;
+        }
+
+    deflate_hp(you.hp_max);
 }
 
 int xp_to_level_diff(int xp, int scale)
@@ -3968,7 +3969,7 @@ int get_real_hp(bool trans, bool equips, bool rotted)
         hitp = hitp * 3 / 2;
 
     if (trans && you.props.exists(TRANSFORM_POW_KEY)
-		      && you.props[TRANSFORM_POW_KEY].get_int() > 0) // Some transformations give you extra hp.
+              && you.props[TRANSFORM_POW_KEY].get_int() > 0) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
 #if TAG_MAJOR_VERSION == 34
@@ -8162,9 +8163,8 @@ void player_end_berserk()
 
     slow_player(dur);
 
-    // 1KB: No berserk healing.
-    set_hp((you.hp + 1) * 2 / 3);
-    validate_hp();
+    //set_hp((you.hp + 1) * 2 / 3);
+    validate_hp(true);
 
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
