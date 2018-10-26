@@ -1068,11 +1068,9 @@ static bool _shatterable(const actor *act)
 
 spret_type cast_shatter(int pow, bool fail)
 {
-    {
-        targeter_los hitfunc(&you, LOS_ARENA);
-        if (stop_attack_prompt(hitfunc, "harm", _shatterable))
-            return SPRET_ABORT;
-    }
+    targeter_los hitfunc(&you, LOS_ARENA);
+    if (stop_attack_prompt(hitfunc, "harm", _shatterable))
+        return SPRET_ABORT;
 
     fail_check();
     const bool silence = silenced(you.pos());
