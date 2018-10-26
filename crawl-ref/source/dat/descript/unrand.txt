@@ -577,7 +577,11 @@ find it enhances the power of their spells.
 arc blade
 
 A blade somehow crafted from pure electricity. Striking an enemy with it
-occasionally unleashes a static discharge.
+occasionally unleashes powerful arcs of lightning.
+
+These may arc to other adjacent creatures, or back to the wielder, before
+eventually grounding out. It deals reduced damage when arcing to the wielder,
+and bypasses any armour the target may have.
 %%%%
 demon whip "Spellbinder"
 

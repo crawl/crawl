@@ -39,6 +39,7 @@
 #include "mon-tentacle.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stepdown.h"
@@ -130,6 +131,15 @@ bool melee_attack::handle_phase_attempted()
 
             if (stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
                                    defender->as_monster()))
+            {
+                cancel_attack = true;
+                return false;
+            }
+        }
+        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
+        {
+            vector<const actor *> exclude;
+            if (!safe_discharge(defender->pos(), exclude))
             {
                 cancel_attack = true;
                 return false;

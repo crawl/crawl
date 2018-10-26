@@ -1139,7 +1139,7 @@ BOOL:    nogen
 NAME:     arc blade
 INSCRIP:  discharge,
 OBJ:      OBJ_WEAPONS/WPN_RAPIER
-PLUS:     +4
+PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
 TILE_EQ:  arc_blade

@@ -1777,7 +1777,8 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int discharge_monsters(const coord_def &where, int pow, const actor &agent)
+static int _discharge_monsters(const coord_def &where, int pow,
+                              const actor &agent)
 {
     actor* victim = actor_at(where);
 
@@ -1849,7 +1850,7 @@ int discharge_monsters(const coord_def &where, int pow, const actor &agent)
     {
         pow /= random_range(2, 3);
         damage += apply_random_around_square([pow, &agent] (coord_def where2) {
-            return discharge_monsters(where2, pow, agent);
+            return _discharge_monsters(where2, pow, agent);
         }, where, true, 1);
     }
     else if (damage > 0)
@@ -1862,7 +1863,7 @@ int discharge_monsters(const coord_def &where, int pow, const actor &agent)
     return damage;
 }
 
-static bool _safe_discharge(coord_def where, vector<const actor *> &exclude)
+bool safe_discharge(coord_def where, vector<const actor *> &exclude)
 {
     for (adjacent_iterator ai(where); ai; ++ai)
     {
@@ -1884,7 +1885,7 @@ static bool _safe_discharge(coord_def where, vector<const actor *> &exclude)
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!_safe_discharge(act->pos(), exclude))
+            if (!safe_discharge(act->pos(), exclude))
                 return false;
         }
     }
@@ -1895,7 +1896,7 @@ static bool _safe_discharge(coord_def where, vector<const actor *> &exclude)
 spret_type cast_discharge(int pow, const actor &agent, bool fail)
 {
     vector<const actor *> exclude;
-    if (agent.is_player() && !_safe_discharge(you.pos(), exclude))
+    if (agent.is_player() && !safe_discharge(you.pos(), exclude))
         return SPRET_ABORT;
 
     fail_check();
@@ -1903,7 +1904,7 @@ spret_type cast_discharge(int pow, const actor &agent, bool fail)
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
     const int dam =
         apply_random_around_square([pow, &agent] (coord_def target) {
-            return discharge_monsters(target, pow, agent);
+            return _discharge_monsters(target, pow, agent);
         }, agent.pos(), true, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);

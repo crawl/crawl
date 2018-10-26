@@ -1017,22 +1017,16 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
                                      actor* defender, bool mondied,
                                      int dam)
 {
-    if (!mondied && one_chance_in(3))
+    if (one_chance_in(3))
     {
-        const int pow = 75 + random2avg(75, 2);
-        const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
-        int dam_dealt = 0;
-        for (int i = 0; defender->alive() && i < num_targs; i++)
-            dam_dealt += discharge_monsters(defender->pos(), pow, *attacker);
-        if (dam_dealt > 0)
-            scaled_delay(100);
+        const int pow = 100 + random2avg(100, 2);
+
+        if (you.can_see(*attacker))
+            mpr("The arc blade crackles.");
         else
-        {
-            if (you.can_see(*attacker))
-                mpr("The arc blade crackles.");
-            else
-                mpr("You hear the crackle of electricity.");
-        }
+            mpr("You hear the crackle of electricity.");
+
+        cast_discharge(pow, *attacker);
     }
 }
 
