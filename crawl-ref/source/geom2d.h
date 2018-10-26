@@ -12,13 +12,25 @@ struct vector
         : x(_x), y(_y) {}
 
     const vector& operator+=(const vector &v);
+
+#ifdef TARGET_COMPILER_VC
     vector operator+(const vector &v) const;
     vector operator-() const;
     const vector& operator-=(const vector &v);
     vector operator-(const vector &v) const;
+#else
+    vector operator+(const vector &v) const PURE;
+    vector operator-() const PURE;
+    const vector& operator-=(const vector &v);
+    vector operator-(const vector &v) const PURE;
+#endif
 };
 
+#ifdef TARGET_COMPILER_VC
 vector operator*(double t, const vector &v);
+#else
+vector operator*(double t, const vector &v) PURE;
+#endif
 
 struct form
 {
@@ -75,7 +87,12 @@ struct lineseq
     lineseq(double a, double b, double o, double d)
         : f(a,b), offset(o), dist(d) {}
 
+#ifdef TARGET_COMPILER_VC
     double index(const vector &v) const;
+#else
+    double index(const vector &v) const PURE;
+#endif
+
 };
 
 struct grid
