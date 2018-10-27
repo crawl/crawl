@@ -101,6 +101,28 @@ function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
 end
 }}
 
+{{
+-- Create colourful Zot glass
+function colored_glass(e)
+  e.shuffle('roygbiv')
+  e.kfeat('roygbiv = m')
+  e.tile('r = dngn_transparent_wall_red')
+  e.tile('o = dngn_transparent_wall_brown')
+  e.tile('y = dngn_transparent_wall_yellow')
+  e.tile('g = dngn_transparent_wall_green')
+  e.tile('b = dngn_transparent_wall_blue')
+  e.tile('i = dngn_transparent_wall')
+  e.tile('v = dngn_transparent_wall_magenta')
+  e.colour('r = red')
+  e.colour('o = brown')
+  e.colour('y = yellow')
+  e.colour('g = green')
+  e.colour('b = blue')
+  e.colour('i = cyan')
+  e.colour('v = magenta')
+end
+}}
+
 ##############################################################################
 ##############################################################################
 #
@@ -2516,6 +2538,80 @@ MAP
  .b.----b.""""b.'''|x
  .xx---xxx"""xxx'''xx
    xxxxx xxxxx xxxxx
+ENDMAP
+
+##########################################################################
+# Some decorative multi-coloured glass columns
+NAME:   skrybe_zot_glass_1
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST: W : Wwl
+KMASK:  Wwl = no_monster_gen
+: colored_glass(_G)
+MAP
+  .....    .....
+ ..WWW..  ..WWW..
+..WWrWW....WWyWW..
+.WWrrrWW..WWyyyWW.
+.WrrrrrW..WyyyyyW.
+.WWrrrWW..WWyyyWW.
+..WWrWW....WWyWW..
+ ..WWW......WWW..
+  ..............
+  ..............
+ ..WWW......WWW..
+..WWoWW....WWgWW..
+.WWoooWW..WWgggWW.
+.WoooooW..WgggggW.
+.WWoooWW..WWgggWW.
+..WWoWW....WWgWW..
+ ..WWW..  ..WWW..
+  .....    .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_2
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST:  l : Wwl
+KPROP:  l = no_cloud_gen
+KMASK:  Wwl = no_monster_gen
+: colored_glass(_G)
+MAP
+      .....
+ ......lll......
+..lll.lloll.lll..
+.llrlllooolllyll.
+.lrrrlooooolyyyl.
+.llrlllooolllyll.
+..lll.lloll.lll..
+ ......lll......
+      .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_3
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST:  l : Wwl
+SUBST:  ( : ([{.
+KMASK:  Wwl = no_monster_gen
+KPROP:  l = no_cloud_gen
+: colored_glass(_G)
+MAP
+xxxxxx@@@xxxxxx
+xlllll...lllllx
+xlrrrl...looolx
+xlrrll...lloolx
+xlrll.....llolx
+xlll.......lllx
+@.............@
+@......(......@
+@.............@
+xlll.......lllx
+xlyll.....llglx
+xlyyll...llgglx
+xlyyyl...lggglx
+xlllll...lllllx
+xxxxxx@@@xxxxxx
 ENDMAP
 
 ##############################################################################
