@@ -1331,7 +1331,7 @@ xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 ENDMAP
 
 #############################################################
-# Kobolds who escaped to the sewers to worship Makhleb in peace
+# Kobolds who escaped to the sewers to worship evil in peace
 # The temple has 3 sealed chambers at the end, each with loot and a
 # boss monster.
 # Total loot: 8 ok items (mostly consumables), 4 star items
@@ -1339,67 +1339,73 @@ NAME:    kennysheep_sewer_church
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  3
-KFEAT:   B = altar_makhleb
-MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                               pow_max = 100, delay = 10, size = 1, \
-                               walk_dist = 0, excl_rad = 0 }
-: sewer_setup(_G)
 # Placed monsters.
 MONS:    kobold w:30 / shadow imp / big kobold zombie /\
          ufetubus / nothing w:5
 # Randomly generated monsters.
 MONS:    kobold w:50 / kobold zombie / ooze / giant cockroach / \
-         giant cockroach zombie w:3 / adder / adder zombie w:3 / \
+         giant cockroach zombie w:3 / ball python / adder zombie w:3 / \
          bat / bat zombie w:3
-SUBST:   . = .:175 2
-# Sub-boss.
-KMONS:   3 = big kobold w:15 / nothing w:5
-# Bosses.
+NSUBST:   . = 10:2 / *:.
+# Bosses and features for the temple
+:if crawl.random2(2) == 0 then
+KMONS:   3 = big kobold / quasit
 KMONS:   4 = big kobold
-KMONS:   5 = Grinder, shadow imp
-KMONS:   6 = quasit
+KMONS:   5 = quasit
+KFEAT:   B = altar_makhleb
+MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                               pow_max = 100, delay = 10, size = 1, \
+                               walk_dist = 0, excl_rad = 0 }
+:else
+KMONS:   34 = big kobold / wight
+KMONS:   5 = phantom / necrophage
+KFEAT:   B = altar_kikubaaqudgha
+SUBST:   F : VY
+:end
+KMONS:   6 = Grinder, shadow imp
 SHUFFLE: 456
 KITEM:   456 = star_item
 KFEAT:   - = deep_water
 KPROP:   W- = no_tele_into
 SUBST:   W = WWWw.
 SUBST:   - = wwwW-
-COLOUR:  w- = green
-COLOUR:  W = lightgreen
+COLOUR: - = green
 ITEM:    potion of curing / potion of heal wounds / \
          potion of might w:2 / potion of brilliance w:2 / \
          potion of agility w:2 / potion of flight w:14 / \
          any scroll w:7 / any armour w:2 / any weapon w:2
 NSUBST:  d = 1:*
+: sewer_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwwxwwwwwww---xWWWx---wwwwww----WWxWWWx  ccc
-xwwwwwwwwwww----W.WW---wwwwww----W..WWWx  c<c
-xwwwxwwwwwww---xWW.x---wwwwww----WWx111x ccdcc
-xx-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxx1xx cd4dc
-x---x          x-W.xwwwwwwwwwwww-W.+.W-xcc1.1cc
-xWWWx          x-W.xwwwwwwwwwwww-W.x.W-xc.....c
-x.<.x          x-W.xwwwwwwwwwwww-W.x.W-xc.lll.c
-x...x          x-W.xwwwwwwwwwww--W.x.W-xc.....c
-xWWWx          x-W.xwwwwwwwwww--W..x.W-xcc+++cc
-x---x          x-W.x-----------W...x.W-xcc...ccccccc
-xx-xxxxxxxxxxxxxx.xxxx-xx-xx-xxx.xxxx.xcc..F..cc...ccc
-xwwwxwwwwwww---x-W.xW..........W1w-xW..c..2.2F.+.l.1dccc
-xwwwwwwwwwww-----W...wwwwwwwwww1ww--W..+.F.B3..+.l..5d<c
-xwwwxwwwwwww---x-W.xW..........W1w-xW..c..2.2F.+.l.1dccc
-xxxxxxxxxxxxxxxxx.xxxxx-x--xxx-x.xxxx.xcc..F..cc...ccc
-               x-W.x-----------W...x.W-xcc...ccccccc
+                                          ccc
+                                          c<c
+                                         ccdcc
+                                        ccd4dcc
+                                        c-1.1-c
+               xxxxxxxxxxxxxxxxxxxxxxxxxc-...-c
+               x---wwwwwwwwwwwww-W.+1W-xc-...-c
+               x---wwwwwwwwwwwww-W.x1W-xc-...-c
+               x----wwwwwwwwwwww-W.x1W-xc-...-c
+               xWWW-wwwwwwwwwww--W.x.W-xc-...-c
+               xWWW-wwwwwwwwww--W..x.W-xcc+++cc
+               xWWW------------W...x.W-xc.....ccccccccc
+               xxWxxxx-xx-xx-xxx.xxxx.xcc..F...c------cc
+               x-W.x............1w-x...c..2.2F.+.....1dccc
+               x-W.............1www-...+.F.B3..+......5d<c
+               x-W.x............1w-x...c..2.2F.+.....1dccc
+               x-W.xxxx-x--xxx-x.xxxx.xcc..F...c------cc
+               x-W.x-----------W...x.W-xc.....ccccccccc
                x-W.xwwwwwwwwww--W..x.W-xcc+++cc
-               x-W.xwwwwwwwwwww--W.x.W-xc.....c
-               x-W.xwwwwwwwwwwww-W.x.W-xc.lll.c
-               x-W.xwwwwwwwwwwww-W.x.W-xc.....c
-               x-W.xwwwwwwwwwwww-W.+.W-xcc1.1cc
-xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxx1xx cd6dc
-x--------------x-W1x---wwwwwww---WWx111x ccdcc
-xWWWWWWWWWWWWWW.WW.W---wwwwwww---W..W.Wx  c<c
-x..............x1.Wx---wwwwwww---WWxWWWx  ccc
-xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx...xx
+               x-W.xwwwwwwwwwww--W.x.W-xc-...-c
+               x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
+               x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
+               x-W.xwwwwwwwwwwww-W.+1W-xc-...-c
+xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-...-c
+x----------------W1x-------------WWWWW-xc-1.1-c
+xWWWWWWWWWWWWWWWWW.W---wwwwwww---WWWWW-xccd6dcc
+x...............1..x---wwwwwww---------x ccdcc
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  c<c
+xx...xx                                   ccc
 x.....x
 x..A..x
 x..<..x
