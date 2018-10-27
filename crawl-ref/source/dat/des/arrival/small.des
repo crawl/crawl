@@ -3316,3 +3316,23 @@ xxPqrrm.mWWWpxx
   xxPPm.mppxx
    xxxx+xxxx
 ENDMAP
+
+NAME: beargit_arrival_greenhouse
+ORIENT: float
+TAGS: arrival no_monster_gen
+MONS: withered plant, plant
+MAP
+......@......
+.mcmcm+mcmcm.
+.c111c.c222c.
+.m1Y1m.m2U2m.
+.c111c.c222c.
+.mcmcm.mcmcm.
+@+....{....+@
+.mcmcm.mcmcm.
+.c222c.c222c.
+.m2T2m.m2U2m.
+.c222c.c222c.
+.mcmcm+mcmcm.
+......@......
+ENDMAP
