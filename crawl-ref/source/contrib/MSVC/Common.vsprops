@@ -20,7 +20,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalLibraryDirectories="../../contrib/bin/8.0/$(PlatformName)"
+		AdditionalLibraryDirectories="../bin/8.0/$(PlatformName)"
 		GenerateDebugInformation="true"
 	/>
 </VisualStudioPropertySheet>
