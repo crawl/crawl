@@ -3336,3 +3336,78 @@ MAP
 .mcmcm+mcmcm.
 ......@......
 ENDMAP
+
+NAME:   wander_arrival_lonely_grave
+TAGS:   arrival no_monster_gen no_item_gen
+ORIENT: float
+FTILE:  ? = floor_pebble_darkgray:20 / none
+TILE:   t = dngn_tree_dead, \
+        G = dngn_gravestone
+: set_feature_name("granite_statue", "a gravestone")
+COLOUR: ? = darkgrey:20 / lightgrey, \
+        t = darkgrey
+MAP
+.........
+..?????..
+.???????.
+.??t????.
+.???G???.
+.???????.
+..?????..
+...??{...
+.....@...
+ENDMAP
+
+NAME:   wander_arrival_peaceful_grave
+TAGS:   arrival no_monster_gen no_item_gen
+ORIENT: float
+TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "a gravestone")
+FTILE:  ? = floor_grass, \
+        ! = floor_grass:20 / none, \
+        { = floor_grass:20 / none, \
+        t = floor_grass, \
+        G = floor_grass
+COLOUR: ? = green / lightgreen, \
+        ! = green:20 / lightgrey
+MAP
+.........
+..!!!!!..
+.!!???!!.
+.!?t???!.
+.!??G??!.
+.!?????!.
+..!???!..
+...!!{...
+.....@...
+ENDMAP
+
+NAME:   wander_arrival_fairy_ring
+TAGS:   arrival no_monster_gen no_item_gen
+ORIENT: float
+MONS:   plant
+KMONS:  2 = fungus / fungus col:brown
+FTILE:  ? = floor_grass, \
+        . = floor_grass:25 / floor_dirt / none, \
+        2 = floor_grass, \
+        { = floor_grass
+SUBST:  . = .:20 t:3 1:3
+COLOUR: ? = green / lightgreen, \
+        . = green:25 / lightgreen:25 / brown / lightgrey
+MAP
+   .........
+  ...........
+ .............
+.....??2??.....
+....?2???2?....
+...?????????...
+...?2?????2?...
+...????{????...
+...?2?????2?...
+...?????????...
+....?2???2?....
+.....??2??.....
+ .............
+  ...........
+   .........
+ENDMAP

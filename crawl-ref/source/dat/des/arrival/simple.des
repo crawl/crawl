@@ -2377,3 +2377,32 @@ x.WWW.....WWx
 @G.WWWWWWWWxx
  @xxxxxxxxxx
 ENDMAP
+
+NAME:   wander_arrival_desolate
+TAGS:   arrival no_monster_gen no_item_gen
+ORIENT: float
+FTILE:  . = floor_pebble_brown / floor_pebble_darkgray / none
+MAP
+  .....
+ .......
+....A....
+.........
+....{....
+.........
+..V...V..
+.........
+ .......
+ENDMAP
+
+NAME:   wander_arrival_chamber
+TAGS:   arrival no_monster_gen no_item_gen no_pool_fixup
+ORIENT: float
+MAP
+   xxxxxxx
+ xxxwwwwwxxxx
+xxx........Gxxx
+xx..{.........+@
+xxx........Gxxx
+ xxxwwwwwxxxx
+   xxxxxxx
+ENDMAP
