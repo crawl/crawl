@@ -353,6 +353,27 @@ MAP
         @@
 ENDMAP
 
+NAME: ximxim_vaults_locker_room
+TAGS: vaults_entry no_monster_gen no_item_gen no_trap_gen
+MONS: human w:15 / vault guard w:5
+ITEM: w:30 plate armour / w:7 broad axe / glaive / shield \
+      / w:5 large shield / w:3 arbalest / great sword / great mace
+KFEAT: O = enter_vaults
+KFEAT: Z = shallow_water
+MARKER: Z = lua:fog_machine { cloud_type = "rain", \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+vvvvvvvvvvvvv
+vZ1.ZZ.1..ZZv
+v+n+n+n+n+n+v
++.1.1..1.1..v
++.1..1..1.1Ov
++..1.....1..v
+v+v+v+v+v+v+v
+vdvdvdvdvdvdv
+vvvvvvvvvvvvv
+ENDMAP
 ###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################
