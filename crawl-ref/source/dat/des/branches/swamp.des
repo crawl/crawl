@@ -187,6 +187,26 @@ MAP
     ......tttttttt
 ENDMAP
 
+NAME:    skrybe_swamp_entry_bodies
+TAGS:    swamp_entry no_pool_fixup transparent
+KMONS:   1 = patrolling bog body
+KFEAT:   1 = W
+KFEAT:   O = enter_swamp
+NSUBST:  n = 1:1 / 1=W1 / *:W
+NSUBST:  W = 4:t / *:W
+MARKER:  O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+ .....
+..WWW..
+.WWnWW.
+.WnOnW.
+.WWnWW.
+..WWW..
+ .....
+ENDMAP
+
 ###############################################################################
 # Swamp non-entry and non-ending vaults
 ###############################################################################

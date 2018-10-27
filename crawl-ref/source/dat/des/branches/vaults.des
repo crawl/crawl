@@ -321,6 +321,38 @@ MAP
 .................
 ENDMAP
 
+NAME:     skrybe_vaults_entry_preservation
+TAGS:     vaults_entry transparent
+ORIENT:   float
+MONS:     vault guard
+SHUFFLE:  AI , BJ , CK , DL
+SUBST:    A = v , B = v , C = v , D = v
+SUBST:    I = + , J = + , K = + , L = +
+SUBST:    E = vvm , F = vvm, G = vvm, H = vvm
+KFEAT:    O = enter_vaults
+KMONS:    O = ironheart preserver
+NSUBST:   $ = 1:O / *=.$%
+MAP
+        @@
+ vvvvvvv..vvvvvvv
+ v$....v..v....$v
+ v.....E..F.....v
+ v..0..v..v..0..v
+ v...0.A..B.0...v
+ v.....A..B.....v
+ vvEvIIv..vJJvFvv
+@................@
+@................@
+ vvGvKKv..vLLvHvv
+ v.....C..D.....v
+ v...0.C..D.0...v
+ v..0..v..v..0..v
+ v.....G..H.....v
+ v$....v..v....$v
+ vvvvvvv..vvvvvvv
+        @@
+ENDMAP
+
 ###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################
