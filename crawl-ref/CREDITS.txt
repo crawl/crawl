@@ -86,6 +86,7 @@
     Roy Axenov
     Steve 'nfogravity' Balady
     Max Bane
+    Beargit
     Bill Beher
     Alexander Beisig
     biasface
@@ -289,11 +290,13 @@
     Matt Titus
     Tommy
     Mikko Vepsäläinen
+    WanderingBlade
     waylon531
     Steven Wheeler
     Thomas Willem
     Evan Williams
     Jeremey Wilson
+    ximxim
     Yelve Yakut
     Edward Z. Yang
     Yermak
