@@ -152,7 +152,7 @@ void writeChar(char32_t c)
 
     // check for upper Unicode which Windows can't handle
     if (c > 0xFFFF)
-        c = U'¿';
+        c = U'\xbf'; //¿
 
     int tc = WIN32COLOR(current_colour);
     pci = &screen[SCREENINDEX(cx,cy)];
