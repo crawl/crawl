@@ -98,11 +98,9 @@
 #  deeper depths.  Starting at depth 19, there is an increasing
 #  chance of lava pools instead of water pools (never mixed).
 #
-# TODO: More rock pools.  Then add to D:4- with weight 10.
-#
 NAME:   layout_cave_pools
-DEPTH:  Depths
-WEIGHT: 15
+DEPTH:  D:4-, Depths
+WEIGHT: 10, 15 (Depths)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
@@ -117,7 +115,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
     local pool_contents = {}
     pool_contents["."] = 40
-    pool_contents["x"] = 40 - you.absdepth()
+    if you.in_branch("D") then
+        pool_contents["x"] = 120 - (you.absdepth() * 6)
+    else
+        pool_contents["x"] = 40 - you.absdepth()
+    end
     if you.in_branch("Depths") then
         if you.depth() >= crawl.random2(8) then
             pool_contents["l"] = you.absdepth() * crawl.random2(100) / 100
