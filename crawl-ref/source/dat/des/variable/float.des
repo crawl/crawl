@@ -1053,6 +1053,27 @@ ccww.wwcccww.wwcccww.wwcc
           cc+cc
 ENDMAP
 
+NAME:   wander_river
+TAGS:   transparent no_pool_fixup no_monster_gen
+DEPTH:  D, Lair, !Lair:$
+ORIENT: float
+FTILE:  - = floor_pebble_lightgray
+MAP
+                  .@@.
+                  ....       WWWWWWWW
+                  G--G   WWWWWwwwwwwWWWW
+                  G--GWWWWwwwwwwwwwwwwwWWW
+WWWW              W--WWwwwwwwwWWWWWWwwwwwWWW
+WwwWWW         WWWW--wwwwwWWWWW    WWWWwwwwWW
+WwwwwWWWW   WWWWwww--wwWWWW           WWWwwwwW
+WWWwwwwwWWWWWwwwwww--WWW                WWWwwW
+  WWWwwwwwwwwwwwWWW--W                    WWWW
+    WWWWwwwwwWWWW G--G
+       WWWWWWW    G--G
+                  ....
+                  .@@.
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
@@ -1719,6 +1740,7 @@ SUBST:   ? = c
 COLOUR:  _ : yellow
 FTILE:   _A : floor_limestone
 SUBST:   T = T F:1
+: init_protected_by_tso(_G)
 MAP
       xxxxxxxxxxx
      xxxxxcccxxxxx
@@ -1743,6 +1765,41 @@ MAP
     xxxxxxx!xxxxxxx
        xxxx+xxxx
            @
+ENDMAP
+
+NAME:   wander_protected_by_tso
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Depths, !Depths:$
+WEIGHT: 4
+ORIENT: float
+MONS:   generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
+KFEAT:  O = altar_the_shining_one
+TILE:   G = dngn_statue_angel
+COLOUR: _ : yellow
+FTILE:  _|OU = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+    xxxxxxx
+   xxcccccxx
+   xcc.|.ccx
+   xc.U_U.cx
+   xc._O_.cx
+   xc.U_U.cx
+   xcc._.ccx
+   xxc._.ccx
+   xcG...Gcx
+   xc.....cx
+   xc.....cx
+   xcG.1.Gcx
+   xc.....cx
+   xc.....cx
+   xcG...Gcx
+   xc.....cx
+   xcc...ccx
+   xxc---cxx
+    xcc!ccxx
+    xxx+xxx
+    xx@@@xx
 ENDMAP
 
 ##############################################################################
@@ -4528,6 +4585,45 @@ MAP
          ccccccc
 ENDMAP
 
+###############################################################################
+# The kobolds from kennysheep's sewer church have taken their cult mainstream
+NAME:   wander_kiku_kobolds
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:8-12
+ORIENT: float
+KMONS:  1 = kobold demonologist
+KMONS:  2 = shadow imp
+KMONS:  k = kobold / big kobold w:3
+KMONS:  u = kobold skeleton / kobold zombie
+KITEM:  ?1 = kobold skeleton
+: dgn.delayed_decay(_G, '?1', 'kobold skeleton')
+KPROP:  ?A1 = bloody
+KFEAT:  O = altar_kikubaaqudgha
+NSUBST: ' = 1:* / 4:%%- / *:-
+FTILE:  uk-?A12O*% = floor_pebble_darkgray
+MAP
+       ccccc
+cccccccc'''cccccccc
+ckkkccc'''''ccckkkc
+c--cc--2?A?2--cc--c
+c--c----?O?----c--c
+c--+-uu-?1?-uu-+--c
+c--c--uu---uu--c--c
+ckkc--uuuuuuu--ckkc
+c--cc---uuu---cc--c
+c---ccc-----ccc---c
+c---c-cc+++cc-c---c
+c-k-c--G---G--c-k-c
+c-k-c---------c-k-c
+c-k-+--kkkkk--+-k-c
+c-k-c--kkkkk--c-k-c
+ccccc---kkk---ccccc
+....c---------c....
+   .cc-------cc.
+   ..ccc+++ccc..
+    ...G...G...
+     ...@@@...
+ENDMAP
 
 ###############################################################################
 #
