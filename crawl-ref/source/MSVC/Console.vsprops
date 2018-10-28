@@ -6,6 +6,12 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories=";&quot;$(SolutionDir)\..\contrib\zlib&quot;"
 		PreprocessorDefinitions=""
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="zlib.lib opengl32.lib glu32.lib dxguid.lib"
+		AdditionalLibraryDirectories="&quot;$(SolutionDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
 	/>
 </VisualStudioPropertySheet>

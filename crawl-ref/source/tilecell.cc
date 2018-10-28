@@ -1,5 +1,5 @@
 #include "AppHdr.h"
-
+#ifdef USE_TILE
 #include "tilecell.h"
 
 #include "cloud.h"
@@ -501,3 +501,4 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
         _pack_wall_shadows(gc, cell, shadow_tile);
     }
 }
+#endif //TILECELL.CC

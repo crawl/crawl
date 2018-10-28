@@ -388,6 +388,7 @@ Building on Windows (MSVC)
   `git submodule update --init`
 
 * This build is tested on Visual Studio 2017 15.8.7 on Windows 8.1 and 10. 
+  Supported configurations are Debug/Release;Console/Tiles;Win32/x64
 
 * You'll need a perl environment, there are links to several Windows binaries
   you can choose from at http://www.perl.org/get.html

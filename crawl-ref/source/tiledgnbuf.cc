@@ -1,5 +1,5 @@
 #include "AppHdr.h"
-
+#ifdef USE_TILE_LOCAL
 #include "tiledgnbuf.h"
 
 #include "env.h"
@@ -700,3 +700,4 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }
+#endif //TILEDGNBUF.CC
