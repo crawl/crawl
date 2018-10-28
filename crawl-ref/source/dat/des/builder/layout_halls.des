@@ -536,13 +536,12 @@ ENDMAP
 #
 # This is properly called a labyrinth, but that name is already taken
 #
-# TODO: Use Snake variant in Lair, add with weight 3.
 # TODO: Minimum area validation in Snake (can be disconnected).
 #       Then remove minimum size validate as unneeded
 #
 NAME:   layout_concentric_octagons
-DEPTH:  Snake, Zot
-WEIGHT: 5 (Snake), 10 (Zot)
+DEPTH:  Lair, Snake, Zot
+WEIGHT: 3 (Lair), 5 (Snake), 10 (Zot)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand central layout_type_passages
 TAGS:   no_rotate no_vmirror no_hmirror
@@ -683,7 +682,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
   local CENTER_X = GXM / 2
   local CENTER_Y = GYM / 2
 
-  local HALLWAY_SIZE = you.in_branch("Snake") and 3 or 2
+  local HALLWAY_SIZE = you.in_branch("Zot") and 2 or 3
   local layer_size = 2 * crawl.random_range(HALLWAY_SIZE, HALLWAY_SIZE + 2)
   local center_radius = 2 * crawl.random_range(2, 3)
   local layer_size_diagonal = layer_size * 3 / 4  -- can have a .5 on it
@@ -815,9 +814,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
   -- turn the plugs into ordinary walls and floor
   subst("c = x")
 
-  -- Smear the layout a la layout_big_octagon in Snake.
+  -- Smear the layout a la layout_big_octagon outside Zot.
   -- (Actually, that's where this code originates.)
-  if you.in_branch("Snake") then
+  if not you.in_branch("Zot") then
     local gxm, gym = dgn.max_bounds()
     local iterations = 50 + crawl.random2(50) + crawl.random2(50)
     smear_map{iterations = iterations, boxy = false}
