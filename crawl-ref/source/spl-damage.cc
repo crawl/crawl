@@ -439,7 +439,9 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
     int hurted = actual ? beam.damage.roll()
                         // Monsters use the average for foe calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
-    hurted = mons_adjust_flavoured(target, beam, hurted, actual);
+    hurted = mons_adjust_flavoured(target, beam, hurted,
+                 // Drain life doesn't apply drain effects.
+                 actual && beam.origin_spell != SPELL_DRAIN_LIFE);
     dprf("damage done: %d", hurted);
 
     if (actual)
