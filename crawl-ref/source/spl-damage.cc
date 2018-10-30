@@ -447,7 +447,8 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
-        if (hurted)
+        // monster may have died due to flavour damage above.
+        if (hurted && target->alive())
         {
             if (YOU_KILL(beam.thrower))
             {
