@@ -1112,6 +1112,29 @@ xxx.....G.....xxx
        @..
 ENDMAP
 
+NAME:   wander_ebering_terrifying_dragon_lair
+TAGS:   no_monster_gen
+DEPTH:  D:1-3
+MONS:   frilled lizard / leopard gecko
+NSUBST:  $ = $ / 4=$.. / *:.
+NSUBST:  D = 3:d / 3=d.. / *:.
+NSUBST:  E = e / 2=e. / .
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+: dgn.delayed_decay(_G, 'e', 'human corpse')
+MAP
+   xxxxx
+  xx...xx
+ xxDxx..xx
+xxDxxxxDDxx
+xE$$$xxx.Dx
+xE$1$xx..xx
+xx$$$Dx..x
+ xEEExxDDx
+ xxxxx..xx
+  xxDD.xx
+   xxx@x
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
