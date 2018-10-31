@@ -814,6 +814,7 @@ void SkillMenu::finish_experience(bool experience_change)
         }
         m_skill_backup.restore_training();
         m_skill_backup = skill_state();
+        check_training_targets();
     }
 }
 

@@ -2226,7 +2226,10 @@ void skill_state::restore_training()
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
         if (you.skills[sk] < MAX_SKILL_LEVEL)
+        {
             you.train[sk] = train[sk];
+            you.training_targets[sk] = training_targets[sk];
+        }
     }
 
     you.can_train                   = can_train;
