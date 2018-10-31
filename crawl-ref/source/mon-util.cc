@@ -433,6 +433,9 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     int ret = 0;
     const item_def *item = 0;
 
+    if (!alive())
+        return 0;
+
     switch (slot)
     {
     case EQ_WEAPON:
@@ -501,6 +504,9 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     int ret = 0;
     const item_def *item = 0;
 
+    if (!alive())
+        return 0;
+
     switch (slot)
     {
     case EQ_WEAPON:
@@ -565,6 +571,10 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
                             vector<item_def> *matches) const
 {
     UNUSED(matches); //TODO: implement this when it will be required somewhere
+
+    if (!alive())
+        return 0;
+
     int ret = 0;
 
     // TODO: do we really want to prevent randarts from working for zombies?
