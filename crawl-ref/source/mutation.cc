@@ -693,6 +693,9 @@ string describe_mutations(bool drop_title)
     if (player_res_poison(false, false, false) == 3)
         result += "You are immune to poison.\n";
 
+    if (you.fishtail == true)
+        result += "You reflexively tail-slap those who attack you in melee.\n";
+
     result += "</lightblue>";
 
     // First add (non-removable) inborn abilities and demon powers.

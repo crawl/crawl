@@ -2606,6 +2606,9 @@ string mutation_overview()
         mutations.emplace_back("unfitting armour");
     }
 
+    if (you.fishtail == true)
+        mutations.emplace_back("retaliatory tailslap");
+
     if (you.species == SP_OCTOPODE)
     {
         mutations.push_back(_annotate_form_based("amphibious",

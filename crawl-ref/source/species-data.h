@@ -139,8 +139,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
-    {},
-    {},
+    { "You reflexively tailslap those who attack you in melee." },
+    { "retaliatory tailslap" },
     { JOB_BERSERKER, JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },
@@ -158,8 +158,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
-    { "You can breathe blasts of fire." },
-    { "breathe fire" },
+    { "You can breathe blasts of fire." 
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe fire", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -175,8 +176,9 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 7 }, },
     { "You can breathe waves of freezing cold.",
-      "You can buffet flying creatures when you breathe cold." },
-    { "breathe frost" },
+      "You can buffet flying creatures when you breathe cold.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe frost", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -192,8 +194,9 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 7 },
       { MUT_STINGER, 1, 14 }, },
-    { "You can breathe blasts of noxious fumes." },
-    { "breathe noxious fumes" },
+    { "You can breathe blasts of noxious fumes.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe noxious fumes", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -208,8 +211,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_ACIDIC_BITE, 1, 14 }, },
-    { "You can spit globs of acid.", "You are resistant to acid." },
-    { "spit acid", "acid resistance" },
+    { "You can spit globs of acid.", "You are resistant to acid.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "spit acid", "acid resistance", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -224,8 +228,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
-    { "You can walk through water." },
-    { "walk through water" },
+    { "You can walk through water.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "walk through water", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -241,8 +246,9 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 7 },
       { MUT_BIG_WINGS, 1, 14 }, },
-    { "You can breathe wild blasts of lightning." },
-    { "breathe lightning" },
+    { "You can breathe wild blasts of lightning.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe lightning", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -257,8 +263,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
-    { "You can breathe bolts of dispelling energy." },
-    { "breathe power" },
+    { "You can breathe bolts of dispelling energy.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe power", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -275,8 +282,9 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can spit globs of burning liquid.",
-      "You can ignite nearby creatures when you spit burning liquid." },
-    { "breathe sticky flame splash" },
+      "You can ignite nearby creatures when you spit burning liquid.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe sticky flame splash", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
@@ -292,8 +300,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
-    { "You can breathe blasts of scalding, opaque steam." },
-    { "breathe steam" },
+    { "You can breathe blasts of scalding, opaque steam.",
+      "You reflexively tailslap those who attack you in melee." },
+    { "breathe steam", "retaliatory tailslap" },
     {}, // not a starting race
     {}, // not a starting race
 } },
