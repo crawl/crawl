@@ -1281,9 +1281,22 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_THE_GOURMAND:
-        // What's this supposed to achieve? (jpeg)
-        you.duration[DUR_GOURMAND] = 0;
-        mpr("You feel a craving for the dungeon's cuisine.");
+        if (you.species == SP_SPRIGGAN 
+         || you.species == SP_VAMPIRE
+         || you.species == SP_MUMMY
+         || you.get_mutation_level(MUT_HERBIVOROUS) > 0)
+            mpr("After a brief, frighteningly intense craving, your appetite remains unchanged.");
+        else if
+            (you.species == SP_TROLL
+         ||  you.species == SP_GHOUL
+         ||  you.species == SP_FELID
+         ||  you.species == SP_KOBOLD)
+            mpr("After a brief, strange feeling in your gut, your appetite remains unchanged.");
+        else 
+        {
+            you.duration[DUR_GOURMAND] = 0;
+            mpr("You feel a craving for the dungeon's cuisine.");
+        }
         break;
 
     case AMU_REGENERATION:
