@@ -1853,17 +1853,15 @@ KMONS:  1 = ophan generate_awake
 SUBST:  p = ppw, q = wwW, r = ....W
 KFEAT:  p = open_sea
 KFEAT:  A = any shop
-KFEAT:  s = n
 FTILE:  -A>1+ = floor_pebble
 FTILE:  ' = floor_rough
 FTILE:  .< = floor_sand
 TILE:   c = wall_brick_lightgray
 # XXX For some reason, setting color on these alone doesn't change the tile.
-TILE:   s = dngn_transparent_stone_yellow
-TILE:   n = dngn_transparent_stone_white
+TILE:   n = dngn_transparent_stone_yellow
 COLOUR: . = brown
-COLOUR: -'n+> = white
-COLOUR: s = yellow
+COLOUR: -' = white
+COLOUR: n = yellow
 : set_border_fill_type("open_sea")
 : bazaar_setup(_G, false, false)
 MAP
@@ -1883,9 +1881,9 @@ MAP
  ppwwqWrrr.'cn---------nc'..rrWWWqwwwwwp
 ppwwwqWWr.''c--A-----A--c''..rWWWqqqwwwpp
 pwwwwqWWr.'cc-----------cc'...rWWWWqqwwwp
-pwwwqqWr.''n-----sss-----n''...rWWWWqwwpp
-pwwqqWrr.''n->---s1s-----+---...rrWWqqwwp
-pwwwqWWWr''n-----sss-----n'.---<rWWWqqwwp
+pwwwqqWr.''n-----nnn-----n''...rWWWWqwwpp
+pwwqqWrr.''n->---n1n-----+---...rrWWqqwwp
+pwwwqWWWr''n-----nnn-----n'.---<rWWWqqwwp
 ppwwqqWWr.'cc-----------cc'.....rWWqqwwpp
 pwwwqqWr..''c--A-----A--c''...rrWWWWqwwwp
 pwwqqWWr..''cn---------nc'...rWrrWWWqwwpp
