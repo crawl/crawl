@@ -849,6 +849,7 @@ static const struct spell_desc spelldata[] =
     TILEG_POISON_ARROW,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_TWISTED_RESURRECTION, "Twisted Resurrection",
     SPTYP_NECROMANCY,
@@ -857,8 +858,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_TWISTED_RESURRECTION,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_REGENERATION, "Regeneration",
