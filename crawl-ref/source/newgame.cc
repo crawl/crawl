@@ -687,7 +687,7 @@ static void _add_choice_menu_options(int choice_type,
     // Add all the special button entries
     TextItem* tmp = new TextItem();
     if (choice_type == C_SPECIES)
-        tmp->set_text(TR7("+ - Viable species", "+ - 추천 종족 선택");
+        tmp->set_text(TR7("+ - Viable species", "+ - 추천 종족 선택"));
     else
         tmp->set_text("+ - Viable background");
     coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
@@ -726,7 +726,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
+    tmp->set_text(TR7("% - List aptitudes", "% - 스킬 선호도 표시"));
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 2;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -741,7 +741,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("? - Help");
+    tmp->set_text(TR7("? - Help", "? - 도움말"));
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 3;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -771,7 +771,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text(TR7("! - Random character", "! - 임의의 캐릭터");
+    tmp->set_text(TR7("! - Random character", "! - 임의의 캐릭터"));
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -945,7 +945,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
 static species_group species_groups[] =
 {
     {
-        "Simple",
+        TR7("Simple", "기본"),
         coord_def(0, 0),
         20,
         {
@@ -960,7 +960,7 @@ static species_group species_groups[] =
         }
     },
     {
-        "Intermediate",
+        TR7("Intermediate", "중급"),
         coord_def(25, 0),
         20,
         {
@@ -977,7 +977,7 @@ static species_group species_groups[] =
         }
     },
     {
-        "Advanced",
+        TR7("Advanced", "고급"),
         coord_def(50, 0),
         20,
         {
@@ -1852,7 +1852,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     if (!crawl_state.game_is_tutorial())
     {
         tmp = new TextItem();
-        tmp->set_text("% - List aptitudes");
+        tmp->set_text(TR7("% - List aptitudes", "% - 스킬 선호도 표시"));
         min_coord.x = X_MARGIN;
         min_coord.y = SPECIAL_KEYS_START_Y + 1;
         max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1867,7 +1867,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         tmp->set_visible(true);
 
         tmp = new TextItem();
-        tmp->set_text("? - Help");
+        tmp->set_text(TR7("? - Help", "? - 도움말"));
         min_coord.x = X_MARGIN;
         min_coord.y = SPECIAL_KEYS_START_Y + 2;
         max_coord.x = min_coord.x + tmp->get_text().size();
