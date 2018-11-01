@@ -6841,15 +6841,6 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         if (spells[j].spell == SPELL_SUNRAY)
             spells[j].spell = SPELL_STONE_ARROW;
 
-        if (spells[j].spell == SPELL_TWISTED_RESURRECTION && spells[j].flags & MON_SPELL_WIZARD)
-            spells[j].spell = SPELL_HAUNT;
-        else if (spells[j].spell == SPELL_TWISTED_RESURRECTION)
-        {
-            // This is obviously a hack, but outside xv it's equivalent.
-            spells[j].spell = SPELL_CANTRIP;
-            spells[j].freq = 0;
-        }
-
         if (th.getMinorVersion() >= TAG_MINOR_MONSTER_SPELL_SLOTS)
         {
 #endif
@@ -6867,6 +6858,10 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         }
 #endif
     }
+
+    erase_if(spells, [](const mon_spell_slot &t) {
+        return t.spell == SPELL_TWISTED_RESURRECTION;
+    });
 
 #if TAG_MAJOR_VERSION == 34
     // This will turn all old spells into wizard spells, which
