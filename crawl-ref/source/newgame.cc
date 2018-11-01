@@ -32,6 +32,8 @@
 #endif
 #include "version.h"
 
+#define TR7(x, y) y
+
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
@@ -685,7 +687,7 @@ static void _add_choice_menu_options(int choice_type,
     // Add all the special button entries
     TextItem* tmp = new TextItem();
     if (choice_type == C_SPECIES)
-        tmp->set_text("+ - Viable species");
+        tmp->set_text(TR7("+ - Viable species", "+ - 추천 종족 선택");
     else
         tmp->set_text("+ - Viable background");
     coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
@@ -708,7 +710,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("# - Viable character");
+    tmp->set_text(TR7("# - Viable character", "# - 추천 캐릭터 선택"));
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -769,7 +771,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("! - Random character");
+    tmp->set_text(TR7("! - Random character", "! - 임의의 캐릭터");
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1159,12 +1161,12 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
     if (choice_type == C_JOB)
     {
-        cprintf(" Please select your background.");
+        cprintf(TR7(" Please select your background."," 당신의 직업을 선택하시오."));
         _construct_backgrounds_menu(ng, defaults, freeform);
     }
     else
     {
-        cprintf(" Please select your species.");
+        cprintf(TR7(" Please select your species.", " 당신의 종족을 선택하시오."));
         _construct_species_menu(ng, defaults, freeform);
     }
 
@@ -1435,7 +1437,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
+    tmp->set_text(TR7("% - List aptitudes", "% - 스킬 선호도 표시"));
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1450,7 +1452,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("? - Help");
+    tmp->set_text(TR7("? - Help", "? - 도움말"));
     min_coord.x = X_MARGIN;
     min_coord.y = SPECIAL_KEYS_START_Y + 2;
     max_coord.x = min_coord.x + tmp->get_text().size();
