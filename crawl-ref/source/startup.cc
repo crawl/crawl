@@ -65,6 +65,8 @@
  #include "windowmanager.h"
 #endif
 
+#define TR7(x, y) y
+
 static void _cio_init();
 
 // Initialise a whole lot of stuff...
@@ -643,7 +645,7 @@ again:
     if (num_saves)
     {
         tmp = new NoSelectTextItem();
-        tmp->set_text("Saved games:");
+        tmp->set_text(TR7("Saved games:", "저장된 게임들:"));
         tmp->set_bounds(coord_def(1, save_games_start_y),
                         coord_def(SCROLLER_MARGIN_X, save_games_start_y + 1));
         freeform->attach_item(tmp);

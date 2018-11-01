@@ -1070,28 +1070,28 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
 static job_group jobs_order[] =
 {
     {
-        "Warrior",
+        TR7("Warrior", "전사 계열"),
         coord_def(0, 0), 15,
         { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
     },
     {
-        "Adventurer",
+        TR7("Adventurer", "모험가 계열"),
         coord_def(0, 7), 15,
         { JOB_ARTIFICER, JOB_WANDERER }
     },
     {
-        "Zealot",
+        TR7("Zealot", "신앙 계열"),
         coord_def(15, 0), 20,
         { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
     },
     {
-        "Warrior-mage",
+        TR7("Warrior-mage", "마법전사 계열"),
         coord_def(35, 0), 21,
         { JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
           JOB_ENCHANTER }
     },
     {
-        "Mage",
+        TR7("Mage", "마법사 계열"),
         coord_def(56, 0), 22,
         { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
@@ -1467,7 +1467,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("* - Random weapon");
+    tmp->set_text(TR7("* - Random weapon", "* - 임의의 무기"));
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1483,7 +1483,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
     // Adjust the end marker to align the - because Bksp text is longer by 3
     tmp = new TextItem();
-    tmp->set_text("Bksp - Return to character menu");
+    tmp->set_text(TR7("Bksp - Return to character menu", "Bksp - 캐릭터 메뉴로 돌아감"));
     tmp->set_description_text("Lets you return back to Character choice menu");
     min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
     min_coord.y = SPECIAL_KEYS_START_Y + 1;
@@ -1564,7 +1564,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     highlighter->set_visible(true);
 
     textcolour(CYAN);
-    cprintf("\nYou have a choice of weapons:  ");
+    cprintf(TR7("\nYou have a choice of weapons:  ", "\n어느 무기와 함께 시작하겠는가? :"));
 
     while (true)
     {
@@ -1900,7 +1900,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     // TODO: let players escape back to first screen menu
     // Adjust the end marker to align the - because Bksp text is longer by 3
     //tmp = new TextItem();
-    //tmp->set_text("Bksp - Return to character menu");
+    //tmp->set_text(TR7("Bksp - Return to character menu", "Bksp - 캐릭터 메뉴로 돌아감"));
     //tmp->set_description_text("Lets you return back to Character choice menu");
     //min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
     //min_coord.y = SPECIAL_KEYS_START_Y + 1;
