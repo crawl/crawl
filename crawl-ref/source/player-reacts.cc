@@ -690,6 +690,8 @@ static void _decrement_durations()
         {
             mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
             you.redraw_stats[s] = true;
+            if (you.duration[DUR_SLOW] == 0)
+                mprf(MSGCH_DURATION, "You feel yourself speed up.");
         }
     }
 

@@ -4625,8 +4625,9 @@ void dec_slow_player(int delay)
 
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
-        mprf(MSGCH_DURATION, "You feel yourself speed up.");
         you.duration[DUR_SLOW] = 0;
+        if (!have_stat_zero())
+            mprf(MSGCH_DURATION, "You feel yourself speed up.");
     }
 }
 
