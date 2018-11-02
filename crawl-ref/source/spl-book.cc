@@ -933,13 +933,13 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 */
 bool learn_spell(spell_type specspell, bool wizard)
 {
+    if (!_learn_spell_checks(specspell, wizard))
+        return false;
+
     string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
 
     if (!mem_spell_warning_string.empty())
         mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
-
-    if (!_learn_spell_checks(specspell, wizard))
-        return false;
 
     if (!wizard)
     {
