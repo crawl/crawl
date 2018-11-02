@@ -1281,21 +1281,20 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_THE_GOURMAND:
-        if (you.species == SP_SPRIGGAN 
-         || you.species == SP_VAMPIRE
-         || you.species == SP_MUMMY
-         || you.get_mutation_level(MUT_HERBIVOROUS) > 0)
+        if (you.species == SP_VAMPIRE
+         || you_foodless() //Mummy or Lich
+         || you.get_mutation_level(MUT_HERBIVOROUS) > 0) //Spriggan
+         {
             mpr("After a brief, frighteningly intense craving, your appetite remains unchanged.");
+         }
         else if
-            (you.species == SP_TROLL
-         ||  you.species == SP_GHOUL
-         ||  you.species == SP_FELID
-         ||  you.species == SP_KOBOLD)
+           (you.get_mutation_level(MUT_CARNIVOROUS) > 0) //Troll, Felid, Kobold, Ghoul
             mpr("After a brief, strange feeling in your gut, your appetite remains unchanged.");
         else 
         {
-            you.duration[DUR_GOURMAND] = 0;
             mpr("You feel a craving for the dungeon's cuisine.");
+            // What's this supposed to achieve? (jpeg)
+            you.duration[DUR_GOURMAND] = 0;
         }
         break;
 
