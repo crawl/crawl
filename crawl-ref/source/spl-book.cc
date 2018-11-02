@@ -838,9 +838,6 @@ bool can_learn_spell(bool silent)
 
 bool learn_spell()
 {
-    if (!can_learn_spell())
-        return false;
-
     spell_list spells(_get_spell_list(false, true));
     if (spells.empty())
         return false;
