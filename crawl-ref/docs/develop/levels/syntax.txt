@@ -1479,22 +1479,13 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
           A marker ties a square on the map to a game-trigger of some sort
           (which depends on the marker and what feature it is on).
 
-          The portals to the Hells in the Vestibule of Hell are each annotated
-          with feature markers like this:
+          Lua markers are used for more complex triggers such as entry to the
+          Slime loot areas when the Royal Jelly dies, fog generators,
+          transporters, etc.
 
-          MARKER: D=feat:enter_dis, G=feat:enter_gehenna
-
-          When the horn is sounded, the stone arch at D becomes the portal to
-          Dis, the arch at G becomes the portal to Gehenna. This behaviour
-          applies only to the Vestibule of Hell.
-
-          Lua markers are used for more complex triggers, such as for bazaar
-          and labyrinth gates, rune pickup triggers for the branches of Hell,
-          fog generators, etc.
-
-          Here's a Lua marker that creates a cloud generator (for a
+          Here's a Lua marker that creates a cloud generator. For a
           full explanation of the various parameters, read the header
-          of dat/dlua/lm_fog.lua):
+          of dat/dlua/lm_fog.lua.
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \
