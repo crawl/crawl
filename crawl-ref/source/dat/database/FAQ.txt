@@ -165,27 +165,6 @@ Also, casting (difficult) spells will make you hungry, but high Intelligence
 and Spellcasting will lessen this effect. If you press 'II', you can read about
 the hunger effects of your spells. Invocations likewise often have a Food cost.
 %%%%
-Q:labyrinth
-
-I'm stuck in a labyrinth and can't find the exit. How do I get out?
-%%%%
-A:labyrinth
-
-A: To escape a labyrinth, it can be useful to know a few things:
-
-* Each labyrinth consists of several layers of different wall types, ranging
-  from rock in the outer border to metal in the centre part, at the very centre
-  of which the exit is located. (Though the exit itself may be part of a vault
-  that has non-metal walls.)
-
-* From time to time, the walls will rearrange themselves. Though they will
-  never close off the path to the exit, the path itself might change. In
-  particular, this means that the "left hand" rule is not entirely reliable.
-
-Also, exit and loot are guarded by a brutish minotaur, who is very much
-alive. Don't let yourself get sidetracked by necromantic remnants of its
-ancestors.
-%%%%
 Q:cheating
 
 Is there a cheating mode to Crawl where I can play without dying?

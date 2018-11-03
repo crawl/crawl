@@ -1219,7 +1219,7 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_EXPLORE:
-                if (on_level && !player_in_branch(BRANCH_LABYRINTH))
+                if (on_level)
                 {
                     travel_pathfind tp;
                     tp.set_floodseed(you.pos(), true);

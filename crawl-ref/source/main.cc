@@ -1342,7 +1342,6 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     }
 
     // Does the next level have a warning annotation?
-    // Also checks for entering a labyrinth with teleportitis.
     if (!check_annotation_exclusion_warning())
         return false;
 

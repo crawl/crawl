@@ -32,7 +32,6 @@
 #include "dbg-scan.h"
 #include "dgn-delve.h"
 #include "dgn-height.h"
-#include "dgn-labyrinth.h"
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
@@ -1294,8 +1293,7 @@ void dgn_reset_level(bool enable_random_maps)
         env.spawn_random_rate = 50;
     }
     else
-        // No random monsters in Labyrinths and portal vaults if we don't have
-        // the orb.
+        // No random monsters in portal vaults if we don't have the orb.
         env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;
@@ -2368,9 +2366,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
     bool place_vaults = _builder_by_type();
 
-    if (player_in_branch(BRANCH_LABYRINTH))
-        return;
-
     if (player_in_branch(BRANCH_SLIME))
         _slime_connectivity_fixup();
 
@@ -2666,14 +2661,7 @@ static bool _pan_level()
 // to place more vaults after this
 static bool _builder_by_type()
 {
-    if (player_in_branch(BRANCH_LABYRINTH))
-    {
-        dgn_build_labyrinth_level();
-        // Labs placed their minivaults already
-        _fixup_branch_stairs();
-        return false;
-    }
-    else if (player_in_branch(BRANCH_ABYSS))
+    if (player_in_branch(BRANCH_ABYSS))
     {
         generate_abyss();
         // Should place some vaults in abyss because
@@ -5346,12 +5334,10 @@ static dungeon_feature_type _pick_an_altar()
 {
     god_type god;
 
-    if (player_in_branch(BRANCH_TEMPLE)
-        || player_in_branch(BRANCH_LABYRINTH))
-    {
-        // No extra altars in Temple, none at all in Labyrinth.
+    // No extra altars in Temple.
+    if (player_in_branch(BRANCH_TEMPLE))
         god = GOD_NO_GOD;
-    }
+
     // Xom can turn up anywhere
     else if (one_chance_in(27))
         god = GOD_XOM;
@@ -6050,11 +6036,6 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat)
     return coord_def();
 }
 
-static coord_def _dgn_find_labyrinth_entry_point()
-{
-    return dgn_find_feature_marker(DNGN_ENTER_LABYRINTH);
-}
-
 // Make hatches and shafts land the player a bit away from the wall.
 // Specifically, the adjacent cell with least slime walls next to it.
 // XXX: This can still give bad situations if the layout is not bubbly,
@@ -6101,17 +6082,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         const coord_def pos(dgn_find_feature_marker(stair_to_find));
         if (in_bounds(pos) && grd(pos) == stair_to_find)
             return pos;
-    }
-
-    if (player_in_branch(BRANCH_LABYRINTH))
-    {
-        const coord_def pos(_dgn_find_labyrinth_entry_point());
-        if (in_bounds(pos))
-            return pos;
-
-        // Couldn't find a good place, warn, and use old behaviour.
-        dprf(DIAG_DNGN, "Oops, couldn't find labyrinth entry marker.");
-        stair_to_find = DNGN_FLOOR;
     }
 
     if (stair_to_find == your_branch().exit_stairs)
@@ -6248,10 +6218,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     if (in_bounds(pos))
         return pos;
 
-    // Look for any clear terrain and abandon the idea of looking
-    // nearby now. This is used when taking transit Pandemonium gates,
-    // or landing in Labyrinths. Currently the player can land in vaults,
-    // which is considered acceptable.
+    // Look for any clear terrain and abandon the idea of looking nearby now.
+    // This is used when taking transit Pandemonium gates. Currently the player
+    // can land in vaults, which is considered acceptable.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (feat_has_dry_floor(grd(*ri)))

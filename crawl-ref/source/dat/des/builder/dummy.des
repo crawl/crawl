@@ -12,7 +12,7 @@
 # Zot has a 2/3 chance now, to try to make it more interesting. ~Grunt
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Desolation, !Depths:2-, !Pan
+DEPTH: 1-100, !Zig, !Gauntlet, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Desolation, !Depths:2-, !Pan
 ORIENT: float
 CHANCE: 8333, 6666 (Zot), 10000 (Vaults)
 MAP
@@ -24,7 +24,7 @@ ENDMAP
 # And always in Vaults - needs to be done through layouts. ~Grunt
 NAME: primary_mini_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, !Depths:1, !Abyss, !Lab
+DEPTH: 1-100, Pan, !Depths:1, !Abyss, !Gauntlet
 CHANCE: 10000 (Vaults), 5000
 MAP
 x
@@ -82,7 +82,7 @@ ENDMAP
 # Minivaults
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D, !Depths, !Abyss, !Lab
+DEPTH: 1-50, !D, !Depths, !Abyss, !Gauntlet
 TAGS: dummy
 WEIGHT: 90
 MAP

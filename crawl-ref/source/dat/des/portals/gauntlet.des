@@ -1,0 +1,45 @@
+###############################################################################
+# gauntlet.des: Vaults particular to Gauntlets.
+###############################################################################
+
+{{
+function gauntlet_portal(e)
+  local timeout_turns = crawl.random_range(400, 600)
+
+  local messager =
+    timed_msg {
+      initmsg = { "You hear a distant snort.",
+                  "Hark! There is an entrance to a gauntlet"
+                  .. "on this level. Find the entrance quickly before "
+                  .. "the gate is sealed!" },
+      finalmsg = "You hear a giant gate slam closed.",
+      verb = 'creaking',
+      noisemaker = 'gate'
+    }
+
+    e.lua_marker('O',
+      timed_marker {
+        turns = timeout_turns,
+        msg = messager,
+        floor = 'stone_arch',
+        feat_tile = 'dngn_portal_gauntlet_gone',
+        single_timed = true,
+        dstname = 'gauntlet' })
+    e.kfeat("O = enter_gauntlet")
+    e.tile("O = dngn_portal_gauntlet")
+end
+}}
+
+#############################################################################
+# Gauntlet entry vaults
+
+NAME:   gauntlet_entry_generic
+TAGS:   transparent extra uniq_gauntlet
+CHANCE: 5%
+DEPTH:  D:11-, Orc:$, Lair
+: gauntlet_portal(_G)
+MAP
+O
+ENDMAP
+
+default-depth: Gauntlet

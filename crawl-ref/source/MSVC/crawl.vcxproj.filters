@@ -898,9 +898,6 @@
     <ClCompile Include="..\dgn-layouts.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\dgn-labyrinth.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\dgn-irregular-box.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1180,9 +1177,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\dgn-irregular-box.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dgn-labyrinth.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\dgn-layouts.h">

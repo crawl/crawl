@@ -634,9 +634,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     }
     else
     {
-        if (player_in_branch(BRANCH_LABYRINTH) && teleportitis)
-            return false;
-
         coord_def newpos;
         int tries = 500;
         do

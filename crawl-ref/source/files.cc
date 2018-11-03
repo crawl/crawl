@@ -921,12 +921,13 @@ static int _get_dest_stair_type(branch_type old_branch,
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
     }
-
+#if TAG_MAJOR_VERSION == 34
     if (stair_taken == DNGN_ENTER_LABYRINTH)
     {
         // dgn_find_nearby_stair uses special logic for labyrinths.
         return DNGN_ENTER_LABYRINTH;
     }
+#endif
 
     if (feat_is_portal_entrance(stair_taken))
         return DNGN_STONE_ARCH;

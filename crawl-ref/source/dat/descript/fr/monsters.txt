@@ -1340,8 +1340,7 @@ Un effrayant champion ondin avec le regard perçant et une série de javelots.
 %%%%
 minotaur
 
-Un humain imposant avec la tête d'un taureau. Il a élu domicile dans les
-labyrinthes isolés.
+Un humain imposant avec la tête d'un taureau.
 %%%%
 moth
 

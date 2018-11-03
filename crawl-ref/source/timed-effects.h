@@ -5,8 +5,6 @@
 
 #pragma once
 
-void change_labyrinth(bool msg = false);
-
 void update_level(int elapsedTime);
 monster* update_monster(monster& mon, int turns);
 void handle_time();

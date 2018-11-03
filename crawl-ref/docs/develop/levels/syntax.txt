@@ -314,8 +314,7 @@ PLACE:    Used to specify certain special levels. Existing special levels
           will force the map (or one of the maps with PLACE: D:3) to be picked
           when D:3 is generated.
 
-          PLACE cannot be used to specify places in the Abyss, Pandemonium,
-          or Labyrinths.
+          PLACE cannot be used to specify places in the Abyss or Pandemonium.
 
           PLACE can be used with random vaults and minivaults for testing them.
 

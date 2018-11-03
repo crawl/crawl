@@ -64,7 +64,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/dgn-delve.cc \
     $(CRAWL_PATH)/dgn-height.cc \
     $(CRAWL_PATH)/dgn-irregular-box.cc \
-    $(CRAWL_PATH)/dgn-labyrinth.cc \
     $(CRAWL_PATH)/dgn-layouts.cc \
     $(CRAWL_PATH)/dgn-overview.cc \
     $(CRAWL_PATH)/dgn-proclayouts.cc \

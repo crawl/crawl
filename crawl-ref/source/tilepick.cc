@@ -231,8 +231,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:
         return TILE_DNGN_ABANDONED_SHOP;
-    case DNGN_ENTER_LABYRINTH:
-        return TILE_DNGN_PORTAL_LABYRINTH;
+    case DNGN_ENTER_GAUNTLET:
+        return TILE_DNGN_PORTAL_GAUNTLET;
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
@@ -245,7 +245,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
-    case DNGN_EXIT_LABYRINTH:
+    case DNGN_EXIT_GAUNTLET:
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
     case DNGN_SEALED_STAIRS_UP:
@@ -3706,8 +3706,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_ENTER_PANDEMONIUM;
     case BRANCH_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
-    case BRANCH_LABYRINTH:
-        return TILE_DNGN_PORTAL_LABYRINTH;
+    case BRANCH_GAUNTLET:
+        return TILE_DNGN_PORTAL_GAUNTLET;
     case BRANCH_BAZAAR:
         return TILE_DNGN_PORTAL_BAZAAR;
     case BRANCH_TROVE:

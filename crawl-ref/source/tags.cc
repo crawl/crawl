@@ -1020,6 +1020,8 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
         x = DNGN_CLEAR_STONE_WALL;
     }
 
+    if (x == DNGN_ENTER_LABYRINTH)
+        x = DNGN_ENTER_GAUNTLET;
 #endif
 
     return x;
@@ -1114,9 +1116,9 @@ static void _add_missing_branches()
                     map_feature_marker *featm =
                         dynamic_cast<map_feature_marker*>(marker);
                     // [ds] Ensure we're activating the correct feature
-                    // markers. Feature markers are also used for other
-                    // things, notably to indicate the return point from
-                    // a labyrinth or portal vault.
+                    // markers. Feature markers are also used for other things,
+                    // notably to indicate the return point from a portal
+                    // vault.
                     switch (featm->feat)
                     {
                     case DNGN_ENTER_COCYTUS:

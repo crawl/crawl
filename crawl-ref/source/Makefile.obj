@@ -45,7 +45,6 @@ dgl-message.o \
 dgn-delve.o \
 dgn-height.o \
 dgn-irregular-box.o \
-dgn-labyrinth.o \
 dgn-layouts.o \
 dgn-overview.o \
 dgn-proclayouts.o \

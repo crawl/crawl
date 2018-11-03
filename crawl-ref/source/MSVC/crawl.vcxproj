@@ -496,7 +496,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\dgn-delve.cc" />
     <ClCompile Include="..\dgn-height.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
-    <ClCompile Include="..\dgn-labyrinth.cc" />
     <ClCompile Include="..\dgn-layouts.cc" />
     <ClCompile Include="..\dgn-overview.cc" />
     <ClCompile Include="..\dgn-proclayouts.cc" />
@@ -904,7 +903,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\dgn-event.h" />
     <ClInclude Include="..\dgn-height.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
-    <ClInclude Include="..\dgn-labyrinth.h" />
     <ClInclude Include="..\dgn-layouts.h" />
     <ClInclude Include="..\dgn-overview.h" />
     <ClInclude Include="..\dgn-proclayouts.h" />

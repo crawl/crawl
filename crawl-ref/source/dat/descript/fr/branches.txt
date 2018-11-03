@@ -235,18 +235,6 @@ niveau, mais une fois dehors, aucun retour n'est possible.
 
 On ne peut y entrer qu'en possedant au moins 3 runes de Zot.
 %%%%
-Labyrinth
-
-Le Labyrinthe est un vaste et complexe dédale conçu par un esprit subtil et
-malicieux pour une raison qui s'est perdue dans l'histoire. Une vieille légende
-prétend que le labyrinthe aurait été construit comme prison pour un minotaure
-redoutable. Des rumeurs plus récentes disent que la bête vit encore, gardant la
-seule sortie du labyrinthe — ainsi qu'un tas de trésors pris aux aventuriers
-suffisamment stupides pour y avoir pénétrer et y être mort de faim. Prenez
-garde à l'intérieur car les murs bougent parfois créant de nouveaux passages
-dans le labyrinthe, ou vos propres possessions pourraient grossir le butin du
-minotaure.
-%%%%
 Bazaar
 
 En dehors des vendeurs qui ont établi leurs échoppes à l'intérieur même du

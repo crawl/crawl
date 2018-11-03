@@ -676,9 +676,9 @@ A flagged portal
 A portal leading to a bailey, gradually fading away as the standard is lowered
 to the ground.
 %%%%
-A labyrinth entrance
+A gauntlet entrance
 
-A portal leading to a labyrinth.
+A portal leading to a gauntlet.
 %%%%
 # timed bazaar
 A flickering gateway to a bazaar

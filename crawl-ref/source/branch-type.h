@@ -39,12 +39,17 @@ enum branch_type                // you.where_are_you
     BRANCH_ABYSS,
     BRANCH_PANDEMONIUM,
     BRANCH_ZIGGURAT,
+#if TAG_MAJOR_VERSION == 34
     BRANCH_LABYRINTH,
+#endif
     BRANCH_BAZAAR,
     BRANCH_TROVE,
     BRANCH_SEWER,
     BRANCH_OSSUARY,
     BRANCH_BAILEY,
+#if TAG_MAJOR_VERSION > 34
+    BRANCH_GAUNTLET,
+#endif
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
@@ -52,6 +57,9 @@ enum branch_type                // you.where_are_you
     BRANCH_DEPTHS,
 #endif
     BRANCH_DESOLATION,
+#if TAG_MAJOR_VERSION == 34
+    BRANCH_GAUNTLET,
+#endif
     NUM_BRANCHES,
 
     GLOBAL_BRANCH_INFO = 127,

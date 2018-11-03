@@ -315,7 +315,7 @@ STONE_STAIRS_UP(III, iii),
     COLOUR_AND_MAP(BROWN),
     FFT_NONE, MF_STAIR_UP,
 },
-
+#if TAG_MAJOR_VERSION == 34
 {
     DNGN_EXIT_LABYRINTH, "escape hatch in the ceiling", "exit_labyrinth",
     DCHAR_STAIRS_UP, NUM_DCHAR_TYPES,
@@ -329,6 +329,7 @@ STONE_STAIRS_UP(III, iii),
     ETC_SHIMMER_BLUE, LIGHTGREY, ETC_SHIMMER_BLUE, ETC_SHIMMER_BLUE, ETC_SHIMMER_BLUE,
     (FFT_NOTABLE | FFT_EXAMINE_HINT), MF_PORTAL,
 },
+#endif
 
 #define PORTAL_ENTRANCE(enum, name, vaultname, colour)\
 {\
@@ -376,6 +377,7 @@ PORTAL_ENTRANCE(DNGN_ENTER_TROVE, "portal to a secret trove of treasure", "enter
 PORTAL_ENTRANCE(DNGN_ENTER_SEWER, "glowing drain", "enter_sewer", LIGHTGREEN),
 PORTAL_ENTRANCE(DNGN_ENTER_OSSUARY, "sand-covered staircase", "enter_ossuary", BROWN),
 PORTAL_ENTRANCE(DNGN_ENTER_BAILEY, "flagged portal", "enter_bailey", LIGHTRED),
+PORTAL_ENTRANCE(DNGN_ENTER_GAUNTLET, "gate leading to a gauntlet", "enter_gauntlet", ETC_SHIMMER_BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_ICE_CAVE, "frozen archway", "enter_ice_cave", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_VOLCANO, "dark tunnel", "enter_volcano", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER_BLUE),
@@ -389,6 +391,7 @@ PORTAL_EXIT(DNGN_EXIT_TROVE, "gate leading back out of this place", "exit_trove"
 PORTAL_EXIT(DNGN_EXIT_SEWER, "gate leading back out of this place", "exit_sewer", BROWN),
 PORTAL_EXIT(DNGN_EXIT_OSSUARY, "gate leading back out of this place", "exit_ossuary", BROWN),
 PORTAL_EXIT(DNGN_EXIT_BAILEY, "gate leading back out of this place", "exit_bailey", ETC_SHIMMER_BLUE),
+PORTAL_EXIT(DNGN_EXIT_GAUNTLET, "gate leading back out of this place", "exit_gauntlet", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_ICE_CAVE, "ice covered gate leading back out of this place", "exit_ice_cave", WHITE),
 PORTAL_EXIT(DNGN_EXIT_VOLCANO, "rocky tunnel leading out of this place", "exit_volcano", RED),
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),

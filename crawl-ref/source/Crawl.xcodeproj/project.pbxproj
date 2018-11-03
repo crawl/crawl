@@ -14,7 +14,6 @@
 		1F909AE5148B23BC00084E83 /* cellular.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACA148B23BC00084E83 /* cellular.cc */; };
 		1F909AE6148B23BC00084E83 /* dactions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACD148B23BC00084E83 /* dactions.cc */; };
 		1F909AE7148B23BC00084E83 /* dgn-delve.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACF148B23BC00084E83 /* dgn-delve.cc */; };
-		1F909AE8148B23BC00084E83 /* dgn-labyrinth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */; };
 		1F909AE9148B23BC00084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
 		1F909AEA148B23BC00084E83 /* errors.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD6148B23BC00084E83 /* errors.cc */; };
 		1F909AEB148B23BC00084E83 /* evoke.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD8148B23BC00084E83 /* evoke.cc */; };
@@ -65,7 +64,6 @@
 		1F909BC4148B42C700084E83 /* spl-wpnench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1D148B242D00084E83 /* spl-wpnench.cc */; };
 		1F909BC8148B42E900084E83 /* unicode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B4C148B251700084E83 /* unicode.cc */; };
 		1F909BCE148B440800084E83 /* dgn-delve.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACF148B23BC00084E83 /* dgn-delve.cc */; };
-		1F909BCF148B440800084E83 /* dgn-labyrinth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */; };
 		1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
 		1F909BD1148B440800084E83 /* fineff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADC148B23BC00084E83 /* fineff.cc */; };
 		1F909BD2148B440800084E83 /* god-menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* god-menu.cc */; };
@@ -920,8 +918,6 @@
 		1F909ACE148B23BC00084E83 /* dactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dactions.h; sourceTree = "<group>"; };
 		1F909ACF148B23BC00084E83 /* dgn-delve.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-delve.cc"; sourceTree = "<group>"; };
 		1F909AD0148B23BC00084E83 /* dgn-delve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-delve.h"; sourceTree = "<group>"; };
-		1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-labyrinth.cc"; sourceTree = "<group>"; };
-		1F909AD2148B23BC00084E83 /* dgn-labyrinth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-labyrinth.h"; sourceTree = "<group>"; };
 		1F909AD3148B23BC00084E83 /* dgn-layouts.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-layouts.cc"; sourceTree = "<group>"; };
 		1F909AD4148B23BC00084E83 /* dgn-layouts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-layouts.h"; sourceTree = "<group>"; };
 		1F909AD5148B23BC00084E83 /* endianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endianness.h; sourceTree = "<group>"; };
@@ -1847,8 +1843,6 @@
 				1F909AD0148B23BC00084E83 /* dgn-delve.h */,
 				7B09F6371133D823004F149D /* dgn-height.cc */,
 				7B09F6381133D823004F149D /* dgn-height.h */,
-				1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */,
-				1F909AD2148B23BC00084E83 /* dgn-labyrinth.h */,
 				1F909AD3148B23BC00084E83 /* dgn-layouts.cc */,
 				1F909AD4148B23BC00084E83 /* dgn-layouts.h */,
 				7B09F6391133D823004F149D /* dgn-overview.cc */,
@@ -2956,7 +2950,6 @@
 				7B51659D11859D30005B23ED /* dgl-message.cc in Sources */,
 				1F909BCE148B440800084E83 /* dgn-delve.cc in Sources */,
 				7B09F6431133D823004F149D /* dgn-height.cc in Sources */,
-				1F909BCF148B440800084E83 /* dgn-labyrinth.cc in Sources */,
 				1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */,
 				7B09F6441133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6451133D823004F149D /* dgn-shoals.cc in Sources */,
@@ -3200,7 +3193,6 @@
 				7B51659C11859D30005B23ED /* dgl-message.cc in Sources */,
 				1F909AE7148B23BC00084E83 /* dgn-delve.cc in Sources */,
 				7B09F63F1133D823004F149D /* dgn-height.cc in Sources */,
-				1F909AE8148B23BC00084E83 /* dgn-labyrinth.cc in Sources */,
 				1F909AE9148B23BC00084E83 /* dgn-layouts.cc in Sources */,
 				7B09F6401133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6411133D823004F149D /* dgn-shoals.cc in Sources */,

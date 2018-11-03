@@ -6,7 +6,7 @@ arrival vaults or most branch ends. They are organised into several
 subdirectories of dat/des, namely
 
 branches  = maps special to a branch, and branch ends
-portals   = maps needed for portal vaults like labyrinths or bazaars
+portals   = maps needed for portal vaults like gauntlets or bazaars
 arrival   = Dungeon arrival vaults
 variable  = floating vaults, minivaults
 altar     = overflow and other altars

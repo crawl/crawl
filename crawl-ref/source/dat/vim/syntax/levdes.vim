@@ -79,7 +79,7 @@ syn keyword desOrientation southwest southeast encompass float centre
 "Note: `Zot` totally highlights in e.g. the items `rune of Zot` and `Orb of
 "Zot`. Not worth fixing.
 syn keyword desOrientation Abyss Bailey Bazaar Coc Crypt D Depths Desolation Dis
-syn keyword desOrientation Elf Geh Hell IceCv Lair Lab Orc Ossuary Pan Sewer
+syn keyword desOrientation Elf Geh Hell IceCv Lair Gauntlet Orc Ossuary Pan Sewer
 syn keyword desOrientation Shoals Slime Snake Spider Swamp Tar Temple Tomb Trove
 syn keyword desOrientation Vaults Volcano Wizlab Zot Zig
 
@@ -102,8 +102,6 @@ syn match desBranchname contained /volcano\|wizlab\|ziggurat\|zot/
 " TAGS
 " in abyss.cc
 syn keyword desOrientation abyss_exit
-" in decks.cc and dgn-labyrinth.cc (without `minotaur` because monster)
-syn keyword desOrientation lab generate_loot
 " from dlua.ziggurat
 syn keyword desOrientation ziggurat_pillar centered
 " map building in dungeon.cc (`transparent` is handled later)

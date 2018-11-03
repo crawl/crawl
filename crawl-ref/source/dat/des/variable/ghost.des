@@ -1147,8 +1147,8 @@ MAP
     .............
 ENDMAP
 
-NAME:   maelrawn_ghost_labyrinth_escape
-# Same depths where labs can place
+NAME:   maelrawn_ghost_gauntlet_escape
+# Same depths where Gauntlets can place
 DEPTH:  D:11-, Lair, Orc:$
 ORIENT: float
 KPROP:  x = bloody
@@ -1176,7 +1176,7 @@ NSUBST: - = 2=0 / 2=0- / 2=9- / -
 : end
 SUBST:  a = c.
 KFEAT:  O = expired_portal
-FTILE:  O = dngn_portal_labyrinth_gone
+FTILE:  O = dngn_portal_gauntlet_gone
 : ghost_setup(_G)
 MAP
 ...........

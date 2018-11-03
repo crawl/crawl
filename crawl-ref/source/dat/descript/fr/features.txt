@@ -179,10 +179,6 @@ A hole to the Spider Nest
 
 Ce passage conduit au Nid des Serpents.
 %%%%
-A labyrinth entrance
-
-Ce portail conduit dans un labyrinthe.
-%%%%
 A mechanical trap
 
 Un engin mécanique conçu pour nuire aux intrus. Un aventurier habile peut

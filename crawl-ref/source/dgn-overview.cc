@@ -181,9 +181,8 @@ static string _portals_description_string()
         last_id.depth = 10000;
         for (const auto &entry : portals_present)
         {
-            // one line per region should be enough, they're all of
-            // the form D:XX, except for labyrinth portals, of which
-            // you would need 11 (at least) to have a problem.
+            // one line per region should be enough, they're all of the form
+            // Branch:XX.
             if (entry.second == it->id)
             {
                 if (last_id.depth == 10000)
@@ -198,7 +197,7 @@ static string _portals_description_string()
                 }
                 last_id = entry.first.id;
 
-                // Portals notes (Zig/Trovel price).
+                // Portals notes (Trove price).
                 const string note = portal_notes[entry.first];
                 if (!note.empty())
                     disp += " (" + note + ")";

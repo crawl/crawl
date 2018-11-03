@@ -1640,8 +1640,8 @@ A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 minotaur
 
-A large muscular human with the head of a bull. It makes its home in secluded
-labyrinths.
+A large muscular human with the head of a bull. It makes its home in a
+gauntlet where it awaits worthy challengers.
 %%%%
 molten gargoyle
 

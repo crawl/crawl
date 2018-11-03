@@ -212,6 +212,11 @@ static const pop_entry pop_blade[] =
   {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
   { 0,0,0,FLAT,MONS_0 }
 };
+
+static const pop_entry pop_lab[] =
+{ // Labyrinth
+  { 0,0,0,FLAT,MONS_0 }
+};
 #endif
 
 static const pop_entry pop_lair[] =
@@ -911,8 +916,8 @@ static const pop_entry pop_zig[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static const pop_entry pop_lab[] =
-{ // Labyrinth
+static const pop_entry pop_gauntlet[] =
+{ // Gauntlet
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1106,12 +1111,17 @@ static const population_list population[] =
     POP(abyss),
     POP(pan),
     POP(zig),
+#if TAG_MAJOR_VERSION == 34
     POP(lab),
+#endif
     POP(bazaar),
     POP(trove),
     POP(sewer),
     POP(ossuary),
     POP(bailey),
+#if TAG_MAJOR_VERSION > 34
+    POP(gauntlet),
+#endif
     POP(icecv),
     POP(volcano),
     POP(wizlab),
@@ -1119,6 +1129,9 @@ static const population_list population[] =
     POP(depths),
 #endif
     POP(desolation),
+#if TAG_MAJOR_VERSION == 34
+    POP(gauntlet),
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
 
@@ -1215,12 +1228,17 @@ static const population_list population_zombie[] =
     POP(generic_late_zombie), // Abyss
     POP(generic_late_zombie), // Pan
     POP(zig),
+#if TAG_MAJOR_VERSION == 34
     POP(lab),
+#endif
     POP(bazaar),
     POP(trove),
     POP(sewer),
     POP(ossuary),
     POP(bailey),
+#if TAG_MAJOR_VERSION > 34
+    POP(gauntlet),
+#endif
     POP(icecv),
     POP(volcano),
     POP(wizlab),
@@ -1228,6 +1246,9 @@ static const population_list population_zombie[] =
     POP(depths),
 #endif
     POP(desolation),
+#if TAG_MAJOR_VERSION == 34
+    POP(gauntlet),
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
 
@@ -1323,12 +1344,17 @@ static const population_list population_water[] =
     POP(water_generic), // Abyss
     POP(water_generic), // Pan
     POP(water_generic), // Zig
+#if TAG_MAJOR_VERSION == 34
     POP(water_generic), // Lab
+#endif
     POP(water_generic), // Bazaar
     POP(water_generic), // Trove
     POP(water_generic), // Sewer
     POP(water_generic), // Ossuary
     POP(water_generic), // Bailey
+#if TAG_MAJOR_VERSION > 34
+    POP(water_generic), // Gauntlet
+#endif
     POP(water_generic), // IceCv
     POP(water_generic), // Volcano
     POP(water_generic), // WizLab
@@ -1336,6 +1362,9 @@ static const population_list population_water[] =
     POP(water_depths),
 #endif
     POP(water_generic), // Desolation
+#if TAG_MAJOR_VERSION == 34
+    POP(water_generic), // Gauntlet
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1427,12 +1456,17 @@ static const population_list population_lava[] =
     POP(lava_generic), // Abyss
     POP(lava_generic), // Pan
     POP(lava_generic), // Zig
+#if TAG_MAJOR_VERSION == 34
     POP(lava_generic), // Lab
+#endif
     POP(lava_generic), // Bazaar
     POP(lava_generic), // Trove
     POP(lava_generic), // Sewer
     POP(lava_generic), // Ossuary
     POP(lava_generic), // Bailey
+#if TAG_MAJOR_VERSION > 34
+    POP(lava_generic), // Gauntlet
+#endif
     POP(lava_generic), // IceCv
     POP(lava_generic), // Volcano
     POP(lava_generic), // WizLab
@@ -1440,5 +1474,8 @@ static const population_list population_lava[] =
     POP(lava_depths),
 #endif
     POP(lava_generic), // Desolation
+#if TAG_MAJOR_VERSION == 34
+    POP(lava_generic), // Gauntlet
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

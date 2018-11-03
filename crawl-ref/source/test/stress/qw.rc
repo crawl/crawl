@@ -1032,7 +1032,7 @@ local portal_data = {
   --{"Volcano", "a dark tunnel", "volcano"},
   --{"WizLab", "a magical portal", "wizlab"},
   --{"Zig", "gateway to a ziggurat", "ziggurat"},
-  --{"Lab", "labyrinth entrance", "labyrinth"},
+  --{"Gauntlet", "gauntlet entrance", "gauntlet"},
 } -- hack
 
 -- monster lists: XL cutoff (>= to ignore), monster name

@@ -2358,11 +2358,8 @@ void forget_map(bool rot)
     if (!rot)
         clear_travel_trail();
 
-    // Labyrinth and the Abyss use special rotting rules.
-    const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
-                                && you.species == SP_MINOTAUR
-                            || player_in_branch(BRANCH_ABYSS)
-                                && have_passive(passive_t::map_rot_res_abyss);
+    const bool rot_resist = player_in_branch(BRANCH_ABYSS)
+                            && have_passive(passive_t::map_rot_res_abyss);
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
 

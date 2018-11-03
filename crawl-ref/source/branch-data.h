@@ -230,18 +230,16 @@ const Branch branches[NUM_BRANCHES] =
       "You land on top of a ziggurat so tall you cannot make out the ground.",
       BLACK, BLACK,
       'Q', {}, BRANCH_NOISE_NORMAL },
+#if TAG_MAJOR_VERSION == 34
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, 15,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS | BFLAG_NO_MAP,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_LABYRINTH, DNGN_EXIT_LABYRINTH, DNGN_EXIT_THROUGH_ABYSS,
-      "Labyrinth", "a labyrinth", "Lab",
-      // XXX: Ideally, we want to hint at the wall rule (rock > metal),
-      //      and that the walls can shift occasionally.
-      // Are these too long?
-      "As you enter the labyrinth, previously moving walls settle noisily into place.\n"
-      "You hear the metallic echo of a distant snort before it fades into the rock.",
+      "Labyrinth", "a Labyrinth", "Lab",
+      "You enter a labyrinth!",
       BLACK, BLACK,
       '0', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, 18,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
@@ -282,6 +280,16 @@ const Branch branches[NUM_BRANCHES] =
       "You enter a bailey!",
       WHITE, LIGHTRED,
       '5', {}, BRANCH_NOISE_NORMAL },
+#if TAG_MAJOR_VERSION > 34
+
+    { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
+      "Gauntlet", "a Gauntlet", "Gauntlet",
+      "You enter a gauntlet!",
+      BLACK, BLACK,
+      '6', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, 15,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
@@ -289,7 +297,12 @@ const Branch branches[NUM_BRANCHES] =
       "Ice Cave", "an ice cave", "IceCv",
       "You enter an ice cave!",
       BLUE, WHITE,
+#if TAG_MAJOR_VERSION == 34
       '6', {}, BRANCH_NOISE_NORMAL },
+#endif
+#if TAG_MAJOR_VERSION > 34
+      '7', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, 14,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
@@ -297,7 +310,12 @@ const Branch branches[NUM_BRANCHES] =
       "Volcano", "a volcano", "Volcano",
       "You enter a volcano!",
       RED, RED,
+#if TAG_MAJOR_VERSION == 34
       '7', {}, BRANCH_NOISE_NORMAL },
+#endif
+#if TAG_MAJOR_VERSION > 34
+      '8', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, 24,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
@@ -305,7 +323,12 @@ const Branch branches[NUM_BRANCHES] =
       "Wizlab", "a wizard's laboratory", "WizLab",
       "You enter a wizard's laboratory!",
       LIGHTGREY, BROWN, // set per-map
+#if TAG_MAJOR_VERSION == 34
       '8', {}, BRANCH_NOISE_NORMAL },
+#endif
+#if TAG_MAJOR_VERSION > 34
+      '9', {}, BRANCH_NOISE_NORMAL },
+#endif
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
@@ -323,5 +346,20 @@ const Branch branches[NUM_BRANCHES] =
       "Desolation", "the Desolation of Salt", "Desolation",
       "You enter a great desolation of salt!",
       LIGHTGREY, BROWN, // TODO
+#if TAG_MAJOR_VERSION == 34
       '9', {}, BRANCH_NOISE_LOUD },
+#endif
+#if TAG_MAJOR_VERSION > 34
+      '0', {}, BRANCH_NOISE_LOUD },
+#endif
+#if TAG_MAJOR_VERSION == 34
+
+    { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
+      "Gauntlet", "a Gauntlet", "Gauntlet",
+      "You enter a gauntlet!",
+      BLACK, BLACK,
+      '!', {}, BRANCH_NOISE_NORMAL },
+#endif
 };

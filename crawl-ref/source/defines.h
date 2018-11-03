@@ -82,8 +82,6 @@ const int INFINITE_DISTANCE = 30000;
 // necessary, beyond hysterical raisins.
 const int MAPGEN_BORDER    = 2;
 
-const int LABYRINTH_BORDER = 4;
-
 // Now some defines about the actual play area:
 // Note: these boundaries are exclusive for the zone the player can move/dig,
 // and are inclusive for the area that we display on the map.
