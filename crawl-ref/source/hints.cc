@@ -2853,12 +2853,12 @@ string hints_memorise_info()
         cmd.push_back(CMD_CAST_SPELL);
     }
 
+    if (you.spell_no)
+        m += _hints_target_mode(true);
     linebreak_string(m, _get_hints_cols());
     if (!cmd.empty())
         insert_commands(m, cmd);
     text << m;
-    if (you.spell_no)
-        text << _hints_target_mode(true);
 
     return text.str();
 }
