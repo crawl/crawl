@@ -128,9 +128,18 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, string dsc, bool vaultexcl)
     : pos(p), radius(r),
-      los(los_def(p, opc_excl, circle_def(r, C_SQUARE))),
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
+    const monster* m = monster_at(p);
+    if (m) {
+        // Don't exclude past glass for stationary monsters.
+        if (m->is_stationary())
+            los = los_def(p, opc_solid_see, circle_def(r, C_SQUARE));
+        else
+            los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
+    }
+    else
+        los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
     set_los();
 }
 
