@@ -297,7 +297,8 @@ tilesdl.o \
 tiletex.o \
 windowmanager-sdl.o \
 glwrapper-ogl.o \
-fontwrapper-ft.o
+fontwrapper-ft.o \
+i18n-format.o
 
 WEBTILES_OBJECTS = \
 tileweb.o \
