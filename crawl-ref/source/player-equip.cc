@@ -1282,14 +1282,18 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_THE_GOURMAND:
         if (you.species == SP_VAMPIRE
-         || you_foodless() //Mummy or Lich
-         || you.get_mutation_level(MUT_HERBIVOROUS) > 0) //Spriggan
-         {
-            mpr("After a brief, frighteningly intense craving, your appetite remains unchanged.");
-         }
-        else if
-           (you.get_mutation_level(MUT_CARNIVOROUS) > 0) //Troll, Felid, Kobold, Ghoul
-            mpr("After a brief, strange feeling in your gut, your appetite remains unchanged.");
+            || you_foodless() // Mummy or in lichform
+            || you.get_mutation_level(MUT_HERBIVOROUS) > 0) // Spriggan
+        {
+            mpr("After a brief, frighteningly intense craving, "
+                "your appetite remains unchanged.");
+        }
+        else if (you.get_mutation_level(MUT_CARNIVOROUS) > 0  // Fe, Ko, Gh
+                 || you.get_mutation_level(MUT_GOURMAND) > 0) // Troll
+        {
+            mpr("After a brief, strange feeling in your gut, "
+                "your appetite remains unchanged.");
+        }
         else 
         {
             mpr("You feel a craving for the dungeon's cuisine.");
