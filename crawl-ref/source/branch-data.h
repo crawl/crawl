@@ -5,7 +5,8 @@ const Branch branches[NUM_BRANCHES] =
     // Branch struct:
     //  branch id, parent branch, mindepth, maxdepth, depth, absdepth,
     //  branch flags
-    //  entry stairs, exit stairs, short name, long name, abbrev name
+    //  entry stairs, exit stairs, escape feature,
+    //  short name, long name, abbrev name
     //  entry message
     //  floor colour, rock colour
     //  travel shortcut, runes, ambient noise level
