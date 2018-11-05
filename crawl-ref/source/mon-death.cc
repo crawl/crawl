@@ -74,6 +74,7 @@
 #include "unwind.h"
 #include "viewchar.h"
 #include "view.h"
+#include "i18n-format.h"
 
 /**
  * Initialise a corpse item.
@@ -2243,12 +2244,11 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 else
                 {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "당신은 %s을(를) %s!",
-                         mons.name(DESC_PLAIN).c_str(),
+                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+			format("당신은 {0:monster}을(를) {1:killtype}!", mons.name(DESC_PLAIN).c_str(), 
                          exploded                        ? "터뜨렸다" :
                          wounded_damaged(targ_holy)      ? "박살내버렸다"
-                                                         : "죽였다");
-
+                                                         : "죽였다"));
                 }
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.

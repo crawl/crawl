@@ -259,7 +259,8 @@ wizard.o \
 worley.o \
 xom.o \
 tilepick.o \
-tileview.o
+tileview.o \
+i18n-format.o
 
 TILES_OBJECTS = \
 tiledoll.o \
@@ -297,7 +298,7 @@ tilesdl.o \
 tiletex.o \
 windowmanager-sdl.o \
 glwrapper-ogl.o \
-fontwrapper-ft.o
+fontwrapper-ft.o \
 
 WEBTILES_OBJECTS = \
 tileweb.o \
