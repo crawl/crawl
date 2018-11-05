@@ -873,9 +873,9 @@ static const char* _jewellery_class_name(int jeweltype)
  */
 static string jewellery_type_name(int jeweltype)
 {
-    return make_stringf("<963>%s %s%s", _jewellery_class_name(jeweltype),
+    return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
                                    _jewellery_effect_prefix(jeweltype),
-                                    jewellery_effect_name(jeweltype));
+                                    jewellery_effect_name(jeweltype)); // <963> do not use tag - key value
 }
 
 
