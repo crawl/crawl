@@ -30,7 +30,7 @@ static void _show_message_line(string line)
         string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
-        mprf_nocap(MSGCH_DGL_MESSAGE, "<white>%s:</white> %s", sender.c_str(),
+        mprf_nocap(MSGCH_DGL_MESSAGE, "<457><white>%s:</white> %s", sender.c_str(),
                                                                line.c_str());
         if (Options.note_dgl_messages)
         {
@@ -54,7 +54,7 @@ static void _read_each_message()
     FILE *mf = fopen_u(SysEnv.messagefile.c_str(), "r+");
     if (!mf)
     {
-        mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
+        mprf(MSGCH_ERROR, "<458>Couldn't read %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         _kill_messaging(mf);
         return;
@@ -65,7 +65,7 @@ static void _read_each_message()
 
     if (!lock_file_handle(mf, false))
     {
-        mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
+        mprf(MSGCH_ERROR, "<459>Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         _kill_messaging(mf);
         return;
@@ -92,7 +92,7 @@ static void _read_each_message()
 
         if (!lock_file_handle(mf, false))
         {
-            mprf(MSGCH_ERROR, "Failed to lock %s: %s",
+            mprf(MSGCH_ERROR, "<460>Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
                  strerror(errno));
             _kill_messaging(mf);
@@ -101,7 +101,7 @@ static void _read_each_message()
     }
     if (!lock_file_handle(mf, true))
     {
-        mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
+        mprf(MSGCH_ERROR, "<461>Unable to write lock %s: %s",
              SysEnv.messagefile.c_str(),
              strerror(errno));
     }

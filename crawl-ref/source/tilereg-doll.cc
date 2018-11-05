@@ -231,7 +231,7 @@ void DollEditRegion::render()
         "Custom Doll",
         "Job Defaults"
     };
-    doll_name = make_stringf("Doll Mode: %s", mode_name[m_mode]);
+    doll_name = make_stringf("<2443>Doll Mode: %s", mode_name[m_mode]);
     doll_name_y += m_font->char_height() * 2.0f;
     m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
 

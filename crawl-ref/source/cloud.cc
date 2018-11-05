@@ -576,7 +576,7 @@ void manage_clouds()
 #ifdef ASSERTS
         if (cell_is_solid(cloud.pos))
         {
-            die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
+            die("<176>cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
                 dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
         }
 #endif
@@ -983,7 +983,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (you.can_see(*act))
             {
-                mprf("%s은(는) 비 속에서 %s 있다.",
+                mprf("<177>%s은(는) 비 속에서 %s 있다.",
                      act->name(DESC_PLAIN).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "증기를 뿜고" : "지글거리고").c_str());
@@ -1296,7 +1296,7 @@ int actor_apply_cloud(actor *act)
         const string oppr_name =
             oppressor ? " "+apostrophise(oppressor->name(DESC_THE))
                       : "";
-        dprf("%s %s %d damage from%s cloud: %s.",
+        dprf("<178>%s %s %d damage from%s cloud: %s.",
              act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
@@ -1621,7 +1621,7 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     // Normal clouds. (Unmodified rain clouds have a different message.)
     if (type != CLOUD_RAIN && type != CLOUD_STORM)
     {
-        mprf("%s은(는) %s %s 속에.",
+        mprf("<179>%s은(는) %s %s 속에.",
              act->name(DESC_PLAIN).c_str(),
              beneficial ? act->conj_verb("만끽했다 : ").c_str()
                         : (act->conj_verb("") + "삼켜졌다 : ").c_str(),
@@ -1633,7 +1633,7 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     // of spam reduction.
     if (act->is_player())
     {
-        mprf("%s은(는) %s%s 안에 서 있다.",
+        mprf("<180>%s은(는) %s%s 안에 서 있다.",
              act->name(DESC_PLAIN).c_str(),
              act->conj_verb("").c_str(),
              type == CLOUD_STORM ? "뇌우" : "비구름");
@@ -1798,7 +1798,7 @@ void start_still_winds()
 {
     delete_all_clouds();
     env.level_state |= LSTATE_STILL_WINDS;
-    mprf(MSGCH_WARN, "%s", "대기가 완벽하게 멈춰섰다.");
+    mprf(MSGCH_WARN, "<181>%s", "대기가 완벽하게 멈춰섰다.");
 }
 
 void end_still_winds()

@@ -59,7 +59,7 @@ string dlua_chunk::describe(const string &name) const
 {
     if (chunk.empty())
         return "";
-    return make_stringf("function %s()\n%s\nend\n",
+    return make_stringf("<504>function %s()\n%s\nend\n",
                         name.c_str(), chunk.c_str());
 }
 

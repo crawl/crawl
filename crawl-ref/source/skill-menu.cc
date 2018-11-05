@@ -225,7 +225,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         m_name->allow_highlight(false);
     }
 
-    m_name->set_text(make_stringf("%s %-15s", get_prefix().c_str(),
+    m_name->set_text(make_stringf("<2206>%s %-15s", get_prefix().c_str(),
                                 skill_name(m_sk)));
     m_name->set_fg_colour(get_colour());
 #ifdef USE_TILE_LOCAL
@@ -720,11 +720,11 @@ void SkillMenuSwitch::update()
             text += '|';
 
         const string col = (*it == m_state) ? "white" : "darkgrey";
-        text += make_stringf("<%s>%s</%s>", col.c_str(), get_name(*it).c_str(),
+        text += make_stringf("<2207><%s>%s</%s>", col.c_str(), get_name(*it).c_str(),
                              col.c_str());
     }
     if (m_name != "")
-        text += make_stringf(" %s  ", m_name.c_str());
+        text += make_stringf("<2208> %s  ", m_name.c_str());
     else
         text += "  ";
     set_text(text);
@@ -1416,8 +1416,8 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 void SkillMenu::set_title()
 {
     const char* format = is_set(SKMF_RESKILLING)
-                                ? "Transfer Knowledge: select the %s skill"
-                                : "You have %s. Select the skills to train.";
+                                ? "<2209>Transfer Knowledge: select the %s skill"
+                                : "<2210>You have %s. Select the skills to train.";
     string t;
     if (is_set(SKMF_RESKILL_FROM))
         t = make_stringf(format, "source");

@@ -74,7 +74,7 @@ static bool _is_disconnected_level()
 static bool _do_build_level()
 {
     clear_messages();
-    mprf("On %s; %d g, %d fail, %u err%s, %u uniq, "
+    mprf("<276>On %s; %d g, %d fail, %u err%s, %u uniq, "
          "%d try, %d (%.2f%%) vetos",
          level_id::current().describe().c_str(), levels_tried, levels_failed,
          (unsigned int)errors.size(), last_error.empty() ? ""
@@ -101,7 +101,7 @@ static bool _do_build_level()
         // of aborting on first fail.
         if (crawl_state.obj_stat_gen)
         {
-            fprintf(stderr, "Level build failed on %s. Aborting.\n",
+            fprintf(stderr, "<277>Level build failed on %s. Aborting.\n",
                     level_id::current().describe().c_str());
             return false;
         }
@@ -156,7 +156,7 @@ static bool _do_build_level()
             vaults = " (" + vaults + ")";
 
         FILE *fp = fopen("map.dump", "w");
-        fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
+        fprintf(fp, "<278>Bad (disconnected) level (%s) on %s%s.\n\n",
                 env.level_build_method.c_str(),
                 level_id::current().describe().c_str(),
                 vaults.c_str());
@@ -165,7 +165,7 @@ static bool _do_build_level()
         fclose(fp);
 
         mprf(MSGCH_ERROR,
-             "Bad (disconnected) level on %s%s",
+             "<279>Bad (disconnected) level on %s%s",
              level_id::current().describe().c_str(),
              vaults.c_str());
 
@@ -245,7 +245,7 @@ bool mapstat_build_levels()
     for (int i = 0; i < SysEnv.map_gen_iters; ++i)
     {
         clear_messages();
-        mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
+        mprf("<280>On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
              "%d try, %d (%.2f%%) vetoes",
              i, SysEnv.map_gen_iters, levels_tried, levels_failed,
              (unsigned int)errors.size(),
@@ -304,9 +304,9 @@ static void _report_available_random_vaults(FILE *outf)
         // The watchdog has already been activated by _do_build_level.
         // Reporting all the vaults could take a while.
         watchdog();
-        fprintf(outf, "\n%s -------------\n", lvl.describe().c_str());
+        fprintf(outf, "<281>\n%s -------------\n", lvl.describe().c_str());
         clear_messages();
-        mprf("Examining random maps at %s", lvl.describe().c_str());
+        mprf("<282>Examining random maps at %s", lvl.describe().c_str());
         mapstat_report_random_maps(outf, lvl);
         if (kbhit() && key_is_escape(getchk()))
             break;
@@ -324,7 +324,7 @@ static void _write_map_stats()
 {
     const char *out_file = "mapstat.log";
     FILE *outf = fopen(out_file, "w");
-    printf("Writing map stats to %s...", out_file);
+    printf("<283>Writing map stats to %s...", out_file);
     fflush(stdout);
     fprintf(outf, "Map Generation Stats\n\n");
     fprintf(outf, "Levels attempted: %d, built: %d, failed: %d\n",
@@ -334,7 +334,7 @@ static void _write_map_stats()
     {
         fprintf(outf, "\n\nMap errors:\n");
         for (const auto &err : errors)
-            fprintf(outf, "%s: %s\n", err.first.c_str(), err.second.c_str());
+            fprintf(outf, "<284>%s: %s\n", err.first.c_str(), err.second.c_str());
     }
 
     vector<level_id> mapless;
@@ -359,7 +359,7 @@ static void _write_map_stats()
     {
         fprintf(outf, "\n\nLevels with no maps:\n");
         for (int i = 0, size = mapless.size(); i < size; ++i)
-            fprintf(outf, "%3d) %s\n", i + 1, mapless[i].describe().c_str());
+            fprintf(outf, "<285>%3d) %s\n", i + 1, mapless[i].describe().c_str());
     }
 
     _report_available_random_vaults(outf);
@@ -392,7 +392,7 @@ static void _write_map_stats()
         {
             const int vetoes = i->first;
             const int tries  = map_builds[i->second].first;
-            fprintf(outf, "%3d) %s (%d of %d vetoed, %.2f%%)\n",
+            fprintf(outf, "<286>%3d) %s (%d of %d vetoed, %.2f%%)\n",
                     ++count, i->second.describe().c_str(),
                     vetoes, tries, vetoes * 100.0 / tries);
         }
@@ -403,21 +403,21 @@ static void _write_map_stats()
             sortedreasons.insert(make_pair(entry.second, entry.first));
 
         for (auto i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
-            fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
+            fprintf(outf, "<287>%3d) %s\n", i->first, i->second.c_str());
     }
 
     if (!unused_maps.empty() && !SysEnv.map_gen_range.get())
     {
         fprintf(outf, "\n\nUnused maps:\n\n");
         for (int i = 0, size = unused_maps.size(); i < size; ++i)
-            fprintf(outf, "%3d) %s\n", i + 1, unused_maps[i].c_str());
+            fprintf(outf, "<288>%3d) %s\n", i + 1, unused_maps[i].c_str());
     }
 
     fprintf(outf, "\n\nMaps by level:\n\n");
     for (const auto &entry : level_mapsused)
     {
         string line =
-            make_stringf("%s ------------\n", entry.first.describe().c_str());
+            make_stringf("<289>%s ------------\n", entry.first.describe().c_str());
         const set<string> &maps = entry.second;
         for (auto j = maps.begin(); j != maps.end(); ++j)
         {
@@ -425,7 +425,7 @@ static void _write_map_stats()
                 line += ", ";
             if (line.length() + j->length() > 79)
             {
-                fprintf(outf, "%s\n", line.c_str());
+                fprintf(outf, "<290>%s\n", line.c_str());
                 line = *j;
             }
             else
@@ -433,7 +433,7 @@ static void _write_map_stats()
         }
 
         if (!line.empty())
-            fprintf(outf, "%s\n", line.c_str());
+            fprintf(outf, "<291>%s\n", line.c_str());
 
         fprintf(outf, "------------\n\n");
     }
@@ -448,14 +448,14 @@ static void _write_map_stats()
         const int tries = entry.first;
         const int uses = lookup(use_count, entry.second, 0);
         const int succ = lookup(success_count, entry.second, 0);
-        fprintf(outf, "%4d, %4d, %4d: %s\n",
+        fprintf(outf, "<292>%4d, %4d, %4d: %s\n",
                 succ, uses, tries, entry.second.c_str());
     }
 
     fprintf(outf, "\n\nMaps and where used:\n\n");
     for (const auto &entry : map_levelsused)
     {
-        fprintf(outf, "%s ============\n", entry.first.c_str());
+        fprintf(outf, "<293>%s ============\n", entry.first.c_str());
         string line;
         for (auto lvl : entry.second)
         {
@@ -464,14 +464,14 @@ static void _write_map_stats()
             string level = lvl.describe();
             if (line.length() + level.length() > 79)
             {
-                fprintf(outf, "%s\n", line.c_str());
+                fprintf(outf, "<294>%s\n", line.c_str());
                 line = level;
             }
             else
                 line += level;
         }
         if (!line.empty())
-            fprintf(outf, "%s\n", line.c_str());
+            fprintf(outf, "<295>%s\n", line.c_str());
 
         fprintf(outf, "==================\n\n");
     }

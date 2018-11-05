@@ -126,7 +126,7 @@ static string coloured_branch(branch_type br)
     if (br < 0 || br >= NUM_BRANCHES)
         return "<lightred>Buggy buglands</lightred>";
 
-    return make_stringf("<yellow>%s</yellow>", branches[br].shortname);
+    return make_stringf("<467><yellow>%s</yellow>", branches[br].shortname);
 }
 
 static string shoptype_to_string(shop_type s)
@@ -265,7 +265,7 @@ static string _get_seen_branches(bool display)
                                   : it->abbrevname);
 
             snprintf(buffer, sizeof buffer,
-                "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                "<468><yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
                 branch == root_branch ? -7 : 7,
                 brname, lid.depth, brdepth[branch], entry_desc.c_str());
 
@@ -317,7 +317,7 @@ static string _get_unseen_branches()
                 if (it->mindepth != it->maxdepth)
                 {
                     snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d-%d</darkgrey>",
+                        "<469><darkgrey>%6s: %s:%d-%d</darkgrey>",
                             it->abbrevname,
                             branches[parent].abbrevname,
                             it->mindepth,
@@ -326,7 +326,7 @@ static string _get_unseen_branches()
                 else
                 {
                     snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d</darkgrey>",
+                        "<470><darkgrey>%6s: %s:%d</darkgrey>",
                             it->abbrevname,
                             branches[parent].abbrevname,
                             it->mindepth);
@@ -433,7 +433,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (god == GOD_GOZAG && !you_worship(GOD_GOZAG))
             disp_name += make_stringf(" ($%d)", gozag_service_fee());
 
-        snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
+        snprintf(buffer, sizeof buffer, "<471><%s>%s</%s>",
                  colour, disp_name.c_str(), colour);
         disp += buffer;
         num_printed++;
@@ -678,7 +678,7 @@ static const char *_get_tracked_feature_key(dungeon_feature_type feat)
             return SEEN_TRANSPORTER_KEY;
             break;
         default:
-            die("Unknown tracked feature: %s", get_feature_def(feat).name);
+            die("<472>Unknown tracked feature: %s", get_feature_def(feat).name);
             return nullptr;
     }
 }
@@ -697,9 +697,9 @@ static void _update_tracked_feature_annot(dungeon_feature_type feat,
     const char *feat_key = _get_tracked_feature_key(feat);
     const int new_num = env.properties[feat_key];
     const char *feat_desc = get_feature_def(feat).name;
-    const string new_string = make_stringf("%d %s%s", new_num, feat_desc,
+    const string new_string = make_stringf("<473>%d %s%s", new_num, feat_desc,
                                            new_num == 1 ? "" : "s");
-    const string old_string = make_stringf("%d %s%s", old_num, feat_desc,
+    const string old_string = make_stringf("<474>%d %s%s", old_num, feat_desc,
                                            old_num == 1 ? "" : "s");
 
     //TODO: regexes
@@ -947,7 +947,7 @@ void do_annotate(level_id& li)
     string old = get_level_annotation(li, true, true);
     if (!old.empty())
     {
-        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
+        mprf(MSGCH_PROMPT, "<475>Current level annotation: <lightgrey>%s</lightgrey>",
              old.c_str());
     }
 

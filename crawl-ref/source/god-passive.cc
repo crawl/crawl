@@ -495,7 +495,7 @@ void jiyva_eat_offlevel_items()
         if (lid == level_id::current() || !is_existing_level(lid))
             continue;
 
-        dprf("Checking %s", lid.describe().c_str());
+        dprf("<753>Checking %s", lid.describe().c_str());
 
         level_excursion le;
         le.go_to(lid);
@@ -517,7 +517,7 @@ void jiyva_eat_offlevel_items()
                 if (one_chance_in(4))
                     break;
 
-                dprf("Eating %s on %s",
+                dprf("<754>Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
                 // Needs a message now to explain possible hp or mp
@@ -682,7 +682,7 @@ void ash_check_bondage(bool msg)
     {
         string desc = ash_describe_bondage(flags, you.bondage_level != old_level);
         if (!desc.empty())
-            mprf(MSGCH_GOD, "%s", desc.c_str());
+            mprf(MSGCH_GOD, "<755>%s", desc.c_str());
     }
 }
 
@@ -694,7 +694,7 @@ string ash_describe_bondage(int flags, bool level)
     {
         if (you.bondage[ET_WEAPON] == you.bondage[ET_SHIELD])
         {
-            const string verb = make_stringf("are%s",
+            const string verb = make_stringf("<756>are%s",
                                              you.bondage[ET_WEAPON] ? ""
                                                                     : " not");
             desc = you.hands_act(verb, "bound.\n");
@@ -702,7 +702,7 @@ string ash_describe_bondage(int flags, bool level)
         else
         {
             // FIXME: what if you sacrificed a hand?
-            desc = make_stringf("Your %s %s is bound but not your %s %s.\n",
+            desc = make_stringf("<757>Your %s %s is bound but not your %s %s.\n",
                                 you.bondage[ET_WEAPON] ? "weapon" : "shield",
                                 you.hand_name(false).c_str(),
                                 you.bondage[ET_WEAPON] ? "shield" : "weapon",
@@ -711,13 +711,13 @@ string ash_describe_bondage(int flags, bool level)
     }
     else if (flags & ETF_WEAPON && you.bondage[ET_WEAPON] != -1)
     {
-        desc = make_stringf("Your weapon %s is %sbound.\n",
+        desc = make_stringf("<758>Your weapon %s is %sbound.\n",
                             you.hand_name(false).c_str(),
                             you.bondage[ET_WEAPON] ? "" : "not ");
     }
     else if (flags & ETF_SHIELD && you.bondage[ET_SHIELD] != -1)
     {
-        desc = make_stringf("Your shield %s is %sbound.\n",
+        desc = make_stringf("<759>Your shield %s is %sbound.\n",
                             you.hand_name(false).c_str(),
                             you.bondage[ET_SHIELD] ? "" : "not ");
     }
@@ -726,7 +726,7 @@ string ash_describe_bondage(int flags, bool level)
         && you.bondage[ET_ARMOUR] == you.bondage[ET_JEWELS]
         && you.bondage[ET_ARMOUR] != -1)
     {
-        desc += make_stringf("You are %s bound in armour %s jewellery.\n",
+        desc += make_stringf("<760>You are %s bound in armour %s jewellery.\n",
                              you.bondage[ET_ARMOUR] == 0 ? "not" :
                              you.bondage[ET_ARMOUR] == 1 ? "partially"
                                                          : "fully",
@@ -736,7 +736,7 @@ string ash_describe_bondage(int flags, bool level)
     {
         if (flags & ETF_ARMOUR && you.bondage[ET_ARMOUR] != -1)
         {
-            desc += make_stringf("You are %s bound in armour.\n",
+            desc += make_stringf("<761>You are %s bound in armour.\n",
                                  you.bondage[ET_ARMOUR] == 0 ? "not" :
                                  you.bondage[ET_ARMOUR] == 1 ? "partially"
                                                              : "fully");
@@ -744,7 +744,7 @@ string ash_describe_bondage(int flags, bool level)
 
         if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
         {
-            desc += make_stringf("You are %s bound in jewellery.\n",
+            desc += make_stringf("<762>You are %s bound in jewellery.\n",
                                  you.bondage[ET_JEWELS] == 0 ? "not" :
                                  you.bondage[ET_JEWELS] == 1 ? "partially"
                                                              : "fully");
@@ -753,7 +753,7 @@ string ash_describe_bondage(int flags, bool level)
 
     if (level)
     {
-        desc += make_stringf("You are %s bound.",
+        desc += make_stringf("<763>You are %s bound.",
                              you.bondage_level == 0 ? "not" :
                              you.bondage_level == 1 ? "slightly" :
                              you.bondage_level == 2 ? "moderately" :
@@ -832,7 +832,7 @@ bool god_id_item(item_def& item, bool silent)
             you.wield_change = true;
 
         if (!silent)
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("<764>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
         if (in_inventory(item))
@@ -1227,7 +1227,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         you.redraw_armour_class = true;
     }
 
-    mprf(MSGCH_GOD, "당신은 %s 보호받는 느낌이 들었다 : %s에 대해.",
+    mprf(MSGCH_GOD, "<765>당신은 %s 보호받는 느낌이 들었다 : %s에 대해.",
          you.duration[dur] > 0 ? "더 " : "", descript.c_str());
 
     // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
@@ -1290,7 +1290,7 @@ void pakellas_id_device_charges()
             continue;
         }
         set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
-        mprf_nocap("%s",
+        mprf_nocap("<766>%s",
                    menu_colour_item_name(you.inv[which_item],
                                                DESC_INVENTORY).c_str());
     }
@@ -1498,7 +1498,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     beem.target = target;
     beem.aimed_at_spot = orig_beam->aimed_at_spot;
 
-    mprf(MSGCH_FRIEND_SPELL, "%s이(가) 당신의 주문을 모방했다!",
+    mprf(MSGCH_FRIEND_SPELL, "<767>%s이(가) 당신의 주문을 모방했다!",
          mon->name(DESC_PLAIN).c_str());
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
@@ -1621,14 +1621,14 @@ static void _wu_jian_lunge(const coord_def& old_pos)
 
     if (number_of_attacks == 0)
     {
-        mprf("당신은 %s을(를) 향해 돌진했지만, "
+        mprf("<768>당신은 %s을(를) 향해 돌진했지만, "
              "공격 속도가 너무 느려 한 번도 찌르지 못했다.",
              mons->name(DESC_PLAIN).c_str());
         return;
     }
     else
     {
-        mprf("당신은 %s %s을(를) %s.",
+        mprf("<769>당신은 %s %s을(를) %s.",
              wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
                  "믿을 수 없는 가속도로 " : "",
              mons->name(DESC_PLAIN).c_str(),
@@ -1681,14 +1681,14 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
         {
-            mprf("당신은 %s을(를) 공격하기 위해 몸을 회전했지만, "
+            mprf("<770>당신은 %s을(를) 공격하기 위해 몸을 회전했지만, "
                  "공격 속도가 너무 느려 "
                  "한 번도 베지 못했다.", mons->name(DESC_PLAIN).c_str());
             continue;
         }
         else
         {
-            mprf("당신은 돌면서 %s을(를) %s%s 베었다.",
+            mprf("<771>당신은 돌면서 %s을(를) %s%s 베었다.",
                  mons->name(DESC_PLAIN).c_str(),
                  number_of_attacks > 1 ? " 수차례" : "",
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
@@ -1761,7 +1761,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
             {
                 if (landing_actor)
                 {
-                    mprf("벽을 짚고 뛸 만한 공간이 없다; %s이(가) 길목에 있다.",
+                    mprf("<772>벽을 짚고 뛸 만한 공간이 없다; %s이(가) 길목에 있다.",
                         landing_actor->observable() ? landing_actor->name(DESC_PLAIN).c_str()
                                     : "당신이 볼 수 없는 무언가");
                 }
@@ -1839,14 +1839,14 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
         {
-            mprf("당신은 %s을(를) 뛰어넘으며 공격했지만, "
+            mprf("<773>당신은 %s을(를) 뛰어넘으며 공격했지만, "
                  "공격 속도가 너무 느려 착지할 때까지 "
                  "한 번도 공격하지 못했다.", target->name(DESC_PLAIN).c_str());
             continue;
         }
         else
         {
-            mprf("당신은 %s 공격했다 : %s을(를) 뛰어넘으며 %s.",
+            mprf("<774>당신은 %s 공격했다 : %s을(를) 뛰어넘으며 %s.",
                  number_of_attacks > 1 ? "수차례 " : "",
                  target->name(DESC_PLAIN).c_str(),
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?

@@ -193,7 +193,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
         name = mons_type_name(entry.first, desc);
         if (entry.second > 1)
         {
-            name = make_stringf("%d %s", entry.second,
+            name = make_stringf("<2611>%d %s", entry.second,
                                 pluralise_monster(name).c_str());
         }
 
@@ -204,7 +204,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
             message += ", ";
         ++count;
     }
-    return make_stringf("%s come into view.", message.c_str());
+    return make_stringf("<2612>%s come into view.", message.c_str());
 }
 
 static monster_type _mons_genus_keep_uniques(monster_type mc)
@@ -360,7 +360,7 @@ static void _secular_headsup(const vector<monster*> &monsters,
     const string warnings = _monster_headsup(monsters, types, false);
     if (!warnings.size())
         return;
-    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
+    mprf(MSGCH_MONSTER_WARNING, "<2613>%s", warnings.c_str());
 }
 
 /**
@@ -387,12 +387,12 @@ static void _handle_comes_into_view(const vector<string> &msgs,
 
     unsigned int size = monsters.size();
     if (size == 1)
-        mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
+        mprf(MSGCH_MONSTER_WARNING, "<2614>%s", msgs[0].c_str());
     else
     {
         while (types.size() > max_msgs && !genera.empty())
             _genus_factoring(types, genera);
-        mprf(MSGCH_MONSTER_WARNING, "%s",
+        mprf(MSGCH_MONSTER_WARNING, "<2615>%s",
              _desc_mons_type_map(types).c_str());
     }
 
@@ -449,15 +449,15 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
     if (incited.empty())
         return;
 
-    string msg = make_stringf("%s incites %s against you.",
+    string msg = make_stringf("<2616>%s incites %s against you.",
                               god_name(GOD_GOZAG).c_str(),
                               mon_count.describe().c_str());
     if (strwidth(msg) >= get_number_of_cols() - 2)
     {
-        msg = make_stringf("%s incites your enemies against you.",
+        msg = make_stringf("<2617>%s incites your enemies against you.",
                            god_name(GOD_GOZAG).c_str());
     }
-    mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+    mprf(MSGCH_GOD, GOD_GOZAG, "<2618>%s", msg.c_str());
 
     for (monster *mon : incited)
         gozag_incite(mon);
@@ -732,14 +732,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (num_altars > 0)
         {
-            sensed.push_back(make_stringf("%d altar%s", num_altars,
+            sensed.push_back(make_stringf("<2619>%d altar%s", num_altars,
                                           num_altars > 1 ? "s" : ""));
         }
 
         if (num_shops_portals > 0)
         {
             const char* plur = num_shops_portals > 1 ? "s" : "";
-            sensed.push_back(make_stringf("%d shop%s/portal%s",
+            sensed.push_back(make_stringf("<2620>%d shop%s/portal%s",
                                           num_shops_portals, plur, plur));
         }
 
@@ -1597,14 +1597,14 @@ static void _config_layers_menu()
     {
         viewwindow();
         mprf(MSGCH_PROMPT, "Select layers to display:\n"
-                           "<%s>(m)onsters</%s>|"
-                           "<%s>(p)layer</%s>|"
-                           "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>"
+                           "<2621><%s>(m)onsters</%s>|"
+                           "<2622><%s>(p)layer</%s>|"
+                           "<2623><%s>(i)tems</%s>|"
+                           "<2624><%s>(c)louds</%s>"
 #ifndef USE_TILE_LOCAL
                            "|"
-                           "<%s>monster (w)eapons</%s>|"
-                           "<%s>monster (h)ealth</%s>"
+                           "<2625><%s>monster (w)eapons</%s>|"
+                           "<2626><%s>monster (h)ealth</%s>"
 #endif
                            ,
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
@@ -1623,7 +1623,7 @@ static void _config_layers_menu()
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
+        mprf(MSGCH_PROMPT, "<2627>Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
                            command_to_string(CMD_SHOW_TERRAIN).c_str());
 
@@ -1664,7 +1664,7 @@ static void _config_layers_menu()
     canned_msg(MSG_OK);
     if (_layers != LAYERS_ALL)
     {
-        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
+        mprf(MSGCH_PLAIN, "<2628>Press <w>%s</w> or perform an action "
                           "to restore all view layers.",
                           command_to_string(CMD_SHOW_TERRAIN).c_str());
     }

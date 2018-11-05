@@ -102,7 +102,7 @@ static int dgn_item_property_set(lua_State *ls)
         const string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
         {
-            luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
+            luaL_error(ls, "<1063>Expected type: [BbSifsC], got: '%s'",
                        type.c_str());
         }
 
@@ -131,7 +131,7 @@ static int dgn_item_property_set(lua_State *ls)
                                                      luaL_checkint(ls, 5));
             break;
         default:
-            luaL_error(ls, "Unknown type: '%s'", type.c_str());
+            luaL_error(ls, "<1064>Unknown type: '%s'", type.c_str());
             break;
         }
     }
@@ -146,7 +146,7 @@ static int dgn_item_property(lua_State *ls)
         const string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
         {
-            luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
+            luaL_error(ls, "<1065>Expected type: [BbSifsC], got: '%s'",
                        type.c_str());
         }
 
@@ -184,7 +184,7 @@ static int dgn_item_property(lua_State *ls)
             return 2;
         }
         default:
-            luaL_error(ls, "Unknown type: '%s'", type.c_str());
+            luaL_error(ls, "<1066>Unknown type: '%s'", type.c_str());
             break;
         }
     }

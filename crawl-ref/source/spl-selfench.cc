@@ -232,7 +232,7 @@ spret_type cast_swiftness(int power, bool fail)
     if (you.in_liquid())
     {
         // Hint that the player won't be faster until they leave the liquid.
-        mprf("%s 거품!", you.in_water() ? "물"
+        mprf("<2300>%s 거품!", you.in_water() ? "물"
                                              : "액화된");
     }
 

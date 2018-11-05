@@ -448,7 +448,7 @@ int dbm_store(SQL_DBM *db, const sql_datum &key, const sql_datum &value, int)
     if (err == SQLITE_DONE || err == SQLITE_CONSTRAINT)
         err = SQLITE_OK;
     else
-        end(1, false, "%d: %s", db->errc, db->error.c_str());
+        end(1, false, "<2340>%d: %s", db->errc, db->error.c_str());
     return err;
 }
 

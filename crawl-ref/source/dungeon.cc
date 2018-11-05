@@ -318,7 +318,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         }
         catch (map_load_exception &mload)
         {
-            mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
+            mprf(MSGCH_ERROR, "<505>Failed to load map, reloading all maps (%s).",
                  mload.what());
             reread_maps();
         }
@@ -333,12 +333,12 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         if (crawl_state.need_save)
         {
             save_game(true,
-                  make_stringf("Unable to generate level for '%s'!",
+                  make_stringf("<506>Unable to generate level for '%s'!",
                                level_id::current().describe().c_str()).c_str());
         }
         else
         {
-            die("Unable to generate level for '%s'!",
+            die("<507>Unable to generate level for '%s'!",
                 level_id::current().describe().c_str());
         }
     }
@@ -365,7 +365,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     }
     catch (dgn_veto_exception& e)
     {
-        dprf(DIAG_DNGN, "<white>VETO</white>: %s: %s",
+        dprf(DIAG_DNGN, "<508><white>VETO</white>: %s: %s",
              level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_STATISTICS
         mapstat_report_map_veto(e.what());
@@ -414,7 +414,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     if (!branch_epilogues[you.where_are_you].empty())
         if (!dlua.callfn(branch_epilogues[you.where_are_you].c_str(), 0, 0))
         {
-            mprf(MSGCH_ERROR, "branch epilogue for %s failed: %s",
+            mprf(MSGCH_ERROR, "<509>branch epilogue for %s failed: %s",
                               level_id::current().describe().c_str(),
                               dlua.error.c_str());
             return false;
@@ -449,7 +449,7 @@ static void _builder_assertions()
         if (!in_bounds(*ri))
             if (!feat_is_valid_border(grd(*ri)))
             {
-                die("invalid map border at (%d,%d): %s", ri->x, ri->y,
+                die("<510>invalid map border at (%d,%d): %s", ri->x, ri->y,
                     dungeon_feature_name(grd(*ri)));
             }
 #endif
@@ -493,7 +493,7 @@ bool dgn_make_transporters_from_markers()
         if (dest_map.find(name) != dest_map.end())
         {
             mprf(MSGCH_ERROR, "Multiple locations with transporter "
-                 "destination name %s.", name.c_str());
+                 "<511>destination name %s.", name.c_str());
             no_errors = false;
             continue;
         }
@@ -509,7 +509,7 @@ bool dgn_make_transporters_from_markers()
         const string name = tm->property(TRANSPORTER_NAME_PROP);
         if (dest_map.find(name) == dest_map.end())
         {
-            mprf(MSGCH_ERROR, "Transporter with name %s has no corresponding "
+            mprf(MSGCH_ERROR, "<512>Transporter with name %s has no corresponding "
                  "destination marker.", name.c_str());
             no_errors = false;
             continue;
@@ -527,7 +527,7 @@ bool dgn_make_transporters_from_markers()
             env.markers.remove(dm);
         else
         {
-            mprf(MSGCH_ERROR, "Unused transporter destination with name %s.",
+            mprf(MSGCH_ERROR, "<513>Unused transporter destination with name %s.",
                  name.c_str());
             no_errors = false;
         }
@@ -574,13 +574,13 @@ void dgn_erase_unused_vault_placements()
                 auto &vp = env.level_vaults[i];
                 // Unreferenced vault, blow it away
                 dprf(DIAG_DNGN, "Removing references to unused map #%d)"
-                        " '%s' (%d,%d) (%d,%d)",
+                        "<514> '%s' (%d,%d) (%d,%d)",
                         i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
                         vp->size.x, vp->size.y);
 
                 if (!vp->seen)
                 {
-                    dprf(DIAG_DNGN, "Unregistering unseen vault: %s",
+                    dprf(DIAG_DNGN, "<515>Unregistering unseen vault: %s",
                             vp->map.name.c_str());
                     _dgn_unregister_vault(vp->map);
                 }
@@ -618,7 +618,7 @@ void dgn_erase_unused_vault_placements()
     int i = 0;
     for (auto &vp : env.level_vaults)
     {
-        dprf(DIAG_DNGN, "%d) %s (%d,%d) size (%d,%d)",
+        dprf(DIAG_DNGN, "<516>%d) %s (%d,%d) size (%d,%d)",
              i++, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
              vp->size.x, vp->size.y);
     }
@@ -1416,7 +1416,7 @@ void fixup_misplaced_items()
             if (feat == DNGN_DEEP_WATER && player_in_branch(BRANCH_ABYSS))
                 continue;
 
-            mprf(MSGCH_ERROR, "Item %s buggily placed in feature %s at (%d, %d).",
+            mprf(MSGCH_ERROR, "<517>Item %s buggily placed in feature %s at (%d, %d).",
                  item.name(DESC_PLAIN).c_str(),
                  feature_description_at(item.pos, false, DESC_PLAIN,
                                         false).c_str(),
@@ -1491,7 +1491,7 @@ static void _fixup_branch_stairs()
 #ifdef DEBUG_DIAGNOSTICS
                 if (count++ && !root)
                 {
-                    mprf(MSGCH_ERROR, "Multiple branch exits on %s",
+                    mprf(MSGCH_ERROR, "<518>Multiple branch exits on %s",
                          level_id::current().describe().c_str());
                 }
 #endif
@@ -1711,7 +1711,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
                                 DNGN_FOUNTAIN_BLOOD);
     }
 
-    dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
+    dprf(DIAG_DNGN, "<519>Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
     // Find pairwise stairs that are connected and turn one of them
@@ -1731,7 +1731,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
 
     // FIXME: stairs that generate inside random vaults are still
     // protected, resulting in superfluous ones.
-    dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
+    dprf(DIAG_DNGN, "<520>After culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
     // XXX: this logic is exceptionally shady & should be reviewed
@@ -1966,13 +1966,13 @@ static void _dgn_verify_connectivity(unsigned nvaults)
                 vlist << ", ";
             vlist << env.level_vaults[i]->map.name;
         }
-        dprf(DIAG_DNGN, "Dungeon has %d zones after placing %s.",
+        dprf(DIAG_DNGN, "<521>Dungeon has %d zones after placing %s.",
              newzones, vlist.str().c_str());
 #endif
         if (newzones > dgn_zones)
         {
             throw dgn_veto_exception(make_stringf(
-                 "Had %d zones, now has %d%s%s.", dgn_zones, newzones,
+                 "<522>Had %d zones, now has %d%s%s.", dgn_zones, newzones,
 #ifdef DEBUG_STATISTICS
                  "; broken by ", vlist.str().c_str()
 #else
@@ -2064,7 +2064,7 @@ static void _build_overflow_temples()
             if (vault == nullptr)
             {
                 mprf(MSGCH_ERROR,
-                     "Couldn't find overflow temple map '%s'!",
+                     "<523>Couldn't find overflow temple map '%s'!",
                      name.c_str());
             }
         }
@@ -2097,7 +2097,7 @@ static void _build_overflow_temples()
                     // god, so do nothing.
 #ifdef DEBUG_TEMPLES
                     mprf(MSGCH_DIAGNOSTICS, "Already placed specialized "
-                         "single-altar temple for %s", name.c_str());
+                         "<524>single-altar temple for %s", name.c_str());
 #endif
                     continue;
                 }
@@ -2107,7 +2107,7 @@ static void _build_overflow_temples()
                 if (vault == nullptr)
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
-                         "for combination of tags %s", vault_tag.c_str());
+                         "<525>for combination of tags %s", vault_tag.c_str());
                 }
 #endif
             }
@@ -2121,7 +2121,7 @@ static void _build_overflow_temples()
                 if (vault == nullptr)
                 {
                     mprf(MSGCH_ERROR,
-                         "Couldn't find overflow temple tag '%s'!",
+                         "<526>Couldn't find overflow temple tag '%s'!",
                          vault_tag.c_str());
                 }
             }
@@ -2139,14 +2139,14 @@ static void _build_overflow_temples()
                     false))
             {
 #ifdef DEBUG_TEMPLES
-                mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
+                mprf(MSGCH_DIAGNOSTICS, "<527>Couldn't place overflow temple '%s', "
                      "vetoing level.", vault->name.c_str());
 #endif
                 return;
             }
         }
 #ifdef DEBUG_TEMPLES
-        mprf(MSGCH_DIAGNOSTICS, "Placed overflow temple %s",
+        mprf(MSGCH_DIAGNOSTICS, "<528>Placed overflow temple %s",
              vault->name.c_str());
 #endif
     }
@@ -2331,7 +2331,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
         if (one_chance_in(FEATURE_MIMIC_CHANCE))
         {
-            dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
+            dprf(DIAG_DNGN, "<529>Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
 
@@ -2591,7 +2591,7 @@ static const map_def *_pick_layout(const map_def *vault)
         {
             if (!tries--)
             {
-                die("Couldn't find a layout for %s",
+                die("<530>Couldn't find a layout for %s",
                     level_id::current().describe().c_str());
             }
             layout = random_map_for_tag("layout", true, true);
@@ -2704,7 +2704,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             if (vault)
                 return vault;
 
-            mprf(MSGCH_ERROR, "Unable to find Temple vault '%s'",
+            mprf(MSGCH_ERROR, "<531>Unable to find Temple vault '%s'",
                  name.c_str());
 
             // Fall through and use a different Temple map instead.
@@ -2724,7 +2724,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             return vault;
 
         end(1, false, "Couldn't find map with tag tomb_stone_stairs for level "
-            "%s.", lid.describe().c_str());
+            "<532>%s.", lid.describe().c_str());
     }
 #endif
 
@@ -2739,7 +2739,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         vault = find_map_by_name(crawl_state.map);
         if (vault == nullptr)
         {
-            end(1, false, "Couldn't find selected map '%s'.",
+            end(1, false, "<533>Couldn't find selected map '%s'.",
                 crawl_state.map.c_str());
         }
     }
@@ -3109,7 +3109,7 @@ static void _place_chance_vaults()
         bool check_fallback = true;
         if (!map->map_already_used())
         {
-            dprf(DIAG_DNGN, "Placing CHANCE vault: %s (%s)",
+            dprf(DIAG_DNGN, "<534>Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
             check_fallback = !_build_secondary_vault(map);
         }
@@ -3124,7 +3124,7 @@ static void _place_chance_vaults()
                     random_map_for_tag(fallback_tag, true, false, MB_FALSE);
                 if (fallback)
                 {
-                    dprf(DIAG_DNGN, "Found fallback vault %s for chance tag %s",
+                    dprf(DIAG_DNGN, "<535>Found fallback vault %s for chance tag %s",
                          fallback->name.c_str(), chance_tag.c_str());
                     _build_secondary_vault(fallback);
                 }
@@ -3496,7 +3496,7 @@ static void _place_branch_entrances(bool use_vaults)
             && level_id::current() == brentry[it->id])
         {
             // Placing a stair.
-            dprf(DIAG_DNGN, "Placing stair to %s", it->shortname);
+            dprf(DIAG_DNGN, "<536>Placing stair to %s", it->shortname);
 
             // Attempt to place an entry vault if allowed
             if (use_vaults)
@@ -3561,7 +3561,7 @@ static int _place_uniques()
 {
 #ifdef DEBUG_UNIQUE_PLACEMENT
     FILE *ostat = fopen("unique_placement.log", "a");
-    fprintf(ostat, "--- Looking to place uniques on %s\n",
+    fprintf(ostat, "<537>--- Looking to place uniques on %s\n",
                    level_id::current().describe().c_str());
 #endif
 
@@ -3602,15 +3602,15 @@ static int _place_uniques()
             if (num_placed >= 3)
                 A++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
-            fprintf(ostat, "Placed valid unique map: %s.\n",
+            fprintf(ostat, "<538>Placed valid unique map: %s.\n",
                     uniq_map->name.c_str());
 #endif
-            dprf(DIAG_DNGN, "Placed %s.", uniq_map->name.c_str());
+            dprf(DIAG_DNGN, "<539>Placed %s.", uniq_map->name.c_str());
         }
 #ifdef DEBUG_UNIQUE_PLACEMENT
         else
         {
-            fprintf(ostat, "Didn't place valid map: %s\n",
+            fprintf(ostat, "<540>Didn't place valid map: %s\n",
                     uniq_map->name.c_str());
         }
 #endif
@@ -3902,7 +3902,7 @@ static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets
             if (feat_is_stair(grd(*ri)))
                 return;
 
-        mprf(MSGCH_ERROR, "Unable to find exit from %s",
+        mprf(MSGCH_ERROR, "<541>Unable to find exit from %s",
              place.map.name.c_str());
         return;
     }
@@ -3964,7 +3964,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
         if (check_collision)
         {
             mprf(MSGCH_DIAGNOSTICS,
-                 "Cannot generate encompass map '%s' with check_collision=true",
+                 "<542>Cannot generate encompass map '%s' with check_collision=true",
                  mdef->name.c_str());
 
             return nullptr;
@@ -3991,7 +3991,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
 #ifdef ASSERTS
         if (mdef->name != vault_place->map.name)
         {
-            die("Placed map '%s', yet vault_placement is '%s'",
+            die("<543>Placed map '%s', yet vault_placement is '%s'",
                 mdef->name.c_str(), vault_place->map.name.c_str());
         }
 #endif
@@ -4037,7 +4037,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
             if (retries-- > 0)
             {
                 mprf(MSGCH_ERROR,
-                     "Failed to load map %s in dgn_safe_place_map, "
+                     "<544>Failed to load map %s in dgn_safe_place_map, "
                      "reloading all maps",
                      mload.what());
                 reread_maps();
@@ -4063,7 +4063,7 @@ void dgn_seen_vault_at(coord_def p)
     {
         if (!vp->seen)
         {
-            dprf(DIAG_DNGN, "Vault %s (%d,%d)-(%d,%d) seen",
+            dprf(DIAG_DNGN, "<545>Vault %s (%d,%d)-(%d,%d) seen",
                  vp->map.name.c_str(), vp->pos.x, vp->pos.y,
                  vp->size.x, vp->size.y);
             vp->seen = true;
@@ -4136,7 +4136,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     const map_section_type placed_vault_orientation =
         vault_main(place, vault, check_collisions);
 
-    dprf(DIAG_DNGN, "Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
+    dprf(DIAG_DNGN, "<546>Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
          placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
@@ -5115,7 +5115,7 @@ static void _vault_grid_glyph_mons(vault_placement &place,
                 && mons_is_unique(mt)
                 && you.unique_creatures[mt])
             {
-                mprf(MSGCH_ERROR, "ERROR: %s already generated somewhere "
+                mprf(MSGCH_ERROR, "<547>ERROR: %s already generated somewhere "
                      "else; please file a bug report.",
                      mons_type_name(mt, DESC_THE).c_str());
                 // Force it to be generated anyway.
@@ -5889,7 +5889,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
 
     if (spec_type == TRAP_SHAFT && !is_valid_shaft_level(known))
     {
-        mprf(MSGCH_ERROR, "Vault %s tried to place a shaft at a branch end",
+        mprf(MSGCH_ERROR, "<548>Vault %s tried to place a shaft at a branch end",
                 env.placing_vault.c_str());
     }
 
@@ -6085,7 +6085,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest,
                                 string hatch_name)
 {
-    dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
+    dprf(DIAG_DNGN, "<549>Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
          stair_to_find, dungeon_feature_name(stair_to_find));
 

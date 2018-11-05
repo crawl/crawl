@@ -168,7 +168,7 @@ static bool _resolve_map_lua(map_def &map)
         if (crawl_state.map_stat_gen)
             mapstat_report_error(map, err);
 #endif
-        mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "<1249>Lua error: %s", err.c_str());
         return false;
     }
 
@@ -176,13 +176,13 @@ static bool _resolve_map_lua(map_def &map)
     err = map.resolve();
     if (!err.empty())
     {
-        mprf(MSGCH_ERROR, "Error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "<1250>Error: %s", err.c_str());
         return false;
     }
 
     if (!map.test_lua_validate(false))
     {
-        dprf("Lua validation for map %s failed.", map.name.c_str());
+        dprf("<1251>Lua validation for map %s failed.", map.name.c_str());
         return false;
     }
 
@@ -561,7 +561,7 @@ static coord_def _find_minivault_place(
         {
 #ifdef DEBUG_MINIVAULT_PLACEMENT
             mprf(MSGCH_DIAGNOSTICS,
-                 "Skipping (%d,%d): not a good minivault place (tags: %s)",
+                 "<1252>Skipping (%d,%d): not a good minivault place (tags: %s)",
                  v1.x, v1.y, place.map.tags.c_str());
 #endif
             continue;
@@ -898,16 +898,16 @@ void map_selector::announce(const map_def *vault) const
         if (sel == DEPTH_AND_CHANCE)
         {
             dprf(DIAG_DNGN,
-                 "[CHANCE+DEPTH] Found map %s for %s (%s)",
+                 "<1253>[CHANCE+DEPTH] Found map %s for %s (%s)",
                  vault->name.c_str(), place.describe().c_str(),
                  vault->chance(place).describe().c_str());
         }
         else
         {
             const char *format =
-                sel == PLACE ? "[PLACE] Found map %s for %s" :
-                sel == DEPTH ? "[DEPTH] Found random map %s for %s" :
-                "[TAG] Found map %s tagged '%s'";
+                sel == PLACE ? "<1254>[PLACE] Found map %s for %s" :
+                sel == DEPTH ? "<1255>[DEPTH] Found random map %s for %s" :
+                "<1256>[TAG] Found map %s tagged '%s'";
 
             dprf(DIAG_DNGN, format,
                  vault->name.c_str(),
@@ -1204,7 +1204,7 @@ static void _check_des_index_dir()
 
     string desdir = _des_cache_dir();
     if (!check_mkdir("Data file cache", &desdir, true))
-        end(1, true, "Can't create data file cache: %s", desdir.c_str());
+        end(1, true, "<1257>Can't create data file cache: %s", desdir.c_str());
 
     checked_des_index_dir = true;
 }
@@ -1275,7 +1275,7 @@ static bool _load_map_index(const string& cache, const string &base,
 
     FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
     if (!fp)
-        end(1, true, "Unable to read %s", (base + ".idx").c_str());
+        end(1, true, "<1258>Unable to read %s", (base + ".idx").c_str());
 
     reader inf(fp, TAG_MINOR_VERSION);
     // Re-check version, might have been modified in the meantime.
@@ -1360,7 +1360,7 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
     const string cfile = filebase + ".dsc";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
-        end(1, true, "Unable to open %s for writing", cfile.c_str());
+        end(1, true, "<1259>Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
@@ -1378,7 +1378,7 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
     const string cfile = filebase + ".idx";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
-        end(1, true, "Unable to open %s for writing", cfile.c_str());
+        end(1, true, "<1260>Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
@@ -1424,10 +1424,10 @@ static void _parse_maps(const string &s)
 
     FILE *dat = fopen_u(s.c_str(), "r");
     if (!dat)
-        end(1, true, "Failed to open %s for reading", s.c_str());
+        end(1, true, "<1261>Failed to open %s for reading", s.c_str());
 
 #ifdef DEBUG_DIAGNOSTICS
-    printf("Regenerating des: %s\n", s.c_str());
+    printf("<1262>Regenerating des: %s\n", s.c_str());
 #endif
 
     time_t mtime = file_modtime(dat);
@@ -1457,7 +1457,7 @@ void read_map(const string &file)
 void read_maps()
 {
     if (dlua.execfile("dlua/loadmaps.lua", true, true, true))
-        end(1, false, "Lua error: %s", dlua.error.c_str());
+        end(1, false, "<1263>Lua error: %s", dlua.error.c_str());
 
     lc_loaded_maps.clear();
 
@@ -1490,7 +1490,7 @@ void dump_map(const map_def &map)
 {
     if (crawl_state.dump_maps)
     {
-        fprintf(stderr, "\n----------------------------------------\n%s\n",
+        fprintf(stderr, "<1264>\n----------------------------------------\n%s\n",
                 map.describe().c_str());
     }
 }
@@ -1510,7 +1510,7 @@ void run_map_global_preludes()
         if (!chunk.empty())
         {
             if (chunk.load_call(dlua, nullptr))
-                mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
+                mprf(MSGCH_ERROR, "<1265>Lua error: %s", chunk.orig_error().c_str());
         }
     }
 }
@@ -1524,7 +1524,7 @@ void run_map_local_preludes()
             string err = vdef.run_lua(true);
             if (!err.empty())
             {
-                mprf(MSGCH_ERROR, "Lua error (map %s): %s",
+                mprf(MSGCH_ERROR, "<1266>Lua error (map %s): %s",
                      vdef.name.c_str(), err.c_str());
             }
         }
@@ -1592,20 +1592,20 @@ static void _report_random_vaults(
     string line;
     for (int i = 0, size = wms.size(); i < size; ++i)
     {
-        string curr = make_stringf("%s (%.2f%%)", wms[i].first.c_str(),
+        string curr = make_stringf("<1267>%s (%.2f%%)", wms[i].first.c_str(),
                                    100.0 * wms[i].second / weightsum);
         if (i < size - 1)
             curr += ", ";
         if (line.length() + curr.length() > 80u)
         {
-            fprintf(outf, "%s\n", line.c_str());
+            fprintf(outf, "<1268>%s\n", line.c_str());
             line.clear();
         }
 
         line += curr;
     }
     if (!line.empty())
-        fprintf(outf, "%s\n", line.c_str());
+        fprintf(outf, "<1269>%s\n", line.c_str());
 }
 
 void mapstat_report_random_maps(FILE *outf, const level_id &place)

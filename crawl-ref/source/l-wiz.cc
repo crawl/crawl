@@ -36,7 +36,7 @@ LUAFN(wiz_quick_fsim)
     monster_type mtype = get_monster_by_name(mon_name, true);
     if (mtype == MONS_PROGRAM_BUG)
     {
-        string err = make_stringf("No such monster: '%s'.", mon_name.c_str());
+        string err = make_stringf("<1080>No such monster: '%s'.", mon_name.c_str());
         return luaL_argerror(ls, 1, err.c_str());
     }
     const int fsim_rounds = luaL_checkint(ls, 2);

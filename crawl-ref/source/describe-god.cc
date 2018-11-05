@@ -391,7 +391,7 @@ static string _describe_ancestor_upgrades()
         desc = "<white>XL              Upgrade\n</white>";
         for (auto &entry : *upgrades)
         {
-            desc += make_stringf("%s%2d              %s%s\n",
+            desc += make_stringf("<397>%s%2d              %s%s\n",
                                  you.experience_level < entry.first
                                      ? "<darkgrey>" : "",
                                  entry.first,
@@ -493,7 +493,7 @@ static bool _check_description_cycle(god_desc_type gdesc)
 #ifdef USE_TILE_LOCAL
                                    "|<w>Right-click</w>"
 #endif
-    "]: %s", place)).display();
+    "<398>]: %s", place)).display();
 
     mouse_control mc(MOUSE_MODE_MORE);
 
@@ -584,7 +584,7 @@ static void _print_top_line(god_type which_god, int width)
     const string godname = uppercase_first(god_name(which_god, true));
     textcolour(god_colour(which_god));
     const int len = width - strwidth(godname);
-    cprintf("%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
+    cprintf("<399>%s%s\n", string(len / 2, ' ').c_str(), godname.c_str());
     textcolour(LIGHTGREY);
     cprintf("\n");
 }
@@ -707,10 +707,10 @@ static string _raw_penance_message(god_type which_god)
     if (penance > 0 && is_good_god(which_god))
     {
         if (is_good_god(you.religion))
-            return "%s is ambivalent towards you.";
+            return "<400>%s is ambivalent towards you.";
         if (!god_hates_your_god(which_god))
         {
-            return "%s is almost ready to forgive your sins.";
+            return "<401>%s is almost ready to forgive your sins.";
                  // == "Come back to the one true church!"
         }
     }
@@ -718,14 +718,14 @@ static string _raw_penance_message(god_type which_god)
     const int initial_penance = initial_wrath_penance_for(which_god);
     // could do some math tricks to turn this into a table, but it seems fiddly
     if (penance > initial_penance * 3 / 4)
-        return "%s's wrath is upon you!";
+        return "<402>%s's wrath is upon you!";
     if (penance > initial_penance / 2)
-        return "%s well remembers your sins.";
+        return "<403>%s well remembers your sins.";
     if (penance > initial_penance / 4)
-        return "%s's wrath is beginning to fade.";
+        return "<404>%s's wrath is beginning to fade.";
     if (penance > 0)
-        return "%s is almost ready to forgive your sins.";
-    return "%s is neutral towards you.";
+        return "<405>%s is almost ready to forgive your sins.";
+    return "<406>%s is neutral towards you.";
 }
 
 /**
@@ -757,7 +757,7 @@ static void _describe_god_powers(god_type which_god)
     textcolour(LIGHTGREY);
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
-    cprintf("\n\n%s%*s%s\n", header,
+    cprintf("<407>\n\n%s%*s%s\n", header,
             min(80, get_number_of_cols()) - 1 - strwidth(header) - strwidth(cost),
             "", cost);
 
@@ -802,7 +802,7 @@ static void _describe_god_powers(god_type which_god)
                           (prot_chance >= 25) ? "sometimes"
                                               : "occasionally";
 
-        cprintf("%s %s watches over you%s.\n",
+        cprintf("<408>%s %s watches over you%s.\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 how,
                 when);
@@ -819,7 +819,7 @@ static void _describe_god_powers(god_type which_god)
             (piety >= piety_breakpoint(1)) ? "sometimes" :
                                              "occasionally";
 
-        cprintf("%s %s shields you from chaos.\n",
+        cprintf("<409>%s %s shields you from chaos.\n",
                 uppercase_first(god_name(which_god)).c_str(), how);
         break;
     }
@@ -827,7 +827,7 @@ static void _describe_god_powers(god_type which_god)
     case GOD_SHINING_ONE:
     {
         have_any = true;
-        cprintf("%s prevents you from stabbing unaware foes.\n",
+        cprintf("<410>%s prevents you from stabbing unaware foes.\n",
                 uppercase_first(god_name(which_god)).c_str());
         if (piety < piety_breakpoint(1))
             textcolour(DARKGREY);
@@ -838,7 +838,7 @@ static void _describe_god_powers(god_type which_god)
             (piety >= piety_breakpoint(3)) ? "mostly" :
                                              "partially";
 
-        cprintf("%s %s shields you from negative energy.\n",
+        cprintf("<411>%s %s shields you from negative energy.\n",
                 uppercase_first(god_name(which_god)).c_str(), how);
 
         const int halo_size = you_worship(which_god) ? you.halo_radius() : -1;
@@ -846,7 +846,7 @@ static void _describe_god_powers(god_type which_god)
             textcolour(DARKGREY);
         else
             textcolour(god_colour(which_god));
-        cprintf("You radiate a%s righteous aura, and others within it are "
+        cprintf("<412>You radiate a%s righteous aura, and others within it are "
                 "easier to hit.\n",
                 halo_size > 5 ? " large" :
                 halo_size > 3 ? "" :
@@ -860,14 +860,14 @@ static void _describe_god_powers(god_type which_god)
             textcolour(god_colour(which_god));
         else
             textcolour(DARKGREY);
-        cprintf("%s shields you from corrosive effects.\n",
+        cprintf("<413>%s shields you from corrosive effects.\n",
                 uppercase_first(god_name(which_god)).c_str());
 
         if (have_passive(passive_t::slime_feed))
             textcolour(god_colour(which_god));
         else
             textcolour(DARKGREY);
-        cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
+        cprintf("<414>You gain nutrition%s when your fellow slimes consume items.\n",
                 have_passive(passive_t::slime_hp) ? ", magic and health" :
                 have_passive(passive_t::slime_mp) ? " and magic" :
                                                     "");
@@ -889,12 +889,12 @@ static void _describe_god_powers(god_type which_god)
             textcolour(god_colour(which_god));
         else
             textcolour(DARKGREY);
-        cprintf("%s %sslows your movement.\n",
+        cprintf("<415>%s %sslows your movement.\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 piety >= piety_breakpoint(5) ? "greatly " :
                 piety >= piety_breakpoint(2) ? "" :
                                                "slightly ");
-        cprintf("%s supports your attributes. (+%d)\n",
+        cprintf("<416>%s supports your attributes. (+%d)\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 chei_stat_boost(piety));
         break;
@@ -906,7 +906,7 @@ static void _describe_god_powers(god_type which_god)
             const char* offer = numoffers == 1
                                ? spell_title(*you.vehumet_gifts.begin())
                                : "some of Vehumet's most lethal spells";
-            cprintf("You can memorise %s.\n", offer);
+            cprintf("<417>You can memorise %s.\n", offer);
         }
         else
         {
@@ -923,7 +923,7 @@ static void _describe_god_powers(god_type which_god)
             textcolour(DARKGREY);
         else
             textcolour(god_colour(which_god));
-        cprintf("You radiate a%s aura of darkness, enhancing your stealth "
+        cprintf("<418>You radiate a%s aura of darkness, enhancing your stealth "
                 "and reducing the accuracy of your foes.\n",
                 umbra_size > 5 ? " large" :
                 umbra_size > 3 ? "n" :
@@ -934,7 +934,7 @@ static void _describe_god_powers(god_type which_god)
     case GOD_GOZAG:
         have_any = true;
         cprintf("You passively detect gold.\n");
-        cprintf("%s turns your defeated foes' bodies to gold.\n",
+        cprintf("<419>%s turns your defeated foes' bodies to gold.\n",
                 uppercase_first(god_name(which_god)).c_str());
         cprintf("Your enemies may become distracted by gold.\n");
         break;
@@ -947,9 +947,9 @@ static void _describe_god_powers(god_type which_god)
     case GOD_PAKELLAS:
     {
         have_any = true;
-        cprintf("%s prevents your magic from regenerating.\n",
+        cprintf("<420>%s prevents your magic from regenerating.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        cprintf("%s identifies device charges for you.\n",
+        cprintf("<421>%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
         if (!you_foodless_normally())
         {
@@ -958,7 +958,7 @@ static void _describe_god_powers(god_type which_god)
             else
                 textcolour(DARKGREY);
 
-            cprintf("%s will collect and distill excess magic from your "
+            cprintf("<422>%s will collect and distill excess magic from your "
                     "kills.\n",
                     uppercase_first(god_name(which_god)).c_str());
         }
@@ -1001,7 +1001,7 @@ static void _describe_god_powers(god_type which_god)
         if (abil_cost == "(None)")
             abil_cost = "";
 
-        cprintf("%s%*s%s\n", buf.c_str(),
+        cprintf("<423>%s%*s%s\n", buf.c_str(),
                 min(80, get_number_of_cols()) - 1 - desc_len - abil_cost.size(),
                 "", abil_cost.c_str());
         textcolour(god_colour(which_god));
@@ -1027,7 +1027,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s\n", get_linebreak_string(god_desc, numcols).c_str());
+    cprintf("<424>%s\n", get_linebreak_string(god_desc, numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))
@@ -1037,7 +1037,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
         textcolour(god_colour(which_god));
 
         string title = god_title(which_god, you.species, you.piety);
-        cprintf("%s", title.c_str());
+        cprintf("<425>%s", title.c_str());
     }
 
     // mv: Now let's print favour as Brent suggested.
@@ -1054,7 +1054,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
     {
         cprintf(_describe_favour(which_god).c_str());
         if (which_god == GOD_ASHENZARI)
-            cprintf("\n%s", ash_describe_bondage(ETF_ALL, true).c_str());
+            cprintf("<426>\n%s", ash_describe_bondage(ETF_ALL, true).c_str());
     }
     _describe_god_powers(which_god);
 }

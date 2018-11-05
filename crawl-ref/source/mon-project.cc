@@ -150,7 +150,7 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
                                         abs_angle_diff;
         if (angle_diff >= PI / 3)
         {
-            dprf("can't target %s; angle diff %f",
+            dprf("<1569>can't target %s; angle diff %f",
                  m->name(DESC_PLAIN).c_str(), angle_diff);
             continue;
         }
@@ -158,14 +158,14 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
         // if preferred foe is valid, choose it.
         if (m->mindex() == preferred_foe)
         {
-            dprf("preferred target %s is valid burst target (delta %f)",
+            dprf("<1570>preferred target %s is valid burst target (delta %f)",
                  m->name(DESC_PLAIN).c_str(), angle_diff);
             return preferred_foe;
         }
 
         if (mons_aligned(m, &you) || mons_is_firewood(*m))
         {
-            dprf("skipping invalid burst target %s (%s)",
+            dprf("<1571>skipping invalid burst target %s (%s)",
                  m->name(DESC_PLAIN).c_str(),
                  mons_aligned(m, &you) ? "aligned" : "firewood");
             continue;
@@ -175,12 +175,12 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
         // on distance ties, bias by iterator order (mindex)
         if (dist >= closest_dist)
         {
-            dprf("%s not closer to target than closest (%d vs %d)",
+            dprf("<1572>%s not closer to target than closest (%d vs %d)",
                  m->name(DESC_PLAIN).c_str(), dist, closest_dist);
             continue;
         }
 
-        dprf("%s is valid burst target (delta %f, dist %d)",
+        dprf("<1573>%s is valid burst target (delta %f, dist %d)",
              m->name(DESC_PLAIN).c_str(), angle_diff, dist);
         closest_dist = dist;
         closest_foe = m->mindex();
@@ -446,7 +446,7 @@ move_again:
             && you.see_cell(pos)
             && you.see_cell(mon.pos()))
         {
-            mprf("%s은(는) %s을(를) 공격했다.", mon.name(DESC_PLAIN, true).c_str(),
+            mprf("<1574>%s은(는) %s을(를) 공격했다.", mon.name(DESC_PLAIN, true).c_str(),
                  feature_description_at(pos, false, DESC_PLAIN).c_str());
         }
 
@@ -510,7 +510,7 @@ move_again:
             if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
                 if (victim->is_player())
-                    mprf("당신은 %s을(를) 막았다.", mon.name(DESC_PLAIN, true).c_str());
+                    mprf("<1575>당신은 %s을(를) 막았다.", mon.name(DESC_PLAIN, true).c_str());
                 else
                 {
                     simple_monster_message(*mons, ("은(는) "
@@ -525,14 +525,14 @@ move_again:
             {
                 if (shield && shield_reflects(*shield))
                 {
-                    mprf("당신의 %s은(는) %s을(를) 반사했다!",
+                    mprf("<1576>당신의 %s은(는) %s을(를) 반사했다!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_PLAIN, true).c_str());
                     ident_reflector(shield);
                 }
                 else // has reflection property not from shield
                 {
-                    mprf("%s은(는) 당신 주위의 보이지않는 방패에 반사되었다!",
+                    mprf("<1577>%s은(는) 당신 주위의 보이지않는 방패에 반사되었다!",
                          mon.name(DESC_PLAIN, true).c_str());
                 }
             }
@@ -542,7 +542,7 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s은(는) %s와(과) %s의 %s에 반사되었다!",
+                        mprf("<1578>%s은(는) %s와(과) %s의 %s에 반사되었다!",
                              victim->name(DESC_PLAIN, true).c_str(),
                              mon.name(DESC_PLAIN, true).c_str(),
                              mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
@@ -551,7 +551,7 @@ move_again:
                     }
                     else
                     {
-                        mprf("%s은(는) %s 주위의 보이지않는 방패에 반사되었다!",
+                        mprf("<1579>%s은(는) %s 주위의 보이지않는 방패에 반사되었다!",
                              mon.name(DESC_PLAIN, true).c_str(),
                              victim->name(DESC_PLAIN, true).c_str());
 
@@ -562,7 +562,7 @@ move_again:
                 }
                 else
                 {
-                    mprf("%s이(가) 공중에서 튕겨져나갔다!",
+                    mprf("<1580>%s이(가) 공중에서 튕겨져나갔다!",
                          mon.name(DESC_PLAIN, true).c_str());
                 }
             }

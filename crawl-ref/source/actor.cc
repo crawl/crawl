@@ -437,7 +437,7 @@ bool actor::check_clinging(bool stepped, bool door)
     {
         if (you.can_see(*this))
         {
-            mprf("%s은(는) %s아래로 떨어졌다.", name(DESC_PLAIN).c_str(),
+            mprf("<17>%s은(는) %s아래로 떨어졌다.", name(DESC_PLAIN).c_str(),
                  door ? "문" : "벽");
         }
         apply_location_effects(pos());
@@ -472,7 +472,7 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
-        mprf("%s은(는) %s을(를) 붙잡고 있던것을 %s.",
+        mprf("<18>%s은(는) %s을(를) 붙잡고 있던것을 %s.",
                 name(DESC_PLAIN).c_str(),
                 constrictee->name(DESC_PLAIN).c_str(),
                 intentional ? "놓았다" : "놓쳤다");
@@ -679,7 +679,7 @@ void actor::handle_constriction()
 
         if (is_player() || you.can_see(*this))
         {
-            mprf("%s은(는) %s %s%s%s",
+            mprf("<19>%s은(는) %s %s%s%s",
             (is_player() ? "당신"
                          : name(DESC_PLAIN).c_str()),
             conj_verb("조였다 : ").c_str(),
@@ -693,7 +693,7 @@ void actor::handle_constriction()
         }
         else if (you.can_see(*defender) || defender->is_player())
         {
-            mprf("%s %s 조여졌다%s%s",
+            mprf("<20>%s %s 조여졌다%s%s",
             defender->name(DESC_PLAIN).c_str(),
             defender->conj_verb("은(는)").c_str(),
 #ifdef DEBUG_DIAGNOSTICS
@@ -704,7 +704,7 @@ void actor::handle_constriction()
                  exclamations.c_str());
         }
 
-        dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+        dprf("<21>constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
              name(DESC_PLAIN, true).c_str(),
              defender->name(DESC_PLAIN, true).c_str(),
              basedam, durdam, acdam, timescale_dam, infdam);
@@ -809,12 +809,12 @@ string actor::resist_margin_phrase(int margin) const
 
     static const string resist_messages[][2] =
     {
-      { "은(는) 아슬아슬하게 %s",       "저항했다" },
-      { "은(는) 저항하기위해 %s",    "발버둥쳤다." },
-      { "은(는) 상당한 노력 끝에 %s.",  "저항했다" },
-      { "은(는) 꽤 노력 끝에 %s.",      "저항했다" },
-      { "은(는) 손쉽게 %s.",            "저항했다" },
-      { "은(는) 별 노력없이 %s.",       "저항했다" },
+      { "<22>은(는) 아슬아슬하게 %s",       "저항했다" },
+      { "<23>은(는) 저항하기위해 %s",    "발버둥쳤다." },
+      { "<24>은(는) 상당한 노력 끝에 %s.",  "저항했다" },
+      { "<25>은(는) 꽤 노력 끝에 %s.",      "저항했다" },
+      { "<26>은(는) 손쉽게 %s.",            "저항했다" },
+      { "<27>은(는) 별 노력없이 %s.",       "저항했다" },
     };
 
     const int index = max(0, min((int)ARRAYSZ(resist_messages) - 1,
@@ -848,7 +848,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
         if (you.can_see(*this) || you.can_see(*other))
         {
-            mprf("%s이(가) %s와 충돌했다!",
+            mprf("<28>%s이(가) %s와 충돌했다!",
                  name(DESC_PLAIN).c_str(),
                  other->name(DESC_PLAIN).c_str());
         }
@@ -869,7 +869,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     {
         if (!can_pass_through_feat(grd(newpos)))
         {
-            mprf("%s은(는) %s에 %s!",
+            mprf("<29>%s은(는) %s에 %s!",
                  name(DESC_PLAIN).c_str(), conj_verb("내팽개쳐졌다").c_str(),
                  env.map_knowledge(newpos).known()
                  ? feature_description_at(newpos, false, DESC_PLAIN, false)
@@ -878,7 +878,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         }
         else
         {
-            mprf("%s의 움직임이 격렬하게 %s!",
+            mprf("<30>%s의 움직임이 격렬하게 %s!",
                  name(DESC_PLAIN).c_str(), conj_verb("멈추었다").c_str());
         }
     }

@@ -224,7 +224,7 @@ void TextDB::init()
 
     if (!open_db())
     {
-        end(1, true, "Failed to open DB: %s",
+        end(1, true, "<227>Failed to open DB: %s",
             _db_cache_path(_db_name, lang()).c_str());
     }
 }
@@ -280,9 +280,9 @@ void TextDB::_regenerate_db()
     shutdown();
 #ifdef DEBUG_DIAGNOSTICS
     if (_parent)
-        printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
+        printf("<228>Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
     else
-        printf("Regenerating db: %s\n", _db_name);
+        printf("<229>Regenerating db: %s\n", _db_name);
 #endif
 
     string db_path = _db_cache_path(_db_name, lang());
@@ -301,7 +301,7 @@ void TextDB::_regenerate_db()
 
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
-        end(1, true, "Unable to open DB: %s", db_path.c_str());
+        end(1, true, "<230>Unable to open DB: %s", db_path.c_str());
     for (const string &file : _input_files)
     {
         string full_input_path = _directory + file;
@@ -474,7 +474,7 @@ static void _add_entry(DBM *db, const string &k, string &v)
     value.dsize = v.length();
 
     if (dbm_store(db, key, value, DBM_REPLACE))
-        end(1, true, "Error storing %s", k.c_str());
+        end(1, true, "<231>Error storing %s", k.c_str());
 }
 
 static void _parse_text_db(LineInput &inf, DBM *db)
@@ -524,7 +524,7 @@ static void _store_text_db(const string &in, DBM *db)
 {
     UTF8FileLineInput inf(in.c_str());
     if (inf.error())
-        end(1, true, "Unable to open input file: %s", in.c_str());
+        end(1, true, "<232>Unable to open input file: %s", in.c_str());
 
     _parse_text_db(inf, db);
 }
@@ -812,7 +812,7 @@ string getSpeakString(const string &key)
     int num_replacements = 0;
 
 #ifdef DEBUG_MONSPEAK
-    dprf(DIAG_SPEECH, "monster speech lookup for %s", key.c_str());
+    dprf(DIAG_SPEECH, "<233>monster speech lookup for %s", key.c_str());
 #endif
     string txt = _getRandomisedStr(SpeakDB, key, "", num_replacements);
     _execute_embedded_lua(txt);

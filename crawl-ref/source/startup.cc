@@ -229,7 +229,7 @@ static void _zap_los_monsters(bool items_also)
         if (mon == nullptr || !mons_is_threatening(*mon))
             continue;
 
-        dprf("Dismissing %s",
+        dprf("<2356>Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str());
 
         // Do a hard reset so the monster's items will be discarded.
@@ -745,7 +745,7 @@ again:
         cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
         clear_to_end_of_line();
         cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
-        cprintf("%s", input_string.c_str());
+        cprintf("<2357>%s", input_string.c_str());
 
         const int keyn = getch_ck();
 
@@ -946,7 +946,7 @@ static void _choose_arena_teams(newgame_def& choice,
 
     cgotoxy(1, 4);
     if (!defaults.arena_teams.empty())
-        cprintf("Enter - %s\n", defaults.arena_teams.c_str());
+        cprintf("<2358>Enter - %s\n", defaults.arena_teams.c_str());
     cprintf("\n");
     cprintf("Examples:\n");
     cprintf("  Sigmund v Jessica\n");

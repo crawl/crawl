@@ -165,7 +165,7 @@ bool deviant_route_warning::warn_continue_travel(
         return true;
 
     target = dest;
-    const string prompt = make_stringf("Have to go through %s. Continue?",
+    const string prompt = make_stringf("<2516>Have to go through %s. Continue?",
                                        deviant.describe().c_str());
     // If the user says "Yes, shut up and take me there", we won't ask
     // again for that destination. If the user says "No", we will
@@ -778,12 +778,12 @@ static void _explore_find_target_square()
 
             if (!inacc.empty())
             {
-                inacc_desc = make_stringf("can't reach some %s",
+                inacc_desc = make_stringf("<2517>can't reach some %s",
                                  comma_separated_line(inacc.begin(),
                                                       inacc.end()).c_str());
                 reasons.push_back(inacc_desc.c_str());
             }
-            mprf("탐사를 부분적으로 완료하였다, %s.",
+            mprf("<2518>탐사를 부분적으로 완료하였다, %s.",
                  comma_separated_line(reasons.begin(), reasons.end()).c_str());
         }
         stop_running();
@@ -815,7 +815,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
         if (explore_stopped_pos == you.pos())
         {
             const string prompt =
-                make_stringf("Could not pick up %s here; shall I ignore %s?",
+                make_stringf("<2519>Could not pick up %s here; shall I ignore %s?",
                              tried_pickup == 1? "an item" : "some items",
                              tried_pickup == 1? "it" : "them");
 
@@ -893,14 +893,14 @@ command_type travel()
 
     if (Options.travel_key_stop && kbhit())
     {
-        mprf("키 입력됨, %s 중지.", you.running.runmode_name().c_str());
+        mprf("<2520>키 입력됨, %s 중지.", you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
     }
 
     if (you.confused())
     {
-        mprf("혼란에 걸려, %s을(를) 중지했다.",
+        mprf("<2521>혼란에 걸려, %s을(를) 중지했다.",
              you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
@@ -909,7 +909,7 @@ command_type travel()
     // Excluded squares are only safe if marking stairs, i.e. another level.
     if (is_excluded(you.pos()) && !is_stair_exclusion(you.pos()))
     {
-        mprf("탐험 예외 지역에 도달하여, %s을(를) 중지했다.",
+        mprf("<2522>탐험 예외 지역에 도달하여, %s을(를) 중지했다.",
              you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
@@ -2111,7 +2111,7 @@ static int _prompt_travel_branch(int prompt_flags)
             if (!trans_travel_dest.empty() && remember_targ)
             {
                 segs.push_back(
-                    make_stringf("Enter - %s", trans_travel_dest.c_str()));
+                    make_stringf("<2523>Enter - %s", trans_travel_dest.c_str()));
             }
 
             segs.emplace_back("? - help");
@@ -2120,7 +2120,7 @@ static int _prompt_travel_branch(int prompt_flags)
                                               ", ", ", ");
             shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "어디로? %s",
+        mprf(MSGCH_PROMPT, "<2524>어디로? %s",
              shortcuts.c_str());
 
         int keyin = get_ch();
@@ -2402,8 +2402,8 @@ static level_pos _prompt_travel_depth(const level_id &id)
     while (true)
     {
         clear_messages();
-        mprf(MSGCH_PROMPT, "%s의 몇 층으로 이동하는가? "
-             "(디폴트:%s, ? - 도움말) ",
+        mprf(MSGCH_PROMPT, "<2525>%s의 몇 층으로 이동하는가? "
+             "<2526>(디폴트:%s, ? - 도움말) ",
              branches[target.id.branch].longname,
              _get_trans_travel_dest(target, true).c_str());
 
@@ -3045,13 +3045,13 @@ string level_id::describe(bool long_name, bool with_number) const
             // decapitalise 'the'
             if (starts_with(result, "The"))
                 result[0] = 't';
-            result = make_stringf("Level %d of %s",
+            result = make_stringf("<2527>Level %d of %s",
                       depth, result.c_str());
         }
         else if (depth)
-            result = make_stringf("%s:%d", result.c_str(), depth);
+            result = make_stringf("<2528>%s:%d", result.c_str(), depth);
         else
-            result = make_stringf("%s:$", result.c_str());
+            result = make_stringf("<2529>%s:$", result.c_str());
     }
     return result;
 }
@@ -3066,7 +3066,7 @@ level_id level_id::parse_level_id(const string &s)
 
     if (br == NUM_BRANCHES)
     {
-        throw bad_level_id_f("Invalid branch \"%s\" in spec \"%s\"",
+        throw bad_level_id_f("Invalid branch \"<2530>%s\" in spec \"%s\"",
                              brname.c_str(), s.c_str());
     }
 
@@ -3078,7 +3078,7 @@ level_id level_id::parse_level_id(const string &s)
     // The branch might have been longer when the save has been created.
     if (dep < 0 || dep > brdepth[br] && dep > branches[br].numlevels)
     {
-        throw bad_level_id_f("Invalid depth for %s in spec \"%s\"",
+        throw bad_level_id_f("<2531>Invalid depth for %s in spec \"%s\"",
                              brname.c_str(), s.c_str());
     }
 
@@ -3150,13 +3150,13 @@ string stair_info::describe() const
     if (destination.is_valid())
     {
         const level_pos &lp(destination);
-        return make_stringf(" (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
+        return make_stringf("<2532> (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
                              lp.pos.x, lp.pos.y,
                              guessed_pos? " guess" : "",
                              type == PLACEHOLDER ? " placeholder" : "");
     }
     else if (destination.id.is_valid())
-        return make_stringf(" (->%s (?))", destination.id.describe().c_str());
+        return make_stringf("<2533> (->%s (?))", destination.id.describe().c_str());
 
     return " (?)";
 }
@@ -3869,7 +3869,7 @@ void TravelCache::add_waypoint(int x, int y)
         list_waypoints();
     }
 
-    mprf(MSGCH_PROMPT, "목적지에 어떤 숫자를 배정하겠는가? (0-9%s) ",
+    mprf(MSGCH_PROMPT, "<2534>목적지에 어떤 숫자를 배정하겠는가? (0-9%s) ",
          waypoints_exist? ", D - 기억한 지점 삭제" : "");
 
     int keyin = toalower(get_ch());
@@ -3911,12 +3911,12 @@ void TravelCache::add_waypoint(int x, int y)
             mprf("지점 %d이(가) 현재 위치로 재설정되었다.", waynum);
         else
         {
-            mprf("지점 %d은(는) %s에서 %s(으)로 재설정되었다.",
+            mprf("<2535>지점 %d은(는) %s에서 %s(으)로 재설정되었다.",
                  waynum, old_dest.c_str(), new_dest.c_str());
         }
     }
     else
-        mprf("Waypoint %d assigned to %s.", waynum, new_dest.c_str());
+        mprf("<2536>Waypoint %d assigned to %s.", waynum, new_dest.c_str());
 
     update_waypoints();
 }
@@ -4565,7 +4565,7 @@ template <class C> void explore_discoveries::say_any(
 
     if (has_duplicates(coll.begin(), coll.end()))
     {
-        mprf("%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
+        mprf("<2537>%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
         return;
     }
 
@@ -4573,7 +4573,7 @@ template <class C> void explore_discoveries::say_any(
                            comma_separated_line(coll.begin(), coll.end()) + ".";
 
     if (printed_width(message) >= get_number_of_cols())
-        mprf("%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
+        mprf("<2538>%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
     else
         mpr(message);
 }
@@ -4610,7 +4610,7 @@ bool explore_discoveries::stop_explore() const
         mpr(msg);
 
     for (const string &marked : marked_feats)
-        mprf("%s개의 아이템을 발견했다.", marked.c_str());
+        mprf("<2539>%s개의 아이템을 발견했다.", marked.c_str());
 
     if (!es_flags)
         return marker_stop;

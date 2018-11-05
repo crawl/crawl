@@ -228,8 +228,8 @@ void init_spell_rarities()
                 item.base_type = OBJ_BOOKS;
                 item.sub_type  = i;
 
-                end(1, false, "Spellbook '%s' has spells out of level order "
-                    "('%s' is before '%s')",
+                end(1, false, "<2225>Spellbook '%s' has spells out of level order "
+                    "<2226>('%s' is before '%s')",
                     item.name(DESC_PLAIN, false, true).c_str(),
                     spell_title(last),
                     spell_title(spell));
@@ -244,8 +244,8 @@ void init_spell_rarities()
                 item.base_type = OBJ_BOOKS;
                 item.sub_type  = i;
 
-                end(1, false, "Spellbook '%s' contains invalid spell "
-                             "'%s'",
+                end(1, false, "<2227>Spellbook '%s' contains invalid spell "
+                             "<2228>'%s'",
                     item.name(DESC_PLAIN, false, true).c_str(),
                     spell_title(spell));
             }
@@ -363,7 +363,7 @@ static bool _get_book_spells(const item_def& book, spell_set &spells)
 
     if (num_spells == 0)
     {
-        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
+        mprf(MSGCH_ERROR, "Spellbook \"<2229>%s\" contains no spells! Please "
              "버그리포트 해주세요.", book.name(DESC_PLAIN).c_str());
         return true;
     }
@@ -515,7 +515,7 @@ static void _get_mem_list(spell_list &mem_spells,
                                                              mem_spells,
                                                              num_misc);
     if (!just_check && !unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+        mprf(MSGCH_PROMPT, "<2230>%s", unavail_reason.c_str());
 }
 
 /// Give the player a memorization prompt for the spells from the given book.
@@ -534,7 +534,7 @@ void learn_spell_from(const item_def &book)
                                                              mem_spells,
                                                              num_misc);
     if (!unavail_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+        mprf(MSGCH_PROMPT, "<2231>%s", unavail_reason.c_str());
     if (mem_spells.empty())
         return;
 
@@ -652,7 +652,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    string more_str = make_stringf("<lightgreen>%d spell level%s left"
+    string more_str = make_stringf("<2232><lightgreen>%d spell level%s left"
                                    "<lightgreen>",
                                    player_spell_levels(),
                                    (player_spell_levels() > 1
@@ -660,7 +660,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     if (num_misc > 0)
     {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
+        more_str += make_stringf("<2233>, <lightred>%u spell%s unmemorisable"
                                  "</lightred>",
                                  num_misc,
                                  num_misc > 1 ? "s" : "");
@@ -873,7 +873,7 @@ bool learn_spell(spell_type specspell, bool wizard)
     string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
 
     if (mem_spell_warning_string != "")
-        mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
+        mprf(MSGCH_WARN, "<2234>%s", mem_spell_warning_string.c_str());
 
     if (!_learn_spell_checks(specspell, wizard))
         return false;
@@ -893,14 +893,14 @@ bool learn_spell(spell_type specspell, bool wizard)
             mprf(MSGCH_WARN, "이 주문은 시전이 불가능하다!");
         else if (severity > 0)
         {
-            mprf(MSGCH_WARN, "이 주문은 시전하기가 %s하다%s",
+            mprf(MSGCH_WARN, "<2235>이 주문은 시전하기가 %s하다%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");
         }
     }
 
     const string prompt = make_stringf(
-             "Memorise %s, consuming %d spell level%s and leaving %d?",
+             "<2236>Memorise %s, consuming %d spell level%s and leaving %d?",
              spell_title(specspell), spell_levels_required(specspell),
              spell_levels_required(specspell) != 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));

@@ -100,7 +100,7 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
         && thing_done != DID_EXPLORATION || old_piety != you.piety)
     {
 
-        dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
+        dprf("<749>conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
              conducts[thing_done],
              you.piety, piety_change, piety_denom,
              you.penance[you.religion], penance);
@@ -665,7 +665,7 @@ static like_response okawaru_kill(const char* desc)
             if (piety > 3200)
             {
                 mprf(MSGCH_GOD, you.religion,
-                     "<white>%s은(는) 당신의 살해를 명예롭게 생각한다.</white>",
+                     "<750><white>%s은(는) 당신의 살해를 명예롭게 생각한다.</white>",
                      uppercase_first(god_name(you.religion)).c_str());
             }
             else if (piety > 9) // might still be miniscule
@@ -885,7 +885,7 @@ static like_map divine_likes[] =
             {
                 const int speed_delta =
                     cheibriados_monster_player_speed_delta(*victim);
-                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
+                dprf("<751>Chei DID_KILL_FAST: %s speed delta: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
                      speed_delta);
 

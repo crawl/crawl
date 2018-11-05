@@ -62,8 +62,8 @@ static void _dump_item(const char *name, int num, const item_def &item,
     string msg = vmake_stringf(format, args);
     va_end(args);
 
-    mprf(chan, "%s", msg.c_str());
-    mprf(chan, "%s", name);
+    mprf(chan, "<312>%s", msg.c_str());
+    mprf(chan, "<313>%s", name);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
@@ -76,7 +76,7 @@ static void _dump_item(const char *name, int num, const item_def &item,
 
 #ifdef DEBUG_FATAL
     if (!crawl_state.game_crashed)
-        die("%s %s", msg.c_str(), name);
+        die("<314>%s %s", msg.c_str(), name);
 #endif
     crawl_state.cancel_cmd_repeat();
 }
@@ -181,7 +181,7 @@ void debug_item_scan()
                 {
                     if (ii->index() == i)
                     {
-                        mprf("Held by monster #%d: %s at (%d,%d)",
+                        mprf("<315>Held by monster #%d: %s at (%d,%d)",
                              j, mons.name(DESC_A, true).c_str(),
                              mons.pos().x, mons.pos().y);
                     }
@@ -294,7 +294,7 @@ static string _vault_desc(const coord_def pos)
         if (_inside_vault(*vault, pos))
         {
             coord_def br = vault->pos + vault->size - 1;
-            out += make_stringf(" [vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
+            out += make_stringf("<316> [vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
                         vault->map_name_at(pos).c_str(),
                         vault->pos.x, vault->pos.y,
                         br.x, br.y,
@@ -335,7 +335,7 @@ void debug_mons_scan()
 
                 _announce_level_prob(warned);
                 mprf(MSGCH_WARN,
-                     "Bogosity: mgrd at (%d,%d) points at %s, "
+                     "<317>Bogosity: mgrd at (%d,%d) points at %s, "
                      "but monster is at (%d,%d)",
                      x, y, m->name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y);
@@ -347,7 +347,7 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 mprf_nocap(MSGCH_ERROR,
-                     "mgrd at (%d,%d) points at dead monster %s",
+                     "<318>mgrd at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
             }
@@ -378,7 +378,7 @@ void debug_mons_scan()
 
         if (!in_bounds(pos))
         {
-            mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
+            mprf(MSGCH_ERROR, "<319>Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
                  m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
@@ -389,7 +389,7 @@ void debug_mons_scan()
             is_floating[i] = true;
 
             _announce_level_prob(warned);
-            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
+            mprf(MSGCH_WARN, "<320>Floating monster: %s at (%d,%d), midx = %d",
                  m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
             warned = true;
@@ -406,12 +406,12 @@ void debug_mons_scan()
                 string full = m2->full_name(DESC_PLAIN);
                 if (m2->alive())
                 {
-                    mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
+                    mprf(MSGCH_WARN, "<321>Also at (%d, %d): %s, midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
                 else if (m2->type != MONS_NO_MONSTER)
                 {
-                    mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
+                    mprf(MSGCH_WARN, "<322>Dead mon also at (%d, %d): %s,"
                                      "midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
@@ -424,7 +424,7 @@ void debug_mons_scan()
             // if we're going to dump, point out the culprit
             env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
-            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
+            mprf(MSGCH_ERROR, "<323>Monster %s in %s at (%d, %d)%s",
                  m->full_name(DESC_PLAIN).c_str(),
                  dungeon_feature_name(grd(pos)),
                  pos.x, pos.y,
@@ -439,7 +439,7 @@ void debug_mons_scan()
 
             if (idx < 0 || idx > MAX_ITEMS)
             {
-                mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
+                mprf(MSGCH_ERROR, "<324>Monster %s (%d, %d) has invalid item "
                                   "index %d in slot %d.",
                      m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, idx, j);
@@ -451,7 +451,7 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
+                mprf(MSGCH_WARN, "<325>Monster %s (%d, %d) holding invalid item in "
                                  "slot %d (midx = %d)",
                      m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, j, i);
@@ -466,7 +466,7 @@ void debug_mons_scan()
                 warned = true;
                 _dump_item(item.name(DESC_PLAIN, false, true).c_str(),
                             idx, item,
-                           "Monster %s (%d, %d) holding non-monster "
+                           "<326>Monster %s (%d, %d) holding non-monster "
                            "item (midx = %d)",
                            m->full_name(DESC_PLAIN).c_str(),
                            pos.x, pos.y, i);
@@ -477,9 +477,9 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
-                                 "item %s, but item thinks it's held by "
-                                 "monster %s (%d, %d) [midx = %d]",
+                mprf(MSGCH_WARN, "<327>Monster %s (%d, %d) [midx = %d] holding "
+                                 "<328>item %s, but item thinks it's held by "
+                                 "<329>monster %s (%d, %d) [midx = %d]",
                      m->full_name(DESC_PLAIN).c_str(),
                      m->pos().x, m->pos().y, i,
                      item.name(DESC_PLAIN).c_str(),
@@ -509,7 +509,7 @@ void debug_mons_scan()
             else if (m1->mid == m->mid)
             {
                 mprf(MSGCH_ERROR,
-                     "Error: monster %s(%d) has same mid as %s(%d) (%d)",
+                     "<330>Error: monster %s(%d) has same mid as %s(%d) (%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex(),
                      m1->name(DESC_PLAIN, true).c_str(), m1->mindex(), m->mid);
             }
@@ -520,7 +520,7 @@ void debug_mons_scan()
         if (you.constricted_by == m->mid && (!m->constricting
               || m->constricting->find(MID_PLAYER) == m->constricting->end()))
         {
-            mprf(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
+            mprf(MSGCH_ERROR, "<331>Error: constricting[you] entry missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
         }
 
@@ -529,14 +529,14 @@ void debug_mons_scan()
             const actor *h = actor_by_mid(m->constricted_by);
             if (!h)
             {
-                mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                mprf(MSGCH_ERROR, "<332>Error: constrictor missing for monster %s(%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex());
             }
             if (!h->constricting
                 || h->constricting->find(m->mid) == h->constricting->end())
             {
-                mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
-                                  "entry missing for monster %s(mindex=%d mid=%d)",
+                mprf(MSGCH_ERROR, "<333>Error: constricting[%s(mindex=%d mid=%d)] "
+                                  "<334>entry missing for monster %s(mindex=%d mid=%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid,
                      h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid);
             }
@@ -550,7 +550,7 @@ void debug_mons_scan()
         if (menv[idx].mid != entry.first)
         {
             monster &m(menv[idx]);
-            die("mid cache bogosity: mid %d points to %s mindex=%d mid=%d",
+            die("<335>mid cache bogosity: mid %d points to %s mindex=%d mid=%d",
                 entry.first, m.name(DESC_PLAIN, true).c_str(), m.mindex(),
                 m.mid);
         }
@@ -560,7 +560,7 @@ void debug_mons_scan()
         if (const monster* m = monster_at(you.pos()))
             if (!m->submerged() && !fedhas_passthrough(m))
             {
-                mprf(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
+                mprf(MSGCH_ERROR, "<336>Error: player on same spot as monster: %s(%d)",
                       m->name(DESC_PLAIN, true).c_str(), m->mindex());
             }
 
@@ -593,12 +593,12 @@ void debug_mons_scan()
         const monster* mon = &menv[idx];
         vector<string> vaults = _in_vaults(mon->pos());
 
-        string str = make_stringf("Floating monster %s (%d, %d)",
+        string str = make_stringf("<337>Floating monster %s (%d, %d)",
                                   mon->name(DESC_PLAIN, true).c_str(),
                                   mon->pos().x, mon->pos().y);
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprf(MSGCH_WARN, "<338>%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -614,13 +614,13 @@ void debug_mons_scan()
         const int       idx = bogus_idx[i];
         const monster* mon = &menv[idx];
 
-        string str = make_stringf("Bogus mgrd (%d, %d) pointing to %s", pos.x,
+        string str = make_stringf("<339>Bogus mgrd (%d, %d) pointing to %s", pos.x,
                                   pos.y, mon->name(DESC_PLAIN, true).c_str());
 
         vector<string> vaults = _in_vaults(pos);
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprf(MSGCH_WARN, "<340>%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -635,7 +635,7 @@ void debug_mons_scan()
         vaults = _in_vaults(mon->pos());
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprf(MSGCH_WARN, "<341>%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -714,14 +714,14 @@ void check_map_validity()
 #ifdef DEBUG_DIAGNOSTICS
         dump_map("missing_portal.map", true);
 #endif
-        die("Portal %s[%d] didn't get generated.", dungeon_feature_name(portal), portal);
+        die("<342>Portal %s[%d] didn't get generated.", dungeon_feature_name(portal), portal);
     }
     if (exit)
     {
 #ifdef DEBUG_DIAGNOSTICS
         dump_map("missing_exit.map", true);
 #endif
-        die("Exit %s[%d] didn't get generated.", dungeon_feature_name(exit), exit);
+        die("<343>Exit %s[%d] didn't get generated.", dungeon_feature_name(exit), exit);
     }
 
     // And just for good measure:

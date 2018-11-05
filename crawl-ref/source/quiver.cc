@@ -164,7 +164,7 @@ void quiver_item(int slot)
 #ifdef USE_SOUND
     parse_sound(CHANGE_QUIVER_SOUND);
 #endif
-    mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
+    mprf("<1924>Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
          t == AMMO_BLOWGUN  ? "blowguns" :
          t == AMMO_SLING    ? "slings" :
@@ -192,7 +192,7 @@ void choose_item_for_quiver()
         ammo_t t = _get_weapon_ammo_type(you.weapon());
         you.m_quiver.empty_quiver(t);
 
-        mprf("%s 보조 장비를 기본 선택으로 설정했다.",
+        mprf("<1925>%s 보조 장비를 기본 선택으로 설정했다.",
              t == AMMO_THROW    ? "throwing" :
              t == AMMO_BLOWGUN  ? "blowgun" :
              t == AMMO_SLING    ? "sling" :
@@ -246,7 +246,7 @@ void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
             return;
 
 #ifdef DEBUG_QUIVER
-        mprf(MSGCH_DIAGNOSTICS, "item %s is for throwing",
+        mprf(MSGCH_DIAGNOSTICS, "<1926>item %s is for throwing",
              item.name(DESC_PLAIN).c_str());
 #endif
         m_last_used_of_type[AMMO_THROW] = item;
@@ -319,7 +319,7 @@ void player_quiver::_maybe_fill_empty_slot()
     const ammo_t slot = _get_weapon_ammo_type(weapon);
 
 #ifdef DEBUG_QUIVER
-    mprf(MSGCH_DIAGNOSTICS, "last quiver item: %s; link %d, wpn: %d",
+    mprf(MSGCH_DIAGNOSTICS, "<1927>last quiver item: %s; link %d, wpn: %d",
          m_last_used_of_type[slot].name(DESC_PLAIN).c_str(),
          m_last_used_of_type[slot].link, you.equip[EQ_WEAPON]);
 #endif

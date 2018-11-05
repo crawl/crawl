@@ -160,7 +160,7 @@ static void _print_character_info(const newgame_def& ng)
 {
     clrscr();
     textcolour(BROWN);
-    cprintf("%s\n", _welcome(ng).c_str());
+    cprintf("<1683>%s\n", _welcome(ng).c_str());
 }
 
 void choose_tutorial_character(newgame_def& ng_choice)
@@ -412,7 +412,7 @@ static bool _reroll_random(newgame_def& ng)
 
     string specs = chop_string(species_name(ng.species), 79, false);
 
-    cprintf("You are a%s %s %s.\n",
+    cprintf("<1684>You are a%s %s %s.\n",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
             get_job_name(ng.job));
 
@@ -601,7 +601,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 
         string specs = chop_string(species_name(ng.species), 79, false);
 
-        cprintf("You are a%s %s %s.\n",
+        cprintf("<1685>You are a%s %s %s.\n",
                 (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
                 get_job_name(ng.job));
 
@@ -1155,7 +1155,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
     // TODO: attach these to the menu in a NoSelectTextItem
     textcolour(BROWN);
-    cprintf("%s", _welcome(ng).c_str());
+    cprintf("<1686>%s", _welcome(ng).c_str());
 
     textcolour(YELLOW);
 
@@ -1981,7 +1981,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     highlighter->set_visible(true);
 
     textcolour(CYAN);
-    cprintf("\nYou have a choice of %s:\n\n",
+    cprintf("<1687>\nYou have a choice of %s:\n\n",
             ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons"
                                                   : "maps");
 
@@ -2078,7 +2078,7 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     const mapref_vector maps = find_maps_for_tag(type_name);
 
     if (maps.empty())
-        end(1, true, "No %s maps found.", type_name.c_str());
+        end(1, true, "<1688>No %s maps found.", type_name.c_str());
 
     if (ng_choice.map.empty())
     {

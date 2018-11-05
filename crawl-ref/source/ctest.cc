@@ -62,7 +62,7 @@ static void _reset_test_data()
 
 static int crawl_begin_test(lua_State *ls)
 {
-    mprf(MSGCH_PROMPT, "Starting %s: %s",
+    mprf(MSGCH_PROMPT, "<216>Starting %s: %s",
          activity,
          luaL_checkstring(ls, 1));
     lua_pushnumber(ls, ++ntests);
@@ -72,7 +72,7 @@ static int crawl_begin_test(lua_State *ls)
 static int crawl_test_success(lua_State *ls)
 {
     if (!crawl_state.script)
-        mprf(MSGCH_PROMPT, "Test success: %s", luaL_checkstring(ls, 1));
+        mprf(MSGCH_PROMPT, "<217>Test success: %s", luaL_checkstring(ls, 1));
     lua_pushnumber(ls, ++nsuccess);
     return 1;
 }
@@ -104,7 +104,7 @@ static bool _is_test_selected(const string &testname)
     if (crawl_state.test_list)
     {
         ASSERT(ends_with(testname, ".lua"));
-        printf("%s\n", testname.substr(0, testname.length() - 4).c_str());
+        printf("<218>%s\n", testname.substr(0, testname.length() - 4).c_str());
         return false;
     }
 
@@ -124,7 +124,7 @@ static void run_test(const string &file)
         return;
 
     ++ntests;
-    mprf(MSGCH_DIAGNOSTICS, "Running %s %d: %s",
+    mprf(MSGCH_DIAGNOSTICS, "<219>Running %s %d: %s",
          activity, ntests, file.c_str());
     flush_prev_message();
 
@@ -148,7 +148,7 @@ static bool _has_test(const string& test)
 static void _run_test(const string &name, void (*func)())
 {
     if (crawl_state.test_list)
-        return (void)printf("%s\n", name.c_str());
+        return (void)printf("<220>%s\n", name.c_str());
 
     if (!_has_test(name))
         return;
@@ -214,10 +214,10 @@ void run_tests()
         end(0);
     cio_cleanup();
     for (const file_error &fe : failures)
-        fprintf(stderr, "%s error: %s\n", activity, fe.second.c_str());
+        fprintf(stderr, "<221>%s error: %s\n", activity, fe.second.c_str());
 
     const int code = failures.empty() ? 0 : 1;
-    end(code, false, "%d %ss, %d succeeded, %d failed",
+    end(code, false, "<222>%d %ss, %d succeeded, %d failed",
         ntests, activity, nsuccess, (int)failures.size());
 }
 

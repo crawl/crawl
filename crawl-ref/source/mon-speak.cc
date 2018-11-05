@@ -551,7 +551,7 @@ bool mons_speaks(monster* mons)
             prefix += prefixes[i];
             prefix += " ";
         }
-        dprf(DIAG_SPEECH, "monster speech lookup for %s: prefix = %s",
+        dprf(DIAG_SPEECH, "<1581>monster speech lookup for %s: prefix = %s",
              mons->name(DESC_PLAIN).c_str(), prefix.c_str());
     }
 #endif
@@ -756,7 +756,7 @@ bool mons_speaks(monster* mons)
     if (msg.empty() || msg == "__NONE")
     {
 #ifdef DEBUG_MONSPEAK
-        dprf(DIAG_SPEECH, "final result: %s!",
+        dprf(DIAG_SPEECH, "<1582>final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
         return false;
@@ -824,7 +824,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
         {
             if (you.can_see(*mons))
                 handle_seen_interrupt(mons);
-            mprf(msg_type, "%s", line.c_str());
+            mprf(msg_type, "<1583>%s", line.c_str());
         }
     }
     return noticed;

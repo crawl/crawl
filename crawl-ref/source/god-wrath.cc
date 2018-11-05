@@ -107,7 +107,7 @@ static string _god_wrath_name(god_type god)
     const bool use_full_name = god == GOD_FEDHAS      // fedhas is very formal.
                                || god == GOD_WU_JIAN; // apparently.
 
-    return make_stringf("the %s of %s",
+    return make_stringf("<777>the %s of %s",
                         _god_wrath_adjectives[god],
                         god_name(god, use_full_name).c_str());
 }
@@ -1697,7 +1697,7 @@ static bool _uskayaw_retribution()
     case 1:
         if (mon && mon->can_go_berserk())
         {
-            simple_god_message(make_stringf("이 %s을(를) 광란의 무도로 이끌었다!",
+            simple_god_message(make_stringf("<778>이 %s을(를) 광란의 무도로 이끌었다!",
                                      mon->name(DESC_PLAIN).c_str()).c_str(), god);
             mon->go_berserk(true);
             return true;
@@ -1781,7 +1781,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 
     default:
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
-        mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
+        mprf(MSGCH_DIAGNOSTICS, "<779>No retribution defined for %s.",
              god_name(god).c_str());
 #endif
         return false;

@@ -231,7 +231,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             monster_info mi(mon);
             set_auto_exclude(mon);
 
-            mprf(MSGCH_WARN, "%s comes into view.",
+            mprf(MSGCH_WARN, "<2376>%s comes into view.",
                  get_monster_equipment_desc(mi, DESC_WEAPON).c_str());
         }
 
@@ -239,10 +239,10 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             hints_monster_seen(*mon);
 #else
         formatted_string fs(channel_to_colour(MSGCH_WARN));
-        fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
+        fs.cprintf("<2377>%s (", mon->name(DESC_PLAIN, true).c_str());
         monster_info mi(mon);
         fs.add_glyph(get_mons_glyph(mi));
-        fs.cprintf(") in view: (%d,%d), see_cell: %s",
+        fs.cprintf("<2378>) in view: (%d,%d), see_cell: %s",
                    mon->pos().x, mon->pos().y,
                    you.see_cell(mon->pos())? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
@@ -491,11 +491,11 @@ void game_state::dump()
     {
         fprintf(stderr, "Startup errors:\n");
         for (const string &err : startup_errors)
-            fprintf(stderr, "%s\n", err.c_str());
+            fprintf(stderr, "<2379>%s\n", err.c_str());
         fprintf(stderr, "\n");
     }
 
-    fprintf(stderr, "prev_cmd = %s\n", command_to_name(prev_cmd).c_str());
+    fprintf(stderr, "<2380>prev_cmd = %s\n", command_to_name(prev_cmd).c_str());
 
     if (doing_prev_cmd_again)
     {
@@ -508,13 +508,13 @@ void game_state::dump()
             fprintf(stderr, "%c", (char) key);
         fprintf(stderr, "\n\n");
     }
-    fprintf(stderr, "repeat_cmd = %s\n", command_to_name(repeat_cmd).c_str());
+    fprintf(stderr, "<2381>repeat_cmd = %s\n", command_to_name(repeat_cmd).c_str());
 
     fprintf(stderr, "\n");
 
     if (god_act.which_god != GOD_NO_GOD || god_act.depth != 0)
     {
-        fprintf(stderr, "God %s currently acting with depth %d\n\n",
+        fprintf(stderr, "<2382>God %s currently acting with depth %d\n\n",
                 god_name(god_act.which_god).c_str(), god_act.depth);
     }
 
@@ -523,7 +523,7 @@ void game_state::dump()
         fprintf(stderr, "Other gods acting:\n");
         for (const god_act_state &godact : god_act_stack)
         {
-            fprintf(stderr, "God %s with depth %d\n",
+            fprintf(stderr, "<2383>God %s with depth %d\n",
                     god_name(godact.which_god).c_str(), godact.depth);
         }
         fprintf(stderr, "\n\n");
@@ -531,7 +531,7 @@ void game_state::dump()
 
     if (mon_act != nullptr)
     {
-        fprintf(stderr, "%s currently acting:\n\n",
+        fprintf(stderr, "<2384>%s currently acting:\n\n",
                 debug_mon_str(mon_act).c_str());
         debug_dump_mon(mon_act, true);
     }
@@ -540,7 +540,7 @@ void game_state::dump()
     {
         fprintf(stderr, "Others monsters acting:\n");
         for (const monster *mon : mon_act_stack)
-            fprintf(stderr, "    %s\n", debug_mon_str(mon).c_str());
+            fprintf(stderr, "<2385>    %s\n", debug_mon_str(mon).c_str());
     }
 }
 

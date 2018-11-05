@@ -311,7 +311,7 @@ string branch_rune_desc(branch_type br, bool remaining_only)
 
     if (!rune_names.empty())
     {
-        desc = make_stringf("This branch contains the %s rune%s of Zot.",
+        desc = make_stringf("<142>This branch contains the %s rune%s of Zot.",
                             comma_separated_line(begin(rune_names),
                                                  end(rune_names)).c_str(),
                             rune_names.size() > 1 ? "s" : "");

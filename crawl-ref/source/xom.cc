@@ -564,7 +564,7 @@ static void _xom_random_spell(int sever)
 #endif
 
     your_spells(spell, sever, false);
-    const string note = make_stringf("cast spell '%s'", spell_title(spell));
+    const string note = make_stringf("<2736>cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
@@ -661,7 +661,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     _try_brand_switch(thing_created);
 
     static char gift_buf[100];
-    snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
+    snprintf(gift_buf, sizeof(gift_buf), "<2737>god gift: %s",
              mitm[thing_created].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
 
@@ -697,7 +697,7 @@ static void _xom_acquirement(int /*sever*/)
 
     _try_brand_switch(item_index);
 
-    const string note = make_stringf("god gift: %s",
+    const string note = make_stringf("<2738>god gift: %s",
                                      mitm[item_index].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 
@@ -1071,7 +1071,7 @@ static void _xom_send_allies(int sever)
     {
         god_speaks(GOD_XOM, _get_xom_speech("multiple summons").c_str());
 
-        const string note = make_stringf("summons %d friendly demon%s",
+        const string note = make_stringf("<2739>summons %d friendly demon%s",
                                          num_actually_summoned,
                                          num_actually_summoned > 1 ? "s" : "");
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
@@ -1092,7 +1092,7 @@ static void _xom_send_one_ally(int sever)
     {
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
-        const string note = make_stringf("summons friendly %s",
+        const string note = make_stringf("<2740>summons friendly %s",
                                          summons->name(DESC_PLAIN).c_str());
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
     }
@@ -1136,7 +1136,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
         const string new_name = see_new ? mons.full_name(DESC_PLAIN)
                                         : "something unseen";
 
-        string note = make_stringf("polymorph %s -> %s",
+        string note = make_stringf("<2741>polymorph %s -> %s",
                                    old_name.c_str(), new_name.c_str());
 
 #ifdef NOTE_DEBUG_XOM
@@ -1345,7 +1345,7 @@ static void _xom_snakes_to_sticks(int sever)
         item.quantity = 1;
 
         // Output some text since otherwise snakes will disappear silently.
-        mprf("%s은(는) %s(으)로 모습을 바꾸었다.", mi->name(DESC_PLAIN).c_str(),
+        mprf("<2742>%s은(는) %s(으)로 모습을 바꾸었다.", mi->name(DESC_PLAIN).c_str(),
              item.name(DESC_A).c_str());
 
         // Dismiss monster silently.
@@ -1417,7 +1417,7 @@ static void _xom_animate_monster_weapon(int sever)
     mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
-    mprf("%s %s이(가) 공중으로 떠올라 춤을 추기 시작했다!",
+    mprf("<2743>%s %s이(가) 공중으로 떠올라 춤을 추기 시작했다!",
          apostrophise(mon->name(DESC_PLAIN)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
@@ -1438,7 +1438,7 @@ static void _xom_give_mutations(bool good)
 
     const int num_tries = random2(4) + 1;
 
-    const string note = make_stringf("give %smutation%s",
+    const string note = make_stringf("<2744>give %smutation%s",
 #ifdef NOTE_DEBUG_XOM
              good ? "good " : "random ",
 #else
@@ -1638,7 +1638,7 @@ static void _xom_change_scenery(int /*sever*/)
     if (fountains_blood > 0)
     {
         string fountains = make_stringf(
-                 "%s fountain%s start%s gushing blood",
+                 "<2745>%s fountain%s start%s gushing blood",
                  fountains_blood == 1 ? "a" : "some",
                  fountains_blood == 1 ? ""  : "s",
                  fountains_blood == 1 ? "s" : "");
@@ -1650,7 +1650,7 @@ static void _xom_change_scenery(int /*sever*/)
     }
     if (!effects.empty())
     {
-        mprf("%s!",
+        mprf("<2746>%s!",
              comma_separated_line(effects.begin(), effects.end(),
                                   ", and ").c_str());
         effects.clear();
@@ -1658,7 +1658,7 @@ static void _xom_change_scenery(int /*sever*/)
 
     if (doors_open > 0)
     {
-        effects.push_back(make_stringf("%s door%s burst%s open",
+        effects.push_back(make_stringf("<2747>%s door%s burst%s open",
                                        doors_open == 1 ? "A"    :
                                        doors_open == 2 ? "Two"
                                                        : "Several",
@@ -1668,7 +1668,7 @@ static void _xom_change_scenery(int /*sever*/)
     }
     if (doors_close > 0)
     {
-        string closed = make_stringf("%s%s door%s slam%s shut",
+        string closed = make_stringf("<2748>%s%s door%s slam%s shut",
                  doors_close == 1 ? "a"    :
                  doors_close == 2 ? "two"
                                   : "several",
@@ -1686,7 +1686,7 @@ static void _xom_change_scenery(int /*sever*/)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ("scenery: "
             + comma_separated_line(terse.begin(), terse.end(), ", ", ", ")).c_str()),
             true);
-        mprf("%s!",
+        mprf("<2749>%s!",
              comma_separated_line(effects.begin(), effects.end(),
                                   ", and ").c_str());
     }
@@ -1797,7 +1797,7 @@ static void _xom_enchant_monster(bool helpful)
     enchant_actor_with_flavour(mon, 0, ench);
 
     // Take a note.
-    const string note = make_stringf("enchant monster %s",
+    const string note = make_stringf("<2750>enchant monster %s",
                                      helpful ? "(good)" : "(bad)");
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
@@ -2200,7 +2200,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
     // Take a note.
     const char* levels[4] = { "harmless", "mild", "medium", "severe" };
     const auto school = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
-    string desc = make_stringf("%s %s miscast", levels[level],
+    string desc = make_stringf("<2751>%s %s miscast", levels[level],
                                spelltype_short_name(school));
 #ifdef NOTE_DEBUG_XOM
     if (nasty)
@@ -2284,7 +2284,7 @@ static void _xom_player_confusion_effect(int sever)
         return;
 
     god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
-    mprf(MSGCH_WARN, "당신은 %s혼란스러워졌다.",
+    mprf(MSGCH_WARN, "<2752>당신은 %s혼란스러워졌다.",
          conf ? "더 " : "");
 
     // At higher severities, Xom is less likely to confuse surrounding
@@ -2441,7 +2441,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     string stair_str = feature_description_at(stair_pos, false, DESC_THE, false);
 
-    mprf("%s slides %s you!", stair_str.c_str(),
+    mprf("<2753>%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");
 
     // Animate stair moving.
@@ -2466,7 +2466,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     if (!swap_features(stair_pos, ray.pos(), false, false))
     {
-        mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
+        mprf(MSGCH_ERROR, "<2754>_move_stair(): failed to move %s",
              stair_str.c_str());
         return stairs_moved;
     }
@@ -2585,7 +2585,7 @@ static void _xom_statloss(int /*sever*/)
     lose_stat(stat, loss);
 
     const char* sstr[3] = { "Str", "Int", "Dex" };
-    const string note = make_stringf("stat loss: -%d %s (%d/%d)",
+    const string note = make_stringf("<2755>stat loss: -%d %s (%d/%d)",
                                      loss, sstr[stat], you.stat(stat),
                                      you.max_stat(stat));
 
@@ -2657,7 +2657,7 @@ static void _xom_summon_hostiles(int sever)
 
     if (num_summoned > 0)
     {
-        const string note = make_stringf("summons %d hostile %s%s",
+        const string note = make_stringf("<2756>summons %d hostile %s%s",
                                          num_summoned,
                                          shadow_creatures ? "shadow creature"
                                                           : "demon",
@@ -2810,13 +2810,13 @@ static void _xom_cleaving(int sever)
     {
         const bool axe = item_attack_skill(*weapon) == SK_AXES;
         mprf(MSGCH_DURATION,
-             "%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
+             "<2757>%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
              conjugate_verb("look", weapon->quantity > 1).c_str(),
              (axe) ? " (like it always does)." : ".");
     }
     else
     {
-        mprf(MSGCH_DURATION, "%s",
+        mprf(MSGCH_DURATION, "<2758>%s",
              you.hands_act("look", "sharp.").c_str());
     }
 
@@ -3332,7 +3332,7 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
              niceness, sever, tension, you.piety, you.gift_timeout);
 
         static char xom_buf[100];
-        snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
+        snprintf(xom_buf, sizeof(xom_buf), "<2759>xom_acts(%s, %d, %d), mood: %d",
                  (niceness ? "true" : "false"), sever, tension, you.piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
     }
@@ -3556,7 +3556,7 @@ static void _xom_good_teleport(int /*sever*/)
     maybe_update_stashes();
 
     // Take a note.
-    const string note = make_stringf("%d-stop teleportation journey%s", count,
+    const string note = make_stringf("<2760>%d-stop teleportation journey%s", count,
 #ifdef NOTE_DEBUG_XOM
              player_in_a_dangerous_place() ? " (dangerous)" :
 #endif
@@ -3587,7 +3587,7 @@ static void _xom_bad_teleport(int sever)
     maybe_update_stashes();
 
     // Take a note.
-    const string note = make_stringf("%d-stop teleportation journey%s", count,
+    const string note = make_stringf("<2761>%d-stop teleportation journey%s", count,
 #ifdef NOTE_DEBUG_XOM
              badness == 3 ? " (dangerous)" : "");
 #else
@@ -3727,7 +3727,7 @@ void validate_xom_events()
         }
 
         if (action_names.count(event->name))
-            fails += make_stringf("Duplicate name '%s'!\n", event->name);
+            fails += make_stringf("<2762>Duplicate name '%s'!\n", event->name);
         action_names.insert(event->name);
 
         if (_action_is_bad(event_type))
@@ -3735,17 +3735,17 @@ void validate_xom_events()
             if ((event->badness_10x < 10 || event->badness_10x > 50)
                 && event->badness_10x != -1) // implies it's special-cased
             {
-                fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
+                fails += make_stringf("<2763>'%s' badness %d outside 10-50 range.\n",
                                       event->name, event->badness_10x);
             }
         } else if (event->badness_10x)
         {
-            fails += make_stringf("'%s' is not bad, but has badness!\n",
+            fails += make_stringf("<2764>'%s' is not bad, but has badness!\n",
                                   event->name);
         }
 
         if (event_type != XOM_DID_NOTHING && !event->action)
-            fails += make_stringf("No action for '%s'!\n", event->name);
+            fails += make_stringf("<2765>No action for '%s'!\n", event->name);
     }
 
     dump_test_fails(fails, "xom-data");
@@ -3805,10 +3805,10 @@ void debug_xom_effects()
     const int tension       = get_tension(GOD_XOM);
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
-    fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
-    fprintf(ostat, "%s\n", screenshot().c_str());
-    fprintf(ostat, "%s\n", _list_exploration_estimate().c_str());
-    fprintf(ostat, "%s\n", mpr_monster_list().c_str());
+    fprintf(ostat, "<2766>%s\n", dump_overview_screen(false).c_str());
+    fprintf(ostat, "<2767>%s\n", screenshot().c_str());
+    fprintf(ostat, "<2768>%s\n", _list_exploration_estimate().c_str());
+    fprintf(ostat, "<2769>%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
     if (player_under_penance(GOD_XOM))
@@ -3879,7 +3879,7 @@ void debug_xom_effects()
         if (i == 0)
             fprintf(ostat, "\nTotal effects (all piety ranges)\n");
         else
-            fprintf(ostat, "\nMood: You are %s\n", moods[i].c_str());
+            fprintf(ostat, "<2770>\nMood: You are %s\n", moods[i].c_str());
 
         fprintf(ostat, "GOOD%7.2f%%\n",
                 (100.0 * (float) mood_good_acts[i] / (float) total));
@@ -3913,7 +3913,7 @@ void debug_xom_effects()
         sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
         for (const xom_effect_count &xec : xom_ec_pairs)
         {
-            fprintf(ostat, "%7.2f%%    %s\n",
+            fprintf(ostat, "<2771>%7.2f%%    %s\n",
                     (100.0 * xec.count / total),
                     xec.effect.c_str());
         }

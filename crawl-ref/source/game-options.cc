@@ -33,11 +33,11 @@ static unsigned _curses_attribute(const string &field, string &error)
         if (colour != -1)
             return CHATTR_HILITE | (colour << 8);
 
-        error = make_stringf("Bad highlight string -- %s",
+        error = make_stringf("<653>Bad highlight string -- %s",
                              field.c_str());
     }
     else if (field != "none")
-        error = make_stringf("Bad colour -- %s", field.c_str());
+        error = make_stringf("<654>Bad colour -- %s", field.c_str());
     return CHATTR_NORMAL;
 }
 
@@ -62,7 +62,7 @@ bool read_bool(const string &field, bool def_value)
     if (result != MB_MAYBE)
         return tobool(result, false);
 
-    Options.report_error("Bad boolean: %s (should be true or false)", field.c_str());
+    Options.report_error("<655>Bad boolean: %s (should be true or false)", field.c_str());
     return def_value;
 }
 
@@ -75,7 +75,7 @@ string BoolGameOption::loadFromString(string field, rc_line_type) const
     const maybe_bool result = read_maybe_bool(field);
     if (result == MB_MAYBE)
     {
-        return make_stringf("Bad %s value: %s (should be true or false)",
+        return make_stringf("<656>Bad %s value: %s (should be true or false)",
                             name().c_str(), field.c_str());
     }
 
@@ -89,7 +89,7 @@ string ColourGameOption::loadFromString(string field, rc_line_type) const
 {
     const int col = str_to_colour(field, -1, true, elemental);
     if (col == -1)
-        return make_stringf("Bad %s -- %s\n", name().c_str(), field.c_str());
+        return make_stringf("<657>Bad %s -- %s\n", name().c_str(), field.c_str());
 
     value = col;
     return "";
@@ -102,7 +102,7 @@ string CursesGameOption::loadFromString(string field, rc_line_type) const
     string error;
     const unsigned result = _curses_attribute(field, error);
     if (!error.empty())
-        return make_stringf("%s (for %s)", error.c_str(), name().c_str());
+        return make_stringf("<658>%s (for %s)", error.c_str(), name().c_str());
 
     value = result;
     return "";
@@ -129,11 +129,11 @@ string IntGameOption::loadFromString(string field, rc_line_type) const
 {
     int val = default_value;
     if (!parse_int(field.c_str(), val))
-        return make_stringf("Bad %s: \"%s\"", name().c_str(), field.c_str());
+        return make_stringf("<659>Bad %s: \"%s\"", name().c_str(), field.c_str());
     if (val < min_value)
-        return make_stringf("Bad %s: %d < %d", name().c_str(), val, min_value);
+        return make_stringf("<660>Bad %s: %d < %d", name().c_str(), val, min_value);
     if (val > max_value)
-        return make_stringf("Bad %s: %d > %d", name().c_str(), val, max_value);
+        return make_stringf("<661>Bad %s: %d > %d", name().c_str(), val, max_value);
     value = val;
     return "";
 }
@@ -171,7 +171,7 @@ string ColourThresholdOption::loadFromString(string field,
                 remove_matching(value, entry);
             break;
         default:
-            die("Unknown rc line type for %s: %d!", name().c_str(), ltyp);
+            die("<662>Unknown rc line type for %s: %d!", name().c_str(), ltyp);
     }
     return "";
 }
@@ -187,11 +187,11 @@ colour_thresholds
 
         if (insplit.size() != 2)
         {
-            const string failure = make_stringf("Bad %s pair: '%s'",
+            const string failure = make_stringf("<663>Bad %s pair: '%s'",
                                                 name().c_str(),
                                                 pair_str.c_str());
             if (!error)
-                die("%s", failure.c_str());
+                die("<664>%s", failure.c_str());
             *error = failure;
             break;
         }
@@ -202,11 +202,11 @@ colour_thresholds
         const int scolour = str_to_colour(colstr, -1, true, false);
         if (scolour <= 0)
         {
-            const string failure = make_stringf("Bad %s: '%s'",
+            const string failure = make_stringf("<665>Bad %s: '%s'",
                                                 name().c_str(),
                                                 colstr.c_str());
             if (!error)
-                die("%s", failure.c_str());
+                die("<666>%s", failure.c_str());
             *error = failure;
             break;
         }

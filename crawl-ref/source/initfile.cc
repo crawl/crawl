@@ -693,7 +693,7 @@ static species_type _str_to_species(const string &str)
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)
-        fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
+        fprintf(stderr, "<861>Unknown species choice: %s\n", str.c_str());
 
     return ret;
 }
@@ -728,7 +728,7 @@ job_type str_to_job(const string &str)
         job = JOB_UNKNOWN;
 
     if (job == JOB_UNKNOWN)
-        fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
+        fprintf(stderr, "<862>Unknown background choice: %s\n", str.c_str());
 
     return job;
 }
@@ -763,7 +763,7 @@ void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
         const int col = str_to_colour(colstr);
         if (col < 0)
         {
-            Options.report_error("Bad enemy_hp_colour: %s\n", colstr.c_str());
+            Options.report_error("<863>Bad enemy_hp_colour: %s\n", colstr.c_str());
             return;
         }
         else if (prepend)
@@ -858,7 +858,7 @@ void game_options::set_activity_interrupt(
         string delay_name =
             _correct_spelling(interrupt.substr(interrupt_prefix.length()));
         if (!activity_interrupts.count(delay_name))
-            return report_error("Unknown delay: %s\n", delay_name.c_str());
+            return report_error("<864>Unknown delay: %s\n", delay_name.c_str());
 
         FixedBitVector<NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay_name];
@@ -870,7 +870,7 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        return report_error("Delay interrupt name \"%s\" not recognised.\n",
+        return report_error("Delay interrupt name \"<865>%s\" not recognised.\n",
                             interrupt.c_str());
     }
 
@@ -1314,7 +1314,7 @@ void game_options::remove_mon_glyph_override(const string &text, bool prepend)
         const monster_type m = _mons_class_by_string(override[0]);
         if (m == MONS_0)
         {
-            report_error("Unknown monster: \"%s\"", text.c_str());
+            report_error("Unknown monster: \"<866>%s\"", text.c_str());
             return;
         }
         matches.insert(m);
@@ -1337,7 +1337,7 @@ void game_options::add_mon_glyph_override(const string &text, bool prepend)
         const monster_type m = _mons_class_by_string(override[0]);
         if (m == MONS_0)
         {
-            report_error("Unknown monster: \"%s\"", text.c_str());
+            report_error("Unknown monster: \"<867>%s\"", text.c_str());
             return;
         }
         matches.insert(m);
@@ -1555,7 +1555,7 @@ void read_init_file(bool runscript)
         {
             clua.execfile(builtin, false, false);
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprf(MSGCH_ERROR, "<868>Lua error: %s", clua.error.c_str());
         }
     }
 
@@ -1667,19 +1667,19 @@ newgame_def read_startup_prefs()
 static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
     if (prefs.type != NUM_GAME_TYPE)
-        fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
+        fprintf(f, "<869>type = %s\n", gametype_to_str(prefs.type).c_str());
     if (!prefs.map.empty())
-        fprintf(f, "map = %s\n", prefs.map.c_str());
+        fprintf(f, "<870>map = %s\n", prefs.map.c_str());
     if (!prefs.arena_teams.empty())
-        fprintf(f, "arena_teams = %s\n", prefs.arena_teams.c_str());
-    fprintf(f, "name = %s\n", prefs.name.c_str());
+        fprintf(f, "<871>arena_teams = %s\n", prefs.arena_teams.c_str());
+    fprintf(f, "<872>name = %s\n", prefs.name.c_str());
     if (prefs.species != SP_UNKNOWN)
-        fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
+        fprintf(f, "<873>species = %s\n", _species_to_str(prefs.species).c_str());
     if (prefs.job != JOB_UNKNOWN)
-        fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
+        fprintf(f, "<874>background = %s\n", _job_to_str(prefs.job).c_str());
     if (prefs.weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
+        fprintf(f, "<875>weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
+    fprintf(f, "<876>fully_random = %s\n", prefs.fully_random ? "yes" : "no");
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
@@ -1855,7 +1855,7 @@ void game_options::read_options(LineInput &il, bool runscript,
 #ifdef CLUA_BINDINGS
                 if (luacode.run(clua))
                 {
-                    mprf(MSGCH_ERROR, "Lua error: %s",
+                    mprf(MSGCH_ERROR, "<877>Lua error: %s",
                          luacode.orig_error().c_str());
                 }
                 luacode.clear();
@@ -1872,7 +1872,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             {
                 if (luacode.run(clua))
                 {
-                    mprf(MSGCH_ERROR, "Lua error: %s",
+                    mprf(MSGCH_ERROR, "<878>Lua error: %s",
                          luacode.orig_error().c_str());
                 }
             }
@@ -1907,7 +1907,7 @@ void game_options::read_options(LineInput &il, bool runscript,
         if (l_init)
             luacond.add(line, "]])");
         if (luacond.run(clua))
-            mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
+            mprf(MSGCH_ERROR, "<879>Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
 }
@@ -1975,8 +1975,8 @@ void game_options::set_player_tile(const string &field)
                 base_tname = base_tname.substr(0, found);
                 if (!tile_player_index(base_tname.c_str(), &base_tile))
                 {
-                    report_error("Can't find base tile \"%s\" of variant "
-                                 "tile \"%s\"", base_tname.c_str(),
+                    report_error("Can't find base tile \"<880>%s\" of variant "
+                                 "tile \"<881>%s\"", base_tname.c_str(),
                                  fields[1].c_str());
                     return;
                 }
@@ -1985,7 +1985,7 @@ void game_options::set_player_tile(const string &field)
         }
         else if (!tile_player_index(fields[1].c_str(), &tile_player_tile))
         {
-            report_error("Unknown tile: \"%s\"", fields[1].c_str());
+            report_error("Unknown tile: \"<882>%s\"", fields[1].c_str());
             return;
         }
         tile_use_monster = MONS_PLAYER;
@@ -1995,7 +1995,7 @@ void game_options::set_player_tile(const string &field)
         // Handle mons:<monster-name> values
         const monster_type m = _mons_class_by_string(fields[1]);
         if (m == MONS_0)
-            report_error("Unknown monster: \"%s\"", fields[1].c_str());
+            report_error("Unknown monster: \"<883>%s\"", fields[1].c_str());
         else
         {
             tile_use_monster = m;
@@ -2004,7 +2004,7 @@ void game_options::set_player_tile(const string &field)
     }
     else
     {
-        report_error("Invalid setting for tile_player_tile: \"%s\"",
+        report_error("Invalid setting for tile_player_tile: \"<884>%s\"",
                      field.c_str());
     }
 }
@@ -2032,7 +2032,7 @@ void game_options::set_tile_offsets(const string &field, bool set_shield)
         || !parse_int(offs[1].c_str(), offsets->second)
         || abs(offsets->second) > 32)
     {
-        report_error("Invalid %s tile offsets: \"%s\"",
+        report_error("<885>Invalid %s tile offsets: \"%s\"",
                      set_shield ? "shield" : "weapon", field.c_str());
         error = true;
     }
@@ -2334,7 +2334,7 @@ static void _bindkey(string field)
         || end_bracket == string::npos
         || start_bracket > end_bracket)
     {
-        mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
+        mprf(MSGCH_ERROR, "<886>Bad bindkey bracketing in '%s'",
              field.c_str());
         return;
     }
@@ -2356,7 +2356,7 @@ static void _bindkey(string field)
     // TODO: Function keys.
     if (wchars.size() == 0)
     {
-        mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
+        mprf(MSGCH_ERROR, "<887>No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
@@ -2367,7 +2367,7 @@ static void _bindkey(string field)
         // Ctrl + non-ascii is meaningless here.
         if (wchars[0] != '^' || wchars[1] > 127)
         {
-            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+            mprf(MSGCH_ERROR, "<888>Invalid key '%s' in bindkey directive '%s'",
                  key_str.c_str(), field.c_str());
             return;
         }
@@ -2376,7 +2376,7 @@ static void _bindkey(string field)
     }
     else
     {
-        mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+        mprf(MSGCH_ERROR, "<889>Invalid key '%s' in bindkey directive '%s'",
              key_str.c_str(), field.c_str());
         return;
     }
@@ -2384,7 +2384,7 @@ static void _bindkey(string field)
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
     if (start_name == string::npos)
     {
-        mprf(MSGCH_ERROR, "No command name for bindkey directive '%s'",
+        mprf(MSGCH_ERROR, "<890>No command name for bindkey directive '%s'",
              field.c_str());
         return;
     }
@@ -2393,7 +2393,7 @@ static void _bindkey(string field)
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
-        mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
+        mprf(MSGCH_ERROR, "<891>No command named '%s'", name.c_str());
         return;
     }
 
@@ -2535,7 +2535,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         const string error = (*option)->loadFromString(field, line_type);
         if (!error.empty())
-            report_error("%s", error.c_str());
+            report_error("<892>%s", error.c_str());
     }
     else if (key == "include")
         include(field, true, runscript);
@@ -2571,12 +2571,12 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "default")
             char_set = CSET_DEFAULT;
         else
-            fprintf(stderr, "Bad character set: %s\n", field.c_str());
+            fprintf(stderr, "<893>Bad character set: %s\n", field.c_str());
     }
     else if (key == "language")
     {
         if (!set_lang(field.c_str()))
-            report_error("No translations for language: %s\n", field.c_str());
+            report_error("<894>No translations for language: %s\n", field.c_str());
     }
     else if (key == "fake_lang")
         set_fake_langs(field);
@@ -2639,7 +2639,7 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef CLUA_BINDINGS
         clua.execfile(field.c_str(), false, false);
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprf(MSGCH_ERROR, "<895>Lua error: %s", clua.error.c_str());
 #endif
     }
     else if (key == "terp_file" && runscript)
@@ -2653,7 +2653,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             colour[orig_col] = result_col;
         else
         {
-            fprintf(stderr, "Bad colour -- %s=%d or %s=%d\n",
+            fprintf(stderr, "<896>Bad colour -- %s=%d or %s=%d\n",
                      subkey.c_str(), orig_col, field.c_str(), result_col);
         }
     }
@@ -2665,9 +2665,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (chnl != -1 && col != MSGCOL_NONE)
             channels[chnl] = col;
         else if (chnl == -1)
-            fprintf(stderr, "Bad channel -- %s\n", subkey.c_str());
+            fprintf(stderr, "<897>Bad channel -- %s\n", subkey.c_str());
         else if (col == MSGCOL_NONE)
-            fprintf(stderr, "Bad colour -- %s\n", field.c_str());
+            fprintf(stderr, "<898>Bad colour -- %s\n", field.c_str());
     }
     else if (key == "use_animations")
     {
@@ -2785,7 +2785,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             fire_items_start = letter_to_index(field[0]);
         else
         {
-            fprintf(stderr, "Bad fire item start index: %s\n",
+            fprintf(stderr, "<899>Bad fire item start index: %s\n",
                      field.c_str());
         }
     }
@@ -2805,7 +2805,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "no")
             show_god_gift = MB_FALSE;
         else
-            report_error("Unknown show_god_gift value: %s\n", field.c_str());
+            report_error("<900>Unknown show_god_gift value: %s\n", field.c_str());
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
@@ -2883,7 +2883,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "yes")
             wiz_mode = WIZ_YES;
         else
-            report_error("Unknown wiz_mode option: %s\n", field.c_str());
+            report_error("<901>Unknown wiz_mode option: %s\n", field.c_str());
     #endif
 #endif
     }
@@ -2898,7 +2898,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "yes")
             explore_mode = WIZ_YES;
         else
-            report_error("Unknown explore_mode option: %s\n", field.c_str());
+            report_error("<902>Unknown explore_mode option: %s\n", field.c_str());
     #endif
 #endif
     }
@@ -2965,18 +2965,18 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (first == string::npos || first != last)
         {
             return report_error("Autoinscribe string must have exactly "
-                                "one colon: %s\n", field.c_str());
+                                "<903>one colon: %s\n", field.c_str());
         }
 
         if (first == 0)
         {
-            report_error("Autoinscribe pattern is empty: %s\n", field.c_str());
+            report_error("<904>Autoinscribe pattern is empty: %s\n", field.c_str());
             return;
         }
 
         if (last == field.length() - 1)
         {
-            report_error("Autoinscribe result is empty: %s\n", field.c_str());
+            report_error("<905>Autoinscribe result is empty: %s\n", field.c_str());
             return;
         }
 
@@ -2984,7 +2984,7 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         if (thesplit.size() != 2)
         {
-            report_error("Error parsing autoinscribe string: %s\n",
+            report_error("<906>Error parsing autoinscribe string: %s\n",
                          field.c_str());
             return;
         }
@@ -3018,7 +3018,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                  || insplit.size() == 1 && !minus_equal
                  || insplit.size() == 2 && minus_equal)
             {
-                report_error("Bad monster_list_colour string: %s\n",
+                report_error("<907>Bad monster_list_colour string: %s\n",
                              field.c_str());
                 break;
             }
@@ -3028,12 +3028,12 @@ void game_options::read_option_line(const string &str, bool runscript)
             // No elemental colours!
             if (scolour >= 16 || scolour < 0 && !minus_equal)
             {
-                report_error("Bad monster_list_colour: %s", insplit[1].c_str());
+                report_error("<908>Bad monster_list_colour: %s", insplit[1].c_str());
                 break;
             }
             if (!set_monster_list_colour(insplit[0], scolour))
             {
-                report_error("Bad monster_list_colour key: %s\n",
+                report_error("<909>Bad monster_list_colour key: %s\n",
                              insplit[0].c_str());
                 break;
             }
@@ -3052,7 +3052,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 note_skill_levels.set(num, !minus_equal);
             else
             {
-                report_error("Bad skill level to note -- %s\n",
+                report_error("<910>Bad skill level to note -- %s\n",
                              thesplit[i].c_str());
                 continue;
             }
@@ -3072,7 +3072,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing %s string: %s\n",
+            return report_error("<911>Error parsing %s string: %s\n",
                                 key.c_str(), field.c_str());
         }
         pair<text_pattern,string> entry(text_pattern(thesplit[0], true),
@@ -3353,9 +3353,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "constant")
     {
         if (!variables.count(field))
-            report_error("No variable named '%s' to make constant", field.c_str());
+            report_error("<912>No variable named '%s' to make constant", field.c_str());
         else if (constants.count(field))
-            report_error("'%s' is already a constant", field.c_str());
+            report_error("<913>'%s' is already a constant", field.c_str());
         else
             constants.insert(field);
     }
@@ -3378,7 +3378,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         {
 #ifdef CLUA_BINDINGS
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprf(MSGCH_ERROR, "<914>Lua error: %s", clua.error.c_str());
 #endif
             named_options[key] = orig_field;
         }
@@ -3505,7 +3505,7 @@ void game_options::set_fake_langs(const string &input)
         const string flang_name = split_flang[0];
         if (split_flang.size() > 2)
         {
-            report_error("Invalid fake-lang format: %s", flang_text.c_str());
+            report_error("<915>Invalid fake-lang format: %s", flang_text.c_str());
             continue;
         }
 
@@ -3520,14 +3520,14 @@ void game_options::set_fake_langs(const string &input)
             {
                 if (*flang != flang_t::butt)
                 {
-                    report_error("Lang %s doesn't take a value",
+                    report_error("<916>Lang %s doesn't take a value",
                                  flang_name.c_str());
                     continue;
                 }
 
                 if (value == -1)
                 {
-                    report_error("Invalid value '%s' provided for lang",
+                    report_error("<917>Invalid value '%s' provided for lang",
                                  split_flang[1].c_str());
                     continue;
                 }
@@ -3536,7 +3536,7 @@ void game_options::set_fake_langs(const string &input)
             fake_langs.push_back({*flang, value});
         }
         else
-            report_error("Unknown language %s!", flang_name.c_str());
+            report_error("<918>Unknown language %s!", flang_name.c_str());
 
     }
 }
@@ -3598,12 +3598,12 @@ string game_options::resolve_include(const string &file, const char *type)
         const string resolved = resolve_include(filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
-            report_error("Cannot find %sfile \"%s\".", type, file.c_str());
+            report_error("<919>Cannot find %sfile \"%s\".", type, file.c_str());
         return resolved;
     }
     catch (const unsafe_path &err)
     {
-        report_error("Cannot include %sfile: %s", type, err.what());
+        report_error("<920>Cannot include %sfile: %s", type, err.what());
         return "";
     }
 }
@@ -3650,12 +3650,12 @@ void game_options::report_error(const char* format, ...)
     // otherwise spam the warning channel.
     if (crawl_state.need_save)
     {
-        mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
+        mprf(MSGCH_ERROR, "<921>Warning: %s (%s:%d)", error.c_str(),
              basefilename.c_str(), line_num);
     }
     else
     {
-        crawl_state.add_startup_error(make_stringf("%s (%s:%d)",
+        crawl_state.add_startup_error(make_stringf("<922>%s (%s:%d)",
                                                    error.c_str(),
                                                    basefilename.c_str(),
                                                    line_num));
@@ -3821,9 +3821,9 @@ static string _find_executable_path()
 
 static void _print_version()
 {
-    printf("Crawl version %s%s", Version::Long, "\n");
-    printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, "\n");
-    printf("%s", compilation_info);
+    printf("<923>Crawl version %s%s", Version::Long, "\n");
+    printf("<924>Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, "\n");
+    printf("<925>%s", compilation_info);
 }
 
 static void _print_save_version(char *name)
@@ -3841,11 +3841,11 @@ static void _print_save_version(char *name)
         if (!get_save_version(chrf, major, minor))
             fail("Save file is invalid.");
         else
-            printf("Save file version for %s is %d.%d\n", name, major, minor);
+            printf("<926>Save file version for %s is %d.%d\n", name, major, minor);
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.what());
+        fprintf(stderr, "<927>Error: %s\n", fe.what());
     }
 }
 
@@ -3901,15 +3901,15 @@ static void _edit_save(int argc, char **argv)
         if (!strcmp(ec.name, cmdn))
         {
             if (argc < ec.min_args + 2)
-                FAIL("Too few arguments for %s.\n", cmdn);
+                FAIL("<928>Too few arguments for %s.\n", cmdn);
             else if (argc > ec.max_args + 2)
-                FAIL("Too many arguments for %s.\n", cmdn);
+                FAIL("<929>Too many arguments for %s.\n", cmdn);
             cmd = ec.cmd;
             rw = ec.rw;
             break;
         }
     if (cmd == NUM_ES)
-        FAIL("Unknown command: %s.\n", cmdn);
+        FAIL("<930>Unknown command: %s.\n", cmdn);
 
     try
     {
@@ -3924,13 +3924,13 @@ static void _edit_save(int argc, char **argv)
             vector<string> list = save.list_chunks();
             sort(list.begin(), list.end(), numcmpstr);
             for (const string &s : list)
-                printf("%s\n", s.c_str());
+                printf("<931>%s\n", s.c_str());
         }
         else if (cmd == ES_GET)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                FAIL("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"<932>%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 FAIL("No such chunk in the save file.\n");
             chunk_reader inc(&save, chunk);
@@ -3942,22 +3942,22 @@ static void _edit_save(int argc, char **argv)
             else
                 f = stdout;
             if (!f)
-                sysfail("Can't open \"%s\" for writing", file);
+                sysfail("Can't open \"<933>%s\" for writing", file);
 
             char buf[16384];
             while (size_t s = inc.read(buf, sizeof(buf)))
                 if (fwrite(buf, 1, s, f) != s)
-                    sysfail("Error writing \"%s\"", file);
+                    sysfail("Error writing \"<934>%s\"", file);
 
             if (f != stdout)
                 if (fclose(f))
-                    sysfail("Write error on close of \"%s\"", file);
+                    sysfail("Write error on close of \"<935>%s\"", file);
         }
         else if (cmd == ES_PUT)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                FAIL("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"<936>%s\".\n", chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
@@ -3966,14 +3966,14 @@ static void _edit_save(int argc, char **argv)
             else
                 f = stdin;
             if (!f)
-                sysfail("Can't read \"%s\"", file);
+                sysfail("Can't read \"<937>%s\"", file);
             chunk_writer outc(&save, chunk);
 
             char buf[16384];
             while (size_t s = fread(buf, 1, sizeof(buf), f))
                 outc.write(buf, s);
             if (ferror(f))
-                sysfail("Error reading \"%s\"", file);
+                sysfail("Error reading \"<938>%s\"", file);
 
             if (f != stdin)
                 fclose(f);
@@ -3982,7 +3982,7 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                FAIL("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"<939>%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 FAIL("No such chunk in the save file.\n");
 
@@ -4025,7 +4025,7 @@ static void _edit_save(int argc, char **argv)
                 plen_t clen = 0;
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
-                printf("%7d/%7d %3u %s\n", cclen, clen, cfrag, chunk.c_str());
+                printf("<940>%7d/%7d %3u %s\n", cclen, clen, cfrag, chunk.c_str());
             }
             // the directory is not a chunk visible from the outside
             printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
@@ -4038,7 +4038,7 @@ static void _edit_save(int argc, char **argv)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.what());
+        fprintf(stderr, "<941>Error: %s\n", fe.what());
     }
 }
 #undef FAIL
@@ -4149,7 +4149,7 @@ void game_options::write_webtiles_options(const string& name)
 static void _print_webtiles_options()
 {
     Options.write_webtiles_options("");
-    printf("%s\n", tiles.get_message().c_str());
+    printf("<942>%s\n", tiles.get_message().c_str());
 }
 #endif
 
@@ -4161,21 +4161,21 @@ static bool _check_extra_opt(char* _opt)
     if (opt[0] == ':' || opt[0] == '<' || opt[0] == '{'
         || starts_with(opt, "L<") || starts_with(opt, "Lua{"))
     {
-        fprintf(stderr, "An extra option can't use Lua (%s)\n",
+        fprintf(stderr, "<943>An extra option can't use Lua (%s)\n",
                 _opt);
         return false;
     }
 
     if (opt[0] == '#')
     {
-        fprintf(stderr, "An extra option can't be a comment (%s)\n",
+        fprintf(stderr, "<944>An extra option can't be a comment (%s)\n",
                 _opt);
         return false;
     }
 
     if (opt.find_first_of('=') == string::npos)
     {
-        fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
+        fprintf(stderr, "<945>An extra opt must contain a '=' (%s)\n",
                 _opt);
         return false;
     }
@@ -4183,7 +4183,7 @@ static bool _check_extra_opt(char* _opt)
     vector<string> parts = split_string(opt, "=");
     if (opt.find_first_of('=') == 0 || parts[0].length() == 0)
     {
-        fprintf(stderr, "An extra opt must have an option name (%s)\n",
+        fprintf(stderr, "<946>An extra opt must have an option name (%s)\n",
                 _opt);
         return false;
     }
@@ -4255,7 +4255,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (c != '-')
         {
             fprintf(stderr,
-                    "Option '%s' is invalid; options must be prefixed "
+                    "<947>Option '%s' is invalid; options must be prefixed "
                     "with -\n\n", arg);
             return false;
         }
@@ -4285,14 +4285,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (o == num_cmd_ops)
         {
             fprintf(stderr,
-                    "Unknown option: %s\n\n", argv[current]);
+                    "<948>Unknown option: %s\n\n", argv[current]);
             return false;
         }
 
         // Disallow options specified more than once.
         if (arg_seen[o])
         {
-            fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
+            fprintf(stderr, "<949>Duplicate option: %s\n\n", argv[current]);
             return false;
         }
 
@@ -4363,28 +4363,28 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 }
                 catch (const bad_level_id &err)
                 {
-                    fprintf(stderr, "Error parsing depths: %s\n", err.what());
+                    fprintf(stderr, "<950>Error parsing depths: %s\n", err.what());
                     end(1);
                 }
                 nextUsed = true;
             }
             break;
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
+            fprintf(stderr, "<951>%s", dbg_stat_err);
             end(1);
 #endif
         case CLO_MAPSTAT_DUMP_DISCONNECT:
 #ifdef DEBUG_STATISTICS
             crawl_state.map_stat_dump_disconnect = true;
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
+            fprintf(stderr, "<952>%s", dbg_stat_err);
             end(1);
 #endif
         case CLO_ITERATIONS:
 #ifdef DEBUG_STATISTICS
             if (!next_is_param || !isadigit(*next_arg))
             {
-                fprintf(stderr, "Integer argument required for -%s\n", arg);
+                fprintf(stderr, "<953>Integer argument required for -%s\n", arg);
                 end(1);
             }
             else
@@ -4397,7 +4397,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, "%s", dbg_stat_err);
+            fprintf(stderr, "<954>%s", dbg_stat_err);
             end(1);
 #endif
             break;
@@ -4421,7 +4421,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_PLAYABLE_JSON:
-            fprintf(stdout, "%s", playable_metadata_json().c_str());
+            fprintf(stdout, "<955>%s", playable_metadata_json().c_str());
             end(0);
 
         case CLO_TEST:
@@ -4698,7 +4698,7 @@ void system_environment::add_rcdir(const string &dir)
     if (dir_exists(cdir))
         rcdirs.push_back(cdir);
     else
-        end(1, false, "Cannot find -rcdir \"%s\"", cdir.c_str());
+        end(1, false, "Cannot find -rcdir \"<956>%s\"", cdir.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////

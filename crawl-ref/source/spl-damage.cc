@@ -108,7 +108,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     if (cell_is_solid(beam.target))
     {
         const char *feat = feat_type_name(grd(beam.target));
-        mprf("%s에는 폭풍을 일으킬 수 없다.", article_a(feat).c_str());
+        mprf("<2252>%s에는 폭풍을 일으킬 수 없다.", article_a(feat).c_str());
         return SPRET_ABORT;
     }
 
@@ -299,7 +299,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         if (target.x == -1)
         {
             if (see_source)
-                mprf("%s(은)는 지면에 직격했다.", beam.name.c_str());
+                mprf("<2253>%s(은)는 지면에 직격했다.", beam.name.c_str());
 
             break;
         }
@@ -325,9 +325,9 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         first = false;
 
         if (see_source && !see_targ)
-            mprf("%s의 원호가 당신의 시야 밖으로 사라졌다!", beam.name.c_str());
+            mprf("<2254>%s의 원호가 당신의 시야 밖으로 사라졌다!", beam.name.c_str());
         else if (!see_source && see_targ)
-            mprf("%s(이)가 갑자기 나타났다.", beam.name.c_str());
+            mprf("<2255>%s(이)가 갑자기 나타났다.", beam.name.c_str());
 
         beam.source = source;
         beam.target = target;
@@ -400,7 +400,7 @@ static void _pre_refrigerate(const actor* agent, bool player,
             counted_monster_list mons_list =
                 _counted_monster_list_from_vector(seen_monsters);
             const string message =
-                make_stringf("%s %s frozen.",
+                make_stringf("<2256>%s %s frozen.",
                             mons_list.describe(DESC_THE, true).c_str(),
                             conjugate_verb("be", mons_list.count() > 1).c_str());
             if (strwidth(message) < get_number_of_cols() - 2)
@@ -409,7 +409,7 @@ static void _pre_refrigerate(const actor* agent, bool player,
             {
                 // Exclamation mark to suggest that a lot of creatures were
                 // affected.
-                mprf("%s 주변의 몬스터들이 얼어붙었다!",
+                mprf("<2257>%s 주변의 몬스터들이 얼어붙었다!",
                     agent && agent->is_monster() && you.can_see(*agent)
                     ? agent->as_monster()->name(DESC_PLAIN).c_str()
                     : "당신");
@@ -543,7 +543,7 @@ static int _drain_monster(const actor* agent, monster* target, int pow,
         {
             if (agent && agent->is_player())
             {
-                mprf("당신은 %s(으)로부터 생명력을 흡수했다.",
+                mprf("<2258>당신은 %s(으)로부터 생명력을 흡수했다.",
                      target->name(DESC_PLAIN).c_str());
             }
             target->hurt(agent, hurted);
@@ -760,7 +760,7 @@ void sonic_damage(bool scream)
     if (!affected_monsters.empty())
     {
         const string message =
-            make_stringf("%s %s hurt by the noise.",
+            make_stringf("<2259>%s %s hurt by the noise.",
                          affected_monsters.describe().c_str(),
                          conjugate_verb("be", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
@@ -900,7 +900,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("당신은 %s을(를) 얼게했다.", mons->name(DESC_PLAIN).c_str());
+        mprf("<2260>당신은 %s을(를) 얼게했다.", mons->name(DESC_PLAIN).c_str());
 
         behaviour_event(mons, ME_ANNOY, &you);
     }
@@ -952,13 +952,13 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     {
         if (mons->observable())
         {
-            mprf("그러나, 공기는 %s에게 피해를 입히지 못했다!",
+            mprf("<2261>그러나, 공기는 %s에게 피해를 입히지 못했다!",
                  mons->name(DESC_PLAIN).c_str());
             return SPRET_ABORT;
         }
 
         fail_check();
-        mprf("공기의 흐름이 물결쳐 꼬였으나, %s에게 피해를 입히지 못하고 흩어졌다.",
+        mprf("<2262>공기의 흐름이 물결쳐 꼬였으나, %s에게 피해를 입히지 못하고 흩어졌다.",
              mons->name(DESC_PLAIN).c_str());
         // Bailing out early, no need to upset the gods or the target.
         return SPRET_SUCCESS; // you still did discover the invisible monster
@@ -973,7 +973,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     fail_check();
     set_attack_conducts(conducts, mons);
 
-    mprf("주위에서 공기가 %s뒤틀리더니 %s를 강타했다!",
+    mprf("<2263>주위에서 공기가 %s뒤틀리더니 %s를 강타했다!",
          mons->airborne() ? "폭력적으로 " : "",
          mons->name(DESC_PLAIN).c_str());
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
@@ -1287,13 +1287,13 @@ bool mons_shatter(monster* caster, bool actual)
     {
         if (silence)
         {
-            mprf("%s 주변의 지각이 요동치며 뒤집혔다!",
+            mprf("<2264>%s 주변의 지각이 요동치며 뒤집혔다!",
                  caster->name(DESC_PLAIN).c_str());
         }
         else
         {
             noisy(spell_effect_noise(SPELL_SHATTER), caster->pos(), caster->mid);
-            mprf(MSGCH_SOUND, "%s 주변에서 굉음이 울렸다!",
+            mprf(MSGCH_SOUND, "<2265>%s 주변에서 굉음이 울렸다!",
                  caster->name(DESC_PLAIN).c_str());
         }
     }
@@ -1320,7 +1320,7 @@ bool mons_shatter(monster* caster, bool actual)
                 foes -= _shatter_player_dice();
             if (const monster *victim = monster_at(*di))
             {
-                dprf("[%s]", victim->name(DESC_PLAIN, true).c_str());
+                dprf("<2266>[%s]", victim->name(DESC_PLAIN, true).c_str());
                 foes += _shatter_mon_dice(victim)
                      * (victim->wont_attack() ? -1 : 1);
             }
@@ -1374,7 +1374,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     if (!affected_monsters.empty())
     {
         const string message =
-            make_stringf("%s shudder%s.",
+            make_stringf("<2267>%s shudder%s.",
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "s" : "");
         if (strwidth(message) < get_number_of_cols() - 2)
@@ -1428,7 +1428,7 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
 
     if (you.can_see(*mons))
     {
-        mprf("%s(은)는 마법오염의 방출에 휩쓸렸다!",
+        mprf("<2268>%s(은)는 마법오염의 방출에 휩쓸렸다!",
              mons->name(DESC_PLAIN).c_str());
     }
 
@@ -1809,7 +1809,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
             : UA_MONSTER,
         RED, 100, &hitfunc);
 
-    mprf("%s은(는) %s 주위의 독을 %s 시켰다!", agent->name(DESC_PLAIN).c_str(),
+    mprf("<2269>%s은(는) %s 주위의 독을 %s 시켰다!", agent->name(DESC_PLAIN).c_str(),
          agent->pronoun(PRONOUN_POSSESSIVE).c_str(),
          agent->conj_verb("발화").c_str());
 
@@ -1976,7 +1976,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
         monster* mons = victim->as_monster();
         ASSERT(mons);
 
-        dprf("%s: static discharge damage: %d",
+        dprf("<2270>%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
         if (damage > 0)
@@ -1984,7 +1984,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
 
         if (damage)
         {
-            mprf("번개가 %s에게 명중했다.",
+            mprf("<2271>번개가 %s에게 명중했다.",
                  mons->name(DESC_PLAIN).c_str());
             if (agent->is_player())
             {
@@ -2069,7 +2069,7 @@ spret_type cast_discharge(int pow, bool fail)
         else
         {
             const bool plural = coinflip();
-            mprf("%s 시퍼런 방전%s이 %s을(를) 돌아 당신 %s 땅으로 흩어졌다.",
+            mprf("<2272>%s 시퍼런 방전%s이 %s을(를) 돌아 당신 %s 땅으로 흩어졌다.",
                  plural ? "약간의" : "한",
                  plural ? "들" : "",
                  plural ? " 그들 자신" : "그 자체",
@@ -2239,7 +2239,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     {
         if (caster->is_player() && !quiet)
         {
-            mprf("%s은(는) 부자연스러울 정도로 단단해 보인다.",
+            mprf("<2273>%s은(는) 부자연스러울 정도로 단단해 보인다.",
                  feature_description_at(target, false, DESC_PLAIN, false).c_str());
         }
         return false;
@@ -2403,7 +2403,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     if (what != nullptr) // Terrain explodes.
     {
         if (you.see_cell(target))
-            mprf("%s은(는) 산산히 부서졌다!", what);
+            mprf("<2274>%s은(는) 산산히 부서졌다!", what);
         if (should_destroy_wall)
             destroy_wall(target);
     }
@@ -2419,7 +2419,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     else // Monster explodes.
     {
         if (you.see_cell(target))
-            mprf("%s이(가) 산산히 부서졌다!", mon->name(DESC_PLAIN).c_str());
+            mprf("<2275>%s이(가) 산산히 부서졌다!", mon->name(DESC_PLAIN).c_str());
 
         if (caster->is_player())
         {
@@ -2470,7 +2470,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
         if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
             mpr("당신에게 남아있는 돌이 하나도 없다.");
         else
-            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+            mprf_nocap("<2276>%s", stone->name(DESC_INVENTORY).c_str());
     }
 
     return ret;
@@ -2596,7 +2596,7 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
         if (feat_is_tree(grd(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
-            mprf(ch, "%s", msg.c_str());
+            mprf(ch, "<2277>%s", msg.c_str());
             return;
         }
 }
@@ -3067,7 +3067,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     if (you.can_see(*caster) || caster->is_player())
     {
-        mprf("%s은(는) 강렬한 얼음의 %s을 일으켰다!",
+        mprf("<2278>%s은(는) 강렬한 얼음의 %s을 일으켰다!",
              caster->name(DESC_PLAIN).c_str(),
              caster->conj_verb("폭발").c_str());
     }

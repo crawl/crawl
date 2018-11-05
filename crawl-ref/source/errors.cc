@@ -60,14 +60,14 @@ void dump_test_fails(string fails, string name)
     if (fails.empty())
         return;
 
-    fprintf(stderr, "%s", fails.c_str());
+    fprintf(stderr, "<560>%s", fails.c_str());
 
-    const string outfile = make_stringf("%s.out", name.c_str());
+    const string outfile = make_stringf("<561>%s.out", name.c_str());
     FILE *f = fopen(outfile.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
-    fprintf(f, "%s", fails.c_str());
+    fprintf(f, "<562>%s", fails.c_str());
     fclose(f);
-    fail("%s event errors (dumped to %s)",
+    fail("<563>%s event errors (dumped to %s)",
          name.c_str(), outfile.c_str());
 }

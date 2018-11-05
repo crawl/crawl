@@ -176,7 +176,7 @@ void WebTextArea::send(bool force)
         {
             if (!sending)
             {
-                tiles.write_message("{\"msg\":\"txt\",\"id\":\"%s\"",
+                tiles.write_message("{\"msg\":\"txt\",\"id\":\"<2451>%s\"",
                                     m_client_side_name.c_str());
                 if (force)
                     tiles.write_message(",\"clear\":true");
@@ -185,7 +185,7 @@ void WebTextArea::send(bool force)
             }
 
             tiles.json_write_comma();
-            tiles.write_message("\"%u\":\"%s\"", y, html.c_str());
+            tiles.write_message("\"%u\":\"<2452>%s\"", y, html.c_str());
         }
     }
     if (sending)

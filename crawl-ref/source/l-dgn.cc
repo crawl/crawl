@@ -953,7 +953,7 @@ static int lua_dgn_set_branch_epilogue(lua_State *ls)
     branch_type br = branch_by_abbrevname(branch_name);
     if (br == NUM_BRANCHES)
     {
-        luaL_error(ls, make_stringf("unknown branch: '%s'.", branch_name).c_str());
+        luaL_error(ls, make_stringf("<1054>unknown branch: '%s'.", branch_name).c_str());
         return 0;
     }
 
@@ -1360,7 +1360,7 @@ static bool _lua_map_place_valid(const map_def &map,
     // Lua error invalidates place.
     if (err)
     {
-        mprf(MSGCH_ERROR, "Lua error: %s", lua_tostring(ls, -1));
+        mprf(MSGCH_ERROR, "<1055>Lua error: %s", lua_tostring(ls, -1));
         return true;
     }
 

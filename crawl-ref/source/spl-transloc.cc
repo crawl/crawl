@@ -173,7 +173,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
 
         if (crawl_state.seen_hups)
         {
-            mprf("Cancelling %s due to HUP.", verb.c_str());
+            mprf("<2322>Cancelling %s due to HUP.", verb.c_str());
             return false;
         }
 
@@ -194,7 +194,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
         const monster* beholder = you.get_beholder(beam.target);
         if (beholder)
         {
-            mprf("You cannot %s away from %s!",
+            mprf("<2323>You cannot %s away from %s!",
                  verb.c_str(),
                  beholder->name(DESC_THE, true).c_str());
             continue;
@@ -203,7 +203,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
         const monster* fearmonger = you.get_fearmonger(beam.target);
         if (fearmonger)
         {
-            mprf("You cannot %s closer to %s!",
+            mprf("<2324>You cannot %s closer to %s!",
                  verb.c_str(),
                  fearmonger->name(DESC_THE, true).c_str());
             continue;
@@ -212,14 +212,14 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
         if (cell_is_solid(beam.target))
         {
             clear_messages();
-            mprf("You can't %s into that!", verb.c_str());
+            mprf("<2325>You can't %s into that!", verb.c_str());
             continue;
         }
 
         monster* target_mons = monster_at(beam.target);
         if (target_mons && you.can_see(*target_mons))
         {
-            mprf("You can't %s onto %s!", verb.c_str(),
+            mprf("<2326>You can't %s onto %s!", verb.c_str(),
                  target_mons->name(DESC_THE).c_str());
             continue;
         }
@@ -667,7 +667,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
             else
             {
                 interrupt_activity(AI_TELEPORT);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                mprf("<2327>You are suddenly yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
             }
@@ -901,7 +901,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
     // Actually move the item.
-    mprf("Yoink! You pull the item%s towards yourself.",
+    mprf("<2328>Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
 
     move_top_item(where, new_spot);
@@ -1033,7 +1033,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         // This probably shouldn't ever happen, but just in case:
         if (you.can_see(*victim))
         {
-            mprf("%s violently %s moving!",
+            mprf("<2329>%s violently %s moving!",
                  victim->name(DESC_THE).c_str(),
                  victim->conj_verb("stop").c_str());
         }
@@ -1107,7 +1107,7 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
 
     monster* mons = monster_at(where);
 
-    mprf("Gravity reorients around %s.",
+    mprf("<2330>Gravity reorients around %s.",
          mons                      ? mons->name(DESC_THE).c_str() :
          feat_is_solid(grd(where)) ? feature_description(grd(where),
                                                          NUM_TRAPS, "",
@@ -1165,7 +1165,7 @@ bool beckon(actor &beckoned, const bolt &path)
     if (!beckoned.move_to_pos(dest))
         return false;
 
-    mprf("%s %s suddenly forward!",
+    mprf("<2331>%s %s suddenly forward!",
          beckoned.name(DESC_THE).c_str(),
          beckoned.conj_verb("hurl").c_str());
 

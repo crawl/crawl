@@ -77,7 +77,7 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
     const bool antimagicable
         = type == MON_SPELL_WIZARD || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(", which are affected by%s%s%s",
+    return make_stringf("<427>, which are affected by%s%s%s",
                         silencable ? " silence" : "",
                         silencable && antimagicable ? " and" : "",
                         antimagicable ? " antimagic" : "");
@@ -95,7 +95,7 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
 static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pronoun)
 {
     const bool is_spell = type = MON_SPELL_WIZARD;
-    return make_stringf(" (judging by the %s you have seen %s %s)",
+    return make_stringf("<428> (judging by the %s you have seen %s %s)",
                         is_spell ? "spells" : "abilities",
                         pronoun,
                         is_spell ? "cast" : "use");
@@ -127,7 +127,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("has mastered %s%s%s:",
+        return make_stringf("<429>has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
                             spell_filter_desc.c_str(),
@@ -136,7 +136,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("possesses the following %s abilities%s%s:",
+    return make_stringf("<430>possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
                         spell_filter_desc.c_str(),
                         vulnerabilities.c_str());
@@ -259,7 +259,7 @@ static void _monster_spellbooks(const monster_info &mi,
         }
         else
         {
-            output_book.label += make_stringf("\n%s %d:",
+            output_book.label += make_stringf("<431>\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
         }
 
@@ -320,7 +320,7 @@ spellset monster_spellset(const monster_info &mi)
     {
         spellbook_contents output_book;
         output_book.label
-          = make_stringf("You have seen %s using the following:",
+          = make_stringf("<432>You have seen %s using the following:",
                          mi.pronoun(PRONOUN_SUBJECTIVE));
         for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
             output_book.spells.emplace_back((spell_type)spell);
@@ -480,7 +480,7 @@ static void _describe_book(const spellbook_contents &book,
 {
     description.textcolour(LIGHTGREY);
 
-    description.cprintf("%s", book.label.c_str());
+    description.cprintf("<433>%s", book.label.c_str());
 
     // only display header for book spells
     if (source_item)
@@ -509,14 +509,14 @@ static void _describe_book(const spellbook_contents &book,
 #endif
             && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
-            description.cprintf("%c - (%d%%) %s",
+            description.cprintf("<434>%c - (%d%%) %s",
                             spell_letter,
                             hex_chance(spell, hd),
                             chop_string(spell_title(spell), 22).c_str());
         }
         else
         {
-            description.cprintf("%c - %s",
+            description.cprintf("<435>%c - %s",
                             spell_letter,
                             chop_string(spell_title(spell), 29).c_str());
         }
@@ -536,7 +536,7 @@ static void _describe_book(const spellbook_contents &book,
         string schools =
             source_item->base_type == OBJ_RODS ? "Evocations"
                                                : _spell_schools(spell);
-        description.cprintf("%s%d\n",
+        description.cprintf("<436>%s%d\n",
                             chop_string(schools, 30).c_str(),
                             spell_difficulty(spell));
     }

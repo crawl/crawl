@@ -49,7 +49,7 @@ static bool _start_butchering(item_def& corpse)
 
     if (is_forbidden_food(corpse))
     {
-        mprf("이것을 해체하%s는 것은 죄가 될 것이다!",
+        mprf("<143>이것을 해체하%s는 것은 죄가 될 것이다!",
              bottle_blood ? "거나 피를 뽑아내" : "");
         return false;
     }
@@ -83,7 +83,7 @@ void finish_butchering(item_def& corpse, bool bottling)
     }
     else
     {
-        mprf("당신은 %s을(를) 해체했다.",
+        mprf("<144>당신은 %s을(를) 해체했다.",
              corpse.name(DESC_PLAIN).c_str());
 
         butcher_corpse(corpse);
@@ -159,7 +159,7 @@ void butchery(item_def* specific_corpse)
 
     if (corpses.empty())
     {
-        mprf("이 곳엔 %s해체할 것이 아무 것도 없다.",
+        mprf("<145>이 곳엔 %s해체할 것이 아무 것도 없다.",
              bottle_blood ? "피를 뽑거나 " : "");
         return;
     }
@@ -229,7 +229,7 @@ void butchery(item_def* specific_corpse)
                 const bool can_bottle =
                     can_bottle_blood_from_corpse(it->mon_type);
                 mprf(MSGCH_PROMPT,
-                     "%s을(를) %s? [(y)네/(c)선별해서/(n)아니오/(a)모두/(e)먹는것만/(q)취소/?]",
+                     "<146>%s을(를) %s? [(y)네/(c)선별해서/(n)아니오/(a)모두/(e)먹는것만/(q)취소/?]",
                      can_bottle ? "병에 담겠는가?" : "해체하겠나?",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -288,7 +288,7 @@ void butchery(item_def* specific_corpse)
     // No point in displaying this if the player pressed 'a' above.
     if (!to_eat && !butcher_all)
     {
-        mprf("이곳에는 해체%s %s 무언가가 없다.",
+        mprf("<147>이곳에는 해체%s %s 무언가가 없다.",
              bottle_blood ? "하거나 피를 뽑을" : "할",
              butcher_edible ? "먹을 수 있는" : "");
     }

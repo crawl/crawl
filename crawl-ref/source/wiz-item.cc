@@ -87,7 +87,7 @@ void wizard_create_spec_object_by_name()
     create_item_named(buf, you.pos(), &error);
     if (!error.empty())
     {
-        mprf(MSGCH_ERROR, "Error: %s", error.c_str());
+        mprf(MSGCH_ERROR, "<2679>Error: %s", error.c_str());
         return;
     }
 }
@@ -281,7 +281,7 @@ static void _tweak_randart(item_def &item)
         else
             choice = '-'; // Too many choices!
 
-        snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
+        snprintf(buf, sizeof(buf), "<2680>%s) %s%-6s%s ",
                 choice == '<' ? "<<" : string(1, choice).c_str(),
                  props[i] ? "<w>" : "",
                  artp_name((artefact_prop_type)choice_to_prop[choice_num]),
@@ -291,7 +291,7 @@ static void _tweak_randart(item_def &item)
 
         choice_num++;
     }
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mprf(MSGCH_PROMPT, "<2681>%s", prompt.c_str());
 
     mprf(MSGCH_PROMPT, "Change which field? ");
 
@@ -318,7 +318,7 @@ static void _tweak_randart(item_def &item)
     switch (artp_potential_value_types(prop))
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
+        mprf(MSGCH_PROMPT, "<2682>Toggling %s to %s.", artp_name(prop),
              props[prop] ? "off" : "on");
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              !props[prop]);
@@ -326,12 +326,12 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_POS:
     {
-        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        mprf(MSGCH_PROMPT, "<2683>%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
-            mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
+            mprf(MSGCH_PROMPT, "<2684>Value for %s must be non-negative",
                  artp_name(prop));
             return;
         }
@@ -341,7 +341,7 @@ static void _tweak_randart(item_def &item)
     }
     case ARTP_VAL_ANY:
     {
-        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        mprf(MSGCH_PROMPT, "<2685>%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
@@ -350,7 +350,7 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_BRAND:
     {
-        mprf(MSGCH_PROMPT, "%s was %s.", artp_name(prop),
+        mprf(MSGCH_PROMPT, "<2686>%s was %s.", artp_name(prop),
              props[prop] ? ego_type_string(item, false).c_str() : "normal");
 
         char specs[80];
@@ -365,12 +365,12 @@ static void _tweak_randart(item_def &item)
 
         if (ego == 0 && string(specs) != "normal") // this is secretly a hack
         {
-            mprf("No such ego as: %s", specs);
+            mprf("<2687>No such ego as: %s", specs);
             break;
         }
         if (ego == -1)
         {
-            mprf("Ego '%s' is invalid for %s.",
+            mprf("<2688>Ego '%s' is invalid for %s.",
                  specs, item.name(DESC_A).c_str());
             break;
         }
@@ -405,9 +405,9 @@ void wizard_tweak_object()
 
         while (true)
         {
-            mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("<2689>%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
-            mprf_nocap(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
+            mprf_nocap(MSGCH_PROMPT, "<2690>a - plus  b - plus2  c - %s  "
                                      "d - quantity  e - flags  ESC - exit",
                                      is_art ? "art props" : "special");
 
@@ -637,7 +637,7 @@ void wizard_make_object_randart()
             mpr("신을 찾을 수 없다. 물건을 신과 별개로 남긴다.");
         else
         {
-            mprf("God gift of %s.", god_name(god, false).c_str());
+            mprf("<2691>God gift of %s.", god_name(god, false).c_str());
             item.orig_monnum = -god;
         }
     }
@@ -666,7 +666,7 @@ void wizard_make_object_randart()
     if (eq != EQ_NONE)
         equip_item(eq, invslot);
 
-    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    mprf_nocap("<2692>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 // Returns whether an item of this type can be cursed.
@@ -695,7 +695,7 @@ void wizard_uncurse_item()
             }
             do_curse_item(item);
         }
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<2693>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
     }
 }
 
@@ -740,7 +740,7 @@ void wizard_list_items()
     {
         if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
         {
-            mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
+            mprf("<2694>(%2d,%2d): %s%s", item.pos.x, item.pos.y,
                  item.name(DESC_PLAIN, false, false, false).c_str(),
                  item.flags & ISFLAG_MIMIC ? " mimic" : "");
         }
@@ -755,7 +755,7 @@ void wizard_list_items()
         int item = igrd(*ri);
         if (item != NON_ITEM)
         {
-            mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
+            mprf("<2695>%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
                  mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
                  mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
@@ -947,7 +947,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
 
     // Print acquirement base type.
-    fprintf(ostat, "Acquiring %s for:\n\n",
+    fprintf(ostat, "<2696>Acquiring %s for:\n\n",
             type == OBJ_WEAPONS    ? "weapons" :
             type == OBJ_ARMOUR     ? "armour"  :
             type == OBJ_JEWELLERY  ? "jewellery" :
@@ -963,7 +963,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     if (!you_worship(GOD_NO_GOD))
         godname += " of " + god_name(you.religion);
 
-    fprintf(ostat, "%s %s, Level %d %s %s%s\n\n",
+    fprintf(ostat, "<2697>%s %s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species_name(you.species).c_str(),
@@ -991,7 +991,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
 
-            fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
+            fprintf(ostat, "<2698>%-7s: %s %s\n", equip_slot_to_name(eqslot),
                     item.name(DESC_PLAIN, true).c_str(),
                     you.melded[i] ? "(melded)" : "");
             naked = false;
@@ -1003,7 +1003,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     // Also print the skills, in case they matter.
     string skills = "\nSkills:\n";
     dump_skills(skills);
-    fprintf(ostat, "%s\n\n", skills.c_str());
+    fprintf(ostat, "<2699>%s\n\n", skills.c_str());
 
     if (type == OBJ_BOOKS && you.skills[SK_SPELLCASTING])
     {
@@ -1540,7 +1540,7 @@ void debug_item_statistics()
 
     if (!ostat)
     {
-        mprf(MSGCH_ERROR, "Can't write items.stat: %s", strerror(errno));
+        mprf(MSGCH_ERROR, "<2700>Can't write items.stat: %s", strerror(errno));
         return;
     }
 

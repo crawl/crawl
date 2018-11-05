@@ -45,7 +45,7 @@ void AbilityRegion::draw_tag()
     const ability_type ability = (ability_type) idx;
     const string failure = failure_rate_to_string(get_talent(ability,
                                                              false).fail);
-    string desc = make_stringf("%s    (%s)",
+    string desc = make_stringf("<2435>%s    (%s)",
                                ability_name(ability), failure.c_str());
     draw_desc(desc.c_str());
 }
@@ -84,7 +84,7 @@ bool AbilityRegion::update_tab_tip_text(string &tip, bool active)
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
 
-    tip = make_stringf("%s%s\n%s%s",
+    tip = make_stringf("<2436>%s%s\n%s%s",
                        prefix1, "Display abilities",
                        prefix2, "Use abilities");
 

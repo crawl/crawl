@@ -49,7 +49,7 @@ string GodMenuEntry::get_text(const bool unused) const
     if (level == MEL_ITEM && hotkeys.size())
     {
         char buf[300];
-        snprintf(buf, sizeof buf, " <%s>%c</%s> %c %s",  colour_text.c_str(),
+        snprintf(buf, sizeof buf, "<752> <%s>%c</%s> %c %s",  colour_text.c_str(),
                  hotkeys[0], colour_text.c_str(), preselected ? '+' : '-', text.c_str());
         return string(buf);
     }

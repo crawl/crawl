@@ -389,7 +389,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mprf("당신은 %s을(를) 손에 들 수 없다.", base_type_string(item));
+                mprf("<1761>당신은 %s을(를) 손에 들 수 없다.", base_type_string(item));
             return false;
         }
 
@@ -830,7 +830,7 @@ bool player::shove(const char* feat_name)
         {
             moveto(*di);
             if (*feat_name)
-                mprf("당신은 %s에서 밀려났다.", feat_name);
+                mprf("<1762>당신은 %s에서 밀려났다.", feat_name);
             dprf("Moved to (%d, %d).", pos().x, pos().y);
             return true;
         }

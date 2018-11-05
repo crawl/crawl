@@ -649,7 +649,7 @@ static void write_map(FILE *f, const macromap &mp, const char *key)
         // macro struct for all used keyboard commands.
         if (entry.second.size())
         {
-            fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
+            fprintf(f, "<1105>%s%s\nA:%s\n\n", OUTS(key),
                 OUTS(vtostr(entry.first)), OUTS(vtostr(entry.second)));
         }
     }
@@ -665,11 +665,11 @@ void macro_save()
     f = fopen_u(macrofile.c_str(), "w");
     if (!f)
     {
-        mprf(MSGCH_ERROR, "Couldn't open %s for writing!", macrofile.c_str());
+        mprf(MSGCH_ERROR, "<1106>Couldn't open %s for writing!", macrofile.c_str());
         return;
     }
 
-    fprintf(f, "# %s %s macro file\n"
+    fprintf(f, "<1107># %s %s macro file\n"
                "# WARNING: This file is entirely auto-generated.\n"
                "\n"
                "# Key Mappings:\n",
@@ -827,7 +827,7 @@ void flush_input_buffer(int reason)
 
 static string _macro_prompt_string(const string &macro_type)
 {
-    return make_stringf("Input %s action: ", macro_type.c_str());
+    return make_stringf("<1108>Input %s action: ", macro_type.c_str());
 }
 
 static void _macro_prompt(const string &macro_type)
@@ -845,7 +845,7 @@ static void _input_action_raw(const string &macro_type, keyseq* action)
     while (!done)
     {
         cgotoxy(x, y);
-        cprintf("%s", vtostr(*action).c_str());
+        cprintf("<1109>%s", vtostr(*action).c_str());
 
         int input = m_getch();
 
@@ -880,7 +880,7 @@ static void _input_action_text(const string &macro_type, keyseq* action)
 
 static string _macro_type_name(bool keymap, KeymapContext keymc)
 {
-    return make_stringf("%s%s",
+    return make_stringf("<1110>%s%s",
                         keymap ? (keymc == KMC_DEFAULT    ? "default " :
                                   keymc == KMC_LEVELMAP   ? "level-map " :
                                   keymc == KMC_TARGETING  ? "targeting " :
@@ -949,7 +949,7 @@ void macro_add_query()
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
     const string macro_type = _macro_type_name(keymap, keymc);
-    const string trigger_prompt = make_stringf("Input %s trigger key: ",
+    const string trigger_prompt = make_stringf("<1111>Input %s trigger key: ",
                                                macro_type.c_str());
     msgwin_prompt(trigger_prompt);
 
@@ -963,7 +963,7 @@ void macro_add_query()
     {
         string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
-        mprf(MSGCH_WARN, "Current Action: %s", action.c_str());
+        mprf(MSGCH_WARN, "<1112>Current Action: %s", action.c_str());
         mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
 
         input = m_getch();
@@ -976,7 +976,7 @@ void macro_add_query()
         }
         else if (input == 'c')
         {
-            mprf("Cleared %s '%s' => '%s'.",
+            mprf("<1113>Cleared %s '%s' => '%s'.",
                  macro_type.c_str(),
                  vtostr(key).c_str(),
                  vtostr(mapref[key]).c_str());
@@ -997,7 +997,7 @@ void macro_add_query()
         const bool deleted_macro = macro_del(mapref, key);
         if (deleted_macro)
         {
-            mprf("Deleted %s for '%s'.",
+            mprf("<1114>Deleted %s for '%s'.",
                  macro_type.c_str(),
                  vtostr(key).c_str());
         }
@@ -1007,7 +1007,7 @@ void macro_add_query()
     else
     {
         macro_add(mapref, key, action);
-        mprf("Created %s '%s' => '%s'.",
+        mprf("<1115>Created %s '%s' => '%s'.",
              macro_type.c_str(),
              vtostr(key).c_str(), vtostr(action).c_str());
     }
@@ -1073,7 +1073,7 @@ static void _read_macros_from(const char* filename)
  * bit after "macros +=")
  *
  * @return The string of any errors which occurred, or "" if no error.
- * %s is the field argument.
+<1116> * %s is the field argument.
  */
 
 string read_rc_file_macro(const string& field)
@@ -1081,7 +1081,7 @@ string read_rc_file_macro(const string& field)
     const int first_space = field.find(' ');
 
     if (first_space < 0)
-        return "Cannot parse marcos += %s , there is only one argument";
+        return "<1117>Cannot parse marcos += %s , there is only one argument";
 
     // Start by deciding what context the macro/keymap is in
     const string context = field.substr(0, first_space);
@@ -1109,7 +1109,7 @@ string read_rc_file_macro(const string& field)
         keymap = false;
     else
         return "'" + context
-                   + "' is not a valid macro or keymap context (macros += %s)";
+                   + "<1118>' is not a valid macro or keymap context (macros += %s)";
 
     // Now grab the key and action to be performed
     const string key_and_action = field.substr((first_space + 1));
@@ -1117,7 +1117,7 @@ string read_rc_file_macro(const string& field)
     const int second_space = key_and_action.find(' ');
 
     if (second_space < 0)
-        return "Cannot parse marcos += %s , there are only two arguments";
+        return "<1119>Cannot parse marcos += %s , there are only two arguments";
 
     const string macro_key_string = key_and_action.substr(0, second_space);
     const string action_string = key_and_action.substr((second_space + 1));
@@ -1294,7 +1294,7 @@ command_type key_to_command(int key, KeymapContext context)
         if (cmd_context != context)
         {
             mprf(MSGCH_ERROR,
-                 "key_to_command(): command '%s' (%d:%d) wrong for desired "
+                 "<1120>key_to_command(): command '%s' (%d:%d) wrong for desired "
                  "context",
                  command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
                  CMD_MAX_CMD + key);
@@ -1365,7 +1365,7 @@ void bind_command_to_key(command_type cmd, int key)
             return;
         }
 
-        mprf(MSGCH_ERROR, "'%s'는 하나의 키로 묶을 수 없다.",
+        mprf(MSGCH_ERROR, "<1121>'%s'는 하나의 키로 묶을 수 없다.",
              command_name.c_str());
         return;
     }

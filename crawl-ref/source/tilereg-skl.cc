@@ -102,7 +102,7 @@ bool SkillRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
-    tip = make_stringf("%s%s", prefix, "Manage skills");
+    tip = make_stringf("<2448>%s%s", prefix, "Manage skills");
 
     return true;
 }

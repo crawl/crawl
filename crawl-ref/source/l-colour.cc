@@ -61,7 +61,7 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     lua_pushinteger(ls, loc.y);
     if (!dlua.callfn(nullptr, 3, 1))
     {
-        mprf(MSGCH_WARN, "%s", dlua.error.c_str());
+        mprf(MSGCH_WARN, "<1043>%s", dlua.error.c_str());
         return BLACK;
     }
 

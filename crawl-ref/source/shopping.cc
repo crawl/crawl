@@ -1032,7 +1032,7 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf("<2163> <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
                             need_cursor ? '[' : ' ',
@@ -1123,7 +1123,7 @@ int ShopMenu::selected_cost() const
 
 void ShopMenu::update_help()
 {
-    string top_line = make_stringf("<yellow>You have %d gold piece%s.",
+    string top_line = make_stringf("<2164><yellow>You have %d gold piece%s.",
                                    you.gold,
                                    you.gold != 1 ? "s" : "");
     const int total_cost = selected_cost();
@@ -1131,7 +1131,7 @@ void ShopMenu::update_help()
     {
         top_line += "<lightred>";
         top_line +=
-            make_stringf(" You are short %d gold piece%s for the purchase.",
+            make_stringf("<2165> You are short %d gold piece%s for the purchase.",
                          total_cost - you.gold,
                          (total_cost - you.gold != 1) ? "s" : "");
         top_line += "</lightred>";
@@ -1139,7 +1139,7 @@ void ShopMenu::update_help()
     else if (total_cost)
     {
         top_line +=
-            make_stringf(" After the purchase, you will have %d gold piece%s.",
+            make_stringf("<2166> After the purchase, you will have %d gold piece%s.",
                          you.gold - total_cost,
                          (you.gold - total_cost != 1) ? "s" : "");
     }
@@ -1155,8 +1155,8 @@ void ShopMenu::update_help()
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "%s  [%s] %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
+        "<2167>%s  [%s] %s\n"
+        "<2168>[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
         looking       ? "[<w>!</w>] buy|<w>examine</w> items" :
                         "[<w>!</w>] <w>buy</w>|examine items",
@@ -1197,7 +1197,7 @@ void ShopMenu::purchase_selected()
     if (cost > you.gold)
     {
         more = formatted_string::parse_string(make_stringf(
-                   "<%s>You don't have enough money.</%s>\n",
+                   "<2169><%s>You don't have enough money.</%s>\n",
                    col.c_str(),
                    col.c_str()));
         more += old_more;
@@ -1205,7 +1205,7 @@ void ShopMenu::purchase_selected()
         return;
     }
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Purchase items%s for %d gold? (y/N)</%s>\n",
+               "<2170><%s>Purchase items%s for %d gold? (y/N)</%s>\n",
                col.c_str(),
                buying_from_list ? " in shopping list" : "",
                cost,
@@ -1266,7 +1266,7 @@ void ShopMenu::purchase_selected()
     if (outside_items)
     {
         more = formatted_string::parse_string(make_stringf(
-            "<%s>I'll put %s outside for you.</%s>\n",
+            "<2171><%s>I'll put %s outside for you.</%s>\n",
             col.c_str(),
             bought_indices.size() == 1             ? "it" :
       (int) bought_indices.size() == outside_items ? "them"
@@ -1443,7 +1443,7 @@ void shop()
     // Quick out, if no inventory
     if (shop.stock.empty())
     {
-        mprf("%s은(는) 문을 닫은 듯 하다.", shopname.c_str());
+        mprf("<2172>%s은(는) 문을 닫은 듯 하다.", shopname.c_str());
         destroy_shop_at(you.pos());
         return;
     }
@@ -1472,7 +1472,7 @@ void shop()
         destroy_shop_at(you.pos());
     redraw_screen();
     if (menu.bought_something)
-        mprf("우리 %s에서 물건을 사 줘서 정말 고마워!", shopname.c_str());
+        mprf("<2173>우리 %s에서 물건을 사 줘서 정말 고마워!", shopname.c_str());
     if (any_on_list)
         mpr("당신은 '$' 를 눌러 당신의 구매 리스트에 접근 할 수 있다.");
 }
@@ -1656,7 +1656,7 @@ void list_shop_types()
 {
     mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
     for (const char *type : shop_types)
-        mprf_nocap("%s", type);
+        mprf_nocap("<2174>%s", type);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -1701,7 +1701,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (find_thing(item, pos) != -1)
     {
-        mprf(MSGCH_ERROR, "%s은(는) 이미 구매 목록에 올라와 있다.",
+        mprf(MSGCH_ERROR, "<2175>%s은(는) 이미 구매 목록에 올라와 있다.",
              item.name(DESC_PLAIN).c_str());
         return false;
     }
@@ -1725,7 +1725,7 @@ bool ShoppingList::add_thing(string desc, string buy_verb, int cost,
 
     if (find_thing(desc, pos) != -1)
     {
-        mprf(MSGCH_ERROR, "%s은(는) 이미 구매 목록에 올라와 있다.",
+        mprf(MSGCH_ERROR, "<2176>%s은(는) 이미 구매 목록에 올라와 있다.",
              desc.c_str());
         return false;
     }
@@ -1783,7 +1783,7 @@ bool ShoppingList::del_thing(const item_def &item,
 
     if (idx == -1)
     {
-        mprf(MSGCH_ERROR, "%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
+        mprf(MSGCH_ERROR, "<2177>%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
              item.name(DESC_PLAIN).c_str());
         return false;
     }
@@ -1800,7 +1800,7 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 
     if (idx == -1)
     {
-        mprf(MSGCH_ERROR, "%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
+        mprf(MSGCH_ERROR, "<2178>%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
              desc.c_str());
         return false;
     }
@@ -1938,7 +1938,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
             thing[REPLACE_PROMPTED_KEY] = (bool) true;
 
             string prompt =
-                make_stringf("Shopping list: replace %dgp %s with cheaper "
+                make_stringf("<2179>Shopping list: replace %dgp %s with cheaper "
                              "one? (Y/n)", list_cost,
                              describe_thing(thing).c_str());
 
@@ -1958,13 +1958,13 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
                 continue;
             thing[REMOVE_PROMPTED_KEY] = (bool) true;
 
-            string prompt = make_stringf("Shopping list: remove %s? (Y/n)",
+            string prompt = make_stringf("<2180>Shopping list: remove %s? (Y/n)",
                                          describe_thing(thing, DESC_A).c_str());
 
             if (yesno(prompt.c_str(), true, 'y', false))
             {
                 to_del.push_back(listed);
-                mprf("Shopping list: removing %s",
+                mprf("<2181>Shopping list: removing %s",
                      describe_thing(thing, DESC_A).c_str());
             }
             else
@@ -1972,7 +1972,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         }
         else
         {
-            mprf("Shopping list: removing %s",
+            mprf("<2182>Shopping list: removing %s",
                  describe_thing(thing, DESC_A).c_str());
             to_del.push_back(listed);
         }
@@ -2193,7 +2193,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total %d gold",
+        fs.cprintf("<2183>%d %s%s, total %d gold",
                    title->quantity, title->text.c_str(),
                    title->quantity > 1? "s" : "",
                    total_cost);
@@ -2231,7 +2231,7 @@ void ShoppingListMenu::draw_title()
  */
 string ShoppingList::describe_thing_pos(const CrawlHashTable &thing)
 {
-    return make_stringf("[%s]", thing_pos(thing).id.describe().c_str());
+    return make_stringf("<2184>[%s]", thing_pos(thing).id.describe().c_str());
 }
 
 void ShoppingList::fill_out_menu(Menu& shopmenu)
@@ -2250,7 +2250,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         const string etitle =
             make_stringf(
-                "%*s%5d gold  %s%s",
+                "<2185>%*s%5d gold  %s%s",
                 longest,
                 describe_thing_pos(thing).c_str(),
                 cost,
@@ -2333,7 +2333,7 @@ void ShoppingList::display()
             if (cost > you.gold)
             {
                 string prompt =
-                   make_stringf("You cannot afford %s; travel there "
+                   make_stringf("<2186>You cannot afford %s; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
@@ -2357,7 +2357,7 @@ void ShoppingList::display()
             {
                 // HACK: Assume it's some kind of portal vault.
                 const string info = make_stringf(
-                             "%s with an entry fee of %d gold pieces.",
+                             "<2187>%s with an entry fee of %d gold pieces.",
                              describe_thing(*thing, DESC_A).c_str(),
                              (int) thing_cost(*thing));
 

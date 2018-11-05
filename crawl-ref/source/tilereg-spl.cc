@@ -47,7 +47,7 @@ void SpellRegion::draw_tag()
 
     const spell_type spell = (spell_type) idx;
     const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    string desc = make_stringf("%d MP    %s    (%s)", spell_mana(spell),
+    string desc = make_stringf("<2449>%d MP    %s    (%s)", spell_mana(spell),
                                spell_title(spell), failure.c_str());
     draw_desc(desc.c_str());
 }
@@ -85,7 +85,7 @@ bool SpellRegion::update_tab_tip_text(string &tip, bool active)
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
 
-    tip = make_stringf("%s%s\n%s%s",
+    tip = make_stringf("<2450>%s%s\n%s%s",
                        prefix1, "Display memorised spells",
                        prefix2, "Cast spells");
 

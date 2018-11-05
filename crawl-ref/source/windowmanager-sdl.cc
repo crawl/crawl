@@ -357,7 +357,7 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
 #endif
     {
-        printf("Failed to initialise SDL: %s\n", SDL_GetError());
+        printf("<2630>Failed to initialise SDL: %s\n", SDL_GetError());
         return false;
     }
 
@@ -446,9 +446,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Failed to create window: %s", SDL_GetError());
+                            "<2631>Failed to create window: %s", SDL_GetError());
 #endif
-        printf("Failed to create window: %s\n", SDL_GetError());
+        printf("<2632>Failed to create window: %s\n", SDL_GetError());
         return false;
     }
 
@@ -458,9 +458,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Failed to create GL context: %s", SDL_GetError());
+                            "<2633>Failed to create GL context: %s", SDL_GetError());
 #endif
-        printf("Failed to create GL context: %s\n", SDL_GetError());
+        printf("<2634>Failed to create GL context: %s\n", SDL_GetError());
         return false;
     }
 
@@ -522,9 +522,9 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Failed to load icon: %s", SDL_GetError());
+                            "<2635>Failed to load icon: %s", SDL_GetError());
 #endif
-        printf("Failed to load icon: %s\n", SDL_GetError());
+        printf("<2636>Failed to load icon: %s\n", SDL_GetError());
         return false;
     }
     SDL_SetWindowIcon(m_window, surf);
@@ -840,9 +840,9 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Couldn't find texture '%s'.", filename);
+                            "<2637>Couldn't find texture '%s'.", filename);
 #endif
-        fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
+        fprintf(stderr, "<2638>Couldn't find texture '%s'.\n", filename);
         return false;
     }
 
@@ -852,9 +852,9 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Couldn't load texture '%s'.", tex_path.c_str());
+                            "<2639>Couldn't load texture '%s'.", tex_path.c_str());
 #endif
-        fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
+        fprintf(stderr, "<2640>Couldn't load texture '%s'.\n", tex_path.c_str());
         return false;
     }
 
@@ -989,7 +989,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     }
     else
     {
-        printf("Warning: unsupported format, bpp = %d for '%s'\n",
+        printf("<2641>Warning: unsupported format, bpp = %d for '%s'\n",
                bpp, acBuffer);
         return false;
     }
@@ -1036,7 +1036,7 @@ void SDLWrapper::glDebug(const char* msg)
 #ifdef __ANDROID__
     int e = glGetError();
     if (e > 0)
-       __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
+       __android_log_print(ANDROID_LOG_INFO, "Crawl", "<2642>ERROR %x: %s", e, msg);
 #endif
 }
 #endif // USE_SDL

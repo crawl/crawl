@@ -279,17 +279,17 @@ static void _change_skill_level(skill_type exsk, int n)
     // are you drained/crosstrained/ash'd in the relevant skill?
     const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
     if (you.skills[exsk] == MAX_SKILL_LEVEL)
-        mprf(MSGCH_INTRINSIC_GAIN, "당신은 %s을(를) 마스터했다!", skill_name(exsk));
+        mprf(MSGCH_INTRINSIC_GAIN, "<2211>당신은 %s을(를) 마스터했다!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "당신의 %s %s 스킬이 %s했다. 현재레벨 : %d!",
+        mprf(MSGCH_INTRINSIC_GAIN, "<2212>당신의 %s %s 스킬이 %s했다. 현재레벨 : %d!",
              specify_base ? "기본 " : "",
              skill_name(exsk), (n > 0) ? "상승" : "감소",
              you.skills[exsk]);
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "당신의 %s%s 스킬이 %s %d 레벨. 그래서 이제 "
+        mprf(MSGCH_INTRINSIC_GAIN, "<2213>당신의 %s%s 스킬이 %s %d 레벨. 그래서 이제 "
              "%d 레벨에 도달하였다!",
              specify_base ? "기본 " : "",
              skill_name(exsk),
@@ -492,7 +492,7 @@ static void _check_start_train()
             ++it;
 
     if (!skills.empty())
-        mprf("당신은 %s 수련을 재개했다.", skill_names(skills).c_str());
+        mprf("<2214>당신은 %s 수련을 재개했다.", skill_names(skills).c_str());
 
     you.start_train.clear();
 }
@@ -521,7 +521,7 @@ static void _check_stop_train()
 
     if (!skills.empty())
     {
-        mprf("당신은 %s 수련을 멈추었다.", skill_names(skills).c_str());
+        mprf("<2215>당신은 %s 수련을 멈추었다.", skill_names(skills).c_str());
         check_selected_skills();
     }
 
@@ -791,7 +791,7 @@ void exercise(skill_type exsk, int deg)
     if (you.skills[exsk] >= MAX_SKILL_LEVEL)
         return;
 
-    dprf(DIAG_SKILLS, "Exercise %s by %d.", skill_name(exsk), deg);
+    dprf(DIAG_SKILLS, "<2216>Exercise %s by %d.", skill_name(exsk), deg);
 
     // push first in case queues are empty, like during -test
     while (deg > 0)
@@ -965,7 +965,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
             skill_type sk = static_cast<skill_type>(i);
             if (total_gain[sk] && !simu)
             {
-                dprf(DIAG_SKILLS, "Trained %s by %d.",
+                dprf(DIAG_SKILLS, "<2217>Trained %s by %d.",
                      skill_name(sk), total_gain[sk]);
             }
 #ifdef DEBUG_TRAINING_COST
@@ -1613,7 +1613,7 @@ void dump_skills(string &text)
         int cur  = you.skill((skill_type)i, 10);
         if (real > 0 || (!you.auto_training && you.train[i] > 0))
         {
-            text += make_stringf(" %c Level %.*f%s %s\n",
+            text += make_stringf("<2218> %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
                                  !you.can_train[i] ? ' ' :
                                  you.train[i] == 2 ? '*' :
@@ -1660,7 +1660,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
     if (!simu && you.ct_skill_points[fsk] > 0)
     {
-        dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
+        dprf(DIAG_SKILLS, "<2219>ct_skill_points[%s]: %d",
              skill_name(fsk), you.ct_skill_points[fsk]);
     }
 
@@ -1732,13 +1732,13 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         else
             you.transfer_skill_points -= total_skp_lost;
 
-        dprf(DIAG_SKILLS, "skill %s lost %d points",
+        dprf(DIAG_SKILLS, "<2220>skill %s lost %d points",
              skill_name(fsk), total_skp_lost);
-        dprf(DIAG_SKILLS, "skill %s gained %d points",
+        dprf(DIAG_SKILLS, "<2221>skill %s gained %d points",
              skill_name(tsk), total_skp_gained);
         if (you.ct_skill_points[fsk] > 0)
         {
-            dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
+            dprf(DIAG_SKILLS, "<2222>ct_skill_points[%s]: %d",
                  skill_name(fsk), you.ct_skill_points[fsk]);
         }
 

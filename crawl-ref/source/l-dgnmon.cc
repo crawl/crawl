@@ -146,14 +146,14 @@ static int dgn_set_random_mon_list(lua_State *ls)
         if (mon.colour != COLOUR_INHERIT)
         {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
-                 "%s being ignored.",
+                 "<1067>%s being ignored.",
                  name.c_str());
         }
 
         if (!mon.items.empty())
         {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
-                 "%s being ignored.",
+                 "<1068>%s being ignored.",
                  name.c_str());
         }
     } // for (int i = 0; i < num_mons; i++)

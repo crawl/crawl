@@ -600,7 +600,7 @@ bool make_book_level_randart(item_def &book, int level)
 
         if (god_discard > 0 && uncastable_discard == 0)
         {
-            snprintf(buf, sizeof(buf), "%s disliked all level %d spells",
+            snprintf(buf, sizeof(buf), "<1928>%s disliked all level %d spells",
                      god_name(god).c_str(), level);
         }
         else if (god_discard == 0 && uncastable_discard > 0)
@@ -608,14 +608,14 @@ bool make_book_level_randart(item_def &book, int level)
         else if (god_discard > 0 && uncastable_discard > 0)
         {
             snprintf(buf, sizeof(buf),
-                     "All level %d spells are either disliked by %s "
+                     "<1929>All level %d spells are either disliked by %s "
                      "or cannot be cast by you.",
                      level, god_name(god).c_str());
         }
         else
             sprintf(buf, "No level %d spells?!?!?!", level);
 
-        mprf(MSGCH_ERROR, "Could not create fixed level randart spellbook: %s",
+        mprf(MSGCH_ERROR, "<1930>Could not create fixed level randart spellbook: %s",
              buf);
 
         return false;
@@ -630,7 +630,7 @@ bool make_book_level_randart(item_def &book, int level)
              "randart spellbook than there are valid spells.",
              level);
         mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
-             "%d spells due to being disliked by %s.",
+             "<1931>%d spells due to being disliked by %s.",
              uncastable_discard, god_discard, god_name(god).c_str());
 #endif
     }
@@ -788,7 +788,7 @@ static string _gen_randbook_name(string subject, string owner,
 
     if (!real_subject.empty())
     {
-        return make_stringf("%s%s of %s",
+        return make_stringf("<1932>%s%s of %s",
                             apostrophised_owner.c_str(),
                             getRandNameString("book_noun").c_str(),
                             real_subject.c_str());

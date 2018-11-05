@@ -292,7 +292,7 @@ static void _check_monster_pos(const monster* mons)
         // If this mprf triggers for you, please note any special
         // circumstances so we can track down where this is coming
         // from.
-        mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
+        mprf(MSGCH_ERROR, "<2204>monster %s (%d) at (%d, %d) was "
              "improperly placed. Updating mgrd.",
              mons->name(DESC_PLAIN, true).c_str(), s,
              mons->pos().x, mons->pos().y);

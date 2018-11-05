@@ -35,7 +35,7 @@ bool yes_or_no(const char* fmt, ...)
     va_end(args);
     buf[sizeof(buf)-1] = 0;
 
-    mprf(MSGCH_PROMPT, "%s (Confirm with \"yes\".) ", buf);
+    mprf(MSGCH_PROMPT, "<1913>%s (Confirm with \"yes\".) ", buf);
 
     if (cancellable_get_line(buf, sizeof buf))
         return false;
@@ -62,7 +62,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     if (res == MB_FALSE)
         return false;
 
-    string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    string prompt = make_stringf("<1914>%s ", str ? str : "Buggy prompt?");
 
 #ifdef TOUCH_UI
     Popup *pop = new Popup(prompt);
@@ -88,9 +88,9 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             if (!noprompt)
             {
                 if (message)
-                    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+                    mprf(MSGCH_PROMPT, "<1915>%s", prompt.c_str());
                 else
-                    cprintf("%s", prompt.c_str());
+                    cprintf("<1916>%s", prompt.c_str());
             }
 
             tmp = getchm(KMC_CONFIRM);
@@ -133,7 +133,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             bool upper = !allow_lowercase
                          && (tmp == 'n' || tmp == 'y'
                              || crawl_state.game_is_hints_tutorial());
-            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
+            const string pr = make_stringf("<1917>%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
 #ifdef TOUCH_UI
             status->text = pr;
@@ -141,7 +141,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             if (message)
                 mpr(pr);
             else
-                cprintf("%s\n", pr.c_str());
+                cprintf("<1918>%s\n", pr.c_str());
 #endif
         }
     }
@@ -210,12 +210,12 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
     mouse_control mc(MOUSE_MODE_YESNO);
 
     string prompt =
-    make_stringf("%s%s ", str ? str : "Buggy prompt?",
+    make_stringf("<1919>%s%s ", str ? str : "Buggy prompt?",
                  _list_allowed_keys(alt_yes, alt_yes2,
                                     allow_lowercase, allow_all).c_str());
     while (true)
     {
-        mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+        mprf(MSGCH_PROMPT, "<1920>%s", prompt.c_str());
 
         int tmp = getchm(KMC_CONFIRM);
 
@@ -251,7 +251,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
                 bool upper = !allow_lowercase
                              && (tmp == 'n' || tmp == 'y' || tmp == 'a'
                                  || crawl_state.game_is_hints_tutorial());
-                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
+                mprf("<1921>Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
                      upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
             }
@@ -261,7 +261,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
             bool upper = !allow_lowercase
                          && (tmp == 'n' || tmp == 'y'
                              || crawl_state.game_is_hints_tutorial());
-            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
+            mprf("<1922>%s[Y]es%s, [N]o or [Q]uit only, please.",
                  upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
@@ -348,6 +348,6 @@ int letter_to_index(int the_letter)
     else if (the_letter >= 'A' && the_letter <= 'Z')
         return the_letter - 'A' + 26; // returns range [26-51] {dlb}
 
-    die("slot not a letter: %s (%d)", the_letter ?
+    die("<1923>slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
 }

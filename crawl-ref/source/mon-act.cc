@@ -200,7 +200,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
     // and not eligible to be swapped with
     if (moved.is_constricted())
     {
-        dprf("%s fails to swap with %s, constricted.",
+        dprf("<1363>%s fails to swap with %s, constricted.",
             mover.name(DESC_THE).c_str(),
             moved.name(DESC_THE).c_str());
             return false;
@@ -239,7 +239,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
 
     if (you.can_see(mover) && you.can_see(moved))
     {
-        mprf("%s와 %s이(가) 자리를 바꾸었다.", mover.name(DESC_PLAIN).c_str(),
+        mprf("<1364>%s와 %s이(가) 자리를 바꾸었다.", mover.name(DESC_PLAIN).c_str(),
              moved.name(DESC_PLAIN).c_str());
     }
 
@@ -880,7 +880,7 @@ static bool _handle_swoop(monster& mons)
 
         if (you.can_see(mons))
         {
-            mprf("%s이(가) 허공에서 %s을(를) 덮쳤다!",
+            mprf("<1365>%s이(가) 허공에서 %s을(를) 덮쳤다!",
                  mons.name(DESC_PLAIN).c_str(),
                  defender->name(DESC_PLAIN).c_str());
         }
@@ -1010,7 +1010,7 @@ static bool _handle_scroll(monster& mons)
         if (mons.can_see(you))
         {
             simple_monster_message(mons, "이(가) 두루마리를 읽었다.");
-            mprf("한 가닥의 그림자가 %s 주위에서 소용돌이친다.", mons.name(DESC_PLAIN).c_str());
+            mprf("<1366>한 가닥의 그림자가 %s 주위에서 소용돌이친다.", mons.name(DESC_PLAIN).c_str());
             read = true;
             int count = roll_dice(2, 2);
             for (int i = 0; i < count; ++i)
@@ -1106,7 +1106,7 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
         set_ident_type(OBJ_WANDS, wand_type, true);
         if (!mons.props["wand_known"].get_bool())
         {
-            mprf("이것은 %s였다.", wand.name(DESC_PLAIN).c_str());
+            mprf("<1367>이것은 %s였다.", wand.name(DESC_PLAIN).c_str());
             mons.props["wand_known"] = true;
         }
 
@@ -1302,7 +1302,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         }
         else if (interference == DO_REDIRECT_ATTACK)
         {
-            mprf(MSGCH_GOD, "당신은 %s의 공격을 되돌려보냈다!",
+            mprf(MSGCH_GOD, "<1368>당신은 %s의 공격을 되돌려보냈다!",
                     mons->name(DESC_PLAIN).c_str());
             int pfound = 0;
             for (radius_iterator ri(you.pos(),
@@ -1372,7 +1372,7 @@ static void _monster_add_energy(monster& mons)
 #    define DEBUG_ENERGY_USE(problem) \
     if (mons->speed_increment == old_energy && mons->alive()) \
              mprf(MSGCH_DIAGNOSTICS, \
-                  problem " for monster '%s' consumed no energy", \
+                  problem "<1369> for monster '%s' consumed no energy", \
                   mons->name(DESC_PLAIN).c_str());
 #else
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
@@ -1577,7 +1577,7 @@ void handle_monster_move(monster* mons)
     if (!monster_was_floating
         && mgrd(mons->pos()) != mons->mindex())
     {
-        mprf(MSGCH_ERROR, "Monster %s became detached from mgrd "
+        mprf(MSGCH_ERROR, "<1370>Monster %s became detached from mgrd "
                           "in handle_monster_move() loop",
              mons->name(DESC_PLAIN, true).c_str());
         mprf(MSGCH_WARN, "[[[[[[[[[[[[[[[[[[");
@@ -1588,7 +1588,7 @@ void handle_monster_move(monster* mons)
     else if (monster_was_floating
              && mgrd(mons->pos()) == mons->mindex())
     {
-        mprf(MSGCH_DIAGNOSTICS, "Monster %s re-attached itself to mgrd "
+        mprf(MSGCH_DIAGNOSTICS, "<1371>Monster %s re-attached itself to mgrd "
                                 "in handle_monster_move() loop",
              mons->name(DESC_PLAIN, true).c_str());
         monster_was_floating = false;
@@ -1948,7 +1948,7 @@ void handle_monster_move(monster* mons)
                     // attack that target
                     mons->target = new_target->pos();
                     mons->foe = new_target->mindex();
-                    mprf(MSGCH_GOD, "당신은 %s의 공격을 되돌려보냈다!",
+                    mprf(MSGCH_GOD, "<1372>당신은 %s의 공격을 되돌려보냈다!",
                          mons->name(DESC_PLAIN).c_str());
                     fight_melee(mons, new_target);
                 }
@@ -2122,7 +2122,7 @@ void monster::struggle_against_net()
         {
             if (visible_to(&you))
             {
-                mprf("그물이 찢어지고, %s 풀려났다!",
+                mprf("<1373>그물이 찢어지고, %s 풀려났다!",
                      name(DESC_PLAIN).c_str());
             }
             else
@@ -2148,7 +2148,7 @@ static void _ancient_zyme_sicken(monster* mons)
         {
             if (!you.duration[DUR_SICKENING])
             {
-                mprf(MSGCH_WARN, "%s의 존재로 인해 당신의 몸에서 질병이 자라난다.",
+                mprf(MSGCH_WARN, "<1374>%s의 존재로 인해 당신의 몸에서 질병이 자라난다.",
                     mons->name(DESC_PLAIN).c_str());
             }
 
@@ -2200,7 +2200,7 @@ static void _torpor_snail_slow(monster* mons)
     {
         if (!you.duration[DUR_SLOW])
         {
-            mprf("%s의 근처에 서자 당신은 무기력해졌다.",
+            mprf("<1375>%s의 근처에 서자 당신은 무기력해졌다.",
                  mons->name(DESC_PLAIN).c_str());
         }
 
@@ -2259,7 +2259,7 @@ static void _post_monster_move(monster* mons)
                 if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
                     && you.see_cell(*ai))
                 {
-                    mprf("%s의 물의 오라가 %s을(를) 뒤덮는다.",
+                    mprf("<1376>%s의 물의 오라가 %s을(를) 뒤덮는다.",
                          apostrophise(mons->name(DESC_PLAIN)).c_str(),
                          feature_description_at(*ai, false, DESC_PLAIN).c_str());
                 }
@@ -2360,7 +2360,7 @@ void handle_monsters(bool with_noise)
     {
         if (tries++ > 32767)
         {
-            die("infinite handle_monsters() loop, mons[0 of %d] is %s",
+            die("<1377>infinite handle_monsters() loop, mons[0 of %d] is %s",
                 (int)monster_queue.size(),
                 monster_queue.top().first->name(DESC_PLAIN, true).c_str());
         }
@@ -2488,7 +2488,7 @@ static bool _monster_eat_item(monster* mons)
         if (!item_is_jelly_edible(*si))
             continue;
 
-        dprf("%s eating %s", mons->name(DESC_PLAIN, true).c_str(),
+        dprf("<1378>%s eating %s", mons->name(DESC_PLAIN, true).c_str(),
              si->name(DESC_PLAIN).c_str());
 
         int quant = si->quantity;
@@ -2512,7 +2512,7 @@ static bool _monster_eat_item(monster* mons)
 
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
-            mprf(MSGCH_SOUND, "%s 호로록거리는 소음이 들린다.",
+            mprf(MSGCH_SOUND, "<1379>%s 호로록거리는 소음이 들린다.",
                  you.see_cell(mons->pos()) ? "" : " 멀리서");
             shown_msg = true;
         }
@@ -2657,12 +2657,12 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
 
         if (!you.can_see(mons))
         {
-            mprf("보이지 않는 무언가가 %s", open_str.c_str());
+            mprf("<1380>보이지 않는 무언가가 %s", open_str.c_str());
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
         else if (!you_are_delayed())
         {
-            mprf("%s %s", mons.name(DESC_PLAIN).c_str(),
+            mprf("<1381>%s %s", mons.name(DESC_PLAIN).c_str(),
                  open_str.c_str());
         }
     }
@@ -3092,7 +3092,7 @@ static void _jelly_grows(monster& mons)
 {
     if (player_can_hear(mons.pos()))
     {
-        mprf(MSGCH_SOUND, "%s 호로록거리는 소음이 들린다.",
+        mprf(MSGCH_SOUND, "<1382>%s 호로록거리는 소음이 들린다.",
              you.see_cell(mons.pos()) ? "" : "멀리서");
     }
 
@@ -3154,7 +3154,7 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
 
     if (you.can_see(*plant))
     {
-        mprf("%s안에서 %s가 자란다.",
+        mprf("<1383>%s안에서 %s가 자란다.",
              plant->name(DESC_PLAIN).c_str(), mons.name(DESC_PLAIN).c_str());
     }
 
@@ -3180,7 +3180,7 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
     {
         if (coinflip())
         {
-            dprf("Alerting monster %s at (%d,%d)",
+            dprf("<1384>Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
             behaviour_event(m2, ME_ALERT);
         }
@@ -3361,7 +3361,7 @@ static bool _monster_move(monster* mons)
             {
                 if (one_chance_in(10))
                 {
-                    mprf(MSGCH_TALK_VISUAL, "%s이(가) 분노한다.",
+                    mprf(MSGCH_TALK_VISUAL, "<1385>%s이(가) 분노한다.",
                          mons->name(DESC_PLAIN).c_str());
                 }
                 noisy(noise_level, mons->pos(), mons->mid);
@@ -3565,7 +3565,7 @@ static bool _monster_move(monster* mons)
                 if (you.see_cell(target))
                 {
                     const bool actor_visible = you.can_see(*mons);
-                    mprf("%s이(가) 나무를 쓰러뜨렸다!",
+                    mprf("<1386>%s이(가) 나무를 쓰러뜨렸다!",
                          actor_visible?
                          mons->name(DESC_PLAIN).c_str() : "무언가가");
                     noisy(25, target);
@@ -3597,7 +3597,7 @@ static bool _monster_move(monster* mons)
             {
                 mons->flags &= ~MF_TAKING_STAIRS;
 
-                dprf("BUG: %s was marked as follower when not following!",
+                dprf("<1387>BUG: %s was marked as follower when not following!",
                      mons->name(DESC_PLAIN).c_str());
             }
             else
@@ -3605,7 +3605,7 @@ static bool _monster_move(monster* mons)
                 ret    = true;
                 mmov.reset();
 
-                dprf("%s is skipping movement in order to follow.",
+                dprf("<1388>%s is skipping movement in order to follow.",
                      mons->name(DESC_THE).c_str());
             }
         }

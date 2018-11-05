@@ -207,13 +207,13 @@ static void _cprintf_touchui(const char *format, ...)
         case TOUCH_V_PLACE:
         case TOUCH_S_NULL:
             // don't draw these
-//            printf("X! %s\n",buf.c_str());
+//            printf("<1700>X! %s\n",buf.c_str());
             break;
         case TOUCH_T_HP:
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf("%s", you.your_name.c_str());
+            cprintf("<1701>%s", you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
@@ -229,11 +229,11 @@ static void _cprintf_touchui(const char *format, ...)
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf("%s", buf.c_str());
+            cprintf("<1702>%s", buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf("%s", buf.c_str());
+            cprintf("<1703>%s", buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
@@ -242,8 +242,8 @@ static void _cprintf_touchui(const char *format, ...)
             break;
 
         default:
-//            printf("p: %s\n",buf.c_str());
-            cprintf("%s", buf.c_str());
+//            printf("<1704>p: %s\n",buf.c_str());
+            cprintf("<1705>%s", buf.c_str());
     }
     va_end(args);
 }
@@ -262,14 +262,14 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf("%s%s %.4s", get_species_abbrev(you.species),
+            cprintf("<1706>%s%s %.4s", get_species_abbrev(you.species),
                                  get_job_abbrev(you.char_class),
                                  god_name(you.religion).c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
             break;
         default:
-//            printf("q: %s\n",buf.c_str());
-            nowrap_eol_cprintf("%s", buf.c_str());
+//            printf("<1707>q: %s\n",buf.c_str());
+            nowrap_eol_cprintf("<1708>%s", buf.c_str());
     }
     va_end(args);
 }
@@ -548,7 +548,7 @@ void update_turn_count()
     textcolour(HUD_VALUE_COLOUR);
     if (Options.show_game_time)
     {
-        CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+        CPRINTF("<1709>%.1f (%.1f)%s", you.elapsed_time / 10.0,
                 (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
                 // extra spaces to erase excess if previous output was longer
                 "    ");
@@ -928,10 +928,10 @@ static void _print_stats_wp(int y)
     const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
                                           : '-';
     const string slot_name = make_stringf("%c) ", slot_letter);
-    CPRINTF("%s", slot_name.c_str());
+    CPRINTF("<1710>%s", slot_name.c_str());
     textcolour(_wpn_name_colour());
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(text, max_name_width).c_str());
+    CPRINTF("<1711>%s", chop_string(text, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
 
@@ -975,9 +975,9 @@ static void _print_stats_qv(int y)
     textcolour(col);
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
-    CPRINTF("%s", chop_string(text, w).c_str());
+    CPRINTF("<1712>%s", chop_string(text, w).c_str());
 #else
-    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
+    CPRINTF("<1713>%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
 #endif
     textcolour(LIGHTGREY);
 }
@@ -1106,7 +1106,7 @@ static void _print_status_lights(int y)
         if (end_x <= crawl_view.hudsz.x)
         {
             textcolour(lights[i_light].colour);
-            CPRINTF("%s", lights[i_light].text.c_str());
+            CPRINTF("<1714>%s", lights[i_light].text.c_str());
             if (end_x < crawl_view.hudsz.x)
                 CPRINTF(" ");
             ++i_light;
@@ -1129,7 +1129,7 @@ static void _print_status_lights(int y)
         if (lights.size() == 1)
         {
             textcolour(lights[0].colour);
-            CPRINTF("%s", lights[0].text.c_str());
+            CPRINTF("<1715>%s", lights[0].text.c_str());
         }
         else
         {
@@ -1139,7 +1139,7 @@ static void _print_status_lights(int y)
                 if (i_light == lights.size() - 1
                     && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex())
                 {
-                    CPRINTF("%s",lights[i_light].text.c_str());
+                    CPRINTF("<1716>%s",lights[i_light].text.c_str());
                 }
                 else if ((int)lights.size() > crawl_view.hudsz.x / 2)
                     CPRINTF("%.1s",lights[i_light].text.c_str());
@@ -1175,7 +1175,7 @@ static void _draw_wizmode_flag(const char *word)
     textcolour(LIGHTMAGENTA);
     // 3+ for the " **"
     CGOTOXY(1 + crawl_view.hudsz.x - (3 + strlen(word)), 1, GOTO_STAT);
-    CPRINTF(" *%s*", word);
+    CPRINTF("<1717> *%s*", word);
 }
 
 static void _redraw_title()
@@ -1214,7 +1214,7 @@ static void _redraw_title()
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
     textcolour(small_layout && you.wizard ? LIGHTMAGENTA : YELLOW);
-    CPRINTF("%s", chop_string(title, WIDTH).c_str());
+    CPRINTF("<1718>%s", chop_string(title, WIDTH).c_str());
     if (you.wizard && !small_layout)
         _draw_wizmode_flag("WIZARD");
     else if (you.suppress_wizard && !small_layout)
@@ -1230,7 +1230,7 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
-    NOWRAP_EOL_CPRINTF("%s", species.c_str());
+    NOWRAP_EOL_CPRINTF("<1719>%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
         if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
@@ -1239,7 +1239,7 @@ static void _redraw_title()
             string godpiety = "**....";
             textcolour(DARKGREY);
             if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-                NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
+                NOWRAP_EOL_CPRINTF("<1720> %s", godpiety.c_str());
             clear_to_end_of_line();
         }
         else
@@ -1253,18 +1253,18 @@ static void _redraw_title()
         string god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                       : god_name(you.religion);
-        NOWRAP_EOL_CPRINTF("%s", god.c_str());
+        NOWRAP_EOL_CPRINTF("<1721>%s", god.c_str());
 
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
         if (textwidth <= WIDTH)
-            NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
+            NOWRAP_EOL_CPRINTF("<1722> %s", piety.c_str());
         else if (textwidth == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
-            NOWRAP_EOL_CPRINTF("%s", piety.c_str());
+            NOWRAP_EOL_CPRINTF("<1723>%s", piety.c_str());
         }
         clear_to_end_of_line();
         if (you_worship(GOD_GOZAG))
@@ -1444,7 +1444,7 @@ void print_stats_level()
 #ifdef DEBUG_DIAGNOSTICS
     CPRINTF("(%d) ", env.absdepth0 + 1);
 #endif
-    CPRINTF("%s", _level_description_string_hud().c_str());
+    CPRINTF("<1724>%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
 }
 
@@ -1628,7 +1628,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             monster_info mi = mons[i_mon];
             cglyph_t g = get_mons_glyph(mi);
             textcolour(g.col);
-            CPRINTF("%s", stringize_glyph(g.ch).c_str());
+            CPRINTF("<1725>%s", stringize_glyph(g.ch).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1669,7 +1669,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             mons[start].to_string(count, desc, desc_colour, zombified);
             textcolour(desc_colour);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
-            CPRINTF("%s", desc.c_str());
+            CPRINTF("<1726>%s", desc.c_str());
         }
     }
 
@@ -1734,7 +1734,7 @@ int update_monster_pane()
         if (i_print >= skip_lines && i_mons < (int) mons.size())
             _print_next_monster_desc(mons, i_mons, full_info);
         else
-            CPRINTF("%s", blank.c_str());
+            CPRINTF("<1727>%s", blank.c_str());
     }
 
     if (i_mons < (int)mons.size())
@@ -1938,7 +1938,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const char equip_char = index_to_letter(item_idx);
 
             str = make_stringf(
-                     "<w>%c</w> - <%s>%s%s</%s>",
+                     "<1728><w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
                      colname.c_str(),
                      melded ? "melded " : "",
@@ -1980,9 +1980,9 @@ static void _print_overview_screen_equip(column_composer& cols,
 
 static string _overview_screen_title(int sw)
 {
-    string title = make_stringf(" %s ", player_title().c_str());
+    string title = make_stringf("<1729> %s ", player_title().c_str());
 
-    string species_job = make_stringf("(%s %s)",
+    string species_job = make_stringf("<1730>(%s %s)",
                                       species_name(you.species).c_str(),
                                       get_job_name(you.char_class));
 
@@ -1998,7 +1998,7 @@ static string _overview_screen_title(int sw)
 
     if (linelength >= sw)
     {
-        species_job = make_stringf("(%s%s)", get_species_abbrev(you.species),
+        species_job = make_stringf("<1731>(%s%s)", get_species_abbrev(you.species),
                                              get_job_abbrev(you.char_class));
         linelength -= (char_width - strwidth(species_job));
     }
@@ -2030,7 +2030,7 @@ static string _overview_screen_title(int sw)
 static string _wiz_god_powers()
 {
     string godpowers = god_name(you.religion);
-    return make_stringf("%s %d (%d)", god_name(you.religion).c_str(),
+    return make_stringf("<1732>%s %d (%d)", god_name(you.religion).c_str(),
                                       you.piety,
                                       you.duration[DUR_PIETY_POOL]);
 }
@@ -2691,7 +2691,7 @@ string _status_mut_rune_list(int sw)
             runes.emplace_back(rune_type_name(i));
     if (!runes.empty())
     {
-        text += make_stringf("\n<w>%s:</w> %d/%d rune%s: %s",
+        text += make_stringf("<1733>\n<w>%s:</w> %d/%d rune%s: %s",
                     stringize_glyph(get_item_symbol(SHOW_ITEM_MISCELLANY)).c_str(),
                     (int)runes.size(), you.obtainable_runes,
                     you.obtainable_runes == 1 ? "" : "s",

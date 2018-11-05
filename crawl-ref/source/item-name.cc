@@ -127,7 +127,7 @@ static string _item_inscription(const item_def &item)
     if (insparts.empty())
         return "";
 
-    return make_stringf(" {%s}",
+    return make_stringf("<962> {%s}",
                         comma_separated_line(begin(insparts),
                                              end(insparts),
                                              ", ").c_str());
@@ -873,7 +873,7 @@ static const char* _jewellery_class_name(int jeweltype)
  */
 static string jewellery_type_name(int jeweltype)
 {
-    return make_stringf("%s %s%s", _jewellery_class_name(jeweltype),
+    return make_stringf("<963>%s %s%s", _jewellery_class_name(jeweltype),
                                    _jewellery_effect_prefix(jeweltype),
                                     jewellery_effect_name(jeweltype));
 }
@@ -1241,7 +1241,7 @@ string ghost_brand_name(int brand)
         return "an antimagic weapon";
     if (brand == SPWPN_VORPAL)
         return "a vorpal weapon"; // can't use brand_type_name
-    return make_stringf("a weapon of %s", brand_type_name(brand, false));
+    return make_stringf("<964>a weapon of %s", brand_type_name(brand, false));
 }
 
 string ego_type_string(const item_def &item, bool terse, int override_brand)
@@ -1506,7 +1506,7 @@ static string _ego_suffix(const item_def &weap, bool terse)
         return "";
 
     if (terse)
-        return make_stringf(" (%s)", brand_name.c_str());
+        return make_stringf("<965> (%s)", brand_name.c_str());
     return " of " + brand_name;
 }
 
@@ -2248,7 +2248,7 @@ void pack_item_identify_message(int base_type, int sub_type)
 {
     for (const auto &item : you.inv)
         if (item.defined() && item.is_type(base_type, sub_type))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("<966>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 bool get_ident_type(const item_def &item)
@@ -2427,7 +2427,7 @@ public:
         else
             symbol = '-';
 
-        return make_stringf(" %c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
+        return make_stringf("<967> %c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
                                            symbol, need_cursor ? ']' : ' ',
                                            name.c_str());
     }
@@ -2725,7 +2725,7 @@ void display_runes()
                                                    "lightgreen";
 
     auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+                              "<968><%s>%d</%s><white> collected) & Orbs of Power</white>",
                               col, runes_in_pack(), col);
     title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
@@ -3077,11 +3077,11 @@ static void _test_scroll_names(const string& fname)
             const string name = make_name(seed, MNAME_SCROLL);
             if (name.length() > longest.length())
                 longest = name;
-            fprintf(f, "%s\n", name.c_str());
+            fprintf(f, "<969>%s\n", name.c_str());
         }
     }
 
-    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+    fprintf(f, "<970>\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
 
     fclose(f);
 }
@@ -3103,10 +3103,10 @@ static void _test_jiyva_names(const string& fname)
         ASSERT(name[0] == 'J');
         if (name.length() > longest.length())
             longest = name;
-        fprintf(f, "%s\n", name.c_str());
+        fprintf(f, "<971>%s\n", name.c_str());
     }
 
-    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+    fprintf(f, "<972>\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
 
     fclose(f);
 }
@@ -3920,7 +3920,7 @@ string menu_colour_item_name(const item_def &item, description_level_type desc)
 
     const string colour = colour_to_str(col);
     const char * const colour_z = colour.c_str();
-    return make_stringf("<%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
+    return make_stringf("<973><%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
 }
 
 typedef map<string, item_kind> item_names_map;

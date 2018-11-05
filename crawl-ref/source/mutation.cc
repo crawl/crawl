@@ -538,7 +538,7 @@ void validate_mutations(bool debug_msg)
         mutation_type mut = static_cast<mutation_type>(i);
         if (debug_msg && you.mutation[mut] > 0)
         {
-            dprf("mutation %s: total %d innate %d temp %d",
+            dprf("<1664>mutation %s: total %d innate %d temp %d",
                 mutation_name(mut), you.mutation[mut],
                 you.innate_mutation[mut], you.temp_mutation[mut]);
         }
@@ -570,7 +570,7 @@ void validate_mutations(bool debug_msg)
 
             if (debug_msg && is_trait)
             {
-                dprf("scheduled innate for %s: %d, actual %d", mutation_name(mut),
+                dprf("<1665>scheduled innate for %s: %d, actual %d", mutation_name(mut),
                      trait_level, you.innate_mutation[mut]);
             }
             if (is_trait)
@@ -631,7 +631,7 @@ string describe_mutations(bool center_title)
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
 
         result += _annotate_form_based(
-                    make_stringf("Your %s. (AC +%d)",
+                    make_stringf("<1666>Your %s. (AC +%d)",
                        you.species == SP_NAGA ? "serpentine skin is tough" :
                        you.species == SP_GARGOYLE ? "stone body is resilient" :
                                                     scale_clause.c_str(),
@@ -659,11 +659,11 @@ string describe_mutations(bool center_title)
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
-            make_stringf("You can wear up to %s rings at the same time.",
+            make_stringf("<1667>You can wear up to %s rings at the same time.",
                          num_tentacles.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
-            make_stringf("You can use your tentacles to constrict %s enemies at once.",
+            make_stringf("<1668>You can use your tentacles to constrict %s enemies at once.",
                          num_tentacles.c_str()),
             !form_keeps_mutations());
     }
@@ -1576,7 +1576,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
         case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
         case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-            mprf(MSGCH_MUTATION, "%s이(가) 느껴졌다.", _stat_mut_desc(mutat, true));
+            mprf(MSGCH_MUTATION, "<1669>%s이(가) 느껴졌다.", _stat_mut_desc(mutat, true));
             gain_msg = false;
             break;
 
@@ -1589,7 +1589,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     arms = "tentacles";
                 else
                     break;
-                mprf(MSGCH_MUTATION, "%s",
+                mprf(MSGCH_MUTATION, "<1670>%s",
                      replace_all(mdef.gain[cur_base_level - 1], "arms",
                                  arms).c_str());
                 gain_msg = false;
@@ -1605,7 +1605,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     hands = "tentacles";
                 else
                     break;
-                mprf(MSGCH_MUTATION, "%s",
+                mprf(MSGCH_MUTATION, "<1671>%s",
                      replace_all(mdef.gain[cur_base_level - 1], "hands",
                                  hands).c_str());
                 gain_msg = false;
@@ -1630,7 +1630,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         notify_stat_change();
 
         if (gain_msg)
-            mprf(MSGCH_MUTATION, "%s", mdef.gain[cur_base_level - 1]);
+            mprf(MSGCH_MUTATION, "<1672>%s", mdef.gain[cur_base_level - 1]);
 
         // Do post-mutation effects.
         switch (mutat)
@@ -1722,7 +1722,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (you.hp <= 0)
         {
             ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
-                 make_stringf("gaining the %s mutation",
+                 make_stringf("<1673>gaining the %s mutation",
                               mutation_name(mutat)).c_str());
         }
     }
@@ -1787,7 +1787,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        mprf(MSGCH_MUTATION, "%s이(가) 느껴졌다.", _stat_mut_desc(mutat, false));
+        mprf(MSGCH_MUTATION, "<1674>%s이(가) 느껴졌다.", _stat_mut_desc(mutat, false));
         lose_msg = false;
         break;
 
@@ -1827,7 +1827,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     notify_stat_change();
 
     if (lose_msg)
-        mprf(MSGCH_MUTATION, "%s", mdef.lose[you.mutation[mutat]]);
+        mprf(MSGCH_MUTATION, "<1675>%s", mdef.lose[you.mutation[mutat]]);
 
     // Do post-mutation effects.
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
@@ -1849,7 +1849,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (you.hp <= 0)
     {
         ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
-             make_stringf("losing the %s mutation", mutation_name(mutat)).c_str());
+             make_stringf("<1676>losing the %s mutation", mutation_name(mutat)).c_str());
     }
 
     return true;
@@ -2511,7 +2511,7 @@ _schedule_ds_mutations(vector<mutation_type> muts)
             dt.level_gained = slots_left.front();
             dt.mutation     = muts_left.front();
 
-            dprf("Demonspawn will gain %s at level %d",
+            dprf("<1677>Demonspawn will gain %s at level %d",
                     _get_mutation_def(dt.mutation).short_desc, dt.level_gained);
 
             out.push_back(dt);
@@ -2548,7 +2548,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-        dprf("Perma Mutate %s: cap %d, total %d, innate %d", mutation_name(which_mut), cap,
+        dprf("<1678>Perma Mutate %s: cap %d, total %d, innate %d", mutation_name(which_mut), cap,
             you.get_base_mutation_level(which_mut), you.get_innate_mutation_level(which_mut));
         if (you.get_base_mutation_level(which_mut, true, false, false) < cap
             && !mutate(which_mut, reason, false, true, false, false, MUTCLASS_INNATE))
@@ -2588,7 +2588,7 @@ bool temp_mutation_wanes()
         max(starting_tmuts * 5 / 12 - random2(3),
         1 + random2(3)));
 
-    mprf(MSGCH_DURATION, "You feel the corruption within you wane %s.",
+    mprf(MSGCH_DURATION, "<1679>You feel the corruption within you wane %s.",
         (num_remove >= starting_tmuts ? "completely" : "somewhat"));
 
     for (int i = 0; i < num_remove; ++i)

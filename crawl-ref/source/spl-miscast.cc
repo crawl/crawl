@@ -236,7 +236,7 @@ void MiscastEffect::do_miscast()
     // killed a target which was alive when the object was created.
     if (!target->alive())
     {
-        dprf("Miscast target '%s' already dead",
+        dprf("<2293>Miscast target '%s' already dead",
              target->name(DESC_PLAIN, true).c_str());
         return;
     }
@@ -267,7 +267,7 @@ void MiscastEffect::do_miscast()
         severity = (pow * fail * (10 + pow) / 7 * WILD_MAGIC_NASTINESS) / 100;
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
-        mprf(MSGCH_DIAGNOSTICS, "'%s' miscast power: %d",
+        mprf(MSGCH_DIAGNOSTICS, "<2294>'%s' miscast power: %d",
              spell != SPELL_NO_SPELL ? spell_title(spell)
                                      : spelltype_short_name(sp_type),
              severity);
@@ -289,7 +289,7 @@ void MiscastEffect::do_miscast()
     }
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
-    mprf(MSGCH_DIAGNOSTICS, "Sptype: %s, severity: %d",
+    mprf(MSGCH_DIAGNOSTICS, "<2295>Sptype: %s, severity: %d",
          spelltype_short_name(sp_type), severity);
 #endif
 
@@ -416,7 +416,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
             msg = replace_all(msg, "'s body", "");
     }
 
-    mprf(msg_ch, "%s", msg.c_str());
+    mprf(msg_ch, "<2296>%s", msg.c_str());
 
     if (msg_ch == MSGCH_SOUND)
     {
@@ -780,7 +780,7 @@ void MiscastEffect::_conjuration(int severity)
             // Player only (for now).
             bool plural;
             string hair = _hair_str(target, plural);
-            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
+            you_msg = make_stringf("<2297>Your %s stand%s on end.", hair.c_str(),
                                    plural ? "" : "s");
         }
         }
@@ -1866,7 +1866,7 @@ void MiscastEffect::_transmutation(int severity)
             // Player only (for now).
             bool plural;
             string hair = _hair_str(target, plural);
-            you_msg = make_stringf("Your %s momentarily turn%s into snakes!",
+            you_msg = make_stringf("<2298>Your %s momentarily turn%s into snakes!",
                                    hair.c_str(), plural ? "" : "s");
         }
         }
@@ -2640,7 +2640,7 @@ void MiscastEffect::_air(int severity)
             // Player only (for now).
             bool plural;
             string hair = _hair_str(target, plural);
-            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
+            you_msg = make_stringf("<2299>Your %s stand%s on end.", hair.c_str(),
                                    plural ? "" : "s");
             break;
         }

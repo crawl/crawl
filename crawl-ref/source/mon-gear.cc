@@ -41,7 +41,7 @@ void give_specific_item(monster* mon, int thing)
     item_def &mthing = mitm[thing];
     ASSERT(mthing.defined());
 
-    dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+    dprf(DIAG_MONPLACE, "<1538>Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
 
     mthing.pos.reset();
@@ -71,7 +71,7 @@ void give_specific_item(monster* mon, int thing)
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!mon->pickup_item(mthing, false, true))
     {
-        dprf(DIAG_MONPLACE, "Destroying %s because %s doesn't want it!",
+        dprf(DIAG_MONPLACE, "<1539>Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN, false, true).c_str(),
              mon->name(DESC_PLAIN, true).c_str());
         destroy_item(thing, true);
@@ -157,7 +157,7 @@ static void _give_wand(monster* mon, int level)
     if (rejection_reason)
     {
         dprf(DIAG_MONPLACE,
-             "Destroying %s because %s doesn't want a %s wand.",
+             "<1540>Destroying %s because %s doesn't want a %s wand.",
              wand.name(DESC_A).c_str(),
              mon->name(DESC_THE).c_str(),
              rejection_reason);

@@ -299,7 +299,7 @@ static void _apply_ood(level_id &place)
         if (fuzz)
         {
             place.depth += fuzz;
-            dprf(DIAG_MONPLACE, "Monster level fuzz: %d (old: %s, new: %s)",
+            dprf(DIAG_MONPLACE, "<1549>Monster level fuzz: %d (old: %s, new: %s)",
                  fuzz, old_place.describe().c_str(), place.describe().c_str());
         }
     }
@@ -311,7 +311,7 @@ static void _apply_ood(level_id &place)
     {
         // this maxes depth most of the time
         place.depth += random2avg(27, 2);
-        dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
+        dprf(DIAG_MONPLACE, "<1550>Super OOD roll: Old: %s, New: %s",
              old_place.describe().c_str(), place.describe().c_str());
     }
 }
@@ -636,7 +636,7 @@ monster_type resolve_monster_type(monster_type mon_type,
                 proximity = PROX_AWAY_FROM_PLAYER;
             if (proximity == PROX_NEAR_STAIRS)
             {
-                dprf(DIAG_MONPLACE, "foreign monster from %s",
+                dprf(DIAG_MONPLACE, "<1551>foreign monster from %s",
                      place->describe().c_str());
             }
             else // we dunt cotton to no ferrniers in these here parts
@@ -869,7 +869,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // places.
     if (chose_ood_monster && _in_ood_pack_protected_place())
     {
-        dprf(DIAG_MONPLACE, "Chose monster with OOD roll: %s,"
+        dprf(DIAG_MONPLACE, "<1552>Chose monster with OOD roll: %s,"
                             " disabling band generation",
                             get_monster_data(mg.cls)->name);
         create_band = false;
@@ -1047,7 +1047,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
-        mprf("Monster %s is patrolling around (%d, %d).",
+        mprf("<1553>Monster %s is patrolling around (%d, %d).",
              mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
 #endif
     }
@@ -1063,7 +1063,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // Message to player from stairwell/gate/abyss appearance.
     if (shoved)
     {
-        mprf("%s(이)가 당신을 %s에서 밀어냈다!",
+        mprf("<1554>%s(이)가 당신을 %s에서 밀어냈다!",
              mon->visible_to(&you) ? mon->name(DESC_PLAIN).c_str() : "무언가",
              stair_type == DCHAR_ARCH ? "관문" : "계단");
     }
@@ -1198,7 +1198,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             && !crawl_state.game_is_arena()
         || mons_class_flag(mg.cls, M_CANT_SPAWN))
     {
-        die("invalid monster to place: %s (%d)", mons_class_name(mg.cls), mg.cls);
+        die("<1555>invalid monster to place: %s (%d)", mons_class_name(mg.cls), mg.cls);
     }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
@@ -1781,7 +1781,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // A rare case of a debug message NOT showing in the debug mode.
     if (mons_class_flag(mon->type, M_UNFINISHED))
     {
-        mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
+        mprf(MSGCH_WARN, "<1556>Warning: monster '%s' is not yet fully coded.",
              mon->name(DESC_PLAIN, true).c_str());
     }
 #endif
@@ -2905,7 +2905,7 @@ monster* mons_place(mgen_data mg)
     if (!creation)
         return 0;
 
-    dprf(DIAG_MONPLACE, "Created %s.", creation->base_name(DESC_A, true).c_str());
+    dprf(DIAG_MONPLACE, "<1557>Created %s.", creation->base_name(DESC_A, true).c_str());
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
@@ -3165,29 +3165,29 @@ bool player_angers_monster(monster* mon)
             switch (why)
             {
             case DID_EVIL:
-                mprf("당신의 신성한 기운이 %s을(를) 분노케 했다!", mname.c_str());
+                mprf("<1558>당신의 신성한 기운이 %s을(를) 분노케 했다!", mname.c_str());
                 break;
             case DID_CORPSE_VIOLATION:
-                mprf("%s은(는) 당신의 자연 수호에 강한 반감을 드러냈다!", mname.c_str());
+                mprf("<1559>%s은(는) 당신의 자연 수호에 강한 반감을 드러냈다!", mname.c_str());
                 break;
             case DID_HOLY:
-                mprf("%s은(는) 당신의 사악함을 용서하지 않을 모양이다!", mname.c_str());
+                mprf("<1560>%s은(는) 당신의 사악함을 용서하지 않을 모양이다!", mname.c_str());
                 break;
             case DID_UNCLEAN:
             case DID_CHAOS:
-                mprf("%s은(는) 당신의 신성한 기운을 가만 두지 않을 모양이다!", mname.c_str());
+                mprf("<1561>%s은(는) 당신의 신성한 기운을 가만 두지 않을 모양이다!", mname.c_str());
                 break;
             case DID_SPELL_CASTING:
-                mprf("%s은(는) 마법을 싫어하는 당신의 신에 대한 분노를 드러냈다!", mname.c_str());
+                mprf("<1562>%s은(는) 마법을 싫어하는 당신의 신에 대한 분노를 드러냈다!", mname.c_str());
                 break;
             case DID_FIRE:
-                mprf("%s은(는) 당신의 어두움에 격분했다!", mname.c_str());
+                mprf("<1563>%s은(는) 당신의 어두움에 격분했다!", mname.c_str());
                 break;
             case DID_SACRIFICE_LOVE:
-                mprf("%s은(는) 오직 당신에 대한 증오만을 느낄 수 있다!", mname.c_str());
+                mprf("<1564>%s은(는) 오직 당신에 대한 증오만을 느낄 수 있다!", mname.c_str());
                 break;
             default:
-                mprf("%s is enraged by a buggy thing about you!", mname.c_str());
+                mprf("<1565>%s is enraged by a buggy thing about you!", mname.c_str());
                 break;
             }
         }

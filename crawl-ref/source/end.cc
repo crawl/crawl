@@ -134,7 +134,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 || defined(DGL_PAUSE_AFTER_ERROR)
         if (exit_code && !error.empty())
         {
-            if (_print_error_screen("%s", error.c_str()))
+            if (_print_error_screen("<550>%s", error.c_str()))
                 need_pause = false;
         }
 #endif
@@ -154,9 +154,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         if (!error.empty())
         {
 #ifdef __ANDROID__
-            __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
+            __android_log_print(ANDROID_LOG_INFO, "Crawl", "<551>%s", error.c_str());
 #endif
-            fprintf(stderr, "%s", error.c_str());
+            fprintf(stderr, "<552>%s", error.c_str());
             error.clear();
         }
     }
@@ -349,16 +349,16 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         macro_save();
 
     clrscr();
-    cprintf("잘가게, %s.", you.your_name.c_str());
+    cprintf("<553>잘가게, %s.", you.your_name.c_str());
     cprintf("\n\n    "); // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, "\n") + 1;
 
-    cprintf("%s", hiscore.c_str());
+    cprintf("<554>%s", hiscore.c_str());
 
-    cprintf("\n최상의 크롤러들 - %s\n",
+    cprintf("<555>\n최상의 크롤러들 - %s\n",
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
@@ -366,7 +366,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
                         hiscore_index);
 
 #ifndef DGAMELAUNCH
-    cprintf("\n영안실 파일은 '%s' 디렉토리에서 찾을 수 있습니다.",
+    cprintf("<556>\n영안실 파일은 '%s' 디렉토리에서 찾을 수 있습니다.",
             morgue_directory().c_str());
 #endif
 
@@ -405,16 +405,16 @@ NORETURN void game_ended_with_error(const string &message)
     {
         if (crawl_state.io_inited)
         {
-            mprf(MSGCH_ERROR, "%s", message.c_str());
+            mprf(MSGCH_ERROR, "<557>%s", message.c_str());
             more();
         }
         else
         {
-            fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
+            fprintf(stderr, "<558>%s\nHit Enter to continue...\n", message.c_str());
             getchar();
         }
         game_ended();
     }
     else
-        end(1, false, "%s", message.c_str());
+        end(1, false, "<559>%s", message.c_str());
 }

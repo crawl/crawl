@@ -88,7 +88,7 @@ static void _dump_compilation_info(FILE* file)
 {
     fprintf(file, "Compilation info:\n");
     fprintf(file, "<<<<<<<<<<<\n");
-    fprintf(file, "%s", compilation_info);
+    fprintf(file, "<234>%s", compilation_info);
     fprintf(file, ">>>>>>>>>>>\n\n");
 }
 
@@ -103,7 +103,7 @@ static void _dump_level_info(FILE* file)
 
     string place = level_id::current().describe();
 
-    fprintf(file, "Level id: %s\n", place.c_str());
+    fprintf(file, "<235>Level id: %s\n", place.c_str());
     if (player_in_branch(BRANCH_ABYSS))
     {
         fprintf(file, "Abyssal state:\n"
@@ -144,9 +144,9 @@ static void _dump_player(FILE *file)
     fprintf(file, "Player:\n");
     fprintf(file, "{{{{{{{{{{{\n");
 
-    fprintf(file, "Name:    [%s]\n", you.your_name.c_str());
-    fprintf(file, "Species: %s\n", species_name(you.species).c_str());
-    fprintf(file, "Job:     %s\n\n", get_job_name(you.char_class));
+    fprintf(file, "<236>Name:    [%s]\n", you.your_name.c_str());
+    fprintf(file, "<237>Species: %s\n", species_name(you.species).c_str());
+    fprintf(file, "<238>Job:     %s\n\n", get_job_name(you.char_class));
 
     fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
             you.hp_max_adj_temp, you.hp_max_adj_perm);
@@ -157,7 +157,7 @@ static void _dump_player(FILE *file)
             you.strength(false), you.max_strength(),
             you.intel(false), you.max_intel(),
             you.dex(false), you.max_dex());
-    fprintf(file, "Position: %s, god: %s (%d), turn_is_over: %d, "
+    fprintf(file, "<239>Position: %s, god: %s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),
             god_name(you.religion).c_str(), (int) you.religion,
@@ -165,7 +165,7 @@ static void _dump_player(FILE *file)
 
     if (in_bounds(you.pos()))
     {
-        fprintf(file, "Standing on/in/over feature: %s\n",
+        fprintf(file, "<240>Standing on/in/over feature: %s\n",
                 raw_feature_description(you.pos()).c_str());
     }
 
@@ -178,7 +178,7 @@ static void _dump_player(FILE *file)
         fprintf(file, "    mode: %d\n", you.running.runmode);
         fprintf(file, "      mp: %d\n", you.running.mp);
         fprintf(file, "      hp: %d\n", you.running.hp);
-        fprintf(file, "     pos: %s\n\n",
+        fprintf(file, "<241>     pos: %s\n\n",
                 debug_coord_str(you.running.pos).c_str());
     }
 
@@ -188,14 +188,14 @@ static void _dump_player(FILE *file)
                 (unsigned int)you.delay_queue.size());
         for (const auto delay : you.delay_queue)
         {
-            fprintf(file, "    type:     %s", delay->name());
+            fprintf(file, "<242>    type:     %s", delay->name());
             fprintf(file, "\n");
             fprintf(file, "    duration: %d\n", delay->duration);
         }
         fprintf(file, "\n");
     }
 
-    fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
+    fprintf(file, "<243>Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
     fprintf(file, "Name            | can_train | train | training | level | points | progress\n");
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
@@ -240,14 +240,14 @@ static void _dump_player(FILE *file)
 
         if (flags & SPFLAG_MONSTER)
         {
-            fprintf(file, "    spell slot #%d: monster only spell %s\n",
+            fprintf(file, "<244>    spell slot #%d: monster only spell %s\n",
                     (int)i, spell_title(spell));
         }
         else if (flags & SPFLAG_TESTING)
-            fprintf(file, "    spell slot #%d: testing spell %s\n",
+            fprintf(file, "<245>    spell slot #%d: testing spell %s\n",
                     (int)i, spell_title(spell));
         else if (count_bits(get_spell_disciplines(spell)) == 0)
-            fprintf(file, "    spell slot #%d: school-less spell %s\n",
+            fprintf(file, "<246>    spell slot #%d: school-less spell %s\n",
                     (int)i, spell_title(spell));
     }
     fprintf(file, "\n");
@@ -280,7 +280,7 @@ static void _dump_player(FILE *file)
             continue;
 
         if (const char* name = mutation_name(mut))
-            fprintf(file, "    %s: %d", name, normal);
+            fprintf(file, "<247>    %s: %d", name, normal);
         else
             fprintf(file, "    unknown #%d: %d", i, normal);
 
@@ -321,7 +321,7 @@ static void _dump_player(FILE *file)
             const int orig_quant = item.quantity;
             item.quantity = 1;
 
-            fprintf(file, "    slot #%d: otherwise valid item '%s' has "
+            fprintf(file, "<248>    slot #%d: otherwise valid item '%s' has "
                           "invalid quantity %d\n",
                     i, item.name(DESC_PLAIN, false, true).c_str(),
                     orig_quant);
@@ -335,19 +335,19 @@ static void _dump_player(FILE *file)
 
         if (item.link != i)
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid link %d\n",
+            fprintf(file, "<249>    slot #%d: item '%s' has invalid link %d\n",
                     i, name.c_str(), item.link);
         }
 
         if (item.slot < 0 || item.slot > 127)
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid slot %d\n",
+            fprintf(file, "<250>    slot #%d: item '%s' has invalid slot %d\n",
                     i, name.c_str(), item.slot);
         }
 
         if (!item.pos.equals(-1, -1))
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid pos %s\n",
+            fprintf(file, "<251>    slot #%d: item '%s' has invalid pos %s\n",
                     i, name.c_str(), debug_coord_str(item.pos).c_str());
         }
     }
@@ -383,7 +383,7 @@ static void _dump_player(FILE *file)
                 suffix += "melded";
             suffix += ")";
         }
-        fprintf(file, ": %s%s\n",
+        fprintf(file, "<252>: %s%s\n",
                 you.inv[eq].name(DESC_PLAIN, false, true).c_str(), suffix.c_str());
     }
     fprintf(file, "\n");
@@ -398,7 +398,7 @@ static void _dump_player(FILE *file)
         else
         {
             const monster* mon = &menv[midx];
-            fprintf(file, "%s:\n", debug_mon_str(mon).c_str());
+            fprintf(file, "<253>%s:\n", debug_mon_str(mon).c_str());
             debug_dump_mon(mon, true);
         }
         fprintf(file, "\n");
@@ -485,7 +485,7 @@ static void _debug_dump_markers()
         if (marker == nullptr || marker->get_type() == MAT_LUA_MARKER)
             continue;
 
-        mprf(MSGCH_DIAGNOSTICS, "Marker %d at (%d, %d): %s",
+        mprf(MSGCH_DIAGNOSTICS, "<254>Marker %d at (%d, %d): %s",
              i, marker->pos.x, marker->pos.y,
              marker->debug_describe().c_str());
     }
@@ -512,7 +512,7 @@ static void _debug_dump_lua_markers(FILE *file)
         fprintf(file, "Lua marker %u at (%d, %d):\n",
                 i, marker->pos.x, marker->pos.y);
         fprintf(file, "{{{{\n");
-        fprintf(file, "%s", result.c_str());
+        fprintf(file, "<255>%s", result.c_str());
         fprintf(file, "}}}}\n");
     }
 }
@@ -524,7 +524,7 @@ static void _debug_dump_lua_persist(FILE* file)
     string result;
     if (!dlua.callfn("persist_to_string", 0, 1))
     {
-        result = make_stringf("error (persist_to_string): %s",
+        result = make_stringf("<256>error (persist_to_string): %s",
                               dlua.error.c_str());
     }
     else if (lua_isstring(dlua, -1))
@@ -532,12 +532,12 @@ static void _debug_dump_lua_persist(FILE* file)
     else
         result = "persist_to_string() returned nothing";
 
-    fprintf(file, "%s", result.c_str());
+    fprintf(file, "<257>%s", result.c_str());
 }
 
 static void _dump_ver_stuff(FILE* file)
 {
-    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long);
+    fprintf(file, "<258>Version: %s %s\n", CRAWL, Version::Long);
 #if defined(UNIX)
     fprintf(file, "Platform: unix");
 #   if defined(TARGET_OS_MACOSX)
@@ -551,7 +551,7 @@ static void _dump_ver_stuff(FILE* file)
 #endif // UNIX
 
     fprintf(file, "Bits: %d\n", (int)sizeof(void*)*8);
-    fprintf(file, "Game mode: %s\n",
+    fprintf(file, "<259>Game mode: %s\n",
             gametype_to_str(crawl_state.type).c_str());
 
 #if defined(USE_TILE_LOCAL)
@@ -567,7 +567,7 @@ static void _dump_command_line(FILE *file)
 {
     fprintf(file, "Command line:");
     for (const string& str : crawl_state.command_line_arguments)
-        fprintf(file, " %s", str.c_str());
+        fprintf(file, "<260> %s", str.c_str());
     if (crawl_state.command_line_arguments.empty())
         fprintf(file, " (unknown)");
     fprintf(file, "\n\n");
@@ -577,7 +577,7 @@ static void _dump_command_line(FILE *file)
 static void _dump_options(FILE *file)
 {
     fprintf(file, "RC options:\n");
-    fprintf(file, "restart_after_game = %s\n",
+    fprintf(file, "<261>restart_after_game = %s\n",
             Options.restart_after_game? "true" : "false");
     fprintf(file, "\n\n");
 }
@@ -619,18 +619,18 @@ void do_crash_dump()
 
     char name[180] = {};
 
-    snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
+    snprintf(name, sizeof(name), "<262>%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
     if (!crawl_state.test && !_assert_msg.empty())
-        fprintf(stderr, "\n%s", _assert_msg.c_str());
+        fprintf(stderr, "<263>\n%s", _assert_msg.c_str());
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
             "\nPlease submit a bug report at https://crawl.develz.org/mantis/ "
             "and include:"
-            "\n- The crash report: %s"
-            "\n- Your save file: %s"
+            "<264>\n- The crash report: %s"
+            "<265>\n- Your save file: %s"
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
@@ -641,7 +641,7 @@ void do_crash_dump()
     // only freak out if freopen() returned nullptr!
     if (!file)
     {
-        fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
+        fprintf(stdout, "<266>\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
         file = stdout;
     }
@@ -653,7 +653,7 @@ void do_crash_dump()
     set_msg_dump_file(file);
 
     if (!_assert_msg.empty())
-        fprintf(file, "%s\n\n", _assert_msg.c_str());
+        fprintf(file, "<267>%s\n\n", _assert_msg.c_str());
 
     _dump_ver_stuff(file);
 
@@ -692,7 +692,7 @@ void do_crash_dump()
         fprintf(file, "\nMessages:\n");
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
         string messages = get_last_messages(NUM_STORED_MESSAGES, true);
-        fprintf(file, "%s", messages.c_str());
+        fprintf(file, "<268>%s", messages.c_str());
         fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
     }
 
@@ -724,7 +724,7 @@ void do_crash_dump()
     else
     {
         fprintf(file, "\nScreenshot:\n");
-        fprintf(file, "%s\n", screenshot().c_str());
+        fprintf(file, "<269>%s\n", screenshot().c_str());
     }
 
     // If anything has screwed up the Lua runtime stacks then trying to
@@ -777,7 +777,7 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
     // so it's in the message history if we call Crawl from a shell.
 #endif
 #endif
-    fprintf(stderr, "%s\n", mesg);
+    fprintf(stderr, "<270>%s\n", mesg);
 
 #if defined(TARGET_OS_WINDOWS)
     OutputDebugString(mesg);
@@ -808,7 +808,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
     while (fileName > file && fileName[-1] != '\\')
         --fileName;
 
-    snprintf(mesg, sizeof(mesg), "ASSERT(%s) in '%s' at line %d failed.",
+    snprintf(mesg, sizeof(mesg), "<271>ASSERT(%s) in '%s' at line %d failed.",
              expr, fileName, line);
 
     _assert_msg = mesg;
@@ -823,7 +823,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         va_end(args);
         // Build the final result
         char final_mesg[1024];
-        snprintf(final_mesg, sizeof(final_mesg), "%s (%s)", mesg, detail);
+        snprintf(final_mesg, sizeof(final_mesg), "<272>%s (%s)", mesg, detail);
         _assert_msg = final_mesg;
         _BreakStrToDebugger(final_mesg, true);
     }
@@ -847,7 +847,7 @@ NORETURN void die(const char *file, int line, const char *format, ...)
     vsnprintf(tmp, sizeof(tmp), format, args);
     va_end(args);
 
-    snprintf(mesg, sizeof(mesg), "ERROR in '%s' at line %d: %s",
+    snprintf(mesg, sizeof(mesg), "<273>ERROR in '%s' at line %d: %s",
              file, line, tmp);
 
     _assert_msg = mesg;
@@ -866,10 +866,10 @@ NORETURN void die_noline(const char *format, ...)
     vsnprintf(tmp, sizeof(tmp), format, args);
     va_end(args);
 
-    snprintf(mesg, sizeof(mesg), "ERROR: %s", tmp);
+    snprintf(mesg, sizeof(mesg), "<274>ERROR: %s", tmp);
 
 #ifdef __ANDROID__
-    __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", mesg);
+    __android_log_print(ANDROID_LOG_INFO, "Crawl", "<275>%s", mesg);
 #endif
 
     _assert_msg = mesg;

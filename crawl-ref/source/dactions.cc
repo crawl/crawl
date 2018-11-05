@@ -156,7 +156,7 @@ void add_daction(daction_type act)
     COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS);
 #endif
 
-    dprf("scheduling delayed action: %s", daction_names[act]);
+    dprf("<223>scheduling delayed action: %s", daction_names[act]);
     you.dactions.push_back(act);
 
     // If we're removing a counted monster type, zero the counter even though
@@ -193,7 +193,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
-            dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
+            dprf("<224>going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
             if (local)
@@ -268,7 +268,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 static void _apply_daction(daction_type act)
 {
     ASSERT_RANGE(act, 0, NUM_DACTIONS);
-    dprf("applying delayed action: %s", daction_names[act]);
+    dprf("<225>applying delayed action: %s", daction_names[act]);
 
     switch (act)
     {
@@ -464,5 +464,5 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     if (could_see && !can_see)
         mpr("돼지가 사라졌다!");
     else if (!could_see && can_see)
-        mprf("%s이(가) 허공에서 나타났다!", mon->name(DESC_PLAIN).c_str());
+        mprf("<226>%s이(가) 허공에서 나타났다!", mon->name(DESC_PLAIN).c_str());
 }

@@ -576,7 +576,7 @@ static bool _cast_spell_on_target(actor* target)
 
     if (!_spell_in_range(spell, target))
     {
-        mprf("%s is out of range for that spell.",
+        mprf("<2439>%s is out of range for that spell.",
              target->name(DESC_THE).c_str());
         return true;
     }
@@ -1027,9 +1027,9 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, cell.tile.cloud, 'V');
         }
 
-        tip += make_stringf("\nFLV: floor: %d (%s) (%d)"
-                            "\n     wall:  %d (%s) (%d)"
-                            "\n     feat:  %d (%s) (%d)"
+        tip += make_stringf("<2440>\nFLV: floor: %d (%s) (%d)"
+                            "<2441>\n     wall:  %d (%s) (%d)"
+                            "<2442>\n     feat:  %d (%s) (%d)"
                             "\n  special:  %d\n",
                             env.tile_flv(gc).floor,
                             tile_dngn_name(env.tile_flv(gc).floor),

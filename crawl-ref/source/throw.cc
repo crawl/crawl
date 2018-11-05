@@ -306,7 +306,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
     if (teleport && cell_is_solid(target.target))
     {
         const char *feat = feat_type_name(grd(target.target));
-        mprf("There is %s there.", article_a(feat).c_str());
+        mprf("<2422>There is %s there.", article_a(feat).c_str());
         return false;
     }
 
@@ -377,14 +377,14 @@ bool fire_warn_if_impossible(bool silent)
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
-                mprf("%s 상태에서는 아무것도 던질 수 없다.", held_status());
+                mprf("<2423>%s 상태에서는 아무것도 던질 수 없다.", held_status());
             return true;
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             if (!silent)
             {
-                mprf("You cannot shoot with your %s while %s.",
+                mprf("<2424>You cannot shoot with your %s while %s.",
                      weapon->name(DESC_BASENAME).c_str(), held_status());
             }
             return true;
@@ -662,7 +662,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         break;
 
     default:
-        die("Invalid launcher '%s'",
+        die("<2425>Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
@@ -859,7 +859,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
-    mprf("You %s%s %s.",
+    mprf("<2426>You %s%s %s.",
           teleport ? "magically " : "",
           (projected == launch_retval::FUMBLED ? "toss away" :
            projected == launch_retval::LAUNCHED ? "shoot" : "throw"),

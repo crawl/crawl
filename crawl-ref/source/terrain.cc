@@ -853,7 +853,7 @@ void slime_wall_damage(actor* act, int delay)
                                              roll_dice(2, strength));
         if (dam > 0 && you.can_see(*mon))
         {
-            mprf((walls > 1) ? "%s은(는) 근처 산성질 벽에 의해 화상을 입었다!" : "%s은(는) 근처 산성질 벽에 의해 화상을 입었다!",
+            mprf((walls > 1) ? "<2419>%s은(는) 근처 산성질 벽에 의해 화상을 입었다!" : "%s은(는) 근처 산성질 벽에 의해 화상을 입었다!",
                   mon->name(DESC_THE).c_str());
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
@@ -1598,7 +1598,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         }
     }
 
-    mprf("당신은 %s 안으로 떨어졌다!",
+    mprf("<2420>당신은 %s 안으로 떨어졌다!",
          (terrain == DNGN_LAVA)       ? "용암" :
          (terrain == DNGN_DEEP_WATER) ? "물"
                                       : "프로그래밍 균열");
@@ -1987,7 +1987,7 @@ dungeon_feature_type orig_terrain(coord_def pos)
 
     const map_terrain_change_marker *terch
         = dynamic_cast<const map_terrain_change_marker *>(mark);
-    ASSERTM(terch, "%s has incorrect class", mark->debug_describe().c_str());
+    ASSERTM(terch, "<2421>%s has incorrect class", mark->debug_describe().c_str());
 
     return terch->old_feature;
 }

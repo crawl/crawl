@@ -3750,8 +3750,8 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefi
     }
 
     string tile_string = make_stringf(
-        "%cFG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n"
-        "%cBG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n",
+        "%cFG: %4" PRIu64" | 0x%8" PRIx64"<2429> (%s)\n"
+        "%cBG: %4" PRIu64" | 0x%8" PRIx64"<2430> (%s)\n",
         prefix,
         fg_idx,
         fg & ~TILE_FLAG_MASK,
@@ -3769,12 +3769,12 @@ void bind_item_tile(item_def &item)
     if (item.props.exists("item_tile_name"))
     {
         string tile = item.props["item_tile_name"].get_string();
-        dprf("Binding non-worn item tile: \"%s\".", tile.c_str());
+        dprf("Binding non-worn item tile: \"<2431>%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_main_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
-            dprf("bad tile name: \"%s\".", tile.c_str());
+            dprf("bad tile name: \"<2432>%s\".", tile.c_str());
             item.props.erase("item_tile_name");
             item.props.erase("item_tile");
         }
@@ -3785,12 +3785,12 @@ void bind_item_tile(item_def &item)
     if (item.props.exists("worn_tile_name"))
     {
         string tile = item.props["worn_tile_name"].get_string();
-        dprf("Binding worn item tile: \"%s\".", tile.c_str());
+        dprf("Binding worn item tile: \"<2433>%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
-            dprf("bad tile name: \"%s\".", tile.c_str());
+            dprf("bad tile name: \"<2434>%s\".", tile.c_str());
             item.props.erase("worn_tile_name");
             item.props.erase("worn_tile");
         }

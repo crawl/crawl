@@ -252,7 +252,7 @@ void wizard_set_hunger_state()
         hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged";
     hunger_prompt += "? ";
 
-    mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
+    mprf(MSGCH_PROMPT, "<2723>%s", hunger_prompt.c_str());
 
     const int c = toalower(getchk());
 
@@ -364,7 +364,7 @@ void wizard_set_gold()
     else
         you.set_gold(max(atoi(buf), 0));
 
-    mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
+    mprf("<2724>You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
 }
 
 void wizard_set_piety()
@@ -441,7 +441,7 @@ void wizard_set_skill_level(skill_type skill)
 
     redraw_skill(skill);
 
-    mprf("%s %s to skill level %.1f.", (old_amount < amount ? "Increased" :
+    mprf("<2725>%s %s to skill level %.1f.", (old_amount < amount ? "Increased" :
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
@@ -526,7 +526,7 @@ bool wizard_add_mutation()
                 matches.emplace_back(mutname);
             }
 
-            string prefix = make_stringf("No exact match for mutation '%s', possible matches are: ", specs);
+            string prefix = make_stringf("<2726>No exact match for mutation '%s', possible matches are: ", specs);
 
             // Use mpr_comma_separated_list() because the list
             // might be *LONG*.
@@ -538,7 +538,7 @@ bool wizard_add_mutation()
     }
     else
     {
-        mprf("Found #%d: %s (\"%s\")", (int) mutat,
+        mprf("<2727>Found #%d: %s (\"%s\")", (int) mutat,
              mutation_name(mutat),
              mutation_desc(mutat, 1, false).c_str());
 
@@ -694,7 +694,7 @@ void wizard_edit_durations()
             choice = matches[0];
         else if (matches.empty())
         {
-            mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
+            mprf(MSGCH_PROMPT, "<2728>No durations matching '%s'.", buf);
             return;
         }
         else
@@ -709,7 +709,7 @@ void wizard_edit_durations()
         }
     }
 
-    snprintf(buf, sizeof(buf), "Set '%s' to: ", duration_name(choice));
+    snprintf(buf, sizeof(buf), "<2729>Set '%s' to: ", duration_name(choice));
     int num = prompt_for_int(buf, false);
 
     if (num == 0)
@@ -722,7 +722,7 @@ void wizard_edit_durations()
 
 void wizard_list_props()
 {
-    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+    mprf(MSGCH_DIAGNOSTICS, "<2730>props: %s",
          you.describe_props().c_str());
 }
 
@@ -870,7 +870,7 @@ void wizard_get_god_gift()
 void wizard_toggle_xray_vision()
 {
     you.xray_vision = !you.xray_vision;
-    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
+    mprf("<2731>X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
     viewwindow(true);
 }
 
@@ -900,7 +900,7 @@ void wizard_god_wrath()
     else if (!divine_retribution(god, true, true))
     {
         // Dead Jiyva, or Ru/Gozag/Ashenzari.
-        mprf("%s is not feeling wrathful today.", god_name(god).c_str());
+        mprf("<2732>%s is not feeling wrathful today.", god_name(god).c_str());
     }
 }
 
@@ -936,7 +936,7 @@ void wizard_transform()
             line += make_stringf("[%c] %-10s ", i + 'a', transform_name(tr));
             if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mprf(MSGCH_PROMPT, "<2733>%s", line.c_str());
                 line.clear();
             }
         }
@@ -1010,7 +1010,7 @@ void wizard_xom_acts()
         const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
                                 frombool(coinflip());
         const xom_event_type result = xom_acts(severity, nice);
-        dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
+        dprf("<2734>Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS
         UNUSED(result);
 #endif
@@ -1024,7 +1024,7 @@ void wizard_xom_acts()
         return;
     }
 
-    dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
+    dprf("<2735>Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
     xom_take_action(event, severity);
 }
 #endif

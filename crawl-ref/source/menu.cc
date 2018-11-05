@@ -120,7 +120,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     {
         string text = me->get_text(needs_cursor);
         text = chop_string(text, get_number_of_cols());
-        cprintf("%s", text.c_str());
+        cprintf("<1325>%s", text.c_str());
     }
 }
 
@@ -711,7 +711,7 @@ bool Menu::draw_title_suffix(const string &s, bool titlefirst)
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
     unsigned avail_width = get_number_of_cols() - x + 1;
     string towrite = chop_string(s, avail_width);
-    cprintf("%s", towrite.c_str());
+    cprintf("<1326>%s", towrite.c_str());
 
     cgotoxy(oldx, oldy);
     return true;
@@ -770,7 +770,7 @@ string Menu::get_select_count_string(int count) const
         char buf[100] = "";
         if (count)
         {
-            snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
+            snprintf(buf, sizeof buf, "<1327>  (%d item%s)  ", count,
                     (count > 1 ? "s" : ""));
         }
         return string(buf);
@@ -1347,7 +1347,7 @@ void Menu::write_title()
     if (flags & MF_ALLOW_FORMATTING)
         fs += formatted_string::parse_string(text);
     else
-        fs.cprintf("%s", text.c_str());
+        fs.cprintf("<1328>%s", text.c_str());
 
     if (flags & MF_SHOW_PAGENUMBERS)
     {
@@ -2841,7 +2841,7 @@ void TextItem::render()
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
-        cprintf("%s", white_space.c_str());
+        cprintf("<1329>%s", white_space.c_str());
     }
 
     // print each line separately, is there a cleaner solution?
@@ -2853,7 +2853,7 @@ void TextItem::render()
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
         textcolour(m_fg_colour);
         textbackground(m_bg_colour);
-        cprintf("%s", m_render_text.substr(newline_pos,
+        cprintf("<1330>%s", m_render_text.substr(newline_pos,
                 endline_pos - newline_pos).c_str());
         if (endline_pos != string::npos)
             newline_pos = endline_pos + 1;
@@ -2966,7 +2966,7 @@ void FormattedTextItem::render()
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
-        cprintf("%s", white_space.c_str());
+        cprintf("<1331>%s", white_space.c_str());
     }
 
     cgotoxy(m_min_coord.x, m_min_coord.y);

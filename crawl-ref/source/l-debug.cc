@@ -234,7 +234,7 @@ LUAFN(debug_god_wrath)
     god_type god = strcmp(god_name, "random") ? str_to_god(god_name) : GOD_RANDOM;
     if (god == GOD_NO_GOD)
     {
-        string err = make_stringf("'%s' matches no god.", god_name);
+        string err = make_stringf("<1050>'%s' matches no god.", god_name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 
@@ -304,7 +304,7 @@ static bool _check_uniques()
             || !was_set && is_set && !placed)
         {
             mprf(MSGCH_ERROR,
-                 "Bad unique tracking: %s placed=%d was_set=%d is_set=%d",
+                 "<1051>Bad unique tracking: %s placed=%d was_set=%d is_set=%d",
                  mons_type_name(mt, DESC_PLAIN).c_str(),
                  placed, was_set, is_set);
             ret = false;
@@ -361,7 +361,7 @@ LUAFN(debug_disable)
             return 0;
         }
     luaL_argerror(ls, 1,
-                  make_stringf("unknown thing to disable: %s", what).c_str());
+                  make_stringf("<1052>unknown thing to disable: %s", what).c_str());
 
     return 0;
 }
@@ -376,7 +376,7 @@ LUAFN(debug_cpp_assert)
     if (!lua_isnoneornil(ls, 2))
         reason = reason + ": (" + luaL_checkstring(ls, 2) + ")";
     if (!test)
-        dprf("ASSERT from lua failed%s", reason.c_str());
+        dprf("<1053>ASSERT from lua failed%s", reason.c_str());
     ASSERT(test);
     return 0;
 }

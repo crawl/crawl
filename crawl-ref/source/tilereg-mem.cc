@@ -45,7 +45,7 @@ void MemoriseRegion::draw_tag()
 
     const spell_type spell = (spell_type) idx;
     const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
+    string desc = make_stringf("<2446>%s    (%s)    %d/%d spell slot%s",
                                spell_title(spell),
                                failure.c_str(),
                                spell_levels_required(spell),
@@ -85,7 +85,7 @@ bool MemoriseRegion::update_tab_tip_text(string &tip, bool active)
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
 
-    tip = make_stringf("%s%s\n%s%s",
+    tip = make_stringf("<2447>%s%s\n%s%s",
                        prefix1, "Display spells in carried books",
                        prefix2, "Memorise spells");
 

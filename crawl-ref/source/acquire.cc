@@ -1317,7 +1317,7 @@ int acquirement_create_item(object_class_type class_wanted,
         if (!rejection_reason.empty())
         {
             if (!quiet)
-                dprf("%s", rejection_reason.c_str());
+                dprf("<16>%s", rejection_reason.c_str());
             destroy_item(acq_item);
             thing_created = NON_ITEM;
             continue;

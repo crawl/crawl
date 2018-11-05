@@ -387,7 +387,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.what());
+            end(1, false, "<1122>%s", fe.what());
         }
         catch (short_read_exception &E)
         {
@@ -413,7 +413,7 @@ NORETURN static void _launch_game()
 
     if (!game_start && you.prev_save_version != Version::Long)
     {
-        const string note = make_stringf("Upgraded the game from %s to %s",
+        const string note = make_stringf("<1123>Upgraded the game from %s to %s",
                                          you.prev_save_version.c_str(),
                                          Version::Long);
         take_note(Note(NOTE_MESSAGE, 0, 0, note));
@@ -616,7 +616,7 @@ static string _welcome_spam_suffix()
 static void _announce_goal_message()
 {
     const string type = _welcome_spam_suffix();
-    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+    mprf(MSGCH_PLAIN, "<1124><yellow>%s</yellow>",
          getMiscString("welcome_spam" + type).c_str());
 }
 
@@ -1088,7 +1088,7 @@ static void _input()
             else
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    mprf(MSGCH_ERROR, "<1125>Lua error: %s", clua.error.c_str());
             }
         }
 
@@ -1212,7 +1212,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // Held
     if (you.attribute[ATTR_HELD])
     {
-        mprf("%s 동안에는 할 수 없다.", held_status());
+        mprf("<1126>%s 동안에는 할 수 없다.", held_status());
         return false;
     }
 
@@ -1225,7 +1225,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     if (you.beheld() && !you.confused())
     {
         const monster* beholder = you.get_any_beholder();
-        mprf("%s(으)로부터 도망칠 수 없다!",
+        mprf("<1127>%s(으)로부터 도망칠 수 없다!",
              beholder->name(DESC_PLAIN, true).c_str());
         return false;
     }
@@ -1379,7 +1379,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        string prompt = make_stringf("%s을 종료할 것인가?%s",
+        string prompt = make_stringf("<1128>%s을 종료할 것인가?%s",
                                      branches[root_branch].longname,
                                      crawl_state.game_is_tutorial() ? "" :
                                      " 이것은 당신이 게임을 잃게 만들 것이다!");
@@ -1492,7 +1492,7 @@ static void _take_stairs(bool down)
 
 static void _experience_check()
 {
-    mprf("당신은 %d레벨 %s 종족의 %s이다.",
+    mprf("<1129>당신은 %d레벨 %s 종족의 %s이다.",
          you.experience_level,
          species_name(you.species).c_str(),
          get_job_name(you.char_class));
@@ -1635,7 +1635,7 @@ static void _do_cycle_quiver(int dir)
     const int cur = you.m_quiver.get_fire_item();
     const int next = get_next_fire_item(cur, dir);
 #ifdef DEBUG_QUIVER
-    mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
+    mprf(MSGCH_DIAGNOSTICS, "<1130>next slot: %d, item: %s", next,
          next == -1 ? "none" : you.inv[next].name(DESC_PLAIN).c_str());
 #endif
     if (next != -1)
@@ -1654,7 +1654,7 @@ static void _do_cycle_quiver(int dir)
 static void _do_list_gold()
 {
     if (shopping_list.empty())
-        mprf("당신이 가진 금화는 총 %d골드이다%s.", you.gold, you.gold != 1 ? "" : "");
+        mprf("<1131>당신이 가진 금화는 총 %d골드이다%s.", you.gold, you.gold != 1 ? "" : "");
     else
         shopping_list.display();
 }
@@ -1734,7 +1734,7 @@ void process_command(command_type cmd)
             mprf(MSGCH_DANGER, "당신은 무모하게 싸워서는 안 된다!");
         }
         else if (!clua.callfn(fnname, 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprf(MSGCH_ERROR, "<1132>Lua error: %s", clua.error.c_str());
         break;
     }
 #endif
@@ -1761,13 +1761,13 @@ void process_command(command_type cmd)
             Options.autopickup_on = 1;
         else
             Options.autopickup_on = 0;
-        mprf("자동습득 %s.", Options.autopickup_on > 0 ? "활성화" : "비활성화");
+        mprf("<1133>자동습득 %s.", Options.autopickup_on > 0 ? "활성화" : "비활성화");
         break;
 
 #ifdef USE_SOUND
     case CMD_TOGGLE_SOUND:
         Options.sounds_on = !Options.sounds_on;
-        mprf("음향효과 %s.", Options.sounds_on ? "활성화" : "비활성화");
+        mprf("<1134>음향효과 %s.", Options.sounds_on ? "활성화" : "비활성화");
         break;
 #endif
 
@@ -2676,7 +2676,7 @@ static void _close_door(coord_def move)
 {
     if (you.attribute[ATTR_HELD])
     {
-        mprf("%s 도중에는 문을 닫을 수 없다.", held_status());
+        mprf("<1135>%s 도중에는 문을 닫을 수 없다.", held_status());
         return;
     }
 
@@ -2848,7 +2848,7 @@ static void _entered_malign_portal(actor* act)
     ASSERT(act); // XXX: change to actor &act
     if (you.can_see(*act))
     {
-        mprf("%s%s가 난폭하게 요동치며 관문에서 튀어나왔다!",
+        mprf("<1136>%s%s가 난폭하게 요동치며 관문에서 튀어나왔다!",
              act->name(DESC_PLAIN).c_str(), act->conj_verb("").c_str());
     }
 
@@ -2919,14 +2919,14 @@ static void _move_player(coord_def move)
             you.turn_is_over = true;
             if (you.digging) // no actual damage
             {
-                mprf("%s에 충돌하자 당신은 턱을 집어넣었다.",
+                mprf("<1137>%s에 충돌하자 당신은 턱을 집어넣었다.",
                      feature_description_at(new_targ, false,
                                             DESC_PLAIN).c_str());
                 you.digging = false;
             }
             else
             {
-                mprf("당신은 %s에 부딪혔다.",
+                mprf("<1138>당신은 %s에 부딪혔다.",
                      feature_description_at(new_targ, false,
                                             DESC_PLAIN).c_str());
             }
@@ -2971,7 +2971,7 @@ static void _move_player(coord_def move)
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need a better message. -cao
-            mprf("당신은 %s : 조심스럽게 %s을 지나감.", walkverb.c_str(),
+            mprf("<1139>당신은 %s : 조심스럽게 %s을 지나감.", walkverb.c_str(),
                  mons_genus(targ_monst->type) == MONS_FUNGUS ? "버섯"
                                                              : "식물");
         }
@@ -3090,7 +3090,7 @@ static void _move_player(coord_def move)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
-            mprf("당신은 %s으로 거의 발을 헛 디뎠다!",
+            mprf("<1140>당신은 %s으로 거의 발을 헛 디뎠다!",
                  feature_description_at(targ, false, DESC_PLAIN, false).c_str());
             you.apply_berserk_penalty = true;
             you.turn_is_over = true;
@@ -3130,7 +3130,7 @@ static void _move_player(coord_def move)
 
         if (you.digging)
         {
-            mprf("당신은 %s속으로 파고들었다.", feature_description_at(targ, false,
+            mprf("<1141>당신은 %s속으로 파고들었다.", feature_description_at(targ, false,
                  DESC_PLAIN, false).c_str());
             destroy_wall(targ);
             noisy(6, you.pos());
@@ -3269,14 +3269,14 @@ static void _move_player(coord_def move)
     }
     else if (beholder && !attacking && !can_wall_jump)
     {
-        mprf("%s에게서 벗어날 수 없다!",
+        mprf("<1142>%s에게서 벗어날 수 없다!",
             beholder->name(DESC_PLAIN).c_str());
         stop_running();
         return;
     }
     else if (fmonger && !attacking && !can_wall_jump)
     {
-        mprf("%s에게로 가까이 갈 수 없다!",
+        mprf("<1143>%s에게로 가까이 갈 수 없다!",
             fmonger->name(DESC_PLAIN).c_str());
         stop_running();
         return;
@@ -3315,7 +3315,7 @@ static int _get_num_and_char_keyfun(int &ch)
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
     if (prompt != nullptr)
-        mprf(MSGCH_PROMPT, "%s", prompt);
+        mprf(MSGCH_PROMPT, "<1144>%s", prompt);
 
     line_reader reader(buf, buf_len);
 

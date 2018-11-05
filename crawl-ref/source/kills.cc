@@ -225,7 +225,7 @@ void KillMaster::add_kill_info(string &killtext,
         for (const kill_exp &kill : kills)
             killtext += "  " + kill.desc + "\n";
 
-        killtext += make_stringf("%d creature%s vanquished.\n",
+        killtext += make_stringf("<1041>%d creature%s vanquished.\n",
                                  count, count == 1 ? "" : "s");
     }
 #ifdef CLUA_BINDINGS
@@ -961,7 +961,7 @@ static int kill_lualc_summary(lua_State *ls)
     *buf = 0;
     if (count)
     {
-        snprintf(buf, sizeof buf, "%u creature%s vanquished.",
+        snprintf(buf, sizeof buf, "<1042>%u creature%s vanquished.",
                 count, count > 1? "s" : "");
     }
     lua_pushstring(ls, buf);

@@ -615,7 +615,7 @@ void bolt::initialise_fire()
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
-    ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",
+    ASSERTM(range >= 0, "<83>beam '%s', source '%s', item '%s'; has range -1",
             name.c_str(),
             (source_id == MID_PLAYER ? "player" :
                           monster_by_mid(source_id) ?
@@ -639,7 +639,7 @@ void bolt::initialise_fire()
             && !crawl_state.is_god_acting()
             && (!mon || !mon->observable()))
         {
-            mprf("옅은 대기에서 %s이(가) 나타났다!",
+            mprf("<84>옅은 대기에서 %s이(가) 나타났다!",
                  article_a(name, false).c_str());
         }
     }
@@ -669,7 +669,7 @@ void bolt::initialise_fire()
     if (quiet_debug)
         return;
 
-    dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+    dprf(DIAG_BEAM, "<85>%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (pierce) ? "beam" : "missile",
           (is_explosion) ? "*" :
@@ -851,7 +851,7 @@ void bolt::digging_wall_effect()
             else
                 wall = "rock";
 
-            mprf("%s %s이(가) 산산조각났다.",
+            mprf("<86>%s %s이(가) 산산조각났다.",
                  agent() && agent()->is_player() ? "" : "몇몇",
                  wall.c_str());
         }
@@ -930,7 +930,7 @@ void bolt::affect_wall()
             && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
         {
             const string prompt =
-                make_stringf("Are you sure you want to burn %s?",
+                make_stringf("<87>Are you sure you want to burn %s?",
                              feature_description_at(pos(), false, DESC_THE,
                                                     false).c_str());
 
@@ -1087,7 +1087,7 @@ void bolt::do_fire()
     {
 #ifdef DEBUG
         dprf(DIAG_BEAM, "fire_beam() called on already done beam "
-             "'%s' (item = '%s')", name.c_str(),
+             "<88>'%s' (item = '%s')", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
         return;
@@ -1240,7 +1240,7 @@ void bolt::do_fire()
 
         if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
         {
-            mprf("%s이(가) 당신의 시야 범위 밖에서 나타났다.",
+            mprf("<89>%s이(가) 당신의 시야 범위 밖에서 나타났다.",
                  article_a(name, false).c_str());
         }
 
@@ -2271,7 +2271,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // The victim may die.
     coord_def c = victim->pos();
 
-    mprf("%s의 생명력이 제물로 바쳐졌다.", victim->name(DESC_ITS).c_str());
+    mprf("<90>%s의 생명력이 제물로 바쳐졌다.", victim->name(DESC_ITS).c_str());
     damage = victim->hurt(agent, damage, BEAM_MALIGN_OFFERING, KILLED_BY_BEAM,
                           "", "by a malign offering");
 
@@ -2285,7 +2285,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
         {
             if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
-                mprf("%s %s 회복되었다.", ai->name(DESC_PLAIN).c_str(),
+                mprf("<91>%s %s 회복되었다.", ai->name(DESC_PLAIN).c_str(),
                                       ai->conj_verb("은(는)").c_str());
             }
         }
@@ -2533,7 +2533,7 @@ void bolt::drop_object()
     {
         if (you.see_cell(pos()))
         {
-            mprf("%s은(는) %s!",
+            mprf("<92>%s은(는) %s!",
                  item->name(DESC_PLAIN).c_str(),
                  summoned_poof_msg(agent() ? agent()->as_monster() : nullptr,
                                    *item).c_str());
@@ -3058,7 +3058,7 @@ void bolt::reflect()
         reflector = MID_NOBODY;
 #ifdef DEBUG
         dprf(DIAG_BEAM, "Bolt reflected by neither player nor "
-             "monster (bolt = %s, item = %s)", name.c_str(),
+             "<93>monster (bolt = %s, item = %s)", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
     }
@@ -3077,7 +3077,7 @@ void bolt::tracer_affect_player()
     {
         if (!dont_stop_player && !harmless_to_player())
         {
-            string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
+            string prompt = make_stringf("<94>That %s is likely to hit you. Continue anyway?",
                                          item ? name.c_str() : "beam");
 
             if (yesno(prompt.c_str(), false, 'n'))
@@ -3124,7 +3124,7 @@ bool bolt::misses_player()
         if (hit_verb.empty())
             hit_verb = engulfs ? "삼켰다" : "타격했다";
         if (flavour != BEAM_VISUAL && !is_enchantment())
-            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
+            mprf("<95>%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         return false;
     }
 
@@ -3179,20 +3179,20 @@ bool bolt::misses_player()
             {
                 if (shield && is_shield(*shield) && shield_reflects(*shield))
                 {
-                    mprf("당신의 %s은(는) %s을(를) 반사했다!",
+                    mprf("<96>당신의 %s은(는) %s을(를) 반사했다!",
                             shield->name(DESC_PLAIN).c_str(),
                             refl_name.c_str());
                 }
                 else
                 {
-                    mprf("%s은(는) 당신 주위의 보이지 않는 방패에 반사되었다!",
+                    mprf("<97>%s은(는) 당신 주위의 보이지 않는 방패에 반사되었다!",
                             refl_name.c_str());
                 }
                 reflect();
             }
             else
             {
-                mprf("당신은 %s을(를) 막았다.", name.c_str());
+                mprf("<98>당신은 %s을(를) 막았다.", name.c_str());
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
@@ -3217,13 +3217,13 @@ bool bolt::misses_player()
 
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
-        mprf("%s이(가) 당신을 빗겨나갔다.", name.c_str());
+        mprf("<99>%s이(가) 당신을 빗겨나갔다.", name.c_str());
         count_action(CACT_DODGE, DODGE_EVASION);
     }
     else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         // active voice to imply stronger effect
-        mprf(defl == 1 ? "%s이(가) 튕겨나갔다." : "당신은 %s을(를) 흘려보냈다!",
+        mprf(defl == 1 ? "<100>%s이(가) 튕겨나갔다." : "당신은 %s을(를) 흘려보냈다!",
              name.c_str());
         you.ablate_deflection();
         count_action(CACT_DODGE, DODGE_DEFLECT);
@@ -3236,9 +3236,9 @@ bool bolt::misses_player()
             hit_verb = engulfs ? "삼켰다" : "타격했다";
 
         if (_test_beam_hit(real_tohit, dodge_more, pierce, defl, r))
-            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
+            mprf("<101>%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         else
-            mprf("무기력하게도 당신은 %s을(를) 피하지 못했다.", name.c_str());
+            mprf("<102>무기력하게도 당신은 %s을(를) 피하지 못했다.", name.c_str());
 
         miss = false;
     }
@@ -3261,7 +3261,7 @@ void bolt::affect_player_enchantment(bool resistible)
             const monster* mon = monster_by_mid(source_id);
             if (mon && !mon->observable())
             {
-                mprf("무언가가 당신에게 뭔가를 하려고 했지만 당신은 %s.",
+                mprf("<103>무언가가 당신에게 뭔가를 하려고 했지만 당신은 %s.",
                      you.res_magic() == MAG_IMMUNE ? "아무런 영향도 받지 않았다"
                                                    : "저항했다");
                 need_msg = false;
@@ -3275,7 +3275,7 @@ void bolt::affect_player_enchantment(bool resistible)
             {
                 // the message reflects the level of difficulty resisting.
                 const int margin = you.res_magic() - ench_power;
-                mprf("당신은%s", you.resist_margin_phrase(margin).c_str());
+                mprf("<104>당신은%s", you.resist_margin_phrase(margin).c_str());
             }
         }
         // You *could* have gotten a free teleportation in the Abyss,
@@ -3493,7 +3493,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_DIMENSION_ANCHOR:
-        mprf("당신은 %s공간에 속박되었음을 느꼈다.",
+        mprf("<105>당신은 %s공간에 속박되었음을 느꼈다.",
              you.duration[DUR_DIMENSION_ANCHOR] ? "더 " : "");
         you.increase_duration(DUR_DIMENSION_ANCHOR, 12 + random2(15), 50);
         if (you.duration[DUR_TELEPORT])
@@ -3551,7 +3551,7 @@ void bolt::affect_player_enchantment(bool resistible)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
-        mprf(MSGCH_WARN, "당신의 마력이 %s오염되었음을 느꼈다.",
+        mprf(MSGCH_WARN, "<106>당신의 마력이 %s오염되었음을 느꼈다.",
              you.duration[DUR_SAP_MAGIC] ? "더 " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
@@ -3701,7 +3701,7 @@ void bolt::affect_player()
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "삼켰다" : "타격했다";
-            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
+            mprf("<107>%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         }
 
         affect_player_enchantment();
@@ -3793,7 +3793,7 @@ void bolt::affect_player()
             && item_is_jelly_edible(*item)
             && coinflip())
         {
-            mprf("당신에게 달라붙은 젤리가 %s을(를) 흡수했다!", item->name(DESC_PLAIN).c_str());
+            mprf("<108>당신에게 달라붙은 젤리가 %s을(를) 흡수했다!", item->name(DESC_PLAIN).c_str());
             inc_hp(random2(hurted / 2));
             canned_msg(MSG_GAIN_HEALTH);
             drop_item = false;
@@ -4121,7 +4121,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     if (!is_tracer && final > 0)
     {
         for (const string &msg : messages)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
+            mprf(MSGCH_MONSTER_DAMAGE, "<109>%s", msg.c_str());
     }
 
     // Either way, we could hit this monster, so update range used.
@@ -4346,7 +4346,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             {
                 if (you.see_cell(*ai))
                 {
-                    mprf("산이 %s 위에 끼얹어졌다!",
+                    mprf("<110>산이 %s 위에 끼얹어졌다!",
                          victim->name(DESC_PLAIN).c_str());
                 }
 
@@ -4455,13 +4455,13 @@ void bolt::knockback_actor(actor *act, int dam)
     {
         if (origin_spell == SPELL_CHILLING_BREATH)
         {
-            mprf("%s %s 내뿜은 얼어붙는 바람이 뒤로 밀어냈다.",
+            mprf("<111>%s %s 내뿜은 얼어붙는 바람이 뒤로 밀어냈다.",
                  act->name(DESC_PLAIN).c_str(),
                  act->conj_verb("이(가)").c_str());
         }
         else
         {
-            mprf("%s %s %s에 의해 뒤로 밀려났다.",
+            mprf("<112>%s %s %s에 의해 뒤로 밀려났다.",
                  act->name(DESC_PLAIN).c_str(),
                  act->conj_verb("이(가)").c_str(),
                  name.c_str());
@@ -4505,7 +4505,7 @@ bool bolt::attempt_block(monster* mon)
         {
             if (shield && is_shield(*shield) && shield_reflects(*shield))
             {
-                mprf("%s이(가) %s을 반사시킴 : %s의 %s로!",
+                mprf("<113>%s이(가) %s을 반사시킴 : %s의 %s로!",
                      mon->name(DESC_PLAIN).c_str(),
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
@@ -4514,7 +4514,7 @@ bool bolt::attempt_block(monster* mon)
             }
             else
             {
-                mprf("%s이(가) %s 주위의  보이지 않는 방패에 막혀 튕겨나왔다!",
+                mprf("<114>%s이(가) %s 주위의  보이지 않는 방패에 막혀 튕겨나왔다!",
                      name.c_str(),
                      mon->name(DESC_PLAIN).c_str());
 
@@ -4524,13 +4524,13 @@ bool bolt::attempt_block(monster* mon)
             }
         }
         else if (you.see_cell(pos()))
-            mprf("%s이(가) 아무것도 없는 공간에서 튕겨나왔다!", name.c_str());
+            mprf("<115>%s이(가) 아무것도 없는 공간에서 튕겨나왔다!", name.c_str());
 
         reflect();
     }
     else if (you.see_cell(pos()))
     {
-        mprf("%s은(는) %s을(를) 막았다.",
+        mprf("<116>%s은(는) %s을(를) 막았다.",
              mon->name(DESC_PLAIN).c_str(), name.c_str());
         finish_beam();
     }
@@ -4573,7 +4573,7 @@ void bolt::affect_monster(monster* mon)
             else if (!bush_immune(*mon))
             {
                 simple_god_message(
-                    make_stringf("은 %s을(를) 상해로부터 보호했다.",
+                    make_stringf("<117>은 %s을(를) 상해로부터 보호했다.",
                         attitude == ATT_FRIENDLY ? "당신의 " : "").c_str(),
                     GOD_FEDHAS);
             }
@@ -4583,7 +4583,7 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
     {
         if (you.see_cell(mon->pos()))
-            mprf("%s은(는) %s을(를) 통과했다.", name.c_str(), mon->name(DESC_PLAIN).c_str());
+            mprf("<118>%s은(는) %s을(를) 통과했다.", name.c_str(), mon->name(DESC_PLAIN).c_str());
     }
 
     if (ignores_monster(mon))
@@ -4628,11 +4628,11 @@ void bolt::affect_monster(monster* mon)
                 hit_verb = engulfs ? "삼켰다" : "타격했다";
             if (you.see_cell(mon->pos()))
             {
-                mprf("%s이(가) %s %s을(를).", name.c_str(), hit_verb.c_str(),
+                mprf("<119>%s이(가) %s %s을(를).", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_PLAIN).c_str());
             }
             else if (heard && !hit_noise_msg.empty())
-                mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
+                mprf(MSGCH_SOUND, "<120>%s", hit_noise_msg.c_str());
         }
         // no to-hit check
         enchantment_affect_monster(mon);
@@ -4656,7 +4656,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf(DIAG_BEAM, "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
+    dprf(DIAG_BEAM, "<121>Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
          mon->name(DESC_PLAIN).c_str(), preac, postac, final);
 #endif
 
@@ -4781,26 +4781,26 @@ void bolt::affect_monster(monster* mon)
         if (hit_verb.empty())
             hit_verb = engulfs ? "삼켰다" : "타격했다";
 
-        mprf("%s이(가) %s %s을(를).",
+        mprf("<122>%s이(가) %s %s을(를).",
              name.c_str(),
              hit_verb.c_str(),
              mon->name(DESC_PLAIN).c_str());
 
     }
     else if (heard && !hit_noise_msg.empty())
-        mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
+        mprf(MSGCH_SOUND, "<123>%s", hit_noise_msg.c_str());
     // The player might hear something, if _they_ fired a missile
     // (not magic beam).
     else if (!silenced(you.pos()) && flavour == BEAM_MISSILE
              && YOU_KILL(thrower))
     {
-        mprf(MSGCH_SOUND, "%s이(가) 무언가를 맞췄다.", name.c_str());
+        mprf(MSGCH_SOUND, "<124>%s이(가) 무언가를 맞췄다.", name.c_str());
     }
 
     if (final > 0)
     {
         for (const string &msg : messages)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
+            mprf(MSGCH_MONSTER_DAMAGE, "<125>%s", msg.c_str());
     }
 
     // Apply flavoured specials.
@@ -5065,7 +5065,7 @@ bool enchant_monster_invisible(monster* mon, const string &how)
         // Can't use simple_monster_message(*) here, since it checks
         // for visibility of the monster (and it's now invisible).
         // - bwr
-        mprf("%s이(가) %s%s",
+        mprf("<126>%s이(가) %s%s",
              monster_name.c_str(),
              how.c_str(),
              is_visible ? " 잠시."
@@ -5454,7 +5454,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (you.can_see(*mon))
             {
-                mprf("%s의 마법 방어가 벗겨져 나갔다.",
+                mprf("<127>%s의 마법 방어가 벗겨져 나갔다.",
                      mon->name(DESC_ITS).c_str());
                 obvious_effect = true;
             }
@@ -5512,7 +5512,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (you.can_see(*mon))
             {
-                mprf("%s이(가) %s의 마법에 대한 자신감을 잃은 것 같다.",
+                mprf("<128>%s이(가) %s의 마법에 대한 자신감을 잃은 것 같다.",
                      mon->name(DESC_PLAIN).c_str(), mon->pronoun(PRONOUN_POSSESSIVE).c_str());
                 obvious_effect = true;
             }
@@ -5532,7 +5532,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                                   dur));
         if (you.can_see(*mon))
         {
-            mprf("%s의 마력이 대기 중으로 새어나갔다.",
+            mprf("<129>%s의 마력이 대기 중으로 새어나갔다.",
                  apostrophise(mon->name(DESC_PLAIN)).c_str());
         }
 
@@ -5701,7 +5701,7 @@ void bolt::refine_for_explosion()
         if (explosion)
         {
             seeMsg = explosion->seeMsg;
-            hearMsg = make_stringf("You hear %s!", explosion->sound);
+            hearMsg = make_stringf("<130>You hear %s!", explosion->sound);
         }
         else
         {
@@ -5727,7 +5727,7 @@ void bolt::refine_for_explosion()
             if (!heard)
                 msg_generated = false;
             else
-                mprf(MSGCH_SOUND, "%s", hearMsg.c_str());
+                mprf(MSGCH_SOUND, "<131>%s", hearMsg.c_str());
         }
     }
 }
@@ -5802,7 +5802,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         if (!is_tracer && you.see_cell(pos()) && !name.empty())
         {
-            mprf(MSGCH_GOD, "진의 권능에 의해 %s은(는) 구속되었다.",
+            mprf(MSGCH_GOD, "<132>진의 권능에 의해 %s은(는) 구속되었다.",
                  name.c_str());
             return true;
         }
@@ -5833,7 +5833,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         heard = heard || heard_expl;
 
         if (heard_expl && !explode_noise_msg.empty() && !you.see_cell(pos()))
-            mprf(MSGCH_SOUND, "%s", explode_noise_msg.c_str());
+            mprf(MSGCH_SOUND, "<133>%s", explode_noise_msg.c_str());
     }
 
     // Run DFS to determine which cells are influenced

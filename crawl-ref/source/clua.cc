@@ -156,16 +156,16 @@ void CLua::save_persist()
     f = fopen_u(persistfile.c_str(), "w");
     if (!f)
     {
-        mprf(MSGCH_ERROR, "Couldn't open %s for writing!", persistfile.c_str());
+        mprf(MSGCH_ERROR, "<182>Couldn't open %s for writing!", persistfile.c_str());
         return;
     }
 
-    fprintf(f, "-- %s %s persistent clua file\n"
+    fprintf(f, "<183>-- %s %s persistent clua file\n"
                "-- WARNING: This file is entirely auto-generated.\n"
             "\n",
             OUTS(CRAWL), // ok, localizing the game name is not likely
             OUTS(Version::Long)); // nor the version string
-    fprintf(f, "%s", persist.c_str());
+    fprintf(f, "<184>%s", persist.c_str());
     fclose(f);
 }
 
@@ -200,7 +200,7 @@ int CLua::file_write(lua_State *ls)
 
     const char *text = luaL_checkstring(ls, 2);
     if (text)
-        fprintf(f, "%s", text);
+        fprintf(f, "<185>%s", text);
     return 0;
 }
 
@@ -298,7 +298,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     {
         lua_pushstring(
             ls,
-            make_stringf("invalid filename: %s", filename).c_str());
+            make_stringf("<186>invalid filename: %s", filename).c_str());
         return -1;
     }
 
@@ -306,7 +306,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     if (file.empty())
     {
         lua_pushstring(ls,
-                       make_stringf("Can't find \"%s\"", filename).c_str());
+                       make_stringf("Can't find \"<187>%s\"", filename).c_str());
         return -1;
     }
 
@@ -315,7 +315,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     while (!f.eof())
         script += f.get_line() + "\n";
 
-    // prefixing with @ stops lua from adding [string "%s"]
+    // prefixing with @ stops lua from adding [string "<188>%s"]
     return luaL_loadbuffer(ls, &script[0], script.length(),
                            ("@" + file).c_str());
 }
@@ -336,7 +336,7 @@ int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
     set_error(err);
     if (die_on_fail && !error.empty())
     {
-        end(1, false, "Lua execfile error (%s): %s",
+        end(1, false, "<189>Lua execfile error (%s): %s",
             filename, dlua.error.c_str());
     }
     return err;
@@ -865,7 +865,7 @@ void CLua::print_stack()
         else
             file++;
 
-        fprintf(stderr, "%s, function %s, line %d\n", file,
+        fprintf(stderr, "<190>%s, function %s, line %d\n", file,
                 dbg.name, dbg.currentline);
     }
 

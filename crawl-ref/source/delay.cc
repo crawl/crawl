@@ -138,7 +138,7 @@ static void _interrupt_butchering(const char* action)
                {
                    return d->is_butcher();
                });
-    mprf("당신은 %s 하는 것을 멈췄다 : 시체%s.", action, multiple_corpses ? "들을" : "를");
+    mprf("<381>당신은 %s 하는 것을 멈췄다 : 시체%s.", action, multiple_corpses ? "들을" : "를");
 }
 
 bool BottleBloodDelay::try_interrupt()
@@ -456,7 +456,7 @@ void MemoriseDelay::start()
 {
     if (vehumet_is_offering(spell))
     {
-        string message = make_stringf("은 %s에 대한 지식을 제공했다.",
+        string message = make_stringf("<382>은 %s에 대한 지식을 제공했다.",
             spell_title(spell));
         simple_god_message(message.c_str());
     }
@@ -582,7 +582,7 @@ static bool _check_corpse_gone(item_def& item, const char* action)
     }
     else if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
     {
-        mprf("시체가 당신이 %s 하기 전에 해골로 변했다!", action);
+        mprf("<383>시체가 당신이 %s 하기 전에 해골로 변했다!", action);
         _xom_check_corpse_waste();
         return true;
     }
@@ -676,7 +676,7 @@ void Delay::handle()
     // Actually handle delay:
     if (duration > 0)
     {
-        dprf("Delay type: %s, duration: %d", name(), duration);
+        dprf("<384>Delay type: %s, duration: %d", name(), duration);
         --duration;
         tick();
     }
@@ -743,7 +743,7 @@ void ArmourOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(EQUIP_ARMOUR_SOUND);
 #endif
-    mprf("당신은 %s을(를) 입었다.", armour.name(DESC_YOUR).c_str());
+    mprf("<385>당신은 %s을(를) 입었다.", armour.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -767,7 +767,7 @@ void ArmourOffDelay::finish()
 #ifdef USE_SOUND
     parse_sound(DEQUIP_ARMOUR_SOUND);
 #endif
-    mprf("당신은 %s을(를) 벗었다.", armour.name(DESC_YOUR).c_str());
+    mprf("<386>당신은 %s을(를) 벗었다.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
@@ -936,7 +936,7 @@ void run_macro(const char *macroname)
     {
         if (!clua.error.empty())
         {
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprf(MSGCH_ERROR, "<387>Lua error: %s", clua.error.c_str());
             stop_delay();
         }
         else if (delay->duration > 0)
@@ -1056,7 +1056,7 @@ static string _abyss_monster_creation_message(const monster* mon)
         { " materialises.", 45 },
         { " emerges from chaos.", 13 },
         { " emerges from the beyond.", 26 },
-        { make_stringf(" assembles %s!",
+        { make_stringf("<388> assembles %s!",
                        mon->pronoun(PRONOUN_REFLEXIVE).c_str()), 33 },
         { " erupts from nowhere.", 9 },
         { " bursts from nowhere.", 18 },
@@ -1066,7 +1066,7 @@ static string _abyss_monster_creation_message(const monster* mon)
         { " coalesces out of seething chaos.", 10 },
         { " punctures the fabric of time!", 2 },
         { " punctures the fabric of the universe.", 7 },
-        { make_stringf(" manifests%s!",
+        { make_stringf("<389> manifests%s!",
                        silenced(you.pos()) ? "" : " with a bang"), 3 },
 
 
@@ -1108,7 +1108,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         // during the previous turn.
         if (testbits(mon->flags, MF_WAS_IN_VIEW) && delay)
         {
-            mprf(MSGCH_WARN, "당신이 하고픈 걸 하기엔 %s이(가) 너무 가깝다.",
+            mprf(MSGCH_WARN, "<390>당신이 하고픈 걸 하기엔 %s이(가) 너무 가깝다.",
                  mon->name(DESC_PLAIN).c_str());
         }
     }
@@ -1124,7 +1124,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
-            text += make_stringf(" (%s)",
+            text += make_stringf("<391> (%s)",
                                  short_ghost_description(mon).c_str());
         }
         set_auto_exclude(mon);
@@ -1209,9 +1209,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             msgs_buf->push_back(text);
         else
         {
-            mprf(MSGCH_MONSTER_WARNING, "%s", text.c_str());
+            mprf(MSGCH_MONSTER_WARNING, "<392>%s", text.c_str());
             if (ash_id || zin_id)
-                mprf(MSGCH_GOD, "%s", god_warning.c_str());
+                mprf(MSGCH_GOD, "<393>%s", god_warning.c_str());
 #ifndef USE_TILE_LOCAL
             if (zin_id)
                 update_monster_pane();
@@ -1226,7 +1226,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                     && mon->get_experience_level() >=
                        random2(you.experience_level))
                 {
-                    mprf(MSGCH_GOD, GOD_GOZAG, "고자그가 당신에게 맞서는 %s을(를) 선동했다.",
+                    mprf(MSGCH_GOD, GOD_GOZAG, "<394>고자그가 당신에게 맞서는 %s을(를) 선동했다.",
                          mon->name(DESC_PLAIN).c_str());
                     gozag_incite(mon);
                 }
@@ -1258,7 +1258,7 @@ void autotoggle_autopickup(bool off)
         {
             Options.autopickup_on = -1;
             mprf(MSGCH_WARN,
-                 "자동 줍기 중지; <w>%s</w>를 눌러 재개.",
+                 "<395>자동 줍기 중지; <w>%s</w>를 눌러 재개.",
                  command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
         if (crawl_state.game_is_hints())
@@ -1312,7 +1312,7 @@ bool interrupt_activity(activity_interrupt_type ai,
         return false;
     }
 
-    dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
+    dprf("<396>Activity interrupt: %s", _activity_interrupt_name(ai));
 
     // First try to stop the current delay.
     if (ai == AI_FULL_HP && !you.running.notified_hp_full)

@@ -54,7 +54,7 @@ static void _print_holy_pacification_speech(const string &key,
     {
         msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
-        mprf(channel, "%s", msg.c_str());
+        mprf(channel, "<2279>%s", msg.c_str());
     }
 }
 
@@ -96,7 +96,7 @@ string unpacifiable_reason(const monster &mon)
 
     if (mon.asleep()) // not aware of what is happening
     {
-        return make_stringf("You cannot pacify this monster while %s is "
+        return make_stringf("<2280>You cannot pacify this monster while %s is "
                             "sleeping!",
                             mon.pronoun(PRONOUN_SUBJECTIVE).c_str());
     }
@@ -142,7 +142,7 @@ static int _pacifiable_hp(const monster &mon, int healing)
     const int base_hp = you.skill(SK_INVOCATIONS, healing) + healing;
     const int hp = heal_mult * base_hp / heal_div;
 
-    dprf("pacifying %s? factor: %d, Inv: %d, healed: %d, pacify hp pre-roll %d",
+    dprf("<2281>pacifying %s? factor: %d, Inv: %d, healed: %d, pacify hp pre-roll %d",
          mon.name(DESC_PLAIN).c_str(), heal_mult, you.skill(SK_INVOCATIONS),
          healing, hp);
 
@@ -180,7 +180,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     {
         // monster mhp too high to ever be pacified with your invo skill.
         dprf("mon hp %d", mon_hp);
-        mprf("%s은(는) 당신의 치유에 동요하지 않았다.",
+        mprf("<2282>%s은(는) 당신의 치유에 동요하지 않았다.",
              mon.name(DESC_PLAIN).c_str());
         return SPRET_SUCCESS;
     }
@@ -190,7 +190,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     if (pacified_hp * 23 / 20 < mon_hp)
     {
         // not even close.
-        mprf("엘리빌론의 빛이 %s에게 닿지 못했다.",
+        mprf("<2283>엘리빌론의 빛이 %s에게 닿지 못했다.",
              mon.name(DESC_PLAIN).c_str());
         return SPRET_SUCCESS;
     }
@@ -198,7 +198,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     if (pacified_hp < mon_hp)
     {
         // closer! ...but not quite.
-        mprf("엘리빌론의 빛이 %s에게 거의 닿았다.",
+        mprf("<2284>엘리빌론의 빛이 %s에게 거의 닿았다.",
              mon.name(DESC_PLAIN).c_str());
         return SPRET_SUCCESS;
     }
@@ -246,7 +246,7 @@ bool heal_monster(monster& patient, int amount)
     if (!patient.heal(amount))
         return false;
 
-    mprf("당신은 %s을(를) 치유했다.", patient.name(DESC_PLAIN).c_str());
+    mprf("<2285>당신은 %s을(를) 치유했다.", patient.name(DESC_PLAIN).c_str());
 
     if (patient.hit_points == patient.max_hit_points)
         simple_monster_message(patient, "은(는) 완전하게 치유되었다.");
@@ -706,7 +706,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
             || armour && item.base_type != OBJ_ARMOUR
             || !armour && item.base_type != OBJ_JEWELLERY)
         {
-            mprf("저주받지 않은 %s를 선택하시오. (Esc:취소)",
+            mprf("<2286>저주받지 않은 %s를 선택하시오. (Esc:취소)",
                  armour ? "방어구" : "장신구");
             more();
             continue;
@@ -736,7 +736,7 @@ bool curse_item(bool armour, const string &pre_msg)
     }
     if (!found)
     {
-        mprf(MSGCH_PROMPT, "당신은 저주받지 않은 %s를 착용하고 있지 않다.",
+        mprf(MSGCH_PROMPT, "<2287>당신은 저주받지 않은 %s를 착용하고 있지 않다.",
              armour ? "방어구" : "장신구");
         return false;
     }
@@ -820,8 +820,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "%s을(를) 가두려 했으나, 근처에 무언가 보이지 않는 것이 있는 것 같다."
-                        : "%s을(를) 가두기에는 빈 공간이 부족해 보인다.",
+            mprf(none_vis ? "<2288>%s을(를) 가두려 했으나, 근처에 무언가 보이지 않는 것이 있는 것 같다."
+                        : "<2289>%s을(를) 가두기에는 빈 공간이 부족해 보인다.",
                 targname.c_str());
             return false;
         }
@@ -922,7 +922,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     {
         if (zin)
         {
-            mprf("진은 %s을(를) 순수한 은의 벽으로 가두었다!",
+            mprf("<2290>진은 %s을(를) 순수한 은의 벽으로 가두었다!",
                  targname.c_str());
         }
         else
@@ -988,7 +988,7 @@ bool cast_smiting(int pow, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("당신은 %s을 강타했다!", mons->name(DESC_PLAIN).c_str());
+        mprf("<2291>당신은 %s을 강타했다!", mons->name(DESC_PLAIN).c_str());
 
         behaviour_event(mons, ME_ANNOY, &you);
     }
@@ -1099,7 +1099,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 {
     if (!silent && attacker)
     {
-        mprf("%s은(는) 어마어마한 힘의 언어를 %s!",
+        mprf("<2292>%s은(는) 어마어마한 힘의 언어를 %s!",
              attacker->name(DESC_PLAIN).c_str(),
              attacker->conj_verb("읊었다").c_str());
     }

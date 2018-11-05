@@ -477,13 +477,13 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
             const species_type sp = find_species_from_string(race);
             if (sp == SP_UNKNOWN)
             {
-                mprf("Unknown species: %s", race.c_str());
+                mprf("<2659>Unknown species: %s", race.c_str());
                 return false;
             }
             const job_type job = find_job_from_string(role);
             if (job == JOB_UNKNOWN)
             {
-                mprf("Unknown job: %s", role.c_str());
+                mprf("<2660>Unknown job: %s", role.c_str());
                 return false;
             }
             change_species_to(sp);
@@ -541,7 +541,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
 
     item_def item = _item_from_string(item_desc);
     if (item.base_type == OBJ_UNASSIGNED)
-        mprf("unknown item: %s", item_desc.c_str());
+        mprf("<2661>unknown item: %s", item_desc.c_str());
     else
     {
         int mitm_slot = get_mitm_slot();

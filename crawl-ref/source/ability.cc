@@ -1272,7 +1272,7 @@ static bool _check_ability_possible(const ability_def& abil,
         {
             if (!quiet)
             {
-                mprf("침묵 상태에서는 %s을(를) 호출할 수 없다.",
+                mprf("<0>침묵 상태에서는 %s을(를) 호출할 수 없다.",
                      god_name(you.religion).c_str());
             }
             return false;
@@ -1545,7 +1545,7 @@ static bool _check_ability_possible(const ability_def& abil,
         {
             if (!quiet)
             {
-                mprf("%s은(는) 아직 기억 속에 갇혀 있다!",
+                mprf("<1>%s은(는) 아직 기억 속에 갇혀 있다!",
                      hepliaklqana_ally_name().c_str());
             }
             return false;
@@ -1597,7 +1597,7 @@ bool activate_talent(const talent& tal)
     {
         if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
-            mprf("지금 원 상태로 돌아온다면 당신은 %s 것이다!",
+            mprf("<2>지금 원 상태로 돌아온다면 당신은 %s 것이다!",
                  env.grid(you.pos()) == DNGN_LAVA ? "타 죽을" : "빠져 죽을");
 
             crawl_state.zero_turns_taken();
@@ -2290,7 +2290,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("불경한 에너지의 또 다른 물결이 당신에게로 흘러 들어간다.");
         else
         {
-            mprf("당신은 %s에게 자신을 바치고, 부정한 에너지로 가득찼다.",
+            mprf("<3>당신은 %s에게 자신을 바치고, 부정한 에너지로 가득찼다.",
                  god_name(you.religion).c_str());
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
@@ -2389,7 +2389,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (you.duration[DUR_FINESSE])
         {
             // "Your [hand(s)] get{s} new energy."
-            mprf(MSGCH_DURATION, "%s",
+            mprf(MSGCH_DURATION, "<4>%s",
                  you.hands_act("get", "new energy.").c_str());
         }
         else
@@ -2539,7 +2539,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("구원에 대한 당신의 요청이 갱신되었다.");
         else
         {
-            mprf("당신은 %s에게 생명을 보호해 줄 것을 간청했다.",
+            mprf("<5>당신은 %s에게 생명을 보호해 줄 것을 간청했다.",
                  god_name(you.religion).c_str());
         }
         // Might be a decrease, this is intentional (like Yred).
@@ -2753,7 +2753,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         const item_def* const weapon = you.weapon();
         const string msg = weapon ? weapon->name(DESC_YOUR)
                                   : ("your " + you.hand_name(true));
-        mprf(MSGCH_DURATION, "%s 위에 두꺼운 점액층이 생겨났다.", msg.c_str());
+        mprf(MSGCH_DURATION, "<6>%s 위에 두꺼운 점액층이 생겨났다.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               random2avg(you.piety / 4, 2) + 3, 100);
         break;
@@ -3045,7 +3045,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         take_note(Note(NOTE_ID_ITEM, 0, 0, wand.name(DESC_A).c_str(),
                   "supercharged by Pakellas"));
 
-        mprf(MSGCH_GOD, "당신의 %s가 밝게 빛난다!",
+        mprf(MSGCH_GOD, "<7>당신의 %s가 밝게 빛난다!",
              wand.name(DESC_QUALNAME).c_str());
 
         flash_view(UA_PLAYER, LIGHTGREEN);
@@ -3787,7 +3787,7 @@ void swap_ability_slots(int index1, int index2, bool silent)
 
     if (!silent)
     {
-        mprf_nocap("%c - %s", index_to_letter(index2),
+        mprf_nocap("<8>%c - %s", index_to_letter(index2),
                    ability_name(you.ability_letter_table[index2]));
     }
 

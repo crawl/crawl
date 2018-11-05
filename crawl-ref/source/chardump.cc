@@ -262,31 +262,31 @@ static void _sdump_visits(dump_params &par)
     for (const PlaceInfo &branch : branches_visited)
         branches_total += branch;
 
-    text += make_stringf("You %svisited %d branch",
+    text += make_stringf("<148>You %svisited %d branch",
                          have.c_str(), (int)branches_visited.size());
     if (branches_visited.size() != 1)
         text += "es";
     if (brdepth[root_branch] > 1 || branches_visited.size() != 1)
     {
-        text += make_stringf(" of the dungeon, and %s %d of its levels.\n",
+        text += make_stringf("<149> of the dungeon, and %s %d of its levels.\n",
                              seen.c_str(), branches_total.levels_seen);
     }
 
     PlaceInfo place_info = you.get_place_info(BRANCH_PANDEMONIUM);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited Pandemonium %d time",
+        text += make_stringf("<150>You %svisited Pandemonium %d time",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
-        text += make_stringf(", and %s %d of its levels.\n",
+        text += make_stringf("<151>, and %s %d of its levels.\n",
                              seen.c_str(), place_info.levels_seen);
     }
 
     place_info = you.get_place_info(BRANCH_ABYSS);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited the Abyss %d time",
+        text += make_stringf("<152>You %svisited the Abyss %d time",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
@@ -296,7 +296,7 @@ static void _sdump_visits(dump_params &par)
     place_info = you.get_place_info(BRANCH_BAZAAR);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %d bazaar",
+        text += make_stringf("<153>You %svisited %d bazaar",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
@@ -307,7 +307,7 @@ static void _sdump_visits(dump_params &par)
     if (place_info.num_visits > 0)
     {
         int num_zigs = place_info.num_visits;
-        text += make_stringf("You %s%s %d ziggurat",
+        text += make_stringf("<154>You %s%s %d ziggurat",
                              have.c_str(),
                              (num_zigs == you.zigs_completed) ? "completed"
                                                               : "visited",
@@ -316,7 +316,7 @@ static void _sdump_visits(dump_params &par)
             text += "s";
         if (num_zigs != you.zigs_completed && you.zigs_completed)
             text += make_stringf(" (completing %d)", you.zigs_completed);
-        text += make_stringf(", and %s %d of %s levels",
+        text += make_stringf("<155>, and %s %d of %s levels",
                              seen.c_str(), place_info.levels_seen,
                              num_zigs > 1 ? "their" : "its");
         if (num_zigs != 1 && !you.zigs_completed)
@@ -359,35 +359,35 @@ static void _sdump_gold(dump_params &par)
     if (you.attribute[ATTR_GOLD_FOUND] > 0)
     {
         lines++;
-        text += make_stringf("You %scollected %d gold pieces.\n", have,
+        text += make_stringf("<156>You %scollected %d gold pieces.\n", have,
                              you.attribute[ATTR_GOLD_FOUND]);
     }
 
     if (you.attribute[ATTR_PURCHASES] > 0)
     {
         lines++;
-        text += make_stringf("You %sspent %d gold pieces at shops.\n", have,
+        text += make_stringf("<157>You %sspent %d gold pieces at shops.\n", have,
                              you.attribute[ATTR_PURCHASES]);
     }
 
     if (you.attribute[ATTR_DONATIONS] > 0)
     {
         lines++;
-        text += make_stringf("You %sdonated %d gold pieces to Zin.\n", have,
+        text += make_stringf("<158>You %sdonated %d gold pieces to Zin.\n", have,
                              you.attribute[ATTR_DONATIONS]);
     }
 
     if (you.attribute[ATTR_GOZAG_GOLD_USED] > 0)
     {
         lines++;
-        text += make_stringf("You %spaid %d gold pieces to Gozag.\n", have,
+        text += make_stringf("<159>You %spaid %d gold pieces to Gozag.\n", have,
                              you.attribute[ATTR_GOZAG_GOLD_USED]);
     }
 
     if (you.attribute[ATTR_MISC_SPENDING] > 0)
     {
         lines++;
-        text += make_stringf("You %sused %d gold pieces for miscellaneous "
+        text += make_stringf("<160>You %sused %d gold pieces for miscellaneous "
                              "purposes.\n", have,
                              you.attribute[ATTR_MISC_SPENDING]);
     }
@@ -1396,7 +1396,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (size_t i = 0; i < env.level_vaults.size(); ++i)
         {
             const vault_placement &vp(*env.level_vaults[i]);
-            fprintf(fp, "  \e[3%dm%s\e[0m at (%d,%d) size (%d,%d)\n",
+            fprintf(fp, "<161>  \e[3%dm%s\e[0m at (%d,%d) size (%d,%d)\n",
                     6 - (int)i % 6, vp.map.name.c_str(),
                     vp.pos.x, vp.pos.y, vp.size.x, vp.size.y);
         }
@@ -1515,7 +1515,7 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());
 
-    dprf("File name: %s", file_name.c_str());
+    dprf("<162>File name: %s", file_name.c_str());
 
     if (handle != nullptr)
     {
@@ -1526,11 +1526,11 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 #ifdef DGAMELAUNCH
             mpr("Char dumped successfully.");
 #else
-            mprf("Char dumped to '%s'.", file_name.c_str());
+            mprf("<163>Char dumped to '%s'.", file_name.c_str());
 #endif
     }
     else
-        mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
+        mprf(MSGCH_ERROR, "<164>Error opening file '%s'", file_name.c_str());
 
     return succeeded;
 }
@@ -1595,7 +1595,7 @@ void whereis_record(const char *status)
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         // no need to bother with supporting ancient charsets for DGL
-        fprintf(handle, "%s:status=%s\n",
+        fprintf(handle, "<165>%s:status=%s\n",
                 xlog_status_line().c_str(),
                 status? status : "");
         fclose(handle);

@@ -528,7 +528,7 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolour(WHITE);
 
-    cprintf("%s", chop_string(
+    cprintf("<2629>%s", chop_string(
                     uppercase_first(level_id::current().describe(true, true))
                       + pstr, columns - helplen).c_str());
 

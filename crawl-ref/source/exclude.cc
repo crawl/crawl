@@ -99,7 +99,7 @@ void set_auto_exclude(const monster* mon)
         //        (as is possible for some vaults), this could be really
         //        annoying. (jpeg)
         mprf(MSGCH_WARN,
-             "Marking area around %s as unsafe for travelling.",
+             "<576>Marking area around %s as unsafe for travelling.",
              mon->name(DESC_THE).c_str());
 
 #ifdef USE_TILE
@@ -606,7 +606,7 @@ string exclude_set::get_exclusion_desc()
                         desc.push_back(old_desc);
                     else
                     {
-                        desc.push_back(make_stringf("%d %s",
+                        desc.push_back(make_stringf("<577>%d %s",
                                        count, pluralise(old_desc).c_str()));
                         count = 1;
                     }
@@ -618,14 +618,14 @@ string exclude_set::get_exclusion_desc()
             desc.push_back(old_desc);
         else
         {
-            desc.push_back(make_stringf("%d %s",
+            desc.push_back(make_stringf("<578>%d %s",
                            count, pluralise(old_desc).c_str()));
         }
     }
 
     if (count_other > 0)
     {
-        desc.push_back(make_stringf("%d %sexclusion%s",
+        desc.push_back(make_stringf("<579>%d %sexclusion%s",
                                     count_other, desc.empty() ? "" : "more ",
                                     count_other > 1 ? "s" : ""));
     }

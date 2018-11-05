@@ -88,7 +88,7 @@ class default_desc_proc
 public:
     int width() { return get_number_of_cols() - 1; }
     int height() { return get_number_of_lines(); }
-    void print(const string &str) { cprintf("%s", str.c_str()); }
+    void print(const string &str) { cprintf("<437>%s", str.c_str()); }
 
     void nextline()
     {
@@ -512,7 +512,7 @@ static string _randart_descrip(const item_def &item)
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "\n당신을 %s%s 은밀하게 만든다.",
+        snprintf(buf, sizeof buf, "<438>\n당신을 %s%s 은밀하게 만든다.",
                  (stval < -1 || stval > 1) ? "더 " : "",
                  (stval < 0) ? "적게" : "많이");
         description += buf;
@@ -830,7 +830,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     description += make_stringf(
     "\n기본 명중률: %+d 기본 피해량: %d 기본 공격 지연시간: %.1f"
     "\n이 무기를 최소 공격 지연시간 (%.1f)으로 다루려면 숙련도 %d에 도달해야한다."
-    "%s",
+    "<439>%s",
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
      (float) property(item, PWPN_SPEED) / 10,
@@ -1111,7 +1111,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         const skill_type skill = item_attack_skill(item);
 
         description +=
-            make_stringf(" '%s' 카테고리. ",
+            make_stringf("<440> '%s' 카테고리. ",
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
         description += _handedness_string(item);
@@ -1262,7 +1262,7 @@ static string _describe_ammo(const item_def &item)
             "\n기본 데미지: %d 기본 공격 속도: %.1f"
             "\n이 투사체의 최소 공격 속도는 (%.1f) "
               "다음 기술 레벨에서 얻어진다 : %d."
-            "%s",
+            "<441>%s",
             dam,
             (float) throw_delay / 10,
             (float) FASTEST_PLAYER_THROWING_SPEED / 10,
@@ -2044,7 +2044,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     if (feat_is_altar(feat))
     {
         long_desc +=
-            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+            make_stringf("<442>\n(Pray here with '%s' to learn more.)\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
 
@@ -2386,7 +2386,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
 void inscribe_item(item_def &item)
 {
-    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    mprf_nocap(MSGCH_EQUIPMENT, "<443>%s", item.name(DESC_INVENTORY).c_str());
 
     const bool is_inscribed = !item.inscription.empty();
     string prompt = is_inscribed ? "새겨진 글귀를 무엇으로 다시 새길것인가? "
@@ -2412,7 +2412,7 @@ void inscribe_item(item_def &item)
 
     item.inscription = new_inscrip;
 
-    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    mprf_nocap(MSGCH_EQUIPMENT, "<444>%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
     you.redraw_quiver = true;
 }
@@ -2430,7 +2430,7 @@ static string _player_spell_stats(const spell_type spell)
 
     const string schools = spell_schools_string(spell);
     description +=
-        make_stringf("        School%s: %s",
+        make_stringf("<445>        School%s: %s",
                      schools.find("/") != string::npos ? "s" : "",
                      schools.c_str());
 
@@ -2441,7 +2441,7 @@ static string _player_spell_stats(const spell_type spell)
     }
 
     const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    description += make_stringf("        Fail: %s", failure.c_str());
+    description += make_stringf("<446>        Fail: %s", failure.c_str());
 
     description += "\n\nPower : ";
     description += spell_power_string(spell);
@@ -2645,7 +2645,7 @@ static bool _get_spell_description(const spell_type spell,
             if (you.wizard)
                 wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
 #endif
-            description += make_stringf("Chance to beat your MR: %d%%%s\n",
+            description += make_stringf("<447>Chance to beat your MR: %d%%%s\n",
                                         hex_chance(spell, hd),
                                         wiz_info.c_str());
         }
@@ -3054,7 +3054,7 @@ static string _monster_attacks_description(const monster_info& mi)
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
         const string weapon_note
-            = info.weapon ? make_stringf(" plus %s %s",
+            = info.weapon ? make_stringf("<448> plus %s %s",
                                          mi.pronoun(PRONOUN_POSSESSIVE),
                                          info.weapon->name(DESC_PLAIN).c_str())
                           : "";
@@ -3067,7 +3067,7 @@ static string _monster_attacks_description(const monster_info& mi)
         if (attack.flavour == AF_PURE_FIRE)
         {
             attack_descs.push_back(
-                make_stringf("%s for up to %d fire damage",
+                make_stringf("<449>%s for up to %d fire damage",
                              mon_attack_name(attack.type).c_str(),
                              flavour_damage(attack.flavour, mi.hd, false)));
             continue;
@@ -3077,7 +3077,7 @@ static string _monster_attacks_description(const monster_info& mi)
         // description, but not for plain attacks.
         bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
         const string damage_desc =
-            make_stringf("%sfor up to %d damage%s%s%s",
+            make_stringf("<450>%sfor up to %d damage%s%s%s",
                          has_flavour ? "(" : "",
                          attack.damage,
                          attack_count.second > 1 ? " each" : "",
@@ -3085,7 +3085,7 @@ static string _monster_attacks_description(const monster_info& mi)
                          has_flavour ? ")" : "");
 
         attack_descs.push_back(
-            make_stringf("%s%s%s%s %s%s",
+            make_stringf("<451>%s%s%s%s %s%s",
                          _special_flavour_prefix(attack.flavour),
                          mon_attack_name(attack.type).c_str(),
                          _flavour_range_desc(attack.flavour),
@@ -3122,7 +3122,7 @@ static string _monster_spells_description(const monster_info& mi)
 
     formatted_string description;
     if (mi.type == MONS_PANDEMONIUM_LORD)
-        description.cprintf("%s", panlord_desc.c_str());
+        description.cprintf("<452>%s", panlord_desc.c_str());
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("To read a description, press the key listed above.\n");
     return description.tostring();
@@ -3791,7 +3791,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mons.has_originating_map())
     {
-        inf.body << make_stringf("\nPlaced by map: %s",
+        inf.body << make_stringf("<453>\nPlaced by map: %s",
                                  mons.originating_map().c_str());
     }
 
@@ -3969,13 +3969,13 @@ string short_ghost_description(const monster *mon, bool abbrev)
     const ghost_demon &ghost = *(mon->ghost);
     const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
 
-    string desc = make_stringf("%s %s %s", rank,
+    string desc = make_stringf("<454>%s %s %s", rank,
                                species_name(ghost.species).c_str(),
                                get_job_name(ghost.job));
 
     if (abbrev || strwidth(desc) > 40)
     {
-        desc = make_stringf("%s %s%s",
+        desc = make_stringf("<455>%s %s%s",
                             rank,
                             get_species_abbrev(ghost.species),
                             get_job_abbrev(ghost.job));
@@ -4129,7 +4129,7 @@ string extra_cloud_info(cloud_type cloud_type)
         "다수의 구름은 시야를 가릴 것이다.";
     const string vanish_info
         = make_stringf("\n모험가가 만드는 이 종류의 구름은 그들의 시야 밖에서 "
-                       "%s 사라질 것이다.",
+                       "<456>%s 사라질 것이다.",
                        opaque ? "빠르게" : "거의 즉시");
     return opacity_info + vanish_info;
 }

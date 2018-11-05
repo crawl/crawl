@@ -51,7 +51,7 @@ void adjust_item(int from_slot)
         if (prompt_failed(from_slot))
             return;
 
-        mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<31>%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     const int to_slot = prompt_invent_item("어떤 글자로 조정하겠는가? ",
@@ -100,7 +100,7 @@ static void _adjust_spell()
     }
 
     // Print targeted spell.
-    mprf_nocap("%c - %s", keyin, spell_title(spell));
+    mprf_nocap("<32>%c - %s", keyin, spell_title(spell));
 
     // Select target slot.
     keyin = 0;
@@ -134,13 +134,13 @@ static void _adjust_spell()
     you.spell_letter_table[index_1] = tmp;
 
     // print out spell in new slot
-    mprf_nocap("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
+    mprf_nocap("<33>%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
     spell = get_spell_by_letter(input_1);
 
     if (spell != SPELL_NO_SPELL)
-        mprf_nocap("%c - %s", input_1, spell_title(spell));
+        mprf_nocap("<34>%c - %s", input_1, spell_title(spell));
 }
 
 static void _adjust_ability()
@@ -165,7 +165,7 @@ static void _adjust_ability()
 
     char old_key = static_cast<char>(talents[selected].hotkey);
 
-    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which));
+    mprf_nocap("<35>%c - %s", old_key, ability_name(talents[selected].which));
 
     const int index1 = letter_to_index(old_key);
 
@@ -207,10 +207,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     if (verbose)
     {
-        mprf_nocap("%s", you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<36>%s", you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
         if (you.inv[from_slot].defined())
-            mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("<37>%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])

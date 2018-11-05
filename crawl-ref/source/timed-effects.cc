@@ -66,7 +66,7 @@ static void _hell_effect_noise()
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
 
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    mprf(MSGCH_HELL_EFFECT, "<2463>%s", msg.c_str());
     if (loud)
         noisy(15, you.pos());
 }
@@ -455,7 +455,7 @@ void change_labyrinth(bool msg)
         mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
         for (coord_def target : targets)
             path_str += make_stringf("(%d, %d)  ", target.x, target.y);
-        mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
+        mprf(MSGCH_DIAGNOSTICS, "<2464>%s", path_str.c_str());
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %u", (unsigned int)targets.size());
     }
 
@@ -857,7 +857,7 @@ static void _jiyva_effects(int /*time_delta*/)
                     simple_god_message("는 명랑하게 꾸륵거렸다.");
                     break;
                 case 1:
-                    mprf(MSGCH_SOUND, "당신은 %s 튀기는 소리를 들었다%s.",
+                    mprf(MSGCH_SOUND, "<2465>당신은 %s 튀기는 소리를 들었다%s.",
                          total_jellies > 1 ? "여러 개의" : "",
                          total_jellies > 1 ? "" : "");
                     break;
@@ -1481,15 +1481,15 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
     if (count)
     {
         if (seen_change && !zin)
-            mprf("The walls disappear%s!", premature ? " prematurely" : "");
+            mprf("<2466>The walls disappear%s!", premature ? " prematurely" : "");
         else if (seen_change && zin)
         {
-            mprf("Zin %s %s %s.",
+            mprf("<2467>Zin %s %s %s.",
                  (mon) ? "releases"
                        : "dismisses",
                  (mon) ? mon->name(DESC_THE).c_str()
                        : "the silver walls,",
-                 (mon) ? make_stringf("from %s prison",
+                 (mon) ? make_stringf("<2468>from %s prison",
                              mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str()
                        : "but there is nothing inside them");
         }

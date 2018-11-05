@@ -154,7 +154,7 @@ map_marker *map_feature_marker::parse(const string &s, const string &)
     const dungeon_feature_type ft = dungeon_feature_by_name(raw);
     if (ft == DNGN_UNSEEN)
     {
-        throw bad_map_marker_f("Bad feature marker: %s (unknown feature '%s')",
+        throw bad_map_marker_f("<1231>Bad feature marker: %s (unknown feature '%s')",
                                s.c_str(), raw.c_str());
     }
     return new map_feature_marker(coord_def(0, 0), ft);
@@ -162,7 +162,7 @@ map_marker *map_feature_marker::parse(const string &s, const string &)
 
 string map_feature_marker::debug_describe() const
 {
-    return make_stringf("feature (%s)", dungeon_feature_name(feat));
+    return make_stringf("<1232>feature (%s)", dungeon_feature_name(feat));
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ map_lua_marker::map_lua_marker(const lua_datum &fn)
     lua_stack_cleaner clean(dlua);
     fn.push();
     if (fn.is_function() && !dlua.callfn("dgn_run_map", 1, 1))
-        mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
+        mprf(MSGCH_ERROR, "<1233>lua_marker exec error: %s", dlua.error.c_str());
     else
         check_register_table();
 }
@@ -192,15 +192,15 @@ map_lua_marker::map_lua_marker(const string &s, const string &,
     if (mapdef_marker)
     {
         if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
-            mprf(MSGCH_ERROR, "lua_marker load error: %s", dlua.error.c_str());
+            mprf(MSGCH_ERROR, "<1234>lua_marker load error: %s", dlua.error.c_str());
         if (!dlua.callfn("dgn_run_map", 1, 1))
-            mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
+            mprf(MSGCH_ERROR, "<1235>lua_marker exec error: %s", dlua.error.c_str());
     }
     else
     {
         if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
         {
-            mprf(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
+            mprf(MSGCH_ERROR, "<1236>lua_marker_mapless exec error: %s",
                  dlua.error.c_str());
         }
     }
@@ -264,12 +264,12 @@ void map_lua_marker::write(writer &outf) const
     // Call dlua_marker_function(table, 'read')
     lua_pushstring(dlua, "read");
     if (!dlua.callfn("dlua_marker_reader_name", 2, 1))
-        end(1, false, "lua_marker: write error: %s", dlua.error.c_str());
+        end(1, false, "<1237>lua_marker: write error: %s", dlua.error.c_str());
 
     // Right, what's on top should be a table name. Save it.
     if (!lua_isstring(dlua, -1))
     {
-        end(1, false, "Expected marker class name (string) to save, got %s",
+        end(1, false, "<1238>Expected marker class name (string) to save, got %s",
             lua_typename(dlua, lua_type(dlua, -1)));
     }
 
@@ -285,7 +285,7 @@ void map_lua_marker::write(writer &outf) const
     lua_pushlightuserdata(dlua, &outf);
 
     if (!dlua.callfn("dlua_marker_method", 4))
-        end(1, false, "lua_marker::write error: %s", dlua.error.c_str());
+        end(1, false, "<1239>lua_marker::write error: %s", dlua.error.c_str());
 }
 
 void map_lua_marker::read(reader &inf)
@@ -300,7 +300,7 @@ void map_lua_marker::read(reader &inf)
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
     lua_pushlightuserdata(dlua, &inf);
     if (!dlua.callfn("dlua_marker_read", 3, 1))
-        end(1, false, "lua_marker::read error: %s", dlua.error.c_str());
+        end(1, false, "<1240>lua_marker::read error: %s", dlua.error.c_str());
 
     // Right, what's on top had better be a table.
     check_register_table();
@@ -330,7 +330,7 @@ bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
     }
     const bool res = dlua.callfn("dlua_marker_method", args, 1);
     if (!res && warn_err)
-        mprf(MSGCH_ERROR, "mlua error: %s", dlua.error.c_str());
+        mprf(MSGCH_ERROR, "<1241>mlua error: %s", dlua.error.c_str());
     return res;
 }
 
@@ -349,7 +349,7 @@ bool map_lua_marker::notify_dgn_event(const dgn_event &e)
     clua_push_dgn_event(dlua, &e);
     if (!dlua.callfn("dlua_marker_method", 4, 1))
     {
-        mprf(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
+        mprf(MSGCH_ERROR, "<1242>notify_dgn_event: Lua error: %s",
              dlua.error.c_str());
 
         // Lua error prevents veto if the event is vetoable.
@@ -369,7 +369,7 @@ string map_lua_marker::call_str_fn(const char *fn) const
 {
     lua_stack_cleaner cln(dlua);
     if (!callfn(fn))
-        return make_stringf("error (%s): %s", fn, dlua.error.c_str());
+        return make_stringf("<1243>error (%s): %s", fn, dlua.error.c_str());
 
     string result;
     if (lua_isstring(dlua, -1))
@@ -389,9 +389,9 @@ string map_lua_marker::property(const string &pname) const
     lua_pushstring(dlua, pname.c_str());
     if (!callfn("property", false, 4))
     {
-        mprf(MSGCH_ERROR, "Lua marker property (%s) error: %s",
+        mprf(MSGCH_ERROR, "<1244>Lua marker property (%s) error: %s",
              pname.c_str(), dlua.error.c_str());
-        return make_stringf("error (prop:%s): %s",
+        return make_stringf("<1245>error (prop:%s): %s",
                             pname.c_str(), dlua.error.c_str());
     }
     string result;
@@ -408,7 +408,7 @@ string map_lua_marker::debug_to_string() const
         return "Unable to get table for lua marker.";
 
     if (!dlua.callfn("table_to_string", 1, 1))
-        return make_stringf("error (table_to_string): %s", dlua.error.c_str());
+        return make_stringf("<1246>error (table_to_string): %s", dlua.error.c_str());
 
     string result;
     if (lua_isstring(dlua, -1))
@@ -437,7 +437,7 @@ map_marker *map_lua_marker::parse(const string &s, const string &ctx)
     if (!mark->initialised)
     {
         delete mark;
-        throw bad_map_marker_f("Unable to initialise Lua marker from '%s'",
+        throw bad_map_marker_f("<1247>Unable to initialise Lua marker from '%s'",
                                raw.c_str());
     }
     return mark;
@@ -657,7 +657,7 @@ map_marker *map_malign_gateway_marker::clone() const
 
 string map_malign_gateway_marker::debug_describe() const
 {
-    return make_stringf("Malign gateway (%d, %s)", duration,
+    return make_stringf("<1248>Malign gateway (%d, %s)", duration,
                         is_player ? "player" : "monster");
 }
 #if TAG_MAJOR_VERSION == 34

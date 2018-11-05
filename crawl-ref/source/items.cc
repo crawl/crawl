@@ -560,7 +560,7 @@ void unlink_item(int dest)
                 return;
             }
         }
-        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
+        mprf(MSGCH_ERROR, "<1023>Item %s claims to be held by monster %s, but "
                           "it isn't in the monster's inventory.",
              mitm[dest].name(DESC_PLAIN, false, true).c_str(),
              mons->name(DESC_PLAIN, true).c_str());
@@ -614,7 +614,7 @@ void unlink_item(int dest)
 
 #ifdef DEBUG
     // Okay, the sane ways are gone... let's warn the player:
-    mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
+    mprf(MSGCH_ERROR, "<1024>BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
          mitm[dest].name(DESC_PLAIN).c_str(),
          mitm[dest].pos.x, mitm[dest].pos.y);
 
@@ -911,7 +911,7 @@ void item_check()
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "여기에 있는 것들:");
         for (const item_def *it : items)
         {
-            mprf_nocap("%s", menu_colour_item_name(*it, DESC_PLAIN).c_str());
+            mprf_nocap("<1025>%s", menu_colour_item_name(*it, DESC_PLAIN).c_str());
             _maybe_give_corpse_hint(*it);
         }
     }
@@ -1333,7 +1333,7 @@ bool pickup_single_item(int link, int qty)
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
     {
         const string prompt
-                = make_stringf("Pick up how many of %s (; or enter for all)? ",
+                = make_stringf("<1026>Pick up how many of %s (; or enter for all)? ",
                                item->name(DESC_THE, false,
                                           false, false).c_str());
 
@@ -1442,7 +1442,7 @@ void pickup(bool partial_quantity)
 
             if (keyin != 'a')
             {
-                string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
+                string prompt = "<1027>Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
                      menu_colour_item_name(mitm[o], DESC_A).c_str());
@@ -1489,7 +1489,7 @@ void pickup(bool partial_quantity)
         if (!any_selectable)
         {
             for (stack_iterator si(you.pos(), true); si; ++si)
-                mprf_nocap("%s", menu_colour_item_name(*si, DESC_PLAIN).c_str());
+                mprf_nocap("<1028>%s", menu_colour_item_name(*si, DESC_PLAIN).c_str());
         }
 
         if (!pickup_warning.empty())
@@ -1725,7 +1725,7 @@ void get_gold(const item_def& item, int quant, bool quiet)
                             ? make_stringf(" (금화 %d개 획득함)", quant)
                             : "";
 
-        mprf("당신은 현재 %d개의 금화%s%s을(를) 갖고있다.",
+        mprf("<1029>당신은 현재 %d개의 금화%s%s을(를) 갖고있다.",
              you.gold, you.gold != 1 ? "" : "", gain.c_str());
         learned_something_new(HINT_SEEN_GOLD);
     }
@@ -1841,7 +1841,7 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
-        mprf("당신은 %s 룬을 집는 순간, 그 힘을 선명하게 느꼈다.",
+        mprf("<1030>당신은 %s 룬을 집는 순간, 그 힘을 선명하게 느꼈다.",
              rune_type_name(it.sub_type));
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
@@ -1916,7 +1916,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (%d개 획득함)",
+            mprf_nocap("<1031>%s (%d개 획득함)",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
@@ -2057,7 +2057,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 #ifdef USE_SOUND
         parse_sound(PICKUP_SOUND);
 #endif
-        mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
+        mprf_nocap("<1032>%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
     }
 
     return item.link;
@@ -2260,7 +2260,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     }
 
     if (p == you.pos() && _id_floor_item(item))
-        mprf("당신은 이 곳에서 %s을(를) 보았다.", item.name(DESC_PLAIN).c_str());
+        mprf("<1033>당신은 이 곳에서 %s을(를) 보았다.", item.name(DESC_PLAIN).c_str());
 
     return true;
 }
@@ -2465,7 +2465,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && item.base_type == OBJ_WEAPONS && item.cursed())
     {
-        mprf("%s은(는) 당신에게 들러붙었다!", item.name(DESC_PLAIN).c_str());
+        mprf("<1034>%s은(는) 당신에게 들러붙었다!", item.name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -2513,7 +2513,7 @@ bool drop_item(int item_dropped, int quant_drop)
         return false;
     }
 
-    mprf("당신은 %s을(를) 떨어뜨렸다.", quant_name(item, quant_drop, DESC_PLAIN).c_str());
+    mprf("<1035>당신은 %s을(를) 떨어뜨렸다.", quant_name(item, quant_drop, DESC_PLAIN).c_str());
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
@@ -2823,7 +2823,7 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
                                       &item, iname.c_str());
     if (!clua.error.empty())
     {
-        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
+        mprf(MSGCH_ERROR, "<1036>ch_force_autopickup failed: %s",
              clua.error.c_str());
     }
 
@@ -4077,7 +4077,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             line += make_stringf("[%c] %-10s ", i + 'a', rune_type_name(i));
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mprf(MSGCH_PROMPT, "<1037>%s", line.c_str());
                 line.clear();
             }
         }
@@ -4360,7 +4360,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                         make_item_unrandart(*item, index);
                         if (create_for_real)
                         {
-                            mprf("%s (%s)", entry->name,
+                            mprf("<1038>%s (%s)", entry->name,
                                  debug_art_val_str(*item).c_str());
                         }
                         return true;
@@ -4863,11 +4863,11 @@ static void _identify_last_item(item_def &item)
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :
                                     item_class_name(item.base_type, true);
-    mprf("당신은 마지막으로 %s을(를) 감정해냈다.", class_name.c_str());
+    mprf("<1039>당신은 마지막으로 %s을(를) 감정해냈다.", class_name.c_str());
 
     if (in_inventory(item))
     {
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<1040>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
         auto_assign_item_slot(item);
     }
 }

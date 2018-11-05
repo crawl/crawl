@@ -83,7 +83,7 @@ void wizard_place_stairs(bool down)
     if (stairs == DNGN_UNSEEN)
         return;
 
-    mprf("Creating %sstairs.", down ? "down" : "up");
+    mprf("<2643>Creating %sstairs.", down ? "down" : "up");
     dungeon_terrain_changed(you.pos(), stairs);
 }
 
@@ -201,12 +201,12 @@ bool wizard_create_feature(const coord_def& pos)
                 if (fprop != FPROP_NONE)
                 {
                     env.pgrid(you.pos()) |= fprop;
-                    mprf("Set fprops \"%s\" at (%d,%d)",
+                    mprf("Set fprops \"<2644>%s\" at (%d,%d)",
                          name.c_str(), you.pos().x, you.pos().y);
                 }
                 else
                 {
-                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                    mprf(MSGCH_DIAGNOSTICS, "<2645>No features matching '%s'",
                          name.c_str());
                 }
                 return false;
@@ -282,12 +282,12 @@ void wizard_list_branches()
             continue;
         else if (brentry[it->id].is_valid())
         {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
+            mprf(MSGCH_DIAGNOSTICS, "<2646>Branch %d (%s) is on %s",
                  it->id, it->longname, brentry[it->id].describe().c_str());
         }
         else if (is_random_subbranch(it->id))
         {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
+            mprf(MSGCH_DIAGNOSTICS, "<2647>Branch %d (%s) was not generated "
                  "this game", it->id, it->longname);
         }
     }
@@ -333,7 +333,7 @@ void wizard_list_branches()
                 comma_separated_line(god_names.begin(), god_names.end()));
         }
 
-        mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
+        mprf(MSGCH_DIAGNOSTICS, "<2648>%u on D:%u (%s)", temples.size(),
              i + 1,
              comma_separated_line(temple_strings.begin(),
                                   temple_strings.end(), "; ", "; ").c_str()
@@ -425,7 +425,7 @@ bool debug_make_trap(const coord_def& pos)
     {
         if (matches.empty())
         {
-            mprf("I know no traps named \"%s\".", spec.c_str());
+            mprf("I know no traps named \"<2649>%s\".", spec.c_str());
             return false;
         }
         // Only one match, use that
@@ -442,7 +442,7 @@ bool debug_make_trap(const coord_def& pos)
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
+    mprf("<2650>Created %s, marked it undiscovered.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
             : trap_at(you.pos())->name(DESC_A).c_str());
@@ -474,7 +474,7 @@ bool debug_make_shop(const coord_def& pos)
 
     if (new_shop_type == SHOP_UNASSIGNED)
     {
-        mprf("Bad shop type: \"%s\"", requested_shop);
+        mprf("Bad shop type: \"<2651>%s\"", requested_shop);
         list_shop_types();
         return false;
     }
@@ -510,7 +510,7 @@ static void debug_load_map_by_name(string name, bool primary)
 
         if (matches.empty())
         {
-            mprf("Can't find map named '%s'.", name.c_str());
+            mprf("<2652>Can't find map named '%s'.", name.c_str());
             return;
         }
         else if (matches.size() == 1)
@@ -549,7 +549,7 @@ static void debug_load_map_by_name(string name, bool primary)
             {
                 if (!in_bounds(*ri))
                 {
-                    mprf("Placing %s on top of you would put part of the "
+                    mprf("<2653>Placing %s on top of you would put part of the "
                          "map outside of the level, cancelling.",
                          toplace->name.c_str());
                     return;
@@ -560,7 +560,7 @@ static void debug_load_map_by_name(string name, bool primary)
         }
         else
         {
-            mprf("%s decides where it goes, can't place where you are.",
+            mprf("<2654>%s decides where it goes, can't place where you are.",
                  toplace->name.c_str());
         }
     }
@@ -598,7 +598,7 @@ static void debug_load_map_by_name(string name, bool primary)
         unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
         if (dgn_place_map(toplace, false, false, where))
         {
-            mprf("Successfully placed %s.", toplace->name.c_str());
+            mprf("<2655>Successfully placed %s.", toplace->name.c_str());
             // Fix up doors from vaults and any changes to the default walls
             // and floors from the vault.
             tile_init_flavour();
@@ -607,7 +607,7 @@ static void debug_load_map_by_name(string name, bool primary)
             dgn_make_transporters_from_markers();
         }
         else
-            mprf("Failed to place %s.", toplace->name.c_str());
+            mprf("<2656>Failed to place %s.", toplace->name.c_str());
     }
 }
 
@@ -742,7 +742,7 @@ void wizard_list_levels()
             cnts += num;
         }
         mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
-             "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
+             "<2657>%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
     }
 
     string cnts = "";
@@ -752,7 +752,7 @@ void wizard_list_levels()
         sprintf(num, "%d/", query_daction_counter((daction_type)j));
         cnts += num;
     }
-    mprf("%-10s : %s", "`- total", cnts.c_str());
+    mprf("<2658>%-10s : %s", "`- total", cnts.c_str());
 }
 
 void wizard_recreate_level()

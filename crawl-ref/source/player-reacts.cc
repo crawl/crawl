@@ -188,9 +188,9 @@ static bool _decrement_a_duration(duration_type dur, int delay,
             if (you.duration[dur] <= 0)
                 you.duration[dur] = 1;
             if (need_expiration_warning(dur))
-                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+                mprf(MSGCH_DANGER, "<1789>Careful! %s", midmsg);
             else
-                mprf(chan, "%s", midmsg);
+                mprf(chan, "<1790>%s", midmsg);
         }
     }
 
@@ -198,7 +198,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     {
         you.duration[dur] = 0;
         if (endmsg && *endmsg != '\0')
-            mprf(chan, "%s", endmsg);
+            mprf(chan, "<1791>%s", endmsg);
         return true;
     }
 
@@ -217,7 +217,7 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
-        mprf(MSGCH_DURATION, "당신의 몸이 %s로 돌아와 다시 움직일 수 있다.",
+        mprf(MSGCH_DURATION, "<1792>당신의 몸이 %s로 돌아와 다시 움직일 수 있다.",
             flesh_equiv.c_str());
     }
 
@@ -500,7 +500,7 @@ static bool _check_recite()
 
 static void _handle_recitation(int step)
 {
-    mprf("\"%s\"",
+    mprf("\"<1793>%s\"",
          zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
@@ -526,7 +526,7 @@ static void _handle_recitation(int step)
             if (!closure.empty())
                 speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "당신은 %s 암송을 마쳤다", speech.str().c_str());
+        mprf(MSGCH_DURATION, "<1794>당신은 %s 암송을 마쳤다", speech.str().c_str());
     }
 }
 
@@ -539,7 +539,7 @@ static void _try_to_respawn_ancestor()
      if (!ancestor)
          return;
 
-    mprf("%s이 기억의 안개 속에서 나타났다!",
+    mprf("<1795>%s이 기억의 안개 속에서 나타났다!",
         ancestor->name(DESC_YOUR).c_str());
     add_companion(ancestor);
     check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
@@ -678,7 +678,7 @@ static void _decrement_durations()
         if (you.stat(s) > 0
             && _decrement_a_duration(stat_zero_duration(s), delay))
         {
-            mprf(MSGCH_RECOVERY, "당신의 %s이 복구되었다.", stat_desc(s, SD_NAME));
+            mprf(MSGCH_RECOVERY, "<1796>당신의 %s이 복구되었다.", stat_desc(s, SD_NAME));
             you.redraw_stats[s] = true;
         }
     }

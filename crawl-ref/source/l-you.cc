@@ -434,7 +434,7 @@ LUAFN(you_get_base_mutation_level)
     if (mut != NUM_MUTATIONS)
         PLUARET(integer, you.get_base_mutation_level(mut, innate, temp, normal)); // includes innate mutations
 
-    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("<1081>No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 
@@ -455,7 +455,7 @@ LUAFN(you_mutation)
     if (mut != NUM_MUTATIONS)
         PLUARET(integer, you.get_base_mutation_level(mut, true, true, true)); // includes innate, temp mutations. I'm not sure if this is what was intended but this was the old behavior.
 
-    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("<1082>No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 
@@ -466,7 +466,7 @@ LUAFN(you_temp_mutation)
     if (mut != NUM_MUTATIONS)
         PLUARET(integer, you.get_base_mutation_level(mut, false, true, false));
 
-    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("<1083>No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 
@@ -815,7 +815,7 @@ LUAFN(you_in_branch)
             if (br != NUM_BRANCHES)
             {
                 string err = make_stringf(
-                    "'%s' matches both branch '%s' and '%s'",
+                    "<1084>'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
                     it->abbrevname);
                 return luaL_argerror(ls, 1, err.c_str());
@@ -826,7 +826,7 @@ LUAFN(you_in_branch)
 
     if (br == NUM_BRANCHES)
     {
-        string err = make_stringf("'%s' matches no branches.", name);
+        string err = make_stringf("<1085>'%s' matches no branches.", name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 
@@ -856,7 +856,7 @@ LUAFN(you_mutate)
     if (mut != NUM_MUTATIONS)
         PLUARET(boolean, mutate(mut, reason, true, force, false, false, mutclass));
 
-    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("<1086>No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 
@@ -868,7 +868,7 @@ LUAFN(you_delete_mutation)
     if (mut != NUM_MUTATIONS)
         PLUARET(boolean, delete_mutation(mut, reason, false));
 
-    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("<1087>No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 

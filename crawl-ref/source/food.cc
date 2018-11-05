@@ -173,7 +173,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     {
         if (!silent)
         {
-            mprf("당신은 %s에는 너무 배부르다.",
+            mprf("<638>당신은 %s에는 너무 배부르다.",
                  you.species == SP_VAMPIRE ? "흡혈하기" : "먹기");
             crawl_state.zero_turns_taken();
         }
@@ -256,7 +256,7 @@ bool food_change(bool initial)
             {
                 print_stats();
                 mprf(MSGCH_WARN,
-                     "당신의 피%s 몸은 당신의 변신을 유지할 수 없다.",
+                     "<639>당신의 피%s 몸은 당신의 변신을 유지할 수 없다.",
                      form_reason == UFR_TOO_DEAD ? "가 없는" : "로 가득한");
                 you.duration[DUR_TRANSFORMATION] = 1; // end at end of turn
                 // could maybe end immediately, but that makes me nervous
@@ -270,7 +270,7 @@ bool food_change(bool initial)
             {
             case HS_FAINTING:
                 msg += "배고픔으로 기절하기 직전이다!";
-                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "<640>%s", msg.c_str());
                 break;
 
             case HS_STARVING:
@@ -279,7 +279,7 @@ bool food_change(bool initial)
                 else
                     msg += "굶주리고 있다!";
 
-                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "<641>%s", msg.c_str());
 
                 learned_something_new(HINT_YOU_STARVING);
                 you.check_awaken(500);
@@ -291,7 +291,7 @@ bool food_change(bool initial)
                 else
                     msg += "굶주리기 직전이다!";
 
-                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "<642>%s", msg.c_str());
 
                 learned_something_new(HINT_YOU_HUNGRY);
                 break;
@@ -304,7 +304,7 @@ bool food_change(bool initial)
                 msg += _how_hungry();
                 msg += ".";
 
-                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "<643>%s", msg.c_str());
 
                 learned_something_new(HINT_YOU_HUNGRY);
                 break;
@@ -524,7 +524,7 @@ int prompt_eat_chunks(bool only_auto)
                 return 0;
             else
             {
-                mprf(MSGCH_PROMPT, "%s? : %s%s (ye/n/q)",
+                mprf(MSGCH_PROMPT, "<644>%s? : %s%s (ye/n/q)",
                      (you.species == SP_VAMPIRE ? "흡혈하겠는가" : "먹겠는가"),
                      ((item->quantity > 1) ? "중 하나를 " : ""),
                      item_name.c_str());
@@ -547,7 +547,7 @@ int prompt_eat_chunks(bool only_auto)
                 {
                     if (autoeat)
                     {
-                        mprf("%s : %s%s.",
+                        mprf("<645>%s : %s%s.",
                              (you.species == SP_VAMPIRE ? "흡혈했다"
                                                         : "먹었다"),
                              ((item->quantity > 1) ? "중 하나를 " : ""),
@@ -692,7 +692,7 @@ static void _eat_chunk(item_def& food)
             _heal_from_food(hp_amt);
         }
 
-        mprf("이 날고기는 %s", _chunk_flavour_phrase(likes_chunks));
+        mprf("<646>이 날고기는 %s", _chunk_flavour_phrase(likes_chunks));
         do_eat = true;
         break;
     }
@@ -729,7 +729,7 @@ bool eat_item(item_def &food)
         return false;
     }
 
-    mprf("당신은 먹었다. : %s%s", food.quantity > 1 ? "중 하나를 " : "",
+    mprf("<647>당신은 먹었다. : %s%s", food.quantity > 1 ? "중 하나를 " : "",
                           food.name(DESC_PLAIN).c_str());
 
     if (food.sub_type == FOOD_CHUNK)
@@ -994,7 +994,7 @@ static bool _vampire_consume_corpse(item_def& corpse)
         return false;
     }
 
-    mprf("이 %s피는 맛있다!",
+    mprf("<648>이 %s피는 맛있다!",
          mons_class_flag(mons_type, M_WARM_BLOOD) ? "따듯한 " : "");
 
     const int food_value = CHUNK_BASE_NUTRITION

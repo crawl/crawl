@@ -127,7 +127,7 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
     const string::size_type sep = norm < fixe? norm : fixe;
     if (sep == string::npos)
     {
-        return make_stringf("malformed declaration - must use = or : in '%s'",
+        return make_stringf("<1147>malformed declaration - must use = or : in '%s'",
                             s.c_str());
     }
 
@@ -138,13 +138,13 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
         || (key_max_len != -1 && (int) key->length() > key_max_len))
     {
         return make_stringf(
-            "selector '%s' must be <= %d characters in '%s'",
+            "<1148>selector '%s' must be <= %d characters in '%s'",
             key->c_str(), key_max_len, s.c_str());
     }
 
     if (substitute.empty())
     {
-        return make_stringf("no substitute defined in '%s'",
+        return make_stringf("<1149>no substitute defined in '%s'",
                             s.c_str());
     }
 
@@ -166,7 +166,7 @@ int store_tilename_get_index(const string& tilename)
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
-    mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
+    mprf("<1150>adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
     env.tile_names.push_back(tilename);
@@ -260,7 +260,7 @@ string level_range::str_depth_range() const
 
 string level_range::describe() const
 {
-    return make_stringf("%s%s%s",
+    return make_stringf("<1151>%s%s%s",
                         deny? "!" : "",
                         branch == NUM_BRANCHES ? "Any" :
                         branches[branch].abbrevname,
@@ -282,14 +282,14 @@ void level_range::set(const string &br, int s, int d)
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
     else if ((branch = branch_by_abbrevname(br)) == NUM_BRANCHES)
-        throw bad_level_id_f("Unknown branch: '%s'", br.c_str());
+        throw bad_level_id_f("<1152>Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
     deepest    = d;
 
     if (deepest < shallowest || deepest <= 0)
     {
-        throw bad_level_id_f("Level-range %s:%d-%d is malformed",
+        throw bad_level_id_f("<1153>Level-range %s:%d-%d is malformed",
                              br.c_str(), s, d);
     }
 }
@@ -775,7 +775,7 @@ static string _parse_weighted_str(const string &spec, T &list)
 
         if (!list.parse(val, weight))
         {
-            return make_stringf("bad spec: '%s' in '%s'",
+            return make_stringf("<1154>bad spec: '%s' in '%s'",
                                 val.c_str(), spec.c_str());
         }
     }
@@ -940,7 +940,7 @@ string map_lines::parse_nsubst_spec(const string &s, subst_spec &spec)
     else
         parse_int(key.c_str(), count);
     if (!count)
-        return make_stringf("Illegal spec: %s", s.c_str());
+        return make_stringf("<1155>Illegal spec: %s", s.c_str());
 
     glyph_replacements_t repl;
     err = parse_glyph_replacements(arg, repl);
@@ -977,7 +977,7 @@ string map_lines::add_nsubst(const string &s)
         err = parse_nsubst_spec(ns, spec);
         if (!err.empty())
         {
-            return make_stringf("Bad NSUBST spec: %s (%s)",
+            return make_stringf("<1156>Bad NSUBST spec: %s (%s)",
                                 s.c_str(), err.c_str());
         }
         substs.push_back(spec);
@@ -2061,7 +2061,7 @@ dlua_set_map::dlua_set_map(map_def *map)
     clua_push_map(dlua, map);
     if (!dlua.callfn("dgn_set_map", 1, 1))
     {
-        mprf(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
+        mprf(MSGCH_ERROR, "<1157>dgn_set_map failed for '%s': %s",
              map->name.c_str(), dlua.error.c_str());
     }
     // Save the returned map as a lua_datum
@@ -2072,7 +2072,7 @@ dlua_set_map::~dlua_set_map()
 {
     old_map->push();
     if (!dlua.callfn("dgn_set_map", 1, 0))
-        mprf(MSGCH_ERROR, "dgn_set_map failed: %s", dlua.error.c_str());
+        mprf(MSGCH_ERROR, "<1158>dgn_set_map failed: %s", dlua.error.c_str());
 }
 
 ///////////////////////////////////////////////
@@ -2336,7 +2336,7 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
     {
         throw map_load_exception(make_stringf(
-            "Map was built for a different version of Crawl (%s) "
+            "<1159>Map was built for a different version of Crawl (%s) "
             "(map: %d.%d us: %d.%d)",
             name.c_str(), int(major), int(minor),
             TAG_MAJOR_VERSION, TAG_MINOR_VERSION));
@@ -2348,7 +2348,7 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     if (fp_name != name)
     {
         throw map_load_exception(make_stringf(
-            "Map fp_name (%s) != name (%s)!",
+            "<1160>Map fp_name (%s) != name (%s)!",
             fp_name.c_str(), name.c_str()));
     }
 
@@ -2372,7 +2372,7 @@ map_chance map_def::chance(const level_id &lid) const
 
 string map_def::describe() const
 {
-    return make_stringf("Map: %s\n%s%s%s%s%s%s",
+    return make_stringf("<1161>Map: %s\n%s%s%s%s%s%s",
                         name.c_str(),
                         prelude.describe("prelude").c_str(),
                         mapchunk.describe("mapchunk").c_str(),
@@ -2414,7 +2414,7 @@ void map_def::load()
     if (!inf.valid())
     {
         throw map_load_exception(
-                make_stringf("Map inf is invalid: %s", name.c_str()));
+                make_stringf("<1162>Map inf is invalid: %s", name.c_str()));
     }
     inf.advance(cache_offset);
     read_full(inf, true);
@@ -2458,7 +2458,7 @@ void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
     {
-        end(1, false, "Map %s: can't write index - cache offset not set!",
+        end(1, false, "<1163>Map %s: can't write index - cache offset not set!",
             name.c_str());
     }
     marshallString4(outf, name);
@@ -2562,7 +2562,7 @@ void map_def::copy_hooks_from(const map_def &other_map, const string &hook_name)
     if (!dlua.callfn("dgn_map_copy_hooks_from", "ss",
                      other_map.name.c_str(), hook_name.c_str()))
     {
-        mprf(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
+        mprf(MSGCH_ERROR, "<1164>Lua error copying hook (%s) from '%s' to '%s': %s",
              hook_name.c_str(), other_map.name.c_str(),
              name.c_str(), dlua.error.c_str());
     }
@@ -2577,12 +2577,12 @@ bool map_def::run_hook(const string &hook_name, bool die_on_lua_error)
     {
         if (die_on_lua_error)
         {
-            end(1, false, "Lua error running hook '%s' on map '%s': %s",
+            end(1, false, "<1165>Lua error running hook '%s' on map '%s': %s",
                 hook_name.c_str(), name.c_str(),
                 rewrite_chunk_errors(dlua.error).c_str());
         }
         else
-            mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+            mprf(MSGCH_ERROR, "<1166>Lua error running hook '%s' on map '%s': %s",
                  hook_name.c_str(), name.c_str(),
                  rewrite_chunk_errors(dlua.error).c_str());
         return false;
@@ -2607,9 +2607,9 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
     else if (err)
     {
         if (die_on_lua_error)
-            end(1, false, "Lua error: %s", chunk.orig_error().c_str());
+            end(1, false, "<1167>Lua error: %s", chunk.orig_error().c_str());
         else
-            mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
+            mprf(MSGCH_ERROR, "<1168>Lua error: %s", chunk.orig_error().c_str());
         return result;
     }
     if (dlua.callfn("dgn_run_map", 1, 1))
@@ -2618,12 +2618,12 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
     {
         if (die_on_lua_error)
         {
-            end(1, false, "Lua error: %s",
+            end(1, false, "<1169>Lua error: %s",
                 rewrite_chunk_errors(dlua.error).c_str());
         }
         else
         {
-            mprf(MSGCH_ERROR, "Lua error: %s",
+            mprf(MSGCH_ERROR, "<1170>Lua error: %s",
                  rewrite_chunk_errors(dlua.error).c_str());
         }
     }
@@ -2745,8 +2745,8 @@ string map_def::validate_map_placeable()
     }
 
     return has_selectable_tag? "" :
-           make_stringf("Map '%s' has no DEPTH, no PLACE and no "
-                        "selectable tag in '%s'",
+           make_stringf("<1171>Map '%s' has no DEPTH, no PLACE and no "
+                        "<1172>selectable tag in '%s'",
                         name.c_str(), tags.c_str());
 }
 
@@ -2816,7 +2816,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         if (orient == MAP_ENCOMPASS)
         {
             return make_stringf(
-                "Map '%s' cannot use 'encompass' orientation in the abyss",
+                "<1173>Map '%s' cannot use 'encompass' orientation in the abyss",
                 name.c_str());
         }
 
@@ -2829,7 +2829,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
             || map.height() > max_abyss_map_height)
         {
             return make_stringf(
-                "Map '%s' is too big for the Abyss: %dx%d - max %dx%d",
+                "<1174>Map '%s' is too big for the Abyss: %dx%d - max %dx%d",
                 name.c_str(),
                 map.width(), map.height(),
                 max_abyss_map_width, max_abyss_map_height);
@@ -2853,7 +2853,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
             || map.height() > GYM - MAPGEN_BORDER * 2)
         {
             return make_stringf(
-                     "%s '%s' is too big: %dx%d - max %dx%d",
+                     "<1175>%s '%s' is too big: %dx%d - max %dx%d",
                      is_minivault()? "Minivault" : "Float",
                      name.c_str(),
                      map.width(), map.height(),
@@ -2866,7 +2866,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         if (map.width() > GXM || map.height() > GYM)
         {
             return make_stringf(
-                     "Map '%s' is too big: %dx%d - max %dx%d",
+                     "<1176>Map '%s' is too big: %dx%d - max %dx%d",
                      name.c_str(),
                      map.width(), map.height(),
                      GXM, GYM);
@@ -2911,7 +2911,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         if (!has_exit())
         {
             return make_stringf(
-                "Map '%s' has no (possible) exits; use TAGS: no_exits if "
+                "<1177>Map '%s' has no (possible) exits; use TAGS: no_exits if "
                 "this is intentional",
                 name.c_str());
         }
@@ -2974,7 +2974,7 @@ coord_def map_def::float_dock()
     if (which_orient == MAP_NONE || which_orient == MAP_FLOAT)
         return coord_def(-1, -1);
 
-    dprf(DIAG_DNGN, "Docking floating vault to %s",
+    dprf(DIAG_DNGN, "<1178>Docking floating vault to %s",
          map_section_name(which_orient));
 
     return dock_pos(which_orient);
@@ -3109,7 +3109,7 @@ void map_def::hmirror()
     if (has_tag("no_hmirror"))
         return;
 
-    dprf(DIAG_DNGN, "Mirroring %s horizontally.", name.c_str());
+    dprf(DIAG_DNGN, "<1179>Mirroring %s horizontally.", name.c_str());
     map.hmirror();
 
     switch (orient)
@@ -3140,7 +3140,7 @@ void map_def::vmirror()
     if (has_tag("no_vmirror"))
         return;
 
-    dprf(DIAG_DNGN, "Mirroring %s vertically.", name.c_str());
+    dprf(DIAG_DNGN, "<1180>Mirroring %s vertically.", name.c_str());
     map.vmirror();
 
     switch (orient)
@@ -3175,7 +3175,7 @@ void map_def::rotate(bool clock)
     // Make sure the largest dimension fits in the smaller map bound.
     if (map.width() <= GMINM && map.height() <= GMINM)
     {
-        dprf(DIAG_DNGN, "Rotating %s %sclockwise.",
+        dprf(DIAG_DNGN, "<1181>Rotating %s %sclockwise.",
              name.c_str(), !clock? "anti-" : "");
         map.rotate(clock);
 
@@ -3387,7 +3387,7 @@ string map_def::apply_subvault(string_spec &spec)
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
-            return make_stringf("No vault found for tag '%s'", tag.c_str());
+            return make_stringf("<1182>No vault found for tag '%s'", tag.c_str());
 
         map_def vault = *orig;
 
@@ -3419,7 +3419,7 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
-    return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
+    return make_stringf("<1183>Could not fit '%s' in (%d,%d) to (%d, %d).",
                         tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
 
@@ -3599,21 +3599,21 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 if (slot_vals.size() < 2)
                 {
                     error = make_stringf(
-                        "Invalid spell slot format: '%s' in '%s'",
+                        "<1184>Invalid spell slot format: '%s' in '%s'",
                         spname.c_str(), slotspec.c_str());
                     return;
                 }
                 const spell_type sp(spell_by_name(slot_vals[0]));
                 if (sp == SPELL_NO_SPELL)
                 {
-                    error = make_stringf("Unknown spell name: '%s' in '%s'",
+                    error = make_stringf("<1185>Unknown spell name: '%s' in '%s'",
                                          slot_vals[0].c_str(),
                                          slotspec.c_str());
                     return;
                 }
                 if (!is_valid_mon_spell(sp))
                 {
-                    error = make_stringf("Not a monster spell: '%s'",
+                    error = make_stringf("<1186>Not a monster spell: '%s'",
                                          slot_vals[0].c_str());
                     return;
                 }
@@ -3622,7 +3622,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 if (freq <= 0)
                 {
                     error = make_stringf("Need a positive spell frequency;"
-                                         "got '%s' in '%s'",
+                                         "<1187>got '%s' in '%s'",
                                          slot_vals[1].c_str(),
                                          spname.c_str());
                     return;
@@ -3656,7 +3656,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 if (!(cur_spells[i].flags & MON_SPELL_TYPE_MASK))
                 {
                     error = make_stringf(
-                        "Spell slot '%s' missing a casting type",
+                        "<1188>Spell slot '%s' missing a casting type",
                         spname.c_str());
                     return;
                 }
@@ -3672,7 +3672,7 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
     vector<string> ep = split_string(":", ench_str);
     if (ep.size() > (perm ? 2 : 3))
     {
-        error = make_stringf("bad %sench specifier: \"%s\"",
+        error = make_stringf("<1189>bad %sench specifier: \"%s\"",
                              perm ? "perm_" : "",
                              ench_str.c_str());
         return mon_enchant();
@@ -3681,7 +3681,7 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
     enchant_type et = name_to_ench(ep[0].c_str());
     if (et == ENCH_NONE)
     {
-        error = make_stringf("unknown ench: \"%s\"", ep[0].c_str());
+        error = make_stringf("unknown ench: \"<1190>%s\"", ep[0].c_str());
         return mon_enchant();
     }
 
@@ -3689,14 +3689,14 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
     if (ep.size() > 1 && !ep[1].empty())
         if (!parse_int(ep[1].c_str(), deg))
         {
-            error = make_stringf("invalid deg in ench specifier \"%s\"",
+            error = make_stringf("invalid deg in ench specifier \"<1191>%s\"",
                                  ench_str.c_str());
             return mon_enchant();
         }
     if (ep.size() > 2 && !ep[2].empty())
         if (!parse_int(ep[2].c_str(), dur))
         {
-            error = make_stringf("invalid dur in ench specifier \"%s\"",
+            error = make_stringf("invalid dur in ench specifier \"<1192>%s\"",
                                  ench_str.c_str());
             return mon_enchant();
         }
@@ -3728,7 +3728,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
         if (parts.size() == 0)
         {
-            error = make_stringf("Not enough non-semicolons for '%s' spec.",
+            error = make_stringf("<1193>Not enough non-semicolons for '%s' spec.",
                                  s.c_str());
             return slot;
         }
@@ -3737,7 +3737,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
         if (parts.size() > 2)
         {
-            error = make_stringf("Too many semi-colons for '%s' spec.",
+            error = make_stringf("<1194>Too many semi-colons for '%s' spec.",
                                  mon_str.c_str());
             return slot;
         }
@@ -3754,7 +3754,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             if (segs.size() > NUM_MONSTER_SLOTS)
             {
                 error = make_stringf("More items than monster item slots "
-                                     "for '%s'.", mon_str.c_str());
+                                     "<1195>for '%s'.", mon_str.c_str());
                 return slot;
             }
 
@@ -3861,7 +3861,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             summon_type = static_cast<int>(str_to_summon_type(s_type));
             if (summon_type == SPELL_NO_SPELL)
             {
-                error = make_stringf("bad monster summon type: \"%s\"",
+                error = make_stringf("bad monster summon type: \"<1196>%s\"",
                                 s_type.c_str());
                 return slot;
             }
@@ -3896,7 +3896,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 mspec.colour = str_to_colour(colour, COLOUR_UNDEF);
                 if (mspec.colour == COLOUR_UNDEF)
                 {
-                    error = make_stringf("bad monster colour \"%s\" in \"%s\"",
+                    error = make_stringf("bad monster colour \"<1197>%s\" in \"%s\"",
                                          colour.c_str(), monspec.c_str());
                     return slot;
                 }
@@ -3912,7 +3912,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             if (mspec.god == GOD_NO_GOD)
             {
-                error = make_stringf("bad monster god: \"%s\"",
+                error = make_stringf("bad monster god: \"<1198>%s\"",
                                      god_name.c_str());
                 return slot;
             }
@@ -3927,7 +3927,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
-                error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+                error = make_stringf("bad tile name: \"<1199>%s\".", tile.c_str());
                 return slot;
             }
             // Store name along with the tile.
@@ -4047,14 +4047,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             if (nspec.type == MONS_PROGRAM_BUG)
             {
-                error = make_stringf("unknown monster: \"%s\"",
+                error = make_stringf("unknown monster: \"<1200>%s\"",
                                      mon_str.c_str());
                 return slot;
             }
 
             if (mons_class_flag(nspec.type, M_CANT_SPAWN))
             {
-                error = make_stringf("can't place dummy monster: \"%s\"",
+                error = make_stringf("can't place dummy monster: \"<1201>%s\"",
                                      mon_str.c_str());
                 return slot;
             }
@@ -4101,7 +4101,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                          || mons_class_itemuse(mspec.monbase)
                             < MONUSE_STARTING_EQUIPMENT))
             {
-                error = make_stringf("Monster '%s' can't use items.",
+                error = make_stringf("<1202>Monster '%s' can't use items.",
                     mon_str.c_str());
             }
         }
@@ -4285,7 +4285,7 @@ mons_spec mons_list::get_slime_spec(const string &name) const
     else
     {
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
+        mprf(MSGCH_DIAGNOSTICS, "<1203>Slime spec wants invalid size '%s'",
              prefix.c_str());
 #endif
     }
@@ -4986,7 +4986,7 @@ int item_list::parse_acquirement_source(const string &source)
     const string god_name(replace_all_of(source, "_", " "));
     const god_type god(str_to_god(god_name));
     if (god == GOD_NO_GOD)
-        error = make_stringf("unknown god name: '%s'", god_name.c_str());
+        error = make_stringf("<1204>unknown god name: '%s'", god_name.c_str());
     return god;
 }
 
@@ -5011,13 +5011,13 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
 
     if (!mons_class_can_leave_corpse(*mons))
     {
-        error = make_stringf("'%s' cannot leave corpses", name.c_str());
+        error = make_stringf("<1205>'%s' cannot leave corpses", name.c_str());
         return false;
     }
 
     if (skeleton && !mons_skeleton(*mons))
     {
-        error = make_stringf("'%s' has no skeleton", name.c_str());
+        error = make_stringf("<1206>'%s' has no skeleton", name.c_str());
         return false;
     }
 
@@ -5056,7 +5056,7 @@ bool item_list::parse_corpse_spec(item_spec &result, string s)
     monster_type mtype = static_cast<monster_type>(spec.type);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
     {
-        error = make_stringf("Requested corpse '%s' is invalid",
+        error = make_stringf("<1207>Requested corpse '%s' is invalid",
                              s.c_str());
         return false;
     }
@@ -5093,7 +5093,7 @@ static deck_rarity_type _rarity_string_to_rarity(const string& s)
     if (s == "ornate")    return DECK_RARITY_RARE; // synonym
     if (s == "legendary") return DECK_RARITY_LEGENDARY;
 
-    mprf("Unknown deck rarity '%s'", s.c_str());
+    mprf("<1208>Unknown deck rarity '%s'", s.c_str());
     return DECK_RARITY_RANDOM;
 }
 
@@ -5115,7 +5115,7 @@ void item_list::build_deck_spec(string s, item_spec* spec)
     // Error checking.
     if (word != "deck")
     {
-        error = make_stringf("Bad spec: %s", s.c_str());
+        error = make_stringf("<1209>Bad spec: %s", s.c_str());
         return;
     }
 
@@ -5127,7 +5127,7 @@ void item_list::build_deck_spec(string s, item_spec* spec)
 
         if (sub_type == NUM_MISCELLANY)
         {
-            error = make_stringf("Bad deck type: %s", sub_type_str.c_str());
+            error = make_stringf("<1210>Bad deck type: %s", sub_type_str.c_str());
             return;
         }
 
@@ -5225,7 +5225,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
                 id |= ISFLAG_KNOW_PROPERTIES;
             else
             {
-                error = make_stringf("Bad identify status: %s", id_str.c_str());
+                error = make_stringf("<1211>Bad identify status: %s", id_str.c_str());
                 return false;
             }
         }
@@ -5323,7 +5323,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             disc1 = school_by_name(st_disc1);
             if (disc1 == SPTYP_NONE)
             {
-                error = make_stringf("Bad spell school: %s", st_disc1.c_str());
+                error = make_stringf("<1212>Bad spell school: %s", st_disc1.c_str());
                 return false;
             }
         }
@@ -5334,7 +5334,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             disc2 = school_by_name(st_disc2);
             if (disc2 == SPTYP_NONE)
             {
-                error = make_stringf("Bad spell school: %s", st_disc2.c_str());
+                error = make_stringf("<1213>Bad spell school: %s", st_disc2.c_str());
                 return false;
             }
         }
@@ -5379,7 +5379,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             spell_type spell = spell_by_name(spell_name);
             if (spell == SPELL_NO_SPELL)
             {
-                error = make_stringf("Bad spell: %s", spnam.c_str());
+                error = make_stringf("<1214>Bad spell: %s", spnam.c_str());
                 return false;
             }
             incl_spells.push_back(spell);
@@ -5416,7 +5416,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         tileidx_t index;
         if (!tile_main_index(tile.c_str(), &index))
         {
-            error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+            error = make_stringf("bad tile name: \"<1215>%s\".", tile.c_str());
             return false;
         }
         result.props["item_tile_name"].get_string() = tile;
@@ -5428,7 +5428,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
-            error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+            error = make_stringf("bad tile name: \"<1216>%s\".", tile.c_str());
             return false;
         }
         result.props["worn_tile_name"].get_string() = tile;
@@ -5524,12 +5524,12 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     if (ego == 0)
     {
-        error = make_stringf("No such ego as: %s", ego_str.c_str());
+        error = make_stringf("<1217>No such ego as: %s", ego_str.c_str());
         return false;
     }
     else if (ego == -1)
     {
-        error = make_stringf("Ego '%s' is invalid for item '%s'.",
+        error = make_stringf("<1218>Ego '%s' is invalid for item '%s'.",
                              ego_str.c_str(), s.c_str());
         return false;
     }
@@ -5544,7 +5544,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
              || result.base_type == OBJ_MISSILES
                 && !is_missile_brand_ok(result.sub_type, ego, false))
     {
-        error = make_stringf("Ego '%s' is incompatible with item '%s'.",
+        error = make_stringf("<1219>Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
         return false;
     }
@@ -5557,7 +5557,7 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
     trim_string(c);
     if (c == "?" || c.empty())
     {
-        error = make_stringf("Bad item class: '%s'", c.c_str());
+        error = make_stringf("<1220>Bad item class: '%s'", c.c_str());
         return;
     }
 
@@ -5605,7 +5605,7 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         return;
     }
 
-    error = make_stringf("Bad item class: '%s'", c.c_str());
+    error = make_stringf("<1221>Bad item class: '%s'", c.c_str());
 }
 
 void item_list::parse_raw_name(string name, item_spec &spec)
@@ -5613,7 +5613,7 @@ void item_list::parse_raw_name(string name, item_spec &spec)
     trim_string(name);
     if (name.empty())
     {
-        error = make_stringf("Bad item name: '%s'", name.c_str());
+        error = make_stringf("<1222>Bad item name: '%s'", name.c_str());
         return ;
     }
 
@@ -5627,7 +5627,7 @@ void item_list::parse_raw_name(string name, item_spec &spec)
         return;
     }
 
-    error = make_stringf("Bad item name: '%s'", name.c_str());
+    error = make_stringf("<1223>Bad item name: '%s'", name.c_str());
 }
 
 item_list::item_spec_slot item_list::parse_item_spec(string spec)
@@ -5644,7 +5644,7 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
         if (parse_single_spec(result, specifier))
             list.ilist.push_back(result);
         else
-            dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
+            dprf(DIAG_DNGN, "<1224>Failed to parse: %s", specifier.c_str());
     }
 
     return list;
@@ -5778,7 +5778,7 @@ string map_marker_spec::apply_transform(map_lines &map)
             map_marker *mark = create_marker();
             if (!mark)
             {
-                return make_stringf("Unable to parse marker from %s",
+                return make_stringf("<1225>Unable to parse marker from %s",
                                     marker.c_str());
             }
             mark->pos = p;
@@ -5919,7 +5919,7 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
 
     const int trap = str_to_trap(s);
     if (trap == -1)
-        err = make_stringf("bad trap name: '%s'", s.c_str());
+        err = make_stringf("<1226>bad trap name: '%s'", s.c_str());
 
     feature_spec fspec(known ? 1 : -1, weight);
     fspec.trap.reset(new trap_spec(static_cast<trap_type>(trap)));
@@ -5970,10 +5970,10 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
 
     const shop_type shop = str_to_shoptype(main_part);
     if (shop == SHOP_UNASSIGNED)
-        err = make_stringf("bad shop type: '%s'", s.c_str());
+        err = make_stringf("<1227>bad shop type: '%s'", s.c_str());
 
     if (parts.size() > 2)
-        err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
+        err = make_stringf("<1228>too many semi-colons for '%s' spec", orig.c_str());
 
     item_list items;
     if (err.empty() && parts.size() == 2)
@@ -6024,7 +6024,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
     else if (auto ftype = dungeon_feature_by_name(s)) // DNGN_UNSEEN == 0
         list.emplace_back(ftype, weight, mimic, no_mimic);
     else
-        err = make_stringf("no features matching \"%s\"", str.c_str());
+        err = make_stringf("no features matching \"<1229>%s\"", str.c_str());
 
     return list;
 }
@@ -6074,7 +6074,7 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
     }
     catch (const bad_map_flag &error)
     {
-        err = make_stringf("Unknown flag: '%s'", error.what());
+        err = make_stringf("<1230>Unknown flag: '%s'", error.what());
     }
 
     return err;

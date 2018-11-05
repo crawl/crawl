@@ -86,7 +86,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     if (you.caught())
     {
-        mprf("당신은 %s기 때문에 공격할 수 없다.", held_status());
+        mprf("<564>당신은 %s기 때문에 공격할 수 없다.", held_status());
         return false;
     }
 
@@ -193,7 +193,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mpr("공격이 도달했다!");
         else
         {
-            mprf("%s이(가) 가로막고 있다.",
+            mprf("<565>%s이(가) 가로막고 있다.",
                  mons->observable() ? mons->name(DESC_PLAIN).c_str()
                                     : "보이지 않는 무언가");
         }
@@ -265,7 +265,7 @@ static bool _evoke_horn_of_geryon()
             created = true;
         if (mon && will_anger)
         {
-            mprf("%s은 당신의 신성한 오라가 마음에 안드는 모양이다!",
+            mprf("<566>%s은 당신의 신성한 오라가 마음에 안드는 모양이다!",
                  mon->name(DESC_PLAIN).c_str());
         }
     }
@@ -517,7 +517,7 @@ void zap_wand(int slot)
                 "the power of this device...");
         }
 
-        mprf("이 마법봉에는 %d회의 충전횟수가 남아있다%s.",
+        mprf("<567>이 마법봉에는 %d회의 충전횟수가 남아있다%s.",
              wand.plus, wand.plus == 1 ? "" : "");
 
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
@@ -596,14 +596,14 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
         if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
-            desc = make_stringf(" 그리고 이제 %d회의 충전이 남아있다%s",
+            desc = make_stringf("<568> 그리고 이제 %d회의 충전이 남아있다%s",
                                 new_charges, new_charges == 1 ? "" : "");
         }
 
         if (known && !pre_msg.empty())
             mpr(pre_msg);
 
-        mprf("%s가 잠시 %s다.%s.",
+        mprf("<569>%s가 잠시 %s다.%s.",
              wand.name(DESC_PLAIN).c_str(),
              charged ? "빛났" : "깜빡거렸",
              desc.c_str());
@@ -662,7 +662,7 @@ void finish_manual(int slot)
     item_def& manual(you.inv[slot]);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    mprf("당신은 %s의 매뉴얼을 읽는걸 끝마치곤 어딘가로 던져버렸다.",
+    mprf("<570>당신은 %s의 매뉴얼을 읽는걸 끝마치곤 어딘가로 던져버렸다.",
          skill_name(skill));
     dec_inv_item_quantity(slot, 1);
 }
@@ -770,7 +770,7 @@ static bool _box_of_beasts(item_def &box)
         return false;
     }
 
-    mprf("...그러자 %s이(가) %s나왔다!",
+    mprf("<571>...그러자 %s이(가) %s나왔다!",
          mons->name(DESC_PLAIN).c_str(), mons->airborne() ? "날아" : "튀어");
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
@@ -1396,9 +1396,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         const string source = card ? "카드" : "부채";
 
         if (pow > 120)
-            mprf("%s로부터 강력한 돌풍이 터져나온다!", source.c_str());
+            mprf("<572>%s로부터 강력한 돌풍이 터져나온다!", source.c_str());
         else
-            mprf("%s에서 맹렬한 바람이 불어나온다.", source.c_str());
+            mprf("<573>%s에서 맹렬한 바람이 불어나온다.", source.c_str());
     }
 
     noisy(8, agent->pos());
@@ -1409,7 +1409,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     if (!affected_monsters.empty())
     {
         const string message =
-            make_stringf("%s은(는) %s 바람에 의해 날아갔다.",
+            make_stringf("<574>%s은(는) %s 바람에 의해 날아갔다.",
                          affected_monsters.describe().c_str(),
                          conjugate_verb("", affected_monsters.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
@@ -1577,7 +1577,7 @@ static spret_type _phantom_mirror()
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
-    mprf("당신은 %s을(를) 거울에 비추었다, 거울이 산산조각났다!",
+    mprf("<575>당신은 %s을(를) 거울에 비추었다, 거울이 산산조각났다!",
          victim->name(DESC_PLAIN).c_str());
 
     return SPRET_SUCCESS;

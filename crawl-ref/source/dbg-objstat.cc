@@ -825,9 +825,9 @@ void objstat_iteration_stats()
 
 static void _write_stat_headers(const vector<string> &fields, bool items = true)
 {
-    fprintf(stat_outf, "%s\tLevel", items ? "Item" : "Monster");
+    fprintf(stat_outf, "<296>%s\tLevel", items ? "Item" : "Monster");
     for (const string &field : fields)
-        fprintf(stat_outf, "\t%s", field.c_str());
+        fprintf(stat_outf, "<297>\t%s", field.c_str());
     fprintf(stat_outf, "\n");
 }
 
@@ -876,7 +876,7 @@ static void _write_stat(map<string, double> &stats, string field)
     else
         value = stats[field] / SysEnv.map_gen_iters;
     output << "\t" << value;
-    fprintf(stat_outf, "%s", output.str().c_str());
+    fprintf(stat_outf, "<298>%s", output.str().c_str());
 }
 
 static string _brand_name(const item_type &item, int brand)
@@ -942,7 +942,7 @@ static string _level_name(const level_id &lev)
         name = lev.describe(false, true);
     else
     {
-        name = make_stringf("%s:%02d", lev.describe(false, false).c_str(),
+        name = make_stringf("<299>%s:%02d", lev.describe(false, false).c_str(),
                             lev.depth);
     }
     return name;
@@ -975,7 +975,7 @@ static void _write_brand_stats(const vector<int> &brand_stats,
         brand_name = _brand_name(item, i);
         brand_summary << brand_name.c_str() << ":" << value;
     }
-    fprintf(stat_outf, "\t%s", brand_summary.str().c_str());
+    fprintf(stat_outf, "<300>\t%s", brand_summary.str().c_str());
 }
 
 static void _write_level_brand_stats(const level_id &lev, const item_type &item)
@@ -1009,7 +1009,7 @@ static void _write_branch_item_stats(branch_type br, const item_type &item)
         ++level_count;
         if (item_recs[lid][item.base_type][item.sub_type][num_field] < 1)
             continue;
-        fprintf(stat_outf, "%s\t%s", name.c_str(), _level_name(lid).c_str());
+        fprintf(stat_outf, "<301>%s\t%s", name.c_str(), _level_name(lid).c_str());
         map <string, double> &item_stats =
             item_recs[lid][item.base_type][item.sub_type];
         for (const string &field : fields)
@@ -1022,7 +1022,7 @@ static void _write_branch_item_stats(branch_type br, const item_type &item)
     {
         map <string, double> &branch_stats =
             item_recs[br_lev][item.base_type][item.sub_type];
-        fprintf(stat_outf, "%s\t%s", name.c_str(), _level_name(br_lev).c_str());
+        fprintf(stat_outf, "<302>%s\t%s", name.c_str(), _level_name(br_lev).c_str());
         for (const string &field : fields)
             _write_stat(branch_stats, field);
         _write_level_brand_stats(br_lev, item);
@@ -1047,7 +1047,7 @@ static void _write_branch_monster_stats(branch_type br, monster_type mons_type,
         ++level_count;
         if (monster_recs[lid][mons_ind]["Num"] < 1)
             continue;
-        fprintf(stat_outf, "%s\t%s", mons_name.c_str(),
+        fprintf(stat_outf, "<303>%s\t%s", mons_name.c_str(),
                 _level_name(lid).c_str());
         for (const string &field : fields)
             _write_stat(monster_recs[lid][mons_ind], field);
@@ -1056,7 +1056,7 @@ static void _write_branch_monster_stats(branch_type br, monster_type mons_type,
     // If there are multiple levels for this branch, print a branch summary.
     if (level_count > 1 && monster_recs[br_lev][mons_ind]["Num"] > 0)
     {
-        fprintf(stat_outf, "%s\t%s", mons_name.c_str(),
+        fprintf(stat_outf, "<304>%s\t%s", mons_name.c_str(),
                 _level_name(br_lev).c_str());
         for (const string &field : fields)
             _write_stat(monster_recs[br_lev][mons_ind], field);
@@ -1070,8 +1070,8 @@ static FILE * _open_stat_file(string stat_file)
     stat_fh = fopen(stat_file.c_str(), "w");
     if (!stat_fh)
     {
-        fprintf(stderr, "Unable to open objstat output file: %s\n"
-                "Error: %s", stat_file.c_str(), strerror(errno));
+        fprintf(stderr, "<305>Unable to open objstat output file: %s\n"
+                "<306>Error: %s", stat_file.c_str(), strerror(errno));
         end(1);
     }
     return stat_fh;
@@ -1105,7 +1105,7 @@ static void _write_item_stats(item_base_type base_type)
             _write_branch_item_stats(br.first, item);
     }
     fclose(stat_outf);
-    printf("Wrote %s item stats to %s.\n", _item_class_name(base_type).c_str(),
+    printf("<307>Wrote %s item stats to %s.\n", _item_class_name(base_type).c_str(),
            out_file.str().c_str());
 }
 
@@ -1126,12 +1126,12 @@ static void _write_stat_info()
     fprintf(stat_outf, "Object Generation Stats\n"
             "Number of iterations: %d\n"
             "Number of branches: %d\n"
-            "%s"
+            "<308>%s"
             "Number of levels: %d\n"
-            "Version: %s\n", SysEnv.map_gen_iters, num_branches,
+            "<309>Version: %s\n", SysEnv.map_gen_iters, num_branches,
             all_desc.c_str(), num_levels, Version::Long);
     fclose(stat_outf);
-    printf("Wrote Objstat Info to %s.\n", out_file.str().c_str());
+    printf("<310>Wrote Objstat Info to %s.\n", out_file.str().c_str());
 }
 
 static void _write_object_stats()
@@ -1150,7 +1150,7 @@ static void _write_object_stats()
     for (const auto &entry : valid_monsters)
         for (const auto &br : stat_branches)
             _write_branch_monster_stats(br.first, entry.first, entry.second);
-    printf("Wrote Monster stats to %s.\n", out_file.str().c_str());
+    printf("<311>Wrote Monster stats to %s.\n", out_file.str().c_str());
     fclose(stat_outf);
 
 }

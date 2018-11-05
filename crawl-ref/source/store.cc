@@ -1323,7 +1323,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
     ASSERT_VALIDITY();
     ACCESS(key);
     auto iter = find(key);
-    ASSERTM(iter != end(), "trying to read non-existent property \"%s\"", key.c_str());
+    ASSERTM(iter != end(), "trying to read non-existent property \"<2390>%s\"", key.c_str());
 
     const CrawlStoreValue& store = iter->second;
     ASSERT(store.type != SV_NONE);
@@ -1750,7 +1750,7 @@ void dump_prop_accesses()
 
     sort(props.begin(), props.end(), _cmp);
     for (const auto &prop : props)
-        fprintf(f, "%10d %s\n", accesses[prop], prop.c_str());
+        fprintf(f, "<2391>%10d %s\n", accesses[prop], prop.c_str());
     fclose(f);
 }
 #endif

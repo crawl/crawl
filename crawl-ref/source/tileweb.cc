@@ -162,7 +162,7 @@ void TilesFramework::write_message(const char *format, ...)
     va_list argp;
     va_start(argp, format);
     if ((len = vsnprintf(buf, sizeof(buf), format, argp)) < 0)
-        die("Webtiles message format error! (%s)", format);
+        die("<2453>Webtiles message format error! (%s)", format);
     else if (len >= (int)sizeof(buf))
         die("Webtiles message too long! (%d)", len);
     va_end(argp);
@@ -204,7 +204,7 @@ void TilesFramework::finish_message()
                     const char *errmsg = retval == 0 ? "No bytes sent"
                                                      : strerror(errno);
                     if (--retries <= 0)
-                        die("Socket write error: %s", errmsg);
+                        die("<2454>Socket write error: %s", errmsg);
 
                     if (retval == 0 || errno == ENOBUFS || errno == EWOULDBLOCK
                         || errno == EINTR || errno == EAGAIN)
@@ -221,7 +221,7 @@ void TilesFramework::finish_message()
                         break;
                     }
                     else
-                        die("Socket write error: %s", errmsg);
+                        die("<2455>Socket write error: %s", errmsg);
                 }
                 else
                     sent += retval;
@@ -245,7 +245,7 @@ void TilesFramework::send_message(const char *format, ...)
         || len == -1)
     {
         if (len == -1)
-            die("Webtiles message format error! (%s)", format);
+            die("<2456>Webtiles message format error! (%s)", format);
         else
             die("Webtiles message too long! (%d)", len);
     }
@@ -290,7 +290,7 @@ wint_t TilesFramework::_receive_control_message()
                        (sockaddr *) &srcaddr, &srcaddr_len);
 
     if (len == -1)
-        die("Socket read error: %s", strerror(errno));
+        die("<2457>Socket read error: %s", strerror(errno));
 
     string data(buf, len);
     try
@@ -445,13 +445,13 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         }
         else
-            die("select error: %s", strerror(errno));
+            die("<2458>select error: %s", strerror(errno));
     }
 }
 
 void TilesFramework::dump()
 {
-    fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
+    fprintf(stderr, "<2459>Webtiles message buffer: %s\n", m_msg_buf.c_str());
     fprintf(stderr, "Webtiles JSON stack:\n");
     for (const JsonFrame &frame : m_json_stack)
     {
@@ -489,11 +489,11 @@ void TilesFramework::_send_version()
 {
 #ifdef WEB_DIR_PATH
     // The star signals a message to the server
-    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long);
+    send_message("*{\"msg\":\"client_path\",\"path\":\"<2460>%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long);
 #endif
 
     string title = CRAWL " " + string(Version::Long);
-    send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
+    send_message("{\"msg\":\"version\",\"text\":\"<2461>%s\"}", title.c_str());
 }
 
 void TilesFramework::_send_options()
@@ -567,7 +567,7 @@ void TilesFramework::close_all_menus()
 
 static void _send_text_cursor(bool enabled)
 {
-    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
+    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\"<2462>:%s}",
                        enabled ? "true" : "false");
 }
 

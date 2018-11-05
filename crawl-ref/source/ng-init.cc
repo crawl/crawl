@@ -92,7 +92,7 @@ void initialise_branch_depths()
 
     for (branch_type disabled : disabled_branch)
     {
-        dprf("Disabling branch: %s", branches[disabled].shortname);
+        dprf("<1689>Disabling branch: %s", branches[disabled].shortname);
         brentry[disabled].clear();
     }
 
@@ -155,7 +155,7 @@ void initialise_temples()
             if (sizes.empty())
             {
                 mprf(MSGCH_ERROR,
-                     "Temple %s set as variable but has no sizes.",
+                     "<1690>Temple %s set as variable but has no sizes.",
                      main_temple->name.c_str());
                 main_temple = nullptr;
                 continue;
@@ -175,7 +175,7 @@ void initialise_temples()
 
         if (!err.empty())
         {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+            mprf(MSGCH_ERROR, "<1691>Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
             main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
@@ -187,7 +187,7 @@ void initialise_temples()
 
         if (!err.empty())
         {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+            mprf(MSGCH_ERROR, "<1692>Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
             main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
@@ -207,12 +207,12 @@ void initialise_temples()
 
     if (main_temple_size == 0)
     {
-        end(1, false, "Main temple '%s' has no altars",
+        end(1, false, "<1693>Main temple '%s' has no altars",
             main_temple->name.c_str());
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %u",
+    mprf(MSGCH_DIAGNOSTICS, "<1694>Chose main temple %s, size %u",
          main_temple->name.c_str(), main_temple_size);
 #endif
 

@@ -356,15 +356,15 @@ void assert_read_safe_path(const string &path)
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-        throw unsafe_path_f("\"%s\" contains bad characters.", path.c_str());
+        throw unsafe_path_f("\"<585>%s\" contains bad characters.", path.c_str());
 #endif
 
 #ifdef DATA_DIR_PATH
     if (is_absolute_path(path))
-        throw unsafe_path_f("\"%s\" is an absolute path.", path.c_str());
+        throw unsafe_path_f("\"<586>%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != string::npos)
-        throw unsafe_path_f("\"%s\" contains \"..\" sequences.", path.c_str());
+        throw unsafe_path_f("\"<587>%s\" contains \"..\" sequences.", path.c_str());
 #endif
 
     // Path is okay.
@@ -446,7 +446,7 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     {
         string name = basedir + basename;
 #ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
+        __android_log_print(ANDROID_LOG_INFO,"Crawl","<588>Looking for %s as '%s'",basename.c_str(),name.c_str());
 #endif
         if (thing_exists(name))
             return name;
@@ -455,7 +455,7 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     // Die horribly.
     if (croak_on_fail)
     {
-        end(1, false, "Cannot find data file '%s' anywhere, aborting\n",
+        end(1, false, "<589>Cannot find data file '%s' anywhere, aborting\n",
             basename.c_str());
     }
 
@@ -490,10 +490,10 @@ bool check_mkdir(const string &whatdir, string *dir, bool silent)
         {
 #ifdef __ANDROID__
             __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                                "%s \"%s\" does not exist and I can't create it.",
+                                "<590>%s \"%s\" does not exist and I can't create it.",
                                 whatdir.c_str(), dir->c_str());
 #endif
-            fprintf(stderr, "%s \"%s\" does not exist "
+            fprintf(stderr, "<591>%s \"%s\" does not exist "
                     "and I can't create it.\n",
                     whatdir.c_str(), dir->c_str());
         }
@@ -666,7 +666,7 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
-                dprf("%s: %s", filename.c_str(), E.what());
+                dprf("<592>%s: %s", filename.c_str(), E.what());
             }
         }
 
@@ -890,7 +890,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
 
     level_id dest = level_id::current();
 
-    dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
+    dprf("<593>%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
     bool could_see = you.can_see(*fol);
     fol->set_transit(dest);
@@ -968,13 +968,13 @@ static void _grab_followers()
         // Summons won't follow and will time out.
         if (non_stair_using_summons > 0)
         {
-            mprf("Your summoned %s left behind.",
+            mprf("<594>Your summoned %s left behind.",
                  non_stair_using_allies > 1 ? "allies are" : "ally is");
         }
         else
         {
             // Permanent undead are left behind but stay.
-            mprf("Your mindless thrall%s behind.",
+            mprf("<595>Your mindless thrall%s behind.",
                  non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
@@ -1120,15 +1120,15 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         {
             // warn about breakage so testers know it's an abnormal situation.
             mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
-                 "the same level (%s) twice! It will be trampled upon return.\n"
-                 "The stack has: %s.",
+                 "<596>the same level (%s) twice! It will be trampled upon return.\n"
+                 "<597>The stack has: %s.",
                  level_id::current().describe().c_str(),
                  comma_separated_line(stack.begin(), stack.end(),
                                       ", ", ", ").c_str());
         }
         else
         {
-            die("Attempt to enter a portal (%s) twice; stack: %s",
+            die("<598>Attempt to enter a portal (%s) twice; stack: %s",
                 level_id::current().describe().c_str(),
                 comma_separated_line(stack.begin(), stack.end(),
                                      ", ", ", ").c_str());
@@ -1234,7 +1234,7 @@ static void _place_player(dungeon_feature_type stair_taken,
             }
         }
 
-        dprf("%s under player and can't be moved anywhere; killing",
+        dprf("<599>%s under player and can't be moved anywhere; killing",
              mon->name(DESC_PLAIN).c_str());
         monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
@@ -1316,7 +1316,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        dprf("stair_taken = %s", dungeon_feature_name(stair_taken));
+        dprf("<600>stair_taken = %s", dungeon_feature_name(stair_taken));
         // Not the case normally, but can happen during recovery of damaged
         // games.
         if (old_level.depth != -1)
@@ -1352,13 +1352,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (!you.save->has_chunk(level_name))
     {
         ASSERT(load_mode != LOAD_VISITOR);
-        dprf("Generating new level for '%s'.", level_name.c_str());
+        dprf("<601>Generating new level for '%s'.", level_name.c_str());
         _make_level(stair_taken, old_level);
         just_created_level = true;
     }
     else
     {
-        dprf("Loading old level '%s'.", level_name.c_str());
+        dprf("<602>Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
         _redraw_all();
@@ -1451,7 +1451,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         && !get_level_annotation().empty()
         && !crawl_state.level_annotation_shown)
     {
-        mprf(MSGCH_PLAIN, YELLOW, "Level annotation: %s",
+        mprf(MSGCH_PLAIN, YELLOW, "<603>Level annotation: %s",
              get_level_annotation().c_str());
     }
 
@@ -1516,14 +1516,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 if (coinflip()
                     && slide_feature_over(you.pos()))
                 {
-                    mprf("%s slides away from you right after you %s it!",
+                    mprf("<604>%s slides away from you right after you %s it!",
                          stair_str.c_str(), verb.c_str());
                 }
 
                 if (coinflip())
                 {
                     // Stairs stop fleeing from you now you actually caught one.
-                    mprf("%s settles down.", stair_str.c_str());
+                    mprf("<605>%s settles down.", stair_str.c_str());
                     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
                     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
                 }
@@ -1700,7 +1700,7 @@ void save_game(bool leave_game, const char *farewellmsg)
         throw game_ended_condition(true);
     }
 
-    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+    end(0, false, farewellmsg? "<606>%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
 }
 
@@ -1740,7 +1740,7 @@ static vector<string> _list_bones()
     string old_bonefile = _get_old_bonefile_directory() + base_filename;
     if (access(old_bonefile.c_str(), F_OK) == 0)
     {
-        dprf("Found old bonefile %s", old_bonefile.c_str());
+        dprf("<607>Found old bonefile %s", old_bonefile.c_str());
         bonefiles.push_back(old_bonefile);
     }
 
@@ -1821,7 +1821,7 @@ bool load_ghost(bool creating_level)
         }
         catch (short_read_exception &short_read)
         {
-            mprf(MSGCH_ERROR, "Broken bones file: %s",
+            mprf(MSGCH_ERROR, "<608>Broken bones file: %s",
                  ghost_filename.c_str());
         }
     }
@@ -1833,7 +1833,7 @@ bool load_ghost(bool creating_level)
     if (!debug_check_ghosts())
     {
         mprf(MSGCH_DIAGNOSTICS,
-             "Refusing to load buggy ghost from file \"%s\"!",
+             "Refusing to load buggy ghost from file \"<609>%s\"!",
              ghost_filename.c_str());
 
         return false;
@@ -1880,7 +1880,7 @@ bool load_ghost(bool creating_level)
             else if (mons->type != MONS_PLAYER_GHOST)
             {
                 mprf(MSGCH_DIAGNOSTICS,
-                     "Placed ghost is not MONS_PLAYER_GHOST, but %s",
+                     "<610>Placed ghost is not MONS_PLAYER_GHOST, but %s",
                      mons->name(DESC_PLAIN, true).c_str());
                 ghost_errors = true;
             }
@@ -1934,7 +1934,7 @@ static bool _restore_game(const string& filename)
             you.save = 0;
             return false;
         }
-        fail("Cannot load an incompatible save from version %s",
+        fail("<611>Cannot load an incompatible save from version %s",
              you.prev_save_version.c_str());
     }
 
@@ -2021,7 +2021,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "해당 이름으로 저장이 있지만 유효하지 않은 것으로 보인다.\n"
-                   "(Error: %s). 삭제하겠나?", err.what()).c_str(),
+                   "<612>(Error: %s). 삭제하겠나?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)
@@ -2283,11 +2283,11 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     {
         if (!complaint)
         {
-            dprf("chunk %s: %s", name.c_str(), reason.c_str());
+            dprf("<613>chunk %s: %s", name.c_str(), reason.c_str());
             return false;
         }
         else
-            end(-1, false, "\n%s %s\n", complaint, reason.c_str());
+            end(-1, false, "<614>\n%s %s\n", complaint, reason.c_str());
     }
 
     crawl_state.minor_version = inf.getMinorVersion();
@@ -2297,7 +2297,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     }
     catch (short_read_exception &E)
     {
-        fail("truncated save chunk (%s)", name.c_str());
+        fail("<615>truncated save chunk (%s)", name.c_str());
     };
 
     inf.fail_if_not_eof(name);
@@ -2332,7 +2332,7 @@ static bool _ghost_version_compatible(reader &inf)
     catch (short_read_exception &E)
     {
         mprf(MSGCH_ERROR,
-             "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
+             "Ghost file \"<616>%s\" seems to be invalid (short read); deleting it.",
              inf.filename().c_str());
         return false;
     }
@@ -2352,18 +2352,18 @@ static FILE* _make_bones_file(string * return_gfilename)
     const string base_filename = _make_ghost_filename();
     for (int i = 0; i < GHOST_LIMIT; i++)
     {
-        const string g_file_name = make_stringf("%s%s_%d", bone_dir.c_str(),
+        const string g_file_name = make_stringf("<617>%s%s_%d", bone_dir.c_str(),
                                                 base_filename.c_str(), i);
         FILE *gfil = lk_open_exclusive(g_file_name);
         // need to check file size, so can't open 'wb' - would truncate!
 
         if (!gfil)
         {
-            dprf("Could not open %s", g_file_name.c_str());
+            dprf("<618>Could not open %s", g_file_name.c_str());
             continue;
         }
 
-        dprf("found %s", g_file_name.c_str());
+        dprf("<619>found %s", g_file_name.c_str());
 
         *return_gfilename = g_file_name;
         return gfil;
@@ -2444,7 +2444,7 @@ void save_ghost(bool force)
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
-        mprf(MSGCH_DIAGNOSTICS, "Saved ghosts (%s).", g_file_name.c_str());
+        mprf(MSGCH_DIAGNOSTICS, "<620>Saved ghosts (%s).", g_file_name.c_str());
 #endif
 }
 
@@ -2479,7 +2479,7 @@ FILE *lk_open(const char *mode, const string &file)
     const bool write_lock = mode[0] != 'r' || strchr(mode, '+');
     if (!lock_file_handle(handle, write_lock))
     {
-        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
+        mprf(MSGCH_ERROR, "<621>ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
         handle = nullptr;
     }
@@ -2503,7 +2503,7 @@ FILE *lk_open_exclusive(const string &file)
 
     if (!lock_file(fd, true))
     {
-        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
+        mprf(MSGCH_ERROR, "<622>ERROR: Could not lock file %s", file.c_str());
         close(fd);
         return nullptr;
     }
@@ -2531,7 +2531,7 @@ file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
     : handle(nullptr), mode(_mode), filename(s)
 {
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
-        end(1, true, "Unable to open lock file \"%s\"", filename.c_str());
+        end(1, true, "Unable to open lock file \"<623>%s\"", filename.c_str());
 }
 
 file_lock::~file_lock()

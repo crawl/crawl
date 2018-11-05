@@ -98,7 +98,7 @@ static coord_def _place_feature_near(const coord_def &centre,
 
         if (grd(cp) == candidate)
         {
-            dprf(DIAG_ABYSS, "Placing %s at (%d,%d)",
+            dprf(DIAG_ABYSS, "<9>Placing %s at (%d,%d)",
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
             grd(cp) = replacement;
@@ -211,7 +211,7 @@ static bool _abyss_place_map(const map_def *mdef)
     }
     catch (dgn_veto_exception &e)
     {
-        dprf(DIAG_ABYSS, "Abyss map placement vetoed: %s", e.what());
+        dprf(DIAG_ABYSS, "<10>Abyss map placement vetoed: %s", e.what());
     }
     return false;
 }
@@ -476,7 +476,7 @@ static bool _abyss_check_place_feat(coord_def p,
     // item-free.
     if (place_feat || (feats_wanted && *feats_wanted > 0))
     {
-        dprf(DIAG_ABYSS, "Placing abyss feature: %s.",
+        dprf(DIAG_ABYSS, "<11>Placing abyss feature: %s.",
              dungeon_feature_name(which_feat));
 
         // When placing Abyss exits, try to use a vault if we have one.
@@ -769,7 +769,7 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
         const coord_def oldp = vp.pos;
 #endif
         vp.pos += delta;
-        dprf(DIAG_ABYSS, "Moved vault (%s) from (%d,%d)-(%d,%d)",
+        dprf(DIAG_ABYSS, "<12>Moved vault (%s) from (%d,%d)-(%d,%d)",
              vp.map.name.c_str(), oldp.x, oldp.y, vp.pos.x, vp.pos.y);
     }
 }
@@ -1399,7 +1399,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     // Any rune on the floor prevents the abyssal rune from being generated.
     const bool placed_abyssal_rune = find_floor_item(OBJ_RUNES);
 
-    dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
+    dprf(DIAG_ABYSS, "<13>_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 
     _abyss_apply_terrain(abyss_genlevel_mask);
@@ -2011,7 +2011,7 @@ bool lugonu_corrupt_level(int power)
         return false;
 
     simple_god_message("의 타락의 손이 뻗쳐온다!");
-    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
+    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("<14>Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
     mark_corrupted_level(level_id::current());
 
@@ -2053,7 +2053,7 @@ void abyss_maybe_spawn_xp_exit()
     redraw_screen(); // before the force-more
     mprf(MSGCH_BANISHMENT,
          "심연의 물질계가 격렬하게 뒤틀리고, "
-         " %s으로 향하는 관문이 나타났다!", stairs ? "더 깊은 곳" : "밖");
+         "<15> %s으로 향하는 관문이 나타났다!", stairs ? "더 깊은 곳" : "밖");
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;

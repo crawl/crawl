@@ -312,7 +312,7 @@ static int _calc_player_experience(const monster* mons)
 
     if (!mons->damage_total)
     {
-        mprf(MSGCH_WARN, "Error, exp for monster with no damage: %s",
+        mprf(MSGCH_WARN, "<1463>Error, exp for monster with no damage: %s",
              mons->name(DESC_PLAIN, true).c_str());
         return 0;
     }
@@ -472,7 +472,7 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     if (you.see_cell(pos) && !silent)
     {
         // XXX: tweak for uniques/named monsters, somehow?
-        mprf("%s은(는) %s손상되지 않았다.",
+        mprf("<1464>%s은(는) %s손상되지 않았다.",
              item.name(DESC_PLAIN).c_str(),
              mons_genus(mtyp) == MONS_DRAGON ? ""  // scales are
                                              : ""); // hide is
@@ -750,7 +750,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     dprf("new hp: %d", mons->hit_points);
 
-    const string msg = make_stringf("%s이(가) %s을(를) 치료하였다%s",
+    const string msg = make_stringf("<1465>%s이(가) %s을(를) 치료하였다%s",
              god_name(god, false).c_str(),
              mons->name(DESC_PLAIN).c_str(),
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
@@ -791,7 +791,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
     // checks are made against your stats. You're the potential
     // messiah, after all.
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+    mprf(MSGCH_DIAGNOSTICS, "<1466>Death convert attempt on %s, HD: %d, "
          "your xl: %d",
          mons.name(DESC_PLAIN).c_str(),
          mons.get_hit_dice(),
@@ -1025,10 +1025,10 @@ static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
         mprf(MSGCH_MONSTER_SPELL, "당신은 순간 소름이 끼쳤다...");
     else if (you.can_see(*target))
     {
-        mprf(MSGCH_MONSTER_SPELL, "악의적인 기운이 %s을(를) 감싼다.",
+        mprf(MSGCH_MONSTER_SPELL, "<1467>악의적인 기운이 %s을(를) 감싼다.",
              target->name(DESC_PLAIN).c_str());
     }
-    const string cause = make_stringf("%s의 사망저주",
+    const string cause = make_stringf("<1468>%s의 사망저주",
                             apostrophise(mons->name(DESC_PLAIN)).c_str());
     MiscastEffect(target, mons, MUMMY_MISCAST, SPTYP_NECROMANCY,
                   pow, random2avg(88, 3), cause.c_str());
@@ -1393,12 +1393,12 @@ static bool _explode_monster(monster* mons, killer_type killer,
         saw = true;
         viewwindow();
         if (is_sanctuary(mons->pos()))
-            mprf(MSGCH_GOD, "%s", sanct_msg);
+            mprf(MSGCH_GOD, "<1469>%s", sanct_msg);
         else if (type == MONS_BENNU)
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s이(가) 뛰쳐나왔다!",
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "<1470>%s이(가) 뛰쳐나왔다!",
                  mons->full_name(DESC_PLAIN).c_str());
         else
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s이(가) 폭발했다!",
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "<1471>%s이(가) 폭발했다!",
                  mons->full_name(DESC_PLAIN).c_str());
     }
 
@@ -1567,7 +1567,7 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
             {
                 if (!quiet)
                 {
-                    mprf("%s 안개가 순간적으로 모여들었다가, 흩어졌다.",
+                    mprf("<1472>%s 안개가 순간적으로 모여들었다가, 흩어졌다.",
                          bound_soul ? "얼어붙은" : "빛나는");
                 }
                 return;
@@ -1580,7 +1580,7 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
         {
             if (!quiet)
             {
-                mprf("%s 안개가 모여들기 시작한다...",
+                mprf("<1473>%s 안개가 모여들기 시작한다...",
                      bound_soul ? "얼어붙은" : "빛나는");
             }
 
@@ -1623,7 +1623,7 @@ static void _druid_final_boon(const monster* mons)
 
     if (you.can_see(*mons))
     {
-        mprf(MSGCH_MONSTER_SPELL, "마지막 숨결과 함께, %s은(는) 야수에게 "
+        mprf(MSGCH_MONSTER_SPELL, "<1474>마지막 숨결과 함께, %s은(는) 야수에게 "
                                   "힘을 선사하였다!",
                                   mons->name(DESC_PLAIN).c_str());
     }
@@ -1639,7 +1639,7 @@ static void _druid_final_boon(const monster* mons)
         if (beasts[i]->heal(roll_dice(3, mons->get_hit_dice()))
             && you.can_see(*beasts[i]))
         {
-            mprf("%s은(는) %s치유되었다.", beasts[i]->name(DESC_PLAIN).c_str(),
+            mprf("<1475>%s은(는) %s치유되었다.", beasts[i]->name(DESC_PLAIN).c_str(),
                                   beasts[i]->conj_verb("").c_str());
         }
     }
@@ -1684,9 +1684,9 @@ static bool _mons_reaped(actor *killer, monster* victim)
     }
 
     if (you.can_see(*victim))
-        mprf("%s이(가) 좀비로 되살아났다!", victim->name(DESC_PLAIN).c_str());
+        mprf("<1476>%s이(가) 좀비로 되살아났다!", victim->name(DESC_PLAIN).c_str());
     else if (you.can_see(*zombie))
-        mprf("%s이(가) 희미한 대기 사이에서 나타났다!", zombie->name(DESC_PLAIN).c_str());
+        mprf("<1477>%s이(가) 희미한 대기 사이에서 나타났다!", zombie->name(DESC_PLAIN).c_str());
 
     player_angers_monster(zombie);
 
@@ -1945,7 +1945,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         else
         {
             mprf(MSGCH_ERROR,
-                 "Lua death function for monster '%s' didn't load: %s",
+                 "<1478>Lua death function for monster '%s' didn't load: %s",
                  mons.full_name(DESC_PLAIN).c_str(),
                  dlua.error.c_str());
         }
@@ -2032,7 +2032,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             you.increase_duration(DUR_BERSERK, bonus);
 
             mprf(MSGCH_GOD, you.religion,
-                 "격렬해진 분노 속에서 당신은 %s의 힘을 느꼈다.",
+                 "<1479>격렬해진 분노 속에서 당신은 %s의 힘을 느꼈다.",
                  uppercase_first(god_name(you.religion)).c_str());
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
@@ -2236,7 +2236,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (killer == KILL_YOU_CONF
                     && (anon || !invalid_monster_index(killer_index)))
                 {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s은(는) %s!",
+                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "<1480>%s은(는) %s!",
                          mons.name(DESC_PLAIN).c_str(),
                          exploded                        ? "터져버렸다" :
                          wounded_damaged(targ_holy)      ? "박살나버렸다"
@@ -2786,7 +2786,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
             if (!you.can_see(mons))
             {
-                mprf("%s의 존재는 이 세상에서 소멸했다.",
+                mprf("<1481>%s의 존재는 이 세상에서 소멸했다.",
                      hepliaklqana_ally_name().c_str());
             }
             // respawn in ~30-60 turns
@@ -2843,7 +2843,7 @@ void unawaken_vines(const monster* mons, bool quiet)
 
     if (!quiet && vines_seen)
     {
-        mprf("덩굴%s이 흐느적 거리며 땅으로 떨어졌다.",
+        mprf("<1482>덩굴%s이 흐느적 거리며 땅으로 떨어졌다.",
               (vines_seen > 1 ? "들" : ""));
     }
 }
@@ -2860,7 +2860,7 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
 
         if (you.can_see(*act) && !quiet)
         {
-            mprf("%s의 신체의 끔찍한 상처가 사라졌다.",
+            mprf("<1483>%s의 신체의 끔찍한 상처가 사라졌다.",
                  act->name(DESC_PLAIN).c_str());
         }
 
@@ -2998,7 +2998,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     // something has fallen into the lava.
     if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || grd(oldpos) != grid))
     {
-         mprf("%s은(는) %s에 빠졌다!",
+         mprf("<1484>%s은(는) %s에 빠졌다!",
              mons->name(DESC_PLAIN).c_str(),
              grid == DNGN_LAVA ? "용암" : "물");
     }
@@ -3091,33 +3091,33 @@ string summoned_poof_msg(const monster* mons, bool plural)
         valid_mon = true;
     }
 
-    string msg      = "연기 속으로 사라졌다%s";
+    string msg      = "<1485>연기 속으로 사라졌다%s";
     bool   no_chaos = false;
 
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
     case MON_SUMM_SCROLL:
-        msg      = "그림자로 용해되었다%s";
+        msg      = "<1486>그림자로 용해되었다%s";
         no_chaos = true;
         break;
 
     case MON_SUMM_CHAOS:
-        msg = "원시 혼돈의 구름으로 퇴보하였다%s";
+        msg = "<1487>원시 혼돈의 구름으로 퇴보하였다%s";
         break;
 
     case MON_SUMM_WRATH:
     case MON_SUMM_AID:
         if (valid_mon && is_good_god(mons->god))
         {
-            msg      = "반짝이는 빛으로 용해되었다%s";
+            msg      = "<1488>반짝이는 빛으로 용해되었다%s";
             no_chaos = true;
         }
         break;
 
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_CALL_LOST_SOUL:
-        msg = "스르륵%s 사라졌다";
+        msg = "<1489>스르륵%s 사라졌다";
         break;
     }
 
@@ -3126,27 +3126,27 @@ string summoned_poof_msg(const monster* mons, bool plural)
         if (mons->god == GOD_XOM && !no_chaos && one_chance_in(10)
             || mons->type == MONS_CHAOS_SPAWN)
         {
-            msg = "원시 혼돈의 구름으로 퇴보하였다%s";
+            msg = "<1490>원시 혼돈의 구름으로 퇴보하였다%s";
         }
 
         if (mons->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
         {
-            msg = "반짝이는 빛으로 용해되었다%s";
+            msg = "<1491>반짝이는 빛으로 용해되었다%s";
         }
 
         if (mons_is_slime(*mons)
             && mons->god == GOD_JIYVA)
         {
-            msg = "점액질 웅덩이%s로 용해되었다";
+            msg = "<1492>점액질 웅덩이%s로 용해되었다";
         }
 
         if (mons->type == MONS_DROWNED_SOUL)
-            msg = "깊은 곳으로 되돌아갔다%s";
+            msg = "<1493>깊은 곳으로 되돌아갔다%s";
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
-            msg = "어른거리더니%s 사라졌다" + string(plural ? "" : ""); // Ugh
+            msg = "<1494>어른거리더니%s 사라졌다" + string(plural ? "" : ""); // Ugh
     }
 
     // Conjugate.
@@ -3206,7 +3206,7 @@ void pikel_band_neutralise()
         if (you.get_mutation_level(MUT_NO_LOVE))
         {
             const char *substr = visible_slaves > 1 ? "노예들" : "노예";
-            final_msg = make_stringf("피켈의 주문이 깨졌지만, 이전의 %s은(는) "
+            final_msg = make_stringf("<1495>피켈의 주문이 깨졌지만, 이전의 %s은(는) "
                                      "당신을 증오하는 감정만을 느낄 수 있다!", substr);
         }
         else
@@ -3215,7 +3215,7 @@ void pikel_band_neutralise()
                 ? "노예들은 당신에게 고마워했다"
                 : "노예는 당신에게 고마워했다";
             final_msg = make_stringf("피켈의 주문이 깨졌으므로, "
-                                     "자유를 되찾은 이전의 %s", substr);
+                                     "<1496>자유를 되찾은 이전의 %s", substr);
         }
     }
     delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
@@ -3262,7 +3262,7 @@ void hogs_to_humans()
     if (any > 0)
     {
         final_msg = make_stringf("더 이상 키르케의 주문에 속박 되어 있지 않으므로, "
-                                 "%s %s %s 되돌아갔다!",
+                                 "<1497>%s %s %s 되돌아갔다!",
                                  any > 1 ? "돼지들은"
                                          : "돼지는",
                                  any == human ? "인간의" : "원래의",

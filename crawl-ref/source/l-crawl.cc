@@ -81,7 +81,7 @@ static int crawl_mpr(lua_State *ls)
     if (ch < 0 || ch >= NUM_MESSAGE_CHANNELS)
         ch = MSGCH_PLAIN;
 
-    mprf(static_cast<msg_channel_type>(ch), "%s", message);
+    mprf(static_cast<msg_channel_type>(ch), "<1044>%s", message);
     return 0;
 }
 
@@ -121,7 +121,7 @@ function stderr(text) */
 LUAFN(crawl_stderr)
 {
     const char *text = luaL_checkstring(ls, 1);
-    fprintf(stderr, "%s\n", text);
+    fprintf(stderr, "<1045>%s\n", text);
     return 0;
 }
 
@@ -133,7 +133,7 @@ LUAFN(crawl_dpr)
 #ifdef DEBUG_DIAGNOSTICS
     const char *text = luaL_checkstring(ls, 1);
     if (crawl_state.io_inited)
-        dprf("%s", text);
+        dprf("<1046>%s", text);
 #endif
     return 0;
 }
@@ -351,7 +351,7 @@ static bool _check_can_do_command(lua_State *ls)
     auto delay = current_delay();
     if (delay && !delay->is_macro())
     {
-        luaL_error(ls, "Cannot currently process new keys (%s delay active)",
+        luaL_error(ls, "<1047>Cannot currently process new keys (%s delay active)",
                    delay->name());
         return false;
     }
@@ -1036,7 +1036,7 @@ static int crawl_call_dlua(lua_State *ls)
             const char *msg = lua_tostring(dlua, -1);
             if (msg == nullptr)
                 msg = "(error object is not a string)";
-            mprf(MSGCH_ERROR, "%s", msg);
+            mprf(MSGCH_ERROR, "<1048>%s", msg);
         }
 
         lua_settop(dlua, 0); // don't bother unwinding, just nuke the stack
@@ -1276,7 +1276,7 @@ LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
         if (((godvar) = str_to_god(_cg_name)) == GOD_NO_GOD)             \
         {                                                                \
             return luaL_argerror(ls, _cg_arg,                            \
-                       make_stringf("'%s' matches no god.",              \
+                       make_stringf("<1049>'%s' matches no god.",              \
                                     _cg_name).c_str());                  \
         }                                                                \
     } while (0)

@@ -112,7 +112,7 @@ static void _moveto_maybe_repel_stairs()
 
         if (slide_feature_over(you.pos()))
         {
-            mprf("%s %s(으)로 이동하자, 그것은 도망갔다!", stair_str.c_str(),
+            mprf("<1806>%s %s(으)로 이동하자, 그것은 도망갔다!", stair_str.c_str(),
                  prep.c_str());
 
             if (player_in_a_dangerous_place() && one_chance_in(5))
@@ -152,7 +152,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        string prompt = make_stringf("정말로 %s 구름 속으로 %s?",
+        string prompt = make_stringf("<1807>정말로 %s 구름 속으로 %s?",
                                      cloud_type_name(ctype).c_str(),
                                      move_verb.c_str());
         learned_something_new(HINT_CLOUD_WARNING);
@@ -176,12 +176,12 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
     if (trap->type == TRAP_ZOT && !trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        string msg = "정말로 조트의 함정 속으로 %s?";
+        string msg = "<1808>정말로 조트의 함정 속으로 %s?";
         string prompt = make_stringf(msg.c_str(), move_verb.c_str());
 
         if (prompted)
             *prompted = true;
-        if (!yes_or_no("%s", prompt.c_str()))
+        if (!yes_or_no("<1809>%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
             return false;
@@ -193,7 +193,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        prompt = make_stringf("정말로 %s %s that %s?", move_verb.c_str(),
+        prompt = make_stringf("<1810>정말로 %s %s that %s?", move_verb.c_str(),
                               (trap->type == TRAP_ALARM
                                || trap->type == TRAP_PLATE) ? "에"
                               : "으로",
@@ -276,7 +276,7 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
     {
         if (prompted)
             *prompted = true;
-        prompt = make_stringf("정말로 탐험금지 설정구역으로 %s?",
+        prompt = make_stringf("<1811>정말로 탐험금지 설정구역으로 %s?",
                               move_verb.c_str());
 
         if (!yesno(prompt.c_str(), false, 'n'))
@@ -324,7 +324,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         if (!quiet)
         {
             simple_monster_message(*mons,
-                make_stringf(" is %s!", held_status(mons)).c_str());
+                make_stringf("<1812> is %s!", held_status(mons)).c_str());
         }
         return false;
     }
@@ -346,7 +346,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     // prompt when swapping into known zot traps
     if (!quiet && trap_at(loc) && trap_at(loc)->type == TRAP_ZOT
         && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
-        && !yes_or_no("당신은 정말로 %s을(를) 조트의 함정으로 위치를 바꿀 것인가?",
+        && !yes_or_no("<1813>당신은 정말로 %s을(를) 조트의 함정으로 위치를 바꿀 것인가?",
                       mons->name(DESC_YOUR).c_str()))
     {
         return false;
@@ -422,7 +422,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             {
                 if (!feat_is_water(old_feat))
                 {
-                    mprf("당신은 %s 물 속에 %s.",
+                    mprf("<1814>당신은 %s 물 속에 %s.",
                          new_grid == DNGN_SHALLOW_WATER ? "얕은" : "깊은",
                          stepped ? "들어갔다" : "빠졌다");
                 }
@@ -2437,10 +2437,10 @@ static void _recharge_xp_evokers(int exp)
             continue;
 
         if (evoker_max_charges(i) == 1)
-            mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
+            mprf("<1815>%s has recharged.", evoker->name(DESC_YOUR).c_str());
         else
         {
-            mprf("%s가 %s 재충전되었다%s.",
+            mprf("<1816>%s가 %s 재충전되었다%s.",
                  evoker->name(DESC_YOUR).c_str(),
                  number_in_words(gained).c_str(), gained > 1 ? "" : "");
         }
@@ -2861,7 +2861,7 @@ void level_change(bool skip_attribute_increase)
                     init_player_doll();
 #endif
                     mprf(MSGCH_INTRINSIC_GAIN,
-                         "당신의 비늘이 %s색으로 변화하기 시작했다.",
+                         "<1817>당신의 비늘이 %s색으로 변화하기 시작했다.",
                          article_a(scale_type(you.species)).c_str());
 
                     // Produce messages about skill increases/decreases. We
@@ -2873,7 +2873,7 @@ void level_change(bool skip_attribute_increase)
                         const int newapt = species_apt(sk, you.species);
                         if (oldapt != newapt)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "당신은 %s을(를) %s%s 익힌다.",
+                            mprf(MSGCH_INTRINSIC_GAIN, "<1818>당신은 %s을(를) %s%s 익힌다.",
                                  skill_name(sk),
                                  abs(oldapt - newapt) > 1 ? "꽤 " : "",
                                  oldapt > newapt ? "느리게" : "빠르게");
@@ -2885,7 +2885,7 @@ void level_change(bool skip_attribute_increase)
 
                     // Tell the player about their new species
                     for (auto &mut : fake_mutations(you.species, false))
-                        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
+                        mprf(MSGCH_INTRINSIC_GAIN, "<1819>%s", mut.c_str());
 
                     // needs to be done early here, so HP doesn't look rotted
                     // when we redraw the screen
@@ -3218,9 +3218,9 @@ static void _display_char_status(int value, const char *fmt, ...)
     string msg = vmake_stringf(fmt, argp);
 
     if (you.wizard)
-        mprf("%s (%d).", msg.c_str(), value);
+        mprf("<1820>%s (%d).", msg.c_str(), value);
     else
-        mprf("%s.", msg.c_str());
+        mprf("<1821>%s.", msg.c_str());
 
     va_end(argp);
 }
@@ -3280,7 +3280,7 @@ static void _display_movement_speed()
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
                             && you.attribute[ATTR_SWIFTNESS] < 0);
 
-    _display_char_status(move_cost, "당신의 %s 속도는 %s%s%s",
+    _display_char_status(move_cost, "<1822>당신의 %s 속도는 %s%s%s",
           // order is important for these:
           (swim)    ? "수영" :
           (water)   ? "wading" :
@@ -3357,7 +3357,7 @@ static void _display_attack_delay()
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
 
-    _display_char_status(avg, "당신의 공격속도는 %s%s%s",
+    _display_char_status(avg, "<1823>당신의 공격속도는 %s%s%s",
                          _attack_delay_desc(avg),
                          at_min_delay ?
                             " (부가적인 무기 기술로는 향상 될 수 없다)" : "",
@@ -4069,7 +4069,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         if (msg)
         {
             mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
-                 "%s", describe_contamination(new_level).c_str());
+                 "<1824>%s", describe_contamination(new_level).c_str());
         }
         if (player_severe_contamination())
             xom_is_stimulated(new_level * 25);
@@ -4146,7 +4146,7 @@ bool confuse_player(int amount, bool quiet, bool force)
 
         if (!quiet)
         {
-            mprf(MSGCH_WARN, "You are %sconfused.",
+            mprf(MSGCH_WARN, "<1825>You are %sconfused.",
                  old_value > 0 ? "more " : "");
         }
 
@@ -4199,7 +4199,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
             mprf(MSGCH_DANGER, "You are lethally poisoned!");
         else
         {
-            mprf(MSGCH_WARN, "You are %spoisoned.",
+            mprf(MSGCH_WARN, "<1826>You are %spoisoned.",
                 old_value > 0 ? "more " : "");
         }
 
@@ -4324,7 +4324,7 @@ void handle_player_poison(int delay)
         int oldhp = you.hp;
         ouch(dmg, KILLED_BY_POISON);
         if (you.hp < oldhp)
-            mprf(channel, "%s독에 시달리고 있다.", adj);
+            mprf(channel, "<1827>%s독에 시달리고 있다.", adj);
     }
 
     // Now decrease the poison in our system
@@ -4835,7 +4835,7 @@ void fly_player(int pow, bool already_flying)
 
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
-        mprf(MSGCH_DURATION, "몸의 부양 능력이 %s 늘어났다.", standing ? "매우" : "더");
+        mprf(MSGCH_DURATION, "<1828>몸의 부양 능력이 %s 늘어났다.", standing ? "매우" : "더");
 
     you.increase_duration(DUR_FLIGHT, 25 + random2(pow), 100);
 
@@ -6315,7 +6315,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         {
             if (item.base_type == OBJ_WEAPONS)
             {
-                problems.push_back(make_stringf("wielding %s",
+                problems.push_back(make_stringf("<1829>wielding %s",
                                                 item.name(DESC_A).c_str()));
             }
             else
@@ -6325,14 +6325,14 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         if (worn_notele.size() > (problems.empty() ? 3 : 1))
         {
             problems.push_back(
-                make_stringf("wearing %s %s preventing teleportation",
+                make_stringf("<1830>wearing %s %s preventing teleportation",
                              number_in_words(worn_notele.size()).c_str(),
                              found_nonartefact ? "items": "artefacts"));
         }
         else if (!worn_notele.empty())
         {
             problems.push_back(
-                make_stringf("wearing %s",
+                make_stringf("<1831>wearing %s",
                              comma_separated_line(worn_notele.begin(),
                                                   worn_notele.end()).c_str()));
         }
@@ -6341,7 +6341,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (problems.empty())
         return ""; // no problem
 
-    return make_stringf("You cannot %s because you are %s.",
+    return make_stringf("<1832>You cannot %s because you are %s.",
                         blinking ? "blink" : "teleport",
                         comma_separated_line(problems.begin(),
                                              problems.end()).c_str());
@@ -6560,7 +6560,7 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
     }
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
-                      make_stringf("%s corrodes you!",
+                      make_stringf("<1833>%s corrodes you!",
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
@@ -7277,7 +7277,7 @@ bool player::can_do_shaft_ability(bool quiet) const
     if (attribute[ATTR_HELD])
     {
         if (!quiet)
-            mprf("%s하는 동안에는 구덩이를 팔 수 없다.", held_status());
+            mprf("<1834>%s하는 동안에는 구덩이를 팔 수 없다.", held_status());
         return false;
     }
 
@@ -7356,9 +7356,9 @@ void player::set_gold(int amount)
             {
                 const int cost = get_gold_cost(power.abil);
                 if (gold >= cost && old_gold < cost)
-                    power.display(true, "You now have enough gold to %s.");
+                    power.display(true, "<1835>You now have enough gold to %s.");
                 else if (old_gold >= cost && gold < cost)
-                    power.display(false, "You no longer have enough gold to %s.");
+                    power.display(false, "<1836>You no longer have enough gold to %s.");
             }
             you.redraw_title = true;
         }
@@ -7406,7 +7406,7 @@ bool player::attempt_escape(int attempts)
     if (roll_dice(4 + escape_attempts, 13)
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
-        mprf("You escape %s grasp.", themonst->name(DESC_ITS, true).c_str());
+        mprf("<1837>You escape %s grasp.", themonst->name(DESC_ITS, true).c_str());
 
         // Stun the monster to prevent it from constricting again right away.
         themonst->speed_increment -= 5;
@@ -7417,7 +7417,7 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        mprf("%s grasp on you weakens, but your attempt to escape fails.",
+        mprf("<1838>%s grasp on you weakens, but your attempt to escape fails.",
              themonst->name(DESC_ITS, true).c_str());
         turn_is_over = true;
         return false;
@@ -7543,7 +7543,7 @@ static string _constriction_description()
     const int num_free_tentacles = you.usable_tentacles();
     if (num_free_tentacles)
     {
-        cinfo += make_stringf("You have %d tentacle%s available for constriction.",
+        cinfo += make_stringf("<1839>You have %d tentacle%s available for constriction.",
                               num_free_tentacles,
                               num_free_tentacles > 1 ? "s" : "");
     }
@@ -7553,7 +7553,7 @@ static string _constriction_description()
         if (!cinfo.empty())
             cinfo += "\n";
 
-        cinfo += make_stringf("You are being %s by %s.",
+        cinfo += make_stringf("<1840>You are being %s by %s.",
                       you.held == HELD_MONSTER ? "held" : "constricted",
                       monster_by_mid(you.constricted_by)->name(DESC_A).c_str());
     }
@@ -7649,7 +7649,7 @@ void print_potion_heal_message()
         if (player_equip_unrand(UNRAND_KRYIAS))
         {
             item_def* item = you.slot_item(EQ_BODY_ARMOUR);
-            mprf("%s enhances the healing.",
+            mprf("<1841>%s enhances the healing.",
             item->name(DESC_THE, false, false, false).c_str());
         }
         else
@@ -7720,7 +7720,7 @@ void player_open_door(coord_def doorpos)
 
         if (!ignore_exclude && is_exclude_root(doorpos))
         {
-            string prompt = make_stringf("This %s%s is marked as excluded! "
+            string prompt = make_stringf("<1842>This %s%s is marked as excluded! "
                                          "Open it anyway?", adj, noun);
 
             if (!yesno(prompt.c_str(), true, 'n', true, false))
@@ -7756,7 +7756,7 @@ void player_open_door(coord_def doorpos)
                 mprf(berserk_open.c_str(), adj, noun);
             }
             else
-                mprf("%s%s이(가) 확 열렸다!", adj, noun);
+                mprf("<1843>%s%s이(가) 확 열렸다!", adj, noun);
         }
         else
         {
@@ -7769,7 +7769,7 @@ void player_open_door(coord_def doorpos)
                 mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "%s%s이(가) 쾅 소리를 내며 확 열렸다!", adj, noun);
+                mprf(MSGCH_SOUND, "<1844>%s%s이(가) 쾅 소리를 내며 확 열렸다!", adj, noun);
             noisy(15, you.pos());
         }
     }
@@ -7779,7 +7779,7 @@ void player_open_door(coord_def doorpos)
             mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "%s%s이(가) 커다란 삐걱거리는 소리와 함께 열렸다!",
+            mprf(MSGCH_SOUND, "<1845>%s%s이(가) 커다란 삐걱거리는 소리와 함께 열렸다!",
                  adj, noun);
         }
         noisy(10, you.pos());
@@ -7792,14 +7792,14 @@ void player_open_door(coord_def doorpos)
             if (!door_airborne.empty())
                 verb = door_airborne.c_str();
             else
-                verb = "You reach down and open the %s%s.";
+                verb = "<1846>You reach down and open the %s%s.";
         }
         else
         {
             if (!door_open_verb.empty())
                verb = door_open_verb.c_str();
             else
-               verb = "You open the %s%s.";
+               verb = "<1847>You open the %s%s.";
         }
 
         mprf(verb, adj, noun);
@@ -7853,7 +7853,7 @@ void player_close_door(coord_def doorpos)
     find_connected_identical(doorpos, all_door);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
-    const string waynoun_str = make_stringf("%sway", noun);
+    const string waynoun_str = make_stringf("<1848>%sway", noun);
     const char *waynoun = waynoun_str.c_str();
 
     if (!door_desc_adj.empty())
@@ -7871,25 +7871,25 @@ void player_close_door(coord_def doorpos)
             const bool mons_unseen = !you.can_see(*mon);
             if (mons_unseen || mons_is_object(mon->type))
             {
-                mprf("무엇인가가 %s을(를) 막고 있다!", waynoun);
+                mprf("<1849>무엇인가가 %s을(를) 막고 있다!", waynoun);
                 // No free detection!
                 if (mons_unseen)
                     you.turn_is_over = true;
             }
             else
-                mprf("몬스터가 %s을(를) 막고 있다!", waynoun);
+                mprf("<1850>몬스터가 %s을(를) 막고 있다!", waynoun);
             return;
         }
 
         if (igrd(dc) != NON_ITEM)
         {
-            mprf("무엇인가가 %s을(를) 막고 있다.", waynoun);
+            mprf("<1851>무엇인가가 %s을(를) 막고 있다.", waynoun);
             return;
         }
 
         if (you.pos() == dc)
         {
-            mprf("멍청한 몬스터가 %s을(를) 막고 있다.", waynoun);
+            mprf("<1852>멍청한 몬스터가 %s을(를) 막고 있다.", waynoun);
             return;
         }
     }
@@ -7906,7 +7906,7 @@ void player_close_door(coord_def doorpos)
                 mprf(berserk_close.c_str(), adj, noun);
             }
             else
-                mprf("당신은 %s%s을(를) 세게 닫았다!", adj, noun);
+                mprf("<1853>당신은 %s%s을(를) 세게 닫았다!", adj, noun);
         }
         else
         {
@@ -7920,7 +7920,7 @@ void player_close_door(coord_def doorpos)
             }
             else
             {
-                mprf(MSGCH_SOUND, "당신은 쾅 소리를 내며 %s%s을(를) 세게 닫았다!",
+                mprf(MSGCH_SOUND, "<1854>당신은 쾅 소리를 내며 %s%s을(를) 세게 닫았다!",
                                   adj, noun);
             }
 
@@ -7933,7 +7933,7 @@ void player_close_door(coord_def doorpos)
             mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "%s%s이(가) 크게 삐걱거리며 닫혔다!",
+            mprf(MSGCH_SOUND, "<1855>%s%s이(가) 크게 삐걱거리며 닫혔다!",
                               adj, noun);
         }
 
@@ -7947,14 +7947,14 @@ void player_close_door(coord_def doorpos)
             if (!door_airborne.empty())
                 verb = door_airborne.c_str();
             else
-                verb = "You reach down and close the %s%s.";
+                verb = "<1856>You reach down and close the %s%s.";
         }
         else
         {
             if (!door_close_verb.empty())
                 verb = door_close_verb.c_str();
             else
-                verb = "You close the %s%s.";
+                verb = "<1857>You close the %s%s.";
         }
 
         mprf(verb, adj, noun);

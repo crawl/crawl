@@ -100,7 +100,7 @@ static int _mons_exp_mod(monster_type mclass);
 #define ASSERT_smc()                                                    \
     do {                                                                \
         if (!get_monster_data(mc))                                      \
-            die("bogus mc (no monster data): %s (%d)",                  \
+            die("<1591>bogus mc (no monster data): %s (%d)",                  \
                 mons_type_name(mc, DESC_PLAIN).c_str(), mc);            \
     } while (false)
 
@@ -208,7 +208,7 @@ void init_mon_name_cache()
                 continue;
             }
             else
-                die("Un-handled duplicate monster name: %s", name.c_str());
+                die("<1592>Un-handled duplicate monster name: %s", name.c_str());
         }
 
         Mon_Name_Cache[name] = mon;
@@ -1067,7 +1067,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
     const string cackle = db_cackle != "" ? db_cackle : "낄낄대고는"; //cackle
     const string cackle_str = can_cackle ? cackle : "";
 
-    mprf("%s 미믹은 %s %s 사라졌다!",
+    mprf("<1593>%s 미믹은 %s %s 사라졌다!",
          name.c_str(), cackle_str.c_str(), smoke_str);
     interrupt_activity(AI_MIMIC);
 }
@@ -1123,7 +1123,7 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf("%s%s은(는) 미믹이었다!", name.c_str(), plural ? "" : "");
+        mprf("<1594>%s%s은(는) 미믹이었다!", name.c_str(), plural ? "" : "");
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
@@ -2732,7 +2732,7 @@ void mons_load_spells(monster& mon)
     if (book == MST_NO_SPELLS)
         return;
 
-    dprf(DIAG_MONPLACE, "%s: loading spellbook #%d",
+    dprf(DIAG_MONPLACE, "<1595>%s: loading spellbook #%d",
          mon.name(DESC_PLAIN, true).c_str(), static_cast<int>(book));
 
     for (const mon_spellbook &spbook : mspell_list)
@@ -3555,7 +3555,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     if (mon.type == MONS_GERYON)
     {
         simple_monster_message(mon,
-            make_stringf("은(는) %s의 뿔피리를 떨어뜨렸다.",
+            make_stringf("<1596>은(는) %s의 뿔피리를 떨어뜨렸다.",
                          mon.pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
@@ -4953,46 +4953,46 @@ void debug_mondata()
         if (MR < 0)
             MR = md->HD * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
-            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+            fails += make_stringf("<1597>%s has MR %d > 200\n", name, MR);
         if (get_resist(md->resists, MR_RES_POISON) == 2)
-            fails += make_stringf("%s has rPois++\n", name);
+            fails += make_stringf("<1598>%s has rPois++\n", name);
         if (get_resist(md->resists, MR_RES_ELEC) == 2)
-            fails += make_stringf("%s has rElec++\n", name);
+            fails += make_stringf("<1599>%s has rElec++\n", name);
 
         // Tests below apply only to real monsters.
         if (md->bitfields & M_CANT_SPAWN)
             continue;
 
         if (!md->HD && md->basechar != 'Z') // derived undead...
-            fails += make_stringf("%s has 0 HD: %d\n", name, md->HD);
+            fails += make_stringf("<1600>%s has 0 HD: %d\n", name, md->HD);
         if (md->avg_hp_10x <= 0 && md->basechar != 'Z')
-            fails += make_stringf("%s has <= 0 HP: %d", name, md->avg_hp_10x);
+            fails += make_stringf("<1601>%s has <= 0 HP: %d", name, md->avg_hp_10x);
 
         if (md->basechar == ' ')
-            fails += make_stringf("%s has an empty glyph\n", name);
+            fails += make_stringf("<1602>%s has an empty glyph\n", name);
 
         if (md->AC < 0 && !mons_is_job(mc))
-            fails += make_stringf("%s has negative AC\n", name);
+            fails += make_stringf("<1603>%s has negative AC\n", name);
         if (md->ev < 0 && !mons_is_job(mc))
-            fails += make_stringf("%s has negative EV\n", name);
+            fails += make_stringf("<1604>%s has negative EV\n", name);
         if (md->exp_mod < 0)
-            fails += make_stringf("%s has negative xp mod\n", name);
+            fails += make_stringf("<1605>%s has negative xp mod\n", name);
 
         if (md->speed < 0)
-            fails += make_stringf("%s has 0 speed\n", name);
+            fails += make_stringf("<1606>%s has 0 speed\n", name);
         else if (md->speed == 0 && !mons_class_is_firewood(mc)
             && mc != MONS_HYPERACTIVE_BALLISTOMYCETE)
         {
-            fails += make_stringf("%s has 0 speed\n", name);
+            fails += make_stringf("<1607>%s has 0 speed\n", name);
         }
 
         const bool male = mons_class_flag(mc, M_MALE);
         const bool female = mons_class_flag(mc, M_FEMALE);
         if (male && female)
-            fails += make_stringf("%s is both male and female\n", name);
+            fails += make_stringf("<1608>%s is both male and female\n", name);
 
         if (md->shape == MON_SHAPE_BUGGY)
-            fails += make_stringf("%s has no defined shape\n", name);
+            fails += make_stringf("<1609>%s has no defined shape\n", name);
 
         const bool has_corpse_tile = md->corpse_tile
                                      && md->corpse_tile != TILE_ERROR;
@@ -5001,7 +5001,7 @@ void debug_mondata()
             if (has_corpse_tile)
             {
                 fails +=
-                    make_stringf("%s isn't a species but has a corpse tile\n",
+                    make_stringf("<1610>%s isn't a species but has a corpse tile\n",
                                  name);
             }
         }
@@ -5009,11 +5009,11 @@ void debug_mondata()
         {
             if (has_corpse_tile)
             {
-                fails += make_stringf("%s has a corpse tile & no corpse\n",
+                fails += make_stringf("<1611>%s has a corpse tile & no corpse\n",
                                       name);
             }
         } else if (!has_corpse_tile)
-            fails += make_stringf("%s has a corpse but no corpse tile\n", name);
+            fails += make_stringf("<1612>%s has a corpse but no corpse tile\n", name);
     }
 
     dump_test_fails(fails, "mon-data");
@@ -5051,9 +5051,9 @@ void debug_monspells()
             else
                 for (const mon_spell_slot &spslot : spbook.spells)
                     if (is_valid_spell(spslot.spell))
-                        spells += make_stringf(",%s", spell_title(spslot.spell));
+                        spells += make_stringf("<1613>,%s", spell_title(spslot.spell));
 
-            fails += make_stringf("Book #%d is unused (%s)\n", spbook.type,
+            fails += make_stringf("<1614>Book #%d is unused (%s)\n", spbook.type,
                                   spells.c_str());
             book_name = make_stringf("#%d", spbook.type);
         }
@@ -5066,7 +5066,7 @@ void debug_monspells()
             {
                 auto it = find(begin(mons_books), end(mons_books), spbook.type);
                 ASSERT(it != end(mons_books));
-                book_name = make_stringf("%s-%d", mons_name,
+                book_name = make_stringf("<1615>%s-%d", mons_name,
                                          (int) (it - begin(mons_books)));
             }
             else
@@ -5076,14 +5076,14 @@ void debug_monspells()
         const char * const bknm = book_name.c_str();
 
         if (!spbook.spells.size())
-            fails += make_stringf("Empty book %s\n", bknm);
+            fails += make_stringf("<1616>Empty book %s\n", bknm);
 
         for (const mon_spell_slot &spslot : spbook.spells)
         {
             string spell_name;
             if (!is_valid_spell(spslot.spell))
             {
-                fails += make_stringf("Book %s contains invalid spell %d\n",
+                fails += make_stringf("<1617>Book %s contains invalid spell %d\n",
                                       bknm, spslot.spell);
                 spell_name = to_string(spslot.spell);
             }
@@ -5094,7 +5094,7 @@ void debug_monspells()
             const int max_freq = 200;
             if (spslot.freq > max_freq)
             {
-                fails += make_stringf("Spellbook %s has spell %s at freq %d "
+                fails += make_stringf("<1618>Spellbook %s has spell %s at freq %d "
                                       "(greater than max freq %d)\n",
                                       bknm, spell_name.c_str(),
                                       spslot.freq, max_freq);
@@ -5113,7 +5113,7 @@ void debug_monspells()
                         category = flag;
                     else
                     {
-                        fails += make_stringf("Spellbook %s has spell %s in "
+                        fails += make_stringf("<1619>Spellbook %s has spell %s in "
                                               "multiple categories (%d and %d)\n",
                                               bknm, spell_name.c_str(),
                                               category, flag);
@@ -5126,7 +5126,7 @@ void debug_monspells()
                 if (flag == MON_SPELL_NO_SILENT
                     && (category & NO_SILENT_CATEGORIES))
                 {
-                    fails += make_stringf("Spellbook %s has spell %s marked "
+                    fails += make_stringf("<1620>Spellbook %s has spell %s marked "
                                           "MON_SPELL_NO_SILENT redundantly\n",
                                           bknm, spell_name.c_str());
                 }
@@ -5135,7 +5135,7 @@ void debug_monspells()
                 if (flag == MON_SPELL_NOISY
                     && category && !(category & MON_SPELL_INNATE_MASK))
                 {
-                    fails += make_stringf("Spellbook %s has spell %s marked "
+                    fails += make_stringf("<1621>Spellbook %s has spell %s marked "
                                           "MON_SPELL_NOISY redundantly\n",
                                           bknm, spell_name.c_str());
                 }
@@ -5143,7 +5143,7 @@ void debug_monspells()
 
             if (category == MON_SPELL_NO_FLAGS)
             {
-                fails += make_stringf("Spellbook %s has spell %s with no "
+                fails += make_stringf("<1622>Spellbook %s has spell %s with no "
                                       "category\n", bknm, spell_name.c_str());
             }
         }
@@ -5629,7 +5629,7 @@ void throw_monster_bits(const monster& mon)
 
         int damage = 1 + random2(mon.get_hit_dice());
 
-        mprf("%s은(는) 날아가던 %s에 맞았다!",
+        mprf("<1623>%s은(는) 날아가던 %s에 맞았다!",
                 target->name(DESC_PLAIN, false).c_str(),
                 mon.name(DESC_PLAIN, false).c_str());
 
@@ -5699,7 +5699,7 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
             == old_spells.end())
         {
-            mprf("%s은(는) %s의 %s에 대한 기억을 되찾았다.",
+            mprf("<1624>%s은(는) %s의 %s에 대한 기억을 되찾았다.",
                  ancestor.name(DESC_YOUR, true).c_str(),
                  ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
                  spell_title(spellslot.spell));

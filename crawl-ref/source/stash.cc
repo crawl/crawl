@@ -56,7 +56,7 @@ string userdef_annotate_item(const char *s, const item_def *item,
     lua_stack_cleaner cleaner(clua);
     clua_push_item(clua, const_cast<item_def*>(item));
     if (!clua.callfn(s, 1, 1) && !clua.error.empty())
-        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        mprf(MSGCH_ERROR, "<2359>Lua error: %s", clua.error.c_str());
     string ann;
     if (lua_isstring(clua, -1))
         ann = luaL_checkstring(clua, -1);
@@ -129,7 +129,7 @@ void describe_stash(const coord_def& c)
 {
     string desc = get_stash_desc(c);
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
+        mprf(MSGCH_EXAMINE_FILTER, "<2360>%s", desc.c_str());
 }
 
 vector<item_def> Stash::get_items() const
@@ -549,7 +549,7 @@ void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
 
     no_notes nx;
 
-    fprintf(f, "(%d, %d%s%s)\n", pos.x - refpos.x, pos.y - refpos.y,
+    fprintf(f, "<2361>(%d, %d%s%s)\n", pos.x - refpos.x, pos.y - refpos.y,
             place.empty() ? "" : ", ", OUTS(place));
 
     for (int i = 0; i < (int) items.size(); ++i)
@@ -569,7 +569,7 @@ void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
             ann = " " + ann;
         }
 
-        fprintf(f, "  %s%s%s\n", OUTS(s), OUTS(ann),
+        fprintf(f, "<2362>  %s%s%s\n", OUTS(s), OUTS(ann),
             (!verified && (items.size() > 1 || i) ? " (still there?)" : ""));
 
         if (is_dumpable_artefact(item))
@@ -587,7 +587,7 @@ void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
                     if (desc[j] == '\n')
                         desc.insert(j + 1, " ");
 
-                fprintf(f, "    %s\n", OUTS(desc));
+                fprintf(f, "<2363>    %s\n", OUTS(desc));
             }
         }
     }
@@ -651,7 +651,7 @@ ShopInfo::ShopInfo(const shop_struct& shop_)
 
 string ShopInfo::shop_item_name(const item_def &it) const
 {
-    return make_stringf("%s%s (%d gold)",
+    return make_stringf("<2364>%s%s (%d gold)",
                         Stash::stash_item_name(it).c_str(),
                         shop_item_unknown(it) ? " (unknown)" : "",
                         item_price(it, shop));
@@ -741,7 +741,7 @@ vector<stash_search_result> ShopInfo::matches_search(
 void ShopInfo::write(FILE *f, bool identify) const
 {
     no_notes nx;
-    fprintf(f, "[Shop] %s\n", OUTS(shop_name(shop)));
+    fprintf(f, "<2365>[Shop] %s\n", OUTS(shop_name(shop)));
     if (!shop.stock.empty())
     {
         for (item_def item : shop.stock) // intentional copy
@@ -749,10 +749,10 @@ void ShopInfo::write(FILE *f, bool identify) const
             if (identify)
                 _fully_identify_item(&item);
 
-            fprintf(f, "  %s\n", OUTS(shop_item_name(item)));
+            fprintf(f, "<2366>  %s\n", OUTS(shop_item_name(item)));
             string desc = shop_item_desc(item);
             if (!desc.empty())
-                fprintf(f, "    %s\n", OUTS(desc));
+                fprintf(f, "<2367>    %s\n", OUTS(desc));
         }
     }
     else
@@ -986,7 +986,7 @@ void LevelStashes::write(FILE *f, bool identify) const
         return;
 
     // very unlikely level names will be localized, but hey
-    fprintf(f, "%s\n", OUTS(level_name()));
+    fprintf(f, "<2368>%s\n", OUTS(level_name()));
 
     for (const ShopInfo &shop : m_shops)
         shop.write(f, identify);
@@ -1119,7 +1119,7 @@ void StashTracker::dump(const char *filename, bool identify) const
 
 void StashTracker::write(FILE *f, bool identify) const
 {
-    fprintf(f, "%s\n\n", OUTS(you.your_name));
+    fprintf(f, "<2369>%s\n\n", OUTS(you.your_name));
     if (!levels.size())
         fprintf(f, "  You have no stashes.\n");
     else
@@ -1196,7 +1196,7 @@ string StashTracker::stash_search_prompt()
     {
         const string disp = replace_all(lastsearch, "<", "<<");
         opts.push_back(
-            make_stringf("Enter for \"%s\"", disp.c_str()));
+            make_stringf("Enter for \"<2370>%s\"", disp.c_str()));
     }
     if (lastsearch != ".")
         opts.emplace_back("? for help");
@@ -1207,7 +1207,7 @@ string StashTracker::stash_search_prompt()
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    return make_stringf("Search for what%s? ", prompt_qual.c_str());
+    return make_stringf("<2371>Search for what%s? ", prompt_qual.c_str());
 }
 
 void StashTracker::remove_shop(const level_pos &pos)
@@ -1589,7 +1589,7 @@ void StashSearchMenu::draw_title()
     {
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s",
+        fs.cprintf("<2372>%d %s%s",
                    title->quantity, title->text.c_str(),
                    title->quantity == 1 ? "" : "es");
         fs.display();
@@ -1608,9 +1608,9 @@ void StashSearchMenu::draw_title()
         } else {
             draw_title_suffix(formatted_string::parse_string(make_stringf(
                 "<lightgrey>"
-                ": <w>%s</w> [toggle: <w>!</w>],"
-                " by <w>%s</w> [<w>/</w>],"
-                " <w>%s</w> useless & duplicates [<w>=</w>]"
+                "<2373>: <w>%s</w> [toggle: <w>!</w>],"
+                "<2374> by <w>%s</w> [<w>/</w>],"
+                "<2375> <w>%s</w> useless & duplicates [<w>=</w>]"
                 "</lightgrey>",
                 menu_action == ACT_EXECUTE ? "travel" : "view  ",
                 sort_style, filtered)), false);

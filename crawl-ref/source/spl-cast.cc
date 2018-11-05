@@ -92,7 +92,7 @@ void surge_power(const int enhanced)
                                 (enhanced ==  2) ? "강대한" :
                                 (enhanced  >  2) ? "커다란"
                                                  : "";
-        mprf("당신은 %s %s",
+        mprf("<2237>당신은 %s %s",
              !modifier.length() ? ""
                                 : article_a(modifier).c_str(),
              (enhanced < 0) ? "무감각하게 느낀다."
@@ -728,7 +728,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "주문: <w>%s</w>",
+                    mprf(MSGCH_PROMPT, "<2238>주문: <w>%s</w>",
                          spell_title(you.last_cast_spell));
                     mprf(MSGCH_PROMPT, ". 또는 Enter 키로 결정. ? 또는 * 키로 주문 목록 일람.");
                 }
@@ -946,7 +946,7 @@ static void _majin_speak(spell_type spell)
     const bool weak = level <= 4;
     const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
     const string msg = "A voice whispers, \"" + getSpeakString(lookup) + "\"";
-    mprf(MSGCH_TALK, "%s", msg.c_str());
+    mprf(MSGCH_TALK, "<2239>%s", msg.c_str());
 }
 
 /**
@@ -1056,7 +1056,7 @@ static void _maybe_cancel_repeat(spell_type spell)
 #if TAG_MAJOR_VERSION == 34
     switch (spell)
     {
-    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
+    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("<2240>You can't repeat %s.",
                                                  spell_title(spell)));
         break;
 
@@ -1126,7 +1126,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         && !crawl_state.disables[DIS_CONFIRMATIONS]
         && !fake_spell)
     {
-        string prompt = make_stringf("The spell is %s to cast%s "
+        string prompt = make_stringf("<2241>The spell is %s to cast%s "
                                      "그래도 계속하겠는가?",
                                      fail_severity_adjs[severity],
                                      severity > 1 ? "!" : ".");
@@ -1336,7 +1336,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)
-            mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "어느 방향으로?");
+            mprf(MSGCH_PROMPT, "<2242>%s", prompt ? prompt : "어느 방향으로?");
 
         const bool needs_path = !testbits(flags, SPFLAG_TARGET)
                                 // Apportation must be SPFLAG_TARGET, since a
@@ -1523,7 +1523,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
             return SPRET_FAIL;
 #endif
 
-        mprf("당신은 %s을(를) 시전하는데 실패했다.", spell_title(spell));
+        mprf("<2243>당신은 %s을(를) 시전하는데 실패했다.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
@@ -1567,7 +1567,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         if (is_valid_spell(spell))
         {
-            mprf(MSGCH_ERROR, "%s은(는) 사용가능한 주문이 아니다.",
+            mprf(MSGCH_ERROR, "<2244>%s은(는) 사용가능한 주문이 아니다.",
                  spell_title(spell));
         }
         else
@@ -2121,7 +2121,7 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
             return shortdesc.str();
         }
         else
-            return make_stringf("%s (%d)", desc, noise);
+            return make_stringf("<2245>%s (%d)", desc, noise);
     }
     else
 #endif

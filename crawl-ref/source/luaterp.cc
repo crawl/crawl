@@ -52,7 +52,7 @@ static int _pushline(lua_State *ls, int firstline)
         b[l-1] = '\0';             // remove it
 
     if (firstline && l > 0 && b[0] == '=')  // first line starts with `=' ?
-        lua_pushfstring(ls, "return %s", b+1);  // change it to `return'
+        lua_pushfstring(ls, "<1101>return %s", b+1);  // change it to `return'
     else
         lua_pushstring(ls, b);
     return 1;
@@ -98,7 +98,7 @@ static int _report(lua_State *ls, int status)
         const char *msg = lua_tostring(ls, -1);
         if (msg == nullptr)
             msg = "(error object is not a string)";
-        mprf(MSGCH_ERROR, "%s", msg);
+        mprf(MSGCH_ERROR, "<1102>%s", msg);
         lua_pop(ls, 1);
     }
     return status;
@@ -123,7 +123,7 @@ static void _run_dlua_interpreter(lua_State *ls)
             lua_insert(ls, 1);
             if (lua_pcall(ls, lua_gettop(ls) - 1, 0, 0) != 0)
             {
-                mprf(MSGCH_ERROR, "error calling __echo (%s)",
+                mprf(MSGCH_ERROR, "<1103>error calling __echo (%s)",
                                   lua_tostring(ls, -1));
             }
         }
@@ -149,7 +149,7 @@ void debug_terp_dlua(CLua &vm)
         {
             vm.execfile(file.c_str(), false, false);
             if (!vm.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", vm.error.c_str());
+                mprf(MSGCH_ERROR, "<1104>Lua error: %s", vm.error.c_str());
         }
         _loaded_terp_files = true;
     }

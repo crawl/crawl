@@ -677,7 +677,7 @@ static void _display_god_blessing(monster* follower, god_type god,
     string whom = you.can_see(*follower) ? follower->name(DESC_THE)
     : "a follower";
 
-    simple_god_message(make_stringf(" blesses %s with %s.",
+    simple_god_message(make_stringf("<747> blesses %s with %s.",
                                     whom.c_str(), blessing.c_str()).c_str(),
                        god);
 

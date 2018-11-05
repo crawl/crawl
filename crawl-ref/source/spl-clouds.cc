@@ -50,7 +50,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (agent->is_player())
         {
             const char *feat = feat_type_name(grd(where));
-            mprf("%s 바로 위에는 구름을 생성할 수 없다.", article_a(feat).c_str());
+            mprf("<2246>%s 바로 위에는 구름을 생성할 수 없다.", article_a(feat).c_str());
         }
         return SPRET_ABORT;
     }
@@ -136,7 +136,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
-        mprf("그러나 유독성 증기는 %s에게 피해를 끼치지 못한다!",
+        mprf("<2247>그러나 유독성 증기는 %s에게 피해를 끼치지 못한다!",
              mons->name(DESC_PLAIN).c_str());
         return SPRET_ABORT;
     }
@@ -165,7 +165,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     else
     {
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("유독성 증기가%s을(를) 감싼다!", mons->name(DESC_PLAIN).c_str());
+        mprf("<2248>유독성 증기가%s을(를) 감싼다!", mons->name(DESC_PLAIN).c_str());
     }
 
     behaviour_event(mons, ME_WHACK, &you);
@@ -186,7 +186,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     if (cell_is_solid(beam.target))
     {
         const char *feat = feat_type_name(grd(beam.target));
-        mprf("%s 안에는 구름을 생성할 수 없다.", article_a(feat).c_str());
+        mprf("<2249>%s 안에는 구름을 생성할 수 없다.", article_a(feat).c_str());
         return SPRET_ABORT;
     }
 
@@ -332,7 +332,7 @@ void corpse_rot(actor* caster)
     }
 
     if (saw_rot)
-        mprf("무언가가 썩는 것을 %s.", you.can_smell() ? "맡았다" : "감지했다");
+        mprf("<2250>무언가가 썩는 것을 %s.", you.can_smell() ? "맡았다" : "감지했다");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -419,7 +419,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                     5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }
-    mprf("%s은(는) %s %s을. 그리고 쏘았다!",
+    mprf("<2251>%s은(는) %s %s을. 그리고 쏘았다!",
          caster->name(DESC_PLAIN).c_str(),
          caster->conj_verb("만들었다 : ").c_str(),
          cloud_type_name(cloud).c_str());

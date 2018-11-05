@@ -129,7 +129,7 @@ bool monster::level_up()
         // Not less than 3 hp, not more than 25.
         hpboost = min(max(hpboost, 3), 25);
 
-        dprf("%s: HD: %d, maxhp: %d, boost: %d",
+        dprf("<1541>%s: HD: %d, maxhp: %d, boost: %d",
              name(DESC_PLAIN).c_str(), get_experience_level(),
              max_hit_points, hpboost);
 

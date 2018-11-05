@@ -342,7 +342,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         {
             if (mon->visible_to(&you))
             {
-                mprf("그물에 %s이(가) 걸려들었다!",
+                mprf("<2493>그물에 %s이(가) 걸려들었다!",
                      mon->name(DESC_PLAIN).c_str());
             }
             else
@@ -355,7 +355,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
     {
         if (you.can_see(*mon))
         {
-            mprf("그물이 %s을(를) 관통해 지나갔다!",
+            mprf("<2494>그물이 %s을(를) 관통해 지나갔다!",
                  mon->name(DESC_PLAIN).c_str());
         }
         return false;
@@ -410,7 +410,7 @@ void check_net_will_hold_monster(monster* mons)
         {
             if (mons->visible_to(&you))
             {
-                mprf("그물이 찢어지고, %s은(는) 탈출했다!",
+                mprf("<2495>그물이 찢어지고, %s은(는) 탈출했다!",
                      mons->name(DESC_PLAIN).c_str());
             }
             else
@@ -569,7 +569,7 @@ void trap_def::trigger(actor& triggerer)
         if (!you_trigger && !you_know && !in_sight)
             hide();
         if (you_trigger)
-            mprf("당신은 %s을(를) 통과했다!", name(DESC_PLAIN).c_str());
+            mprf("<2496>당신은 %s을(를) 통과했다!", name(DESC_PLAIN).c_str());
         if (ammo_qty > 0 && !--ammo_qty)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
@@ -577,7 +577,7 @@ void trap_def::trigger(actor& triggerer)
             if (in_sight)
             {
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-                mprf("%s(은)는 사라졌다.", name(DESC_PLAIN).c_str());
+                mprf("<2497>%s(은)는 사라졌다.", name(DESC_PLAIN).c_str());
             }
             destroy();
         }
@@ -592,7 +592,7 @@ void trap_def::trigger(actor& triggerer)
         {
             if (you_know && in_sight)
             {
-                mprf("%s vibrates slightly, failing to make a sound.",
+                mprf("<2498>%s vibrates slightly, failing to make a sound.",
                      name(DESC_THE).c_str());
             }
         }
@@ -601,7 +601,7 @@ void trap_def::trigger(actor& triggerer)
             string msg;
             if (you_trigger)
             {
-                msg = make_stringf("%s emits a blaring wail!",
+                msg = make_stringf("<2499>%s emits a blaring wail!",
                                    name(DESC_THE).c_str());
             }
             else
@@ -761,7 +761,7 @@ void trap_def::trigger(actor& triggerer)
                 {
                     if (m->visible_to(&you))
                     {
-                        mprf("커다란 그물이 %s에 떨어졌다!",
+                        mprf("<2500>커다란 그물이 %s에 떨어졌다!",
                              m->name(DESC_PLAIN).c_str());
                     }
                     else
@@ -794,7 +794,7 @@ void trap_def::trigger(actor& triggerer)
         {
             trap_destroyed = true;
             if (you_trigger)
-                mprf("당신은 %s로 그물을 찢어버렸다.", you_know ? "" : "");
+                mprf("<2501>당신은 %s로 그물을 찢어버렸다.", you_know ? "" : "");
             else if (m)
                 simple_monster_message(*m, "은(는) 거미줄을 관통해 찢어발겼다.");
             break;
@@ -895,7 +895,7 @@ void trap_def::trigger(actor& triggerer)
             // to their friend.
             if (player_can_hear(pos) && (!targ || !in_sight))
             {
-                mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
+                mprf(MSGCH_SOUND, "<2502>You hear a %s \"Zot\"!",
                      in_sight ? "loud" : "distant");
             }
 
@@ -903,7 +903,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 if (in_sight)
                 {
-                    mprf("조트의 힘이 %s에 대해 발동되었다!",
+                    mprf("<2503>조트의 힘이 %s에 대해 발동되었다!",
                          targ->name(DESC_PLAIN).c_str());
                 }
                 MiscastEffect(targ, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
@@ -953,7 +953,7 @@ void trap_def::trigger(actor& triggerer)
         {
             if (in_sight)
             {
-                mprf("%s shaft crumbles and collapses.",
+                mprf("<2504>%s shaft crumbles and collapses.",
                      triggerer_seen ? "The" : "A");
                 know_trap_destroyed = true;
             }
@@ -1122,7 +1122,7 @@ void search_around()
         if (effective > ptrap->skill_rnd)
         {
             ptrap->reveal();
-            mprf("당신은 %s를 찾아냈다!",
+            mprf("<2505>당신은 %s를 찾아냈다!",
                  ptrap->name(DESC_PLAIN).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }
@@ -1209,7 +1209,7 @@ void free_self_from_net()
 
     if (hold < NET_MIN_DURABILITY)
     {
-        mprf("당신은 그물을 %s 탈출했다!", damage > 3 ? "조각내고" : "찢고");
+        mprf("<2506>당신은 그물을 %s 탈출했다!", damage > 3 ? "조각내고" : "찢고");
 
         destroy_item(net);
         stop_being_held();
@@ -1351,7 +1351,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (one_chance_in(5) || was_known && !one_chance_in(4))
         {
-            mprf("You avoid triggering %s.", name(DESC_A).c_str());
+            mprf("<2507>You avoid triggering %s.", name(DESC_A).c_str());
             return;
         }
     }
@@ -1359,7 +1359,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (was_known && you.see_cell(pos) && you.can_see(act))
         {
-            mprf("%s avoids triggering %s.", act.name(DESC_THE).c_str(),
+            mprf("<2508>%s avoids triggering %s.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());
         }
         return;
@@ -1373,17 +1373,17 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     const int con_block = random2(20 + act.shield_block_penalty());
     const int pro_block = act.shield_bonus();
-    dprf("%s: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
+    dprf("<2509>%s: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
          trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
     if (trap_hit < act.evasion())
     {
         if (act.is_player())
-            mprf("%s이(가) 쏘아져 나왔지만, 당신을 맞추지 못하고 빗나갔다.", shot.name(DESC_PLAIN).c_str());
+            mprf("<2510>%s이(가) 쏘아져 나왔지만, 당신을 맞추지 못하고 빗나갔다.", shot.name(DESC_PLAIN).c_str());
         else if (you.see_cell(act.pos()))
         {
-            mprf("%s이(가) %s을(를) 맞추지 못하고 빗나갔다!", shot.name(DESC_PLAIN).c_str(),
+            mprf("<2511>%s이(가) %s을(를) 맞추지 못하고 빗나갔다!", shot.name(DESC_PLAIN).c_str(),
                  act.name(DESC_PLAIN).c_str());
         }
     }
@@ -1397,7 +1397,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             owner = apostrophise(act.name(DESC_THE));
         else // "its" sounds abysmal; animals don't use shields
             owner = "someone's";
-        mprf("%s이(가) 쏘아져 나와 %s 방패에 맞았다.", shot.name(DESC_PLAIN).c_str(),
+        mprf("<2512>%s이(가) 쏘아져 나와 %s 방패에 맞았다.", shot.name(DESC_PLAIN).c_str(),
              owner.c_str());
 
         act.shield_block_succeeded(0);
@@ -1411,7 +1411,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         if (act.is_player())
         {
-            mprf("%s(이)가 쏘아져 나와 당신에게 명중했다!", shot.name(DESC_PLAIN).c_str());
+            mprf("<2513>%s(이)가 쏘아져 나와 당신에게 명중했다!", shot.name(DESC_PLAIN).c_str());
 
             string n = name(DESC_A);
 
@@ -1425,7 +1425,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         {
             if (you.see_cell(act.pos()))
             {
-                mprf("%s(이)가 %s에게 명중했%s다.",
+                mprf("<2514>%s(이)가 %s에게 명중했%s다.",
                      shot.name(DESC_PLAIN).c_str(),
                      act.name(DESC_PLAIN).c_str(),
                      (damage_taken == 0 && !poison) ?
@@ -1760,7 +1760,7 @@ bool ensnare(actor *fly)
     if (fly->body_size() >= SIZE_GIANT)
     {
         if (you.can_see(*fly))
-            mprf("거미줄이 %s에게 달라붙었지만, 움직임을 묶기에는 너무 작았다.", fly->name(DESC_THE).c_str());
+            mprf("<2515>거미줄이 %s에게 달라붙었지만, 움직임을 묶기에는 너무 작았다.", fly->name(DESC_THE).c_str());
         return false;
     }
 

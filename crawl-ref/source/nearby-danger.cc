@@ -230,7 +230,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             {
                 if (announce)
                 {
-                    mprf(MSGCH_WARN, "당신은 %s의 구름에 들어와 있다!",
+                    mprf(MSGCH_WARN, "<1680>당신은 %s의 구름에 들어와 있다!",
                          cloud_type_name(type).c_str());
                 }
                 return false;
@@ -269,7 +269,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     if (visible.size() == 1)
     {
         const monster& m = *visible[0];
-        msg = make_stringf("%s is nearby!", m.name(DESC_A).c_str());
+        msg = make_stringf("<1681>%s is nearby!", m.name(DESC_A).c_str());
     }
     else if (visible.size() > 1)
         msg = "주변에 몬스터가 있다!";
@@ -280,7 +280,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
     if (announce)
     {
-        mprf(MSGCH_WARN, "%s", msg.c_str());
+        mprf(MSGCH_WARN, "<1682>%s", msg.c_str());
 
         if (Options.use_animations & UA_MONSTER_IN_SIGHT)
         {

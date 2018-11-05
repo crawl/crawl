@@ -368,10 +368,10 @@ vector<god_power> get_god_powers(god_type god)
  * Print a description of getting/losing this power.
  *
  * @param gaining If true, use this->gain; otherwise, use this->loss.
- * @param fmt  A string containing "%s" that will be used as a format
+ * @param fmt  A string containing "<1942>%s" that will be used as a format
  *             string with our string as parameter; it is not used if
  *             our string begins with a capital letter. IF THIS DOES
- *             NOT CONTAIN "%s", OR CONTAINS OTHER FORMAT SPECIFIERS,
+ *             NOT CONTAIN "<1943>%s", OR CONTAINS OTHER FORMAT SPECIFIERS,
  *             BEHAVIOUR IS UNDEFINED.
  * @return a string suitable for being read by the user.
  */
@@ -554,7 +554,7 @@ void dec_penance(god_type god, int val)
         const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
 
         simple_god_message(
-            make_stringf(" seems mollified%s.",
+            make_stringf("<1944> seems mollified%s.",
                          dead_jiyva ? ", and vanishes" : "").c_str(),
             god);
 
@@ -1201,7 +1201,7 @@ void mons_make_god_gift(monster& mon, god_type god)
 
     if (mon.flags & MF_GOD_GIFT)
     {
-        dprf("Monster '%s' was already a gift of god '%s', now god '%s'.",
+        dprf("<1945>Monster '%s' was already a gift of god '%s', now god '%s'.",
              mon.name(DESC_PLAIN, true).c_str(),
              god_name(mon.god).c_str(),
              god_name(god).c_str());
@@ -1285,7 +1285,7 @@ static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
         gift = mon->name(DESC_A);
     else
     {
-        gift = make_stringf("%d %s", placed,
+        gift = make_stringf("<1946>%d %s", placed,
                             pluralise(mon->name(DESC_PLAIN)).c_str());
     }
 
@@ -1373,7 +1373,7 @@ mgen_data hepliaklqana_ancestor_gen_data()
 /// Print a message for an ancestor's *something* being gained.
 static void _regain_memory(const monster &ancestor, string memory)
 {
-    mprf("%s regains the memory of %s %s.",
+    mprf("<1947>%s regains the memory of %s %s.",
          ancestor.name(DESC_YOUR, true).c_str(),
          ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
          memory.c_str());
@@ -1414,7 +1414,7 @@ static void _regain_item_memory(const monster &ancestor,
 
     const string ego_name = _item_ego_name(base_type, brand);
     const string item_name
-        = make_stringf("%s of %s",
+        = make_stringf("<1948>%s of %s",
                        item_base_name(base_type, sub_type).c_str(),
                        ego_name.c_str());
     _regain_memory(ancestor, item_name);
@@ -1453,7 +1453,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
 
     if (!quiet_force)
     {
-        mprf("%s remembers more of %s old skill.",
+        mprf("<1949>%s remembers more of %s old skill.",
              ancestor->name(DESC_YOUR, true).c_str(),
              ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
     }
@@ -1481,7 +1481,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         else if (brand != _hepliaklqana_weapon_brand(ancestor->type, old_hd)
                  && !quiet_force)
         {
-            mprf("%s remembers %s %s %s.",
+            mprf("<1950>%s remembers %s %s %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
                  ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str(),
                  apostrophise(item_base_name(OBJ_WEAPONS, wpn)).c_str(),
@@ -2167,7 +2167,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
-    mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
+    mprf(MSGCH_GOD, god, "<1951>%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
     fake_mon.reset();
     mgrd(you.pos()) = orig_mon;
@@ -2208,7 +2208,7 @@ void dock_piety(int piety_loss, int penance)
         if (last_piety_lecture != you.num_turns)
         {
             // output guilt message:
-            mprf("You feel%sguilty.",
+            mprf("<1952>You feel%sguilty.",
                  (piety_loss == 1) ? " a little " :
                  (piety_loss <  5) ? " " :
                  (piety_loss < 10) ? " very "
@@ -2340,7 +2340,7 @@ static void _gain_piety_point()
             if (power.rank == rank
                 || power.rank == 7 && can_do_capstone_ability(you.religion))
             {
-                power.display(true, "You can now %s.");
+                power.display(true, "<1953>You can now %s.");
 #ifdef USE_TILE_LOCAL
                 tiles.layout_statcol();
                 redraw_screen();
@@ -2516,7 +2516,7 @@ void lose_piety(int pgn)
                 || power.rank == 7 && old_rank == 6
                    && !you.one_time_ability_used[you.religion])
             {
-                power.display(false, "You can no longer %s.");
+                power.display(false, "<1954>You can no longer %s.");
                 // Preserve the old hotkey
                 if (power.abil == ABIL_YRED_ANIMATE_DEAD)
                 {
@@ -2721,7 +2721,7 @@ void excommunication(bool voluntary, god_type new_god)
     if (god_hates_your_god(old_god, new_god))
     {
         simple_god_message(
-            make_stringf("은(는) %s로 향한 배교를 용납하지 않는다!",
+            make_stringf("<1955>은(는) %s로 향한 배교를 용납하지 않는다!",
                          _god_hates_your_god_reaction(old_god, new_god).c_str()).c_str(),
             old_god);
     }
@@ -2800,7 +2800,7 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_NEMELEX_XOBEH:
         nemelex_reclaim_decks();
-        mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
+        mprf(MSGCH_GOD, old_god, "<1956>Your access to %s's decks is revoked.",
              god_name(old_god).c_str());
         break;
 
@@ -3134,7 +3134,7 @@ static void _god_welcome_handle_gear()
         const item_def* item = you.slot_item(static_cast<equipment_type>(i));
         if (item && god_hates_item(*item))
         {
-            mprf(MSGCH_GOD, "%s은(는) %s을(를) 해제하는 것에 대해 경고했다.",
+            mprf(MSGCH_GOD, "<1957>%s은(는) %s을(를) 해제하는 것에 대해 경고했다.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
         }
@@ -3261,7 +3261,7 @@ static void _transfer_good_god_piety()
         };
 
         // Some feedback that piety moved over.
-        simple_god_message(make_stringf(" says: Farewell. Go and %s with %s.",
+        simple_god_message(make_stringf("<1958> says: Farewell. Go and %s with %s.",
                                         lookup(farewell_messages, you.religion,
                                                "become a bug"),
                                         god_name(you.religion).c_str()).c_str(),
@@ -3291,7 +3291,7 @@ static string _good_god_wrath_message(god_type good_god)
         case GOD_SHINING_ONE:
             return "You will pay for your evil ways, mortal";
         case GOD_ZIN:
-            return make_stringf("You will suffer for embracing such %s",
+            return make_stringf("<1959>You will suffer for embracing such %s",
                                 is_chaotic_god(you.religion) ? "chaos"
                                                              : "evil");
         default:
@@ -3316,7 +3316,7 @@ static void _check_good_god_wrath(god_type old_god)
         }
 
         const string wrath_message
-            = make_stringf("이(가) 말했다: %s!",
+            = make_stringf("<1960>이(가) 말했다: %s!",
                            _good_god_wrath_message(good_god).c_str());
         simple_god_message(wrath_message.c_str(), good_god);
         set_penance_xp_timeout();
@@ -3401,7 +3401,7 @@ static void _join_gozag()
         }
         if (you.gold >= get_gold_cost(power.abil))
         {
-            power.display(true, "You have enough gold to %s.");
+            power.display(true, "<1961>You have enough gold to %s.");
             needs_redraw = true;
         }
     }
@@ -3452,7 +3452,7 @@ static void _join_hepliaklqana()
     const mgen_data mg = hepliaklqana_ancestor_gen_data();
     delayed_monster(mg);
     simple_god_message(make_stringf("가 당신의 생명의 조각을"
-                                    "당신의 선조, %s의 기억으로 만들어냈다!",
+                                    "<1962>당신의 선조, %s의 기억으로 만들어냈다!",
                                     mg.mname.c_str()).c_str());
 }
 
@@ -3598,7 +3598,7 @@ void join_religion(god_type which_god)
                            || is_good_god(which_god)
                               && you.species == SP_BARACHI;
     simple_god_message(
-        make_stringf("이 당신%s을 환영한다!",
+        make_stringf("<1963>이 당신%s을 환영한다!",
                      returning ? "의 귀환" : "").c_str());
     // included in default force_more_message
 #ifdef DGL_WHEREIS
@@ -3640,7 +3640,7 @@ void join_religion(god_type which_god)
     if (!you_worship(GOD_GOZAG))
         for (const auto& power : get_god_powers(you.religion))
             if (power.rank <= 0)
-                power.display(true, "You can now %s.");
+                power.display(true, "<1964>You can now %s.");
 
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
@@ -3668,7 +3668,7 @@ void god_pitch(god_type which_god)
         mpr("당신은 베오그의 선교사에게 경례했다.");
     else
     {
-        mprf("You %s the altar of %s.",
+        mprf("<1965>You %s the altar of %s.",
              get_form()->player_prayer_action().c_str(),
              god_name(which_god).c_str());
     }
@@ -3754,7 +3754,7 @@ void god_pitch(god_type which_god)
                     fee, you.gold);
         }
     }
-    const string prompt = make_stringf("%s이 종교에 %s가입하고 싶은가?",
+    const string prompt = make_stringf("<1966>%s이 종교에 %s가입하고 싶은가?",
                                        service_fee.c_str(),
                                        (you.worshipped[which_god]) ? "재" : "");
 
@@ -3767,7 +3767,7 @@ void god_pitch(god_type which_god)
         return;
     }
 
-    const string abandon = make_stringf("정말로 %s을 버릴 것인가?",
+    const string abandon = make_stringf("<1967>정말로 %s을 버릴 것인가?",
                                         god_name(you.religion).c_str());
     if (!you_worship(GOD_NO_GOD) && !yesno(abandon.c_str(), false, 'n', true,
                                            true, false, nullptr, GOTO_CRT))
@@ -3796,7 +3796,7 @@ god_type choose_god(god_type def_god)
 
     string help = def_god == NUM_GODS ? "by name"
                                       : "default " + god_name(def_god);
-    string prompt = make_stringf("Which god (%s)? ", help.c_str());
+    string prompt = make_stringf("<1968>Which god (%s)? ", help.c_str());
 
     if (msgwin_get_line(prompt, specs, sizeof(specs)) != 0)
         return NUM_GODS; // FIXME: distinguish cancellation from no match

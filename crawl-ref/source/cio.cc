@@ -166,7 +166,7 @@ void nowrap_eol_cprintf(const char *s, ...)
     string buf = vmake_stringf(s, args);
     va_end(args);
 
-    cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
+    cprintf("<166>%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
 static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
@@ -189,7 +189,7 @@ static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
             const string line = chop_string(buf.c_str() + linestart, avail, false);
             linestart += line.length();
             if (skiplines == 0)
-                cprintf("%s", line.c_str());
+                cprintf("<167>%s", line.c_str());
         }
 
         // No room for more lines, quit now.
@@ -444,7 +444,7 @@ int line_reader::read_line(bool clear_previous)
     }
 
     if (length)
-        wrapcprintf(wrapcol, "%s", buffer);
+        wrapcprintf(wrapcol, "<168>%s", buffer);
 
     if (pos != width)
         cursorto(pos);
@@ -518,7 +518,7 @@ void line_reader::backspace()
     buffer[length] = 0;
     // Two spaces in case we deleted a double-width character, or
     // caused a double-width character to move back a line.
-    wrapcprintf(wrapcol, "%s  ", cur);
+    wrapcprintf(wrapcol, "<169>%s  ", cur);
     cursorto(pos);
 }
 
@@ -535,7 +535,7 @@ void line_reader::kill_to_begin()
     int rest = length - (cur - buffer);
     buffer[length] = 0;
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", cur, pos, "");
+    wrapcprintf(wrapcol, "<170>%s%*s", cur, pos, "");
     memmove(buffer, cur, rest);
     buffer[length = rest] = 0;;
     pos = 0;
@@ -573,7 +573,7 @@ void line_reader::killword()
     calc_pos();
 
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", buffer, ew, "");
+    wrapcprintf(wrapcol, "<171>%s%*s", buffer, ew, "");
     cursorto(pos);
 }
 
@@ -624,7 +624,7 @@ int line_reader::process_key(int ch)
             cursorto(0);
 
             int clear = pos < olen ? olen - pos : 0;
-            wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
+            wrapcprintf(wrapcol, "<172>%s%*s", buffer, clear, "");
 
             cursorto(pos);
         }
@@ -664,7 +664,7 @@ int line_reader::process_key(int ch)
             cursorto(pos);
             // Two spaces in case we deleted a double-width character, or
             // caused a double-width character to move back a line.
-            wrapcprintf(wrapcol, "%s  ", cur);
+            wrapcprintf(wrapcol, "<173>%s  ", cur);
             cursorto(pos);
         }
         break;
@@ -739,13 +739,13 @@ int line_reader::process_key(int ch)
             if (!w)
             {
                 cursorto(0);
-                wrapcprintf(wrapcol, "%s", buffer);
+                wrapcprintf(wrapcol, "<174>%s", buffer);
             }
             else
             {
                 putwch(ch);
                 if (*cur)
-                    wrapcprintf(wrapcol, "%s", cur);
+                    wrapcprintf(wrapcol, "<175>%s", cur);
             }
             cursorto(pos);
         }

@@ -117,12 +117,12 @@ static string _time_string()
 
 static void _write_version(FILE * o)
 {
-    fprintf(o, CRAWL " version %s\n", Version::Long);
+    fprintf(o, CRAWL "<2662> version %s\n", Version::Long);
 }
 
 static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
-    fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
+    fprintf(o, "<2663>%s: %s %s vs. %s (%d rounds) (%s)\n",
             defend ? "Defense" : "Attack",
             species_name(you.species).c_str(),
             get_job_name(you.char_class),
@@ -133,7 +133,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 
 static void _write_you(FILE * o)
 {
-    fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
+    fprintf(o, "<2664>%s %s: XL %d   Str %d   Int %d   Dex %d\n",
             species_name(you.species).c_str(),
             get_job_name(you.char_class),
             you.experience_level,
@@ -144,14 +144,14 @@ static void _write_you(FILE * o)
 
 static void _write_weapon(FILE * o)
 {
-    fprintf(o, "%s, Skill: %s\n",
+    fprintf(o, "<2665>%s, Skill: %s\n",
             _equipped_weapon_name().c_str(),
             skill_name(_equipped_skill()));
 }
 
 static void _write_mon(FILE * o, monster &mon)
 {
-    fprintf(o, "%s: HD %d   AC %d   EV %d\n",
+    fprintf(o, "<2666>%s: HD %d   AC %d   EV %d\n",
             mon.name(DESC_PLAIN, true).c_str(),
             mon.get_experience_level(),
             mon.armour_class(),
@@ -465,11 +465,11 @@ void wizard_quick_fsim()
 
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
-    mprf("           %s\nAttacking: %s", _title_line,
+    mprf("<2667>           %s\nAttacking: %s", _title_line,
          _fight_string(fdata, false).c_str());
 
     fdata = _get_fight_data(*mon, iter_limit, true);
-    mprf("Defending: %s", _fight_string(fdata, false).c_str());
+    mprf("<2668>Defending: %s", _fight_string(fdata, false).c_str());
 
     _uninit_fsim(mon);
     return;
@@ -538,12 +538,12 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         col_name = _init_scale(scale, xl_mode);
 
-    const string title = make_stringf("%10.10s | %s", col_name.c_str(),
+    const string title = make_stringf("<2669>%10.10s | %s", col_name.c_str(),
                                       _title_line);
     if (Options.fsim_csv)
-        fprintf(o, "%s\t%s\n", col_name.c_str(), _csv_title_line);
+        fprintf(o, "<2670>%s\t%s\n", col_name.c_str(), _csv_title_line);
     else
-        fprintf(o, "%s\n", title.c_str());
+        fprintf(o, "<2671>%s\n", title.c_str());
 
     mpr(title);
 
@@ -561,13 +561,13 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         }
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
-        const string line = make_stringf("        %2d | %s", i,
+        const string line = make_stringf("<2672>        %2d | %s", i,
                                          _fight_string(fdata, false).c_str());
         mpr(line);
         if (Options.fsim_csv)
-            fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true).c_str());
+            fprintf(o, "<2673>%d\t%s\n", i, _fight_string(fdata, true).c_str());
         else
-            fprintf(o, "%s\n", line.c_str());
+            fprintf(o, "<2674>%s\n", line.c_str());
         fflush(o);
 
         // kill the loop if the user hits escape
@@ -594,7 +594,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
         sky = _equipped_skill();
     }
 
-    fprintf(o, "%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
+    fprintf(o, "<2675>%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
     fprintf(o, Options.fsim_csv ? "\t" : "  ");
     for (int y = 1; y <= 27; y += 2)
         fprintf(o,Options.fsim_csv ? "%d\t" : "   %2d", y);
@@ -611,7 +611,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             set_skill_level(skx, x);
             set_skill_level(sky, y);
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
-            mprf("%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,
+            mprf("<2676>%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,
                  int(fdata.av_eff_dam));
             fprintf(o,Options.fsim_csv ? "%.1f\t" : "%5.1f", fdata.av_eff_dam);
             fflush(o);
@@ -640,7 +640,7 @@ void wizard_fight_sim(bool double_scale)
     FILE * o = fopen(fightstat, "a");
     if (!o)
     {
-        mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
+        mprf(MSGCH_ERROR, "<2677>Can't write %s: %s", fightstat, strerror(errno));
         _uninit_fsim(mon);
         return;
     }
@@ -707,7 +707,7 @@ void wizard_fight_sim(bool double_scale)
             }
             else
             {
-                mprf("Aborting sim on %s", kit.c_str());
+                mprf("<2678>Aborting sim on %s", kit.c_str());
                 if (error != "")
                     mpr(error);
                 break;

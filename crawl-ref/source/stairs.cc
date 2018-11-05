@@ -62,7 +62,7 @@ bool check_annotation_exclusion_warning()
         && next_level_id != level_id::current()
         && is_connected_branch(next_level_id))
     {
-        mprf(MSGCH_PROMPT, "경고, 다음 층의 주석: <yellow>%s</yellow>",
+        mprf(MSGCH_PROMPT, "<2341>경고, 다음 층의 주석: <yellow>%s</yellow>",
              get_level_annotation(next_level_id).c_str());
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
@@ -144,7 +144,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 
     string verb = stair_climb_verb(stair);
 
-    mprf("당신이 %s%s 시도하자, 그것은 도망가버렸다!", stair_str.c_str(),
+    mprf("<2342>당신이 %s%s 시도하자, 그것은 도망가버렸다!", stair_str.c_str(),
          verb.c_str());
 
     you.turn_is_over = true;
@@ -166,20 +166,20 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
             mpr("알 수 없는 힘이 당신을 위로 밀어냈다.");
         else
         {
-            mprf("당신은 %s 내려갔다.",
+            mprf("<2343>당신은 %s 내려갔다.",
                  you.airborne() ? "날아서" : "미끄러져");
         }
         mpr("당신의 뒤에서 출입구가 거칠게 닫혔다.");
     }
     else if (feat_is_gate(stair))
     {
-        mprf("You %s %s through the gate.",
+        mprf("<2344>You %s %s through the gate.",
              you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
     else
     {
-        mprf("당신은 %s쪽으로 %s갔다",
+        mprf("<2345>당신은 %s쪽으로 %s갔다",
              going_up ? "윗" : "아랫",
              you.airborne() ? "날아" : "걸어");
     }
@@ -318,7 +318,7 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
         if (!feat_is_staircase(ftype))
             fall_where = "through the gate";
 
-        mprf("혼란한 나머지, %s굴러 떨어졌다.%s",
+        mprf("<2346>혼란한 나머지, %s굴러 떨어졌다.%s",
              going_up ? "뒤에서 " : "", fall_where);
         if (!feat_is_staircase(ftype))
             ouch(1, KILLED_BY_FALLING_THROUGH_GATE);
@@ -355,7 +355,7 @@ static void _rune_effect(dungeon_feature_type ftype)
         {
             ASSERT(runes.size() >= 3);
 
-            mprf("당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[2]));
+            mprf("<2347>당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[2]));
 #ifdef USE_TILE_LOCAL
             tiles.add_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
             update_screen();
@@ -365,14 +365,14 @@ static void _rune_effect(dungeon_feature_type ftype)
             mpr("바위가 불가사의하게 빛났다!");
             // included in default force_more_message
 
-            mprf("당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[1]));
+            mprf("<2348>당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[1]));
             big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
             viewwindow();
             mpr("짙은 연기가 바위로부터 흘러나왔다!");
             // included in default force_more_message
         }
 
-        mprf("당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[0]));
+        mprf("<2349>당신은 잠긴 문 안에, %s의 룬을 넣었다.", rune_type_name(runes[0]));
 
         if (silenced(you.pos()))
             mpr("문이 활짝 열렸다!");
@@ -493,7 +493,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
         if (shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
+        mprf("<2350>You %s a shaft%s!", you.airborne() ? "are sucked into"
                                                  : "fall through",
                                   howfar.c_str());
 
@@ -665,7 +665,7 @@ void floor_transition(dungeon_feature_type how,
         if (have_passive(passive_t::slow_abyss))
         {
             mprf(MSGCH_GOD, you.religion,
-                 "You feel %s slowing down the madness of this place.",
+                 "<2351>You feel %s slowing down the madness of this place.",
                  god_name(you.religion).c_str());
         }
 
@@ -694,13 +694,13 @@ void floor_transition(dungeon_feature_type how,
     {
         const branch_type branch = you.where_are_you;
         if (branch_entered(branch))
-            mprf("%s에 돌아온 걸 환영한다!", branches[branch].longname);
+            mprf("<2352>%s에 돌아온 걸 환영한다!", branches[branch].longname);
         else if (how == branches[branch].entry_stairs)
         {
             if (branches[branch].entry_message)
                 mpr(branches[branch].entry_message);
             else if (branch != BRANCH_ABYSS) // too many messages...
-                mprf("%s에 온 것을 환영한다!", branches[branch].longname);
+                mprf("<2353>%s에 온 것을 환영한다!", branches[branch].longname);
         }
 
         // Did we leave a notable branch for the first time?
@@ -930,7 +930,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         }
         catch (const bad_level_id &err)
         {
-            die("Invalid destination for portal: %s", err.what());
+            die("<2354>Invalid destination for portal: %s", err.what());
         }
 #endif
 
@@ -957,7 +957,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
                 }
                 return level_id(BRANCH_DUNGEON, 1);
             }
-            die("no return path from a portal (%s)",
+            die("<2355>no return path from a portal (%s)",
                 level_id::current().describe().c_str());
         }
         return you.level_stack.back().id;

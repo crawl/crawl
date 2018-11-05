@@ -86,7 +86,7 @@ static bool _pray_ecumenical_altar()
             unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
 
             god_type altar_god = _altar_identify_ecumenical_altar();
-            mprf(MSGCH_GOD, "%s은(는) 당신의 기도를 받아들였다!",
+            mprf(MSGCH_GOD, "<775>%s은(는) 당신의 기도를 받아들였다!",
                             god_name(altar_god).c_str());
             you.turn_is_over = true;
             if (!you_worship(altar_god))
@@ -142,7 +142,7 @@ void try_god_conversion(god_type god)
     else
     {
         // Already worshipping this god - just print a message.
-        mprf(MSGCH_GOD, "당신은 %s기도를 올렸다 : %s에게.",
+        mprf(MSGCH_GOD, "<776>당신은 %s기도를 올렸다 : %s에게.",
              you.cannot_speak() ? "침묵의 " : "",
              god_name(god).c_str());
     }

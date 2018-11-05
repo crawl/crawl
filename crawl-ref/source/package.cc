@@ -84,7 +84,7 @@ package::package(const char* file, bool writeable, bool empty)
     , tmp(false)
 #endif
 {
-    dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
+    dprintf("package: initializing file=\"<1734>%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
     filename = file;
     rw = writeable;
@@ -93,12 +93,12 @@ package::package(const char* file, bool writeable, bool empty)
     {
         fd = open_u(file, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, 0666);
         if (fd == -1)
-            sysfail("can't create save file (%s)", file);
+            sysfail("<1735>can't create save file (%s)", file);
 
         if (!lock_file(fd, true))
         {
             close(fd);
-            sysfail("failed to lock newly created save (%s)", file);
+            sysfail("<1736>failed to lock newly created save (%s)", file);
         }
 
         dirty = true;
@@ -108,7 +108,7 @@ package::package(const char* file, bool writeable, bool empty)
     {
         fd = open_u(file, (writeable? O_RDWR : O_RDONLY) | O_BINARY, 0666);
         if (fd == -1)
-            sysfail("can't open save file (%s)", file);
+            sysfail("<1737>can't open save file (%s)", file);
 
         try
         {
@@ -144,7 +144,7 @@ package::package()
     if (!lock_file(fd, true))
     {
         close(fd);
-        sysfail("failed to lock newly created save (%s)", file);
+        sysfail("<1738>failed to lock newly created save (%s)", file);
     }
 
     dirty = true;
@@ -156,23 +156,23 @@ void package::load()
     file_header head;
     ssize_t res = ::read(fd, &head, sizeof(file_header));
     if (res < 0)
-        sysfail("error reading the save file (%s)", filename.c_str());
+        sysfail("<1739>error reading the save file (%s)", filename.c_str());
     if (!res || !(head.magic || head.version || head.padding[0]
                   || head.padding[1] || head.padding[2] || head.start))
     {
-        corrupted("The save file (%s) is empty!", filename.c_str());
+        corrupted("<1740>The save file (%s) is empty!", filename.c_str());
     }
     if (res != sizeof(file_header))
-        corrupted("save file (%s) corrupted -- header truncated", filename.c_str());
+        corrupted("<1741>save file (%s) corrupted -- header truncated", filename.c_str());
 
     if (htole(head.magic) != PACKAGE_MAGIC)
     {
-        corrupted("save file (%s) corrupted -- not a DCSS save file",
+        corrupted("<1742>save file (%s) corrupted -- not a DCSS save file",
              filename.c_str());
     }
     off_t len = lseek(fd, 0, SEEK_END);
     if (len == -1)
-        sysfail("save file (%s) is not seekable", filename.c_str());
+        sysfail("<1743>save file (%s) is not seekable", filename.c_str());
     file_len = len;
     read_directory(htole(head.start), head.version);
 
@@ -367,7 +367,7 @@ void package::free_chunk(const string &name)
     if (ci == directory.end())
         return;
 
-    dprintf("freeing chunk(%s)\n", name.c_str());
+    dprintf("<1744>freeing chunk(%s)\n", name.c_str());
     if (new_chunks.count(ci->second))
         free_block_chain(ci->second);
     else // can't free committed blocks yet
@@ -530,7 +530,7 @@ void package::read_directory(plen_t start, uint8_t version)
             string chname(ch0.name, 4);
             chname.resize(strlen(chname.c_str()));
             directory[chname] = htole(ch0.start);
-            dprintf("* %s\n", chname.c_str());
+            dprintf("<1745>* %s\n", chname.c_str());
         }
         break;
     case 1:
@@ -547,11 +547,11 @@ void package::read_directory(plen_t start, uint8_t version)
             if (rd.read(&bstart, sizeof(bstart)) != sizeof(bstart))
                 corrupted("save file corrupted -- truncated directory");
             directory[chname] = htole(bstart);
-            dprintf("* %s\n", chname.c_str());
+            dprintf("<1746>* %s\n", chname.c_str());
         }
         break;
     default:
-        corrupted("save file (%s) uses an unknown format %u", filename.c_str(),
+        corrupted("<1747>save file (%s) uses an unknown format %u", filename.c_str(),
              version);
     }
 }
@@ -677,7 +677,7 @@ chunk_writer::chunk_writer(package *parent, const string &_name)
     ASSERT(MAX_CHUNK_NAME_LENGTH < 256);
     ASSERT(_name.length() < MAX_CHUNK_NAME_LENGTH);
 
-    dprintf("chunk_writer(%s): starting\n", _name.c_str());
+    dprintf("<1748>chunk_writer(%s): starting\n", _name.c_str());
     pkg = parent;
     pkg->n_users++;
     name = _name;
@@ -688,7 +688,7 @@ chunk_writer::chunk_writer(package *parent, const string &_name)
     zs.zfree     = 0;
     zs.opaque    = Z_NULL;
     if (deflateInit(&zs, Z_DEFAULT_COMPRESSION))
-        fail("save file compression failed during init: %s", zs.msg);
+        fail("<1749>save file compression failed during init: %s", zs.msg);
 #define ZB_SIZE 32768
     zs.next_out  = z_buffer = (Bytef*)malloc(ZB_SIZE);
     zs.avail_out = ZB_SIZE;
@@ -697,7 +697,7 @@ chunk_writer::chunk_writer(package *parent, const string &_name)
 
 chunk_writer::~chunk_writer()
 {
-    dprintf("chunk_writer(%s): closing\n", name.c_str());
+    dprintf("<1750>chunk_writer(%s): closing\n", name.c_str());
 
     ASSERT(pkg->n_users > 0);
     pkg->n_users--;
@@ -718,13 +718,13 @@ chunk_writer::~chunk_writer()
     {
         res = deflate(&zs, Z_FINISH);
         if (res != Z_STREAM_END && res != Z_OK && res != Z_BUF_ERROR)
-            fail("save file compression failed: %s", zs.msg);
+            fail("<1751>save file compression failed: %s", zs.msg);
         raw_write(z_buffer, zs.next_out - z_buffer);
         zs.next_out = z_buffer;
         zs.avail_out = ZB_SIZE;
     } while (res != Z_STREAM_END);
     if (deflateEnd(&zs) != Z_OK)
-        fail("save file compression failed during clean-up: %s", zs.msg);
+        fail("<1752>save file compression failed during clean-up: %s", zs.msg);
     free(z_buffer);
 #endif
     if (cur_block)
@@ -789,7 +789,7 @@ void chunk_writer::write(const void *data, plen_t len)
         }
         // we don't allow Z_BUF_ERROR, so it's fatal for us
         if (deflate(&zs, Z_NO_FLUSH) != Z_OK)
-            fail("save file compression failed: %s", zs.msg);
+            fail("<1753>save file compression failed: %s", zs.msg);
     }
 #else
     raw_write(data, len);
@@ -814,7 +814,7 @@ void chunk_reader::init(plen_t start)
     zs.next_in   = Z_NULL;
     zs.avail_in  = 0;
     if (inflateInit(&zs))
-        fail("save file decompression failed during init: %s", zs.msg);
+        fail("<1754>save file decompression failed during init: %s", zs.msg);
     eof = false;
 #endif
 }
@@ -831,8 +831,8 @@ chunk_reader::chunk_reader(package *parent, const string &_name)
 {
     ASSERT(parent);
     if (!parent->has_chunk(_name))
-        corrupted("save file corrupted -- chunk \"%s\" missing", _name.c_str());
-    dprintf("chunk_reader(%s): starting\n", _name.c_str());
+        corrupted("save file corrupted -- chunk \"<1755>%s\" missing", _name.c_str());
+    dprintf("<1756>chunk_reader(%s): starting\n", _name.c_str());
     pkg = parent;
     init(parent->directory[_name]);
 }
@@ -843,7 +843,7 @@ chunk_reader::~chunk_reader()
 
 #ifdef USE_ZLIB
     if (inflateEnd(&zs) != Z_OK)
-        fail("save file decompression failed during clean-up: %s", zs.msg);
+        fail("<1757>save file decompression failed during clean-up: %s", zs.msg);
 #endif
     ASSERT(pkg->reader_count[first_block] > 0);
     if (!--pkg->reader_count[first_block])
@@ -928,7 +928,7 @@ plen_t chunk_reader::read(void *data, plen_t len)
             return zs.next_out - (Bytef*)data;
         }
         if (res != Z_OK)
-            corrupted("save file decompression failed: %s", zs.msg);
+            corrupted("<1758>save file decompression failed: %s", zs.msg);
     }
     return zs.next_out - (Bytef*)data;
 #else

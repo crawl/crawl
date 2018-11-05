@@ -332,7 +332,7 @@ static int l_mons_do_set_prop(lua_State *ls)
     {
         string err
             = make_stringf("Don't know how to set monster property of the "
-                           "given value type for property '%s'", prop_name);
+                           "<1075>given value type for property '%s'", prop_name);
         luaL_argerror(ls, 2, err.c_str());
     }
 
@@ -355,7 +355,7 @@ static int l_mons_do_get_prop(lua_State *ls)
     {
         if (lua_isboolean(ls, 2))
         {
-            string err = make_stringf("Don't have a property called '%s'.", prop_name);
+            string err = make_stringf("<1076>Don't have a property called '%s'.", prop_name);
             luaL_argerror(ls, 2, err.c_str());
         }
 
@@ -417,7 +417,7 @@ static int l_mons_do_add_ench(lua_State *ls)
     enchant_type met = name_to_ench(ench_name);
     if (!met)
     {
-        string err = make_stringf("No such enchantment: %s", ench_name);
+        string err = make_stringf("<1077>No such enchantment: %s", ench_name);
         luaL_argerror(ls, 1, err.c_str());
         return 0;
     }
@@ -440,7 +440,7 @@ static int l_mons_do_del_ench(lua_State *ls)
     enchant_type met = name_to_ench(ench_name);
     if (!met)
     {
-        string err = make_stringf("No such enchantment: %s", ench_name);
+        string err = make_stringf("<1078>No such enchantment: %s", ench_name);
         luaL_argerror(ls, 1, err.c_str());
         return 0;
     }

@@ -199,7 +199,7 @@ const vector<string>& fake_mutations(species_type species, bool terse)
 /**
  * What message should be printed when a character of the specified species
  * prays at an altar, if not in some form?
- * To be inserted into "You %s the altar of foo."
+ * To be inserted into "<2223>You %s the altar of foo."
  *
  * @param species   The species in question.
  * @return          An action to be printed when the player prays at an altar.
@@ -488,7 +488,7 @@ void change_species_to(species_type sp)
         if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
             && you.equip[i] != -1)
         {
-            mprf("%s fall%s away.",
+            mprf("<2224>%s fall%s away.",
                  you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
                  you.inv[you.equip[i]].quantity > 1 ? "" : "s");
             // Unwear items without the usual processing.

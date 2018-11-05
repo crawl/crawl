@@ -132,7 +132,7 @@ void crash_signal_handler(int sig_num)
 
         char name[180];
 
-        snprintf(name, sizeof(name), "%scrash-recursive-%s-%s.txt", dir.c_str(),
+        snprintf(name, sizeof(name), "<208>%scrash-recursive-%s-%s.txt", dir.c_str(),
                 you.your_name.c_str(), make_file_time(time(nullptr)).c_str());
 
         FILE* file = fopen_replace(name);
@@ -289,7 +289,7 @@ void dump_crash_info(FILE* file)
     if (name == nullptr)
         name = "INVALID";
 
-    fprintf(file, "Crash caused by signal #%d: %s\n\n", _crash_signal, name);
+    fprintf(file, "<209>Crash caused by signal #%d: %s\n\n", _crash_signal, name);
 #endif
 }
 
@@ -375,7 +375,7 @@ void write_stack_trace(FILE* file, int ignore_count)
         bt += "\n";
     }
 
-    fprintf(file, "%s", bt.c_str());
+    fprintf(file, "<210>%s", bt.c_str());
 
     free(symbols);
 }
@@ -383,8 +383,8 @@ void write_stack_trace(FILE* file, int ignore_count)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";
-    fprintf(stderr, "%s", msg);
-    fprintf(file, "%s", msg);
+    fprintf(stderr, "<211>%s", msg);
+    fprintf(file, "<212>%s", msg);
 }
 #endif
 
@@ -392,7 +392,7 @@ void call_gdb(FILE *file)
 {
 #ifndef TARGET_OS_WINDOWS
     if (crawl_state.no_gdb)
-        return (void)fprintf(file, "%s\n", crawl_state.no_gdb);
+        return (void)fprintf(file, "<213>%s\n", crawl_state.no_gdb);
 
     fprintf(file, "Trying to run gdb.\n");
     fflush(file); // so we can use fileno()
@@ -406,7 +406,7 @@ void call_gdb(FILE *file)
     switch (int gdb = fork())
     {
     case -1:
-        return (void)fprintf(file, "Couldn't fork: %s\n", strerror(errno));
+        return (void)fprintf(file, "<214>Couldn't fork: %s\n", strerror(errno));
     case 0:
         {
             int fd = fileno(file);
@@ -424,7 +424,7 @@ void call_gdb(FILE *file)
                 0
             };
             execv("/usr/bin/gdb", (char* const*)argv);
-            printf("Failed to start gdb: %s\n", strerror(errno));
+            printf("<215>Failed to start gdb: %s\n", strerror(errno));
             fflush(stdout);
             _exit(0);
         }

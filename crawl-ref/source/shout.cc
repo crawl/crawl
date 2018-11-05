@@ -408,7 +408,7 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
 
-    mprf(channel, "%s", msg.c_str());
+    mprf(channel, "<2188>%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
         noisy(loudness, you.pos());
@@ -521,7 +521,7 @@ static int _issue_orders_prompt()
     {
         string cap_shout = you.shout_verb(false);
         cap_shout[0] = toupper(cap_shout[0]);
-        mprf(" t - %s!", cap_shout.c_str());
+        mprf("<2189> t - %s!", cap_shout.c_str());
     }
 
     if (!you.berserk())
@@ -534,7 +534,7 @@ static int _issue_orders_prompt()
                 previous = "   p - Attack previous target.";
         }
 
-        mprf("아군에게 명령:     a - 새로운 목표를 공격.%s", previous.c_str());
+        mprf("<2190>아군에게 명령:     a - 새로운 목표를 공격.%s", previous.c_str());
         mpr("                   r - 후퇴!                s - 공격 중지.");
         mpr("                   g - 지역 방어.           f - 날 따르라.");
     }
@@ -728,13 +728,13 @@ void yell(const actor* mon)
         {
             if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
-                mprf("당신은 %s을(를) 지르려고 하였으나, "
+                mprf("<2191>당신은 %s을(를) 지르려고 하였으나, "
                      "당신은 소리를 낼 수 없었다!",
                      shout_verb.c_str());
             }
             else
             {
-                mprf("%s이(가) 목구멍으로부터 절로 새어나왔으나, "
+                mprf("<2192>%s이(가) 목구멍으로부터 절로 새어나왔으나, "
                      "아무 소리도 나지 않았다!",
                      shout_verb.c_str());
             }
@@ -747,14 +747,14 @@ void yell(const actor* mon)
 
     if (mon)
     {
-        mprf("You %s%s at %s!",
+        mprf("<2193>You %s%s at %s!",
              shout_verb.c_str(),
              you.duration[DUR_RECITE] ? " your recitation" : "",
              mon->name(DESC_PLAIN).c_str());
     }
     else
     {
-        mprf(MSGCH_SOUND, "You %s%s!",
+        mprf(MSGCH_SOUND, "<2194>You %s%s!",
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention");
     }
@@ -830,7 +830,7 @@ bool noisy(int original_loudness, const coord_def& where,
     if (player_distance <= dist && player_can_hear(where))
     {
         if (msg && !fake_noise)
-            mprf(MSGCH_SOUND, "%s", msg);
+            mprf(MSGCH_SOUND, "<2195>%s", msg);
         return true;
     }
     return false;
@@ -871,7 +871,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 {
                     if (coinflip())
                     {
-                        dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
+                        dprf(DIAG_NOISE, "<2196>disturbing %s (%d, %d)",
                              mi->name(DESC_A, true).c_str(),
                              mi->pos().x, mi->pos().y);
                         behaviour_event(*mi, ME_DISTURB, 0, where);
@@ -879,7 +879,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     break;
                 }
             }
-            dprf(DIAG_NOISE, "alerting %s (%d, %d)",
+            dprf(DIAG_NOISE, "<2197>alerting %s (%d, %d)",
                             mi->name(DESC_A, true).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
@@ -893,14 +893,14 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             {
                 if (coinflip())
                 {
-                    dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
+                    dprf(DIAG_NOISE, "<2198>disturbing %s (%d, %d)",
                          mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_DISTURB, 0, where);
                 }
                 else
                 {
-                    dprf(DIAG_NOISE, "alerting %s (%d, %d)",
+                    dprf(DIAG_NOISE, "<2199>alerting %s (%d, %d)",
                          mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_ALERT, 0, where);
@@ -1239,7 +1239,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
         : perceived_point;
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
+    dprf(DIAG_NOISE, "<2200>[NOISE] Noise perceived by %s at (%d,%d) "
          "centroid (%d,%d) source (%d,%d) "
          "heard at (%d,%d), distance: %d (traveled %d)",
          act->name(DESC_PLAIN, true).c_str(),
@@ -1289,7 +1289,7 @@ static string _noise_intensity_styles()
     for (int intensity = 1; intensity <= max_intensity; ++intensity)
     {
         const int hue = lo_hue - intensity * huespan / max_intensity;
-        styles += make_stringf(".i%d { background: #%s }\n",
+        styles += make_stringf("<2201>.i%d { background: #%s }\n",
                                intensity, _hue_rgb(hue).c_str());
 
     }
@@ -1302,7 +1302,7 @@ static void _write_noise_grid_css(FILE *outf)
             "<style type='text/css'>\n"
             "body { font-family: monospace; padding: 0; margin: 0; "
             "line-height: 100%% }\n"
-            "%s\n"
+            "<2202>%s\n"
             "</style>",
             _noise_intensity_styles().c_str());
 }
@@ -1362,7 +1362,7 @@ static void _actor_apply_noise(actor *act,
                                int noise_travel_distance)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
+    dprf(DIAG_NOISE, "<2203>[NOISE] Actor %s (%d,%d) perceives noise (%d) "
          "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,

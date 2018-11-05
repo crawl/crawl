@@ -173,12 +173,12 @@ namespace arena
         if (items.empty())
             return;
 
-        fprintf(file, "%s:\n", mon->name(DESC_PLAIN, true).c_str());
+        fprintf(file, "<38>%s:\n", mon->name(DESC_PLAIN, true).c_str());
 
         for (int iidx : items)
         {
             item_def &item = mitm[iidx];
-            fprintf(file, "        %s\n",
+            fprintf(file, "<39>        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
     }
@@ -205,7 +205,7 @@ namespace arena
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) grd: %s",
+                            "<40>Failed to create monster at (%d,%d) grd: %s",
                             loc.x, loc.y, dungeon_feature_name(grd(loc))));
                 }
                 list_eq(mon);
@@ -217,13 +217,13 @@ namespace arena
     static void center_print(unsigned sz, string text, int number = -1)
     {
         if (number >= 0)
-            text = make_stringf("(%d) %s", number, text.c_str());
+            text = make_stringf("<41>(%d) %s", number, text.c_str());
 
         unsigned len = strwidth(text);
         if (len > sz)
             text = chop_string(text, len = sz);
 
-        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
+        cprintf("<42>%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
     }
 
     static void setup_level()
@@ -258,7 +258,7 @@ namespace arena
 
         if (!map)
         {
-            throw arena_error_f("No arena maps named \"%s\"",
+            throw arena_error_f("No arena maps named \"<43>%s\"",
                                 arena_type.c_str());
         }
 
@@ -272,7 +272,7 @@ namespace arena
         bool success = dgn_place_map(map, false, true);
         if (!success)
         {
-            throw arena_error_f("Failed to create arena named \"%s\"",
+            throw arena_error_f("Failed to create arena named \"<44>%s\"",
                                 arena_type.c_str());
         }
         link_items();
@@ -365,7 +365,7 @@ namespace arena
             }
             catch (const bad_level_id &err)
             {
-                throw arena_error_f("Bad place '%s': %s",
+                throw arena_error_f("<45>Bad place '%s': %s",
                                     arena_place.c_str(),
                                     err.what());
             }
@@ -383,7 +383,7 @@ namespace arena
         if (factions.size() != 2)
         {
             throw arena_error_f("Expected arena monster spec \"xxx v yyy\", "
-                                "but got \"%s\"", spec.c_str());
+                                "but got \"<46>%s\"", spec.c_str());
         }
 
         try
@@ -393,7 +393,7 @@ namespace arena
         }
         catch (const arena_error &err)
         {
-            throw arena_error_f("Bad monster spec \"%s\": %s",
+            throw arena_error_f("Bad monster spec \"<47>%s\": %s",
                                 spec.c_str(),
                                 err.what());
         }
@@ -633,7 +633,7 @@ namespace arena
             }
             msg = prefix + msg;
 
-            fprintf(file, "%s\n", msg.c_str());
+            fprintf(file, "<48>%s\n", msg.c_str());
         }
     }
 
@@ -744,7 +744,7 @@ namespace arena
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
                     mprf(MSGCH_DIAGNOSTICS,
-                         "Dismissing non-respawner %s to make room for "
+                         "<49>Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
                     monster_die(other, KILL_DISMISSED, NON_MONSTER);
@@ -753,7 +753,7 @@ namespace arena
                 {
                     // Other monster is a respawner, try to move it.
                     mprf(MSGCH_DIAGNOSTICS,
-                         "Teleporting respawner %s to make room for "
+                         "<50>Teleporting respawner %s to make room for "
                          "other respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
                     monster_teleport(&other, true);
@@ -886,7 +886,7 @@ namespace arena
         if (was_tied)
             msg = "Tie";
         else
-            msg = "Winner: %s!";
+            msg = "<51>Winner: %s!";
 
         if (Options.arena_dump_msgs || Options.arena_list_eq)
             msg = "---------- " + msg + " ----------";
@@ -934,7 +934,7 @@ namespace arena
         if (file != nullptr)
         {
             string spec = find_monster_spec();
-            fprintf(file, "%s\n", spec.c_str());
+            fprintf(file, "<52>%s\n", spec.c_str());
 
             if (Options.arena_dump_msgs || Options.arena_list_eq)
                 fprintf(file, "========================================\n");
@@ -978,7 +978,7 @@ namespace arena
     {
         if (file != nullptr)
         {
-            fprintf(file, "err: %s\n", error.c_str());
+            fprintf(file, "<53>err: %s\n", error.c_str());
             fclose(file);
         }
         file = nullptr;
@@ -1007,7 +1007,7 @@ namespace arena
 
         if (total_trials > 0)
         {
-            mprf("Final score: %s (%d); %s (%d) [%d ties]",
+            mprf("<54>Final score: %s (%d); %s (%d) [%d ties]",
                  faction_a.desc.c_str(), team_a_wins,
                  faction_b.desc.c_str(), trials_done - team_a_wins - ties,
                  ties);
@@ -1049,7 +1049,7 @@ monster_type arena_pick_random_monster(const level_id &place)
     }
 
     game_ended_with_error(
-        make_stringf("No random monsters for place '%s'",
+        make_stringf("<55>No random monsters for place '%s'",
                      arena::place.describe().c_str()));
 }
 
@@ -1126,7 +1126,7 @@ void arena_placed_monster(monster* mons)
     const bool summoned = mons->is_summoned();
 
 #ifdef ARENA_VERBOSE
-    mprf("%s %s!",
+    mprf("<56>%s %s!",
          mons->full_name(DESC_A).c_str(),
          arena::is_respawning                ? "respawns" :
          (summoned && ! arena::real_summons) ? "is summoned"

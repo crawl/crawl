@@ -227,7 +227,7 @@ void reader::fail_if_not_eof(const string &name)
         _file ? (fgetc(_file) != EOF) :
         _read_offset >= _pbuf->size())
     {
-        fail("Incomplete read of \"%s\" - aborting.", name.c_str());
+        fail("Incomplete read of \"<2393>%s\" - aborting.", name.c_str());
     }
 }
 
@@ -237,7 +237,7 @@ void writer::check_ok(bool ok)
     {
         failed = true;
         if (!_ignore_errors)
-            end(1, true, "Error writing to %s", _filename.c_str());
+            end(1, true, "<2394>Error writing to %s", _filename.c_str());
     }
 }
 
@@ -705,8 +705,8 @@ static void _fix_missing_constrictions()
             h->constricting = new actor::constricting_t;
         if (h->constricting->find(m->mid) == h->constricting->end())
         {
-            dprf("Fixing missing constriction for %s (mindex=%d mid=%d)"
-                 " of %s (mindex=%d mid=%d)",
+            dprf("<2395>Fixing missing constriction for %s (mindex=%d mid=%d)"
+                 "<2396> of %s (mindex=%d mid=%d)",
                  h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
                  m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
 
@@ -887,7 +887,7 @@ string make_date_string(time_t in_date)
     struct tm *date = TIME_FN(&in_date);
 
     return make_stringf(
-              "%4d%02d%02d%02d%02d%02d%s",
+              "<2397>%4d%02d%02d%02d%02d%02d%s",
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
               ((date->tm_isdst > 0) ? "D" : "S"));
@@ -1072,13 +1072,13 @@ static void _ensure_entry(branch_type br)
                 {
                     grd(*di) = entry; // No need to update LOS, etc.
                     // Announce the repair even in non-debug builds.
-                    mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
+                    mprf(MSGCH_ERROR, "<2398>Placing missing branch entry: %s.",
                          dungeon_feature_name(entry));
                     return;
                 }
             die("no floor to place a branch entrance");
         }
-    die("no upstairs on %s???", level_id::current().describe().c_str());
+    die("<2399>no upstairs on %s???", level_id::current().describe().c_str());
 }
 
 static void _add_missing_branches()
@@ -1118,7 +1118,7 @@ static void _add_missing_branches()
                     case DNGN_ENTER_GEHENNA:
                     case DNGN_ENTER_TARTARUS:
                         grd(*ri) = featm->feat;
-                        dprf("opened %s", dungeon_feature_name(featm->feat));
+                        dprf("<2400>opened %s", dungeon_feature_name(featm->feat));
                         env.markers.remove(marker);
                         break;
                     default:
@@ -1198,7 +1198,7 @@ static void _shunt_monsters_out_of_walls()
                     // Could have been a rock worm or a dryad.
                     if (m.type != MONS_GHOST)
 #endif
-                    mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
+                    mprf(MSGCH_ERROR, "<2401>Error: monster %s in %s at (%d,%d)",
                          m.name(DESC_PLAIN, true).c_str(),
                          dungeon_feature_name(grd(m.pos())),
                          m.pos().x, m.pos().y);
@@ -1640,7 +1640,7 @@ static void tag_construct_you(writer &th)
         ASSERT(!_calc_score_exists());
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
-        mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
+        mprf(MSGCH_ERROR, "<2402>Failed to save Lua data: %s", dlua.error.c_str());
 
     CANARY;
 
@@ -1846,7 +1846,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
         if (!f.mons.alive())
         {
             mprf(MSGCH_ERROR,
-                 "Dead monster %s in transit list in saved game, ignoring.",
+                 "<2403>Dead monster %s in transit list in saved game, ignoring.",
                  f.mons.name(DESC_PLAIN, true).c_str());
         }
         else
@@ -2165,7 +2165,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     // be forward-compatible. We validate them only on an actual restore.
     you.your_name         = unmarshallString2(th);
     you.prev_save_version = unmarshallString2(th);
-    dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
+    dprf("<2404>Last save Crawl version: %s", you.prev_save_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));
@@ -3540,7 +3540,7 @@ static void tag_read_you(reader &th)
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
-        mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
+        mprf(MSGCH_ERROR, "<2405>Failed to load Lua persist table: %s",
              dlua.error.c_str());
     }
 
@@ -3615,7 +3615,7 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (!bad_slots.empty())
     {
-        mprf(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
+        mprf(MSGCH_ERROR, "<2406>Fixed bad positions for inventory slots %s",
                           bad_slots.c_str());
     }
 #endif
@@ -4198,7 +4198,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
         if (!item.quantity)
             name = "(quantity: 0) ", dummy.quantity = 1;
         name += dummy.name(DESC_PLAIN, true);
-        die("Invalid item: %s", name.c_str());
+        die("<2407>Invalid item: %s", name.c_str());
     }
 #endif
     ASSERT(item.is_valid(iinfo));
@@ -5457,13 +5457,13 @@ static void tag_construct_level_monsters(writer &th)
         {
             if (invalid_monster_type(m.type))
             {
-                mprf(MSGCH_ERROR, "Marshalled monster #%d %s",
+                mprf(MSGCH_ERROR, "<2408>Marshalled monster #%d %s",
                      i, m.name(DESC_PLAIN, true).c_str());
             }
             if (!in_bounds(m.pos()))
             {
                 mprf(MSGCH_ERROR,
-                     "Marshalled monster #%d %s out of bounds at (%d, %d)",
+                     "<2409>Marshalled monster #%d %s out of bounds at (%d, %d)",
                      i, m.name(DESC_PLAIN, true).c_str(),
                      m.pos().x, m.pos().y);
             }
@@ -5486,7 +5486,7 @@ void tag_construct_level_tiles(writer &th)
     {
         marshallString(th, name);
 #ifdef DEBUG_TILE_NAMES
-        mprf("Writing '%s' into save.", name.c_str());
+        mprf("<2410>Writing '%s' into save.", name.c_str());
 #endif
     }
 
@@ -6158,7 +6158,7 @@ void unmarshallMonster(reader &th, monster& m)
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
-            dprf("bad tile name: \"%s\".", tile.c_str());
+            dprf("bad tile name: \"<2411>%s\".", tile.c_str());
             m.props.erase("monster_tile_name");
             if (m.props.exists("monster_tile"))
                 m.props.erase("monster_tile");
@@ -6270,7 +6270,7 @@ static void tag_read_level_monsters(reader &th)
         env.mid_cache[m.mid] = i;
         if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
         {
-            dprf("Killed elsewhere companion %s(%d) on %s",
+            dprf("<2412>Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
             monster_die(m, KILL_RESET, -1, true, false);
@@ -6280,20 +6280,20 @@ static void tag_read_level_monsters(reader &th)
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (invalid_monster_type(m.type))
         {
-            mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
+            mprf(MSGCH_ERROR, "<2413>Unmarshalled monster #%d %s",
                  i, m.name(DESC_PLAIN, true).c_str());
         }
         if (!in_bounds(m.pos()))
         {
             mprf(MSGCH_ERROR,
-                 "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
+                 "<2414>Unmarshalled monster #%d %s out of bounds at (%d, %d)",
                  i, m.name(DESC_PLAIN, true).c_str(),
                  m.pos().x, m.pos().y);
         }
         int midx = mgrd(m.pos());
         if (midx != NON_MONSTER)
         {
-            mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
+            mprf(MSGCH_ERROR, "<2415>(%d, %d) for %s already occupied by %s",
                  m.pos().x, m.pos().y,
                  m.name(DESC_PLAIN, true).c_str(),
                  menv[midx].name(DESC_PLAIN, true).c_str());
@@ -6374,7 +6374,7 @@ void tag_read_level_tiles(reader &th)
     {
 #ifdef DEBUG_TILE_NAMES
         string temp = unmarshallString(th);
-        mprf("Reading tile_names[%d] = %s", i, temp.c_str());
+        mprf("<2416>Reading tile_names[%d] = %s", i, temp.c_str());
         env.tile_names.push_back(temp);
 #else
         env.tile_names.push_back(unmarshallString(th));
@@ -6426,13 +6426,13 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
     if (!tile_dngn_index(tilename.c_str(), &tile))
     {
 #ifdef DEBUG_TILE_NAMES
-        mprf("tilename %s (index %d) not found",
+        mprf("<2417>tilename %s (index %d) not found",
              tilename.c_str(), idx - 1);
 #endif
         return 0;
     }
 #ifdef DEBUG_TILE_NAMES
-    mprf("tilename %s (index %d) resolves to tile %d",
+    mprf("<2418>tilename %s (index %d) resolves to tile %d",
          tilename.c_str(), idx - 1, (int) tile);
 #endif
 

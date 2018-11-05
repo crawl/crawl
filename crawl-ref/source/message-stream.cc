@@ -80,9 +80,9 @@ namespace msg
             // null-terminate and print the string
             internal_buf[internal_count] = 0;
             if (capitalise)
-                mprf(channel, param, "%s", internal_buf);
+                mprf(channel, param, "<1332>%s", internal_buf);
             else
-                mprf_nocap(channel, param, "%s", internal_buf);
+                mprf_nocap(channel, param, "<1333>%s", internal_buf);
 
             internal_count = 0;
 

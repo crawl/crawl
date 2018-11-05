@@ -246,7 +246,7 @@ item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
     // No selectable items in inv or floor
     if (!any_items_of_type(item_type, -1, true))
     {
-        mprf(MSGCH_PROMPT, "%s",
+        mprf(MSGCH_PROMPT, "<978>%s",
              no_selectables_message(item_type).c_str());
         return nullptr;
     }
@@ -331,7 +331,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
     {
-        SAY(mprf("당신은 %s그런식으로 무기를 다룰 수 없다!",
+        SAY(mprf("<979>당신은 %s그런식으로 무기를 다룰 수 없다!",
                  !unwield ? "새 무기를 꺼내기 위해 " : ""));
         return false;
     }
@@ -407,7 +407,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
         {
             set_ident_flags(*wwpn, ISFLAG_KNOW_TYPE);
             if (in_inventory(*weapon))
-                mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
+                mprf_nocap("<980>%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
             artefact_learn_prop(*wwpn, ARTP_BRAND);
@@ -600,7 +600,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 #ifdef USE_SOUND
         parse_sound(WIELD_WEAPON_SOUND);
 #endif
-        mprf_nocap("%s", new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<981>%s", new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     check_item_hint(new_wpn, old_talents);
@@ -709,7 +709,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            mprf("%s 당신의 날개는 그것과 맞지 않을 것이다.", you.has_mutation(MUT_BIG_WINGS)
+            mprf("<982>%s 당신의 날개는 그것과 맞지 않을 것이다.", you.has_mutation(MUT_BIG_WINGS)
                  ? "" : "비록 흔적만 남은 것 뿐일지라도,");
         }
         return false;
@@ -737,7 +737,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (you.species == SP_OCTOPODE)
                 mpr("나머지 촉수는 이동을 위해 사용해야 한다.");
             else
-                mprf("그렇게 하려면 당신은 또 하나의 %s이(가) 필요하다!", you.hand_name(false).c_str());
+                mprf("<983>그렇게 하려면 당신은 또 하나의 %s이(가) 필요하다!", you.hand_name(false).c_str());
         }
         return false;
     }
@@ -753,7 +753,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             else
             {
                 // Singular hand should have already been handled above.
-                mprf("그렇게 하려면 3개의 %s이(가) 필요하다!",
+                mprf("<984>그렇게 하려면 3개의 %s이(가) 필요하다!",
                      you.hand_name(true).c_str());
             }
         }
@@ -774,7 +774,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("그 사슬갑옷은 당신의 %s와 맞지 않을 것이다.",
+                mprf("<985>그 사슬갑옷은 당신의 %s와 맞지 않을 것이다.",
                      you.hand_name(true).c_str());
             }
             return false;
@@ -802,7 +802,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 {
                     if (verbose)
                     {
-                        mprf("당신은 당신의 %s을(를) 자유롭게 할 필요가 있다.",
+                        mprf("<986>당신은 당신의 %s을(를) 자유롭게 할 필요가 있다.",
                              parts[s - EQ_HELMET].c_str());
                     }
                     return false;
@@ -812,7 +812,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 {
                     if (verbose)
                     {
-                        mprf("그 사슬갑옷은 당신의 %s와 맞지 않을 것이다.",
+                        mprf("<987>그 사슬갑옷은 당신의 %s와 맞지 않을 것이다.",
                              parts[s - EQ_HELMET].c_str());
                     }
                     return false;
@@ -846,7 +846,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            mprf("이 갑옷은 당신에겐 너무 %s!",
+            mprf("<988>이 갑옷은 당신에겐 너무 %s!",
                  (bad_size > 0) ? "크다" : "작다");
         }
 
@@ -869,7 +869,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("당신의 그 거대한 손톱%s(으)로는 장갑을 낄 수 없다!",
+                mprf("<989>당신의 그 거대한 손톱%s(으)로는 장갑을 낄 수 없다!",
                      you.get_mutation_level(MUT_MISSING_HAND) ? "" : "들");
             }
             return false;
@@ -1118,7 +1118,7 @@ static bool _can_takeoff_armour(int item)
     const equipment_type slot = get_armour_slot(invitem);
     if (item == you.equip[slot] && you.melded[slot])
     {
-        mprf("%s은(는) 당신의 몸 속에 녹아들었다!",
+        mprf("<990>%s은(는) 당신의 몸 속에 녹아들었다!",
              invitem.name(DESC_PLAIN).c_str());
         return false;
     }
@@ -1132,7 +1132,7 @@ static bool _can_takeoff_armour(int item)
     // If we get here, we're wearing the item.
     if (invitem.cursed())
     {
-        mprf("%s은(는) 당신의 몸에 들러붙었다!", invitem.name(DESC_PLAIN).c_str());
+        mprf("<991>%s은(는) 당신의 몸에 들러붙었다!", invitem.name(DESC_PLAIN).c_str());
         return false;
     }
     return true;
@@ -1272,7 +1272,7 @@ static int _prompt_ring_to_remove(int new_ring)
             m += '<';
 
         m += "</w> or " + rings[i]->name(DESC_INVENTORY);
-        mprf_nocap("%s", m.c_str());
+        mprf_nocap("<992>%s", m.c_str());
     }
     flush_prev_message();
 
@@ -1405,7 +1405,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
             verb = "Wear";
     }
 
-    string prompt = make_stringf("이것을 %s하면 당신의 %s은 0이 될 것이다. "
+    string prompt = make_stringf("<993>이것을 %s하면 당신의 %s은 0이 될 것이다. "
                                  "계속하겠는가?", verb.c_str(),
                                  stat_desc(red_stat, SD_NAME));
     if (!yesno(prompt.c_str(), true, 'n', true, false))
@@ -1516,7 +1516,7 @@ static bool _swap_rings(int ring_slot)
     }
     else if (available == 0)
     {
-        mprf("당신은 이미 %s에 저주받은 반지%s(을)를 착용하고 있다!%s",
+        mprf("<994>당신은 이미 %s에 저주받은 반지%s(을)를 착용하고 있다!%s",
              number_in_words(cursed).c_str(),
              (cursed == 1 ? "" : "들"),
              (cursed > 2 ? " 이건 당신에게 충분 하지않나?" : ""));
@@ -1560,7 +1560,7 @@ static equipment_type _choose_ring_slot()
     clear_messages();
 
     mprf(MSGCH_PROMPT,
-         "어느 쪽에 반지를 끼겠는가 %s? (취소하려면 <w>Esc</w>)", you.hand_name(false).c_str());
+         "<995>어느 쪽에 반지를 끼겠는가 %s? (취소하려면 <w>Esc</w>)", you.hand_name(false).c_str());
 
     const vector<equipment_type> slots = _current_ring_types();
     for (auto eq : slots)
@@ -1583,7 +1583,7 @@ static equipment_type _choose_ring_slot()
             msg += " (오른쪽)";
         else if (eq == EQ_RING_AMULET)
             msg += " (목걸이)";
-        mprf_nocap("%s", msg.c_str());
+        mprf_nocap("<996>%s", msg.c_str());
     }
     flush_prev_message();
 
@@ -1647,7 +1647,7 @@ static bool _can_puton_jewellery(int item_slot)
         int existing = you.equip[EQ_AMULET];
         if (existing != -1 && you.inv[existing].cursed())
         {
-            mprf("%s 당신에게 들러붙었다!",
+            mprf("<997>%s 당신에게 들러붙었다!",
                  you.inv[existing].name(DESC_YOUR).c_str());
             return false;
         }
@@ -1678,7 +1678,7 @@ static bool _can_puton_jewellery(int item_slot)
         if (melded == (int)slots.size())
             mpr("지금 당신의 모습으로는 그것을 착용할 수 없다.");
         else
-            mprf("당신은 이미 %s에 저주받은 반지%s(을)를 착용하고 있다!%s",
+            mprf("<998>당신은 이미 %s에 저주받은 반지%s(을)를 착용하고 있다!%s",
                  number_in_words(cursed).c_str(),
                  (cursed == 1 ? "" : "들"),
                  (cursed > 2 ? " 이건 당신에게 충분 하지않나?" : ""));
@@ -1957,7 +1957,7 @@ bool remove_ring(int slot, bool announce)
     {
         if (announce)
         {
-            mprf("%s 당신에게 들러붙었다!",
+            mprf("<999>%s 당신에게 들러붙었다!",
                  you.inv[you.equip[hand_used]].name(DESC_YOUR).c_str());
         }
         else
@@ -1976,7 +1976,7 @@ bool remove_ring(int slot, bool announce)
 #ifdef USE_SOUND
     parse_sound(REMOVE_JEWELLERY_SOUND);
 #endif
-    mprf("당신은 %s을(를) 빼냈다.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
+    mprf("<1000>당신은 %s을(를) 빼냈다.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
 #ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();
 #endif
@@ -2217,52 +2217,52 @@ static void _brand_weapon(item_def &wpn)
     {
     case SPWPN_VORPAL:
         flash_colour = YELLOW;
-        mprf("%s은(는) 찬란한 번쩍이는 빛을 냈다!",itname.c_str());
+        mprf("<1001>%s은(는) 찬란한 번쩍이는 빛을 냈다!",itname.c_str());
         break;
 
     case SPWPN_PROTECTION:
         flash_colour = YELLOW;
-        mprf("%s에 보이지않는 물리력의 방패가 투영되었다!",itname.c_str());
+        mprf("<1002>%s에 보이지않는 물리력의 방패가 투영되었다!",itname.c_str());
         break;
 
     case SPWPN_FLAMING:
         flash_colour = RED;
-        mprf("%s은(는) 화염에 휩쌓였다!", itname.c_str());
+        mprf("<1003>%s은(는) 화염에 휩쌓였다!", itname.c_str());
         break;
 
     case SPWPN_FREEZING:
         flash_colour = LIGHTCYAN;
-        mprf("%s은(는) 얇은 얼음층으로 뒤뎦혔다!", itname.c_str());
+        mprf("<1004>%s은(는) 얇은 얼음층으로 뒤뎦혔다!", itname.c_str());
         break;
 
     case SPWPN_DRAINING:
         flash_colour = DARKGREY;
-        mprf("%s이(가) 살아있는 영혼을 갈구한다!", itname.c_str());
+        mprf("<1005>%s이(가) 살아있는 영혼을 갈구한다!", itname.c_str());
         break;
 
     case SPWPN_VAMPIRISM:
         flash_colour = DARKGREY;
-        mprf("%s은(는) 필멸자의 생명을 마시고자 한다!", itname.c_str());
+        mprf("<1006>%s은(는) 필멸자의 생명을 마시고자 한다!", itname.c_str());
         break;
 
     case SPWPN_VENOM:
         flash_colour = GREEN;
-        mprf("%s에 독이 뚝뚝 떨어진다.", itname.c_str());
+        mprf("<1007>%s에 독이 뚝뚝 떨어진다.", itname.c_str());
         break;
 
     case SPWPN_ELECTROCUTION:
         flash_colour = LIGHTCYAN;
-        mprf("%s은(는) 전류를 띄고 파직거린다.", itname.c_str());
+        mprf("<1008>%s은(는) 전류를 띄고 파직거린다.", itname.c_str());
         break;
 
     case SPWPN_CHAOS:
         flash_colour = random_colour();
-        mprf("%s은(는) 기괴한 색으로 미친듯이 번쩍거렸다.", itname.c_str());
+        mprf("<1009>%s은(는) 기괴한 색으로 미친듯이 번쩍거렸다.", itname.c_str());
         break;
 
     case SPWPN_ACID:
         flash_colour = ETC_SLIME;
-        mprf("%s에서 부식성 점액질이 스며나왔다.", itname.c_str());
+        mprf("<1010>%s에서 부식성 점액질이 스며나왔다.", itname.c_str());
         break;
 
     default:
@@ -2275,7 +2275,7 @@ static void _brand_weapon(item_def &wpn)
         item_set_appearance(wpn);
         // Message would spoil this even if we didn't identify.
         set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
-        mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<1011>%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
         // Might be rebranding to/from protection or evasion.
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
@@ -2356,7 +2356,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
         wpn.plus++;
         success = true;
         if (!quiet)
-            mprf("%s은(는) 순간 붉은빛을 띄었다.", iname.c_str());
+            mprf("<1012>%s은(는) 순간 붉은빛을 띄었다.", iname.c_str());
     }
 
     if (!success && !quiet)
@@ -2397,7 +2397,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Output identified item.
-    mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
+    mprf_nocap("<1013>%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
     if (in_inventory(item))
     {
         if (item.link == you.equip[EQ_WEAPON])
@@ -2456,7 +2456,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     {
         const bool plural = armour_is_hide(arm)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
-        mprf("%s은(는) 순간 %s 녹색을 띄었다.",
+        mprf("<1014>%s은(는) 순간 %s 녹색을 띄었다.",
              _item_name(arm).c_str(),
              conjugate_verb("빛나는", plural).c_str());
     }
@@ -2496,13 +2496,13 @@ void random_uselessness()
     {
     case 0:
     case 1:
-        mprf("먼지가 %s색으로 빛났다!", weird_glowing_colour().c_str());
+        mprf("<1015>먼지가 %s색으로 빛났다!", weird_glowing_colour().c_str());
         break;
 
     case 2:
         if (you.weapon())
         {
-            mprf("%s은(는) 순간 %s색으로 빛났다.",
+            mprf("<1016>%s은(는) 순간 %s색으로 빛났다.",
                  you.weapon()->name(DESC_YOUR).c_str(),
                  weird_glowing_colour().c_str());
         }
@@ -2517,7 +2517,7 @@ void random_uselessness()
         if (you.species == SP_MUMMY)
             mpr("감긴 붕대가 잠시 흔들렸다.");
         else // if (you.can_smell())
-            mprf("당신은 %s 냄새를 맡았다.", _weird_smell().c_str());
+            mprf("<1017>당신은 %s 냄새를 맡았다.", _weird_smell().c_str());
         break;
 
     case 4:
@@ -2535,7 +2535,7 @@ void random_uselessness()
 
     case 6:
     case 7:
-        mprf(MSGCH_SOUND, "당신은 %s 소리를 들었다.", _weird_sound().c_str());
+        mprf(MSGCH_SOUND, "<1018>당신은 %s 소리를 들었다.", _weird_sound().c_str());
         noisy(2, you.pos());
         break;
     }
@@ -2761,7 +2761,7 @@ void read(item_def* scroll)
     const string failure_reason = cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
-        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
+        mprf(MSGCH_PROMPT, "<1019>%s", failure_reason.c_str());
         return;
     }
 
@@ -2833,7 +2833,7 @@ void read_scroll(item_def& scroll)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you read the %s, it crumbles to dust.",
+            make_stringf("<1020>As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
     if (!_is_cancellable_scroll(which_scroll))
     {
@@ -2996,7 +2996,7 @@ void read_scroll(item_def& scroll)
             const string weapon_name =
                 weapon ? weapon->name(DESC_YOUR)
                        : "당신의 " + you.hand_name(true, &plural);
-            mprf("%s에서 %s은(는) 아주 간단히 검은 광택을 얻었다.",
+            mprf("<1021>%s에서 %s은(는) 아주 간단히 검은 광택을 얻었다.",
                  weapon_name.c_str(), plural ? "" : "");
         }
         else
@@ -3141,7 +3141,7 @@ void read_scroll(item_def& scroll)
         && which_scroll != SCR_RECHARGING
         && which_scroll != SCR_AMNESIA)
     {
-        mprf("이것은 %s%s이다.",
+        mprf("<1022>이것은 %s%s이다.",
              scroll.quantity < prev_quantity ? "" : "",
              scroll_name.c_str());
     }

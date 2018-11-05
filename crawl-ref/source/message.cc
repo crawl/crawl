@@ -215,7 +215,7 @@ struct message_line
         {
             if (!text.empty())
             {
-                text += make_stringf("<lightgrey>%s </lightgrey>",
+                text += make_stringf("<1334><lightgrey>%s </lightgrey>",
                                      needs_semicolon ? ";" : "");
             }
             text += msg.with_repeats();
@@ -1262,7 +1262,7 @@ static void _debug_channel_arena(msg_channel_type channel)
     case MSGCH_EXAMINE_FILTER:
     case MSGCH_ORB:
     case MSGCH_TUTORIAL:
-        die("Invalid channel '%s' in arena mode",
+        die("<1335>Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
         break;
     default:
@@ -1335,7 +1335,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                  bool cap)
 {
     if (_msg_dump_file != nullptr)
-        fprintf(_msg_dump_file, "%s\n", text.c_str());
+        fprintf(_msg_dump_file, "<1336>%s\n", text.c_str());
 
     if (crawl_state.game_crashed)
         return;
@@ -1345,13 +1345,13 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
-        die_noline("%s", text.c_str());
+        die_noline("<1337>%s", text.c_str());
 #endif
 
     if (!crawl_state.io_inited)
     {
         if (channel == MSGCH_ERROR)
-            fprintf(stderr, "%s\n", text.c_str());
+            fprintf(stderr, "<1338>%s\n", text.c_str());
         return;
     }
 
@@ -1417,7 +1417,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
 static string show_prompt(string prompt)
 {
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mprf(MSGCH_PROMPT, "<1339>%s", prompt.c_str());
 
     // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
@@ -1436,7 +1436,7 @@ void msgwin_reply(string reply)
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
     reply = replace_all(reply, "<", "<<");
-    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
+    mprf(MSGCH_PROMPT, "<1340>%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
     msgwin.got_input();
 }
 
@@ -1686,7 +1686,7 @@ void canned_msg(canned_message_type which_message)
     switch (which_message)
     {
         case MSG_SOMETHING_APPEARS:
-            mprf("무엇인가 %s 나타났다!",
+            mprf("<1341>무엇인가 %s 나타났다!",
                  player_has_feet() ? "당신의 발 밑에" : "당신 앞에");
             break;
         case MSG_NOTHING_HAPPENS:
@@ -1755,13 +1755,13 @@ void canned_msg(canned_message_type which_message)
             const char* when =
             (which_message == MSG_EMPTY_HANDED_ALREADY ? "이미" : "지금");
             if (you.species == SP_FELID)
-                mprf("당신의 입은 %s 비어있다.", when);
+                mprf("<1342>당신의 입은 %s 비어있다.", when);
             else if (you.has_usable_claws(true))
-                mprf("당신의 손톱은 %s 비어있다.", when);
+                mprf("<1343>당신의 손톱은 %s 비어있다.", when);
             else if (you.has_usable_tentacles(true))
-                mprf("당신의 촉수는 %s 비어있다.", when);
+                mprf("<1344>당신의 촉수는 %s 비어있다.", when);
             else
-                mprf("당신의 손은 %s 비어있다.", when);
+                mprf("<1345>당신의 손은 %s 비어있다.", when);
             break;
         }
         case MSG_YOU_BLINK:
@@ -1845,7 +1845,7 @@ bool simple_monster_message(const monster& mons, const char *event,
         if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
-        mprf(channel, param, "%s", msg.c_str());
+        mprf(channel, param, "<1346>%s", msg.c_str());
         return true;
     }
 

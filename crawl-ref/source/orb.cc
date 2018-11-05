@@ -62,14 +62,14 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
     if (_orb_noise(where, loudness))
     {
         if (msg)
-            mprf(MSGCH_ORB, "%s", msg);
+            mprf(MSGCH_ORB, "<1696>%s", msg);
         else
             mprf(MSGCH_ORB, "오브가 끔찍한 괴성을 지른다!");
     }
     else
     {
         if (msg2)
-            mprf(MSGCH_ORB, "%s", msg2);
+            mprf(MSGCH_ORB, "<1697>%s", msg2);
         else
             mprf(MSGCH_ORB, "오브가 강력한 빛을 맹렬히 쏟아낸다!");
     }
@@ -93,7 +93,7 @@ void start_orb_run(game_chapter chapter, const char* message)
             simple_god_message("는 그들에게 서두르지 말라고 지시했다.");
     }
 
-    mprf(MSGCH_ORB, "%s", message);
+    mprf(MSGCH_ORB, "<1698>%s", message);
     you.chapter = chapter;
     xom_is_stimulated(200, XM_INTRIGUED);
     invalidate_agrid(true);

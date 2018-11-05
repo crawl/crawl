@@ -485,7 +485,7 @@ static void _recap_spell_keys(vector<string> &keys)
         // first, strip " spell"
         const string key_name = keys[i].substr(0, keys[i].length() - 6);
         // then get the real name
-        keys[i] = make_stringf("%s spell",
+        keys[i] = make_stringf("<1089>%s spell",
                                spell_title(spell_by_name(key_name)));
     }
 }
@@ -501,7 +501,7 @@ static void _recap_ability_keys(vector<string> &keys)
     {
         strip_suffix(key, "ability");
         // get the real name
-        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
+        key = make_stringf("<1090>%s ability", ability_name(ability_by_name(key)));
     }
 }
 
@@ -1061,7 +1061,7 @@ static int _describe_spellbook(const item_def &item)
 {
     const string desc = get_item_description(item, true);
     formatted_string fdesc;
-    fdesc.cprintf("%s", desc.c_str());
+    fdesc.cprintf("<1091>%s", desc.c_str());
 
     list_spellset(item_spellset(item), nullptr, &item, fdesc);
     return 0; // XXX: this breaks exact match stuff
@@ -1126,8 +1126,8 @@ static string _branch_entry_runes(branch_type br)
 
     if (num_runes > 0)
     {
-        desc = make_stringf("\n\nThis %s can only be entered while carrying "
-                            "at least %d rune%s of Zot.",
+        desc = make_stringf("<1092>\n\nThis %s can only be entered while carrying "
+                            "<1093>at least %d rune%s of Zot.",
                             br == BRANCH_ZIGGURAT ? "portal" : "branch",
                             num_runes, num_runes > 1 ? "s" : "");
     }
@@ -1143,7 +1143,7 @@ static string _branch_depth(branch_type br)
     // Abyss depth is explained in the description.
     if (depth > 1 && br != BRANCH_ABYSS)
     {
-        desc = make_stringf("\n\nThis %s is %d levels deep.",
+        desc = make_stringf("<1094>\n\nThis %s is %d levels deep.",
                             br == BRANCH_ZIGGURAT ? "portal"
                                                   : "branch",
                             depth);
@@ -1191,7 +1191,7 @@ static string _branch_subbranches(branch_type br)
     // Lair's random branches are explained in the description.
     if (!subbranch_names.empty() && br != BRANCH_LAIR)
     {
-        desc += make_stringf("\n\nThis branch contains the entrance%s to %s.",
+        desc += make_stringf("<1095>\n\nThis branch contains the entrance%s to %s.",
                              subbranch_names.size() > 1 ? "s" : "",
                              comma_separated_line(begin(subbranch_names),
                                                   end(subbranch_names)).c_str());
@@ -1303,11 +1303,11 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 {
     const string type = lowercase_string(lookup_type.type);
     const string extra = lookup_type.supports_glyph_lookup() ?
-        make_stringf(" Enter a single letter to list %s displayed by that"
+        make_stringf("<1096> Enter a single letter to list %s displayed by that"
                      " symbol.", pluralise(type).c_str()) :
         "";
     mprf(MSGCH_PROMPT,
-         "Describe a %s; partial names and regexps are fine.%s",
+         "<1097>Describe a %s; partial names and regexps are fine.%s",
          type.c_str(), extra.c_str());
 
     mprf(MSGCH_PROMPT, "Describe what? ");
@@ -1370,7 +1370,7 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
                     "' to display.";
         }
 
-        return make_stringf("Too many matching %s (%d) to display.",
+        return make_stringf("<1098>Too many matching %s (%d) to display.",
                             plur_type.c_str(), (int) key_list.size());
     }
 
@@ -1391,7 +1391,7 @@ static bool _find_description(string &response)
     const string lookup_type_prompts =
         comma_separated_fn(lookup_types.begin(), lookup_types.end(),
                            mem_fn(&LookupType::prompt_string), " or ");
-    mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
+    mprf(MSGCH_PROMPT, "<1099>Describe a %s? ", lookup_type_prompts.c_str());
 
     int ch;
     {
@@ -1463,7 +1463,7 @@ void keyhelp_query_descriptions()
         redraw_screen();
 
         if (!response.empty())
-            mprf(MSGCH_PROMPT, "%s", response.c_str());
+            mprf(MSGCH_PROMPT, "<1100>%s", response.c_str());
         response = "";
 
         if (!_find_description(response))

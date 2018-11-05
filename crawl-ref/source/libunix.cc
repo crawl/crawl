@@ -835,7 +835,7 @@ void clrscr()
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
-    printf("%s", DGL_CLEAR_SCREEN);
+    printf("<1088>%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
 

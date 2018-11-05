@@ -47,13 +47,13 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     }
     else if (launch_type == launch_retval::LAUNCHED)
     {
-        aux_source = make_stringf("Shot with a%s %s by %s",
+        aux_source = make_stringf("<1933>Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
                  attacker->name(DESC_A).c_str());
     }
     else
     {
-        aux_source = make_stringf("Hit by a%s %s thrown by %s",
+        aux_source = make_stringf("<1934>Hit by a%s %s thrown by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
                  attacker->name(DESC_A).c_str());
     }
@@ -209,7 +209,7 @@ bool ranged_attack::handle_phase_blocked()
 
     if (needs_message)
     {
-        mprf("%s %s %s%s",
+        mprf("<1935>%s %s %s%s",
              defender_name(false).c_str(),
              defender->conj_verb(verb).c_str(),
              projectile->name(DESC_THE).c_str(),
@@ -234,13 +234,13 @@ bool ranged_attack::handle_phase_dodged()
         {
             if (defender->missile_deflection() >= 2)
             {
-                mprf("%s %s %s!",
+                mprf("<1936>%s %s %s!",
                      defender->name(DESC_THE).c_str(),
                      defender->conj_verb("deflect").c_str(),
                      projectile->name(DESC_THE).c_str());
             }
             else
-                mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
+                mprf("<1937>%s is repelled.", projectile->name(DESC_THE).c_str());
 
             defender->ablate_deflection();
         }
@@ -256,7 +256,7 @@ bool ranged_attack::handle_phase_dodged()
 
     if (needs_message)
     {
-        mprf("%s%s misses %s%s",
+        mprf("<1938>%s%s misses %s%s",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
              defender_name(false).c_str(),
@@ -297,7 +297,7 @@ bool ranged_attack::handle_phase_hit()
         }
         else if (needs_message)
         {
-            mprf("%s %s %s 그러나 손상을 주지 못했다.",
+            mprf("<1939>%s %s %s 그러나 손상을 주지 못했다.",
                  projectile->name(DESC_PLAIN).c_str(),
                  attack_verb.c_str(),
                  defender->name(DESC_PLAIN).c_str());
@@ -396,7 +396,7 @@ bool ranged_attack::ignores_shield(bool verbose)
     {
         if (verbose)
         {
-            mprf("%s pierces through %s %s!",
+            mprf("<1940>%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
                  apostrophise(defender_name(false)).c_str(),
                  defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
@@ -813,7 +813,7 @@ void ranged_attack::announce_hit()
     if (!needs_message)
         return;
 
-    mprf("%s %s %s%s%s",
+    mprf("<1941>%s %s %s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
          defender_name(false).c_str(),

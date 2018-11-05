@@ -525,11 +525,11 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         else
             verb = "끓어오르면서 바뀌었다.";
 
-        mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
+        mprf("<1566>%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
     {
-        mprf("%s이(가) 갑자기 나타났다!", mons->name(DESC_PLAIN).c_str());
+        mprf("<1567>%s이(가) 갑자기 나타났다!", mons->name(DESC_PLAIN).c_str());
         autotoggle_autopickup(false);
     }
     else
@@ -651,7 +651,7 @@ void seen_monster(monster* mons)
         string name = mons->name(DESC_A, true);
         if (mons->type == MONS_PLAYER_GHOST)
         {
-            name += make_stringf(" (%s)",
+            name += make_stringf("<1568> (%s)",
                                  short_ghost_description(mons, true).c_str());
         }
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));

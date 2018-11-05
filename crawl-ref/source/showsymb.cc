@@ -571,5 +571,5 @@ string glyph_to_tagstr(const cglyph_t& g)
     string ch = stringize_glyph(g.ch);
     if (g.ch == '<')
         ch += "<";
-    return make_stringf("<%s>%s</%s>", col.c_str(), ch.c_str(), col.c_str());
+    return make_stringf("<2205><%s>%s</%s>", col.c_str(), ch.c_str(), col.c_str());
 }

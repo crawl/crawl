@@ -204,7 +204,7 @@ void wizard_list_companions()
     {
         companion &comp = entry.second;
         monster &mon = comp.mons.mons;
-        mprf("%s (%d)(%s:%d)", mon.name(DESC_PLAIN, true).c_str(), mon.mid,
+        mprf("<748>%s (%d)(%s:%d)", mon.name(DESC_PLAIN, true).c_str(), mon.mid,
              branches[comp.level.branch].abbrevname, comp.level.depth);
     }
 }

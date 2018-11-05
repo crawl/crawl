@@ -54,10 +54,10 @@ void debug_dump_levgen()
                                       env.level_layout_types.end(), ", ");
 
         if (!env.placing_vault.empty())
-            mprf("Vault being placed: %s", env.placing_vault.c_str());
+            mprf("<344>Vault being placed: %s", env.placing_vault.c_str());
         if (!env.new_subvault_names.empty())
         {
-            mprf("Subvaults: %s", comma_separated_line(
+            mprf("<345>Subvaults: %s", comma_separated_line(
                  env.new_subvault_names.begin(), env.new_subvault_names.end(),
                  ", ").c_str());
         }
@@ -75,7 +75,7 @@ void debug_dump_levgen()
             type = props[LAYOUT_TYPE_KEY].get_string();
     }
 
-    mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
+    mprf("<346>Level build method = %s, level layout type  = %s, absdepth0 = %d",
          method.c_str(), type.c_str(), env.absdepth0);
 
     if (!env.level_vaults.empty())
@@ -95,7 +95,7 @@ void debug_dump_levgen()
                 }
                 vault_name += "]";
             }
-            mprf("    %s", vault_name.c_str());
+            mprf("<347>    %s", vault_name.c_str());
         }
     }
     mpr("");
@@ -103,7 +103,7 @@ void debug_dump_levgen()
 
 string debug_coord_str(const coord_def &pos)
 {
-    return make_stringf("(%d, %d)%s", pos.x, pos.y,
+    return make_stringf("<348>(%d, %d)%s", pos.x, pos.y,
                         !in_bounds(pos) ? " <OoB>" : "");
 }
 
@@ -114,7 +114,7 @@ string debug_mon_str(const monster* mon)
         return make_stringf("Invalid monster index %d", midx);
 
     string out = "Monster '" + mon->full_name(DESC_PLAIN) + "' ";
-    out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
+    out += make_stringf("<349>%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
     return out;
@@ -124,14 +124,14 @@ static void _debug_mid_name(mid_t mid)
 {
     if (mid == MID_PLAYER)
     {
-        fprintf(stderr, "player %s",
+        fprintf(stderr, "<350>player %s",
                 debug_coord_str(you.pos()).c_str());
     }
     else
     {
         monster * const mons = monster_by_mid(mid);
         if (mons)
-            fprintf(stderr, "%s", debug_mon_str(mons).c_str());
+            fprintf(stderr, "<351>%s", debug_mon_str(mons).c_str());
         else
             fprintf(stderr, "bad monster[%" PRImidt"]", mid);
     }
@@ -165,16 +165,16 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
     fprintf(stderr, "<<<<<<<<<\n");
 
-    fprintf(stderr, "Name: %s\n", mon->name(DESC_PLAIN, true).c_str());
-    fprintf(stderr, "Base name: %s\n",
+    fprintf(stderr, "<352>Name: %s\n", mon->name(DESC_PLAIN, true).c_str());
+    fprintf(stderr, "<353>Base name: %s\n",
             mon->base_name(DESC_PLAIN, true).c_str());
-    fprintf(stderr, "Full name: %s\n\n",
+    fprintf(stderr, "<354>Full name: %s\n\n",
             mon->full_name(DESC_PLAIN).c_str());
 
     if (in_bounds(mon->pos()))
     {
         string feat = raw_feature_description(mon->pos());
-        fprintf(stderr, "On/in/over feature: %s\n\n", feat.c_str());
+        fprintf(stderr, "<355>On/in/over feature: %s\n\n", feat.c_str());
     }
 
     fprintf(stderr, "Foe: ");
@@ -187,7 +187,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     else if (mon->foe == midx)
         fprintf(stderr, "self");
     else
-        fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
+        fprintf(stderr, "<356>%s", debug_mon_str(&menv[mon->foe]).c_str());
 
     fprintf(stderr, "\n");
 
@@ -195,7 +195,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     if (mon->target.origin())
         fprintf(stderr, "none\n");
     else
-        fprintf(stderr, "%s\n", debug_coord_str(mon->target).c_str());
+        fprintf(stderr, "<357>%s\n", debug_coord_str(mon->target).c_str());
 
     int target = MHITNOT;
     fprintf(stderr, "At target: ");
@@ -224,7 +224,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         else if (invalid_monster_index(target))
             fprintf(stderr, "invalid monster index %d", target);
         else
-            fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
+            fprintf(stderr, "<358>%s", debug_mon_str(&menv[target]).c_str());
     }
     else
         fprintf(stderr, "<OoB>");
@@ -234,7 +234,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
     if (mon->is_patrolling())
     {
-        fprintf(stderr, "Patrolling: %s\n\n",
+        fprintf(stderr, "<359>Patrolling: %s\n\n",
                 debug_coord_str(mon->patrol_point).c_str());
     }
 
@@ -247,9 +247,9 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
         if (!mon->travel_path.empty())
         {
-            fprintf(stderr, "    next travel step: %s\n",
+            fprintf(stderr, "<360>    next travel step: %s\n",
                     debug_coord_str(mon->travel_path.back()).c_str());
-            fprintf(stderr, "    last travel step: %s\n",
+            fprintf(stderr, "<361>    last travel step: %s\n",
                     debug_coord_str(mon->travel_path.front()).c_str());
         }
     }
@@ -278,16 +278,16 @@ void debug_dump_mon(const monster* mon, bool recurse)
             continue;
         }
 
-        fprintf(stderr, "%s", item.name(DESC_PLAIN, false, true).c_str());
+        fprintf(stderr, "<362>%s", item.name(DESC_PLAIN, false, true).c_str());
 
         if (!item.held_by_monster())
         {
-            fprintf(stderr, " [not held by monster, pos = %s]",
+            fprintf(stderr, "<363> [not held by monster, pos = %s]",
                     debug_coord_str(item.pos).c_str());
         }
         else if (item.holding_monster() != mon)
         {
-            fprintf(stderr, " [held by other monster: %s]",
+            fprintf(stderr, "<364> [held by other monster: %s]",
                     debug_mon_str(item.holding_monster()).c_str());
         }
 
@@ -311,7 +311,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         if (!is_valid_spell(spell))
             fprintf(stderr, "Invalid spell #%d\n", (int) spell);
         else
-            fprintf(stderr, "%s\n", spell_title(spell));
+            fprintf(stderr, "<365>%s\n", spell_title(spell));
         fprintf(stderr, "\n");
     }
 
@@ -322,7 +322,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
                   "experience: %u\n",
             mon->colour, mon->foe_memory, mon->shield_blocks, mon->experience);
 
-    fprintf(stderr, "god: %s, seen_context: %d\n",
+    fprintf(stderr, "<366>god: %s, seen_context: %d\n",
             god_name(mon->god).c_str(), mon->seen_context);
 
     fprintf(stderr, ">>>>>>>>>\n\n");
@@ -446,14 +446,14 @@ void wizard_toggle_dprf()
         string line;
         for (int i = 0; i < NUM_DIAGNOSTICS; i++)
         {
-            line += make_stringf("%s[%c] %-10s%s ",
+            line += make_stringf("<367>%s[%c] %-10s%s ",
                                  Options.quiet_debug_messages[i] ? "<white>" : "",
                                  i + '0',
                                  diag_names[i],
                                  Options.quiet_debug_messages[i] ? "</white>" : "");
             if (i % 5 == 4 || i == NUM_DIAGNOSTICS - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mprf(MSGCH_PROMPT, "<368>%s", line.c_str());
                 line.clear();
             }
         }
@@ -473,7 +473,7 @@ void wizard_toggle_dprf()
 
         int diag = keyin - '0';
         Options.quiet_debug_messages.set(diag, !Options.quiet_debug_messages[diag]);
-        mprf("%s messages will be %s.", diag_names[diag],
+        mprf("<369>%s messages will be %s.", diag_names[diag],
              Options.quiet_debug_messages[diag] ? "suppressed" : "printed");
         return;
     }

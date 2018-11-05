@@ -122,8 +122,8 @@ string pattern_match::annotate_string(const string &color) const
 
     if (*this && start < end)
     {
-        ret.insert(end, make_stringf("</%s>", color.c_str()));
-        ret.insert(start, make_stringf("<%s>", color.c_str()));
+        ret.insert(end, make_stringf("<1759></%s>", color.c_str()));
+        ret.insert(start, make_stringf("<1760><%s>", color.c_str()));
     }
 
     return ret;

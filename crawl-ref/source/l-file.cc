@@ -113,7 +113,7 @@ static int file_marshall_meta(lua_State *ls)
         ptype = lua_persist::nil;
     else
         luaL_error(ls,
-                   make_stringf("Cannot marshall %s",
+                   make_stringf("<1069>Cannot marshall %s",
                                 lua_typename(ls, lua_type(ls, 2))).c_str());
     marshallByte(th, static_cast<int8_t>(ptype));
     if (ptype != lua_persist::nil)
@@ -156,7 +156,7 @@ LUAFN(_file_datadir_files_recursive)
     const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
-        luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
+        luaL_error(ls, "<1070>Cannot find data directory: '%s'", rawdir.c_str());
 
     const vector<string> files = get_dir_files_recursive(datadir, ext_filter);
     return clua_stringtable(ls, files);
@@ -175,7 +175,7 @@ LUAFN(_file_datadir_files)
     const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
-        luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
+        luaL_error(ls, "<1071>Cannot find data directory: '%s'", rawdir.c_str());
 
     const vector<string> files = ext_filter.empty()
                                  ? get_dir_files(datadir)
@@ -189,7 +189,7 @@ LUAFN(_file_writefile)
     FILE *f = fopen_replace(fname.c_str());
     if (f)
     {
-        fprintf(f, "%s", luaL_checkstring(ls, 2));
+        fprintf(f, "<1072>%s", luaL_checkstring(ls, 2));
         fclose(f);
         lua_pushboolean(ls, true);
     }

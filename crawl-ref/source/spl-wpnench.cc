@@ -33,7 +33,7 @@ void end_weapon_brand(item_def &weapon, bool verbose)
 
     if (verbose)
     {
-        mprf(MSGCH_DURATION, "%s seems less pained.",
+        mprf(MSGCH_DURATION, "<2338>%s seems less pained.",
              weapon.name(DESC_YOUR).c_str());
     }
 
@@ -93,7 +93,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     }
 
     noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
-    mprf("%s은(는) 고통에 %s.", weapon.name(DESC_YOUR).c_str(),
+    mprf("<2339>%s은(는) 고통에 %s.", weapon.name(DESC_YOUR).c_str(),
                             silenced(you.pos()) ? "몸부림쳤다" : "비명을 질렀다");
 
     if (!has_temp_brand)

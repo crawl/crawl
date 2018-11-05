@@ -274,7 +274,7 @@ bool InventoryRegion::update_tab_tip_text(string &tip, bool active)
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
 
-    tip = make_stringf("%s%s\n%s%s",
+    tip = make_stringf("<2444>%s%s\n%s%s",
                        prefix1, "Display inventory",
                        prefix2, "Use items");
 
@@ -332,7 +332,7 @@ bool InventoryRegion::update_tip_text(string& tip)
 
         if (item_is_stationary_net(item))
         {
-            tip += make_stringf(" (holding %s)",
+            tip += make_stringf("<2445> (holding %s)",
                                 net_holdee(item)->name(DESC_A).c_str());
         }
 

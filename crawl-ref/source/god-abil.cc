@@ -197,7 +197,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
-    mprf(MSGCH_GOD, "당신의 %s이(가) 영롱하게 빛난다!", wpn.name(DESC_QUALNAME).c_str());
+    mprf(MSGCH_GOD, "<671>당신의 %s이(가) 영롱하게 빛난다!", wpn.name(DESC_QUALNAME).c_str());
     flash_view(UA_PLAYER, colour);
     simple_god_message("외침: 이 선물을 현명하게 사용하거라!");
     you.one_time_ability_used.set(you.religion);
@@ -699,7 +699,7 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
         string elig;
         for (int i = 0; i < NUM_RECITE_TYPES; i++)
             elig += '0' + eligibility[i];
-        dprf("Eligibility: %s", elig.c_str());
+        dprf("<672>Eligibility: %s", elig.c_str());
     }
 #endif
 
@@ -1354,7 +1354,7 @@ void tso_divine_shield()
     {
         if (you.shield())
         {
-            mprf("당신의 방패가 %s의 신성한 힘에 의해 강화되었다.",
+            mprf("<673>당신의 방패가 %s의 신성한 힘에 의해 강화되었다.",
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());
         }
         else
@@ -1403,7 +1403,7 @@ bool elyvilon_divine_vigour()
 
     if (!you.duration[DUR_DIVINE_VIGOUR])
     {
-        mprf("%s이 당신에게 신성한 활력을 부여했다.",
+        mprf("<674>%s이 당신에게 신성한 활력을 부여했다.",
              god_name(GOD_ELYVILON).c_str());
 
         const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
@@ -1483,7 +1483,7 @@ bool trog_burn_spellbooks()
         {
             if (item_is_spellbook(*si))
             {
-                mprf("당신의 %s을(를) 태우는 건 좋은 생각이 아니다!",
+                mprf("<675>당신의 %s을(를) 태우는 건 좋은 생각이 아니다!",
                         you.foot_name(true).c_str());
                 return false;
             }
@@ -1547,7 +1547,7 @@ bool trog_burn_spellbooks()
             const int duration = min(4 + count + random2(6), 20);
             place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
-            mprf(MSGCH_GOD, "마법서%s이(가) 화염%s에 휩싸였다.",
+            mprf(MSGCH_GOD, "<676>마법서%s이(가) 화염%s에 휩싸였다.",
                  count == 1 ? ""  : "들",
                  count == 1 ? "" : "");
         }
@@ -1560,7 +1560,7 @@ bool trog_burn_spellbooks()
     }
     else if (totalblocked)
     {
-        mprf("마법서%s을(를) 불태우는 데%s 실패했다!",
+        mprf("<677>마법서%s을(를) 불태우는 데%s 실패했다!",
              totalblocked == 1 ? ""  : "들",
              totalblocked == 1 ? "" : "");
         for (auto c : mimics)
@@ -1640,7 +1640,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
     {
         if (!quiet)
         {
-            mprf("%s은(는) 이미 선물을 받았다.",
+            mprf("<678>%s은(는) 이미 선물을 받았다.",
                  mons->name(DESC_PLAIN, false).c_str());
         }
         return false;
@@ -1717,7 +1717,7 @@ bool beogh_gift_item()
         || body_armour && !check_armour_size(gift, mons->body_size())
         || !item_is_selected(gift, OSEL_BEOGH_GIFT))
     {
-        mprf("당신은 %s에게 그것을 줄 수 없다.", mons->name(DESC_PLAIN, false).c_str());
+        mprf("<679>당신은 %s에게 그것을 줄 수 없다.", mons->name(DESC_PLAIN, false).c_str());
 
         return false;
     }
@@ -1726,7 +1726,7 @@ bool beogh_gift_item()
                  || mons_alt_weapon
                     && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
     {
-        mprf("%s은(는) 그것을 양손무기와 함께 착용할 수 없다.",
+        mprf("<680>%s은(는) 그것을 양손무기와 함께 착용할 수 없다.",
              mons->name(DESC_PLAIN, false).c_str());
         return false;
     }
@@ -1780,7 +1780,7 @@ bool beogh_resurrect()
         }
     if (!corpse)
     {
-        mprf("그곳엔 당신이 부활시킬 수 있는 %s것이 없다.",
+        mprf("<681>그곳엔 당신이 부활시킬 수 있는 %s것이 없다.",
              found_any ? "다른 " : "");
         return false;
     }
@@ -1934,7 +1934,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         invalidate_agrid();
     }
 
-    mprf("%s 영혼은 %s.", whose.c_str(),
+    mprf("<682>%s 영혼은 %s.", whose.c_str(),
          !force_hostile ? "이제 당신의 것이다" : "당신과 싸운다");
 }
 
@@ -2277,7 +2277,7 @@ static bool _mushroom_spawn_message(int seen_targets, int seen_corpses)
     string where = seen_corpses  > 1 ? "근처의 시체들" :
                    seen_corpses == 1 ? "근처의 시체"
                                      : "바닥";
-    mprf("%s이(가) %s%s에서 자라났다.",
+    mprf("<683>%s이(가) %s%s에서 자라났다.",
          what.c_str(), seen_targets > 1 ? "" : "", where.c_str());
 
     return true;
@@ -2431,7 +2431,7 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
                 placed_targets++;
                 if (current == you.pos())
                 {
-                    mprf("버섯이 %s에서 자라났다.",
+                    mprf("<684>버섯이 %s에서 자라났다.",
                          player_has_feet() ? "당신의 발" : "당신 뒤");
                     current = mushroom->pos();
                 }
@@ -2626,7 +2626,7 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
         {
             if (hp_adjust)
             {
-                mprf("%s에 의해 강화된 식물이 땅으로부터 자라났다.",
+                mprf("<685>%s에 의해 강화된 식물이 땅으로부터 자라났다.",
                      god_name(GOD_FEDHAS).c_str());
             }
             else
@@ -2708,7 +2708,7 @@ spret_type fedhas_sunlight(bool fail)
 
     if (revealed_count)
     {
-        mprf("밝은 빛 속에서, 당신은 %s 알아챘다.", revealed_count == 1 ?
+        mprf("<686>밝은 빛 속에서, 당신은 %s 알아챘다.", revealed_count == 1 ?
              "보이지 않는 형체를" : "보이지 않는 형체들을");
     }
 
@@ -3195,7 +3195,7 @@ int fedhas_rain(const coord_def &target)
 
     if (spawned_count > 0)
     {
-        mprf("%s이 빗속에서%s 자라났다.",
+        mprf("<687>%s이 빗속에서%s 자라났다.",
              (spawned_count > 1 ? "몇몇 식물" : "식물"),
              (spawned_count > 1 ? "" : ""));
     }
@@ -3537,7 +3537,7 @@ void lugonu_bend_space()
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
 
-    mprf("공간이 당신 주위에서 %s일그러진다!", area_warp ? "날카롭게 " : "");
+    mprf("<688>공간이 당신 주위에서 %s일그러진다!", area_warp ? "날카롭게 " : "");
 
     if (area_warp)
         _lugonu_warp_area(pow);
@@ -3558,14 +3558,14 @@ void cheibriados_time_bend(int pow)
                              - random2avg(pow, 2);
             if (res_margin > 0)
             {
-                mprf("%s은(는) %s",
+                mprf("<689>%s은(는) %s",
                      mon->name(DESC_PLAIN).c_str(),
                      mon->resist_margin_phrase(res_margin).c_str());
                 continue;
             }
 
             simple_god_message(
-                make_stringf("가 %s을(를) 꾸짖었다.",
+                make_stringf("<690>가 %s을(를) 꾸짖었다.",
                              mon->name(DESC_PLAIN).c_str()).c_str(),
                              GOD_CHEIBRIADOS);
             do_slow_monster(*mon, &you);
@@ -3755,7 +3755,7 @@ bool ashenzari_transfer_knowledge()
     // We reset the view to force view transfer next time.
     you.skill_menu_view = SKM_NONE;
 
-    mprf("당신은 %s에 대한 기억을 잃음으로써 %s을(를) 이해할 준비가 되었다고 느꼈다.",
+    mprf("<691>당신은 %s에 대한 기억을 잃음으로써 %s을(를) 이해할 준비가 되었다고 느꼈다.",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
 
@@ -3769,14 +3769,14 @@ bool ashenzari_end_transfer(bool finished, bool force)
 {
     if (!force && !finished)
     {
-        mprf("당신은 현재 %s에서 %s(으)로 지식을 전송하고 있다.",
+        mprf("<692>당신은 현재 %s에서 %s(으)로 지식을 전송하고 있다.",
              skill_name(you.transfer_from_skill),
              skill_name(you.transfer_to_skill));
         if (!yesno("이전을 취소하고 싶은가?", false, 'n'))
             return false;
     }
 
-    mprf("당신은 %s : %s을(를) 잊고 %s을(를) 배우는 과정을.",
+    mprf("<693>당신은 %s : %s을(를) 잊고 %s을(를) 배우는 과정을.",
          finished ? "완료했다" : "중단했다",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
@@ -3801,7 +3801,7 @@ bool ashenzari_curse_item(int num_rc)
 {
     ASSERT(num_rc > 0);
     const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
+            "<694>Curse which item? (%d remove curse scroll%s left)"
             " (Esc to abort)",
             num_rc, num_rc == 1 ? "" : "s");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
@@ -3840,7 +3840,7 @@ void spare_beogh_convert()
     if (you.one_time_ability_used[GOD_BEOGH])
     {
         // You still get to convert, but orcs will remain hostile.
-        mprf(MSGCH_TALK, "%s", getSpeakString("orc_priest_apostate").c_str());
+        mprf(MSGCH_TALK, "<695>%s", getSpeakString("orc_priest_apostate").c_str());
         return;
     }
 
@@ -3982,7 +3982,7 @@ bool dithmenos_shadow_step()
     }
 
     const actor *victim = actor_at(sdirect.target);
-    mprf("당신은 %s의 그림자로 걸어 들어갔다.",
+    mprf("<696>당신은 %s의 그림자로 걸어 들어갔다.",
          apostrophise(victim->name(DESC_PLAIN)).c_str());
 
     return true;
@@ -4348,7 +4348,7 @@ static string _describe_gozag_shop(int index)
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
-    return make_stringf("  [%c] %5d gold - %s %s %s",
+    return make_stringf("<697>  [%c] %5d gold - %s %s %s",
                         offer_letter,
                         cost,
                         shop_name.c_str(),
@@ -4406,7 +4406,7 @@ static string _gozag_shop_spec(int index)
     if (!spec_type.empty())
         spec_type = " type:" + spec_type;
 
-    return make_stringf("%s shop name:%s%s%s gozag",
+    return make_stringf("<698>%s shop name:%s%s%s gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
                         suffix.c_str(),
@@ -4442,7 +4442,7 @@ static void _gozag_place_shop(int index)
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
                                              GENDER_NEUTER);
 
-    mprf(MSGCH_GOD, "%s가 %s %s%s%s에 당신을 초대했다.",
+    mprf(MSGCH_GOD, "<699>%s가 %s %s%s%s에 당신을 초대했다.",
                     shop->shop_name.c_str(),
                     decline_pronoun(gender, PRONOUN_POSSESSIVE),
                     shop_type_name(shop->type).c_str(),
@@ -4560,7 +4560,7 @@ int gozag_type_bribable(monster_type type)
         return 0;
 
     const int chance = max(mons_class_hit_dice(type) / *factor, 1);
-    dprf("%s, bribe chance: %d", mons_type_name(type, DESC_PLAIN).c_str(),
+    dprf("<700>%s, bribe chance: %d", mons_type_name(type, DESC_PLAIN).c_str(),
                                  chance);
 
     return chance;
@@ -4579,7 +4579,7 @@ void gozag_deduct_bribe(branch_type br, int amount)
     branch_bribe[br] = max(0, branch_bribe[br] - amount);
     if (branch_bribe[br] <= 0)
     {
-        mprf(MSGCH_DURATION, "당신의 %s에 대한 매수가 그 효력을 다했다.",
+        mprf(MSGCH_DURATION, "<701>당신의 %s에 대한 매수가 그 효력을 다했다.",
              branches[br].longname);
         add_daction(DACT_BRIBE_TIMEOUT);
     }
@@ -4606,10 +4606,10 @@ bool gozag_check_bribe_branch(bool quiet)
                 break;
             }
     }
-    const string who = make_stringf("the denizens of %s",
+    const string who = make_stringf("<702>the denizens of %s",
                                    branches[branch].longname);
     const string who2 = branch2 != NUM_BRANCHES
-                        ? make_stringf("the denizens of %s",
+                        ? make_stringf("<703>the denizens of %s",
                                        branches[branch2].longname)
                         : "";
     if (!gozag_branch_bribable(branch)
@@ -4619,9 +4619,9 @@ bool gozag_check_bribe_branch(bool quiet)
         if (!quiet)
         {
             if (branch2 != NUM_BRANCHES)
-                mprf("%s(이)나 %s을(를) 매수할 수는 없다.", who.c_str(), who2.c_str());
+                mprf("<704>%s(이)나 %s을(를) 매수할 수는 없다.", who.c_str(), who2.c_str());
             else
-                mprf("%s을(를) 매수할 수는 없다.", who.c_str());
+                mprf("<705>%s을(를) 매수할 수는 없다.", who.c_str());
         }
         return false;
     }
@@ -4642,7 +4642,7 @@ bool gozag_bribe_branch()
             {
                 branch_type stair_branch = gozag_fixup_branch(it->id);
                 string prompt =
-                    make_stringf("%s의 주민들을 매수하길 원하는가?",
+                    make_stringf("<706>%s의 주민들을 매수하길 원하는가?",
                                  stair_branch == BRANCH_VESTIBULE ? "지옥"
                                  : branches[stair_branch].longname);
                 if (yesno(prompt.c_str(), true, 'n'))
@@ -4660,16 +4660,16 @@ bool gozag_bribe_branch()
                 break;
             }
     }
-    string who = make_stringf("the denizens of %s",
+    string who = make_stringf("<707>the denizens of %s",
                               branches[branch].longname);
     if (!gozag_branch_bribable(branch))
     {
-        mprf("%s을(를) 매수할 수는 없다.", who.c_str());
+        mprf("<708>%s을(를) 매수할 수는 없다.", who.c_str());
         return false;
     }
 
     string prompt =
-        make_stringf("%s의 주민들을 매수하길 원하는가?",
+        make_stringf("<709>%s의 주민들을 매수하길 원하는가?",
                      branch == BRANCH_VESTIBULE ? "지옥" :
                      branches[branch].longname);
 
@@ -4678,7 +4678,7 @@ bool gozag_bribe_branch()
         you.del_gold(bribe_amount);
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
-        string msg = make_stringf("뇌물을 %s에 퍼뜨려라!",
+        string msg = make_stringf("<710>뇌물을 %s에 퍼뜨려라!",
                                   branch == BRANCH_VESTIBULE ? "지옥" :
                                   branches[branch].longname);
         simple_god_message(msg.c_str());
@@ -4731,7 +4731,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 
         if (cell_is_solid(beam.target))
         {
-            mprf("그곳엔 %s이(가) 있다.",
+            mprf("<711>그곳엔 %s이(가) 있다.",
                  article_a(feat_type_name(grd(beam.target))).c_str());
             return SPRET_ABORT;
         }
@@ -4816,7 +4816,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     if (!quiet)
     {
         scaled_delay(100);
-        mprf(MSGCH_GOD, "%s", message.c_str());
+        mprf(MSGCH_GOD, "<712>%s", message.c_str());
     }
     else
         scaled_delay(25);
@@ -5685,7 +5685,7 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
 
 static bool _execute_sacrifice(ability_type sac, const char* message)
 {
-    mprf("루는 당신이 %s 할 것을 요구했다.", message);
+    mprf("<713>루는 당신이 %s 할 것을 요구했다.", message);
     mpr(ru_sacrifice_description(sac));
     if (!yesno("정말로 이 희생을 할 것인가?",
                false, 'n'))
@@ -5725,7 +5725,7 @@ static void _extra_sacrifice_code(ability_type sac)
         // Drop your shield if there is one
         if (shield != nullptr)
         {
-            mprf("당신은 더이상 %s을(를) 들 수 없다!",
+            mprf("<714>당신은 더이상 %s을(를) 들 수 없다!",
                 shield->name(DESC_PLAIN).c_str());
             unequip_item(EQ_SHIELD);
         }
@@ -5735,7 +5735,7 @@ static void _extra_sacrifice_code(ability_type sac)
         {
             if (you.hands_reqd(*weapon) == HANDS_TWO)
             {
-                mprf("당신은 더이상 %s을(를) 들 수 없다!",
+                mprf("<715>당신은 더이상 %s을(를) 들 수 없다!",
                     weapon->name(DESC_PLAIN).c_str());
                 unequip_item(EQ_WEAPON);
             }
@@ -5764,12 +5764,12 @@ static void _extra_sacrifice_code(ability_type sac)
                 }
             }
 
-            mprf("당신은 더이상 %s을(를) 착용할 수 없다!",
+            mprf("<716>당신은 더이상 %s을(를) 착용할 수 없다!",
                 ring->name(DESC_PLAIN).c_str());
             unequip_item(ring_slot);
             if (open_ring_slot)
             {
-                mprf("당신은 %s을(를) %s %s에 착용했다!",
+                mprf("<717>당신은 %s을(를) %s %s에 착용했다!",
                      ring->name(DESC_PLAIN).c_str(),
                      (you.species == SP_OCTOPODE ? "다른" : "당신의 다른"),
                      you.hand_name(true).c_str());
@@ -5824,7 +5824,7 @@ string ru_sac_text(ability_type sac)
     {
         ASSERT(sacrifice_muts.size() == 1);
         const mutation_type mut = AS_MUT(sacrifice_muts[0]);
-        return make_stringf(" (%s)", mutation_name(mut));
+        return make_stringf("<718> (%s)", mutation_name(mut));
     }
 
     // "Tloc/Fire/Ice"
@@ -5834,7 +5834,7 @@ string ru_sac_text(ability_type sac)
                     return _arcane_mutation_to_school_abbr(AS_MUT(mut));
                 }, "/", "/");
 
-    return make_stringf(" (%s)", school_names.c_str());
+    return make_stringf("<719> (%s)", school_names.c_str());
 }
 
 static int _ru_get_sac_piety_gain(ability_type sac)
@@ -5858,7 +5858,7 @@ static int _ru_get_sac_piety_gain(ability_type sac)
 string ru_sacrifice_description(ability_type sac)
 {
     const int piety_gain = _ru_get_sac_piety_gain(sac);
-    return make_stringf("이것은 %s 희생이다. 희생으로 도달할 신앙심: %s",
+    return make_stringf("<720>이것은 %s 희생이다. 희생으로 도달할 신앙심: %s",
                         _describe_sacrifice_piety_gain(piety_gain),
                         _piety_asterisks(you.piety + piety_gain).c_str());
 }
@@ -5895,21 +5895,21 @@ bool ru_do_sacrifice(ability_type sac)
             {
                 if (i == num_sacrifices - 1)
                 {
-                    sac_text = make_stringf("%sand %s", sac_text.c_str(),
+                    sac_text = make_stringf("<721>%sand %s", sac_text.c_str(),
                         _arcane_mutation_to_school_name(mut));
                 }
                 else
                 {
-                    sac_text = make_stringf("%s%s, ", sac_text.c_str(),
+                    sac_text = make_stringf("<722>%s%s, ", sac_text.c_str(),
                         _arcane_mutation_to_school_name(mut));
                 }
             }
             else
                 sac_text = mut_upgrade_summary(mut);
         }
-        offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
+        offer_text = make_stringf("<723>%s: %s", sac_def.sacrifice_text,
             sac_text.c_str());
-        mile_text = make_stringf("%s: %s.", sac_def.milestone_text,
+        mile_text = make_stringf("<724>%s: %s.", sac_def.milestone_text,
             sac_text.c_str());
     }
     else
@@ -5922,7 +5922,7 @@ bool ru_do_sacrifice(ability_type sac)
             handtxt = you.hand_name(true);
 
         offer_text = sac_def.sacrifice_text + handtxt;
-        mile_text = make_stringf("%s.", sac_def.milestone_text);
+        mile_text = make_stringf("<725>%s.", sac_def.milestone_text);
     }
 
     // get confirmation that the sacrifice is desired.
@@ -6103,30 +6103,30 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->antimagic_susceptible()))
     {
-        mprf(MSGCH_GOD, "당신의 집중된 의지는 %s의 마력을 흡수했다!", mons->name(DESC_PLAIN).c_str());
+        mprf(MSGCH_GOD, "<726>당신의 집중된 의지는 %s의 마력을 흡수했다!", mons->name(DESC_PLAIN).c_str());
         mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
     }
     else if (power > 35)
     {
-        mprf(MSGCH_GOD, "당신의 집중된 의지는 %s을(를) 마비시켰다!",
+        mprf(MSGCH_GOD, "<727>당신의 집중된 의지는 %s을(를) 마비시켰다!",
                 mons->name(DESC_PLAIN).c_str());
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        mprf(MSGCH_GOD, "당신의 집중된 의지는 %s을(를) 느려지게 만들었다!",
+        mprf(MSGCH_GOD, "<728>당신의 집중된 의지는 %s을(를) 느려지게 만들었다!",
                 mons->name(DESC_PLAIN).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
     else if (power > 10 && mons_can_be_blinded(mons->type))
     {
-        mprf(MSGCH_GOD, "당신의 집중된 의지는 %s의 눈을 멀게 만들었다!",
+        mprf(MSGCH_GOD, "<729>당신의 집중된 의지는 %s의 눈을 멀게 만들었다!",
                 mons->name(DESC_PLAIN).c_str());
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        mprf(MSGCH_GOD, "당신의 집중된 의지는 %s을(를) 광채에 휩싸이게 만들었다!",
+        mprf(MSGCH_GOD, "<730>당신의 집중된 의지는 %s을(를) 광채에 휩싸이게 만들었다!",
                 mons->name(DESC_PLAIN).c_str());
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
@@ -6219,7 +6219,7 @@ bool ru_power_leap()
         if (beholder)
         {
             clear_messages();
-            mprf("%s에게서 도약으로 벗어날 수는 없다!",
+            mprf("<731>%s에게서 도약으로 벗어날 수는 없다!",
                  beholder->name(DESC_PLAIN, true).c_str());
             continue;
         }
@@ -6228,7 +6228,7 @@ bool ru_power_leap()
         if (fearmonger)
         {
             clear_messages();
-            mprf("%s에게 도약으로 접근할 수는 없다!",
+            mprf("<732>%s에게 도약으로 접근할 수는 없다!",
                  fearmonger->name(DESC_PLAIN, true).c_str());
             continue;
         }
@@ -6620,7 +6620,7 @@ bool uskayaw_line_pass()
         if (beholder)
         {
             clear_messages();
-            mprf("%s에게서 벗어날 수는 없다!",
+            mprf("<733>%s에게서 벗어날 수는 없다!",
                  beholder->name(DESC_PLAIN, true).c_str());
             continue;
         }
@@ -6629,7 +6629,7 @@ bool uskayaw_line_pass()
         if (fearmonger)
         {
             clear_messages();
-            mprf("%s에게 다가갈 수는 없다!",
+            mprf("<734>%s에게 다가갈 수는 없다!",
                  fearmonger->name(DESC_PLAIN, true).c_str());
             continue;
         }
@@ -6767,7 +6767,7 @@ spret_type uskayaw_grand_finale(bool fail)
     ASSERT(mons);
 
     // kill the target
-    mprf("%s이(가) 격렬하게 폭발했다!", mons->name(DESC_PLAIN, false).c_str());
+    mprf("<735>%s이(가) 격렬하게 폭발했다!", mons->name(DESC_PLAIN, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -6818,7 +6818,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     const auto ancestor_type = *ancestor_mapped;
     const string ancestor_type_name = mons_type_name(ancestor_type, DESC_A);
 
-    if (!yesno(make_stringf("조상을 %s으로 기억하겠는가?", ancestor_type_name.c_str()).c_str(),
+    if (!yesno(make_stringf("<736>조상을 %s으로 기억하겠는가?", ancestor_type_name.c_str()).c_str(),
                false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -6839,7 +6839,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     god_speaks(you.religion, "It is so.");
     take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0, ancestor_type_name));
     const string mile_text
-        = make_stringf("remembered their ancestor %s as %s.",
+        = make_stringf("<737>remembered their ancestor %s as %s.",
                        hepliaklqana_ally_name().c_str(),
                        ancestor_type_name.c_str());
     mark_milestone("ancestor.class", mile_text);
@@ -6866,13 +6866,13 @@ spret_type hepliaklqana_idealise(bool fail)
     monster *ancestor = monster_by_mid(ancestor_mid);
     if (!ancestor || !you.can_see(*ancestor))
     {
-        mprf("%s이(가) 근처에 없다!", hepliaklqana_ally_name().c_str());
+        mprf("<738>%s이(가) 근처에 없다!", hepliaklqana_ally_name().c_str());
         return SPRET_ABORT;
     }
 
     fail_check();
 
-    simple_god_message(make_stringf("는 %s에 회복시키고 방어력을 하사했다!",
+    simple_god_message(make_stringf("<739>는 %s에 회복시키고 방어력을 하사했다!",
                                     ancestor->name(DESC_YOUR).c_str()).c_str());
 
     // 1/3 mhp healed at 0 skill, full at 27 invo
@@ -6953,7 +6953,7 @@ spret_type hepliaklqana_transference(bool fail)
     monster *ancestor = hepliaklqana_ancestor_mon();
     if (!ancestor || !you.can_see(*ancestor))
     {
-        mprf("%s이(가) 근처에 없다!", hepliaklqana_ally_name().c_str());
+        mprf("<740>%s이(가) 근처에 없다!", hepliaklqana_ally_name().c_str());
         return SPRET_ABORT;
     }
 
@@ -6996,7 +6996,7 @@ spret_type hepliaklqana_transference(bool fail)
     const bool uninhabitable = victim && !victim->is_habitable(destination);
     if (uninhabitable && victim_visible)
     {
-        mprf("%s을(를) %s(으)로 옮길 수 없다.",
+        mprf("<741>%s을(를) %s(으)로 옮길 수 없다.",
              victim->name(DESC_PLAIN).c_str(), feat_type_name(grd(destination)));
         return SPRET_ABORT;
     }
@@ -7019,7 +7019,7 @@ spret_type hepliaklqana_transference(bool fail)
     else
         ancestor->swap_with(victim->as_monster());
 
-    mprf("%s이(가) %s당신의 %s와(과) 자리를 바꾸었다!!",
+    mprf("<742>%s이(가) %s당신의 %s와(과) 자리를 바꾸었다!!",
          victim->name(DESC_THE).c_str(),
          victim->is_player() ? "" : "",
          ancestor->name(DESC_PLAIN).c_str());
@@ -7045,7 +7045,7 @@ spret_type hepliaklqana_transference(bool fail)
 static void _hepliaklqana_choose_name()
 {
     const string old_name = hepliaklqana_ally_name();
-    string prompt  = make_stringf("Remember %s name as what? ",
+    string prompt  = make_stringf("<743>Remember %s name as what? ",
                                   apostrophise(old_name).c_str());
 
     char buf[18];
@@ -7066,7 +7066,7 @@ static void _hepliaklqana_choose_name()
     }
 
     you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = new_name;
-    mprf("그래, %s이(가) 훨씬 나은 이름인 것 같다.", new_name.c_str());
+    mprf("<744>그래, %s이(가) 훨씬 나은 이름인 것 같다.", new_name.c_str());
     upgrade_hepliaklqana_ancestor(true);
 }
 
@@ -7078,7 +7078,7 @@ static void _hepliaklqana_choose_gender()
     ASSERT(size_t(current_gender) < ARRAYSZ(gender_names));
 
     mprf(MSGCH_PROMPT,
-         "%s은(는) 무엇이었는가? a) 남성, b) 여성, or c) 그 외? (현재 %s.)",
+         "<745>%s은(는) 무엇이었는가? a) 남성, b) 여성, or c) 그 외? (현재 %s.)",
          hepliaklqana_ally_name().c_str(),
          gender_names[current_gender].c_str());
 
@@ -7105,7 +7105,7 @@ static void _hepliaklqana_choose_gender()
     }
 
     you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = new_gender;
-    mprf("%s은(는) 항상 %s였다고 당신은 확신했다.",
+    mprf("<746>%s은(는) 항상 %s였다고 당신은 확신했다.",
          hepliaklqana_ally_name().c_str(),
          gender_names[new_gender].c_str());
     upgrade_hepliaklqana_ancestor(true);

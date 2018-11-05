@@ -188,7 +188,7 @@ void mirror_damage_fineff::fire()
                                    defender()->as_monster() : nullptr;
         if (reflector)
         {
-            mprf("%s이(가) 피해를 당신에게 반사했다!",
+            mprf("<624>%s이(가) 피해를 당신에게 반사했다!",
                  reflector->name(DESC_PLAIN).c_str());
         }
         else
@@ -305,16 +305,16 @@ void trj_spawn_fineff::fire()
     if (trj)
     {
         const string monnam = trj->name(DESC_PLAIN);
-        mprf("%s은(는) %s몸을 떨었다.", monnam.c_str(),
+        mprf("<625>%s은(는) %s몸을 떨었다.", monnam.c_str(),
              spawned >= 5 ? "놀랄 만큼 " :
              spawned >= 3 ? "폭력적으로 " :
              spawned > 1 ? "힘차게 " : "");
 
         if (spawned == 1)
-            mprf("%s 또다른 젤리를 뱉어냈다.", monnam.c_str());
+            mprf("<626>%s 또다른 젤리를 뱉어냈다.", monnam.c_str());
         else
         {
-            mprf("%s %s개의 젤리를 더 뱉어냈다.",
+            mprf("<627>%s %s개의 젤리를 더 뱉어냈다.",
                  monnam.c_str(),
                  number_in_words(spawned).c_str());
         }
@@ -323,7 +323,7 @@ void trj_spawn_fineff::fire()
         mpr("로열 젤리의 조각 중 하나가 살아남았다.");
     else
     {
-        mprf("로열 젤리가 죽어가며 %s개의 젤리를 더 뱉어냈다.",
+        mprf("<628>로열 젤리가 죽어가며 %s개의 젤리를 더 뱉어냈다.",
              number_in_words(spawned).c_str());
     }
 }
@@ -455,14 +455,14 @@ void shock_serpent_discharge_fineff::fire()
     const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s의 전기가 %s방출되었고, %s을(를) 감전시켰다!",
+        mprf("<629>%s의 전기가 %s방출되었고, %s을(를) 감전시켰다!",
              serpent->name(DESC_PLAIN).c_str(),
              power < 4 ? "" : "폭력적으로 ",
              oppressor.name(DESC_PLAIN).c_str());
     }
     else if (you.can_see(oppressor))
     {
-        mprf("대기에 전기 스파크가 일어났고, %s을(를) 감전시켰다!",
+        mprf("<630>대기에 전기 스파크가 일어났고, %s을(를) 감전시켰다!",
              oppressor.name(DESC_PLAIN).c_str());
     }
 
@@ -507,7 +507,7 @@ void rakshasa_clone_fineff::fire()
     if (you.can_see(*rakshasa))
     {
         mprf(MSGCH_MONSTER_SPELL,
-             "부상당한 %s이(가) 방어적인 환상을 자아냈다!",
+             "<631>부상당한 %s이(가) 방어적인 환상을 자아냈다!",
              rakshasa->name(DESC_PLAIN).c_str());
     }
 }
@@ -541,7 +541,7 @@ void infestation_death_fineff::fire()
 
         if (you.see_cell(posn) || you.can_see(*scarab))
         {
-            mprf("%s이(가) %s로부터 뿜어져 나왔다!", scarab->name(DESC_PLAIN, true).c_str(),
+            mprf("<632>%s이(가) %s로부터 뿜어져 나왔다!", scarab->name(DESC_PLAIN, true).c_str(),
                                        name.c_str());
         }
     }

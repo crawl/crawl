@@ -73,7 +73,7 @@ bool monster::has_ench(enchant_type ench) const
     {
         if (!ench_cache[ench])
         {
-            die("monster %s has ench '%s' not in cache",
+            die("<1498>monster %s has ench '%s' not in cache",
                 name(DESC_PLAIN).c_str(),
                 string(e).c_str());
         }
@@ -82,14 +82,14 @@ bool monster::has_ench(enchant_type ench) const
     {
         if (ench_cache[ench])
         {
-            die("monster %s has no ench '%s' but cache says it does",
+            die("<1499>monster %s has no ench '%s' but cache says it does",
                 name(DESC_PLAIN).c_str(),
                 string(mon_enchant(ench)).c_str());
         }
     }
     else
     {
-        die("get_ench returned '%s' when asked for '%s'",
+        die("<1500>get_ench returned '%s' when asked for '%s'",
             string(e).c_str(),
             string(mon_enchant(ench)).c_str());
     }
@@ -224,7 +224,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        dprf("%s submerges.", name(DESC_A, true).c_str());
+        dprf("<1501>%s submerges.", name(DESC_A, true).c_str());
         break;
 
     case ENCH_CHARM:
@@ -280,7 +280,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         {
             if (!quiet)
             {
-                mprf("당신은 %s %s을(를) %s.",
+                mprf("<1502>당신은 %s %s을(를) %s.",
                      friendly() ? "탐지함 : " : "더 이상 탐지하지 못함 : ",
                      ench.ench == ENCH_HEXED ? "저주받은" :
                      ench.ench == ENCH_CHARM ? "매혹된"
@@ -322,7 +322,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_RING_OF_THUNDER:
         _place_thunder_ring(*this);
-        mprf(MSGCH_WARN, "격렬한 폭풍이 %s의 주위에서 요동치기 시작한다.",
+        mprf(MSGCH_WARN, "<1503>격렬한 폭풍이 %s의 주위에서 요동치기 시작한다.",
              name(DESC_THE).c_str());
         break;
 
@@ -353,8 +353,8 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         {
             mgrd(mon->pos()) = midx;
 
-            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to %s monster, even "
-                 "though it contains submerged monster %s (see bug 2293518)",
+            mprf(MSGCH_ERROR, "<1504>mgrd(%d,%d) points to %s monster, even "
+                 "<1505>though it contains submerged monster %s (see bug 2293518)",
                  mon->pos().x, mon->pos().y,
                  other_mon->type == MONS_NO_MONSTER ? "dead" : "buggy",
                  mon->name(DESC_PLAIN, true).c_str());
@@ -363,8 +363,8 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
                 return true;
         }
         else
-            mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
-                 "%s (see bug 2293518)", mon->name(DESC_THE, true).c_str(),
+            mprf(MSGCH_ERROR, "<1506>%s tried to unsubmerge while on same square as "
+                 "<1507>%s (see bug 2293518)", mon->name(DESC_THE, true).c_str(),
                  mon->name(DESC_A, true).c_str());
     }
 
@@ -478,7 +478,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (alive())
                 simple_monster_message(*this, "은(는) 이제 다시 들을 수 있다.");
             else
-                mprf("%s이(가) %s, 소리가 돌아온다.",
+                mprf("<1508>%s이(가) %s, 소리가 돌아온다.",
                      name(DESC_PLAIN).c_str(),
                      wounded_damaged(holiness()) ? "파괴되었다" : "죽었다");
         }
@@ -498,7 +498,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_OZOCUBUS_ARMOUR:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s의 얼음 갑옷이 증발했다.",
+            mprf("<1509>%s의 얼음 갑옷이 증발했다.",
                  apostrophise(name(DESC_PLAIN)).c_str());
         }
         break;
@@ -564,7 +564,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             && !friendly())
         {
             if (!quiet)
-                mprf("%s이(가) 갑자기 나타났다!", name(DESC_PLAIN, true).c_str());
+                mprf("<1510>%s이(가) 갑자기 나타났다!", name(DESC_PLAIN, true).c_str());
 
             autotoggle_autopickup(false);
             handle_seen_interrupt(this);
@@ -582,16 +582,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             {
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
                 {
-                    mprf("%s은(는) 당신의 제어에서 벗어났다!",
+                    mprf("<1511>%s은(는) 당신의 제어에서 벗어났다!",
                          name(DESC_THE, true).c_str());
                 }
                 else
-                    mprf("%s은(는) 더 이상 %s상태가 아니다.", name(DESC_PLAIN, true).c_str(),
+                    mprf("<1512>%s은(는) 더 이상 %s상태가 아니다.", name(DESC_PLAIN, true).c_str(),
                          me.ench == ENCH_CHARM   ? "매혹"
                          : me.ench == ENCH_HEXED ? "저주"
                                                  : "매수된");
 
-                mprf("당신은 %s을(를) %s.",
+                mprf("<1513>당신은 %s을(를) %s.",
                      friendly() ? "다시 한번 탐지했다" : "탐지하지 못했다",
                      name(DESC_PLAIN, true).c_str());
             }
@@ -652,7 +652,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 simple_monster_message(*this, "이(가) 빛나던 것이 멈췄다.");
             else if (has_ench(ENCH_INVIS) && you.see_cell(pos()))
             {
-                mprf("%s은(는) 빛을 발하던 것을 멈추고, 사라졌다.",
+                mprf("<1514>%s은(는) 빛을 발하던 것을 멈추고, 사라졌다.",
                      name(DESC_THE, true).c_str());
             }
         }
@@ -724,7 +724,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             monster_teleport(this, true, false);
             if (you.pos() == pos())
             {
-                mprf(MSGCH_ERROR, "%s is on the same square as you!",
+                mprf(MSGCH_ERROR, "<1515>%s is on the same square as you!",
                      name(DESC_A).c_str());
             }
         }
@@ -733,7 +733,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet && feat_is_watery(grd(pos())))
             {
-                mprf(MSGCH_WARN, "%s이(가) 물 속에서 폭발적으로 솟구쳤다.",
+                mprf(MSGCH_WARN, "<1516>%s이(가) 물 속에서 폭발적으로 솟구쳤다.",
                      name(DESC_PLAIN, true).c_str());
                 seen_monster(this);
             }
@@ -859,7 +859,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_TOXIC_RADIANCE:
         if (!quiet && you.can_see(*this))
-            mprf("%s의 독기가 사라졌다.", name(DESC_ITS).c_str());
+            mprf("<1517>%s의 독기가 사라졌다.", name(DESC_ITS).c_str());
         break;
 
     case ENCH_GRASPING_ROOTS_SOURCE:
@@ -889,7 +889,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_ICEMAIL:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s의 얼음막이 흩어졌다!",
+            mprf("<1518>%s의 얼음막이 흩어졌다!",
                  apostrophise(name(DESC_PLAIN)).c_str());
         }
         break;
@@ -966,7 +966,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BOUND_SOUL:
         if (!quiet && you.can_see(*this))
-            mprf("그 %s의 영혼은 더 이상 묶여 있지않다.", name(DESC_PLAIN).c_str());
+            mprf("<1519>그 %s의 영혼은 더 이상 묶여 있지않다.", name(DESC_PLAIN).c_str());
         break;
 
     case ENCH_INFESTATION:
@@ -1144,7 +1144,7 @@ static bool _apply_grasping_roots(monster* mons)
 {
     if (you.see_cell(mons->pos()) && one_chance_in(12))
     {
-        mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
+        mprf(MSGCH_TALK_VISUAL, "<1520>%s", random_choose(
                 "얽힌 뿌리는 땅을 따라서 꿈틀거렸다.",
                 "썩은 뿌리가 땅에 쌓이면서 표면이 부풀어올랐다.",
                 "뿌리가 땅을 뚫고 솟아올라 움직이는 물체를 붙잡았다."));
@@ -1177,7 +1177,7 @@ static bool _apply_grasping_roots(monster* mons)
 
             if (you.can_see(**ai))
             {
-                mprf("뿌리가 %s 아래에서 솟아올라 %s을 %s땅으로 잡아당겼다.",
+                mprf("<1521>뿌리가 %s 아래에서 솟아올라 %s을 %s땅으로 잡아당겼다.",
                      ai->name(DESC_PLAIN).c_str(),
                      ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
                      ai->is_monster() ? "" : "");
@@ -1185,7 +1185,7 @@ static bool _apply_grasping_roots(monster* mons)
         }
         else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
         {
-            mprf("뿌리가 당신의 %s을(를) 잡아채, 움직이기 어렵게 만들고 있다.",
+            mprf("<1522>뿌리가 당신의 %s을(를) 잡아채, 움직이기 어렵게 만들고 있다.",
                  you.foot_name(true).c_str());
         }
 
@@ -1256,7 +1256,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                 {
                     if (monster_at(oldpos))
                     {
-                        mprf("무언가가 당신이 %s와 자리를 바꾸지 못하게 한다.",
+                        mprf("<1523>무언가가 당신이 %s와 자리를 바꾸지 못하게 한다.",
                              mon->name(DESC_PLAIN).c_str());
                         return do_resist;
                     }
@@ -1269,7 +1269,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                     // Plunk it down.
                     mgrd(mon->pos()) = swap_mon;
 
-                    mprf("당신은 %s와 자리를 바꾸었다.",
+                    mprf("<1524>당신은 %s와 자리를 바꾸었다.",
                          mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true);
@@ -1339,7 +1339,7 @@ static void _merfolk_avatar_song(monster* mons)
         {
             if (you.see_cell(mons->pos()))
             {
-                mprf("%s의 노래 깊은 곳에서 어둠의 형상이 떠오른다!",
+                mprf("<1525>%s의 노래 깊은 곳에서 어둠의 형상이 떠오른다!",
                      mons->name(DESC_ITS).c_str());
             }
             mons->props["merfolk_avatar_call"].get_bool() = true;
@@ -1534,7 +1534,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            dprf("%s takes poison damage: %d (degree %d)",
+            dprf("<1526>%s takes poison damage: %d (degree %d)",
                  name(DESC_THE).c_str(), dam, me.degree);
 
             hurt(me.agent(), dam, BEAM_POISON, KILLED_BY_POISON);
@@ -1551,7 +1551,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             if (you.can_see(*this))
             {
-                mprf("%s을 뒤덮던 불길이 사그라 들었다.",
+                mprf("<1527>%s을 뒤덮던 불길이 사그라 들었다.",
                      name(DESC_PLAIN, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
@@ -1581,7 +1581,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
                         if (visible_to(&you))
-                            mprf("%s에 불이 옮겨붙었다!", mon->name(DESC_PLAIN).c_str());
+                            mprf("<1528>%s에 불이 옮겨붙었다!", mon->name(DESC_PLAIN).c_str());
                         behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
@@ -1608,12 +1608,12 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.can_see(*this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
-                    mprf("%s이(가) 무너져내렸다.", name(DESC_PLAIN, false).c_str());
+                    mprf("<1529>%s이(가) 무너져내렸다.", name(DESC_PLAIN, false).c_str());
                 else if (type == MONS_BLOCK_OF_ICE)
-                    mprf("%s은(는) 녹아 없어졌다.", name(DESC_PLAIN, false).c_str());
+                    mprf("<1530>%s은(는) 녹아 없어졌다.", name(DESC_PLAIN, false).c_str());
                 else
                 {
-                    mprf("근처의 %s이(가) 시들어 말라 비틀어졌다.",
+                    mprf("<1531>근처의 %s이(가) 시들어 말라 비틀어졌다.",
                          name(DESC_PLAIN, false).c_str());
                 }
             }
@@ -1721,7 +1721,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             coord_def base_position = props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
-                mprf("관문이 닫히고, %s은(는) 두동강났다.", name(DESC_PLAIN).c_str());
+                mprf("<1532>관문이 닫히고, %s은(는) 두동강났다.", name(DESC_PLAIN).c_str());
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
                 env.grid(base_position) = DNGN_FLOOR;
@@ -1813,7 +1813,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             add_ench(ENCH_TORNADO_COOLDOWN);
             if (you.can_see(*this))
             {
-                mprf("%s을(를) 둘러싼 바람이 점차 가라앉는다.",
+                mprf("<1533>%s을(를) 둘러싼 바람이 점차 가라앉는다.",
                      name(DESC_PLAIN).c_str());
             }
         }
@@ -1843,7 +1843,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(en, true, false);
             if (you.can_see(*this))
             {
-                mprf("그 %s의 기도가 방해로 중단되었다.",
+                mprf("<1534>그 %s의 기도가 방해로 중단되었다.",
                      name(DESC_PLAIN).c_str());
             }
             break;
@@ -1928,7 +1928,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             remove_tornado_clouds(mid);
             if (you.can_see(*this))
-                mprf("%s을(를) 둘러싼 바람이 가라앉았다.", name(DESC_PLAIN).c_str());
+                mprf("<1535>%s을(를) 둘러싼 바람이 가라앉았다.", name(DESC_PLAIN).c_str());
         }
         break;
 
@@ -1941,7 +1941,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(*this))
             {
-                mprf("%s의 노래가 방해로 중단되었다.",
+                mprf("<1536>%s의 노래가 방해로 중단되었다.",
                      name(DESC_PLAIN).c_str());
             }
             break;
@@ -2202,7 +2202,7 @@ mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
 mon_enchant::operator string () const
 {
     const actor *a = agent();
-    return make_stringf("%s (%d:%d%s %s)",
+    return make_stringf("<1537>%s (%d:%d%s %s)",
                         _mons_enchantment_name(ench),
                         degree,
                         duration,

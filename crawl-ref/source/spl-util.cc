@@ -105,17 +105,17 @@ void init_spell_descs()
                 "spell #%d, id %d has no name", i, data.id);
 
         ASSERTM(data.level >= 1 && data.level <= 9,
-                "spell '%s' has invalid level %d", data.title, data.level);
+                "<2332>spell '%s' has invalid level %d", data.title, data.level);
 
         ASSERTM(data.min_range <= data.max_range,
-                "spell '%s' has min_range larger than max_range", data.title);
+                "<2333>spell '%s' has min_range larger than max_range", data.title);
 
         ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
                 || (data.min_range >= 0 && data.max_range > 0),
-                "targeted/directed spell '%s' has invalid range", data.title);
+                "<2334>targeted/directed spell '%s' has invalid range", data.title);
 
         ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
-                "spell '%s' is declared as a monster spell but is a player spell", data.title);
+                "<2335>spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
     }
@@ -351,7 +351,7 @@ static void _remove_spell_attributes(spell_type spell)
         {
             const int orig_defl = you.missile_deflection();
             you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "당신은 투사체%s을 느꼈다.",
+            mprf(MSGCH_DURATION, "<2336>당신은 투사체%s을 느꼈다.",
                                  you.missile_deflection() < orig_defl
                                  ? "에 덜 보호받음"
                                  : "를 주문이 더 이상 막아주지 않음");
@@ -381,7 +381,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
     spell_skills(you.spells[slot], you.stop_train);
 
-    mprf("%s에 대한 기억을 지웠다.", spell_title(you.spells[slot]));
+    mprf("<2337>%s에 대한 기억을 지웠다.", spell_title(you.spells[slot]));
     _remove_spell_attributes(you.spells[slot]);
 
     you.spells[slot] = SPELL_NO_SPELL;

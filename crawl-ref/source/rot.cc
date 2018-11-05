@@ -402,7 +402,7 @@ static void _print_chunk_messages(int num_chunks, int num_chunks_gone)
     if (num_chunks_gone > 0)
     {
         mprf(MSGCH_ROTTEN_MEAT,
-             "%s of the chunks of flesh in your inventory have rotted away.",
+             "<2161>%s of the chunks of flesh in your inventory have rotted away.",
              num_chunks_gone == num_chunks ? "All" : "Some");
     }
 }
@@ -413,7 +413,7 @@ static void _potion_stack_changed_message(string item_name, int num_changed,
 {
     ASSERT(num_changed > 0);
 
-    mprf(MSGCH_ROTTEN_MEAT, "%s %s rot%s away.",
+    mprf(MSGCH_ROTTEN_MEAT, "<2162>%s %s rot%s away.",
          get_desc_quantity(num_changed, initial_quantity).c_str(),
          item_name.c_str(),
          num_changed == 1 ? "s" : "");

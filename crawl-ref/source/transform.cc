@@ -202,7 +202,7 @@ int Form::get_duration(int pow) const
  */
 string Form::get_description(bool past_tense) const
 {
-    return make_stringf("You %s %s",
+    return make_stringf("<2469>You %s %s",
                         past_tense ? "were" : "are",
                         description.c_str());
 }
@@ -226,7 +226,7 @@ string Form::transform_message(transformation previous_trans) const
     else
         start = "Y";
 
-    return make_stringf("%sou turn into %s", start.c_str(),
+    return make_stringf("<2470>%sou turn into %s", start.c_str(),
                         get_transform_description().c_str());
 }
 
@@ -264,7 +264,7 @@ static string _brand_suffix(int brand)
 {
     if (brand == SPWPN_NORMAL)
         return "";
-    return make_stringf(" (%s)", brand_type_name(brand, true));
+    return make_stringf("<2471> (%s)", brand_type_name(brand, true));
 }
 
 /**
@@ -431,7 +431,7 @@ bool Form::all_blocked(int slotflags) const
 
 /**
  * What message should be printed when the player prays at an altar?
- * To be inserted into "You %s the altar of foo."
+ * To be inserted into "<2472>You %s the altar of foo."
  *
  * If the form has a valid custom action, print that; otherwise, default to the
  * 'flying' or species-specific actions, as appropriate.
@@ -501,7 +501,7 @@ public:
      */
     string get_description(bool past_tense) const override
     {
-        return make_stringf("You %s blades for %s.",
+        return make_stringf("<2473>You %s blades for %s.",
                             past_tense ? "had" : "have",
                             blade_parts().c_str());
     }
@@ -514,7 +514,7 @@ public:
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
 
         // XXX: a little ugly
-        return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
+        return make_stringf("<2474>Your %s turn%s into%s razor-sharp scythe blade%s.",
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? " a" : "", singular ? "" : "s");
     }
@@ -527,7 +527,7 @@ public:
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
 
         // XXX: a little ugly
-        return make_stringf("Your %s revert%s to %s normal proportions.",
+        return make_stringf("<2475>Your %s revert%s to %s normal proportions.",
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? "its" : "their");
     }
@@ -595,7 +595,7 @@ public:
             return "Stone tentacles";
 
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
-        return make_stringf("Stone fist%s", singular ? "" : "s");
+        return make_stringf("<2476>Stone fist%s", singular ? "" : "s");
     }
 };
 
@@ -621,7 +621,7 @@ public:
     string get_uc_attack_name(string default_name) const override
     {
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
-        return make_stringf("Ice fist%s", singular ? "" : "s");
+        return make_stringf("<2477>Ice fist%s", singular ? "" : "s");
     }
 };
 
@@ -741,7 +741,7 @@ public:
 
     string get_description(bool past_tense) const override
     {
-        return make_stringf("You %s in %sbat-form.",
+        return make_stringf("<2478>You %s in %sbat-form.",
                             past_tense ? "were" : "are",
                             you.species == SP_VAMPIRE ?  "vampire-" : "");
     }
@@ -752,7 +752,7 @@ public:
      */
     string get_transform_description() const override
     {
-        return make_stringf("a %sbat.",
+        return make_stringf("<2479>a %sbat.",
                             you.species == SP_VAMPIRE ? "vampire " : "");
     }
 };
@@ -782,11 +782,11 @@ public:
     {
         if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
         {
-            return make_stringf("One of your tentacles %s a temporary spike.",
+            return make_stringf("<2480>One of your tentacles %s a temporary spike.",
                                  past_tense ? "had" : "has");
         }
 
-        return make_stringf("You %s grown temporary %s.",
+        return make_stringf("<2481>You %s grown temporary %s.",
                             past_tense ? "had" : "have",
                             mutation_name((mutation_type)
                                           you.attribute[ATTR_APPENDAGE]));
@@ -935,7 +935,7 @@ public:
      */
     string get_description(bool past_tense) const override
     {
-        return make_stringf("You %s %s",
+        return make_stringf("<2482>You %s %s",
                             past_tense ? "were" : "are",
                             get_transform_description().c_str());
     }
@@ -1168,7 +1168,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
                 unequip = true;
         }
 
-        mprf("%s %s%s %s", equip->name(DESC_YOUR).c_str(),
+        mprf("<2483>%s %s%s %s", equip->name(DESC_YOUR).c_str(),
              unequip ? "fall" : "meld",
              equip->quantity > 1 ? "" : "s",
              unequip ? "away!" : "into your body.");
@@ -1233,12 +1233,12 @@ static void _unmeld_equipment_type(equipment_type e)
 
     if (force_remove)
     {
-        mprf("%s이(가) 벗겨져 나갔다!", item.name(DESC_YOUR).c_str());
+        mprf("<2484>%s이(가) 벗겨져 나갔다!", item.name(DESC_YOUR).c_str());
         unequip_item(e);
     }
     else
     {
-        mprf("%s이(가) 당신의 몸으로부터 빠져나왔다.", item.name(DESC_YOUR).c_str());
+        mprf("<2485>%s이(가) 당신의 몸으로부터 빠져나왔다.", item.name(DESC_YOUR).c_str());
         unmeld_slot(e);
     }
 }
@@ -1438,7 +1438,7 @@ static bool _transformation_is_safe(transformation which_trans,
 
     if (fail_reason)
     {
-        *fail_reason = make_stringf("You would %s in your new form.",
+        *fail_reason = make_stringf("<2486>You would %s in your new form.",
                                     feat == DNGN_DEEP_WATER ? "drown" : "burn");
     }
 
@@ -1468,7 +1468,7 @@ bool check_form_stat_safety(transformation new_form)
     if (!bad_str && !bad_dex)
         return true;
 
-    string prompt = make_stringf("%s 당신의 %s이 0이 된다. 계속하겠는가?",
+    string prompt = make_stringf("<2487>%s 당신의 %s이 0이 된다. 계속하겠는가?",
                                  new_form == transformation::none
                                      ? "되돌아가면"
                                      : "변신하면",
@@ -1890,7 +1890,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (you.hp <= 0)
     {
         ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
-             make_stringf("gaining the %s transformation",
+             make_stringf("<2488>gaining the %s transformation",
                           transform_name(which_trans)).c_str());
     }
 
@@ -1946,7 +1946,7 @@ void untransform(bool skip_move)
         {
             const char * const verb = you.has_mutation(app) ? "shrink"
                                                             : "disappear";
-            mprf(MSGCH_DURATION, "Your %s %s%s.",
+            mprf(MSGCH_DURATION, "<2489>Your %s %s%s.",
                  mutation_name(app), verb,
                  app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
@@ -1954,7 +1954,7 @@ void untransform(bool skip_move)
 
     const string message = get_form(old_form)->get_untransform_message();
     if (message != "")
-        mprf(MSGCH_DURATION, "%s", message.c_str());
+        mprf(MSGCH_DURATION, "<2490>%s", message.c_str());
 
     const int str_mod = get_form(old_form)->str_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
@@ -2007,7 +2007,7 @@ void untransform(bool skip_move)
         you.duration[DUR_ICY_ARMOUR] = 0;
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        mprf(MSGCH_DURATION, "%s이(가) 당신의 얼음 갑옷을 깨트렸다.",
+        mprf(MSGCH_DURATION, "<2491>%s이(가) 당신의 얼음 갑옷을 깨트렸다.",
              armour->name(DESC_YOUR).c_str());
     }
 
@@ -2025,7 +2025,7 @@ void untransform(bool skip_move)
     if (you.hp <= 0)
     {
         ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
-             make_stringf("losing the %s form",
+             make_stringf("<2492>losing the %s form",
                           transform_name(old_form)).c_str());
     }
 

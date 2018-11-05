@@ -29,7 +29,7 @@
 
 static string _monster_clone_id_for(monster* mons)
 {
-    return make_stringf("%s%d",
+    return make_stringf("<1460>%s%d",
                         mons->name(DESC_PLAIN, true).c_str(),
                         you.num_turns);
 }
@@ -128,12 +128,12 @@ static void _mons_summon_monster_illusion(monster* caster,
         {
             if (!you.can_see(*caster))
             {
-                mprf("%s은(는) %s에서 빠져나온 것으로 보인다!",
+                mprf("<1461>%s은(는) %s에서 빠져나온 것으로 보인다!",
                      foe->name(DESC_PLAIN).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
             }
             else
-                mprf("%s은(는) %s을 %s으로부터 끌어낸 것으로 보인다!",
+                mprf("<1462>%s은(는) %s을 %s으로부터 끌어낸 것으로 보인다!",
                      caster->name(DESC_PLAIN).c_str(),
                      foe->name(DESC_PLAIN).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());

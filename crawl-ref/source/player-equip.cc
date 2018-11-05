@@ -364,7 +364,7 @@ static void _unequip_artefact_effect(item_def &item,
     // this must be last!
     if (proprt[ARTP_FRAGILE] && !meld)
     {
-        mprf("%s은(는) 먼지처럼 바스라졌다!", item.name(DESC_PLAIN).c_str());
+        mprf("<1763>%s은(는) 먼지처럼 바스라졌다!", item.name(DESC_PLAIN).c_str());
         dec_inv_item_quantity(item.link, 1);
     }
 }
@@ -393,7 +393,7 @@ static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
 {
     if (!item.cursed() || unmeld)
         return;
-    mprf("그것은 당신의 %s에 달라붙어 떨어지지 않는다!", you.hand_name(false).c_str());
+    mprf("<1764>그것은 당신의 %s에 달라붙어 떨어지지 않는다!", you.hand_name(false).c_str());
     int amusement = 16;
     if (!known_cursed)
     {
@@ -475,18 +475,18 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 switch (special)
                 {
                 case SPWPN_FLAMING:
-                    mprf("%s이(가) 화염에 휩싸인다!", item_name.c_str());
+                    mprf("<1765>%s이(가) 화염에 휩싸인다!", item_name.c_str());
                     break;
 
                 case SPWPN_FREEZING:
-                   mprf("%s이(가) %s", item_name.c_str(),
+                   mprf("<1766>%s이(가) %s", item_name.c_str(),
                         is_range_weapon(item) ?
                             "서리에 뒤덮인다." :
                             "차가운 파란색으로 빛난다!");
                     break;
 
                 case SPWPN_HOLY_WRATH:
-                    mprf("%s이(가) 신성한 광휘로 부드럽게 빛난다!",
+                    mprf("<1767>%s이(가) 신성한 광휘로 부드럽게 빛난다!",
                          item_name.c_str());
                     break;
 
@@ -501,11 +501,11 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_VENOM:
-                    mprf("%s이(가) 독을 뚝뚝 흘리기 시작했다!", item_name.c_str());
+                    mprf("<1768>%s이(가) 독을 뚝뚝 흘리기 시작했다!", item_name.c_str());
                     break;
 
                 case SPWPN_PROTECTION:
-                    mprf("%s에 잠든 힘이 퍼져나온다!", item_name.c_str());
+                    mprf("<1769>%s에 잠든 힘이 퍼져나온다!", item_name.c_str());
                     break;
 
                 case SPWPN_DRAINING:
@@ -532,19 +532,19 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("미숙한 기분이 든다.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
                     {
-                        mprf("강렬한 고통이 %s을(를) 타고 올라왔다!",
+                        mprf("<1770>강렬한 고통이 %s을(를) 타고 올라왔다!",
                              your_arm.c_str());
                     }
                     else
                     {
-                        mprf("타는 듯한 고통이 %s을(를) 쑤시기 시작했다!",
+                        mprf("<1771>타는 듯한 고통이 %s을(를) 쑤시기 시작했다!",
                              your_arm.c_str());
                     }
                     break;
                 }
 
                 case SPWPN_CHAOS:
-                    mprf("%s이(가) 순간적으로 반짝이는 무작위적 색깔의 "
+                    mprf("<1772>%s이(가) 순간적으로 반짝이는 무작위적 색깔의 "
                          "오라에 휩싸였다.", item_name.c_str());
                     break;
 
@@ -555,13 +555,13 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     bool plural = true;
                     string hand = you.hand_name(true, &plural);
 
-                    mprf("당신의 %s을 꽉 잡아 쥐기 전에 손이 그것을 잠깐 %s했다.",
+                    mprf("<1773>당신의 %s을 꽉 잡아 쥐기 전에 손이 그것을 잠깐 %s했다.",
                          hand.c_str(), conjugate_verb("통과", plural).c_str());
                     break;
                 }
 
                 case SPWPN_REAPING:
-                    mprf("%s이(가) 순간적으로 변화무쌍한 그림자에 휩싸였다.",
+                    mprf("<1774>%s이(가) 순간적으로 변화무쌍한 그림자에 휩싸였다.",
                          item_name.c_str());
                     break;
 
@@ -575,7 +575,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_ACID:
-                    mprf("%s이(가) 부식성 점액을 흘리기 시작했다!", item_name.c_str());
+                    mprf("<1775>%s이(가) 부식성 점액을 흘리기 시작했다!", item_name.c_str());
                     break;
 
                 default:
@@ -651,28 +651,28 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             {
             case SPWPN_FLAMING:
                 if (showMsgs)
-                    mprf("%s의 불길이 사라졌다.", msg.c_str());
+                    mprf("<1776>%s의 불길이 사라졌다.", msg.c_str());
                 break;
 
             case SPWPN_FREEZING:
             case SPWPN_HOLY_WRATH:
                 if (showMsgs)
-                    mprf("%s의 빛이 사라졌다.", msg.c_str());
+                    mprf("<1777>%s의 빛이 사라졌다.", msg.c_str());
                 break;
 
             case SPWPN_ELECTROCUTION:
                 if (showMsgs)
-                    mprf("%s의 파열음이 멈추었다.", msg.c_str());
+                    mprf("<1778>%s의 파열음이 멈추었다.", msg.c_str());
                 break;
 
             case SPWPN_VENOM:
                 if (showMsgs)
-                    mprf("%s에서 독액이 흘러 나오는 것이 멈추었다.", msg.c_str());
+                    mprf("<1779>%s에서 독액이 흘러 나오는 것이 멈추었다.", msg.c_str());
                 break;
 
             case SPWPN_PROTECTION:
                 if (showMsgs)
-                    mprf("%s이(가) 잠잠해졌다.", msg.c_str());
+                    mprf("<1780>%s이(가) 잠잠해졌다.", msg.c_str());
                 if (you.duration[DUR_SPWPN_PROTECTION])
                 {
                     you.duration[DUR_SPWPN_PROTECTION] = 0;
@@ -730,7 +730,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 // effect in brand weapon scroll effect in read_scroll.
 
             case SPWPN_ACID:
-                mprf("%s이(가) 더 이상 부식성 점액을 흘리지 않는다.", msg.c_str());
+                mprf("<1781>%s이(가) 더 이상 부식성 점액을 흘리지 않는다.", msg.c_str());
                 break;
             }
 
@@ -751,7 +751,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     monster *spectral_weapon = find_spectral_weapon(&you);
     if (spectral_weapon)
     {
-        mprf("%s 당신의 유령 무기가 사라졌다.",
+        mprf("<1782>%s 당신의 유령 무기가 사라졌다.",
              meld ? "당신의 무기가 녹아들자" : "당신이 장비를 놓자");
         end_spectral_weapon(spectral_weapon, false, true);
     }
@@ -851,7 +851,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
                     mpr("비행을 멈추려면 장비를 해제하십시오.");
                 else
                 {
-                mprf("(<w>%s</w>능력창에서 사용가능 : 비행을 %s하기)",
+                mprf("<1783>(<w>%s</w>능력창에서 사용가능 : 비행을 %s하기)",
                      command_to_string(CMD_USE_ABILITY).c_str(),
                      you.attribute[ATTR_LAST_FLIGHT_STATUS]
                          ? "정지 또는 시작" : "시작 또는 정지");
@@ -1104,7 +1104,7 @@ static void _remove_amulet_of_faith(item_def &item)
         if (you.piety - piety_loss > 10)
         {
             mprf(MSGCH_GOD, "당신은 덜 경건한 기분이 든다.");
-            dprf("%s: piety drain: %d",
+            dprf("<1784>%s: piety drain: %d",
                  item.name(DESC_PLAIN).c_str(), piety_loss);
             lose_piety(piety_loss);
         }
@@ -1207,7 +1207,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("작고 조용한 도약이 당신에게로 쏟아진다.");
         else
             // keep in sync with player_teleport
-            mprf("약간의 불안정함을 %s느꼈다.",
+            mprf("<1785>약간의 불안정함을 %s느꼈다.",
                  (player_teleport(false) > 8) ? " " : "");
         break;
 
@@ -1223,7 +1223,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message("는 오직 금화만을 원한다!");
         else
         {
-            mprf(MSGCH_GOD, "신의 %s관심이 느껴진다.",
+            mprf(MSGCH_GOD, "<1786>신의 %s관심이 느껴진다.",
                             you_worship(GOD_NO_GOD) ? "낯선 " : "");
         }
 
@@ -1268,7 +1268,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     if (item.cursed() && !unmeld)
     {
-        mprf("헉, 이 %s는 끔찍하게 차갑다.",
+        mprf("<1787>헉, 이 %s는 끔찍하게 차갑다.",
              jewellery_is_amulet(item)? "목걸이" : "반지");
         learned_something_new(HINT_YOU_CURSED);
 
@@ -1287,7 +1287,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
     if (!unmeld)
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("<1788>%s", item.name(DESC_INVENTORY_EQUIP).c_str());
     if (new_ident)
         auto_assign_item_slot(item);
 }

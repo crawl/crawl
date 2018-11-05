@@ -61,7 +61,7 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
 {
 #ifdef ASSERTS
     if (!place.is_valid())
-        die("trying to pick a monster from %s", place.describe().c_str());
+        die("<1547>trying to pick a monster from %s", place.describe().c_str());
 #endif
     return pick_monster_from(population[place.branch].pop, place.depth, veto);
 }
@@ -212,7 +212,7 @@ void debug_monpick()
                 && br != BRANCH_ZIGGURAT) // order is ok, check the loop
             {
                 fails += make_stringf(
-                    "%s: no valid skeletons in any parallel branch\n",
+                    "<1548>%s: no valid skeletons in any parallel branch\n",
                     level_id(br, d).describe().c_str());
             }
         }

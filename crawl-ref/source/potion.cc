@@ -321,7 +321,7 @@ public:
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
-        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+        mprf(MSGCH_DURATION, "<1858>갑자기 %s해졌다.",
              were_mighty ? "강" : "매우 강");
         you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
         if (!were_mighty)
@@ -345,7 +345,7 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
-        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+        mprf(MSGCH_DURATION, "<1859>갑자기 %s해졌다.",
              were_brilliant ? "더 명료" : "명료");
         you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
         if (!were_brilliant)
@@ -369,7 +369,7 @@ public:
     {
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
-        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+        mprf(MSGCH_DURATION, "<1860>갑자기 %s해졌다.",
              were_agile ? "더 기민" : "기민");
 
         you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
@@ -480,7 +480,7 @@ public:
         if (confuse_player(ambrosia_turns, false, true))
         {
             print_potion_heal_message();
-            mprf("You feel%s invigorated.",
+            mprf("<1861>You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
             you.increase_duration(DUR_AMBROSIA, ambrosia_turns);
             return true;
@@ -518,7 +518,7 @@ public:
             if (you.duration[DUR_QUAD_DAMAGE])
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
             mprf(MSGCH_DURATION,
-                 "당신은 %s투명해졌으나, %s%s에 의한 빛이 "
+                 "<1862>당신은 %s투명해졌으나, %s%s에 의한 빛이 "
                  "당신을 완전히 투명하게 만드는 것을 막고있다.",
                  you.duration[DUR_INVIS] ? "더욱 " : "",
                  you.haloed() && you.halo_radius() == -1 ? "" : "당신의 ",
@@ -680,7 +680,7 @@ static bool _can_mutate(string *reason)
 
     if (reason)
     {
-        *reason = make_stringf("You cannot mutate%s.",
+        *reason = make_stringf("<1863>You cannot mutate%s.",
                                you.can_safely_mutate(false) ? "" : " at present");
     }
     return false;
@@ -740,7 +740,7 @@ public:
             if (is_damaging_cloud(cloud, false)
                 // Tree form is immune to these two.
                 && cloud != CLOUD_MEPHITIC && cloud != CLOUD_POISON
-                && !yesno(make_stringf("정말로 %s의 구름 위에서 나무가 될 것인가?",
+                && !yesno(make_stringf("<1864>정말로 %s의 구름 위에서 나무가 될 것인가?",
                                        cloud_type_name(cloud).c_str()).c_str(),
                           false, 'n'))
             {
@@ -1140,7 +1140,7 @@ public:
         {
             if (reason)
             {
-                *reason = make_stringf("You have no %smutations to cure!",
+                *reason = make_stringf("<1865>You have no %smutations to cure!",
                                        you.how_mutated(false, false, true)
                                        ? "permanent " : "");
             }
@@ -1333,7 +1333,7 @@ bool quaff_potion(item_def &potion)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
         set_ident_type(potion, true);
-        mprf("이건 %s였다.", potion.name(DESC_QUALNAME).c_str());
+        mprf("<1866>이건 %s였다.", potion.name(DESC_QUALNAME).c_str());
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);

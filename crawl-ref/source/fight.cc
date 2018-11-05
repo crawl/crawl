@@ -300,7 +300,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 {
                     if (could_see || you.can_see(*mons))
                     {
-                        mprf("%s은(는) 공격하며 뒤로 뛰었다.",
+                        mprf("<582>%s은(는) 공격하며 뒤로 뛰었다.",
                              mons->name(DESC_PLAIN, true).c_str());
                     }
                     mons->speed_increment -= 2; // Add a small extra delay
@@ -985,7 +985,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     else
         verb = "attack ";
 
-    const string prompt = make_stringf("정말로 %s%s%s?%s",
+    const string prompt = make_stringf("<583>정말로 %s%s%s?%s",
              verb.c_str(), mon_name.c_str(), suffix.c_str(),
              penance ? " 이 공격은 당신을 참회에 빠뜨릴 것이다!" : "");
 
@@ -1048,7 +1048,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         adj = "the " + adj;
     mon_name = adj + mon_name;
 
-    const string prompt = make_stringf("정말로 %s %s%s?%s",
+    const string prompt = make_stringf("<584>정말로 %s %s%s?%s",
              verb, mon_name.c_str(), suffix.c_str(),
              penance ? " 이 공격은 당신을 참회에 빠뜨릴 것이다!" : "");
 

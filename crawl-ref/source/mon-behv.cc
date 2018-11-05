@@ -1121,7 +1121,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
             if (you.can_see(*mon))
             {
-                mprf("%s attack snaps %s out of %s fear.",
+                mprf("<1389>%s attack snaps %s out of %s fear.",
                         src ? src->name(DESC_ITS).c_str() : "the",
                         mon->name(DESC_THE).c_str(),
                         mon->pronoun(PRONOUN_POSSESSIVE).c_str());
@@ -1351,7 +1351,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
                              'A', 'z' + 1);
-                mprf("(<w>%c</w>을 누르시오 : 베오그로 개종하려면 능력 메뉴창에서<w>%s</w>을.)",
+                mprf("<1390>(<w>%c</w>을 누르시오 : 베오그로 개종하려면 능력 메뉴창에서<w>%s</w>을.)",
                      get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
                      command_to_string(CMD_USE_ABILITY).c_str());
                 you.attribute[ATTR_SEEN_BEOGH] = 1;
@@ -1436,7 +1436,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     {
         command_type dir = feat_stair_direction(feat);
         simple_monster_message(*mon,
-            make_stringf(" %s : %s.",
+            make_stringf("<1391> %s : %s.",
                 dir == CMD_GO_UPSTAIRS     ? "올라간다" :
                 dir == CMD_GO_DOWNSTAIRS   ? "내려간다"
                                            : "타고간다",
@@ -1446,7 +1446,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     else if (is_shaft)
     {
         simple_monster_message(*mon,
-            make_stringf("이 구덩이로 %s.",
+            make_stringf("<1392>이 구덩이로 %s.",
                 mon->airborne() ? "내려간다"
                                 : "뛰어든다").c_str());
     }

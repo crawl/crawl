@@ -347,7 +347,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:
     case NUM_REAL_SPECIAL_WEAPONS:
-        die("invalid brand %d on weapon %d (%s)", brand, type,
+        die("<1145>invalid brand %d on weapon %d (%s)", brand, type,
             item.name(DESC_PLAIN).c_str());
         break;
     }
@@ -2007,7 +2007,7 @@ int items(bool allow_uniques,
         || item.base_type == OBJ_MISSILES
           && !is_missile_brand_ok(item.sub_type, item.brand, false))
     {
-        mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
+        mprf(MSGCH_ERROR, "<1146>Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES
                       | ISFLAG_KNOW_CURSE).c_str());
         item.brand = 0;

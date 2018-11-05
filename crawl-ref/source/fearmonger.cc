@@ -23,7 +23,7 @@ bool player::add_fearmonger(const monster* mon)
     {
         if (can_see(*mon))
         {
-            mprf("%s의 공포의 형상은 아무 소리도 나지 않았고, 당신에게 아무 영향도 미치지 못했다.",
+            mprf("<580>%s의 공포의 형상은 아무 소리도 나지 않았고, 당신에게 아무 영향도 미치지 못했다.",
                  mon->name(DESC_PLAIN).c_str());
         }
         else
@@ -36,7 +36,7 @@ bool player::add_fearmonger(const monster* mon)
     {
         set_duration(DUR_AFRAID, 7, 12);
         fearmongers.push_back(mon->mid);
-        mprf(MSGCH_WARN, "당신은 %s에 대한 공포에 질렸다!",
+        mprf(MSGCH_WARN, "<581>당신은 %s에 대한 공포에 질렸다!",
                          mon->name(DESC_PLAIN).c_str());
     }
     else

@@ -84,7 +84,7 @@ InvEntry::InvEntry(const item_def &i)
 
     if (item_is_stationary_net(i))
     {
-        text += make_stringf(" (holding %s)",
+        text += make_stringf("<957> (holding %s)",
                              net_holdee(i)->name(DESC_A).c_str());
     }
 
@@ -1248,7 +1248,7 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
         }
     }
 
-    return make_stringf(" (%u%s turn%s)",
+    return make_stringf("<958> (%u%s turn%s)",
                         (unsigned int)s->size(),
                         extraturns? "+" : "",
                         s->size() > 1? "s" : "");
@@ -1290,7 +1290,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 
         if (need_prompt)
         {
-            mprf(MSGCH_PROMPT, "%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
+            mprf(MSGCH_PROMPT, "<959>%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
                  prompt.c_str());
         }
 
@@ -1831,7 +1831,7 @@ int prompt_invent_item(const char *prompt,
 
     if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD)
     {
-        mprf(MSGCH_PROMPT, "%s",
+        mprf(MSGCH_PROMPT, "<960>%s",
              no_selectables_message(type_expect).c_str());
         return PROMPT_NOTHING;
     }
@@ -1864,7 +1864,7 @@ int prompt_invent_item(const char *prompt,
 
         if (need_prompt)
         {
-            mprf(MSGCH_PROMPT, "%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
+            mprf(MSGCH_PROMPT, "<961>%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
                  prompt);
         }
         else

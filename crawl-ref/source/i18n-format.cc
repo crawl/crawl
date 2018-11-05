@@ -25,7 +25,7 @@ char* _format(char* formatS, size_t cnt, ...){
     ch = formatS[i];
     if(ch == '{'){
       if(isOpen){
-        printf("format Error: already open {\n%s\n", formatS);
+        printf("<858>format Error: already open {\n%s\n", formatS);
         exit(-1);
       }
       start = i;
@@ -34,7 +34,7 @@ char* _format(char* formatS, size_t cnt, ...){
     }
     if(ch == '}'){
       if(!isOpen){
-        printf("format Error: is not opened }\n%s\n", formatS);
+        printf("<859>format Error: is not opened }\n%s\n", formatS);
         exit(-2);
       }
       end = i+1;
@@ -51,7 +51,7 @@ char* _format(char* formatS, size_t cnt, ...){
   }
 
   if(cntStart != cntEnd){
-    printf("format Error: {cnt != }cnt\n%s\n", formatS);
+    printf("<860>format Error: {cnt != }cnt\n%s\n", formatS);
     exit(-3);
   }
   if(cntFormat != cnt){

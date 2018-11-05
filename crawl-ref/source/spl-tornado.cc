@@ -141,7 +141,7 @@ spret_type cast_tornado(int powc, bool fail)
 
     fail_check();
 
-    mprf("거친 바람의 큰 소용돌이가 %s.",
+    mprf("<2320>거친 바람의 큰 소용돌이가 %s.",
          (you.airborne() || get_form()->forbids_flight()) ?
          "당신의 주변에 나타난다" : "나타나 당신을 들어올린다");
 
@@ -463,7 +463,7 @@ void tornado_damage(actor *caster, int dur)
             && !need_expiration_warning(old_player_pos)
             && need_expiration_warning(new_player_pos))
         {
-            mprf(MSGCH_DANGER, "주의! 당신은 지금 %s위를 비행중이다",
+            mprf(MSGCH_DANGER, "<2321>주의! 당신은 지금 %s위를 비행중이다",
                  feature_description_at(new_player_pos, false, DESC_PLAIN)
                      .c_str());
         }

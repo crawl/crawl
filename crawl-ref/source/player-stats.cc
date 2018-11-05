@@ -108,7 +108,7 @@ bool attribute_increase()
     if (you.species == SP_GNOLL)
         return true;
 
-    const string stat_gain_message = make_stringf("당신의 경험으로 당신의 능력치가 %s"
+    const string stat_gain_message = make_stringf("<1797>당신의 경험으로 당신의 능력치가 %s"
                                                   " 증가하였다!",
                                                   you.species == SP_DEMIGOD ?
                                                   " 드마라틱하게" : "n");
@@ -129,7 +129,7 @@ bool attribute_increase()
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
 #else
-    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
+    mprf(MSGCH_INTRINSIC_GAIN, "<1798>%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
@@ -326,7 +326,7 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
     if (!suppress_msg)
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
-             "%s을(를) 느꼈다.",
+             "<1799>%s을(를) 느꼈다.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
@@ -357,7 +357,7 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     if (!suppress_msg)
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
-             "%s을(를) 느꼈다.",
+             "<1800>%s을(를) 느꼈다.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
@@ -547,13 +547,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
     {
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
         {
-            mprf("신성한 원기가 당신을 %s의 감소로부터 보호했다.",
+            mprf("<1801>신성한 원기가 당신을 %s의 감소로부터 보호했다.",
                  _stat_name(which_stat).c_str());
             return false;
         }
     }
 
-    mprf(MSGCH_WARN, "%s을(를) 느꼈다.", stat_desc(which_stat, SD_LOSS));
+    mprf(MSGCH_WARN, "<1802>%s을(를) 느꼈다.", stat_desc(which_stat, SD_LOSS));
 
     you.stat_loss[which_stat] = min<int>(100,
                                          you.stat_loss[which_stat] + stat_loss);
@@ -605,7 +605,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     if (!suppress_msg)
     {
         mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-             "%s이(가) 회복된 것을 느꼈다.",
+             "<1803>%s이(가) 회복된 것을 느꼈다.",
              _stat_name(which_stat).c_str());
     }
 
@@ -637,8 +637,8 @@ static void _handle_stat_change(stat_type stat)
         // Time required for recovery once the stat is restored, randomised slightly.
         you.duration[stat_zero_duration(stat)] =
             (20 + random2(20)) * BASELINE_DELAY;
-        mprf(MSGCH_WARN, "당신은 %s을(를) 잃었다.", stat_desc(stat, SD_NAME));
-        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
+        mprf(MSGCH_WARN, "<1804>당신은 %s을(를) 잃었다.", stat_desc(stat, SD_NAME));
+        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("<1805>Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
         // 2 to 5 turns of paralysis (XXX: decremented right away?)
         you.increase_duration(DUR_PARALYSIS, 2 + random2(3));

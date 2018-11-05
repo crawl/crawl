@@ -244,11 +244,11 @@ void debug_list_monsters()
             char buf[80];
             if (count > 1)
             {
-                snprintf(buf, sizeof(buf), "%d %s", count,
+                snprintf(buf, sizeof(buf), "<2701>%d %s", count,
                          pluralise_monster(prev_name).c_str());
             }
             else
-                snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
+                snprintf(buf, sizeof(buf), "<2702>%s", prev_name.c_str());
             mons.push_back(buf);
 
             count = 0;
@@ -276,11 +276,11 @@ void debug_list_monsters()
     char buf[80];
     if (count > 1)
     {
-        snprintf(buf, sizeof(buf), "%d %s", count,
+        snprintf(buf, sizeof(buf), "<2703>%d %s", count,
                  pluralise_monster(prev_name).c_str());
     }
     else
-        snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
+        snprintf(buf, sizeof(buf), "<2704>%s", prev_name.c_str());
     mons.emplace_back(buf);
 
     mpr_comma_separated_list("Monsters: ", mons);
@@ -344,7 +344,7 @@ void wizard_spawn_control()
             const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
-                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
+                mprf("<2705>Spawning %i monster%s.", num, num == 1 ? "" : "s");
                 int curr_rate = env.spawn_random_rate;
                 // Each call to spawn_random_monsters() will spawn one with
                 // the rate at 5 or less.
@@ -414,7 +414,7 @@ void debug_stethoscope(int mon)
     monster& mons(menv[i]);
 
     // Print type of monster.
-    mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
+    mprf(MSGCH_DIAGNOSTICS, "<2706>%s (id #%d; type=%d loc=(%d,%d) align=%s)",
          mons.name(DESC_THE, true).c_str(),
          i, mons.type, mons.pos().x, mons.pos().y,
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
@@ -427,7 +427,7 @@ void debug_stethoscope(int mon)
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) MR=%d XP=%d SP=%d "
-         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
+         "<2707>energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
          mons.experience,
@@ -456,8 +456,8 @@ void debug_stethoscope(int mon)
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);
     mprf(MSGCH_DIAGNOSTICS,
-         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
-         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
+         "<2708>hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
+         "<2709>firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
          : mons_is_wandering(mons)       ? "wander"
@@ -478,14 +478,14 @@ void debug_stethoscope(int mon)
          mons.firing_pos.x, mons.firing_pos.y,
          mons.patrol_point.x, mons.patrol_point.y,
          god_name(mons.god).c_str(),
-         (summoner ? make_stringf(" summoner=%s(%d)",
+         (summoner ? make_stringf("<2710> summoner=%s(%d)",
                                   summoner->name(DESC_PLAIN, true).c_str(),
                                   summoner->mindex()).c_str()
                    : ""));
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
-                            "acid=%d sticky=%s rot=%s",
+                            "<2711>acid=%d sticky=%s rot=%s",
          mons.res_fire(),
          mons.res_cold(),
          mons.res_elec(),
@@ -495,10 +495,10 @@ void debug_stethoscope(int mon)
          mons.res_sticky_flame() ? "yes" : "no",
          mons.res_rotting() ? "yes" : "no");
 
-    mprf(MSGCH_DIAGNOSTICS, "ench: %s",
+    mprf(MSGCH_DIAGNOSTICS, "<2712>ench: %s",
          mons.describe_enchantments().c_str());
 
-    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+    mprf(MSGCH_DIAGNOSTICS, "<2713>props: %s",
          mons.describe_props().c_str());
 
     ostringstream spl;
@@ -543,7 +543,7 @@ void debug_stethoscope(int mon)
         spl << " (#" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)
-        mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
+        mprf(MSGCH_DIAGNOSTICS, "<2714>spells: %s", spl.str().c_str());
 
     ostringstream inv;
     bool found_item = false;
@@ -561,7 +561,7 @@ void debug_stethoscope(int mon)
         inv << " (" << static_cast<int>(ii->index()) << ")";
     }
     if (found_item)
-        mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
+        mprf(MSGCH_DIAGNOSTICS, "<2715>inv: %s", inv.str().c_str());
 
     if (mons_is_ghost_demon(mons.type))
     {
@@ -586,7 +586,7 @@ void wizard_detect_creatures()
 #endif
         count++;
     }
-    mprf("Detected %i monster%s.", count, count == 1 ? "" : "s");
+    mprf("<2716>Detected %i monster%s.", count, count == 1 ? "" : "s");
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
@@ -609,7 +609,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     }
 
     int count = dismiss_monsters(buf);
-    mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
+    mprf("<2717>Dismissed %i monster%s.", count, count == 1 ? "" : "s");
     // If it was turned off turn autopickup back on if all monsters went away.
     if (!*buf)
         autotoggle_autopickup(false);
@@ -696,7 +696,7 @@ void wizard_apply_monster_blessing(monster* mon)
         god = GOD_SHINING_ONE;
 
     if (!bless_follower(mon, god, true))
-        mprf("%s won't bless this monster for you!", god_name(god).c_str());
+        mprf("<2718>%s won't bless this monster for you!", god_name(god).c_str());
 }
 
 void wizard_give_monster_item(monster* mon)
@@ -1056,7 +1056,7 @@ void debug_miscast(int target_index)
     }
     else if (spell != SPELL_NO_SPELL && school != SPTYP_NONE)
     {
-        mprf("Ambiguous: can be spell '%s' or school '%s'.",
+        mprf("<2719>Ambiguous: can be spell '%s' or school '%s'.",
             spell_title(spell), spelltype_short_name(school));
         return;
     }
@@ -1068,15 +1068,15 @@ void debug_miscast(int target_index)
 
         if (!disciplines)
         {
-            mprf("Spell '%s' has no disciplines.", spell_title(spell));
+            mprf("<2720>Spell '%s' has no disciplines.", spell_title(spell));
             return;
         }
     }
 
     if (spell != SPELL_NO_SPELL)
-        mprf("Miscasting spell %s.", spell_title(spell));
+        mprf("<2721>Miscasting spell %s.", spell_title(spell));
     else
-        mprf("Miscasting school %s.", spelltype_long_name(school));
+        mprf("<2722>Miscasting school %s.", spelltype_long_name(school));
 
     if (spell != SPELL_NO_SPELL)
         mprf(MSGCH_PROMPT, "Enter spell_power,raw_spell_failure: ");

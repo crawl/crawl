@@ -229,7 +229,7 @@ void list_armour()
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(estr.str(), "", "equip");
 
-        mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
+        mprf(MSGCH_EQUIPMENT, colour, "<192>%s", estr.str().c_str());
     }
 }
 
@@ -278,7 +278,7 @@ void list_jewellery()
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(item, "", "equip");
 
-        item = chop_string(make_stringf("%-*s: %s",
+        item = chop_string(make_stringf("<193>%-*s: %s",
                                         split ? cols > 96 ? 9 : 8 : 11,
                                         slot, item.c_str()),
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
@@ -287,12 +287,12 @@ void list_jewellery()
         if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
                 you.get_mutation_level(MUT_MISSING_HAND))
         {
-            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+            mprf(MSGCH_EQUIPMENT, "<194>%s", item.c_str());
         }
         else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
-            mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
+            mprf(MSGCH_EQUIPMENT, "<195>%s%s", jstr.c_str(), item.c_str());
     }
 }
 

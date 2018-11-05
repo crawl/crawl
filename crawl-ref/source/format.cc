@@ -206,7 +206,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
                 // If this was the only tag, or the colour didn't match
                 // the one we are popping, display the tag as a warning.
                 fs.textcolour(LIGHTRED);
-                fs.cprintf("</%s>", tagtext.c_str());
+                fs.cprintf("<649></%s>", tagtext.c_str());
             }
         }
         else
@@ -215,7 +215,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             if (colour == -1)
             {
                 fs.textcolour(LIGHTRED);
-                fs.cprintf("<%s>", tagtext.c_str());
+                fs.cprintf("<650><%s>", tagtext.c_str());
             }
             else
                 colour_stack.push_back(colour);
@@ -449,7 +449,7 @@ void formatted_string::add_glyph(cglyph_t g)
 {
     const int last_col = find_last_colour();
     textcolour(g.col);
-    cprintf("%s", stringize_glyph(g.ch).c_str());
+    cprintf("<651>%s", stringize_glyph(g.ch).c_str());
     textcolour(last_col);
 }
 
@@ -495,7 +495,7 @@ void formatted_string::fs_op::display() const
             ::textcolour(x);
         break;
     case FSOP_TEXT:
-        ::cprintf("%s", text.c_str());
+        ::cprintf("<652>%s", text.c_str());
         break;
     }
 }

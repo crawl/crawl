@@ -351,7 +351,7 @@ string direction_chooser::build_targeting_hint_string() const
 void direction_chooser::print_top_prompt() const
 {
     if (!top_prompt.empty())
-        mprf(MSGCH_PROMPT, "%s", top_prompt.c_str());
+        mprf(MSGCH_PROMPT, "<477>%s", top_prompt.c_str());
 }
 
 void direction_chooser::print_key_hints() const
@@ -387,7 +387,7 @@ void direction_chooser::print_key_hints() const
     }
 
     // Display the prompt.
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mprf(MSGCH_PROMPT, "<478>%s", prompt.c_str());
 }
 
 bool direction_chooser::targets_objects() const
@@ -547,7 +547,7 @@ public:
     }
     int width() { return crawl_view.msgsz.x; }
     int height() { return crawl_view.msgsz.y; }
-    void print(const string &str) { cprintf("%s", str.c_str()); }
+    void print(const string &str) { cprintf("<479>%s", str.c_str()); }
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
 
@@ -578,7 +578,7 @@ void full_describe_view()
 #ifdef DEBUG_DIAGNOSTICS
         if (items.empty())
         {
-            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
+            mprf(MSGCH_ERROR, "<480>No items found in stash, but top item is %s",
                  mitm[oid].name(DESC_PLAIN).c_str());
             more();
         }
@@ -1286,7 +1286,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
          || !allow_out_of_range)
         && !in_range(target()))
     {
-        mprf(MSGCH_EXAMINE_FILTER, "%s",
+        mprf(MSGCH_EXAMINE_FILTER, "<481>%s",
              hitfunc? hitfunc->why_not.c_str() : "그곳은 최대 사정거리 밖이다.");
         return false;
     }
@@ -1376,7 +1376,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
 
     if (!in_range(target()))
     {
-        mprf(MSGCH_EXAMINE_FILTER, "%s",
+        mprf(MSGCH_EXAMINE_FILTER, "<482>%s",
              hitfunc ? hitfunc->why_not.c_str() : "사정거리 밖.");
     }
 }
@@ -1462,7 +1462,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
             + ")";
     }
 
-    mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
+    mprf(MSGCH_PROMPT, "<483>%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "조준",
          text.c_str());
 
@@ -1507,7 +1507,7 @@ void direction_chooser::print_target_object_description() const
         return;
 
     // FIXME: remove the duplication with print_items_description().
-    mprf(MSGCH_PROMPT, "%s: %s",
+    mprf(MSGCH_PROMPT, "<484>%s: %s",
          target_prefix ? target_prefix : "조준",
          menu_colour_item_name(*item, DESC_PLAIN).c_str());
 }
@@ -1522,7 +1522,7 @@ void direction_chooser::print_items_description() const
         return;
 
     // Print the first item.
-    mprf(MSGCH_FLOOR_ITEMS, "%s.",
+    mprf(MSGCH_FLOOR_ITEMS, "<485>%s.",
          menu_colour_item_name(*item, DESC_A).c_str());
 
     if (multiple_items_at(target()))
@@ -1539,7 +1539,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
     // [ds] Be more verbose in debug mode.
     _debug_describe_feature_at(target());
 #else
-    mprf(MSGCH_EXAMINE_FILTER, "%s",
+    mprf(MSGCH_EXAMINE_FILTER, "<486>%s",
          feature_description_at(target(), true).c_str());
 #endif
 }
@@ -1677,7 +1677,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         marker_result =
             env.markers.property_at(target(), MAT_ANY, "portal_debug");
 
-        mprf(MSGCH_DIAGNOSTICS, "Got result: %s!",
+        mprf(MSGCH_DIAGNOSTICS, "<487>Got result: %s!",
             marker_result.empty() ? "nothing" : marker_result.c_str());
 
         return;
@@ -2694,7 +2694,7 @@ static void _describe_oos_feature(const coord_def& where)
     string desc = feature_description(env.map_knowledge(where).feat());
 
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
+        mprf(MSGCH_EXAMINE_FILTER, "<488>[%s]", desc.c_str());
 }
 
 // Returns a vector of features matching the given pattern.
@@ -2749,7 +2749,7 @@ void describe_floor()
     if (feat_is_water(grid) || feat_is_lava(grid))
         return;
 
-    mprf(channel, "%s%s이(가) 여기 있다.", prefix, feat.c_str());
+    mprf(channel, "<489>%s%s이(가) 여기 있다.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_LABYRINTH)
         mprf(MSGCH_EXAMINE, "조심해라. 미노타우르스가 당신을 기다린다!");
 }
@@ -3194,12 +3194,12 @@ static void _describe_monster(const monster_info& mi)
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
         text += " It is" + constriction_desc + ".";
-    mprf(MSGCH_EXAMINE, "%s", text.c_str());
+    mprf(MSGCH_EXAMINE, "<490>%s", text.c_str());
 
     // Print the rest of the description.
     text = _get_monster_desc(mi);
     if (!text.empty())
-        mprf(MSGCH_EXAMINE, "%s", text.c_str());
+        mprf(MSGCH_EXAMINE, "<491>%s", text.c_str());
 }
 
 // This method is called in two cases:
@@ -3319,28 +3319,28 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     if (mon_arm)
     {
-        const string armour_desc = make_stringf("wearing %s",
+        const string armour_desc = make_stringf("<492>wearing %s",
                                                 mon_arm->name(DESC_A).c_str());
         item_descriptions.push_back(armour_desc);
     }
 
     if (mon_shd)
     {
-        const string shield_desc = make_stringf("wearing %s",
+        const string shield_desc = make_stringf("<493>wearing %s",
                                                 mon_shd->name(DESC_A).c_str());
         item_descriptions.push_back(shield_desc);
     }
 
     if (mon_rng)
     {
-        const string rng_desc = make_stringf("wearing %s",
+        const string rng_desc = make_stringf("<494>wearing %s",
                                              mon_rng->name(DESC_A).c_str());
         item_descriptions.push_back(rng_desc);
     }
 
     if (mon_qvr)
     {
-        const string qvr_desc = make_stringf("quivering %s",
+        const string qvr_desc = make_stringf("<495>quivering %s",
                                              mon_qvr->name(DESC_A).c_str());
         item_descriptions.push_back(qvr_desc);
     }
@@ -3395,13 +3395,13 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("전이 에너지로 가득하다");
     if (!areas.empty())
     {
-        mprf("이곳은 %s.",
+        mprf("<496>이곳은 %s.",
              comma_separated_line(areas.begin(), areas.end()).c_str());
     }
 
     if (cloud_struct* cloud = cloud_at(where))
     {
-        mprf(MSGCH_EXAMINE, "그곳엔 %s의 구름이 있다.",
+        mprf(MSGCH_EXAMINE, "<497>그곳엔 %s의 구름이 있다.",
              cloud->cloud_name(true).c_str());
         return true;
     }
@@ -3417,7 +3417,7 @@ static bool _print_item_desc(const coord_def where)
         return false;
 
     string name = menu_colour_item_name(mitm[targ_item], DESC_A);
-    mprf(MSGCH_FLOOR_ITEMS, "이곳엔 %s이(가) 있다.", name.c_str());
+    mprf(MSGCH_FLOOR_ITEMS, "<498>이곳엔 %s이(가) 있다.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)
         mprf(MSGCH_FLOOR_ITEMS, "바닥에 다른 무언가가 놓여져 있다.");
@@ -3449,7 +3449,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     {
         const vault_placement &vp(*env.level_vaults[map_index]);
         const coord_def br = vp.pos + vp.size - 1;
-        vault = make_stringf(" [Vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
+        vault = make_stringf("<499> [Vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
                              vp.map_name_at(where).c_str(),
                              vp.pos.x, vp.pos.y,
                              br.x, br.y,
@@ -3457,7 +3457,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     }
 
     char32_t ch = get_cell_glyph(where).ch;
-    dprf("(%d,%d): %s - %s (%d/%s)%s%s%s%s map: %x",
+    dprf("<500>(%d,%d): %s - %s (%d/%s)%s%s%s%s map: %x",
          where.x, where.y,
          ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),
@@ -3486,7 +3486,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #ifdef DEBUG_DIAGNOSTICS
         if (!mon->visible_to(&you))
         {
-            mprf(MSGCH_DIAGNOSTICS, "이곳엔 %s 보이지 않는 몬스터가 있다.",
+            mprf(MSGCH_DIAGNOSTICS, "<501>이곳엔 %s 보이지 않는 몬스터가 있다.",
                  _mon_exposed_in_water(mon) ? "물에 의해 드러난 " :
                  _mon_exposed_in_cloud(mon) ? "구름에 의해 드러난 " : "");
         }
@@ -3507,7 +3507,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (!in_range)
         {
-            mprf(MSGCH_EXAMINE_FILTER, "%s은(는) 사정거리 밖이다.",
+            mprf(MSGCH_EXAMINE_FILTER, "<502>%s은(는) 사정거리 밖이다.",
                  mon->pronoun(PRONOUN_SUBJECTIVE).c_str());
         }
 #ifndef DEBUG_DIAGNOSTICS
@@ -3576,7 +3576,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (feat == DNGN_FLOOR || feat_is_water(feat))
             channel = MSGCH_EXAMINE_FILTER;
 
-        mprf(channel, "%s", feature_desc.c_str());
+        mprf(channel, "<503>%s", feature_desc.c_str());
     }
 #endif
 }

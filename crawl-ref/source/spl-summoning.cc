@@ -317,7 +317,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
 
     if (seen)
     {
-        mprf("%s %s %s %s!", caster->name(DESC_THE).c_str(),
+        mprf("<2301>%s %s %s %s!", caster->name(DESC_THE).c_str(),
                              caster->conj_verb("summon").c_str(),
                              plural ? "some" : "a",
                              plural ? pluralise_monster(mons_type_name(type, DESC_PLAIN)).c_str()
@@ -344,7 +344,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     if (monster *hydra = create_monster(mg))
     {
         if (you.see_cell(hydra->pos()))
-            mprf("%s이(가) 나타났다.", hydra->name(DESC_PLAIN).c_str());
+            mprf("<2302>%s이(가) 나타났다.", hydra->name(DESC_PLAIN).c_str());
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -756,7 +756,7 @@ static bool _check_tukima_validity(const actor *target)
             bool plural = true;
             const string hand = target->hand_name(true, &plural);
 
-            mprf("%s의 %s %s.",
+            mprf("<2303>%s의 %s %s.",
                  apostrophise(target->name(DESC_PLAIN)).c_str(),
                  hand.c_str(), conjugate_verb("경련했다", plural).c_str());
         }
@@ -775,7 +775,7 @@ static bool _check_tukima_validity(const actor *target)
         }
         else
         {
-            mprf("%s이(가) 잠깐 동안 격렬하게 진동했다.%s",
+            mprf("<2304>%s이(가) 잠깐 동안 격렬하게 진동했다.%s",
                  _get_item_desc(wpn, target_is_player).c_str(),
                  wpn->quantity > 1 ? "" : "");
         }
@@ -825,7 +825,7 @@ static void _animate_weapon(int pow, actor* target)
 
     if (!mons)
     {
-        mprf("%s twitches for a moment.",
+        mprf("<2305>%s twitches for a moment.",
              _get_item_desc(wpn, target_is_player).c_str());
         return;
     }
@@ -839,7 +839,7 @@ static void _animate_weapon(int pow, actor* target)
     }
 
     // We are successful. Unwield the weapon, removing any wield effects.
-    mprf("%s은(는) 공중에서 춤추었다!",
+    mprf("<2306>%s은(는) 공중에서 춤추었다!",
          _get_item_desc(wpn, target_is_player).c_str());
     if (target_is_player)
         unwield_item();
@@ -1555,7 +1555,7 @@ static void _display_undead_motions(int motions)
         mpr("시체들이 일어났다!");
     else
     {
-        mprf("죽음이 %s!", comma_separated_line(motions_list.begin(),
+        mprf("<2307>죽음이 %s!", comma_separated_line(motions_list.begin(),
              motions_list.end()).c_str());
     }
 }
@@ -1623,7 +1623,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         {
             if (you.see_cell(pos))
             {
-                mprf("머리없는 히드라 %s 휘청 하더니 갑자기 무너져 내렸다!",
+                mprf("<2308>머리없는 히드라 %s 휘청 하더니 갑자기 무너져 내렸다!",
                      item.sub_type == CORPSE_BODY ? "시체가" : "스켈레톤이");
             }
             return false;
@@ -1756,7 +1756,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             // Ignore quiet.
             if (was_butchering || was_draining)
             {
-                mprf("당신이 %s던 시체가, 갑자기 일어나 %s!",
+                mprf("<2309>당신이 %s던 시체가, 갑자기 일어나 %s!",
                      was_draining ? "마시"
                                   : "도축하",
                      beha == BEH_FRIENDLY ? "당신의 군단에 합류했다"
@@ -1952,7 +1952,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         if (corpse.props[CORPSE_HEADS].get_short() == 0)
         {
             // No monster to conj_verb with :(
-            mprf("머리 없는 히드라 얼음환영%s이 %s에서 일어나는 즉시 붕괴되어 눈처럼 내렸다!",
+            mprf("<2310>머리 없는 히드라 얼음환영%s이 %s에서 일어나는 즉시 붕괴되어 눈처럼 내렸다!",
                  how_many == 1 ? "" : "", how_many == 1 ? "들" : "");
             if (!turn_corpse_into_skeleton(corpse))
                 butcher_corpse(corpse, MB_FALSE, false);
@@ -2054,7 +2054,7 @@ bool monster_simulacrum(monster *mon, bool actual)
                 // Ignore quiet.
                 if (was_butchering || was_draining)
                 {
-                    mprf("당신이 %s 시체의 고기가 기화한다!",
+                    mprf("<2311>당신이 %s 시체의 고기가 기화한다!",
                          was_draining ? "마시던" : "도축하던");
                     xom_is_stimulated(200);
                 }
@@ -2207,7 +2207,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     if (seen_lost)
     {
-        mprf("%s %s into %s!",
+        mprf("<2312>%s %s into %s!",
              _count_article(seen_lost, seen_crawlies + seen_masses == 0),
              seen_lost == 1 ? "corpse collapses" : "corpses collapse",
              seen_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
@@ -2215,7 +2215,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     if (seen_crawlies > 0)
     {
-        mprf("%s %s to drag %s along the ground!",
+        mprf("<2313>%s %s to drag %s along the ground!",
              _count_article(seen_crawlies, seen_lost + seen_masses == 0),
              seen_crawlies == 1 ? "corpse begins" : "corpses begin",
              seen_crawlies == 1 ? "itself" : "themselves");
@@ -2223,7 +2223,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     if (seen_masses > 0)
     {
-        mprf("%s시체들이 녹아 내려, 몸부림치는 %s로 변했다!",
+        mprf("<2314>%s시체들이 녹아 내려, 몸부림치는 %s로 변했다!",
              _count_article(2, seen_crawlies + seen_lost == 0),
              seen_masses == 1 ? "an agglomeration" : "agglomerations");
     }
@@ -2401,7 +2401,7 @@ void init_servitor(monster* servitor, actor* caster)
 
     if (you.can_see(*caster))
     {
-        mprf("%s %s a servant imbued with %s destructive magic!",
+        mprf("<2315>%s %s a servant imbued with %s destructive magic!",
              caster->name(DESC_THE).c_str(),
              caster->conj_verb("summon").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
@@ -2450,7 +2450,7 @@ static int _abjuration(int pow, monster *mon)
     if (mon->is_summoned(&duration))
     {
         int sockage = max(fuzz_value(abjdur, 60, 30), 40);
-        dprf("%s abj: dur: %d, abj: %d",
+        dprf("<2316>%s abj: dur: %d, abj: %d",
              mon->name(DESC_PLAIN).c_str(), duration, sockage);
 
         bool shielded = false;
@@ -2980,7 +2980,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         {
             if (you.can_see(*victim))
             {
-                mprf("%s %s.", victim->name(DESC_THE).c_str(),
+                mprf("<2317>%s %s.", victim->name(DESC_THE).c_str(),
                                victim->conj_verb("twitch").c_str());
             }
             else
@@ -3006,7 +3006,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
     {
         if (caster->observable())
         {
-            mprf("%s %s a prism of explosive energy!",
+            mprf("<2318>%s %s a prism of explosive energy!",
                  caster->name(DESC_THE).c_str(),
                  caster->conj_verb("conjure").c_str());
         }
@@ -3047,7 +3047,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
         {
             if (wpn)
             {
-                mprf("%s이(가) 잠깐 동안 격렬하게 진동했다.%s",
+                mprf("<2319>%s이(가) 잠깐 동안 격렬하게 진동했다.%s",
                      wpn->name(DESC_YOUR).c_str(),
                      wpn->quantity > 1 ? "" : "");
             }

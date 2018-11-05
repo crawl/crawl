@@ -165,7 +165,7 @@ bool try_pathfind(monster* mon)
     }
 
 #ifdef DEBUG_PATHFIND
-    mprf("%s: Target out of reach! What now?",
+    mprf("<1542>%s: Target out of reach! What now?",
          mon->name(DESC_PLAIN).c_str());
 #endif
     // If we're already on our way, do nothing.
@@ -209,14 +209,14 @@ bool try_pathfind(monster* mon)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
-        mprf("Distance too great, don't attempt pathfinding! (%s)",
+        mprf("<1543>Distance too great, don't attempt pathfinding! (%s)",
              mon->name(DESC_PLAIN).c_str());
 #endif
         return false;
     }
 
 #ifdef DEBUG_PATHFIND
-    mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
+    mprf("<1544>Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
          mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y,
          targpos.x, targpos.y, range);
 #endif
@@ -445,7 +445,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
 static bool _handle_monster_travelling(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
-    mprf("Monster %s reached target (%d, %d)",
+    mprf("<1545>Monster %s reached target (%d, %d)",
          mon->name(DESC_PLAIN).c_str(), mon->target.x, mon->target.y);
 #endif
 
@@ -711,7 +711,7 @@ static bool _handle_monster_patrolling(monster* mon)
     else
     {
 #ifdef DEBUG_PATHFIND
-        mprf("Monster %s (pp: %d, %d) is now patrolling to (%d, %d)",
+        mprf("<1546>Monster %s (pp: %d, %d) is now patrolling to (%d, %d)",
              mon->name(DESC_PLAIN).c_str(),
              mon->patrol_point.x, mon->patrol_point.y,
              mon->target.x, mon->target.y);

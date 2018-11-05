@@ -24,7 +24,7 @@ void player::add_beholder(const monster& mon, bool axe)
         {
             if (can_see(mon))
             {
-                mprf("%s의 노래가 멎었고, 이제 당신에게 아무런 영향을 주지 못한다.",
+                mprf("<134>%s의 노래가 멎었고, 이제 당신에게 아무런 영향을 주지 못한다.",
                      mon.name(DESC_PLAIN).c_str());
             }
             else
@@ -33,7 +33,7 @@ void player::add_beholder(const monster& mon, bool axe)
         else
         {
             if (can_see(mon))
-                mprf("%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
+                mprf("<135>%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
             else
                 mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
         }
@@ -47,7 +47,7 @@ void player::add_beholder(const monster& mon, bool axe)
         beholders.push_back(mon.mid);
         if (!axe)
         {
-            mprf(MSGCH_WARN, "당신은 %s에 의해 매혹되었다!",
+            mprf(MSGCH_WARN, "<136>당신은 %s에 의해 매혹되었다!",
                              mon.name(DESC_PLAIN).c_str());
         }
     }
@@ -137,7 +137,7 @@ static void _removed_beholder_msg(const monster *mons)
         {
             if (you.can_see(mon))
             {
-                mprf("%s의 노래가 기묘한 침묵으로 중단되었다.",
+                mprf("<137>%s의 노래가 기묘한 침묵으로 중단되었다.",
                      mon.name(DESC_PLAIN).c_str());
             }
             else
@@ -146,7 +146,7 @@ static void _removed_beholder_msg(const monster *mons)
         else
         {
             if (you.can_see(mon))
-                mprf("%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
+                mprf("<138>%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
             else
                 mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
         }
@@ -160,7 +160,7 @@ static void _removed_beholder_msg(const monster *mons)
         {
             if (mons_is_siren_beholder(mon))
             {
-                mprf("당신은 더 이상 %s이(가) 노래하는 것을 들을 수 없다!",
+                mprf("<139>당신은 더 이상 %s이(가) 노래하는 것을 들을 수 없다!",
                      mon.name(DESC_PLAIN).c_str());
             }
             else
@@ -169,9 +169,9 @@ static void _removed_beholder_msg(const monster *mons)
         }
 
         if (mons_is_siren_beholder(mon))
-            mprf("%s은(는) 노래를 멈췄다.", mon.name(DESC_PLAIN).c_str());
+            mprf("<140>%s은(는) 노래를 멈췄다.", mon.name(DESC_PLAIN).c_str());
         else
-            mprf("%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
+            mprf("<141>%s은(는) 이제 더이상 매혹되어 있지 않다!", mon.name(DESC_PLAIN).c_str());
 
         return;
     }

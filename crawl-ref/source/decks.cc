@@ -390,7 +390,7 @@ static card_type _draw_top_card(item_def& deck, bool message,
     {
         const char *verb = (_flags & CFLAG_DEALT) ? "뽑았다" : "뒤집었다";
 
-        mprf("당신은 카드 한 장을 %s... 이건 %s다.", verb, card_name(card));
+        mprf("<370>당신은 카드 한 장을 %s... 이건 %s다.", verb, card_name(card));
     }
 
     return card;
@@ -637,7 +637,7 @@ static string _empty_deck_msg(deck_rarity_type rarity)
     };
     const char* const *rarity_message = map_find(empty_deck_messages, rarity);
     ASSERT(rarity_message);
-    return make_stringf("The deck of cards %s", *rarity_message);
+    return make_stringf("<371>The deck of cards %s", *rarity_message);
 }
 
 // Choose a deck from inventory and return its slot (or -1).
@@ -663,7 +663,7 @@ static void _deck_ident(item_def& deck)
     if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
     {
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-        mprf("이건 %s이다.", deck.name(DESC_PLAIN).c_str());
+        mprf("<372>이건 %s이다.", deck.name(DESC_PLAIN).c_str());
         you.wield_change = true;
     }
 }
@@ -741,7 +741,7 @@ static void _redraw_stacked_cards(const vector<card_type>& draws,
     {
         cgotoxy(1, i+2);
         textcolour(selected == i ? WHITE : LIGHTGREY);
-        cprintf("%u - %s", i+1, card_name(draws[i]));
+        cprintf("<373>%u - %s", i+1, card_name(draws[i]));
         clear_to_end_of_line();
     }
 }
@@ -1091,7 +1091,7 @@ void draw_from_deck_of_punishment(bool deal)
         flags |= CFLAG_DEALT;
     card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON);
 
-    mprf("당신은 카드를 %s...", deal ? "뒤집었다" : "뽑았다");
+    mprf("<374>당신은 카드를 %s...", deal ? "뒤집었다" : "뽑았다");
     card_effect(card, DECK_RARITY_COMMON, flags);
 }
 
@@ -1171,7 +1171,7 @@ static void _suppressed_card_message(god_type god, conduct_type done)
         default: forbidden_act = "buggy"; break;
     }
 
-    mprf("%s의 권능으로, 카드에 있던 %s의 마법이 아무 일 없이 사라졌다.",
+    mprf("<375>%s의 권능으로, 카드에 있던 %s의 마법이 아무 일 없이 사라졌다.",
          apostrophise(god_name(you.religion)).c_str(), forbidden_act.c_str());
 }
 
@@ -1405,7 +1405,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     const char *participle = dealt ? "dealt" : "drawn";
 
     bool done_prompt = false;
-    string prompt = make_stringf("You have %s %s.", participle,
+    string prompt = make_stringf("<376>You have %s %s.", participle,
                                  card_name(card));
 
     dist target;
@@ -1809,10 +1809,10 @@ bool recruit_mercenary(int mid)
         return true; // wut?
 
     int fee = mon->props["mercenary_fee"].get_int();
-    const string prompt = make_stringf("Pay %s fee of %d gold?",
+    const string prompt = make_stringf("<377>Pay %s fee of %d gold?",
                                        mon->name(DESC_ITS).c_str(), fee);
     bool paid = yesno(prompt.c_str(), false, 0);
-    const string message = make_stringf("Hired %s for %d gold.",
+    const string message = make_stringf("<378>Hired %s for %d gold.",
                                         mon->full_name(DESC_A).c_str(), fee);
     if (crawl_state.seen_hups)
         return false;
@@ -2070,7 +2070,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             && which_card != CARD_PAIN
             && which_card != CARD_ORB)
         {
-            mprf("당신은 %s : %s을(를).", participle, card_name(which_card));
+            mprf("<379>당신은 %s : %s을(를).", participle, card_name(which_card));
         }
     }
 
@@ -2160,7 +2160,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
-        mprf("당신은 버그 카드를 %s!", participle);
+        mprf("<380>당신은 버그 카드를 %s!", participle);
         break;
     }
 }

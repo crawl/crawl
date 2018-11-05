@@ -155,7 +155,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
     // TODO: Attach this information to the vault name string
     //       instead of the build method string.
-    env.level_build_method += make_stringf(" [%s]",
+    env.level_build_method += make_stringf("<462> [%s]",
         force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
 
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
@@ -427,7 +427,7 @@ static bool _octa_room(dgn_region& region, int oblique_max,
 {
     // TODO: Attach this information to the vault name string
     //       instead of the build method string.
-    env.level_build_method += make_stringf(" octa_room [oblique %d, %s]", oblique_max,
+    env.level_build_method += make_stringf("<463> octa_room [oblique %d, %s]", oblique_max,
                                            dungeon_feature_name(type_floor));
 
     int x,y;
@@ -1040,7 +1040,7 @@ static void _many_pools(dungeon_feature_type pool_type)
 
         // TODO: Attach this information to the vault name string
         //       instead of the build method string.
-    env.level_build_method += make_stringf(" many_pools [%s %d]",
+    env.level_build_method += make_stringf("<464> many_pools [%s %d]",
         dungeon_feature_name(pool_type), num_pools);
 
     for (int timeout = 0; pools < num_pools && timeout < 30000; ++timeout)
@@ -1091,7 +1091,7 @@ static void _build_river(dungeon_feature_type river_type) //mv
 
     // TODO: Attach this information to the vault name string
     //       instead of the build method string.
-    env.level_build_method += make_stringf(" river [%s]",
+    env.level_build_method += make_stringf("<465> river [%s]",
                                            dungeon_feature_name(river_type));
 
     // Made rivers less wide... min width five rivers were too annoying. -- bwr
@@ -1141,7 +1141,7 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
 
         // TODO: Attach this information to the vault name string
         //       instead of the build method string.
-    env.level_build_method += make_stringf(" lake [%s]",
+    env.level_build_method += make_stringf("<466> lake [%s]",
                                            dungeon_feature_name(lake_type));
 
     x1 = 5 + random2(GXM - 30);
