@@ -3043,15 +3043,16 @@ string level_id::describe(bool long_name, bool with_number) const
         if (long_name)
         {
             // decapitalise 'the'
+	    // TODO:ENGLISH
             if (starts_with(result, "The"))
                 result[0] = 't';
-            result = make_stringf("<2527>Level %d of %s",
-                      depth, result.c_str());
+            result = make_stringf("Level %d of %s",
+                      depth, result.c_str()); // do not use tag < <2527> is key : eg "Level 7 of Lair"
         }
         else if (depth)
-            result = make_stringf("<2528>%s:%d", result.c_str(), depth);
+            result = make_stringf("%s:%d", result.c_str(), depth); // do not use tag : <2528> is key : eg "D:1"
         else
-            result = make_stringf("<2529>%s:$", result.c_str());
+            result = make_stringf("%s:$", result.c_str()); // do not use tag : <2529>  is key : eg ?? depth?
     }
     return result;
 }

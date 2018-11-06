@@ -756,7 +756,7 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    tmp->set_text("* - Random " + choice_name);
+    tmp->set_text(TR7("* - Random ", "* - 랜덤   ") + choice_name);
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
     min_coord.y = SPECIAL_KEYS_START_Y;
     max_coord.x = min_coord.x + tmp->get_text().size();
