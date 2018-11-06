@@ -875,12 +875,10 @@ int mons_usable_missile(monster* mons, item_def **launcher)
 
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
-                bool& would_cause_penance, coord_def attack_pos,
-                bool check_landing_only)
+                bool& would_cause_penance, coord_def attack_pos)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     ASSERT(!crawl_state.game_is_arena());
-    bool bad_landing = false;
 
     if (!you.can_see(*mon))
         return false;
@@ -892,18 +890,10 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     suffix.clear();
     would_cause_penance = false;
 
-    if (!check_landing_only
-        && (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos)))
+    if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
     {
         suffix = ", despite your sanctuary";
     }
-    else if (check_landing_only && is_sanctuary(attack_pos))
-    {
-        suffix = ", when you might land in your sanctuary";
-        bad_landing = true;
-    }
-    if (check_landing_only)
-        return bad_landing;
 
     if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
@@ -955,7 +945,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted,
-                        coord_def attack_pos, bool check_landing_only)
+                        coord_def attack_pos)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
@@ -970,7 +960,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         return false;
 
     string adj, suffix;
-    if (!bad_attack(mon, adj, suffix, penance, attack_pos, check_landing_only))
+    if (!bad_attack(mon, adj, suffix, penance, attack_pos))
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".

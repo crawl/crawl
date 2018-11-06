@@ -63,13 +63,11 @@ int mons_usable_missile(monster* mons, item_def **launcher);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
-                coord_def attack_pos = coord_def(0, 0),
-                bool check_landing_only = false);
+                coord_def attack_pos = coord_def(0, 0));
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted = nullptr,
-                        coord_def attack_pos = coord_def(0, 0),
-                        bool check_landing_only = false);
+                        coord_def attack_pos = coord_def(0, 0));
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
