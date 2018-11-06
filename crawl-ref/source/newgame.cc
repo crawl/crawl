@@ -32,7 +32,7 @@
 #endif
 #include "version.h"
 
-#define TR7(x, y) y
+#include "i18n-format.h"
 
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
@@ -152,7 +152,7 @@ static string _welcome(const newgame_def& ng)
         text = "unnamed " + text;
     if (!text.empty())
         text = ", " + text;
-    text = "Welcome" + text + ".";
+    text = TR7("Welcome", "환영합니다") + text + ".";
     return text;
 }
 

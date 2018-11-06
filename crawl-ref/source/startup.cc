@@ -65,7 +65,7 @@
  #include "windowmanager.h"
 #endif
 
-#define TR7(x, y) y
+#include "i18n-format.h"
 
 static void _cio_init();
 

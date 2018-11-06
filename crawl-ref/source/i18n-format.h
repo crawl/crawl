@@ -49,3 +49,4 @@ char* _format(char* formatS, size_t cnt, ...);
 
 #define format(fmt, ...)  _format(fmt, (size_t)PP_NARG(__VA_ARGS__), ##__VA_ARGS__)
 
+#define TR7(x, y) y
