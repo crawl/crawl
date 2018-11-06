@@ -895,6 +895,13 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         suffix = ", despite your sanctuary";
     }
 
+    if (you.duration[DUR_LIFESAVING]
+        && mon->holiness() & (MH_NATURAL | MH_PLANT))
+    {
+        suffix = " while asking for your life to be spared";
+        would_cause_penance = true;
+    }
+
     if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
