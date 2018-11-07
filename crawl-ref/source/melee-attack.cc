@@ -816,6 +816,17 @@ bool melee_attack::attack()
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
+    // Remove sanctuary if - through some attack - it was violated.
+    if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
+        && attacker != defender
+        && (is_sanctuary(attack_position) || is_sanctuary(defender->pos()))
+        && (attacker->is_player()
+            // XXX: Can friendly monsters actually violate sanctuary?
+            || attacker->as_monster()->friendly() && !attacker->confused()))
+    {
+        remove_sanctuary(true);
+    }
+
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, defender->as_monster());
@@ -875,16 +886,6 @@ bool melee_attack::attack()
         }
         else
             handle_phase_dodged();
-    }
-
-    // Remove sanctuary if - through some attack - it was violated.
-    if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
-        && attacker != defender
-        && (is_sanctuary(attack_position) || is_sanctuary(defender->pos()))
-        && (attacker->is_player() || attacker->as_monster()->friendly()
-                                     && !attacker->confused()))
-    {
-        remove_sanctuary(true);
     }
 
     if (attacker->is_player())
