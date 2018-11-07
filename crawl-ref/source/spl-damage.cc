@@ -468,7 +468,7 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
     return hurted;
 }
 
-static int _los_spell_damage_monster(const actor* agent, monster* target,
+static int _los_spell_damage_monster(const actor* agent, monster &target,
                                      bolt &beam, bool actual, bool wounds)
 {
 
@@ -476,52 +476,37 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
                     agent                        ? KILL_MON
                                                  : KILL_MISC;
 
+    // Set conducts here. The monster needs to be alive when this is done, and
+    // mons_adjust_flavoured() could kill it.
+    god_conduct_trigger conducts[3];
+    if (YOU_KILL(beam.thrower))
+        set_attack_conducts(conducts, target, you.can_see(target));
+
     int hurted = actual ? beam.damage.roll()
                         // Monsters use the average for foe calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
-    hurted = mons_adjust_flavoured(target, beam, hurted,
+    hurted = mons_adjust_flavoured(&target, beam, hurted,
                  // Drain life doesn't apply drain effects.
                  actual && beam.origin_spell != SPELL_DRAIN_LIFE);
     dprf("damage done: %d", hurted);
 
     if (actual)
     {
-        god_conduct_trigger conducts[3];
-
-        // monster may have died due to flavour damage above.
-        if (hurted && target->alive())
-        {
-            if (YOU_KILL(beam.thrower))
-                set_attack_conducts(conducts, *target, you.can_see(*target));
-
-            target->hurt(agent, hurted, beam.flavour);
-        }
-
-        if (target->alive())
-        {
-            behaviour_event(target, ME_ANNOY, agent,
-                            agent ? agent->pos() : coord_def());
-        }
-
-        if (target->alive() && you.can_see(*target) && wounds)
-            print_wounds(*target);
-
-        if (YOU_KILL(beam.thrower)
-            && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
-        {
-                remove_sanctuary(true);
-        }
+        if (YOU_KILL(beam.thrower))
+            _player_hurt_monster(target, hurted, beam.flavour, false);
+        else if (hurted)
+            target.hurt(agent, hurted, beam.flavour);
 
         // Cold-blooded creatures can be slowed.
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
-            && target->alive())
+            && target.alive())
         {
-            target->expose_to_element(beam.flavour, 5);
+            target.expose_to_element(beam.flavour, 5);
         }
     }
 
     // So that summons don't restore HP.
-    if (beam.origin_spell == SPELL_DRAIN_LIFE && target->is_summoned())
+    if (beam.origin_spell == SPELL_DRAIN_LIFE && target.is_summoned())
         return 0;
 
     return hurted;
@@ -674,7 +659,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
         if (!m->alive())
             continue;
 
-        int this_damage = _los_spell_damage_monster(agent, m, beam, actual,
+        int this_damage = _los_spell_damage_monster(agent, *m, beam, actual,
                                                     m != defender);
         total_damage += this_damage;
 
