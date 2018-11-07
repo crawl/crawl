@@ -952,32 +952,22 @@ bool cast_smiting(int pow, monster* mons)
         return true;
     }
 
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return false;
+
     god_conduct_trigger conducts[3];
-    disable_attack_conducts(conducts);
+    set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    const bool success = !stop_attack_prompt(mons, false, you.pos());
+    mprf("You smite %s!", mons->name(DESC_THE).c_str());
+    behaviour_event(mons, ME_ANNOY, &you);
 
-    if (success)
-    {
-        set_attack_conducts(conducts, mons);
+    // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
+    int damage_increment = div_rand_round(pow, 8);
+    mons->hurt(&you, 6 + roll_dice(3, damage_increment));
+    if (mons->alive())
+        print_wounds(*mons);
 
-        mprf("You smite %s!", mons->name(DESC_THE).c_str());
-
-        behaviour_event(mons, ME_ANNOY, &you);
-    }
-
-    enable_attack_conducts(conducts);
-
-    if (success)
-    {
-        // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-        int damage_increment = div_rand_round(pow, 8);
-        mons->hurt(&you, 6 + roll_dice(3, damage_increment));
-        if (mons->alive())
-            print_wounds(*mons);
-    }
-
-    return success;
+    return true;
 }
 
 void holy_word_player(holy_word_source_type source)

@@ -447,16 +447,12 @@ static int _los_spell_damage_monster(const actor* agent, monster* target,
     if (actual)
     {
         god_conduct_trigger conducts[3];
-        disable_attack_conducts(conducts);
 
         // monster may have died due to flavour damage above.
         if (hurted && target->alive())
         {
             if (YOU_KILL(beam.thrower))
-            {
-                set_attack_conducts(conducts, target, you.can_see(*target));
-                enable_attack_conducts(conducts);
-            }
+                set_attack_conducts(conducts, *target, you.can_see(*target));
 
             target->hurt(agent, hurted, beam.flavour);
         }
@@ -705,19 +701,15 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     god_conduct_trigger conducts[3];
-    disable_attack_conducts(conducts);
 
     const bool abort = stop_attack_prompt(mons, false, you.pos());
 
     if (!abort && !fail)
     {
-        set_attack_conducts(conducts, mons);
+        set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
         behaviour_event(mons, ME_WHACK, &you, you.pos());
     }
-
-    enable_attack_conducts(conducts);
-
     if (abort)
     {
         canned_msg(MSG_OK);
@@ -778,21 +770,17 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     }
 
     god_conduct_trigger conducts[3];
-    disable_attack_conducts(conducts);
 
     const bool abort = stop_attack_prompt(mons, false, you.pos());
 
     if (!abort && !fail)
     {
-        set_attack_conducts(conducts, mons);
+        set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
         mprf("You freeze %s.", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, &you);
     }
-
-    enable_attack_conducts(conducts);
-
     if (abort)
     {
         canned_msg(MSG_OK);
@@ -834,14 +822,13 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    god_conduct_trigger conducts[3];
-    disable_attack_conducts(conducts);
-
     if (stop_attack_prompt(mons, false, you.pos()))
         return SPRET_ABORT;
 
     fail_check();
-    set_attack_conducts(conducts, mons);
+
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
     mprf("The air twists around and %sstrikes %s!",
          mons->airborne() ? "violently " : "",
@@ -849,8 +836,6 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
     behaviour_event(mons, ME_ANNOY, &you);
-
-    enable_attack_conducts(conducts);
 
     int hurted = 8 + random2(2 + div_rand_round(pow, 7));
 
@@ -879,8 +864,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         return false;
 
     god_conduct_trigger conducts[3];
-    set_attack_conducts(conducts, &m, you.can_see(m));
-    enable_attack_conducts(conducts);
+    set_attack_conducts(conducts, m, you.can_see(m));
 
     m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
 

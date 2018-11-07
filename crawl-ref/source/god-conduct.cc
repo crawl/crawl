@@ -24,7 +24,7 @@ static bool _god_likes_killing(const monster& victim);
 
 god_conduct_trigger::god_conduct_trigger(
     conduct_type c, int pg, bool kn, const monster* vict)
-  : conduct(c), pgain(pg), known(kn), enabled(true), victim(nullptr)
+  : conduct(c), pgain(pg), known(kn), victim(nullptr)
 {
     if (vict)
     {
@@ -49,7 +49,7 @@ void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
 
 god_conduct_trigger::~god_conduct_trigger()
 {
-    if (enabled && conduct != NUM_CONDUCTS)
+    if (conduct != NUM_CONDUCTS)
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
@@ -1059,41 +1059,34 @@ void god_conduct_turn_start()
     _first_attack_was_friendly.clear();
 }
 
-void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
+void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
                          bool known)
 {
-    ASSERT(mon);  // TODO: change to const monster &mon
-    const mid_t mid = mon->mid;
+    // We need to examine the monster before it has been reset.
+    ASSERT(mon.alive());
 
-    if (mon->friendly())
+    const mid_t mid = mon.mid;
+
+    if (mon.friendly())
     {
         if (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
             || _first_attack_was_friendly.find(mid)
                != _first_attack_was_friendly.end())
         {
-            conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
+            conduct[0].set(DID_ATTACK_FRIEND, 5, known, &mon);
             _first_attack_was_friendly.insert(mid);
         }
     }
-    else if (mon->neutral())
-        conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
+    else if (mon.neutral())
+        conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, &mon);
 
-    if (mon->is_holy() && !mon->is_illusion())
-        conduct[2].set(DID_ATTACK_HOLY, mon->get_experience_level(), known, mon);
+    if (mon.is_holy() && !mon.is_illusion())
+    {
+        conduct[2].set(DID_ATTACK_HOLY, mon.get_experience_level(), known,
+                       &mon);
+    }
 
     _first_attack_conduct.insert(mid);
-}
-
-void enable_attack_conducts(god_conduct_trigger conduct[3])
-{
-    for (int i = 0; i < 3; ++i)
-        conduct[i].enabled = true;
-}
-
-void disable_attack_conducts(god_conduct_trigger conduct[3])
-{
-    for (int i = 0; i < 3; ++i)
-        conduct[i].enabled = false;
 }
 
 string get_god_likes(god_type which_god)
