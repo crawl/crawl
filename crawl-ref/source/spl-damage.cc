@@ -339,6 +339,46 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
     return SPRET_SUCCESS;
 }
 
+/*
+ * Handle the application of damage from a player spell that doesn't apply these
+ * through struct bolt. This applies any Zin sancuary violation and can apply
+ * god conducts as well.
+ * @param mon          The monster.
+ * @param damage       The damage to apply, if any. Regardless of damage done,
+ *                     the monster will have death cleanup applied via
+ *                     monster_die() if it's now dead.
+ * @param flavour      The beam flavour of damage.
+ * @param god_conducts If true, apply any god conducts. Some callers need to
+ *                     apply effects prior to damage that might kill the
+ *                     monster, hence handle conducts on their own.
+*/
+static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
+                                 bool god_conducts = true)
+{
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon.pos()))
+        remove_sanctuary(true);
+
+    god_conduct_trigger conducts[3];
+    if (god_conducts)
+        set_attack_conducts(conducts, mon, you.can_see(mon));
+
+    // Don't let monster::hurt() do death cleanup here. We're handling death
+    // cleanup at the end to cover cases where we've done no damage and the
+    // monster is dead from previous effects.
+    if (damage)
+        mon.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
+
+    if (mon.alive())
+    {
+        behaviour_event(&mon, ME_WHACK, &you);
+
+        if (damage && you.can_see(mon))
+            print_wounds(mon);
+    }
+    else
+        monster_die(mon, KILL_YOU, NON_MONSTER);
+}
+
 static counted_monster_list _counted_monster_list_from_vector(
     vector<monster *> affected_monsters)
 {
@@ -684,9 +724,10 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_ABORT;
     }
 
-    if (mons == nullptr || mons->submerged())
+    if (!mons || mons->submerged())
     {
         fail_check();
+
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // Cost to disallow freely locating invisible/submerged
         // monsters.
@@ -700,17 +741,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_ABORT;
     }
 
-    god_conduct_trigger conducts[3];
-
-    const bool abort = stop_attack_prompt(mons, false, you.pos());
-
-    if (!abort && !fail)
-    {
-        set_attack_conducts(conducts, *mons, you.can_see(*mons));
-
-        behaviour_event(mons, ME_WHACK, &you, you.pos());
-    }
-    if (abort)
+    if (stop_attack_prompt(mons, false, you.pos()))
     {
         canned_msg(MSG_OK);
         return SPRET_ABORT;
@@ -738,16 +769,11 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    const bool mons_was_summoned = mons->is_summoned();
-
-    mons->hurt(&you, hp_gain);
-
-    if (mons->alive())
-        print_wounds(*mons);
+    _player_hurt_monster(*mons, hp_gain, BEAM_NEG);
 
     hp_gain = div_rand_round(hp_gain, 2);
 
-    if (hp_gain && !mons_was_summoned && !you.duration[DUR_DEATHS_DOOR])
+    if (hp_gain && !mons->is_summoned() && !you.duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel life coursing into your body.");
         inc_hp(hp_gain);
@@ -760,7 +786,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
 
-    if (mons == nullptr || mons->submerged())
+    if (!mons || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
@@ -769,19 +795,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    god_conduct_trigger conducts[3];
-
-    const bool abort = stop_attack_prompt(mons, false, you.pos());
-
-    if (!abort && !fail)
-    {
-        set_attack_conducts(conducts, *mons, you.can_see(*mons));
-
-        mprf("You freeze %s.", mons->name(DESC_THE).c_str());
-
-        behaviour_event(mons, ME_ANNOY, &you);
-    }
-    if (abort)
+    if (stop_attack_prompt(mons, false, you.pos()))
     {
         canned_msg(MSG_OK);
         return SPRET_ABORT;
@@ -789,19 +803,23 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 
     fail_check();
 
+    // Set conducts here. The monster needs to be alive when this is done, and
+    // mons_adjust_flavoured() could kill it.
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, *mons);
+
+    mprf("You freeze %s.", mons->name(DESC_THE).c_str());
+
     bolt beam;
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
-    mons->hurt(&you, hurted);
+    _player_hurt_monster(*mons, hurted, beam.flavour, false);
 
     if (mons->alive())
-    {
         mons->expose_to_element(BEAM_COLD, orig_hurted);
-        print_wounds(*mons);
-    }
 
     return SPRET_SUCCESS;
 }
@@ -824,7 +842,6 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     if (stop_attack_prompt(mons, false, you.pos()))
         return SPRET_ABORT;
-
     fail_check();
 
     god_conduct_trigger conducts[3];
@@ -833,55 +850,21 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     mprf("The air twists around and %sstrikes %s!",
          mons->airborne() ? "violently " : "",
          mons->name(DESC_THE).c_str());
+
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
-
-    behaviour_event(mons, ME_ANNOY, &you);
-
-    int hurted = 8 + random2(2 + div_rand_round(pow, 7));
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
 
+    int hurted = 8 + random2(2 + div_rand_round(pow, 7));
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
-
-    mons->hurt(&you, hurted);
-    if (mons->alive())
-        print_wounds(*mons);
+    _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
     return SPRET_SUCCESS;
-}
-
-// Just to avoid typing this over and over.
-// Returns true if monster died. -- bwr
-static bool _player_hurt_monster(monster& m, int damage,
-                                 beam_type flavour = BEAM_MISSILE)
-{
-    if (damage <= 0)
-        return false;
-
-    god_conduct_trigger conducts[3];
-    set_attack_conducts(conducts, m, you.can_see(m));
-
-    m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
-
-    if (m.alive())
-    {
-        if (you.can_see(m))
-            print_wounds(m);
-
-        behaviour_event(&m, ME_WHACK, &you);
-    }
-    else
-    {
-        monster_die(m, KILL_YOU, NON_MONSTER);
-        return true;
-    }
-
-    return false;
 }
 
 // Here begin the actual spells:
@@ -931,23 +914,15 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
-    if (mon == nullptr || mon == agent)
+    if (!mon || !mon->alive() || mon == agent)
         return 0;
 
     dam_dice.num = _shatter_mon_dice(mon);
     int damage = max(0, dam_dice.roll() - random2(mon->armour_class()));
 
-    if (damage <= 0)
-        return 0;
-
     if (agent->is_player())
-    {
-        _player_hurt_monster(*mon, damage);
-
-        if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
-            remove_sanctuary(true);
-    }
-    else
+        _player_hurt_monster(*mon, damage, BEAM_MMISSILE);
+    else if (damage)
         mon->hurt(agent, damage);
 
     return damage;
@@ -1056,7 +1031,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     targeter_los hitfunc(&you, LOS_ARENA);
-    if (stop_attack_prompt(hitfunc, "harm", _shatterable))
+    if (stop_attack_prompt(hitfunc, "attack", _shatterable))
         return SPRET_ABORT;
 
     fail_check();
@@ -1256,7 +1231,7 @@ static bool _irradiate_is_safe()
 static int _irradiate_cell(coord_def where, int pow, actor *agent)
 {
     monster *mons = monster_at(where);
-    if (!mons)
+    if (!mons || !mons->alive())
         return 0; // XXX: handle damaging the player for mons casts...?
 
     if (you.can_see(*mons))
@@ -1272,20 +1247,14 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
-    {
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
-
-        // Why are you casting this spell at all while worshipping Zin?
-        if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
-            remove_sanctuary(true);
-    }
-    else
+    else if (dam)
         mons->hurt(agent, dam, BEAM_MMISSILE);
 
     if (mons->alive())
         mons->malmutate("");
 
-    return 1;
+    return dam;
 }
 
 /**
@@ -1765,11 +1734,11 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
 }
 
 static int _discharge_monsters(const coord_def &where, int pow,
-                              const actor &agent)
+                               const actor &agent)
 {
     actor* victim = actor_at(where);
 
-    if (!victim)
+    if (!victim || !victim->alive())
         return 0;
 
     int damage = (&agent == victim) ? 1 + random2(3 + pow / 15)
@@ -1807,28 +1776,22 @@ static int _discharge_monsters(const coord_def &where, int pow,
     else
     {
         monster* mons = victim->as_monster();
-        ASSERT(mons);
+
+        // We need to initialize these before the monster has died.
+        god_conduct_trigger conducts[3];
+        if (agent.is_player())
+            set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
+        mprf("%s is struck by an arc of lightning.",
+                mons->name(DESC_THE).c_str());
         damage = mons_adjust_flavoured(mons, beam, damage);
-        if (damage > 0)
-            victim->expose_to_element(BEAM_ELECTRICITY, 2);
 
-        if (damage)
-        {
-            mprf("%s is struck by an arc of lightning.",
-                 mons->name(DESC_THE).c_str());
-            if (agent.is_player())
-            {
-                _player_hurt_monster(*mons, damage);
-
-                if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
-                    remove_sanctuary(true);
-            }
-            else
-                mons->hurt(agent.as_monster(), damage);
-        }
+        if (agent.is_player())
+            _player_hurt_monster(*mons, damage, beam.flavour, false);
+        else if (damage)
+            mons->hurt(agent.as_monster(), damage);
     }
 
     // Recursion to give us chain-lightning -- bwr
@@ -2153,8 +2116,11 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     bolt beam;
 
-    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,hole))
+    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
+                hole))
+    {
         return SPRET_ABORT;
+    }
 
     if (caster->is_player())
     {
@@ -2170,8 +2136,6 @@ spret_type cast_fragmentation(int pow, const actor *caster,
             return SPRET_ABORT;
         }
     }
-
-    monster* mon = monster_at(target);
 
     fail_check();
 
@@ -2191,13 +2155,19 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     }
     else // Monster explodes.
     {
+        // Checks by setup_fragmentation_beam() must guarantee that we have a
+        // monster.
+        monster* mon = monster_at(target);
+        ASSERT(mon);
+
         if (you.see_cell(target))
             mprf("%s shatters!", mon->name(DESC_THE).c_str());
 
+        const int dam = beam.damage.roll();
         if (caster->is_player())
-            _player_hurt_monster(*mon, beam.damage.roll(), BEAM_DISINTEGRATION);
-        else
-            mon->hurt(caster, beam.damage.roll(), BEAM_DISINTEGRATION);
+            _player_hurt_monster(*mon, dam, BEAM_DISINTEGRATION);
+        else if (dam)
+            mon->hurt(caster, dam, BEAM_DISINTEGRATION);
     }
 
     beam.explode(true, hole);
