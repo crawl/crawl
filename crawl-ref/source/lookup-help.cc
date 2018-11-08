@@ -1263,7 +1263,7 @@ static const vector<LookupType> lookup_types = {
                _describe_skill, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_ability, lookup_type::db_suffix),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),

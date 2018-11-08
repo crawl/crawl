@@ -1089,6 +1089,9 @@ static string _sacrifice_desc(const ability_type ability)
     const string piety_info = ru_sacrifice_description(ability);
     const string desc = boilerplate + piety_info;
 
+    if (!you_worship(GOD_RU))
+        return desc;
+
     const string sac_vec_key = ru_sacrifice_vector(ability);
     if (sac_vec_key.empty())
         return desc;

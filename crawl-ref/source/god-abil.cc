@@ -5818,6 +5818,9 @@ static int _ru_get_sac_piety_gain(ability_type sac)
 
 string ru_sacrifice_description(ability_type sac)
 {
+    if (!you_worship(GOD_RU))
+        return "";
+
     const int piety_gain = _ru_get_sac_piety_gain(sac);
     return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
                         _describe_sacrifice_piety_gain(piety_gain),
