@@ -2780,17 +2780,6 @@ MAP
 .........
 ENDMAP
 
-# Not hard to obtain as is, but requires getting shafted.
-NAME:  minmay_item_behind_shaft
-TAGS:  extra
-DEPTH: D:2-, !D:$, Depths, !Depths:$
-KFEAT: S = shaft trap
-MAP
-xxxxx
-..S%x
-xxxxx
-ENDMAP
-
 NAME:  minmay_statues_item
 TAGS:  extra transparent
 DEPTH: D, Depths
