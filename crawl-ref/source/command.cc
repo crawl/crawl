@@ -1175,6 +1175,7 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
             char buf[200];
             string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
+            ASSERTM(fp, "Failed to open '%s'!", fname.c_str());
             while (fgets(buf, sizeof buf, fp))
             {
                 text += formatted_string(buf);
