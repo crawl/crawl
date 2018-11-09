@@ -454,6 +454,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
     m_context = SDL_GL_CreateContext(m_window);
+
+    // The following two lines are a part of the magical dance needed to get
+    // Mojave to work with the version of SDL2 we are using.
+    SDL_PumpEvents();
+    SDL_SetWindowSize(m_window, m_windowsz->x, m_windowsz->y);
+
     glDebug("SDL_GL_CreateContext");
     if (!m_context)
     {
