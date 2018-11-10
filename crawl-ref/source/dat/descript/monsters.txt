@@ -223,7 +223,8 @@ test its edge.
 Ijyb
 
 A small and twisted goblin, wearing some ugly blue rags. She claims dominion
-over this level of the dungeon; the punishment for trespassing is death.
+over this level of the dungeon; those who trespass will find themselves killed
+and tortured by her wands.
 %%%%
 Ilsuiw
 
@@ -304,9 +305,10 @@ slew the ancient dragon from whose hide her strange armour is crafted.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend — at
-least according to himself. He is skilled, nonetheless, and among all the
-thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
+A sly, conniving thief who always carries a wand. In his profession, Maurice is
+considered a legend — at least according to himself. He is skilled, nonetheless,
+and among all the thieves and rogues lured by the Orb, Maurice is undoubtedly
+the most crafty.
 %%%%
 Menkaure
 
