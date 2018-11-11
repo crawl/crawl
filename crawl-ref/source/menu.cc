@@ -344,6 +344,7 @@ void UIMenu::do_layout(int mw, int num_columns)
             row_height = max(row_height, item_height);
         }
     }
+    row_height += row_height == 0 ? 0 : 2*item_pad;
     height += row_height;
     row_heights.push_back(height);
     column_width += 2*item_pad;
