@@ -1087,6 +1087,8 @@ void set_mp(int new_amount);
 bool player_regenerates_hp();
 bool player_regenerates_mp();
 
+bool ancestor_full_hp();
+
 void print_potion_heal_message();
 
 void contaminate_player(int change, bool controlled = false, bool msg = true);

@@ -1030,10 +1030,11 @@ static bool _should_stop_activity(Delay* delay,
     if ((ai == AI_SEE_MONSTER || ai == AI_MIMIC) && player_stair_delay())
         return false;
 
-    if (ai == AI_FULL_HP || ai == AI_FULL_MP)
+    if (ai == AI_FULL_HP || ai == AI_FULL_MP || ai == AI_ANC_HP)
     {
         if (Options.rest_wait_both && curr->is_resting()
-            && !you.is_sufficiently_rested())
+            && !you.is_sufficiently_rested()
+            || !ancestor_full_hp())
         {
             return false;
         }
@@ -1323,6 +1324,11 @@ bool interrupt_activity(activity_interrupt_type ai,
         you.running.notified_mp_full = true;
         mpr("Magic restored.");
     }
+    else if (ai == AI_ANC_HP && !you.running.notified_anc_hp_full)
+    {
+        you.running.notified_anc_hp_full = true;
+        mpr("Ancestor HP restored.");
+    }
 
     if (_should_stop_activity(delay.get(), ai, at))
     {
@@ -1366,7 +1372,7 @@ bool interrupt_activity(activity_interrupt_type ai,
 // Must match the order of activity_interrupt_type in enum.h!
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "hungry", "message",
+    "force", "keypress", "full_hp", "full_mp", "anc_hp", "hungry", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
     "sense_monster", "mimic"
 };

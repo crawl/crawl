@@ -35,6 +35,7 @@
 #include "exercise.h"
 #include "food.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h"
@@ -4036,6 +4037,18 @@ bool player_regenerates_mp()
     // Pakellas blocks MP regeneration.
     if (have_passive(passive_t::no_mp_regen) || player_under_penance(GOD_PAKELLAS))
         return false;
+    return true;
+}
+
+bool ancestor_full_hp()
+{
+    if (you.religion == GOD_HEPLIAKLQANA) {
+        monster* anc = monster_by_mid(hepliaklqana_ancestor());
+        if (anc == nullptr)
+            return true;
+        if (anc->hit_points != anc->max_hit_points)
+            return false;
+    }
     return true;
 }
 

@@ -131,6 +131,9 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
+    if (mons->hit_points == mons->max_hit_points)
+        return;
+    
     if (crawl_state.disables[DIS_MON_REGEN])
         return;
 
@@ -152,6 +155,12 @@ static void _monster_regenerate(monster* mons)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(1);
+    }
+
+    if (mons->type == MONS_ANCESTOR)
+    {
+        if (mons->hit_points == mons->max_hit_points)
+            interrupt_activity(AI_ANC_HP);
     }
 }
 
