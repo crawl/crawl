@@ -131,6 +131,10 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
+    // Early bailout so that regen-based triggers don't get spammed
+    if (mons->hit_points == mons->max_hit_points)
+        return;
+
     if (crawl_state.disables[DIS_MON_REGEN])
         return;
 
@@ -152,6 +156,12 @@ static void _monster_regenerate(monster* mons)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(1);
+    }
+
+    if (mons_is_hepliaklqana_ancestor(mons->type))
+    {
+        if (mons->hit_points == mons->max_hit_points && you.can_see(*mons))
+            interrupt_activity(AI_ANCESTOR_HP);
     }
 }
 

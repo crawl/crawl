@@ -696,6 +696,7 @@ public:
     int hp;
     bool notified_mp_full;
     bool notified_hp_full;
+    bool notified_ancestor_hp_full;
     coord_def pos;
     int travel_speed;
     int direction;
