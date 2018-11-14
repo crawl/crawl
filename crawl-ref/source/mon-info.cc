@@ -887,12 +887,11 @@ string monster_info::_core_name() const
         case MONS_SPECTRAL_WEAPON:
             if (inv[MSLOT_WEAPON])
             {
-                iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-                bool     use_inscrip  = true;
                 const item_def& item = *inv[MSLOT_WEAPON];
-                s = type==MONS_SPECTRAL_WEAPON ? "spectral " : "";
-                s += (item.name(DESC_PLAIN, false, false, use_inscrip, false,
-                                ignore_flags));
+
+                s = type == MONS_SPECTRAL_WEAPON ? "spectral " : "";
+                s += item.name(DESC_PLAIN, false, false, true, false,
+                               ISFLAG_KNOW_CURSE);
             }
             break;
 
