@@ -760,6 +760,253 @@ cc---ccccc---cc
  ccccccccccccc
 ENDMAP
 
+NAME:   minmay_temple_entry_arrows
+TAGS:   transparent
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+        .
+       ...
+      ..c..
+     ...c...
+    ..c.c.c..
+   ....ccc....
+  ..c...c...c..
+ ....c.....c....
+..ccccc.O.ccccc..
+ ....c.....c....
+  ..c...c...c..
+   ....ccc....
+    ..c.c.c..
+     ...c...
+      ..c..
+       ...
+        .
+ENDMAP
+
+NAME:   minmay_temple_entry_sparse_star
+TAGS:   transparent
+SUBST:  ? : cGT.
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+      ...
+      .c.
+     .....
+     .c.c.
+    .......
+  ...c.?.c...
+...c.......c...
+.c...?.O.?...c.
+...c.......c...
+  ...c.?.c...
+    .......
+     .c.c.
+     .....
+      .c.
+      ...
+ENDMAP
+
+NAME:   minmay_temple_entry_slanted
+TAGS:   transparent
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+       ...
+       .c.
+      .....
+    ...c.c.
+  ...cnc.c..
+...ccc...cc.
+.c........n..
+...cc..O..cc...
+  ..n........c.
+   .cc...ccc...
+   ..c.cnc...
+    .c.c...
+    .....
+     .c.
+     ...
+ENDMAP
+
+NAME:   minmay_temple_entry_antechambers
+TAGS:   transparent
+SUBST:  c : ccccb
+SUBST:  ! : ..TG
+SUBST:  ? : TG
+: temple_entry(_G)
+MAP
+    ccccccc
+ccccc!...!ccccc
+c...c.....c...c
+..?....O....?..
+c...c.....c...c
+ccccc!...!ccccc
+    ccccccc
+ENDMAP
+
+NAME:   minmay_temple_entry_mini_moons
+TAGS:   transparent
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+  ........
+ ..c...cc..
+....c.c..c.
+.c..c....c.
+..cc....c..
+.....O.....
+..c....cc..
+.c....c..c.
+.c..c.c....
+..cc...c..
+ ........
+ENDMAP
+
+NAME:   minmay_temple_entry_wispy
+TAGS:   transparent
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+ ...
+ .c...... ....
+ ..cc..c...cc..
+  ..cc..cccccc.
+  ..ccc..cccc..
+   .ccc.......
+   ..c..O...c.
+    .......c..
+     ..cc.cc.
+     .ccccc.
+     ..ccc.
+      ....
+ENDMAP
+
+NAME:   minmay_temple_entry_drinking_statues
+TAGS:   transparent
+SUBST:  T = T:99 V:1
+: temple_entry(_G)
+MAP
+....
+.GT.
+......
+.GT.O.
+......
+.GT.
+....
+ENDMAP
+
+NAME:    minmay_temple_entry_offerings
+TAGS:    transparent
+SHUFFLE: def$
+ITEM:    any weapon, any book, ration
+: temple_entry(_G)
+MAP
+d.e
+.O.
+f.$
+ENDMAP
+
+NAME:   minmay_temple_entry_gardened_gates
+TAGS:   transparent
+KMONS:  p = plant
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+  p@p
+ cc.cc
+pc...cp
+@..O..@
+pc...cp
+ cc.cc
+  p@p
+ENDMAP
+
+NAME:   minmay_temple_entry_proselytizer
+TAGS:   transparent
+KMONS:  O = orc priest
+: temple_entry(_G)
+MAP
+O
+ENDMAP
+
+NAME:   minmay_temple_entry_stoned_glass
+TAGS:   transparent
+: temple_entry(_G)
+MAP
+.........
+.nc...cn.
+.cn...nc.
+.........
+....O....
+.........
+.cn...nc.
+.nc...cn.
+.........
+ENDMAP
+
+NAME:   minmay_temple_entry_tees
+TAGS:   transparent
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+     ...
+    ..c..
+   ...c...
+  ...ccc...
+ ...........
+...c.....c...
+.ccc..O..ccc.
+...c.....c...
+ ...........
+  ...ccc...
+   ...c...
+    ..c..
+     ...
+ENDMAP
+
+NAME:   minmay_temple_entry_ruins
+TAGS:   transparent
+: temple_entry(_G)
+MAP
+...............
+.c.c.c....cc.c.
+.c.c.c.cc....c.
+...........c...
+.c.cc.c.cc.c...
+.c....c........
+....c...c.c.cc.
+.cc.c.O.c.c....
+............c..
+...c.c.c....c..
+.c.c.c.c.cc....
+.c...........c.
+....c.cc.c.c.c.
+.cc.c....c.c...
+...............
+ENDMAP
+
+NAME:   minmay_temple_entry_waves
+TAGS:   transparent
+SUBST:  ? : ..TG
+SUBST:  c : ccccb
+: temple_entry(_G)
+MAP
+   .........
+  ..c..?..c..
+ ..cc.....cc..
+..cc..c.c..cc..
+.cc..cc.cc..cc.
+....cc...cc....
+..?....O....?..
+....cc...cc....
+.cc..cc.cc..cc.
+..cc..c.c..cc..
+ ..cc.....cc..
+  ..c..?..c..
+   .........
+ENDMAP
+
 ##############################################################################
 # <<M>> Temple maps
 ##############################################################################
