@@ -450,6 +450,25 @@ xx...xx
    @
 ENDMAP
 
+NAME:   minmay_worlds_worst_comb
+TAGS:   transparent
+DEPTH:  D:1-2
+MONS:   giant cockroach / nothing
+MAP
+   ....
+  ..xx.
+  .xx1..
+ ..1xxx.
+ .xxx1...
+...1xxxx.
+.xxxx1...
+...1xxx.
+ .xxx1..
+ ..1xx.
+  .xx..
+  ....
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -5904,6 +5923,489 @@ MAP
    ..xxx9....xxxx..
     ....xxxxxx....
        ........
+ENDMAP
+
+NAME:   minmay_indecisive_spiral
+TAGS:   transparent
+DEPTH:  D:1-2
+MAP
+...........
+.xxx.xxx.x.
+...xxx...x.
+.x.x.x.xxx.
+.x...0.%x..
+.xxx0x0xxx.
+..x%.0...x.
+.xxx.x.x.x.
+.x...xxx...
+.x.xxx.xxx.
+...........
+ENDMAP
+
+NAME:   minmay_increasing_density
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  0 = 0.
+MAP
+.........................
+x.......x.......x.......x
+.....x......x......x.....
+...x.....x.....x.....x...
+..x....x....x....x....x..
+x...x...x...x...x...x...x
+...x..x..x..x..x..x..x...
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x0xx0xx0xx0xxx0xx0xx0xx0x
+xx0xxx0xxx%xxx%xxx0xxx0xx
+xx0xxxx%xxxxxxxxx%xxxx0xx
+xxx%xxxxxxxxxxxxxxxxx%xxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  minmay_starry_boxes
+TAGS:  transparent
+DEPTH: D:3-,Depths
+SUBST: 0 = 0..
+SUBST: x : xxxxxxcvb
+MAP
+ ...............
+..xx...xxx...xx..
+.xxx.x.x%x.x.xxx.
+.xxx...x.x...xxx.
+....xxx.0.xxx....
+..x.x%x0x0x%x.x..
+....xx0x.x0xx....
+.xxx.0x.x.x0.xxx.
+.x%.0x.x.x.x0.%x.
+.xxx.0x.x.x0.xxx.
+....xx0x.x0xx....
+..x.x%x0x0x%x.x..
+....xxx.0.xxx....
+.xxx...x.x...xxx.
+.xxx.x.x%x.x.xxx.
+..xx...xxx...xx..
+ ...............
+ENDMAP
+
+NAME:   minmay_diced_spiral
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  0 = 0.
+MAP
+..................
+.xxxx.xxx.xx.x.xx.
+.xxxx.xxx.xx.x.xx.
+...............xx.
+.xx.xxx.xx.x.x.xx.
+.............x....
+.xx.x.xx0x0x.x.xx.
+.xx...0....x...xx.
+....x.x.%..0.x.xx.
+.xx.x.0..%.x.x....
+.xx...x....0...xx.
+.xx.x.x0x0xx.x.xx.
+....x.............
+.xx.x.x.xx.xxx.xx.
+.xx...............
+.xx.x.xx.xxx.xxxx.
+.xx.x.xx.xxx.xxxx.
+..................
+ENDMAP
+
+NAME:   minmay_quadrilaterals
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  x : x:40 cvbm
+SUBST:  0 = 0.
+MAP
+.....................
+..xxxx+xxxxxxx+xxxxx.
+.xxx.....xxx.....xxx.
+.xxxx.....xxx.....xx.
+.x.xxx..0..xxx..0..x.
+.x..xxx.....xxx....x.
+.+...xxx.....xxx...+.
+.x....xxxx+xxxxxx..x.
+.x..0..x0...0x.xxx.x.
+.xx....x..%..x..xxxx.
+.xxx...+.%'%.+...xxx.
+.xxxx..x..%..x....xx.
+.x.xxx.x0...0x..0..x.
+.x..xxxxxx+xxxx....x.
+.+...xxx.....xxx...+.
+.x....xxx.....xxx..x.
+.x..0..xxx..0..xxx.x.
+.xx.....xxx.....xxxx.
+.xxx.....xxx.....xxx.
+.xxxxx+xxxxxxx+xxxx..
+.....................
+ENDMAP
+
+NAME:   minmay_3d_cube
+TAGS:   transparent
+DEPTH:  D:1-2
+SUBST:  x : x:40 cvbm
+SUBST:  0 = 0.
+MAP
+.........
+.xxxxxxx..
+.xx..0..x..
+.x.x..0..x..
+.x..xxxxxxx.
+.x0.x0.0..x.
+.x.0x.%...x.
+.x..x0....x.
+..x.x...%.x.
+ ..xx.....x.
+  ..xxxxxx+.
+   .........
+ENDMAP
+
+NAME:   minmay_puff
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  0 = 0.
+MAP
+   xxxxx
+xxxx...xxx
+xx.......xx
+x...xmx...xx
+x..xx%xx...x
+xx0..0xx...xxxxx
+.xmxxmx...xx...xx
+.........xx.....xx
+@......xmx..xxx.0x
+....xmxx...xx%0.xx
+xxmx........mxxxx
+....xmxx...xx%0.xx
+@......xmx..xxx.0x
+.........xx.....xx
+.xmxxmx...xx...xx
+xx0..0xx...xxxxx
+x..xx%xx...x
+x...xmx...xx
+xx.......xx
+xxxx...xxx
+xxxxxxxx
+ENDMAP
+
+NAME:   minmay_fractal_squares_5
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  x : x:40 cvbm
+SUBST:  0 = 0.
+MAP
+        ...
+        .x.
+       .....
+     ...xxx...
+     .x.x%x.x.
+   .....x.x.....
+   .x...0.0...x.
+  .....xx0xx.....
+...xxx0x...x0xxx...
+.x.x%..0.%.0..%x.x.
+...xxx0x...x0xxx...
+  .....xx0xx.....
+   .x...0.0...x.
+   .....x.x.....
+     .x.x%x.x.
+     ...xxx...
+       .....
+        .x.
+        ...
+ENDMAP
+
+NAME:   minmay_fractal_squares_gapless_5
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  x : x:40 cvbm
+SUBST:  0 = 0.
+MAP
+      ...
+     ..x..
+    ..xxx..
+    .xx%xx.
+  ....x.x....
+ ..x.xx0xx.x..
+..xxxx0.0xxxx..
+.xx%.0.%.0.%xx.
+..xxxx0.0xxxx..
+ ..x.xx0xx.x..
+  ....+.x....
+    .xx%xx.
+    ..xxx..
+     ..x..
+      ...
+ENDMAP
+
+NAME:   minmay_fractal_squares_gapless_7
+TAGS:   transparent
+DEPTH:  D:9-,Depths
+SUBST:  m : nx
+SUBST:  x : cvb
+SUBST:  ' : xcvbnGT .:70
+SUBST:  9 = 09..
+MAP
+            ...
+           ..x..
+          ..xxx..
+          .xx%xx.
+        ....m.m....
+       ..x.xx9xx.x..
+      ..xxmx...xmxx..
+     ..xx%.9.'.9.%xx..
+    ..xxxxxx...xxxxxx..
+    .xx%xxxxx.xxxxx%xx.
+  ....m.xxxxx9xxxxx.m....
+ ..x.xx9xxx.....xxx9xx.x..
+..xxmx...xx.....xx...xmxx..
+.xx%.9.'..9..'..9..'.9.%xx.
+..xxmx...xx.....xx...xmxx..
+ ..x.xx9xxx.....xxx9xx.x..
+  ....m.xxxxx9xxxxx.m....
+    .xx%xxxxx.xxxxx%xx.
+    ..xxxxxx...xxxxxx..
+     ..xx%.9.'.9.%xx..
+      ..xxmx...xmxx..
+       ..x.xx9xx.x..
+        ....+.m....
+          .xx%xx.
+          ..xxx..
+           ..x..
+            ...
+ENDMAP
+
+NAME:   minmay_fractal_squares_diagonal_5
+TAGS:   transparent
+DEPTH:  D:3-, Depths
+SUBST:  0 = 0..
+MAP
+... ... ... ...
+.x...x. .x...x.
+..xxx.. ..xxx..
+ .x%x.   .x%x.
+..xx+00000+xx..
+.x..0xx+xx0..x.
+... 0x...x0 ...
+    0x...x0
+... 0x%%%x0 ...
+.x..0xxxxx0..x.
+..xx+00000+xx..
+ .x%x.   .x%x.
+..xxx.. ..xxx..
+.x...x. .x...x.
+... ... ... ...
+ENDMAP
+
+NAME:    minmay_mirror_moons_of_madness
+TAGS:    transparent
+DEPTH:   D:9-, Depths
+SHUFFLE: ccvvbb
+MAP
+     ........
+   ...cncncn...
+  ..ncncncncnc...
+ ..ncnc0..0ncncn.
+ .ncn0......0cnc.
+..cn...nbnb...cn..
+......nbnbnb..ncn.
+.....nb|..|nb.0nc.
+.....bn........cn.
+.....nb........nc.
+.....bn9..9bn.%cn.
+......bnbnbn..cnc.
+..nc...bnbn...nc..
+ .cnc%......%ncn.
+ ..cncn%..%cncn..
+  ..cncncncncn..
+   ...ncncnc...
+     ........
+ENDMAP
+
+NAME:   minmay_circle_x
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  z : y:50 %0GTz
+SUBST:  y : x:34 .:34 cvb G:2
+SUBST:  x : xcvb
+SUBST:  z = x
+SUBST:  0 = 0..
+MAP
+  .......
+ ..xxxxx..
+..y0xxx0y..
+.x0y0x0y0x.
+.xx0y%y0xx.
+.xxx%z%xxx.
+.xx0y%y0xx.
+.x0y0x0y0x.
+..y0xxx0y..
+ ..xxxxx..
+  .......
+ENDMAP
+
+NAME:   minmay_between
+TAGS:   transparent
+DEPTH:  D:2-
+SUBST:  0 = 0.
+MAP
+ .......
+..x...x..
+.xxx.xxx.
+.00xxx00.
+.xxx.xxx.
+..x..%x...
+ ...x%..x..
+  .xxx.xxx.
+  .00xxx00.
+  .xxxxxxx.
+  ..x...x..
+   .......
+ENDMAP
+
+# Each chamber contains a different feature in a different arrangement of 5.
+NAME:    minmay_chambers_of_fives
+TAGS:    transparent
+DEPTH:   D:5-10
+SHUFFLE: ABCDG / EFHI0 / JKLMT / NOPQ" / RSYZ%
+SHUFFLE: AFLPZ / BHMQR / CIJNS / DEKOY
+SUBST:   BCDHIEMJKQNORSY = .
+SUBST:   A = G, F = 00009, L = TTTTV, P = x, Z = %%%%*
+SUBST:   " = x
+SUBST:   x : xxxxxcccvb
+MAP
+      .........
+      .xxx.xxx.
+      .xI.H.Ix.
+      .x.FEF.x.
+      ..HE0EH..
+      .x.FEF.x.
+.......xI.H.Ix.......
+.xxx.xxxxx.xxxxx.xxx.
+.xD.C.DxZ.Y.ZxM.L.Mx.
+.x.BAB.x.SRS.x.KJK.x.
+..CAGAC.YR%RY.LJTJL..
+.x.BAB.x.SRS.x.KJK.x.
+.xD.C.DxZ.Y.ZxM.L.Mx.
+.xxx.xxxxx.xxxxx.xxx.
+.......xQ.P.Qx.......
+      .x.ONO.x.
+      ..PN"NP..
+      .x.ONO.x.
+      .xQ.P.Qx.
+      .xxx.xxx.
+      .........
+ENDMAP
+
+NAME:   minmay_shattered_shrine
+DEPTH:  D:7-, Depths, Lair
+TAGS:   transparent
+KMONS:  p = plant
+SUBST:  9 = 9., " = .:190 0:5 %:5, ' = .:30 0:5 %:5
+MAP
+.......................
+.ccccccc""c"cc"ccccccc.
+.cp9..pc"cc"c""cp9.9pc.
+.c9nnn.c"cc""c"c9n+n9c.
+.c.+*n.+""c"c""c.n*n.c.
+.c9nnn.c"c"""c"c.nnn.c.
+.cp9..pc"c""cc"cp...pc.
+.ccccccc"c"c"c"ccc+ccc.
+.""""""""ccccc"""""""".
+.cc"c""cc'cc''"ccc"cc".
+.c""c"c""''c''c""""""".
+.cccc""ccccc'c"cc"ccc".
+."c"cc"""c''c'c""""""".
+.c"ccc"cc'cc'c""cccc"c.
+.""""""""c""c""""cccc".
+.ccc+ccc"ccc""""""""c".
+.cp...pc"""cccc"cc""cc.
+.c.nnn.c""ccc"cc"c"c"c.
+.c.n*n.c"cccc"""c"cccc.
+.c9n+n9c""cc"c"""""""c.
+.cp9.9pc"c""""ccc""c"c.
+.ccccccc"cc"cc"""""""".
+.......................
+ENDMAP
+
+NAME:    minmay_pentangle
+TAGS:    transparent
+DEPTH:   D:3-6
+SHUFFLE: '! / Q" / Q" / Q"
+# Each chamber independently has either monsters or items
+SHUFFLE: 12345adefg
+SUBST:   12345 = 0..., adefg = %..., ! = ', ' : xcvb, ? : +., x : xxxxxcccvb
+SUBST:   " = .:80 xcvbGTV%, Q = .
+MAP
+...................
+.xxxxxxxx?xxxxxxxx.
+.xxxx111x.x222xxxx.
+.xx1111xx.xx2222xx.
+.xx1111xx.xx2222xx.
+.x1111+x...x+2222x.
+.xxxxxx..'..xxxxxx.
+.?.......'.......?.
+.xxx..''.'.''..xxx.
+.x4xx..''"''..xx3x.
+.x44xx..'.'..xx33x.
+.x444+.''.''.+333x.
+.x44xx.'...'.xx33x.
+.x4xx....x....xx3x.
+.x44x..xx+xx..x33x.
+.xx4x.xx555xx.x3xx.
+.xxxx?xxxxxxx?xxxx.
+...................
+ENDMAP
+
+NAME:    minmay_pentomino_pile
+TAGS:    transparent
+DEPTH:   D:2-4
+SUBST:   0 = 0%
+MAP
+   ............
+   ....xxx.....
+   .xx.x.x.xxx.
+....x.x.0.xx...
+..x.x.xx.x..x..
+..x.x.x.xxx0xx...
+..xx.0x.0x..xx...
+..x.xx.x..xx..xx.
+.x.0.x.xxx.xx0xx.
+.xx.xx0..x.x..x..
+..xx..xxx.0.xx...
+....x0.x.xxx...
+   .xx.x.x.....
+   ..xx..x...
+   ..........
+ENDMAP
+
+NAME:   minmay_alternating_orb
+TAGS:   transparent
+DEPTH:  D:6-, Depths
+WEIGHT: 5
+SUBST:  x : xxxxxcccvb
+MAP
+     ......
+  ....xxxx..
+ ..xxx%%%xx.
+ .xx%%xx%%x.
+ .x%%x0xx%x.
+..x%xx00x%x.
+.x0x%%xx0x..
+.x0xx%x00x.
+.x00xx00xx.
+.xx000xxx..
+..xxxx...
+ ......
+ENDMAP
+
+NAME:   minmay_microvault
+DEPTH:  D:6-, Depths
+MAP
+c9c
+c*c
+ccc
 ENDMAP
 
 ################################################################
