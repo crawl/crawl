@@ -651,6 +651,152 @@ MAP
 .......
 ENDMAP
 
+# Get your favourite rare base type early in the game! As long as you don't mind
+# enchanting and branding it yourself...
+NAME:    minmay_shop_damaged
+TAGS:    transparent extra
+# not interesting after Lair
+DEPTH:   D:4-10
+KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
+             damaged ego:none demon whip | \
+             damaged ego:none eveningstar | \
+             damaged ego:none quick blade | \
+             damaged ego:none demon blade | \
+             damaged ego:none double sword | \
+             damaged ego:none triple sword | \
+             damaged ego:none executioner's axe | \
+             damaged ego:none demon trident | \
+             damaged ego:none bardiche | \
+             damaged ego:none lajatang | \
+             damaged ego:none fustibalus | \
+             damaged ego:none triple crossbow | \
+             damaged ego:none longbow | \
+             damaged ego:none crystal plate armour | \
+             damaged ego:none centaur barding | \
+             damaged ego:none naga barding | \
+             damaged ego:none pearl dragon scales | \
+             damaged ego:none gold dragon scales
+MAP
+S
+ENDMAP
+
+NAME:    minmay_shop_chei
+TAGS:    transparent extra
+DEPTH:   D:7-
+WEIGHT:  5
+KFEAT:   _ = altar_cheibriados
+# Determine items and their enchantment for the shop.
+{{
+-- The enchantment bonus for ponderousness only gets applied to naturally
+-- generated items, so I have to duplicate it here in order to get the same
+-- distribution of enchantments as naturally generated plate of ponderousness.
+local plateEnchant = 3 + crawl.random2(3) + crawl.random2(8) +
+    (crawl.x_chance_in_y(21 + you.absdepth(), 300) and crawl.random2(3) or 0)
+if plateEnchant > 10 then plateEnchant = 10 end
+
+-- And that enchantment bonus is too good for CPA, so use a super complicated
+-- custom formula for the CPA's enchantment.
+local cpaEnchant = crawl.random2(6)
+
+-- Don't want to have the same items every time, but also don't want to pick
+-- the same unrandart twice. So build a custom list...
+local items = {"black knight's horse barding",
+               "hat of pondering",
+               "crystal plate armour ego:ponderousness plus:" .. cpaEnchant,
+               "plate armour ego:ponderousness plus:" .. plateEnchant}
+local itemCount = crawl.random2(2) + 1
+local chosen = {}
+local kstr =
+    "S = armour shop name:Cheibriados type:Comfort suffix:Zone use_all ; "
+local i = 0
+while i < itemCount do
+    local itm = items[crawl.random2(#items) + 1]
+    if not (chosen[itm] or you.unrands(itm)) then
+        i = i + 1
+        chosen[itm] = true
+        kstr = kstr .. itm
+        if i < itemCount then kstr = kstr .. " | " end
+    end
+end
+kfeat(kstr)
+}}
+MAP
+ ...
+.._..
+.G.G.
+..S..
+ ...
+ENDMAP
+
+NAME:   minmay_shop_enchanted_jewellery
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+TAGS:   transparent extra
+WEIGHT: 5
+KFEAT:  S = jewellery shop ; \
+            ring of strength | \
+            ring of dexterity | \
+            ring of intelligence | \
+            amulet of reflection | \
+            ring of evasion | \
+            ring of protection | \
+            ring of slaying w:3
+MAP
+S
+ENDMAP
+
+NAME:   minmay_shop_mayhem
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+TAGS:   transparent extra
+WEIGHT: 3
+# Only deals in items that damage multiple targets, only has spellbooks in which
+# ALL of the spells damage multiple targets.
+{{
+local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
+             "hand axe w:5 | " ..
+             "war axe | " ..
+             "broad axe w:5 | " ..
+             "battleaxe | " ..
+             "executioner's axe w:2 | " ..
+             "book of fire w:5 | " ..
+             "book of the tempests w:5 | " ..
+             "wand of iceblast"
+
+-- Unfortunately this can still result in the unrandart being picked twice or
+-- more in the shop (resulting in the shop having regular clubs/great maces).
+-- unrandart axes aren't included here since one of the above axes can already
+-- get turned into them.
+if not you.unrands("devastator") then
+      kstr = kstr .. "|devastator w:1"
+end
+if not you.unrands("firestarter") then
+      kstr = kstr .. "|firestarter w:1"
+end
+
+kfeat(kstr)
+}}
+MAP
+S
+ENDMAP
+
+NAME:   minmay_shop_mass
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+TAGS:   transparent extra
+WEIGHT: 3
+# Only deals in items that are probably really heavy.
+KFEAT:  S = general shop type:Mass suffix:Market ; \
+        large rock w:30 | \
+        giant club w:20 | \
+        giant spiked club | \
+        great mace | \
+        executioner's axe w:2 | \
+        triple sword w:2 | \
+        bardiche w:5 | \
+        plate armour w:20 | \
+        large shield | \
+        crystal plate armour w:1
+MAP
+S
+ENDMAP
 
 ###############################################################################
 # <<3>> Multi.
