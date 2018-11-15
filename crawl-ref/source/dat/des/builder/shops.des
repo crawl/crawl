@@ -228,7 +228,7 @@ G.G.G
 ENDMAP
 
 NAME: nicolae_shop_window_shopping
-TAGS: allow_dup extra shop
+TAGS: allow_dup extra shop transparent
 WEIGHT: 5
 KFEAT: O = any shop
 MAP
@@ -302,7 +302,7 @@ ENDMAP
 #####################################################
 # Custom venom shop
 NAME:    guppyfry_shop_venom
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen transparent
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
@@ -326,7 +326,7 @@ ENDMAP
 #####################################################
 # Custom earth shop
 NAME:    guppyfry_shop_earth
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
 KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
@@ -355,7 +355,7 @@ ENDMAP
 #####################################################
 # Custom blood shop
 NAME:    guppyfry_shop_blood
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen transparent
 DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
@@ -403,11 +403,12 @@ MAP
 ENDMAP
 
 #####################################################
-# Items related to the good gods thematically; healing, silver, holy wrath, etc.
+# Items related to the good gods thematically; healing, silver, holy wrath,
+# etc.
 NAME: nicolae_good_shop
 WEIGHT: 2
 DEPTH: D:6-, Depths
-TAGS: no_monster_gen no_trap_gen
+TAGS: no_monster_gen no_trap_gen transparent
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
@@ -417,6 +418,7 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 KPROP: 1 = no_tele_into
+KMASK: 1 = opaque
 MONS: angel
 MAP
 nnn
@@ -455,7 +457,7 @@ ENDMAP
 # Sells conjurations-heavy books, destructive wands, etc.
 NAME: nicolae_blasting_shop
 DEPTH: D:8-, Depths
-TAGS: no_trap_gen no_monster_gen no_item_gen
+TAGS: no_monster_gen no_item_gen transparent extra
 MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
@@ -484,7 +486,7 @@ ENDMAP
 # Contains only four items: an evocable item, a staff, a randbook, and a wand,
 # associated with one of each of the four elemental schools.
 NAME: nicolae_elemental_shop
-TAGS: no_monster_gen no_trap_gen no_item_gen no_pool_fixup
+TAGS: no_monster_gen no_item_gen no_pool_fixup transparent extra
 DEPTH: D:4-, Depths
 SHUFFLE: AB
 NSUBST: A = a / l / w / x
@@ -526,7 +528,7 @@ ENDMAP
 
 # Sells only randbooks. All unique first editions with goofy names.
 NAME: nicolae_rare_books
-TAGS: transparent
+TAGS: transparent extra
 DEPTH: Elf, Depths
 KFEAT: S = book shop type:One-of-a-Kind suffix:Books count:5 ; \
        any fixed theme book | any fixed level book
@@ -540,7 +542,7 @@ ENDMAP
 
 # Why not take a chance on an unidentified artefact?
 NAME: nicolae_antique_artefacts
-TAGS: transparent
+TAGS: transparent extra
 DEPTH: D:10-, Depths
 WEIGHT: 1
 SHUFFLE: -m
@@ -559,7 +561,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_shop_scaring_up_business
-TAGS: extra
+TAGS: transparent
 DEPTH: D:7-
 WEIGHT: 1
 KFEAT: O = food shop
@@ -573,7 +575,7 @@ ENDMAP
 # Get away from it all.
 NAME: nicolae_island_escapes
 DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
-TAGS: no_trap_gen no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
+TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
 WEIGHT: 5
 SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
@@ -597,7 +599,7 @@ ENDMAP
 
 # Eat the purple.
 NAME: nicolae_transmutations_shop
-TAGS: transparent no_item_gen no_monster_gen no_trap_gen
+TAGS: transparent no_item_gen no_monster_gen extra
 DEPTH: D:8-, Depths, Zot
 COLOUR: m = magenta
 TILE: m = dngn_transparent_wall_magenta
