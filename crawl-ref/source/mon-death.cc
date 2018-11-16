@@ -2933,25 +2933,20 @@ void monster_cleanup(monster* mons)
 
     const mid_t mid = mons->mid;
     env.mid_cache.erase(mid);
-    unsigned int monster_killed = mons->mindex();
-    mons->reset();
 
+    mons->remove_summons();
+
+    unsigned int monster_killed = mons->mindex();
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->foe == monster_killed)
             mi->foe = MHITNOT;
-
-        int sumtype = 0;
-        if (mi->summoner == mid
-            && (mi->is_summoned(nullptr, &sumtype)
-                || sumtype == MON_SUMM_CLONE))
-        {
-            mi->del_ench(ENCH_ABJ);
-        }
     }
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
+
+    mons->reset();
 }
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,

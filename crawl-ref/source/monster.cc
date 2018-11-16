@@ -6669,44 +6669,36 @@ void monster::note_spell_cast(spell_type spell)
     props[SEEN_SPELLS_KEY].get_vector().push_back(spell);
 }
 
-void monster::align_avatars(bool force_friendly)
-{
-    mon_attitude_type new_att = (force_friendly ? ATT_FRIENDLY
-                                   : attitude);
-
-    // Neutral monsters don't need avatars, and in same cases would attack their
-    // own avatars if they had them.
-    if (new_att == ATT_NEUTRAL || new_att == ATT_STRICT_NEUTRAL
-        || new_att == ATT_GOOD_NEUTRAL)
-    {
-        remove_avatars();
-        return;
-    }
-
-    monster* avatar = find_spectral_weapon(this);
-    if (avatar)
-    {
-        avatar->attitude = new_att;
-        reset_spectral_weapon(avatar);
-    }
-
-    avatar = find_battlesphere(this);
-    if (avatar)
-    {
-        avatar->attitude = new_att;
-        reset_battlesphere(avatar);
-    }
-}
-
-void monster::remove_avatars()
+/**
+ * Remove this monsters summon's. Any monsters summoned by this monster will be
+ * abjured and any spectral weapon or battlesphere avatars they have will be
+ * ended.
+ *
+ * @param check_attitude If true, only remove summons/avatars whose attitude
+ *                       differs from the the monster.
+ */
+void monster::remove_summons(bool check_attitude)
 {
     monster* avatar = find_spectral_weapon(this);
-    if (avatar)
+    if (avatar && (!check_attitude || attitude != avatar->attitude))
         end_spectral_weapon(avatar, false, false);
 
     avatar = find_battlesphere(this);
-    if (avatar)
+    if (avatar && (!check_attitude || attitude != avatar->attitude))
         end_battlesphere(avatar, false);
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        int sumtype = 0;
+
+        if ((!check_attitude || attitude != mi->attitude)
+            && mi->summoner == mid
+            && (mi->is_summoned(nullptr, &sumtype)
+                || sumtype == MON_SUMM_CLONE))
+        {
+            mi->del_ench(ENCH_ABJ);
+        }
+    }
 }
 
 /**
