@@ -29,15 +29,15 @@
 
      If the version of zlib you use does not match that used when the
      distribution was built you will get warnings from pngtest that the zlib
-     versions do not match.  The zlib version used in this build is recorded
+     versions do not match. The zlib version used in this build is recorded
      below:
      -->
     <ZLibSrcDir>..\zlib</ZLibSrcDir>
 
     <!-- The following line allows compilation for an ARM target with Visual
-         Studio 2012.  Notice that this is not supported by the Visual Studio
+         Studio 2012. Notice that this is not supported by the Visual Studio
          2012 IDE and that the programs that result cannot be run unless they
-         signed by Microsoft.  This is therefore untested; only Microsoft can
+         signed by Microsoft. This is therefore untested; only Microsoft can
          test it:
      -->
     <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>

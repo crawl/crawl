@@ -12,9 +12,9 @@ struct vector
         : x(_x), y(_y) {}
 
     const vector& operator+=(const vector &v);
-	
-	//TODO Figure out MSVC compatability with
-	//PURE definitions in this and hash.h
+
+    // TODO Figure out MSVC compatability with
+    // PURE definitions in this and hash.h
 
 #ifdef TARGET_COMPILER_VC
     vector operator+(const vector &v) const;

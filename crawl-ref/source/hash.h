@@ -15,8 +15,8 @@ static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
     return x;
 }
 
-	//TODO Figure out MSVC compatability with
-	//PURE definitions in this and geom2d.h
+// TODO Figure out MSVC compatability with
+// PURE definitions in this and geom2d.h
 
 #ifdef TARGET_COMPILER_VC
 uint32_t hash32(const void *data, int len);

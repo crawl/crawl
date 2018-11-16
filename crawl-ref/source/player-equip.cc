@@ -1294,7 +1294,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("After a brief, strange feeling in your gut, "
                 "your appetite remains unchanged.");
         }
-        else 
+        else
         {
             mpr("You feel a craving for the dungeon's cuisine.");
             // What's this supposed to achieve? (jpeg)
