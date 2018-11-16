@@ -573,7 +573,7 @@ bool mon_can_be_slimified(const monster* mons)
            && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 
-void slimify_monster(monster* mon, bool hostile)
+void slimify_monster(monster* mon)
 {
     monster_type target = MONS_JELLY;
 
@@ -611,10 +611,7 @@ void slimify_monster(monster* mon, bool hostile)
 
     monster_polymorph(mon, target);
 
-    if (!hostile)
-        mon->attitude = ATT_STRICT_NEUTRAL;
-    else
-        mon->attitude = ATT_HOSTILE;
+    mon->attitude = ATT_STRICT_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 
