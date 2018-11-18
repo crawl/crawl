@@ -639,7 +639,7 @@ robe of Vines
 
 A robe woven of living vines. The vines form a symbiotic relationship with
 their wearer, greatly increasing their regeneration, but preventing them from
-being healed by potions and wands.
+being healed by potions.
 %%%%
 Kryia's mail coat
 
