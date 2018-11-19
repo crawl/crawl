@@ -134,7 +134,7 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
     if (m) {
         // Don't exclude past glass for stationary monsters.
         if (m->is_stationary())
-            los = los_def(p, opc_solid_see, circle_def(r, C_SQUARE));
+            los = los_def(p, opc_fully_no_trans, circle_def(r, C_SQUARE));
         else
             los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
     }
