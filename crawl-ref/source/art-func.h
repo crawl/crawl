@@ -214,6 +214,28 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 
 ////////////////////////////////////////////////////
 
+static void _FINISHER_melee_effects(item_def* weapon, actor* attacker,
+                                  actor* defender, bool mondied, int dam)
+{
+    // Can't kill a monster that's already dead.
+    // Can't kill a monster if we don't do damage.
+    // Don't insta-kill the player
+    if (mondied || dam == 0 || defender->is_player())
+        return;
+
+    // Chance to insta-kill based on HD. From 1/4 for small HD popcorn down to
+    // 1/10 for an Orb of Fire (compare to the 3/20 chance for banish or
+    // instant teleport on distortion).
+    if (x_chance_in_y(50 - defender->get_hit_dice(), 200))
+    {
+        monster* mons = defender->as_monster();
+        mons->flags |= MF_EXPLODE_KILL;
+        mons->hurt(attacker, INSTANT_DEATH);
+    }
+}
+
+////////////////////////////////////////////////////
+
 // XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 

@@ -391,12 +391,13 @@ MAGIC:    1
 
 NAME:    scythe "Finisher"
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+INSCRIP: speed, eviscerate
 PLUS:    +5
 COLOUR:  ETC_DARK
 TILE:    urand_finisher
 TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
-STR:     3
+BOOL:    skip_ego
 
 NAME:    sling "Punk"
 OBJ:     OBJ_WEAPONS/WPN_FUSTIBALUS
