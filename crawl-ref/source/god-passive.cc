@@ -1274,7 +1274,7 @@ bool does_ru_wanna_redirect(monster* mon)
 {
     return have_passive(passive_t::aura_of_power)
             && !mon->friendly()
-            && you.see_cell(mon->pos())
+            && you.see_cell_no_trans(mon->pos())
             && !mons_is_firewood(*mon)
             && !mon->submerged()
             && !mons_is_projectile(mon->type);
