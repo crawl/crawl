@@ -5713,7 +5713,8 @@ void player::ablate_deflection()
  * Used as the base for adjusted armour penalty calculations, as well as for
  * stealth penalty calculations.
  *
- * @return  The player's body armour's PARM_EVASION, if any.
+ * @return  The player's body armour's PARM_EVASION, if any, taking into account
+ *          the sturdy frame mutation that reduces encumbrance.
  */
 int player::unadjusted_body_armour_penalty() const
 {
@@ -5721,7 +5722,9 @@ int player::unadjusted_body_armour_penalty() const
     if (!body_armour)
         return 0;
 
-    return -property(*body_armour, PARM_EVASION) / 10;
+    // PARM_EVASION is always less than or equal to 0
+    return max(0, -property(*body_armour, PARM_EVASION) / 10
+                  - get_mutation_level(MUT_STURDY_FRAME) * 2);
 }
 
 /**
@@ -5733,9 +5736,7 @@ int player::unadjusted_body_armour_penalty() const
  */
 int player::adjusted_body_armour_penalty(int scale) const
 {
-    const int base_ev_penalty =
-        max(0, unadjusted_body_armour_penalty()
-                   - get_mutation_level(MUT_STURDY_FRAME) * 2);
+    const int base_ev_penalty = unadjusted_body_armour_penalty();
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
