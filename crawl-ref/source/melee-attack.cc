@@ -2976,6 +2976,9 @@ void melee_attack::mons_apply_attack_flavour()
             }
             else
             {
+                // Halving the MR of magic immune targets has no effect
+                if (defender->as_monster()->res_magic() == MAG_IMMUNE)
+                    break;
                 if (!defender->as_monster()->has_ench(ENCH_LOWERED_MR))
                     visible_effect = true;
                 mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, attacker,
