@@ -2556,11 +2556,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ELYVILON_HEAL_OTHER:
     {
-        int pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        pow = min(50, pow);
-        int max_pow = 10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0);
-        max_pow = min(50, max_pow);
-        return cast_healing(pow, max_pow, fail);
+        int pow = 30 + you.skill(SK_INVOCATIONS, 1);
+        return cast_healing(pow, fail);
     }
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:

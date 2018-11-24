@@ -6,7 +6,7 @@
 #include "spl-cast.h"
 #include "torment-source-type.h"
 
-spret_type cast_healing(int pow, int max_pow, bool fail);
+spret_type cast_healing(int pow, bool fail);
 bool heal_monster(monster& patient, int amount);
 
 /// List of monster enchantments which can be dispelled.
