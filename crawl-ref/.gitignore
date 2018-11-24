@@ -148,12 +148,17 @@ makefile.dep
 # Visual C++ cruft
 *.suo
 *.ncb
-*.vcproj.*.user
+*.vcproj.user
+*.vcxproj.user
 
 # Visual C++ outputs
 /source/*.exe
 /source/*.[pi]db
 /source/*.dll
+/source/*.exp
+/source/*.lib
+/source/MSVC/.vs/*
+/source/contrib/.vs/*
 
 # Packaging
 /source/util/release_ver
