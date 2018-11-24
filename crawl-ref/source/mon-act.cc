@@ -157,10 +157,10 @@ static void _monster_regenerate(monster* mons)
         mons->heal(1);
     }
 
-    if (mons->type == MONS_ANCESTOR)
+    if (mons_is_hepliaklqana_ancestor(mons->type) && Options.rest_wait_ancestor)
     {
         if (mons->hit_points == mons->max_hit_points)
-            interrupt_activity(AI_ANC_HP);
+            interrupt_activity(AI_ANCESTOR_HP);
     }
 }
 

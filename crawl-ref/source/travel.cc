@@ -4136,7 +4136,7 @@ void runrest::initialise(int dir, int mode)
     direction = dir;
     notified_hp_full = false;
     notified_mp_full = false;
-    notified_anc_hp_full = false;
+    notified_ancestor_hp_full = false;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4356,7 +4356,7 @@ void runrest::clear()
     mp = hp = travel_speed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
-    notified_anc_hp_full = false;
+    notified_ancestor_hp_full = false;
 }
 
 /////////////////////////////////////////////////////////////////////////////

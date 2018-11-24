@@ -452,6 +452,10 @@ public:
 
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
+
+    bool        rest_wait_ancestor;// Stop resting only if the ancestor's HP
+                                   // is fully restored.
+
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
 

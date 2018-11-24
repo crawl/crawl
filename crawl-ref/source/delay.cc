@@ -30,6 +30,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-prayer.h"
@@ -1030,11 +1031,12 @@ static bool _should_stop_activity(Delay* delay,
     if ((ai == AI_SEE_MONSTER || ai == AI_MIMIC) && player_stair_delay())
         return false;
 
-    if (ai == AI_FULL_HP || ai == AI_FULL_MP || ai == AI_ANC_HP)
+    if (ai == AI_FULL_HP || ai == AI_FULL_MP || ai == AI_ANCESTOR_HP)
     {
         if (Options.rest_wait_both && curr->is_resting()
             && !you.is_sufficiently_rested()
-            || !ancestor_full_hp())
+            || (Options.rest_wait_ancestor && !ancestor_full_hp())
+            )
         {
             return false;
         }
@@ -1324,9 +1326,10 @@ bool interrupt_activity(activity_interrupt_type ai,
         you.running.notified_mp_full = true;
         mpr("Magic restored.");
     }
-    else if (ai == AI_ANC_HP && !you.running.notified_anc_hp_full)
+    else if (ai == AI_ANCESTOR_HP 
+             && !you.running.notified_ancestor_hp_full)
     {
-        you.running.notified_anc_hp_full = true;
+        you.running.notified_ancestor_hp_full = true;
         mpr("Ancestor HP restored.");
     }
 
@@ -1369,10 +1372,10 @@ bool interrupt_activity(activity_interrupt_type ai,
     return false;
 }
 
-// Must match the order of activity_interrupt_type in enum.h!
+// Must match the order of activity_interrupt_type.h!
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "anc_hp", "hungry", "message",
+    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "hungry", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
     "sense_monster", "mimic"
 };

@@ -252,6 +252,18 @@ monster* hepliaklqana_ancestor_mon()
     return nullptr;
 }
 
+bool ancestor_full_hp()
+{
+    if (you.religion == GOD_HEPLIAKLQANA) {
+        monster* ancestor = monster_by_mid(hepliaklqana_ancestor());
+        if (ancestor == nullptr)
+            return true;
+        if (ancestor->hit_points != ancestor->max_hit_points)
+            return false;
+    }
+    return true;
+}
+
 #if TAG_MAJOR_VERSION == 34
 // A temporary routine to clean up some references to invalid companions and
 // prevent crashes on load. Should be unnecessary once the cloning bugs that
