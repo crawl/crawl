@@ -5088,6 +5088,10 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
             continue;
         }
 
+        // No potion heal doesn't affect mummies since they can't quaff potions
+        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
+            continue;
+
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
         // an explicit list, by giving each one a chance to be chosen equal to
