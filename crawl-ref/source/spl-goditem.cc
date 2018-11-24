@@ -126,8 +126,8 @@ static int _pacification_heal_div(mon_holy_type holiness)
 }
 
 /**
- * What's the highest MHP version of the given monster that the player can
- * potentially pacify, with the given 'healing' roll?
+ * Can the player potentially pacify the monster,
+ * with the given 'healing' roll?
  *
  * @param mon       The monster in question.
  * @param healing   The player's 'healing' roll.
@@ -174,19 +174,19 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
 
     fail_check();
 
-    const int mon_hp = mon.max_hit_points;
+    const int mon_hp = mons_avg_hp(mon.type);
 
     if (_pacifiable_hp(mon, max_healed) < mon_hp)
     {
-        // monster mhp too high to ever be pacified with your invo skill.
-        dprf("mon hp %d", mon_hp);
+        // monster avg hp too high to ever be pacified with your invo skill.
+        dprf("mon avg hp %d", mon_hp);
         mprf("%s is completely unfazed by your meager offer of peace.",
              mon.name(DESC_THE).c_str());
         return SPRET_SUCCESS;
     }
 
     const int pacified_hp = random2(_pacifiable_hp(mon, healed));
-    dprf("pacified hp: %d, mon hp %d", pacified_hp, mon_hp);
+    dprf("pacified hp: %d, mon avg hp %d", pacified_hp, mon_hp);
     if (pacified_hp * 23 / 20 < mon_hp)
     {
         // not even close.
