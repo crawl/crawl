@@ -2420,7 +2420,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         case 1: zapping(ZAP_PAIN, power, beam); break;
         case 2: zapping(ZAP_STONE_ARROW, power, beam); break;
         case 3: zapping(ZAP_SHOCK, power, beam); break;
-        case 4: zapping(ZAP_BREATHE_ACID, power / 2, beam); break;
+        case 4: zapping(ZAP_BREATHE_ACID, power / 7, beam); break;
         }
         break;
     }
