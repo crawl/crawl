@@ -688,7 +688,7 @@ dgn.loot_scrolls = [[
     w:5   scroll of enchant weapon /
     w:5   scroll of enchant armour /
     w:3   scroll of brand weapon /
-    w:2   scroll of acquirement /
+    w:2   scroll of acquirement
     ]]
 dgn.loot_potions = [[ /
     w:15  potion of haste /
@@ -701,7 +701,7 @@ dgn.loot_potions = [[ /
     w:8  potion of cancellation /
     w:5   potion of brilliance /
     w:5   potion of resistance /
-    w:2   potion of experience /
+    w:2   potion of experience
     ]]
 
 -- Returns true if point1 is inside radius(X, point2).
