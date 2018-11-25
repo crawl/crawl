@@ -434,6 +434,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#login_form").hide();
         $("#reg_link").hide();
         $("#forgot_link").hide();
+        $('#chem_link').show();
         $("#logout_link").show();
 
         chat.reset_visibility(true);
@@ -659,6 +660,39 @@ function (exports, $, key_conversion, chat, comm) {
     function register_failed(data)
     {
         $("#register_message").html(data.reason);
+    }
+
+    function start_change_email()
+    {
+        $("#chem_message").html("");
+        show_dialog("#change_email");
+        $("#chem_email").focus();
+    }
+
+    function cancel_change_email()
+    {
+        hide_dialog();
+    }
+
+    function change_email()
+    {
+        var email = $("#chem_email").val();
+
+        send_message("change_email", {
+            email: email
+        });
+
+        return false;
+    }
+
+    function change_email_failed(data)
+    {
+        $("#chem_message").html(data.reason);
+    }
+
+    function change_email_done()
+    {
+        show_dialog("#change_email_2");
     }
 
     function start_forgot_password()
@@ -1239,6 +1273,8 @@ function (exports, $, key_conversion, chat, comm) {
         "login_fail": login_failed,
         "login_cookie": set_login_cookie,
         "register_fail": register_failed,
+        "change_email_fail": change_email_failed,
+        "change_email_done": change_email_done,
         "forgot_password_fail": forgot_password_failed,
         "forgot_password_done": forgot_password_done,
         "reset_password_fail": reset_password_failed,
@@ -1279,6 +1315,12 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_link").bind("click", start_register);
         $("#register_form").bind("submit", register);
         $("#reg_cancel").bind("click", cancel_register);
+
+        $("#chem_link").bind("click", start_change_email);
+        $("#chem_form").bind("submit", change_email);
+        $("#chem_cancel").bind("click", cancel_change_email);
+
+        $("#change_email_2 input").bind("click", hide_dialog);
 
         $("#forgot_link").bind("click", start_forgot_password);
         $("#forgot_form").bind("submit", forgot_password);

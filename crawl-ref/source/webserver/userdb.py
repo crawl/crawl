@@ -188,6 +188,23 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
+def change_email(username, email): # Returns an error message or None
+    result = validate_email_address(email)
+    if result: return result
+    
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute("update dglusers set email=? where username=?",
+                  (email, username))
+
+        conn.commit()
+
+        return None
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
 def find_recovery_token(token): # Returns tuple (userid, username, error)
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()

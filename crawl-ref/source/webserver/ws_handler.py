@@ -149,6 +149,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
+            "change_email": self.change_email,
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
@@ -542,6 +543,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
+    def change_email(self, email):
+        if self.username is None:
+            self.send_message("change_email_fail", reason = "You need to log in to change your email")
+            return
+        error = userdb.change_email(self.username, email)
+        if error is None:
+            self.logger.info("User %s changed email to %s.", self.username, email)
+            self.send_message("change_email_done")
+        else:
+            self.logger.info("Failed to change username for %s: %s", self.username, error)
+            self.send_message("change_email_fail", reason = error)
 
     def forgot_password(self, email):
         if not getattr(config, "allow_password_reset", False):
