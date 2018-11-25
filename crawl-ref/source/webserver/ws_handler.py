@@ -111,6 +111,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
+        self.user_id = None
+        self.user_email = None
         self.timeout = None
         self.watched_game = None
         self.process = None
@@ -149,6 +151,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
+            "start_change_email": self.start_change_email,
+            "change_email": self.change_email,
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
@@ -369,6 +373,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def do_login(self, username):
         self.username = username
+        self.user_id, self.user_email = userdb.get_user_info(username)
         self.logger.extra["username"] = username
         if not self.init_user():
             msg = ("Could not initialize your rc and morgue!<br>" +
@@ -542,6 +547,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
+    def start_change_email(self):
+        self.send_message("start_change_email", email = self.user_email)
+
+    def change_email(self, email):
+        if self.username is None:
+            self.send_message("change_email_fail", reason = "You need to log in to change your email")
+            return
+        error = userdb.change_email(self.user_id, email)
+        if error is None:
+            self.user_id, self.user_email = userdb.get_user_info(self.username)
+            self.logger.info("User %s changed email to %s.", self.username, email if email else "null")
+            self.send_message("change_email_done", email = email)
+        else:
+            self.logger.info("Failed to change username for %s: %s", self.username, error)
+            self.send_message("change_email_fail", reason = error)
 
     def forgot_password(self, email):
         if not getattr(config, "allow_password_reset", False):

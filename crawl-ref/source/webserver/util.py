@@ -131,8 +131,9 @@ def send_email(to_address, subject, body_plaintext, body_html):
         if email_server: email_server.quit()
 
 def validate_email_address(address): # Returns an error string describing the problem, or None
-    if not address: return "Email address can't be empty"
+    if not address: return None
     if " " in address: return "Email address can't contain a space"
     if "@" not in address: return "Expected email address to contain the @ symbol"
     if not re.match(r"[^@]+@[^@]+\.[^@]+", address): return "Invalid email address"
+    if len(address) >= 80: return "Email address can't be more than 80 characters"
     return None
