@@ -1,3 +1,53 @@
+Stone Soup 0.23 (up to 0.23-a0-459-ge787970)
+--------------------------------------------
+
+Character
+---------
+* Wanderers' starting spell libraries aare announced with their equipment.
+* Wanderers that start with exactly one level 1 spell start with it memorized.
+
+Branches, Environment
+---------------------
+* Layouts:
+  - Concentric octagons is enabled for Lair and Snake
+  - Cave pools (with adjusted parameters) is enabled for the Dungeon
+
+Interface
+---------
+* The Hepliakqana ancestor reaching full health interrupts resting. The exact
+  behavior of this interrupt can be configured by rest_wait_ancestor
+
+Items
+-----
+* Stash search can now search by handedness.
+* Butchering a corpse always leaves a skeleton.
+* Wand charges have been reduced. Dig wands in particular now have a rarity
+  like to scattershot's.
+* Unrandarts:
+  - The Singing Sword is now vorpal, its sonic damage effect is now
+    stronger and triggers on-hit instead of while wielded.
+  - The Spriggan's Knife loses Dex+4 and MR+ and converts all stabs to
+    sleep-tier stabs.
+  - The robe of Misfortune is now identified, and is +5 {*Contam *Corrode
+    *Drain Harm *Slow and EV+5}.
+  - The sceptre of Torment is now +7 eveningstar {pain} that does not torment
+    its wielder.
+  - The arc blade's static discharge effect has been re-worked, and is now +8.
+  - Finisher loses Str+3 and gains a chance to instant-explode the target.
+
+Monsters
+--------
+* Grasping Roots no longer inflicts the Roots status. Instead it provides the
+  monster with smite-targeted constriction.
+* Jorgrun gains the Grasping Roots spell and can now spawn in Swamp.
+* Orb run spawns are more frequently near the player and more dangerous.
+* Pandemonium lords' spell sets and attack brands are revealed.
+
+Spells
+------
+* Confusing touch works with a weapon wielded
+
+
 Stone Soup 0.22 (20180810)
 --------------------------
 
