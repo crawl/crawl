@@ -662,8 +662,14 @@ function (exports, $, key_conversion, chat, comm) {
         $("#register_message").html(data.reason);
     }
 
-    function start_change_email()
+    function ask_change_email()
     {
+        send_message("start_change_email");
+    }
+
+    function start_change_email(data)
+    {
+        $("#chem_current").html(data.email);
         $("#chem_message").html("");
         show_dialog("#change_email");
         $("#chem_email").focus();
@@ -690,8 +696,17 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chem_message").html(data.reason);
     }
 
-    function change_email_done()
+    function change_email_done(data)
     {
+        if( data.email == "" )
+        {
+            $("#chem_confirmation_message").html("Your account is no longer associated with an email address.");
+        }
+        else
+        {
+            $("#chem_confirmation_message").html("Your email address has been set to " + data.email + ".");
+        }
+        
         show_dialog("#change_email_2");
     }
 
@@ -1273,6 +1288,7 @@ function (exports, $, key_conversion, chat, comm) {
         "login_fail": login_failed,
         "login_cookie": set_login_cookie,
         "register_fail": register_failed,
+        "start_change_email": start_change_email,
         "change_email_fail": change_email_failed,
         "change_email_done": change_email_done,
         "forgot_password_fail": forgot_password_failed,
@@ -1316,7 +1332,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#register_form").bind("submit", register);
         $("#reg_cancel").bind("click", cancel_register);
 
-        $("#chem_link").bind("click", start_change_email);
+        $("#chem_link").bind("click", ask_change_email);
         $("#chem_form").bind("submit", change_email);
         $("#chem_cancel").bind("click", cancel_change_email);
 

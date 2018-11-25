@@ -81,6 +81,21 @@ def set_mutelist(username, mutelist):
         if conn:
             conn.close()
 
+def get_user_info(username): # Returns user data in a tuple (userid, email)
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute("select id,email from dglusers where username=? collate nocase",
+                  (username,))
+        result = c.fetchone()
+
+        if result is None:
+            return None
+        else:
+            return result[0], result[1]
+    finally:
+        if c: c.close()
+        if conn: conn.close()
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
@@ -188,15 +203,15 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
-def change_email(username, email): # Returns an error message or None
+def change_email(user_id, email): # Returns an error message or None
     result = validate_email_address(email)
     if result: return result
     
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        c.execute("update dglusers set email=? where username=?",
-                  (email, username))
+        c.execute("update dglusers set email=? where id=?",
+                  (email, user_id))
 
         conn.commit()
 
@@ -257,6 +272,7 @@ def update_user_password_from_token(token, passwd): # Returns a tuple where item
     return username, token_error
 
 def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
+    if not email: return False, "Email address can't be empty"
     email_error = validate_email_address(email)
     if email_error: return False, email_error
 
