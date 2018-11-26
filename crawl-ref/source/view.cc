@@ -502,6 +502,13 @@ void update_monsters_in_view()
         }
     }
 
+    // Summoners may have lost their summons upon seeing us and converting
+    // leaving invalid monsters in this vector.
+    monsters.erase(
+        std::remove_if(monsters.begin(), monsters.end(),
+            [](const monster * m) { return !m->alive(); }),
+        monsters.end());
+
     if (!msgs.empty())
     {
         _handle_comes_into_view(msgs, monsters);
