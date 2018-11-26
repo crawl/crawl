@@ -1,47 +1,66 @@
-Stone Soup 0.23 (up to 0.23-a0-459-ge787970)
---------------------------------------------
-
-Character
----------
-* Wanderers' starting spell libraries aare announced with their equipment.
-* Wanderers that start with exactly one level 1 spell start with it memorized.
+Stone Soup 0.23 (up to 0.23-a0-462-g7c42f869)
+---------------------------------------------
 
 Branches, Environment
 ---------------------
+* New early vaults featuring thematic item shops and monsters guarding
+  manuals.
 * Layouts:
-  - Concentric octagons is enabled for Lair and Snake
-  - Cave pools (with adjusted parameters) is enabled for the Dungeon
+  - Concentric octagons is enabled for Lair and Snake.
+  - Cave pools (with adjusted parameters) is enabled for the Dungeon.
+
+Character
+---------
+* Wanderer starting spell libraries are announced along with equipment.
+* Wanderers that start with exactly one level 1 spell start with it memorized.
+* The player can no longer be put to sleep when paralyzed or petrified.
+
+Gods
+----
+* Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
+  sight instead of on the turn after the monster enters LOS.
+* The acid damage from Makhleb's Minor Destruction has been reduced.
 
 Interface
 ---------
 * The Hepliakqana ancestor reaching full health interrupts resting. The exact
-  behavior of this interrupt can be configured by rest_wait_ancestor
+  behavior of this interrupt can be configured by rest_wait_ancestor.
+* WebTiles users can use a "Forgot Password" link to reset their password
+  via a link sent to their registration email address. This feature is not yet
+  enabled on most official servers.
 
 Items
 -----
 * Stash search can now search by handedness.
 * Butchering a corpse always leaves a skeleton.
-* Wand charges have been reduced. Dig wands in particular now have a rarity
-  like to scattershot's.
+* Wand charges for wands of digging, enslavement, flame, paralysis, polymorph,
+  and random effects have been reduced.
 * Unrandarts:
-  - The Singing Sword is now vorpal, its sonic damage effect is now
-    stronger and triggers on-hit instead of while wielded.
+  - The Singing Sword is now vorpal, and its sonic damage effect is stronger
+    and triggers on-hit instead of while wielded.
   - The Spriggan's Knife loses Dex+4 and MR+ and converts all stabs to
     sleep-tier stabs.
   - The robe of Misfortune is now identified, and is +5 {*Contam *Corrode
     *Drain Harm *Slow and EV+5}.
-  - The sceptre of Torment is now +7 eveningstar {pain} that does not torment
-    its wielder.
-  - The arc blade's static discharge effect has been re-worked, and is now +8.
+  - The sceptre of Torment is now a +7 eveningstar of pain, and its torment
+    does not affect the wielder.
+  - The arc blade's effect now casts static discharge only once, but at very
+    high spellpower. The weapon's enchantment is now +8.
   - Finisher loses Str+3 and gains a chance to instant-explode the target.
+  - Unrandarts with melee effects that could anger nearby allies give a proper
+    warning.
 
 Monsters
 --------
-* Grasping Roots no longer inflicts the Roots status. Instead it provides the
-  monster with smite-targeted constriction.
+* Monster weapons, armour, and wands are identified and revealed to the player
+  when the monster is first seen.
+* The shambling mangrove Grasping Roots ability now performs smite-targeted
+  constriction instead of applying a 'Roots' status.
 * Jorgrun gains the Grasping Roots spell and can now spawn in Swamp.
 * Orb run spawns are more frequently near the player and more dangerous.
 * Pandemonium lords' spell sets and attack brands are revealed.
+* Monster summons disappear whenever the summoner changes alignment from being
+  charmed/uncharmed, pacified, or slimified.
 
 Spells
 ------
