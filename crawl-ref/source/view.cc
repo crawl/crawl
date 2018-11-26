@@ -103,8 +103,6 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
     if (!mons_is_safe(mons))
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
 
-    seen_monster(mons);
-
     return false;
 }
 

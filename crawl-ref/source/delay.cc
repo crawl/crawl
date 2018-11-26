@@ -1128,9 +1128,6 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        view_monster_equipment(mon);
-        do_conversions(mon);
-
         string text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
             text = mon->full_name(DESC_A);
