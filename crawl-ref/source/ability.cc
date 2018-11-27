@@ -356,6 +356,9 @@ static const ability_def Ability_List[] =
       2, 0, 250, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_RATSKIN, "Evoke Ratskin",
       3, 0, 200, 0, {fail_basis::evo, 50, 2}, abflag::none },
+    { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
+      5, 0, 200, 0, {fail_basis::evo, 60, 2}, abflag::none },
+
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
@@ -2108,6 +2111,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         break;
 
+    case ABIL_EVOKE_THUNDER: // robe of Clouds
+        fail_check();
+        mpr("The folds of your robe billow into a mighty storm.");
+
+        for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
+            if (!cell_is_solid(*ri))
+                place_cloud(CLOUD_STORM, *ri, 8 + random2avg(8,2), &you);
+
+        break;
+
     case ABIL_CANCEL_PPROJ:
         fail_check();
         you.duration[DUR_PORTAL_PROJECTILE] = 0;
@@ -3408,6 +3421,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !you.get_mutation_level(MUT_NO_LOVE))
     {
         _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
+    }
+
+    if (player_equip_unrand(UNRAND_RCLOUDS)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _add_talent(talents, ABIL_EVOKE_THUNDER, check_confused);
     }
 
     if (you.evokable_berserk() && !you.get_mutation_level(MUT_NO_ARTIFICE))

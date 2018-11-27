@@ -968,12 +968,13 @@ PLUS:     +8
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
+INSCRIP:  +Thunder rCloud
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +3
 COLOUR:   ETC_MIST
 TILE:     urand_clouds
 TILE_EQ:  robe_clouds
-BOOL:     elec, fly
+BOOL:     elec
 
 NAME:     hat of Pondering
 OBJ:      OBJ_ARMOUR/ARM_HAT

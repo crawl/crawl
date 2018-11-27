@@ -582,26 +582,6 @@ static void _GONG_melee_effects(item_def* item, actor* wearer,
 
 ///////////////////////////////////////////////////
 
-static void _RCLOUDS_world_reacts(item_def *item)
-{
-    cloud_type cloud;
-    if (one_chance_in(4))
-        cloud = CLOUD_RAIN;
-    else
-        cloud = CLOUD_MIST;
-
-    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(20))
-            place_cloud(cloud, *ri, random2(10), &you, 1);
-}
-
-static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _equip_mpr(show_msgs, "A thin mist springs up around you!");
-}
-
-///////////////////////////////////////////////////
-
 static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
                                      actor* defender, bool mondied, int dam)
 {

@@ -131,6 +131,10 @@ Evoke Ratskin ability
 
 Summons up to two dungeon rats to serve their master for a brief time.
 %%%%
+Evoke Thunderclouds ability
+
+Create a mighty thunderclouds around the user.
+%%%%
 End Transformation ability
 
 Reverts you to your normal form.

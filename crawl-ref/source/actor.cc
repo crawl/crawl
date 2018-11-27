@@ -216,7 +216,10 @@ bool actor::res_corr(bool calc_unid, bool items) const
 
 bool actor::cloud_immune(bool calc_unid, bool items) const
 {
-    return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));
+    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
+    return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid)
+                     || (body_armour
+                        && is_unrandom_artefact(*body_armour, UNRAND_RCLOUDS)));
 }
 
 bool actor::holy_wrath_susceptible() const

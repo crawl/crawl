@@ -3383,6 +3383,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_FOG;
     case ABIL_EVOKE_RATSKIN:
         return TILEG_ABILITY_EVOKE_RATSKIN;
+    case ABIL_EVOKE_THUNDER:
+        return TILEG_ABILITY_EVOKE_THUNDER;
 
     // Divine abilities
     // Zin
