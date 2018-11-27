@@ -1467,37 +1467,43 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 }
 
 /***
- * The player rolled a new tile, try to trap them maybe.
- * */
+ * The player rolled a new tile, see if they deserve to be trapped.
+ */
+void roll_trap_effects()
+{
+    int trap_rate = trap_rate_for_place();
+
+    you.trapped = you.trapped || x_chance_in_y(trap_rate, 5 * env.density);
+}
+
+/***
+ * Separate from the previous function so the trap triggers when crawl is in an
+ * appropriate state
+ */
 void do_trap_effects()
 {
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
-    int trap_rate = trap_rate_for_place();
 
-    // Chance to trigger a trap effect
-    if (x_chance_in_y(trap_rate, 5 * env.density))
+    // Don't shaft the player when we can't, and also when it would be into a
+    // dangerous end.
+    if (coinflip() && is_valid_shaft_level()
+        && !(branch.branch_flags & BFLAG_DANGEROUS_END
+             && brdepth[place.branch] - place.depth == 1))
     {
-        // Don't shaft the player when we can't, and also when it would be into a
-        // dangerous end.
-        if (coinflip() && is_valid_shaft_level()
-            && !(branch.branch_flags & BFLAG_DANGEROUS_END
-                 && brdepth[place.branch] - place.depth == 1))
-        {
-            dprf("Attempting to shaft player.");
-            you.do_shaft();
-        }
-        // No alarms on the first 3 floors
-        else if (env.absdepth0 > 3)
-        {
-            // Alarm effect alarms are always noisy, even if the player is
-            // silenced, to avoid "travel only while silenced" behavior.
-            // XXX: improve messaging to make it clear theres a wail outside of the
-            // player's silence
-            mprf("You set off the alarm!");
-            fake_noisy(40, you.pos());
-            you.sentinel_mark(true);
-        }
+        dprf("Attempting to shaft player.");
+        you.do_shaft();
+    }
+    // No alarms on the first 3 floors
+    else if (env.absdepth0 > 3)
+    {
+        // Alarm effect alarms are always noisy, even if the player is
+        // silenced, to avoid "travel only while silenced" behavior.
+        // XXX: improve messaging to make it clear theres a wail outside of the
+        // player's silence
+        mprf("You set off the alarm!");
+        fake_noisy(40, you.pos());
+        you.sentinel_mark(true);
     }
 }
 

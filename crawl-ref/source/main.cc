@@ -2102,6 +2102,15 @@ static void _check_sanctuary()
     decrease_sanctuary_radius();
 }
 
+static void _check_trapped()
+{
+    if (you.trapped)
+    {
+        you.trapped = false;
+        do_trap_effects();
+    }
+}
+
 static void _update_mold_state(const coord_def & pos)
 {
     if (coinflip())
@@ -2218,6 +2227,7 @@ void world_reacts()
 
     _check_banished();
     _check_sanctuary();
+    _check_trapped();
 
     run_environment_effects();
 
