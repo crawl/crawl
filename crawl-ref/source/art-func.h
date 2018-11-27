@@ -554,18 +554,6 @@ static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _STORM_BOW_world_reacts(item_def *item)
-{
-    if (!one_chance_in(300))
-        return;
-
-    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(5))
-            place_cloud(CLOUD_RAIN, *ri, random2(20), &you, 3);
-}
-
-///////////////////////////////////////////////////
-
 static void _GONG_melee_effects(item_def* item, actor* wearer,
                                 actor* attacker, bool dummy, int dam)
 {
