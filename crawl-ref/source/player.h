@@ -406,6 +406,9 @@ public:
     string banished_by;
     int banished_power;
 
+    // If true, player has triggered a trap effect by exploring.
+    bool trapped;
+
     bool wield_change;          // redraw weapon
     bool redraw_quiver;         // redraw quiver
 
