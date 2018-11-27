@@ -806,79 +806,76 @@ bool monster::likes_wand(const item_def &item) const
 
 void monster::equip_weapon(item_def &item, bool msg)
 {
-    if (msg)
-    {
-        const string str = " wields " +
-                           item.name(DESC_A, false, false, true, false,
-                                     ISFLAG_CURSED) + ".";
-        msg = simple_monster_message(*this, str.c_str());
-    }
+    if (!msg) return;
+
+    const string str = " wields " +
+                       item.name(DESC_A, false, false, true, false,
+                                 ISFLAG_CURSED) + ".";
+    simple_monster_message(*this, str.c_str());
 
     const int brand = get_weapon_brand(item);
-    if (msg)
+
+    bool message_given = true;
+    switch (brand)
     {
-        bool message_given = true;
-        switch (brand)
-        {
-        case SPWPN_FLAMING:
-            mpr("It bursts into flame!");
-            break;
-        case SPWPN_FREEZING:
-            mpr(is_range_weapon(item) ? "It is covered in frost."
-                                      : "It glows with a cold blue light!");
-            break;
-        case SPWPN_HOLY_WRATH:
-            mpr("It softly glows with a divine radiance!");
-            break;
-        case SPWPN_ELECTROCUTION:
-            mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
-            break;
-        case SPWPN_VENOM:
-            mpr("It begins to drip with poison!");
-            break;
-        case SPWPN_DRAINING:
-            mpr("You sense an unholy aura.");
-            break;
-        case SPWPN_DISTORTION:
-            mpr("Its appearance distorts for a moment.");
-            break;
-        case SPWPN_CHAOS:
-            mpr("It is briefly surrounded by a scintillating aura of "
-                "random colours.");
-            break;
-        case SPWPN_PENETRATION:
-        {
-            bool plural = true;
-            string hand = hand_name(true, &plural);
-            mprf("%s %s briefly %s through it before %s manages to get a "
-                 "firm grip on it.",
-                 pronoun(PRONOUN_POSSESSIVE).c_str(),
-                 hand.c_str(),
-                 // Not conj_verb: the monster isn't the subject.
-                 conjugate_verb("pass", plural).c_str(),
-                 pronoun(PRONOUN_SUBJECTIVE).c_str());
-        }
-            break;
-        case SPWPN_REAPING:
-            mpr("It is briefly surrounded by shifting shadows.");
-            break;
-        case SPWPN_ACID:
-            mprf("It begins to drip corrosive slime!");
-            break;
+    case SPWPN_FLAMING:
+        mpr("It bursts into flame!");
+        break;
+    case SPWPN_FREEZING:
+        mpr(is_range_weapon(item) ? "It is covered in frost."
+                                  : "It glows with a cold blue light!");
+        break;
+    case SPWPN_HOLY_WRATH:
+        mpr("It softly glows with a divine radiance!");
+        break;
+    case SPWPN_ELECTROCUTION:
+        mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
+        break;
+    case SPWPN_VENOM:
+        mpr("It begins to drip with poison!");
+        break;
+    case SPWPN_DRAINING:
+        mpr("You sense an unholy aura.");
+        break;
+    case SPWPN_DISTORTION:
+        mpr("Its appearance distorts for a moment.");
+        break;
+    case SPWPN_CHAOS:
+        mpr("It is briefly surrounded by a scintillating aura of "
+            "random colours.");
+        break;
+    case SPWPN_PENETRATION:
+    {
+        bool plural = true;
+        string hand = hand_name(true, &plural);
+        mprf("%s %s briefly %s through it before %s manages to get a "
+             "firm grip on it.",
+             pronoun(PRONOUN_POSSESSIVE).c_str(),
+             hand.c_str(),
+             // Not conj_verb: the monster isn't the subject.
+             conjugate_verb("pass", plural).c_str(),
+             pronoun(PRONOUN_SUBJECTIVE).c_str());
+    }
+        break;
+    case SPWPN_REAPING:
+        mpr("It is briefly surrounded by shifting shadows.");
+        break;
+    case SPWPN_ACID:
+        mprf("It begins to drip corrosive slime!");
+        break;
 
-        default:
-            // A ranged weapon without special message is known to be unbranded.
-            if (brand != SPWPN_NORMAL || !is_range_weapon(item))
-                message_given = false;
-        }
+    default:
+        // A ranged weapon without special message is known to be unbranded.
+        if (brand != SPWPN_NORMAL || !is_range_weapon(item))
+            message_given = false;
+    }
 
-        if (message_given)
-        {
-            if (is_artefact(item) && !is_unrandom_artefact(item))
-                artefact_learn_prop(item, ARTP_BRAND);
-            else
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
-        }
+    if (message_given)
+    {
+        if (is_artefact(item) && !is_unrandom_artefact(item))
+            artefact_learn_prop(item, ARTP_BRAND);
+        else
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
     }
 }
 
@@ -6437,7 +6434,9 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
     inv[mslot] = index;
     new_item.set_holding_monster(*this);
 
-    equip(new_item, true);
+    const bool give_msg = (mslot != MSLOT_ALT_WEAPON
+                           || mons_wields_two_weapons(*this));
+    equip(new_item, give_msg);
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);
