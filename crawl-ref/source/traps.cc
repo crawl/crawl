@@ -1473,7 +1473,7 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.trapped || x_chance_in_y(trap_rate, 5 * env.density);
+    you.trapped = you.trapped || x_chance_in_y(trap_rate, 7 * env.density);
 }
 
 /***
@@ -1485,25 +1485,32 @@ void do_trap_effects()
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
 
-    // Don't shaft the player when we can't, and also when it would be into a
-    // dangerous end.
-    if (coinflip() && is_valid_shaft_level()
-        && !(branch.branch_flags & BFLAG_DANGEROUS_END
-             && brdepth[place.branch] - place.depth == 1))
+    // Either try to shaft or try to alarm the player.
+    if (coinflip())
     {
-        dprf("Attempting to shaft player.");
-        you.do_shaft();
+        // Don't shaft the player when we can't, and also when it would be into a
+        // dangerous end.
+        if (is_valid_shaft_level()
+           && !(branch.branch_flags & BFLAG_DANGEROUS_END
+                && brdepth[place.branch] - place.depth == 1))
+        {
+            dprf("Attempting to shaft player.");
+            you.do_shaft();
+        }
     }
-    // No alarms on the first 3 floors
-    else if (env.absdepth0 > 3)
+    else
     {
-        // Alarm effect alarms are always noisy, even if the player is
-        // silenced, to avoid "travel only while silenced" behavior.
-        // XXX: improve messaging to make it clear theres a wail outside of the
-        // player's silence
-        mprf("You set off the alarm!");
-        fake_noisy(40, you.pos());
-        you.sentinel_mark(true);
+        // No alarms on the first 3 floors
+        if (env.absdepth0 > 3)
+        {
+            // Alarm effect alarms are always noisy, even if the player is
+            // silenced, to avoid "travel only while silenced" behavior.
+            // XXX: improve messaging to make it clear theres a wail outside of the
+            // player's silence
+            mprf("You set off the alarm!");
+            fake_noisy(40, you.pos());
+            you.sentinel_mark(true);
+        }
     }
 }
 
