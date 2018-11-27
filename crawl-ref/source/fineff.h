@@ -8,6 +8,7 @@
 
 #include "beh-type.h"
 #include "mon-util.h"
+#include "mgen-data.h"
 
 class final_effect
 {
@@ -335,6 +336,30 @@ protected:
     {
     }
     string name;
+};
+
+class make_derived_undead_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos, mgen_data mg, int xl,
+                         const string &agent, const string &msg)
+    {
+        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg));
+    }
+protected:
+    make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
+                               const string &_agent, const string &_msg)
+        : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
+          agent(_agent), message(_msg)
+    {
+    }
+    mgen_data mg;
+    int experience_level;
+    string agent;
+    string message;
 };
 
 void fire_final_effects();

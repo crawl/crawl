@@ -1585,6 +1585,15 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                         bound_soul ?
                         GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         mg.set_base(mons->type);
+
+        if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+            mg.mname = mons->mname;
+        else if (mons_is_unique(mons->type))
+            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+        mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
+                                          | MF_NAME_ADJECTIVE
+                                          | MF_NAME_DESCRIPTOR);
+
         if (mons->mons_species() == MONS_HYDRA)
         {
             // No undead 0-headed hydras, sorry.
@@ -1601,36 +1610,23 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                 mg.props[MGEN_NUM_HEADS] = mons->heads();
         }
 
-        if (monster *undead = create_monster(mg))
+        string agent_name = "";
+        if (bound_soul)
         {
-            if (!quiet)
-            {
-                mprf("A %s mist starts to gather...",
-                     bound_soul ? "freezing" : "glowing");
-            }
-
-            // If the original monster has been levelled up, its HD might be
-            // different from its class HD, in which case its HP should be
-            // rerolled to match.
-            if (undead->get_experience_level() != mons->get_experience_level())
-            {
-                undead->set_hit_dice(max(mons->get_experience_level(), 1));
-                roll_zombie_hp(undead);
-            }
-
-            name_zombie(*undead, *mons);
-
-            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-            if (bound_soul)
-            {
-                const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
-                if (agent)
-                {
-                    mons_add_blame(undead,
-                        "animated by " + agent->as_monster()->full_name(DESC_A));
-                }
-            }
+            const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
+            if (agent)
+                agent_name = agent->as_monster()->full_name(DESC_A);
         }
+
+        string monster_name = "";
+
+        string message = quiet ? "" :
+            make_stringf("A %s mist starts to gather...",
+                         bound_soul ? "freezing" : "glowing");
+
+        make_derived_undead_fineff::schedule(mons->pos(), mg,
+                mons->get_experience_level(), agent_name, message);
+
     }
 }
 
@@ -2683,8 +2679,14 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
         _mummy_curse(&mons, mummy_curse_power(mons.type), killer, killer_index);
 
-    if (mons.has_ench(ENCH_INFESTATION) && !was_banished && !mons_reset)
-        _infestation_create_scarab(&mons);
+    // Necromancy
+    if (!was_banished && !mons_reset)
+    {
+        if (mons.has_ench(ENCH_INFESTATION))
+            _infestation_create_scarab(&mons);
+        if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
+            _make_derived_undead(&mons, !death_message, false);
+    }
 
     if (mons.mons_species() == MONS_BALLISTOMYCETE)
     {
@@ -2715,8 +2717,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     if (corpse && mons.has_ench(ENCH_BOUND_SOUL))
         _make_derived_undead(&mons, !death_message, true);
-    if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
-        _make_derived_undead(&mons, !death_message, false);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;

@@ -550,6 +550,35 @@ void infestation_death_fineff::fire()
     }
 }
 
+void make_derived_undead_fineff::fire()
+{
+    if (monster *undead = create_monster(mg))
+    {
+        if (!message.empty())
+            mpr(message);
+
+        // If the original monster has been levelled up, its HD might be
+        // different from its class HD, in which case its HP should be
+        // rerolled to match.
+        if (undead->get_experience_level() != experience_level)
+        {
+            undead->set_hit_dice(max(experience_level, 1));
+            roll_zombie_hp(undead);
+        }
+
+        // Fix up custom names
+        if (!mg.mname.empty())
+            name_zombie(*undead, mg.base_type, mg.mname);
+
+        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        if (!agent.empty())
+        {
+            mons_add_blame(undead,
+                "animated by " + agent);
+        }
+    }
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
