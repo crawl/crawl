@@ -1,13 +1,13 @@
 :: 1139-1141 in Makefile
 
-:: docs/FAQ.html This file needs 
-:: to be run from inside /util, 
+:: docs/FAQ.html This file needs
+:: to be run from inside /util,
 :: or it can't find FAQ.txt
 perl FAQ2html.pl
 
 cd ..
 :: art-enum.h ,art-data.h
-perl util/art-data.pl 
+perl util/art-data.pl
 :: mon-mst.h
 perl util/gen-mst.pl
 :: cmd-name.h
