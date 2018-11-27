@@ -150,6 +150,7 @@ makefile.dep
 *.ncb
 *.vcproj.user
 *.vcxproj.user
+/source/MSVC/*.user
 
 # Visual C++ outputs
 /source/*.exe
@@ -157,8 +158,12 @@ makefile.dep
 /source/*.dll
 /source/*.exp
 /source/*.lib
+/source/*.iobj
+/source/*.ipdb
 /source/MSVC/.vs/*
 /source/contrib/.vs/*
+*.coverage
+*.vsp
 
 # Packaging
 /source/util/release_ver
