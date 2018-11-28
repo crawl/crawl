@@ -280,6 +280,13 @@ void handle_behaviour(monster* mon)
     //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
     //     mon->pos().y, mon->target.x, mon->target.y);
 
+    // Check for permanent confusion, early out.
+    if (mons_class_flag(mon->type, M_CONFUSED))
+    {
+        set_random_target(mon);
+        return;
+    }
+
     if (mons_is_fleeing_sanctuary(*mon)
         && mons_is_fleeing(*mon)
         && is_sanctuary(you.pos()))
