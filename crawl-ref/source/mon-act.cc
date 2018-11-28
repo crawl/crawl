@@ -915,24 +915,19 @@ static bool _handle_reaching(monster* mons)
     const reach_type range = mons->reach_range();
     actor *foe = mons->get_foe();
 
-    if (mons->caught())
+    if (mons->caught()
+        || mons_is_confused(*mons)
+        || !foe
+        || range <= REACH_NONE
+        || is_sanctuary(mons->pos())
+        || is_sanctuary(foe->pos())
+        || mons->submerged()
+        || (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
+        || (mons_is_fleeing(*mons)
+        || mons->pacified()))
+    {
         return false;
-
-    if (!foe || range <= REACH_NONE)
-        return false;
-
-    if (is_sanctuary(mons->pos()) || is_sanctuary(foe->pos()))
-        return false;
-
-    if (mons->submerged())
-        return false;
-
-    if (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
-        return false;
-
-    // Don't stop to jab at things while fleeing or leaving the level
-    if ((mons_is_fleeing(*mons) || mons->pacified()))
-        return false;
+    }
 
     const coord_def foepos(foe->pos());
     const coord_def delta(foepos - mons->pos());
@@ -1190,7 +1185,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
         || mons->submerged()
-        || mons->caught())
+        || mons->caught()
+        || mons_is_confused(*mons))
     {
         return false;
     }
@@ -1775,8 +1771,10 @@ void handle_monster_move(monster* mons)
         // Calculates mmov based on monster target.
         _handle_movement(mons);
 
-        if (mons_is_confused(*mons))
+        // Confused monsters sometimes stumble about instead of acting.
+        if (mons_is_confused(*mons) && !one_chance_in(3))
         {
+            set_random_target(mons);
             _confused_move_dir(mons);
 
             // OK, mmov determined.
@@ -3414,21 +3412,6 @@ static bool _monster_move(monster* mons)
                 noisy(noise_level, mons->pos(), mons->mid);
             }
         }
-    }
-
-    if (mons->confused())
-    {
-        if (!mmov.origin() || one_chance_in(15))
-        {
-            const coord_def newpos = mons->pos() + mmov;
-            if (in_bounds(newpos)
-                && (habitat == HT_LAND
-                    || monster_habitable_grid(mons, grd(newpos))))
-            {
-                return _do_move_monster(*mons, mmov);
-            }
-        }
-        return false;
     }
 
     // If a water (or lava) monster is currently flopping around on land, it

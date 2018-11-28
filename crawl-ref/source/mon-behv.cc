@@ -280,13 +280,6 @@ void handle_behaviour(monster* mon)
     //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
     //     mon->pos().y, mon->target.x, mon->target.y);
 
-    // Check for confusion -- early out.
-    if (mon->has_ench(ENCH_CONFUSION))
-    {
-        set_random_target(mon);
-        return;
-    }
-
     if (mons_is_fleeing_sanctuary(*mon)
         && mons_is_fleeing(*mon)
         && is_sanctuary(you.pos()))
