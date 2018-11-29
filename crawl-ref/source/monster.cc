@@ -804,7 +804,7 @@ bool monster::likes_wand(const item_def &item) const
     return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
 }
 
-void monster::equip_weapon(item_def &item)
+void monster::equip_weapon_message(item_def &item)
 {
     const string str = " wields " +
                        item.name(DESC_A, false, false, true, false,
@@ -900,14 +900,14 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
     return armour_ac + armour_plus;
 }
 
-void monster::equip_armour(item_def &item)
+void monster::equip_armour_message(item_def &item)
 {
     const string str = " wears " +
                        item.name(DESC_A) + ".";
     simple_monster_message(*this, str.c_str());
 }
 
-void monster::equip_jewellery(item_def &item)
+void monster::equip_jewellery_message(item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
@@ -916,21 +916,21 @@ void monster::equip_jewellery(item_def &item)
     simple_monster_message(*this, str.c_str());
 }
 
-void monster::equip(item_def &item)
+void monster::equip_message(item_def &item)
 {
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        equip_weapon(item);
+        equip_weapon_message(item);
         break;
 
     case OBJ_ARMOUR:
-        equip_armour(item);
+        equip_armour_message(item);
         break;
 
     case OBJ_JEWELLERY:
-        equip_jewellery(item);
+        equip_jewellery_message(item);
     break;
 
     default:
@@ -1157,7 +1157,7 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
             inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
             if (msg)
-                equip(item);
+                equip_message(item);
             lose_pickup_energy();
             return true;
         }
@@ -1183,7 +1183,7 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     if (msg)
     {
         pickup_message(item);
-        equip(item);
+        equip_message(item);
     }
     lose_pickup_energy();
     return true;
@@ -1237,7 +1237,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped && msg)
-                equip(pitem);
+                equip_message(pitem);
 
             return false;
         }
@@ -2144,7 +2144,7 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
 
     if (alt && msg)
-        equip(*alt);
+        equip_message(*alt);
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
@@ -6429,8 +6429,8 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
     inv[mslot] = index;
     new_item.set_holding_monster(*this);
 
-    if(mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(*this))
-        equip(new_item);
+    if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(*this))
+        equip_message(new_item);
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);
