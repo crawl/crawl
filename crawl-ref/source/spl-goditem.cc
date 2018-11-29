@@ -275,7 +275,7 @@ bool heal_monster(monster& patient, int amount)
  * come up distinct. The formula below computes the probability of rolling two
  * numbers that are both large enough, minus the probability they are the same.
  */
-int _pacify_chance(const monster_info& mi, const int pow, int scale)
+static int _pacify_chance(const monster_info& mi, const int pow, int scale)
 {
     const int sides = _pacification_sides(mi.type, pow);
     const int target = _pacification_hp(mi.type);
@@ -287,7 +287,7 @@ int _pacify_chance(const monster_info& mi, const int pow, int scale)
          / (sides * sides);
 }
 
-vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
+static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
 {
     vector<string> descs;
 
