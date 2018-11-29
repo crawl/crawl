@@ -41,7 +41,8 @@ Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freen
 ## How you can help
 
 If you like the game and you want to help make it better, there are a number
-of ways to do so:
+of ways to do so. For a detailed guide to the crawl workflow, look at
+the [contributor's guide](crawl-ref/docs/develop/contribution-process.md).
 
 ### Reporting bugs
 
