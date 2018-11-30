@@ -2,6 +2,7 @@
 # gauntlet.des: Vaults particular to Gauntlets.
 #
 # <<1>>      Gauntlet arena subvaults.
+# <<2>>      Gauntlet exit subvaults.
 ###############################################################################
 
 : require("dlua/gauntlet.lua")
@@ -311,4 +312,252 @@ n'xx.x.'''n
  x''''x'''
  ''''1x'''
  d''dQdx'd
+ENDMAP
+
+#############################################################################
+# <<2>> Gauntlet exit subvaults
+#############################################################################
+# The vaults exit subvaults that place an exit, a boss, and its loot pile.
+# These vaults must have tag 'gauntlet_exit'. Vaults not defining their own custom
+# loot set can place exactly one '<' and call gauntlet_exit_loot(G_) to place
+# loot there. Otherwise the map must place its own loot and exit_gauntlet
+# feature. The vault must also place exactly one patrolling awake minotaur.
+#
+# These vaults must have the same shape as the template below. This is so that
+# they place in the parent vault with the subvault entrance in the right
+# relative location. The entrance must place in the first row at the wider top
+# section, relative to the template below.
+#
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+# ...............
+#  .............
+#  .............
+#  .............
+#
+# The vault will be surrounded by metal walls in the parent map. Hence the
+# subvault should fill the shape above with 'v' metal wall glyphs for areas
+# that are meant to be part of that surrounding wall.
+#############################################################################
+
+# Adapted from the labyrinth_watery minotaur exit vault.
+NAME:    gauntlet_exit_watery
+TAGS:    gauntlet_exit no_pool_fixup
+MONS:    patrolling generate_awake minotaur
+KFEAT:   < = exit_gauntlet
+SHUFFLE: def, ghi
+SUBST:   dg = ., efhi = v
+: gauntlet_exit_loot(_G)
+MAP
+vvv.vvv.vvv.vvv
+vvv.vvv.vvv.vvv
+v.............v
+v.vvv.vvv.vvv.v
+v.vvv.vvv.vvv.v
+v.............v
+vvvvbbb+bbbvvvv
+vvvvb.....bvvvv
+vvvvbbb1bbbvvvv
+vvvvbw...wbvvvv
+ vvvbww<wwbvvv
+ vvvbwwwwwbvvv
+ vvvbbbbbbbvvv
+ENDMAP
+
+# Adapted from labyrinth_green minotaur.
+NAME:   gauntlet_exit_green
+TAGS:   gauntlet_exit
+WEIGHT: 2
+MONS:   patrolling generate_awake minotaur
+KFEAT:  < = exit_gauntlet
+: gauntlet_exit_loot(_G)
+MAP
+v.vv.vv.vv.vv.v
+v.vv.vv.vv.vv.v
+...............
+.vv.vv.vv.vv.vv
+.vv.vv.vv.vv.vv
+...............
+vv.vv.b+bvv.vv.
+vv.vv.b.bvv.vv.
+......b.b......
+v.vv.vb1bv.vv.v
+ .vv.vb<bv.vv.
+ .....bbb.....
+ vv.vv.vv.vv.v
+ENDMAP
+
+# Adapted from labyrinth_spiral.
+NAME:   gauntlet_exit_spiral
+TAGS:   gauntlet_exit
+MONS:   patrolling generate_awake minotaur
+SUBST:  b : bvz, z = vb
+KFEAT:  < = exit_gauntlet
+: gauntlet_exit_loot(_G)
+MAP
+vvvvvvv.vvvvvvv
+vvvvvvv.vvvvvvv
+vvv.....vvvvvvv
+vvb.bbbbbbbvvvv
+vvb.b.....bvvvv
+vvb.b.bbb.bvvvv
+vvb.b.b<b.bvvvv
+vvb.b.b1b.bvvvv
+vvb.b.b.b.bvvvv
+vvb.b...b.bvvvv
+ vb.bbbbb.bvvv
+ vb.......bvvv
+ vbbbbbbbbbvvv
+ENDMAP
+
+# Adapted from labyrinth_hidden_loot.
+NAME:   gauntlet_exit_hidden_loot
+TAGS:   gauntlet_exit
+MONS:   patrolling generate_awake minotaur, minotaur zombie
+SUBST:  d = 2%*
+SUBST:  b : bvv
+KFEAT:  < = exit_gauntlet
+: gauntlet_exit_loot(_G)
+MAP
+vvv.vvv.vvv.vvv
+vvv.vvv.vvv.vvv
+v.............v
+v.vvv.vvv.vvv.v
+v.............v
+vvvvxxx+xxxxvvv
+vvvvxxx.xxxxvvv
+vvvvxx..<.xxvvv
+vvvvd+U...xxvvv
+vvvvxx...U+dvvv
+ vvvxx.U.1xxvv
+ vvvxxx+xxxxvv
+ vvvxxxdxxxxvv
+ENDMAP
+
+# Adapted from labyrinth_mini_lab.
+NAME:    gauntlet_exit_mini_maze
+TAGS:    gauntlet_exit
+SHUFFLE: def, ghi, klm
+SUBST:   d : b, e : ., f : b
+SUBST:   g : b, h : ., i : b
+SUBST:   k = <, l = ., m = .
+KMONS:   < = patrolling generate_awake minotaur
+KFEAT:   < = exit_gauntlet
+SUBST:   b : vvb
+: gauntlet_exit_loot(_G)
+# should not be necessary
+validate {{ return has_exit_from_glyph('<') }}
+MAP
+vbfbbbbbebbbdbv
+vbfg.......b.bv
+vbfb.bhbdb.b.bv
+vbfb.b.b.g.b.bv
+vbfb.f.b.b.b.bv
+vbfbii.b.b...bv
+vbfb.h.b.bbebbv
+vb...b.b.....bv
+vbbbbb.bfbbb.bv
+vb.........b.bv
+ bfbbdbbbbebgb
+ bl....k....mb
+ bbbbbbbbbbbbb
+ENDMAP
+
+#############################################################################
+# Chooses four corpses, each with their own set of loot, themed around some
+# particular archetypical species/background. Each set of loot has at least
+# three guaranteed items.
+# The dead octopode has a 62% chance of generating only 3 rings,
+# a 93% chance of generating 4 or less rings, and a 99% chance of
+# 5 or less. The chance of all 8 is 0.0006%.
+NAME:    nicolae_gauntlet_exit_dead_adventurers
+TAGS:    gauntlet_exit
+KMONS:   1 = patrolling generate_awake minotaur
+KPROP:   ABCD'1 = bloody
+KFEAT:   ' = floor
+SHUFFLE: bvc, ABCDEFHIJKLM
+{{
+ -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
+dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe / '
+   .. "eveningstar / executioner's axe w:2 / "
+   .. 'great mace w:2, helmet good_item / '
+   .. 'pair of gloves good_item / pair of boots good_item, '
+   .. 'plate armour / crystal plate armour w:2' )
+
+ -- Elf caster. 4 items.
+dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe, randbook, '
+   .. 'any magical staff, any jewellery' )
+
+ -- Spriggan stabber. 4 items.
+dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
+   .. 'quick blade w:1, ration, cloak, randbook disc:hexes / any book' )
+
+ -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
+dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
+   .. 'arrow good_item, ration / nothing, '
+   .. 'helmet / centaur barding / pair of gloves' )
+
+ -- Dwarven artificer. 3 items.
+dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
+   .. 'any wand / any misc w:20' )
+
+ -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
+dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
+   .. 'any ring good_item / any ring, any ring, any ring w:1 / nothing w:10, '
+   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10, '
+   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10' )
+
+ -- Merfolk skald. 3 items.
+dgn.delayed_decay_extra(_G, 'H', 'merfolk skeleton', 'leather armour good_item w:30 / '
+   .. 'swamp dragon scales w:2 / fire dragon scales w:2 / '
+   .. 'ice dragon scales w:2, trident / demon trident / glaive / bardiche, '
+   .. 'randbook disc:charms / any book' )
+
+ -- Human wanderer. 3-5 items.
+dgn.delayed_decay_extra(_G, 'I', 'human skeleton', 'any armour, any weapon, '
+   .. 'any good_item / any book / any jewellery, '
+   .. 'nothing / any scroll, nothing / any potion' )
+
+ -- Orc fighter. 3 items.
+dgn.delayed_decay_extra(_G, 'J', 'orc skeleton', 'shield / large shield w:2, '
+   .. 'long sword / eveningstar / broad axe / demon blade, '
+   .. 'plate armour / crystal plate armour w:2' )
+
+ -- Dwarven heavy armour earth elementalist. 3-4 items.
+dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
+   .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
+   .. 'ring of wizardry / any jewellery / nothing w:20' )
+
+ -- Halfling warper. 4-5 items.
+dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
+   .. 'randbook disc:translocation / any book, scroll of blinking / '
+   .. 'scroll of teleportation / nothing w:45, '
+   .. 'robe / leather armour, short sword good_item' )
+
+ -- Ogre, maybe an ogre mage of some kind. 4-5 items.
+dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '
+   .. 'giant spiked club good_item, robe, large rock, ration, '
+   .. 'any book / nothing' )
+}}
+MAP
+v.v.vvvvvvv.v.v
+v.v....v....v.v
+v.v.vv.v.vv.v.v
+v.............v
+v.v..bb+bb..v.v
+v.v..bG.Gb..v.v
+v....b...b....v
+vvvG.bG1Gb.Gvvv
+vvvvvbB'Dbvvvvv
+vvvvvbG'Gbvvvvv
+ vvvvbA'Cbvvvv
+ vvvvbG<Gbvvvv
+ vvvvbbbbbvvvv
 ENDMAP
