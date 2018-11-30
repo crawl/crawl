@@ -1,7 +1,10 @@
 ###############################################################################
 # gauntlet.des: Vaults particular to Gauntlets.
+#
+# <<1>>      Gauntlet arena subvaults.
 ###############################################################################
 
+: require("dlua/gauntlet.lua")
 {{
 function gauntlet_portal(e)
   local timeout_turns = crawl.random_range(400, 600)
@@ -43,3 +46,269 @@ O
 ENDMAP
 
 default-depth: Gauntlet
+
+#############################################################################
+# <<1>> Gauntlet arena subvaults
+#############################################################################
+# Each vault should have tags 'gauntlet_arena_first' and 'gauntlet_arena_second' assuming
+# its viable for both tiers. Two tags exist in case a vault wants to specify
+# custom terrain for specific monsters and loot and is only appropriate for one
+# tier.
+#
+# The vaults must must have the same shape as one of the templates below. These
+# all have one side that is tapered so that the vaults exit transporter landing
+# site in the parent map will be close to the exit transporter. It represents
+# the "end" of the vault and is where the exit tranporter 'Q' glyph, '1' glyph,
+# and 'd' loot glyphs should generally be (see below). As the templates below
+# show, the vault can be any rotation of this basic shape.
+#
+# n.........n  nnnnnn      ...dQd...      nnnnnn
+# n.........n  .........   ....1....   .........
+# n.........n  .........   .........   .........
+# n.........n  .........  n.........n  .........
+# n....P....n  ........d  n....P....n  d........
+# n.........n  ....P..1Q  n.........n  Q1..P....
+#  .........   ........d  n.........n  d........
+#  ....1....   .........  n.........n  .........
+#  ...dQd...   .........  n.........n  .........
+#              .........               .........
+#              nnnnnn                     nnnnnn
+#
+# The 'n' tiles shown # are part of the transparent arena walls and must always
+# be present. Ideally nearly every location in the subvault is visible from at
+# least one of the three window areas on the walls.
+#
+# All vaults must call gauntlet_arena_subvault_setup(_G) to set up the
+# features, monsters, and items for these glyphs. All subvaults are required to
+# place the following glyphs:
+#
+# 'P' : Entry transporter landing site. Central locations or locations somewhat
+#       far away the center of the top are best. Monsters inside the arena will
+#       try to be close to the player at the top-center as they take the
+#       transporter, and ideally the player has some turns to move after
+#       transporting.
+# 'Q' : Exit transporter. Needs to be located near the tapered side of the
+#       vault where it will be close to the exit transporter landing site in
+#       the parent vault.
+# '1' : At least one glyph for the strongest type of monster. Should be an
+#       ideal location if the monster should be station (i.e. statue or oklob).
+#       If multiple are placed, only one at random will be used.
+# '2' : At least six of this glyph for the middle tier monsters. Unused
+#       instances will become floor.
+# '3' : At least ten of this glyph for the weakest tier monsters. Unused
+#       instances will become floor.
+# 'd' : At least four of this glyph for loot items. Unused instances will
+#       become floor. Tier 1 arenas place two items and tier 2 place 3. See
+#       gauntlet_arena_item_setup() for details on what's placed.
+#
+# For terrain, use 'x' for any walls and these will collectively randomized to
+# appropriate walls for the tier: either rock or stone for first tier and
+# stone, metal, or crystal for the second tier. To prevent this, give a second
+# argument of true to gauntlet_arena_subvault_setup().
+#############################################################################
+
+NAME: gammafunk_gauntlet_arena_open
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+WEIGHT: 5
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n.........n
+n.........n
+n..33333..n
+n..3...3..n
+n..3.P.3..n
+n..2...2..n
+ ..22322..
+ ....1....
+ ..ddQdd..
+ENDMAP
+
+NAME: gammafunk_gauntlet_arena_corners
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n..3.3.3..n
+n.3.3.3.3.n
+n..2x3x2..n
+n..xx.xx..n
+n.23.P.32.n
+n..xx.xx..n
+ ..2x3x2..
+ ....1....
+ ..ddQdd..
+ENDMAP
+
+NAME: gammafunk_gauntlet_arena_hedges
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+KMONS: p = plant w:20 / nothing
+KMONS: q = plant
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n3.3.3.3.3n
+n.pp3.3pp.n
+n3pmp3pmp3n
+n.pmp.pmp.n
+n2pmpPpmp2n
+n.pmp.pmp.n
+ 2pmp.pmp2
+ .pp212pp.
+ ..ddQdd..
+ENDMAP
+
+NAME: gammafunk_gauntlet_arena_split_x
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n3.......3n
+n.x3...3x.n
+n.xx3.3xx.n
+n.3xx.xx3.n
+n....P....n
+n.3xx.xx3.n
+ .xx2.2xx.
+ 2x2.1.2x2
+ ..ddQdd..
+ENDMAP
+
+NAME: gammafunk_gauntlet_arena_grid
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n3.3.3.3.3n
+n.x.x.x.x.n
+n.3x3.3x3.n
+n.x.x.x.x.n
+n.3..P..3.n
+n.x.x.x.x.n
+ .2x2.2x2.
+ .x.x1x.x.
+ .2ddQdd2.
+ENDMAP
+
+NAME: gammafunk_gauntlet_arena_split_diamond
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n...3.3...n
+n.3xx.xx3.n
+n.xx3.3xx.n
+n3x.....x3n
+n..3.P.3..n
+n2x.....x2n
+ .xx2.2xx.
+ .2xx1xx2.
+ ..ddQdd..
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_t_cross
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST: P = P / .
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n3.3.3.3.3n
+n...xxx...n
+n3.3.x.3.3n
+n.x..x..x.n
+n3xxxPxxx3n
+n.x..x..x.n
+ ..2.x.2..
+ 2..d1d..2
+ ..2dQd2..
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_x
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n..3.3.3..n
+n.x.....x.n
+n.3x3.3x3.n
+n...x.x...n
+n.3..P..3.n
+n...x.x...n
+ .2x2.2x2.
+ .x.d1d.x.
+ ..2dQd2..
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_flowing_pool
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup no_pool_fixup
+NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
+SUBST: w : wwwl
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n--ww---w-n
+n-w--w--w-n
+n-w-ww-w-wn
+nw-w...w--n
+nw--wPw--wn
+n'w'.wwww'n
+ 'ww'''w''
+ ww''1w'w'
+ d'wdQd'wd
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_quarters
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST: P = P / .
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n3.3...3.3n
+n..xx3xx..n
+n3x3.x.3x3n
+n.x..x..x.n
+n3.xxPxx.3n
+n.x..x..x.n
+ 2x2.x.2x2
+ ..xx1xx..
+ .2ddQdd2.
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_blocks
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n.3..3..3.n
+n.x.....x.n
+n.3xx3xx3.n
+n..xx.xx..n
+n3x3.P.3x3n
+n..xx.xx..n
+ 2.xx.xx.2
+ .x.212.x.
+ .2ddQdd2.
+ENDMAP
+
+NAME: nicolae_gauntlet_arena_grate_2
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+KFEAT: pq = iron_grate
+SUBST: q = qq.
+NSUBST: - = 10=3 / ., ' = 6=2 / .
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n---------n
+n-x-x---x-n
+n---x-x---n
+n-x-..x-x-n
+n-x-xP.-x-n
+n'''x.x'''n
+ 'x'''x'x'
+ 'x''1''x'
+ ''ddQdd''
+ENDMAP
+
+NAME: nicolae_gauntlet_swirl
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
+: gauntlet_arena_subvault_setup(_G)
+MAP
+n--x------n
+n---x-----n
+n---x----xn
+n---.x.xx-n
+n---xPx---n
+n'xx.x.'''n
+ x''''x'''
+ ''''1x'''
+ d''dQdx'd
+ENDMAP
