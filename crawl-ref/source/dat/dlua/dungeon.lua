@@ -704,6 +704,18 @@ dgn.loot_potions = [[ /
     w:2   potion of experience
     ]]
 
+-- Some definitions for all types of auxiliary armor.
+dgn.aux_armour = "cloak / scarf / helmet / hat / pair of gloves " ..
+    "/ pair of boots"
+
+-- Scarves not influenced by good_item.
+dgn.good_aux_armour = "cloak good_item / scarf / helmet good_item " ..
+    "/ hat good_item / pair of gloves good_item / pair of boots good_item"
+
+-- Scarves excluded since they can't be randart.
+dgn.randart_aux_armour = "cloak randart / helmet randart / hat randart " ..
+    "/ pair of gloves randart / pair of boots randart"
+
 -- Returns true if point1 is inside radius(X, point2).
 function dgn.point_in_radius(point1, point2, radius)
   return dgn.distance(point1.x, point1.y, point2.x, point2.y) <=
