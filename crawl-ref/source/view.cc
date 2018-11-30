@@ -1016,13 +1016,15 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
-        env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
-        if (!crawl_state.game_is_arena())
+        if (!crawl_state.game_is_arena()
+            && cell_triggers_conduct(gc)
+            && !player_in_branch(BRANCH_TEMPLE))
         {
             did_god_conduct(DID_EXPLORATION, 2500);
             const int density = env.density ? env.density : 2000;
             you.exploration += div_rand_round(1<<16, density);
         }
+        env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
     }
 
 #ifdef USE_TILE

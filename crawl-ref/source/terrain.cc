@@ -1974,6 +1974,20 @@ void set_terrain_changed(const coord_def p)
             act->check_clinging(false, feat_is_door(grd(p)));
 }
 
+/**
+ * Does this cell count for exploraation piety?
+ *
+ * Don't count: endless map borders, deep water, lava, and cells explicitly
+ * marked. (player_view_update_at in view.cc updates the flags)
+ */
+bool cell_triggers_conduct(const coord_def p)
+{
+    return !(feat_is_endless(grd(p))
+             || grd(p) == DNGN_LAVA
+             || grd(p) == DNGN_DEEP_WATER
+             || env.pgrid(p) & FPROP_SEEN_OR_NOEXP);
+}
+
 bool is_boring_terrain(dungeon_feature_type feat)
 {
     if (!is_notable_terrain(feat))
