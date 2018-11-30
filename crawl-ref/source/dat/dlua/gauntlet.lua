@@ -1,3 +1,113 @@
+-- Set up transporter features on glyphs 'P' and 'Q' based on the current
+-- subvault number.
+-- @param e Lua environment.
+function gauntlet_arena_transporter_setup(e)
+    if gauntlet_arena_numsv == nil then
+        gauntlet_arena_numsv = 1
+    else
+        gauntlet_arena_numsv = gauntlet_arena_numsv + 1
+    end
+
+    e.lua_marker("P", transp_dest_loc("gauntlet_arena_entry_" ..
+                                      tostring(gauntlet_arena_numsv)))
+    e.lua_marker("Q", transp_loc("gauntlet_arena_exit_" ..
+                                 tostring(gauntlet_arena_numsv)))
+end
+
+-- Get a random arena entry for an arena subvault based on the arena's tier.
+-- @param e Lua environment.
+function gauntlet_arena_get_monster_entry(e)
+    local gauntlet_arenas
+    if gauntlet_arena_tier == 1 then
+        gauntlet_arenas = tier1_gauntlet_arenas
+    else
+        gauntlet_arenas = tier2_gauntlet_arenas
+    end
+
+    return util.random_weighted_from("weight", gauntlet_arenas)
+end
+
+-- Make a KMONS statement based on a given monster entry and glyph. Roll the
+-- number of monsters to place and place them on that glyph.
+-- @param e     Lua environment.
+-- @param entry A table with keys 'mons', 'min', and 'max' See the comments
+--              above the variable tier1_gauntlet_arenas.
+-- @param glyph The glyph on which to place the entry. If entry is nil, this
+--              glyph will be replaced with floor.
+function gauntlet_arena_mons_setup(e, entry, glyph)
+    if entry == nil then
+        e.subst(glyph .. " = .")
+        return
+    end
+
+    e.kmons(glyph .. " = " .. entry["mons"])
+
+    local n = entry["min"] + crawl.random2(entry["max"] - entry["min"] + 1)
+    if n < 1 then
+        e.subst(glyph .. " = .")
+    else
+        e.nsubst(glyph .. " = " .. tostring(n) .. "=" .. glyph .. " / .")
+    end
+end
+
+-- Set up item definitions for arena subvaults.
+-- @param e          Lua environment.
+-- @param other_loot If non-nil, place this items as a guaranteed loot item.
+function gauntlet_arena_item_setup(e, other_loot)
+    -- If an entry defines loot, one of that item will always place, otherwise
+    -- 50% chance of good scroll or potion and 50% chance of star_item.
+    local d_first_nsubst = "d*"
+    if other_loot then
+        e.item(other_loot)
+        d_first_nsubst = "d"
+    else
+        e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+    end
+
+    -- For tier 1 arenas, we place one more item that's either 2/3 chance
+    -- superb item or star_item and 1/3 chance for good_item aux or jewellery.
+    if gauntlet_arena_tier == 1 then
+        e.item(dgn.good_aux_armour)
+        e.item("any jewellery good_item")
+        e.nsubst("d = " .. d_first_nsubst .. " / ef|*|* / .")
+    -- For tier 2
+    else
+        if crawl.one_chance_in(3) then
+            e.item(dgn.randart_aux_armour)
+            e.item("any jewellery randart")
+        else
+            e.item(dgn.good_aux_armour)
+            e.item("any jewellery good_item")
+        end
+        e.nsubst("d = " .. d_first_nsubst .. " / ef / |* / .")
+    end
+end
+
+-- Arena subvault main setup. See the comments in the arena subvault section of
+-- gauntlet.des for details.
+-- @param e              Lua environment.
+-- @param rock_unchanged If true, replace all 'x' with a wall type appropriate
+--                       for the given tier. Defaults to true.
+function gauntlet_arena_subvault_setup(e, rock_unchanged)
+    gauntlet_arena_transporter_setup(e)
+
+    local entry = gauntlet_arena_get_monster_entry(e)
+
+    gauntlet_arena_item_setup(e, entry["loot"])
+
+    gauntlet_arena_mons_setup(e, entry["first"], "1")
+    gauntlet_arena_mons_setup(e, entry["second"], "2")
+    gauntlet_arena_mons_setup(e, entry["third"], "3")
+
+    if not rock_unchanged then
+        local glyphs = "xxc"
+        if gauntlet_arena_tier == 2 then
+            glyphs = "cccvvb"
+        end
+        e.subst("x : " .. glyphs)
+    end
+end
+
 -- Arena monster sets used for the first vault choice. The monster entries are
 -- in the keys 'first', 'second', and 'third' in decreasing difficulty with
 -- each entry - giving the monster to place on the glyphs '1', '2', and '3',
