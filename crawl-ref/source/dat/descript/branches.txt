@@ -11,7 +11,8 @@ some sliver of sanity sufficient to tell the tale.
 Temple
 
 The Ecumenical Temple is a place of peace and refuge from the insanity of the
-dungeon. It usually contains altars to most of the known gods.
+dungeon. It usually contains altars to most of the known gods. Gods that value
+exploration grant no piety for exploring the Temple.
 %%%%
 Orcish Mines
 
