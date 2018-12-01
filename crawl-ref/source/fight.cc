@@ -891,9 +891,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     would_cause_penance = false;
 
     if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
-    {
         suffix = ", despite your sanctuary";
-    }
 
     if (you.duration[DUR_LIFESAVING]
         && mon->holiness() & (MH_NATURAL | MH_PLANT))

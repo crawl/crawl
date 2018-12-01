@@ -85,7 +85,7 @@ sub rebrace($$$)
 
 for my $f (@files)
 {
-    open F, "<", $f or die "Can't read $f\n";
+    open F, "<", $f or (print(STDERR "Can't read $f\n"), next);
     my $old = $_ = <F>;
     close F;
 
