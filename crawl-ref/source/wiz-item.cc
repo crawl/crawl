@@ -1585,7 +1585,7 @@ void wizard_draw_card()
         lowercase(card);
         if (card.find(wanted) != string::npos)
         {
-            card_effect(c, DECK_RARITY_LEGENDARY);
+            card_effect(c);
             found_card = true;
             break;
         }

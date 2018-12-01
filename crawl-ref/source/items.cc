@@ -3901,7 +3901,7 @@ colour_t item_def::miscellany_colour() const
     ASSERT(base_type == OBJ_MISCELLANY);
 
     if (is_deck(*this, true))
-        return deck_rarity_to_colour(deck_rarity);
+        return MAGENTA;
 
     switch (sub_type)
     {
@@ -4217,7 +4217,6 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         trim_string(type_str);
     }
 
-    item.deck_rarity = DECK_RARITY_COMMON;
     item.sub_type    = MISC_DECK_UNKNOWN;
 
     if (!type_str.empty())
@@ -4269,61 +4268,6 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         if (deck_type)
             item.sub_type = *deck_type;
     }
-
-    const char* rarities[] =
-    {
-        "plain",
-        "ornate",
-        "legendary",
-        nullptr
-    };
-
-    int rarity_val = -1;
-
-    for (int i = 0; rarities[i] != nullptr; ++i)
-        if (specs.find(rarities[i]) != string::npos)
-        {
-            rarity_val = i;
-            break;
-        }
-
-    if (rarity_val == -1 && !create_for_real)
-        rarity_val = 0;
-
-    if (rarity_val == -1)
-    {
-        while (true)
-        {
-            mprf(MSGCH_PROMPT, "[a] plain [b] ornate [c] legendary? (ESC to exit)");
-
-            int keyin = toalower(get_ch());
-
-            if (key_is_escape(keyin) || keyin == ' '
-                || keyin == '\r' || keyin == '\n')
-            {
-                canned_msg(MSG_OK);
-                item.base_type = OBJ_UNASSIGNED;
-                return;
-            }
-
-            switch (keyin)
-            {
-            case 'p': keyin = 'a'; break;
-            case 'o': keyin = 'b'; break;
-            case 'l': keyin = 'c'; break;
-            }
-
-            if (keyin < 'a' || keyin > 'c')
-                continue;
-
-            rarity_val = keyin - 'a';
-            break;
-        }
-    }
-
-    const deck_rarity_type rarity =
-        static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
-    item.deck_rarity = rarity;
 
     const int num_cards =
         create_for_real ? prompt_for_int("How many cards? ", false)
@@ -4820,14 +4764,10 @@ item_info get_item_info(const item_def& item)
                 ii.sub_type = item.sub_type;
         }
 
-        if (ii.sub_type == MISC_DECK_UNKNOWN)
-            ii.deck_rarity = item.deck_rarity;
-
         if (is_deck(item))
         {
             // All cards are passed through, whether seen or not, as
             // _describe_deck() needs to check card flags anyway.
-            ii.deck_rarity = item.deck_rarity;
             ii.props[CARD_KEY] = item.props[CARD_KEY];
             ii.props[CARD_FLAG_KEY] = item.props[CARD_FLAG_KEY];
             ii.used_count = item.used_count;

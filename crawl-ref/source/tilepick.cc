@@ -2482,19 +2482,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     if (is_deck(item, true))
     {
         tileidx_t ch = TILE_ERROR;
-        switch (item.deck_rarity)
-        {
-            case DECK_RARITY_LEGENDARY:
-                ch = TILE_MISC_DECK_LEGENDARY;
-                break;
-            case DECK_RARITY_RARE:
-                ch = TILE_MISC_DECK_RARE;
-                break;
-            case DECK_RARITY_COMMON:
-            default:
-                ch = TILE_MISC_DECK;
-                break;
-        }
+        ch = TILE_MISC_DECK_RARE;
 
         if (item.flags & ISFLAG_KNOW_TYPE
 #if TAG_MAJOR_VERSION == 34

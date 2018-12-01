@@ -745,10 +745,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         default:
-            if (is_deck(item))
-                valued += 80 + item.deck_rarity * 60;
-            else
-                valued += 200;
+            valued += 200;
         }
         break;
 

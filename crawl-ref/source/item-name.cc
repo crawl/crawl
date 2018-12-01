@@ -999,17 +999,6 @@ const char* rune_type_name(short p)
     }
 }
 
-const char* deck_rarity_name(deck_rarity_type rarity)
-{
-    switch (rarity)
-    {
-    case DECK_RARITY_COMMON:    return "plain";
-    case DECK_RARITY_RARE:      return "ornate";
-    case DECK_RARITY_LEGENDARY: return "legendary";
-    default:                    return "buggy rarity";
-    }
-}
-
 static string misc_type_name(int type, bool known)
 {
     if (is_deck_type(type, true))
@@ -1417,9 +1406,6 @@ static void _name_deck(const item_def &deck, description_level_type desc,
         buff << "BUGGY deck of cards";
         return;
     }
-
-    if (!dbname)
-        buff << deck_rarity_name(deck.deck_rarity) << ' ';
 
     if (deck.sub_type == MISC_DECK_UNKNOWN)
         buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
@@ -2538,8 +2524,6 @@ static void _add_fake_item(object_class_type base, int sub,
         ptmp->freshness = 100;
         ptmp->mon_type = MONS_RAT;
     }
-    else if (is_deck(*ptmp, true)) // stupid fake decks
-        ptmp->deck_rarity = DECK_RARITY_COMMON;
 
     if (force_known_type)
         ptmp->flags |= ISFLAG_KNOW_TYPE;
@@ -3982,7 +3966,6 @@ void init_item_name_cache()
                 if (is_deck(item))
                 {
                     item.plus = 1;
-                    item.deck_rarity = DECK_RARITY_COMMON;
                     init_deck(item);
                 }
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
