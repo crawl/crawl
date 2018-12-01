@@ -690,7 +690,7 @@ dgn.loot_scrolls = [[
     w:2   scroll of acquirement
     ]]
 
-dgn.loot_potions = [[ /
+dgn.loot_potions = [[
     w:15  potion of haste /
     w:15  potion of heal wounds /
     w:10  potion of might /
