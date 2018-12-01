@@ -56,6 +56,7 @@ const string deck_flavour(deck_type deck);
 bool gift_cards();
 void reset_cards();
 
+bool deck_draw();
 bool deck_triple_draw();
 bool deck_deal();
 bool deck_stack();

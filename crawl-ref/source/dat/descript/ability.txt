@@ -424,6 +424,10 @@ distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
 # Nemelex Xobeh
+Draw ability
+
+Draws a card from a deck of power.
+%%%%
 Triple Draw ability
 
 Draws three cards from any deck in your inventory, and allows you to choose one
