@@ -10,6 +10,7 @@
 #include <string>
 
 #include "command-type.h"
+#include "deck-type.h"
 #include "enum.h"
 #include "mon-util.h"
 #include "trap-type.h"
@@ -72,6 +73,7 @@ void describe_spell(spell_type spelled,
                     bool show_booklist = false);
 
 void describe_ability(ability_type ability);
+void describe_deck(deck_type deck);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);

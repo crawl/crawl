@@ -28,6 +28,7 @@
 #include "colour.h"
 #include "database.h"
 #include "dbg-util.h"
+#include "decks.h"
 #include "delay.h"
 #include "describe-spells.h"
 #include "directn.h"
@@ -3257,6 +3258,18 @@ void describe_ability(ability_type ability)
 #endif
 }
 
+/**
+ * Examine a given deck.
+ */
+void describe_deck(deck_type deck)
+{
+    describe_info inf;
+    inf.title = "The " + deck_name(deck);
+    inf.body << "A deck of magical cards, ";
+    inf.body << deck_flavour(deck) << "\n\n";
+    inf.body << deck_contents(deck);
+    show_description(inf);
+}
 
 static string _describe_draconian(const monster_info& mi)
 {

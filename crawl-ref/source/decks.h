@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "deck-type.h"
 #include "enum.h"
 
 /// The minimum number of cards to deal when gifting.
@@ -16,15 +17,6 @@ const int MIN_GIFT_CARDS = 4;
 /// The maximum number of cards to deal when gifting.
 const int MAX_GIFT_CARDS = 13;
 const int MAX_DECK_SIZE  = 13;
-
-enum deck_type
-{
-    DECK_OF_ESCAPE,
-    DECK_OF_DESTRUCTION,
-    DECK_OF_SUMMONING,
-    LAST_PLAYER_DECK = DECK_OF_SUMMONING,
-    DECK_OF_PUNISHMENT,
-};
 
 enum card_type
 {
@@ -55,31 +47,25 @@ enum card_type
     NUM_CARDS
 };
 
-enum card_flags_type
-{
-                      //1 << 0
-    CFLAG_SEEN       = (1 << 1),
-                      //1 << 2
-    CFLAG_PUNISHMENT = (1 << 3),
-    CFLAG_DEALT      = (1 << 4),
-};
-
 const char* card_name(card_type card);
 card_type name_to_card(string name);
 const string deck_contents(deck_type deck);
+string which_decks(card_type card);
+const string deck_flavour(deck_type deck);
 
 bool gift_cards();
 void reset_cards();
+
 bool deck_triple_draw();
 bool deck_deal();
-string which_decks(card_type card);
 bool deck_stack();
 
 bool draw_three(int slot);
 bool stack_five(int slot);
 
-void card_effect(card_type which_card,
-                 uint8_t card_flags = 0, bool tell_card = true);
+void card_effect(card_type which_card, bool dealt = false,
+        bool punishment = false,
+        bool tell_card = true);
 void draw_from_deck_of_punishment(bool deal = false);
 
 string deck_name(deck_type type);

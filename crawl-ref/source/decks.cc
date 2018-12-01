@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
@@ -70,18 +71,13 @@
 #include "transform.h"
 #include "traps.h"
 #include "uncancel.h"
+#include "unicode.h"
 #include "view.h"
 #include "xom.h"
 
 using namespace ui;
 
-struct card_with_weights
-{
-    card_type card;
-    int weight;
-};
-
-typedef vector<card_with_weights> deck_archetype;
+typedef map<card_type, int> deck_archetype;
 
 deck_archetype deck_of_escape =
 {
@@ -125,23 +121,28 @@ deck_archetype deck_of_punishment =
 struct deck_type_data
 {
     string name;
+    string flavour;
     /// The list of cards this deck contains.
-    const deck_archetype* cards;
+    const deck_archetype cards;
 };
 
 static map<deck_type, deck_type_data> all_decks =
 {
     { DECK_OF_ESCAPE, {
-        "escape", &deck_of_escape,
+        "escape", "mainly dealing with various forms of escape.",
+        deck_of_escape,
     } },
     { DECK_OF_DESTRUCTION, {
-        "destruction", &deck_of_destruction,
+        "destruction", "most of which hurl death and destruction "
+            "at one's foes (or, if unlucky, at oneself).",
+        deck_of_destruction,
     } },
     { DECK_OF_SUMMONING, {
-        "summoning", &deck_of_summoning,
+        "summoning", "depicting a range of weird and wonderful creatures.",
+        deck_of_summoning,
     } },
     { DECK_OF_PUNISHMENT, {
-        "punishment", &deck_of_punishment,
+        "punishment", "which wreak havoc on the user.", deck_of_punishment,
     } },
 };
 
@@ -189,7 +190,7 @@ card_type name_to_card(string name)
     return NUM_CARDS;
 }
 
-static const deck_archetype* _cards_in_deck(deck_type deck)
+static const deck_archetype _cards_in_deck(deck_type deck)
 {
     deck_type_data *deck_data = map_find(all_decks, deck);
 
@@ -210,9 +211,9 @@ const string deck_contents(deck_type deck)
     // that appears in multiple subdecks from showing up twice in the
     // output.
     set<card_type> cards;
-    const deck_archetype* pdeck =_cards_in_deck(deck);
-    for (const card_with_weights& cww : *pdeck)
-        cards.insert(cww.card);
+    const deck_archetype &pdeck =_cards_in_deck(deck);
+    for (const auto& cww : pdeck)
+        cards.insert(cww.first);
 
     output += comma_separated_fn(cards.begin(), cards.end(), card_name);
     output += ".";
@@ -220,28 +221,25 @@ const string deck_contents(deck_type deck)
     return output;
 }
 
-static card_type _choose_from_deck(const deck_archetype* pdeck)
+const string deck_flavour(deck_type deck)
 {
-    // FIXME: We should use one of the various choose_random_weighted
-    // functions here, probably with an iterator, instead of
-    // duplicating the implementation.
+    deck_type_data* deck_data = map_find(all_decks, deck);
 
-    int totalweight = 0;
-    card_type result = NUM_CARDS;
-    for (const card_with_weights cww : *pdeck)
-    {
-        totalweight += cww.weight;
-        if (x_chance_in_y(cww.weight, totalweight))
-            result = cww.card;
-    }
-    return result;
+    if (deck_data)
+        return deck_data->flavour;
+
+    return "";
 }
 
 static card_type _random_card(deck_type deck)
 {
-    const deck_archetype *pdeck = _cards_in_deck(deck);
+    const deck_archetype &pdeck = _cards_in_deck(deck);
+    return *random_choose_weighted(pdeck);
+}
 
-    return _choose_from_deck(pdeck);
+static int _deck_cards(deck_type deck)
+{
+    return you.props[deck_name(deck)].get_int();
 }
 
 bool gift_cards()
@@ -255,7 +253,7 @@ bool gift_cards()
                                         5, DECK_OF_DESTRUCTION,
                                         4, DECK_OF_SUMMONING,
                                         2, DECK_OF_ESCAPE);
-        if (you.props[deck_name(choice)].get_int() < MAX_DECK_SIZE)
+        if (_deck_cards(choice) < MAX_DECK_SIZE)
         {
             you.props[deck_name(choice)]++;
             dealt_cards = true;
@@ -267,23 +265,8 @@ bool gift_cards()
 
 void reset_cards()
 {
-    for (int i = 0; i <= LAST_PLAYER_DECK; i++)
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
         you.props[deck_name((deck_type) i)] = 0;
-}
-
-// Draw the top four cards of an unstacked deck and play them all.
-// Discards the rest of the deck. Return false if the operation was
-// failed/aborted along the way.
-bool deck_deal()
-{
-    return false;
-}
-
-static bool _card_in_deck(card_type card, const deck_archetype *pdeck)
-{
-    return any_of(pdeck->begin(), pdeck->end(),
-                  [card](const card_with_weights& cww){return cww.card == card;});
-
 }
 
 string which_decks(card_type card)
@@ -293,11 +276,10 @@ string which_decks(card_type card)
     bool punishment = false;
     for (auto &deck_data : all_decks)
     {
-        misc_item_type deck = (misc_item_type)deck_data.first;
-        if (!_card_in_deck(card, deck_data.second.cards))
+        if (!deck_data.second.cards.count(card))
             continue;
 
-        if (deck == MISC_DECK_OF_PUNISHMENT)
+        if (deck_data.first == DECK_OF_PUNISHMENT)
             punishment = true;
         else
             decks.push_back(deck_data.second.name);
@@ -305,7 +287,7 @@ string which_decks(card_type card)
 
     if (!decks.empty())
     {
-        output += "It is usually found in decks of "
+        output += "It is found in decks of "
                +  comma_separated_line(decks.begin(), decks.end());
         if (punishment)
             output += ", or in Nemelex Xobeh's deck of punishment";
@@ -313,7 +295,7 @@ string which_decks(card_type card)
     }
     else if (punishment)
     {
-        output += "It is usually only found in Nemelex Xobeh's deck of "
+        output += "It is only found in Nemelex Xobeh's deck of "
                   "punishment.";
     }
     else
@@ -406,6 +388,83 @@ static void _describe_cards(vector<card_type> cards)
 #endif
 }
 
+static string _describe_deck(deck_type deck)
+{
+    const string name = deck_name(deck);
+    const int cards   = _deck_cards(deck);
+
+    ostringstream desc;
+
+    desc << chop_string(deck_name(deck), 24)
+         << to_string(cards);
+
+    return trimmed_string(desc.str());
+}
+
+void _print_deck_description(deck_type deck)
+{
+    describe_deck(deck);
+}
+
+static deck_type _choose_deck(const string title = "Draw")
+{
+    ToggleableMenu deck_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+    {
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(make_stringf("%s which deck?        "
+                                    "Cards available", title.c_str()),
+                                    "Describe which deck?    "
+                                    "Cards available",
+                                    MEL_TITLE);
+#ifdef USE_TILE_LOCAL
+        me->colour = BLUE;
+#endif
+        deck_menu.set_title(me, true, true);
+    }
+    deck_menu.set_tag("deck");
+    deck_menu.add_toggle_key('!');
+    deck_menu.add_toggle_key('?');
+    deck_menu.menu_action = Menu::ACT_EXECUTE;
+
+    deck_menu.set_more(formatted_string::parse_string(
+                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                       "between deck selection and description."));
+
+    int numbers[NUM_DECKS];
+
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
+    {
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(_describe_deck((deck_type)i),
+                    _describe_deck((deck_type)i),
+                    MEL_ITEM, 1, i + 'a');
+        numbers[i] = i;
+        me->data = &numbers[i];
+        if (!_deck_cards((deck_type)i))
+            me->colour = COL_USELESS;
+
+        deck_menu.add_entry(me);
+    }
+
+    int ret = NUM_DECKS;
+    deck_menu.on_single_selection = [&deck_menu, &ret](const MenuEntry& sel)
+    {
+        ASSERT(sel.hotkeys.size() == 1);
+        int selected = *(static_cast<int*>(sel.data));
+
+        if (deck_menu.menu_action == Menu::ACT_EXAMINE)
+            _print_deck_description((deck_type) selected);
+        else
+            ret = *(static_cast<int*>(sel.data));
+        return deck_menu.menu_action == Menu::ACT_EXAMINE;
+    };
+    deck_menu.show(false);
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+    return (deck_type) ret;
+}
+
 // Stack a deck: look at the next five cards, put them back in any
 // order, discard the rest of the deck.
 // Return false if the operation was failed/aborted along the way.
@@ -464,6 +523,14 @@ bool stack_five(int slot)
     return false;
 }
 
+// Draw the top four cards of an unstacked deck and play them all.
+// Discards the rest of the deck. Return false if the operation was
+// failed/aborted along the way.
+bool deck_deal()
+{
+    return false;
+}
+
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
@@ -479,13 +546,10 @@ bool draw_three(int slot)
 // rather than "draw" (for the Deal Four out-of-cards situation).
 void draw_from_deck_of_punishment(bool deal)
 {
-    uint8_t flags = CFLAG_PUNISHMENT;
-    if (deal)
-        flags |= CFLAG_DEALT;
     card_type card = _random_card(DECK_OF_PUNISHMENT);
 
     mprf("You %s a card...", deal ? "deal" : "draw");
-    card_effect(card, flags);
+    card_effect(card, deal, true);
 }
 
 static int _get_power_level(int power)
@@ -1288,10 +1352,11 @@ static int _card_power(bool punishment)
 }
 
 void card_effect(card_type which_card,
-                 uint8_t flags, bool tell_card)
+                 bool dealt,
+                 bool punishment, bool tell_card)
 {
-    const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
-    const int power = _card_power(flags & CFLAG_PUNISHMENT);
+    const char *participle = dealt ? "dealt" : "drawn";
+    const int power = _card_power(punishment);
 
     dprf("Card power: %d", power);
 
@@ -1332,7 +1397,7 @@ void card_effect(card_type which_card,
     case CARD_VITRIOL:
     case CARD_PAIN:
     case CARD_ORB:
-        _damaging_card(which_card, power, flags & CFLAG_DEALT);
+        _damaging_card(which_card, power, dealt);
         break;
 
     case CARD_FAMINE:
