@@ -282,6 +282,14 @@ tier1_gauntlet_arenas = {
     second  = {mons = "large abomination", min = 0, max = 2},
     third   = {mons = "small abomination", min = 3, max = 6},
   },
+  {
+    first   = {mons = "ice statue", min = 1, max = 1},
+    second  = {mons = "rime drake", min = 1, max = 2},
+  },
+  {
+    first   = {mons = "oklob plant", min = 1, max = 1},
+    second  = {mons = "acid dragon", min = 1, max = 2},
+  },
 }
 
 -- Monster sets used for the first vault choice, same structure as for
