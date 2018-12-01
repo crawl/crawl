@@ -133,15 +133,15 @@ NAME: gammafunk_gauntlet_arena_corners
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 : gauntlet_arena_subvault_setup(_G)
 MAP
-n..3.3.3..n
 n.3.3.3.3.n
-n..2x3x2..n
+n.xx...xx.n
+n3x3xnx3x3n
 n..xx.xx..n
-n.23.P.32.n
+n.3..P..3.n
 n..xx.xx..n
- ..2x3x2..
- ....1....
- ..ddQdd..
+ 2x2xnx2x2
+ .xx.1.xx.
+ .2ddQdd2.
 ENDMAP
 
 NAME: gammafunk_gauntlet_arena_hedges
@@ -151,14 +151,14 @@ KMONS: q = plant
 : gauntlet_arena_subvault_setup(_G)
 MAP
 n3.3.3.3.3n
-n.pp3.3pp.n
-n3pmp3pmp3n
-n.pmp.pmp.n
-n2pmpPpmp2n
-n.pmp.pmp.n
- 2pmp.pmp2
+n.ppp3ppp.n
+n3pxqqqxp3n
+n.ppp.ppp.n
+n3...P...3n
+n.ppp.ppp.n
+ 2pxqqqxp2
  .pp212pp.
- ..ddQdd..
+ .2ddQdd2.
 ENDMAP
 
 NAME: gammafunk_gauntlet_arena_split_x
@@ -170,7 +170,7 @@ n.x3...3x.n
 n.xx3.3xx.n
 n.3xx.xx3.n
 n....P....n
-n.3xx.xx3.n
+n.3xxnxx3.n
  .xx2.2xx.
  2x2.1.2x2
  ..ddQdd..
@@ -182,11 +182,11 @@ TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 MAP
 n3.3.3.3.3n
 n.x.x.x.x.n
-n.3x3.3x3.n
+n.3x3n3x3.n
 n.x.x.x.x.n
-n.3..P..3.n
+n.3n.P.n3.n
 n.x.x.x.x.n
- .2x2.2x2.
+ .2x2n2x2.
  .x.x1x.x.
  .2ddQdd2.
 ENDMAP
@@ -212,29 +212,29 @@ NSUBST: P = P / .
 : gauntlet_arena_subvault_setup(_G)
 MAP
 n3.3.3.3.3n
-n...xxx...n
+n...nnn...n
 n3.3.x.3.3n
-n.x..x..x.n
-n3xxxPxxx3n
-n.x..x..x.n
- ..2.x.2..
- 2..d1d..2
- ..2dQd2..
+n.n.PxP.n.n
+n3nxxxxxn3n
+n.n.2x2.n.n
+ .2..x..2.
+ ...n1n...
+ .2ddQdd2.
 ENDMAP
 
 NAME: nicolae_gauntlet_arena_x
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 : gauntlet_arena_subvault_setup(_G)
 MAP
-n..3.3.3..n
+nx.3.3.3.xn
 n.x.....x.n
 n.3x3.3x3.n
-n...x.x...n
-n.3..P..3.n
+n...xPx...n
+n.3..x..3.n
 n...x.x...n
  .2x2.2x2.
  .x.d1d.x.
- ..2dQd2..
+ x.2dQd2.x
 ENDMAP
 
 NAME: nicolae_gauntlet_arena_flowing_pool
@@ -245,12 +245,12 @@ SUBST: w : wwwl
 MAP
 n--ww---w-n
 n-w--w--w-n
-n-w-ww-w-wn
-nw-w...w--n
-nw--wPw--wn
-n'w'.wwww'n
+nPw-ww-wwPn
+nw-w---w--n
+nw--wPw-wwn
+n-w-www-w-n
  'ww'''w''
- ww''1w'w'
+ 'w''1w'w'
  d'wdQd'wd
 ENDMAP
 
@@ -260,13 +260,13 @@ NSUBST: P = P / .
 : gauntlet_arena_subvault_setup(_G)
 MAP
 n3.3...3.3n
-n..xx3xx..n
-n3x3.x.3x3n
+n..nx3xn..n
+n3n3.x.3n3n
+n.x.PxP.x.n
+n3.xxxxx.3n
 n.x..x..x.n
-n3.xxPxx.3n
-n.x..x..x.n
- 2x2.x.2x2
- ..xx1xx..
+ 2n2.x.2n2
+ ..nx1xn..
  .2ddQdd2.
 ENDMAP
 
@@ -276,11 +276,11 @@ TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 MAP
 n.3..3..3.n
 n.x.....x.n
-n.3xx3xx3.n
+n.3xxnxx3.n
 n..xx.xx..n
-n3x3.P.3x3n
+n3.3.P.3.3n
 n..xx.xx..n
- 2.xx.xx.2
+ 2.xxnxx.2
  .x.212.x.
  .2ddQdd2.
 ENDMAP
@@ -293,13 +293,13 @@ NSUBST: - = 10=3 / ., ' = 6=2 / .
 : gauntlet_arena_subvault_setup(_G)
 MAP
 n---------n
-n-x-x---x-n
-n---x-x---n
-n-x-..x-x-n
-n-x-xP.-x-n
-n'''x.x'''n
- 'x'''x'x'
- 'x''1''x'
+n-xqx---x-n
+n---xpx---n
+n-x---xqx-n
+n-xqxP--x-n
+n'''xpx'''n
+ 'x'''xqx'
+ 'xqx1''x'
  ''ddQdd''
 ENDMAP
 
@@ -311,9 +311,9 @@ MAP
 n--x------n
 n---x-----n
 n---x----xn
-n---.x.xx-n
-n---xPx---n
-n'xx.x.'''n
+n---PnPxx-n
+n---nnn---n
+n'xx'n''''n
  x''''x'''
  ''''1x'''
  d''dQdx'd
