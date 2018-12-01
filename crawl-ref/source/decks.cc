@@ -465,6 +465,48 @@ static deck_type _choose_deck(const string title = "Draw")
     return (deck_type) ret;
 }
 
+/**
+ * Printed when a deck is exhausted
+ *
+ * @return          A message to print;
+ *                  e.g. "the deck of cards disappears without a trace."
+ */
+static string _empty_deck_msg()
+{
+    string message = random_choose("disappears without a trace.",
+        "glows slightly and disappears.",
+        "glows with a rainbow of weird colours and disappears.");
+    return "The deck of cards " + message;
+}
+
+static void _evoke_deck(deck_type deck, bool dealt = false)
+{
+    ASSERT(_deck_cards(deck) > 0);
+
+    --you.props[deck_name(deck)];
+
+    mprf("You %s a card...", dealt ? "deal" : "draw");
+    card_effect(_random_card(deck), dealt);
+
+    if (!_deck_cards(deck))
+        mpr(_empty_deck_msg());
+}
+
+// Draw one card from a deck
+bool deck_draw()
+{
+    deck_type choice = _choose_deck();
+
+    if (!_deck_cards(choice))
+    {
+        mpr("That deck is empty!");
+        return false;
+    }
+
+    _evoke_deck(choice);
+    return true;
+}
+
 // Stack a deck: look at the next five cards, put them back in any
 // order, discard the rest of the deck.
 // Return false if the operation was failed/aborted along the way.

@@ -476,6 +476,8 @@ static const ability_def Ability_List[] =
       {fail_basis::invo}, abflag::none },
 
     // Nemelex
+    { ABIL_NEMELEX_DRAW_ONE, "Draw",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
       2, 0, 0, 2, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
@@ -2636,6 +2638,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                            "corruption of the Abyss.");
         // included in default force_more_message
         if (!bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA))
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_NEMELEX_DRAW_ONE:
+        fail_check();
+        if (!deck_draw())
             return SPRET_ABORT;
         break;
 
