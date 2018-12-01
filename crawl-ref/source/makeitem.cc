@@ -1752,18 +1752,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     {
         item.initial_cards = random_range(MIN_STARTING_CARDS,
                                           MAX_STARTING_CARDS);
-
-        if (force_ego >= DECK_RARITY_COMMON
-            && force_ego <= DECK_RARITY_LEGENDARY)
-        {
-            item.deck_rarity = static_cast<deck_rarity_type>(force_ego);
-        }
-        else
-        {
-            item.deck_rarity = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                                     20, DECK_RARITY_RARE,
-                                                     72, DECK_RARITY_COMMON);
-        }
         init_deck(item);
     }
 }

@@ -20,7 +20,6 @@
 #include <vector>
 
 #include "bitary.h"
-#include "deck-rarity-type.h"
 #include "description-level-type.h"
 #include "dungeon-feature-type.h"
 #include "enum.h"
@@ -560,7 +559,6 @@ struct item_def
         // These must all be the same size!
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
-        deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()

@@ -12,11 +12,10 @@
 #define DRAWN_CARD_KEY "drawn_cards"
 
 // DECK STRUCTURE: deck.initial_cards is the number of cards the deck *started*
-// with, deck.used_count is* the number of cards drawn, deck.rarity is the
-// deck rarity, deck.props[CARD_KEY] holds the list of cards (with the
-// highest index card being the top card, and index 0 being the bottom
-// card), deck.props[DRAWN_CARD_KEY] holds the list of drawn cards
-// (with index 0 being the first drawn), deck.props[CARD_FLAG_KEY]
+// with, deck.used_count is* the number of cards drawn, deck.props[CARD_KEY]
+// holds the list of cards (with the highest index card being the top card, and
+// index 0 being the bottom card), deck.props[DRAWN_CARD_KEY] holds the list of
+// drawn cards (with index 0 being the first drawn), deck.props[CARD_FLAG_KEY]
 // holds the flags for each card.
 //
 // *if deck.used_count is negative, it's actually -(cards_left). wtf.
@@ -162,7 +161,7 @@ bool draw_three(int slot);
 bool stack_five(int slot);
 bool recruit_mercenary(int mid);
 
-void card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(card_type which_card,
                  uint8_t card_flags = 0, bool tell_card = true);
 void draw_from_deck_of_punishment(bool deal = false);
 
@@ -175,7 +174,6 @@ uint8_t random_deck_type();
 bool is_deck_type(uint8_t type, bool allow_unided = false);
 bool is_deck(const item_def &item, bool iinfo = false);
 bool bad_deck(const item_def &item);
-colour_t deck_rarity_to_colour(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
 int cards_in_deck(const item_def &deck);

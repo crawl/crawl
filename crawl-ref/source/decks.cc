@@ -85,54 +85,54 @@ static void _deck_ident(item_def& deck);
 struct card_with_weights
 {
     card_type card;
-    int weight[3];
+    int weight;
 };
 
 typedef vector<card_with_weights> deck_archetype;
 
 deck_archetype deck_of_escape =
 {
-    { CARD_TOMB,       {5, 5, 5} },
-    { CARD_EXILE,      {0, 1, 2} },
-    { CARD_ELIXIR,     {5, 5, 5} },
-    { CARD_CLOUD,      {5, 5, 5} },
-    { CARD_VELOCITY,   {5, 5, 5} },
-    { CARD_SHAFT,      {5, 5, 5} },
+    { CARD_TOMB,       5 },
+    { CARD_EXILE,      1 },
+    { CARD_ELIXIR,     5 },
+    { CARD_CLOUD,      5 },
+    { CARD_VELOCITY,   5 },
+    { CARD_SHAFT,      5 },
 };
 
 deck_archetype deck_of_destruction =
 {
-    { CARD_VITRIOL,    {5, 5, 5} },
-    { CARD_STORM,      {5, 5, 5} },
-    { CARD_PAIN,       {5, 5, 3} },
-    { CARD_ORB,        {5, 5, 5} },
-    { CARD_DEGEN,      {3, 3, 3} },
-    { CARD_WILD_MAGIC, {5, 5, 3} },
+    { CARD_VITRIOL,    5 },
+    { CARD_STORM,      5 },
+    { CARD_PAIN,       5 },
+    { CARD_ORB,        5 },
+    { CARD_DEGEN,      3 },
+    { CARD_WILD_MAGIC, 5 },
 };
 
 deck_archetype deck_of_summoning =
 {
-    { CARD_ELEMENTS,        {5, 5, 5} },
-    { CARD_SUMMON_DEMON,    {5, 5, 5} },
-    { CARD_SUMMON_WEAPON,   {5, 5, 5} },
-    { CARD_SUMMON_FLYING,   {5, 5, 5} },
-    { CARD_RANGERS,         {5, 5, 5} },
-    { CARD_ILLUSION,        {5, 5, 5} },
+    { CARD_ELEMENTS,        5 },
+    { CARD_SUMMON_DEMON,    5 },
+    { CARD_SUMMON_WEAPON,   5 },
+    { CARD_SUMMON_FLYING,   5 },
+    { CARD_RANGERS,         5 },
+    { CARD_ILLUSION,        5 },
 };
 
 deck_archetype deck_of_punishment =
 {
-    { CARD_WRAITH,     {5, 5, 5} },
-    { CARD_WRATH,      {5, 5, 5} },
-    { CARD_FAMINE,     {5, 5, 5} },
-    { CARD_SWINE,      {5, 5, 5} },
-    { CARD_TORMENT,    {5, 5, 5} },
+    { CARD_WRAITH,     5 },
+    { CARD_WRATH,      5 },
+    { CARD_FAMINE,     5 },
+    { CARD_SWINE,      5 },
+    { CARD_TORMENT,    5 },
 };
 
 #if TAG_MAJOR_VERSION == 34
 deck_archetype removed_deck =
 {
-    { CARD_XOM, {5, 5, 5} },
+    { CARD_XOM, 5 },
 };
 #endif
 
@@ -340,12 +340,8 @@ const string deck_contents(uint8_t deck_type)
     return output;
 }
 
-static card_type _choose_from_deck(const deck_archetype* pdeck,
-                                   deck_rarity_type rarity)
+static card_type _choose_from_deck(const deck_archetype* pdeck)
 {
-    // Random rarity should have been replaced by one of the others by now.
-    ASSERT_RANGE(rarity, DECK_RARITY_COMMON, DECK_RARITY_LEGENDARY + 1);
-
     // FIXME: We should use one of the various choose_random_weighted
     // functions here, probably with an iterator, instead of
     // duplicating the implementation.
@@ -354,23 +350,23 @@ static card_type _choose_from_deck(const deck_archetype* pdeck,
     card_type result = NUM_CARDS;
     for (const card_with_weights cww : *pdeck)
     {
-        totalweight += cww.weight[rarity - DECK_RARITY_COMMON];
-        if (x_chance_in_y(cww.weight[rarity - DECK_RARITY_COMMON], totalweight))
+        totalweight += cww.weight;
+        if (x_chance_in_y(cww.weight, totalweight))
             result = cww.card;
     }
     return result;
 }
 
-static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity)
+static card_type _random_card(uint8_t deck_type)
 {
     const deck_archetype *pdeck = _cards_in_deck(deck_type);
 
-    return _choose_from_deck(pdeck, rarity);
+    return _choose_from_deck(pdeck);
 }
 
 static card_type _random_card(const item_def& item)
 {
-    return _random_card(item.sub_type, item.deck_rarity);
+    return _random_card(item.sub_type);
 }
 
 static card_type _draw_top_card(item_def& deck, bool message,
@@ -622,25 +618,17 @@ static bool _check_buggy_deck(item_def& deck)
 }
 
 /**
- * What message should be printed when a deck of the given rarity is exhausted?
+ * Printed when a deck is exhausted
  *
- * @param rarity    The deck_rarity of the deck that's been exhausted.
  * @return          A message to print;
  *                  e.g. "the deck of cards disappears without a trace."
  */
-static string _empty_deck_msg(deck_rarity_type rarity)
+static string _empty_deck_msg()
 {
-    static const map<deck_rarity_type, const char*> empty_deck_messages = {
-        { DECK_RARITY_COMMON,
-            "disappears without a trace." },
-        { DECK_RARITY_RARE,
-            "glows slightly and disappears." },
-        { DECK_RARITY_LEGENDARY,
-            "glows with a rainbow of weird colours and disappears." },
-    };
-    const char* const *rarity_message = map_find(empty_deck_messages, rarity);
-    ASSERT(rarity_message);
-    return make_stringf("The deck of cards %s", *rarity_message);
+    string message = random_choose("disappears without a trace.",
+        "glows slightly and disappears.",
+        "glows with a rainbow of weird colours and disappears.");
+    return "The deck of cards " + message;
 }
 
 // Choose a deck from inventory and return its slot (or -1).
@@ -727,7 +715,7 @@ bool deck_deal()
     // If the deck had cards left, exhaust it.
     if (deck.quantity > 0)
     {
-        mpr(_empty_deck_msg(deck.deck_rarity));
+        mpr(_empty_deck_msg());
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1105,10 +1093,9 @@ bool draw_three(int slot)
 
     // Make deck disappear *before* the card effect, since we
     // don't want to unwield an empty deck.
-    const deck_rarity_type rarity = deck.deck_rarity;
     if (cards_in_deck(deck) == 0)
     {
-        mpr(_empty_deck_msg(deck.deck_rarity));
+        mpr(_empty_deck_msg());
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1116,7 +1103,7 @@ bool draw_three(int slot)
     }
 
     // Note that card_effect() might cause you to unwield the deck.
-    card_effect(draws[selected], rarity,
+    card_effect(draws[selected],
                 flags[selected] | CFLAG_SEEN, false);
 
     return true;
@@ -1129,10 +1116,10 @@ void draw_from_deck_of_punishment(bool deal)
     uint8_t flags = CFLAG_PUNISHMENT;
     if (deal)
         flags |= CFLAG_DEALT;
-    card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON);
+    card_type card = _random_card(MISC_DECK_OF_PUNISHMENT);
 
     mprf("You %s a card...", deal ? "deal" : "draw");
-    card_effect(card, DECK_RARITY_COMMON, flags);
+    card_effect(card, flags);
 }
 
 void evoke_deck(item_def& deck)
@@ -1141,8 +1128,6 @@ void evoke_deck(item_def& deck)
         return;
 
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
-
-    const deck_rarity_type rarity = deck.deck_rarity;
 
     uint8_t flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
@@ -1157,40 +1142,20 @@ void evoke_deck(item_def& deck)
     const bool deck_gone = (cards_in_deck(deck) == 0);
     if (deck_gone)
     {
-        mpr(_empty_deck_msg(deck.deck_rarity));
+        mpr(_empty_deck_msg());
         dec_inv_item_quantity(deck.link, 1);
     }
 
-    card_effect(card, rarity, flags, false);
+    card_effect(card, flags, false);
 
     // Always wield change, since the number of cards used/left has
     // changed, and it might be wielded.
     you.wield_change = true;
 }
 
-static int _get_power_level(int power, deck_rarity_type rarity)
+static int _get_power_level(int power)
 {
-    int power_level = 0;
-    switch (rarity)
-    {
-    case DECK_RARITY_COMMON:
-        // small chance for an upgrade - approx 1/2 ORNATE chance
-        // (plain decks don't get the +150 power boost)
-        if (x_chance_in_y(power, 1000))
-            ++power_level;
-        break;
-    case DECK_RARITY_LEGENDARY:
-        if (x_chance_in_y(power, 500))
-            ++power_level;
-        // deliberate fall-through
-    case DECK_RARITY_RARE:
-        if (x_chance_in_y(power, 700))
-            ++power_level;
-        break;
-    case DECK_RARITY_RANDOM:
-        die("unset deck rarity");
-    }
-    dprf("Power level: %d", power_level);
+    int power_level = x_chance_in_y(power, 900) + x_chance_in_y(power, 2700);
 
     // other functions in this file will break if this assertion is violated
     ASSERT(power_level >= 0 && power_level <= 2);
@@ -1216,10 +1181,10 @@ static void _suppressed_card_message(god_type god, conduct_type done)
 
 // Actual card implementations follow.
 
-static void _velocity_card(int power, deck_rarity_type rarity)
+static void _velocity_card(int power)
 {
 
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     bool did_something = false;
     enchant_type for_allies = ENCH_NONE, for_hostiles = ENCH_NONE;
 
@@ -1331,7 +1296,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _exile_card(int power, deck_rarity_type rarity)
+static void _exile_card(int power)
 {
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -1340,7 +1305,7 @@ static void _exile_card(int power, deck_rarity_type rarity)
     }
 
     // Calculate how many extra banishments you get.
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     int extra_targets = power_level + random2(1 + power_level);
 
     for (int i = 0; i < 1 + extra_targets; ++i)
@@ -1362,9 +1327,9 @@ static void _exile_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _shaft_card(int power, deck_rarity_type rarity)
+static void _shaft_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     bool did_something = false;
 
     if (is_valid_shaft_level())
@@ -1394,7 +1359,7 @@ static int stair_draw_count = 0;
 
 // This does not describe an actual card. Instead, it only exists to test
 // the stair movement effect in wizard mode ("&c stairs").
-static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
+static void _stairs_card(int /*power*/)
 {
     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
@@ -1437,10 +1402,10 @@ static monster* _friendly(monster_type mt, int dur)
                           .set_summoned(&you, dur, 0));
 }
 
-static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
+static void _damaging_card(card_type card, int power,
                            bool dealt = false)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     const char *participle = dealt ? "dealt" : "drawn";
 
     bool done_prompt = false;
@@ -1556,9 +1521,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     }
 }
 
-static void _elixir_card(int power, deck_rarity_type rarity)
+static void _elixir_card(int power)
 {
-    int power_level = _get_power_level(power, rarity);
+    int power_level = _get_power_level(power);
 
     you.duration[DUR_ELIXIR_HEALTH] = 0;
     you.duration[DUR_ELIXIR_MAGIC] = 0;
@@ -1616,9 +1581,9 @@ static void _godly_wrath()
     mpr("You somehow manage to escape divine attention...");
 }
 
-static void _summon_demon_card(int power, deck_rarity_type rarity)
+static void _summon_demon_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     // one demon (potentially hostile), and one other demonic creature (always
     // friendly)
     monster_type dct, dct2;
@@ -1668,10 +1633,10 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     _friendly(dct2, 5 - power_level);
 }
 
-static void _elements_card(int power, deck_rarity_type rarity)
+static void _elements_card(int power)
 {
 
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     const monster_type element_list[][3] =
     {
         {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
@@ -1690,9 +1655,9 @@ static void _elements_card(int power, deck_rarity_type rarity)
 
 }
 
-static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
+static void _summon_dancing_weapon(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
 
     monster *mon =
         create_monster(
@@ -1761,9 +1726,9 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     mon->ghost_demon_init();
 }
 
-static void _summon_flying(int power, deck_rarity_type rarity)
+static void _summon_flying(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
 
     const monster_type flytypes[] =
     {
@@ -1800,9 +1765,9 @@ static void _summon_flying(int power, deck_rarity_type rarity)
         mpr("You sense the presence of something unfriendly.");
 }
 
-static void _summon_rangers(int power, deck_rarity_type rarity)
+static void _summon_rangers(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     const monster_type dctr  = random_choose(MONS_CENTAUR, MONS_YAKTAUR),
                        dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN),
                        dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN,
@@ -1862,9 +1827,9 @@ bool recruit_mercenary(int mid)
 }
 #endif
 
-static void _cloud_card(int power, deck_rarity_type rarity)
+static void _cloud_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     bool something_happened = false;
 
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
@@ -1912,9 +1877,9 @@ static void _cloud_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _storm_card(int power, deck_rarity_type rarity)
+static void _storm_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
 
     _friendly(MONS_AIR_ELEMENTAL, 3);
 
@@ -1941,9 +1906,9 @@ static void _storm_card(int power, deck_rarity_type rarity)
 
 }
 
-static void _illusion_card(int power, deck_rarity_type rarity)
+static void _illusion_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     monster* mon = get_free_monster();
 
     if (!mon || monster_at(you.pos()))
@@ -1960,9 +1925,9 @@ static void _illusion_card(int power, deck_rarity_type rarity)
     mon->reset();
 }
 
-static void _degeneration_card(int power, deck_rarity_type rarity)
+static void _degeneration_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
 
     if (!apply_visible_monsters([power_level](monster& mons)
            {
@@ -1994,9 +1959,9 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _wild_magic_card(int power, deck_rarity_type rarity)
+static void _wild_magic_card(int power)
 {
-    const int power_level = _get_power_level(power, rarity);
+    const int power_level = _get_power_level(power);
     int num_affected = 0;
 
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
@@ -2053,7 +2018,7 @@ static void _torment_card()
 
 // Punishment cards don't have their power adjusted depending on Nemelex piety,
 // and are based on experience level instead of invocations skill.
-static int _card_power(deck_rarity_type rarity, bool punishment)
+static int _card_power(bool punishment)
 {
     if (punishment)
         return you.experience_level * 18;
@@ -2062,22 +2027,18 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
     result *= you.skill(SK_INVOCATIONS, 100) + 2500;
     result /= 2700;
     result += you.skill(SK_INVOCATIONS, 9);
-
-    if (rarity == DECK_RARITY_RARE)
-        result += 150;
-    else if (rarity == DECK_RARITY_LEGENDARY)
-        result += 300;
+    result += (you.piety * 3) / 2;
 
     return result;
 }
 
-void card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(card_type which_card,
                  uint8_t flags, bool tell_card)
 {
     const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
-    const int power = _card_power(rarity, flags & CFLAG_PUNISHMENT);
+    const int power = _card_power(flags & CFLAG_PUNISHMENT);
 
-    dprf("Card power: %d, rarity: %d", power, rarity);
+    dprf("Card power: %d", power);
 
     if (tell_card)
     {
@@ -2093,30 +2054,30 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     switch (which_card)
     {
-    case CARD_VELOCITY:         _velocity_card(power, rarity); break;
-    case CARD_EXILE:            _exile_card(power, rarity); break;
-    case CARD_ELIXIR:           _elixir_card(power, rarity); break;
-    case CARD_STAIRS:           _stairs_card(power, rarity); break;
-    case CARD_SHAFT:            _shaft_card(power, rarity); break;
+    case CARD_VELOCITY:         _velocity_card(power); break;
+    case CARD_EXILE:            _exile_card(power); break;
+    case CARD_ELIXIR:           _elixir_card(power); break;
+    case CARD_STAIRS:           _stairs_card(power); break;
+    case CARD_SHAFT:            _shaft_card(power); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
-    case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
-    case CARD_ELEMENTS:         _elements_card(power, rarity); break;
-    case CARD_RANGERS:          _summon_rangers(power, rarity); break;
-    case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
-    case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
+    case CARD_SUMMON_DEMON:     _summon_demon_card(power); break;
+    case CARD_ELEMENTS:         _elements_card(power); break;
+    case CARD_RANGERS:          _summon_rangers(power); break;
+    case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power); break;
+    case CARD_SUMMON_FLYING:    _summon_flying(power); break;
     case CARD_TORMENT:          _torment_card(); break;
-    case CARD_CLOUD:            _cloud_card(power, rarity); break;
-    case CARD_STORM:            _storm_card(power, rarity); break;
-    case CARD_ILLUSION:         _illusion_card(power, rarity); break;
-    case CARD_DEGEN:            _degeneration_card(power, rarity); break;
-    case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
+    case CARD_CLOUD:            _cloud_card(power); break;
+    case CARD_STORM:            _storm_card(power); break;
+    case CARD_ILLUSION:         _illusion_card(power); break;
+    case CARD_DEGEN:            _degeneration_card(power); break;
+    case CARD_WILD_MAGIC:       _wild_magic_card(power); break;
 
     case CARD_VITRIOL:
     case CARD_PAIN:
     case CARD_ORB:
-        _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
+        _damaging_card(which_card, power, flags & CFLAG_DEALT);
         break;
 
     case CARD_FAMINE:
@@ -2211,7 +2172,6 @@ card_type top_card(const item_def &deck)
  *
  * @param sub_type  The type of deck in question.
  * @return          A name, e.g. "deck of destruction".
- *                  Does not include rarity.
  *                  If the given type isn't a deck, return "deck of bugginess".
  */
 string deck_name(uint8_t sub_type)
@@ -2272,26 +2232,6 @@ bool bad_deck(const item_def &item)
            || cards_in_deck(item) == 0;
 }
 
-colour_t deck_rarity_to_colour(deck_rarity_type rarity)
-{
-    switch (rarity)
-    {
-    case DECK_RARITY_COMMON:
-        return GREEN;
-
-    case DECK_RARITY_RARE:
-        return MAGENTA;
-
-    case DECK_RARITY_LEGENDARY:
-        return LIGHTMAGENTA;
-
-    case DECK_RARITY_RANDOM:
-        die("unset deck rarity");
-    }
-
-    return WHITE;
-}
-
 void init_deck(item_def &item)
 {
     CrawlHashTable &props = item.props;
@@ -2299,8 +2239,6 @@ void init_deck(item_def &item)
     ASSERT(is_deck(item));
     ASSERT_RANGE(item.initial_cards, 1, 128);
     ASSERT(!props.exists(CARD_KEY));
-    ASSERT(item.deck_rarity >= DECK_RARITY_COMMON
-           && item.deck_rarity <= DECK_RARITY_LEGENDARY);
 
     const store_flags fl = SFLAG_CONST_TYPE;
 

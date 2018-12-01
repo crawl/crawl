@@ -5084,18 +5084,6 @@ static string _get_and_discard_word(string* s)
     return result;
 }
 
-static deck_rarity_type _rarity_string_to_rarity(const string& s)
-{
-    if (s == "common")    return DECK_RARITY_COMMON;
-    if (s == "plain")     return DECK_RARITY_COMMON; // synonym
-    if (s == "rare")      return DECK_RARITY_RARE;
-    if (s == "ornate")    return DECK_RARITY_RARE; // synonym
-    if (s == "legendary") return DECK_RARITY_LEGENDARY;
-
-    mprf("Unknown deck rarity '%s'", s.c_str());
-    return DECK_RARITY_RANDOM;
-}
-
 void item_list::build_deck_spec(string s, item_spec* spec)
 {
     spec->base_type = OBJ_MISCELLANY;
@@ -5104,12 +5092,7 @@ void item_list::build_deck_spec(string s, item_spec* spec)
     // The deck description can start with either "[rarity] deck..." or
     // just "deck".
     if (word != "deck")
-    {
-        spec->ego = _rarity_string_to_rarity(word);
         word = _get_and_discard_word(&s);
-    }
-    else
-        spec->ego = DECK_RARITY_RANDOM;
 
     // Error checking.
     if (word != "deck")
