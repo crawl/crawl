@@ -12,7 +12,6 @@
 #include "art-enum.h" // unrand -> magic staff silliness
 #include "artefact.h"
 #include "colour.h"
-#include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "item-name.h"
@@ -1747,13 +1746,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
                                       MISC_PHANTOM_MIRROR);
     }
-
-    if (is_deck(item))
-    {
-        item.initial_cards = random_range(MIN_STARTING_CARDS,
-                                          MAX_STARTING_CARDS);
-        init_deck(item);
-    }
 }
 
 /**
@@ -1765,9 +1757,8 @@ void squash_plusses(int item_slot)
 {
     item_def& item(mitm[item_slot]);
 
-    ASSERT(!is_deck(item));
     item.plus         = 0;
-    item.used_count   = 0;
+    item.plus2        = 0;
     item.brand        = 0;
     set_equip_desc(item, ISFLAG_NO_DESC);
 }
@@ -1804,7 +1795,7 @@ int items(bool allow_uniques,
            || force_class == OBJ_WEAPONS
            || force_class == OBJ_ARMOUR
            || force_class == OBJ_MISSILES
-           || force_class == OBJ_MISCELLANY && is_deck_type(force_type));
+           || force_class == OBJ_MISCELLANY);
 
     // Find an empty slot for the item (with culling if required).
     int p = get_mitm_slot(10);

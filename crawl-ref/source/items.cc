@@ -30,7 +30,6 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dbg-util.h"
-#include "decks.h"
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
@@ -3154,11 +3153,6 @@ static bool _interesting_explore_pickup(const item_def& item)
         return _item_different_than_inv(item, _edible_food);
 
     case OBJ_MISCELLANY:
-        // Decks always start out unidentified.
-        if (is_deck(item))
-            return true;
-
-        // Intentional fall-through.
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
     case OBJ_STAVES:
@@ -3900,9 +3894,6 @@ colour_t item_def::miscellany_colour() const
 {
     ASSERT(base_type == OBJ_MISCELLANY);
 
-    if (is_deck(*this, true))
-        return MAGENTA;
-
     switch (sub_type)
     {
         case MISC_FAN_OF_GALES:
@@ -4196,95 +4187,6 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     }
 }
 
-static void _deck_from_specs(const char* _specs, item_def &item,
-                             bool create_for_real)
-{
-    string specs    = _specs;
-    string type_str = "";
-
-    trim_string(specs);
-
-    if (specs.find(" of ") != string::npos)
-    {
-        type_str = specs.substr(specs.find(" of ") + 4);
-
-        if (type_str.find("card") != string::npos
-            || type_str.find("deck") != string::npos)
-        {
-            type_str = "";
-        }
-
-        trim_string(type_str);
-    }
-
-    item.sub_type    = MISC_DECK_UNKNOWN;
-
-    if (!type_str.empty())
-    {
-        for (auto type : deck_types)
-        {
-            item.sub_type = type;
-            item.initial_cards = 1;
-            init_deck(item);
-            // Remove "plain " from front.
-            string name = item.name(DESC_PLAIN).substr(6);
-            item.props.clear();
-
-            if (name.find(type_str) != string::npos)
-                break;
-        }
-    }
-
-    if (item.sub_type == MISC_DECK_UNKNOWN && !create_for_real)
-    {
-        // bail
-        item.base_type = OBJ_UNASSIGNED;
-        return;
-    }
-
-    while (item.sub_type == MISC_DECK_UNKNOWN)
-    {
-        mprf(MSGCH_PROMPT, "[a] escape [b] destruction [c] summoning? "
-                           "(ESC to exit)");
-
-        const int keyin = toalower(get_ch());
-
-        if (key_is_escape(keyin) || keyin == ' '
-            || keyin == '\r' || keyin == '\n')
-        {
-            canned_msg(MSG_OK);
-            item.base_type = OBJ_UNASSIGNED;
-            return;
-        }
-
-        static const map<char, misc_item_type> deckmap =
-        {
-            { 'a', MISC_DECK_OF_ESCAPE },
-            { 'b', MISC_DECK_OF_DESTRUCTION },
-            { 'c', MISC_DECK_OF_SUMMONING },
-        };
-
-        const misc_item_type *deck_type = map_find(deckmap, keyin);
-        if (deck_type)
-            item.sub_type = *deck_type;
-    }
-
-    const int num_cards =
-        create_for_real ? prompt_for_int("How many cards? ", false)
-                        : 1;
-
-    if (num_cards <= 0)
-    {
-        canned_msg(MSG_OK);
-        item.base_type = OBJ_UNASSIGNED;
-        return;
-    }
-
-    item.initial_cards = num_cards;
-
-    init_deck(item);
-}
-
 static bool _book_from_spell(const char* specs, item_def &item)
 {
     spell_type type = spell_by_name(specs, true);
@@ -4321,16 +4223,6 @@ bool get_item_by_name(item_def *item, const char* specs,
     item->quantity  = 1;
     // Don't use set_ident_flags(), to avoid getting a spurious ID note.
     item->flags    |= ISFLAG_IDENT_MASK;
-
-    if (class_wanted == OBJ_MISCELLANY
-        && (strstr(specs, "deck") || strstr(specs, "card")))
-    {
-        _deck_from_specs(specs, *item, create_for_real);
-
-        // deck creation cancelled, clean up item->
-        if (item->base_type == OBJ_UNASSIGNED)
-            return false;
-    }
 
     if (class_wanted == OBJ_RUNES && strstr(specs, "rune"))
     {
@@ -4564,17 +4456,6 @@ bool get_item_by_exact_name(item_def &item, const char* name)
         item.base_type = static_cast<object_class_type>(i);
         item.sub_type = 0;
 
-        // _deck_from_specs doesn't use exact matches, but it's close enough
-        if (item.base_type == OBJ_MISCELLANY && starts_with(name_lc, "deck of"))
-        {
-            _deck_from_specs(name, item, false);
-
-            // deck creation cancelled, clean up item.
-            if (item.base_type == OBJ_UNASSIGNED)
-                return false;
-            return item.sub_type != 0;
-        }
-
         if (!item.sub_type)
         {
             for (int j = 0; j < get_max_subtype(item.base_type); ++j)
@@ -4752,26 +4633,7 @@ item_info get_item_info(const item_def& item)
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
-        {
-            if (item.sub_type >= MISC_FIRST_DECK
-                 && item.sub_type <= MISC_LAST_DECK)
-            {
-                // Needs to be changed if we add other miscellaneous items
-                // that can be non-identified.
-                ii.sub_type = MISC_DECK_UNKNOWN;
-            }
-            else
-                ii.sub_type = item.sub_type;
-        }
-
-        if (is_deck(item))
-        {
-            // All cards are passed through, whether seen or not, as
-            // _describe_deck() needs to check card flags anyway.
-            ii.props[CARD_KEY] = item.props[CARD_KEY];
-            ii.props[CARD_FLAG_KEY] = item.props[CARD_FLAG_KEY];
-            ii.used_count = item.used_count;
-        }
+            ii.sub_type = item.sub_type;
         break;
     case OBJ_GOLD:
         ii.sub_type = item.sub_type;
@@ -4797,7 +4659,7 @@ item_info get_item_info(const item_def& item)
     static const char* copy_props[] =
     {
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
-        CORPSE_NAME_TYPE_KEY, DRAWN_CARD_KEY, "item_tile", "item_tile_name",
+        CORPSE_NAME_TYPE_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
         FORCED_ITEM_COLOUR_KEY,
     };

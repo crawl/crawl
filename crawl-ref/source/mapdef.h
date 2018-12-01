@@ -624,7 +624,6 @@ private:
 private:
     item_spec item_by_specifier(const string &spec);
     item_spec_slot parse_item_spec(string spec);
-    void build_deck_spec(string s, item_spec* spec);
     bool parse_single_spec(item_spec &result, string s);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);

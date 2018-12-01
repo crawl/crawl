@@ -4,7 +4,6 @@
 
 #include "ability.h"
 #include "adjust.h"
-#include "decks.h"
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"

@@ -19,7 +19,6 @@
 #include "coordit.h"
 #include "dbg-maps.h"
 #include "dbg-util.h"
-#include "decks.h"
 #include "dungeon.h"
 #include "end.h"
 #include "env.h"

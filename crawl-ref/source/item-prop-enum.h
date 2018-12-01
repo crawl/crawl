@@ -271,27 +271,20 @@ enum misc_item_type
 #endif
     MISC_LIGHTNING_ROD,
 
+#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_ESCAPE,
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_DECK_OF_DESTRUCTION,
-#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_DUNGEONS,
-#endif
     MISC_DECK_OF_SUMMONING,
-#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_WONDERS,
-#endif
     MISC_DECK_OF_PUNISHMENT,
-
-#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_WAR,
     MISC_DECK_OF_CHANGES,
     MISC_DECK_OF_DEFENCE,
     MISC_LAST_DECK = MISC_DECK_OF_DEFENCE,
 
     MISC_RUNE_OF_ZOT,
-#else
-    MISC_LAST_DECK = MISC_DECK_OF_PUNISHMENT,
 #endif
 
     MISC_QUAD_DAMAGE, // Sprint only
@@ -308,19 +301,6 @@ enum misc_item_type
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
-};
-
-// in no particular order (but we need *a* fixed order for dbg-scan)
-const vector<misc_item_type> deck_types =
-{
-    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION,
-#if TAG_MAJOR_VERSION == 34
-    MISC_DECK_OF_SUMMONING, MISC_DECK_OF_WONDERS, MISC_DECK_OF_ODDITIES,
-#endif
-    MISC_DECK_OF_PUNISHMENT, MISC_DECK_OF_WAR,
-#if TAG_MAJOR_VERSION == 34
-    MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE, MISC_DECK_OF_DUNGEONS,
-#endif
 };
 
 // in no particular order (but we need *a* fixed order for dbg-scan)

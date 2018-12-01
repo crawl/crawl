@@ -539,7 +539,6 @@ struct item_def
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
-        short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
         short tithe_state;          ///< tithe state of a stack of gold
     };
@@ -547,8 +546,6 @@ struct item_def
     {
         // These must all be the same size!
         short plus2;        ///< legacy/generic name for this union
-        short used_count;   ///< the # of times a deck was used.
-                            //   negative for stacked deck. #remaining
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short stash_freshness; ///< where stash.cc stores corpse freshness

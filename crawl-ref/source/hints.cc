@@ -15,7 +15,6 @@
 #include "cloud.h"
 #include "colour.h"
 #include "database.h"
-#include "decks.h"
 #include "describe.h"
 #include "end.h"
 #include "english.h"
@@ -3394,24 +3393,9 @@ string hints_describe_item(const item_def &item)
             break;
 
         case OBJ_MISCELLANY:
-            if (is_deck(item))
-            {
-                ostr << "Decks of cards are powerful but dangerous magical "
-                        "items. Try e<w>%</w>oking it"
-#ifdef USE_TILE
-                        ", which can be done by clicking on it"
-#endif
-                        ". You can read about the effect of a card by "
-                        "searching the game's database with <w>%/c</w>.";
-                cmd.push_back(CMD_EVOKE);
-                cmd.push_back(CMD_DISPLAY_COMMANDS);
-            }
-            else
-            {
-                ostr << "Miscellaneous items sometimes harbour magical powers "
-                        "that can be harnessed by e<w>%</w>oking the item.";
-                cmd.push_back(CMD_EVOKE);
-            }
+            ostr << "Miscellaneous items sometimes harbour magical powers "
+                    "that can be harnessed by e<w>%</w>oking the item.";
+            cmd.push_back(CMD_EVOKE);
 
             Hints.hints_events[HINT_SEEN_MISC] = false;
             break;

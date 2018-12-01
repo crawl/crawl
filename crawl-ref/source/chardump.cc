@@ -1316,10 +1316,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
 #if TAG_MAJOR_VERSION == 34
         case EVOC_ROD:
             return "Rod";
-#endif
         case EVOC_DECK:
             return "Deck";
-#if TAG_MAJOR_VERSION == 34
         case EVOC_MISC:
             return "Miscellaneous";
         case EVOC_BUGGY_TOME:

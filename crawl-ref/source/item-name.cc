@@ -1001,12 +1001,10 @@ const char* rune_type_name(short p)
 
 static string misc_type_name(int type, bool known)
 {
-    if (is_deck_type(type, true))
-    {
-        if (!known)
-            return "deck of cards";
-        return deck_name(type);
-    }
+#if TAG_MAJOR_VERSION == 34
+    if (is_deck_type(type))
+        return "removed deck";
+#endif
 
     switch (static_cast<misc_item_type>(type))
     {
@@ -1376,66 +1374,6 @@ static bool _know_ego(const item_def &item, description_level_type desc,
     return _know_any_ident(item, desc, ident)
            && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
            && (ident || item_type_known(item));
-}
-
-/**
- * Construct the name of a given deck item.
- *
- * @param[in] deck      The deck item in question.
- * @param[in] desc      The description level to be used.
- * @param[in] ident     Whether the deck should be named as if it were
- *                      identified.
- * @param[out] buff     The buffer to fill with the given item name.
- */
-static void _name_deck(const item_def &deck, description_level_type desc,
-                       bool ident, ostringstream &buff)
-{
-    const bool know_type = ident || item_type_known(deck);
-
-    const bool dbname   = desc == DESC_DBNAME;
-    const bool basename = _use_basename(deck, desc, ident);
-
-    if (basename)
-    {
-        buff << "deck of cards";
-        return;
-    }
-
-    if (bad_deck(deck))
-    {
-        buff << "BUGGY deck of cards";
-        return;
-    }
-
-    if (deck.sub_type == MISC_DECK_UNKNOWN)
-        buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
-    else
-        buff << misc_type_name(deck.sub_type, know_type);
-
-    // name overriden, not a stacked deck, not a deck that's been drawn from
-    if (dbname || !top_card_is_known(deck) && deck.used_count == 0)
-        return;
-
-    buff << " {";
-    // A marked deck!
-    if (top_card_is_known(deck))
-        buff << card_name(top_card(deck));
-
-    // How many cards have been drawn, or how many are left.
-    if (deck.used_count != 0)
-    {
-        if (top_card_is_known(deck))
-            buff << ", ";
-
-        if (deck.used_count > 0)
-            buff << "drawn: ";
-        else
-            buff << "left: ";
-
-        buff << abs(deck.used_count);
-    }
-
-    buff << "}";
 }
 
 /**
@@ -1965,12 +1903,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
     case OBJ_MISCELLANY:
     {
-        if (is_deck(*this) || item_typ == MISC_DECK_UNKNOWN)
-        {
-            _name_deck(*this, desc, ident, buff);
-            break;
-        }
-
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
 
@@ -2112,7 +2044,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         buff << "bad item (cl:" << static_cast<int>(base_type)
              << ",ty:" << item_typ << ",pl:" << plus
-             << ",pl2:" << used_count << ",sp:" << special
+             << ",pl2:" << plus2 << ",sp:" << special
              << ",qu:" << quantity << ")";
     }
 
@@ -2163,7 +2095,7 @@ bool item_type_known(const item_def& item)
     if (item.base_type == OBJ_MISSILES)
         return true;
 
-    if (item.base_type == OBJ_MISCELLANY && !is_deck(item))
+    if (item.base_type == OBJ_MISCELLANY)
         return true;
 
 #if TAG_MAJOR_VERSION == 34
@@ -3753,7 +3685,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         default:
-            return you.get_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);
+            return you.get_mutation_level(MUT_NO_ARTIFICE);
         }
 
     case OBJ_BOOKS:
@@ -3963,11 +3895,6 @@ void init_item_name_cache()
             {
                 if (plus > 0)
                     item.plus = max(0, plus - 1);
-                if (is_deck(item))
-                {
-                    item.plus = 1;
-                    init_deck(item);
-                }
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
                                         true, true);
                 lowercase(name);
