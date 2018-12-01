@@ -124,7 +124,6 @@ deck_archetype deck_of_punishment =
 
 struct deck_type_data
 {
-    /// The name of the deck. (Doesn't include "deck of ".)
     string name;
     /// The list of cards this deck contains.
     const deck_archetype* cards;
@@ -243,6 +242,33 @@ static card_type _random_card(deck_type deck)
     const deck_archetype *pdeck = _cards_in_deck(deck);
 
     return _choose_from_deck(pdeck);
+}
+
+bool gift_cards()
+{
+    const int deal = random_range(MIN_GIFT_CARDS, MAX_GIFT_CARDS);
+    bool dealt_cards = false;
+
+    for (int i = 0; i < deal; i++)
+    {
+        deck_type choice = random_choose_weighted(
+                                        5, DECK_OF_DESTRUCTION,
+                                        4, DECK_OF_SUMMONING,
+                                        2, DECK_OF_ESCAPE);
+        if (you.props[deck_name(choice)].get_int() < MAX_DECK_SIZE)
+        {
+            you.props[deck_name(choice)]++;
+            dealt_cards = true;
+        }
+    }
+
+    return dealt_cards;
+}
+
+void reset_cards()
+{
+    for (int i = 0; i <= LAST_PLAYER_DECK; i++)
+        you.props[deck_name((deck_type) i)] = 0;
 }
 
 // Draw the top four cards of an unstacked deck and play them all.
@@ -1337,10 +1363,9 @@ void card_effect(card_type which_card,
  * @return          A name, e.g. "deck of destruction".
  *                  If the given type isn't a deck, return "deck of bugginess".
  */
-string deck_name(uint8_t sub_type)
+string deck_name(deck_type deck)
 {
-    const deck_type_data *deck_data = map_find(all_decks,
-                                               (deck_type)sub_type);
+    const deck_type_data *deck_data = map_find(all_decks, deck);
     const string name = deck_data ? deck_data->name : "bugginess";
     return "deck of " + name;
 }

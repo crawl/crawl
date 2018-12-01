@@ -947,6 +947,14 @@ static bool _give_nemelex_gift(bool forced = false)
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY))
     {
+        if (gift_cards())
+            simple_god_message(" deals you some cards!");
+        else
+            simple_god_message(" goes to deal, but finds you have enough cards.");
+        _inc_gift_timeout(5 + random2avg(9, 2));
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
         return true;
     }
 
@@ -2760,7 +2768,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_NEMELEX_XOBEH:
-        // nemelex_reset_decks();
+        reset_cards();
         mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
              god_name(old_god).c_str());
         break;
