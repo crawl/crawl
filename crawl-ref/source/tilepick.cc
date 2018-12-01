@@ -2479,24 +2479,6 @@ static tileidx_t _tileidx_rune(const item_def &item)
 
 static tileidx_t _tileidx_misc(const item_def &item)
 {
-    if (is_deck(item, true))
-    {
-        tileidx_t ch = TILE_ERROR;
-        ch = TILE_MISC_DECK_RARE;
-
-        if (item.flags & ISFLAG_KNOW_TYPE
-#if TAG_MAJOR_VERSION == 34
-            && item.sub_type != MISC_DECK_OF_ODDITIES // non-contiguous
-#endif
-            )
-        {
-            // NOTE: order of tiles must be identical to order of decks.
-            int offset = item.sub_type - MISC_FIRST_DECK + 1;
-            ch += offset;
-        }
-        return ch;
-    }
-
     switch (item.sub_type)
     {
 #if TAG_MAJOR_VERSION == 34
@@ -2532,6 +2514,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_BOX_OF_BEASTS:
         return TILE_MISC_BOX_OF_BEASTS;
 
+    // Detault for summary menus
+    case NUM_MISCELLANY:
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 

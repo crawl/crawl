@@ -26,7 +26,9 @@ enum object_selector
 #endif
     OSEL_ENCHANTABLE_ARMOUR      =  -5,
     OSEL_BEOGH_GIFT              =  -6,
+#if TAG_MAJOR_VERSION == 34
     OSEL_DRAW_DECK               =  -7,
+#endif
     OSEL_THROWABLE               =  -8,
     OSEL_EVOKABLE                =  -9,
     OSEL_WORN_ARMOUR             = -10,

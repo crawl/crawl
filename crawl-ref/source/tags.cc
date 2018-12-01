@@ -3617,6 +3617,15 @@ static void tag_read_you(reader &th)
         you.uncancel[i].second = unmarshallInt(th);
     }
 #if TAG_MAJOR_VERSION == 34
+    // Cancel any item-based deck manipulations
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_DECKS)
+    {
+        erase_if(you.uncancel,
+                 [](const pair<uncancellable_type, int> uc) {
+                    return uc.first == UNC_DRAW_THREE
+                           || uc.first == UNC_STACK_FIVE;
+                });
+    }
     }
 
     if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL)
@@ -3921,14 +3930,10 @@ static void tag_read_you_items(reader &th)
                                                            | (seed3 << 16);
         }
     }
-    // Remove any decks if no longer worshipping Nemelex, now that items have
-    // been loaded.
-    if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WRATH
-        && !you_worship(GOD_NEMELEX_XOBEH)
-        && you.num_total_gifts[GOD_NEMELEX_XOBEH])
-    {
-        nemelex_reclaim_decks();
-    }
+
+    // Remove any decks now that items have been loaded.
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_DECKS)
+        reclaim_decks();
 
     // Reset training arrays for transfered gnolls that didn't train all skills.
     if (th.getMinorVersion() < TAG_MINOR_GNOLLS_REDUX)

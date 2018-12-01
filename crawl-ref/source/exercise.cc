@@ -250,9 +250,3 @@ void practise_evoking(int amount)
     // XXX: degree determination is just passed in but should be done here.
     exercise(SK_EVOCATIONS, amount);
 }
-
-/// Skill training while using one of Nemelex's decks.
-void practise_using_deck()
-{
-    exercise(SK_INVOCATIONS, 1);
-}

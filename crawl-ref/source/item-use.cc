@@ -19,7 +19,6 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "decks.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
