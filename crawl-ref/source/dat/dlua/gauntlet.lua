@@ -182,7 +182,8 @@ tier1_gauntlet_arenas = {
     third   = {mons = "steam dragon", min = 1, max = 2},
   },
   {
-    second  = {mons = "jelly w:5 / slime creature", min = 3, max = 6},
+    second  = {mons = "slime creature", min = 1, max = 3},
+    third   = {mons = "jelly", min = 1, max = 3},
   },
   {
     first   = {mons = "death ooze", min = 1, max = 1},
@@ -259,11 +260,15 @@ tier1_gauntlet_arenas = {
     second  = {mons = "spectral thing place:Lair:6", min = 1, max = 1},
   },
   {
-    second  = {mons = "small abomination", min = 2, max = 4},
+    first   = {mons = "shining eye", min = 1, max = 1},
+    second  = {mons = "floating eye / golden eye", min = 1, max = 2},
+    loot    = "potion of mutation ident:type",
+    weight  = 5,
   },
   {
-    second  = {mons = "floating eye", min = 1, max = 2},
-    third   = {mons = "shining eye / eye of devastation", min = 1, max = 2},
+    first   = {mons = "eye of devastation", min = 1, max = 1},
+    second  = {mons = "floating eye / golden eye", min = 1, max = 2},
+    weight  = 5,
   },
   {
     first   = {mons = "tengu warrior", min = 1, max = 1},
@@ -271,7 +276,11 @@ tier1_gauntlet_arenas = {
   },
   {
     first   = {mons = "wizard", min = 1, max = 1},
-    second  = {mons = "crimson imp / white imp / shadow imp", min = 1, max = 3},
+    second  = {mons = "white imp / shadow imp", min = 1, max = 3},
+  },
+  {
+    second  = {mons = "large abomination", min = 0, max = 2},
+    third   = {mons = "small abomination", min = 3, max = 6},
   },
 }
 
@@ -335,19 +344,21 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "cacodemon", min = 1, max = 1},
-    second = {mons = "neqoxec", min = 1, max = 3},
-    weight = 2
+    second = {mons = "neqoxec", min = 0, max = 3},
+    loot   = "potion of mutation ident:type",
+    weight = 5
   },
   {
     first  = {mons = "blizzard demon", min = 1, max = 1},
-    second = {mons = "white imp / ice devil", min = 1, max = 3},
+    second = {mons = "white imp / ice devil", min = 0, max = 3},
   },
   {
     first  = {mons = "reaper", min = 1, max = 1},
     second = {mons = "hellwing / shadow imp", min = 1, max = 3},
   },
   {
-    second = {mons = "shapeshifter", min = 2, max = 4},
+    first  = {mons = "glowing shapeshifter", min = 1, max = 1},
+    second = {mons = "shapeshifter", min = 2, max = 3},
   },
   {
     first  = {mons = "apocalypse crab", min = 1, max = 1},
@@ -382,26 +393,28 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "great orb of eyes", min = 1, max = 1},
-    second = {mons = "ugly thing", min = 1, max = 3},
+    second = {mons = "ugly thing", min = 1, max = 2},
   },
   {
     second = {mons = "glowing orange brain", min = 1, max = 2},
+    third  = {mons = "ugly thing", min = 1, max = 2},
   },
   {
-    second = {mons = "large abomination", min = 1, max = 2},
-    third  = {mons = "small abomination", min = 2, max = 4},
+    second = {mons = "large abomination", min = 2, max = 3},
+    third  = {mons = "small abomination", min = 3, max = 6},
   },
   {
     first  = {mons = "wretched star", min = 1, max = 1},
-    second = {mons = "neqoxec / shapeshifter", min = 1, max = 3},
+    second = {mons = "neqoxec / small abomination", min = 1, max = 3},
     loot   = "potion of mutation ident:type",
   },
   {
-    second = {mons = "wizard", min = 2, max = 3},
+    second = {mons = "wizard", min = 2, max = 2},
+    third  = {mons = "white imp / shadow imp", min = 2, max = 4},
   },
   {
-    second = {mons = "death scarab", min = 1, max = 3},
-    third  = {mons = "spectral thing place:Spider:4", min = 1, max = 3},
+    second = {mons = "death scarab", min = 2, max = 2},
+    third  = {mons = "spectral thing place:Lair:6", min = 2, max = 4},
   },
   {
     first  = {mons = "orange crystal statue", min = 1, max = 1},
