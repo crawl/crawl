@@ -3124,7 +3124,7 @@ KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               lightning rod
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
-KFEAT:   T = known permanent teleport trap
+KFEAT:   T = known permanent teleport trap / dispersal trap
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -3454,7 +3454,7 @@ KMASK: 89 = opaque
 KMONS: 8 = 8
 KMONS: 9 = 9
 KITEM: 89 = % / * / w:1 |
-KFEAT: X = known permanent teleport trap
+KFEAT: X = known permanent teleport trap / dispersal trap
 KFEAT: Z : known permanent teleport trap / w:30 x
 SUBST: Y = 89, x : xcvb
 MAP

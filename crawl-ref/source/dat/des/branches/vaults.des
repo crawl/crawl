@@ -2161,7 +2161,7 @@ TAGS:   vaults_end_quadrant_prize unrand
 NSUBST: ; = 3:l / 3:z / 3:A / *:.
 SUBST:  9 = 8 9
 SUBST:  $ = | * $
-KFEAT:  l = teleport trap
+KFEAT:  l = teleport trap / dispersal trap
 KFEAT:  z = zot trap
 KFEAT:  A = alarm trap
 SUBST:  s = x:250 +:1
