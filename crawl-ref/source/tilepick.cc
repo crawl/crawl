@@ -84,7 +84,7 @@ static tileidx_t _tileidx_trap(trap_type type)
     case TRAP_SPEAR:
         return TILE_DNGN_TRAP_SPEAR;
     case TRAP_DISPERSAL:
-        return TILE_DNGN_TRAP_TELEPORT;
+        return TILE_DNGN_TRAP_DISPERSAL;
     case TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case TRAP_TELEPORT_PERMANENT:
@@ -207,6 +207,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_TRAP_MECHANICAL:
         return TILE_DNGN_TRAP_ARROW;
+    case DNGN_TRAP_DISPERSAL:
+        return TILE_DNGN_TRAP_DISPERSAL;
     case DNGN_TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case DNGN_TRAP_ALARM:
