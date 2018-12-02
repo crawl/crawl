@@ -3747,7 +3747,7 @@ MAP
 ENDMAP
 
 NAME: cheibrodos_fertilizer
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
