@@ -435,7 +435,7 @@ to keep, discarding the other two.
 %%%%
 Deal Four ability
 
-Deals four cards from any unmarked deck in the time it normally takes to draw a
+Deals four cards from a deck in the time it normally takes to draw a
 single card. The rest of the deck is lost. If the deck does not contain enough
 cards, Nemelex will give you one extra card, but you might not like it.
 %%%%
