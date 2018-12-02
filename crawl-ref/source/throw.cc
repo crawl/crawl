@@ -49,6 +49,7 @@
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
+static int  _get_blowgun_chance(const int hd);
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
@@ -280,8 +281,64 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
         {
             descs.emplace_back("immune to nets");
         }
+
+        // Display the chance for a needle of para/confuse/sleep/frenzy
+        // to affect monster
+        if (you.weapon() && you.weapon()->is_type(OBJ_WEAPONS, WPN_BLOWGUN))
+        {
+            special_missile_type brand = get_ammo_brand(*item);
+            if (brand == SPMSL_PARALYSIS || brand == SPMSL_CONFUSION
+                || brand == SPMSL_FRENZY || brand == SPMSL_SLEEP)
+            {
+                int chance = _get_blowgun_chance(mi.hd);
+                bool immune = false;
+                if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
+                    immune = true;
+
+                string verb = brand == SPMSL_PARALYSIS ? "paralyse" :
+                              brand == SPMSL_CONFUSION ? "confuse"  :
+                              brand == SPMSL_FRENZY    ? "frenzy"
+                              /* SPMSL_SLEEP */        : "sleep";
+
+                string chance_string = immune ? "immune to needles" :
+                                       make_stringf("chance to %s on hit: %d%%",
+                                                    verb.c_str(), chance);
+                descs.emplace_back(chance_string);
+            }
+        }
     }
     return descs;
+}
+
+/**
+ *  Chance for a needle fired by the player to affect a monster of a particular
+ *  hit dice, given the player's throwing skill and blowgun enchantment.
+ *
+ *    @param hd     The monster's hit dice.
+ *    @return       The percentage chance for the player to affect the monster,
+ *                  rounded down.
+ *
+ *  This chance is rolled in ranged_attack::blowgun_check using this formula for
+ *  success:
+ *      if hd < 15, fixed 3% chance to succeed regardless of roll
+ *      else, or if the 3% chance fails,
+ *                      succeed if 2 + random2(4 + skill + enchantment) >= hd
+ */
+static int _get_blowgun_chance(const int hd)
+{
+    ASSERT(you.weapon()->is_type(OBJ_WEAPONS, WPN_BLOWGUN));
+    const int plus = you.weapon()->plus;
+    const int skill = you.skill_rdiv(SK_THROWING);
+
+    int chance = 10000 - 10000 * (hd - 2) / (4 + skill + plus);
+    chance = min(max(chance, 0), 10000);
+    if (hd < 15)
+    {
+        chance *= 97;
+        chance /= 100;
+        chance += 300; // 3% chance to ignore HD and affect enemy anyway
+    }
+    return chance / 100;
 }
 
 static bool _fire_choose_item_and_target(int& slot, dist& target,
