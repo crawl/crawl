@@ -13,6 +13,7 @@
 #include "enum.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
+#define NEMELEX_STACK_KEY       deck_name(DECK_STACK)
 
 /// The minimum number of cards to deal when gifting.
 const int MIN_GIFT_CARDS = 4;

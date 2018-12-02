@@ -203,8 +203,23 @@ static const deck_archetype _cards_in_deck(deck_type deck)
     return {};
 }
 
+static const string _stack_contents()
+{
+    const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+
+    string output = "\nRemaining cards: ";
+    output += comma_separated_fn(stack.begin(), stack.end(),
+              [](const CrawlStoreValue& card) { return card_name((card_type)card.get_int()); });
+    output += ".";
+
+    return output;
+}
+
 const string deck_contents(deck_type deck)
 {
+    if (deck == DECK_STACK)
+        return _stack_contents();
+
     string output = "\nIt may contain the following cards: ";
 
     // This way of doing things is intended to prevent a card
@@ -223,6 +238,9 @@ const string deck_contents(deck_type deck)
 
 const string deck_flavour(deck_type deck)
 {
+    if (deck == DECK_STACK)
+        return "set aside for later.";
+
     deck_type_data* deck_data = map_find(all_decks, deck);
 
     if (deck_data)
@@ -239,7 +257,8 @@ static card_type _random_card(deck_type deck)
 
 static int _deck_cards(deck_type deck)
 {
-    return you.props[deck_name(deck)].get_int();
+    return deck == DECK_STACK ? you.props[NEMELEX_STACK_KEY].get_vector().size()
+                              : you.props[deck_name(deck)].get_int();
 }
 
 bool gift_cards()
@@ -267,6 +286,7 @@ void reset_cards()
 {
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
         you.props[deck_name((deck_type) i)] = 0;
+    you.props[NEMELEX_STACK_KEY].get_vector().clear();
 }
 
 string which_decks(card_type card)
@@ -304,7 +324,7 @@ string which_decks(card_type card)
     return output;
 }
 
-static void _describe_cards(vector<card_type> cards)
+static void _describe_cards(CrawlVector& cards)
 {
     ASSERT(!cards.empty());
 
@@ -318,8 +338,10 @@ static void _describe_cards(vector<card_type> cards)
     bool seen[NUM_CARDS] = {0};
     ostringstream data;
     bool first = true;
-    for (card_type card : cards)
+    for (auto& val : cards)
     {
+        card_type card = (card_type) val.get_int();
+
         if (seen[card])
             continue;
         seen[card] = true;
@@ -406,7 +428,8 @@ void _print_deck_description(deck_type deck)
     describe_deck(deck);
 }
 
-static deck_type _choose_deck(const string title = "Draw")
+static deck_type _choose_deck(const string title = "Draw",
+                              bool allow_stack = false)
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
@@ -447,6 +470,18 @@ static deck_type _choose_deck(const string title = "Draw")
         deck_menu.add_entry(me);
     }
 
+    if (allow_stack && _deck_cards(DECK_STACK))
+    {
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(_describe_deck(DECK_STACK),
+                    _describe_deck(DECK_STACK),
+                    MEL_ITEM, 1, LAST_PLAYER_DECK + 1 + 'a');
+        numbers[LAST_PLAYER_DECK + 1] = DECK_STACK;
+        me->data = &numbers[LAST_PLAYER_DECK + 1];
+
+        deck_menu.add_entry(me);
+    }
+
     int ret = NUM_DECKS;
     deck_menu.on_single_selection = [&deck_menu, &ret](const MenuEntry& sel)
     {
@@ -483,10 +518,20 @@ static void _evoke_deck(deck_type deck, bool dealt = false)
 {
     ASSERT(_deck_cards(deck) > 0);
 
-    --you.props[deck_name(deck)];
-
     mprf("You %s a card...", dealt ? "deal" : "draw");
-    card_effect(_random_card(deck), dealt);
+
+    if (deck == DECK_STACK)
+    {
+        auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+        card_type card = (card_type) stack[stack.size() - 1].get_int();
+        stack.pop_back();
+        card_effect(card, dealt);
+    }
+    else
+    {
+        --you.props[deck_name(deck)];
+        card_effect(_random_card(deck), dealt);
+    }
 
     if (!_deck_cards(deck))
         mpr(_empty_deck_msg());
@@ -495,7 +540,10 @@ static void _evoke_deck(deck_type deck, bool dealt = false)
 // Draw one card from a deck
 bool deck_draw()
 {
-    deck_type choice = _choose_deck();
+    deck_type choice = _choose_deck("Draw", true);
+
+    if (choice == NUM_DECKS)
+        return false;
 
     if (!_deck_cards(choice))
     {
@@ -507,20 +555,43 @@ bool deck_draw()
     return true;
 }
 
-// Stack a deck: look at the next five cards, put them back in any
-// order, discard the rest of the deck.
-// Return false if the operation was failed/aborted along the way.
 bool deck_stack()
 {
-    return false;
+    int total_cards = 0;
+
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
+        total_cards += _deck_cards((deck_type) i);
+
+    if (_deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
+                                          false, 0))
+    {
+        return false;
+    }
+
+    if (!total_cards)
+    {
+        mpr("You are out of cards!");
+        return false;
+    }
+
+    if (total_cards < 5 && !yesno("You have fewer than five cards, "
+                                  "stack them anyway?", false, 0))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.props[NEMELEX_STACK_KEY].get_vector().clear();
+    run_uncancel(UNC_STACK_FIVE, min(total_cards, 5));
+    return true;
 }
 
 class StackFiveMenu : public Menu
 {
     virtual bool process_key(int keyin) override;
-    vector<card_type>& draws;
+    CrawlVector& draws;
 public:
-    StackFiveMenu(vector<card_type>& d, vector<uint8_t>& f)
+    StackFiveMenu(CrawlVector& d)
         : Menu(MF_NOSELECT | MF_ALWAYS_SHOW_MORE), draws(d) {};
 };
 
@@ -560,9 +631,49 @@ bool StackFiveMenu::process_key(int keyin)
     return true;
 }
 
-bool stack_five(int slot)
+bool stack_five(int to_stack)
 {
-    return false;
+    auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+
+    while (stack.size() < to_stack)
+    {
+        if (crawl_state.seen_hups)
+            return false;
+
+        deck_type choice = _choose_deck("Draw");
+
+        if (choice == NUM_DECKS)
+            continue;
+
+        you.props[deck_name(choice)]--;
+
+        card_type draw = _random_card(choice);
+        mprf("You draw... %s", card_name(draw));
+        more();
+        stack.push_back(draw);
+    }
+
+    StackFiveMenu menu(stack);
+    MenuEntry *const title = new MenuEntry("Select two cards to swap them:", MEL_TITLE);
+    menu.set_title(title);
+    for (unsigned int i = 0; i < stack.size(); i++)
+    {
+        MenuEntry * const entry =
+            new MenuEntry(card_name((card_type)stack[i].get_int()),
+                          MEL_ITEM, 1, '1'+i);
+#ifdef USE_TILE
+        entry->add_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+#endif
+        menu.add_entry(entry);
+    }
+    menu.set_more(formatted_string::parse_string(
+                "<lightgrey>Press <w>?</w> for the card descriptions"
+                " or <w>Enter</w> to accept."));
+    menu.show();
+
+    std::reverse(stack.begin(), stack.end());
+
+    return true;
 }
 
 // Draw the top four cards of an deck and play them all.
@@ -654,10 +765,7 @@ bool deck_triple_draw()
 
 bool draw_three()
 {
-    auto& draw = you.props[NEMELEX_TRIPLE_DRAW_KEY].get_vector();
-    vector<card_type> draws;
-    for (auto& val : draw)
-        draws.push_back((card_type)val.get_int());
+    auto& draws = you.props[NEMELEX_TRIPLE_DRAW_KEY].get_vector();
 
     int selected = -1;
     bool need_prompt_redraw = true;
@@ -670,7 +778,7 @@ bool draw_three()
             {
                 msg::streams(MSGCH_PROMPT)
                     << msg::nocap << (static_cast<char>(i + 'a')) << " - "
-                    << card_name(draws[i]) << endl;
+                    << card_name((card_type)draws[i].get_int()) << endl;
             }
             need_prompt_redraw = false;
         }
@@ -694,7 +802,7 @@ bool draw_three()
             canned_msg(MSG_HUH);
     }
 
-    card_effect(draws[selected]);
+    card_effect((card_type) draws[selected].get_int());
 
     return true;
 }
@@ -1587,6 +1695,8 @@ void card_effect(card_type which_card,
  */
 string deck_name(deck_type deck)
 {
+    if (deck == DECK_STACK)
+        return "stacked deck";
     const deck_type_data *deck_data = map_find(all_decks, deck);
     const string name = deck_data ? deck_data->name : "bugginess";
     return "deck of " + name;

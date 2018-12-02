@@ -3264,7 +3264,12 @@ void describe_ability(ability_type ability)
 void describe_deck(deck_type deck)
 {
     describe_info inf;
-    inf.title = "The " + deck_name(deck);
+
+    if (deck == DECK_STACK)
+        inf.title = "A stacked deck";
+    else
+        inf.title = "The " + deck_name(deck);
+
     inf.body << "A deck of magical cards, ";
     inf.body << deck_flavour(deck) << "\n\n";
     inf.body << deck_contents(deck);

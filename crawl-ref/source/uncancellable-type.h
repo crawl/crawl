@@ -3,8 +3,8 @@
 enum uncancellable_type
 {
     UNC_ACQUIREMENT,           // arg is AQ_SCROLL
-    UNC_DRAW_THREE,            // arg is inv slot of the deck
-    UNC_STACK_FIVE,            // arg is inv slot of the deck
+    UNC_DRAW_THREE,            // arg is ignored
+    UNC_STACK_FIVE,            // arg is number of cards to stack
 #if TAG_MAJOR_VERSION == 34
     UNC_MERCENARY,             // arg is mid of the monster
 #endif
