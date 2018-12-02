@@ -1015,8 +1015,8 @@ int player_teleport(bool calc_unid)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // Don't allow any form of teleportation in Sprint.
-    if (crawl_state.game_is_sprint())
+    // Don't allow any form of teleportation in Sprint or Gauntlets.
+    if (crawl_state.game_is_sprint() || player_in_branch(BRANCH_GAUNTLET))
         return 0;
 
     // Short-circuit rings of teleport to prevent spam.
@@ -6336,8 +6336,13 @@ int player_res_magic(bool calc_unid, bool temp)
  */
 string player::no_tele_reason(bool calc_unid, bool blinking) const
 {
-    if (crawl_state.game_is_sprint() && !blinking)
-        return "Long-range teleportation is disallowed in Dungeon Sprint.";
+    if (!blinking)
+    {
+        if (crawl_state.game_is_sprint())
+            return "Long-range teleportation is disallowed in Dungeon Sprint.";
+        else if (player_in_branch(BRANCH_GAUNTLET))
+            return "Long-range teleportation does not work in a Gauntlet.";
+    }
 
     if (stasis())
         return "Your stasis prevents you from teleporting.";
