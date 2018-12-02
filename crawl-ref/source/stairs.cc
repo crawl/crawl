@@ -567,6 +567,10 @@ void floor_transition(dungeon_feature_type how,
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
+    you.stop_constricting_all();
+    you.stop_being_constricted();
+    you.clear_beholders();
+    you.clear_fearmongers();
 
     if (!forced)
     {
@@ -782,20 +786,9 @@ void floor_transition(dungeon_feature_type how,
 
     new_level();
 
-    // Dunno why this is on going down only.
-    if (!going_up)
-    {
-        moveto_location_effects(whence);
+    moveto_location_effects(whence);
 
-        // Clear list of beholding and constricting/constricted monsters.
-        you.clear_beholders();
-        you.stop_constricting_all();
-        you.stop_being_constricted();
-
-        trackers_init_new_level(true);
-    }
-
-    you.clear_fearmongers();
+    trackers_init_new_level(true);
 
     if (update_travel_cache && !shaft)
         _update_travel_cache(old_level, stair_pos);
