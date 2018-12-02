@@ -63,7 +63,8 @@ bool cast_imprison(int pow, monster* mons, int source);
 
 bool cast_smiting(int pow, monster* mons);
 
-string unpacifiable_reason(const monster &mon);
+string unpacifiable_reason(const monster& mon);
+string unpacifiable_reason(const monster_info& mi);
 
 struct bolt;
 

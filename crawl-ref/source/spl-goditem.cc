@@ -64,6 +64,11 @@ static bool _mons_hostile(const monster* mon)
     return !mon->wont_attack() && !mon->neutral();
 }
 
+string unpacifiable_reason(const monster& mon)
+{
+    return unpacifiable_reason(monster_info(&mon));
+}
+
 /**
  * Is it possible for the player to pacify this monster, independent of their
  * total 'heal power'? If not, why not?
@@ -73,32 +78,32 @@ static bool _mons_hostile(const monster* mon)
  *              e.g. "You cannot pacify this monster while she is sleeping!"
  *              If the monster *can* be pacified, returns the empty string.
  */
-string unpacifiable_reason(const monster &mon)
+string unpacifiable_reason(const monster_info& mi)
 {
     // XXX: be more specific?
     const string generic_reason = "You cannot pacify this monster!";
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
-        || mons_is_tentacle_or_tentacle_segment(mon.type)) // body part
+    if (mi.intel() <= I_BRAINLESS // no self-awareness
+        || mons_is_tentacle_or_tentacle_segment(mi.type)) // body part
     {
         return generic_reason;
     }
 
-    const mon_holy_type holiness = mon.holiness();
+    const mon_holy_type holiness = mi.holi;
 
     if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
         return generic_reason;
 
-    if (mon.is_stationary()) // not able to leave the level
+    if (mons_class_is_stationary(mi.type)) // not able to leave the level
         return generic_reason;
 
-    if (mon.asleep()) // not aware of what is happening
+    if (mi.is(MB_SLEEPING)) // not aware of what is happening
     {
         return make_stringf("You cannot pacify this monster while %s is "
                             "sleeping!",
-                            mon.pronoun(PRONOUN_SUBJECTIVE).c_str());
+                            mi.pronoun(PRONOUN_SUBJECTIVE));
     }
 
     // pacifiable, maybe!
@@ -176,7 +181,8 @@ static int _pacification_hp(monster_type mc)
 static spret_type _try_to_pacify(monster &mon, int healed, int pow,
                                  bool fail)
 {
-    const string illegal_reason = unpacifiable_reason(mon);
+    const monster_info mi(&mon);
+    const string illegal_reason = unpacifiable_reason(mi);
     if (!illegal_reason.empty())
     {
         mpr(illegal_reason);
@@ -293,7 +299,8 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
 
     if (mi.intel() <= I_BRAINLESS)
         descs.push_back("mindless");
-    else if (_pacification_sides(mi.type, pow) <= _pacification_hp(mi.type))
+    else if (!unpacifiable_reason(mi).empty()
+             || _pacification_sides(mi.type, pow) <= _pacification_hp(mi.type))
         descs.push_back("uninterested");
     else
     {
