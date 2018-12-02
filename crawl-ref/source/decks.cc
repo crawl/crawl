@@ -565,12 +565,46 @@ bool stack_five(int slot)
     return false;
 }
 
-// Draw the top four cards of an unstacked deck and play them all.
+// Draw the top four cards of an deck and play them all.
 // Discards the rest of the deck. Return false if the operation was
 // failed/aborted along the way.
 bool deck_deal()
 {
-    return false;
+    deck_type choice = _choose_deck("Deal");
+
+    if (choice == NUM_DECKS)
+        return false;
+
+    int num_cards = _deck_cards(choice);
+
+    if (!num_cards)
+    {
+        mpr("That deck is empty!");
+        return false;
+    }
+
+    if (num_cards - 4 < 0
+        && !yesno("Really deal without enough cards? "
+                  "Nemelex will not be pleased.", false, 0))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    const int num_to_deal = min(num_cards, 4);
+
+    for (int i = 0; i < num_to_deal; ++i)
+        _evoke_deck(choice, true);
+
+    you.props[deck_name(choice)] = 0;
+
+    if (num_to_deal < 4)
+    {
+        mpr("Nemelex gives you another card to finish dealing.");
+        draw_from_deck_of_punishment(true);
+    }
+
+    return true;
 }
 
 // Draw the next three cards, discard two and pick one.
