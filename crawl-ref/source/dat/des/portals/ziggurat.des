@@ -423,6 +423,17 @@ xx9.9xx
   xxx
 ENDMAP
 
+NAME:  ziggurat_pillar_centre_dispersal
+TAGS:  ziggurat_pillar centered generate_awake unrand no_exits
+KFEAT: ^ = dispersal trap
+MAP
+^G.G^
+GG.GG
+.....
+GG.GG
+^G.G^
+ENDMAP
+
 #######################################################################
 
 NAME: ziggurat1

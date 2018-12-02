@@ -9193,17 +9193,17 @@ NSUBST:  h = 2:@ / c, j = 2:. / *:cv, k = . / *:bcv
 : if you.absdepth() < 8 then
 SHUFFLE: wW / LL
 SUBST:   9 = 0, 1 = 9:40 8, 2 = G, r = $%, s = *, ^ = ^.
-KFEAT:   ^ = shaft trap / teleport trap / alarm trap
+KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Dungeon") then
 MONS:    ice statue
 SHUFFLE: wW / LL
 SUBST:   9 = 09, 1 = 98, 2 = G:50 1, r = $%, s =  *|, } = }>
-KFEAT:   ^ = shaft trap / teleport trap / alarm trap
+KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Lair") then
 KMONS:   p = plant
 SHUFFLE: Ww / LL
 SUBST:   9 = 09, 1 = 98, r = $%, s = *|,  2G = ., bcv = x, } = }>, K = p
-KFEAT:   ^ = shaft trap / teleport trap / alarm trap
+KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Depths") then
 MONS:    juggernaut / ancient lich / golden dragon
 MONS:    obsidian statue / orange crystal statue

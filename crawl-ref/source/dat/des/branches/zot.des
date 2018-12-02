@@ -764,7 +764,7 @@ ENDMAP
 NAME:  lemuel_golem_globe
 DEPTH: Zot
 TAGS:  no_rotate no_exits
-KFEAT: T = permanent teleport trap
+KFEAT: T = permanent teleport trap / dispersal trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
@@ -1113,7 +1113,7 @@ KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   0 = known zot trap
-KFEAT:   ^~ = known teleport trap
+KFEAT:   ^~ = known teleport trap / dispersal trap
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KFEAT:   m = iron_grate

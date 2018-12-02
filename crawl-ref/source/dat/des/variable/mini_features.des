@@ -2655,6 +2655,15 @@ xt.-.tx
 xxxxxxx
 ENDMAP
 
+NAME: ebering_dispersal_statue_hall
+TAGS: decor extra
+KFEAT: ^ = dispersal trap
+MAP
+xxxxx
+.^G^.
+xxxxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
