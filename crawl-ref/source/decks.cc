@@ -610,12 +610,93 @@ bool deck_deal()
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
+    deck_type choice = _choose_deck();
+
+    if (choice == NUM_DECKS)
+        return false;
+
+    int num_cards = _deck_cards(choice);
+
+    if (!num_cards)
+    {
+        mpr("That deck is empty!");
+        return false;
+    }
+
+    if (num_cards < 3 && !yesno("There's fewer than three cards, "
+                                "still triple draw?", false, 0))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    if (num_cards == 1)
+    {
+        // Only one card to draw, so just draw it.
+        mpr("There's only one card left!");
+        _evoke_deck(choice);
+        return true;
+    }
+
+    const int num_to_draw = min(num_cards, 3);
+
+    you.props[deck_name(choice)] = _deck_cards(choice) - num_to_draw;
+
+    auto& draw = you.props[NEMELEX_TRIPLE_DRAW_KEY].get_vector();
+    draw.clear();
+
+    for (int i = 0; i < num_to_draw; ++i)
+        draw.push_back(_random_card(choice));
+
+    run_uncancel(UNC_DRAW_THREE, 0);
     return true;
 }
 
-bool draw_three(int slot)
+bool draw_three()
 {
-    return false;
+    auto& draw = you.props[NEMELEX_TRIPLE_DRAW_KEY].get_vector();
+    vector<card_type> draws;
+    for (auto& val : draw)
+        draws.push_back((card_type)val.get_int());
+
+    int selected = -1;
+    bool need_prompt_redraw = true;
+    while (true)
+    {
+        if (need_prompt_redraw)
+        {
+            mpr("You draw... (choose one card, ? for their descriptions)");
+            for (int i = 0; i < draws.size(); ++i)
+            {
+                msg::streams(MSGCH_PROMPT)
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - "
+                    << card_name(draws[i]) << endl;
+            }
+            need_prompt_redraw = false;
+        }
+        const int keyin = toalower(get_ch());
+
+        if (crawl_state.seen_hups)
+            return false;
+
+        if (keyin == '?')
+        {
+            _describe_cards(draws);
+            redraw_screen();
+            need_prompt_redraw = true;
+        }
+        else if (keyin >= 'a' && keyin < 'a' + draws.size())
+        {
+            selected = keyin - 'a';
+            break;
+        }
+        else
+            canned_msg(MSG_HUH);
+    }
+
+    card_effect(draws[selected]);
+
+    return true;
 }
 
 // This is Nemelex retribution. If deal is true, use the word "deal"

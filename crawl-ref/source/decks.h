@@ -12,6 +12,8 @@
 #include "deck-type.h"
 #include "enum.h"
 
+#define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
+
 /// The minimum number of cards to deal when gifting.
 const int MIN_GIFT_CARDS = 4;
 /// The maximum number of cards to deal when gifting.
@@ -61,7 +63,7 @@ bool deck_triple_draw();
 bool deck_deal();
 bool deck_stack();
 
-bool draw_three(int slot);
+bool draw_three();
 bool stack_five(int slot);
 
 void card_effect(card_type which_card, bool dealt = false,
