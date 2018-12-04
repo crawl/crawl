@@ -44,6 +44,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
+#include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1485,32 +1486,38 @@ void do_trap_effects()
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
 
-    // Either try to shaft or try to alarm the player.
-    if (coinflip())
+    // Try to shaft, teleport, or alarm the player.
+    int roll = random2(3);
+    switch (roll)
     {
-        // Don't shaft the player when we can't, and also when it would be into a
-        // dangerous end.
-        if (is_valid_shaft_level()
-           && !(branch.branch_flags & BFLAG_DANGEROUS_END
-                && brdepth[place.branch] - place.depth == 1))
-        {
-            dprf("Attempting to shaft player.");
-            you.do_shaft();
-        }
-    }
-    else
-    {
-        // No alarms on the first 3 floors
-        if (env.absdepth0 > 3)
-        {
-            // Alarm effect alarms are always noisy, even if the player is
-            // silenced, to avoid "travel only while silenced" behavior.
-            // XXX: improve messaging to make it clear theres a wail outside of the
-            // player's silence
-            mprf("You set off the alarm!");
-            fake_noisy(40, you.pos());
-            you.sentinel_mark(true);
-        }
+        case 0:
+            // Don't shaft the player when we can't, and also when it would be into a
+            // dangerous end.
+            if (is_valid_shaft_level()
+               && !(branch.branch_flags & BFLAG_DANGEROUS_END
+                    && brdepth[place.branch] - place.depth == 1))
+            {
+                dprf("Attempting to shaft player.");
+                you.do_shaft();
+            }
+            break;
+        case 1:
+            // No alarms on the first 3 floors
+            if (env.absdepth0 > 3)
+            {
+                // Alarm effect alarms are always noisy, even if the player is
+                // silenced, to avoid "travel only while silenced" behavior.
+                // XXX: improve messaging to make it clear theres a wail outside of the
+                // player's silence
+                mprf("You set off the alarm!");
+                fake_noisy(40, you.pos());
+                you.sentinel_mark(true);
+            }
+            break;
+        case 2:
+            // Teleportitis
+            you_teleport_now(false, true);
+            break;
     }
 }
 
