@@ -1535,13 +1535,18 @@ level_id generic_shaft_dest(coord_def pos, bool known = false)
  * deeper levels; by one for every 10 levels of absdepth,
  * capping out at max 9.
  *
+ * No traps in tutorial, sprint, and arena.
+ *
  * @return  The trap rate for the current level.
 */
 int trap_rate_for_place()
 {
     if (player_in_branch(BRANCH_TEMPLE)
         || (!player_in_connected_branch()
-            && !player_in_branch(BRANCH_PANDEMONIUM)))
+            && !player_in_branch(BRANCH_PANDEMONIUM))
+        || crawl_state.game_is_sprint()
+        || crawl_state.game_is_tutorial()
+        || crawl_state.game_is_arena())
     {
         return 0;
     }
