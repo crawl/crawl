@@ -2106,8 +2106,8 @@ static void _check_trapped()
 {
     if (you.trapped)
     {
-        you.trapped = false;
         do_trap_effects();
+        you.trapped = false;
     }
 }
 
