@@ -1474,7 +1474,8 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.trapped || x_chance_in_y(trap_rate, 9 * env.density);
+    you.trapped = you.num_turns &&
+        (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
 /***
