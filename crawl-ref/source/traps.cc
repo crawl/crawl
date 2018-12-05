@@ -1517,7 +1517,7 @@ void do_trap_effects()
             break;
         case 2:
             // Teleportitis
-            you_teleport_now(false, true);
+            you_teleport_now(false, true, "You stumble into a teleport trap!");
             break;
     }
 }

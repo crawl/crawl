@@ -553,12 +553,15 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 }
 
-static bool _teleport_player(bool wizard_tele, bool teleportitis)
+static bool _teleport_player(bool wizard_tele, bool teleportitis, 
+                             string reason="")
 {
     if (!wizard_tele && !teleportitis
-        && (crawl_state.game_is_sprint() || you.no_tele(true, true))
+        && (crawl_state.game_is_sprint() || you.no_tele())
             && !player_in_branch(BRANCH_ABYSS))
     {
+        if (!reason.empty())
+            mpr(reason);
         canned_msg(MSG_STRANGE_STASIS);
         return false;
     }
@@ -579,6 +582,8 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         if (teleportitis)
             return false;
 
+        if (!reason.empty())
+            mpr(reason);
         abyss_teleport();
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
@@ -659,14 +664,18 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
                 dprf("teleportitis: no monster near target");
                 return false;
             }
-            else if (you.no_tele(true, true))
+            else if (you.no_tele())
             {
+                if (!reason.empty())
+                    mpr(reason);
                 canned_msg(MSG_STRANGE_STASIS);
                 return false;
             }
             else
             {
                 interrupt_activity(AI_TELEPORT);
+                if (!reason.empty())
+                    mpr(reason);
                 mprf("You are suddenly yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
@@ -761,9 +770,9 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool wizard_tele, bool teleportitis)
+void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 {
-    const bool randtele = _teleport_player(wizard_tele, teleportitis);
+    const bool randtele = _teleport_player(wizard_tele, teleportitis, reason);
 
     // Xom is amused by teleports that land you in a dangerous place, unless
     // the player is in the Abyss and teleported to escape from all the
