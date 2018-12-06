@@ -476,8 +476,14 @@ static const ability_def Ability_List[] =
       {fail_basis::invo}, abflag::none },
 
     // Nemelex
-    { ABIL_NEMELEX_DRAW_ONE, "Draw",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_NEMELEX_DRAW_DESTRUCTION, "Draw Destruction",
+      0, 0, 0, 0, {}, abflag::none },
+    { ABIL_NEMELEX_DRAW_ESCAPE, "Draw Escape",
+      0, 0, 0, 0, {}, abflag::none },
+    { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
+      0, 0, 0, 0, {}, abflag::none },
+    { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
+      0, 0, 0, 0, {}, abflag::none },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
       2, 0, 0, 2, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
@@ -2641,9 +2647,24 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
-    case ABIL_NEMELEX_DRAW_ONE:
+    case ABIL_NEMELEX_DRAW_DESTRUCTION:
         fail_check();
-        if (!deck_draw())
+        if (!deck_draw(DECK_OF_DESTRUCTION))
+            return SPRET_ABORT;
+        break;
+    case ABIL_NEMELEX_DRAW_ESCAPE:
+        fail_check();
+        if (!deck_draw(DECK_OF_ESCAPE))
+            return SPRET_ABORT;
+        break;
+    case ABIL_NEMELEX_DRAW_SUMMONING:
+        fail_check();
+        if (!deck_draw(DECK_OF_SUMMONING))
+            return SPRET_ABORT;
+        break;
+    case ABIL_NEMELEX_DRAW_STACK:
+        fail_check();
+        if (!deck_draw(DECK_STACK))
             return SPRET_ABORT;
         break;
 
@@ -3687,6 +3708,17 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         {
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
+    }
+    if (you_worship(GOD_NEMELEX_XOBEH))
+    {
+        for (int deck = ABIL_NEMELEX_FIRST_DECK;
+             deck <= ABIL_NEMELEX_LAST_DECK;
+             ++deck)
+        {
+            abilities.push_back(static_cast<ability_type>(deck));
+        }
+        if (!you.props[NEMELEX_STACK_KEY].get_vector().empty())
+            abilities.push_back(ABIL_NEMELEX_DRAW_STACK);
     }
     if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);

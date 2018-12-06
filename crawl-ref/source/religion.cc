@@ -188,7 +188,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Nemelex
-    { { 0, ABIL_NEMELEX_DRAW_ONE, "draw from a deck of power" },
+    {
+      { 0, "draw from decks of power" },
       { 3, ABIL_NEMELEX_TRIPLE_DRAW, "choose one out of three cards" },
       { 4, ABIL_NEMELEX_DEAL_FOUR, "deal four cards at a time" },
       { 5, ABIL_NEMELEX_STACK_FIVE, "stack five cards from your decks",
