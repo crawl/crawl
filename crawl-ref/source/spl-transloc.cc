@@ -553,7 +553,7 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 }
 
-static bool _teleport_player(bool wizard_tele, bool teleportitis, 
+static bool _teleport_player(bool wizard_tele, bool teleportitis,
                              string reason="")
 {
     if (!wizard_tele && !teleportitis
