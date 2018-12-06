@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "ability.h"
 #include "abyss.h"
 #include "act-iter.h"
 #include "artefact.h"
@@ -144,6 +145,14 @@ static map<deck_type, deck_type_data> all_decks =
     { DECK_OF_PUNISHMENT, {
         "punishment", "which wreak havoc on the user.", deck_of_punishment,
     } },
+};
+
+static ability_type deck_ability[NUM_DECKS] = {
+    ABIL_NEMELEX_DRAW_ESCAPE,
+    ABIL_NEMELEX_DRAW_DESTRUCTION,
+    ABIL_NEMELEX_DRAW_SUMMONING,
+    ABIL_NON_ABILITY,
+    ABIL_NEMELEX_DRAW_STACK
 };
 
 const char* card_name(card_type card)
@@ -428,8 +437,14 @@ void _print_deck_description(deck_type deck)
     describe_deck(deck);
 }
 
-static deck_type _choose_deck(const string title = "Draw",
-                              bool allow_stack = false)
+// This will assert if the player doesn't have the ability to draw from the
+// deck passed.
+static char _deck_hotkey(deck_type deck)
+{
+    return get_talent(deck_ability[deck], false).hotkey;
+}
+
+static deck_type _choose_deck(const string title = "Draw")
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
@@ -461,23 +476,11 @@ static deck_type _choose_deck(const string title = "Draw",
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(_describe_deck((deck_type)i),
                     _describe_deck((deck_type)i),
-                    MEL_ITEM, 1, i + 'a');
+                    MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
         if (!_deck_cards((deck_type)i))
             me->colour = COL_USELESS;
-
-        deck_menu.add_entry(me);
-    }
-
-    if (allow_stack && _deck_cards(DECK_STACK))
-    {
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_describe_deck(DECK_STACK),
-                    _describe_deck(DECK_STACK),
-                    MEL_ITEM, 1, LAST_PLAYER_DECK + 1 + 'a');
-        numbers[LAST_PLAYER_DECK + 1] = DECK_STACK;
-        me->data = &numbers[LAST_PLAYER_DECK + 1];
 
         deck_menu.add_entry(me);
     }
@@ -537,21 +540,16 @@ static void _evoke_deck(deck_type deck, bool dealt = false)
         mpr(_empty_deck_msg());
 }
 
-// Draw one card from a deck
-bool deck_draw()
+// Draw one card from a deck, prompting the user for a choice
+bool deck_draw(deck_type deck)
 {
-    deck_type choice = _choose_deck("Draw", true);
-
-    if (choice == NUM_DECKS)
-        return false;
-
-    if (!_deck_cards(choice))
+    if (!_deck_cards(deck))
     {
         mpr("That deck is empty!");
         return false;
     }
 
-    _evoke_deck(choice);
+    _evoke_deck(deck);
     return true;
 }
 
