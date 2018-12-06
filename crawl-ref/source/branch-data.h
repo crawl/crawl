@@ -1,5 +1,6 @@
 #include "colour.h"
 
+// The order of these entries must match the order of the branch-type enum.
 const Branch branches[NUM_BRANCHES] =
 {
     // Branch struct:
@@ -42,8 +43,8 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       WHITE, ETC_ELVEN_BRICK,
       'E', {}, BRANCH_NOISE_NORMAL },
-
 #if TAG_MAJOR_VERSION == 34
+
     { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
       BFLAG_NONE,
       DNGN_ENTER_DWARF, DNGN_EXIT_DWARF, NUM_FEATURES,
@@ -109,6 +110,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREY, BROWN,
       'V', { RUNE_VAULTS }, BRANCH_NOISE_NORMAL },
 #if TAG_MAJOR_VERSION == 34
+
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS,
       DNGN_ENTER_BLADE, DNGN_EXIT_BLADE, NUM_FEATURES,
@@ -133,6 +135,16 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       BROWN, BROWN,
       'W', { RUNE_TOMB }, BRANCH_NOISE_QUIET },
+#if TAG_MAJOR_VERSION > 34
+
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
+      BFLAG_NONE,
+      DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS, NUM_FEATURES,
+      "Depths", "the Depths", "Depths",
+      nullptr,
+      LIGHTGREY, BROWN,
+      'U', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
       BFLAG_NO_ITEMS,
@@ -183,6 +195,7 @@ const Branch branches[NUM_BRANCHES] =
       BLACK, BLACK, // set per-map
       'Z', {}, BRANCH_NOISE_NORMAL },
 #if TAG_MAJOR_VERSION == 34
+
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
       BFLAG_SPOTTY,
       DNGN_ENTER_FOREST, DNGN_EXIT_FOREST, NUM_FEATURES,
@@ -293,6 +306,7 @@ const Branch branches[NUM_BRANCHES] =
       "You enter a wizard's laboratory!",
       LIGHTGREY, BROWN, // set per-map
       '8', {}, BRANCH_NOISE_NORMAL },
+#if TAG_MAJOR_VERSION == 34
 
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
       BFLAG_NONE,
@@ -301,6 +315,7 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, BRANCH_NOISE_NORMAL },
+#endif
 
     { BRANCH_DESOLATION, NUM_BRANCHES, -1, -1, 1, 20,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
