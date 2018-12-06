@@ -1062,6 +1062,8 @@ struct population_list
     int count;
 };
 
+// This list must be in the same order as the branch-type enum values.
+//
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
 // standalone symbols first. Thus this fugly list.
@@ -1176,6 +1178,7 @@ static const pop_entry pop_generic_late_zombie[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+// This list must be in the same order as the branch-type enum values.
 static const population_list population_zombie[] =
 {
     POP(d),
@@ -1195,22 +1198,22 @@ static const population_list population_zombie[] =
 #if TAG_MAJOR_VERSION == 34
     POP(blade),
 #endif
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
+    POP(generic_late_zombie), // Crypt
+    POP(generic_late_zombie), // Tomb
 #if TAG_MAJOR_VERSION > 34
     POP(depths),
 #endif
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
+    POP(generic_late_zombie), // Vestibule
+    POP(generic_late_zombie), // Dis
+    POP(generic_late_zombie), // Geh
+    POP(generic_late_zombie), // Coc
+    POP(generic_late_zombie), // Tar
     POP(zot),
 #if TAG_MAJOR_VERSION == 34
     POP(forest),
 #endif
-    POP(generic_late_zombie),
-    POP(generic_late_zombie),
+    POP(generic_late_zombie), // Abyss
+    POP(generic_late_zombie), // Pan
     POP(zig),
     POP(lab),
     POP(bazaar),
@@ -1282,56 +1285,57 @@ static const pop_entry pop_water_hell[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+// This list must be in the same order as the branch-type enum values.
 // Shoals, Abyss, Pan, Zot, D:1-5 liquid monsters are blocked in dungeon.cc
 static const population_list population_water[] =
 {
     POP(water_d),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
+    POP(water_generic), // Temple
+    POP(water_generic), // Orc
+    POP(water_generic), // Elf
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic),
+    POP(water_generic), // Dwarf
 #endif
-    POP(water_generic),
+    POP(water_generic), // Lair
     POP(water_swamp),
-    POP(water_generic),
+    POP(water_generic), // Shoals
     POP(water_snake),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
+    POP(water_generic), // Spider
+    POP(water_generic), // Slime
+    POP(water_generic), // Vaults
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic),
+    POP(water_generic), // Blade
 #endif
-    POP(water_generic),
-    POP(water_generic),
+    POP(water_generic), // Crypt
+    POP(water_generic), // Tomb
 #if TAG_MAJOR_VERSION > 34
     POP(water_depths),
 #endif
-    POP(water_hell),
-    POP(water_hell),
-    POP(water_hell),
-    POP(water_hell),
-    POP(water_hell),
-    POP(water_generic),
+    POP(water_hell), // Vestibule
+    POP(water_hell), // Dis
+    POP(water_hell), // Geh
+    POP(water_hell), // Coc
+    POP(water_hell), // Tar
+    POP(water_generic), // Zot
 #if TAG_MAJOR_VERSION == 34
     POP(water_generic), // Forest
 #endif
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
-    POP(water_generic),
+    POP(water_generic), // Abyss
+    POP(water_generic), // Pan
+    POP(water_generic), // Zig
+    POP(water_generic), // Lab
+    POP(water_generic), // Bazaar
+    POP(water_generic), // Trove
+    POP(water_generic), // Sewer
+    POP(water_generic), // Ossuary
+    POP(water_generic), // Bailey
+    POP(water_generic), // IceCv
+    POP(water_generic), // Volcano
+    POP(water_generic), // WizLab
 #if TAG_MAJOR_VERSION == 34
     POP(water_depths),
 #endif
-    POP(water_generic),
+    POP(water_generic), // Desolation
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1386,54 +1390,55 @@ static const pop_entry pop_lava_hell[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+// This list must be in the same order as the branch-type enum values.
 static const population_list population_lava[] =
 {
     POP(lava_d),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_generic), // Temple
+    POP(lava_generic), // Orc
+    POP(lava_generic), // Elf
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic),
+    POP(lava_generic), // Dwarf
 #endif
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_generic), // Lair
+    POP(lava_generic), // Swamp
+    POP(lava_generic), // Shoals
     POP(lava_snake),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_generic), // Spider
+    POP(lava_generic), // Slime
+    POP(lava_generic), // Vaults
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic),
+    POP(lava_generic), // Blade
 #endif
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_generic), // Crypt
+    POP(lava_generic), // Tomb
 #if TAG_MAJOR_VERSION > 34
     POP(lava_depths),
 #endif
-    POP(lava_hell),
-    POP(lava_hell),
-    POP(lava_hell),
-    POP(lava_hell),
-    POP(lava_hell),
-    POP(lava_generic),
+    POP(lava_hell), // Vestibule
+    POP(lava_hell), // Dis
+    POP(lava_hell), // Geh
+    POP(lava_hell), // Coc
+    POP(lava_hell), // Tar
+    POP(lava_generic), // Zot
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic),
+    POP(lava_generic), // Forest
 #endif
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_generic), // Abyss
+    POP(lava_generic), // Pan
+    POP(lava_generic), // Zig
+    POP(lava_generic), // Lab
+    POP(lava_generic), // Bazaar
+    POP(lava_generic), // Trove
+    POP(lava_generic), // Sewer
+    POP(lava_generic), // Ossuary
+    POP(lava_generic), // Bailey
+    POP(lava_generic), // IceCv
+    POP(lava_generic), // Volcano
+    POP(lava_generic), // WizLab
 #if TAG_MAJOR_VERSION == 34
     POP(lava_depths),
 #endif
-    POP(lava_generic),
+    POP(lava_generic), // Desolation
 };
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
