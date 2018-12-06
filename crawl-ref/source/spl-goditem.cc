@@ -280,13 +280,16 @@ bool heal_monster(monster& patient, int amount)
  * [0,sides), re-rolling if they come up the same, and taking a min if they
  * come up distinct. The formula below computes the probability of rolling two
  * numbers that are both large enough, minus the probability they are the same.
+ *
+ * The reason for the + 1 in the inequality is that if the die is only one
+ * larger than monster hp, the min of two distinct rolls is guaranteed to lose.
  */
 static int _pacify_chance(const monster_info& mi, const int pow, int scale)
 {
     const int sides = _pacification_sides(mi.type, pow);
     const int target = _pacification_hp(mi.type);
 
-    if (sides <= target)
+    if (sides <= target + 1)
         return 0;
 
     return (scale * ((sides - target) * (sides - target) - sides))
@@ -300,7 +303,8 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
     if (mi.intel() <= I_BRAINLESS)
         descs.push_back("mindless");
     else if (!unpacifiable_reason(mi).empty()
-             || _pacification_sides(mi.type, pow) <= _pacification_hp(mi.type))
+             || _pacification_sides(mi.type, pow)
+                <= _pacification_hp(mi.type) + 1)
         descs.push_back("uninterested");
     else
     {
