@@ -1288,6 +1288,21 @@ void tag_read(reader &inf, tag_type tag_id)
         }
         tag_read_level_tiles(th);
 #if TAG_MAJOR_VERSION == 34
+        if (you.where_are_you == BRANCH_GAUNTLET
+            && th.getMinorVersion() < TAG_MINOR_GAUNTLET_TRAPPED)
+        {
+            vault_placement *place = dgn_vault_at(you.pos());
+            if (place && place->map.desc_or_name()
+                         == "gammafunk_gauntlet_branching")
+            {
+                auto exit = DNGN_EXIT_GAUNTLET;
+                grd(you.pos()) = exit;
+                // Announce the repair even in non-debug builds.
+                mprf(MSGCH_ERROR, "Placing emergency exit: %s.",
+                     dungeon_feature_name(exit));
+            }
+        }
+
         // We can't do this when we unmarshall shops, since we haven't
         // unmarshalled items yet...
         if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
