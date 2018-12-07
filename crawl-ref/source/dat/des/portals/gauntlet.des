@@ -618,7 +618,6 @@ SUBVAULT: h : gauntlet_arena_second
 SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
-SUBST: apqrsu = c, y = v
 : gauntlet_appearance(_G)
 MAP
             ccccccccccccccccccccccccccccccc
@@ -703,7 +702,6 @@ SUBVAULT: r : gauntlet_arena_second
 SUBVAULT: s : gauntlet_arena_second
 SUBVAULT: u : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
-SUBST: apqrsu = c, y = v
 : gauntlet_appearance(_G)
 MAP
 ccccccccccccccccccccccccccccccc
@@ -786,7 +784,6 @@ SUBVAULT: s : gauntlet_arena_first
 SUBVAULT: s : gauntlet_arena_second
 : end
 SUBVAULT: y : gauntlet_exit
-SUBST: apqrsu = c, y = v
 : gauntlet_appearance(_G)
 MAP
 ccccccccccccccccccccccccccccccc
@@ -855,7 +852,6 @@ SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: k : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
-SUBST: apqrsu = c, y = v
 : gauntlet_appearance(_G)
 MAP
                                      ccc
