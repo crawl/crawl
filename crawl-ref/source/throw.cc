@@ -341,8 +341,24 @@ static int _get_blowgun_chance(const int hd)
     return chance / 100;
 }
 
+/**
+ *  Validate any item selected to be fired, and choose a target to fire at.
+ *
+ *  @param slot         The slot the item to be fired is in, or -1 if
+ *                      an item has not yet been chosen.
+ *  @param target       An empty variable of the dist class to store the
+ *                      target information in.
+ *  @param teleport     Does the player have portal projectile active?
+ *  @param fired_normally  True if the projectile was fired through the f
+ *                      command, false if fired through the F command.
+ *                      If true, if the player changes their mind about which
+ *                      item to fire, update the quivered item accordingly.
+ *  @return             Whether the item validation and target selection
+ *                      was successful.
+ */
 static bool _fire_choose_item_and_target(int& slot, dist& target,
-                                         bool teleport = false)
+                                         bool teleport = false,
+                                         bool fired_normally = true)
 {
     fire_target_behaviour beh;
     const bool was_chosen = (slot != -1);
@@ -384,8 +400,11 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return false;
     }
 
-    you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
-    you.redraw_quiver = true;
+    if (fired_normally)
+    {
+        you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
+        you.redraw_quiver = true;
+    }
     slot = beh.m_slot;
 
     return true;
@@ -589,8 +608,12 @@ void throw_item_no_quiver()
         return;
     }
 
+    dist target;
+    if (!_fire_choose_item_and_target(slot, target, is_pproj_active(), false))
+        return;
+
     bolt beam;
-    throw_it(beam, slot);
+    throw_it(beam, slot, &target);
 }
 
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
