@@ -1088,13 +1088,18 @@ bool skill_trained(int i)
  *
  * @param sk the skill to check. This checks crosstraining and ash bonuses,
  * but not other skill modifiers.
+ * @param target the target to check against. Defaults to you.training_targets[sk]
  *
  * @return whether the skill target has been met.
  */
+bool target_met(skill_type sk, unsigned int target)
+{
+    return you.skill(sk, 10, false, false, false) >= (int) target;
+}
+
 bool target_met(skill_type sk)
 {
-    return you.skill(sk, 10, false, false, false) >=
-                                        (int) you.training_targets[sk];
+    return target_met(sk, you.training_targets[sk]);
 }
 
 /**
@@ -2225,8 +2230,14 @@ void skill_state::restore_training()
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        if (you.skills[sk] < MAX_SKILL_LEVEL)
+        // Don't resume training if it's impossible or a target was met
+        // after our backup was made.
+        if (you.skills[sk] < MAX_SKILL_LEVEL
+            && !(training_targets[sk] &&
+                 target_met(sk, training_targets[sk])))
+        {
             you.train[sk] = train[sk];
+        }
     }
 
     you.can_train                   = can_train;
