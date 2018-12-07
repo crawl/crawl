@@ -3270,9 +3270,8 @@ void describe_deck(deck_type deck)
     else
         inf.title = "The " + deck_name(deck);
 
-    inf.body << "A deck of magical cards, ";
-    inf.body << deck_flavour(deck) << "\n\n";
-    inf.body << deck_contents(deck);
+    inf.body << deck_description(deck);
+
     show_description(inf);
 }
 

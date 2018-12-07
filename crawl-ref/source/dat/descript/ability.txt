@@ -430,8 +430,8 @@ Draws a card from a deck of power.
 %%%%
 Triple Draw ability
 
-Draws three cards from any deck in your inventory, and allows you to choose one
-to keep, discarding the other two.
+Draws three cards from any deck, and allows you to choose one to play,
+discarding the other two.
 %%%%
 Deal Four ability
 
