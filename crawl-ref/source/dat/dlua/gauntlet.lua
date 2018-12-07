@@ -207,7 +207,7 @@ tier1_gauntlet_arenas = {
   {
     first   = {mons = "smoke demon", min = 1, max = 1},
     second  = {mons = "red devil", min = 0, max = 1},
-    second  = {mons = "crimson imp", min = 2, max = 4},
+    third   = {mons = "crimson imp", min = 2, max = 4},
   },
   {
     first   = {mons = "neqoxec", min = 1, max = 1},
