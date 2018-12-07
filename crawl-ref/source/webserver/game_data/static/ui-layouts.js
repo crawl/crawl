@@ -188,7 +188,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .describe-cards").clone();
         var $card_tmpl = $(".templates > .describe-generic");
-        var t = main.MISC_CARD, tex = enums.texture.DEFAULT;
+        var t = gui.NEMELEX_CARD, tex = enums.texture.GUI;
         desc.cards.forEach(function (card) {
             var $card = $card_tmpl.clone().removeClass("hidden").addClass("describe-card");
             $card.find(".header > span").html(card.name);

@@ -63,6 +63,26 @@ nemelex_deal_four ABILITY_NEMELEX_DEAL_FOUR
 nemelex_stack_five ABILITY_NEMELEX_STACK_FIVE
 nemelex_triple_draw ABILITY_NEMELEX_TRIPLE_DRAW
 nemelex_draw_stack ABILITY_NEMELEX_DRAW_STACK
+# special nemelex ui elements
+nemelex_card NEMELEX_CARD
+nemelex_deck NEMELEX_DECK
+# match order in deck-type.h
+%start
+%compose nemelex_deck
+%compose i-deck_escape
+%finish
+%start
+%compose nemelex_deck
+%compose i-deck_destruction
+%finish
+%start
+%compose nemelex_deck
+%compose i-deck_summoning
+%finish
+%start
+%compose nemelex_deck
+%compose i-deck_punishment
+%finish
 okawaru_finesse ABILITY_OKAWARU_FINESSE
 okawaru_heroism ABILITY_OKAWARU_HEROISM
 pakellas_device_surge ABILITY_PAKELLAS_DEVICE_SURGE
