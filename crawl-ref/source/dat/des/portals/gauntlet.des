@@ -14,7 +14,7 @@ function gauntlet_portal(e)
   local messager =
     timed_msg {
       initmsg = { "You hear a distant snort.",
-                  "Hark! There is an entrance to a gauntlet"
+                  "Hark! There is an entrance to a gauntlet "
                   .. "on this level. Find the entrance quickly before "
                   .. "the gate is sealed!" },
       finalmsg = "You hear a giant gate slam closed.",
