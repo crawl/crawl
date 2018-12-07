@@ -814,3 +814,71 @@ ccccccvnnnvvvvvvvvvvvnnnvcccccc
        vvyyyyyyyyyyyyyvv
        vvvvvvvvvvvvvvvvv
 ENDMAP
+
+NAME:   gammafunk_gauntlet_one_two_three
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+: gauntlet_arena_setup(_G, "DFJLNPRpr", "EHKMOQSqs")
+SUBVAULT: a : gauntlet_arena_first
+SUBVAULT: d : gauntlet_arena_first
+SUBVAULT: e : gauntlet_arena_first
+: gauntlet_arena_set_tier(2)
+SUBVAULT: f : gauntlet_arena_second
+SUBVAULT: g : gauntlet_arena_second
+SUBVAULT: h : gauntlet_arena_second
+SUBVAULT: i : gauntlet_arena_second
+SUBVAULT: j : gauntlet_arena_second
+SUBVAULT: k : gauntlet_arena_second
+SUBVAULT: y : gauntlet_exit
+SUBST: apqrsu = c, y = v
+: gauntlet_appearance(_G)
+MAP
+                                     ccc
+                  cccccccccccccccccccc<cccccccccccccccccccc
+                  cG..................A..................Gc
+                  c...................D...................c
+                  c..nnnnddddddn.nnnnnnnnnnn.neeeeeennnn..c
+                ccc..ndddddddddn.aaaaaaaaaaa.neeeeeeeeen..ccc
+                cG...ndddddddddn.aaaaaaaaaaa.neeeeeeeeen...Gc
+                c....ndddddddddn.aaaaaaaaaaa.neeeeeeeeen....c
+                c..nnndddddddddn.aaaaaaaaaaa.neeeeeeeeennn..c
+                c..nHndddddddddn.aaaaaaaaaaa.neeeeeeeeenKn..c
+                c..n.ndddddddddn.aaaaaaaaaaa.neeeeeeeeen.n..c
+                c..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..c
+                c..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..c
+    ccccccccccccc..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..ccccccccccccc
+    cG.............n.nnnnddddddnnnnnnnnnnnnnnneeeeeennnn.n.............Gc
+ccccc..............n.n.....nF.........E.........Jn.....n.n..............ccccc
+cG.....nnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnn.....Gc
+c......nL...........N...........Pn.........nR...........p...........rn......c
+c..nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
+c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
+c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
+c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
+c..nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn..c
+c...........................................................................c
+cG...................................GTG...................................Gc
+vvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvv
+      v.M...........O...........Q...........S...........q...........s.v
+      v...............................................................v
+      vvvvvvvvvvvvvvvvvvvvvvvvvyyyyyyyyyyyyyyyvvvvvvvvvvvvvvvvvvvvvvvvvv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vyyyyyyyyyyyyyyyv
+                              vvyyyyyyyyyyyyyvv
+                              vvyyyyyyyyyyyyyvv
+                              vvyyyyyyyyyyyyyvv
+                              vvvvvvvvvvvvvvvvv
+ENDMAP
