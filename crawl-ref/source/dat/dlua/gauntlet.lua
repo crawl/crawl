@@ -386,6 +386,9 @@ tier2_gauntlet_arenas = {
     first  = {mons = "ghost crab", min = 1, max = 1},
   },
   {
+    first = {mons = "meliai band", min = 1, max = 1},
+  },
+  {
     first  = {mons = "torpor snail", min = 1, max = 1},
     second = {mons = "death yak / hydra", min = 1, max = 2},
   },
@@ -423,6 +426,10 @@ tier2_gauntlet_arenas = {
   {
     second = {mons = "wizard", min = 2, max = 2},
     third  = {mons = "white imp / shadow imp", min = 3, max = 6},
+  },
+  {
+    first  = {mons = "necromancer", min = 1, max = 1},
+    second = {mons = "death yak band", min = 1, max = 1},
   },
   {
     second = {mons = "death scarab", min = 2, max = 2},
