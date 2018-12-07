@@ -1403,6 +1403,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
+    if (testbits(abil.flags, abflag::card) && !deck_cards(ability_deck(abil.ability)))
+    {
+        if (!quiet)
+            mpr("That deck is empty!");
+        return false;
+    }
+
     vector<text_pattern> &actions = Options.confirm_action;
     if (!actions.empty())
     {
