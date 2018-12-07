@@ -747,7 +747,7 @@ ENDMAP
 NAME:   gammafunk_gauntlet_shortcut
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_arena_setup(_G, "DFJLNP", "EHKMOQ")
+: gauntlet_arena_setup(_G, "DFJLN", "EHKMO")
 : gauntlet_arena_set_tier(2)
 SUBVAULT: a : gauntlet_arena_second
 SUBVAULT: p : gauntlet_arena_second
@@ -778,11 +778,11 @@ c..naaaaaaaaan...nqqqqqqqqqn........Ln......c
 c..naaaaaaaaan...nqqqqqqqqqn.nnnnnnnnnnnnn..c
 c..naaaaaaaaan...nqqqqqqqqqn.n.rrrrrrrrrrr..c
 c..nnnnnnnnnnn...nnnnnnnnnnn.n.rrrrrrrrrrr..c
-c......nEn...........nK......n.rrrrrrrrrrr..c
-cG.....n.n...........nnnnnnnnn.rrrrrrrrrrr..c
-cT.....n.n.....T...............rrrrrrrrrrr.Tc
-cG.....n.n...........nnnnnnnnn.rrrrrrrrrrr..c
-c......nFn...........nN......n.nrrrrrrrrrn..c
+c.....n.E.n..........nK......n.rrrrrrrrrrr..c
+cG....n...n..........nnnnnnnnn.rrrrrrrrrrr..c
+cT....n...n....T...............rrrrrrrrrrr.Tc
+cG....n...n..........nnnnnnnnn.rrrrrrrrrrr..c
+c.....n.F.n..........nN......n.nrrrrrrrrrn..c
 c..nnnnnnnnnnn...nnnnnnnnnnn.n.nrrrrrrrrrn..c
 c..ppppppppppp...sssssssssss.n.nrrrrrrrrrn..c
 c..ppppppppppp...sssssssssss.nnnnnnnnnnnnn..c
