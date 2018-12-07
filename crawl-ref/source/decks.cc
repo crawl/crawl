@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 
 #include "ability.h"
@@ -147,7 +148,7 @@ static map<deck_type, deck_type_data> all_decks =
     } },
 };
 
-static ability_type deck_ability[NUM_DECKS] = {
+vector<ability_type> deck_ability = {
     ABIL_NEMELEX_DRAW_ESCAPE,
     ABIL_NEMELEX_DRAW_DESTRUCTION,
     ABIL_NEMELEX_DRAW_SUMMONING,
@@ -216,8 +217,10 @@ static const string _stack_contents()
 {
     const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
 
-    string output = "\nRemaining cards: ";
-    output += comma_separated_fn(stack.begin(), stack.end(),
+    string output = "Remaining cards: ";
+    output += comma_separated_fn(
+                reverse_iterator<CrawlVector::const_iterator>(stack.end()),
+                reverse_iterator<CrawlVector::const_iterator>(stack.begin()),
               [](const CrawlStoreValue& card) { return card_name((card_type)card.get_int()); });
     output += ".";
 
@@ -229,7 +232,7 @@ const string deck_contents(deck_type deck)
     if (deck == DECK_STACK)
         return _stack_contents();
 
-    string output = "\nIt may contain the following cards: ";
+    string output = "It may contain the following cards: ";
 
     // This way of doing things is intended to prevent a card
     // that appears in multiple subdecks from showing up twice in the
@@ -264,7 +267,7 @@ static card_type _random_card(deck_type deck)
     return *random_choose_weighted(pdeck);
 }
 
-static int _deck_cards(deck_type deck)
+int deck_cards(deck_type deck)
 {
     return deck == DECK_STACK ? you.props[NEMELEX_STACK_KEY].get_vector().size()
                               : you.props[deck_name(deck)].get_int();
@@ -281,7 +284,7 @@ bool gift_cards()
                                         5, DECK_OF_DESTRUCTION,
                                         4, DECK_OF_SUMMONING,
                                         2, DECK_OF_ESCAPE);
-        if (_deck_cards(choice) < MAX_DECK_SIZE)
+        if (deck_cards(choice) < MAX_DECK_SIZE)
         {
             you.props[deck_name(choice)]++;
             dealt_cards = true;
@@ -422,7 +425,7 @@ static void _describe_cards(CrawlVector& cards)
 static string _describe_deck(deck_type deck)
 {
     const string name = deck_name(deck);
-    const int cards   = _deck_cards(deck);
+    const int cards   = deck_cards(deck);
 
     ostringstream desc;
 
@@ -432,9 +435,47 @@ static string _describe_deck(deck_type deck)
     return trimmed_string(desc.str());
 }
 
-void _print_deck_description(deck_type deck)
+string deck_description(deck_type deck)
 {
-    describe_deck(deck);
+    ostringstream desc;
+
+    desc << "A deck of magical cards, ";
+    desc << deck_flavour(deck) << "\n\n";
+    desc << deck_contents(deck) << "\n";
+
+    if (deck != DECK_STACK)
+    {
+        const int cards = deck_cards(deck);
+        desc << "\n";
+
+        if (cards > 1)
+            desc << make_stringf("It currently has %d cards ", cards);
+        else if (cards == 1)
+            desc << "It currently has 1 card ";
+        else
+            desc << "It is currently empty ";
+
+        desc << make_stringf("and can contain up to %d cards.", MAX_DECK_SIZE);
+        desc << "\n";
+    }
+
+    return desc.str();
+}
+
+/**
+ * The deck a given ability uses. Asserts if called on an ability that does not
+ * use decks.
+ *
+ * @param abil the ability
+ *
+ * @return the deck
+ */
+deck_type ability_deck(ability_type abil)
+{
+    auto deck = find(deck_ability.begin(), deck_ability.end(), abil);
+
+    ASSERT(deck != deck_ability.end());
+    return (deck_type) distance(deck_ability.begin(), deck);
 }
 
 // This will assert if the player doesn't have the ability to draw from the
@@ -479,7 +520,7 @@ static deck_type _choose_deck(const string title = "Draw")
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
-        if (!_deck_cards((deck_type)i))
+        if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
 #ifdef USE_TILE
@@ -495,7 +536,7 @@ static deck_type _choose_deck(const string title = "Draw")
         int selected = *(static_cast<int*>(sel.data));
 
         if (deck_menu.menu_action == Menu::ACT_EXAMINE)
-            _print_deck_description((deck_type) selected);
+            describe_deck((deck_type) selected);
         else
             ret = *(static_cast<int*>(sel.data));
         return deck_menu.menu_action == Menu::ACT_EXAMINE;
@@ -522,7 +563,7 @@ static string _empty_deck_msg()
 
 static void _evoke_deck(deck_type deck, bool dealt = false)
 {
-    ASSERT(_deck_cards(deck) > 0);
+    ASSERT(deck_cards(deck) > 0);
 
     mprf("You %s a card...", dealt ? "deal" : "draw");
 
@@ -539,14 +580,14 @@ static void _evoke_deck(deck_type deck, bool dealt = false)
         card_effect(_random_card(deck), dealt);
     }
 
-    if (!_deck_cards(deck))
+    if (!deck_cards(deck))
         mpr(_empty_deck_msg());
 }
 
 // Draw one card from a deck, prompting the user for a choice
 bool deck_draw(deck_type deck)
 {
-    if (!_deck_cards(deck))
+    if (!deck_cards(deck))
     {
         mpr("That deck is empty!");
         return false;
@@ -561,9 +602,9 @@ bool deck_stack()
     int total_cards = 0;
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
-        total_cards += _deck_cards((deck_type) i);
+        total_cards += deck_cards((deck_type) i);
 
-    if (_deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
+    if (deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
                                           false, 0))
     {
         return false;
@@ -687,7 +728,7 @@ bool deck_deal()
     if (choice == NUM_DECKS)
         return false;
 
-    int num_cards = _deck_cards(choice);
+    int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
@@ -727,7 +768,7 @@ bool deck_triple_draw()
     if (choice == NUM_DECKS)
         return false;
 
-    int num_cards = _deck_cards(choice);
+    int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
@@ -752,7 +793,7 @@ bool deck_triple_draw()
 
     const int num_to_draw = min(num_cards, 3);
 
-    you.props[deck_name(choice)] = _deck_cards(choice) - num_to_draw;
+    you.props[deck_name(choice)] = deck_cards(choice) - num_to_draw;
 
     auto& draw = you.props[NEMELEX_TRIPLE_DRAW_KEY].get_vector();
     draw.clear();

@@ -1115,12 +1115,31 @@ static string _sacrifice_desc(const ability_type ability)
             + ".\n" + desc;
 }
 
+static string _nemelex_desc(ability_type ability)
+{
+    ostringstream desc;
+    deck_type deck = ability_deck(ability);
+
+    desc << "Draw a card from " << (deck == DECK_STACK ? "your " : "the ");
+    desc << deck_name(deck) << "; " << lowercase_first(deck_description(deck));
+
+    return desc.str();
+}
+
 // XXX: should this be in describe.cc?
 string get_ability_desc(const ability_type ability, bool need_title)
 {
     const string& name = ability_name(ability);
 
-    string lookup = getLongDescription(name + " ability");
+    string lookup;
+
+    if ((ABIL_NEMELEX_FIRST_DECK <= ability && ability <= ABIL_NEMELEX_LAST_DECK)
+        || ability == ABIL_NEMELEX_DRAW_STACK)
+    {
+        lookup = _nemelex_desc(ability);
+    }
+    else
+        lookup = getLongDescription(name + " ability");
 
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "deck-type.h"
+#include "ability-type.h"
 #include "enum.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
@@ -53,8 +54,10 @@ enum card_type
 const char* card_name(card_type card);
 card_type name_to_card(string name);
 const string deck_contents(deck_type deck);
+int deck_cards(deck_type deck);
 string which_decks(card_type card);
 const string deck_flavour(deck_type deck);
+deck_type ability_deck(ability_type abil);
 
 bool gift_cards();
 void reset_cards();
@@ -72,7 +75,8 @@ void card_effect(card_type which_card, bool dealt = false,
         bool tell_card = true);
 void draw_from_deck_of_punishment(bool deal = false);
 
-string deck_name(deck_type type);
+string deck_name(deck_type deck);
+string deck_description(deck_type deck);
 
 #if TAG_MAJOR_VERSION == 34
 bool is_deck_type(uint8_t type);
