@@ -237,19 +237,18 @@ tier1_gauntlet_arenas = {
   },
   {
     first   = {mons = "queen ant", min = 1, max = 1},
-    second  = {mons = "soldier ant", min = 2, max = 4},
+    second  = {mons = "soldier ant", min = 3, max = 6},
   },
   {
-    first   = {mons = "hornet", min = 1, max = 1},
-    second  = {mons = "killer bee", min = 2, max = 4},
+    second  = {mons = "hornet", min = 2, max = 3},
   },
   {
     first   = {mons = "queen bee", min = 1, max = 1},
-    second  = {mons = "killer bee", min = 2, max = 4},
+    second  = {mons = "killer bee band", min = 1, max = 1},
   },
   {
     first   = {mons = "moth of wrath", min = 1, max = 1},
-    second  = {mons = "wolf", min = 1, max = 3},
+    second  = {mons = "wolf band", min = 1, max = 1},
   },
   {
     first   = {mons = "worldbinder", min = 1, max = 1},
@@ -315,14 +314,17 @@ tier2_gauntlet_arenas = {
   {
     first  = {mons = "fire crab", min = 1, max = 1},
     second = {mons = "hell hound", min = 1, max = 3},
+    third  = {mons = "fire bat", min = 3, max = 6},
   },
   {
     first  = {mons = "efreet", min = 1, max = 1},
-    second = {mons = "hell hound / fire elemental", min = 1, max = 3},
+    second = {mons = "hell hound", min = 1, max = 3},
+    third  = {mons = "fire elemental", min = 1, max = 3},
   },
   {
     first  = {mons = "hell hog", min = 1, max = 1},
-    second = {mons = "fire bat / hell hound", min = 0, max = 3},
+    second = {mons = "hell hound", min = 1, max = 3},
+    third  = {mons = "fire bat", min = 2, max = 4},
   },
   {
     second = {mons = "death ooze", min = 1, max = 1},
@@ -333,21 +335,22 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "hell beast", min = 1, max = 1},
-    second = {mons = "hell hound / crimson imp / iron imp", min = 0, max = 3},
+    second = {mons = "hell hound", min = 0, max = 2},
   },
   {
     first  = {mons = "green death", min = 1, max = 1},
-    second = {mons = "orange demon", min = 0, max = 3},
+    second = {mons = "orange demon", min = 0, max = 2},
   },
   {
     first  = {mons = "hellion", min = 1, max = 1},
-    second = {mons = "smoke demon / red devil", min = 1, max = 1},
-    third  = {mons = "crimson imp", min = 0, max = 3},
+    second = {mons = "sun demon / smoke demon / red devil", min = 0, max = 1},
+    third  = {mons = "hell hound", min = 0, max = 2},
     weight = 5
   },
   {
     first  = {mons = "balrug", min = 1, max = 1},
-    third  = {mons = "crimson imp / hell hound", min = 0, max = 3},
+    third  = {mons = "sun demon", min = 0, max = 1},
+    third  = {mons = "hell hound", min = 0, max = 2},
     weight = 5
   },
   {
@@ -393,7 +396,8 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "moth of wrath", min = 1, max = 1},
-    second = {mons = "redback / soldier ant", min = 2, max = 4},
+    second = {mons = "wolf spider / nothing", min = 0, max = 1},
+    third  = {mons = "redback", min = 2, max = 4},
   },
   {
     second = {mons = "thrashing horror", min = 1, max = 2},
@@ -418,7 +422,7 @@ tier2_gauntlet_arenas = {
   },
   {
     second = {mons = "wizard", min = 2, max = 2},
-    third  = {mons = "white imp / shadow imp", min = 2, max = 4},
+    third  = {mons = "white imp / shadow imp", min = 3, max = 6},
   },
   {
     second = {mons = "death scarab", min = 2, max = 2},
