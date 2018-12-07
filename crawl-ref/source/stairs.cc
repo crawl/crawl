@@ -730,9 +730,14 @@ void floor_transition(dungeon_feature_type how,
                 mprf("Welcome to %s!", branches[branch].longname);
         }
 
+        const set<branch_type> boring_branch_exits = {
+            BRANCH_TEMPLE,
+            BRANCH_BAZAAR,
+            BRANCH_TROVE
+        };
+
         // Did we leave a notable branch for the first time?
-        if ((brdepth[old_level.branch] > 1
-             || old_level.branch == BRANCH_VESTIBULE)
+        if (boring_branch_exits.count(old_level.branch) == 0
             && !you.branches_left[old_level.branch])
         {
             string old_branch_string = branches[old_level.branch].longname;
