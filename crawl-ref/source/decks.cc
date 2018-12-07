@@ -367,7 +367,7 @@ static void _describe_cards(CrawlVector& cards)
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
         auto icon = make_shared<Image>();
-        icon->set_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+        icon->set_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
         title_hbox->add_child(move(icon));
 #endif
         auto title = make_shared<Text>(formatted_string(name, WHITE));
@@ -482,6 +482,9 @@ static deck_type _choose_deck(const string title = "Draw")
         if (!_deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
+#ifdef USE_TILE
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
+#endif
         deck_menu.add_entry(me);
     }
 
@@ -660,7 +663,7 @@ bool stack_five(int to_stack)
             new MenuEntry(card_name((card_type)stack[i].get_int()),
                           MEL_ITEM, 1, '1'+i);
 #ifdef USE_TILE
-        entry->add_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+        entry->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
 #endif
         menu.add_entry(entry);
     }

@@ -688,7 +688,7 @@ static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 #ifdef USE_TILE
-    me->add_tile(tile_def(TILE_MISC_CARD, TEX_DEFAULT));
+    me->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
 #endif
     return me;
 }
@@ -1059,7 +1059,7 @@ static int _describe_card(const string &key, const string &suffix,
     const card_type card = name_to_card(card_name);
     ASSERT(card != NUM_CARDS);
 #ifdef USE_TILE
-    tile_def tile = tile_def(TILE_MISC_CARD, TEX_DEFAULT);
+    tile_def tile = tile_def(TILEG_NEMELEX_CARD, TEX_GUI);
     return _describe_key(key, suffix, footer, which_decks(card) + "\n", &tile);
 #else
     return _describe_key(key, suffix, footer, which_decks(card) + "\n");
