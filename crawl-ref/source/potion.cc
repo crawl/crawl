@@ -598,6 +598,11 @@ public:
         }
         else
             skill_menu(SKMF_EXPERIENCE, exp);
+
+        // the player might meet training targets and need to choose
+        // skills
+        check_selected_skills();
+
         return true;
     }
 };
