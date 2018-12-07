@@ -115,6 +115,7 @@ enum class abflag
     hostile             = 0x00400000, // failure summons a hostile (Makhleb)
     starve_ok           = 0x00800000, // can use even if starving
     berserk_ok          = 0x01000000, // can use even if berserk
+    card                = 0x02000000, // deck drawing (Nemelex)
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -477,13 +478,13 @@ static const ability_def Ability_List[] =
 
     // Nemelex
     { ABIL_NEMELEX_DRAW_DESTRUCTION, "Draw Destruction",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_DRAW_ESCAPE, "Draw Escape",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
-      0, 0, 0, 0, {}, abflag::none },
+      0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
       2, 0, 0, 2, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
@@ -820,6 +821,13 @@ const string make_cost_description(ability_type ability)
         ret += ru_sac_text(ability);
     }
 
+    if (abil.flags & abflag::card)
+    {
+        ret += ", ";
+        ret += "A Card ";
+        ret += make_stringf("(%d in deck)", deck_cards(ability_deck(ability)));
+    }
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
         return "None";
@@ -1133,11 +1141,8 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     string lookup;
 
-    if ((ABIL_NEMELEX_FIRST_DECK <= ability && ability <= ABIL_NEMELEX_LAST_DECK)
-        || ability == ABIL_NEMELEX_DRAW_STACK)
-    {
+    if (testbits(get_ability_def(ability).flags, abflag::card))
         lookup = _nemelex_desc(ability);
-    }
     else
         lookup = getLongDescription(name + " ability");
 
