@@ -5,8 +5,7 @@ Velocity card
 The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
 coat the boots' soles.
 
-Drawing this card can grant great speed or terrible slowness to foes and allies
-alike. The beneficial aspects depend on card power.
+Drawing this card can grant great speed to allies or terrible slowness to foes.
 %%%%
 the Tomb card
 
