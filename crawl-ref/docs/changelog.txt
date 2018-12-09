@@ -3,21 +3,26 @@ Stone Soup 0.23 (up to 0.23-a0-550-g7de1f8ee)
 
 Branches, Environment
 ---------------------
+* Traps have been reworked:
+  - Traps that generate on the ground are always revealed.
+  - Exploration has a chance to trigger a "trap effect" independent from
+    terrain traps. The possible effects are alarm, shaft, and teleport near
+    monsters.
+  - Alarm traps only trigger in LOS, and always Mark the player when
+    triggered.
+  - New trap: dispersal trap. When triggered every actor in sight of the trap
+    is blinked.
+* A new Gauntlet portal that replaces Labyrinths:
+   - Gauntlets have the player choose a path through several combat arenas,
+     each of which contains (sometimes exotic) monsters and loot.
+   - Arena access is one-way using transporters, and teleports are disabled.
+   - All paths lead to the minotaur who guards the exit and a pile of treasure.
+   - Gauntlets are found where Labyrinths previously generated.
 * New early vaults featuring thematic item shops and monsters guarding
   manuals.
 * Layouts:
   - Concentric octagons is enabled for Lair.
   - Cave pools (with adjusted parameters) is enabled for the Dungeon.
-* Traps that generate on the ground are all revealed
-* Alarm traps only trigger in LOS, and always Mark the player when triggerd
-* New trap: dispersal trap. When triggered every actor in sight of the trap is
-  blinked
-* Exploration has a chance to trigger a "trap effect" independent from terrain
-  traps. The possible effects are alarm, shaft, and teleport near monsters.
-* Labyrinths are removed and replaced with a new portal: the Gauntlet. The
-  portal features a thematic arenas with choices between different paths
-  through the collection of arenas, and culminating in a final battle with a
-  big tough monster (currently the minotaur).
 
 Character
 ---------
