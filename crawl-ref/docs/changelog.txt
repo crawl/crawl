@@ -35,8 +35,10 @@ Gods
 * Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
   sight instead of on the turn after the monster enters LOS.
 * The acid damage from Makhleb's Minor Destruction has been reduced.
-* Elyvilon's Heal Other's internal formula has been simplified, allowing the
-  targeter to display pacification chance.
+* Elyvilon's Heal Other's is adjusted
+  - The formula depends only on monster type, not specific monster maxhp
+  - Player Ghosts and Pandemonium Lords are now immune
+  - The targeter to display pacification chance.
 
 Interface
 ---------
@@ -69,7 +71,7 @@ Items
     warning.
   - The robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
     storm clouds in place of its old mist
-  - The storm bow no longer occasionaly creates rain clouds
+  - The storm bow no longer occasionally creates rain clouds
 
 Monsters
 --------
