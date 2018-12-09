@@ -87,7 +87,7 @@ default-depth: Gauntlet
 # be present. Ideally nearly every location in the subvault is visible from at
 # least one of the three window areas on the walls.
 #
-# All vaults must call gauntlet_arena_subvault_setup(_G) to set up the
+# All vaults must call gauntlet_arena_setup(_G) to set up the
 # features, monsters, and items for these glyphs. All subvaults are required to
 # place the following glyphs:
 #
@@ -113,13 +113,13 @@ default-depth: Gauntlet
 # For terrain, use 'x' for any walls and these will collectively randomized to
 # appropriate walls for the tier: either rock or stone for first tier and
 # stone, metal, or crystal for the second tier. To prevent this, give a second
-# argument of true to gauntlet_arena_subvault_setup().
+# argument of true to gauntlet_arena_setup().
 #############################################################################
 
 NAME: gammafunk_gauntlet_arena_open
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 WEIGHT: 5
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n.........n
 n.........n
@@ -134,7 +134,7 @@ ENDMAP
 
 NAME: gammafunk_gauntlet_arena_corners
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n.3.3.3.3.n
 n.xx...xx.n
@@ -151,7 +151,7 @@ NAME: gammafunk_gauntlet_arena_hedges
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 KMONS: p = plant w:20 / nothing
 KMONS: q = plant
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n3.3.3.3.3n
 n.ppp3ppp.n
@@ -166,7 +166,7 @@ ENDMAP
 
 NAME: gammafunk_gauntlet_arena_split_x
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n3.......3n
 n.x3...3x.n
@@ -181,7 +181,7 @@ ENDMAP
 
 NAME: gammafunk_gauntlet_arena_grid
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n3.3.3.3.3n
 n.x.x.x.x.n
@@ -196,7 +196,7 @@ ENDMAP
 
 NAME: gammafunk_gauntlet_arena_split_diamond
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n...3.3...n
 n.3xx.xx3.n
@@ -212,7 +212,7 @@ ENDMAP
 NAME: nicolae_gauntlet_arena_t_cross
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST: P = P / .
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n3.3.3.3.3n
 n...nnn...n
@@ -227,7 +227,8 @@ ENDMAP
 
 NAME: nicolae_gauntlet_arena_x
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+SUBST: ~ = ^..
+: gauntlet_arena_setup(_G)
 MAP
 nx.3.3.3.xn
 n.x.....x.n
@@ -244,7 +245,7 @@ NAME: nicolae_gauntlet_arena_flowing_pool
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup no_pool_fixup
 NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
 SUBST: w : wwwl
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n--ww---w-n
 n-w--w--w-n
@@ -260,7 +261,7 @@ ENDMAP
 NAME: nicolae_gauntlet_arena_quarters
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST: P = P / .
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n3.3...3.3n
 n..nx3xn..n
@@ -275,7 +276,7 @@ ENDMAP
 
 NAME: nicolae_gauntlet_arena_blocks
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n.3..3..3.n
 n.x.....x.n
@@ -293,7 +294,7 @@ TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 KFEAT: pq = iron_grate
 SUBST: q = qq.
 NSUBST: - = 10=3 / ., ' = 6=2 / .
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n---------n
 n-xqx---x-n
@@ -309,7 +310,7 @@ ENDMAP
 NAME: nicolae_gauntlet_swirl
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
-: gauntlet_arena_subvault_setup(_G)
+: gauntlet_arena_setup(_G)
 MAP
 n--x------n
 n---x-----n
@@ -581,7 +582,7 @@ ENDMAP
 #
 # Before any arena subvault statements, call the setup function:
 #
-#    gauntlet_arena_setup(_G, entry_glyphs, exit_glyphs)
+#    gauntlet_setup(_G, entry_glyphs, exit_glyphs)
 #
 # The map should place the arena entry transporters on the glyphs in the string
 # 'entry_glyphs' and the arena exit transporter landing sites on the glyphs in
@@ -594,7 +595,7 @@ ENDMAP
 # Gauntlet arenas have two tiers for easier and harder difficulties. To set a
 # subvault's difficulty, call gauntlet_arena_set_tier(n) before the subvault
 # statement and use tags gauntlet_arena_first and gauntlet_arena_second. The
-# gauntlet_arena_setup() function will initialize difficulty to the first tier.
+# gauntlet_setup() function will initialize difficulty to the first tier.
 #
 # The map should place exactly one subvault with tag 'gauntlet_exit', which will
 # place and exit features. Call gauntlet_appearance(_G) to set the exit feature on
@@ -602,7 +603,7 @@ ENDMAP
 NAME:   gammafunk_gauntlet_branching
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_arena_setup(_G, "DFJLNPRp", "EHKMOQSq")
+: gauntlet_setup(_G, "DFJLNPRp", "EHKMOQSq")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: d : gauntlet_arena_first
 : if crawl.coinflip() then
@@ -689,7 +690,7 @@ ENDMAP
 NAME:   gammafunk_gauntlet_hard_choice
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_arena_setup(_G, "DFJLNP", "EHKMOQ")
+: gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: p : gauntlet_arena_first
 # 50% chance to make the second fight harder.
@@ -773,7 +774,7 @@ ENDMAP
 NAME:   gammafunk_gauntlet_shortcut
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_arena_setup(_G, "DFJLN", "EHKMO")
+: gauntlet_setup(_G, "DFJLN", "EHKMO")
 : gauntlet_arena_set_tier(2)
 SUBVAULT: a : gauntlet_arena_second
 SUBVAULT: p : gauntlet_arena_second
@@ -843,7 +844,7 @@ ENDMAP
 NAME:   gammafunk_gauntlet_one_two_three
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_arena_setup(_G, "DFJLNPRpr", "EHKMOQSqs")
+: gauntlet_setup(_G, "DFJLNPRpr", "EHKMOQSqs")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: d : gauntlet_arena_first
 SUBVAULT: e : gauntlet_arena_first

@@ -35,7 +35,7 @@ end
 --                     of subvault placement.
 -- @param exit_glyphs  A string of glyphs for exit transporter landing site
 --                     glyphs in order of subvault placement.
-function gauntlet_arena_setup(e, entry_glyphs, exit_glyphs)
+function gauntlet_setup(e, entry_glyphs, exit_glyphs)
     for i = 1, entry_glyphs:len() do
         e.lua_marker(entry_glyphs:sub(i,i),
                      transp_loc("gauntlet_arena_entry_" ..  tostring(i)))
@@ -44,7 +44,7 @@ function gauntlet_arena_setup(e, entry_glyphs, exit_glyphs)
     end
 
     gauntlet_arena_set_tier(1)
-    gauntlet_arena_numsv = 0
+    gauntlet_arena_num = nil
 
     gauntlet_random_mons_setup(e)
 end
@@ -53,16 +53,16 @@ end
 -- subvault number.
 -- @param e Lua environment.
 function gauntlet_arena_transporter_setup(e)
-    if gauntlet_arena_numsv == nil then
-        gauntlet_arena_numsv = 1
+    if gauntlet_arena_num == nil then
+        gauntlet_arena_num = 1
     else
-        gauntlet_arena_numsv = gauntlet_arena_numsv + 1
+        gauntlet_arena_num = gauntlet_arena_num + 1
     end
 
     e.lua_marker("P", transp_dest_loc("gauntlet_arena_entry_" ..
-                                      tostring(gauntlet_arena_numsv)))
+                                      tostring(gauntlet_arena_num)))
     e.lua_marker("Q", transp_loc("gauntlet_arena_exit_" ..
-                                 tostring(gauntlet_arena_numsv)))
+                                 tostring(gauntlet_arena_num)))
 end
 
 -- Get a random arena entry for an arena subvault based on the arena's tier.
@@ -139,7 +139,7 @@ end
 -- @param e              Lua environment.
 -- @param rock_unchanged If true, replace all 'x' with a wall type appropriate
 --                       for the given tier. Defaults to true.
-function gauntlet_arena_subvault_setup(e, rock_unchanged)
+function gauntlet_arena_setup(e, rock_unchanged)
     gauntlet_arena_transporter_setup(e)
 
     local entry = gauntlet_arena_get_monster_entry(e)
