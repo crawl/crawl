@@ -736,26 +736,12 @@ bool deck_deal()
         return false;
     }
 
-    if (num_cards - 4 < 0
-        && !yesno("Really deal without enough cards? "
-                  "Nemelex will not be pleased.", false, 0))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
     const int num_to_deal = min(num_cards, 4);
 
     for (int i = 0; i < num_to_deal; ++i)
         _evoke_deck(choice, true);
 
     you.props[deck_name(choice)] = 0;
-
-    if (num_to_deal < 4)
-    {
-        mpr("Nemelex gives you another card to finish dealing.");
-        draw_from_deck_of_punishment(true);
-    }
 
     return true;
 }

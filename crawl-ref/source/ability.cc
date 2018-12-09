@@ -486,9 +486,9 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
       0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
-      2, 0, 0, 2, {fail_basis::invo, 60, 5, 20}, abflag::none },
+      2, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
-      8, 0, 0, 8, {fail_basis::invo, -1}, abflag::none }, // failure special-cased
+      8, 0, 0, 0, {fail_basis::invo, -1}, abflag::none }, // failure special-cased
     { ABIL_NEMELEX_STACK_FIVE, "Stack Five",
       5, 0, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
