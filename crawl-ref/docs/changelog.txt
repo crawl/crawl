@@ -1,4 +1,4 @@
-Stone Soup 0.23 (up to 0.23-a0-462-g7c42f869)
+Stone Soup 0.23 (up to 0.23-a0-550-g7de1f8ee)
 ---------------------------------------------
 
 Branches, Environment
@@ -6,8 +6,18 @@ Branches, Environment
 * New early vaults featuring thematic item shops and monsters guarding
   manuals.
 * Layouts:
-  - Concentric octagons is enabled for Lair and Snake.
+  - Concentric octagons is enabled for Lair.
   - Cave pools (with adjusted parameters) is enabled for the Dungeon.
+* Traps that generate on the ground are all revealed
+* Alarm traps only trigger in LOS, and always Mark the player when triggerd
+* New trap: dispersal trap. When triggered every actor in sight of the trap is
+  blinked
+* Exploration has a chance to trigger a "trap effect" independent from terrain
+  traps. The possible effects are alarm, shaft, and teleport near monsters.
+* Labyrinths are removed and replaced with a new portal: the Gauntlet. The
+  portal features a thematic arenas with choices between different paths
+  through the collection of arenas, and culminating in a final battle with a
+  big tough monster (currently the minotaur).
 
 Character
 ---------
@@ -20,6 +30,8 @@ Gods
 * Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
   sight instead of on the turn after the monster enters LOS.
 * The acid damage from Makhleb's Minor Destruction has been reduced.
+* Elyvilon's Heal Other's internal formula has been simplified, allowing the
+  targeter to display pacification chance.
 
 Interface
 ---------
@@ -35,6 +47,7 @@ Items
 * Butchering a corpse always leaves a skeleton.
 * Wand charges for wands of digging, enslavement, flame, paralysis, polymorph,
   and random effects have been reduced.
+* The blowgun targeter now displays the chance to affect the target
 * Unrandarts:
   - The Singing Sword is now vorpal, and its sonic damage effect is stronger
     and triggers on-hit instead of while wielded.
@@ -49,6 +62,9 @@ Items
   - Finisher loses Str+3 and gains a chance to instant-explode the target.
   - Unrandarts with melee effects that could anger nearby allies give a proper
     warning.
+  - The robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
+    storm clouds in place of its old mist
+  - The storm bow no longer occasionaly creates rain clouds
 
 Monsters
 --------
@@ -61,6 +77,7 @@ Monsters
 * Pandemonium lords' spell sets and attack brands are revealed.
 * Monster summons disappear whenever the summoner changes alignment from being
   charmed/uncharmed, pacified, or slimified.
+* Confused monsters now get a 1 in 3 chance to move normally, like players do
 
 Spells
 ------
