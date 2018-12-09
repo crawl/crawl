@@ -50,3 +50,5 @@ bool ensnare(actor *fly);
 void leave_web(bool quiet = false);
 void monster_web_cleanup(const monster &mons, bool quiet = false);
 void stop_being_held();
+
+bool is_regular_trap(trap_type trap);
