@@ -14,12 +14,15 @@ function gauntlet_portal(e)
   local messager =
     timed_msg {
       initmsg = { "You hear a distant snort.",
-                  "Hark! There is an entrance to a gauntlet "
-                  .. "on this level. Find the entrance quickly before "
-                  .. "the gate is sealed!" },
-      finalmsg = "You hear a giant gate slam closed.",
-      verb = 'creaking',
-      noisemaker = 'gate'
+                  "Hark! There is an gateway to a gauntlet on this level. " ..
+                  "Find the entrance quickly before the gate is sealed!" },
+      finalmsg = "After a thunderous strike, the drumbeats cease.",
+      verb = 'beating',
+      noisemaker = 'drum',
+      ranges = {
+        { 5000, 'faint ' },  { 4000, '' }, { 2500, 'loud ' },
+        { 1500, 'thunderous ' }, { 0, 'deafening ' }
+      }
     }
 
     e.lua_marker('O',
