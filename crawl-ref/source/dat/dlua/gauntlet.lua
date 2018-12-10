@@ -182,14 +182,15 @@ tier1_gauntlet_arenas = {
     third   = {mons = "steam dragon", min = 1, max = 2},
   },
   {
-    second  = {mons = "slime creature", min = 1, max = 3},
+    second  = {mons = "slime creature", min = 2, max = 4},
     third   = {mons = "jelly", min = 1, max = 3},
   },
   {
     first   = {mons = "death ooze", min = 1, max = 1},
   },
   {
-    second  = {mons = "sixfirhy", min = 1, max = 2},
+    first  = {mons = "sixfirhy", min = 1, max = 1},
+    second = {mons = "ufetubus", min = 2, max = 4},
   },
   {
     first   = {mons = "ice devil", min = 1, max = 1},
@@ -256,7 +257,7 @@ tier1_gauntlet_arenas = {
   },
   {
     first   = {mons = "death scarab", min = 1, max = 1},
-    second  = {mons = "spectral thing place:Lair:6", min = 1, max = 1},
+    second  = {mons = "spectre place:Lair:6", min = 1, max = 1},
   },
   {
     first   = {mons = "shining eye", min = 1, max = 1},
@@ -288,6 +289,13 @@ tier1_gauntlet_arenas = {
   {
     first   = {mons = "oklob plant", min = 1, max = 1},
     second  = {mons = "acid dragon", min = 1, max = 2},
+  },
+  {
+    first  = {mons = "necromancer", min = 1, max = 1},
+    second = {mons = "wolf band", min = 1, max = 1},
+  },
+  {
+    second  = {mons = "swamp worm", min = 2, max = 3},
   },
 }
 
@@ -390,12 +398,12 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "torpor snail", min = 1, max = 1},
-    second = {mons = "death yak / hydra", min = 1, max = 2},
+    second = {mons = "death yak band / hydra", min = 1, max = 1},
   },
   {
     first  = {mons = "entropy weaver", min = 1, max = 1},
-    second = {mons = "redback / wolf spider / jumping spider", min = 1,
-              max = 2},
+    second = {mons = "wolf spider", min = 0, max = 1},
+    third  = {mons = "redback / jumping spider", min = 1, max = 2},
   },
   {
     first  = {mons = "moth of wrath", min = 1, max = 1},
@@ -433,7 +441,7 @@ tier2_gauntlet_arenas = {
   },
   {
     second = {mons = "death scarab", min = 2, max = 2},
-    third  = {mons = "spectral thing place:Lair:6", min = 2, max = 4},
+    third  = {mons = "spectre place:Lair:6", min = 2, max = 4},
   },
   {
     first  = {mons = "orange crystal statue", min = 1, max = 1},
@@ -447,16 +455,9 @@ tier2_gauntlet_arenas = {
     second = {mons = "lightning spire", min = 0, max = 1},
     third  = {mons = "raiju", min = 1, max = 2},
   },
-  -- Following sets will place in special vaults
   {
-    second  = {mons = "centaur warrior / yaktaur", min = 2, max = 4},
-    weight  = 0
-  },
-  {
-    -- not sure if this can work or is really necessary; would use deep
-    -- water/lava.
-    second  = {mons = "swamp worm", min = 2, max = 3},
-    weight  = 0
+    first   = {mons = "tyrant leech", min = 1, max = 1},
+    second  = {mons = "swamp worm", min = 2, max = 4},
   },
 }
 
