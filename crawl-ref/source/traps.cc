@@ -1739,5 +1739,9 @@ bool ensnare(actor *fly)
 // Whether this trap type can be placed in vaults by the ^ glphy
 bool is_regular_trap(trap_type trap)
 {
+#if TAG_MAJOR_VERSION == 34
     return trap <= TRAP_MAX_REGULAR || trap == TRAP_DISPERSAL;
+#else
+    return trap <= TRAP_MAX_REGULAR;
+#endif
 }
