@@ -32,11 +32,9 @@ msc += $danger:rotting away
 
 # Less urgent, but still significant messages
 #
-msc += $warning:ticking.*clock
-msc += $warning:dying ticks
 msc += $warning:distant snort
-msc += $warning:odd grinding sound
-msc += $warning:creaking of ancient gears
+msc += $warning:beating.*drum
+msc += $warning:drumbeats cease
 msc += $warning:floor suddenly vibrates
 msc += $warning:a sudden draft
 msc += $warning:coins.*counted
