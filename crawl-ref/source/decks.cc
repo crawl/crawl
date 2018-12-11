@@ -227,6 +227,15 @@ static const string _stack_contents()
     return output;
 }
 
+const string stack_top()
+{
+    const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+    if (stack.empty())
+        return "none";
+    else
+        return card_name((card_type) stack[stack.size() - 1].get_int());
+}
+
 const string deck_contents(deck_type deck)
 {
     if (deck == DECK_STACK)

@@ -749,6 +749,16 @@ int get_gold_cost(ability_type ability)
     }
 }
 
+static string _nemelex_card_text(ability_type ability)
+{
+    int cards = deck_cards(ability_deck(ability));
+
+    if (ability == ABIL_NEMELEX_DRAW_STACK)
+        return make_stringf("(next: %s)", stack_top().c_str());
+    else
+        return make_stringf("(%d in deck)", cards);
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -825,7 +835,7 @@ const string make_cost_description(ability_type ability)
     {
         ret += ", ";
         ret += "A Card ";
-        ret += make_stringf("(%d in deck)", deck_cards(ability_deck(ability)));
+        ret += _nemelex_card_text(ability);
     }
 
     // If we haven't output anything so far, then the effect has no cost
