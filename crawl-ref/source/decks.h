@@ -77,6 +77,7 @@ void draw_from_deck_of_punishment(bool deal = false);
 
 string deck_name(deck_type deck);
 string deck_description(deck_type deck);
+const string stack_top();
 
 #if TAG_MAJOR_VERSION == 34
 bool is_deck_type(uint8_t type);
