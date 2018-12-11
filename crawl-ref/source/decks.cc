@@ -17,6 +17,7 @@
 #include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -94,11 +95,11 @@ deck_archetype deck_of_escape =
 deck_archetype deck_of_destruction =
 {
     { CARD_VITRIOL,    5 },
-    { CARD_STORM,      5 },
     { CARD_PAIN,       5 },
     { CARD_ORB,        5 },
     { CARD_DEGEN,      3 },
     { CARD_WILD_MAGIC, 5 },
+    { CARD_STORM,      5 },
 };
 
 deck_archetype deck_of_summoning =
@@ -1535,29 +1536,36 @@ static void _storm_card(int power)
 {
     const int power_level = _get_power_level(power);
 
-    _friendly(MONS_AIR_ELEMENTAL, 3);
+    wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
+    redraw_screen(); // Update monster positions
 
-    wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
-
-    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
+    // 1-4, 5-8, 9-12
+    const int max_explosions = random_range((power_level * 4) + 1, (power_level + 1) * 4);
+    for (int attempt = 0; attempt < max_explosions; attempt++)
     {
-        monster *mons = monster_at(*ri);
-
-        if (adjacent(*ri, you.pos()))
-            continue;
-
-        if (mons && mons->wont_attack())
-            continue;
-
-        if ((feat_has_solid_floor(grd(*ri))
-             || grd(*ri) == DNGN_DEEP_WATER)
-            && !cloud_at(*ri))
+        // Find a random square in range, with a minimum range so you never get
+        // hit yourself.
+        coord_def cp = you.pos();
+        cp.x += random_range(4, LOS_DEFAULT_RANGE) * (coinflip() ? 1 : -1);
+        cp.y += random_range(4, LOS_DEFAULT_RANGE) * (coinflip() ? 1 : -1);
+        if (you.see_cell(cp))
         {
-            place_cloud(CLOUD_STORM, *ri,
-                        5 + (power_level + 1) * random2(10), & you);
+            bolt beam;
+            beam.name              = "electrical discharge";
+            beam.aux_source        = "the storm";
+            beam.flavour           = BEAM_ELECTRICITY;
+            beam.real_flavour      = beam.flavour;
+            beam.colour            = LIGHTCYAN;
+            beam.source_id         = MID_PLAYER;
+            beam.thrower           = KILL_YOU;
+            beam.is_explosion      = true;
+            beam.ex_size           = 4;
+            beam.hit               = AUTOMATIC_HIT;
+            beam.damage            = calc_dice(4, 10); // XXX: doesn't seem to work?
+            beam.target = cp;
+            beam.explode(true);
         }
     }
-
 }
 
 static void _illusion_card(int power)
@@ -1672,6 +1680,8 @@ static void _torment_card()
 
 // Punishment cards don't have their power adjusted depending on Nemelex piety,
 // and are based on experience level instead of invocations skill.
+// Max power = 200 * (2700+2500) / 2700 + 243 + 300 = 928
+// Min power = 1 * 2501 / 2700 + 1 + 0 = 2
 static int _card_power(bool punishment)
 {
     if (punishment)
