@@ -1104,30 +1104,33 @@ static void _damaging_card(card_type card, int power,
     args.mode = TARG_HOSTILE;
     if (!done_prompt)
         args.top_prompt = prompt;
-    if (spell_direction(target, beam, &args)
-        && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
-    {
-        if (you.confused())
-        {
-            target.confusion_fuzz();
-            beam.set_target(target);
-        }
 
-        if (ztype == ZAP_IOOD)
+    // Confirm aborts as they waste the card.
+    prompt = make_stringf("Aiming: %s", card_name(card));
+    while (!(spell_direction(target, beam, &args)
+            && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam)))
+    {
+        if (crawl_state.seen_hups
+            || yesno("Really abort (and waste the card)?", false, 0))
         {
-            if (power_level == 1)
-                cast_iood(&you, power/6, &beam);
-            else
-                cast_iood_burst(power/6, beam.target);
+            canned_msg(MSG_OK);
+            return;
+        }
+        args.top_prompt = prompt;
+    }
+
+    if (ztype == ZAP_IOOD)
+    {
+        if (power_level == 1)
+        {
+            cast_iood(&you, power/6, &beam, 0, 0,
+                      mgrd(beam.target), false, false);
         }
         else
-            zapping(ztype, power/6, beam);
+            cast_iood_burst(power/6, beam.target);
     }
-    else if (ztype == ZAP_IOOD && power_level == 2)
-    {
-        // cancelled orb bursts just become uncontrolled
-        cast_iood_burst(power/6, coord_def(-1, -1));
-    }
+    else
+        zapping(ztype, power/6, beam);
 }
 
 static void _elixir_card(int power)
