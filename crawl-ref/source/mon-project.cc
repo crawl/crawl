@@ -31,11 +31,14 @@
 static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
-                     int foe, bool fail)
+                     int foe, bool fail, bool needs_tracer)
 {
     const bool is_player = caster->is_player();
-    if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
+    if (beam && is_player && needs_tracer
+             && !player_tracer(ZAP_IOOD, pow, *beam))
+    {
         return SPRET_ABORT;
+    }
 
     fail_check();
 
