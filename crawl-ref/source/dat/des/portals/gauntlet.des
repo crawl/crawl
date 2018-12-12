@@ -59,17 +59,17 @@ default-depth: Gauntlet
 #############################################################################
 # <<1>> Gauntlet arena subvaults
 #############################################################################
-# Each vault should have tags 'gauntlet_arena_first' and 'gauntlet_arena_second' assuming
-# its viable for both tiers. Two tags exist in case a vault wants to specify
-# custom terrain for specific monsters and loot and is only appropriate for one
-# tier.
+# Each vault should have tags 'gauntlet_arena_first' and
+# 'gauntlet_arena_second' assuming its viable for both tiers. Two tags exist in
+# case a vault wants to specify custom terrain for specific monsters and loot
+# and is only appropriate for one tier.
 #
 # The vaults must must have the same shape as one of the templates below. These
-# all have one side that is tapered so that the vaults exit transporter landing
-# site in the parent map will be close to the exit transporter. It represents
-# the "end" of the vault and is where the exit tranporter 'Q' glyph, '1' glyph,
-# and 'd' loot glyphs should generally be (see below). As the templates below
-# show, the vault can be any rotation of this basic shape.
+# all have 'bottom' side that is tapered so that the vaults exit transporter
+# landing site in the parent map will be close to the exit transporter. It
+# represents the "end" of the vault and is where the exit transporter 'Q'
+# glyph, '1' glyph, and 'd' loot glyphs should generally be (see below). As the
+# templates below show, the vault can be any rotation of this basic shape.
 #
 # n.........n  nnnnnn      ...dQd...      nnnnnn
 # n.........n  .........   ....1....   .........
@@ -85,35 +85,68 @@ default-depth: Gauntlet
 #
 # The 'n' tiles shown # are part of the transparent arena walls and must always
 # be present. Ideally nearly every location in the subvault is visible from at
-# least one of the three window areas on the walls.
+# least one of the three window areas on the walls. The 'P', 'Q', '1', and 'd',
+# glyphs don't have to be at the exact spots shown, but the shown spots are
+# good guidelines.
 #
-# All vaults must call gauntlet_arena_setup(_G) to set up the
-# features, monsters, and items for these glyphs. All subvaults are required to
-# place the following glyphs:
+# All vaults must place the glyphs below in the given quantities and then call
+# gauntlet_arena_setup(_G) to set up items, monsters, transporters, and
+# terrain.
+#
+# Transporter Glyphs:
 #
 # 'P' : Entry transporter landing site. Central locations or locations somewhat
-#       far away the center of the top are best. Monsters inside the arena will
-#       try to be close to the player at the top-center as they take the
-#       transporter, and ideally the player has some turns to move after
-#       transporting.
-# 'Q' : Exit transporter. Needs to be located near the tapered side of the
-#       vault where it will be close to the exit transporter landing site in
-#       the parent vault.
+#       far away the top-center (non-tapered side) are best. This is because
+#       the player usually enters from a transporter outside the vault at
+#       top-center. Monsters inside will gather close to that area, so placing
+#       the transporter away from it gives the player turns to move before
+#       being attacked. Conversely placing 'P' too close to the exit
+#       transporter 'Q' makes it too easy to raid the arena without engaging
+#       monsters.
+#
+# 'Q' : Exit transporter. Needs to be located near the bottom-center (tapered
+#       side) of the vault where it will be close to the exit transporter
+#       landing site in the parent vault.
+#
+# Monster and Item Glyphs:
+#
+# Note that the '1', '2', and '3' glyphs only determine possible locations of
+# monsters in the vault, not how many can or will place. See the comments for
+# and contents of tier1_gauntlet_arenas in dat/dlua/gauntlet.lua for those
+# details.
+#
 # '1' : At least one glyph for the strongest type of monster. Should be an
-#       ideal location if the monster should be station (i.e. statue or oklob).
-#       If multiple are placed, only one at random will be used.
+#       ideal location if the monster is stationary (i.e. statue or oklob). If
+#       multiple '1' exist, one is chosen randomly and the rest become floor.
+#
 # '2' : At least six of this glyph for the middle tier monsters. Unused
 #       instances will become floor.
+#
 # '3' : At least ten of this glyph for the weakest tier monsters. Unused
 #       instances will become floor.
-# 'd' : At least four of this glyph for loot items. Unused instances will
-#       become floor. Tier 1 arenas place two items and tier 2 place 3. See
-#       gauntlet_arena_item_setup() for details on what's placed.
 #
-# For terrain, use 'x' for any walls and these will collectively randomized to
-# appropriate walls for the tier: either rock or stone for first tier and
-# stone, metal, or crystal for the second tier. To prevent this, give a second
-# argument of true to gauntlet_arena_setup().
+# 'd' : At least four of this glyph for loot items. Unused instances will
+#       become floor. By default, tier one arenas place two items and tier two
+#       place three. See gauntlet_arena_item_setup() for details on default
+#       items, and gauntlet_arena_custom_extra_items() to change the default.
+#
+# 'p' : (Optional) All 'p' glyphs become a plant type appropriate for the
+#       chosen monster set.
+#
+# Terrain Glyphs:
+#
+# 'x' : (Optional) All rock wall glyphs get collectively randomized to
+#       appropriate walls for the tier: either rock or stone for first tier and
+#       stone, metal, or crystal for the second tier. To prevent this, give a
+#       second argument of true to gauntlet_arena_setup(). Otherwise, it's best
+#       to use 'x' for all opaque walls in the arena.
+#
+# 'w' : (Optional) There's a chance for all 'w' glyphs to become 'l' lava
+#       glyphs unless the chosen monster set indicates that only water is
+#       thematically appropriate.
+#
+# 'l' : (Optional) All 'l' glyphs get turned to deep water if the chosen
+#       monster set indicated that only lava is thematically appropriate.
 #############################################################################
 
 NAME: gammafunk_gauntlet_arena_open
@@ -149,18 +182,17 @@ ENDMAP
 
 NAME: gammafunk_gauntlet_arena_hedges
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-KMONS: p = plant w:20 / nothing
-KMONS: q = plant
+SUBST: q = pp.
 : gauntlet_arena_setup(_G)
 MAP
 n3.3.3.3.3n
-n.ppp3ppp.n
-n3pxqqqxp3n
-n.ppp.ppp.n
+n.qqq3qqq.n
+n3qxpppxq3n
+n.qqq.qqq.n
 n3...P...3n
-n.ppp.ppp.n
- 2pxqqqxp2
- .pp212pp.
+n.qqq.qqq.n
+ 2qxpppxq2
+ .qq212qq.
  .2ddQdd2.
 ENDMAP
 
@@ -244,7 +276,6 @@ ENDMAP
 NAME: nicolae_gauntlet_arena_flowing_pool
 TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup no_pool_fixup
 NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
-SUBST: w : wwwl
 : gauntlet_arena_setup(_G)
 MAP
 n--ww---w-n
