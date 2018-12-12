@@ -643,7 +643,7 @@ class StackFiveMenu : public Menu
     CrawlVector& draws;
 public:
     StackFiveMenu(CrawlVector& d)
-        : Menu(MF_NOSELECT | MF_ALWAYS_SHOW_MORE), draws(d) {};
+        : Menu(MF_NOSELECT | MF_UNCANCEL | MF_ALWAYS_SHOW_MORE), draws(d) {};
 };
 
 bool StackFiveMenu::process_key(int keyin)
@@ -675,8 +675,6 @@ bool StackFiveMenu::process_key(int keyin)
         items[i]->colour = WHITE;
         select_item_index(i, 1, false);
     }
-    else if (keyin == CK_ESCAPE)
-        return !crawl_state.seen_hups;
     else
         Menu::process_key(keyin);
     return true;
@@ -684,7 +682,7 @@ bool StackFiveMenu::process_key(int keyin)
 
 static void _draw_stack(int to_stack)
 {
-    ToggleableMenu deck_menu(MF_SINGLESELECT
+    ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
     {
         ToggleableMenuEntry* me =
@@ -732,7 +730,7 @@ static void _draw_stack(int to_stack)
         ASSERT(sel.hotkeys.size() == 1);
         deck_type selected = (deck_type) *(static_cast<int*>(sel.data));
         // Need non-const access to the selection.
-        ToggleableMenuEntry* me = 
+        ToggleableMenuEntry* me =
             static_cast<ToggleableMenuEntry*>(deck_menu.selected_entries()[0]);
 
         if (deck_menu.menu_action == Menu::ACT_EXAMINE)
