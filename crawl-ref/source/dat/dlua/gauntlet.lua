@@ -6,6 +6,33 @@ function gauntlet_arena_set_tier(n)
     gauntlet_arena_tier = n
 end
 
+-- Set a custom nsubst pattern to customize what extra items are placed in an
+-- arena. Here extra item refers to the three possible items placed after the
+-- first.
+--
+-- @param nsubst A string containing nsubst replacement terms for the
+--               three extra item 'd' glyphs. This string should only be the
+--               replacement terms of the nsubst, hence it does not begin with
+--               "d = ".
+--
+-- Example nsubst parameter:
+--
+-- "fg|*|*...... / ." : Replace one 'd' with 50% chance of nothing and 50%
+--                      chance for 'f' or 'g' (1/3 chance), or '|' or '*' (2/3
+--                      chance). The remaining 'd' become floor.
+--
+-- See the comments for gauntlet_arena_item_setup() for details on the
+-- available item slot glyphs.
+function gauntlet_arena_custom_extra_items(nsubst)
+    gauntlet_arena_extra_items_nsubst = nsubst
+end
+
+-- Set the extra item placement in arenas to the default behavior. See
+-- gauntlet_arena_item_setup() for details on this default.
+function gauntlet_arena_default_extra_items()
+    gauntlet_arena_extra_items_nsubst = nil
+end
+
 -- Set a random monster list based on the monsters in tier1_gauntlet_arenas.
 -- Use only these so that the potential summons won't get too crazy. This isn't
 -- a great system since custom weights in the "mons" entries could throw this
@@ -45,6 +72,7 @@ function gauntlet_setup(e, entry_glyphs, exit_glyphs)
 
     gauntlet_arena_set_tier(1)
     gauntlet_arena_num = nil
+    gauntlet_arena_default_extra_items()
 
     gauntlet_random_mons_setup(e)
 end
@@ -101,28 +129,67 @@ function gauntlet_arena_mons_setup(e, entry, glyph)
     end
 end
 
--- Set up item definitions for arena subvaults.
--- @param e          Lua environment.
--- @param other_loot If non-nil, place this items as a guaranteed loot item.
-function gauntlet_arena_item_setup(e, other_loot)
-    -- If an entry defines loot, one of that item will always place, otherwise
-    -- 50% chance of good scroll or potion and 50% chance of star_item.
-    local d_first_nsubst = "d*"
-    if other_loot then
-        e.item(other_loot)
-        d_first_nsubst = "d"
+-- Item setup for arena subvaults.
+--
+-- Defines item slots 'd', 'e', 'f', and 'g'. Slot 'd' will be any custom loot
+-- item defined by the arena, otherwise it's defined as "nothing". Slot 'e' is
+-- 50% chance each of dgn.loot_scrolls or dgn.loot_potions. Slot 'f' is
+-- good_item aux armour, and slot 'g' is good_item jewellery. Both 'f' and 'g'
+-- have a chance to be upgraded to randart for tier 2 arenas.
+--
+-- All arenas place one 'd' glyph that remains as 'd' if a custom definition is
+-- given in the other_loot parameter. Otherwise this first 'd' glyph is
+-- replaced with either 'e' or '*' with 1/2 chance each.
+--
+-- For the remaining three 'd' glyphs, they are replaced according to the
+-- custom nsubst pattern defined via gauntlet_arena_custom_extra_items(). If
+-- this function has not been called or if gauntlet_arena_default_extra_items()
+-- has just been called, the default extra item placement depends on the arena
+-- tier.
+--
+-- For default placement, tier 1 arenas have a 1/3 chance to replace one 'd'
+-- glyph with either 'f' or 'g' and a 2/3 chance to place either '|' or
+-- '*'instead. The two remaining 'd' become floor. For tier 2 arenas, one 'd'
+-- becomes either 'f' or 'g', and one additional 'd' becomes either '|' or '*',
+-- and the final 'd' becomes floor.
+--
+-- @param e           Lua environment.
+-- @param custom_loot If non-nil, place this as a guaranteed loot item.
+function gauntlet_arena_item_setup(e, custom_loot)
+    -- Replace all 'd' after the first with the unused 'X' glyph so we can more
+    -- easilly apply any custom replacement for those extra items.
+    e.nsubst("d = d / X")
+
+    -- Slot 'd'.
+    local first_subst = "e*"
+    if custom_loot then
+        e.item(custom_loot)
+        first_subst = "d"
     else
-        e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+        e.item("nothing")
     end
 
-    -- For tier 1 arenas, we place one more item that's either 2/3 chance
-    -- superb item or star_item and 1/3 chance for good_item aux or jewellery.
+    -- Slot 'e'
+    e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+
+    -- will only
+    e.subst("d = " .. first_subst)
+
+    local extra_nsubst
+    if gauntlet_arena_extra_items_nsubst ~= nil then
+        extra_nsubst = gauntlet_arena_extra_items_nsubst
+    end
+
     if gauntlet_arena_tier == 1 then
+       -- Slots 'f' and 'g' for tier 1.
         e.item(dgn.good_aux_armour)
         e.item("any jewellery good_item")
-        e.nsubst("d = " .. d_first_nsubst .. " / ef|*|* / .")
-    -- For tier 2
+
+        if extra_nsubst == nil then
+            extra_nsubst = "fg|*|* / ."
+        end
     else
+       -- Slots 'f' and 'g' for tier 2.
         if crawl.one_chance_in(3) then
             e.item(dgn.randart_aux_armour)
             e.item("any jewellery randart")
@@ -130,7 +197,14 @@ function gauntlet_arena_item_setup(e, other_loot)
             e.item(dgn.good_aux_armour)
             e.item("any jewellery good_item")
         end
-        e.nsubst("d = " .. d_first_nsubst .. " / ef / |* / .")
+
+        if extra_nsubst == nil then
+            extra_nsubst = "fg / |* / ."
+        end
+    end
+
+    e.nsubst("X = " .. extra_nsubst)
+end
 
 -- Arena subvault terrain setup. Handles randomization of rock, liquids, trap
 -- placement, and plants.
