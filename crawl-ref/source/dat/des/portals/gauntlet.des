@@ -383,7 +383,6 @@ ENDMAP
 # Adapted from labyrinth_green minotaur.
 NAME:   gauntlet_exit_green
 TAGS:   gauntlet_exit
-WEIGHT: 2
 MONS:   patrolling generate_awake minotaur
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
