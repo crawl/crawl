@@ -253,26 +253,27 @@ public:
 
 enum MenuFlag
 {
-    MF_NOSELECT         = 0x0001,   ///< No selection is permitted
-    MF_SINGLESELECT     = 0x0002,   ///< Select just one item
-    MF_MULTISELECT      = 0x0004,   ///< Select multiple items
-    MF_NO_SELECT_QTY    = 0x0008,   ///< Disallow partial selections
-    MF_ANYPRINTABLE     = 0x0010,   ///< Any printable character is valid, and
-                                    ///< closes the menu.
-    MF_SELECT_BY_PAGE   = 0x0020,   ///< Allow selections to occur only on
-                                    ///< currently-visible page.
-    MF_ALWAYS_SHOW_MORE = 0x0040,   ///< Always show the -more- footer
-    MF_WRAP             = 0x0080,   ///< Paging past the end will wrap back.
-    MF_ALLOW_FILTER     = 0x0100,   ///< Control-F will ask for regex and
-                                    ///< select the appropriate items.
-    MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
-    MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
-    MF_NO_WRAP_ROWS     = 0x0800,   ///< For menus used as tables (eg. ability)
-    MF_START_AT_END     = 0x1000,   ///< Scroll to end of list
-    MF_PRESELECTED      = 0x2000,   ///< Has a preselected entry.
-    MF_QUIET_SELECT     = 0x4000,   ///< No selection box and no count.
+    MF_NOSELECT         = 0x00001,   ///< No selection is permitted
+    MF_SINGLESELECT     = 0x00002,   ///< Select just one item
+    MF_MULTISELECT      = 0x00004,   ///< Select multiple items
+    MF_NO_SELECT_QTY    = 0x00008,   ///< Disallow partial selections
+    MF_ANYPRINTABLE     = 0x00010,   ///< Any printable character is valid, and
+                                     ///< closes the menu.
+    MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on
+                                     ///< currently-visible page.
+    MF_ALWAYS_SHOW_MORE = 0x00040,   ///< Always show the -more- footer
+    MF_WRAP             = 0x00080,   ///< Paging past the end will wrap back.
+    MF_ALLOW_FILTER     = 0x00100,   ///< Control-F will ask for regex and
+                                     ///< select the appropriate items.
+    MF_ALLOW_FORMATTING = 0x00200,   ///< Parse index for formatted-string
+    MF_TOGGLE_ACTION    = 0x00400,   ///< ToggleableMenu toggles action as well
+    MF_NO_WRAP_ROWS     = 0x00800,   ///< For menus used as tables (eg. ability)
+    MF_START_AT_END     = 0x01000,   ///< Scroll to end of list
+    MF_PRESELECTED      = 0x02000,   ///< Has a preselected entry.
+    MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
-    MF_USE_TWO_COLUMNS  = 0x8000,  ///< Only valid for tiles menus
+    MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
+    MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
 };
 
 class UIMenu;
