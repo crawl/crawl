@@ -773,16 +773,6 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_WEB:
-        if (triggerer.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        {
-            trap_destroyed = true;
-            if (you_trigger)
-                mpr("You tear through the web.");
-            else if (m)
-                simple_monster_message(*m, " tears through a web.");
-            break;
-        }
-
         if (triggerer.is_web_immune())
         {
             if (m)
