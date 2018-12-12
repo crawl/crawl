@@ -217,7 +217,7 @@ static const string _stack_contents()
 {
     const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
 
-    string output = "Remaining cards: ";
+    string output = "";
     output += comma_separated_fn(
                 reverse_iterator<CrawlVector::const_iterator>(stack.end()),
                 reverse_iterator<CrawlVector::const_iterator>(stack.begin()),
@@ -239,7 +239,7 @@ const string stack_top()
 const string deck_contents(deck_type deck)
 {
     if (deck == DECK_STACK)
-        return _stack_contents();
+        return "Remaining cards: " + _stack_contents();
 
     string output = "It may contain the following cards: ";
 
@@ -682,6 +682,81 @@ bool StackFiveMenu::process_key(int keyin)
     return true;
 }
 
+static void _draw_stack(int to_stack)
+{
+    ToggleableMenu deck_menu(MF_SINGLESELECT
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+    {
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry("Draw which deck?        "
+                                    "Cards available",
+                                    "Describe which deck?    "
+                                    "Cards available",
+                                    MEL_TITLE);
+#ifdef USE_TILE_LOCAL
+        me->colour = BLUE;
+#endif
+        deck_menu.set_title(me, true, true);
+    }
+    deck_menu.set_tag("deck");
+    deck_menu.add_toggle_key('!');
+    deck_menu.add_toggle_key('?');
+    deck_menu.menu_action = Menu::ACT_EXECUTE;
+
+    deck_menu.set_more(formatted_string::parse_string(
+                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                       "between deck selection and description."));
+
+    int numbers[NUM_DECKS];
+
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
+    {
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(_describe_deck((deck_type)i),
+                    _describe_deck((deck_type)i),
+                    MEL_ITEM, 1, _deck_hotkey((deck_type)i));
+        numbers[i] = i;
+        me->data = &numbers[i];
+        if (!deck_cards((deck_type)i))
+            me->colour = COL_USELESS;
+
+#ifdef USE_TILE
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
+#endif
+        deck_menu.add_entry(me);
+    }
+
+    auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+    deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
+    {
+        ASSERT(sel.hotkeys.size() == 1);
+        deck_type selected = (deck_type) *(static_cast<int*>(sel.data));
+        // Need non-const access to the selection.
+        ToggleableMenuEntry* me = 
+            static_cast<ToggleableMenuEntry*>(deck_menu.selected_entries()[0]);
+
+        if (deck_menu.menu_action == Menu::ACT_EXAMINE)
+            describe_deck(selected);
+        else
+        {
+            you.props[deck_name(selected)]--;
+            me->text = _describe_deck(selected);
+            me->alt_text = _describe_deck(selected);
+
+            card_type draw = _random_card(selected);
+            stack.push_back(draw);
+            string status = "Drawn so far: " + _stack_contents();
+            deck_menu.set_more(formatted_string::parse_string(
+                       status + "\n" +
+                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                       "between deck selection and description."));
+        }
+        return stack.size() < to_stack
+               || deck_menu.menu_action == Menu::ACT_EXAMINE;
+    };
+    deck_menu.show(false);
+}
+
 bool stack_five(int to_stack)
 {
     auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
@@ -691,17 +766,7 @@ bool stack_five(int to_stack)
         if (crawl_state.seen_hups)
             return false;
 
-        deck_type choice = _choose_deck("Draw");
-
-        if (choice == NUM_DECKS)
-            continue;
-
-        you.props[deck_name(choice)]--;
-
-        card_type draw = _random_card(choice);
-        mprf("You draw... %s", card_name(draw));
-        more();
-        stack.push_back(draw);
+        _draw_stack(to_stack);
     }
 
     StackFiveMenu menu(stack);
