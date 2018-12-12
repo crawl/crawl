@@ -166,6 +166,14 @@ function gauntlet_arena_terrain_setup(e, rock_unchanged, liquid, plant)
         error("Unknown liquid type: " .. liquid)
     end
 
+    -- A 1/6 chance to use traps for tier 1, 1/4 chance for tier 2.
+    if gauntlet_arena_tier == 1 then
+        e.subst("^ : ^.....")
+    else
+        e.subst("^ : ^...")
+    end
+    e.kfeat("^ = dispersal trap")
+
     if not plant then plant = "default" end
     if plant == "demonic" then
         e.kmons("p = demonic plant")

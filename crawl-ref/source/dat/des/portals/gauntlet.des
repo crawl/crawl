@@ -135,6 +135,17 @@ default-depth: Gauntlet
 #
 # Terrain Glyphs:
 #
+# '^' : Vaults should have some '^' glyphs to let the vault have a chance of
+#       placing dispersal traps. These should be placed at interesting
+#       locations that make the vault more challenging. All instances of '^'
+#       become a trap, so any location randomization must be handled in the
+#       vault before gauntlet_arena_setup() is called.
+#
+#       The number of '^' placed shouldn't be excessive for a 9x9 arena. It's
+#       helpful to guarantee a trap-free walkable path to 'Q' so that the
+#       player isn't forced to repeatedly step on a trap to blink to the exit
+#       after the vault is cleared.
+#
 # 'x' : (Optional) All rock wall glyphs get collectively randomized to
 #       appropriate walls for the tier: either rock or stone for first tier and
 #       stone, metal, or crystal for the second tier. To prevent this, give a
@@ -149,208 +160,221 @@ default-depth: Gauntlet
 #       monster set indicated that only lava is thematically appropriate.
 #############################################################################
 
-NAME: gammafunk_gauntlet_arena_open
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NAME:   gammafunk_gauntlet_arena_open
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 WEIGHT: 5
+NSUBST: "' = 10=3, - = 6=2 / ^...
+SUBST:  ' = ^.....
 : gauntlet_arena_setup(_G)
 MAP
-n.........n
-n.........n
-n..33333..n
-n..3...3..n
-n..3.P.3..n
-n..2...2..n
- ..22322..
- ....1....
- ..ddQdd..
+n"""""""""n
+n"""""""""n
+n'''''''''n
+n'''...'''n
+n'''.P.'''n
+n'''...'''n
+ ---------
+ ----1----
+ --ddQdd--
 ENDMAP
 
-NAME: gammafunk_gauntlet_arena_corners
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NAME:   gammafunk_gauntlet_arena_corners
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^..
+NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
 MAP
-n.3.3.3.3.n
-n.xx...xx.n
+n3.3.3.3.3n
+n~xx3.3xx~n
 n3x3xnx3x3n
-n..xx.xx..n
-n.3..P..3.n
-n..xx.xx..n
- 2x2xnx2x2
- .xx.1.xx.
- .2ddQdd2.
-ENDMAP
-
-NAME: gammafunk_gauntlet_arena_hedges
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-SUBST: q = pp.
-: gauntlet_arena_setup(_G)
-MAP
-n3.3.3.3.3n
-n.qqq3qqq.n
-n3qxpppxq3n
-n.qqq.qqq.n
-n3...P...3n
-n.qqq.qqq.n
- 2qxpppxq2
- .qq212qq.
- .2ddQdd2.
-ENDMAP
-
-NAME: gammafunk_gauntlet_arena_split_x
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_setup(_G)
-MAP
-n3.......3n
-n.x3...3x.n
-n.xx3.3xx.n
-n.3xx.xx3.n
+n.~xx~xx~.n
 n....P....n
-n.3xxnxx3.n
- .xx2.2xx.
- 2x2.1.2x2
- ..ddQdd..
-ENDMAP
-
-NAME: gammafunk_gauntlet_arena_grid
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_setup(_G)
-MAP
-n3.3.3.3.3n
-n.x.x.x.x.n
-n.3x3n3x3.n
-n.x.x.x.x.n
-n.3n.P.n3.n
-n.x.x.x.x.n
- .2x2n2x2.
- .x.x1x.x.
+n.^xx~xx^.n
+ 2x2xnx2x2
+ !xx.1.xx!
  .2ddQdd2.
 ENDMAP
 
-NAME: gammafunk_gauntlet_arena_split_diamond
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-: gauntlet_arena_setup(_G)
-MAP
-n...3.3...n
-n.3xx.xx3.n
-n.xx3.3xx.n
-n3x.....x3n
-n..3.P.3..n
-n2x.....x2n
- .xx2.2xx.
- .2xx1xx2.
- ..ddQdd..
-ENDMAP
-
-NAME: nicolae_gauntlet_arena_t_cross
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-NSUBST: P = P / .
+NAME:  gammafunk_gauntlet_arena_hedges
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST: q = pp~, ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
 n3.3.3.3.3n
-n...nnn...n
-n3.3.x.3.3n
-n.n.PxP.n.n
-n3nxxxxxn3n
-n.n.2x2.n.n
- .2..x..2.
- ...n1n...
+n~qqq3qqq~n
+n3qxpppxq3n
+n~qqq~qqq~n
+n3...P...3n
+n.qqq~qqq~n
+ 2qxpppxq2
+ ^qq212qq^
  .2ddQdd2.
 ENDMAP
 
-NAME: nicolae_gauntlet_arena_x
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NAME:  gammafunk_gauntlet_arena_split_x
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
-nx.3.3.3.xn
-n.x.....x.n
-n.3x3.3x3.n
-n...xPx...n
-n.3..x..3.n
-n...x.x...n
- .2x2.2x2.
- .x.d1d.x.
- x.2dQd2.x
+n3.3.3.3.3n
+n~x3.3.3x~n
+n.xx3.3xx.n
+n.~xx~xx~.n
+n....P....n
+n.^xxnxx^.n
+ .xx2.2xx.
+ !x~.1.~x!
+ 22ddQdd22
 ENDMAP
 
-NAME: nicolae_gauntlet_arena_flowing_pool
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup no_pool_fixup
-NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
+NAME:   gammafunk_gauntlet_arena_grid
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST: - = 10=3 / ^...., ' = 6=2 / ^..
 : gauntlet_arena_setup(_G)
 MAP
-n--ww---w-n
+n---------n
+n-x-x-x-x-n
+n--x-n-x--n
+n-x-x-x-x-n
+n--n-P-n--n
+n-x-x-x-x-n
+ ''x^n^x''
+ 'x'x1x'x'
+ ''ddQdd''
+ENDMAP
+
+NAME:   gammafunk_gauntlet_arena_split_diamond
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^..
+NSUBST: ! = ^. / .
+: gauntlet_arena_setup(_G)
+MAP
+n333333333n
+n3^xx~xx^3n
+n.xx~~~xx.n
+n~x.....x~n
+n....P....n
+n!x.....x!n
+ 2xx~~~xx2
+ 2^xx1xx^2
+ .2ddQdd2.
+ENDMAP
+
+NAME:   nicolae_gauntlet_arena_t_cross
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^..
+NSUBST: P = P / ., ! = ^. / .
+: gauntlet_arena_setup(_G)
+MAP
+n333333333n
+n3.~nnn~.3n
+n.~..x..~.n
+n.n.PxP.n.n
+n!nxxxxxn!n
+n.n..x..n.n
+ .~.2x2.~.
+ 2^~n1n~^2
+ .2ddQdd2.
+ENDMAP
+
+NAME:  nicolae_gauntlet_arena_x
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST: ~ = ^..
+: gauntlet_arena_setup(_G)
+MAP
+nx3333333xn
+n3x.....x3n
+n3~x...x~3n
+n..~xPx~..n
+n...^x^...n
+n..~x.x~..n
+ .~x2.2x~.
+ ~x2.1.2x~
+ x2ddQdd2x
+ENDMAP
+
+NAME:   nicolae_gauntlet_arena_flowing_pool
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup no_pool_fixup
+NSUBST: P = P / -, - = 10=3 / ^..., ' = 6=2 / ^..
+: gauntlet_arena_setup(_G)
+MAP
+n.-ww-..w.n
 n-w--w--w-n
 nPw-ww-wwPn
 nw-w---w--n
 nw--wPw-wwn
 n-w-www-w-n
- 'ww'''w''
+ 'ww^'^w''
  'w''1w'w'
  d'wdQd'wd
 ENDMAP
 
-NAME: nicolae_gauntlet_arena_quarters
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-NSUBST: P = P / .
+NAME:   nicolae_gauntlet_arena_quarters
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^..
+NSUBST: P = P / ., ! = ^. / .
 : gauntlet_arena_setup(_G)
 MAP
-n3.3...3.3n
+n333333333n
 n..nx3xn..n
-n3n3.x.3n3n
+n.n.~x~.n.n
 n.x.PxP.x.n
-n3.xxxxx.3n
+n.^xxxxx^.n
 n.x..x..x.n
- 2n2.x.2n2
- ..nx1xn..
+ !n2~x~2n!
+ .2nx1xn2.
+ 2.ddQdd.2
+ENDMAP
+
+NAME:   nicolae_gauntlet_arena_blocks
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^..
+NSUBST: ! = ^. / .
+: gauntlet_arena_setup(_G)
+MAP
+n3.3.3.3.3n
+n~x.333.x~n
+n3~xxnxx~3n
+n..xx~xx..n
+n....P....n
+n..xx~xx..n
+ 2^xxnxx^2
+ !x.212.x!
  .2ddQdd2.
 ENDMAP
 
-NAME: nicolae_gauntlet_arena_blocks
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
+NAME:   nicolae_gauntlet_arena_grate_2
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+KFEAT:  qr = iron_grate
+NSUBST: "' = 10=3, - = 6=2 / ^.., ! = ^. / .
+SUBST:  r = rr^, ' = ^...
 : gauntlet_arena_setup(_G)
 MAP
-n.3..3..3.n
-n.x.....x.n
-n.3xxnxx3.n
-n..xx.xx..n
-n3.3.P.3.3n
-n..xx.xx..n
- 2.xxnxx.2
- .x.212.x.
- .2ddQdd2.
+n"""""""""n
+n'xrx'''x'n
+n...xqx'''n
+n!x...xrx'n
+n.xrxP..x'n
+n---xqx...n
+ -x---xrx.
+ -xrx1--x!
+ --ddQdd--
 ENDMAP
 
-NAME: nicolae_gauntlet_arena_grate_2
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-KFEAT: pq = iron_grate
-SUBST: q = qq.
-NSUBST: - = 10=3 / ., ' = 6=2 / .
+NAME:   nicolae_gauntlet_swirl
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / ., ! = ^.. / .
+SUBST:  ~ = ^.
 : gauntlet_arena_setup(_G)
 MAP
-n---------n
-n-xqx---x-n
-n---xpx---n
-n-x---xqx-n
-n-xqxP--x-n
-n'''xpx'''n
- 'x'''xqx'
- 'xqx1''x'
- ''ddQdd''
-ENDMAP
-
-NAME: nicolae_gauntlet_swirl
-TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
-NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / .
-: gauntlet_arena_setup(_G)
-MAP
-n--x------n
-n---x-----n
-n---x----xn
-n---PnPxx-n
-n---nnn---n
-n'xx'n''''n
- x''''x'''
- ''''1x'''
+n--x~-----n
+n---x--~--n
+n-~-x~---xn
+n---PnPxx!n
+n--^nnn^--n
+n!xx'n''''n
+ x'''~x'~'
+ ''~'1x'''
  d''dQdx'd
 ENDMAP
 
