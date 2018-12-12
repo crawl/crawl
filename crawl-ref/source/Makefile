@@ -1631,7 +1631,7 @@ ifdef ANDROID
         # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) NO_PKGCONFIG=$(NO_PKGCONFIG) TILES=$(TILES)$(WEBTILES)
 endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
