@@ -4202,7 +4202,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
 
         // Don't allow allies to pass over known (to them) Zot traps.
         if (tt == TRAP_ZOT
-            && ptrap->is_known(&mon)
+            && ptrap->is_known(mon)
             && mon.friendly())
         {
             return false;

@@ -469,7 +469,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     const trap_def* ptrap = trap_at(npos);
     if (ptrap)
     {
-        const bool knows_trap = ptrap->is_known(mons);
+        const bool knows_trap = ptrap->is_known(*mons);
         const trap_type tt = ptrap->type;
         if (tt == TRAP_ALARM || tt == TRAP_ZOT)
         {

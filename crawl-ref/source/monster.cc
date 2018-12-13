@@ -4697,7 +4697,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     // Allies will try to avoid teleportation and zot traps.
     const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
 
-    if (trap.is_known(this))
+    if (trap.is_known(*this))
     {
         if (just_check)
             return false; // Square is blocked.
@@ -4751,7 +4751,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // can't avoid traps you don't know about
-    if (!trap.is_known(this))
+    if (!trap.is_known(*this))
         return true;
 
     // we don't think we have enough hp (per above), so avoid mech traps
