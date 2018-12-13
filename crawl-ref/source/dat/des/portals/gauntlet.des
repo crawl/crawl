@@ -828,56 +828,55 @@ ENDMAP
 NAME:   gammafunk_gauntlet_shortcut
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-: gauntlet_setup(_G, "DFJLN", "EHKMO")
+: gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 : gauntlet_arena_set_tier(2)
+# 3.5 on average per arena (including the single guaranteed item), for 7 items
+# total on average.
+: gauntlet_arena_custom_extra_items("fg / |* / e.")
 SUBVAULT: a : gauntlet_arena_second
-SUBVAULT: p : gauntlet_arena_second
+SUBVAULT: d : gauntlet_arena_second
 : gauntlet_arena_set_tier(1)
-SUBVAULT: q : gauntlet_arena_first
-SUBVAULT: r : gauntlet_arena_first
-: if crawl.coinflip() then
-SUBVAULT: s : gauntlet_arena_first
-: else
-:   gauntlet_arena_set_tier(2)
-SUBVAULT: s : gauntlet_arena_second
-: end
+# 1.75 on average per arena for 7 items total on average.
+: gauntlet_arena_custom_extra_items("fffggg|||***.... / .")
+SUBVAULT: e : gauntlet_arena_first
+SUBVAULT: f : gauntlet_arena_first
+SUBVAULT: g : gauntlet_arena_first
+SUBVAULT: h : gauntlet_arena_first
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-ccccccccccccccccccccccccccccccc
-cG.............A.............Gc
-c.......D.............J.......c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c..aaaaaaaaaaa...qqqqqqqqqqq..c
-c..aaaaaaaaaaa...qqqqqqqqqqq..c
-c..aaaaaaaaaaa...qqqqqqqqqqq..ccccccccccc
-c..aaaaaaaaaaa...qqqqqqqqqqq...........Gc
-c..aaaaaaaaaaa.<.qqqqqqqqqqq............ccccc
-c..aaaaaaaaaaa...qqqqqqqqqqqnnnnnnnnnn.....Gc
-c..naaaaaaaaan...nqqqqqqqqqn........Ln......c
-c..naaaaaaaaan...nqqqqqqqqqn.nnnnnnnnnnnnn..c
-c..naaaaaaaaan...nqqqqqqqqqn.n.rrrrrrrrrrr..c
-c..nnnnnnnnnnn...nnnnnnnnnnn.n.rrrrrrrrrrr..c
-c.....n.E.n..........nK......n.rrrrrrrrrrr..c
-cG....n...n..........nnnnnnnnn.rrrrrrrrrrr..c
-cT....n...n....T...............rrrrrrrrrrr.Tc
-cG....n...n..........nnnnnnnnn.rrrrrrrrrrr..c
-c.....n.F.n..........nN......n.nrrrrrrrrrn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn.n.nrrrrrrrrrn..c
-c..ppppppppppp...sssssssssss.n.nrrrrrrrrrn..c
-c..ppppppppppp...sssssssssss.nnnnnnnnnnnnn..c
-c..ppppppppppp...sssssssssss........Mn......c
-c..ppppppppppp...sssssssssssnnnnnnnnnn.....Gc
-c..ppppppppppp...sssssssssss............ccccc
-c..ppppppppppp...sssssssssss...........Gc
-c..npppppppppn...nsssssssssn..ccccccccccc
-c..npppppppppn...nsssssssssn..c
-c..npppppppppn...nsssssssssn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c.............................c
-cG............GTG............Gc
-ccccccvnnnvvvvvvvvvvvnnnvcccccc
-      v.H.............O.v
+ccccccccccccccccccccccccccccccccccccccccccccc
+cG.............A...........................Gc
+c.......D.............J.....................c
+c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
+c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
+c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
+c..aaaaaaaaaaa...eeeeeeeeeeennnnfffffffffn..c
+c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
+c..aaaaaaaaaaa.<.eeeeeeeeeeeK.Lnfffffffffn..c
+c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
+c..naaaaaaaaan...neeeeeeeeennnnnfffffffffn..c
+c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
+c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
+c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
+c.....n.E.n.......................n.M.n.....c
+cT....n...n....G.............G....n...n....Tc
+c.....n.F.n.......................n.N.n.....c
+c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
+c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
+c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
+c..ddddddddddd...hhhhhhhhhhhnnnggggggggggg..c
+c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
+c..ddddddddddd...hhhhhhhhhhhP.Oggggggggggg..c
+c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
+c..ndddddddddn...nhhhhhhhhhnnnnngggggggggn..c
+c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
+c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
+c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
+c...........................................c
+cG............GTG..........................Gc
+ccccccvnnnvvvvvvvvvvvnnnvcccccccccccccccccccc
+      v.H.............Q.v
       v.................v
       vvyyyyyyyyyyyyyyyvv
        vyyyyyyyyyyyyyyyv
