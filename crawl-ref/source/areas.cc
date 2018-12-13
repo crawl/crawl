@@ -365,7 +365,6 @@ void create_sanctuary(const coord_def& center, int time)
     // and would then have to be stored globally.
     const int radius      = 4;
     int       blood_count = 0;
-    int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
     monster* seen_mon    = nullptr;
@@ -378,15 +377,6 @@ void create_sanctuary(const coord_def& center, int time)
 
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
-
-        if (trap_def* ptrap = trap_at(pos))
-        {
-            if (!ptrap->is_known())
-            {
-                ptrap->reveal();
-                ++trap_count;
-            }
-        }
 
         // forming patterns
         const int x = pos.x - center.x, y = pos.y - center.y;
@@ -449,9 +439,6 @@ void create_sanctuary(const coord_def& center, int time)
     } // radius loop
 
     // Messaging.
-    if (trap_count > 0)
-        mprf(MSGCH_GOD, "By Zin's power, hidden traps are revealed to you.");
-
     if (cloud_count == 1)
     {
         mprf(MSGCH_GOD, "By Zin's power, the foul cloud within the sanctuary "
