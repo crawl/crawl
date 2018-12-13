@@ -1631,7 +1631,12 @@ ifdef ANDROID
         # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) NO_PKGCONFIG=$(NO_PKGCONFIG) TILES=$(TILES)$(WEBTILES)
+# ensure we don't use contrib libpng when cross-compiling - it won't work.
+ifdef CROSSHOST
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+else
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) NO_PKGCONFIG=$(SUB_NO_PKGCONFIG) TILES=$(TILES)$(WEBTILES)
+endif
 endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
