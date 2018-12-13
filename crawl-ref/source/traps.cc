@@ -1397,11 +1397,8 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (env.turns_on_level == -1
-        && branch.branch_flags & BFLAG_NO_SHAFTS)
-    {
+    if (branch.branch_flags & BFLAG_NO_SHAFTS)
         return false;
-    }
 
     // Don't allow shafts from the bottom of a branch.
     return (brdepth[place.branch] - place.depth) >= 1;
