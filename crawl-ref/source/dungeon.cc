@@ -733,7 +733,8 @@ bool dgn_square_travel_ok(const coord_def &c)
     if (feat_is_trap(feat))
     {
         const trap_def * const trap = trap_at(c);
-        return !(trap && trap->type == TRAP_TELEPORT_PERMANENT);
+        return !(trap && (trap->type == TRAP_TELEPORT_PERMANENT
+                          || trap->type == TRAP_DISPERSAL));
     }
     else
         return feat_is_traversable(feat);
