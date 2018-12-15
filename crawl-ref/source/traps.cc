@@ -491,7 +491,10 @@ void trap_def::trigger(actor& triggerer)
     const bool trig_knows = is_known(triggerer);
 
     const bool you_trigger = triggerer.is_player();
-    const bool in_sight = you.see_cell(pos);
+
+    // Out of sight, out of mind.
+    if (!you.see_cell(pos))
+        return;
 
     // If set, the trap will be removed at the end of the
     // triggering process.
@@ -554,7 +557,7 @@ void trap_def::trigger(actor& triggerer)
         dprf("Triggered dispersal.");
         if (you_trigger)
             mprf("You enter %s!", name(DESC_A).c_str());
-        else if (in_sight)
+        else
             mprf("%s enters %s!", triggerer.name(DESC_THE).c_str(),
                     name(DESC_A).c_str());
         apply_visible_monsters([] (monster& mons) {
@@ -573,11 +576,8 @@ void trap_def::trigger(actor& triggerer)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
             // or be banished by a Zot trap
-            if (in_sight)
-            {
-                env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-                mprf("%s disappears.", name(DESC_THE).c_str());
-            }
+            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            mprf("%s disappears.", name(DESC_THE).c_str());
             destroy();
         }
         if (!triggerer.no_tele(true, you_trigger))
@@ -585,30 +585,28 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_ALARM:
-        if (in_sight)
+        // Alarms always mark the player, and monsters can use them when seeing
+        // the player through glass (just like they can shout)
+        trap_destroyed = true;
+        if (you_trigger)
+            mprf("You set off the alarm!");
+        else
+            mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
+                 mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
+
+        if (silenced(pos))
         {
-            // Don't let wandering monsters set off meaningless alarms.
-            trap_destroyed = true;
-            if (you_trigger)
-                mprf("You set off the alarm!");
-            else
-                mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
-                     mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
-
-            if (silenced(pos))
-            {
-                mprf("%s vibrates slightly, failing to make a sound.",
-                     name(DESC_THE).c_str());
-            }
-            else
-            {
-                string msg = make_stringf("%s emits a blaring wail!",
-                                   name(DESC_THE).c_str());
-                noisy(40, pos, msg.c_str(), triggerer.mid);
-            }
-
-            you.sentinel_mark(true);
+            mprf("%s vibrates slightly, failing to make a sound.",
+                 name(DESC_THE).c_str());
         }
+        else
+        {
+            string msg = make_stringf("%s emits a blaring wail!",
+                               name(DESC_THE).c_str());
+            noisy(40, pos, msg.c_str(), triggerer.mid);
+        }
+
+        you.sentinel_mark(true);
         break;
 
     case TRAP_BLADE:
@@ -635,17 +633,12 @@ void trap_def::trigger(actor& triggerer)
             if (one_chance_in(5) || (trig_knows && coinflip()))
             {
                 // Trap doesn't trigger.
-                if (in_sight)
-                {
-                    simple_monster_message(*m,
-                                           " fails to trigger a blade trap.");
-                }
+                simple_monster_message(*m, " fails to trigger a blade trap.");
             }
             else if (random2(m->evasion()) > 8
                      || (trig_knows && random2(m->evasion()) > 8))
             {
-                if (in_sight
-                    && !simple_monster_message(*m,
+                if (!simple_monster_message(*m,
                                             " avoids a huge, swinging blade."))
                 {
                     mpr("A huge blade swings out!");
@@ -653,17 +646,14 @@ void trap_def::trigger(actor& triggerer)
             }
             else
             {
-                if (in_sight)
+                string msg = "A huge blade swings out";
+                if (m->visible_to(&you))
                 {
-                    string msg = "A huge blade swings out";
-                    if (m->visible_to(&you))
-                    {
-                        msg += " and slices into ";
-                        msg += m->name(DESC_THE);
-                    }
-                    msg += "!";
-                    mpr(msg);
+                    msg += " and slices into ";
+                    msg += m->name(DESC_THE);
                 }
+                msg += "!";
+                mpr(msg);
 
                 int damage_taken = m->apply_ac(10 + random2avg(29, 2));
 
@@ -671,7 +661,7 @@ void trap_def::trigger(actor& triggerer)
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
 
                 m->hurt(nullptr, damage_taken);
-                if (in_sight && m->alive())
+                if (m->alive())
                     print_wounds(*m);
             }
         }
@@ -716,8 +706,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 // Not triggered, trap stays.
                 triggered = false;
-                if (in_sight)
-                    simple_monster_message(*m, " fails to trigger a net trap.");
+                simple_monster_message(*m, " fails to trigger a net trap.");
             }
             else if (random2(m->evasion()) > 8
                      || (trig_knows && random2(m->evasion()) > 8))
@@ -725,14 +714,11 @@ void trap_def::trigger(actor& triggerer)
                 // Triggered but evaded.
                 triggered = true;
 
-                if (in_sight)
+                if (!simple_monster_message(*m,
+                                            " nimbly jumps out of the way "
+                                            "of a falling net."))
                 {
-                    if (!simple_monster_message(*m,
-                                                " nimbly jumps out of the way "
-                                                "of a falling net."))
-                    {
-                        mpr("A large net falls down!");
-                    }
+                    mpr("A large net falls down!");
                 }
             }
             else
@@ -740,16 +726,13 @@ void trap_def::trigger(actor& triggerer)
                 // Triggered and hit.
                 triggered = true;
 
-                if (in_sight)
+                if (m->visible_to(&you))
                 {
-                    if (m->visible_to(&you))
-                    {
-                        mprf("A large net falls down onto %s!",
-                             m->name(DESC_THE).c_str());
-                    }
-                    else
-                        mpr("A large net falls down!");
+                    mprf("A large net falls down onto %s!",
+                         m->name(DESC_THE).c_str());
                 }
+                else
+                    mpr("A large net falls down!");
 
                 // actually try to net the monster
                 if (monster_caught_in_net(m, nullptr))
@@ -805,21 +788,13 @@ void trap_def::trigger(actor& triggerer)
         else if (m)
         {
             if (one_chance_in(3) || (trig_knows && coinflip()))
-            {
-                // Not triggered, trap stays.
-                if (in_sight)
-                    simple_monster_message(*m, " evades a web.");
-            }
+                simple_monster_message(*m, " evades a web.");
             else
             {
-                // Triggered and hit.
-                if (in_sight)
-                {
-                    if (m->visible_to(&you))
-                        simple_monster_message(*m, " is caught in a web!");
-                    else
-                        mpr("A web moves frantically as something is caught in it!");
-                }
+                if (m->visible_to(&you))
+                    simple_monster_message(*m, " is caught in a web!");
+                else
+                    mpr("A web moves frantically as something is caught in it!");
 
                 // If somehow already caught, make it worse.
                 m->add_ench(ENCH_HELD);
@@ -861,19 +836,13 @@ void trap_def::trigger(actor& triggerer)
 
             // Give the player a chance to figure out what happened
             // to their friend.
-            if (player_can_hear(pos) && (!targ || !in_sight))
-            {
-                mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
-                     in_sight ? "loud" : "distant");
-            }
+            if (player_can_hear(pos) && !targ)
+                mprf(MSGCH_SOUND, "You hear a loud \"Zot\"!");
 
             if (targ)
             {
-                if (in_sight)
-                {
-                    mprf("The power of Zot is invoked against %s!",
-                         targ->name(DESC_THE).c_str());
-                }
+                mprf("The power of Zot is invoked against %s!",
+                     targ->name(DESC_THE).c_str());
                 MiscastEffect(targ, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                               3, "the power of Zot");
             }
@@ -900,12 +869,9 @@ void trap_def::trigger(actor& triggerer)
         // after one use in down_stairs()
         if (!you_trigger)
         {
-            if (in_sight)
-            {
-                mprf("%s shaft crumbles and collapses.",
-                     triggerer_seen ? "The" : "A");
-                know_trap_destroyed = true;
-            }
+            mprf("%s shaft crumbles and collapses.",
+                 triggerer_seen ? "The" : "A");
+            know_trap_destroyed = true;
             trap_destroyed = true;
         }
         }
@@ -913,8 +879,7 @@ void trap_def::trigger(actor& triggerer)
 
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
-        if (in_sight)
-            mpr("The gas trap seems to be inoperative.");
+        mpr("The gas trap seems to be inoperative.");
         trap_destroyed = true;
         break;
 #endif
