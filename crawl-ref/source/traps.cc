@@ -560,9 +560,10 @@ void trap_def::trigger(actor& triggerer)
         apply_visible_monsters([] (monster& mons) {
                 return !mons.no_tele() && monster_blink(&mons);
             }, pos);
-        triggerer.blink();
         if (!you_trigger && you.see_cell_no_trans(pos))
             you.blink();
+        // Don't chain disperse
+        triggerer.blink();
         break;
     case TRAP_TELEPORT:
     case TRAP_TELEPORT_PERMANENT:
