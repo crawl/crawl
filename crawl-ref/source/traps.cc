@@ -587,6 +587,8 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_ALARM:
         // Alarms always mark the player, and monsters can use them when seeing
         // the player through glass (just like they can shout)
+        // The trap gets destroyed to prevent the player from abusing an alarm
+        // trap found in favorable terrain.
         trap_destroyed = true;
         if (you_trigger)
             mprf("You set off the alarm!");
