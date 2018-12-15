@@ -418,13 +418,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE)
         return true;
 
-    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT
-        || trap == TRAP_SHAFT)
-    {
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
 bool drac_colour_incompatible(int drac, int colour)
