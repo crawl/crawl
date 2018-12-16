@@ -1184,7 +1184,9 @@ bool acrobat_boost_visible()
     // it was during the last move. It's a little hacky.
     return you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
            && (you.duration[DUR_ACROBAT]
-               || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool());
+               || you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY].get_bool())
+           && (!you.caught())
+           && (!you.is_constricted());
 }
 
 static void _equip_amulet_of_mana_regeneration()
