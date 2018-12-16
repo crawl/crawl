@@ -1490,7 +1490,11 @@ static bool _gift_sif_kiku_gift(bool forced)
         // Sif Muna special: Keep quiet if acquirement fails
         // because the player already has seen all spells.
         if (you_worship(GOD_SIF_MUNA))
-            success = acquirement(OBJ_BOOKS, you.religion, true);
+        {
+            int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
+                                                     true, you.pos());
+            success = (item_index != NON_ITEM);
+        }
     }
 
     if (gift != NUM_BOOKS)
