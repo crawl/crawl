@@ -203,6 +203,7 @@
     Paul Maloney
     Pablo Mansanet
     Wille Mäntylä
+    Jean Martel
     James 'Eronarn' Meickle
     Jacob Meigs
     Johannes Maier
