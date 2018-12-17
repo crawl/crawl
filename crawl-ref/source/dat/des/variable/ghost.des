@@ -211,7 +211,7 @@ NSUBST:  de = 2=* / *%--, f = * / *%--, h = 2=* / *%--
 # replace that one.
 NSUBST:  d = d / *-, e = |* / *-, f = |* / *-, h = 2=|* / *-
 :     else
-# From here on, one 'd' glyphs and one 'e' glyph are used by the good loot
+# From here on, one 'd' glyph and one 'e' glyph are used by the good loot
 # items, so we don't replace those.
 NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 :     end
@@ -219,7 +219,7 @@ NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 : else
 NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 : end
-SUBST:   qrs = G, Z = -, y = p, z = V, t : tp
+SUBST:   qrs = G, Z = -, y = p, z = V, p : tp
 TILE:    G = dngn_gravestone
 TILE:    t = dngn_tree_dead
 FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
