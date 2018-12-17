@@ -2064,8 +2064,9 @@ void update_acrobat_status()
     if (you.props[ACROBAT_AMULET_ACTIVE].get_int() != 1)
         return;
 
-    you.duration[DUR_ACROBAT] = you.time_taken;
-    you.props[LAST_ACTION_WAS_MOVE_OR_REST_KEY] = true;
+    // acrobat duration goes slightly into the next turn, giving the
+    // player visual feedback of the EV bonus he recieved.
+    you.duration[DUR_ACROBAT] = you.time_taken+1;
     you.redraw_evasion = true;
 }
 
@@ -2134,9 +2135,9 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
-    // If you have an active amulet of the acrobat and just moved, get massive
+    // If you have an active amulet of the acrobat and just moved or waited, get massive
     // EV bonus.
-    if (acrobat_boost_visible())
+    if (acrobat_boost_active())
         evbonus += 15;
 
     return evbonus;

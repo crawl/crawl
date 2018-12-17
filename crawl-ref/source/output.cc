@@ -505,7 +505,7 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_visible();
+    return you.duration[DUR_AGILITY] || acrobat_boost_active();
 }
 
 static bool _boosted_sh()

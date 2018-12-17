@@ -773,7 +773,7 @@ static bool _update_statuses(player_info& c)
         else if (status == DUR_ACROBAT)
         {
             inf = status_info();
-            if (!acrobat_boost_visible())
+            if (!acrobat_boost_active())
                 continue;
             inf.short_text = "acrobat";
         }
