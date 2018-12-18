@@ -548,6 +548,13 @@ static formatted_string _god_wrath_description(god_type which_god)
     return desc;
 }
 
+static formatted_string _god_extra_description(god_type which_god)
+{
+    formatted_string desc;
+
+    return desc;
+}
+
 /**
  * Describe miscellaneous information about the given god.
  *
@@ -1010,10 +1017,11 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     desc_sw->current() = 0;
     more_sw->current() = 0;
 
-    const formatted_string descs[3] = {
+    const formatted_string descs[4] = {
         _god_overview_description(which_god),
         _detailed_god_description(which_god),
         _god_wrath_description(which_god),
+        _god_extra_description(which_god)
     };
 
 #ifdef USE_TILE_LOCAL
@@ -1022,15 +1030,28 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 # define MORE_PREFIX "[<w>!</w>/<w>^</w>" "]: "
 #endif
 
-    const char* mores[3] = {
-        MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
-        MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
-        MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
+    int mores_index = descs[3].empty() ? 0 : 1;
+    const char* mores[2][4] =
+    {
+        {
+            MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
+            MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
+            MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
+            MORE_PREFIX "Overview|Powers|Wrath"
+        },
+        {
+            MORE_PREFIX "<w>Overview</w>|Powers|Wrath|Extra",
+            MORE_PREFIX "Overview|<w>Powers</w>|Wrath|Extra",
+            MORE_PREFIX "Overview|Powers|<w>Wrath</w>|Extra",
+            MORE_PREFIX "Overview|Powers|Wrath|<w>Extra</w>"
+        }
     };
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         const auto &desc = descs[i];
+        if (desc.empty()) continue;
+
         auto scroller = make_shared<Scroller>();
         auto text = make_shared<Text>(desc.trim());
         text->wrap_text = true;
@@ -1038,7 +1059,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         desc_sw->add_child(move(scroller));
 
         more_sw->add_child(make_shared<Text>(
-                formatted_string::parse_string(mores[i])));
+                formatted_string::parse_string(mores[mores_index][i])));
     }
 
     desc_sw->set_margin_for_sdl({20, 0, 20, 0});
@@ -1110,7 +1131,7 @@ void describe_god(god_type which_god)
         int key = ev.key.keysym.sym;
         if (key == '!' || key == CK_MOUSE_CMD || key == '^')
         {
-            int n = (desc_sw->current() + 1) % 3;
+            int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = more_sw->current() = n;
 #ifdef USE_TILE_WEB
                 tiles.json_open_object();
