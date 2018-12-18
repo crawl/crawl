@@ -450,10 +450,15 @@ Smiting ability
 Smites any targeted enemy within sight, with no direct line of fire required.
 The strength of the smiting is increased by Invocations skill.
 %%%%
-Recall Orcish Followers ability
+Recall the Horde ability
 
 Recalls your orcish followers from anywhere in the dungeon to your immediate
 surroundings.
+%%%%
+Recall Disciples ability
+
+Recalls strong or named followers from anywhere in the dungeon to your
+immediate surroundings.
 %%%%
 Stop Recall ability
 

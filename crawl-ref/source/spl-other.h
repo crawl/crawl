@@ -11,6 +11,7 @@ enum recall_t
     RECALL_SPELL,
     RECALL_YRED,
     RECALL_BEOGH,
+    RECALL_BEOGH_DISCIPLES
 };
 
 struct passwall_path

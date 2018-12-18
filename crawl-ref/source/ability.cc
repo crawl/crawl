@@ -495,8 +495,10 @@ static const ability_def Ability_List[] =
     // Beogh
     { ABIL_BEOGH_SMITING, "Smiting",
       3, 0, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
+    { ABIL_BEOGH_RECALL_HORDE, "Recall the Horde",
       2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
+    { ABIL_BEOGH_RECALL_DISCIPLES, "Recall Disciples",
+      3, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_BEOGH_RESURRECTION, "Resurrection",
@@ -966,9 +968,14 @@ ability_type fixup_ability(ability_type ability)
         return ability;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_HORDE:
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
+        return ability;
+
+    case ABIL_BEOGH_RECALL_DISCIPLES:
+        if (!you.recall_list.empty())
+            return ABIL_NON_ABILITY;
         return ability;
 
     case ABIL_EVOKE_BERSERK:
@@ -2747,9 +2754,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_HORDE:
         fail_check();
         start_recall(RECALL_BEOGH);
+        break;
+
+    case ABIL_BEOGH_RECALL_DISCIPLES:
+        fail_check();
+        start_recall(RECALL_BEOGH_DISCIPLES);
         break;
 
     case ABIL_STOP_RECALL:

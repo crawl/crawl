@@ -112,7 +112,7 @@ void start_recall(recall_t type)
             if (!(mi->holiness() & MH_UNDEAD))
                 continue;
         }
-        else if (type == RECALL_BEOGH)
+        else if (type == RECALL_BEOGH || type == RECALL_BEOGH_DISCIPLES)
         {
             if (!is_orcish_follower(**mi))
                 continue;
@@ -125,17 +125,61 @@ void start_recall(recall_t type)
     if (type != RECALL_SPELL && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
-    if (!rlist.empty())
+    // Sort the recall list roughly
+    for (mid_hd &entry : rlist)
+        entry.second += random2(10);
+
+    sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
+
+    if (type == RECALL_BEOGH)
+        reverse(rlist.begin(), rlist.end());
+
+    // Populate you.recall_list
+    you.recall_list.clear();
+    for (mid_hd &entry : rlist)
     {
-        // Sort the recall list roughly
-        for (mid_hd &entry : rlist)
-            entry.second += random2(10);
-        sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
+        if (type == RECALL_BEOGH || type == RECALL_BEOGH_DISCIPLES)
+        {
+            monster* mons = monster_by_mid(entry.first);
 
-        you.recall_list.clear();
-        for (mid_hd &entry : rlist)
+            // rlist might contain ids which are not in menv,
+            // in which case the id belongs to an off-level companion
+            if (!mons)
+            {
+                ASSERT(companion_list.count(entry.first));
+                mons = &companion_list[entry.first].mons.mons;
+            }
+
+            // Differentiate between expert orcs (warlords, sorcerers,
+            // high priests) and non-expert orcs. Disciples are orcs
+            // which are either expert or named.
+            mprf("mon type = %d",mons->type);
+            switch(mons->type)
+            {
+                case MONS_ORC:
+                case MONS_ORC_WIZARD:
+                case MONS_ORC_PRIEST:
+                case MONS_ORC_WARRIOR:
+                case MONS_ORC_KNIGHT:
+                    if (type == RECALL_BEOGH_DISCIPLES
+                        && !mons->is_named())
+                        continue;
+                    // On RECALL_BEOGH, recall non-expert orcs first
+                    you.recall_list.insert(you.recall_list.begin(), entry.first);
+                    break;
+                default:
+                    you.recall_list.push_back(entry.first);
+                    break;
+            }
+        }
+        else
+        {
             you.recall_list.push_back(entry.first);
+        }
+    }
 
+    if (!you.recall_list.empty())
+    {
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
         mpr("You begin recalling your allies.");
