@@ -1616,3 +1616,97 @@ MAP
   .......S.......
          @
 ENDMAP
+
+# Inspired by lemuel_castle_with_subvaults
+NAME:    gammafunk_ghost_gnarly_gnolls
+TAGS:    no_pool_fixup
+DEPTH:   D:3-8
+ITEM:    any manual
+ITEM:    any jewellery, any jewellery good_item, any jewellery randart
+KMONS:   p = plant
+KMONS:   O = player ghost
+MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
+KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration \
+            . spear w:20 | halberd | club | whip | flail | nothing w:15
+# Define some gnolls with reach weapons.
+{{
+    local basic_weapons = {["halberd"] = 1, ["spear"] = 1}
+    local sergeant_weapons = {["trident"] = 1, ["spear"] = 1}
+    egos = {["venom"] = 15, ["vampirism"] = 5, ["pain"] = 5,
+            ["electrocution"] = 5, ["chaos"] = 5}
+
+    local basic_def = random_item_def(basic_weapons, egos, "", "|")
+    local sergeant_basic_def = random_item_def(sergeant_weapons, egos, "", "|")
+
+    local quality = crawl.one_chance_in(3) and "randart" or "good_item"
+    local good_def = random_item_def(basic_weapons, egos, quality, "|")
+    local sergeant_good_def = random_item_def(sergeant_weapons, egos, quality,
+                                              "|")
+
+    kmons("E = gnoll ; " .. basic_def .. " . throwing net " ..
+          "    | throwing net q:2 | nothing w:20")
+    kmons("F = gnoll ; " .. good_def .. " . throwing net " ..
+          "    | throwing net q:2 | nothing w:20")
+    kmons("H = gnoll sergeant ; " .. sergeant_basic_def ..
+          "    . buckler | shield | nothing w:40" ..
+          "    . ring mail | scale mail")
+    kmons("J = gnoll sergeant ; " .. sergeant_good_def ..
+          "    . buckler good_item | buckler randart w:5 " ..
+          "        | shield good_item | shield randart w:5 " ..
+          "    . ring mail good_item | ring mail randart w:5 " ..
+          "        | scale mail good_item | scale mail randart w:5")
+}}
+# Add pairs of doors near the landing area at up to two locations, each with
+# independent chances. Also randomize exit transporters and tower inner walls.
+SHUFFLE: aK / qL, rM / sN
+NSUBST:  R = R / '
+SUBST:   ar = c, K = G, qs = +, LN = -, M = T, u : ccG-
+# Scale loot and monsters with depth.
+: if you.depth() < 5 then
+SUBST:   h = %$, ij= `, 2 = 2'
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / FFFJ / .
+NSUBST:  R = R / E / E.
+: elseif you.depth() < 7 then
+SUBST:   e = f, h = *, i = %$, j= `
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / 3 / H. / J / .
+: else
+SUBST:   e = g, h = |*, i = *, j = %$
+NSUBST:  - = 2=1 / 2=1. / D / 2=D. / ., ' = E / 2=E. / 3 / 3. / 2=H. / J / .
+:     if not you.uniques("Grum") and crawl.one_chance_in(3) then
+NSUBST:   3 = 4 / 3
+:     end
+
+: end
+MARKER:  P = lua:transp_loc("gnarly_gnolls_entry")
+MARKER:  Q = lua:transp_dest_loc("gnarly_gnolls_entry")
+MARKER:  R = lua:transp_loc("gnarly_gnolls_exit")
+MARKER:  S = lua:transp_dest_loc("gnarly_gnolls_exit")
+TILE:    c = wall_stone_smooth
+COLOUR:  `defghij|*%$O = cyan
+FTILE:   `defghij|*%$O = floor_cobble_blood
+COLOUR:  " = brown
+FTILE:   " = floor_mud
+: ghost_setup(_G)
+MAP
+...........................
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwncccn...........ncccnww.
+.wwc'u-c.cnc.S.cnc.c-u'cww.
+.wwc---cncRccnccRcnc---cww.
+.wwncc---------------ccnww.
+.ww.Gc-cnrnccnacncnc-cG.ww.
+.ww.cc-cpMpcp-Kcej$c-cc.ww.
+.WW.n'-+-----QTcdO$+-2n.WW.
+.ww.cc-cpMpcp-Kchi$c-cc.ww.
+.ww.Gc-cnrnccnacncnc-cG.ww.
+.wwncc---------------ccnww.
+.wwc---cncRccnccRcnc---cww.
+.wwc'u-c.cnc.P.cnc.c-u'cww.
+.wwncccn...........ncccnww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+...........................
+ENDMAP
