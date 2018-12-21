@@ -4671,7 +4671,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return true;
     const trap_def& trap = *ptrap;
 
-    // Known shafts are safe. Unknown ones are unknown.
+    // Known shafts are safe.
     if (trap.type == TRAP_SHAFT)
         return true;
 
@@ -4680,9 +4680,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return true;
 #endif
 
-    // No friendly monsters will ever enter a trap that harms the player
-    // when triggered.
-    if (friendly() && trap.is_bad_for_player())
+    // No friendly or good neutral monsters will ever enter a trap that harms
+    // the player when triggered.
+    if (wont_attack() && trap.is_bad_for_player())
         return false;
 
     // Dumb monsters don't care at all.
@@ -4693,47 +4693,6 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (berserk_or_insane())
         return true;
 
-    // Hostile monsters are not afraid of non-mechanical traps.
-    // Allies will try to avoid teleportation and zot traps.
-    const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
-
-    if (trap.is_known(*this))
-    {
-        if (just_check)
-            return false; // Square is blocked.
-
-        // Test for corridor-like environment.
-        const int x = where.x - pos().x;
-        const int y = where.y - pos().y;
-
-        // The question is whether the monster (m) can easily reach its
-        // presumable destination (x) without stepping on the trap. Traps
-        // in corridors do not allow this. See e.g
-        //  #x#        ##
-        //  #^#   or  m^x
-        //   m         ##
-        //
-        // The same problem occurs if paths are blocked by monsters,
-        // hostile terrain or other traps rather than walls.
-        // What we do is check whether the squares with the relative
-        // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-        // (relative to the _trap_ position rather than the monster one).
-        // If they don't, the trap square is marked as "unsafe" (because
-        // there's a good alternative move for the monster to take),
-        // otherwise the decision will be made according to later tests
-        // (monster hp, trap type, ...)
-        // If a monster still gets stuck in a corridor it will usually be
-        // because it has less than half its maximum hp.
-
-        if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
-             || mon_can_move_to_pos(this, coord_def(x+1,y), true))
-            && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
-                || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
-        {
-            return false;
-        }
-    }
-
     // Friendlies will try not to be parted from you.
     if (intelligent_ally(*this) && (trap.type == TRAP_TELEPORT
                                    || trap.type == TRAP_TELEPORT_PERMANENT)
@@ -4742,31 +4701,57 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return false;
     }
 
+    // Hostile monsters are not afraid of non-mechanical traps.
+    // But, in the arena Zot traps affect all monsters.
+    if (trap.category() != DNGN_TRAP_MECHANICAL)
+        return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
+
+    // If just checking a mechanical trap is dangerous
+    if (just_check)
+        return false;
+
+    // Mechanical trap calculations
+    // Test for corridor-like environment.
+    const int x = where.x - pos().x;
+    const int y = where.y - pos().y;
+
+    // The question is whether the monster (m) can easily reach its
+    // presumable destination (x) without stepping on the trap. Traps
+    // in corridors do not allow this. See e.g
+    //  #x#        ##
+    //  #^#   or  m^x
+    //   m         ##
+    //
+    // The same problem occurs if paths are blocked by monsters,
+    // hostile terrain or other traps rather than walls.
+    // What we do is check whether the squares with the relative
+    // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
+    // (relative to the _trap_ position rather than the monster one).
+    // If they don't, the trap square is marked as "unsafe" (because
+    // there's a good alternative move for the monster to take),
+    // otherwise the decision will be made according to later tests
+    // (monster hp, trap type, ...)
+    // If a monster still gets stuck in a corridor it will usually be
+    // because it has less than half its maximum hp.
+
+    if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
+         || mon_can_move_to_pos(this, coord_def(x+1,y), true))
+        && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
+            || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
+    {
+        return false;
+    }
+
     // Healthy monsters don't mind a little pain.
-    if (mechanical && hit_points >= max_hit_points / 2
+    if (hit_points >= max_hit_points / 2
         && (intel < I_HUMAN
             || hit_points > _estimated_trap_damage(trap.type)))
     {
         return true;
     }
 
-    // can't avoid traps you don't know about
-    if (!trap.is_known(*this))
-        return true;
-
     // we don't think we have enough hp (per above), so avoid mech traps
-    if (mechanical)
-        return false;
-
-    // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly. In the arena Zot traps affect all monsters.
-
-    // XXX: this logic duplicates the checks for friendly creatures & "traps
-    // that are bad for the player " at the top; probably should be merged
-    // somehow
-    if (wont_attack() || crawl_state.game_is_arena())
-        return trap.type != TRAP_ZOT;
-    return true;
+    return false;
 }
 
 bool monster::is_cloud_safe(const coord_def &place) const

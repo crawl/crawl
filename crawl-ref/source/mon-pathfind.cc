@@ -465,25 +465,23 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (mons->floundering_at(npos))
         return 2;
 
-    // Try to avoid (known) traps.
+    // Try to avoid traps.
     const trap_def* ptrap = trap_at(npos);
     if (ptrap)
     {
-        const bool knows_trap = ptrap->is_known(*mons);
-        const trap_type tt = ptrap->type;
-        if (tt == TRAP_ALARM || tt == TRAP_ZOT)
+        if (ptrap->is_bad_for_player())
         {
-            // Your allies take extra precautions to avoid known alarm traps.
-            // Zot traps are considered intraversable.
-            if (knows_trap && mons->friendly())
+            // Your allies take extra precautions to avoid traps that are bad
+            // for you (elsewhere further checks are made to mark Zot traps as
+            // impassible).
+            if (mons->friendly())
                 return 3;
 
             // To hostile monsters, these traps are completely harmless.
             return 1;
         }
 
-        if (knows_trap)
-            return 2;
+        return 2;
     }
 
     return 1;

@@ -146,44 +146,6 @@ string trap_def::name(description_level_type desc) const
         return basename;
 }
 
-bool trap_def::is_known(const actor& act) const
-{
-    if (act.is_player())
-        return true;
-    else if (act.is_monster())
-    {
-        const monster* mons = act.as_monster();
-        const int intel = mons_intel(*mons);
-
-        // Smarter trap handling for intelligent monsters
-        // * monsters native to a branch can be assumed to know the trap
-        //   locations and thus be able to avoid them
-        // * friendlies and good neutrals can be assumed to have been warned
-        //   by the player about all traps s/he knows about
-        // * very intelligent monsters can be assumed to have a high T&D
-        //   skill (or have memorised part of the dungeon layout ;))
-
-        if (type == TRAP_SHAFT)
-        {
-            // Slightly different rules for shafts:
-            // * Lower intelligence requirement for native monsters.
-            // * Allied zombies won't fall through shafts. (No herding!)
-            return intel > I_BRAINLESS && mons_is_native_in_branch(*mons)
-                   || mons->wont_attack();
-        }
-        else
-        {
-            if (intel < I_HUMAN)
-                return false;
-            if (mons->wont_attack())
-                return true;
-
-            return mons_is_native_in_branch(*mons);
-        }
-    }
-    die("invalid actor type");
-}
-
 bool trap_def::is_bad_for_player() const
 {
     return type == TRAP_ALARM
@@ -215,9 +177,6 @@ bool trap_def::is_safe(actor* act) const
     {
         return true;
     }
-
-    if (!is_known(*act))
-        return false;
 
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
         return true;
@@ -488,8 +447,6 @@ static passage_type _find_other_passage_side(coord_def& to)
 
 void trap_def::trigger(actor& triggerer)
 {
-    const bool trig_knows = is_known(triggerer);
-
     const bool you_trigger = triggerer.is_player();
 
     // Out of sight, out of mind.
@@ -502,13 +459,18 @@ void trap_def::trigger(actor& triggerer)
 
     monster* m = triggerer.as_monster();
 
+    // Intelligent monsters native to a branch get a bonus avoiding traps
+    const bool trig_smart = m
+        && mons_is_native_in_branch(*m)
+        && mons_intel(*m) >= I_HUMAN;
+
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
     // an exit, of course.
     if (type == TRAP_SHAFT
         && m
         && (!m->will_trigger_shaft()
-            || trig_knows && !mons_is_fleeing(*m) && !m->pacified()))
+            || trig_smart && !mons_is_fleeing(*m) && !m->pacified()))
     {
         return;
     }
@@ -524,7 +486,7 @@ void trap_def::trigger(actor& triggerer)
     const coord_def p(pos);
 
     if (type_has_ammo())
-        shoot_ammo(triggerer, trig_knows);
+        shoot_ammo(triggerer, trig_smart || you_trigger);
     else switch (type)
     {
     case TRAP_GOLUBRIA:
@@ -615,10 +577,10 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_BLADE:
         if (you_trigger)
         {
-            if (trig_knows && one_chance_in(3))
+            if (one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
             else if (random2limit(you.evasion(), 40)
-                     + random2(6) + (trig_knows ? 3 : 0) > 8)
+                     + random2(6) + 3 > 8)
             {
                 mpr("A huge blade swings just past you!");
             }
@@ -633,13 +595,13 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (m)
         {
-            if (one_chance_in(5) || (trig_knows && coinflip()))
+            if (one_chance_in(5) || (trig_smart && coinflip()))
             {
                 // Trap doesn't trigger.
                 simple_monster_message(*m, " fails to trigger a blade trap.");
             }
             else if (random2(m->evasion()) > 8
-                     || (trig_knows && random2(m->evasion()) > 8))
+                     || (trig_smart && random2(m->evasion()) > 8))
             {
                 if (!simple_monster_message(*m,
                                             " avoids a huge, swinging blade."))
@@ -673,7 +635,7 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_NET:
         if (you_trigger)
         {
-            if (trig_knows && one_chance_in(3))
+            if (one_chance_in(3))
                 mpr("A net swings high above you.");
             else
             {
@@ -681,7 +643,7 @@ void trap_def::trigger(actor& triggerer)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (random2limit(you.evasion(), 40)
-                    + random2(4) + (trig_knows ? 3 : 0) > 12)
+                    + random2(4) + 3 > 12)
                 {
                     mpr("A net drops to the ground!");
                 }
@@ -705,14 +667,14 @@ void trap_def::trigger(actor& triggerer)
         else if (m)
         {
             bool triggered = false;
-            if (one_chance_in(3) || (trig_knows && coinflip()))
+            if (one_chance_in(3) || (trig_smart && coinflip()))
             {
                 // Not triggered, trap stays.
                 triggered = false;
                 simple_monster_message(*m, " fails to trigger a net trap.");
             }
             else if (random2(m->evasion()) > 8
-                     || (trig_knows && random2(m->evasion()) > 8))
+                     || (trig_smart && random2(m->evasion()) > 8))
             {
                 // Triggered but evaded.
                 triggered = true;
@@ -774,7 +736,7 @@ void trap_def::trigger(actor& triggerer)
 
         if (you_trigger)
         {
-            if (trig_knows && one_chance_in(3))
+            if (one_chance_in(3))
                 mpr("You pick your way through the web.");
             else
             {
@@ -790,7 +752,7 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (m)
         {
-            if (one_chance_in(3) || (trig_knows && coinflip()))
+            if (one_chance_in(3) || (trig_smart && coinflip()))
                 simple_monster_message(*m, " evades a web.");
             else
             {
@@ -854,7 +816,8 @@ void trap_def::trigger(actor& triggerer)
 
     case TRAP_SHAFT:
         // Known shafts don't trigger as traps.
-        if (trig_knows)
+        // Allies don't fall through shafts (no herding!)
+        if (trig_smart || (m && m->wont_attack()) || you_trigger)
             break;
 
         // A chance to escape.

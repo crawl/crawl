@@ -4195,25 +4195,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
     if (!mon.is_habitable(p))
         return false;
 
-    const trap_def* ptrap = trap_at(p);
-    if (checktraps && ptrap)
-    {
-        const trap_type tt = ptrap->type;
-
-        // Don't allow allies to pass over known (to them) Zot traps.
-        if (tt == TRAP_ZOT
-            && ptrap->is_known(mon)
-            && mon.friendly())
-        {
-            return false;
-        }
-
-        // Monsters cannot travel over teleport traps.
-        if (!can_place_on_trap(mons_base_type(mon), tt))
-            return false;
-    }
-
-    return true;
+    return !checktraps || mon.is_trap_safe(p);
 }
 
 void mons_remove_from_grid(const monster& mon)
