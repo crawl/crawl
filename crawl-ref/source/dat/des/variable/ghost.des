@@ -1519,7 +1519,7 @@ KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
             ["pain"] = 5, ["electrocution"] = 5}
     basic_def = random_item_def(weapons, egos, "", "|")
     quality = crawl.coinflip() and "randart" or "good_item"
-    good_def = random_item_def(weapons, egos, "good_item", "|")
+    good_def = random_item_def(weapons, egos, quality, "|")
     kmons("L = kobold ; " .. basic_def)
     kmons("M = big kobold ; " .. basic_def)
     kmons("N = kobold ; " .. good_def)
