@@ -322,6 +322,9 @@ endif
 ifdef WEBTILES
 TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(WEBTILES_OBJECTS)
+ifdef NO_PKGCONFIG
+BUILD_LIBPNG = YesPlease # used by build-rltiles sub-make
+endif
 endif
 
 ifdef ANDROID
@@ -1635,7 +1638,7 @@ else
 ifdef CROSSHOST
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
 else
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) NO_PKGCONFIG=$(SUB_NO_PKGCONFIG) TILES=$(TILES)$(WEBTILES)
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) NO_PKGCONFIG=$(NO_PKGCONFIG) TILES=$(TILES)$(WEBTILES)
 endif
 endif
 
