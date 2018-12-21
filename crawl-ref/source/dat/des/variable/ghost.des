@@ -26,17 +26,17 @@
 function setup_hydra_weapon(e)
     -- Possible weapon types with weights. We stick to weapons wieldable by all
     -- non-felids.
-    weapons = {["long sword"] = 8, ["scimitar"] = 12, ["demon blade"] = 1,
-               ["double sword"] = 1, ["war axe"] = 8, ["broad axe"] = 12,
-               ["lajatang"] = 2}
+    local weapons = {["long sword"] = 8, ["scimitar"] = 12,
+                     ["demon blade"] = 1, ["double sword"] = 1,
+                     ["war axe"] = 8, ["broad axe"] = 12, ["lajatang"] = 2}
 
     -- Basic set of egos with weights.
-    egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+    local egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
             ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
             ["vampirism"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
 
-    quality = crawl.one_chance_in(3) and "randart" or "good_item"
+    local quality = crawl.one_chance_in(3) and "randart" or "good_item"
     local weapon_def = random_item_def(weapons, egos, quality)
     e.kitem("O = " .. weapon_def)
 end
@@ -458,7 +458,8 @@ NSUBST: - = 1 / 4=1- / -
 # Set up derived undead from branch end for non-Dungeon branches.
 : else
 {{
-  undead_place = "place:" .. you.branch() .. ":" .. dgn.br_depth(you.branch())
+  local undead_place = "place:" .. you.branch() .. ":" ..
+                       dgn.br_depth(you.branch())
   mons(undead_place .. " spectre / " .. undead_place .. " simulacrum")
 }}
 # Handle loot/monsters for non-Dungeon branches.
@@ -698,14 +699,13 @@ KMONS:  O = player ghost
 {{
 -- Set up hydra monster entry with a range of possible extra heads based on
 -- depth.
-max_heads = 11 + math.floor((you.absdepth() - 8) / 2)
+local max_heads = 11 + math.floor((you.absdepth() - 8) / 2)
 local hydra_def
 for h = 9, max_heads do
-    def = h .. "-headed hydra"
     if hydra_def == nil then
-        hydra_def = def
+        hydra_def = h .. "-headed hydra"
     else
-        hydra_def = hydra_def .. " / " .. def
+        hydra_def = hydra_def .. " / " .. h .. "-headed hydra"
     end
 end
 mons(hydra_def)
@@ -1514,11 +1514,11 @@ KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
                 whip ego:distortion
 # Define some kobolds with more general nasty ego weapons.
 {{
-    weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
-    egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
-            ["pain"] = 5, ["electrocution"] = 5}
-    basic_def = random_item_def(weapons, egos, "", "|")
-    quality = crawl.coinflip() and "randart" or "good_item"
+    local weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
+    local egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
+                  ["pain"] = 5, ["electrocution"] = 5}
+    local basic_def = random_item_def(weapons, egos, "", "|")
+    local quality = crawl.coinflip() and "randart" or "good_item"
     good_def = random_item_def(weapons, egos, quality, "|")
     kmons("L = kobold ; " .. basic_def)
     kmons("M = big kobold ; " .. basic_def)
