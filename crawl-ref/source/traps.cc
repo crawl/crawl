@@ -23,7 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
-#include "god-passive.h" // passive_t::search_traps
+#include "god-passive.h" // passive_t::avoid_traps
 #include "hints.h"
 #include "item-prop.h"
 #include "items.h"
@@ -1392,8 +1392,8 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.num_turns &&
-        (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
+    you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+        && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
 /***
