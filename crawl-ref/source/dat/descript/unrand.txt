@@ -351,7 +351,8 @@ The {{
     if you.can_smell() then
         return "smelly "
     end
-}}skin of some strange animal, native to cold and distant lands.
+}}skin of some strange animal, native to cold and distant lands. It radiates
+the chill of its native habitat, slowing creatures from warmer climes.
 %%%%
 salamander hide armour
 

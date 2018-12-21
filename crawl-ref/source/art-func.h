@@ -32,12 +32,14 @@
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "nearby-danger.h" // For Zhor
 #include "player.h"
 #include "player-stats.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
+#include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
@@ -1392,5 +1394,16 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
             item->plus = 2;
 
         you.wield_change = true;
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _ZHOR_world_reacts(item_def *item)
+{
+    if (there_are_monsters_nearby(true, false, false)
+        && one_chance_in(7 * div_rand_round(BASELINE_DELAY, you.time_taken)))
+    {
+        cast_englaciation(30, false);
     }
 }
