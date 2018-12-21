@@ -33,7 +33,7 @@ function setup_hydra_weapon(e)
     -- Basic set of egos with weights.
     egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
             ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
-            ["vampiric"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
+            ["vampirism"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
 
     quality = crawl.one_chance_in(3) and "randart" or "good_item"
