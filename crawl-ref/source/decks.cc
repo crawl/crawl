@@ -310,6 +310,23 @@ void reset_cards()
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
 }
 
+string deck_status()
+{
+    vector<string> stats;
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
+    {
+        int cards = deck_cards((deck_type) i);
+        const deck_type_data *deck_data = map_find(all_decks, (deck_type) i);
+        const string name = deck_data ? deck_data->name : "bugginess";
+        if (cards)
+        {
+            stats.push_back(make_stringf("%d %s card%s", cards,
+               name.c_str(), cards == 1 ? "" : "s"));
+        }
+    }
+    return comma_separated_line(stats.begin(), stats.end());
+}
+
 string which_decks(card_type card)
 {
     vector<string> decks;

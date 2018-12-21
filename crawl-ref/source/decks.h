@@ -61,6 +61,7 @@ deck_type ability_deck(ability_type abil);
 
 bool gift_cards();
 void reset_cards();
+string deck_status();
 
 bool deck_draw(deck_type deck);
 bool deck_triple_draw();
