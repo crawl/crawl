@@ -354,7 +354,7 @@ I...........I
 .............
 ENDMAP
 
-NAME:   ploomutoo_gammafunk_vaults_potion_laboratory
+NAME:   ploomutoo_gammafunk_vaults_ghost_potion_laboratory
 TAGS:   vaults_orient_s
 WEIGHT: 5
 ITEM:   potion of mutation ident:type q:1
