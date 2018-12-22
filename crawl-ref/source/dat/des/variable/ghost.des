@@ -1710,3 +1710,51 @@ MAP
 .wwwwwwwwwww"""wwwwwwwwwww.
 ...........................
 ENDMAP
+
+NAME:   gammafunk_ghost_tricky_traps
+DEPTH:  D:15, Shoals, Spider, Elf, Depths, Zot
+KFEAT:  ^ = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:16
+KFEAT:  ' = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:8
+: kitem("O = " .. dgn.randart_aux_armour)
+KMONS:  O = player ghost
+: ghost_good_loot(_G)
+: if you.in_branch("D") then
+MONS:   boggart
+SUBST:  f = |*, g = %$, hi = -
+NSUBST: - = 1 / 2=1. / 4=0 / 6=0. / .
+: elseif you.in_branch("Shoals") then
+MONS:   merfolk aquamancer
+SUBST:  f = |*, g = *%, h = %$--, i = -
+NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / .
+: elseif you.in_branch("Spider") then
+MONS:   jumping spider
+SUBST:  f = |*, g = *%, h = %$--, i = -
+NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / .
+: elseif you.in_branch("Elf") then
+MONS:   deep elf archer
+SUBST:  f = |*, g = *, h = %$, i = -
+NSUBST: - = 1 / 2=1. / 6=0 / 6=0. / .
+: elseif you.in_branch("Depths") then
+MONS:   boggart, rakshasa
+SUBST:  fg = |*, h = *, i = %$
+NSUBST: - = 1 / 2=1. / 6=0 / 8=0. / 2 / .
+: elseif you.in_branch("Zot") then
+MONS:   draconian shifter, electric golem
+SUBST:  fghi = |*
+NSUBST: - = 1 / 2=1. / 7=0 / 8=0. / 2 / 2.. / .
+: end
+SUBST:  G : GGtU
+: ghost_setup(_G)
+MAP
+ccccccccccccc
+cG-hfdOegi-Gc
+c-n-n-n-n-n-c
+c'-'-'-'-'-'c
+c-'-n-n-n-'-c
+cG-'-'-'-'-Gc
+cccnn===nnccc
+.^.^.....^.^.
+^.^.^.^.^.^.^
+.^.^.^.^.^.^.
+^.^.^.^.^.^.^
+ENDMAP

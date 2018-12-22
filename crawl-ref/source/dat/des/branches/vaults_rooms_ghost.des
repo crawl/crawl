@@ -393,3 +393,28 @@ nn===nn
 .......
 .......
 ENDMAP
+
+NAME:   gammafunk_vaults_ghost_tricky_traps
+TAGS:   vaults_orient_s
+KFEAT:  ^ = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:16
+KFEAT:  ' = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:8
+: kitem("O = " .. dgn.randart_aux_armour)
+: ghost_good_loot(_G)
+KMONS:  O = player ghost
+MONS:   boggart, rakshasa
+SUBST:  f = |*, g = *, h = %$
+NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / 2 / .
+SUBST:  G : GGtU
+: vaults_ghost_setup(_G)
+MAP
+G-'fdOeg'-G
+-n-n-h-n-n-
+'-'-'-'-'-'
+-'-n-n-n-'-
+G-'-'-'-'-G
+xxnn===nnxx
+^.^.....^.^
+.^.^.^.^.^.
+^.^.^.^.^.^
+.^.^.^.^.^.
+ENDMAP
