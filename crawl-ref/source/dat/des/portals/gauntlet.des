@@ -1309,3 +1309,314 @@ vvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvv
                               vvyyyyyyyyyyyyyvv
                               vvvvvvvvvvvvvvvvv
 ENDMAP
+
+################################################################################
+# Main vaults for 7x7 arenas. Denoted by a water pattern along the walls.
+################################################################################
+
+# Three choices between two arenas. The small arena size allows the player to
+# still examine every arena before they start.
+NAME:   minmay_gauntlet_77_indecision
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+SUBST:  G : GT
+: gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+SUBVAULT: q : gauntlet_arena_77_first
+SUBVAULT: r : gauntlet_arena_77_first
+: gauntlet_arena_set_tier(2)
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: u : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+             c
+            ccc
+           ccwcc
+          ccwwwcc
+ ccccccccccwwwwwcccccccccc
+ccwcccwccc.......cccwcccwcc
+cwwwcwwwc..A.G.<..cwwwcwwwc
+ccw.....D.........F.....wcc
+ccc.nnnnnnnnn.nnnnnnnnn.ccc
+ccw.aaaaaaaaa.ppppppppp.wcc
+cww.aaaaaaaaa.ppppppppp.wwc
+ccw.aaaaaaaaa.ppppppppp.wcc
+ccc.aaaaaaaaa.ppppppppp.ccc
+ccw.aaaaaaaaa.ppppppppp.wcc
+cww.naaaaaaan.npppppppn.wwc
+ccw.naaaaaaan.npppppppn.wcc
+ccc.nnnnnnnnnnnnnnnnnnn.ccc
+ccw....nE.........Hn....wcc
+cww..G.n.G.G.G.G.G.n.G..wwc
+ccw....nJ.........Ln....wcc
+ccc.nnnnnnnnn.nnnnnnnnn.ccc
+ccw.qqqqqqqqq.rrrrrrrrr.wcc
+cww.qqqqqqqqq.rrrrrrrrr.wwc
+ccw.qqqqqqqqq.rrrrrrrrr.wcc
+ccc.qqqqqqqqq.rrrrrrrrr.ccc
+ccw.qqqqqqqqq.rrrrrrrrr.wcc
+cww.nqqqqqqqn.nrrrrrrrn.wwc
+ccw.nqqqqqqqn.nrrrrrrrn.wcc
+ccc.nnnnnnnnnnnnnnnnnnn.ccc
+ccw....nK.........Mn....wcc
+cww..G.n.G.G.G.G.G.n.G..wwc
+ccw....nN.........Pn....wcc
+ccc.nnnnnnnnn.nnnnnnnnn.ccc
+ccw.sssssssss.uuuuuuuuu.wcc
+cww.sssssssss.uuuuuuuuu.wwc
+ccw.sssssssss.uuuuuuuuu.wcc
+ccc.sssssssssnuuuuuuuuu.ccc
+ccw.sssssssss.uuuuuuuuu.wcc
+cww.nsssssssn.nuuuuuuun.wwc
+ccw.nsssssssn.nuuuuuuun.wcc
+ccc.nnnnnnnnn.nnnnnnnnn.ccc
+ccw.....................wcc
+cwwwcwwwc..<.G.<..cwwwcwwwc
+ccwcccwccc.......cccwcccwcc
+ ccccccccccnnnnncccccccccc
+    v.................v
+    v.G.G.G.O.Q.G.G.G.v
+    v.................v
+    vvyyyyyyyyyyyyyyyvv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vyyyyyyyyyyyyyyyv
+     vvyyyyyyyyyyyyyvv
+     vvyyyyyyyyyyyyyvv
+     vvyyyyyyyyyyyyyvv
+     vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   minmay_gauntlet_77_tree
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+KMONS:  ' = plant
+SUBST:  ' = '.
+: gauntlet_setup(_G, "DFJLNPR", "EHKMOQS")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+SUBVAULT: q : gauntlet_arena_77_first
+: gauntlet_arena_set_tier(2)
+SUBVAULT: r : gauntlet_arena_77_second
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: u : gauntlet_arena_77_second
+SUBVAULT: z : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+                      ccc
+                     ccwcc
+                    ccwwwcc
+                 ccccwwwwwcccc
+                 cww...t...wwc
+                 cw..A...<..wc
+              cccc.....D.....cccc
+              cww..nnnnnnnnn..wwc
+              cw...aaaaaaaaa...wc
+           cccc..t.aaaaaaaaa.t..cccc
+           cww..''.aaaaaaaaa.''..wwc
+           cw..t''.aaaaaaaaa.''t..wc
+        cccc..''''.aaaaaaaaa.''''..cccc
+        cww..t'''t.naaaaaaan.t'''t..wwc
+        cw.........naaaaaaan.........wc
+     cccc...nnnnnnnnnnnnnnnnnnnnnnn...cccc
+     cww....nF.........E.........Jn....wwc
+     cw..nnnnnnnnnnnnnnnnnnnnnnnnnnnnn..wc
+  cccc...ppppppppp...........qqqqqqqqq...cccc
+  cww..t.ppppppppp..'cwcwc'..qqqqqqqqq.t..wwc
+  cw..''.ppppppppp.''wwwww''.qqqqqqqqq.''..wc
+ cc..''t.ppppppppp.t'cwcwc't.qqqqqqqqq.t''..cc
+ccw.''''.ppppppppp.''wwwww''.qqqqqqqqq.''''.wcc
+cww.'''t.npppppppn..'cwcwc'..nqqqqqqqn.t'''.wwc
+ccw.''...npppppppn...'''''...nqqqqqqqn...''.wcc
+ccc.'t.nnnnnnnnnnnnn..'t'..nnnnnnnnnnnnn.t'.ccc
+ccw....nL....H....Nn.......nP....K....Rn....wcc
+cww.nnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnn.wwc
+ccw.rrrrrrrrr.sssssssss.uuuuuuuuu.zzzzzzzzz.wcc
+ccc.rrrrrrrrr.sssssssss.uuuuuuuuu.zzzzzzzzz.ccc
+ccw.rrrrrrrrr.sssssssss.uuuuuuuuu.zzzzzzzzz.wcc
+cww.rrrrrrrrr.sssssssss.uuuuuuuuu.zzzzzzzzz.wwc
+ccw.rrrrrrrrr.sssssssss.uuuuuuuuu.zzzzzzzzz.wcc
+ccc.nrrrrrrrn.nsssssssn.nuuuuuuun.nzzzzzzzn.ccc
+ccw.nrrrrrrrn.nsssssssn.nuuuuuuun.nzzzzzzzn.wcc
+cww.nnnnnnnnn.nnnnnnnnn.nnnnnnnnn.nnnnnnnnn.wwc
+ccw.........................................wcc
+ cc.'t'.'t'.'t'.'t'.........'t'.'t'.'t'.'t'.cc
+ccw...............''...<...''...............wcc
+cwwwcwwwcwwwcwwwc..t'.....'t..cwwwcwwwcwwwcwwwc
+ccwcccwcccwcccwccc...........cccwcccwcccwcccwcc
+ ccc ccc ccc ccccccnnnnnnnnncccccc ccc ccc ccc
+              v.................v
+              v.t.t.M.O.Q.S.t.t.v
+              v.................v
+              vvyyyyyyyyyyyyyyyvv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vvyyyyyyyyyyyyyvv
+               vvyyyyyyyyyyyyyvv
+               vvyyyyyyyyyyyyyvv
+               vvvvvvvvvvvvvvvvv
+ENDMAP
+
+################################################################################
+# Main vaults with multiple arena shapes. Denoted by a lava pattern along the
+# walls, and no fountains.
+################################################################################
+NAME:   minmay_gauntlet_mixed_big_or_small
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+: gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
+SUBVAULT: a : gauntlet_arena_first
+SUBVAULT: p : gauntlet_arena_77_first
+SUBVAULT: q : gauntlet_arena_first
+SUBVAULT: r : gauntlet_arena_77_first
+: gauntlet_arena_set_tier(2)
+SUBVAULT: s : gauntlet_arena_second
+SUBVAULT: u : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+  ccccccccccccccc
+ cclclclclclclclcc
+cc...............cc
+cl.......D.....<.lc
+cc..nnnnnnnnnnn..cc
+cl..aaaaaaaaaaa..lc
+cc..aaaaaaaaaaa..cccccccccccc
+cl..aaaaaaaaaaa..lclclclclclcc
+cc..aaaaaaaaaaa.A...........lc
+cl..aaaaaaaaaaa......F......cc
+cc..aaaaaaaaaaa..nnnnnnnnn..lc
+cl..naaaaaaaaan..ppppppppp..cc
+cc..naaaaaaaaan..ppppppppp..lc
+cl..naaaaaaaaan..ppppppppp..cc
+cc..nnnnnnnnnnn..ppppppppp..lc
+cl......nEn......ppppppppp..cc
+cc......nJn......npppppppn..lc
+cl..nnnnnnnnnnn..npppppppn..cc
+cc..qqqqqqqqqqq..nnnnnnnnn..lc
+cl..qqqqqqqqqqq.....nHn.....cc
+cc..qqqqqqqqqqq.....nLn.....lc
+cl..qqqqqqqqqqq..nnnnnnnnn..cc
+cc..qqqqqqqqqqq..rrrrrrrrr..lc
+cl..qqqqqqqqqqq..rrrrrrrrr..cc
+cc..nqqqqqqqqqn..rrrrrrrrr..lc
+cl..nqqqqqqqqqn..rrrrrrrrr..cc
+cc..nqqqqqqqqqn..rrrrrrrrr..lc
+cl..nnnnnnnnnnn..nrrrrrrrn..cc
+cc......nKn......nrrrrrrrn..lc
+cl......nNn......nnnnnnnnn..cc
+cc..nnnnnnnnnnn.....nMn.....lc
+cl..sssssssssss.....nPn.....cc
+cc..sssssssssss..nnnnnnnnn..lc
+cl..sssssssssss..uuuuuuuuu..cc
+cc..sssssssssss..uuuuuuuuu..lc
+cl..sssssssssss..uuuuuuuuu..cc
+cc..sssssssssss..uuuuuuuuu..lc
+cl..nsssssssssn..uuuuuuuuu..cc
+cc..nsssssssssn..nuuuuuuun..lc
+cl..nsssssssssn..nuuuuuuun..cc
+cc..nnnnnnnnnnn..nnnnnnnnn..lc
+cl..............<...........cc
+cc..........................lc
+ cclclclclclcnnnnnnclclclclccc
+  ccccccccccc.O..Q.cccccccccc
+       vvvvvv......vvvvv
+       v...............v
+       v...............v
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vyyyyyyyyyyyyyyyv
+       vvyyyyyyyyyyyyyvv
+       vvyyyyyyyyyyyyyvv
+       vvyyyyyyyyyyyyyvv
+       vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   minmay_gauntlet_mixed_oops_all_seconds
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+: gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
+: gauntlet_arena_set_tier(2)
+SUBVAULT: a : gauntlet_arena_77_second
+SUBVAULT: p : gauntlet_arena_second
+SUBVAULT: q : gauntlet_arena_77_second
+SUBVAULT: r : gauntlet_arena_second
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: u : gauntlet_arena_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+                 ccccccccccccc
+  cccccccccccccccclclclclclclcccccccccccccccc
+ cclclclclclclclc.............clclclclclclclcc
+ cl.................A..G..<.................lc
+ cc.G.....G.....G......F......G.....G.....G.cc
+ cl.......D.......nnnnnnnnnnn.......J.......lc
+ cc...nnnnnnnnn...ppppppppppp...nnnnnnnnn...cc
+ cl...aaaaaaaaa...ppppppppppp...qqqqqqqqq...lc
+ cc...aaaaaaaaa...ppppppppppp...qqqqqqqqq...cc
+ cl...aaaaaaaaa...ppppppppppp...qqqqqqqqq...lc
+ cc.G.aaaaaaaaa.G.ppppppppppp.G.qqqqqqqqq.G.cc
+ cl...aaaaaaaaa...ppppppppppp...qqqqqqqqq...lc
+ cc...naaaaaaan...npppppppppn...nqqqqqqqn...cc
+ cl...naaaaaaan...npppppppppn...nqqqqqqqn...lc
+ cc...nnnnnnnnn...npppppppppn...nnnnnnnnn...cc
+ cl.....n.E.n.....nnnnnnnnnnn.....n.K.n.....lc
+ cc.G...n.G.n...G....n.H.n....G...n.G.n...G.cc
+cc......n.L.n........n...n........n.P.n......cc
+cl...nnnnnnnnnnn.....n.N.n.....nnnnnnnnnnn...lc
+cc...rrrrrrrrrrr...nnnnnnnnn...uuuuuuuuuuu...cc
+cl...rrrrrrrrrrr...sssssssss...uuuuuuuuuuu...lc
+cc...rrrrrrrrrrr...sssssssss...uuuuuuuuuuu...cc
+cl...rrrrrrrrrrr...sssssssss...uuuuuuuuuuu...lc
+cc.G.rrrrrrrrrrr.G.sssssssss.G.uuuuuuuuuuu.G.cc
+cl...rrrrrrrrrrr...sssssssss...uuuuuuuuuuu...lc
+cc...nrrrrrrrrrn...nsssssssn...nuuuuuuuuun...cc
+cl...nrrrrrrrrrn...nsssssssn...nuuuuuuuuun...lc
+cc...nrrrrrrrrrn...nnnnnnnnn...nuuuuuuuuun...cc
+cl...nnnnnnnnnnn...............nnnnnnnnnnn...lc
+cc...............G.....G.....G...............cc
+cl.G......G.........................G......G.lc
+cc...............clcnnnnnnnclc...............cc
+ cclclclclclclclcccc.......cccclclclclclclclcc
+  cccccccccccccccvv..G.G.G..vvccccccccccccccc
+                vv...M.O.Q...vv
+               vv.............vv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vyyyyyyyyyyyyyyyv
+               vvyyyyyyyyyyyyyvv
+               vvyyyyyyyyyyyyyvv
+               vvyyyyyyyyyyyyyvv
+               vvvvvvvvvvvvvvvvv
+ENDMAP
