@@ -651,9 +651,10 @@ ENDMAP
 # statement and use tags gauntlet_arena_first and gauntlet_arena_second. The
 # gauntlet_setup() function will initialize difficulty to the first tier.
 #
-# The map should place exactly one subvault with tag 'gauntlet_exit', which will
-# place and exit features. Call gauntlet_appearance(_G) to set the exit feature on
-# the '<' and for any other common visual changes.
+# The map should place exactly one subvault with tag 'gauntlet_exit', which
+# will place and exit features. Call gauntlet_appearance(_G) to set the exit
+# feature on the '<' and for any other common visual changes.
+
 NAME:   gammafunk_gauntlet_branching
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen no_trap_gen
@@ -945,7 +946,7 @@ cG...................................GTG...................................Gc
 vvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvvvvnnnvvvvvvv
       v.M...........O...........Q...........S...........q...........s.v
       v...............................................................v
-      vvvvvvvvvvvvvvvvvvvvvvvvvyyyyyyyyyyyyyyyvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvvvvvvvvvvvvvvvvvvvvvvyyyyyyyyyyyyyyyvvvvvvvvvvvvvvvvvvvvvvvvv
                               vyyyyyyyyyyyyyyyv
                               vyyyyyyyyyyyyyyyv
                               vyyyyyyyyyyyyyyyv
