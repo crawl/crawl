@@ -58,6 +58,13 @@ default-depth: Gauntlet
 
 #############################################################################
 # <<1>> Gauntlet arena subvaults
+#
+# <<1.1>> 9x9 arenas
+# <<1.2>> 7x7 arenas
+#############################################################################
+
+#############################################################################
+# <<1.1>> 9x9 arenas
 #############################################################################
 # Each vault should have tags 'gauntlet_arena_first' and
 # 'gauntlet_arena_second' assuming its viable for both tiers. Two tags exist in
@@ -376,6 +383,347 @@ n!xx'n''''n
  x'''~x'~'
  ''~'1x'''
  d''dQdx'd
+ENDMAP
+
+#############################################################################
+# <<1.2>> 7x7 arenas
+#############################################################################
+
+#############################################################################
+# The 7x7 arenas use the same setup function and set of required and optional
+# glyphs as the 9x9 vaults described in <<1.1>>. Follow the instructions in
+# that section for creating 7x7 arenas, aside from the required tags. For 7x7
+# arenas, the the selection tags are gauntlet_arena_77_first and
+# gauntlet_arena_77_second. Vaults should have both of these tags unless they
+# place specific terrain for a fixed monster set appropriate for only one of
+# the tiers.
+#
+# Since 7x7 arenas are significantly smaller than 9x9 ones, they have some
+# design considerations outlined below by minmay:
+#
+# Arenas have 23 mandatory glyphs, which is almost half of the available area,
+# so these are heavily constrained in how many walls/liquids/etc. can be
+# placed.
+#
+# A smaller arena is inherently more dangerous than a larger one, so compensate
+# by providing good terrain, to keep the difficulty in line with the larger
+# arenas.
+#
+# Template:
+#
+# n.......n
+# n.......n
+# n.......n
+# n.......n
+# n.......n
+#  .......
+#  .......
+#
+
+NAME:   minmay_gauntlet_arena_77_fan
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n2223xx3n
+nx1^nn3.n
+nxn3x3^.n
+n3nx3xnPn
+n2^3x3nxn
+ 23nn^dx
+ 2xxQddd
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_two_lines
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n1.xx333n
+n...xx33n
+n2x.^xx3n
+n2xxP.x3n
+n22xx..3n
+ 2ddxx.3
+ 2ddQxx3
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_checkered
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+nx2x3x2xn
+n2n2n2n2n
+nx3x3x3xn
+n3nPn1n3n
+nx3x^x3xn
+ 3ndndn3
+ xdxQxdx
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_box
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n333333^n
+n3nxxx33n
+n2x^..x2n
+n2x.P.x2n
+n2x..^x2n
+ ..xxxn3
+ ^ddQdd1
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_double_cross
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n2......n
+n22x....n
+n3xxx...n
+n33xPx..n
+n333xxx.n
+ 3333x22
+ 1ddQdd2
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_museum
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G, true)
+MAP
+n2223222n
+n3G3I3V3n
+n^.p.p.^n
+n.x.P.c.n
+n^.p.p.^n
+ 3v3b3n3
+ 1ddQdd3
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_chump_sandwich
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n3322233n
+n2332332n
+n3xxnxx3n
+n...P...n
+n.xxnxx.n
+ ...1...
+ .ddQdd.
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_tiled_triplets
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n1xx2xx2n
+nx22n22xn
+nxn3nn3xn
+n33nP^n3n
+nx3nn3nxn
+ dn33n3d
+ dxxQxxd
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_hold_the_fort
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n3333222n
+n3xxnx22n
+n3x..nx2n
+n..xP.n3n
+n.^nx.x3n
+ ..^.xx3
+ 1ddQdd3
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_cramped
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+nnn222nnn
+nnn333nnn
+n23nn=32n
+n13nPn33n
+n3d=nn32n
+ nndddnn
+ nnnQnnn
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_p_blocks
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n33332xxn
+n3xxx2xxn
+n3xx.^x3n
+n22.P.22n
+n3x^.xx3n
+ xxdxxx3
+ xxdQdd1
+ENDMAP
+
+# Without the runed door, players could still keep all the monsters away from
+# the entry point by running clockwise around the vault. That is tedious, so the
+# runed door gets rid of the need for it.
+NAME:   minmay_gauntlet_arena_77_path
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n222n^.Pn
+n2x2x.xxn
+n2n3n^.^n
+n1x3xxx.n
+ndn333n3n
+ dxxx3x=
+ ddQn333
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_mirror
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n2221222n
+nxxx.xxxn
+n3.n.n.3n
+n3xxPxx3n
+n3n...n3n
+ 3x^.^x3
+ 3ddQdd3
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_terracotta_army
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n22GxG22n
+n233G332n
+nG3G^G3Gn
+nxG3P3Gxn
+nG3G^G3Gn
+ ...G...
+ 1ddQdd.
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_run_for_it
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n...Pn33n
+n.xx.n33n
+n3xx.n33n
+n33^.n23n
+nnn===21n
+ ddn.n22
+ ddnQn22
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_squiggly
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n22222x3n
+n.xx2.x3n
+nx..nn33n
+nx3^P^3xn
+n33nn..xn
+ 3xddxx.
+ 3xdQd.1
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_radiant_squares
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n3332221n
+n.nxnx32n
+n^.3^3x2n
+nxnxP^n2n
+n.ddx3x3n
+ xddn.n3
+ Qx.x^.3
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_broken_ladder
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n3nnx333n
+n3x333x2n
+n33^xnn2n
+n2x.P.x2n
+n2nnx^.1n
+ 2x...x.
+ .ddQdd.
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_shame_cube
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n^333333n
+n3xnxnx3n
+n3=...=3n
+n2x.P.x2n
+n2nwwwn2n
+ 2xnxnx2
+ 1ddQdd^
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_mess
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+# there is one 3 on the map because a dispersal trap should not be on that
+# square
+NSUBST: ' = 9=3 / 6=2 / 1 / ^ / .
+: gauntlet_arena_setup(_G)
+MAP
+nn''x'n'n
+n'xn'x3nn
+nn''xn'xn
+nx'xP'x'n
+n'n''xn'n
+ 'xnx''x
+ nddQddn
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_block_sizes
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n222.222n
+n3x..xx3n
+n3..Pxx3n
+n3xnx.^3n
+n3xnx^13n
+ 3xnx..3
+ .ddQdd.
+ENDMAP
+
+NAME:   minmay_gauntlet_arena_77_braids
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n22n.n22n
+n3x2x2x3n
+n3x.x.x3n
+n^3nPn3^n
+n3x.x.x3n
+ 3x1x.x3
+ ddnQndd
+ENDMAP
+
+# to escape, face either the 1 or the plant
+NAME:   minmay_gauntlet_arena_77_two_paths
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
+: gauntlet_arena_setup(_G)
+MAP
+n222.222n
+n3xnxnx3n
+n^33x33^n
+nxnxPxnxn
+n^33x33^n
+ .xnxnxp
+ 1ddQdd.
 ENDMAP
 
 #############################################################################
