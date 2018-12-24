@@ -368,12 +368,15 @@ void black_drac_breath()
 }
 
 /**
- * Returns the MP cost of zapping a wand. Usually zero.
+ * Returns the MP cost of zapping a wand:
+ *     3 if player has MP-powered wands and enough MP available,
+ *     1-2 if player has MP-powered wands and only 1-2 MP left,
+ *     0 otherwise.
  */
 int wand_mp_cost()
 {
     // Update mutation-data.h when updating this value.
-    return you.get_mutation_level(MUT_MP_WANDS) * 3;
+    return min(you.magic_points, you.get_mutation_level(MUT_MP_WANDS) * 3);
 }
 
 void zap_wand(int slot)
@@ -409,7 +412,7 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = min(you.magic_points, wand_mp_cost());
+    const int mp_cost = wand_mp_cost();
 
     int item_slot;
     if (slot != -1)
@@ -464,12 +467,7 @@ void zap_wand(int slot)
 
     // Spend MP.
     if (mp_cost)
-    {
         dec_mp(mp_cost, false);
-        mprf("You feel a %ssurge of power%s",
-             mp_cost < 3 ? "slight " : "",
-             mp_cost < 3 ? "."       : "!");
-    }
 
     // Take off a charge.
     wand.charges--;

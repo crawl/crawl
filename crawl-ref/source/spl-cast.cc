@@ -23,6 +23,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "food.h"
 #include "format.h"
@@ -98,6 +99,17 @@ void surge_power(const int enhanced)
                                 : article_a(modifier).c_str(),
              (enhanced < 0) ? "numb sensation."
                             : "surge of power!");
+    }
+}
+
+void surge_power_wand(const int mp_cost)
+{
+    if (mp_cost)
+    {
+        const bool slight = mp_cost < 3;
+        mprf("You feel a %ssurge of power%s",
+             slight ? "slight " : "",
+             slight ? "."      : "!");
     }
 }
 
@@ -1404,7 +1416,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
     {
         const int surge = pakellas_surge_devices();
         powc = player_adjust_evoc_power(powc, surge);
-        surge_power(you.spec_evoke() + surge);
+        int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
+                              ? wand_mp_cost() : 0;
+        surge_power_wand(mp_cost_of_wand + surge * 3);
     }
     else if (allow_fail)
         surge_power(_spell_enhancement(spell));
