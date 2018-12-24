@@ -463,12 +463,7 @@ void zap_wand(int slot)
 
     // Spend MP.
     if (mp_cost)
-    {
         dec_mp(mp_cost, false);
-        mprf("You feel a %ssurge of power%s",
-             mp_cost < 3 ? "slight " : "",
-             mp_cost < 3 ? "."       : "!");
-    }
 
     // Take off a charge.
     wand.charges--;
