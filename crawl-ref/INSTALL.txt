@@ -316,7 +316,7 @@ from within the MSYS2 Shell.
      will clone into a folder named `crawl`. Your home directory (`cd ~`) is
      a reasonable choice.
   2. Run `git clone https://github.com/crawl/crawl.git`.
-  3. Run `cd crawl/crawl-ref-source`.
+  3. Run `cd crawl/crawl-ref/source`.
   4. Run `git submodule update --init`.
 
 * Build the console version of Crawl by simply running:
