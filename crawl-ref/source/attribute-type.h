@@ -83,7 +83,7 @@ enum attribute_type
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
-    ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
+    ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
 #if TAG_MAJOR_VERSION == 34
