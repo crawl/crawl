@@ -73,6 +73,7 @@ enum spret_type
 #define fail_check() if (fail) return SPRET_FAIL
 
 void surge_power(const int enhanced);
+void surge_power_wand(const int mp_cost);
 
 typedef bool (*spell_selector)(spell_type spell);
 
