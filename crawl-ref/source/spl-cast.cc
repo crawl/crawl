@@ -1418,7 +1418,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
     if (evoked_item)
     {
         int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
-                              ? min(you.magic_points, wand_mp_cost()) : 0;
+                              ? wand_mp_cost() : 0;
         surge_power_wand(mp_cost_of_wand);
     }
     else if (allow_fail)
