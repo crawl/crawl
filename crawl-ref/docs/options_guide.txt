@@ -95,20 +95,21 @@ The contents of this text are:
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
                 tile_item_col, tile_unseen_col, tile_floor_col, tile_wall_col,
-                tile_mapped_floor_col, tile_mapped_wall_col, tile_door_col,
-                tile_downstairs_col, tile_upstairs_col, tile_branchstairs_col,
-                tile_feature_col, tile_trap_col, tile_water_col, tile_lava_col,
-                tile_excluded_col, tile_excl_centre_col, tile_update_rate,
-                tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
-                tile_tag_pref, tile_full_screen, tile_window_width,
-                tile_window_height, tile_map_pixels, tile_cell_pixels,
-                tile_force_overlay, tile_single_column_menus,
-                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
-                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
-                tile_font_stat_family, tile_font_msg_family,
-                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
-                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
-                tile_font_ft_light, tile_show_minihealthbar,
+                tile_mapped_floor_col, tile_mapped_wall_col,
+                tile_explore_horizon_col, tile_door_col, tile_downstairs_col,
+                tile_upstairs_col, tile_branchstairs_col, tile_feature_col,
+                tile_transporter_col, tile_transporter_landing_col,
+                tile_trap_col, tile_water_col, tile_lava_col, tile_excluded_col,
+                tile_excl_centre_col, tile_update_rate, tile_runrest_rate,
+                tile_key_repeat_delay, tile_tooltip_ms, tile_tag_pref,
+                tile_full_screen, tile_window_width, tile_window_height,
+                tile_map_pixels, tile_cell_pixels, tile_force_overlay,
+                tile_single_column_menus, tile_font_crt_file,
+                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_family, tile_font_stat_family,
+                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
+                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
+                tile_font_lbl_size, tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
                 tile_misc_anim, tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
@@ -1907,63 +1908,69 @@ tile_menu_icons = true
         the reduction of space.
         If you would rather have the plain menus set this option to false.
 
-tile_player_col       = white
-tile_monster_col      = #660000
-tile_neutral_col      = #660000
-tile_peaceful_col     = #664400
-tile_friendly_col     = #664400
-tile_plant_col        = #446633
-tile_item_col         = #005544
-tile_unseen_col       = black
-tile_floor_col        = #333333
-tile_wall_col         = #666666
-tile_mapped_floor_col = #222266
-tile_mapped_wall_col  = #444499
-tile_door_col         = #775544
-tile_downstairs_col   = #ff00ff
-tile_upstairs_col     = cyan
-tile_branchstairs_col = #ff7788
-tile_portal_col       = #ffdd00
-tile_feature_col      = #997700
-tile_trap_col         = #aa6644
-tile_water_col        = #114455
-tile_deep_water_col   = #001122
-tile_lava_col         = #552211
-tile_excluded_col     = #552266
-tile_excl_centre_col  = #552266
-tile_window_col       = #558855
+tile_player_col              = white
+tile_monster_col             = #660000
+tile_neutral_col             = #660000
+tile_peaceful_col            = #664400
+tile_friendly_col            = #664400
+tile_plant_col               = #446633
+tile_item_col                = #005544
+tile_unseen_col              = black
+tile_floor_col               = #333333
+tile_wall_col                = #666666
+tile_mapped_floor_col        = #222266
+tile_mapped_wall_col         = #444499
+tile_explore_horizon_col     = #6b301b
+tile_door_col                = #775544
+tile_downstairs_col          = #ff00ff
+tile_upstairs_col            = cyan
+tile_branchstairs_col        = #ff7788
+tile_portal_col              = #ffdd00
+tile_transporter_col         = #0000ff
+tile_transporter_landing_col = #5200aa
+tile_feature_col             = #997700
+tile_trap_col                = #aa6644
+tile_water_col               = #114455
+tile_deep_water_col          = #001122
+tile_lava_col                = #552211
+tile_excluded_col            = #552266
+tile_excl_centre_col         = #552266
+tile_window_col              = #558855
 
 These options allow configuring the colours used for the minimap of the dungeon
 level. Using RGB hex codes is also allowed, such as #00ff00 for green.
-   tile_player_col       - colour of player position, as well as of
-                           map centre during level map mode ('X')
-   tile_monster_col      - colour of hostile monsters
-   tile_neutral_col      - colour of neutral monsters
-   tile_peaceful_col     - colour of peaceful monsters
-   tile_friendly_col     - colour of friendly monsters
-   tile_plant_col        - colour of zero xp monsters (plant and fungus)
-   tile_item_col         - colour of known or detected items
-   tile_unseen_col       - colour of unseen areas (usually stone)
-   tile_floor_col        - colour of floor
-   tile_mapped_floor_col - colour of floor detected via magic mapping
-   tile_wall_col         - colour of any wall type
-   tile_mapped_wall_col  - colour of walls detected via magic mapping
-   tile_door_col         - colour of known doors, open or closed
-   tile_downstairs_col   - colour of downstairs
-   tile_upstairs_col     - colour of upstairs, including branch exits
-   tile_branchstairs_col - colour of branch entrances
-   tile_portal_col       - colour of any portal
-   tile_feature_col      - colour of any non-stair, non-portal feature
-                           (altar, shop, fountain, ...)
-   tile_trap_col         - colour of known traps of any type
-   tile_water_col        - colour of shallow water
-   tile_deep_water_col   - colour of deep water
-   tile_lava_col         - colour of lava
-   tile_excluded_col     - colour of squares excluded for autotravel
-                           (will only override tile_floor_col colour)
-   tile_excl_centre_col  - colour of exclusion centre (overrides
-                           tile_floor_col and tile_item_col, only)
-   tile_window_col       - colour of the rectangular view window
+   tile_player_col              - colour of player position, as well as of
+                                  map centre during level map mode ('X')
+   tile_monster_col             - colour of hostile monsters
+   tile_neutral_col             - colour of neutral monsters
+   tile_peaceful_col            - colour of peaceful monsters
+   tile_friendly_col            - colour of friendly monsters
+   tile_plant_col               - colour of zero xp monsters (plant and fungus)
+   tile_item_col                - colour of known or detected items
+   tile_unseen_col              - colour of unseen areas (usually stone)
+   tile_floor_col               - colour of floor
+   tile_mapped_floor_col        - colour of floor detected via magic mapping
+   tile_explore_horizon_col     - colour of the edge of explored territory
+   tile_wall_col                - colour of any wall type
+   tile_mapped_wall_col         - colour of walls detected via magic mapping
+   tile_door_col                - colour of known doors, open or closed
+   tile_downstairs_col          - colour of downstairs
+   tile_upstairs_col            - colour of upstairs, including branch exits
+   tile_branchstairs_col        - colour of branch entrances
+   tile_portal_col              - colour of any portal
+   tile_transporter_col         - colour of transporters
+   tile_transporter_landing_col - colour of transporter destinations
+   tile_feature_col             - colour of any non-stair, non-portal feature
+                                  (altar, shop, fountain, ...)
+   tile_trap_col                - colour of known traps of any type
+   tile_water_col               - colour of shallow water
+   tile_deep_water_col          - colour of deep water
+   tile_lava_col                - colour of lava
+   tile_excluded_col            - colour of squares excluded for autotravel
+                                  (will only override tile_floor_col colour)
+   tile_excl_centre_col         - colour of exclusion centre (overrides
+                                  tile_floor_col and tile_item_col, only)
+   tile_window_col              - colour of the rectangular view window
 
 tile_update_rate = 1000
         The number of milliseconds that tick by before the screen is redrawn
