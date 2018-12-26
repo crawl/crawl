@@ -6,7 +6,7 @@
 # <<3>>      Gauntlet main maps.
 ###############################################################################
 
-: require("dlua/gauntlet.lua")
+: crawl_require("dlua/gauntlet.lua")
 {{
 function gauntlet_portal(e)
   local timeout_turns = crawl.random_range(400, 600)

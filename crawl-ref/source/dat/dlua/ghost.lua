@@ -1,4 +1,4 @@
-require("dlua/dungeon.lua")
+crawl_require("dlua/dungeon.lua")
 
 -- Integer value from 0 to 100 giving the chance that a ghost-allowing level
 -- will attempt to place a ghost vault.

@@ -72,7 +72,7 @@
 #
 ##
 
-: require("dlua/dungeon.lua")
+: crawl_require("dlua/dungeon.lua")
 {{
 function wizlab_portal (e)
     local timeout_turns = crawl.random_range(600, 800)
