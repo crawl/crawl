@@ -193,6 +193,8 @@ void wizard_memorise_spec_spell()
         }
     }
 
+    if (get_spell_flags(static_cast<spell_type>(spell)) & SPFLAG_MONSTER)
+        mpr("Spell is monster-only - unpredictable behavior may result.");
     if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }

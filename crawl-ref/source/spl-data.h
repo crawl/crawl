@@ -2424,7 +2424,9 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DRAIN_LIFE, "Drain Life",
     SPTYP_NECROMANCY,
-    SPFLAG_AREA | SPFLAG_EMERGENCY,
+    // n.b. marked as SPFLAG_MONSTER for wizmode purposes, but this spell is
+    // called by the yred ability.
+    SPFLAG_AREA | SPFLAG_EMERGENCY | SPFLAG_MONSTER,
     6,
     0,
     -1, -1,
