@@ -13,4 +13,3 @@ cglyph_t get_mons_glyph(const monster_info& mi);
 
 show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monsters = false);
 cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters = false, int colour_mode = 0);
-cglyph_t get_cell_glyph(const map_cell& cell, const coord_def& loc, bool only_stationary_monsters = false, int colour_mode = 0);
