@@ -2423,26 +2423,30 @@ colour.OLDCOLOUR = NEWCOLOUR
 display_char = <dungeon_character_name : symbol>
         a list of these is allowed, as well.
 
-        The possible entries for dungeon_character_name are:
-           wall, permawall, wall_magic, floor, floor_magic, door_open,
-           door_closed, trap, stairs_down, stairs_up, grate, altar, arch,
-           fountain, wavy, statue, invis_exposed, item_detected, item_orb,
-           item_rune, item_weapon, item_armour, item_wand, item_food,
-           item_scroll, item_ring, item_potion, item_missile, item_book,
-           item_staff, item_rod, item_miscellany, item_corpse, item_skeleton,
-           item_gold, item_amulet, cloud, tree, transporter,
+        The possible entries for dungeon_character_name are: wall, permawall,
+           wall_magic, floor, floor_magic, door_open, door_closed, trap,
+           stairs_down, stairs_up, grate, altar, arch, fountain, wavy, statue,
+           invis_exposed, item_detected, item_orb, item_rune, item_weapon,
+           item_armour, item_wand, item_food, item_scroll, item_ring,
+           item_potion, item_missile, item_book, item_staff, item_rod,
+           item_miscellany, item_corpse, item_skeleton, item_gold, item_amulet,
+           cloud, cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,
            frame_vert, frame_top_left, frame_top_right, frame_bottom_left,
            frame_bottom_right, draw_horiz, draw_vert, draw_slash,
            draw_backslash, draw_top_left, draw_top_right, draw_bottom_left,
            draw_bottom_right, draw_down, draw_up, draw_right, draw_left
+
         Most of these are self-explanatory. "arch" is used for shops and
-        portals. "floor_magic" and "wall_magic" are used to display
-        magic-mapped squares on the level map. "invis_exposed" is the
-        character for water creatures submerged in shallow water, or
-        invisible creatures wading in shallow water. "wavy" is water and
-        lava.
+        portals. "floor_magic" and "wall_magic" are used to display magic-mapped
+        squares on the level map. "invis_exposed" is the character for water
+        creatures submerged in shallow water, or invisible creatures wading in
+        shallow water. "wavy" is water and lava. "cloud", "cloud_weak",
+        "cloud_fading", and "cloud_terminal" distinguish clouds by remaining
+        duration, listed from furthest to nearest expiry; cloud types that do
+        not visually reveal their remaining duration always use the "cloud"
+        glyph.
 
         Symbols can be specified using a letter, or by its ASCII/Unicode
         code: a decimal number or a hexadecimal one (prefixed with x).
