@@ -9,6 +9,7 @@
 
 #include "showsymb.h"
 
+#include "cloud.h"
 #include "colour.h"
 #include "env.h"
 #include "item-name.h"
@@ -460,12 +461,35 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
     case SH_CLOUD:
         ASSERT(cell_cloud);
-
         show.cls = SH_CLOUD;
         if (coloured)
             g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
+
+        if (cloud_type_tile_info(cell.cloudinfo()->type).variation
+            == CTVARY_DUR)
+        {
+            // duration is already clamped to 0-3
+            int dur = cell.cloudinfo()->duration;
+            switch (dur)
+            {
+            case 0:
+                g.ch = dchar_glyph(DCHAR_CLOUD_TERMINAL);
+                break;
+            case 1:
+                g.ch = dchar_glyph(DCHAR_CLOUD_FADING);
+                break;
+            case 2:
+                g.ch = dchar_glyph(DCHAR_CLOUD_WEAK);
+                break;
+            case 3:
+                g.ch = dchar_glyph(DCHAR_CLOUD);
+                break;
+            }
+        }
+        else
+            g.ch = dchar_glyph(DCHAR_CLOUD);
         break;
 
     case SH_FEATURE:
