@@ -1486,7 +1486,7 @@ void trog_remove_trogs_hand()
  * @param mon the orc in question.
  * @returns whether you have given the monster a Beogh gift before now.
  */
-static bool _given_gift(const monster* mon)
+bool given_gift(const monster* mon)
 {
     return mon->props.exists(BEOGH_RANGE_WPN_GIFT_KEY)
             || mon->props.exists(BEOGH_MELEE_WPN_GIFT_KEY)
@@ -1524,7 +1524,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
         return false;
     }
 
-    if (_given_gift(mons))
+    if (given_gift(mons))
     {
         if (!quiet)
         {

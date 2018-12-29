@@ -90,6 +90,7 @@ void trog_remove_trogs_hand();
 
 bool jiyva_remove_bad_mutation();
 
+bool given_gift(const monster* mons);
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 bool beogh_resurrect();
