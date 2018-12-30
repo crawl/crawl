@@ -25,7 +25,7 @@
 #include "spl-util.h"
 #include "terrain.h"
 
-spret_type cast_sublimation_of_blood(int pow, bool fail)
+spret cast_sublimation_of_blood(int pow, bool fail)
 {
     bool success = false;
 
@@ -66,15 +66,15 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("Your attempt to draw power from your own body fails.");
     }
 
-    return success ? spret_type::success : spret_type::abort;
+    return success ? spret::success : spret::abort;
 }
 
-spret_type cast_death_channel(int pow, god_type god, bool fail)
+spret cast_death_channel(int pow, god_type god, bool fail)
 {
     if (you.duration[DUR_DEATH_CHANNEL] >= 60 * BASELINE_DELAY)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -85,14 +85,14 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
     if (god != GOD_NO_GOD)
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_recall(bool fail)
+spret cast_recall(bool fail)
 {
     fail_check();
     start_recall(RECALL_SPELL);
-    return spret_type::success;
+    return spret::success;
 }
 
 void start_recall(recall_t type)
@@ -386,7 +386,7 @@ bool passwall_path::check_moveto() const
 
 }
 
-spret_type cast_passwall(const coord_def& c, int pow, bool fail)
+spret cast_passwall(const coord_def& c, int pow, bool fail)
 {
     coord_def delta = c - you.pos();
     passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
@@ -396,7 +396,7 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
     {
         if (fail_msg.size())
             mpr(fail_msg);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -409,7 +409,7 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
     else if (p.check_moveto())
     {
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
-        return spret_type::success;
+        return spret::success;
     }
 
     // at this point, the spell failed or was cancelled. Does it cost MP?
@@ -423,9 +423,9 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
         // are standing next to the map edge, which is a leak of sorts, but
         // already apparent from the targeting (and we leak this info all over
         // the place, really).
-        return spret_type::abort;
+        return spret::abort;
     }
-    return spret_type::success;
+    return spret::success;
 }
 
 static int _intoxicate_monsters(coord_def where, int pow)
@@ -449,7 +449,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     return 0;
 }
 
-spret_type cast_intoxicate(int pow, bool fail)
+spret cast_intoxicate(int pow, bool fail)
 {
     fail_check();
     mpr("You attempt to intoxicate your foes!");
@@ -466,10 +466,10 @@ spret_type cast_intoxicate(int pow, bool fail)
         }
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_darkness(int pow, bool fail)
+spret cast_darkness(int pow, bool fail)
 {
     fail_check();
     if (you.duration[DUR_DARKNESS])
@@ -479,5 +479,5 @@ spret_type cast_darkness(int pow, bool fail)
     you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
     update_vision_range();
 
-    return spret_type::success;
+    return spret::success;
 }

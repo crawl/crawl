@@ -9,5 +9,5 @@ class dist;
 
 void end_weapon_brand(item_def &weapon, bool verbose = false);
 
-spret_type cast_excruciating_wounds(int power, bool fail);
-spret_type cast_confusing_touch(int power, bool fail);
+spret cast_excruciating_wounds(int power, bool fail);
+spret cast_confusing_touch(int power, bool fail);

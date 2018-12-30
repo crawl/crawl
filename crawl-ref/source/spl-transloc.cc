@@ -64,7 +64,7 @@ static void _place_tloc_cloud(const coord_def &origin)
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 }
 
-spret_type cast_disjunction(int pow, bool fail)
+spret cast_disjunction(int pow, bool fail)
 {
     fail_check();
     int rand = random_range(35, 45) + random2(pow / 12);
@@ -73,7 +73,7 @@ spret_type cast_disjunction(int pow, bool fail)
         30 + rand));
     contaminate_player(750 + random2(500), true);
     disjunction_spell();
-    return spret_type::success;
+    return spret::success;
 }
 
 void disjunction_spell()
@@ -322,7 +322,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
  *                      therefore fail after selecting a target)
  * @return              Whether the hop succeeded, aborted, or was miscast.
  */
-spret_type frog_hop(bool fail)
+spret frog_hop(bool fail)
 {
     const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
     coord_def target;
@@ -331,7 +331,7 @@ spret_type frog_hop(bool fail)
     while (true)
     {
         if (!_find_cblink_target(target, true, "hop", &tgt))
-            return spret_type::abort;
+            return spret::abort;
         if (grid_distance(you.pos(), target) > hop_range)
         {
             mpr("That's out of range!"); // ! targeting
@@ -344,14 +344,14 @@ spret_type frog_hop(bool fail)
     fail_check();
 
     if (!you.attempt_escape(2)) // XXX: 1?
-        return spret_type::success; // of a sort
+        return spret::success; // of a sort
 
     // invisible monster that the targeter didn't know to avoid, or similar
     if (target.origin())
     {
         mpr("You tried to hop, but there was no room to land!");
         // TODO: what to do here?
-        return spret_type::success; // of a sort
+        return spret::success; // of a sort
     }
 
     if (!cell_is_solid(you.pos())) // should be safe.....
@@ -362,7 +362,7 @@ spret_type frog_hop(bool fail)
     mpr("Boing!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
 
-    return spret_type::success; // TODO
+    return spret::success; // TODO
 }
 
 /**
@@ -375,31 +375,31 @@ spret_type frog_hop(bool fail)
  *                      for e.g. ?blink with blurryvis)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
-spret_type controlled_blink(bool fail, bool safe_cancel)
+spret controlled_blink(bool fail, bool safe_cancel)
 {
     coord_def target;
     targeter_smite tgt(&you, LOS_RADIUS);
     tgt.obeys_mesmerise = true;
     if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
     if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return spret_type::success; // of a sort
+        return spret::success; // of a sort
     }
 
     if (!you.attempt_escape(2))
-        return spret_type::success; // of a sort
+        return spret::success; // of a sort
 
     // invisible monster that the targeter didn't know to avoid
     if (monster_at(target))
     {
         mpr("Oops! There was something there already!");
         uncontrolled_blink();
-        return spret_type::success; // of a sort
+        return spret::success; // of a sort
     }
 
     _place_tloc_cloud(you.pos());
@@ -410,7 +410,7 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    return spret_type::success;
+    return spret::success;
 }
 
 /**
@@ -420,15 +420,15 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret_type cast_blink(bool fail)
+spret cast_blink(bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
-        return fail ? spret_type::fail : spret_type::success; // probably always SUCCESS
+        return fail ? spret::fail : spret::success; // probably always SUCCESS
 
     fail_check();
     uncontrolled_blink();
-    return spret_type::success;
+    return spret::success;
 }
 
 /**
@@ -438,13 +438,13 @@ spret_type cast_blink(bool fail)
  * @param safe    Whether it's safe to abort (not e.g. unknown ?blink)
  * @return        Whether the spell was successfully cast, aborted, or miscast.
  */
-spret_type cast_controlled_blink(bool fail, bool safe)
+spret cast_controlled_blink(bool fail, bool safe)
 {
     // don't prompt if it's useless
     if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (crawl_state.is_repeating_cmd())
@@ -452,7 +452,7 @@ spret_type cast_controlled_blink(bool fail, bool safe)
         crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (orb_limits_translocation())
@@ -460,7 +460,7 @@ spret_type cast_controlled_blink(bool fail, bool safe)
         if (!yesno("Your blink will be uncontrolled - continue anyway?",
                    false, 'n'))
         {
-            return spret_type::abort;
+            return spret::abort;
         }
 
         mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
@@ -782,7 +782,7 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
     }
 }
 
-spret_type cast_portal_projectile(int pow, bool fail)
+spret cast_portal_projectile(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_PORTAL_PROJECTILE])
@@ -792,17 +792,17 @@ spret_type cast_portal_projectile(int pow, bool fail)
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
     you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_apportation(int pow, bolt& beam, bool fail)
+spret cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
 
     if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
         canned_msg(MSG_SOMETHING_IN_WAY);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     // Let's look at the top item in that square...
@@ -812,7 +812,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
         mpr("You don't see anything to apport there.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     item_def& item = mitm[item_idx];
@@ -821,7 +821,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     if (item_is_stationary(item) && !item_is_stationary_net(item))
     {
         mpr("You cannot apport that!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -840,7 +840,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
                 "The Orb shrieks and becomes a dead weight against your magic!",
                 "The Orb lets out a furious burst of light and becomes "
                     "a dead weight against your magic!");
-            return spret_type::success;
+            return spret::success;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
@@ -894,7 +894,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     if (location_on_path == dist)
     {
         mpr("Not with that terrain in the way!");
-        return spret_type::success;
+        return spret::success;
     }
     dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
@@ -907,15 +907,15 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // Mark the item as found now.
     origin_set(new_spot);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_golubrias_passage(const coord_def& where, bool fail)
+spret cast_golubrias_passage(const coord_def& where, bool fail)
 {
     if (orb_limits_translocation())
     {
         mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     // randomize position a bit to make it not as useful to use on monsters
@@ -961,7 +961,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         else
             // XXX: bleh, dumb message
             mpr("Creating a passage of Golubria requires sufficient empty space.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -974,13 +974,13 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     if (!trap || !trap2)
     {
         mpr("Something buggy happened.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     trap->reveal();
     trap2->reveal();
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static int _disperse_monster(monster& mon, int pow)
@@ -1000,7 +1000,7 @@ static int _disperse_monster(monster& mon, int pow)
     return true;
 }
 
-spret_type cast_dispersal(int pow, bool fail)
+spret cast_dispersal(int pow, bool fail)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
@@ -1010,7 +1010,7 @@ spret_type cast_dispersal(int pow, bool fail)
     {
         mpr("The air shimmers briefly around you.");
     }
-    return spret_type::success;
+    return spret::success;
 }
 
 int gravitas_range(int pow)
@@ -1101,12 +1101,12 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
     return affected;
 }
 
-spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
+spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
     if (cell_is_solid(where))
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -1121,7 +1121,7 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
                                                          .c_str()
                                    : "empty space");
     fatal_attraction(where, &you, pow);
-    return spret_type::success;
+    return spret::success;
 }
 
 /**

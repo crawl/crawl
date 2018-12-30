@@ -65,19 +65,19 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.origin_spell = SPELL_FIRE_STORM;
 }
 
-spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
+spret cast_fire_storm(int pow, bolt &beam, bool fail)
 {
     if (grid_distance(beam.target, beam.source) > beam.range)
     {
         mpr("That is beyond the maximum range.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (cell_is_solid(beam.target))
     {
         const char *feat = feat_type_name(grd(beam.target));
         mprf("You can't place the storm on %s.", article_a(feat).c_str());
-        return spret_type::abort;
+        return spret::abort;
     }
 
     setup_fire_storm(&you, pow, beam);
@@ -88,7 +88,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 
     tempbeam.explode(false);
     if (tempbeam.beam_cancelled)
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
@@ -97,7 +97,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     beam.explode(false);
 
     viewwindow();
-    return spret_type::success;
+    return spret::success;
 }
 
 // No setup/cast split here as monster damnation is completely different.
@@ -141,7 +141,7 @@ bool cast_smitey_damnation(int pow, bolt &beam)
 }
 
 // XXX no friendly check
-spret_type cast_chain_spell(spell_type spell_cast, int pow,
+spret cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail)
 {
     fail_check();
@@ -336,7 +336,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         beam.fire();
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
 /*
@@ -513,7 +513,7 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
 }
 
 
-static spret_type _cast_los_attack_spell(spell_type spell, int pow,
+static spret _cast_los_attack_spell(spell_type spell, int pow,
                                          const actor* agent, actor* defender,
                                          bool actual, bool fail,
                                          int* damage_done)
@@ -522,7 +522,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
 
     const zap_type zap = spell_to_zap(spell);
     if (zap == NUM_ZAPS)
-        return spret_type::abort;
+        return spret::abort;
 
     bolt beam;
     zappy(zap, pow, mons, beam);
@@ -569,7 +569,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
             };
             break;
 
-        default: return spret_type::abort;
+        default: return spret::abort;
     }
 
     auto vul_hitfunc = [vulnerable](const actor *act) -> bool
@@ -586,7 +586,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
         if (spell != SPELL_SONIC_WAVE)
         {
             if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
-                return spret_type::abort;
+                return spret::abort;
 
             fail_check();
         }
@@ -684,29 +684,29 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow,
         *damage_done = total_damage;
 
     if (actual)
-        return spret_type::success;
-    return mons_should_fire(beam) ? spret_type::success : spret_type::abort;
+        return spret::success;
+    return mons_should_fire(beam) ? spret::success : spret::abort;
 }
 
-spret_type trace_los_attack_spell(spell_type spell, int pow, const actor* agent)
+spret trace_los_attack_spell(spell_type spell, int pow, const actor* agent)
 {
     return _cast_los_attack_spell(spell, pow, agent, nullptr, false, false,
                                   nullptr);
 }
 
-spret_type fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
+spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
                                  actor *defender, bool fail, int* damage_done)
 {
     return _cast_los_attack_spell(spell, pow, agent, defender, true, fail,
                                   damage_done);
 }
 
-spret_type vampiric_drain(int pow, monster* mons, bool fail)
+spret vampiric_drain(int pow, monster* mons, bool fail)
 {
     if (you.hp == you.hp_max)
     {
         canned_msg(MSG_FULL_HEALTH);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (!mons || mons->submerged())
@@ -716,20 +716,20 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // Cost to disallow freely locating invisible/submerged
         // monsters.
-        return spret_type::success;
+        return spret::success;
     }
 
     // TODO: check known rN instead of holiness
     if (mons->observable() && !(mons->holiness() & MH_NATURAL))
     {
         mpr("You can't drain life from that!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
     {
         canned_msg(MSG_OK);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -737,7 +737,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     if (!mons->alive())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return spret_type::success;
+        return spret::success;
     }
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
@@ -751,7 +751,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     if (!hp_gain)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return spret_type::success;
+        return spret::success;
     }
 
     _player_hurt_monster(*mons, hp_gain, BEAM_NEG);
@@ -764,10 +764,10 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         inc_hp(hp_gain);
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_freeze(int pow, monster* mons, bool fail)
+spret cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
 
@@ -777,13 +777,13 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
         // order to prevent locating invisible/submerged monsters.
-        return spret_type::success;
+        return spret::success;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
     {
         canned_msg(MSG_OK);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -806,15 +806,15 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     if (mons->alive())
         mons->expose_to_element(BEAM_COLD, orig_hurted);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_airstrike(int pow, const dist &beam, bool fail)
+spret cast_airstrike(int pow, const dist &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     monster* mons = monster_at(beam.target);
@@ -822,11 +822,11 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
-        return spret_type::success; // still losing a turn
+        return spret::success; // still losing a turn
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return spret_type::abort;
+        return spret::abort;
     fail_check();
 
     god_conduct_trigger conducts[3];
@@ -849,7 +849,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     dprf("preac: %d, postac: %d", preac, hurted);
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
-    return spret_type::success;
+    return spret::success;
 }
 
 // Here begin the actual spells:
@@ -1013,11 +1013,11 @@ static bool _shatterable(const actor *act)
     return _shatter_mon_dice(act->as_monster());
 }
 
-spret_type cast_shatter(int pow, bool fail)
+spret cast_shatter(int pow, bool fail)
 {
     targeter_los hitfunc(&you, LOS_ARENA);
     if (stop_attack_prompt(hitfunc, "attack", _shatterable))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
     const bool silence = silenced(you.pos());
@@ -1046,7 +1046,7 @@ spret_type cast_shatter(int pow, bool fail)
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static int _shatter_player(int pow, actor *wielder, bool devastator = false)
@@ -1249,14 +1249,14 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
  * @param pow   The power at which the spell is being cast.
  * @param who   The actor doing the irradiating.
  * @param fail  Whether the player has failed to cast the spell.
- * @return      spret_type::abort if the player changed their mind about casting after
- *              realizing they would hit an ally; spret_type::fail if they failed the
- *              cast chance; spret_type::success otherwise.
+ * @return      spret::abort if the player changed their mind about casting after
+ *              realizing they would hit an ally; spret::fail if they failed the
+ *              cast chance; spret::success otherwise.
  */
-spret_type cast_irradiate(int powc, actor* who, bool fail)
+spret cast_irradiate(int powc, actor* who, bool fail)
 {
     if (!_irradiate_is_safe())
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
@@ -1291,7 +1291,7 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
 
     if (who->is_player())
         contaminate_player(1000 + random2(500));
-    return spret_type::success;
+    return spret::success;
 }
 
 // How much work can we consider we'll have done by igniting a cloud here?
@@ -1556,13 +1556,13 @@ bool ignite_poison_affects(const actor* act)
  *                      player chooses not to abort the casting)
  * @param mon_tracer    Whether the 'casting' is just a tracer (a check to see
  *                      if it's worth actually casting)
- * @return              If it's a tracer, spret_type::success if the spell should
- *                      be cast & spret_type::abort otherwise.
- *                      If it's a real spell, spret_type::abort if the player chose
- *                      to abort the spell, spret_type::fail if they failed the cast
- *                      chance, and spret_type::success otherwise.
+ * @return              If it's a tracer, spret::success if the spell should
+ *                      be cast & spret::abort otherwise.
+ *                      If it's a real spell, spret::abort if the player chose
+ *                      to abort the spell, spret::fail if they failed the cast
+ *                      chance, and spret::success otherwise.
  */
-spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
+spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
 {
     if (tracer)
     {
@@ -1573,7 +1573,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
                  + _ignite_poison_player(where, -1, agent);
         }, agent->pos());
 
-        return work > 0 ? spret_type::success : spret_type::abort;
+        return work > 0 ? spret::success : spret::abort;
     }
 
     if (agent->is_player())
@@ -1581,7 +1581,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         if (maybe_abort_ignite())
         {
             canned_msg(MSG_OK);
-            return spret_type::abort;
+            return spret::abort;
         }
         fail_check();
     }
@@ -1608,7 +1608,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         return 0; // ignored
     }, agent->pos());
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static void _ignition_square(const actor *agent, bolt beam, coord_def square, bool center)
@@ -1621,7 +1621,7 @@ static void _ignition_square(const actor *agent, bolt beam, coord_def square, bo
         noisy(spell_effect_noise(SPELL_IGNITION),square);
 }
 
-spret_type cast_ignition(const actor *agent, int pow, bool fail)
+spret cast_ignition(const actor *agent, int pow, bool fail)
 {
     ASSERT(agent->is_player());
 
@@ -1715,7 +1715,7 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
             _ignition_square(agent, beam_actual, pos, false);
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static int _discharge_monsters(const coord_def &where, int pow,
@@ -1828,11 +1828,11 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude)
     return true;
 }
 
-spret_type cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
+spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
 {
     vector<const actor *> exclude;
     if (agent.is_player() && prompt && !safe_discharge(you.pos(), exclude))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
@@ -1859,7 +1859,7 @@ spret_type cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
                  plural ? " themselves" : "s itself");
         }
     }
-    return spret_type::success;
+    return spret::success;
 }
 
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
@@ -2093,7 +2093,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     return true;
 }
 
-spret_type cast_fragmentation(int pow, const actor *caster,
+spret cast_fragmentation(int pow, const actor *caster,
                               const coord_def target, bool fail)
 {
     bool hole                = true;
@@ -2104,7 +2104,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
                 hole))
     {
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (caster->is_player())
@@ -2118,7 +2118,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         if (tempbeam.beam_cancelled)
         {
             canned_msg(MSG_OK);
-            return spret_type::abort;
+            return spret::abort;
         }
     }
 
@@ -2157,10 +2157,10 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     beam.explode(true, hole);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_sandblast(int pow, bolt &beam, bool fail)
+spret cast_sandblast(int pow, bolt &beam, bool fail)
 {
     item_def *stone = nullptr;
     int num_stones = 0;
@@ -2177,13 +2177,13 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     if (num_stones == 0)
     {
         mpr("You don't have any stones to cast with.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     zap_type zap = ZAP_SANDBLAST;
-    const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
+    const spret ret = zapping(zap, pow, beam, true, nullptr, fail);
 
-    if (ret == spret_type::success)
+    if (ret == spret::success)
     {
         if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
             mpr("You now have no stones remaining.");
@@ -2199,7 +2199,7 @@ static bool _elec_not_immune(const actor *act)
     return act->res_elec() < 3;
 }
 
-spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
+spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 {
     coord_def prev;
 
@@ -2222,7 +2222,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     if (caster->is_player()
         && stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
     {
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -2285,7 +2285,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     if (charges < LIGHTNING_MAX_CHARGE)
         charges++;
 
-    return spret_type::success;
+    return spret::success;
 }
 
 // Find an enemy who would suffer from Awaken Forest.
@@ -2498,21 +2498,21 @@ static bool _dazzle_can_hit(const actor *act)
         return false;
 }
 
-spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
+spret cast_dazzling_spray(int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
 
     targeter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
     hitfunc.set_aim(aim);
     if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
     if (hitfunc.beams.size() == 0)
     {
         mpr("You can't see any targets in that direction!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     for (bolt &beam : hitfunc.beams)
@@ -2521,7 +2521,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
         beam.fire();
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static bool _toxic_can_affect(const actor *act)
@@ -2533,14 +2533,14 @@ static bool _toxic_can_affect(const actor *act)
     return act->res_poison() < (act->is_player() ? 3 : 1);
 }
 
-spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
+spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
 {
     if (agent->is_player())
     {
         targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
-                return spret_type::abort;
+                return spret::abort;
         }
         fail_check();
 
@@ -2553,7 +2553,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
 
         flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
 
-        return spret_type::success;
+        return spret::success;
     }
     else if (mon_tracer)
     {
@@ -2562,11 +2562,11 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
             if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
             else
-                return spret_type::success;
+                return spret::success;
         }
 
         // Didn't find any susceptible targets
-        return spret_type::abort;
+        return spret::abort;
     }
     else
     {
@@ -2580,7 +2580,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         targeter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
 
-        return spret_type::success;
+        return spret::success;
     }
 }
 
@@ -2639,12 +2639,12 @@ void toxic_radiance_effect(actor* agent, int mult)
         remove_sanctuary(true);
 }
 
-spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
+spret cast_searing_ray(int pow, bolt &beam, bool fail)
 {
-    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, nullptr,
+    const spret ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, nullptr,
                                    fail);
 
-    if (ret == spret_type::success)
+    if (ret == spret::success)
     {
         // Special value, used to avoid terminating ray immediately, since we
         // took a non-wait action on this turn (ie: casting it)
@@ -2738,7 +2738,7 @@ static bool _player_glaciate_affects(const actor *victim)
             && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
 }
 
-spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
+spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
     targeter_cone hitfunc(caster, range);
@@ -2747,7 +2747,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     if (caster->is_player()
         && stop_attack_prompt(hitfunc, "glaciate", _player_glaciate_affects))
     {
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -2822,17 +2822,17 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     noisy(spell_effect_noise(SPELL_GLACIATE), hitfunc.origin);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
+spret cast_random_bolt(int pow, bolt& beam, bool fail)
 {
     // Need to use a 'generic' tracer regardless of the actual beam type,
     // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
     bolt tracer = beam;
     if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
@@ -2847,7 +2847,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
     beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
     zapping(zap, pow * 7 / 6 + 15, beam, false);
 
-    return spret_type::success;
+    return spret::success;
 }
 
 size_t shotgun_beam_count(int pow)
@@ -2855,7 +2855,7 @@ size_t shotgun_beam_count(int pow)
     return 1 + stepdown((pow - 5) / 3, 5, ROUND_CLOSE);
 }
 
-spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
+spret cast_scattershot(const actor *caster, int pow, const coord_def &pos,
                             bool fail)
 {
     const size_t range = spell_range(SPELL_SCATTERSHOT, pow);
@@ -2868,7 +2868,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     if (caster->is_player())
     {
         if (stop_attack_prompt(hitfunc, "scattershot"))
-            return spret_type::abort;
+            return spret::abort;
     }
 
     fail_check();
@@ -2929,7 +2929,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
         print_wounds(*mons);
     }
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static void _setup_borgnjors_vile_clutch(bolt &beam, int pow)
@@ -2947,12 +2947,12 @@ static void _setup_borgnjors_vile_clutch(bolt &beam, int pow)
     beam.origin_spell = SPELL_BORGNJORS_VILE_CLUTCH;
 }
 
-spret_type cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
+spret cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
         canned_msg(MSG_SOMETHING_IN_WAY);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -2961,5 +2961,5 @@ spret_type cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
     mpr("Decaying hands burst forth from the earth!");
     beam.explode();
 
-    return spret_type::success;
+    return spret::success;
 }

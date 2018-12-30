@@ -235,7 +235,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
 
 // If needs_tracer is true, we need to check the beam path for friendly
 // monsters.
-spret_type zapping(zap_type ztype, int power, bolt &pbolt,
+spret zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer, const char* msg, bool fail)
 {
     dprf(DIAG_BEAM, "zapping: power=%d", power);
@@ -247,7 +247,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
     // (or effect), player_tracer should be called directly with the highest
     // power possible respecting current skill, experience level, etc.
     if (needs_tracer && !player_tracer(ztype, power, pbolt))
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
     // Fill in the bolt structure.
@@ -268,7 +268,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
 
     pbolt.fire();
 
-    return spret_type::success;
+    return spret::success;
 }
 
 // Returns true if the path is considered "safe", and false if there are
@@ -1720,7 +1720,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-nullptr, will be set to the number of monsters that
 // were enchanted. If m_attempted is not nullptr, will be set to the number of
 // monsters that we tried to enchant.
-spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
+spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
     fail_check();
     bool did_msg = false;
@@ -1777,7 +1777,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (wh_enchant == ENCH_INSANE)
         did_god_conduct(DID_HASTY, 8, true);
 
-    return spret_type::success;
+    return spret::success;
 }
 
 void bolt::apply_bolt_paralysis(monster* mons)

@@ -115,7 +115,7 @@ static void _set_tornado_durations(int powc)
     }
 }
 
-spret_type cast_tornado(int powc, bool fail)
+spret cast_tornado(int powc, bool fail)
 {
     bool friendlies = false;
     for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_SQUARE); ri; ++ri)
@@ -136,7 +136,7 @@ spret_type cast_tornado(int powc, bool fail)
                   true, 'n'))
     {
         canned_msg(MSG_OK);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -153,7 +153,7 @@ spret_type cast_tornado(int powc, bool fail)
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
 
-    return spret_type::success;
+    return spret::success;
 }
 
 static bool _mons_is_unmovable(const monster *mons)

@@ -344,9 +344,9 @@ static bool _lightning_rod()
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
 
-    const spret_type ret = your_spells(SPELL_THUNDERBOLT, power, false);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false);
 
-    if (ret == spret_type::abort)
+    if (ret == spret::abort)
         return false;
 
     return true;
@@ -453,11 +453,11 @@ void zap_wand(int slot)
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
 
-    spret_type ret = your_spells(spell, power, false, &wand);
+    spret ret = your_spells(spell, power, false, &wand);
 
-    if (ret == spret_type::abort)
+    if (ret == spret::abort)
         return;
-    else if (ret == spret_type::fail)
+    else if (ret == spret::fail)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         you.turn_is_over = true;
@@ -1364,7 +1364,7 @@ static bool _phial_of_floods()
     return false;
 }
 
-static spret_type _phantom_mirror()
+static spret _phantom_mirror()
 {
     bolt beam;
     monster* victim = nullptr;
@@ -1378,7 +1378,7 @@ static spret_type _phantom_mirror()
     args.top_prompt = "Aiming: <white>Phantom Mirror</white>";
     args.hitfunc = &tgt;
     if (!spell_direction(spd, beam, &args))
-        return spret_type::abort;
+        return spret::abort;
     victim = monster_at(beam.target);
     if (!victim || !you.can_see(*victim))
     {
@@ -1386,7 +1386,7 @@ static spret_type _phantom_mirror()
             mpr("You can't use the mirror on yourself.");
         else
             mpr("You can't see anything there to clone.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     // Mirrored monsters (including by Mara, rakshasas) can still be
@@ -1395,7 +1395,7 @@ static spret_type _phantom_mirror()
         && !victim->has_ench(ENCH_PHANTOM_MIRROR))
     {
         mpr("The mirror can't reflect that.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (player_will_anger_monster(*victim))
@@ -1404,7 +1404,7 @@ static spret_type _phantom_mirror()
             mpr("The reflection would only feel hate for you!");
         else
             simple_god_message(" forbids your reflecting this monster.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     const int surge = pakellas_surge_devices();
@@ -1414,7 +1414,7 @@ static spret_type _phantom_mirror()
     if (!mon)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return spret_type::fail;
+        return spret::fail;
     }
     const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3),
                                                surge);
@@ -1439,7 +1439,7 @@ static spret_type _phantom_mirror()
     mprf("You reflect %s with the mirror, and the mirror shatters!",
          victim->name(DESC_THE).c_str());
 
-    return spret_type::success;
+    return spret::success;
 }
 
 bool evoke_check(int slot, bool quiet)
@@ -1712,14 +1712,14 @@ bool evoke_item(int slot, bool check_range)
             switch (_phantom_mirror())
             {
                 default:
-                case spret_type::abort:
+                case spret::abort:
                     return false;
 
-                case spret_type::success:
+                case spret::success:
                     ASSERT(in_inventory(item));
                     dec_inv_item_quantity(item.link, 1);
                     // deliberate fall-through
-                case spret_type::fail:
+                case spret::fail:
                     practise_evoking(1);
                     break;
             }

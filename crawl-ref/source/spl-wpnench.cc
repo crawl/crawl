@@ -57,7 +57,7 @@ void end_weapon_brand(item_def &weapon, bool verbose)
  * @param[in] fail          Whether you've already failed to cast.
  * @return                  Success, fail, or abort.
  */
-spret_type cast_excruciating_wounds(int power, bool fail)
+spret cast_excruciating_wounds(int power, bool fail)
 {
     item_def& weapon = *you.weapon();
     const brand_type which_brand = SPWPN_PAIN;
@@ -67,14 +67,14 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     if (is_range_weapon(weapon))
     {
         mpr("You cannot brand ranged weapons with this spell.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     bool has_temp_brand = you.duration[DUR_EXCRUCIATING_WOUNDS];
     if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
     {
         mpr("This weapon is already branded with pain.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
@@ -86,7 +86,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
-            return spret_type::abort;
+            return spret::abort;
         }
     }
 
@@ -119,10 +119,10 @@ spret_type cast_excruciating_wounds(int power, bool fail)
 
     you.increase_duration(DUR_EXCRUCIATING_WOUNDS, 8 + roll_dice(2, power), 50);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_confusing_touch(int power, bool fail)
+spret cast_confusing_touch(int power, bool fail)
 {
     fail_check();
     msg::stream << you.hands_act("begin", "to glow ")
@@ -134,5 +134,5 @@ spret_type cast_confusing_touch(int power, bool fail)
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
 
-    return spret_type::success;
+    return spret::success;
 }
