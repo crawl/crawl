@@ -395,7 +395,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int splpow = mons_spellpower(caster, slot.spell);
             if ((!in_bounds(pbolt.target)
                  || conjure_flame(&caster, splpow, pbolt.target, false)
-                    != spret_type::success)
+                    != spret::success)
                 && you.can_see(caster))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -809,7 +809,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
 static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 {
     return trace_los_attack_spell(spell, mons_spellpower(mons, spell), &mons)
-           == spret_type::success;
+           == spret::success;
 }
 
 /// Set up a fake beam, for noise-generating purposes (?)
@@ -8044,9 +8044,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return mon->has_ench(ENCH_TOXIC_RADIANCE)
-               || cast_toxic_radiance(mon, 100, false, true) != spret_type::success;
+               || cast_toxic_radiance(mon, 100, false, true) != spret::success;
     case SPELL_IGNITE_POISON:
-        return cast_ignite_poison(mon, 0, false, true) != spret_type::success;
+        return cast_ignite_poison(mon, 0, false, true) != spret::success;
 
     case SPELL_GLACIATE:
         return !foe

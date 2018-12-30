@@ -163,7 +163,7 @@ void wizard_cast_spec_spell()
         }
     }
 
-    if (your_spells(static_cast<spell_type>(spell), 0, false) == spret_type::abort)
+    if (your_spells(static_cast<spell_type>(spell), 0, false) == spret::abort)
         crawl_state.cancel_cmd_repeat();
 }
 

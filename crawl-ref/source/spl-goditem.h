@@ -6,7 +6,7 @@
 #include "spl-cast.h"
 #include "torment-source-type.h"
 
-spret_type cast_healing(int pow, bool fail);
+spret cast_healing(int pow, bool fail);
 bool heal_monster(monster& patient, int amount);
 
 /// List of monster enchantments which can be dispelled.
@@ -84,4 +84,4 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = nullptr);
 
-spret_type cast_random_effects(int pow, bolt& beam, bool fail);
+spret cast_random_effects(int pow, bolt& beam, bool fail);

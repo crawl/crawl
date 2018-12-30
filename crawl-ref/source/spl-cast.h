@@ -49,7 +49,7 @@ enum spflag_type
                                                  // used by Yred enslaved souls)
 };
 
-enum class spret_type
+enum class spret
 {
     abort = 0,            // should be left as 0
     fail,
@@ -70,7 +70,7 @@ enum class spret_type
 #define IOOD_FLAWED "iood_flawed"
 #define IOOD_TPOS "iood_tpos"
 
-#define fail_check() if (fail) return spret_type::fail
+#define fail_check() if (fail) return spret::fail
 
 void surge_power(const int enhanced);
 void surge_power_wand(const int mp_cost);
@@ -101,7 +101,7 @@ int hex_success_chance(const int mr, int powc, int scale,
 class targeter;
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc);
-spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
+spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                        const item_def* const evoked_item = nullptr);
 
 extern const char *fail_severity_adjs[];

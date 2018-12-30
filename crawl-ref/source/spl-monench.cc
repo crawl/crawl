@@ -60,14 +60,14 @@ int englaciate(coord_def where, int pow, actor *agent)
     return do_slow_monster(*mons, agent, duration);
 }
 
-spret_type cast_englaciation(int pow, bool fail)
+spret cast_englaciation(int pow, bool fail)
 {
     fail_check();
     mpr("You radiate an aura of cold.");
     apply_area_visible([pow] (coord_def where) {
         return englaciate(where, pow, &you);
     }, you.pos());
-    return spret_type::success;
+    return spret::success;
 }
 
 /** Corona a monster.

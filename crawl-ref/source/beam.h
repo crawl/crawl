@@ -307,7 +307,7 @@ bool enchant_monster_invisible(monster* mon, const string &how);
 
 bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                                   bool intrinsic_only = false);
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
+spret mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
 int ench_power_stepdown(int pow);
 
@@ -323,7 +323,7 @@ void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false, bool explosion_hole = false);
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
-spret_type zapping(zap_type ztype, int power, bolt &pbolt,
+spret zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer = false, const char* msg = nullptr,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);

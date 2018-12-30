@@ -33,7 +33,7 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
+spret conjure_flame(const actor *agent, int pow, const coord_def& where,
                          bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
@@ -42,7 +42,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     {
         if (agent->is_player())
             mpr("That's too far away.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (cell_is_solid(where))
@@ -52,7 +52,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
             const char *feat = feat_type_name(grd(where));
             mprf("You can't place the cloud on %s.", article_a(feat).c_str());
         }
-        return spret_type::abort;
+        return spret::abort;
     }
 
     cloud_struct* cloud = cloud_at(where);
@@ -61,7 +61,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     {
         if (agent->is_player())
             mpr("There's already a cloud there!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     actor* victim = actor_at(where);
@@ -71,7 +71,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         {
             if (agent->is_player())
                 mpr("You can't place the cloud on a creature.");
-            return spret_type::abort;
+            return spret::abort;
         }
 
         fail_check();
@@ -79,7 +79,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         // FIXME: maybe should do _paranoid_option_disable() here?
         if (agent->is_player())
             canned_msg(MSG_GHOSTLY_OUTLINE);
-        return spret_type::success;      // Don't give free detection!
+        return spret::success;      // Don't give free detection!
     }
 
     fail_check();
@@ -112,15 +112,15 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
+spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return spret_type::abort;
+        return spret::abort;
     }
 
     monster* mons = monster_at(beam.target);
@@ -128,25 +128,25 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
-        return spret_type::success; // still losing a turn
+        return spret::success; // still losing a turn
     }
 
     if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
         mprf("But poisonous vapours would do no harm to %s!",
              mons->name(DESC_THE).c_str());
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return spret_type::abort;
+        return spret::abort;
 
     cloud_struct* cloud = cloud_at(beam.target);
     if (cloud && cloud->type != CLOUD_POISON)
     {
         // XXX: consider replacing the cloud instead?
         mpr("There's already a cloud there!");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     fail_check();
@@ -167,24 +167,24 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     behaviour_event(mons, ME_WHACK, &you);
 
-    return spret_type::success;
+    return spret::success;
 }
 
-spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
+spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {
     if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
     {
         mpr("That is beyond the maximum range.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     if (cell_is_solid(beam.target))
     {
         const char *feat = feat_type_name(grd(beam.target));
         mprf("You can't place clouds on %s.", article_a(feat).c_str());
-        return spret_type::abort;
+        return spret::abort;
     }
 
     cloud_type cty = CLOUD_NONE;
@@ -208,7 +208,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
             break;
         default:
             mpr("That kind of cloud doesn't exist!");
-            return spret_type::abort;
+            return spret::abort;
     }
 
     beam.thrower           = KILL_YOU;
@@ -219,13 +219,13 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.origin_spell      = spl;
     beam.affect_endpoint();
     if (beam.beam_cancelled)
-        return spret_type::abort;
+        return spret::abort;
 
     fail_check();
 
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(spell_effect_noise(spl), beam.target);
-    return spret_type::success;
+    return spret::success;
 }
 
 static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
@@ -247,14 +247,14 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, -1);
 }
 
-spret_type cast_ring_of_flames(int power, bool fail)
+spret cast_ring_of_flames(int power, bool fail)
 {
     fail_check();
     you.increase_duration(DUR_FIRE_SHIELD,
                           6 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
     manage_fire_shield(1);
-    return spret_type::success;
+    return spret::success;
 }
 
 void manage_fire_shield(int delay)
@@ -274,7 +274,7 @@ void manage_fire_shield(int delay)
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
-spret_type cast_corpse_rot(bool fail)
+spret cast_corpse_rot(bool fail)
 {
     if (!you.res_rotting())
     {
@@ -285,7 +285,7 @@ spret_type cast_corpse_rot(bool fail)
                 if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
-                    return spret_type::abort;
+                    return spret::abort;
                 }
                 break;
             }
@@ -293,7 +293,7 @@ spret_type cast_corpse_rot(bool fail)
     }
     fail_check();
     corpse_rot(&you);
-    return spret_type::success;
+    return spret::success;
 }
 
 void corpse_rot(actor* caster)
@@ -377,14 +377,14 @@ random_pick_entry<cloud_type> cloud_cone_clouds[] =
   { 0,0,0,FLAT,CLOUD_NONE }
 };
 
-spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
+spret cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail)
 {
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         if (caster->is_player())
             mpr("The air is too still to form clouds.");
-        return spret_type::abort;
+        return spret::abort;
     }
 
     // For monsters:
@@ -399,7 +399,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
     if (caster->is_player())
     {
         if (stop_attack_prompt(hitfunc, "cloud"))
-            return spret_type::abort;
+            return spret::abort;
     }
 
     fail_check();
@@ -420,5 +420,5 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
          caster->conj_verb("create").c_str(),
          cloud_type_name(cloud).c_str());
 
-    return spret_type::success;
+    return spret::success;
 }
