@@ -37,7 +37,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     if (beam && is_player && needs_tracer
              && !player_tracer(ZAP_IOOD, pow, *beam))
     {
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     fail_check();
@@ -53,7 +53,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     if (!mon)
     {
         mprf(MSGCH_ERROR, "Failed to spawn projectile.");
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     if (beam)
@@ -115,7 +115,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
             mon->foe = foe;
     }
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 /**

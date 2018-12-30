@@ -2874,7 +2874,7 @@ void read_scroll(item_def& scroll)
         else
         {
             cancel_scroll = (cast_controlled_blink(false, safely_cancellable)
-                             == SPRET_ABORT) && alreadyknown;
+                             == spret_type::abort) && alreadyknown;
         }
 
         if (!cancel_scroll)

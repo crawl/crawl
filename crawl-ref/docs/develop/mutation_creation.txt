@@ -146,7 +146,7 @@ at the end:
         if (!spell_direction(abild, beam)
             || !player_tracer(ZAP_DISINTEGRATE, power, beam))
         {
-            return SPRET_ABORT;
+            return spret_type::abort;
         }
         else
         {

@@ -67,14 +67,14 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     if (is_range_weapon(weapon))
     {
         mpr("You cannot brand ranged weapons with this spell.");
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     bool has_temp_brand = you.duration[DUR_EXCRUCIATING_WOUNDS];
     if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
     {
         mpr("This weapon is already branded with pain.");
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
@@ -86,7 +86,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
-            return SPRET_ABORT;
+            return spret_type::abort;
         }
     }
 
@@ -119,7 +119,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
 
     you.increase_duration(DUR_EXCRUCIATING_WOUNDS, 8 + roll_dice(2, power), 50);
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 spret_type cast_confusing_touch(int power, bool fail)
@@ -134,5 +134,5 @@ spret_type cast_confusing_touch(int power, bool fail)
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
