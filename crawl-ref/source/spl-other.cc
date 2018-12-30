@@ -66,7 +66,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("Your attempt to draw power from your own body fails.");
     }
 
-    return success ? SPRET_SUCCESS : SPRET_ABORT;
+    return success ? spret_type::success : spret_type::abort;
 }
 
 spret_type cast_death_channel(int pow, god_type god, bool fail)
@@ -74,7 +74,7 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
     if (you.duration[DUR_DEATH_CHANNEL] >= 60 * BASELINE_DELAY)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     fail_check();
@@ -85,14 +85,14 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
     if (god != GOD_NO_GOD)
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 spret_type cast_recall(bool fail)
 {
     fail_check();
     start_recall(RECALL_SPELL);
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 void start_recall(recall_t type)
@@ -396,7 +396,7 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
     {
         if (fail_msg.size())
             mpr(fail_msg);
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     fail_check();
@@ -409,7 +409,7 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
     else if (p.check_moveto())
     {
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
-        return SPRET_SUCCESS;
+        return spret_type::success;
     }
 
     // at this point, the spell failed or was cancelled. Does it cost MP?
@@ -423,9 +423,9 @@ spret_type cast_passwall(const coord_def& c, int pow, bool fail)
         // are standing next to the map edge, which is a leak of sorts, but
         // already apparent from the targeting (and we leak this info all over
         // the place, really).
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 static int _intoxicate_monsters(coord_def where, int pow)
@@ -466,7 +466,7 @@ spret_type cast_intoxicate(int pow, bool fail)
         }
     }
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 spret_type cast_darkness(int pow, bool fail)
@@ -479,5 +479,5 @@ spret_type cast_darkness(int pow, bool fail)
     you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
     update_vision_range();
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }

@@ -136,7 +136,7 @@ spret_type cast_tornado(int powc, bool fail)
                   true, 'n'))
     {
         canned_msg(MSG_OK);
-        return SPRET_ABORT;
+        return spret_type::abort;
     }
 
     fail_check();
@@ -153,7 +153,7 @@ spret_type cast_tornado(int powc, bool fail)
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 static bool _mons_is_unmovable(const monster *mons)

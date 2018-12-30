@@ -247,7 +247,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
     // (or effect), player_tracer should be called directly with the highest
     // power possible respecting current skill, experience level, etc.
     if (needs_tracer && !player_tracer(ztype, power, pbolt))
-        return SPRET_ABORT;
+        return spret_type::abort;
 
     fail_check();
     // Fill in the bolt structure.
@@ -268,7 +268,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
 
     pbolt.fire();
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 // Returns true if the path is considered "safe", and false if there are
@@ -1777,7 +1777,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (wh_enchant == ENCH_INSANE)
         did_god_conduct(DID_HASTY, 8, true);
 
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 void bolt::apply_bolt_paralysis(monster* mons)

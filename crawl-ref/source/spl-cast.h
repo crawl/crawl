@@ -49,12 +49,12 @@ enum spflag_type
                                                  // used by Yred enslaved souls)
 };
 
-enum spret_type
+enum class spret_type
 {
-    SPRET_ABORT = 0,            // should be left as 0
-    SPRET_FAIL,
-    SPRET_SUCCESS,
-    SPRET_NONE,                 // spell was not handled
+    abort = 0,            // should be left as 0
+    fail,
+    success,
+    none,                 // spell was not handled
 };
 
 #define IOOD_X "iood_x"
@@ -70,7 +70,7 @@ enum spret_type
 #define IOOD_FLAWED "iood_flawed"
 #define IOOD_TPOS "iood_tpos"
 
-#define fail_check() if (fail) return SPRET_FAIL
+#define fail_check() if (fail) return spret_type::fail
 
 void surge_power(const int enhanced);
 void surge_power_wand(const int mp_cost);

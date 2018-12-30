@@ -67,7 +67,7 @@ spret_type cast_englaciation(int pow, bool fail)
     apply_area_visible([pow] (coord_def where) {
         return englaciate(where, pow, &you);
     }, you.pos());
-    return SPRET_SUCCESS;
+    return spret_type::success;
 }
 
 /** Corona a monster.

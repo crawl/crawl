@@ -1396,7 +1396,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     }
 
     case SPELL_IGNITE_POISON:
-        return cast_ignite_poison(&you, -1, false, true) == SPRET_ABORT;
+        return cast_ignite_poison(&you, -1, false, true) == spret_type::abort;
 
     default:
         break;
