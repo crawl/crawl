@@ -1,4 +1,4 @@
-Stone Soup 0.23 (up to 0.23-a0-550-g7de1f8ee)
+Stone Soup 0.23 (up to 0.23-a0-642-g3120c2f5)
 ---------------------------------------------
 
 Branches, Environment
@@ -41,6 +41,23 @@ Gods
   - The targeter displays the pacification chance.
 * Exploration-based piety is no longer granted for the Temple, deep water, or
   lava.
+* Nemelex Xobeh's decks are moved into an abstract ability
+  - Deck rarity types are removed
+  - Nemelex offers three abilities: "Draw Escape", "Draw Destruction", and
+    "Draw Summoning", which provide card effects
+  - Nemelex periodically adds cards to the three abstract decks
+  - Triple Draw works on the three decks as before, offering a choice of three
+    cards. The piety cost is increased.
+  - Deal Four deals four cards from an abstract deck and discards the
+    remainder. The ability costs no piety.
+  - Stack Five constructs a player-ordered stack of five cards drawn from any
+    of the three decks to be drawn later. Creating a new stack discards the
+    old. The piety cost is the same as old stack five.
+  - The Velocity card no longer hastes enemies, instead always slowing them
+    with a chance proportional to power.
+* Ashenzari protects followers from exploration based trap effects
+* Qazlal's cloud immunity is extended to elementals created with Elemental
+Force
 
 Interface
 ---------
@@ -49,6 +66,8 @@ Interface
 * WebTiles users can use a "Forgot Password" link to reset their password
   via a link sent to their registration email address. This feature is not yet
   enabled on most official servers.
+* New display_chars: cloud_weak, cloud_fading, and cloud_terminal display cloud
+  duration in console; a long available to tiles players.
 
 Items
 -----
@@ -74,6 +93,12 @@ Items
   - The robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
     storm clouds in place of its old mist
   - The storm bow no longer occasionally creates rain clouds
+  - The skin of Zhor gains SInv and a passive Metabolic Englaciation effect
+* The deck item type is removed
+
+Lua
+---
+* The custom `require` used in clua and dlua has been renamed `crawl_require`
 
 Monsters
 --------
@@ -87,6 +112,8 @@ Monsters
 * Monster summons disappear whenever the summoner changes alignment from being
   charmed/uncharmed, pacified, or slimified.
 * Confused monsters now get a 1 in 3 chance to move normally, like players do
+* Giant monsters no longer tear through webs.
+* Monsters only trigger traps in sight of the player
 
 Spells
 ------
