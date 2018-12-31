@@ -3039,44 +3039,46 @@ static string _player_spell_desc(spell_type spell)
     if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
         return ""; // all info is player-dependent
 
-    string description;
+    ostringstream description;
 
     // Report summon cap
     const int limit = summons_limit(spell);
     if (limit)
     {
-        description += "You can sustain at most " + number_in_words(limit)
-                        + " creature" + (limit > 1 ? "s" : "")
-                        + " summoned by this spell.\n";
+        description << "You can sustain at most " + number_in_words(limit)
+                    << " creature" << (limit > 1 ? "s" : "")
+                    << " summoned by this spell.\n";
     }
 
     if (god_hates_spell(spell, you.religion))
     {
-        description += uppercase_first(god_name(you.religion))
-                       + " frowns upon the use of this spell.\n";
+        description << uppercase_first(god_name(you.religion))
+                    << " frowns upon the use of this spell.\n";
         if (god_loathes_spell(spell, you.religion))
-            description += "You'd be excommunicated if you dared to cast it!\n";
+            description << "You'd be excommunicated if you dared to cast it!\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {
-        description += uppercase_first(god_name(you.religion))
-                       + " supports the use of this spell.\n";
+        description << uppercase_first(god_name(you.religion))
+                    << " supports the use of this spell.\n";
     }
 
     if (!you_can_memorise(spell))
     {
-        description += "\nYou cannot memorise this spell because "
-                       + desc_cannot_memorise_reason(spell)
-                       + "\n";
+        description << "\nYou cannot "
+                    << (you.has_spell(spell) ? "cast" : "memorise")
+                    << " this spell because "
+                    << desc_cannot_memorise_reason(spell)
+                    << "\n";
     }
     else if (spell_is_useless(spell, true, false))
     {
-        description += "\nThis spell will have no effect right now because "
-                       + spell_uselessness_reason(spell, true, false)
-                       + "\n";
+        description << "\nThis spell will have no effect right now because "
+                    << spell_uselessness_reason(spell, true, false)
+                    << "\n";
     }
 
-    return description;
+    return description.str();
 }
 
 
