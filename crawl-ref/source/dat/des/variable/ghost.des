@@ -1046,24 +1046,24 @@ SUBST:  hj = -
 NSUBST: - = 3=1 / 6=1. / 2 / 3... / .
 :     elseif you.depth() < 6 then
 SUBST:  h = h-, j = -
-NSUBST: - = 3=1 / 6=1. / 2 / 3 / 3. / 5... / .
+NSUBST: - = 3=1 / 6=1. / 2 / 3 / 3. / D... / .
 :     elseif you.depth() < 9 then
 SUBST:  d = e, j = -
-NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4... / 2=5. / D / .
+NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4... / D / 2=5. / .
 :     elseif you.depth() < 12 then
 SUBST:  d = e, f = g, j = j-
-NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4. / 5 / 2=5. / D / .
+NSUBST: - = 3=1 / 6=1. / 3 / 3. / 4. / D / 5 / 2=5. / .
 :     elseif you.depth() < 14 then
 SUBST:  d = e, f = g, h = i
-NSUBST: - = 3=1 / 4=1. / 3 / 2=3. / 4. / 2=5 / 4=5. / DDDE / .
+NSUBST: - = 3=1 / 4=1. / 3 / 2=3. / 4. / DDDE / 2=5 / 4=5. / .
 :     else
 SUBST:  d = e, f = g, h = i, j = k
-NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / 2=6 / 2=6. / EEEF / .7 / .
+NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / EEEF / 2=6 / 2=6. / .7 / .
 :    end
 # Orc
 : else
 SUBST:  d = e, f = g, h = i, j = k
-NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / 2=6 / 2=6. / EEEF / .7 / .
+NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / EEEF / 2=6 / 2=6. / .7 / .
 : end
 KFEAT:  _ = altar_beogh
 : ghost_setup(_G)

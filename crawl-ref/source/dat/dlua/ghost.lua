@@ -325,30 +325,42 @@ function setup_xom_dancing_weapon(e)
     e.mons("dancing weapon; " .. weapon_def)
 end
 
+-- Some melee weapons sets for warrior monsters. Loosely based on the orc
+-- warrior and knight sets, but including a couple more types and some of the
+-- high-end weapons at reasonable weights.
+ghost_warrior_weap = {
+    ["short sword"] = 5, ["rapier"] = 10, ["long sword"] = 10,
+    ["scimitar"] = 5, ["great sword"] = 10, ["hand axe"] = 5, ["war axe"] = 10,
+    ["broad axe"] = 5, ["battleaxe"] = 10, ["spear"] = 5, ["trident"] = 10,
+    ["halberd"] = 10, ["glaive"] = 5, ["whip"] = 5, ["mace"] = 10,
+    ["flail"] = 10, ["morningstar"] = 5, ["dire flail"] = 10,
+    ["great mace"] = 5, ["quarterstaff"] = 10
+}
+ghost_knight_weap = {
+    ["scimitar"] = 15, ["demon blade"] = 5, ["double sword"] = 5,
+    ["great sword"] = 15, ["triple sword"] = 5, ["war axe"] = 5,
+    ["broad axe"] = 10, ["battleaxe"] = 15, ["executioner's axe"] = 5,
+    ["demon trident"] = 5, ["glaive"] = 10, ["bardiche"] = 5,
+    ["morningstar"] = 10, ["demon whip"] = 5, ["eveningstar"] = 5,
+    ["dire flail"] = 10, ["great mace"] = 10, ["lajatang"] = 5
+}
+
 -- Set up equipment for the fancier orc warriors, knights, and warlord in
 -- biasface_ghost_orc_armoury and biasface_vaults_ghost_orc_armoury.
 function setup_armoury_orcs(e)
-    warrior_weap = {["long sword"] = 10, ["short sword"] = 10,
-                    ["scimitar"] = 10, ["battleaxe"] = 10, ["hand axe"] = 10,
-                    ["halberd"] = 10, ["glaive"] = 10, ["mace"] = 10,
-                    ["dire flail"] = 10, ["trident"] = 10, ["war axe"] = 9,
-                    ["flail"] = 9, ["broad axe"] = 1, ["morningstar"] = 1}
-    knight_weap = {["great sword"] = 4, ["long sword"] = 4, ["battleaxe"] = 4,
-                   ["war axe"] = 4, ["great mace"] = 3, ["dire flail"] = 2,
-                   ["bardiche"] = 1, ["glaive"] = 1, ["broad axe"] = 1 ,
-                   ["halberd"] = 1}
     weapon_quality = crawl.coinflip() and "randart" or "good_item"
-    warrior_def = random_item_def(warrior_weap, nil, weapon_quality, '|')
-    knight_def = random_item_def(knight_weap, nil, weapon_quality, '|')
+    warrior_def = random_item_def(ghost_warrior_weap, nil, weapon_quality, '|')
+    knight_def = random_item_def(ghost_knight_weap, nil, weapon_quality, '|')
     e.kmons("D = orc warrior ; " .. warrior_def .. " . chain mail good_item " ..
-            "| chain mail randart | plate armour good_item" ..
-            "| plate armour randart")
+            "    | chain mail randart | plate armour good_item" ..
+            "    | plate armour randart")
     e.kmons("E = orc knight ; " .. knight_def .. " . chain mail good_item " ..
-            "| chain mail randart | plate armour good_item " ..
-            "| plate armour randart")
-    e.kmons("F = orc warlord ; " .. knight_def .. " . chain mail good_item " ..
-            "| chain mail randart | plate armour good_item " ..
-            "| plate armour randart . shield good_item w:4" ..
-            "| shield randart w:2 | large shield good_item w:2 " ..
-            "| large shield randart w:1")
+            "    | chain mail randart | plate armour good_item " ..
+            "    | plate armour randart")
+    e.kmons("F = orc warlord ; " .. knight_def ..
+            " . chain mail good_item " ..
+            "    | chain mail randart | plate armour good_item " ..
+            "    | plate armour randart " ..
+            " . shield good_item w:4 | shield randart w:2 " ..
+            "    | large shield good_item w:2 | large shield randart w:1")
 end
