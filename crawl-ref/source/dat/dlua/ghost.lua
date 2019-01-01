@@ -59,7 +59,7 @@ function random_item_def(items, egos, args, separator)
         if egos ~= nil then
             for ename, eweight in pairs(egos) do
                 if (not iname:find("demon") or ename ~= "holy_wrath")
-                   and (not make_arte or ename ~= "none") then
+                   and (not iname:find("quick blade") or ename ~= "speed") then
                     def = iname .. args .. " ego:" .. ename .. " w:" ..
                           math.floor(iweight * eweight)
                     if item_def == nil then
