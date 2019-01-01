@@ -1645,10 +1645,8 @@ KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
     local sergeant_good_def = random_item_def(sergeant_weapons, egos, quality,
                                               "|")
 
-    kmons("E = gnoll ; " .. basic_def .. " . throwing net " ..
-          "    | throwing net q:2 | nothing w:20")
-    kmons("F = gnoll ; " .. good_def .. " . throwing net " ..
-          "    | throwing net q:2 | nothing w:20")
+    kmons("E = gnoll ; " .. basic_def .. " . throwing net | nothing")
+    kmons("F = gnoll ; " .. good_def .. " . throwing net | nothing")
     kmons("H = gnoll sergeant ; " .. sergeant_basic_def ..
           "    . buckler | shield | nothing w:40" ..
           "    . ring mail | scale mail")
