@@ -40,6 +40,61 @@ function setup_hydra_weapon(e)
     local weapon_def = random_item_def(weapons, egos, quality)
     e.kitem("O = " .. weapon_def)
 end
+
+-- Set up equipment for monsters with Trog-themed gifts in
+-- gammafunk_ghost_wrathful_warriors.
+function wrathful_weapon(class, quality)
+    local weap
+    if class == "kobold" then
+        weap = {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
+                ["whip"] = 10}
+    elseif class == "sergeant" then
+        weap = {["spear"] = 5, ["trident"] = 10}
+    elseif class == "ogre" then
+        weap = {["dire flail"] = 5, ["great mace"] = 10, ["giant club"] = 10,
+                ["giant spiked club"] = 10}
+    elseif class == "warrior" then
+        weap = ghost_warrior_weap
+    elseif class == "knight" then
+        weap = ghost_knight_weap
+    elseif class == "rider" then
+        weap = {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2}
+    elseif class == "berserker" then
+        weap = {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
+                ["broad axe"] = 10, ["morningstar"] = 10, ["morningstar"] = 10,
+                ["demon whip"] = 5, ["quarterstaff"] = 10, ["lajatang"] = 5}
+    elseif class == "impaler" then
+        weap = {["trident"] = 15, ["demon trident"] = 5}
+    elseif class == "defender" then
+        weap = {["rapier"] = 10, ["quick blade"] = 10, ["morningstar"] = 10,
+                ["demon whip"] = 10, ["lajatang"] = 10}
+    elseif class == "blademaster" then
+        weap = {["rapier"] = 20, ["quick blade"] = 5}
+    else
+        error("Unknown weapon class: " .. class)
+    end
+
+    local egos
+    if quality == "good_item" then
+        -- No egos that Trog hates (pain) or that don't occur on mundane
+        -- weapons, like chaos.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
+                ["flaming"] = 10, ["venom"] = 10, ["protection"] = 10,
+                ["electrocution"] = 5, ["vampirism"] = 5, ["holy_wrath"] = 5,
+                ["draining"] = 5, ["distortion"] = 5, ["speed"] = 2}
+    elseif quality == "randart" then
+        -- Allow chaos and make weights more favorable for better brands.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
+                ["flaming"] = 10, ["vampirism"] = 10, ["draining"] = 10,
+                ["electrocution"] = 10, ["protection"] = 5, ["venom"] = 5,
+                ["holy_wrath"] = 5, ["distortion"] = 5, ["speed"] = 4,
+                ["chaos"] = 4}
+    else
+        error("Unknown weapon quality: " .. quality)
+    end
+
+    return random_item_def(weap, egos, quality, '|')
+ end
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -1910,4 +1965,177 @@ MAP
  ..ccc--cnnnc--cc.
   ...cccc.P.cccc..
     ......@......
+ENDMAP
+
+# Map inspired by trog_three_pillars_becter
+NAME:    gammafunk_ghost_wrathful_warriors
+DEPTH:   D:7-, Lair, Orc, Shoals, Snake, Swamp, Elf, Depths, Zot
+KMONS:   O = player ghost
+MONS:    moth of wrath
+# Definitions needed across branches
+{{
+kmons("D = orc knight; " .. wrathful_weapon("knight", "randart") ..
+      "    . arbalest good_item . bolt" ..
+      "    . chain mail good_item | plate armour good_item")
+kmons("E = ettin ; " .. wrathful_weapon("ogre", "randart") ..
+      "    . " .. wrathful_weapon("ogre",
+                      crawl.coinflip() and "randart" or "good_item"))
+kmons("F = orc warlord; " .. wrathful_weapon("knight", "randart") ..
+      "    . arbalest good_item . bolt " ..
+      "    . chain mail good_item | plate armour good_item")
+kmons("H = spriggan rider; " .. wrathful_weapon("rider", "randart") ..
+      "    . robe good_item . buckler good_item")
+kmons("J = spriggan berserker; " .. wrathful_weapon("berserker", "randart") ..
+      "    . robe good_item | buckler good_item")
+kmons("K = spriggan defender; " .. wrathful_weapon("defender", "randart") ..
+      "    . robe good_item  . buckler good_item")
+kmons("L = deep elf blademaster; " ..
+       wrathful_weapon("blademaster", "randart") ..
+       " . " .. wrathful_weapon("blademaster",
+                    crawl.coinflip() and "randart" or "good_item") ..
+       " . leather armour good_item")
+}}
+SUBST:  ' = x--, " = xx-
+NSUBST: R = R / -
+: ghost_good_loot(_G)
+: if you.in_branch("D") then
+{{
+kmons("q = kobold; " .. wrathful_weapon("kobold",
+               crawl.one_chance_in(3) and "randart" or "good_item") ..
+      "    . blowgun good_item . needle ego:curare | needle ego:poisoned w:5")
+kmons("r = gnoll sergeant; " .. wrathful_weapon("sergeant",
+               crawl.one_chance_in(3) and "randart" or "good_item") ..
+      "    . leather armour good_item | ring mail good_item" ..
+      "    . buckler good_item | shield good_item w:5")
+kmons("s = orc warrior ; " .. wrathful_weapon("warrior",
+               crawl.one_chance_in(3) and "randart" or "good_item") ..
+      "    . chain mail good_item | plate armour good_item")
+kmons("u = ogre ; " .. wrathful_weapon("ogre",
+               crawl.one_chance_in(3) and "randart" or "good_item"))
+kmons("y = two-headed ogre ; " .. wrathful_weapon("ogre",
+               crawl.one_chance_in(3) and "randart" or "good_item") ..
+      "    . " .. wrathful_weapon("ogre", "good_item"))
+kmons("z = tengu warrior ; " .. wrathful_weapon("warrior", "randart") ..
+      "    . leather armour good_item | ring mail good_item" ..
+      "    . buckler good_item | shield good_item")
+}}
+:     if you.depth() < 9 then
+MONS:   big kobold / gnoll sergeant / ogre / orc warrior
+MONS:   troll
+MONS:   cyclops
+SUBST:  d = *, e = *%, f = %$, ghij= -
+NSUBST: - = 1 / qrsu / 2 / 3=2. / 3y.. / 4z...... / .
+:     elseif you.depth() < 12 then
+MONS:   orc warrior / troll / two-headed ogre
+MONS:   cyclops
+MONS:   deep troll
+SUBST:  e = *, f = *%, g = %$--, hij= -
+NSUBST: - = 1 / sy / 2 / 4=2. / 3z / 4D...... / .
+:     elseif you.depth() < 14 then
+MONS:   troll / two-headed ogre / cyclops
+MONS:   tengu warrior / orc knight
+MONS:   deep troll / stone giant
+SUBST:  f = |*, g = *%, h = %$--, ij= -
+NSUBST: - = 1 / 1. / 3=2 / 3=2. / zD / zD.. / 4E.. / .
+:     else
+MONS:   two-headed ogre / cyclops / tengu warrior
+MONS:   deep troll
+MONS:   stone giant
+SUBST:  f = |*, g = *, h = %$, ij= -
+NSUBST: - = 1 / 1. / 3=2 / 4=2. / D / 2=D3.. / 4EF... / .
+:     end
+: elseif you.in_branch("Lair") then
+MONS:   spriggan
+SUBST:  f = *, g = %$, hij= -
+NSUBST: - = 1 / 1. / 2=2 / 4=2. / H / H. / J... / .
+: elseif you.in_branch("Orc") then
+MONS:   orc warrior / troll / two-headed ogre
+MONS:   deep troll
+MONS:   stone giant
+SUBST:  f = |*, g = *%, h = %$--, ij= -
+NSUBST: - = 1 / 1. / 2=2 / 4=2. / D / D3.. / 4EF... / .
+: elseif you.in_branch("Shoals") then
+# Place merfolk through merfolk impaler bands so they get better equipment.
+# Each band is 2-5 merfolk, 3.5 on-average.
+{{
+kmons("q = merfolk impaler band; " .. wrathful_weapon("impaler", "randart") ..
+      "    . robe good_item | leather armour good_item")
+-- Specifying jav quantity so they get their usual quantity bonus.
+kmons("r = merfolk javelineer; " .. wrathful_weapon("impaler", "randart") ..
+      "    . robe good_item . javelin good_item q:" ..
+               tostring(9 + crawl.random2(15)))
+}}
+MONS:   cyclops
+MONS:   merfolk impaler / merfolk javelineer w:5
+SUBST:  fg = |*, h = *%, i = $%--, j= -
+NSUBST: - = 1 / 1. / 3=2. / q / r / 3=3. / .
+: elseif you.in_branch("Snake") then
+{{
+kmons("q = naga warrior; " .. wrathful_weapon("warrior", "randart") ..
+      "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
+      "    . nothing w:40 | shield good_item | large shield good_item")
+}}
+MONS:   naga / salamander
+MONS:   naga warrior
+SUBST:  fg = |*, h = *%, i = $%--, j= -
+NSUBST: - = 1 / 1. / 3=2 / 5=2. / q / 2=q. / 2=3. / .
+: elseif you.in_branch("Swamp") then
+MONS:   spriggan w:20 / spriggan rider
+MONS:   spriggan rider / spriggan berserker
+SUBST:  fg = |*, h = *%, i = $%--, j= -
+NSUBST: - = 1 / 1. / 3=2 / 5=2. / J / HJ.. / 2=3. / K. / .
+: elseif you.in_branch("Elf") then
+{{
+-- Specifying arrow quantity so they get their usual quantity bonus.
+kmons("q = deep elf master archer; longbow randart " ..
+      "    . arrow q:" ..  tostring(37 + crawl.random2(38)) ..
+      "    . leather armour good_item")
+}}
+MONS:   deep elf blademaster / deep elf master archer
+SUBST:  fg = |*, h = *, i = $%, j= -
+# There aren't any good lower-tier, trog-appropriate warrior types. So use all
+# blademasters and master archers, but reduce the reduce monster count.
+NSUBST: - = 1 / 2=1. / 2=L / q / 3=2. / .
+: elseif you.in_branch("Depths") then
+MONS:   tengu warrior / deep troll / spriggan berserker / stone giant / ettin
+MONS:   deep elf blademaster / spriggan defender
+MONS:   juggernaut
+SUBST:  fgh = |*, i = *, j= %$
+NSUBST: - = 2=1 / 1. / 4=2 / 4=2. / 2=KL / KL.. / 3. / 4 / 4. / .
+: elseif you.in_branch("Zot") then
+{{
+kmons("q = base draconian; " .. wrathful_weapon("knight", "randart"))
+kmons("r = draconian monk; cloak randart")
+}}
+MONS:   base draconian
+MONS:   draconian monk
+SUBST:  fghij = |*
+NSUBST: - = 2=1 / 2=1. / 3=q / 2 / 5=2. / 2=r / 3 / 3=3. / .
+: end
+KFEAT:  _ = altar_trog
+MARKER: P = lua:transp_loc("wrathful_warriors_entry")
+MARKER: Q = lua:transp_dest_loc("wrathful_warriors_entry")
+MARKER: R = lua:transp_loc("wrathful_warriors_exit")
+MARKER: S = lua:transp_dest_loc("wrathful_warriors_exit")
+COLOUR: x = lightred
+TILE:   x = wall_pebble_red
+: ghost_setup(_G)
+MAP
+      .@.
+    ...P...
+  ...cnnnc...
+ ..ccc-R-ccc..
+ .cc-----'xcc.
+..cx''--"xxxc..
+.cc'xx"-xlx'cc.
+.n-'xledfxx'-n.
+.nR'xxg_h---Rn.
+.n----iOjx'--n.
+.cc----"lx'-cc.
+..c----'xx--c..
+ .cc----''xcc.
+ ..ccc-Q-ccc..
+  ...cnnnc...
+    ...S...
+      .@.
 ENDMAP
