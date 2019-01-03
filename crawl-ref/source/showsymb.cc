@@ -37,7 +37,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     // These do not obey vault recolouring.
     const bool no_vault_recolour = feat_has_dry_floor(feat)
                                    && feat != DNGN_FLOOR
-                                   && feat != DNGN_OPEN_DOOR;
+                                   && !feat_is_open_door(feat);
 
     // These aren't shown mossy/bloody/slimy in console.
     const bool norecolour = feat_is_door(feat) || no_vault_recolour;

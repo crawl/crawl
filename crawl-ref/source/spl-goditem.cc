@@ -801,7 +801,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
     static const set<dungeon_feature_type> safe_tiles =
     {
-        DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
+        DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
+        DNGN_OPEN_CLEAR_DOOR
     };
 
     bool proceed;

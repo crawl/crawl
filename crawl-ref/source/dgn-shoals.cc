@@ -124,7 +124,7 @@ static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
            // near the water. Note that the actual probability of the tide
            // getting through a doorway is this probability * 0.5 --
            // see _shoals_apply_tide.
-           || feat == DNGN_OPEN_DOOR
+           || feat_is_open_door(feat)
            || feat_is_closed_door(feat) && one_chance_in(3);
 }
 

@@ -4800,10 +4800,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
                      || grd(pos) == DNGN_CLEAR_ROCK_WALL
                      || grd(pos) == DNGN_SLIMY_WALL)
                      && x_chance_in_y(pow / 4, 100)
-                    || grd(pos) == DNGN_CLOSED_DOOR
-                    || grd(pos) == DNGN_RUNED_DOOR
-                    || grd(pos) == DNGN_OPEN_DOOR
-                    || grd(pos) == DNGN_SEALED_DOOR
+                    || feat_is_door(grd(pos))
                     || grd(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);

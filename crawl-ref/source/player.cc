@@ -7860,21 +7860,23 @@ void player_open_door(coord_def doorpos)
     vector<coord_def> excludes;
     for (const auto &dc : all_door)
     {
+        if (cell_is_runed(dc))
+            explored_tracked_feature(grd(dc));
+        dgn_open_door(dc);
+        set_terrain_changed(dc);
+        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
+
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated. Hitting this case requires a really big
         // door!
         if (env.map_knowledge(dc).seen())
         {
-            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
+            env.map_knowledge(dc).set_feature(grd(dc));
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
         }
-        if (grd(dc) == DNGN_RUNED_DOOR)
-            explored_tracked_feature(grd(dc));
-        grd(dc) = DNGN_OPEN_DOOR;
-        set_terrain_changed(dc);
-        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
+
         if (is_excluded(dc))
             excludes.push_back(dc);
     }
@@ -8030,7 +8032,7 @@ void player_close_door(coord_def doorpos)
     for (const coord_def& dc : all_door)
     {
         // Once opened, formerly runed doors become normal doors.
-        grd(dc) = DNGN_CLOSED_DOOR;
+        dgn_close_door(dc);
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
@@ -8039,11 +8041,12 @@ void player_close_door(coord_def doorpos)
         // want the entire door to be updated.
         if (env.map_knowledge(dc).seen())
         {
-            env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+            env.map_knowledge(dc).set_feature(grd(dc));
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
         }
+
         if (is_excluded(dc))
             excludes.push_back(dc);
     }

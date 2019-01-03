@@ -402,8 +402,7 @@ bool monster_pathfind::traversable(const coord_def& p)
     //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE
-        && grd(p) != DNGN_CLOSED_DOOR && grd(p) != DNGN_SEALED_DOOR)
+    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(grd(p)))
     {
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.

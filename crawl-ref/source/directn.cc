@@ -2851,7 +2851,7 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
 
-    if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
+    if (feat_is_door(grid))
     {
         const string door_desc_prefix =
             env.markers.property_at(where, MAT_ANY,
@@ -2884,10 +2884,18 @@ string feature_description_at(const coord_def& where, bool covering,
         {
             if (grid == DNGN_OPEN_DOOR)
                 desc += "open ";
+            else if (grid == DNGN_CLOSED_CLEAR_DOOR)
+                desc += "closed translucent ";
+            else if (grid == DNGN_OPEN_CLEAR_DOOR)
+                desc += "open translucent ";
             else if (grid == DNGN_RUNED_DOOR)
                 desc += "runed ";
+            else if (grid == DNGN_RUNED_CLEAR_DOOR)
+                desc += "runed translucent ";
             else if (grid == DNGN_SEALED_DOOR)
                 desc += "sealed ";
+            else if (grid == DNGN_SEALED_CLEAR_DOOR)
+                desc += "sealed translucent ";
             else
                 desc += "closed ";
         }

@@ -41,7 +41,9 @@ bool feat_has_solid_floor(dungeon_feature_type feat);
 bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
+bool feat_is_open_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
+bool feat_is_runed(dungeon_feature_type feat);
 bool feat_is_statuelike(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
 bool feat_is_endless(dungeon_feature_type feat);
@@ -158,3 +160,6 @@ bool has_push_spaces(const coord_def& pos, bool push_actor,
                     const vector<coord_def>* excluded);
 bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded);
 coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random);
+
+void dgn_close_door(const coord_def &dest);
+void dgn_open_door(const coord_def &dest);

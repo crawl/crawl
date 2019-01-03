@@ -3593,8 +3593,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 #endif
 
     case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-            // XXX: should this be elsewhere?
+    case DNGN_CLOSED_CLEAR_DOOR:
         if (!Hints.hints_explored)
         {
             ostr << "\nTo avoid accidentally opening a door you'd rather "
@@ -3897,10 +3896,10 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (grd(gc) == DNGN_OPEN_DOOR || grd(gc) == DNGN_CLOSED_DOOR)
-        learned_something_new(HINT_SEEN_DOOR, gc);
-    else if (grd(gc) == DNGN_RUNED_DOOR)
+    else if (feat_is_runed(grd(gc)))
         learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
+    else if (feat_is_door(grd(gc)))
+        learned_something_new(HINT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
     else if (feat_is_portal_entrance(grd(gc)))
