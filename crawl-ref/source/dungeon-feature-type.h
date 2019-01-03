@@ -13,8 +13,17 @@ enum dungeon_feature_type
 {
     DNGN_UNSEEN = 0,                   // must be zero
     DNGN_CLOSED_DOOR,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_CLOSED_CLEAR_DOOR,
+#endif
     DNGN_RUNED_DOOR,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_RUNED_CLEAR_DOOR,
+#endif
     DNGN_SEALED_DOOR,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_SEALED_CLEAR_DOOR,
+#endif
     DNGN_TREE,
 
     // Walls
@@ -51,6 +60,9 @@ enum dungeon_feature_type
 
     DNGN_FLOOR,
     DNGN_OPEN_DOOR,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_OPEN_CLEAR_DOOR,
+#endif
 
     DNGN_TRAP_MECHANICAL,
     DNGN_TRAP_TELEPORT,
@@ -267,6 +279,10 @@ enum dungeon_feature_type
     DNGN_TRAP_DISPERSAL,
     DNGN_ENTER_GAUNTLET,
     DNGN_EXIT_GAUNTLET,
+    DNGN_CLOSED_CLEAR_DOOR,
+    DNGN_OPEN_CLEAR_DOOR,
+    DNGN_RUNED_CLEAR_DOOR,
+    DNGN_SEALED_CLEAR_DOOR,
 #endif
 
     NUM_FEATURES

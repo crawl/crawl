@@ -51,6 +51,27 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_SEALED_CLEAR_DOOR, "sealed translucent door", "sealed_clear_door",
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(WHITE),
+    FFT_SOLID, MF_DOOR,
+},
+
+{
+    DNGN_CLOSED_CLEAR_DOOR, "closed translucent door", "closed_clear_door",
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(CYAN),
+    FFT_SOLID, MF_DOOR,
+},
+
+{
+    DNGN_RUNED_CLEAR_DOOR, "runed translucent door", "runed_clear_door",
+    DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(LIGHTCYAN),
+    FFT_SOLID | FFT_NOTABLE, MF_DOOR,
+},
+
+{
     DNGN_TREE, "tree", "tree",
     DCHAR_TREE, DCHAR_WALL_MAGIC,
     COLOUR_IS(ETC_TREE),
@@ -217,6 +238,13 @@ static feature_def feat_defs[] =
     DNGN_OPEN_DOOR, "open door", "open_door",
     DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),
+    FFT_NONE, MF_DOOR,
+},
+
+{
+    DNGN_OPEN_CLEAR_DOOR, "open translucent door", "open_clear_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(CYAN),
     FFT_NONE, MF_DOOR,
 },
 
