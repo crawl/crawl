@@ -75,7 +75,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE
- #include "tiledef-feat.h"
+ #include "tilepick.h"
  #include "tileview.h"
 #endif
 #include "transform.h"
@@ -7873,7 +7873,7 @@ void player_open_door(coord_def doorpos)
         {
             env.map_knowledge(dc).set_feature(grd(dc));
 #ifdef USE_TILE
-            env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
+            env.tile_bk_bg(dc) = tileidx_feature_base(grd(dc));
 #endif
         }
 
@@ -8043,7 +8043,7 @@ void player_close_door(coord_def doorpos)
         {
             env.map_knowledge(dc).set_feature(grd(dc));
 #ifdef USE_TILE
-            env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+            env.tile_bk_bg(dc) = tileidx_feature_base(grd(dc));
 #endif
         }
 

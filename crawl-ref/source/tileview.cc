@@ -451,14 +451,14 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
 {
     const dungeon_feature_type door = grd(gc);
-    return door  == feat
+
+    return door == feat
 #if TAG_MAJOR_VERSION == 34
         || map_masked(gc, MMT_WAS_DOOR_MIMIC)
 #endif
-        || door == DNGN_CLOSED_DOOR && feat == DNGN_SEALED_DOOR
-        || door == DNGN_SEALED_DOOR && feat == DNGN_CLOSED_DOOR
-        || door == DNGN_CLOSED_CLEAR_DOOR && feat == DNGN_SEALED_CLEAR_DOOR
-        || door == DNGN_SEALED_CLEAR_DOOR && feat == DNGN_CLOSED_CLEAR_DOOR;
+        || feat_is_closed_door(door)
+           && feat_is_opaque(feat) == feat_is_opaque(door)
+           && (feat_is_sealed(feat) || feat_is_sealed(door));
 }
 
 void tile_init_flavour(const coord_def &gc, const int domino)
@@ -1342,9 +1342,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (is_door_tile(orig))
     {
         tileidx_t override = flv.feat;
-        /*
-          Was: secret doors. Is it ever needed anymore?
-         */
+        // For vaults overriding door tiles, like Cigotuvi's Fleshworks.
         if (is_door_tile(override))
         {
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
