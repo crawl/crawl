@@ -1511,7 +1511,7 @@ static vector<coord_def> _xom_scenery_candidates()
                     closed_doors.push_back(dc);
             }
         }
-        else if (feat == DNGN_OPEN_DOOR && !actor_at(*ri)
+        else if (feat_is_open_door(feat) && !actor_at(*ri)
                  && igrd(*ri) == NON_ITEM)
         {
             // Check whether this door is already included in a gate.
@@ -1596,14 +1596,17 @@ static void _xom_change_scenery(int /*sever*/)
         switch (grd(pos))
         {
         case DNGN_CLOSED_DOOR:
+        case DNGN_CLOSED_CLEAR_DOOR:
         case DNGN_RUNED_DOOR:
-            grd(pos) = DNGN_OPEN_DOOR;
+        case DNGN_RUNED_CLEAR_DOOR:
+            dgn_open_door(pos);
             set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_open++;
             break;
         case DNGN_OPEN_DOOR:
-            grd(pos) = DNGN_CLOSED_DOOR;
+        case DNGN_OPEN_CLEAR_DOOR:
+            dgn_close_door(pos);
             set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_close++;
@@ -1900,7 +1903,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (!feat_is_solid(feat) && feat_stair_direction(feat) == CMD_NO_CMD
         && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
-        && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
+        && !feat_is_open_door(feat) && feat != DNGN_ABANDONED_SHOP)
     {
         const string feat_name = feature_description_at(you.pos(), false,
                                                         DESC_THE, false);

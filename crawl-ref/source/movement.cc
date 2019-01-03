@@ -279,7 +279,9 @@ void open_door_action(coord_def move)
     if (move.origin())
     {
         const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
-                        + _check_adjacent(DNGN_RUNED_DOOR, move);
+                        + _check_adjacent(DNGN_CLOSED_CLEAR_DOOR, move)
+                        + _check_adjacent(DNGN_RUNED_DOOR, move)
+                        + _check_adjacent(DNGN_RUNED_CLEAR_DOOR, move);
 
         if (num == 0)
         {
@@ -328,10 +330,13 @@ void open_door_action(coord_def move)
     switch (feat)
     {
     case DNGN_CLOSED_DOOR:
+    case DNGN_CLOSED_CLEAR_DOOR:
     case DNGN_RUNED_DOOR:
+    case DNGN_RUNED_CLEAR_DOOR:
         player_open_door(doorpos);
         break;
     case DNGN_OPEN_DOOR:
+    case DNGN_OPEN_CLEAR_DOOR:
     {
         string door_already_open = "";
         if (in_bounds(doorpos))
@@ -347,6 +352,7 @@ void open_door_action(coord_def move)
         break;
     }
     case DNGN_SEALED_DOOR:
+    case DNGN_SEALED_CLEAR_DOOR:
         mpr("That door is sealed shut!");
         break;
     default:
@@ -374,7 +380,8 @@ void close_door_action(coord_def move)
     if (move.origin())
     {
         // If there's only one door to close, don't ask.
-        int num = _check_adjacent(DNGN_OPEN_DOOR, move);
+        int num = _check_adjacent(DNGN_OPEN_DOOR, move)
+                  + _check_adjacent(DNGN_OPEN_CLEAR_DOOR, move);
         if (num == 0)
         {
             mpr("There's nothing to close nearby.");
@@ -410,11 +417,15 @@ void close_door_action(coord_def move)
     switch (feat)
     {
     case DNGN_OPEN_DOOR:
+    case DNGN_OPEN_CLEAR_DOOR:
         player_close_door(doorpos);
         break;
     case DNGN_CLOSED_DOOR:
+    case DNGN_CLOSED_CLEAR_DOOR:
     case DNGN_RUNED_DOOR:
+    case DNGN_RUNED_CLEAR_DOOR:
     case DNGN_SEALED_DOOR:
+    case DNGN_SEALED_CLEAR_DOOR:
         mpr("It's already closed!");
         break;
     default:

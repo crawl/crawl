@@ -668,6 +668,7 @@ static const char *_get_tracked_feature_key(dungeon_feature_type feat)
     switch (feat)
     {
         case DNGN_RUNED_DOOR:
+        case DNGN_RUNED_CLEAR_DOOR:
             return SEEN_RUNED_DOOR_KEY;
             break;
         case DNGN_TRANSPORTER:

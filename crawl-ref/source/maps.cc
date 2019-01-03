@@ -375,8 +375,7 @@ static bool _may_overwrite_feature(const coord_def p,
     if (!feat_is_opaque(grid)
         && grid != DNGN_FLOOR
         && grid != DNGN_SHALLOW_WATER
-        && grid != DNGN_OPEN_DOOR
-        && !feat_is_closed_door(grid))
+        && !feat_is_door(grid))
     {
         return false;
     }

@@ -2270,7 +2270,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 }
 
 static int _tension_door_closed(set<coord_def> door,
-                                                dungeon_feature_type old_feat)
+                                dungeon_feature_type old_feat)
 {
     // this unwind is a bit heavy, but because out-of-los clouds dissipate
     // instantly, they can be wiped out by these door tests.
@@ -2293,7 +2293,7 @@ static int _tension_door_closed(set<coord_def> door,
  */
 static bool _can_force_door_shut(const coord_def& door)
 {
-    if (grd(door) != DNGN_OPEN_DOOR)
+    if (!feat_is_open_door(grd(door)))
         return false;
 
     set<coord_def> all_door;
@@ -2386,7 +2386,7 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
  */
 static bool _should_force_door_shut(const coord_def& door)
 {
-    if (grd(door) != DNGN_OPEN_DOOR)
+    if (!feat_is_open_door(grd(door)))
         return false;
 
     dungeon_feature_type old_feat = grd(door);
@@ -2446,7 +2446,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
-        if (grd(*ri) == DNGN_OPEN_DOOR)
+        if (feat_is_open_door(grd(*ri)))
         {
             if (!_can_force_door_shut(*ri))
                 continue;
@@ -2526,16 +2526,19 @@ static bool _seal_doors_and_stairs(const monster* warden,
         }
 
         // Try to seal the door
-        if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
+        if (feat_is_closed_door(grd(*ri)) && !feat_is_sealed(grd(*ri)))
         {
             if (check_only)
                 return true;
 
             set<coord_def> all_door;
             find_connected_identical(*ri, all_door);
+            const dungeon_feature_type sealed_feat =
+                opc_default(*ri) == OPC_CLEAR ? DNGN_SEALED_CLEAR_DOOR
+                                              : DNGN_SEALED_DOOR;
             for (const auto &dc : all_door)
             {
-                temp_change_terrain(dc, DNGN_SEALED_DOOR, seal_duration,
+                temp_change_terrain(dc, sealed_feat, seal_duration,
                                     TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
@@ -5612,10 +5615,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
                      || grd(pos) == DNGN_CLEAR_ROCK_WALL
                      || grd(pos) == DNGN_SLIMY_WALL)
                      && x_chance_in_y(1, 4)
-                     || grd(pos) == DNGN_CLOSED_DOOR
-                     || grd(pos) == DNGN_RUNED_DOOR
-                     || grd(pos) == DNGN_OPEN_DOOR
-                     || grd(pos) == DNGN_SEALED_DOOR
+                     || feat_is_door(grd(pos))
                      || grd(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
@@ -6322,6 +6322,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         static const set<dungeon_feature_type> safe_tiles =
         {
             DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
+            DNGN_OPEN_CLEAR_DOOR
         };
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)

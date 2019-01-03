@@ -2650,7 +2650,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (you.see_cell(dc))
             was_seen = true;
 
-        grd(dc) = DNGN_OPEN_DOOR;
+        dgn_open_door(dc);
         set_terrain_changed(dc);
     }
 

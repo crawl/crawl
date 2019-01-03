@@ -405,32 +405,50 @@ bool feat_has_dry_floor(dungeon_feature_type feat)
  */
 bool feat_is_door(dungeon_feature_type feat)
 {
-    return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-           || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR;
+    return feat_is_closed_door(feat) || feat_is_open_door(feat);
 }
 
 /** Is this feature a variety of closed door?
  */
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-           || feat == DNGN_SEALED_DOOR;
+    return feat == DNGN_CLOSED_DOOR
+           || feat == DNGN_CLOSED_CLEAR_DOOR
+           || feat_is_runed(feat)
+           || feat == DNGN_SEALED_DOOR
+           || feat == DNGN_SEALED_CLEAR_DOOR;
+}
+
+/** Is this feature a variety of open door?
+ */
+bool feat_is_open_door(dungeon_feature_type feat)
+{
+    return feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR;
 }
 
 /** Has this feature been sealed by a vault warden?
  */
 bool feat_is_sealed(dungeon_feature_type feat)
 {
-    return feat == DNGN_SEALED_STAIRS_DOWN || feat == DNGN_SEALED_STAIRS_UP
-           || feat == DNGN_SEALED_DOOR;
+    return feat == DNGN_SEALED_STAIRS_DOWN
+        || feat == DNGN_SEALED_STAIRS_UP
+        || feat == DNGN_SEALED_DOOR
+        || feat == DNGN_SEALED_CLEAR_DOOR;
 }
 
-/** Is this feature runed, as in a runed door?
+/** Is this feature a type of runed door?
+ */
+bool feat_is_runed(dungeon_feature_type feat)
+{
+    return feat == DNGN_RUNED_DOOR || feat == DNGN_RUNED_CLEAR_DOOR;
+}
+
+/** Is the original feature at this position runed, as in a runed door?
  */
 bool cell_is_runed(const coord_def &p)
 {
     // the orig_terrain call will check the actual terrain if there's no change
-    return orig_terrain(p) == DNGN_RUNED_DOOR;
+    return feat_is_runed(orig_terrain(p));
 }
 
 /** Is this feature a type of statue, i.e., granite or an idol?
@@ -2112,8 +2130,12 @@ static bool _revert_terrain_to_floor(coord_def pos)
         }
     }
 
-    if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
-        explored_tracked_feature(DNGN_RUNED_DOOR);
+    if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR
+        || grd(pos) == DNGN_RUNED_CLEAR_DOOR
+           && newfeat != DNGN_RUNED_CLEAR_DOOR)
+    {
+        explored_tracked_feature(grd(pos));
+    }
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);
@@ -2348,7 +2370,8 @@ bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded)
  *
  * @return the new coordinates for the actor.
  */
-coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random)
+coord_def push_actor_from(const coord_def& pos,
+                          const vector<coord_def>* excluded, bool random)
 {
     actor* act = actor_at(pos);
     if (!act)
@@ -2360,6 +2383,42 @@ coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* exclude
                                     : targets.front();
     ASSERT(!newpos.origin());
     act->move_to_pos(newpos);
-    // the new position of the monster is now an additional veto spot for monsters
+    // The new position of the monster is now an additional veto spot for
+    // monsters.
     return newpos;
+}
+
+/** Close any door at the given position. Handles the grid change, but does not
+ * mark terrain or do any event handling.
+ *
+ * @param dest The location of the door.
+ */
+void dgn_close_door(const coord_def &dest)
+{
+    if (!feat_is_open_door(grd(dest)))
+        return;
+
+    if (grd(dest) == DNGN_OPEN_CLEAR_DOOR)
+        grd(dest) = DNGN_CLOSED_CLEAR_DOOR;
+    else
+        grd(dest) = DNGN_CLOSED_DOOR;
+}
+
+/** Open any door at the given position. Handles the grid change, but does not
+ * mark terrain or do any event handling.
+ *
+ * @param dest The location of the door.
+ */
+void dgn_open_door(const coord_def &dest)
+{
+    if (!feat_is_closed_door(grd(dest)))
+        return;
+
+    if (grd(dest) == DNGN_CLOSED_CLEAR_DOOR
+        || grd(dest) == DNGN_RUNED_CLEAR_DOOR)
+    {
+        grd(dest) = DNGN_OPEN_CLEAR_DOOR;
+    }
+    else
+        grd(dest) = DNGN_OPEN_DOOR;
 }
