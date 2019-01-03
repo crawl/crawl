@@ -385,6 +385,22 @@ n!xx'n''''n
  d''dQdx'd
 ENDMAP
 
+NAME:   minmay_gauntlet_arena_make_your_own_arena
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+KFEAT:  = = runed_clear_door
+: gauntlet_arena_setup(_G)
+MAP
+n..=.P.=..n
+n.^=...=^.n
+n==n=n=n==n
+n..=...=..n
+n..=...=..n
+n==n...n==n
+ 33n===n33
+ 322212223
+ 33ddQdd33
+ENDMAP
+
 #############################################################################
 # <<1.2>> 7x7 arenas
 #############################################################################
