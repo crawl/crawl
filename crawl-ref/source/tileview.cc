@@ -1342,9 +1342,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (is_door_tile(orig))
     {
         tileidx_t override = flv.feat;
-        /*
-          Was: secret doors. Is it ever needed anymore?
-         */
+        // For vaults overriding door tiles, like Cigotuvi's Fleshworks.
         if (is_door_tile(override))
         {
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
