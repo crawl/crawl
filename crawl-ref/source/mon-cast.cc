@@ -1991,7 +1991,7 @@ static bool _animate_dead_okay(spell_type spell)
 // non-beam spells.
 static bool _ms_direct_nasty(spell_type monspell)
 {
-    return !(get_spell_flags(monspell) & SPFLAG_UTILITY
+    return !(get_spell_flags(monspell) & spflag::utility
              || spell_typematch(monspell, SPTYP_SUMMONING));
 }
 
@@ -3701,19 +3701,19 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 /** Chooses a matching spell from this spell list, based on frequency.
  *
  *  @param[in]  spells     the monster spell list to search
- *  @param[in]  flag       what SPFLAG_ the spell should match
+ *  @param[in]  flag       what spflag the spell should match
  *  @return The spell chosen, or a slot containing SPELL_NO_SPELL and
  *          MON_SPELL_NO_FLAGS if no spell was chosen.
  */
 static mon_spell_slot _pick_spell_from_list(const monster_spells &spells,
-                                            int flag)
+                                            spflag flag)
 {
     spell_type spell_cast = SPELL_NO_SPELL;
     mon_spell_slot_flags slot_flags = MON_SPELL_NO_FLAGS;
     int weight = 0;
     for (const mon_spell_slot &slot : spells)
     {
-        int flags = get_spell_flags(slot.spell);
+        spell_flags flags = get_spell_flags(slot.spell);
         if (!(flags & flag))
             continue;
 
@@ -3780,19 +3780,19 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     // If we didn't find a spell on the first pass, try a
     // self-enchantment.
     if (prefer_selfench)
-        return _pick_spell_from_list(hspell_pass, SPFLAG_SELFENCH);
+        return _pick_spell_from_list(hspell_pass, spflag::selfench);
 
     // Monsters that are fleeing or pacified and leaving the
     // level will always try to choose an emergency spell.
     if (mons_is_fleeing(mons) || mons.pacified())
     {
         const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
-                                                           SPFLAG_EMERGENCY);
+                                                           spflag::emergency);
         // Pacified monsters leaving the level will only
         // try and cast escape spells.
         if (spell.spell != SPELL_NO_SPELL
             && mons.pacified()
-            && !testbits(get_spell_flags(spell.spell), SPFLAG_ESCAPE))
+            && !testbits(get_spell_flags(spell.spell), spflag::escape))
         {
             return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
         }
@@ -3840,7 +3840,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
                                bolt &beem, bool ignore_good_idea)
 {
     // beam-type spells requiring tracers
-    if (get_spell_flags(spell) & SPFLAG_NEEDS_TRACER)
+    if (get_spell_flags(spell) & spflag::needs_tracer)
     {
         const bool explode = spell_is_direct_explosion(spell);
         fire_tracer(&mons, beem, explode);
@@ -4189,7 +4189,7 @@ bool handle_mon_spell(monster* mons)
     else
     {
         const bool battlesphere = mons->props.exists("battlesphere");
-        if (!(get_spell_flags(spell_cast) & SPFLAG_UTILITY))
+        if (!(get_spell_flags(spell_cast) & spflag::utility))
             make_mons_stop_fleeing(mons);
 
         if (battlesphere)
@@ -4302,7 +4302,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
 
 static bool _mons_will_abjure(monster* mons, spell_type spell)
 {
-    if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE
+    if (get_spell_flags(spell) & spflag::mons_abjure
         && _monster_abjuration(mons, false) > 0
         && one_chance_in(3))
     {
@@ -5722,7 +5722,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     setup_mons_cast(mons, pbolt, spell_cast);
 
     // single calculation permissible {dlb}
-    const unsigned int flags = get_spell_flags(spell_cast);
+    const spell_flags flags = get_spell_flags(spell_cast);
     actor* const foe = mons->get_foe();
     const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
     const mon_spell_slot slot = {spell_cast, 0, slot_flags};
@@ -5733,10 +5733,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     dprf("Mon #%d casts %s (#%d)",
          mons->mindex(), spell_title(spell_cast), spell_cast);
-    ASSERT(!(flags & SPFLAG_TESTING));
+    ASSERT(!(flags & spflag::testing));
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
-    ASSERT(map_bounds(pbolt.target) || !(flags & SPFLAG_TARGETING_MASK));
+    ASSERT(map_bounds(pbolt.target) || !(flags & spflag::targeting_mask));
 
     // Maybe cast abjuration instead of certain summoning spells.
     if (mons->can_see(you) && _mons_will_abjure(mons, spell_cast))
@@ -6885,14 +6885,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 static int _noise_level(const monster* mons, spell_type spell,
                         bool silent, mon_spell_slot_flags slot_flags)
 {
-    const unsigned int flags = get_spell_flags(spell);
+    const spell_flags flags = get_spell_flags(spell);
 
     int noise;
 
     if (silent
         || (slot_flags & MON_SPELL_INNATE_MASK
             && !(slot_flags & MON_SPELL_NOISY)
-            && !(flags & SPFLAG_NOISY)))
+            && !(flags & spflag::noisy)))
     {
         noise = 0;
     }
@@ -7246,8 +7246,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     int noise = _noise_level(mons, spell_cast, silent, slot_flags);
 
-    const unsigned int spell_flags = get_spell_flags(spell_cast);
-    const bool targeted = (spell_flags & SPFLAG_TARGETING_MASK)
+    const spell_flags spflags = get_spell_flags(spell_cast);
+    const bool targeted = (spflags & spflag::targeting_mask)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible());
 

@@ -278,7 +278,7 @@ static void _monster_spellbooks(const monster_info &mi,
             if (!spell_is_soh_breath(spell))
             {
                 output_book.spells.emplace_back(spell);
-                if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE)
+                if (get_spell_flags(spell) & spflag::mons_abjure)
                     mons_abjure = true;
                 continue;
             }
@@ -468,7 +468,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     int range = spell_range(spell, pow, false);
     const bool has_range = mon_owner
                         && range > 0
-                        && !testbits(flags, SPFLAG_SELFENCH);
+                        && !testbits(flags, spflag::selfench);
     if (!has_range)
         return "";
     const bool in_range = has_range
@@ -537,7 +537,7 @@ static void _describe_book(const spellbook_contents &book,
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && testbits(get_spell_flags(spell), SPFLAG_MR_CHECK))
+            && testbits(get_spell_flags(spell), spflag::MR_check))
         {
             if (you.immune_to_hex(spell))
                 hex_str = "(immune) ";
@@ -631,7 +631,7 @@ static void _write_book(const spellbook_contents &book,
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+            && (get_spell_flags(spell) & spflag::MR_check))
         {
             if (you.immune_to_hex(spell))
                 tiles.json_write_string("hex_chance", "immune");

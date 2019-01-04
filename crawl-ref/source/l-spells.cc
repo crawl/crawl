@@ -161,8 +161,8 @@ LUAFN(l_spells_max_power)
 LUAFN(l_spells_dir_or_target)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_DIR_OR_TARGET);
+    const spell_flags flags = get_spell_flags(spell);
+    PLUARET(boolean, bool(flags & spflag::dir_or_target));
 }
 
 /*** Is this spell targetable?
@@ -173,8 +173,8 @@ LUAFN(l_spells_dir_or_target)
 LUAFN(l_spells_target)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_TARGET);
+    const spell_flags flags = get_spell_flags(spell);
+    PLUARET(boolean, bool(flags & spflag::target));
 }
 
 /*** Is this spell castable in a direction?
@@ -185,8 +185,8 @@ LUAFN(l_spells_target)
 LUAFN(l_spells_dir)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_DIR);
+    const spell_flags flags = get_spell_flags(spell);
+    PLUARET(boolean, bool(flags & spflag::dir));
 }
 
 /*** Can this spell target objects?
@@ -197,8 +197,8 @@ LUAFN(l_spells_dir)
 LUAFN(l_spells_targ_obj)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_OBJ);
+    const spell_flags flags = get_spell_flags(spell);
+    PLUARET(boolean, bool(flags & spflag::obj));
 }
 
 /*** Does our god like this spell?

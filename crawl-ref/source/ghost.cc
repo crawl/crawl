@@ -627,7 +627,7 @@ void ghost_demon::add_spells(bool actual_ghost)
         const int chance = max(0, 50 - failure_rate_to_int(raw_spell_fail(you.spells[i])));
         const spell_type spell = translate_spell(you.spells[i]);
         if (spell != SPELL_NO_SPELL
-            && !(get_spell_flags(spell) & SPFLAG_NO_GHOST)
+            && !(get_spell_flags(spell) & spflag::no_ghost)
             && is_valid_mon_spell(spell)
             && x_chance_in_y(chance*chance, 50*50))
         {

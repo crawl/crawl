@@ -79,7 +79,7 @@ bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
-unsigned int get_spell_flags(spell_type which_spell);
+spell_flags get_spell_flags(spell_type which_spell);
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc);
 spschools_type get_spell_disciplines(spell_type which_spell);
