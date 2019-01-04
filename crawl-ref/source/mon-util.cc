@@ -3722,12 +3722,12 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
         return !attack_only;
     }
 
-    const unsigned int flags = get_spell_flags(monspell);
+    const spell_flags flags = get_spell_flags(monspell);
 
     // buffs & escape spells aren't considered 'ranged'.
-    if (testbits(flags, SPFLAG_SELFENCH)
+    if (testbits(flags, spflag::selfench)
         || spell_typematch(monspell, SPTYP_CHARMS)
-        || testbits(flags, SPFLAG_ESCAPE)
+        || testbits(flags, spflag::escape)
         || monspell == SPELL_BLINK_OTHER_CLOSE)
     {
         return false;

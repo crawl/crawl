@@ -47,7 +47,7 @@ struct spell_desc
     spell_type id;
     const char  *title;
     spschools_type disciplines;
-    unsigned int flags;       // bitfield
+    spell_flags flags;       // bitfield
     unsigned int level;
 
     // Usually in the range 0..200 (0 means uncapped).
@@ -110,11 +110,11 @@ void init_spell_descs()
         ASSERTM(data.min_range <= data.max_range,
                 "spell '%s' has min_range larger than max_range", data.title);
 
-        ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
+        ASSERTM(!(data.flags & spflag::targeting_mask)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
-        ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
+        ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
@@ -434,12 +434,12 @@ bool spell_is_direct_explosion(spell_type spell)
 
 bool spell_harms_target(spell_type spell)
 {
-    const unsigned int flags = _seekspell(spell)->flags;
+    const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+    if (flags & (spflag::helpful | spflag::neutral))
         return false;
 
-    if (flags & SPFLAG_TARGETING_MASK)
+    if (flags & spflag::targeting_mask)
         return true;
 
     return false;
@@ -447,12 +447,12 @@ bool spell_harms_target(spell_type spell)
 
 bool spell_harms_area(spell_type spell)
 {
-    const unsigned int flags = _seekspell(spell)->flags;
+    const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+    if (flags & (spflag::helpful | spflag::neutral))
         return false;
 
-    if (flags & SPFLAG_AREA)
+    if (flags & spflag::area)
         return true;
 
     return false;
@@ -491,7 +491,7 @@ int spell_levels_required(spell_type which_spell)
     return levels;
 }
 
-unsigned int get_spell_flags(spell_type which_spell)
+spell_flags get_spell_flags(spell_type which_spell)
 {
     return _seekspell(which_spell)->flags;
 }
@@ -1405,13 +1405,13 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (minRange < 0 || range < 0)
         return false;
 
-    const unsigned int flags = get_spell_flags(spell);
+    const spell_flags flags = get_spell_flags(spell);
 
     // The healing spells.
-    if (testbits(flags, SPFLAG_HELPFUL))
+    if (testbits(flags, spflag::helpful))
         return false;
 
-    const bool neutral = testbits(flags, SPFLAG_NEUTRAL);
+    const bool neutral = testbits(flags, spflag::neutral);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1448,7 +1448,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         beam.quiet_debug = true;
 #endif
 
-        const bool smite = testbits(flags, SPFLAG_TARGET);
+        const bool smite = testbits(flags, spflag::target);
 
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT);
              ri; ++ri)

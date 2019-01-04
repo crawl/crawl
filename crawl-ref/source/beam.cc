@@ -3030,7 +3030,7 @@ bool bolt::is_reflectable(const actor &whom) const
 
 bool bolt::is_big_cloud() const
 {
-    return get_spell_flags(origin_spell) & SPFLAG_CLOUD;
+    return testbits(get_spell_flags(origin_spell), spflag::cloud);
 }
 
 coord_def bolt::leg_source() const

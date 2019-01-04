@@ -1318,9 +1318,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     if (!wiz_cast && _spellcasting_aborted(spell, !allow_fail))
         return spret::abort;
 
-    const unsigned int flags = get_spell_flags(spell);
+    const spell_flags flags = get_spell_flags(spell);
 
-    ASSERT(wiz_cast || !(flags & SPFLAG_TESTING));
+    ASSERT(wiz_cast || !(flags & spflag::testing));
 
     if (!powc)
         powc = calc_spell_power(spell, true);
@@ -1329,25 +1329,25 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
-    if (flags & SPFLAG_TARGETING_MASK)
+    if (flags & spflag::targeting_mask)
     {
         const targ_mode_type targ =
-              testbits(flags, SPFLAG_NEUTRAL)    ? TARG_ANY :
-              testbits(flags, SPFLAG_HELPFUL)    ? TARG_FRIEND :
-              testbits(flags, SPFLAG_OBJ)        ? TARG_MOVABLE_OBJECT :
+              testbits(flags, spflag::neutral)    ? TARG_ANY :
+              testbits(flags, spflag::helpful)    ? TARG_FRIEND :
+              testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
                                                    TARG_HOSTILE;
 
         const targeting_type dir =
-             testbits(flags, SPFLAG_TARGET) ? DIR_TARGET :
-             testbits(flags, SPFLAG_DIR)    ? DIR_DIR    :
+             testbits(flags, spflag::target) ? DIR_TARGET :
+             testbits(flags, spflag::dir)    ? DIR_DIR    :
                                               DIR_NONE;
 
         const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)
             mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
-        const bool needs_path = !testbits(flags, SPFLAG_TARGET)
-                                // Apportation must be SPFLAG_TARGET, since a
+        const bool needs_path = !testbits(flags, spflag::target)
+                                // Apportation must be spflag::target, since a
                                 // shift-direction makes no sense for it, but
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
@@ -1357,9 +1357,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         unique_ptr<targeter> hitfunc = _spell_targeter(spell, powc, range);
 
         // Add success chance to targeted spells checking monster MR
-        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
-                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
-                              && !testbits(flags, SPFLAG_HELPFUL);
+        const bool mr_check = testbits(flags, spflag::MR_check)
+                              && testbits(flags, spflag::dir_or_target)
+                              && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
         if (mr_check)
         {
@@ -1391,7 +1391,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             args.show_floor_desc = true;
             args.show_boring_feats = false; // don't show "The floor."
         }
-        if (testbits(flags, SPFLAG_NOT_SELF))
+        if (testbits(flags, spflag::not_self))
             args.self = CONFIRM_CANCEL;
         else
             args.self = CONFIRM_NONE;
@@ -1401,7 +1401,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
         beam.range = range;
 
-        if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
+        if (testbits(flags, spflag::not_self) && spd.isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER)
                 mpr("Sorry, this spell works on others only.");
@@ -1515,8 +1515,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         if (will_have_passive(passive_t::shadow_spells)
             && allow_fail
             && !god_hates_spell(spell, you.religion, !allow_fail)
-            && (flags & SPFLAG_TARGETING_MASK)
-            && !(flags & SPFLAG_NEUTRAL)
+            && (flags & spflag::targeting_mask)
+            && !(flags & spflag::neutral)
             && (beam.is_enchantment()
                 || battlesphere_can_mirror(spell))
             && (!old_target || (victim && !victim->is_player())))
@@ -1568,7 +1568,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     case spret::none:
 #ifdef WIZARD
         if (you.wizard && !allow_fail && is_valid_spell(spell)
-            && (flags & SPFLAG_MONSTER))
+            && (flags & spflag::monster))
         {
             _try_monster_cast(spell, powc, spd, beam);
             return spret::success;

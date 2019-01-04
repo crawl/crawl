@@ -427,7 +427,7 @@ static bool _spell_filter(string key, string body)
     if (spell == SPELL_NO_SPELL)
         return true;
 
-    if (get_spell_flags(spell) & SPFLAG_TESTING)
+    if (get_spell_flags(spell) & spflag::testing)
         return !you.wizard;
 
     return false;

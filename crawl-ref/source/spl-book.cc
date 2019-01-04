@@ -271,9 +271,9 @@ void init_spell_rarities()
             }
             last = spell;
 
-            unsigned int flags = get_spell_flags(spell);
+            spell_flags flags = get_spell_flags(spell);
 
-            if (flags & (SPFLAG_MONSTER | SPFLAG_TESTING))
+            if (flags & (spflag::monster | spflag::testing))
             {
                 item_def item;
                 item.base_type = OBJ_BOOKS;

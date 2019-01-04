@@ -404,28 +404,28 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
 {
     ASSERT(is_valid_spell(spell));
 
-    const unsigned int flags    = get_spell_flags(spell);
-    const bool         targeted = flags & SPFLAG_TARGETING_MASK;
+    const spell_flags  flags    = get_spell_flags(spell);
+    const bool         targeted = testbits(flags, spflag::targeting_mask);
 
     // All spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
         return false;
 
-    const bool helpful = flags & SPFLAG_HELPFUL;
+    const bool helpful = testbits(flags, spflag::helpful);
 
     if (target->is_player())
     {
-        if (flags & SPFLAG_NOT_SELF)
+        if (flags & spflag::not_self)
             return false;
 
-        return (flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY))
+        return (flags & (spflag::helpful | spflag::escape | spflag::recovery))
                || !targeted;
     }
 
     if (!targeted)
         return false;
 
-    if (flags & SPFLAG_NEUTRAL)
+    if (flags & spflag::neutral)
         return false;
 
     bool friendly = target->as_monster()->wont_attack();
@@ -525,7 +525,7 @@ static bool _evoke_item_on_target(actor* target)
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
-    if (!(get_spell_flags(spell) & SPFLAG_TARGETING_MASK))
+    if (!(get_spell_flags(spell) & spflag::targeting_mask))
         return true;
 
     int range = calc_spell_range(spell);
@@ -603,7 +603,7 @@ static bool _cast_spell_on_target(actor* target)
     macro_sendkeys_end_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
 
-    if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
+    if (get_spell_flags(spell) & spflag::targeting_mask)
         _add_targeting_commands(target->pos());
 
     return true;

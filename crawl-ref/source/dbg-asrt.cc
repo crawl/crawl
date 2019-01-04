@@ -237,14 +237,14 @@ static void _dump_player(FILE *file)
             continue;
         }
 
-        const unsigned int flags = get_spell_flags(spell);
+        const spell_flags flags = get_spell_flags(spell);
 
-        if (flags & SPFLAG_MONSTER)
+        if (flags & spflag::monster)
         {
             fprintf(file, "    spell slot #%d: monster only spell %s\n",
                     (int)i, spell_title(spell));
         }
-        else if (flags & SPFLAG_TESTING)
+        else if (flags & spflag::testing)
             fprintf(file, "    spell slot #%d: testing spell %s\n",
                     (int)i, spell_title(spell));
         else if (count_bits(get_spell_disciplines(spell)) == 0)
