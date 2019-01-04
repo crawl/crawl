@@ -133,6 +133,8 @@ static bool _do_build_level()
 
             if (grd[x][y] == DNGN_RUNED_DOOR)
                 grd[x][y] = DNGN_CLOSED_DOOR;
+            else if (grd[x][y] == DNGN_RUNED_CLEAR_DOOR)
+                grd[x][y] = DNGN_CLOSED_CLEAR_DOOR;
         }
 
 

@@ -4733,7 +4733,7 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
         int cmd = cmd_array[i];
         if (force)
         {
-            if (grd(gc) == DNGN_OPEN_DOOR
+            if (feat_is_open_door(grd(gc))
                 && !env.map_knowledge(gc).monsterinfo())
             {
                 cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;

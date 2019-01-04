@@ -1903,7 +1903,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (!feat_is_solid(feat) && feat_stair_direction(feat) == CMD_NO_CMD
         && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
-        && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
+        && !feat_is_open_door(feat) && feat != DNGN_ABANDONED_SHOP)
     {
         const string feat_name = feature_description_at(you.pos(), false,
                                                         DESC_THE, false);

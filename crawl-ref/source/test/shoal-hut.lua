@@ -4,7 +4,9 @@
 
 local iterations = 25
 
-local isdoor = dgn.feature_set_fn("closed_door", "open_door", "runed_door")
+local isdoor = dgn.feature_set_fn("closed_door", "close_clear_door",
+                                  "open_door", "open_clear_door", "runed_door",
+                                  "runed_clear_door")
 local floor = dgn.fnum("floor")
 
 local function find_vault_doors(vault)
