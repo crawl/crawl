@@ -45,13 +45,13 @@ public:
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
-                  int _source, spschool_flag_type _school,
+                  int _source, spschool _school,
                   int _level, string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
-                  int _source, spschool_flag_type _school,
+                  int _source, spschool _school,
                   int _pow, int _fail, string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
                   int _lethality_margin = 0,
@@ -71,7 +71,7 @@ private:
     string cause;
 
     spell_type         spell;
-    spschool_flag_type school;
+    spschool school;
 
     int pow;
     int fail;

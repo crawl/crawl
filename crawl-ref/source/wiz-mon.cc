@@ -1043,30 +1043,30 @@ void debug_miscast(int target_index)
     }
 
     spell_type         spell  = spell_by_name(specs, true);
-    spschool_flag_type school = school_by_name(specs);
+    spschool school = school_by_name(specs);
 
     // Prefer exact matches for school name over partial matches for
     // spell name.
-    if (school != SPTYP_NONE
+    if (school != spschool::none
         && (strcasecmp(specs, spelltype_short_name(school)) == 0
             || strcasecmp(specs, spelltype_long_name(school)) == 0))
     {
         spell = SPELL_NO_SPELL;
     }
 
-    if (spell == SPELL_NO_SPELL && school == SPTYP_NONE)
+    if (spell == SPELL_NO_SPELL && school == spschool::none)
     {
         mpr("No matching spell or spell school.");
         return;
     }
-    else if (spell != SPELL_NO_SPELL && school != SPTYP_NONE)
+    else if (spell != SPELL_NO_SPELL && school != spschool::none)
     {
         mprf("Ambiguous: can be spell '%s' or school '%s'.",
             spell_title(spell), spelltype_short_name(school));
         return;
     }
 
-    spschools_type disciplines = SPTYP_NONE;
+    spschools_type disciplines = spschool::none;
     if (spell != SPELL_NO_SPELL)
     {
         disciplines = get_spell_disciplines(spell);

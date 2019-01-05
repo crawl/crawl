@@ -5241,14 +5241,14 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         // spell: <include this spell>, owner:<name of owner>
         // None of these are required, but if you don't intend on using any
         // of them, use "any fixed theme book" instead.
-        spschool_flag_type disc1 = SPTYP_NONE;
-        spschool_flag_type disc2 = SPTYP_NONE;
+        spschool disc1 = spschool::none;
+        spschool disc2 = spschool::none;
 
         string st_disc1 = strip_tag_prefix(s, "disc:");
         if (!st_disc1.empty())
         {
             disc1 = school_by_name(st_disc1);
-            if (disc1 == SPTYP_NONE)
+            if (disc1 == spschool::none)
             {
                 error = make_stringf("Bad spell school: %s", st_disc1.c_str());
                 return false;
@@ -5259,14 +5259,14 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         if (!st_disc2.empty())
         {
             disc2 = school_by_name(st_disc2);
-            if (disc2 == SPTYP_NONE)
+            if (disc2 == spschool::none)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
                 return false;
             }
         }
 
-        if (disc1 == SPTYP_NONE && disc2 != 0)
+        if (disc1 == spschool::none && disc2 != spschool::none)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
             // have been caught above, anyway.
@@ -5315,9 +5315,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         const string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
                                             "_", " ");
 
-        COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
-        result.props[RANDBK_DISC1_KEY].get_short() = disc1;
-        result.props[RANDBK_DISC2_KEY].get_short() = disc2;
+        result.props[RANDBK_DISC1_KEY].get_short() = static_cast<short>(disc1);
+        result.props[RANDBK_DISC2_KEY].get_short() = static_cast<short>(disc2);
         result.props[RANDBK_NSPELLS_KEY] = num_spells;
         result.props[RANDBK_SLVLS_KEY] = slevels;
         result.props[RANDBK_TITLE_KEY] = title;

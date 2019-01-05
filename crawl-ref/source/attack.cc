@@ -38,6 +38,7 @@
 #include "pronoun-type.h"
 #include "religion.h"
 #include "spl-miscast.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -62,7 +63,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-      defender_shield(nullptr), miscast_level(-1), miscast_type(SPTYP_NONE),
+      defender_shield(nullptr), miscast_level(-1), miscast_type(spschool::none),
       miscast_target(nullptr), fake_chaos_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
@@ -658,7 +659,7 @@ static const vector<chaos_effect> chaos_effects = {
                                                            level1_chance, 1,
                                                            level2_chance, 2,
                                                            level3_chance, 3);
-            attack.miscast_type   = SPTYP_RANDOM;
+            attack.miscast_type   = spschool::random;
             attack.miscast_target = attack.defender;
 
             return false;
@@ -858,7 +859,7 @@ void attack::do_miscast()
 
     ASSERT(miscast_target != nullptr);
     ASSERT_RANGE(miscast_level, 0, 4);
-    ASSERT(count_bits(miscast_type) == 1);
+    ASSERT(count_bits(static_cast<uint64_t>(miscast_type)) == 1);
 
     if (!miscast_target->alive())
         return;
@@ -902,7 +903,7 @@ void attack::do_miscast()
     }
 
     MiscastEffect(miscast_target, attacker, MELEE_MISCAST,
-                  (spschool_flag_type) miscast_type, miscast_level, cause,
+                  (spschool) miscast_type, miscast_level, cause,
                   NH_NEVER, 0, hand_str, false);
 
     // Don't do miscast twice for one attack.
@@ -1655,7 +1656,7 @@ bool attack::apply_damage_brand(const char *what)
             && miscast_level == -1 && one_chance_in(20))
         {
             miscast_level  = 0;
-            miscast_type   = SPTYP_RANDOM;
+            miscast_type   = spschool::random;
             miscast_target = random_choose(attacker, defender);
         }
 

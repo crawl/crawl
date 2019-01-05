@@ -1438,7 +1438,7 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, SPTYP_CONJURATION))
+    if (spell_typematch(spell, spschool::conjuration))
         return true;
 
     // Conjurations work by conjuring up a chunk of short-lived matter and
@@ -5226,7 +5226,7 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
     // XXX: this does a really silly dance back and forth between school &
     // spelltype.
     const skill_type sk = arcane_mutation_to_skill(mutation);
-    const spschool_flag_type school = skill2spell_type(sk);
+    const spschool school = skill2spell_type(sk);
     return spelltype_long_name(school);
 }
 

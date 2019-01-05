@@ -1628,12 +1628,12 @@ static void _wild_magic_card(int power)
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                            mons->get_hit_dice()))
         {
-            spschool_flag_type type = random_choose(SPTYP_CONJURATION,
-                                                    SPTYP_FIRE,
-                                                    SPTYP_ICE,
-                                                    SPTYP_EARTH,
-                                                    SPTYP_AIR,
-                                                    SPTYP_POISON);
+            spschool type = random_choose(spschool::conjuration,
+                                          spschool::fire,
+                                          spschool::ice,
+                                          spschool::earth,
+                                          spschool::air,
+                                          spschool::poison);
 
             MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
                           DECK_MISCAST, type,

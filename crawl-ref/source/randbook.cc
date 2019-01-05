@@ -21,25 +21,24 @@
 #include "stringutil.h"
 
 static string _gen_randbook_name(string subject, string owner,
-                                 spschool_flag_type disc1,
-                                 spschool_flag_type disc2);
-static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
-                                  spschool_flag_type disc2,
+                                 spschool disc1, spschool disc2);
+static string _gen_randbook_owner(god_type god, spschool disc1,
+                                  spschool disc2,
                                   const vector<spell_type> &spells);
 
 /// How many spells should be in a random theme book?
 int theme_book_size() { return random2avg(7, 3) + 2; }
 
 /// A discipline chooser that only ever returns the given discipline.
-function<spschool_flag_type()> forced_book_theme(spschool_flag_type theme)
+function<spschool()> forced_book_theme(spschool theme)
 {
     return [theme]() { return theme; };
 }
 
 /// Choose a random valid discipline for a themed randbook.
-spschool_flag_type random_book_theme()
+spschool random_book_theme()
 {
-    vector<spschool_flag_type> disciplines;
+    vector<spschool> disciplines;
     for (auto discipline : spschools_type::range())
         disciplines.push_back(discipline);
     return disciplines[random2(disciplines.size())];
@@ -56,9 +55,9 @@ spschool_flag_type random_book_theme()
  * @return                  A discipline which will match as many of those
  *                          spells as possible.
  */
-spschool_flag_type matching_book_theme(const vector<spell_type> &forced_spells)
+spschool matching_book_theme(const vector<spell_type> &forced_spells)
 {
-    map<spschool_flag_type, int> seen_disciplines;
+    map<spschool, int> seen_disciplines;
     for (auto spell : forced_spells)
     {
         const spschools_type disciplines = get_spell_disciplines(spell);
@@ -79,7 +78,7 @@ spschool_flag_type matching_book_theme(const vector<spell_type> &forced_spells)
 
     if (!matched)
     {
-        const spschool_flag_type *discipline
+        const spschool *discipline
             = random_choose_weighted(seen_disciplines);
         if (discipline)
             return *discipline;
@@ -88,7 +87,7 @@ spschool_flag_type matching_book_theme(const vector<spell_type> &forced_spells)
 
     for (auto seen : seen_disciplines)
         seen.second = seen.second == (int)forced_spells.size() ? 1 : 0;
-    const spschool_flag_type *discipline
+    const spschool *discipline
         = random_choose_weighted(seen_disciplines);
     ASSERT(discipline);
     return *discipline;
@@ -146,8 +145,8 @@ static bool _agent_spell_filter(int agent, spell_type spell)
  * @param spell             The spell to be filtered.
  * @return                  Whether the spell can be included.
  */
-bool basic_themed_spell_filter(spschool_flag_type discipline_1,
-                               spschool_flag_type discipline_2,
+bool basic_themed_spell_filter(spschool discipline_1,
+                               spschool discipline_2,
                                int agent,
                                const vector<spell_type> &prev,
                                spell_type spell)
@@ -183,8 +182,8 @@ themed_spell_filter capped_spell_filter(int max_levels,
     if (max_levels < 1)
         return subfilter; // don't even bother.
 
-    return [max_levels, subfilter](spschool_flag_type discipline_1,
-                                   spschool_flag_type discipline_2,
+    return [max_levels, subfilter](spschool discipline_1,
+                                   spschool discipline_2,
                                    int agent,
                                    const vector<spell_type> &prev,
                                    spell_type spell)
@@ -212,8 +211,8 @@ themed_spell_filter capped_spell_filter(int max_levels,
 themed_spell_filter forced_spell_filter(const vector<spell_type> &forced_spells,
                                         themed_spell_filter subfilter)
 {
-    return [&forced_spells, subfilter](spschool_flag_type discipline_1,
-                                       spschool_flag_type discipline_2,
+    return [&forced_spells, subfilter](spschool discipline_1,
+                                       spschool discipline_2,
                                        int agent,
                                        const vector<spell_type> &prev,
                                        spell_type spell)
@@ -234,8 +233,8 @@ themed_spell_filter forced_spell_filter(const vector<spell_type> &forced_spells,
  * @param num_spells        How many spells should be included.
  * @param spells[out]       The list to be populated.
  */
-void theme_book_spells(spschool_flag_type discipline_1,
-                       spschool_flag_type discipline_2,
+void theme_book_spells(spschool discipline_1,
+                       spschool discipline_2,
                        themed_spell_filter filter,
                        int agent,
                        int num_spells,
@@ -275,8 +274,8 @@ void theme_book_spells(spschool_flag_type discipline_1,
  * @param discipline_1[in,out]      The second book discipline.
  * @param spells[in]                The list of spells the book should contain.
  */
-void fixup_randbook_disciplines(spschool_flag_type &discipline_1,
-                                spschool_flag_type &discipline_2,
+void fixup_randbook_disciplines(spschool &discipline_1,
+                                spschool &discipline_2,
                                 const vector<spell_type> &spells)
 {
     bool has_d1 = false, has_d2 = false;
@@ -310,14 +309,14 @@ void fixup_randbook_disciplines(spschool_flag_type &discipline_1,
  * @param subject           The subject of the book, if any. Cosmetic.
  */
 void build_themed_book(item_def &book, themed_spell_filter filter,
-                       function<spschool_flag_type()> get_discipline,
+                       function<spschool()> get_discipline,
                        int num_spells, string owner, string subject)
 {
     if (num_spells < 1)
         num_spells = theme_book_size();
 
-    spschool_flag_type discipline_1 = get_discipline();
-    spschool_flag_type discipline_2 = get_discipline();
+    spschool discipline_1 = get_discipline();
+    spschool discipline_2 = get_discipline();
 
     item_source_type agent;
     if (!origin_is_acquirement(book, &agent))
@@ -349,8 +348,8 @@ static bool _compare_spells(spell_type a, spell_type b)
     spschools_type schools_a = get_spell_disciplines(a);
     spschools_type schools_b = get_spell_disciplines(b);
 
-    if (schools_a != schools_b && schools_a != SPTYP_NONE
-        && schools_b != SPTYP_NONE)
+    if (schools_a != schools_b && schools_a != spschool::none
+        && schools_b != spschool::none)
     {
         const char* a_type = nullptr;
         const char* b_type = nullptr;
@@ -727,8 +726,8 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
  * @param owner             The book's owner; e.g. "Xom". May be empty.
  * @param subject           The subject of the book. May be empty.
  */
-void name_book_theme_randart(item_def &book, spschool_flag_type discipline_1,
-                             spschool_flag_type discipline_2,
+void name_book_theme_randart(item_def &book, spschool discipline_1,
+                             spschool discipline_2,
                              string owner, string subject)
 {
     if (owner.empty())
@@ -775,8 +774,8 @@ static string _maybe_gen_book_subject(string owner)
  * @return              A book name. May contain placeholders (@foo@).
  */
 static string _gen_randbook_name(string subject, string owner,
-                                 spschool_flag_type disc1,
-                                 spschool_flag_type disc2)
+                                 spschool disc1,
+                                 spschool disc2)
 {
     const string apostrophised_owner = owner.empty() ?
         "" :
@@ -862,8 +861,8 @@ static string _gen_randbook_name(string subject, string owner,
  * @param spells        The spells in the book.
  * @return              The name of the book's 'owner', or the empty string.
  */
-static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
-                                  spschool_flag_type disc2,
+static string _gen_randbook_owner(god_type god, spschool disc1,
+                                  spschool disc2,
                                   const vector<spell_type> &spells)
 {
     // If the owner hasn't been set already use
@@ -934,11 +933,11 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
     {
         switch (disc1)
         {
-            case SPTYP_NECROMANCY:
+            case spschool::necromancy:
                 if (all_spells_disc1 && !one_chance_in(6))
                     return god_name(GOD_KIKUBAAQUDGHA, false);
                 break;
-            case SPTYP_CONJURATION:
+            case spschool::conjuration:
                 if (all_spells_disc1 && !one_chance_in(4))
                     return god_name(GOD_VEHUMET, false);
                 break;
@@ -955,7 +954,7 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
 // that includes Statue Form and is named after her.
 void make_book_roxanne_special(item_def *book)
 {
-    spschool_flag_type disc = random_choose(SPTYP_TRANSMUTATION, SPTYP_EARTH);
+    spschool disc = random_choose(spschool::transmutation, spschool::earth);
     vector<spell_type> forced_spell = {SPELL_STATUE_FORM};
     build_themed_book(*book,
                       forced_spell_filter(forced_spell,
@@ -1131,13 +1130,13 @@ static void _get_weighted_randbook_spells(weighted_spells &possible_spells,
  * @param possibles     A weighted list of all possible spells to include in
  *                      the book.
  * @param agent         The entity creating the item; possibly a god.
- * @return              An appropriate spell school; e.g. SPTYP_FIRE.
+ * @return              An appropriate spell school; e.g. spschool::fire.
  */
-static spschool_flag_type _choose_randbook_discipline(weighted_spells
+static spschool _choose_randbook_discipline(weighted_spells
                                                       &possible_spells,
                                                       int agent)
 {
-    map<spschool_flag_type, int> discipline_weights;
+    map<spschool, int> discipline_weights;
     for (auto weighted_spell : possible_spells)
     {
         const spell_type spell = weighted_spell.first;
@@ -1155,7 +1154,7 @@ static spschool_flag_type _choose_randbook_discipline(weighted_spells
         }
     }
 
-    const spschool_flag_type *discipline
+    const spschool *discipline
         = random_choose_weighted(discipline_weights);
     ASSERT(discipline);
     return *discipline;
@@ -1173,8 +1172,8 @@ static spschool_flag_type _choose_randbook_discipline(weighted_spells
  * @param[out] spells               The chosen spells.
  */
 static void _choose_themed_randbook_spells(weighted_spells &possible_spells,
-                                           spschool_flag_type discipline_1,
-                                           spschool_flag_type discipline_2,
+                                           spschool discipline_1,
+                                           spschool discipline_2,
                                            int size, vector<spell_type> &spells)
 {
     for (auto &weighted_spell : possible_spells)
@@ -1211,9 +1210,9 @@ void acquire_themed_randbook(item_def &book, int agent)
     ASSERT(size);
 
     // XXX: we could cache this...
-    spschool_flag_type discipline_1
+    spschool discipline_1
         = _choose_randbook_discipline(possible_spells, agent);
-    spschool_flag_type discipline_2
+    spschool discipline_2
         = _choose_randbook_discipline(possible_spells, agent);
 
     vector<spell_type> spells;

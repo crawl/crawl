@@ -332,8 +332,8 @@ static void _give_wanderer_book(skill_type skill)
  * @param spell             The spell to be filtered.
  * @return                  Whether the spell can be included.
  */
-static bool exact_level_spell_filter(spschool_flag_type discipline_1,
-                                     spschool_flag_type discipline_2,
+static bool exact_level_spell_filter(spschool discipline_1,
+                                     spschool discipline_2,
                                      int agent,
                                      const vector<spell_type> &prev,
                                      spell_type spell)
@@ -381,7 +381,7 @@ static void _give_wanderer_minor_book(skill_type skill)
         skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
     }
 
-    spschool_flag_type school = skill2spell_type(skill);
+    spschool school = skill2spell_type(skill);
 
     item_def* item = newgame_make_item(OBJ_BOOKS, BOOK_RANDART_THEME);
     if (!item)
