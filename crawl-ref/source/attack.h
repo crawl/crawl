@@ -6,6 +6,7 @@
 #include "mon-enum.h"
 #include "ouch.h"
 #include "pronoun-type.h"
+#include "spl-util.h" // spschool type definition
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;
@@ -85,9 +86,9 @@ public:
 
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
-    int    miscast_level;
-    int    miscast_type;
-    actor* miscast_target;
+    int       miscast_level;
+    spschool  miscast_type;
+    actor*    miscast_target;
 
     bool      fake_chaos_attack;
 

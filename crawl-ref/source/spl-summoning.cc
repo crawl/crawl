@@ -2631,7 +2631,7 @@ void end_battlesphere(monster* mons, bool killed)
 
 bool battlesphere_can_mirror(spell_type spell)
 {
-    return (spell_typematch(spell, SPTYP_CONJURATION)
+    return (spell_typematch(spell, spschool::conjuration)
            && spell_to_zap(spell) != NUM_ZAPS)
            || spell == SPELL_FREEZE
            || spell == SPELL_STICKY_FLAME

@@ -3878,7 +3878,7 @@ bool god_likes_spell(spell_type spell, god_type god)
     case GOD_VEHUMET:
         return vehumet_supports_spell(spell);
     case GOD_KIKUBAAQUDGHA:
-        return spell_typematch(spell, SPTYP_NECROMANCY);
+        return spell_typematch(spell, spschool::necromancy);
     default: // quash unhandled constants warnings
         return false;
     }

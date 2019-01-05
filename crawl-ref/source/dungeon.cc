@@ -4334,21 +4334,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         for (unsigned int i = 0; i < spell_list.size(); ++i)
             spells.push_back((spell_type) spell_list[i].get_int());
 
-        spschool_flag_type disc1
-            = (spschool_flag_type)props[RANDBK_DISC1_KEY].get_short();
-        spschool_flag_type disc2
-            = (spschool_flag_type)props[RANDBK_DISC2_KEY].get_short();
-        if (disc1 == SPTYP_NONE && disc2 == SPTYP_NONE)
+        spschool disc1 = (spschool)props[RANDBK_DISC1_KEY].get_short();
+        spschool disc2 = (spschool)props[RANDBK_DISC2_KEY].get_short();
+        if (disc1 == spschool::none && disc2 == spschool::none)
         {
             if (spells.size())
                 disc1 = matching_book_theme(spells);
             else
                 disc1 = random_book_theme();
             disc2 = random_book_theme();
-        } else if (disc2 == SPTYP_NONE)
+        } else if (disc2 == spschool::none)
             disc2 = disc1;
         else
-            ASSERT(disc1 != SPTYP_NONE); // mapdef should've handled this
+            ASSERT(disc1 != spschool::none); // mapdef should've handled this
 
         int num_spells = props[RANDBK_NSPELLS_KEY].get_short();
         if (num_spells < 1)

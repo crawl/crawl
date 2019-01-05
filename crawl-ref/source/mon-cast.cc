@@ -1992,7 +1992,7 @@ static bool _animate_dead_okay(spell_type spell)
 static bool _ms_direct_nasty(spell_type monspell)
 {
     return !(get_spell_flags(monspell) & spflag::utility
-             || spell_typematch(monspell, SPTYP_SUMMONING));
+             || spell_typematch(monspell, spschool::summoning));
 }
 
 // Checks if the foe *appears* to be immune to negative energy. We
@@ -7697,7 +7697,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     const bool friendly = mon->friendly();
 
     // Keep friendly summoners from spamming summons constantly.
-    if (friendly && !foe && spell_typematch(monspell, SPTYP_SUMMONING))
+    if (friendly && !foe && spell_typematch(monspell, spschool::summoning))
         return true;
 
     // Don't try to cast spells at players who are stepped from time.

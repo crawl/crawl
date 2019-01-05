@@ -732,7 +732,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
                     MiscastEffect(&you, nullptr, WIELD_MISCAST,
-                                  SPTYP_TRANSLOCATION, 9, 90,
+                                  spschool::translocation, 9, 90,
                                   "a distortion unwield");
                 }
                 break;

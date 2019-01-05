@@ -59,20 +59,20 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause), spell(_spell),
-    school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1),
+    school(spschool::none), pow(_pow), fail(_fail), level(-1),
     nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
     ASSERT(is_valid_spell(_spell));
-    ASSERT(get_spell_disciplines(_spell) != SPTYP_NONE);
+    ASSERT(get_spell_disciplines(_spell) != spschool::none);
 
     init();
     do_miscast();
 }
 
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
-                             spschool_flag_type _school, int _level,
+                             spschool _school, int _level,
                              string _cause,
                              nothing_happens_when_type _nothing_happens,
                              int _lethality_margin, string _hand_str,
@@ -85,8 +85,8 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
-    ASSERT(count_bits(_school) == 1);
-    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
+    ASSERT(count_bits(static_cast<uint64_t>(_school)) == 1);
+    ASSERT(_school <= spschool::LAST_SCHOOL || _school == spschool::random);
     ASSERT_RANGE(level, 0, 3 + 1);
 
     init();
@@ -94,7 +94,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
 }
 
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
-                             spschool_flag_type _school, int _pow, int _fail,
+                             spschool _school, int _pow, int _fail,
                              string _cause,
                              nothing_happens_when_type _nothing_happens,
                              int _lethality_margin, string _hand_str,
@@ -107,8 +107,8 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
-    ASSERT(count_bits(_school) == 1);
-    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
+    ASSERT(count_bits(static_cast<uint64_t>(_school)) == 1);
+    ASSERT(_school <= spschool::LAST_SCHOOL || _school == spschool::random);
 
     init();
     do_miscast();
@@ -121,8 +121,8 @@ MiscastEffect::~MiscastEffect()
 
 void MiscastEffect::init()
 {
-    ASSERT(spell != SPELL_NO_SPELL && school == SPTYP_NONE
-           || spell == SPELL_NO_SPELL && school != SPTYP_NONE);
+    ASSERT(spell != SPELL_NO_SPELL && school == spschool::none
+           || spell == SPELL_NO_SPELL && school != spschool::none);
     ASSERT(pow != -1 && fail != -1 && level == -1
            || pow == -1 && fail == -1 && level >= 0 && level <= 3);
 
@@ -211,7 +211,7 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
     // the source of the miscast is the same as the target of the miscast.
     ASSERT(special_source == SPELL_MISCAST);
     ASSERT(spell != SPELL_NO_SPELL);
-    ASSERT(school == SPTYP_NONE);
+    ASSERT(school == spschool::none);
     ASSERT(target->is_player());
 
     return string("miscasting ") + spell_title(spell);
@@ -241,12 +241,12 @@ void MiscastEffect::do_miscast()
         return;
     }
 
-    spschool_flag_type sp_type;
+    spschool sp_type;
     int                severity;
 
     if (spell != SPELL_NO_SPELL)
     {
-        vector<spschool_flag_type> school_list;
+        vector<spschool> school_list;
         for (const auto bit : spschools_type::range())
             if (spell_typematch(spell, bit))
                 school_list.push_back(bit);
@@ -256,8 +256,8 @@ void MiscastEffect::do_miscast()
     else
     {
         sp_type = school;
-        if (sp_type == SPTYP_RANDOM)
-            sp_type = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
+        if (sp_type == spschool::random)
+            sp_type = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
     }
 
     if (level != -1)
@@ -320,18 +320,18 @@ void MiscastEffect::do_miscast()
 
     switch (sp_type)
     {
-    case SPTYP_CONJURATION:    _conjuration(severity);    break;
-    case SPTYP_HEXES:          _hexes(severity);          break;
-    case SPTYP_CHARMS:         _charms(severity);         break;
-    case SPTYP_TRANSLOCATION:  _translocation(severity);  break;
-    case SPTYP_SUMMONING:      _summoning(severity);      break;
-    case SPTYP_NECROMANCY:     _necromancy(severity);     break;
-    case SPTYP_TRANSMUTATION:  _transmutation(severity);  break;
-    case SPTYP_FIRE:           _fire(severity);           break;
-    case SPTYP_ICE:            _ice(severity);            break;
-    case SPTYP_EARTH:          _earth(severity);          break;
-    case SPTYP_AIR:            _air(severity);            break;
-    case SPTYP_POISON:         _poison(severity);         break;
+    case spschool::conjuration:    _conjuration(severity);    break;
+    case spschool::hexes:          _hexes(severity);          break;
+    case spschool::charms:         _charms(severity);         break;
+    case spschool::translocation:  _translocation(severity);  break;
+    case spschool::summoning:      _summoning(severity);      break;
+    case spschool::necromancy:     _necromancy(severity);     break;
+    case spschool::transmutation:  _transmutation(severity);  break;
+    case spschool::fire:           _fire(severity);           break;
+    case spschool::ice:            _ice(severity);            break;
+    case spschool::earth:          _earth(severity);          break;
+    case spschool::air:            _air(severity);            break;
+    case spschool::poison:         _poison(severity);         break;
 
     default:
         die("Invalid miscast spell discipline.");

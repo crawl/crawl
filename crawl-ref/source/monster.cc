@@ -705,7 +705,7 @@ bool monster::search_spells(function<bool (spell_type)> func) const
                         { return func(s.spell); });
 }
 
-bool monster::has_spell_of_type(spschool_flag_type discipline) const
+bool monster::has_spell_of_type(spschool discipline) const
 {
     return search_spells(bind(spell_typematch, placeholders::_1, discipline));
 }
@@ -733,11 +733,11 @@ void monster::bind_spell_flags()
 static bool _needs_ranged_attack(const monster* mon)
 {
     // Prevent monsters that have conjurations from grabbing missiles.
-    if (mon->has_spell_of_type(SPTYP_CONJURATION))
+    if (mon->has_spell_of_type(spschool::conjuration))
         return false;
 
     // Same for summonings, but make an exception for friendlies.
-    if (!mon->friendly() && mon->has_spell_of_type(SPTYP_SUMMONING))
+    if (!mon->friendly() && mon->has_spell_of_type(spschool::summoning))
         return false;
 
     // Blademasters don't want to throw stuff.
@@ -4189,7 +4189,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained, bool temp)
         return hd;
 
     case SK_NECROMANCY:
-        return (has_spell_of_type(SPTYP_NECROMANCY)) ? hd : hd/2;
+        return (has_spell_of_type(spschool::necromancy)) ? hd : hd/2;
 
     case SK_POISON_MAGIC:
     case SK_FIRE_MAGIC:

@@ -914,7 +914,7 @@ static void _debug_acquirement_stats(FILE *ostat)
                 else if (item.sub_type == BOOK_RANDART_LEVEL)
                 {
                     const int level = item.plus;
-                    ego_quants[SPTYP_LAST_EXPONENT + level]++;
+                    ego_quants[SPSCHOOL_LAST_EXPONENT + level]++;
                 }
             }
         }
@@ -1012,8 +1012,8 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         // For spellbooks, for each spell discipline, list the number of
         // unseen and total spells available.
-        vector<int> total_spells(SPTYP_LAST_EXPONENT + 1);
-        vector<int> unseen_spells(SPTYP_LAST_EXPONENT + 1);
+        vector<int> total_spells(SPSCHOOL_LAST_EXPONENT + 1);
+        vector<int> unseen_spells(SPSCHOOL_LAST_EXPONENT + 1);
 
         for (int i = 0; i < NUM_SPELLS; ++i)
         {
@@ -1033,7 +1033,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             const bool seen = you.spell_library[spell];
 
             const spschools_type disciplines = get_spell_disciplines(spell);
-            for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
+            for (int d = 0; d <= SPSCHOOL_LAST_EXPONENT; ++d)
             {
                 const auto disc = spschools_type::exponent(d);
 
@@ -1045,7 +1045,7 @@ static void _debug_acquirement_stats(FILE *ostat)
                 }
             }
         }
-        for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
+        for (int d = 0; d <= SPSCHOOL_LAST_EXPONENT; ++d)
         {
             const auto disc = spschools_type::exponent(d);
 
@@ -1197,9 +1197,9 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "earth magic",
                 "air magic",
             };
-            COMPILE_CHECK(ARRAYSZ(names) == SPTYP_LAST_EXPONENT + 1);
+            COMPILE_CHECK(ARRAYSZ(names) == SPSCHOOL_LAST_EXPONENT + 1);
 
-            for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+            for (int i = 0; i <= SPSCHOOL_LAST_EXPONENT; ++i)
             {
                 if (ego_quants[i] > 0)
                 {
@@ -1210,7 +1210,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             // List levels for fixed level randarts.
             for (int i = 1; i < 9; ++i)
             {
-                const int k = SPTYP_LAST_EXPONENT + i;
+                const int k = SPSCHOOL_LAST_EXPONENT + i;
                 if (ego_quants[k] > 0)
                 {
                     fprintf(ostat, "%15s %d: %5.2f\n", "level", i,

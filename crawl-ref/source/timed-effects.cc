@@ -77,12 +77,12 @@ static void _hell_effect_noise()
  */
 static void _random_hell_miscast()
 {
-    const spschool_flag_type which_miscast
-        = random_choose_weighted(8, SPTYP_NECROMANCY,
-                                 4, SPTYP_SUMMONING,
-                                 2, SPTYP_CONJURATION,
-                                 1, SPTYP_CHARMS,
-                                 1, SPTYP_HEXES);
+    const spschool which_miscast
+        = random_choose_weighted(8, spschool::necromancy,
+                                 4, spschool::summoning,
+                                 2, spschool::conjuration,
+                                 1, spschool::charms,
+                                 1, spschool::hexes);
 
     MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
                   4 + random2(6), random2avg(97, 3),
@@ -95,7 +95,7 @@ struct hell_effect_spec
     /// The type of greater demon to spawn from hell effects.
     vector<monster_type> fiend_types;
     /// The appropriate theme of miscast effects to toss at the player.
-    spschool_flag_type miscast_type;
+    spschool miscast_type;
     /// A weighted list of lesser creatures to spawn.
     vector<pair<monster_type, int>> minor_summons;
 };
@@ -103,13 +103,13 @@ struct hell_effect_spec
 /// Hell effects for each branch of hell
 static map<branch_type, hell_effect_spec> hell_effects_by_branch =
 {
-    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, SPTYP_EARTH, {
+    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, spschool::earth, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
+    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, spschool::fire, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
+    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, spschool::ice, {
         // total weight 100
         { MONS_ZOMBIE, 15 },
         { MONS_SKELETON, 10 },
@@ -123,7 +123,7 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BLIZZARD_DEMON, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, SPTYP_NECROMANCY, {
+    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, spschool::necromancy, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
 };

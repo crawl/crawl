@@ -2202,7 +2202,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     // Take a note.
     const char* levels[4] = { "harmless", "mild", "medium", "severe" };
-    const auto school = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
+    const auto school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
     string desc = make_stringf("%s %s miscast", levels[level],
                                spelltype_short_name(school));
 #ifdef NOTE_DEBUG_XOM
@@ -2223,7 +2223,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
     MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_XOM,
-                  (spschool_flag_type)school, level, cause_str, NH_DEFAULT,
+                  (spschool)school, level, cause_str, NH_DEFAULT,
                   lethality_margin, hand_str, can_plural);
 }
 

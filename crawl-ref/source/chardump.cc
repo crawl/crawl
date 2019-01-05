@@ -816,7 +816,7 @@ static void _sdump_skills(dump_params &par)
     text += "\n";
 }
 
-static string spell_type_shortname(spschool_flag_type spell_class, bool slash)
+static string spell_type_shortname(spschool spell_class, bool slash)
 {
     string ret;
 

@@ -382,7 +382,7 @@ bool is_evil_spell(spell_type spell)
 
     if (flags & spflag::unholy)
         return true;
-    return bool(disciplines & SPTYP_NECROMANCY)
+    return bool(disciplines & spschool::necromancy)
            && !bool(flags & spflag::not_evil);
 }
 

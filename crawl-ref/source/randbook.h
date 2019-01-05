@@ -9,8 +9,8 @@
 
 #include "spl-util.h"
 
-typedef function<bool(spschool_flag_type discipline_1,
-                      spschool_flag_type discipline_2,
+typedef function<bool(spschool discipline_1,
+                      spschool discipline_2,
                       int agent,
                       const vector<spell_type> &prev,
                       spell_type spell)> themed_spell_filter;
@@ -18,12 +18,12 @@ typedef function<bool(spschool_flag_type discipline_1,
 /// How many spells should be in a random theme book?
 int theme_book_size();
 
-spschool_flag_type random_book_theme();
-spschool_flag_type matching_book_theme(const vector<spell_type> &forced_spells);
-function<spschool_flag_type()> forced_book_theme(spschool_flag_type theme);
+spschool random_book_theme();
+spschool matching_book_theme(const vector<spell_type> &forced_spells);
+function<spschool()> forced_book_theme(spschool theme);
 
-bool basic_themed_spell_filter(spschool_flag_type discipline_1,
-                               spschool_flag_type discipline_2,
+bool basic_themed_spell_filter(spschool discipline_1,
+                               spschool discipline_2,
                                int agent,
                                const vector<spell_type> &prev,
                                spell_type spell);
@@ -34,8 +34,8 @@ themed_spell_filter forced_spell_filter(const vector<spell_type> &forced_spells,
                                         themed_spell_filter subfilter
                                             = basic_themed_spell_filter);
 
-void theme_book_spells(spschool_flag_type discipline_1,
-                       spschool_flag_type discipline_2,
+void theme_book_spells(spschool discipline_1,
+                       spschool discipline_2,
                        themed_spell_filter filter,
                        int agent,
                        int num_spells,
@@ -43,17 +43,17 @@ void theme_book_spells(spschool_flag_type discipline_1,
 
 void build_themed_book(item_def &book,
                        themed_spell_filter filter = basic_themed_spell_filter,
-                       function<spschool_flag_type()> get_discipline
+                       function<spschool()> get_discipline
                             = random_book_theme,
                        int num_spells = -1,
                        string owner = "", string subject = "");
 
-void fixup_randbook_disciplines(spschool_flag_type &discipline_1,
-                                spschool_flag_type &discipline_2,
+void fixup_randbook_disciplines(spschool &discipline_1,
+                                spschool &discipline_2,
                                 const vector<spell_type> &spells);
 void init_book_theme_randart(item_def &book, vector<spell_type> spells);
-void name_book_theme_randart(item_def &book, spschool_flag_type discipline_1,
-                             spschool_flag_type discipline_2,
+void name_book_theme_randart(item_def &book, spschool discipline_1,
+                             spschool discipline_2,
                              string owner = "", string subject = "");
 
 bool make_book_level_randart(item_def &book, int level = -1);
