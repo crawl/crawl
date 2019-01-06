@@ -198,7 +198,7 @@ public:
     virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
-    virtual bool polymorph(int pow) = 0;
+    virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
     virtual bool rot(actor *agent, int amount, bool quiet = false,
                      bool no_cleanup = false) = 0;

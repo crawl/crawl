@@ -356,7 +356,7 @@ public:
     bool is_stationary() const override;
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
-    bool polymorph(int pow) override;
+    bool polymorph(int pow, bool allow_immobile = true) override;
     void banish(actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,

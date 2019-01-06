@@ -687,7 +687,7 @@ public:
     bool can_bleed(bool allow_tran = true) const override;
     bool is_stationary() const override;
     bool malmutate(const string &reason) override;
-    bool polymorph(int pow) override;
+    bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();
     void banish(actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
