@@ -780,6 +780,27 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -5;
         *ofs_y = 5;
         break;
+    case TILEP_MONS_KILLER_KLOWN:
+        *ofs_x = 0;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_KILLER_KLOWN_1:
+        *ofs_x = -4;
+        *ofs_y = -1;
+        break;
+    case TILEP_MONS_KILLER_KLOWN_2:
+        *ofs_x = -2;
+        *ofs_y = 4;
+        break;
+    case TILEP_MONS_KILLER_KLOWN_3:
+        *ofs_x = -2;
+        *ofs_y = -5;
+        break;
+    case TILEP_MONS_KILLER_KLOWN_4:
+        *ofs_x = 20;
+        *ofs_y = -10;
+        break;
+
     default:
         // This monster cannot be displayed with a weapon.
         return false;

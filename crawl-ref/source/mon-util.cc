@@ -2004,25 +2004,8 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (attk.type == AT_CHERUB)
         attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
 
-    if (!base_flavour)
-    {
-        if (attk.flavour == AF_KLOWN)
-        {
-            attack_flavour flavours[] =
-                {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
-                 AF_COLD, AF_ELEC, AF_ANTIMAGIC, AF_ACID};
-
-            attk.flavour = RANDOM_ELEMENT(flavours);
-        }
-
-        if (attk.flavour == AF_DRAIN_STAT)
-        {
-            attack_flavour flavours[] =
-                {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
-
-            attk.flavour = RANDOM_ELEMENT(flavours);
-        }
-    }
+    if (attk.flavour == AF_DRAIN_STAT)
+        attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,AF_DRAIN_DEX);
 
     // Slime creature attacks are multiplied by the number merged.
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)

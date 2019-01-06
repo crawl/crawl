@@ -909,6 +909,22 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_DEMON_BLADE,        4 },
               { WPN_DOUBLE_SWORD,       1 }, },
         } },
+        { MONS_KILLER_KLOWN, {
+            { { WPN_CLUB,             10 }, },
+            { 1, 4, 8 },
+            { { SPWPN_NORMAL,         20 },
+              { SPWPN_FLAMING,        20 },
+              { SPWPN_FREEZING,       10 },
+              { SPWPN_VORPAL  ,       10 },
+              { SPWPN_ELECTROCUTION,  10 },
+              { SPWPN_VENOM,          10 },
+              { SPWPN_VAMPIRISM,       5 },
+              { SPWPN_ANTIMAGIC,       5 },
+              { SPWPN_PAIN,            4 },
+              { SPWPN_HOLY_WRATH,      3 },
+              { SPWPN_DISTORTION,      2 },
+              { SPWPN_CHAOS,           1 }, },
+        } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
