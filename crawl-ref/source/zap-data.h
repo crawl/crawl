@@ -1357,4 +1357,23 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     0 // No additional effect noise.
 },
+
+{
+    ZAP_THROW_PIE,
+    "a klown pie",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 20, 0, 1>,
+    new tohit_calculator<16, 1, 25>,
+    BROWN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    true,
+    false,
+    false,
+    6
+},
+
 };

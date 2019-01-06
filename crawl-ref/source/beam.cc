@@ -31,6 +31,7 @@
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
+#include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
@@ -50,6 +51,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
+#include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
 #include "ranged-attack.h"
@@ -3647,6 +3649,134 @@ void bolt::affect_actor(actor *act)
         affect_player();
 }
 
+struct pie_effect
+{
+    const char* desc;
+    function<bool(const actor& def)> valid;
+    function<void (actor& def, const bolt &beam)> effect;
+    int weight;
+};
+
+static const vector<pie_effect> pie_effects = {
+    {
+        "plum",
+        [](const actor &defender) {
+            return defender.is_player();
+        },
+        [](actor &defender, const bolt &/*beam*/) {
+            if (you.duration[DUR_VERTIGO])
+                mpr("You feel your light-headedness will last longer.");
+            else
+                mpr("You feel light-headed.");
+
+            you.increase_duration(DUR_VERTIGO, 10 + random2(11), 50);
+        },
+        10
+    },
+    {
+        "lemon",
+        [](const actor &defender) {
+            return defender.is_player() && !you_foodless();
+        },
+        [](actor &defender, const bolt &beam) {
+            if (you.duration[DUR_NO_POTIONS])
+                mpr("You feel your inability to drink will last longer.");
+            else
+                mpr("You feel unable to drink.");
+
+            you.increase_duration(DUR_NO_POTIONS, 10 + random2(11), 50);
+        },
+        10
+    },
+    {
+        "blueberry",
+        nullptr,
+        [](actor &defender, const bolt &beam) {
+            if (defender.is_monster())
+            {
+                monster *mons = defender.as_monster();
+                simple_monster_message(*mons, "looks unnaturally silent");
+                mons->add_ench(mon_enchant(ENCH_SILENCE, 0, beam.agent(),
+                            10 + random2(21) * BASELINE_DELAY));
+            }
+            else
+            {
+                if (you.duration[DUR_SILENCE])
+                    mpr("You feel your silence will last longer.");
+                else
+                    mpr("An unnatural silence engulfs you.");
+
+                you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
+            }
+        },
+        10
+    },
+    {
+        "raspberry",
+        [](const actor &defender) {
+            return defender.is_player();
+        },
+        [](actor &defender, const bolt &beam) {
+            for (int i = 0; i < NUM_STATS; ++i)
+                lose_stat(static_cast<stat_type>(i), 1 + random2(3));
+        },
+        10
+    },
+    {
+        "cherry",
+        [](const actor &defender) {
+            return defender.is_player() || defender.res_fire() < 3;
+        },
+        [](actor &defender, const bolt &beam) {
+            if (defender.is_monster())
+            {
+                monster *mons = defender.as_monster();
+                simple_monster_message(*mons,
+                        "looks more vulnerable to fire.");
+                mons->add_ench(mon_enchant(ENCH_FIRE_VULN, 0,
+                             beam.agent(),
+                             15 + random2(11) * BASELINE_DELAY));
+            }
+            else
+            {
+                if (you.duration[DUR_FIRE_VULN])
+                {
+                    mpr("You feel your vulnerability to fire will last "
+                        "longer.");
+                }
+                else
+                    mpr("Cherry-coloured flames burn away your fire "
+                        "resistance!");
+
+                you.increase_duration(DUR_FIRE_VULN, 15 + random2(11), 50);
+            }
+        },
+        6
+    },
+    {
+        "moon pie",
+        [](const actor &defender) {
+            return defender.can_polymorph();
+        },
+        [](actor &defender, const bolt &beam) {
+            defender.polymorph(100, false);
+        },
+        4
+    },
+};
+
+static pie_effect _random_pie_effect(const actor &defender)
+{
+    vector<pair<const pie_effect&, int>> weights;
+    for (const pie_effect &effect : pie_effects)
+        if (!effect.valid || effect.valid(defender))
+            weights.push_back({effect, effect.weight});
+
+    ASSERT(!weights.empty());
+
+    return *random_choose_weighted(weights);
+}
+
 void bolt::affect_player()
 {
     hit_count[MID_PLAYER]++;
@@ -3846,9 +3976,15 @@ void bolt::affect_player()
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
 
-
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_player();
+
+    if (origin_spell == SPELL_THROW_PIE && hurted > 0)
+    {
+        const pie_effect effect = _random_pie_effect(you);
+        mprf("%s!", effect.desc);
+        effect.effect(you, *this);
+    }
 
     dprf(DIAG_BEAM, "Damage: %d", hurted);
 
@@ -4408,6 +4544,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(),
                                   random_range(5, 7) * BASELINE_DELAY));
+    }
+
+    if (origin_spell == SPELL_THROW_PIE && dmg > 0)
+    {
+        const pie_effect effect = _random_pie_effect(*mon);
+        if (you.see_cell(mon->pos()))
+            mprf("%s!", effect.desc);
+        effect.effect(*mon, *this);
     }
 }
 

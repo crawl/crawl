@@ -1500,6 +1500,14 @@ Throw Icicle spell
 Fires a shard of ice. Due to its strong impact and cutting edges, a
 significant portion of its damage bypasses cold resistance.
 %%%%
+Throw Klown Pie spell
+
+Throws a harmful yet strangely delicious pie that can inflict its victim with a
+number of debilitating temporary effects. These include inducing vertigo,
+silence, fire vulnerability, stat drain, or an aversion to drinking potions.
+The dreaded moon pie can even turn you into a bat, a hog, or an insubstantial
+wisp!
+%%%%
 Thunderbolt spell
 
 Creates an arc of electricity.

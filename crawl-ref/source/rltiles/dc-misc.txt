@@ -100,6 +100,15 @@ irradiate1
 irradiate2
 irradiate3
 
+pie0 BOLT_PIE
+pie1
+pie2
+pie3
+pie4
+pie5
+pie6
+pie7
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

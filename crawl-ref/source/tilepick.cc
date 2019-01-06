@@ -2959,6 +2959,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case BROWN:
         if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
+        else if (bolt.name == "klown pie")
+            return TILE_BOLT_PIE + dir;
         break;
 
     case GREEN:

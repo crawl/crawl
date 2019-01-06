@@ -1329,6 +1329,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_TELEPORT_OTHER:
     case SPELL_SANDBLAST:
     case SPELL_HARPOON_SHOT:
+    case SPELL_THROW_PIE:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
