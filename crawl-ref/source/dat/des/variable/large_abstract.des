@@ -486,9 +486,6 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-#############################################################################
-# Matthew Ludivico
-#
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  D:12-, !D:$
