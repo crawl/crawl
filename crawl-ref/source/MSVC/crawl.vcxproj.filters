@@ -937,6 +937,9 @@
     <ClCompile Include="..\rltiles\tiledef-wall.cc">
       <Filter>rtiles_generated</Filter>
     </ClCompile>
+    <ClCompile Include="..\util\monster\monster-main.cc">
+      <Filter>other_folders\util\monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h">
@@ -2291,5 +2294,2254 @@
     <Filter Include="rtiles_generated">
       <UniqueIdentifier>{130af3a6-ee12-4d01-909c-3fe6bd58ec78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="other_folders">
+      <UniqueIdentifier>{1e1cefc8-8f97-49de-b9b5-cac95016c581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\util">
+      <UniqueIdentifier>{0f5e12b7-d677-4458-acbf-37325dddbabc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\util\docs">
+      <UniqueIdentifier>{26e01ce3-6693-40cf-b6b1-5352840a88b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\util\monster">
+      <UniqueIdentifier>{4b021eb5-8155-4f72-b15b-cf6befec299f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\test">
+      <UniqueIdentifier>{b2819a8b-e0fe-43d2-b811-e5448831345b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\test\big">
+      <UniqueIdentifier>{2713a361-d5aa-469d-a142-b688de8887e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\test\eyecandy">
+      <UniqueIdentifier>{2c220d8f-7db2-4fcf-b2d8-684e4625ad61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\test\stress">
+      <UniqueIdentifier>{1c6e36a6-16b3-467f-ab57-354fdbed0a51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\scripts">
+      <UniqueIdentifier>{e185cdc6-41e3-4ea3-9c73-6e4d34702023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat">
+      <UniqueIdentifier>{971bfa91-7cfa-40f2-ba78-2eec51b6a167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\clua">
+      <UniqueIdentifier>{21f866f6-955f-4867-b0dc-c0e82b666cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\database">
+      <UniqueIdentifier>{f0e9d5bb-63a2-4ecc-9dc8-25d1d7c5cfbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\defaults">
+      <UniqueIdentifier>{49ac6c5c-8c02-4a48-a71c-aeeb832eb1ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des">
+      <UniqueIdentifier>{56fbfe7a-6082-447c-b7c6-2ea1c32a532e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript">
+      <UniqueIdentifier>{cdbd1e9f-6415-4a8b-910b-54694df4bdb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\dist_bones">
+      <UniqueIdentifier>{37a3411c-cdd1-41cf-a3fc-d735c927a26a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\dlua">
+      <UniqueIdentifier>{4c38f7fa-cdcb-42ae-a51d-6fa68f9993fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\emacs">
+      <UniqueIdentifier>{a7402b32-eb9a-4737-8db4-00a22ebcb960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\lua-wiz">
+      <UniqueIdentifier>{47611f1e-0e6b-4102-bd00-1db6f31719da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\vim">
+      <UniqueIdentifier>{4429b248-ee1b-46eb-b5a4-8ea17b6847e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\tiles">
+      <UniqueIdentifier>{ea8851ac-8149-4d9e-b6ce-9b562705fb30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\vim\syntax">
+      <UniqueIdentifier>{de046849-c2a7-4efb-b529-eb9387250e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\dlua\layout">
+      <UniqueIdentifier>{13e94f91-f14f-46da-b54e-d0cf2612fc9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\cs">
+      <UniqueIdentifier>{acb87aa3-fb21-4dc3-9b4a-268dff162b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\da">
+      <UniqueIdentifier>{b705569a-88a3-4dc5-b78e-adee1fe161ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\de">
+      <UniqueIdentifier>{9f71ff41-c10d-423f-ab48-e81d753e2d63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\el">
+      <UniqueIdentifier>{503bb573-9933-47c3-9bf5-3b9f48831a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\es">
+      <UniqueIdentifier>{2488db87-bd55-4de4-9105-0a7323cb7b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\fi">
+      <UniqueIdentifier>{487a03c3-4f8d-4ef8-b884-8a597b2a3a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\fr">
+      <UniqueIdentifier>{7b7281ee-50b9-4e0d-90e3-800d66f1a645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\hu">
+      <UniqueIdentifier>{9d127074-3144-419e-b0d4-bc68977dedcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\it">
+      <UniqueIdentifier>{286b71ac-0f55-47d9-8b98-bcd31eb4ee30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\ja">
+      <UniqueIdentifier>{30be9a53-8870-447c-aba6-173e3912948e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\ko">
+      <UniqueIdentifier>{763d7baf-46b7-4583-9e79-080c0e1f8daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\lt">
+      <UniqueIdentifier>{830e5bef-64b8-4f86-8afb-44d9e3ca2c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\lv">
+      <UniqueIdentifier>{08a4d2f2-a624-4ff9-9e58-5a285595b356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\zh">
+      <UniqueIdentifier>{e7b0d372-59e5-4c5c-9b21-02a5c2ddad62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\tr">
+      <UniqueIdentifier>{ced6b32d-21b3-445c-9518-767790cd2533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\sv">
+      <UniqueIdentifier>{163e7e69-4eeb-43c1-9d4d-9aeff6fd1fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\pl">
+      <UniqueIdentifier>{b7e9d3de-a5c3-4b38-965d-bf6133f6898c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\ru">
+      <UniqueIdentifier>{18957081-7ac2-4987-a747-56c32f63df1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\pt">
+      <UniqueIdentifier>{e8be9125-e51d-4d31-a74e-f77a6f7847ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\descript\nl">
+      <UniqueIdentifier>{d4a1f01b-a4b1-4909-9bcf-6357b0c8457e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\database\el">
+      <UniqueIdentifier>{8d889e61-57c3-43ca-89e3-d863d5421c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\database\pl">
+      <UniqueIdentifier>{8428706c-a329-42c8-afc0-00ae11fab9c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\altar">
+      <UniqueIdentifier>{2d2deeba-b7f9-4e41-baa4-ffa7f3ab7436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\arrival">
+      <UniqueIdentifier>{cbc3e747-290c-42f2-ab34-b460a64556ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\branches">
+      <UniqueIdentifier>{93154ccf-8fd2-4954-abf8-4a829bbd84ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\builder">
+      <UniqueIdentifier>{2d73ff6d-2aae-470e-a715-f6f986c0ff71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\portals">
+      <UniqueIdentifier>{bc746ba3-1124-4ef2-b7cb-3df9d70c19ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\sprint">
+      <UniqueIdentifier>{88db72c0-daea-4455-8adb-c4c917031810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\serial">
+      <UniqueIdentifier>{eea536a7-4391-49d4-a479-2d9ed50b669d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\variable">
+      <UniqueIdentifier>{1d888cdf-0d29-4a35-9672-2e174299351d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\test">
+      <UniqueIdentifier>{406bb3a6-8f50-4ae2-9d22-af872955f90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\traps">
+      <UniqueIdentifier>{f130b102-531c-4655-b2ab-a6012141f7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other_folders\dat\des\tutorial">
+      <UniqueIdentifier>{d42be6f8-a726-4de6-b9bc-75847be5e6f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\util\art-data.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\checkcommit">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\checkwhite">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\cmd-name.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\config.ld">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\configure">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\cpp_version">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\crawl.nsi">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\db_lint">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\db_splice">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\db_split">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\dcss.svg">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\descript-sort.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\edit_vault">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\FAQ2html.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\find_font">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_abilities">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_backgrounds">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_branches">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_cards">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_clouds">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_features">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_items">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_mons">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_species">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_spells">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_tiles_gui">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gather_tiles_mons">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen_ver.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen_ver_msvc.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-all.cmd">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-apt.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-cflg.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\generate_zombie_tile.sh">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-luatags.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-mi-enum">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\gen-mst.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\good-depfile">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\includes.sh">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\levcomp.lpp">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\levcomp.ypp">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\list_merged_branches.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\logotype.psd">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\mac-crawl-build-update-cdo">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\makedb.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\Makefile">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\optimize-pngs">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\remove_unused_headers.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\rotate-tile.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\salvage-credits.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\split-enum.py">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\tag-major-upgrade">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\testdb.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\tiledef_lint">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\tiles_unused">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\txc">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\unbrace">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\undoku.sed">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\unrest.pl">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\webtiles-init-player.sh">
+      <Filter>other_folders\util</Filter>
+    </None>
+    <None Include="..\util\docs\screen.pdf">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\util\docs\screen.eps">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\util\docs\screen.fig">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\util\docs\README.tex">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\util\docs\quickstart.tex">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\util\docs\key_changes.tex">
+      <Filter>other_folders\util\docs</Filter>
+    </None>
+    <None Include="..\test\abyss_shift.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\bounce.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\bounce2.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\bstair-gen.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\corpse.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\fsim.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\item_curse.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\los_csc.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\los_maps.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\los_symm.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\monplace.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\monster-name.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\monster-plant-pathfind.lua.disabled">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\mut_species.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\mutation.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\rune-gen.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\shoal-hut.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\snake-rune.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\unique.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\uniquegen.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\vault_generation.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\youdie.lua">
+      <Filter>other_folders\test</Filter>
+    </None>
+    <None Include="..\test\stress\abyss">
+      <Filter>other_folders\test\stress</Filter>
+    </None>
+    <None Include="..\test\stress\run">
+      <Filter>other_folders\test\stress</Filter>
+    </None>
+    <None Include="..\test\stress\timeall">
+      <Filter>other_folders\test\stress</Filter>
+    </None>
+    <None Include="..\test\big\README">
+      <Filter>other_folders\test\big</Filter>
+    </None>
+    <None Include="..\scripts\csim.lua">
+      <Filter>other_folders\scripts</Filter>
+    </None>
+    <None Include="..\scripts\genlevel.lua">
+      <Filter>other_folders\scripts</Filter>
+    </None>
+    <None Include="..\scripts\genmap.lua">
+      <Filter>other_folders\scripts</Filter>
+    </None>
+    <None Include="..\scripts\place-population.lua">
+      <Filter>other_folders\scripts</Filter>
+    </None>
+    <None Include="..\scripts\training_simu.lua">
+      <Filter>other_folders\scripts</Filter>
+    </None>
+    <None Include="..\dat\vim\syntax\levdes.vim">
+      <Filter>other_folders\dat\vim\syntax</Filter>
+    </None>
+    <None Include="..\dat\lua-wiz\damtally.lua">
+      <Filter>other_folders\dat\lua-wiz</Filter>
+    </None>
+    <None Include="..\dat\emacs\dir-locals.el">
+      <Filter>other_folders\dat\emacs</Filter>
+    </None>
+    <None Include="..\dat\dlua\debug.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\dungeon.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\fnwrap.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\gauntlet.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\ghost.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\init.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\iter.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_1way.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_door.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_fog.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_items.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_mon_prop.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_monst.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_mslav.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_named_hatch.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_pdesc.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_props.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_timed.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_tmsg.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_toll.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_trans.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_trig.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\lm_trove.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\loadmaps.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\luamark.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\macro.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\mapinit.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\persist.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\point.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\profiler.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\sanity.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\sprint.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\stress.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\tags.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\test.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\tutorial.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\userbase.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\util.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\v_debug.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\v_layouts.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\v_paint.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\v_rooms.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\v_shapes.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\vault.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\ziggurat.lua">
+      <Filter>other_folders\dat\dlua</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\geoelf.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\geoelf_corridors.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\geoelf_directions.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\geoelf_glyphs.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\geoelf_rooms.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_caves.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_city.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_debug.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_decor.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_fort.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_paint.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_place.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_rooms.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_shapes.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_strategy.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\hyper_usage.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\layout.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\minimum_map_area.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\omnigrid.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\procedural.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\procedural_complex.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\procedural_primitives.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\procedural_transform.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\rooms_primitive.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\theme.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\vector.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dlua\layout\zonify.lua">
+      <Filter>other_folders\dat\dlua\layout</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Crypt">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-3">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-4">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-5">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-6">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-7">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-8">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-9">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-10">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-11">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-12">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-13">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-14">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.D-15">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Depths">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Elf">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Hells">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-1">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-2">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-3">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-4">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-5">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Lair-6">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Orc">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Pan">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Shoals">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Slime">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Snake">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Spider">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Swamp">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Tomb">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Vaults">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Zig">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\bones.store.Zot">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\dist_bones\README">
+      <Filter>other_folders\dat\dist_bones</Filter>
+    </None>
+    <None Include="..\dat\des\test.des">
+      <Filter>other_folders\dat\des</Filter>
+    </None>
+    <None Include="..\dat\clua\autofight.lua">
+      <Filter>other_folders\dat\clua</Filter>
+    </None>
+    <None Include="..\dat\clua\automagic.lua">
+      <Filter>other_folders\dat\clua</Filter>
+    </None>
+    <None Include="..\dat\clua\delays.lua">
+      <Filter>other_folders\dat\clua</Filter>
+    </None>
+    <None Include="..\dat\clua\kills.lua">
+      <Filter>other_folders\dat\clua</Filter>
+    </None>
+    <None Include="..\dat\clua\stash.lua">
+      <Filter>other_folders\dat\clua</Filter>
+    </None>
+    <None Include="..\dat\des\altar\altar.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\ashenzari_visionary.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\kiku_cage.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\lugonu_bribe.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\nemelex_the_gamble.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\okawaru_arena.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\overflow.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\pakellas_experiments.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\trog_burn_book.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\trog_wizard.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\vehumet_trees.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\xom_monty_hall.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\xom_sheep.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\altar\yredelemnul_ordeal.des">
+      <Filter>other_folders\dat\des\altar</Filter>
+    </None>
+    <None Include="..\dat\des\arrival\large.des">
+      <Filter>other_folders\dat\des\arrival</Filter>
+    </None>
+    <None Include="..\dat\des\arrival\simple.des">
+      <Filter>other_folders\dat\des\arrival</Filter>
+    </None>
+    <None Include="..\dat\des\arrival\small.des">
+      <Filter>other_folders\dat\des\arrival</Filter>
+    </None>
+    <None Include="..\dat\des\arrival\twisted.des">
+      <Filter>other_folders\dat\des\arrival</Filter>
+    </None>
+    <None Include="..\dat\des\branches\abyss.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\blade.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\coc.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\crypt.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\depths.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\depths_encompass.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\dis.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\elf.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\geh.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\hell.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\lair.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\orc.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\pan.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\shoals.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\slime.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\snake.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\spider.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\swamp.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\tar.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\temple.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\temple_compat.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\tomb.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\vaults.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\vaults_rooms_empty.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\vaults_rooms_ghost.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\vaults_rooms_hard.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\vaults_rooms_standard.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\branches\zot.des">
+      <Filter>other_folders\dat\des\branches</Filter>
+    </None>
+    <None Include="..\dat\des\builder\alphashops.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\arena.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\decor.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\dummy.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\food.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_caves.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_cc.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_cellular.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_city.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_delve.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_forest.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_geoelf.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_geoelf_castle.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_grids.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_halls.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_loops.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_overlapping_boxes.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_pan_divisions.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_pools.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\layout_vaults.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\rooms.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\shops.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\builder\uniques.des">
+      <Filter>other_folders\dat\des\builder</Filter>
+    </None>
+    <None Include="..\dat\des\portals\bailey.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\bazaar.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\desolation.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\gauntlet.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\icecave.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\ossuary.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\sewer.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\trove.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\volcano.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\wizlab.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\portals\ziggurat.des">
+      <Filter>other_folders\dat\des\portals</Filter>
+    </None>
+    <None Include="..\dat\des\serial\aquarium.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\bayou.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\column_ruins.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\corridors.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\curves.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\forest.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\glass.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\gnoll_camp.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\ice.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\magic_research.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\park.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\rivers.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\sigils.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\undead.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\serial\window.des">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\arena_sprint.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\fedhas.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\linesprint.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\meat.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\menkaure.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\pitsprint.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\red_sonja.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\sprint_mu.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\sprint\zigsprint.des">
+      <Filter>other_folders\dat\des\sprint</Filter>
+    </None>
+    <None Include="..\dat\des\test\suite.des">
+      <Filter>other_folders\dat\des\test</Filter>
+    </None>
+    <None Include="..\dat\des\test\suite-los.des">
+      <Filter>other_folders\dat\des\test</Filter>
+    </None>
+    <None Include="..\dat\des\traps\grate.des">
+      <Filter>other_folders\dat\des\traps</Filter>
+    </None>
+    <None Include="..\dat\des\traps\rats_trap.des">
+      <Filter>other_folders\dat\des\traps</Filter>
+    </None>
+    <None Include="..\dat\des\traps\spider_basket.des">
+      <Filter>other_folders\dat\des\traps</Filter>
+    </None>
+    <None Include="..\dat\des\tutorial\lesson1.des">
+      <Filter>other_folders\dat\des\tutorial</Filter>
+    </None>
+    <None Include="..\dat\des\tutorial\lesson2.des">
+      <Filter>other_folders\dat\des\tutorial</Filter>
+    </None>
+    <None Include="..\dat\des\tutorial\lesson3.des">
+      <Filter>other_folders\dat\des\tutorial</Filter>
+    </None>
+    <None Include="..\dat\des\tutorial\lesson4.des">
+      <Filter>other_folders\dat\des\tutorial</Filter>
+    </None>
+    <None Include="..\dat\des\tutorial\lesson5.des">
+      <Filter>other_folders\dat\des\tutorial</Filter>
+    </None>
+    <None Include="..\dat\des\variable\ambush.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\arcadia.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\cathedral_bats.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\compat.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\d_encompass.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\float.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\geyser.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\ghost.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\grated_community.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\large_abstract.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\large_themed.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\lemuel_castle.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\mini.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\mini_features.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\mini_monsters.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\polyominoes.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\the_bubble.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+    <None Include="..\dat\des\variable\the_grid.des">
+      <Filter>other_folders\dat\des\variable</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\util\crawl.ico">
+      <Filter>other_folders\util</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\dngn.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\feat.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\floor.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\gui.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\icons.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\logo.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\logosmall.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\main.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\player.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\stone_soup_icon-32x32.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\stone_soup_icon-512x512.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\stone_soup_icon-win32.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_baconkid_duvessa_dowan.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_baconkid_gastronok.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_baconkid_mnoleg.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_Cws_Minotauros.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_dragon.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_evil_mage.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_invasion.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_kitchen_duty.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_summoner.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_denzi_undead_warrior.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_firemage.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_froggy_goodgod_tengu_gold.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_froggy_jiyva_felid.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_froggy_natasha_and_boris.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_froggy_rune_and_run_failed_on_dis.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_froggy_thunder_fist_nikola.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_omndra_zot_demon.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_peileppe_bloax_eye.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_ploomutoo_ijyb.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_pooryurik_knight.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_psiweapon_kiku.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_psiweapon_roxanne.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_shadyamish_octm.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_white_noise_entering_the_dungeon.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\title_white_noise_grabbing_the_orb.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+    <Image Include="..\dat\tiles\wall.png">
+      <Filter>other_folders\dat\tiles</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\util\crawl.rc">
+      <Filter>other_folders\util</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss_short_run.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss_short_wait.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\fireworks.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\qw.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\unwoken_rest.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\woken_rest.rc">
+      <Filter>other_folders\test\stress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\eyecandy\fireworks.rc">
+      <Filter>other_folders\test\eyecandy</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\dat\descript\ability.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\backgrounds.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\branches.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cards.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\clouds.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\commands.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\features.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\gods.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\hints.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\items.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\monsters.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\quotes.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\skills.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\species.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\spells.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\status.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tutorial.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\unident.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\unrand.txt">
+      <Filter>other_folders\dat\descript</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\ability.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\branches.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\commands.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\features.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\gods.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\hints.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\items.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\monsters.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\quotes.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\species.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\spells.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\tutorial.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\unident.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\cs\unrand.txt">
+      <Filter>other_folders\dat\descript\cs</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\ability.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\backgrounds.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\branches.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\cards.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\commands.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\hints.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\items.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\monsters.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\quotes.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\skills.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\species.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\unident.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\da\unrand.txt">
+      <Filter>other_folders\dat\descript\da</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\ability.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\backgrounds.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\branches.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\cards.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\commands.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\features.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\gods.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\hints.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\items.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\monsters.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\quotes.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\skills.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\species.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\spells.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\tutorial.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\unident.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\de\unrand.txt">
+      <Filter>other_folders\dat\descript\de</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\ability.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\backgrounds.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\branches.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\gods.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\items.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\monsters.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\species.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\tutorial.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\unident.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\el\unrand.txt">
+      <Filter>other_folders\dat\descript\el</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\ability.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\backgrounds.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\branches.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\cards.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\commands.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\features.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\gods.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\items.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\monsters.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\quotes.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\skills.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\species.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\tutorial.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\unident.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\es\unrand.txt">
+      <Filter>other_folders\dat\descript\es</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\ability.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\backgrounds.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\cards.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\commands.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\features.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\items.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\monsters.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\species.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\spells.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\unident.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fi\unrand.txt">
+      <Filter>other_folders\dat\descript\fi</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\ability.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\backgrounds.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\branches.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\cards.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\commands.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\features.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\gods.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\hints.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\items.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\monsters.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\quotes.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\skills.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\species.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\spells.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\tutorial.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\unident.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\fr\unrand.txt">
+      <Filter>other_folders\dat\descript\fr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\hu\backgrounds.txt">
+      <Filter>other_folders\dat\descript\hu</Filter>
+    </Text>
+    <Text Include="..\dat\descript\hu\species.txt">
+      <Filter>other_folders\dat\descript\hu</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\backgrounds.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\branches.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\cards.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\commands.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\features.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\gods.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\hints.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\items.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\monsters.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\quotes.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\skills.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\species.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\tutorial.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\unident.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\it\unrand.txt">
+      <Filter>other_folders\dat\descript\it</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\ability.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\backgrounds.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\branches.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\cards.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\commands.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\gods.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\hints.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\items.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\monsters.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\skills.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\species.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\spells.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\tutorial.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\unident.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ja\unrand.txt">
+      <Filter>other_folders\dat\descript\ja</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\ability.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\backgrounds.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\branches.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\cards.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\commands.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\features.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\gods.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\hints.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\items.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\monsters.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\quotes.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\skills.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\species.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\spells.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\tutorial.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\unident.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ko\unrand.txt">
+      <Filter>other_folders\dat\descript\ko</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\backgrounds.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\branches.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\commands.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\monsters.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\skills.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\species.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lt\unident.txt">
+      <Filter>other_folders\dat\descript\lt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\ability.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\backgrounds.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\branches.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\cards.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\commands.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\features.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\gods.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\hints.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\items.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\monsters.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\skills.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\species.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\spells.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\tutorial.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\unident.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\lv\unrand.txt">
+      <Filter>other_folders\dat\descript\lv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\ability.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\backgrounds.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\branches.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\cards.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\commands.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\features.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\gods.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\hints.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\items.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\monsters.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\quotes.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\skills.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\species.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\spells.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\tutorial.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\unident.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\zh\unrand.txt">
+      <Filter>other_folders\dat\descript\zh</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\ability.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\cards.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\commands.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\gods.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\items.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\quotes.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\species.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\tutorial.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\unident.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\tr\unrand.txt">
+      <Filter>other_folders\dat\descript\tr</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\ability.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\cards.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\commands.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\features.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\items.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\monsters.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\species.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\sv\unrand.txt">
+      <Filter>other_folders\dat\descript\sv</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\ability.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\backgrounds.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\cards.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\commands.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\features.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\gods.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\hints.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\items.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\quotes.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\skills.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\species.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\spells.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\tutorial.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\unident.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pl\unrand.txt">
+      <Filter>other_folders\dat\descript\pl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\ability.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\backgrounds.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\branches.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\cards.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\commands.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\features.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\gods.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\hints.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\items.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\monsters.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\quotes.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\skills.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\species.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\spells.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\tutorial.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\unident.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\ru\unrand.txt">
+      <Filter>other_folders\dat\descript\ru</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pt\ability.txt">
+      <Filter>other_folders\dat\descript\pt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pt\commands.txt">
+      <Filter>other_folders\dat\descript\pt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pt\gods.txt">
+      <Filter>other_folders\dat\descript\pt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pt\items.txt">
+      <Filter>other_folders\dat\descript\pt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\pt\unident.txt">
+      <Filter>other_folders\dat\descript\pt</Filter>
+    </Text>
+    <Text Include="..\dat\descript\nl\ability.txt">
+      <Filter>other_folders\dat\descript\nl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\nl\tutorial.txt">
+      <Filter>other_folders\dat\descript\nl</Filter>
+    </Text>
+    <Text Include="..\dat\descript\nl\unident.txt">
+      <Filter>other_folders\dat\descript\nl</Filter>
+    </Text>
+    <Text Include="..\dat\des\guide.txt">
+      <Filter>other_folders\dat\des</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\autopickup_exceptions.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\food_colouring.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\glyph_colours.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\menu_colours.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\messages.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\misc.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\runrest_messages.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\defaults\standard_colours.txt">
+      <Filter>other_folders\dat\defaults</Filter>
+    </Text>
+    <Text Include="..\dat\database\FAQ.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\godname.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\godspeak.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\help.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\insult.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\miscname.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\monflee.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\monname.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\monspeak.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\monspell.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\montitle.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\rand_all.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\rand_arm.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\rand_wpn.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\randbook.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\randname.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\shout.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\wpnnoise.txt">
+      <Filter>other_folders\dat\database</Filter>
+    </Text>
+    <Text Include="..\dat\database\el\monflee.txt">
+      <Filter>other_folders\dat\database\el</Filter>
+    </Text>
+    <Text Include="..\dat\database\el\rand_all.txt">
+      <Filter>other_folders\dat\database\el</Filter>
+    </Text>
+    <Text Include="..\dat\database\pl\godspeak.txt">
+      <Filter>other_folders\dat\database\pl</Filter>
+    </Text>
+    <Text Include="..\dat\database\pl\miscname.txt">
+      <Filter>other_folders\dat\database\pl</Filter>
+    </Text>
+    <Text Include="..\dat\des\arrival\arrival_guide.txt">
+      <Filter>other_folders\dat\des\arrival</Filter>
+    </Text>
+    <Text Include="..\dat\des\serial\serial_guide.txt">
+      <Filter>other_folders\dat\des\serial</Filter>
+    </Text>
   </ItemGroup>
 </Project>

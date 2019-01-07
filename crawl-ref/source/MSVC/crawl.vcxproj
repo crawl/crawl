@@ -374,7 +374,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;__STDC_LIMIT_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
@@ -805,6 +805,16 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\ui.cc" />
     <ClCompile Include="..\uncancel.cc" />
     <ClCompile Include="..\unicode.cc" />
+    <ClCompile Include="..\util\monster\monster-main.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\version.cc" />
     <ClCompile Include="..\view.cc" />
     <ClCompile Include="..\viewchar.cc" />
@@ -1276,6 +1286,1623 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Project>{dae92a45-087b-445b-8e94-ba864173a73f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\dat\clua\autofight.lua" />
+    <None Include="..\dat\clua\automagic.lua" />
+    <None Include="..\dat\clua\delays.lua" />
+    <None Include="..\dat\clua\kills.lua" />
+    <None Include="..\dat\clua\stash.lua" />
+    <None Include="..\dat\des\altar\altar.des" />
+    <None Include="..\dat\des\altar\ashenzari_visionary.des" />
+    <None Include="..\dat\des\altar\kiku_cage.des" />
+    <None Include="..\dat\des\altar\lugonu_bribe.des" />
+    <None Include="..\dat\des\altar\nemelex_the_gamble.des" />
+    <None Include="..\dat\des\altar\okawaru_arena.des" />
+    <None Include="..\dat\des\altar\overflow.des" />
+    <None Include="..\dat\des\altar\pakellas_experiments.des" />
+    <None Include="..\dat\des\altar\trog_burn_book.des" />
+    <None Include="..\dat\des\altar\trog_wizard.des" />
+    <None Include="..\dat\des\altar\vehumet_trees.des" />
+    <None Include="..\dat\des\altar\xom_monty_hall.des" />
+    <None Include="..\dat\des\altar\xom_sheep.des" />
+    <None Include="..\dat\des\altar\yredelemnul_ordeal.des" />
+    <None Include="..\dat\des\arrival\large.des" />
+    <None Include="..\dat\des\arrival\simple.des" />
+    <None Include="..\dat\des\arrival\small.des" />
+    <None Include="..\dat\des\arrival\twisted.des" />
+    <None Include="..\dat\des\branches\abyss.des" />
+    <None Include="..\dat\des\branches\blade.des" />
+    <None Include="..\dat\des\branches\coc.des" />
+    <None Include="..\dat\des\branches\crypt.des" />
+    <None Include="..\dat\des\branches\depths.des" />
+    <None Include="..\dat\des\branches\depths_encompass.des" />
+    <None Include="..\dat\des\branches\dis.des" />
+    <None Include="..\dat\des\branches\elf.des" />
+    <None Include="..\dat\des\branches\geh.des" />
+    <None Include="..\dat\des\branches\hell.des" />
+    <None Include="..\dat\des\branches\lair.des" />
+    <None Include="..\dat\des\branches\orc.des" />
+    <None Include="..\dat\des\branches\pan.des" />
+    <None Include="..\dat\des\branches\shoals.des" />
+    <None Include="..\dat\des\branches\slime.des" />
+    <None Include="..\dat\des\branches\snake.des" />
+    <None Include="..\dat\des\branches\spider.des" />
+    <None Include="..\dat\des\branches\swamp.des" />
+    <None Include="..\dat\des\branches\tar.des" />
+    <None Include="..\dat\des\branches\temple.des" />
+    <None Include="..\dat\des\branches\temple_compat.des" />
+    <None Include="..\dat\des\branches\tomb.des" />
+    <None Include="..\dat\des\branches\vaults.des" />
+    <None Include="..\dat\des\branches\vaults_rooms_empty.des" />
+    <None Include="..\dat\des\branches\vaults_rooms_ghost.des" />
+    <None Include="..\dat\des\branches\vaults_rooms_hard.des" />
+    <None Include="..\dat\des\branches\vaults_rooms_standard.des" />
+    <None Include="..\dat\des\branches\zot.des" />
+    <None Include="..\dat\des\builder\alphashops.des" />
+    <None Include="..\dat\des\builder\arena.des" />
+    <None Include="..\dat\des\builder\decor.des" />
+    <None Include="..\dat\des\builder\dummy.des" />
+    <None Include="..\dat\des\builder\food.des" />
+    <None Include="..\dat\des\builder\layout.des" />
+    <None Include="..\dat\des\builder\layout_caves.des" />
+    <None Include="..\dat\des\builder\layout_cc.des" />
+    <None Include="..\dat\des\builder\layout_cellular.des" />
+    <None Include="..\dat\des\builder\layout_city.des" />
+    <None Include="..\dat\des\builder\layout_delve.des" />
+    <None Include="..\dat\des\builder\layout_forest.des" />
+    <None Include="..\dat\des\builder\layout_geoelf.des" />
+    <None Include="..\dat\des\builder\layout_geoelf_castle.des" />
+    <None Include="..\dat\des\builder\layout_grids.des" />
+    <None Include="..\dat\des\builder\layout_halls.des" />
+    <None Include="..\dat\des\builder\layout_loops.des" />
+    <None Include="..\dat\des\builder\layout_overlapping_boxes.des" />
+    <None Include="..\dat\des\builder\layout_pan_divisions.des" />
+    <None Include="..\dat\des\builder\layout_pools.des" />
+    <None Include="..\dat\des\builder\layout_vaults.des" />
+    <None Include="..\dat\des\builder\rooms.des" />
+    <None Include="..\dat\des\builder\shops.des" />
+    <None Include="..\dat\des\builder\uniques.des" />
+    <None Include="..\dat\des\portals\bailey.des" />
+    <None Include="..\dat\des\portals\bazaar.des" />
+    <None Include="..\dat\des\portals\desolation.des" />
+    <None Include="..\dat\des\portals\gauntlet.des" />
+    <None Include="..\dat\des\portals\icecave.des" />
+    <None Include="..\dat\des\portals\ossuary.des" />
+    <None Include="..\dat\des\portals\sewer.des" />
+    <None Include="..\dat\des\portals\trove.des" />
+    <None Include="..\dat\des\portals\volcano.des" />
+    <None Include="..\dat\des\portals\wizlab.des" />
+    <None Include="..\dat\des\portals\ziggurat.des" />
+    <None Include="..\dat\des\serial\aquarium.des" />
+    <None Include="..\dat\des\serial\bayou.des" />
+    <None Include="..\dat\des\serial\column_ruins.des" />
+    <None Include="..\dat\des\serial\corridors.des" />
+    <None Include="..\dat\des\serial\curves.des" />
+    <None Include="..\dat\des\serial\forest.des" />
+    <None Include="..\dat\des\serial\glass.des" />
+    <None Include="..\dat\des\serial\gnoll_camp.des" />
+    <None Include="..\dat\des\serial\ice.des" />
+    <None Include="..\dat\des\serial\magic_research.des" />
+    <None Include="..\dat\des\serial\park.des" />
+    <None Include="..\dat\des\serial\rivers.des" />
+    <None Include="..\dat\des\serial\sigils.des" />
+    <None Include="..\dat\des\serial\undead.des" />
+    <None Include="..\dat\des\serial\window.des" />
+    <None Include="..\dat\des\sprint\arena_sprint.des" />
+    <None Include="..\dat\des\sprint\fedhas.des" />
+    <None Include="..\dat\des\sprint\linesprint.des" />
+    <None Include="..\dat\des\sprint\meat.des" />
+    <None Include="..\dat\des\sprint\menkaure.des" />
+    <None Include="..\dat\des\sprint\pitsprint.des" />
+    <None Include="..\dat\des\sprint\red_sonja.des" />
+    <None Include="..\dat\des\sprint\sprint_mu.des" />
+    <None Include="..\dat\des\sprint\zigsprint.des" />
+    <None Include="..\dat\des\test.des" />
+    <None Include="..\dat\des\test\suite-los.des" />
+    <None Include="..\dat\des\test\suite.des" />
+    <None Include="..\dat\des\traps\grate.des" />
+    <None Include="..\dat\des\traps\rats_trap.des" />
+    <None Include="..\dat\des\traps\spider_basket.des" />
+    <None Include="..\dat\des\tutorial\lesson1.des" />
+    <None Include="..\dat\des\tutorial\lesson2.des" />
+    <None Include="..\dat\des\tutorial\lesson3.des" />
+    <None Include="..\dat\des\tutorial\lesson4.des" />
+    <None Include="..\dat\des\tutorial\lesson5.des" />
+    <None Include="..\dat\des\variable\ambush.des" />
+    <None Include="..\dat\des\variable\arcadia.des" />
+    <None Include="..\dat\des\variable\cathedral_bats.des" />
+    <None Include="..\dat\des\variable\compat.des" />
+    <None Include="..\dat\des\variable\d_encompass.des" />
+    <None Include="..\dat\des\variable\float.des" />
+    <None Include="..\dat\des\variable\geyser.des" />
+    <None Include="..\dat\des\variable\ghost.des" />
+    <None Include="..\dat\des\variable\grated_community.des" />
+    <None Include="..\dat\des\variable\large_abstract.des" />
+    <None Include="..\dat\des\variable\large_themed.des" />
+    <None Include="..\dat\des\variable\lemuel_castle.des" />
+    <None Include="..\dat\des\variable\mini.des" />
+    <None Include="..\dat\des\variable\mini_features.des" />
+    <None Include="..\dat\des\variable\mini_monsters.des" />
+    <None Include="..\dat\des\variable\polyominoes.des" />
+    <None Include="..\dat\des\variable\the_bubble.des" />
+    <None Include="..\dat\des\variable\the_grid.des" />
+    <None Include="..\dat\dist_bones\bones.store.Crypt" />
+    <None Include="..\dat\dist_bones\bones.store.D-10" />
+    <None Include="..\dat\dist_bones\bones.store.D-11" />
+    <None Include="..\dat\dist_bones\bones.store.D-12" />
+    <None Include="..\dat\dist_bones\bones.store.D-13" />
+    <None Include="..\dat\dist_bones\bones.store.D-14" />
+    <None Include="..\dat\dist_bones\bones.store.D-15" />
+    <None Include="..\dat\dist_bones\bones.store.D-3" />
+    <None Include="..\dat\dist_bones\bones.store.D-4" />
+    <None Include="..\dat\dist_bones\bones.store.D-5" />
+    <None Include="..\dat\dist_bones\bones.store.D-6" />
+    <None Include="..\dat\dist_bones\bones.store.D-7" />
+    <None Include="..\dat\dist_bones\bones.store.D-8" />
+    <None Include="..\dat\dist_bones\bones.store.D-9" />
+    <None Include="..\dat\dist_bones\bones.store.Depths" />
+    <None Include="..\dat\dist_bones\bones.store.Elf" />
+    <None Include="..\dat\dist_bones\bones.store.Hells" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-1" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-2" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-3" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-4" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-5" />
+    <None Include="..\dat\dist_bones\bones.store.Lair-6" />
+    <None Include="..\dat\dist_bones\bones.store.Orc" />
+    <None Include="..\dat\dist_bones\bones.store.Pan" />
+    <None Include="..\dat\dist_bones\bones.store.Shoals" />
+    <None Include="..\dat\dist_bones\bones.store.Slime" />
+    <None Include="..\dat\dist_bones\bones.store.Snake" />
+    <None Include="..\dat\dist_bones\bones.store.Spider" />
+    <None Include="..\dat\dist_bones\bones.store.Swamp" />
+    <None Include="..\dat\dist_bones\bones.store.Tomb" />
+    <None Include="..\dat\dist_bones\bones.store.Vaults" />
+    <None Include="..\dat\dist_bones\bones.store.Zig" />
+    <None Include="..\dat\dist_bones\bones.store.Zot" />
+    <None Include="..\dat\dist_bones\README" />
+    <None Include="..\dat\dlua\debug.lua" />
+    <None Include="..\dat\dlua\dungeon.lua" />
+    <None Include="..\dat\dlua\fnwrap.lua" />
+    <None Include="..\dat\dlua\gauntlet.lua" />
+    <None Include="..\dat\dlua\ghost.lua" />
+    <None Include="..\dat\dlua\init.lua" />
+    <None Include="..\dat\dlua\iter.lua" />
+    <None Include="..\dat\dlua\layout\geoelf.lua" />
+    <None Include="..\dat\dlua\layout\geoelf_corridors.lua" />
+    <None Include="..\dat\dlua\layout\geoelf_directions.lua" />
+    <None Include="..\dat\dlua\layout\geoelf_glyphs.lua" />
+    <None Include="..\dat\dlua\layout\geoelf_rooms.lua" />
+    <None Include="..\dat\dlua\layout\hyper.lua" />
+    <None Include="..\dat\dlua\layout\hyper_caves.lua" />
+    <None Include="..\dat\dlua\layout\hyper_city.lua" />
+    <None Include="..\dat\dlua\layout\hyper_debug.lua" />
+    <None Include="..\dat\dlua\layout\hyper_decor.lua" />
+    <None Include="..\dat\dlua\layout\hyper_fort.lua" />
+    <None Include="..\dat\dlua\layout\hyper_paint.lua" />
+    <None Include="..\dat\dlua\layout\hyper_place.lua" />
+    <None Include="..\dat\dlua\layout\hyper_rooms.lua" />
+    <None Include="..\dat\dlua\layout\hyper_shapes.lua" />
+    <None Include="..\dat\dlua\layout\hyper_strategy.lua" />
+    <None Include="..\dat\dlua\layout\hyper_usage.lua" />
+    <None Include="..\dat\dlua\layout\layout.lua" />
+    <None Include="..\dat\dlua\layout\minimum_map_area.lua" />
+    <None Include="..\dat\dlua\layout\omnigrid.lua" />
+    <None Include="..\dat\dlua\layout\procedural.lua" />
+    <None Include="..\dat\dlua\layout\procedural_complex.lua" />
+    <None Include="..\dat\dlua\layout\procedural_primitives.lua" />
+    <None Include="..\dat\dlua\layout\procedural_transform.lua" />
+    <None Include="..\dat\dlua\layout\rooms_primitive.lua" />
+    <None Include="..\dat\dlua\layout\theme.lua" />
+    <None Include="..\dat\dlua\layout\vector.lua" />
+    <None Include="..\dat\dlua\layout\zonify.lua" />
+    <None Include="..\dat\dlua\lm_1way.lua" />
+    <None Include="..\dat\dlua\lm_door.lua" />
+    <None Include="..\dat\dlua\lm_fog.lua" />
+    <None Include="..\dat\dlua\lm_items.lua" />
+    <None Include="..\dat\dlua\lm_monst.lua" />
+    <None Include="..\dat\dlua\lm_mon_prop.lua" />
+    <None Include="..\dat\dlua\lm_mslav.lua" />
+    <None Include="..\dat\dlua\lm_named_hatch.lua" />
+    <None Include="..\dat\dlua\lm_pdesc.lua" />
+    <None Include="..\dat\dlua\lm_props.lua" />
+    <None Include="..\dat\dlua\lm_timed.lua" />
+    <None Include="..\dat\dlua\lm_tmsg.lua" />
+    <None Include="..\dat\dlua\lm_toll.lua" />
+    <None Include="..\dat\dlua\lm_trans.lua" />
+    <None Include="..\dat\dlua\lm_trig.lua" />
+    <None Include="..\dat\dlua\lm_trove.lua" />
+    <None Include="..\dat\dlua\loadmaps.lua" />
+    <None Include="..\dat\dlua\luamark.lua" />
+    <None Include="..\dat\dlua\macro.lua" />
+    <None Include="..\dat\dlua\mapinit.lua" />
+    <None Include="..\dat\dlua\persist.lua" />
+    <None Include="..\dat\dlua\point.lua" />
+    <None Include="..\dat\dlua\profiler.lua" />
+    <None Include="..\dat\dlua\sanity.lua" />
+    <None Include="..\dat\dlua\sprint.lua" />
+    <None Include="..\dat\dlua\stress.lua" />
+    <None Include="..\dat\dlua\tags.lua" />
+    <None Include="..\dat\dlua\test.lua" />
+    <None Include="..\dat\dlua\tutorial.lua" />
+    <None Include="..\dat\dlua\userbase.lua" />
+    <None Include="..\dat\dlua\util.lua" />
+    <None Include="..\dat\dlua\vault.lua" />
+    <None Include="..\dat\dlua\v_debug.lua" />
+    <None Include="..\dat\dlua\v_layouts.lua" />
+    <None Include="..\dat\dlua\v_paint.lua" />
+    <None Include="..\dat\dlua\v_rooms.lua" />
+    <None Include="..\dat\dlua\v_shapes.lua" />
+    <None Include="..\dat\dlua\ziggurat.lua" />
+    <None Include="..\dat\emacs\dir-locals.el" />
+    <None Include="..\dat\lua-wiz\damtally.lua" />
+    <None Include="..\dat\vim\syntax\levdes.vim" />
+    <None Include="..\scripts\csim.lua" />
+    <None Include="..\scripts\genlevel.lua" />
+    <None Include="..\scripts\genmap.lua" />
+    <None Include="..\scripts\place-population.lua" />
+    <None Include="..\scripts\training_simu.lua" />
+    <None Include="..\test\abyss_shift.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\big\README">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\bounce.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\bounce2.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\bstair-gen.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\corpse.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\fsim.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\item_curse.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\los_csc.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\los_maps.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\los_symm.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\monplace.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\monster-name.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\monster-plant-pathfind.lua.disabled">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\mutation.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\mut_species.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\rune-gen.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\shoal-hut.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\snake-rune.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\stress\abyss">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\stress\run">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\stress\timeall">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\unique.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\uniquegen.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\vault_generation.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\test\youdie.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\art-data.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\checkcommit">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\checkwhite">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\cmd-name.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\config.ld">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\configure">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\cpp_version">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\crawl.nsi">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\db_lint">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\db_splice">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\db_split">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\dcss.svg">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\descript-sort.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\key_changes.tex">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\quickstart.tex">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\README.tex">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\screen.eps">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\screen.fig">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\docs\screen.pdf">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\edit_vault">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\FAQ2html.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\find_font">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_abilities">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_backgrounds">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_branches">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_cards">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_clouds">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_features">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_items">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_mons">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_species">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_spells">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_tiles_gui">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gather_tiles_mons">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-all.cmd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-apt.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-cflg.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-luatags.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-mi-enum">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen-mst.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\generate_zombie_tile.sh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen_ver.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\gen_ver_msvc.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\good-depfile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\includes.sh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\levcomp.lpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\levcomp.ypp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\list_merged_branches.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\logotype.psd">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\mac-crawl-build-update-cdo">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\makedb.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\Makefile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\optimize-pngs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\remove_unused_headers.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\rotate-tile.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\salvage-credits.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\split-enum.py">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\tag-major-upgrade">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\testdb.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\tiledef_lint">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\tiles_unused">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\txc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\unbrace">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\undoku.sed">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\unrest.pl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\util\webtiles-init-player.sh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\dat\tiles\dngn.png" />
+    <Image Include="..\dat\tiles\feat.png" />
+    <Image Include="..\dat\tiles\floor.png" />
+    <Image Include="..\dat\tiles\gui.png" />
+    <Image Include="..\dat\tiles\icons.png" />
+    <Image Include="..\dat\tiles\logo.png" />
+    <Image Include="..\dat\tiles\logosmall.png" />
+    <Image Include="..\dat\tiles\main.png" />
+    <Image Include="..\dat\tiles\player.png" />
+    <Image Include="..\dat\tiles\stone_soup_icon-32x32.png" />
+    <Image Include="..\dat\tiles\stone_soup_icon-512x512.png" />
+    <Image Include="..\dat\tiles\stone_soup_icon-win32.png" />
+    <Image Include="..\dat\tiles\title_baconkid_duvessa_dowan.png" />
+    <Image Include="..\dat\tiles\title_baconkid_gastronok.png" />
+    <Image Include="..\dat\tiles\title_baconkid_mnoleg.png" />
+    <Image Include="..\dat\tiles\title_Cws_Minotauros.png" />
+    <Image Include="..\dat\tiles\title_denzi_dragon.png" />
+    <Image Include="..\dat\tiles\title_denzi_evil_mage.png" />
+    <Image Include="..\dat\tiles\title_denzi_invasion.png" />
+    <Image Include="..\dat\tiles\title_denzi_kitchen_duty.png" />
+    <Image Include="..\dat\tiles\title_denzi_summoner.png" />
+    <Image Include="..\dat\tiles\title_denzi_undead_warrior.png" />
+    <Image Include="..\dat\tiles\title_firemage.png" />
+    <Image Include="..\dat\tiles\title_froggy_goodgod_tengu_gold.png" />
+    <Image Include="..\dat\tiles\title_froggy_jiyva_felid.png" />
+    <Image Include="..\dat\tiles\title_froggy_natasha_and_boris.png" />
+    <Image Include="..\dat\tiles\title_froggy_rune_and_run_failed_on_dis.png" />
+    <Image Include="..\dat\tiles\title_froggy_thunder_fist_nikola.png" />
+    <Image Include="..\dat\tiles\title_omndra_zot_demon.png" />
+    <Image Include="..\dat\tiles\title_peileppe_bloax_eye.png" />
+    <Image Include="..\dat\tiles\title_ploomutoo_ijyb.png" />
+    <Image Include="..\dat\tiles\title_pooryurik_knight.png" />
+    <Image Include="..\dat\tiles\title_psiweapon_kiku.png" />
+    <Image Include="..\dat\tiles\title_psiweapon_roxanne.png" />
+    <Image Include="..\dat\tiles\title_shadyamish_octm.png" />
+    <Image Include="..\dat\tiles\title_white_noise_entering_the_dungeon.png" />
+    <Image Include="..\dat\tiles\title_white_noise_grabbing_the_orb.png" />
+    <Image Include="..\dat\tiles\wall.png" />
+    <Image Include="..\util\crawl.ico">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\test\eyecandy\fireworks.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss_short_run.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\abyss_short_wait.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\fireworks.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\qw.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\unwoken_rest.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\test\stress\woken_rest.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+    <ResourceCompile Include="..\util\crawl.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\dat\database\el\monflee.txt" />
+    <Text Include="..\dat\database\el\rand_all.txt" />
+    <Text Include="..\dat\database\FAQ.txt" />
+    <Text Include="..\dat\database\godname.txt" />
+    <Text Include="..\dat\database\godspeak.txt" />
+    <Text Include="..\dat\database\help.txt" />
+    <Text Include="..\dat\database\insult.txt" />
+    <Text Include="..\dat\database\miscname.txt" />
+    <Text Include="..\dat\database\monflee.txt" />
+    <Text Include="..\dat\database\monname.txt" />
+    <Text Include="..\dat\database\monspeak.txt" />
+    <Text Include="..\dat\database\monspell.txt" />
+    <Text Include="..\dat\database\montitle.txt" />
+    <Text Include="..\dat\database\pl\godspeak.txt" />
+    <Text Include="..\dat\database\pl\miscname.txt" />
+    <Text Include="..\dat\database\randbook.txt" />
+    <Text Include="..\dat\database\randname.txt" />
+    <Text Include="..\dat\database\rand_all.txt" />
+    <Text Include="..\dat\database\rand_arm.txt" />
+    <Text Include="..\dat\database\rand_wpn.txt" />
+    <Text Include="..\dat\database\shout.txt" />
+    <Text Include="..\dat\database\wpnnoise.txt" />
+    <Text Include="..\dat\defaults\autopickup_exceptions.txt" />
+    <Text Include="..\dat\defaults\food_colouring.txt" />
+    <Text Include="..\dat\defaults\glyph_colours.txt" />
+    <Text Include="..\dat\defaults\menu_colours.txt" />
+    <Text Include="..\dat\defaults\messages.txt" />
+    <Text Include="..\dat\defaults\misc.txt" />
+    <Text Include="..\dat\defaults\runrest_messages.txt" />
+    <Text Include="..\dat\defaults\standard_colours.txt" />
+    <Text Include="..\dat\descript\ability.txt" />
+    <Text Include="..\dat\descript\backgrounds.txt" />
+    <Text Include="..\dat\descript\branches.txt" />
+    <Text Include="..\dat\descript\cards.txt" />
+    <Text Include="..\dat\descript\clouds.txt" />
+    <Text Include="..\dat\descript\commands.txt" />
+    <Text Include="..\dat\descript\cs\ability.txt" />
+    <Text Include="..\dat\descript\cs\branches.txt" />
+    <Text Include="..\dat\descript\cs\commands.txt" />
+    <Text Include="..\dat\descript\cs\features.txt" />
+    <Text Include="..\dat\descript\cs\gods.txt" />
+    <Text Include="..\dat\descript\cs\hints.txt" />
+    <Text Include="..\dat\descript\cs\items.txt" />
+    <Text Include="..\dat\descript\cs\monsters.txt" />
+    <Text Include="..\dat\descript\cs\quotes.txt" />
+    <Text Include="..\dat\descript\cs\species.txt" />
+    <Text Include="..\dat\descript\cs\spells.txt" />
+    <Text Include="..\dat\descript\cs\tutorial.txt" />
+    <Text Include="..\dat\descript\cs\unident.txt" />
+    <Text Include="..\dat\descript\cs\unrand.txt" />
+    <Text Include="..\dat\descript\da\ability.txt" />
+    <Text Include="..\dat\descript\da\backgrounds.txt" />
+    <Text Include="..\dat\descript\da\branches.txt" />
+    <Text Include="..\dat\descript\da\cards.txt" />
+    <Text Include="..\dat\descript\da\commands.txt" />
+    <Text Include="..\dat\descript\da\hints.txt" />
+    <Text Include="..\dat\descript\da\items.txt" />
+    <Text Include="..\dat\descript\da\monsters.txt" />
+    <Text Include="..\dat\descript\da\quotes.txt" />
+    <Text Include="..\dat\descript\da\skills.txt" />
+    <Text Include="..\dat\descript\da\species.txt" />
+    <Text Include="..\dat\descript\da\unident.txt" />
+    <Text Include="..\dat\descript\da\unrand.txt" />
+    <Text Include="..\dat\descript\de\ability.txt" />
+    <Text Include="..\dat\descript\de\backgrounds.txt" />
+    <Text Include="..\dat\descript\de\branches.txt" />
+    <Text Include="..\dat\descript\de\cards.txt" />
+    <Text Include="..\dat\descript\de\commands.txt" />
+    <Text Include="..\dat\descript\de\features.txt" />
+    <Text Include="..\dat\descript\de\gods.txt" />
+    <Text Include="..\dat\descript\de\hints.txt" />
+    <Text Include="..\dat\descript\de\items.txt" />
+    <Text Include="..\dat\descript\de\monsters.txt" />
+    <Text Include="..\dat\descript\de\quotes.txt" />
+    <Text Include="..\dat\descript\de\skills.txt" />
+    <Text Include="..\dat\descript\de\species.txt" />
+    <Text Include="..\dat\descript\de\spells.txt" />
+    <Text Include="..\dat\descript\de\tutorial.txt" />
+    <Text Include="..\dat\descript\de\unident.txt" />
+    <Text Include="..\dat\descript\de\unrand.txt" />
+    <Text Include="..\dat\descript\el\ability.txt" />
+    <Text Include="..\dat\descript\el\backgrounds.txt" />
+    <Text Include="..\dat\descript\el\branches.txt" />
+    <Text Include="..\dat\descript\el\gods.txt" />
+    <Text Include="..\dat\descript\el\items.txt" />
+    <Text Include="..\dat\descript\el\monsters.txt" />
+    <Text Include="..\dat\descript\el\species.txt" />
+    <Text Include="..\dat\descript\el\tutorial.txt" />
+    <Text Include="..\dat\descript\el\unident.txt" />
+    <Text Include="..\dat\descript\el\unrand.txt" />
+    <Text Include="..\dat\descript\es\ability.txt" />
+    <Text Include="..\dat\descript\es\backgrounds.txt" />
+    <Text Include="..\dat\descript\es\branches.txt" />
+    <Text Include="..\dat\descript\es\cards.txt" />
+    <Text Include="..\dat\descript\es\commands.txt" />
+    <Text Include="..\dat\descript\es\features.txt" />
+    <Text Include="..\dat\descript\es\gods.txt" />
+    <Text Include="..\dat\descript\es\items.txt" />
+    <Text Include="..\dat\descript\es\monsters.txt" />
+    <Text Include="..\dat\descript\es\quotes.txt" />
+    <Text Include="..\dat\descript\es\skills.txt" />
+    <Text Include="..\dat\descript\es\species.txt" />
+    <Text Include="..\dat\descript\es\tutorial.txt" />
+    <Text Include="..\dat\descript\es\unident.txt" />
+    <Text Include="..\dat\descript\es\unrand.txt" />
+    <Text Include="..\dat\descript\features.txt" />
+    <Text Include="..\dat\descript\fi\ability.txt" />
+    <Text Include="..\dat\descript\fi\backgrounds.txt" />
+    <Text Include="..\dat\descript\fi\cards.txt" />
+    <Text Include="..\dat\descript\fi\commands.txt" />
+    <Text Include="..\dat\descript\fi\features.txt" />
+    <Text Include="..\dat\descript\fi\items.txt" />
+    <Text Include="..\dat\descript\fi\monsters.txt" />
+    <Text Include="..\dat\descript\fi\species.txt" />
+    <Text Include="..\dat\descript\fi\spells.txt" />
+    <Text Include="..\dat\descript\fi\unident.txt" />
+    <Text Include="..\dat\descript\fi\unrand.txt" />
+    <Text Include="..\dat\descript\fr\ability.txt" />
+    <Text Include="..\dat\descript\fr\backgrounds.txt" />
+    <Text Include="..\dat\descript\fr\branches.txt" />
+    <Text Include="..\dat\descript\fr\cards.txt" />
+    <Text Include="..\dat\descript\fr\commands.txt" />
+    <Text Include="..\dat\descript\fr\features.txt" />
+    <Text Include="..\dat\descript\fr\gods.txt" />
+    <Text Include="..\dat\descript\fr\hints.txt" />
+    <Text Include="..\dat\descript\fr\items.txt" />
+    <Text Include="..\dat\descript\fr\monsters.txt" />
+    <Text Include="..\dat\descript\fr\quotes.txt" />
+    <Text Include="..\dat\descript\fr\skills.txt" />
+    <Text Include="..\dat\descript\fr\species.txt" />
+    <Text Include="..\dat\descript\fr\spells.txt" />
+    <Text Include="..\dat\descript\fr\tutorial.txt" />
+    <Text Include="..\dat\descript\fr\unident.txt" />
+    <Text Include="..\dat\descript\fr\unrand.txt" />
+    <Text Include="..\dat\descript\gods.txt" />
+    <Text Include="..\dat\descript\hints.txt" />
+    <Text Include="..\dat\descript\hu\backgrounds.txt" />
+    <Text Include="..\dat\descript\hu\species.txt" />
+    <Text Include="..\dat\descript\items.txt" />
+    <Text Include="..\dat\descript\it\backgrounds.txt" />
+    <Text Include="..\dat\descript\it\branches.txt" />
+    <Text Include="..\dat\descript\it\cards.txt" />
+    <Text Include="..\dat\descript\it\commands.txt" />
+    <Text Include="..\dat\descript\it\features.txt" />
+    <Text Include="..\dat\descript\it\gods.txt" />
+    <Text Include="..\dat\descript\it\hints.txt" />
+    <Text Include="..\dat\descript\it\items.txt" />
+    <Text Include="..\dat\descript\it\monsters.txt" />
+    <Text Include="..\dat\descript\it\quotes.txt" />
+    <Text Include="..\dat\descript\it\skills.txt" />
+    <Text Include="..\dat\descript\it\species.txt" />
+    <Text Include="..\dat\descript\it\tutorial.txt" />
+    <Text Include="..\dat\descript\it\unident.txt" />
+    <Text Include="..\dat\descript\it\unrand.txt" />
+    <Text Include="..\dat\descript\ja\ability.txt" />
+    <Text Include="..\dat\descript\ja\backgrounds.txt" />
+    <Text Include="..\dat\descript\ja\branches.txt" />
+    <Text Include="..\dat\descript\ja\cards.txt" />
+    <Text Include="..\dat\descript\ja\commands.txt" />
+    <Text Include="..\dat\descript\ja\gods.txt" />
+    <Text Include="..\dat\descript\ja\hints.txt" />
+    <Text Include="..\dat\descript\ja\items.txt" />
+    <Text Include="..\dat\descript\ja\monsters.txt" />
+    <Text Include="..\dat\descript\ja\skills.txt" />
+    <Text Include="..\dat\descript\ja\species.txt" />
+    <Text Include="..\dat\descript\ja\spells.txt" />
+    <Text Include="..\dat\descript\ja\tutorial.txt" />
+    <Text Include="..\dat\descript\ja\unident.txt" />
+    <Text Include="..\dat\descript\ja\unrand.txt" />
+    <Text Include="..\dat\descript\ko\ability.txt" />
+    <Text Include="..\dat\descript\ko\backgrounds.txt" />
+    <Text Include="..\dat\descript\ko\branches.txt" />
+    <Text Include="..\dat\descript\ko\cards.txt" />
+    <Text Include="..\dat\descript\ko\commands.txt" />
+    <Text Include="..\dat\descript\ko\features.txt" />
+    <Text Include="..\dat\descript\ko\gods.txt" />
+    <Text Include="..\dat\descript\ko\hints.txt" />
+    <Text Include="..\dat\descript\ko\items.txt" />
+    <Text Include="..\dat\descript\ko\monsters.txt" />
+    <Text Include="..\dat\descript\ko\quotes.txt" />
+    <Text Include="..\dat\descript\ko\skills.txt" />
+    <Text Include="..\dat\descript\ko\species.txt" />
+    <Text Include="..\dat\descript\ko\spells.txt" />
+    <Text Include="..\dat\descript\ko\tutorial.txt" />
+    <Text Include="..\dat\descript\ko\unident.txt" />
+    <Text Include="..\dat\descript\ko\unrand.txt" />
+    <Text Include="..\dat\descript\lt\backgrounds.txt" />
+    <Text Include="..\dat\descript\lt\branches.txt" />
+    <Text Include="..\dat\descript\lt\commands.txt" />
+    <Text Include="..\dat\descript\lt\monsters.txt" />
+    <Text Include="..\dat\descript\lt\skills.txt" />
+    <Text Include="..\dat\descript\lt\species.txt" />
+    <Text Include="..\dat\descript\lt\unident.txt" />
+    <Text Include="..\dat\descript\lv\ability.txt" />
+    <Text Include="..\dat\descript\lv\backgrounds.txt" />
+    <Text Include="..\dat\descript\lv\branches.txt" />
+    <Text Include="..\dat\descript\lv\cards.txt" />
+    <Text Include="..\dat\descript\lv\commands.txt" />
+    <Text Include="..\dat\descript\lv\features.txt" />
+    <Text Include="..\dat\descript\lv\gods.txt" />
+    <Text Include="..\dat\descript\lv\hints.txt" />
+    <Text Include="..\dat\descript\lv\items.txt" />
+    <Text Include="..\dat\descript\lv\monsters.txt" />
+    <Text Include="..\dat\descript\lv\skills.txt" />
+    <Text Include="..\dat\descript\lv\species.txt" />
+    <Text Include="..\dat\descript\lv\spells.txt" />
+    <Text Include="..\dat\descript\lv\tutorial.txt" />
+    <Text Include="..\dat\descript\lv\unident.txt" />
+    <Text Include="..\dat\descript\lv\unrand.txt" />
+    <Text Include="..\dat\descript\monsters.txt" />
+    <Text Include="..\dat\descript\nl\ability.txt" />
+    <Text Include="..\dat\descript\nl\tutorial.txt" />
+    <Text Include="..\dat\descript\nl\unident.txt" />
+    <Text Include="..\dat\descript\pl\ability.txt" />
+    <Text Include="..\dat\descript\pl\backgrounds.txt" />
+    <Text Include="..\dat\descript\pl\cards.txt" />
+    <Text Include="..\dat\descript\pl\commands.txt" />
+    <Text Include="..\dat\descript\pl\features.txt" />
+    <Text Include="..\dat\descript\pl\gods.txt" />
+    <Text Include="..\dat\descript\pl\hints.txt" />
+    <Text Include="..\dat\descript\pl\items.txt" />
+    <Text Include="..\dat\descript\pl\quotes.txt" />
+    <Text Include="..\dat\descript\pl\skills.txt" />
+    <Text Include="..\dat\descript\pl\species.txt" />
+    <Text Include="..\dat\descript\pl\spells.txt" />
+    <Text Include="..\dat\descript\pl\tutorial.txt" />
+    <Text Include="..\dat\descript\pl\unident.txt" />
+    <Text Include="..\dat\descript\pl\unrand.txt" />
+    <Text Include="..\dat\descript\pt\ability.txt" />
+    <Text Include="..\dat\descript\pt\commands.txt" />
+    <Text Include="..\dat\descript\pt\gods.txt" />
+    <Text Include="..\dat\descript\pt\items.txt" />
+    <Text Include="..\dat\descript\pt\unident.txt" />
+    <Text Include="..\dat\descript\quotes.txt" />
+    <Text Include="..\dat\descript\ru\ability.txt" />
+    <Text Include="..\dat\descript\ru\backgrounds.txt" />
+    <Text Include="..\dat\descript\ru\branches.txt" />
+    <Text Include="..\dat\descript\ru\cards.txt" />
+    <Text Include="..\dat\descript\ru\commands.txt" />
+    <Text Include="..\dat\descript\ru\features.txt" />
+    <Text Include="..\dat\descript\ru\gods.txt" />
+    <Text Include="..\dat\descript\ru\hints.txt" />
+    <Text Include="..\dat\descript\ru\items.txt" />
+    <Text Include="..\dat\descript\ru\monsters.txt" />
+    <Text Include="..\dat\descript\ru\quotes.txt" />
+    <Text Include="..\dat\descript\ru\skills.txt" />
+    <Text Include="..\dat\descript\ru\species.txt" />
+    <Text Include="..\dat\descript\ru\spells.txt" />
+    <Text Include="..\dat\descript\ru\tutorial.txt" />
+    <Text Include="..\dat\descript\ru\unident.txt" />
+    <Text Include="..\dat\descript\ru\unrand.txt" />
+    <Text Include="..\dat\descript\skills.txt" />
+    <Text Include="..\dat\descript\species.txt" />
+    <Text Include="..\dat\descript\spells.txt" />
+    <Text Include="..\dat\descript\status.txt" />
+    <Text Include="..\dat\descript\sv\ability.txt" />
+    <Text Include="..\dat\descript\sv\cards.txt" />
+    <Text Include="..\dat\descript\sv\commands.txt" />
+    <Text Include="..\dat\descript\sv\features.txt" />
+    <Text Include="..\dat\descript\sv\items.txt" />
+    <Text Include="..\dat\descript\sv\monsters.txt" />
+    <Text Include="..\dat\descript\sv\species.txt" />
+    <Text Include="..\dat\descript\sv\unrand.txt" />
+    <Text Include="..\dat\descript\tr\ability.txt" />
+    <Text Include="..\dat\descript\tr\cards.txt" />
+    <Text Include="..\dat\descript\tr\commands.txt" />
+    <Text Include="..\dat\descript\tr\gods.txt" />
+    <Text Include="..\dat\descript\tr\items.txt" />
+    <Text Include="..\dat\descript\tr\quotes.txt" />
+    <Text Include="..\dat\descript\tr\species.txt" />
+    <Text Include="..\dat\descript\tr\tutorial.txt" />
+    <Text Include="..\dat\descript\tr\unident.txt" />
+    <Text Include="..\dat\descript\tr\unrand.txt" />
+    <Text Include="..\dat\descript\tutorial.txt" />
+    <Text Include="..\dat\descript\unident.txt" />
+    <Text Include="..\dat\descript\unrand.txt" />
+    <Text Include="..\dat\descript\zh\ability.txt" />
+    <Text Include="..\dat\descript\zh\backgrounds.txt" />
+    <Text Include="..\dat\descript\zh\branches.txt" />
+    <Text Include="..\dat\descript\zh\cards.txt" />
+    <Text Include="..\dat\descript\zh\commands.txt" />
+    <Text Include="..\dat\descript\zh\features.txt" />
+    <Text Include="..\dat\descript\zh\gods.txt" />
+    <Text Include="..\dat\descript\zh\hints.txt" />
+    <Text Include="..\dat\descript\zh\items.txt" />
+    <Text Include="..\dat\descript\zh\monsters.txt" />
+    <Text Include="..\dat\descript\zh\quotes.txt" />
+    <Text Include="..\dat\descript\zh\skills.txt" />
+    <Text Include="..\dat\descript\zh\species.txt" />
+    <Text Include="..\dat\descript\zh\spells.txt" />
+    <Text Include="..\dat\descript\zh\tutorial.txt" />
+    <Text Include="..\dat\descript\zh\unident.txt" />
+    <Text Include="..\dat\descript\zh\unrand.txt" />
+    <Text Include="..\dat\des\arrival\arrival_guide.txt" />
+    <Text Include="..\dat\des\guide.txt" />
+    <Text Include="..\dat\des\serial\serial_guide.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
