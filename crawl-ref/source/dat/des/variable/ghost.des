@@ -1711,11 +1711,11 @@ KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
           "    . ring mail good_item | ring mail randart w:5 " ..
           "        | scale mail good_item | scale mail randart w:5")
 }}
-# Add pairs of doors near the landing area at up to two locations, each with
-# independent chances. Also randomize exit transporters and tower inner walls.
-SHUFFLE: aK / qL, rM / sN
+# Sometimes add an additional pairs of doors near the landing area. Also
+# randomize exit transporters and tower inner walls.
+SHUFFLE: qK / rL
 NSUBST:  R = R / '
-SUBST:   ar = c, K = G, qs = +, LN = -, M = T, u : ccG-
+SUBST:   q = c, r = ~, K = T, L = -, s : ccG-
 # Scale loot and monsters with depth.
 : if you.depth() < 5 then
 SUBST:   h = %$, ij= `, 2 = 2'
@@ -1732,6 +1732,7 @@ NSUBST:   3 = 4 / 3
 :     end
 
 : end
+KFEAT:   ~ = closed_clear_door
 MARKER:  P = lua:transp_loc("gnarly_gnolls_entry")
 MARKER:  Q = lua:transp_dest_loc("gnarly_gnolls_entry")
 MARKER:  R = lua:transp_loc("gnarly_gnolls_exit")
@@ -1747,17 +1748,17 @@ MAP
 .wwwwwwwwwwwwWwwwwwwwwwwww.
 .wwwwwwwwwwwwWwwwwwwwwwwww.
 .wwncccn...........ncccnww.
-.wwc'u-c.cnc.S.cnc.c-u'cww.
+.wwc's-c.cnc.S.cnc.c-s'cww.
 .wwc---cncRccnccRcnc---cww.
 .wwncc---------------ccnww.
-.ww.Gc-cnrnccnacncnc-cG.ww.
-.ww.cc-cpMpcp-Kcej$c-cc.ww.
-.WW.n'-+-----QTcdO$+-2n.WW.
-.ww.cc-cpMpcp-Kchi$c-cc.ww.
-.ww.Gc-cnrnccnacncnc-cG.ww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
+.ww.cc-cpKpcp-Gcej$c-cc.ww.
+.WW.n'-~-----QTcdO$~-2n.WW.
+.ww.cc-cpKpcp-Gchi$c-cc.ww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
 .wwncc---------------ccnww.
 .wwc---cncRccnccRcnc---cww.
-.wwc'u-c.cnc.P.cnc.c-u'cww.
+.wwc's-c.cnc.P.cnc.c-s'cww.
 .wwncccn...........ncccnww.
 .wwwwwwwwwww"""wwwwwwwwwww.
 .wwwwwwwwwww"""wwwwwwwwwww.
