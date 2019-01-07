@@ -31,18 +31,20 @@
 
 * The administrators of public crawl servers, both present:
     John Boyle (crawl.berotato.org)
-    Jan Anders Bremer (crawl.lantea.net)
     Rax E. Dillon (crawl.akrasiac.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex Jurkiewicz (crawl.project357.org)
-    Aleksi Miikkael Luukkonen (crawl.lantea.net)
     Neil Moore (crawl.s-z.org)
     Marc H. Thoben (crawl.develz.org)
-    dplusplus (http://lazy-life.ddo.jp/)
+    dplusplus (lazy-life.ddo.jp)
+    floraline (crawl.kelbi.org)
   and past:
-    sd1989 (kr.dobrazupa.org)
+    Jan Anders Bremer (crawl.lantea.net)
+    Aleksi Miikkael Luukkonen (crawl.lantea.net)
     joosa (rl.heh.fi)
+    sd1989 (kr.dobrazupa.org)
     phunktion (crawl.somatika.net)
+    ZiBuDo (crawl.jorgrun.rocks)
 
 * The members of various usability testing teams from the department of
   Information Processing Science in Oulu University:
