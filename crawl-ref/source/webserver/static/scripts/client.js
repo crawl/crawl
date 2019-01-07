@@ -1166,12 +1166,24 @@ function (exports, $, key_conversion, chat, comm) {
 
     function decode_utf8(bufs, callback)
     {
-        var b = new Blob(bufs);
-        var f = new FileReader();
-        f.onload = function(e) {
-            callback(e.target.result)
+        if ("TextDecoder" in window)
+        {
+            let decoder = new TextDecoder('utf-8');
+            callback(decoder.decode(bufs));
         }
-        f.readAsText(b, "UTF-8");
+        else
+        {
+            // this approach is only a fallback for older browsers because the
+            // order of the callback isn't guaranteed, so messages can get
+            // queued out of order. TODO: maybe just fall back on uncompressed
+            // sockets instead?
+            var b = new Blob([bufs]);
+            var f = new FileReader();
+            f.onload = function(e) {
+                callback(e.target.result)
+            }
+            f.readAsText(b, "UTF-8");
+        }
     }
 
     var blob_construction_supported = true;
@@ -1342,8 +1354,8 @@ function (exports, $, key_conversion, chat, comm) {
                     var data = new Uint8Array(msg.data.byteLength + 4);
                     data.set(new Uint8Array(msg.data), 0);
                     data.set([0, 0, 255, 255], msg.data.byteLength);
-                    var decompressed = [inflater.append(data)];
-                    if (decompressed[0] === -1)
+                    var decompressed = inflater.append(data);
+                    if (decompressed === -1)
                     {
                         console.error("Decompression error!");
                         var x = inflater.append(data);
@@ -1352,8 +1364,10 @@ function (exports, $, key_conversion, chat, comm) {
                         if (window.log_messages === 2)
                             console.log("Message: " + s);
                         if (window.log_message_size)
-                            console.log("Message size: " + s.length);
-
+                        {
+                            console.log("Message size: " + s.length
+                                + " (compressed " + msg.data.byteLength + ")");
+                        }
                         enqueue_messages(s);
                     });
                     return;
