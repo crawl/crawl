@@ -91,7 +91,7 @@ spret cast_death_channel(int pow, god_type god, bool fail)
 spret cast_recall(bool fail)
 {
     fail_check();
-    start_recall(RECALL_SPELL);
+    start_recall(recall_t::spell);
     return spret::success;
 }
 
@@ -107,12 +107,12 @@ void start_recall(recall_t type)
         if (!mons_is_recallable(&you, **mi))
             continue;
 
-        if (type == RECALL_YRED)
+        if (type == recall_t::yred)
         {
             if (!(mi->holiness() & MH_UNDEAD))
                 continue;
         }
-        else if (type == RECALL_BEOGH)
+        else if (type == recall_t::beogh)
         {
             if (!is_orcish_follower(**mi))
                 continue;
@@ -122,7 +122,7 @@ void start_recall(recall_t type)
         rlist.push_back(m);
     }
 
-    if (type != RECALL_SPELL && branch_allows_followers(you.where_are_you))
+    if (type != recall_t::spell && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
     if (!rlist.empty())
