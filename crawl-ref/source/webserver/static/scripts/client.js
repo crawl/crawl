@@ -1168,7 +1168,7 @@ function (exports, $, key_conversion, chat, comm) {
     {
         if ("TextDecoder" in window)
         {
-            let decoder = new TextDecoder('utf-8');
+            var decoder = new TextDecoder('utf-8');
             callback(decoder.decode(bufs));
         }
         else
