@@ -10,11 +10,11 @@
 #include "mpr.h"
 #include "spl-util.h"
 
-enum nothing_happens_when_type
+enum class nothing_happens
 {
-    NH_DEFAULT,
-    NH_NEVER,
-    NH_ALWAYS,
+    DEFAULT,
+    NEVER,
+    ALWAYS,
 };
 
 enum miscast_source
@@ -41,19 +41,19 @@ public:
     MiscastEffect(actor* _target, actor* _act_source,
                   int _source, spell_type _spell, int _pow,
                   int _fail, string _cause = "",
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
                   int _source, spschool _school,
                   int _level, string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
                   int _source, spschool _school,
                   int _pow, int _fail, string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
 
@@ -81,7 +81,7 @@ private:
     // init() sets this to a proper value
     killer_type kt = KILL_NONE;
 
-    nothing_happens_when_type nothing_happens_when;
+    nothing_happens nothing_happens_when;
 
     int lethality_margin;
 

@@ -904,7 +904,7 @@ void attack::do_miscast()
 
     MiscastEffect(miscast_target, attacker, MELEE_MISCAST,
                   (spschool) miscast_type, miscast_level, cause,
-                  NH_NEVER, 0, hand_str, false);
+                  nothing_happens::NEVER, 0, hand_str, false);
 
     // Don't do miscast twice for one attack.
     miscast_level = -1;

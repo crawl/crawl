@@ -156,7 +156,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     {
         MiscastEffect(&you, nullptr, WIELD_MISCAST, spschool::necromancy,
                       random2(9), random2(70), "the scythe of Curses",
-                      NH_NEVER);
+                      nothing_happens::NEVER);
     }
 }
 
@@ -176,7 +176,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, spschool::necromancy,
                       random2(9), random2(70), "the scythe of Curses",
-                      NH_NEVER);
+                      nothing_happens::NEVER);
     }
 }
 
@@ -846,7 +846,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
         mpr("Mutagenic energy flows through the plutonium sword!");
         MiscastEffect(defender, attacker, MELEE_MISCAST,
                       spschool::transmutation, random2(9), random2(70),
-                      "the plutonium sword", NH_NEVER);
+                      "the plutonium sword", nothing_happens::NEVER);
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
@@ -1035,7 +1035,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, spschool::random,
                       random2(9), random2(70),
-                      "the demon whip \"Spellbinder\"", NH_NEVER);
+                      "the demon whip \"Spellbinder\"", nothing_happens::NEVER);
     }
 }
 

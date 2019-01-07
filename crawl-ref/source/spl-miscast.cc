@@ -54,7 +54,7 @@
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
                              int _source, spell_type _spell,
                              int _pow, int _fail, string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
@@ -74,7 +74,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
                              spschool _school, int _level,
                              string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
@@ -96,7 +96,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
                              spschool _school, int _pow, int _fail,
                              string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
@@ -377,9 +377,9 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     if (msg.empty())
     {
         if (!suppress_nothing_happens
-            && (nothing_happens_when == NH_ALWAYS
-                || (nothing_happens_when == NH_DEFAULT && source_known
-                    && target_known)))
+            && (nothing_happens_when == nothing_happens::ALWAYS
+                || (nothing_happens_when == nothing_happens::DEFAULT
+                    && source_known && target_known)))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
         }
