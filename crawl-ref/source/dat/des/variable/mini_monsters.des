@@ -2647,20 +2647,22 @@ NAME:   minmay_statue_crystal_thing
 TAGS:   transparent
 DEPTH:  D:9-
 MONS:   orange crystal statue w:30 / obsidian statue / ice statue w:5
+KFEAT:  ~ = closed_clear_door
+KFEAT:  = = runed_clear_door
 MAP
       .....
     ...b=b...
   ...bbb.bbb...
   .bbb.....bbb.
- ..b...b+b...b..
+ ..b...b~b...b..
  .bb.bbb.bbb.bb.
 ..b..b.....b..b..
 .bb.bb..*..bb.bb.
-.=..+..*1*..+..=.
+.=..~..*1*..~..=.
 .bb.bb..*..bb.bb.
 ..b..b.....b..b..
  .bb.bbb.bbb.bb.
- ..b...b+b...b..
+ ..b...b~b...b..
   .bbb.....bbb.
   ...bbb.bbb...
     ...b=b...

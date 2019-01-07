@@ -2304,15 +2304,16 @@ ccc-wwww-cccwww.cc.....
 ccccccccccccww....@...@
 ENDMAP
 
-NAME: cheibrodos_body_horror
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:12-
+NAME:   cheibrodos_body_horror
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:12-
 ORIENT: north
-MONS: small abomination, demonic crawler, ugly thing, chaos spawn, neqoxec
-MONS: large abomination / very ugly thing
-KMONS: _ = tentacled monstrosity
-KITEM: _ = |
-NSUBST: - = 1:_ / 2=%%* / 3=234 / 2=234... / 1=5. / 2:6 / 1=6. / *:1
+MONS:   small abomination, demonic crawler, ugly thing, chaos spawn, neqoxec
+MONS:   large abomination / very ugly thing
+KMONS:  _ = tentacled monstrosity
+KITEM:  _ = |
+NSUBST: - = _ / 2=%%* / 3=234 / 2=234... / 5. / 2=6 / 6. / 1
+KFEAT:  = = runed_clear_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx-xxxxxxxxxxxxxxx

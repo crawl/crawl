@@ -491,6 +491,7 @@ ORIENT: southwest
 DEPTH:  D:12-, !D:$
 MONS:   hell hound, necromancer, wizard, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
+KFEAT:  = = runed_clear_door
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx

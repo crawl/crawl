@@ -4161,6 +4161,7 @@ ENDMAP
 NAME:  minmay_the_grid_triangle_9x9_fully_insulated_deathbox
 TAGS:  the_grid_triangle_9x9 unrand
 SUBST: 0 = 0 9:4 8:1
+KFEAT: = = runed_clear_door
 MAP
 . nnnnn .
  .=000=.

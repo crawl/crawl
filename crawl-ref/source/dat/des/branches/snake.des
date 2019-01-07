@@ -312,6 +312,7 @@ DEPTH:  Snake
 KITEM:  s = $ / nothing w:25 / * w:1
 KMONS:  s = adder w:5 / ball python w:5 / black mamba / anaconda / \
            water moccasin / sea snake w:1 / nothing w:20
+KFEAT:  = = runed_clear_door
 MAP
  xxxxxxx
 xxsssssxxxxxx
