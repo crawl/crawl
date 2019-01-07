@@ -127,9 +127,12 @@ function (exports, $, key_conversion, chat, comm) {
 
     function delay(ms)
     {
-        clearTimeout(delay_timeout);
-        inhibit_messages();
-        delay_timeout = setTimeout(delay_ended, ms);
+        if (!("hidden" in document))
+        {
+            clearTimeout(delay_timeout);
+            inhibit_messages();
+            delay_timeout = setTimeout(delay_ended, ms);
+        }
     }
 
     function delay_ended()
