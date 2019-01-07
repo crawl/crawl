@@ -679,7 +679,8 @@ namespace arena
                 continue;
 
             MiscastEffect(*mon, *mon, WIZARD_MISCAST, spschool::random,
-                          random_range(1, 3), "arena miscast", NH_NEVER);
+                          random_range(1, 3), "arena miscast",
+                          nothing_happens::NEVER);
         }
     }
 
