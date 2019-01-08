@@ -814,8 +814,7 @@ bool stack_five(int to_stack)
 }
 
 // Draw the top four cards of an deck and play them all.
-// Discards the rest of the deck. Return false if the operation was
-// failed/aborted along the way.
+// Return false if the operation was failed/aborted along the way.
 bool deck_deal()
 {
     deck_type choice = _choose_deck("Deal");
@@ -835,8 +834,6 @@ bool deck_deal()
 
     for (int i = 0; i < num_to_deal; ++i)
         _evoke_deck(choice, true);
-
-    you.props[deck_name(choice)] = 0;
 
     return true;
 }

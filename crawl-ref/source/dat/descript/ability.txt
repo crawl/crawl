@@ -436,7 +436,7 @@ discarding the other two.
 Deal Four ability
 
 Deals four cards from a deck in the time it normally takes to draw a
-single card. The rest of the deck is lost.
+single card.
 %%%%
 Stack Five ability
 
