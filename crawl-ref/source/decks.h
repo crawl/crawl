@@ -20,7 +20,6 @@
 const int MIN_GIFT_CARDS = 4;
 /// The maximum number of cards to deal when gifting.
 const int MAX_GIFT_CARDS = 13;
-const int MAX_DECK_SIZE  = 13;
 
 enum card_type
 {

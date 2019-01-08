@@ -126,6 +126,7 @@ struct deck_type_data
     string flavour;
     /// The list of cards this deck contains.
     const deck_archetype cards;
+    int deck_max;
 };
 
 static map<deck_type, deck_type_data> all_decks =
@@ -133,18 +134,22 @@ static map<deck_type, deck_type_data> all_decks =
     { DECK_OF_ESCAPE, {
         "escape", "mainly dealing with various forms of escape.",
         deck_of_escape,
+        13,
     } },
     { DECK_OF_DESTRUCTION, {
         "destruction", "most of which hurl death and destruction "
             "at one's foes (or, if unlucky, at oneself).",
         deck_of_destruction,
+        26,
     } },
     { DECK_OF_SUMMONING, {
         "summoning", "depicting a range of weird and wonderful creatures.",
         deck_of_summoning,
+        13,
     } },
     { DECK_OF_PUNISHMENT, {
         "punishment", "which wreak havoc on the user.", deck_of_punishment,
+        0, // Not a user deck
     } },
 };
 
@@ -290,10 +295,10 @@ bool gift_cards()
     for (int i = 0; i < deal; i++)
     {
         deck_type choice = random_choose_weighted(
-                                        5, DECK_OF_DESTRUCTION,
-                                        4, DECK_OF_SUMMONING,
-                                        2, DECK_OF_ESCAPE);
-        if (deck_cards(choice) < MAX_DECK_SIZE)
+                                        3, DECK_OF_DESTRUCTION,
+                                        1, DECK_OF_SUMMONING,
+                                        1, DECK_OF_ESCAPE);
+        if (deck_cards(choice) < all_decks[choice].deck_max)
         {
             you.props[deck_name(choice)]++;
             dealt_cards = true;
@@ -481,7 +486,8 @@ string deck_description(deck_type deck)
         else
             desc << "It is currently empty ";
 
-        desc << make_stringf("and can contain up to %d cards.", MAX_DECK_SIZE);
+        desc << make_stringf("and can contain up to %d cards.",
+                             all_decks[deck].deck_max);
         desc << "\n";
     }
 
