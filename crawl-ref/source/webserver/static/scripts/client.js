@@ -28,6 +28,9 @@ function (exports, $, key_conversion, chat, comm) {
 
     var game_version = null;
     var loaded_modules = null;
+    var text_decoder = null;
+    if ("TextDecoder" in window)
+        text_decoder = new TextDecoder('utf-8');
 
     window.log = function (text)
     {
@@ -1169,11 +1172,8 @@ function (exports, $, key_conversion, chat, comm) {
 
     function decode_utf8(bufs, callback)
     {
-        if ("TextDecoder" in window)
-        {
-            var decoder = new TextDecoder('utf-8');
-            callback(decoder.decode(bufs));
-        }
+        if (text_decoder)
+            callback(text_decoder.decode(bufs));
         else
         {
             // this approach is only a fallback for older browsers because the
