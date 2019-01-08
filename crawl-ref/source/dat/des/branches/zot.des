@@ -2622,52 +2622,48 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 
-NAME:       hall_of_Zot
-PLACE:      Zot:$
-ORIENT:     north
-TAGS:       no_dump
-
-## terrain
-# XXX: Fixed trap chance spots and slim chances for traps on nearly every
-# square should be replaced with per-chamber trap NSUBSTs, with separate
-# NSUBSTs for each chamber's inner and outer edges alongside main innards.
-KFEAT:    ~ = any trap / w:20 floor
-KMASK:    1! = no_item_gen
-SUBST:    C = X:90 c
-SUBST:    ^ = ^ .:10
-SUBST:    . = .:500 ^
-SUBST:    ! = ^ .:40
-# 1/4 times, lower the chance of forced traps to enter the first chambers,
-# but provide some statues between the first and second chambers instead.
-SHUFFLE:  ABab / ^^.. / ^^.. / ^^..
-SUBST:    A = ^..., B = ^.
-SUBST:    a = ., b = 6G
-
-## monsters
-MONS:     patrolling orb guardian, killer klown, electric golem, orb of fire
-MONS:     ancient lich, orange crystal statue / w:20 obsidian statue
-SHUFFLE:  234
-SUBST:    8 = 8..., 5 = 5.
-# For the chambers closer to the orb, have 1/3 chances for more ancient liches,
-# 1/3 chance for more orbs of fire, or 1/3 chances for more killer klowns and
-# random floor spawns.
-SUBST:    ? = .:8 ?
-SUBST:    ? : KLM
-SUBST:    K = 4:30 5 0 ~
-SUBST:    L = 4 5:30 0 ~
-SUBST:    M = 2:20 4 5 0:20 ~
-
-## colours
+NAME:    hall_of_Zot
+PLACE:   Zot:$
+ORIENT:  north
+TAGS:    no_dump no_trap_gen
+KITEM:   Z = Orb of Zot
+MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
+MONS:    electric golem, killer klown, ancient lich, orb of fire
+# Traps to spread throughout the vault. Fewer alarm traps as those have a big
+# effect on the vault as a whole.
+KFEAT:   ~ = zot trap / dispersal trap / permanent teleport trap / net trap \
+             / alarm trap w:5
+# Flat distribution of traps for specific sections.
+KFEAT:   ^ = zot trap / dispersal trap / permanent teleport trap / alarm trap \
+             / net trap
+KMASK:   ^~ = no_item_gen
+# Place a minimum number of traps and some extra liches in each lower wing.
+NSUBST:  d = 2=5. / 4=~ / ., h = 2=5. / 4=~ / .
+# In a each upper wing, place a few monsters along with locations for the main
+# monster set on '?'. Use more central areas in the upper wings to do this.
+NSUBST:  f = 3 / 4 / 6 / 9 = ? .:8 / e, k = 3 / 4 / 6 / 9 = ? .:8 / j
+# Minimum number of traps in each upper wing.
+NSUBST:  e = 4=~ / ., j = 4=~ / .
+# Each upper wing has equal chance to get one of three sets that most heavily
+# weight a specific monster: killer klown, ancient lich, or orb of fire.
+SUBST:   ? : KLM
+SUBST:   K = 0 4:40 5 6 ., L = 0 4 5:40 6 ., M = 0 4 5 6:40 .
+# Make a final sprinkling of traps throughout the vault.
+SUBST:   . = ~ .:600
+# Put traps in wing entrances with decreased odds on one side to make double
+# trapped entrances rarer.
+SUBST:   D = ^..., H = ^.
+# For upper-wing entrances, sometimes put statue monsters, traps, or statues.
+SUBST:   E = 2 ^:20 G .:80, J = 2 ^:20 G .:80
+# For the orb chamber, some guaranteed and random traps. About 4 on-average.
+NSUBST:  - = 2=^ / * = ^ .:240
+# Colours
 COLOUR:     cX = lightmagenta
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LROCKTILE:  wall_zot_lightmagenta
-
-KITEM:    Z = Orb of Zot
-
 validate {{ return has_exit_from_glyph('Z') }}
-
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -2676,34 +2672,34 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXXXXXXXXXXXX.............XXXXXXXXXXXXXX
-XXXXXXXXXXXX...................XXXXXXXXXXXXXXXXXXX...................XXXXXXXXXXX
-XXXXXXXXXXX..........3...........XXXXXXXXXXXXXXX...........3..........XXXXXXXXXX
-XXXXXXXXXX..~.....................XXXXXXXXXXXXX.....................~..XXXXXXXXX
-XXXXXXXXXX.......?..?.....~.~.....XXX...1...XXX.....~.~.....?..?.......XXXXXXXXX
-XXXXXXXXXXX.~...........?.........XX..1...1..XX.........?...........~.XXXXXXXXXX
-XXXXXXXXXXXX......................X1...!!!...1X......................XXXXXXXXXXX
-XXXXXXXXXXXXX.....4....2....~.~......1.!Z!.1......~.~....2....4.....XXXXXXXXXXXX
-XXXXXXXXXXXX....?...?.....?...?...X1...!!!...1X...?...?.....?....?...XXXXXXXXXXX
-XXXXXXXXXXX.......?....?..........XX..1...1..XX..........?....2.......XXXXXXXXXX
-XXXXXXXXXX.....~..........~.~.....XXX...1...XXX.....~.~..........~.....XXXXXXXXX
-XXXXXXXXXX...~....................cXXXXXXXXXXXc....................~...XXXXXXXXX
-XXXXXXXXXXX.....~.~.~..~.........ccccccccccccccc........~...~.~.~.....XXXXXXXXXX
-XXXXXXXXXXXX...............~...XcccccccccccccccccX...~............~..XXXXXXXXXXX
-XXXXXXXXXXXXX........~..~...XXXXcccccccccccccccccXXXX...~..~........XXXXXXXXXXXX
-XXXXXXXXXXXXXXa111accCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCccb111bXXXXXXXXXXXXX
-XXXXXXXXXXXcc...............AA1.ccccccccccccccccc.1BB...............ccXXXXXXXXXX
-XXXXXXXXXXcc...~.~..~.~.....cc1...ccccccccccccc...1cc.......~..~.~.~.ccXXXXXXXXX
-XXXXXXXXXcc.~...~......~.~...ccc...ccccccccccc...ccc...~.~.~..~.......ccXXXXXXXX
-XXXXXXXXXc.~..~....~.~........ccc...............ccc.....~....~..~.~....cXXXXXXXX
-XXXXXXXXXc..~..~.~....~.~.~.5.cXcc.............ccXc.5.~.~.~....~.~...~.cXXXXXXXX
-XXXXXXXXXc..~.....~.~.......~.cXXc.............cXXc~........~.....~.~..cXXXXXXXX
-XXXXXXXXXc.~...~......~.~.....cXXcc.1...1...1.ccXXc......~.......~.....cXXXXXXXX
-XXXXXXXXXc~..~...~.~.~.~...~.~cXXXc...........cXXXc~.~..~..~.~.~...~.~.cXXXXXXXX
-XXXXXXXXXc.....~.........~....cXXcc...........ccXXc....~.~.............cXXXXXXXX
-XXXXXXXXXcc...5..~..~.~....~.ccXXc.............cXXcc~.....~....~..5.~.ccXXXXXXXX
-XXXXXXXXXXcc~......~....~.~.ccXXcc.............ccXXcc.~.~....~....~..ccXXXXXXXXX
-XXXXXXXXXXXcc..............ccXXXc...............cXXXcc..............ccXXXXXXXXXX
+XXXXXXXXXXXXXXXeeeeeeeeeeeeeXXXXXXXXXXXXXXXXXXXXXXXXXjjjjjjjjjjjjjXXXXXXXXXXXXXX
+XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXXXXXXXXXXXXXXXXXXXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
+XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeeXXXXXXXXXXXXXXXjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
+XXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeeeeXXXXXXXXXXXXXjjjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXX
+XXXXXXXXXXeeeeeeefffffffffffffeeeeXXX---1---XXXjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
+XXXXXXXXXXXeeeeeefffffffffffffeeeeXX--1---1--XXjjjjkkkkkkkkkkkkkjjjjjjXXXXXXXXXX
+XXXXXXXXXXXXeeeeefffffffffffffeeeeX1---------1XjjjjkkkkkkkkkkkkkjjjjjXXXXXXXXXXX
+XXXXXXXXXXXXXeeeefffffffffffffeeeee--1--Z--1--jjjjjkkkkkkkkkkkkkjjjjXXXXXXXXXXXX
+XXXXXXXXXXXXeeeeefffffffffffffeeeeX1---------1XjjjjkkkkkkkkkkkkkjjjjjXXXXXXXXXXX
+XXXXXXXXXXXeeeeeefffffffffffffeeeeXX--1---1--XXjjjjkkkkkkkkkkkkkjjjjjjXXXXXXXXXX
+XXXXXXXXXXeeeeeeefffffffffffffeeeeXXX---1---XXXjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
+XXXXXXXXXXeeeeeeefffffffffffffeeeecXXXXXXXXXXXcjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
+XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
+XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
+XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
+XXXXXXXXXXXXXXE111EccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXccJ111JXXXXXXXXXXXXX
+XXXXXXXXXXXccdddddddddddddddDD1.ccccccccccccccccc.1HHhhhhhhhhhhhhhhhccXXXXXXXXXX
+XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
+XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddccc...............ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXcc.............ccXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXc.............cXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXcc.1...1...1.ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXXc...........cXXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXccddddddddddddddddddccXXc.............cXXcchhhhhhhhhhhhhhhhhhccXXXXXXXX
+XXXXXXXXXXccddddddddddddddddccXXcc.............ccXXcchhhhhhhhhhhhhhhhccXXXXXXXXX
+XXXXXXXXXXXccddddddddddddddccXXXc...............cXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
