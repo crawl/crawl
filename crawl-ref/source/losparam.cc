@@ -46,7 +46,7 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
 opacity_type opacity_no_trans::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = grd(p);
-    if (feat_is_opaque(f) || feat_is_wall(f))
+    if (feat_is_opaque(f) || feat_is_wall(f) || feat_is_closed_door(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(cloud_type_at(p)))
         return OPC_HALF;
@@ -58,7 +58,7 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
 opacity_type opacity_fully_no_trans::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = grd(p);
-    if (feat_is_opaque(f) || feat_is_wall(f))
+    if (feat_is_opaque(f) || feat_is_wall(f) || feat_is_closed_door(f))
         return OPC_OPAQUE;
     return OPC_CLEAR;
 }
