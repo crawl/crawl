@@ -130,7 +130,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function delay(ms)
     {
-        if (!("hidden" in document))
+        if (!("hidden" in document) || !document["hidden"])
         {
             clearTimeout(delay_timeout);
             inhibit_messages();
