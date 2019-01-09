@@ -541,7 +541,7 @@ static const duration_def duration_data[] =
       {{ "The infernal howling subsides.", []() {
           you.props.erase(NEXT_DOOM_HOUND_KEY);
       }}}},
-    { DUR_VERTIGO, YELLOW, "Vertigo", "", "vertigo",
+    { DUR_VERTIGO, YELLOW, "Vertigo", "vertigo", "",
       "Vertigo is making it harder to attack, cast, and dodge.", D_DISPELLABLE,
       {{ "The world stops spinning.", []() {
           you.redraw_evasion = true;
