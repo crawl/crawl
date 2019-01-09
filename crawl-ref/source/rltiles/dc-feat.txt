@@ -194,6 +194,10 @@ statue_demonic_bust
 statue_twins
 statue_orb_guardian
 statue_sword
+statue_axe
+%syn DNGN_STATUE_AXE
+statue_polearm
+%syn DNGN_STATUE_POLEARM
 %weight 1
 statue_sigmund
 statue_ancient_hero
