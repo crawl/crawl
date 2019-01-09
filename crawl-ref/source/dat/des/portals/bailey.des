@@ -301,7 +301,7 @@ KPROP:  d = no_tele_into
     TILE: G = dngn_statue_axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-:   set_feature_name("granite_statue", "granite statue wielding a fearsome glaive")
+:   set_feature_name("granite_statue", "granite statue wielding a fearsome trident")
     TILE: G = dngn_statue_polearm
 :   bailey_portal_polearm(_G)
 : end
