@@ -1981,8 +1981,10 @@ string get_last_messages(int mcount, bool full)
         if (full || is_channel_dumpworthy(msg.channel))
         {
             string line = msg.pure_text_with_repeats();
-            string wrapped = wordwrap_line(line, 79, false, true);
-            text = wrapped + "\n" + text;
+            string wrapped;
+            while (!line.empty())
+                wrapped += wordwrap_line(line, 79, false, true) + "\n";
+            text = wrapped + text;
         }
         mcount--;
     }
