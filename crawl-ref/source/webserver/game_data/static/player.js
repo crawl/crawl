@@ -287,7 +287,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
     function percentage_color(name)
     {
         var real = false;
-        if (player["real_" + name + "_max"] != player[name + "_max"])
+        // There is only real_hp_max, real_mp_max doesn't exist
+        if (player["real_" + name + "_max"]
+            && player["real_" + name + "_max"] != player[name + "_max"])
             real = true;
 
         $("#stats_" + name).removeClass();
