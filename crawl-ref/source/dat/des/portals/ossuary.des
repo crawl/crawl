@@ -767,41 +767,22 @@ ITEM:    potion of curing / potion of heal wounds / potion of haste / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of random uselessness
-# There are three setups than can occur:
-# 10% - part of the loot in the closets, bit more loot
-# 45% - traps are nasty, monsters asleep
-# 45% - traps are softer, monsters are awake
-: if crawl.one_chance_in(10) then
-SUBST:   3 = d
-NSUBST:  d = 6:3 / *:d
 SUBST:   M = 111.
-: elseif crawl.coinflip() then
-SUBST:   M = 111.
-: else
-SUBST:   ~ = T
-SUBST:   3 = 2
-NSUBST:  M = 1:1 / *:.
-:end
 MONS:    mummy
-MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
-         generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = net trap / needle trap / alarm trap w:5 / floor w:40
-KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
+KFEAT:   ~ = net trap / alarm trap / dispersal trap w:5 / floor w:100
+KFEAT:   ^ = net trap w:20 / dispersal trap w:5 / floor w:25
 : ossuary_setup_features(_G)
 MAP
-           cccccccccccccccccccc
-   ccccccccc3c3c3c3c3c3c3cddddccc
- ccc.......c+c+c+c+c+c+c+c^.....c
+           ccccccccccccccccccccc
+ ccccccccccc2c2c2c2c2c2c2ccddddcc
 cc1.......~~~~~~~~~~~~~~~~^.....cc
 c.........~~~~~~~~~~~~~~~~^.....Mcc
 c1....A.<.~~~~~~~~~~~~~~~~^.....M<c
 c.........~~~~~~~~~~~~~~~~^.....Mcc
 cc1.......~~~~~~~~~~~~~~~~^.....cc
- ccc.......c+c+c+c+c+c+c+c^.....c
-   ccccccccc3c3c3c3c3c3c3cddddccc
-           cccccccccccccccccccc
+ ccccccccccc2c2c2c2c2c2c2ccddddcc
+           ccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_due_mausoleum
