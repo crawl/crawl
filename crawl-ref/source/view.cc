@@ -75,6 +75,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "viewmap.h"
 #include "xom.h"
@@ -1362,6 +1363,8 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
     }
 }
 
+static bool _view_is_updating = false;
+
 /**
  * Draws the main window using the character set returned
  * by get_show_glyph().
@@ -1375,104 +1378,122 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
  */
 void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
-    // The player could be at (0,0) if we are called during level-gen; this can
-    // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
-    if (you.duration[DUR_TIME_STEP] || you.pos().origin())
-        return;
-
-    screen_cell_t *cell(crawl_view.vbuf);
-
-    // The buffer is not initialised when run from 'monster'; abort early.
-    if (!cell)
-        return;
-
-    // Update the animation of cells only once per turn.
-    const bool anim_updates = (you.last_view_update != you.num_turns);
-    // Except for elemental colours, which should be updated every refresh.
-    you.frame_no++;
-
-#ifdef USE_TILE
-    tiles.clear_text_tags(TAG_NAMED_MONSTER);
-
-    if (show_updates)
-        mcache.clear_nonref();
-#endif
-
-    if (show_updates || _layers != LAYERS_ALL)
+    if (_view_is_updating)
     {
-        if (!is_map_persistent())
-            ash_detect_portals(false);
-
-#ifdef USE_TILE
-        tile_draw_floor();
-        tile_draw_rays(true);
-        tiles.clear_overlays();
-#endif
-
-        show_init(_layers);
+        // recursive calls to this function can lead to memory corruption or
+        // crashes, depending on the circumstance, because some functions
+        // called from here (e.g. show_init) will wipe out a whole bunch of
+        // map data that will still be lurking around higher on the call stack
+        // as references. Because the call paths are so complicated, it's hard
+        // to find a principled / non-brute-force way of preventing recursion
+        // here -- though it's still better to prevent it by other means if
+        // possible.
+        dprf("Recursive viewwindow call attempted!");
+        return;
     }
 
-    if (show_updates)
-        player_view_update();
-
-    bool run_dont_draw = you.running && Options.travel_delay < 0
-                && (!you.running.is_explore() || Options.explore_delay < 0);
-
-    if (run_dont_draw || you.asleep())
     {
+        unwind_bool updating(_view_is_updating, true);
+
+        // The player could be at (0,0) if we are called during level-gen; this can
+        // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
+        if (you.duration[DUR_TIME_STEP] || you.pos().origin())
+            return;
+
+        screen_cell_t *cell(crawl_view.vbuf);
+
+        // The buffer is not initialised when run from 'monster'; abort early.
+        if (!cell)
+            return;
+
+        // Update the animation of cells only once per turn.
+        const bool anim_updates = (you.last_view_update != you.num_turns);
+        // Except for elemental colours, which should be updated every refresh.
+        you.frame_no++;
+
+#ifdef USE_TILE
+        tiles.clear_text_tags(TAG_NAMED_MONSTER);
+
+        if (show_updates)
+            mcache.clear_nonref();
+#endif
+
+        if (show_updates || _layers != LAYERS_ALL)
+        {
+            if (!is_map_persistent())
+                ash_detect_portals(false);
+
+#ifdef USE_TILE
+            tile_draw_floor();
+            tile_draw_rays(true);
+            tiles.clear_overlays();
+#endif
+
+            show_init(_layers);
+        }
+
+        if (show_updates)
+            player_view_update();
+
+        bool run_dont_draw = you.running && Options.travel_delay < 0
+                    && (!you.running.is_explore() || Options.explore_delay < 0);
+
+        if (run_dont_draw || you.asleep())
+        {
+            // Reset env.show if we munged it.
+            if (_layers != LAYERS_ALL)
+                show_init();
+            return;
+        }
+
+        cursor_control cs(false);
+
+        int flash_colour = you.flash_colour;
+        if (flash_colour == BLACK)
+            flash_colour = viewmap_flash_colour();
+
+        const coord_def tl = coord_def(1, 1);
+        const coord_def br = crawl_view.viewsz;
+        for (rectangle_iterator ri(tl, br); ri; ++ri)
+        {
+            // in grid coords
+            const coord_def gc = a
+                ? a->cell_cb(view2grid(*ri), flash_colour)
+                : view2grid(*ri);
+
+            if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
+                draw_cell(cell, gc, anim_updates, 0);
+            else
+                draw_cell(cell, gc, anim_updates, flash_colour);
+
+            cell++;
+        }
+
+        you.last_view_update = you.num_turns;
+#ifndef USE_TILE_LOCAL
+        if (!tiles_only)
+        {
+            puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+            update_monster_pane();
+        }
+#endif
+#ifdef USE_TILE
+        tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
+        tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
+        tiles.update_tabs();
+#endif
+
+        // Leaving it this way because short flashes can occur in long ones,
+        // and this simply works without requiring a stack.
+        you.flash_colour = BLACK;
+        you.flash_where = 0;
+
         // Reset env.show if we munged it.
         if (_layers != LAYERS_ALL)
             show_init();
-        return;
+
+        _debug_pane_bounds();
     }
-
-    cursor_control cs(false);
-
-    int flash_colour = you.flash_colour;
-    if (flash_colour == BLACK)
-        flash_colour = viewmap_flash_colour();
-
-    const coord_def tl = coord_def(1, 1);
-    const coord_def br = crawl_view.viewsz;
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-    {
-        // in grid coords
-        const coord_def gc = a
-            ? a->cell_cb(view2grid(*ri), flash_colour)
-            : view2grid(*ri);
-
-        if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-            draw_cell(cell, gc, anim_updates, 0);
-        else
-            draw_cell(cell, gc, anim_updates, flash_colour);
-
-        cell++;
-    }
-
-    you.last_view_update = you.num_turns;
-#ifndef USE_TILE_LOCAL
-    if (!tiles_only)
-    {
-        puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
-        update_monster_pane();
-    }
-#endif
-#ifdef USE_TILE
-    tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
-    tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-    tiles.update_tabs();
-#endif
-
-    // Leaving it this way because short flashes can occur in long ones,
-    // and this simply works without requiring a stack.
-    you.flash_colour = BLACK;
-    you.flash_where = 0;
-
-    // Reset env.show if we munged it.
-    if (_layers != LAYERS_ALL)
-        show_init();
-
-    _debug_pane_bounds();
 }
 
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
