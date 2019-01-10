@@ -11,6 +11,7 @@
 #include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 
 /*** Is this spell memorised?
  * @tparam string spellname
@@ -96,6 +97,65 @@ LUAFN(l_spells_min_range)
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, spell_range(spell, 0));
 }
+
+
+/*** If this spell is aimed at (x,y), what path will it actually take?
+ * @tparam string spell name
+ * @tparam int x coordinate to aim at, in player coordinates
+ * @tparam int y coordinate to aim at, in player coordinates
+ * @treturn string|nil a list in "x1,y1 x2,y2 x3,y3..." format giving the path
+ *    the spell will take, in player coordinates
+ * @function path
+ */
+LUAFN(l_spells_path)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    if (!you.has_spell(spell))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    int power = calc_spell_power(spell, true);
+    int range = spell_range(spell, power);
+    zap_type zap = spell_to_zap(spell);
+    if( power <= 0 || range <= 0 )
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    coord_def s;
+    s.x = luaL_checkint(ls, 2);
+    s.y = luaL_checkint(ls, 3);
+    coord_def aim = player2grid(s);
+
+    bolt beam;
+    beam.set_agent(&you);
+    beam.source = you.pos();
+    beam.attitude = ATT_FRIENDLY;
+    zappy(zap, power, false, beam);
+    beam.is_tracer = true;
+    beam.is_targeting = true;
+    beam.range = range;
+    beam.target = aim;
+    beam.dont_stop_player = true;
+    beam.friend_info.dont_stop = true;
+    beam.foe_info.dont_stop = true;
+    beam.ex_size = 0;
+    beam.aimed_at_spot = true;
+    beam.path_taken.clear();
+    beam.fire();
+
+    char buf[255];
+    int len = 0;
+    for (auto g : beam.path_taken) {
+        coord_def p = grid2player(g);
+        len += sprintf(buf+len, "%d,%d ", p.x, p.y);
+    }
+
+    PLUARET(string, buf);
+}
+
 
 /*** The failure rate of the spell as a number in [0,100].
  * @tparam string name
@@ -258,6 +318,7 @@ static const struct luaL_reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
     { "letter"        , l_spells_letter },
+    { "path"          , l_spells_path },
     { "level"         , l_spells_level },
     { "mana_cost"     , l_spells_mana_cost },
     { "range"         , l_spells_range },
