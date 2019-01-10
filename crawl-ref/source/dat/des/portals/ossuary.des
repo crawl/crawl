@@ -148,15 +148,14 @@ ENDMAP
 NAME:   gup_ossuary_entry_pyramid
 TAGS:   transparent
 KMONS:  O = mummy
-NSUBST: ' = 3:~ / *:'
 : ossuary_portal(_G)
 MAP
      ...
     ..c..
    ..ccc..
   ..ccOcc..
- ..cc'''cc..
-..cc'''''cc..
+ ..cc...cc..
+..cc.....cc..
 .ccccc+ccccc.
 .............
 ENDMAP
@@ -557,7 +556,7 @@ MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
         human zombie / kobold zombie / goblin zombie / \
         big kobold zombie / centaur zombie / scorpion zombie w:20
 ITEM:   any scroll / any potion / any jewellery w:1 / nothing
-KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / floor w:50
+KFEAT:  ~ = needle trap / arrow trap / spear trap w:5
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
@@ -604,16 +603,14 @@ NSUBST:  B = 1:+ / *:n
 NSUBST:  C = 1:+ / *:n
 NSUBST:  D = 1:+ / *:n
 NSUBST:  E = 1:+ / *:n
-KFEAT:   ~ = needle trap / arrow trap / spear trap
-SUBST:   ~ = ~.
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccccccccc
-c$$B~..........<..........~Cddc
-c$$B~.....................~Cddc
-cBBB~........ccccc........~CCCc
-c~~~~.....................~~~~c
+c$$B...........<...........Cddc
+c$$B.......................Cddc
+cBBB.........ccccc.........CCCc
+c.............................c
 c....2.........1.........2....c
 c.....cc....1.....1....cc.....c
 c.....cc...............cc.....c
@@ -628,10 +625,10 @@ c.............................c
 c.....cc....1.....1....cc.....c
 c.....cc.......1.......cc.....c
 c....2...................2....c
-c~~~~.....................~~~~c
-cEEE~........ccccc........~DDDc
-c**E~.....................~Deec
-c**E~..........<..........~Deec
+c.............................c
+cEEE.........ccccc.........DDDc
+c**E.......................Deec
+c**E...........<...........Deec
 ccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -792,19 +789,17 @@ MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
 KFEAT:   ~ = net trap / needle trap / alarm trap w:5 / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
 KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
-COLOUR:  ^ = red
-KFEAT:   W = arrow trap / floor w:20
 : ossuary_setup_features(_G)
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
- ccc.....WWc+c+c+c+c+c+c+c^.....c
-cc1.....WW~~~~~~~~~~~~~~~~^.....cc
-c......WWW~~~~~~~~~~~~~~~~^.....Mcc
-c1....AW<W~~~~~~~~~~~~~~~~^.....M<c
-c......WWW~~~~~~~~~~~~~~~~^.....Mcc
-cc1.....WW~~~~~~~~~~~~~~~~^.....cc
- ccc.....WWc+c+c+c+c+c+c+c^.....c
+ ccc.......c+c+c+c+c+c+c+c^.....c
+cc1.......~~~~~~~~~~~~~~~~^.....cc
+c.........~~~~~~~~~~~~~~~~^.....Mcc
+c1....A.<.~~~~~~~~~~~~~~~~^.....M<c
+c.........~~~~~~~~~~~~~~~~^.....Mcc
+cc1.......~~~~~~~~~~~~~~~~^.....cc
+ ccc.......c+c+c+c+c+c+c+c^.....c
    ccccccccc3c3c3c3c3c3c3cddddccc
            cccccccccccccccccccc
 ENDMAP
@@ -891,23 +886,23 @@ KMONS:   y = rat skeleton
 MAP
            ccc
          cccxccccc
-       ccc''''+''c      cccccc
-      cc'''ccccc'c     cc'+.1cc
-     cc1'ccc  cc+cc   cc''cc''cc
-    cc..cc   cc...ccccc''cccc''ccc
-ccc cc+cc    c+.x.+.1'''cc  cc'''cc
-cAccc'''cc  ccb...cccxccc   cecc'cc
-c..+..1'+c  cBcc+cc ccc   cceEec+cc
-c<ccc'''cc  ccb''cc   cccccxccc...ccc
-ccc cc+cc   cc''+cccccc''+''''+.x.+Xc
-     c.cc  cc1'cc'cdDd.1ccccccc...ccc
+       ccc.'''+''c      cccccc
+      cc.'.ccccc'c     cc.+.1cc
+     cc1.ccc  cc+cc   cc..cc..cc
+    cc..cc   cc...ccccc..cccc..ccc
+ccc cc+cc    c+.x.+.1''.cc  cc.'.cc
+cAccc...cc  ccb...cccxccc   cecc'cc
+c..+..1.+c  cBcc+cc ccc   cceEec+cc
+c<ccc...cc  ccb..cc   cccccxccc...ccc
+ccc cc+cc   cc..+cccccc.'+''''+.x.+Xc
+     c.cc  cc1.cc'cdDd.1ccccccc...ccc
      c1cc cc..cccc'cdd.cc     cc+cc
-     c''cccc+cc  cc'cc+cc      cXc
-     cc''cc...cccccc+yyyccccc  ccc
-      cc'+..x..+'''+yyyyy+.1cc
-       cccc...cccxcccyyyccc''cc
-          cc+cc ccc cc+cc cc''ccccc
-           cxc       ccc   cc'''+Xc
+     c..cccc+cc  cc'cc+cc      cXc
+     cc..cc...cccccc+yyyccccc  ccc
+      cc.+..x..+'''+yyyyy+.1cc
+       cccc...cccxcccyyyccc..cc
+          cc+cc ccc cc+cc cc..ccccc
+           cxc       ccc   cc.''+Xc
            ccc              ccccccc
 ENDMAP
 
@@ -1134,7 +1129,7 @@ MONS:   rat zombie / quokka zombie / adder zombie /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
-KFEAT:  ~ = arrow trap / needle trap / floor w:40
+KFEAT:  ~ = arrow trap / needle trap
 : ossuary_setup_features(_G)
 MAP
 ccccc     ccc ccc ccc
