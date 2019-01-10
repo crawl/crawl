@@ -530,6 +530,7 @@ SUBST:   T = ~ .
 #
 : tomb_1_centre_setup(_G)
 SUBST:   t = ~ .:50
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5
 #
 MAP
 ..ttttttttttc................ctt>
@@ -630,6 +631,7 @@ SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
 SUBST: AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
 : tomb_1_centre_setup(_G)
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5
 MAP
 .................................
 ..cccAccc.....2...2.....cccEccc..
@@ -799,6 +801,7 @@ SUBST:    ' = ~ ':100
 SUBST:    ' = 1:5 2:5 3:1 .:89
 SUBST:    " = ~ ":50
 SUBST:    " = 2:3 3:1 .:96
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
@@ -988,6 +991,7 @@ SUBST:    ' : " $ ':80
 SUBST:    ' = " $
 SUBST:    " = ~:1 .
 SUBST:    $ = *:2 |:1 $:17
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 #
 : tomb_guardian_set(_G)
 : set_border_fill_type("permarock_wall")
@@ -1208,6 +1212,7 @@ SUBST:    ' = ~ ':100
 SUBST:    ' = 1:5 2:5 3:1 .:89
 SUBST:    " = ~ ":50
 SUBST:    " = 2:3 3:1 .:96
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 MONS: mummy
 : tomb_guardian_set(_G)
 : tomb_mummy_priest_set(_G)
@@ -1293,6 +1298,7 @@ SUBST:    ' : " $ ':80
 SUBST:    ' = " $
 SUBST:    " = ~:1 .
 SUBST:    $ = *:2 |:1 $:17
+KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 #
 : tomb_guardian_set(_G)
 : set_border_fill_type("permarock_wall")
