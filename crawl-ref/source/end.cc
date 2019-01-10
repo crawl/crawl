@@ -311,10 +311,8 @@ NORETURN void end_game(scorefile_entry &se)
         logfile_new_entry(se);
     }
 #ifndef SCORE_WIZARD_CHARACTERS
-    else 
-    {
+    else
         hiscores_read_to_memory();
-    }
 #endif
 
     // Never generate bones files of wizard or tutorial characters -- bwr
@@ -462,7 +460,7 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    goodbye_msg += hiscores_print_list(get_number_of_lines() - desc_lines - 5, 
+    goodbye_msg += hiscores_print_list(get_number_of_lines() - desc_lines - 5,
                                        SCORE_TERSE, hiscore_index);
 
 #ifndef DGAMELAUNCH

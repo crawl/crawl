@@ -175,7 +175,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     {
         _hs_write(scores, *hs_list[i]);
 
-        // Leave in memory.  Does this anyway if !inserted.  
+        // Leave in memory. Does this anyway if !inserted.
         // Can write cleanup function if nessicary??
         // hs_list[i].reset(nullptr);
     }
@@ -289,7 +289,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry)
     string ret;
 
     // Additional check to preserve previous functionality
-    if(!hs_list_initalized) {
+    if (!hs_list_initalized) {
         hiscores_read_to_memory();
     }
 
