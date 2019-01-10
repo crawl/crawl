@@ -381,6 +381,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
         else
             $("#stats_real_hp_max").text("");
 
+        if (player.species == "Deep Dwarf" && player.dd_real_mp_max != player.mp_max)
+            $("#stats_dd_real_mp_max").text("(" + player.dd_real_mp_max + ")");
+        else
+            $("#stats_dd_real_mp_max").text("");
+
         percentage_color("hp");
         percentage_color("mp");
         update_bar("hp");
@@ -495,7 +500,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $.extend(player, {
                 name: "", god: "", title: "", species: "",
                 hp: 0, hp_max: 0, real_hp_max: 0, poison_survival: 0,
-                mp: 0, mp_max: 0,
+                mp: 0, mp_max: 0, dd_real_mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
                 time: 0, time_delta: 0,
