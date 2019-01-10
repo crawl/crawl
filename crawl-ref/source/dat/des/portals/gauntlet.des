@@ -78,15 +78,15 @@ default-depth: Gauntlet
 # glyph, '1' glyph, and 'd' loot glyphs should generally be (see below). As the
 # templates below show, the vault can be any rotation of this basic shape.
 #
-# n.........n  nnnnnn      ...dQd...      nnnnnn
+# n.........n  nnnnnn      ..ddQdd..      nnnnnn
 # n.........n  .........   ....1....   .........
 # n.........n  .........   .........   .........
-# n.........n  .........  n.........n  .........
+# n.........n  ........d  n.........n  d........
 # n....P....n  ........d  n....P....n  d........
 # n.........n  ....P..1Q  n.........n  Q1..P....
 #  .........   ........d  n.........n  d........
-#  ....1....   .........  n.........n  .........
-#  ...dQd...   .........  n.........n  .........
+#  ....1....   ........d  n.........n  d........
+#  ..ddQdd..   .........  n.........n  .........
 #              .........               .........
 #              nnnnnn                     nnnnnn
 #
@@ -399,6 +399,78 @@ n==n...n==n
  33n===n33
  322212223
  33ddQdd33
+ENDMAP
+
+NAME:   gammafunk_gauntlet_arena_teeth
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:  ~ = ^...
+NSUBST: ! = ^. / .
+: gauntlet_arena_setup(_G)
+MAP
+n..33333..n
+n..33333..n
+n.nnnnnnn.n
+nx~x~x~x~xn
+n....P....n
+n.x~x~x~x.n
+ !nnnnnnn!
+ 2^2.1.2^2
+ .2ddQdd2.
+ENDMAP
+
+NAME:    gammafunk_gauntlet_arena_mazey
+TAGS:    gauntlet_arena_first gauntlet_arena_second allow_dup
+NSUBST:  P = P / a
+# Ensure that at least one of the four paths is always open.
+SHUFFLE: qrsu
+SUBST:   a = ^pnn, q = ., rsu = ^pnnnnnn
+NSUBST:  . = 10=3 / .
+: gauntlet_arena_setup(_G)
+MAP
+n..x.nx..xn
+nax..n.nxan
+nx.xa.xn.Pn
+nqP..x..a.n
+nxqxxrPsxun
+n...rxxs2un
+ x2xnnn22x
+ 22xa1ndxa
+ a^ddQdx^x
+ENDMAP
+
+NAME:    gammafunk_gauntlet_arena_chambers
+TAGS:    gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST:   ~ = ^..
+NSUBST:  ! = ^. / .
+: gauntlet_arena_setup(_G)
+MAP
+n333x.x333n
+n33x...x33n
+n.xx...xx.n
+nx~~x~x~~xn
+n....P....n
+nx..x^x..xn
+ !xxxnxxx!
+ 22x~1~x22
+ .2ddQdd2.
+ENDMAP
+
+NAME:    gammafunk_gauntlet_arena_crates
+TAGS:    gauntlet_arena_first gauntlet_arena_second allow_dup
+# At least one open path, but usually not the one adjacent to the landing site.
+SHUFFLE: Pq / Rr / Ss
+SUBST:   a = ...^nn, q = ^nnn, r = .^nn, sRS = ., x = ^ x:150
+: gauntlet_arena_setup(_G)
+MAP
+nxx3xx3xx3n
+nxx3xx3xx3n
+na3a33a33an
+nPxxRxxSxxn
+n.xx.xx.xxn
+n.a.a..a.an
+ x2nxrxn2x
+ xqnn1nnsx
+ 22ddQdd22
 ENDMAP
 
 #############################################################################
