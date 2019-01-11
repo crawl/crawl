@@ -4706,6 +4706,10 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (trap.category() != DNGN_TRAP_MECHANICAL)
         return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
 
+    // Net traps always target the player, let's use them!
+    if (trap.type == TRAP_NET)
+        return true;
+
     // If just checking a mechanical trap is dangerous
     if (just_check)
         return false;

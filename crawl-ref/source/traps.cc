@@ -150,7 +150,8 @@ bool trap_def::is_bad_for_player() const
 {
     return type == TRAP_ALARM
            || type == TRAP_DISPERSAL
-           || type == TRAP_ZOT;
+           || type == TRAP_ZOT
+           || type == TRAP_NET;
 }
 
 bool trap_def::is_safe(actor* act) const
@@ -169,7 +170,7 @@ bool trap_def::is_safe(actor* act) const
 #endif
 
     if (!act->is_player())
-        return false;
+        return is_bad_for_player();
 
     // No prompt (teleport traps are ineffective if wearing a -Tele item)
     if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
@@ -633,90 +634,61 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_NET:
+        {
+        bool triggered = false;
         if (you_trigger)
         {
             if (one_chance_in(3))
                 mpr("A net swings high above you.");
             else
-            {
-                item_def item = generate_trap_item();
-                copy_item_to_grid(item, triggerer.pos());
-
-                if (random2limit(you.evasion(), 40)
-                    + random2(4) + 3 > 12)
-                {
-                    mpr("A net drops to the ground!");
-                }
-                else
-                {
-                    mpr("A large net falls onto you!");
-                    if (player_caught_in_net())
-                    {
-                        if (player_in_a_dangerous_place())
-                            xom_is_stimulated(50);
-
-                        // Mark the item as trapping; after this it's
-                        // safe to update the view.
-                        _mark_net_trapping(you.pos());
-                    }
-                }
-
-                trap_destroyed = true;
-            }
+                triggered = true;
         }
         else if (m)
         {
-            bool triggered = false;
-            if (one_chance_in(3) || (trig_smart && coinflip()))
+            if (mons_intel(*m) < I_HUMAN)
             {
                 // Not triggered, trap stays.
-                triggered = false;
                 simple_monster_message(*m, " fails to trigger a net trap.");
-            }
-            else if (random2(m->evasion()) > 8
-                     || (trig_smart && random2(m->evasion()) > 8))
-            {
-                // Triggered but evaded.
-                triggered = true;
-
-                if (!simple_monster_message(*m,
-                                            " nimbly jumps out of the way "
-                                            "of a falling net."))
-                {
-                    mpr("A large net falls down!");
-                }
             }
             else
             {
-                // Triggered and hit.
+                // Triggered, net the player.
                 triggered = true;
 
-                if (m->visible_to(&you))
+                if (!simple_monster_message(*m,
+                                            " drops a net on you."))
                 {
-                    mprf("A large net falls down onto %s!",
-                         m->name(DESC_THE).c_str());
-                }
-                else
-                    mpr("A large net falls down!");
-
-                // actually try to net the monster
-                if (monster_caught_in_net(m, nullptr))
-                {
-                    // Don't try to escape the net in the same turn
-                    m->props[NEWLY_TRAPPED_KEY] = true;
+                    mpr("Something launches a net on you.");
                 }
             }
+        }
 
-            if (triggered)
+        if (triggered)
+        {
+            item_def item = generate_trap_item();
+            copy_item_to_grid(item, you.pos());
+
+            if (random2limit(you.evasion(), 40)
+                + random2(4) + 3 > 12)
             {
-                item_def item = generate_trap_item();
-                copy_item_to_grid(item, triggerer.pos());
-
-                if (m->caught())
-                    _mark_net_trapping(m->pos());
-
-                trap_destroyed = true;
+                mpr("A net drops to the ground!");
             }
+            else
+            {
+                mpr("A large net falls onto you!");
+                if (player_caught_in_net())
+                {
+                    if (player_in_a_dangerous_place())
+                        xom_is_stimulated(50);
+
+                    // Mark the item as trapping; after this it's
+                    // safe to update the view.
+                    _mark_net_trapping(you.pos());
+                }
+            }
+
+            trap_destroyed = true;
+        }
         }
         break;
 

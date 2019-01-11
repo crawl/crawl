@@ -629,8 +629,8 @@ A mechanical contraption that shoots poisoned needles.
 %%%%
 A net trap
 
-A large concealed net hanging from the dungeon's ceiling, rigged to fall onto
-anyone who steps beneath it.
+A large concealed net hanging from the dungeon's ceiling, enchanted by the
+powers of Zot to land only on intruders.
 %%%%
 A pressure plate
 
