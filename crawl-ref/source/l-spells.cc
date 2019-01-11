@@ -103,6 +103,8 @@ LUAFN(l_spells_min_range)
  * @tparam string spell name
  * @tparam int x coordinate to aim at, in player coordinates
  * @tparam int y coordinate to aim at, in player coordinates
+ * @tparam int x coordinate of spell source, in player coordinates (default=0)
+ * @tparam int y coordinate of spell source, in player coordinates (default=0)
  * @treturn string|nil a list in "x1,y1 x2,y2 x3,y3..." format giving the path
  *    the spell will take, in player coordinates
  * @function path
@@ -124,14 +126,19 @@ LUAFN(l_spells_path)
         return 1;
     }
 
+    coord_def a;
+    a.x = luaL_checkint(ls, 2);
+    a.y = luaL_checkint(ls, 3);
+    coord_def aim = player2grid(a);
+
     coord_def s;
-    s.x = luaL_checkint(ls, 2);
-    s.y = luaL_checkint(ls, 3);
-    coord_def aim = player2grid(s);
+    s.x = lua_isnumber(ls, 4) ? lua_tonumber(ls, 4) : 0;
+    s.y = lua_isnumber(ls, 5) ? lua_tonumber(ls, 5) : 0;
+    coord_def src = player2grid(s);
 
     bolt beam;
     beam.set_agent(&you);
-    beam.source = you.pos();
+    beam.source = src;
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, power, false, beam);
     beam.is_tracer = true;
