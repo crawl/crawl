@@ -3695,7 +3695,7 @@ static const vector<pie_effect> pie_effects = {
             if (defender.is_monster())
             {
                 monster *mons = defender.as_monster();
-                simple_monster_message(*mons, "looks unnaturally silent");
+                simple_monster_message(*mons, " looks unnaturally silent");
                 mons->add_ench(mon_enchant(ENCH_SILENCE, 0, beam.agent(),
                             10 + random2(21) * BASELINE_DELAY));
             }
@@ -3732,7 +3732,7 @@ static const vector<pie_effect> pie_effects = {
             {
                 monster *mons = defender.as_monster();
                 simple_monster_message(*mons,
-                        "looks more vulnerable to fire.");
+                        " looks more vulnerable to fire.");
                 mons->add_ench(mon_enchant(ENCH_FIRE_VULN, 0,
                              beam.agent(),
                              15 + random2(11) * BASELINE_DELAY));
