@@ -118,7 +118,7 @@ LUAFN(l_spells_path)
     int power = calc_spell_power(spell, true);
     int range = spell_range(spell, power);
     zap_type zap = spell_to_zap(spell);
-    if( power <= 0 || range <= 0 )
+    if (power <= 0 || range <= 0)
     {
         lua_pushnil(ls);
         return 1;
@@ -148,7 +148,8 @@ LUAFN(l_spells_path)
 
     char buf[255];
     int len = 0;
-    for (auto g : beam.path_taken) {
+    for (auto g : beam.path_taken)
+    {
         coord_def p = grid2player(g);
         len += sprintf(buf+len, "%d,%d ", p.x, p.y);
     }
