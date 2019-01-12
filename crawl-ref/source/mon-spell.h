@@ -619,7 +619,7 @@ static const mon_spellbook mspell_list[] =
     { MST_KILLER_KLOWN,
       {
        { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
-       { SPELL_THROW_PIE, 16, MON_SPELL_NATURAL },
+       { SPELL_THROW_PIE, 24, MON_SPELL_NATURAL },
       }
     },
 
