@@ -1360,7 +1360,7 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
 
 {
     ZAP_THROW_PIE,
-    "a klown pie",
+    "klown pie",
     200,
     nullptr,
     nullptr,
