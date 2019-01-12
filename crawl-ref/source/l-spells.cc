@@ -112,20 +112,13 @@ LUAFN(l_spells_min_range)
 LUAFN(l_spells_path)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    if (!you.has_spell(spell))
-    {
-        lua_pushnil(ls);
-        return 1;
-    }
     int power = calc_spell_power(spell, true);
     int range = spell_range(spell, power);
-    zap_type zap = spell_to_zap(spell);
-    if (power <= 0 || range <= 0)
+    if (range <= 0)
     {
         lua_pushnil(ls);
         return 1;
     }
-
     coord_def a;
     a.x = luaL_checkint(ls, 2);
     a.y = luaL_checkint(ls, 3);
@@ -140,7 +133,7 @@ LUAFN(l_spells_path)
     beam.set_agent(&you);
     beam.source = src;
     beam.attitude = ATT_FRIENDLY;
-    zappy(zap, power, false, beam);
+    zappy(spell_to_zap(spell), power, false, beam);
     beam.is_tracer = true;
     beam.is_targeting = true;
     beam.range = range;
