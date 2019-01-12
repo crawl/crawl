@@ -911,7 +911,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_KILLER_KLOWN, {
             { { WPN_CLUB,             10 }, },
-            { 1, 4, 8 },
+            { 1, 8, 12 },
             { { SPWPN_NORMAL,         20 },
               { SPWPN_FLAMING,        20 },
               { SPWPN_FREEZING,       10 },
