@@ -105,8 +105,7 @@ LUAFN(l_spells_min_range)
  * @tparam int y coordinate to aim at, in player coordinates
  * @tparam int x coordinate of spell source, in player coordinates (default=0)
  * @tparam int y coordinate of spell source, in player coordinates (default=0)
- * @treturn string|nil a list in "x1,y1 x2,y2 x3,y3..." format giving the path
- *    the spell will take, in player coordinates
+ * @treturn table|nil a table of {x,y} of the path the spell will take, in player coordinates
  * @function path
  */
 LUAFN(l_spells_path)
@@ -146,15 +145,19 @@ LUAFN(l_spells_path)
     beam.path_taken.clear();
     beam.fire();
 
-    char buf[255];
-    int len = 0;
+    lua_createtable(ls, beam.path_taken.size(), 0);
+    int index = 0;
     for (auto g : beam.path_taken)
     {
         coord_def p = grid2player(g);
-        len += sprintf(buf+len, "%d,%d ", p.x, p.y);
+        lua_createtable(ls, 2, 0);
+        lua_pushnumber(ls, p.x);
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, p.y);
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
     }
-
-    PLUARET(string, buf);
+    return 1;
 }
 
 
