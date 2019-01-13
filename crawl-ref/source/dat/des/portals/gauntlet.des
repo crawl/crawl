@@ -387,7 +387,6 @@ ENDMAP
 
 NAME:   minmay_gauntlet_arena_make_your_own_arena
 TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
-KFEAT:  = = runed_clear_door
 : gauntlet_arena_setup(_G)
 MAP
 n..=.P.=..n
