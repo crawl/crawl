@@ -870,7 +870,7 @@ vvvvbw...wbvvvv
  vvvbbbbbbbvvv
 ENDMAP
 
-# Adapted from labyrinth_green minotaur.
+# Adapted from labyrinth_green.
 NAME:   gauntlet_exit_green
 TAGS:   gauntlet_exit
 MONS:   patrolling generate_awake minotaur
@@ -970,79 +970,158 @@ ENDMAP
 
 #############################################################################
 # Chooses four corpses, each with their own set of loot, themed around some
-# particular archetypical species/background. Each set of loot has at least
-# three guaranteed items.
-# The dead octopode has a 62% chance of generating only 3 rings,
-# a 93% chance of generating 4 or less rings, and a 99% chance of
-# 5 or less. The chance of all 8 is 0.0006%.
+# particular archetypical species/background. Each set of loot has 2-4 items.
 NAME:    nicolae_gauntlet_exit_dead_adventurers
 TAGS:    gauntlet_exit
 KMONS:   1 = patrolling generate_awake minotaur
-KPROP:   ABCD'1 = bloody
+KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
-SHUFFLE: bvc, ABCDEFHIJKLM
+SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ
 {{
- -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
-dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe / '
-   .. "eveningstar / executioner's axe w:2 / "
-   .. 'great mace w:2, helmet good_item / '
-   .. 'pair of gloves good_item / pair of boots good_item, '
-   .. 'plate armour / crystal plate armour w:2' )
+-- These adventurers always place a weapon.
 
- -- Elf caster. 4 items.
-dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe, randbook, '
-   .. 'any magical staff, any jewellery' )
+local light_scales = "troll leather armour good_item" ..
+    " / stream dragon scales good_item / acid dragon scales good_item"
+local medium_scales = "swamp dragon scales good_item" ..
+    " / quicksilver dragon scales / fire dragon scales good_item" ..
+    " / ice dragon scales good_item / quicksilver dragon scales" ..
+    " / pearl dragon scales good_item"
+local heavy_scales = "storm dragon scales / shadow dragon scales" ..
+    " / gold dragon scales"
+local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
+    " / plate armour good_item w:50 / crystal plate armour good_item"
 
- -- Spriggan stabber. 4 items.
-dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
-   .. 'quick blade w:1, ration, cloak, randbook disc:hexes / any book' )
+ -- Dwarven fighter. Maybe the minotaur got the last MD.
+dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
+    "flail randart / morningstar good_item / eveningstar w:2" ..
+    "    / demon whip w:2 / dire flail good_item / great mace good_item" ..
+    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / executioner's axe w:2 " ..
+    ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
+    "    / " .. heavy_scales ..
+    ", shield good_item / large shield good_item / " .. dgn.good_aux_armour ..
+    "    / nothing w:80" ..
+    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / nothing w:60")
 
- -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
-dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
-   .. 'arrow good_item, ration / nothing, '
-   .. 'helmet / centaur barding / pair of gloves' )
+ -- Centaur hunter.
+dgn.delayed_decay_extra(_G, "E", "centaur skeleton",
+    "shortbow good_item / longbow w:5 / arbalest good_item" ..
+    "    / triple crossbow w:5 / javelin good_item" ..
+    ", leather armour good_item w:50 / ring mail good_item w:50" ..
+    "    / " .. heavy_armour .. " / " .. medium_scales ..
+    "    / " .. heavy_scales ..
+    ", centaur barding good_item / " .. dgn.good_aux_armour ..
+    "    / nothing w:70" ..
+    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / nothing w:60")
 
- -- Dwarven artificer. 3 items.
-dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
-   .. 'any wand / any misc w:20' )
+ -- Spriggan stabber.
+dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
+    "dagger good_item / short sword good_item / rapier good_item" ..
+    "    / quick blade w:5" ..
+    ", robe good_item w:120 / " .. light_scales .. " / shadow dragon scales" ..
+    ", randbook disc:hexes / book of maledictions / nothing w:20" ..
+    ", buckler good_item / hat good_item / any wand w:20 / any misc / gold" ..
+    "    / any scroll / any potion / nothing w:80")
 
- -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
-dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
-   .. 'any ring good_item / any ring, any ring, any ring w:1 / nothing w:10, '
-   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10, '
-   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10' )
+ -- Merfolk skald. 3 guaranteed items, 3.25 on-average.
+dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
+    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    ", leather armour good_item w:100 / ring mail good_item w:100" ..
+    "    / " .. light_scales .. " / " .. medium_scales ..
+    ", randbook disc:charms / book of battle" ..
+    -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
+    ", buckler good_item / shield good_item / large shield good_item" ..
+    "    / " .. dgn.good_aux_armour .. " / any wand w:20 / any misc / gold" ..
+    "    / any scroll / any potion / nothing w:480")
 
- -- Merfolk skald. 3 items.
-dgn.delayed_decay_extra(_G, 'H', 'merfolk skeleton', 'leather armour good_item w:30 / '
-   .. 'swamp dragon scales w:2 / fire dragon scales w:2 / '
-   .. 'ice dragon scales w:2, trident / demon trident / glaive / bardiche, '
-   .. 'randbook disc:charms / any book' )
+ -- Hill orc fighter. 3 guaranteed items, 3.25 on-average.
+dgn.delayed_decay_extra(_G, "J", "orc skeleton",
+    "long sword good_item / double sword w:5 / demon blade w:5" ..
+    "    / flail good_item / morningstar good_item / eveningstar" ..
+    "    / war axe good_item / broad axe good_item / trident good_item" ..
+    "    / demon trident w:5" ..
+    ", shield good_item / large shield good_item w:5" ..
+    ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
+    "    / " .. heavy_scales ..
+    -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
+    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / " .. dgn.good_aux_armour ..  " / nothing w:390")
 
- -- Human wanderer. 3-5 items.
-dgn.delayed_decay_extra(_G, 'I', 'human skeleton', 'any armour, any weapon, '
-   .. 'any good_item / any book / any jewellery, '
-   .. 'nothing / any scroll, nothing / any potion' )
+ -- Ogre, maybe an ogre mage of some kind.
+dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
+    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / executioner's axe w:2 / giant club good_item" ..
+    "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..
+    "    / any magical staff w:20" ..
+    ", robe good_item w:200 / " .. light_scales .. " / " .. medium_scales ..
+    "    / " .. heavy_scales ..
+    ", hat good_item w:20 / cloak good_item w:20 / shield good_item" ..
+    "    / large shield good_item / nothing w:60" ..
+    ", randbook w:20 / any wand w:20 / any misc / gold / any scroll" ..
+    "    / any potion / nothing w:80")
 
- -- Orc fighter. 3 items.
-dgn.delayed_decay_extra(_G, 'J', 'orc skeleton', 'shield / large shield w:2, '
-   .. 'long sword / eveningstar / broad axe / demon blade, '
-   .. 'plate armour / crystal plate armour w:2' )
+-- These adventurers don't always place weapons, with the exception of
+-- magical staves.
 
- -- Dwarven heavy armour earth elementalist. 3-4 items.
-dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
-   .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
-   .. 'ring of wizardry / any jewellery / nothing w:20' )
+-- Human wanderer.
+dgn.delayed_decay_extra(_G, "L", "human skeleton",
+    "any armour good_item, any weapon good_item / randbook / any misc" ..
+    ", any book / any jewellery / any wand w:20 / any misc / gold" ..
+    "    / any scroll / any potion / nothing w:70" ..
+    ", any book / any jewellery / any wand w:20 / any misc / gold" ..
+    "    / any scroll / any potion / nothing w:70")
 
- -- Halfling warper. 4-5 items.
-dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
-   .. 'randbook disc:translocation / any book, scroll of blinking / '
-   .. 'scroll of teleportation / nothing w:45, '
-   .. 'robe / leather armour, short sword good_item' )
+-- Deep Elf caster.
+dgn.delayed_decay_extra(_G, "M", "elf skeleton",
+    "randbook, any magical staff" ..
+    ", robe good_item w:50 / leather armour good_item w:50 " .. light_scales ..
+    "    / buckler good_item / " .. dgn.good_aux_armour ..
+    "    / nothing" ..
+    ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
+    "    / any scroll / any potion / nothing w:80")
 
- -- Ogre, maybe an ogre mage of some kind. 4-5 items.
-dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '
-   .. 'giant spiked club good_item, robe, large rock, ration, '
-   .. 'any book / nothing' )
+-- Deep Dwarf artificer.
+dgn.delayed_decay_extra(_G, "N", "dwarf skeleton",
+    "any wand, any misc, any wand / any misc / nothing w:20" ..
+    ", any weapon good_item / any amour good_item / gold / any scroll" ..
+    "    / any potion / nothing w:50")
+
+-- Octopode. Two guaranteed rings and up to two more.
+dgn.delayed_decay_extra(_G, "O", "octopode corpse",
+    "any ring good_item, any ring good_item" ..
+    ", any ring w:150 / any magical staff / trident good_item" ..
+    "    / demon trident w:5 / glaive good_item w:5 / nothing w:180" ..
+    ", any ring w:60 / hat good_item w:20 / buckler good_item w:20" ..
+    "    / shield good_item / large shield good_item / any wand w:20" ..
+    "    / any misc / gold / any scroll / any potion / nothing w:180")
+
+-- Felid Transmuter.
+dgn.delayed_decay_extra(_G, "P", "felid skeleton",
+    "randbook disc:transmutation / book of changes" ..
+    "    / book of transfigurations" ..
+    ", any jewellery good_item w:60 / manual of transmutations" ..
+    "    / manual of unarmed combat / manual of fighting" ..
+    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / nothing w:60")
+
+-- Halfling warper.
+dgn.delayed_decay_extra(_G, "Q", "halfling skeleton",
+    "randbook disc:translocation / book of spatial translocations" ..
+    "    / book of the warp" ..
+    ", scroll of blinking / scroll of teleportation q:2" ..
+    "    / tomahawk ego:dispersal" ..
+    ", dagger good_item / short sword good_item / rapier good_item" ..
+    "    / long sword good_item / double sword / demon blade" ..
+    "    / hunting sling randart / fustibalus good_item" ..
+    "    / hand crossbow randart / arbalest good_item / triple crossbow" ..
+    "    / shortbow good_item / any armour good_item / nothing w:130" ..
+    ", buckler good_item / shield good_item / " .. dgn.good_aux_armour ..
+    "    / any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / nothing w:140")
+
 }}
 MAP
 v.v.vvvvvvv.v.v
@@ -1053,9 +1132,9 @@ v.v..bb+bb..v.v
 v.v..bG.Gb..v.v
 v....b...b....v
 vvvG.bG1Gb.Gvvv
-vvvvvbB'Dbvvvvv
+vvvvvbE'Mbvvvvv
 vvvvvbG'Gbvvvvv
- vvvvbA'Cbvvvv
+ vvvvbD'Lbvvvv
  vvvvbG<Gbvvvv
  vvvvbbbbbvvvv
 ENDMAP
