@@ -121,7 +121,7 @@ def bind_server():
             (r"/", MainHandler),
             (r"/socket", CrawlWebSocket),
             (r"/gamedata/(.*)/(.*)", GameDataHandler)
-            ], gzip=use_gzip, **settings)
+            ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if http_connection_timeout is not None:
