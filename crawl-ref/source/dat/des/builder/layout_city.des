@@ -354,6 +354,7 @@ NAME:   layout_onion_city
 DEPTH:  Elf, Pan
 WEIGHT: 10 (Elf), 5 (Pan)
 ORIENT: encompass
+KFEAT:  ~ = closed_clear_door
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   unrand no_rotate no_hmirror no_vmirror
 {{
@@ -475,6 +476,7 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
   end
 
   -- This function adds windows to walls near doors
+  -- and makes some doors clear
   function add_windows (x1, y1, x2, y2, window_chance)
     for x = x1, x2 do
       for y = y1, y2 do
@@ -487,6 +489,10 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
           local ym  = y - 1
           local yp  = y + 1
           local ypp = y + 2
+
+          if (crawl.random_real() < window_chance) then
+            mapgrd[x][y] = '~'
+          end
 
           if (mapgrd[xm][y] == '.' and mapgrd[xp][y] == '.') then
             -- north window
