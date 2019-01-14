@@ -6441,10 +6441,28 @@ void unmarshallMonster(reader &th, monster& m)
             get_monster_by_name(m.props["original_name"].get_string());
     }
 
+    if (m.props.exists("given beogh shield"))
+    {
+        m.props.erase("given beogh shield");
+        m.props[BEOGH_SH_GIFT_KEY] = true;
+    }
+
+    if (m.props.exists("given beogh armour"))
+    {
+        m.props.erase("given beogh armour");
+        m.props[BEOGH_ARM_GIFT_KEY] = true;
+    }
+
     if (m.props.exists("given beogh weapon"))
     {
         m.props.erase("given beogh weapon");
         m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+    }
+
+    if (m.props.exists("given beogh range weapon"))
+    {
+        m.props.erase("given beogh range weapon");
+        m.props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS
