@@ -552,53 +552,81 @@ static formatted_string _god_wrath_description(god_type which_god)
     return desc;
 }
 
+static formatted_string _beogh_extra_description()
+{
+    formatted_string desc;
+
+    _add_par(desc, "Named Followers:");
+
+    vector<monster*> followers;
+
+    for (monster_iterator mi; mi; ++mi)
+        if (is_orcish_follower(**mi))
+            followers.push_back(*mi);
+    for (auto &entry : companion_list)
+        // if not elsewhere, follower already seen by monster_iterator
+        if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
+            followers.push_back(&entry.second.mons.mons);
+
+    sort(followers.begin(), followers.end(),
+        [] (monster* a, monster* b) { return a->experience > b->experience;});
+
+    bool has_named_followers = false;
+    for (auto mons : followers)
+    {
+        if (!mons->is_named()) continue;
+        has_named_followers = true;
+
+        desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
+        if (given_gift(mons))
+        {
+            mon_inv_type slot =
+                mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
+                mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
+                mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
+                MSLOT_WEAPON;
+
+            desc.cprintf(" (");
+
+            item_def &gift = mitm[mons->inv[slot]];
+            desc += formatted_string::parse_string(menu_colour_item_name(gift,DESC_PLAIN));
+            desc.cprintf(")");
+        }
+        desc.cprintf("\n");
+    }
+
+    if (!has_named_followers)
+        _add_par(desc, "None");
+
+    return desc;
+}
+
+
 static formatted_string _god_extra_description(god_type which_god)
 {
     formatted_string desc;
 
-    if (which_god == GOD_BEOGH)
+    switch (which_god)
     {
-        _add_par(desc, "Named Followers:");
-
-        vector<monster*> followers;
-
-        for (monster_iterator mi; mi; ++mi)
-            if (is_orcish_follower(**mi))
-                followers.push_back(*mi);
-        for (auto &entry : companion_list)
-            // if not elsewhere, follower already seen by monster_iterator
-            if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
-                followers.push_back(&entry.second.mons.mons);
-
-        sort(followers.begin(), followers.end(),
-            [] (monster* a, monster* b) { return a->experience > b->experience;});
-
-        bool has_named_followers = false;
-        for (auto mons : followers)
-        {
-            if (!mons->is_named()) continue;
-            has_named_followers = true;
-
-            desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
-            if (given_gift(mons))
+        case GOD_ASHENZARI:
+            if (have_passive(passive_t::bondage_skill_boost))
             {
-                mon_inv_type slot =
-                    mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
-                    mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
-                    mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
-                    MSLOT_WEAPON;
-
-                desc.cprintf(" (");
-
-                item_def &gift = mitm[mons->inv[slot]];
-                desc += formatted_string::parse_string(menu_colour_item_name(gift,DESC_PLAIN));
-                desc.cprintf(")");
+                _add_par(desc, "Curse skill supports:");
+                _add_par(desc,  _describe_ash_skill_boost());
             }
-            desc.cprintf("\n");
-        }
-
-        if (!has_named_followers)
-            _add_par(desc, "None");
+            break;
+        case GOD_BEOGH:
+            desc = _beogh_extra_description();
+            break;
+        case GOD_GOZAG:
+            _add_par(desc, _describe_branch_bribability());
+            break;
+        case GOD_HEPLIAKLQANA:
+            _add_par(desc, "Ancestor upgrades:");
+            _add_par(desc, _describe_ancestor_upgrades());
+            break;
+        default:
+            break;
     }
 
     return desc;
@@ -639,39 +667,17 @@ static string _get_god_misc_info(god_type which_god)
     return info;
 }
 
-static string _get_god_specific_table(god_type which_god)
-{
-    switch (which_god)
-    {
-        case GOD_ASHENZARI:
-            if (have_passive(passive_t::bondage_skill_boost))
-                return _describe_ash_skill_boost();
-            return "";
-
-        case GOD_GOZAG:
-            return _describe_branch_bribability();
-
-        case GOD_HEPLIAKLQANA:
-            return _describe_ancestor_upgrades();
-
-        default:
-            return "";
-    }
-}
-
 /**
  * Print a detailed description of the given god's likes and powers.
  *
  * @param god       The god in question.
  */
-static formatted_string _detailed_god_description(god_type which_god, bool for_web = false)
+static formatted_string _detailed_god_description(god_type which_god)
 {
     formatted_string desc;
     _add_par(desc, getLongDescription(god_name(which_god) + " powers"));
     _add_par(desc, get_god_likes(which_god));
     _add_par(desc, _get_god_misc_info(which_god));
-    if (!for_web)
-        _add_par(desc, _get_god_specific_table(which_god));
     return desc;
 }
 
@@ -1150,10 +1156,10 @@ static void _send_god_ui(god_type god, bool is_altar)
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",
             _describe_god_powers(god).to_colour_string());
-    tiles.json_write_string("info_table", _get_god_specific_table(god));
+    // tiles.json_write_string("info_table", _get_god_specific_table(god));
 
     tiles.json_write_string("powers",
-            _detailed_god_description(god, true).to_colour_string());
+            _detailed_god_description(god).to_colour_string());
     tiles.json_write_string("wrath",
             _god_wrath_description(god).to_colour_string());
     tiles.push_ui_layout("describe-god", 1);
