@@ -1077,6 +1077,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
+    god_conduct_trigger conducts[3];
     int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
@@ -1085,6 +1086,13 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
             simple_monster_message(*mons, " convulses!");
+
+        if (attacker && attacker->is_player()
+            && source == HOLY_WORD_SCROLL
+            && item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD))
+        {
+            set_attack_conducts(conducts, *mons, you.can_see(*mons));
+        }
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1239,6 +1247,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         return;
     }
 
+    god_conduct_trigger conducts[3];
     int hploss = max(0, mons->hit_points *
                         (50 - mons->res_negative_energy() * 5) / 100 - 1);
 
@@ -1251,6 +1260,24 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         // it. It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
+
+        if (attacker && attacker->is_player())
+        {
+            bool set_conducts = false;
+            switch (taux)
+            {
+                case TORMENT_SCROLL:
+                    set_conducts = item_type_known(OBJ_SCROLLS, SCR_TORMENT);
+                    break;
+                case TORMENT_SCEPTRE:
+                    set_conducts = true;
+                    break;
+                default: break;
+            }
+
+            if (set_conducts)
+                set_attack_conducts(conducts, *mons, you.can_see(*mons));
+        }
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);

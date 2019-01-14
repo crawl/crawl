@@ -9,6 +9,7 @@
 #include <string>
 
 #include "enum.h"
+#include "item-prop-enum.h"
 #include "operation-types.h"
 
 item_def* use_an_item(int item_type, operation_types oper, const char* prompt,

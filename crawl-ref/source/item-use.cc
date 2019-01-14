@@ -26,6 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
+#include "fight.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -2738,6 +2739,34 @@ string cannot_read_item_reason(const item_def &item)
 }
 
 /**
+ * Check if a particular scroll type would hurt a monster.
+ *
+ * @param scr           Scroll type in question
+ * @param m             Actor as a potential victim to the scroll
+ * @return  true if the provided scroll type is harmful to the actor.
+ */
+static bool _scroll_will_harm(const scroll_type scr, const actor &m)
+{
+    if (!m.alive())
+        return false;
+
+    switch (scr)
+    {
+        case SCR_HOLY_WORD:
+            if (m.undead_or_demonic())
+                return true;
+            break;
+        case SCR_TORMENT:
+            if (!m.res_torment())
+                return true;
+            break;
+        default: break;
+    }
+
+    return false;
+}
+
+/**
  * Check to see if the player can read the item in the given slot, and if so,
  * reads it. (Examining books, evoking the tome of destruction, & using
  * scrolls.)
@@ -2770,14 +2799,66 @@ void read(item_def* scroll)
         return;
     }
 
-    // need to handle this before we waste time (with e.g. blurryvis)
-    if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
-        && orb_limits_translocation()
-        && !yesno("Your blink will be uncontrolled - continue anyway?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
+    if (item_type_known(*scroll)) {
+        // need to handle this before we waste time (with e.g. blurryvis)
+        bool penance = god_hates_item(*scroll);
+        bool friendly_fire = false;
+        const coord_def& where = you.pos();
+
+        for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+        {
+            const monster_info* m = env.map_knowledge(*ri).monsterinfo();
+            monster* mons = monster_at(*ri);
+
+            if (!m || !mons || !_scroll_will_harm(which_scroll, *mons))
+                continue;
+
+            if (!friendly_fire
+                && mons_att_wont_attack(m->attitude)
+                && !mons_is_projectile(m->type))
+            {
+                friendly_fire = true;
+            }
+
+            if (!penance)
+            {
+                string adj, suffix;
+                bad_attack(mons, adj, suffix, penance, where);
+            }
+
+            if (penance && friendly_fire)
+                break;
+        }
+
+        // We warn about friendly fire first because if that also happens to put
+        // us under penance it makes more sense to warn about the penance AFTER
+        // warning about the allies.
+        if (friendly_fire && !yesno("Some of your allies may get hurt"
+                                    " - continue anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        // We use the term 'could' rather than 'would' here because by the time
+        // we finish reading the scroll (having blurry vision), it may no longer
+        // anger our god.
+        if (penance && !yesno("This action could place you under penance"
+                              " - continue anyway?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        if (scroll->sub_type == SCR_BLINKING
+            && orb_limits_translocation()
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
     }
 
     if (you.get_mutation_level(MUT_BLURRY_VISION)
