@@ -9,19 +9,23 @@
 
 #include <iomanip>
 
+#include "act-iter.h"
 #include "ability.h"
 #include "branch.h"
 #include "cio.h"
 #include "database.h"
 #include "describe.h"
 #include "english.h"
+#include "env.h"
 #include "eq-type-flags.h"
 #include "food.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "god-type.h"
+#include "item-name.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -551,6 +555,51 @@ static formatted_string _god_wrath_description(god_type which_god)
 static formatted_string _god_extra_description(god_type which_god)
 {
     formatted_string desc;
+
+    if (which_god == GOD_BEOGH)
+    {
+        _add_par(desc, "Named Followers:");
+
+        vector<monster*> followers;
+
+        for (monster_iterator mi; mi; ++mi)
+            if (is_orcish_follower(**mi))
+                followers.push_back(*mi);
+        for (auto &entry : companion_list)
+            // if not elsewhere, follower already seen by monster_iterator
+            if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
+                followers.push_back(&entry.second.mons.mons);
+
+        sort(followers.begin(), followers.end(),
+            [] (monster* a, monster* b) { return a->experience > b->experience;});
+
+        bool has_named_followers = false;
+        for (auto mons : followers)
+        {
+            if (!mons->is_named()) continue;
+            has_named_followers = true;
+
+            desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
+            if (given_gift(mons))
+            {
+                mon_inv_type slot =
+                    mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
+                    mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
+                    mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
+                    MSLOT_WEAPON;
+
+                desc.cprintf(" (");
+
+                item_def &gift = mitm[mons->inv[slot]];
+                desc += formatted_string::parse_string(menu_colour_item_name(gift,DESC_PLAIN));
+                desc.cprintf(")");
+            }
+            desc.cprintf("\n");
+        }
+
+        if (!has_named_followers)
+            _add_par(desc, "None");
+    }
 
     return desc;
 }
