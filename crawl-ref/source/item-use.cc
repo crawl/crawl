@@ -2780,6 +2780,42 @@ void read(item_def* scroll)
         return;
     }
 
+    if (scroll->sub_type == SCR_HOLY_WORD && item_type_known(*scroll))
+    {
+        if (you_worship(GOD_YREDELEMNUL)
+            && !yesno("This action would place you under penance -"
+                      " continue anyway?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        bool friendlies = false;
+        const coord_def& where = you.pos();
+        for (radius_iterator ri(where, LOS_SOLID); ri; ++ri) {
+            const monster_info* m = env.map_knowledge(*ri).monsterinfo();
+            monster* mons = monster_at(*ri);
+
+            if (!m || !mons || !mons->alive() || !mons->undead_or_demonic())
+                continue;
+
+            if (mons_att_wont_attack(m->attitude)
+                && !mons_is_projectile(m->type))
+            {
+                friendlies = true;
+                break;
+            }
+        }
+
+        if (friendlies
+        && !yesno("There are friendly unholy creatures around -"
+                  " continue anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
     if (you.get_mutation_level(MUT_BLURRY_VISION)
         && !i_feel_safe(false, false, true)
         && !yesno("Really read with blurry vision while enemies are nearby?",
