@@ -1,5 +1,5 @@
-Stone Soup 0.23 (up to 0.23-a0-642-g3120c2f5)
----------------------------------------------
+Stone Soup 0.23 (up to 0.23-a0-709-gaefc81b7b9)
+-----------------------------------------------
 
 Branches, Environment
 ---------------------
@@ -10,19 +10,24 @@ Branches, Environment
     monsters.
   - Alarm traps only trigger in LOS, and always Mark the player when
     triggered.
-  - New trap: dispersal trap. When triggered every actor in sight of the trap
+  - Net traps now try to net the player whenever they are triggered in LOS.
+  - New trap: dispersal trap. When triggered, every actor in sight of the trap
     is blinked.
+  - Mechanical traps save for net traps have been removed from Tomb and the
+    Hall of Zot on Zot:5, and traps have been adjusted in many Ossuaries.
 * A new Gauntlet portal that replaces Labyrinths:
-   - Gauntlets have the player choose a path through several combat arenas,
-     each of which contains (sometimes exotic) monsters and loot.
-   - Arena access is one-way using transporters, and teleports are disabled.
-   - All paths lead to the minotaur who guards the exit and a pile of treasure.
-   - Gauntlets are found where Labyrinths previously generated.
+  - Gauntlets have the player choose a path through several combat arenas,
+    each of which contains (sometimes exotic) monsters and loot.
+  - Arena access is one-way using transporters, and teleports are disabled.
+  - All paths lead to the minotaur who guards the exit and a pile of treasure.
+  - Gauntlets are found where Labyrinths previously generated.
 * New early vaults featuring thematic item shops and monsters guarding
-  manuals.
+  manuals, as well as new ghost vaults for many branches.
 * Layouts:
   - Concentric octagons is enabled for Lair.
   - Cave pools (with adjusted parameters) is enabled for the Dungeon.
+* Translucent doors that can bee seen through when closed have been added and
+  are now used in Elf layouts and some vaults.
 
 Character
 ---------
@@ -35,29 +40,30 @@ Gods
 * Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
   sight instead of on the turn after the monster enters LOS.
 * The acid damage from Makhleb's Minor Destruction has been reduced.
-* Elyvilon's Heal Other's is adjusted.
+* Elyvilon's Heal Other's is adjusted:
   - The formula depends only on monster type, not specific monster maxhp.
   - Player Ghosts and Pandemonium Lords are now immune.
   - The targeter displays the pacification chance.
 * Exploration-based piety is no longer granted for the Temple, deep water, or
   lava.
-* Nemelex Xobeh's decks are moved into an abstract ability
-  - Deck rarity types are removed
+* Nemelex Xobeh's decks are moved into an abstract abilities:
+  - Decks are are accessed through abilities and no longer exist as items.
   - Nemelex offers three abilities: "Draw Escape", "Draw Destruction", and
-    "Draw Summoning", which provide card effects
-  - Nemelex periodically adds cards to the three abstract decks
+    "Draw Summoning", which provide card effects.
+  - The deck abilities do not have rarities; card power levels are determined
+    by invocations and piety alone.
+  - Nemelex periodically adds cards to the three abstract decks.
   - Triple Draw works on the three decks as before, offering a choice of three
     cards. The piety cost is increased.
-  - Deal Four deals four cards from an abstract deck and discards the
-    remainder. The ability costs no piety.
+  - Deal Four deals four cards from a deck and has a reduced piety cost.
   - Stack Five constructs a player-ordered stack of five cards drawn from any
     of the three decks to be drawn later. Creating a new stack discards the
     old. The piety cost is the same as old stack five.
   - The Velocity card no longer hastes enemies, instead always slowing them
     with a chance proportional to power.
-* Ashenzari protects followers from exploration based trap effects
+* Ashenzari protects followers from exploration based trap effects.
 * Qazlal's cloud immunity is extended to elementals created with Elemental
-Force
+  Force.
 
 Interface
 ---------
@@ -66,8 +72,8 @@ Interface
 * WebTiles users can use a "Forgot Password" link to reset their password
   via a link sent to their registration email address. This feature is not yet
   enabled on most official servers.
-* New display_chars: cloud_weak, cloud_fading, and cloud_terminal display cloud
-  duration in console; a long available to tiles players.
+* The new display_chars cloud_weak, cloud_fading, and cloud_terminal indicate
+  remaining cloud duration in console.
 
 Items
 -----
@@ -75,7 +81,7 @@ Items
 * Butchering a corpse always leaves a skeleton.
 * Wand charges for wands of digging, enslavement, flame, paralysis, polymorph,
   and random effects have been reduced.
-* The blowgun targeter now displays the chance to affect the target
+* The blowgun targeter now displays the chance to affect the target.
 * Unrandarts:
   - The Singing Sword is now vorpal, and its sonic damage effect is stronger
     and triggers on-hit instead of while wielded.
@@ -91,10 +97,9 @@ Items
   - Unrandarts with melee effects that could anger nearby allies give a proper
     warning.
   - The robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
-    storm clouds in place of its old mist
-  - The storm bow no longer occasionally creates rain clouds
-  - The skin of Zhor gains SInv and a passive Metabolic Englaciation effect
-* The deck item type is removed
+    storm clouds in place of its old mist.
+  - The storm bow no longer occasionally creates rain clouds.
+  - The skin of Zhor gains SInv and a passive Metabolic Englaciation effect.
 
 Lua
 ---
@@ -107,13 +112,18 @@ Monsters
 * The shambling mangrove Grasping Roots ability now performs smite-targeted
   constriction instead of applying a 'Roots' status.
 * Jorgrun gains the Grasping Roots spell and can now spawn in Swamp.
+* Killer Klowns now have a pie throwing ability that damages the player and
+  effects them with one of Vertigo, Silence, -Potions, Stat drain, rF-, or
+  polymorph to bat, pig, or wisp form.
+* Killer Klowns have highly enchanted, branded clubs instead of the Klown
+  melee flavor, and no longer have fast regen.
 * Orb run spawns are more frequently near the player and more dangerous.
 * Pandemonium lords' spell sets and attack brands are revealed.
 * Monster summons disappear whenever the summoner changes alignment from being
   charmed/uncharmed, pacified, or slimified.
-* Confused monsters now get a 1 in 3 chance to move normally, like players do
+* Confused monsters now get a 1 in 3 chance to move normally, like players do.
 * Giant monsters no longer tear through webs.
-* Monsters only trigger traps in sight of the player
+* Monsters only trigger traps in sight of the player.
 
 Spells
 ------
