@@ -190,11 +190,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HASTE, "Haste",
     SPTYP_CHARMS,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY | SPFLAG_SELFENCH
-        | SPFLAG_UTILITY,
+    SPFLAG_HELPFUL | SPFLAG_HASTY | SPFLAG_SELFENCH | SPFLAG_UTILITY,
     6,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    -1, -1,
     5, 0,
     TILEG_HASTE,
 },
@@ -2261,11 +2260,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MIGHT, "Might",
     SPTYP_CHARMS,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_SELFENCH
-        | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+    SPFLAG_HELPFUL | SPFLAG_SELFENCH | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
     3,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    -1, -1,
     3, 0,
     TILEG_MIGHT,
 },
