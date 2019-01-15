@@ -485,7 +485,10 @@ static void _describe_book(const spellbook_contents &book,
 
     // only display header for book spells
     if (source_item)
-        description.cprintf("\n Spells                           Type                      Level");
+    {
+        description.cprintf(
+            "\n Spells                           Type                      Level");
+    }
     description.cprintf("\n");
 
     // list spells in two columns, instead of one? (monster books)
@@ -501,22 +504,32 @@ static void _describe_book(const spellbook_contents &book,
 
         // don't crash if we have more spells than letters.
         auto entry = find_if(spell_map.begin(), spell_map.end(),
-                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
-        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
+                [&spell](const pair<spell_type,char>& e)
+                {
+                    return e.first == spell;
+                });
+        const char spell_letter = entry != spell_map.end()
+                                            ? entry->second : ' ';
 
+        auto flags = get_spell_flags(spell);
         int pow = mons_power_for_hd(spell, hd, false);
         int range = spell_range(spell, pow, false);
-        bool in_range = mon_owner && grid_distance(you.pos(), mon_owner->pos) <= range;
+        const bool has_range = mon_owner
+                            && range > 0
+                            && !testbits(flags, SPFLAG_SELFENCH);
+        const bool in_range = has_range
+                        && grid_distance(you.pos(), mon_owner->pos) <= range;
         const char *range_col = in_range ? "lightred" : "lightgray";
-        string range_str = (!mon_owner || range < 0) ? "" :
-            make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
+        string range_str = has_range
+            ? make_stringf(" (<%s>%d</%s>)", range_col, range, range_col)
+            : "";
         string hex_str = "";
 
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+            && testbits(flags, SPFLAG_MR_CHECK))
         {
             if (you.immune_to_hex(spell))
                 hex_str = "(immune) ";
@@ -579,8 +592,10 @@ void describe_spellset(const spellset &spells,
 
     if (mon_owner)
     {
-        description.cprintf("\n(x%%) indicates the chance to beat your MR"
-                ", and (y) indicates the spell range.\n");
+        description += formatted_string::parse_string(
+            "\n(x%) indicates the chance to beat your MR, "
+            "and (y) indicates the spell range; shown as (<red>y</red>) if "
+            "you are in range.\n");
     }
 }
 
