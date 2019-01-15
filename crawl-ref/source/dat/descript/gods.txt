@@ -314,18 +314,6 @@ below. They will also be taught to move at unfathomable speeds for short
 distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
 
-  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
-  .......       .......
-
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one action.
-
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
-  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
-
 %%%%
 Kikubaaqudgha powers
 
@@ -665,4 +653,18 @@ Zin wrath
 Those under Zin's wrath will find their beneficial mutations stripped away,
 their bellies emptied, their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
+%%%%
+Wu Jian extra
+
+  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
+  .......       .......
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
+  .......       ....... motion pins monsters in place for one action.
+
+  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
+  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
 %%%%
