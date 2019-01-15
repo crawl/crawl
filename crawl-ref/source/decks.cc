@@ -1548,7 +1548,7 @@ static void _storm_card(int power)
         coord_def cp = you.pos();
         cp.x += random_range(4, LOS_DEFAULT_RANGE) * (coinflip() ? 1 : -1);
         cp.y += random_range(4, LOS_DEFAULT_RANGE) * (coinflip() ? 1 : -1);
-        if (you.see_cell(cp))
+        if (you.see_cell(cp) && !cell_is_solid(cp))
         {
             place_cloud(CLOUD_STORM, cp,
                         5 + (power_level + 1) * random2(10), & you);
