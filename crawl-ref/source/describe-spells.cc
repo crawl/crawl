@@ -508,7 +508,7 @@ static void _describe_book(const spellbook_contents &book,
         int range = spell_range(spell, pow, false);
         bool in_range = mon_owner && grid_distance(you.pos(), mon_owner->pos) <= range;
         const char *range_col = in_range ? "lightred" : "lightgray";
-        string range_str = range < 0 ? "" :
+        string range_str = (!mon_owner || range < 0) ? "" :
             make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
         string hex_str = "";
 
