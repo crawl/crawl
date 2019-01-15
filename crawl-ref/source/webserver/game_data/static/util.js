@@ -44,7 +44,10 @@ function () {
             if (p1 in cols && !str.match(/^<</) && str.match(/>$/))
             {
                 if (closing)
+                {
+                    other_open = false;
                     return "</span>";
+                }
                 else
                 {
                     var text = "<span class='fg" + cols[p1] + "'>";
