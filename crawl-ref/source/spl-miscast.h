@@ -17,18 +17,18 @@ enum class nothing_happens
     ALWAYS,
 };
 
-enum miscast_source
+enum class miscast_source
 {
-    ZOT_TRAP_MISCAST,
-    HELL_EFFECT_MISCAST,
-    WIELD_MISCAST,
-    MELEE_MISCAST,
-    SPELL_MISCAST,
-    ABIL_MISCAST,
-    WIZARD_MISCAST,
-    MUMMY_MISCAST,
-    DECK_MISCAST,
-    GOD_MISCAST
+    zot_trap,
+    hell_effect,
+    wield,
+    melee,
+    spell,
+    ability,   // Not currently used
+    wizard,
+    mummy,
+    deck,
+    god
 };
 
 class actor;

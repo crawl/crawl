@@ -2222,7 +2222,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, nullptr, {GOD_MISCAST, GOD_XOM},
+    MiscastEffect(&you, nullptr, {miscast_source::god, GOD_XOM},
                   (spschool)school, level, cause_str, nothing_happens::DEFAULT,
                   lethality_margin, hand_str, can_plural);
 }
