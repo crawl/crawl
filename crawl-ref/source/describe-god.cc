@@ -14,6 +14,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "database.h"
+#include "decks.h"
 #include "describe.h"
 #include "english.h"
 #include "env.h"
@@ -601,6 +602,19 @@ static formatted_string _beogh_extra_description()
     return desc;
 }
 
+static string _describe_deck_summary()
+{
+    ostringstream desc;
+    desc << "Decks of power:\n";
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
+        desc << " " << deck_status((deck_type) i) << "\n";
+
+    string stack = stack_contents();
+    if (!stack.empty())
+        desc << "\n stacked deck: " << stack << "\n";
+
+    return desc.str();
+}
 
 static formatted_string _god_extra_description(god_type which_god)
 {
@@ -624,6 +638,9 @@ static formatted_string _god_extra_description(god_type which_god)
         case GOD_HEPLIAKLQANA:
             _add_par(desc, "Ancestor upgrades:");
             _add_par(desc, _describe_ancestor_upgrades());
+            break;
+        case GOD_NEMELEX_XOBEH:
+            _add_par(desc, _describe_deck_summary());
             break;
         default:
             break;

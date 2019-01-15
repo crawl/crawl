@@ -60,7 +60,7 @@ deck_type ability_deck(ability_type abil);
 
 bool gift_cards();
 void reset_cards();
-string deck_status();
+string deck_summary();
 
 bool deck_draw(deck_type deck);
 bool deck_triple_draw();
@@ -75,9 +75,11 @@ void card_effect(card_type which_card, bool dealt = false,
         bool tell_card = true);
 void draw_from_deck_of_punishment(bool deal = false);
 
+string deck_status(deck_type deck);
 string deck_name(deck_type deck);
 string deck_description(deck_type deck);
 const string stack_top();
+const string stack_contents();
 
 #if TAG_MAJOR_VERSION == 34
 bool is_deck_type(uint8_t type);
