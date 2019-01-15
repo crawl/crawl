@@ -3687,7 +3687,7 @@ static string _monster_spells_description(const monster_info& mi)
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("To read a description, press the key listed above.\n");
-    return description.tostring();
+    return description.to_colour_string();
 }
 
 static const char *_speed_description(int speed)
@@ -4583,7 +4583,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     if (!needle.empty())
     {
         desc_without_spells = replace_all(desc_without_spells,
-                needle, "SPELLSET_PLACEHOLDER");
+                needle.to_colour_string(), "SPELLSET_PLACEHOLDER");
     }
     tiles.json_write_string("body", desc_without_spells);
     tiles.json_write_string("quote", quote);
