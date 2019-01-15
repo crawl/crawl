@@ -84,7 +84,7 @@ static void _random_hell_miscast()
                                  1, spschool::charms,
                                  1, spschool::hexes);
 
-    MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
+    MiscastEffect(&you, nullptr, {HELL_EFFECT_MISCAST}, which_miscast,
                   4 + random2(6), random2avg(97, 3),
                   "the effects of Hell");
 }
@@ -150,7 +150,7 @@ static void _themed_hell_summon_or_miscast()
     }
     else
     {
-        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, spec->miscast_type,
+        MiscastEffect(&you, nullptr, {HELL_EFFECT_MISCAST}, spec->miscast_type,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }

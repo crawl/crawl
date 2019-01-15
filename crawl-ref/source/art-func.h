@@ -154,7 +154,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
     {
-        MiscastEffect(&you, nullptr, WIELD_MISCAST, spschool::necromancy,
+        MiscastEffect(&you, nullptr, {WIELD_MISCAST}, spschool::necromancy,
                       random2(9), random2(70), "the scythe of Curses",
                       nothing_happens::NEVER);
     }
@@ -174,7 +174,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
         did_god_conduct(DID_EVIL, 3);
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
-        MiscastEffect(defender, attacker, MELEE_MISCAST, spschool::necromancy,
+        MiscastEffect(defender, attacker, {MELEE_MISCAST}, spschool::necromancy,
                       random2(9), random2(70), "the scythe of Curses",
                       nothing_happens::NEVER);
     }
@@ -844,7 +844,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
              || !mons_immune_magic(*defender->as_monster())))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
-        MiscastEffect(defender, attacker, MELEE_MISCAST,
+        MiscastEffect(defender, attacker, {MELEE_MISCAST},
                       spschool::transmutation, random2(9), random2(70),
                       "the plutonium sword", nothing_happens::NEVER);
 
@@ -1033,7 +1033,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     if (defender->antimagic_susceptible()
         && !mondied)
     {
-        MiscastEffect(defender, attacker, MELEE_MISCAST, spschool::random,
+        MiscastEffect(defender, attacker, {MELEE_MISCAST}, spschool::random,
                       random2(9), random2(70),
                       "the demon whip \"Spellbinder\"", nothing_happens::NEVER);
     }

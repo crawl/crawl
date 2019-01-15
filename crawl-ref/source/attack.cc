@@ -902,7 +902,7 @@ void attack::do_miscast()
         }
     }
 
-    MiscastEffect(miscast_target, attacker, MELEE_MISCAST,
+    MiscastEffect(miscast_target, attacker, {MELEE_MISCAST},
                   (spschool) miscast_type, miscast_level, cause,
                   nothing_happens::NEVER, 0, hand_str, false);
 

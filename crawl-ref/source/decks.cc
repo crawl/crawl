@@ -1636,7 +1636,7 @@ static void _wild_magic_card(int power)
                                           spschool::poison);
 
             MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
-                          DECK_MISCAST, type,
+                          {DECK_MISCAST}, type,
                           random2(power/15) + 5, random2(power),
                           "a card of wild magic");
 
