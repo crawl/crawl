@@ -678,7 +678,7 @@ namespace arena
             if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
-            MiscastEffect(*mon, *mon, WIZARD_MISCAST, spschool::random,
+            MiscastEffect(*mon, *mon, {WIZARD_MISCAST}, spschool::random,
                           random_range(1, 3), "arena miscast",
                           nothing_happens::NEVER);
         }

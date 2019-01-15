@@ -1149,22 +1149,22 @@ void debug_miscast(int target_index)
 
     if (spell != SPELL_NO_SPELL)
     {
-        miscast = new MiscastEffect(target, target, WIZARD_MISCAST, spell, pow,
-                                    fail, "", nothing);
+        miscast = new MiscastEffect(target, target, {WIZARD_MISCAST}, spell,
+                                    pow, fail, "", nothing);
     }
     else
     {
         if (level != -1)
         {
-            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
-                                        level, "wizard testing miscast",
+            miscast = new MiscastEffect(target, target, {WIZARD_MISCAST},
+                                        school, level, "wizard testing miscast",
                                         nothing);
         }
         else
         {
-            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
-                                        pow, fail, "wizard testing miscast",
-                                        nothing);
+            miscast = new MiscastEffect(target, target, {WIZARD_MISCAST},
+                                        school, pow, fail,
+                                        "wizard testing miscast", nothing);
         }
     }
     // Merely creating the miscast object causes one miscast effect to

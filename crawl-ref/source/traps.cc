@@ -750,7 +750,7 @@ void trap_def::trigger(actor& triggerer)
         {
             mpr("You enter the Zot trap.");
 
-            MiscastEffect(&you, nullptr, ZOT_TRAP_MISCAST, spschool::random,
+            MiscastEffect(&you, nullptr, {ZOT_TRAP_MISCAST}, spschool::random,
                            3, name(DESC_A));
         }
         else if (m)
@@ -780,8 +780,8 @@ void trap_def::trigger(actor& triggerer)
             {
                 mprf("The power of Zot is invoked against %s!",
                      targ->name(DESC_THE).c_str());
-                MiscastEffect(targ, nullptr, ZOT_TRAP_MISCAST, spschool::random,
-                              3, "the power of Zot");
+                MiscastEffect(targ, nullptr, {ZOT_TRAP_MISCAST},
+                              spschool::random, 3, "the power of Zot");
             }
         }
         break;
