@@ -461,6 +461,22 @@ vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
     return ret;
 }
 
+static string _range_string(const spell_type &spell, const monster_info *mon_owner, int hd)
+{
+    auto flags = get_spell_flags(spell);
+    int pow = mons_power_for_hd(spell, hd, false);
+    int range = spell_range(spell, pow, false);
+    const bool has_range = mon_owner
+                        && range > 0
+                        && !testbits(flags, SPFLAG_SELFENCH);
+    if (!has_range)
+        return "";
+    const bool in_range = has_range
+                    && grid_distance(you.pos(), mon_owner->pos) <= range;
+    const char *range_col = in_range ? "lightred" : "lightgray";
+    return make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
+}
+
 /**
  * Describe a given set of spells.
  *
@@ -511,25 +527,15 @@ static void _describe_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end()
                                             ? entry->second : ' ';
 
-        auto flags = get_spell_flags(spell);
-        int pow = mons_power_for_hd(spell, hd, false);
-        int range = spell_range(spell, pow, false);
-        const bool has_range = mon_owner
-                            && range > 0
-                            && !testbits(flags, SPFLAG_SELFENCH);
-        const bool in_range = has_range
-                        && grid_distance(you.pos(), mon_owner->pos) <= range;
-        const char *range_col = in_range ? "lightred" : "lightgray";
-        string range_str = has_range
-            ? make_stringf(" (<%s>%d</%s>)", range_col, range, range_col)
-            : "";
+        string range_str = _range_string(spell, mon_owner, hd);
+
         string hex_str = "";
 
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && testbits(flags, SPFLAG_MR_CHECK))
+            && testbits(get_spell_flags(spell), SPFLAG_MR_CHECK))
         {
             if (you.immune_to_hex(spell))
                 hex_str = "(immune) ";
@@ -623,15 +629,9 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        int pow = mons_power_for_hd(spell, hd, false);
-        int range = spell_range(spell, pow, false);
-        bool in_range = mon_owner && grid_distance(you.pos(), mon_owner->pos) <= range;
-        const char *range_col = in_range ? "lightred" : "lightgray";
-        if (mon_owner && range >= 0)
-        {
-            tiles.json_write_string("range_string",
-                    make_stringf("<%s>%d</%s>", range_col, range, range_col));
-        }
+        string range_str = _range_string(spell, mon_owner, hd);
+        if (range_str.size() > 0)
+            tiles.json_write_string("range_string", range_str);
 
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
