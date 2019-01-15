@@ -472,6 +472,8 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     if (!has_range)
         return "";
     const bool in_range = has_range
+                    && crawl_state.need_save
+                    && in_bounds(mon_owner->pos)
                     && grid_distance(you.pos(), mon_owner->pos) <= range;
     const char *range_col = in_range ? "lightred" : "lightgray";
     return make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
@@ -595,14 +597,6 @@ void describe_spellset(const spellset &spells,
     auto spell_map = map_chars_to_spells(spells, source_item);
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
-
-    if (mon_owner)
-    {
-        description += formatted_string::parse_string(
-            "\n(x%) indicates the chance to beat your MR, "
-            "and (y) indicates the spell range; shown as (<red>y</red>) if "
-            "you are in range.\n");
-    }
 }
 
 #ifdef USE_TILE_WEB

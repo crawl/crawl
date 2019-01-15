@@ -3686,7 +3686,13 @@ static string _monster_spells_description(const monster_info& mi)
 
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
-    description.cprintf("To read a description, press the key listed above.\n");
+    description.cprintf("\nTo read a description, press the key listed above. "
+        "(x%%) indicates the chance to beat your MR, "
+        "and (y) indicates the spell range");
+    description.cprintf(crawl_state.need_save
+        ? "; shown in red if you are in range.\n"
+        : ".\n");
+
     return description.to_colour_string();
 }
 
