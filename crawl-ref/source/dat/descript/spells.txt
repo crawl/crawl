@@ -647,7 +647,7 @@ pulled adjacent to the caster or collide with anything blocking the way.
 %%%%
 Haste spell
 
-Speeds the actions of a targeted creature.
+Speeds the actions of the caster.
 %%%%
 Haunt spell
 
