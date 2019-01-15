@@ -1550,6 +1550,8 @@ static void _storm_card(int power)
         cp.y += random_range(4, LOS_DEFAULT_RANGE) * (coinflip() ? 1 : -1);
         if (you.see_cell(cp))
         {
+            place_cloud(CLOUD_STORM, *ri,
+                        5 + (power_level + 1) * random2(10), & you);
             bolt beam;
             beam.name              = "electrical discharge";
             beam.aux_source        = "the storm";
