@@ -642,6 +642,10 @@ static formatted_string _god_extra_description(god_type which_god)
         case GOD_NEMELEX_XOBEH:
             _add_par(desc, _describe_deck_summary());
             break;
+        case GOD_WU_JIAN:
+            _add_par(desc, "Martial attacks:");
+            desc += formatted_string::parse_string(getLongDescription(god_name(which_god) + " extra"));
+            break;
         default:
             break;
     }
