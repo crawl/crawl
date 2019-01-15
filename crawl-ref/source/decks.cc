@@ -218,7 +218,7 @@ static const deck_archetype _cards_in_deck(deck_type deck)
     return {};
 }
 
-static const string _stack_contents()
+const string stack_contents()
 {
     const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
 
@@ -227,7 +227,8 @@ static const string _stack_contents()
                 reverse_iterator<CrawlVector::const_iterator>(stack.end()),
                 reverse_iterator<CrawlVector::const_iterator>(stack.begin()),
               [](const CrawlStoreValue& card) { return card_name((card_type)card.get_int()); });
-    output += ".";
+    if (!stack.empty())
+        output += ".";
 
     return output;
 }
@@ -244,7 +245,7 @@ const string stack_top()
 const string deck_contents(deck_type deck)
 {
     if (deck == DECK_STACK)
-        return "Remaining cards: " + _stack_contents();
+        return "Remaining cards: " + stack_contents();
 
     string output = "It may contain the following cards: ";
 
@@ -315,7 +316,7 @@ void reset_cards()
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
 }
 
-string deck_status()
+string deck_summary()
 {
     vector<string> stats;
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
@@ -453,7 +454,7 @@ static void _describe_cards(CrawlVector& cards)
 #endif
 }
 
-static string _describe_deck(deck_type deck)
+string deck_status(deck_type deck)
 {
     const string name = deck_name(deck);
     const int cards   = deck_cards(deck);
@@ -547,8 +548,8 @@ static deck_type _choose_deck(const string title = "Draw")
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_describe_deck((deck_type)i),
-                    _describe_deck((deck_type)i),
+            new ToggleableMenuEntry(deck_status((deck_type)i),
+                    deck_status((deck_type)i),
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
@@ -733,8 +734,8 @@ static void _draw_stack(int to_stack)
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_describe_deck((deck_type)i),
-                    _describe_deck((deck_type)i),
+            new ToggleableMenuEntry(deck_status((deck_type)i),
+                    deck_status((deck_type)i),
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
@@ -761,12 +762,12 @@ static void _draw_stack(int to_stack)
         else
         {
             you.props[deck_name(selected)]--;
-            me->text = _describe_deck(selected);
-            me->alt_text = _describe_deck(selected);
+            me->text = deck_status(selected);
+            me->alt_text = deck_status(selected);
 
             card_type draw = _random_card(selected);
             stack.push_back(draw);
-            string status = "Drawn so far: " + _stack_contents();
+            string status = "Drawn so far: " + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
                        status + "\n" +
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "

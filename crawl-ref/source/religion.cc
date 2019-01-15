@@ -1001,7 +1001,7 @@ static bool _give_nemelex_gift(bool forced = false)
         if (gift_cards())
         {
             simple_god_message(" deals you some cards!");
-            mprf(MSGCH_GOD, "You now have %s", deck_status().c_str());
+            mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
         }
         else
             simple_god_message(" goes to deal, but finds you have enough cards.");
