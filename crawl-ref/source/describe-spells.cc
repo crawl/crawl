@@ -526,9 +526,11 @@ static void _describe_book(const spellbook_contents &book,
 
         int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 4;
 
-        description.cprintf("%c - %s%s%s", spell_letter,
+        description += formatted_string::parse_string(
+                make_stringf("%c - %s%s%s", spell_letter,
                 chop_string(spell_title(spell), 29-hex_len-range_len).c_str(),
-                hex_str.c_str(), range_str.c_str());
+                hex_str.c_str(),
+                range_str.c_str()));
 
         // only display type & level for book spells
         if (doublecolumn)
@@ -576,8 +578,10 @@ void describe_spellset(const spellset &spells,
         _describe_book(book, spell_map, source_item, description, mon_owner);
 
     if (mon_owner)
+    {
         description.cprintf("\n(x%%) indicates the chance to beat your MR"
                 ", and (y) indicates the spell range.\n");
+    }
 }
 
 #ifdef USE_TILE_WEB
