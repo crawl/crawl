@@ -49,7 +49,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 $item.append("<span>" + label + "</span>");
 
                 if (spell.hex_chance !== undefined)
-                    $item.append("<span>("+spell.hex_chance+"%) </span>");
+                    $item.append("<span>("+spell.hex_chance+") </span>");
 
                 $list.append($item);
                 if (colour)

@@ -606,7 +606,11 @@ static void _write_book(const spellbook_contents &book,
 #endif
             && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
-            tiles.json_write_int("hex_chance", hex_chance(spell, hd));
+            if (you.immune_to_hex(spell))
+                tiles.json_write_string("hex_chance", "immune");
+            else
+                tiles.json_write_string("hex_chance",
+                        make_stringf("%d%%", hex_chance(spell, hd)));
         }
 
         string schools = (source_item && source_item->base_type == OBJ_RODS) ?
