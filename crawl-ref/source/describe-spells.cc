@@ -608,6 +608,16 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
+        int pow = mons_power_for_hd(spell, hd, false);
+        int range = spell_range(spell, pow, false);
+        bool in_range = mon_owner && grid_distance(you.pos(), mon_owner->pos) <= range;
+        const char *range_col = in_range ? "lightred" : "lightgray";
+        if (mon_owner && range >= 0)
+        {
+            tiles.json_write_string("range_string",
+                    make_stringf("<%s>%d</%s>", range_col, range, range_col));
+        }
+
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
