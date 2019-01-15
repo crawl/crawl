@@ -289,4 +289,11 @@ function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
     crawl.mpr("There is a strange hissing noise.")
   end
 end
+
+function callback.spider_trap_stepped(data, triggerable, triggerer, marker, ev)
+  data.mons="generate_awake redback"
+  data.msg="A basket of spiders falls from above!"
+  data.max=8
+  callback.drop_trap_stepped(data, triggerable, triggerer, marker, ev)
+end
 }}
