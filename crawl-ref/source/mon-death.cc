@@ -1055,7 +1055,7 @@ static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
     }
     const string cause = make_stringf("%s death curse",
                             apostrophise(mons->name(DESC_A)).c_str());
-    MiscastEffect(target, mons, {MUMMY_MISCAST}, spschool::necromancy,
+    MiscastEffect(target, mons, {miscast_source::mummy}, spschool::necromancy,
                   pow, random2avg(88, 3), cause.c_str());
 }
 
