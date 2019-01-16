@@ -71,12 +71,6 @@ spret cast_sublimation_of_blood(int pow, bool fail)
 
 spret cast_death_channel(int pow, god_type god, bool fail)
 {
-    if (you.duration[DUR_DEATH_CHANNEL] >= 60 * BASELINE_DELAY)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::abort;
-    }
-
     fail_check();
     mpr("Malign forces permeate your being, awaiting release.");
 
