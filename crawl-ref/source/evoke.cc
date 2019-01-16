@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -91,14 +92,15 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     bool targ_mid = false;
     dist beam;
+    const int max_range = weapon_reach(wpn);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
-    args.range = 2;
+    args.range = max_range;
+    targeter_reach hitfunc(&you, weapon_reach(wpn));
     args.top_prompt = "Attack whom?";
     args.self = CONFIRM_CANCEL;
-    targeter_reach hitfunc(&you, REACH_TWO);
     args.hitfunc = &hitfunc;
 
     direction(beam, args);
@@ -131,7 +133,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const coord_def first_middle(x_first_middle, y_first_middle);
     const coord_def second_middle(x_second_middle, y_second_middle);
 
-    if (x_distance > 2 || y_distance > 2)
+    if (x_distance > max_range || y_distance > max_range)
     {
         mpr("Your weapon cannot reach that far!");
         return false;
@@ -141,7 +143,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int attack_delay = you.attack_delay().roll();
 
     if (!feat_is_reachable_past(grd(first_middle))
-        && !feat_is_reachable_past(grd(second_middle)))
+        && !feat_is_reachable_past(grd(second_middle))
+        && !is_unrandom_artefact(wpn, UNRAND_RIFT))
     {
         canned_msg(MSG_SOMETHING_IN_WAY);
         return false;
@@ -153,38 +156,42 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons)
         you.apply_berserk_penalty = false;
 
-    // Choose one of the two middle squares (which might be the same).
-    const coord_def middle =
-        !feat_is_reachable_past(grd(first_middle)) ? second_middle :
-        !feat_is_reachable_past(grd(second_middle)) ? first_middle :
-        random_choose(first_middle, second_middle);
-
-    // Check for a monster in the way. If there is one, it blocks the reaching
-    // attack 50% of the time, and the attack tries to hit it if it is hostile.
-
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
     {
         bool success = true;
-        monster *midmons;
-        if ((midmons = monster_at(middle))
-            && !midmons->submerged())
+        if (!is_unrandom_artefact(wpn, UNRAND_RIFT))
         {
-            // This chance should possibly depend on your skill with
-            // the weapon.
-            if (coinflip())
+            // Choose one of the two middle squares (which might be the same).
+            const coord_def middle =
+                !feat_is_reachable_past(grd(first_middle)) ? second_middle :
+                !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+                random_choose(first_middle, second_middle);
+
+            // Check for a monster in the way. If there is one, it blocks the
+            // reaching attack 50% of the time, and the attack tries to hit it
+            // if it is hostile.
+
+            monster *midmons;
+            if ((midmons = monster_at(middle))
+                && !midmons->submerged())
             {
-                success = false;
-                beam.target = middle;
-                mons = midmons;
-                targ_mid = true;
-                if (mons->wont_attack())
+                // This chance should possibly depend on your skill with
+                // the weapon.
+                if (coinflip())
                 {
-                    // Let's assume friendlies cooperate.
-                    mpr("You could not reach far enough!");
-                    you.time_taken = attack_delay;
-                    make_hungry(3, true);
-                    return true;
+                    success = false;
+                    beam.target = middle;
+                    mons = midmons;
+                    targ_mid = true;
+                    if (mons->wont_attack())
+                    {
+                        // Let's assume friendlies cooperate.
+                        mpr("You could not reach far enough!");
+                        you.time_taken = attack_delay;
+                        make_hungry(3, true);
+                        return true;
+                    }
                 }
             }
         }
