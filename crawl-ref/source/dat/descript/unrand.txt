@@ -681,3 +681,9 @@ A strange sword, one blade blistering hot and the other icy cold. When it hits
 its target the thermal gradient increases. What causes this effect is unknown
 but it is rumored that otherworldly forces are involved.
 %%%%
+demon trident "Rift"
+
+A small wrinkle in the very fabric of reality, magically bound to a shaft by
+some mad acolyte of Lugonu. Among other uses it can be sent forth to strike
+with an unusually large reach.
+%%%%
