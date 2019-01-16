@@ -16,6 +16,7 @@
 #include "dgn-shoals.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "env.h"
 #include "flood-find.h"
 #include "l-defs.h"
 #include "libutil.h"
@@ -1740,6 +1741,94 @@ LUAFN(dgn_apply_tide)
     return 0;
 }
 
+LUAFN(dgn_add_cloud_gen)
+{
+    const int x = luaL_checkint(ls, 1);
+    const int y = luaL_checkint(ls, 2);
+
+    if (!in_bounds(x, y))
+    {
+        char buf[80];
+        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        luaL_argerror(ls, 1, buf);
+        return 0;
+    }
+    const coord_def loc = { x, y };
+
+    //Due to the way chained clouds are created, markers will continue to fire (with payload)
+    //so we check if the cloud generator already exists.
+    //This should be performance insignificant
+    int exists = 0;
+    for (CloudGenerator &generator : env.cloud_generators)
+        if (generator.getLoc() == loc)
+            exists = 1;
+    //Actually create cloud generators, if they don't exist already
+    if (exists == 0)
+    {
+        string cloud = luaL_checkstring(ls, 3);
+        special_fog_type special;
+        cloud_type type;
+        //Special clouds will have their type suffixed by an underscore and the special type
+        if (cloud.find("_") == std::string::npos)
+        {
+            type = cloud_name_to_type(luaL_checkstring(ls, 3));
+            special = special_fog_type::normal;
+        }
+        else
+        {
+            type = cloud_name_to_type(cloud.substr(0, cloud.find("_")));
+            const string special_type = cloud.substr(cloud.find("_"), std::string::npos);
+            if (special_type == "chained")
+                special = special_fog_type::chained;
+        }
+
+        const int walk_dist = luaL_checkint(ls, 4);
+        const int pow_min = luaL_checkint(ls, 5);
+        const int pow_max = luaL_checkint(ls, 6);
+        const int pow_rolls = luaL_checkint(ls, 7);
+        const char* kname = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8) : "";
+        const kill_category kc = dgn_kill_name_to_category(kname);
+        const int size_min = luaL_checkint(ls, 9);
+        const int size_max = luaL_checkint(ls, 10);
+        const int spread_rate = luaL_checkint(ls, 11);
+        const int start_clouds = luaL_checkint(ls, 12);
+        const int excl_rad = luaL_checkint(ls, 13);
+        const int size_buildup_amnt = luaL_checkint(ls, 14);
+        const int size_buildup_time = luaL_checkint(ls, 15);
+        const int spread_buildup_amnt = luaL_checkint(ls, 16);
+        const int spread_buildup_time = luaL_checkint(ls, 17);
+        const int buildup_turns = luaL_checkint(ls, 18);
+        const int delay_min = luaL_checkint(ls, 19);
+        const int delay_max = luaL_checkint(ls, 20);
+        const string marker = luaL_checkstring(ls, 21);
+        //Chained cloud generators
+        vector<string> slaves;
+        const int numslaves = luaL_getn(ls, 22);
+        for (int i = 1; i <= numslaves; i++) {
+            lua_rawgeti(ls, 22, i);
+            const char * a;
+            a = luaL_checkstring(ls, -1);
+            slaves.push_back(a);
+            lua_pop(ls, 1);
+        }
+        //Actually create the generators
+        env.cloud_generators.push_back(
+            CloudGenerator(loc, type,
+            walk_dist, pow_min,
+            pow_max, pow_rolls,
+            kc, size_min,
+            size_max, spread_rate,
+            start_clouds, excl_rad,
+            size_buildup_amnt, size_buildup_time,
+            spread_buildup_amnt, spread_buildup_time,
+            buildup_turns, delay_min,
+            delay_max, special,
+            marker, slaves));
+    }
+    return 1;
+}
+
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1850,6 +1939,8 @@ const struct luaL_reg dgn_dlib[] =
 { "fill_grd_area", dgn_fill_grd_area },
 
 { "apply_tide", dgn_apply_tide },
+
+{ "add_cloud_gen", dgn_add_cloud_gen },
 
 { nullptr, nullptr }
 };

@@ -115,12 +115,14 @@ function FogMachine:new(pars)
 
   local tick_pars = {}
   tick_pars.delay_min = pars.delay_min or pars.delay or 1
-  tick_pars.delay_max = pars.delay_max or pars.delay
+  tick_pars.delay_max = pars.delay_max or pars.delay or 1
   tick_pars.type      = "turn"
 
   m:add_triggerer( DgnTriggerer:new (tick_pars) )
 
   m:add_triggerer( DgnTriggerer:new { type = "entered_level" } )
+
+
 
   if pars.listener then
     m:add_listener(pars.listener)
@@ -131,46 +133,49 @@ end
 
 function FogMachine:apply_cloud(point, pow_min, pow_max, pow_rolls,
                                 size, cloud_type, kill_cat, spread, excl_rad)
-  dgn.apply_area_cloud(point.x, point.y, pow_min, pow_max, pow_rolls, size,
-                       cloud_type, kill_cat, spread, excl_rad)
+  -- THIS FUNCTION IS UNUSED AS OF 948
+  --dgn.apply_area_cloud(point.x, point.y, pow_min, pow_max, pow_rolls, size,
+  --                     cloud_type, kill_cat, spread, excl_rad)
 end
 
 function FogMachine:do_fog(point)
-  local p = point
-  if self.walk_dist > 0 then
-    p = dgn.point(dgn.random_walk(p.x, p.y, self.walk_dist))
-  end
+  -- THIS FUNCTION IS UNUSED AS OF 948
 
-  local buildup_turns = self.buildup_turns
+  --local p = point
+  --if self.walk_dist > 0 then
+  --  p = dgn.point(dgn.random_walk(p.x, p.y, self.walk_dist))
+  --end
+
+  --local buildup_turns = self.buildup_turns
 
   -- Size buildup
-  if buildup_turns > self.size_buildup_time then
-    buildup_turns = self.size_buildup_time
-  end
+  --if buildup_turns > self.size_buildup_time then
+  --  buildup_turns = self.size_buildup_time
+  --end
 
-  local size_buildup = self.size_buildup_amnt * buildup_turns /
-    self.size_buildup_time
+  --local size_buildup = self.size_buildup_amnt * buildup_turns /
+  --  self.size_buildup_time
 
-  local size_min = self.size_min + size_buildup
-  local size_max = self.size_max + size_buildup
+  --local size_min = self.size_min + size_buildup
+  --local size_max = self.size_max + size_buildup
 
-  if (size_min < 0) then
-    size_min = 0
-  end
+  --if (size_min < 0) then
+  --  size_min = 0
+  --end
 
   -- Spread buildup
-  buildup_turns = self.buildup_turns
+  --buildup_turns = self.buildup_turns
 
-  if buildup_turns > self.spread_buildup_time then
-    buildup_turns = self.spread_buildup_time
-  end
+  --if buildup_turns > self.spread_buildup_time then
+  --  buildup_turns = self.spread_buildup_time
+  --end
 
-  local spread = self.spread_rate + (self.spread_buildup_amnt * buildup_turns /
-                                     self.spread_buildup_time)
+  --local spread = self.spread_rate + (self.spread_buildup_amnt * buildup_turns /
+  --                                   self.spread_buildup_time)
 
-  self:apply_cloud(p, self.pow_min, self.pow_max, self.pow_rolls,
-                   crawl.random_range(size_min, size_max, 1),
-                   self.cloud_type, self.kill_cat, spread, self.excl_rad)
+  --self:apply_cloud(p, self.pow_min, self.pow_max, self.pow_rolls,
+  --                 crawl.random_range(size_min, size_max, 1),
+  --                 self.cloud_type, self.kill_cat, spread, self.excl_rad)
 end
 
 function FogMachine:do_trigger(triggerer, marker, ev)
@@ -202,7 +207,28 @@ function FogMachine:do_trigger(triggerer, marker, ev)
   FogMachine.super.do_trigger(self, triggerer, marker, ev)
 end
 
-function FogMachine:on_trigger(triggerer, marker, ev)
+function FogMachine:on_trigger(triggerer, marker, ev, slaves)
+  -- Clone fog machines into C++ using dgn.add_cloud_gen
+  -- Run once, unless it's a special cloud, in which case this doesn't work
+  if (string.find(self.cloud_type, "_") ~= nil or  self.cloned ~= 1)
+    then
+      slave_names = {};
+      if (slaves ~= nil) then
+        for i = 1, #slaves do
+          -- Save slave marker_ids as strings to pass to the function, for special clouds
+          slave_names[i] = tostring(slaves[i])
+        end
+      end
+      dgn.add_cloud_gen(dgn.point(marker:pos()).x,dgn.point(marker:pos()).y, self.cloud_type,
+        self.walk_dist, self.pow_min, self.pow_max, self.pow_rolls, self.kill_cat,
+        self.size_min, self.size_max, self.spread_rate, self.start_clouds, self.excl_rad,
+        self.size_buildup_amnt, self.size_buildup_time,
+        self.spread_buildup_amnt, self.spread_buildup_time, self.buildup_turns,
+        self.triggerers[1].delay_min, self.triggerers[1].delay_max, tostring(marker), slave_names)
+      self.cloned = 1
+  end
+
+
   if triggerer.type == 'turn' then
     self:do_fog(dgn.point(marker:pos()))
   elseif triggerer.type == 'entered_level' then
@@ -268,6 +294,7 @@ function fog_machine(pars)
 end
 
 function chained_fog_machine(pars)
+  pars.cloud_type = pars.cloud_type .. "_chained"
   return Triggerable.synchronized_markers(FogMachine:new(pars))
 end
 

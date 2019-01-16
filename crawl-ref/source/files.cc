@@ -1388,6 +1388,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
         delete_all_clouds();
 
+    env.cloud_generators.clear();
+    env.special_clouds = 0;
+
     // Lose all listeners.
     dungeon_events.clear();
 

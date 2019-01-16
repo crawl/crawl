@@ -599,8 +599,7 @@ void manage_clouds()
         _dissipate_cloud(cloud);
     }
 
-    for (CloudGenerator &generator : env.cloud_generators)
-        generator.run();
+    manage_cloud_generators();
 
     update_cloud_knowledge();
 }
@@ -1520,9 +1519,7 @@ cloud_type cloud_name_to_type(const string &name)
 coord_def random_walk(coord_def start, int dist)
 {
     ASSERT(in_bounds(start));
-
-    if (dist <= 0)
-        return start;
+    ASSERT(dist >= 1);
 
     int moves_left = dist;
     coord_def pos = start;
@@ -1820,39 +1817,116 @@ void end_still_winds()
     mpr("The air resumes its normal movements.");
 }
 
-
-// XXX: move CloudGenerator stuff into its own file
-
-/// Runs a cloud generator for a single turn.
-void CloudGenerator::run()
+void manage_cloud_generators()
 {
-    aut_extant += you.elapsed_time;
-
-    delay -= you.elapsed_time;
-    while (delay <= 0)
+    if (env.special_clouds == 1)
     {
-        const coord_def centre = random_walk(loc, walk_dist);
-        const pair<int, int> size_range = get_size_range();
-        const int size = random_range(size_range.first, size_range.second);
+        for (CloudGenerator &generator : env.cloud_generators)
+            generator.touched = 0;
+    }
+    for (CloudGenerator &generator : env.cloud_generators)
+        generator.manage();
+}
 
-        apply_area_cloud(
-            [this](coord_def where, int /*pow*/, int spreadrate,
-                   cloud_type /*type*/, const actor* agent, int excl_rad)
+void CloudGenerator::manage()
+{
+    if (touched == 0) //Don't run for clouds already activated by a chained loop
+    {
+        buildup_turns += you.time_taken;
+        delay -= you.time_taken;
+        if (loc.distance_from(you.pos()) <= 10)
+        {
+            if (special == special_fog_type::normal)
+            {
+                int runs = 1;
+                if (type == CLOUD_SALT) //Desolation
+                    runs = 20;
+                while (delay <= 0)
+                    run(runs);
+            }
+            if (special == special_fog_type::chained)
+            {
+                if (env.special_clouds == 0) env.special_clouds = 1;
+                //Find and store pointers to members of the chain, only once.
+                if (slave_references.empty() && slaves.size() != 0)
+                {
+                    for (CloudGenerator &generator : env.cloud_generators)
+                        for (int i = 0; i < slaves.size(); i++)
+                        {
+                            if (generator.marker_id == slaves[i] &&
+                                generator.marker_id != marker_id) //Don't slave self.
+                            {
+                                slave_references.push_back(&generator);
+                                // End early if all slaves are found.
+                                if (slaves.size() - 1 == slave_references.size())
+                                    break;
+                            }
+                        }
+                }
+                //Just in case someone makes a vault with a single chained fog machine
+                if (!slave_references.empty())
+                {
+                    for (CloudGenerator *generator : slave_references)
+                    {
+                        generator->buildup_turns += you.time_taken;
+                        //Set this here instead of when they're actually run
+                        //so grouped clouds run on a single master's delay.
+                        //(i.e., their delays won't be checked, even if)
+                        generator->touched = 1;
+                    }
+                    //If the master's delay is 0, run all chained generators.
+                    while (delay <= 0)
+                    {
+                        run(1);
+                        for (CloudGenerator *generator : slave_references)
+                            generator->run(1);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CloudGenerator::run(int runs)
+{
+    if (loc.distance_from(you.pos()) <= 10)
+    {
+        for (int i = 0; i < runs; i++)
+        {
+            const coord_def centre = random_walk(loc, walk_dist);
+            const pair<int, int> size_range = get_size_range();
+            int size = random_range(size_range.first, size_range.second);
+            int spread = get_spread();
+
+            apply_area_cloud(
+                [this](coord_def where, int /*pow*/, int spread,
+                    cloud_type /*type*/, const actor* agent, int excl_rad)
             {
                 const int pow = random_range(pow_min, pow_max, pow_rolls);
-                place_cloud(type, where, pow, agent, spread_rate, excl_rad);
+                place_cloud(type, where, pow, agent, spread, excl_rad);
                 return 1;
-            }, centre, 0, size, type, 0, spread_rate, exclusion_radius);
+            }, centre, 0, size, type, 0, spread, exclusion_radius);
 
-        delay += random_range(delay_min, delay_max);
+            delay += random_range(delay_min, delay_max);
+            // Special case where desolation clouds are delay = 0
+            if (delay <= 0 && delay_min == 0 && delay_max == 0)
+                delay = 1;
+        }
     }
 }
 
 pair<int, int> CloudGenerator::get_size_range() const
 {
-    /*
-    const int size_buildup_time = min(aut_extant, size_buildup_max);
-    const int size_buildup = size_buildup_max <= 0 ? 0 :
-        size_buildup_amnt * buildup_time / size_buildup_max;*/
-    return { size_min, size_max };
+    const int size_buildup_mod = min(buildup_turns, size_buildup_time);
+    const int size_buildup = size_buildup_mod <= 0 ? 0 :
+        size_buildup_amnt * size_buildup_mod / size_buildup_time;
+    return { size_min + size_buildup, size_max + size_buildup };
+}
+
+int CloudGenerator::get_spread() const
+{
+    const int spread_buildup_mod = min(buildup_turns, spread_buildup_time);
+    const int spread_buildup = spread_buildup_mod <= 0 ? 0 :
+        spread_buildup_amnt * spread_buildup_mod / spread_buildup_time;
+    return spread_rate + spread_buildup;
 }

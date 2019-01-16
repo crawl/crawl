@@ -298,7 +298,7 @@ function Triggerable:do_trigger(triggerer, marker, ev)
   for _, slave_marker in ipairs(slaves) do
     self.want_remove = false
 
-    self:on_trigger(triggerer, slave_marker, ev)
+    self:on_trigger(triggerer, slave_marker, ev, slaves)
 
     if self.want_remove then
       num_want_remove = num_want_remove + 1

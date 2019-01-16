@@ -3,11 +3,10 @@
 #include <set>
 #include <memory> // unique_ptr
 
+#include "cloud.h"
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
-#include "cloud.h"
-#include "map_knowledge.h"
 #include "monster.h"
 #include "trap-def.h"
 
@@ -111,7 +110,7 @@ struct crawl_environment
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
 
-    /// Invisible generators that create clouds over time.
+    bool special_clouds;
     vector<CloudGenerator> cloud_generators;
 
     // Remaining fields not marshalled:

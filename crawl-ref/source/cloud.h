@@ -61,24 +61,55 @@ const cloud_tile_info& cloud_type_tile_info(cloud_type type);
 void start_still_winds();
 void end_still_winds();
 
+void manage_cloud_generators();
 
-// XXX: move CloudGenerator stuff into its own file
+enum class special_fog_type {
+    normal,
+    chained,
+};
+
 class CloudGenerator
 {
 public:
-    CloudGenerator(coord_def _loc, cloud_type _type,
-                   int _pow_max, int _delay_max, int _size_max)
-        : loc(_loc), type(_type), walk_dist(0),
-          pow_min(1), pow_max(_pow_max), pow_rolls(1),
-          delay_min(_delay_max), delay_max(_delay_max),
-          size_min(_size_max), size_max(_size_max),
-          size_buildup_amnt(0), size_buildup_max(0),
-          initial_clouds(0), exclusion_radius(0), aut_extant(0), delay(0)
-    { }
+    CloudGenerator
+    (coord_def _loc, cloud_type _type,
+        int _walk_dist, int _pow_min,
+        int _pow_max, int _pow_rolls,
+        kill_category _kc, int _size_min,
+        int _size_max, int _spread_rate,
+        int _start_clouds, int _excl_rad,
+        int _size_buildup_amnt, int _size_buildup_time,
+        int _spread_buildup_amnt, int _spread_buildup_time,
+        int _buildup_turns, int _delay_min,
+        int _delay_max, special_fog_type _special,
+        string _marker_id, vector<string> _slaves)
+        :loc(_loc), type(_type), walk_dist(_walk_dist),
+        pow_min(_pow_min), pow_max(_pow_max),
+        pow_rolls(_pow_rolls), kc(_kc),
+        size_min(_size_max), size_max(_size_max),
+        spread_rate(_spread_rate),
+        start_clouds(_start_clouds),
+        exclusion_radius(_excl_rad),
+        size_buildup_amnt(_size_buildup_amnt),
+        size_buildup_time(_size_buildup_time),
+        spread_buildup_amnt(_spread_buildup_amnt),
+        spread_buildup_time(_spread_buildup_time),
+        buildup_turns(_buildup_turns), delay_min(_delay_min),
+        delay_max(_delay_max), special(_special),
+        marker_id(_marker_id), slaves(_slaves)
+    {
+        delay = delay_max;
+    }
 
-    // TODO: setter functions for pow, delay, size, buildup, initial, exclrad
+    //Main loop for cloud generators
+    void manage();
+    //Actual "create a cloud please" code
+    void run(int runs);
+    //Whether this cloud generator has been run via a managed group
+    int touched = 0;
 
-    void run();
+    coord_def getLoc() const { return loc; }
+    cloud_type getType() const { return type; }
 
 private:
     /// Center of cloud generation.
@@ -89,37 +120,46 @@ private:
     int walk_dist;
     /// Cloud lifetime: [pow_min, pow_max]. More pow_rolls decrease variance.
     int pow_min, pow_max, pow_rolls;
-    /// Delay between each cloud placement: [delay_min, delay_max].
-    int delay_min, delay_max;
+    /// Kill category
+    kill_category kc;
     /// # of clouds that are generated with each firing: [size_min, size_max].
     int size_min, size_max;
-    /**
-     * If nonzero, adds
-     * (size_buildup_amnt / size_buildup_max * aut_extant)
-     * to size_min and size_max, maxing out at size_buildup_amnt.
-     */
-    int size_buildup_amnt, size_buildup_max;
     /// Rate at which clouds spread; -1 is default for type, otherwise [0-100].
     int spread_rate;
     /**
      * The number of clouds to lay when the level containing the cloud machine
      * is entered. (Clouds are cleared when the player leaves a level.)
-     */
-    int initial_clouds;
+    */
+    int start_clouds;
     /**
      * Size of exclusions automatically placed around clouds from this
      * generator. If 0, no exclusion will be placed.
-     */
+    */
     int exclusion_radius;
+    /**
+     * If nonzero, adds
+     * (size_buildup_amnt / size_buildup_max * size_buildup_time)
+     * to size_min and size_max, maxing out at size_buildup_amnt.
+    */
+    int size_buildup_amnt, size_buildup_time;
+    int spread_buildup_amnt, spread_buildup_time;
     /// How long has this generator existed?
-    int aut_extant;
-    /// How long until the next cloud generation event?
+    int buildup_turns;
+    /// Delay between each cloud placement: [delay_min, delay_max].
+    int delay_min, delay_max;
+    /// Whether this cloud is part of a managed group
+    special_fog_type special;
+    /// Synchronized generator variables passed from the Lua
+    string marker_id;
+    vector<string> slaves;
+
+
+    // Stored pointers to managed cloud generators
+    vector<CloudGenerator*> slave_references;
+
+    // How long until the next cloud generation event?
     int delay;
-    // XXX: listener?
-    // XXX: kill_cat?
-    // XXX: spread_rate_buildup/amnt?
 
     pair<int, int> get_size_range() const;
+    int get_spread() const;
 };
-
-#endif
