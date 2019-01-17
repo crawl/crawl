@@ -407,8 +407,8 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? - bwr
         simple_monster_message(*mons, " cannot make way for you.");
-        // FIXME: AI_HIT_MONSTER isn't ideal.
-        interrupt_activity(AI_HIT_MONSTER, mons);
+        // FIXME: activity_interrupt::hit_monster isn't ideal.
+        interrupt_activity(activity_interrupt::hit_monster, mons);
     }
 
     return swap;
@@ -3782,7 +3782,7 @@ void inc_mp(int mp_gain, bool silent)
     if (!silent)
     {
         if (_should_stop_resting(you.magic_points, you.max_magic_points))
-            interrupt_activity(AI_FULL_MP);
+            interrupt_activity(activity_interrupt::full_mp);
         you.redraw_magic_points = true;
     }
 }
@@ -3803,7 +3803,7 @@ void inc_hp(int hp_gain)
         you.hp = you.hp_max;
 
     if (_should_stop_resting(you.hp, you.hp_max))
-        interrupt_activity(AI_FULL_HP);
+        interrupt_activity(activity_interrupt::full_hp);
 
     you.redraw_hit_points = true;
 }
@@ -7781,7 +7781,7 @@ void player_open_door(coord_def doorpos)
                         set_exclude(doorpos, 0);
                     }
                 }
-                interrupt_activity(AI_FORCE_INTERRUPT);
+                interrupt_activity(activity_interrupt::force);
                 return;
             }
             ignore_exclude = true;
@@ -7795,7 +7795,7 @@ void player_open_door(coord_def doorpos)
             if (!yesno(prompt.c_str(), true, 'n', true, false))
             {
                 canned_msg(MSG_OK);
-                interrupt_activity(AI_FORCE_INTERRUPT);
+                interrupt_activity(activity_interrupt::force);
                 return;
             }
         }

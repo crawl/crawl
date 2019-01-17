@@ -2789,7 +2789,7 @@ void check_monster_detect()
             if (you.see_cell(*ri2))
             {
                 mon->flags |= MF_SENSED;
-                interrupt_activity(AI_SENSE_MONSTER);
+                interrupt_activity(activity_interrupt::sense_monster);
                 break;
             }
         }

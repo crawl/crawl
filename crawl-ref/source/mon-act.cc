@@ -161,7 +161,7 @@ static void _monster_regenerate(monster* mons)
     if (mons_is_hepliaklqana_ancestor(mons->type))
     {
         if (mons->hit_points == mons->max_hit_points && you.can_see(*mons))
-            interrupt_activity(AI_ANCESTOR_HP);
+            interrupt_activity(activity_interrupt::ancestor_hp);
     }
 }
 
@@ -2670,7 +2670,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(AI_FORCE_INTERRUPT);
+            interrupt_activity(activity_interrupt::force);
         }
         else if (!you_are_delayed())
         {
@@ -3283,7 +3283,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(AI_FORCE_INTERRUPT);
+                    interrupt_activity(activity_interrupt::force);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3308,7 +3308,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(AI_FORCE_INTERRUPT);
+                    interrupt_activity(activity_interrupt::force);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");

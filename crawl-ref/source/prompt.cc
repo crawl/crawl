@@ -53,7 +53,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
 {
     bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
@@ -220,7 +220,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
               bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     mouse_control mc(MOUSE_MODE_YESNO);
 

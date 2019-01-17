@@ -863,7 +863,7 @@ void game_options::set_default_activity_interrupts()
 }
 
 void game_options::set_activity_interrupt(
-        FixedBitVector<NUM_AINTERRUPTS> &eints,
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,
         const string &interrupt)
 {
     if (starts_with(interrupt, interrupt_prefix))
@@ -873,21 +873,21 @@ void game_options::set_activity_interrupt(
         if (!activity_interrupts.count(delay_name))
             return report_error("Unknown delay: %s\n", delay_name.c_str());
 
-        FixedBitVector<NUM_AINTERRUPTS> &refints =
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &refints =
             activity_interrupts[delay_name];
 
         eints |= refints;
         return;
     }
 
-    activity_interrupt_type ai = get_activity_interrupt(interrupt);
-    if (ai == NUM_AINTERRUPTS)
+    activity_interrupt ai = get_activity_interrupt(interrupt);
+    if (ai == activity_interrupt::COUNT)
     {
         return report_error("Delay interrupt name \"%s\" not recognised.\n",
                             interrupt.c_str());
     }
 
-    eints.set(ai);
+    eints.set(static_cast<int>(ai));
 }
 
 void game_options::set_activity_interrupt(const string &activity_name,
@@ -900,11 +900,11 @@ void game_options::set_activity_interrupt(const string &activity_name,
 
     if (remove_interrupts)
     {
-        FixedBitVector<NUM_AINTERRUPTS> refints;
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> refints;
         for (const string &interrupt : interrupts)
             set_activity_interrupt(refints, interrupt);
 
-        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+        for (int i = 0; i < NUM_ACTIVITY_INTERRUPTS; ++i)
             if (refints[i])
                 eints.set(i, false);
     }
@@ -917,7 +917,7 @@ void game_options::set_activity_interrupt(const string &activity_name,
             set_activity_interrupt(eints, interrupt);
     }
 
-    eints.set(AI_FORCE_INTERRUPT);
+    eints.set(static_cast<int>(activity_interrupt::force));
 }
 
 #if defined(DGAMELAUNCH)

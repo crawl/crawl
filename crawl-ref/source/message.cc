@@ -1430,7 +1430,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     _last_msg_turn = msg.turn;
 
     if (channel == MSGCH_ERROR)
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
@@ -1612,7 +1612,10 @@ static void mpr_check_patterns(const string& message,
     }
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
-        interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
+    {
+        interrupt_activity(activity_interrupt::message,
+                           channel_to_str(channel) + ":" + message);
+    }
 }
 
 static bool channel_message_history(msg_channel_type channel)

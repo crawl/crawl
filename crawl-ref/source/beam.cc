@@ -3761,9 +3761,12 @@ void bolt::affect_player()
     if (!YOU_KILL(thrower))
     {
         if (agent() && agent()->is_monster())
-            interrupt_activity(AI_MONSTER_ATTACKS, agent()->as_monster());
+        {
+            interrupt_activity(activity_interrupt::monster_attacks,
+                               agent()->as_monster());
+        }
         else
-            interrupt_activity(AI_MONSTER_ATTACKS);
+            interrupt_activity(activity_interrupt::monster_attacks);
     }
 
     if (flavour == BEAM_MISSILE && item)

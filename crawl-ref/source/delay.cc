@@ -91,7 +91,7 @@ private:
 int interrupt_block::interrupts_blocked = 0;
 
 static void _xom_check_corpse_waste();
-static const char *_activity_interrupt_name(activity_interrupt_type ai);
+static const char *_activity_interrupt_name(activity_interrupt ai);
 
 void push_delay(shared_ptr<Delay> delay)
 {
@@ -962,12 +962,12 @@ void run_macro(const char *macroname)
 // Returns TRUE if the delay should be interrupted, MAYBE if the user function
 // had no opinion on the matter, FALSE if the delay should not be interrupted.
 static maybe_bool _userdef_interrupt_activity(Delay* delay,
-                                              activity_interrupt_type ai,
+                                              activity_interrupt ai,
                                               const activity_interrupt_data &at)
 {
 #ifdef CLUA_BINDINGS
     lua_State *ls = clua.state();
-    if (!ls || ai == AI_FORCE_INTERRUPT)
+    if (!ls || ai == activity_interrupt::force)
         return MB_TRUE;
 
     const char *interrupt_name = _activity_interrupt_name(ai);
@@ -1002,7 +1002,7 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
 
 // Returns true if the activity should be interrupted, false otherwise.
 static bool _should_stop_activity(Delay* delay,
-                                  activity_interrupt_type ai,
+                                  activity_interrupt ai,
                                   const activity_interrupt_data &at)
 {
     switch (_userdef_interrupt_activity(delay, ai, at))
@@ -1024,15 +1024,20 @@ static bool _should_stop_activity(Delay* delay,
 
     // No monster will attack you inside a sanctuary,
     // so presence of monsters won't matter.
-    if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
+    if (ai == activity_interrupt::see_monster && is_sanctuary(you.pos()))
         return false;
 
     auto curr = current_delay(); // Not necessarily what we were passed.
 
-    if ((ai == AI_SEE_MONSTER || ai == AI_MIMIC) && player_stair_delay())
+    if ((ai == activity_interrupt::see_monster
+         || ai == activity_interrupt::mimic)
+        && player_stair_delay())
+    {
         return false;
+    }
 
-    if (ai == AI_FULL_HP || ai == AI_FULL_MP || ai == AI_ANCESTOR_HP)
+    if (ai == activity_interrupt::full_hp || ai == activity_interrupt::full_mp
+        || ai == activity_interrupt::ancestor_hp)
     {
         if ((Options.rest_wait_both && curr->is_resting()
              && !you.is_sufficiently_rested())
@@ -1044,14 +1049,14 @@ static bool _should_stop_activity(Delay* delay,
     }
 
     // Don't interrupt feeding or butchering for monsters already in view.
-    if (curr->is_butcher() && ai == AI_SEE_MONSTER
+    if (curr->is_butcher() && ai == activity_interrupt::see_monster
         && testbits(at.mons_data->flags, MF_WAS_IN_VIEW))
     {
         return false;
     }
 
-    return ai == AI_FORCE_INTERRUPT
-           || Options.activity_interrupts[delay->name()][ai];
+    return ai == activity_interrupt::force
+           || Options.activity_interrupts[delay->name()][static_cast<int>(ai)];
 }
 
 static string _abyss_monster_creation_message(const monster* mon)
@@ -1088,17 +1093,17 @@ static string _abyss_monster_creation_message(const monster* mon)
     return *random_choose_weighted(messages);
 }
 
-static inline bool _monster_warning(activity_interrupt_type ai,
+static inline bool _monster_warning(activity_interrupt ai,
                                     const activity_interrupt_data &at,
                                     shared_ptr<Delay> delay,
                                     vector<string>* msgs_buf = nullptr)
 {
-    if (ai == AI_SENSE_MONSTER)
+    if (ai == activity_interrupt::sense_monster)
     {
         mprf(MSGCH_WARN, "You sense a monster nearby.");
         return true;
     }
-    if (ai != AI_SEE_MONSTER)
+    if (ai != activity_interrupt::see_monster)
         return false;
     if (delay && !delay->is_run() && !delay->is_butcher())
         return false;
@@ -1279,7 +1284,7 @@ void autotoggle_autopickup(bool off)
 }
 
 // Returns true if any activity was stopped. Not reentrant.
-bool interrupt_activity(activity_interrupt_type ai,
+bool interrupt_activity(activity_interrupt ai,
                         const activity_interrupt_data &at,
                         vector<string>* msgs_buf)
 {
@@ -1287,7 +1292,8 @@ bool interrupt_activity(activity_interrupt_type ai,
         return false;
 
     const interrupt_block block_recursive_interrupts;
-    if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
+    if (ai == activity_interrupt::hit_monster
+        || ai == activity_interrupt::monster_attacks)
     {
         const monster* mon = at.mons_data;
         if (mon && !mon->visible_to(&you) && !mon->submerged())
@@ -1301,7 +1307,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     {
         // Printing "[foo] comes into view." messages even when not
         // auto-exploring/travelling.
-        if (ai == AI_SEE_MONSTER)
+        if (ai == activity_interrupt::see_monster)
             return _monster_warning(ai, at, nullptr, msgs_buf);
         else
             return false;
@@ -1310,7 +1316,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     const auto delay = current_delay();
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (ai == AI_HUNGRY && delay->want_autoeat() && _auto_eat()
+    if (ai == activity_interrupt::hungry && delay->want_autoeat() && _auto_eat()
         && prompt_eat_chunks(true) == 1)
     {
         return false;
@@ -1319,17 +1325,17 @@ bool interrupt_activity(activity_interrupt_type ai,
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
     // First try to stop the current delay.
-    if (ai == AI_FULL_HP && !you.running.notified_hp_full)
+    if (ai == activity_interrupt::full_hp && !you.running.notified_hp_full)
     {
         you.running.notified_hp_full = true;
         mpr("HP restored.");
     }
-    else if (ai == AI_FULL_MP && !you.running.notified_mp_full)
+    else if (ai == activity_interrupt::full_mp && !you.running.notified_mp_full)
     {
         you.running.notified_mp_full = true;
         mpr("Magic restored.");
     }
-    else if (ai == AI_ANCESTOR_HP
+    else if (ai == activity_interrupt::ancestor_hp
              && !you.running.notified_ancestor_hp_full)
     {
         // This interrupt only triggers when the ancestor is in LOS,
@@ -1342,7 +1348,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     {
         _monster_warning(ai, at, delay, msgs_buf);
         // Teleport stops stair delays.
-        stop_delay(ai == AI_TELEPORT);
+        stop_delay(ai == activity_interrupt::teleport);
 
         return true;
     }
@@ -1377,7 +1383,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     return false;
 }
 
-// Must match the order of activity_interrupt_type.h!
+// Must match the order of activity_interrupt.h!
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "hungry", "message",
@@ -1385,23 +1391,23 @@ static const char *activity_interrupt_names[] =
     "sense_monster", "mimic"
 };
 
-static const char *_activity_interrupt_name(activity_interrupt_type ai)
+static const char *_activity_interrupt_name(activity_interrupt ai)
 {
-    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_ACTIVITY_INTERRUPTS);
 
-    if (ai == NUM_AINTERRUPTS)
+    if (ai == activity_interrupt::COUNT)
         return "";
 
-    return activity_interrupt_names[ai];
+    return activity_interrupt_names[static_cast<int>(ai)];
 }
 
-activity_interrupt_type get_activity_interrupt(const string &name)
+activity_interrupt get_activity_interrupt(const string &name)
 {
-    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_ACTIVITY_INTERRUPTS);
 
-    for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+    for (int i = 0; i < NUM_ACTIVITY_INTERRUPTS; ++i)
         if (name == activity_interrupt_names[i])
-            return activity_interrupt_type(i);
+            return activity_interrupt(i);
 
-    return NUM_AINTERRUPTS;
+    return activity_interrupt::COUNT;
 }

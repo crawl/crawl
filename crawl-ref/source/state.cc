@@ -192,7 +192,7 @@ void game_state::zero_turns_taken()
     cancel_cmd_repeat();
 }
 
-bool interrupt_cmd_repeat(activity_interrupt_type ai,
+bool interrupt_cmd_repeat(activity_interrupt ai,
                            const activity_interrupt_data &at)
 {
     if (crawl_state.cmd_repeat_start)
@@ -203,12 +203,12 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     switch (ai)
     {
-    case AI_HUNGRY:
-    case AI_TELEPORT:
-    case AI_FORCE_INTERRUPT:
-    case AI_HP_LOSS:
-    case AI_MONSTER_ATTACKS:
-    case AI_MIMIC:
+    case activity_interrupt::hungry:
+    case activity_interrupt::teleport:
+    case activity_interrupt::force:
+    case activity_interrupt::hp_loss:
+    case activity_interrupt::monster_attacks:
+    case activity_interrupt::mimic:
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
         return true;
 
@@ -216,7 +216,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         break;
     }
 
-    if (ai == AI_SEE_MONSTER)
+    if (ai == activity_interrupt::see_monster)
     {
         const monster* mon = at.mons_data;
         ASSERT(mon);
@@ -261,9 +261,9 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     // then everything interrupts it.
     if (crawl_state.repeat_cmd == CMD_WAIT)
     {
-        if (ai == AI_FULL_MP)
+        if (ai == activity_interrupt::full_mp)
             crawl_state.cancel_cmd_repeat("Magic restored.");
-        else if (ai == AI_FULL_HP)
+        else if (ai == activity_interrupt::full_hp)
             crawl_state.cancel_cmd_repeat("HP restored");
         else
             crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
@@ -274,7 +274,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     if (crawl_state.cmd_repeat_started_unsafe)
         return false;
 
-    if (ai == AI_HIT_MONSTER)
+    if (ai == activity_interrupt::hit_monster)
     {
         // This check is for when command repetition is used to
         // whack away at a 0xp monster, since the player feels safe

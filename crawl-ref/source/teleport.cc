@@ -277,7 +277,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             // delayed, the monster isn't hostile) we still want to give
             // a message.
             activity_interrupt_data ai(mons, SC_TELEPORT_IN);
-            if (!interrupt_activity(AI_SEE_MONSTER, ai))
+            if (!interrupt_activity(activity_interrupt::see_monster, ai))
                 simple_monster_message(*mons, " appears out of thin air!");
         }
     }

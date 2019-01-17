@@ -1103,7 +1103,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 
     mprf("The %s mimic %svanishes%s!",
          name.c_str(), cackle.c_str(), smoke_str);
-    interrupt_activity(AI_MIMIC);
+    interrupt_activity(activity_interrupt::mimic);
 }
 
 /**

@@ -104,7 +104,7 @@ public:
     unique_ptr<ghost_demon> ghost;     // Ghost information.
 
     seen_context_type seen_context;    // Non-standard context for
-                                       // AI_SEE_MONSTER
+                                       // activity_interrupt::see_monster
 
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;

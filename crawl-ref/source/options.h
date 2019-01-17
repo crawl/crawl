@@ -429,7 +429,7 @@ public:
 
     vector<text_pattern> drop_filter;
 
-    map<string, FixedBitVector<NUM_AINTERRUPTS>> activity_interrupts;
+    map<string, FixedBitVector<NUM_ACTIVITY_INTERRUPTS>> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
     FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif
@@ -615,7 +615,7 @@ private:
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
-    void set_activity_interrupt(FixedBitVector<NUM_AINTERRUPTS> &eints,
+    void set_activity_interrupt(FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,
                                 const string &interrupt);
     void set_activity_interrupt(const string &activity_name,
                                 const string &interrupt_names,
