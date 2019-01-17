@@ -2,9 +2,9 @@
 Singing Sword
 
 An enchanted blade which loves nothing more than to sing to its owner, whether
-they want it to or not. In combat involving dangerous or numerous foes, the
-sword may sing so intensely that it radiates damaging sonic waves as you
-strike.
+they want it to or not. The sword may sing so intensely that it radiates
+damaging sonic waves as you strike, especially in combat involving dangerous or
+numerous foes.
 %%%%
 Sulking Sword
 

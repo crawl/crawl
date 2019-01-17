@@ -346,14 +346,14 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
+    int tier = max(1, min(4, 1 + tension / 20));
     bool silent = silenced(you.pos());
 
     string old_name = get_artefact_name(*item);
     string new_name;
     if (silent)
         new_name = "Sulking Sword";
-    else if (tier < 2)
+    else if (tier < 4)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -369,18 +369,17 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                          int dam)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
-    dprf(DIAG_COMBAT, "Singing sword tension: %d; tier: %d", tension, tier);
+    int tier = max(1, min(4, 1 + tension / 20));
+    dprf(DIAG_COMBAT, "Singing sword tension: %d, tier: %d", tension, tier);
 
-    if (silenced(you.pos()))
+    if (silenced(attacker->pos()))
         tier = 0;
 
-    // not as spammy at low tension
-    if (!x_chance_in_y(5, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
+    // Not as spammy at low tension. Max chance reached at tier 3, allowing
+    // tier 0 to have a high chance so that the sword is likely to express its
+    // unhappiness with being silenced.
+    if (!x_chance_in_y(6, (tier == 1) ? 24: (tier == 2) ? 16: 12))
         return;
-
-    if (tier == 3 && one_chance_in(10))
-        tier++; // Loudest scream -- 50% more spellpower and 40 noise.
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
@@ -391,11 +390,11 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
 
     item_noise(*weapon, msg, loudness[tier]);
 
-    if (tier < 3)
-        return; // no damage on low tiers
+    if (tier < 1)
+        return; // Can't cast when silenced.
 
-    fire_los_attack_spell(SPELL_SONIC_WAVE, 120 + (tier == 4) * 60, &you,
-            defender);
+    const int spellpower = 100 + 13 * (tier - 1) + (tier == 4 ? 36 : 0);
+    fire_los_attack_spell(SPELL_SONIC_WAVE, spellpower, attacker, defender);
 }
 ////////////////////////////////////////////////////
 
