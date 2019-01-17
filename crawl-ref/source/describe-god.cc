@@ -644,7 +644,8 @@ static formatted_string _god_extra_description(god_type which_god)
             break;
         case GOD_WU_JIAN:
             _add_par(desc, "Martial attacks:");
-            desc += formatted_string::parse_string(getLongDescription(god_name(which_god) + " extra"));
+            desc += formatted_string::parse_string(
+                        getLongDescription(god_name(which_god) + " extra"));
             break;
         default:
             break;
@@ -1178,11 +1179,14 @@ static void _send_god_ui(god_type god, bool is_altar)
     tiles.json_write_string("powers_list",
             _describe_god_powers(god).to_colour_string());
     // tiles.json_write_string("info_table", _get_god_specific_table(god));
+    tiles.json_write_string("info_table", "");
 
     tiles.json_write_string("powers",
             _detailed_god_description(god).to_colour_string());
     tiles.json_write_string("wrath",
             _god_wrath_description(god).to_colour_string());
+    tiles.json_write_string("extra",
+            _god_extra_description(god).to_colour_string());
     tiles.push_ui_layout("describe-god", 1);
 }
 #endif
