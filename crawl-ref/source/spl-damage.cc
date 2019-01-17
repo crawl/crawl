@@ -565,7 +565,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             mons_invis_msg = "Sound blasts the surrounding area!";
             verb = "blasted";
             vulnerable = [](const actor *caster, const actor *act) {
-                return !act->is_player();
+                return act != caster;
             };
             break;
 

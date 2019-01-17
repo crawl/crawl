@@ -173,7 +173,6 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1000
-BOOL:    special
 BRAND:   SPWPN_VORPAL
 
 NAME:    Wrath of Trog
