@@ -25,11 +25,11 @@ enum branch_flag_type
     BFLAG_NO_SHAFTS       = (1 << 6), // Don't generate random shafts.
 };
 
-enum branch_noise_level
+enum class branch_noise
 {
-    BRANCH_NOISE_NORMAL,
-    BRANCH_NOISE_QUIET,
-    BRANCH_NOISE_LOUD,
+    normal,
+    quiet,
+    loud,
 };
 
 struct Branch
@@ -56,7 +56,7 @@ struct Branch
     colour_t rock_colour;
     int travel_shortcut;         // Which key to press for travel.
     vector<rune_type> runes;      // Contained rune(s) (if any).
-    branch_noise_level ambient_noise; // affects noise loudness
+    branch_noise ambient_noise; // affects noise loudness
 };
 
 enum branch_iterator_type
