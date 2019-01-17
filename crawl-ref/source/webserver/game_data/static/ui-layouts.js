@@ -294,10 +294,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $panes.eq(0).find(".god-favour td.favour")
                     .addClass("fg"+desc.colour).html(desc.favour);
         if (desc.bondage)
+        {
             $panes.eq(0).find(".god-favour")
                 .after("<div class=tbl>"
                         + util.formatted_string_to_html(desc.bondage)
                         + "</div>");
+        }
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
@@ -313,17 +315,21 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         desc.powers = fmt_body_txt(util.formatted_string_to_html(desc.powers));
         if (desc.info_table.length !== "")
+        {
             desc.powers += "<div class=tbl>"
                             + util.formatted_string_to_html(desc.info_table)
                             + "</div>";
+        }
         $panes.eq(1).html(desc.powers);
 
         $panes.eq(2).html(
                     fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
         if (use_extra_pane)
+        {
             $panes.eq(3).html("<div class=tbl>"
                                 + util.formatted_string_to_html(desc.extra)
                                 + "</div>");
+        }
 
         var num_panes = (use_extra_pane ? 3 : 2)
         for (var i = 0; i <= num_panes; i++)
