@@ -112,7 +112,7 @@ branch_iterator::branch_iterator(branch_iterator_type type) :
 
 const branch_type* branch_iterator::branch_order() const
 {
-    if (iter_type == BRANCH_ITER_DANGER)
+    if (iter_type == branch_iterator_type::danger)
         return danger_branch_order;
     return logical_branch_order;
 }

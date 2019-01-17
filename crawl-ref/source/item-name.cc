@@ -2657,7 +2657,7 @@ void display_runes()
     if (!crawl_state.game_is_sprint())
     {
         // Add the runes in order of challenge (semi-arbitrary).
-        for (branch_iterator it(BRANCH_ITER_DANGER); it; ++it)
+        for (branch_iterator it(branch_iterator_type::danger); it; ++it)
         {
             const branch_type br = it->id;
             if (!connected_branch_can_exist(br))

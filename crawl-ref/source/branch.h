@@ -59,16 +59,16 @@ struct Branch
     branch_noise ambient_noise; // affects noise loudness
 };
 
-enum branch_iterator_type
+enum class branch_iterator_type
 {
-    BRANCH_ITER_LOGICAL,
-    BRANCH_ITER_DANGER,
+    logical,
+    danger,
 };
 
 class branch_iterator
 {
 public:
-    branch_iterator(branch_iterator_type type = BRANCH_ITER_LOGICAL);
+    branch_iterator(branch_iterator_type type = branch_iterator_type::logical);
 
     operator bool() const;
     const Branch* operator*() const;
