@@ -625,7 +625,7 @@ static formatted_string _god_extra_description(god_type which_god)
         case GOD_ASHENZARI:
             if (have_passive(passive_t::bondage_skill_boost))
             {
-                _add_par(desc, "Curse skill supports:");
+                _add_par(desc, "Ashenzari supports the following skills because of your curses:");
                 _add_par(desc,  _describe_ash_skill_boost());
             }
             break;
@@ -1127,7 +1127,8 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     for (int i = 0; i < 4; i++)
     {
         const auto &desc = descs[i];
-        if (desc.empty()) continue;
+        if (desc.empty())
+            continue;
 
         auto scroller = make_shared<Scroller>();
         auto text = make_shared<Text>(desc.trim());

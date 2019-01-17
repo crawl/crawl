@@ -548,9 +548,9 @@ static deck_type _choose_deck(const string title = "Draw")
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(deck_status((deck_type)i),
-                    deck_status((deck_type)i),
-                    MEL_ITEM, 1, _deck_hotkey((deck_type)i));
+            new ToggleableMenuEntry(deck_status(static_cast<deck_type>(i)),
+                    deck_status(static_cast<deck_type>(i)),
+                    MEL_ITEM, 1, _deck_hotkey(static_cast<deck_type>(i)));
         numbers[i] = i;
         me->data = &numbers[i];
         if (!deck_cards((deck_type)i))
