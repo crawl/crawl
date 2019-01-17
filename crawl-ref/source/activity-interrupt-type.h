@@ -1,26 +1,27 @@
 #pragma once
 
 // Be sure to change activity_interrupt_names in delay.cc to match!
-enum activity_interrupt_type
+enum class activity_interrupt
 {
-    AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity that can be
-                                    // interrupted.
-    AI_KEYPRESS,
-    AI_FULL_HP,                     // Player is fully healed
-    AI_FULL_MP,                     // Player has recovered all mp
-    AI_ANCESTOR_HP,                 // Player's ancestor is fully healed
-    AI_HUNGRY,                      // Hunger increased
-    AI_MESSAGE,                     // Message was displayed
-    AI_HP_LOSS,
-    AI_STAT_CHANGE,
-    AI_SEE_MONSTER,
-    AI_MONSTER_ATTACKS,
-    AI_TELEPORT,
-    AI_HIT_MONSTER,                 // Player hit monster (invis or
-                                    // mimic) during travel/explore.
-    AI_SENSE_MONSTER,
-    AI_MIMIC,
+    force = 0,          // Forcibly kills any activity that can be
+                        // interrupted.
+    keypress,           // Not currently used
+    full_hp,            // Player is fully healed
+    full_mp,            // Player has recovered all mp
+    ancestor_hp,        // Player's ancestor is fully healed
+    hungry,             // Hunger increased
+    message,            // Message was displayed
+    hp_loss,
+    stat_change,
+    see_monster,
+    monster_attacks,
+    teleport,
+    hit_monster,        // Player hit invis monster during travel/explore.
+    sense_monster,
+    mimic,
 
     // Always the last.
-    NUM_AINTERRUPTS
+    COUNT
 };
+constexpr int NUM_ACTIVITY_INTERRUPTS
+    = static_cast<int>(activity_interrupt::COUNT);

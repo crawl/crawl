@@ -459,7 +459,7 @@ LUARET1(you_absdepth, number, env.absdepth0 + 1)
 /*** Interrupt the current multi-turn activity or macro sequence.
  * @function stop_activity
  */
-LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
+LUAWRAP(you_stop_activity, interrupt_activity(activity_interrupt::force))
 /*** Are you taking the stairs?
  * @treturn boolean
  * @function taking_stairs

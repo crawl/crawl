@@ -440,7 +440,10 @@ void attack::alert_defender()
         && !attacker->as_monster()->wont_attack())
     {
         if (defender->is_player())
-            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+        {
+            interrupt_activity(activity_interrupt::monster_attacks,
+                               attacker->as_monster());
+        }
         if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = attacker->mindex();
     }

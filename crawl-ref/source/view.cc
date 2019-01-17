@@ -102,7 +102,10 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
         aid.context = SC_NEWLY_SEEN;
 
     if (!mons_is_safe(mons))
-        return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
+    {
+        return interrupt_activity(activity_interrupt::see_monster,
+                                  aid, msgs_buf);
+    }
 
     return false;
 }

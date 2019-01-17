@@ -96,7 +96,7 @@ bool check_annotation_exclusion_warning()
         && !yesno("Enter next level anyway?", true, 'n', true, false))
     {
         canned_msg(MSG_OK);
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
         crawl_state.level_annotation_shown = false;
         return false;
     }

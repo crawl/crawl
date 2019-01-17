@@ -632,7 +632,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (you.can_see(*this))
         {
             // and fire activity interrupts
-            interrupt_activity(AI_SEE_MONSTER,
+            interrupt_activity(activity_interrupt::see_monster,
                                activity_interrupt_data(this, SC_UNCHARM));
         }
 
@@ -752,7 +752,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
-            interrupt_activity(AI_FORCE_INTERRUPT);
+            interrupt_activity(activity_interrupt::force);
         }
         break;
 
