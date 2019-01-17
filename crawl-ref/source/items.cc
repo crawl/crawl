@@ -996,7 +996,7 @@ void pickup_menu(int item_link)
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
-                                            MT_PICKUP);
+                                            menu_type::pickup);
     if (selected.empty())
         canned_msg(MSG_OK);
     redraw_screen();

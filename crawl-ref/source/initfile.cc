@@ -2305,7 +2305,7 @@ void game_options::set_menu_sort(string field)
     menu_sort_condition cond(field);
 
     // Overrides all previous settings.
-    if (cond.mtype == MT_ANY)
+    if (cond.mtype == menu_type::any)
         sort_menus.clear();
 
     // Override existing values, if necessary.
@@ -5060,7 +5060,7 @@ menu_sort_condition::menu_sort_condition(menu_type _mt, int _sort)
 }
 
 menu_sort_condition::menu_sort_condition(const string &s)
-    : mtype(MT_ANY), sort(-1), cmp()
+    : mtype(menu_type::any), sort(-1), cmp()
 {
     string cp = s;
     set_menu_type(cp);
@@ -5070,7 +5070,7 @@ menu_sort_condition::menu_sort_condition(const string &s)
 
 bool menu_sort_condition::matches(menu_type mt) const
 {
-    return mtype == MT_ANY || mtype == mt;
+    return mtype == menu_type::any || mtype == mt;
 }
 
 void menu_sort_condition::set_menu_type(string &s)
@@ -5081,11 +5081,11 @@ void menu_sort_condition::set_menu_type(string &s)
         menu_type mtype;
     } menu_type_map[] =
       {
-          { "any:",    MT_ANY       },
-          { "inv:",    MT_INVLIST   },
-          { "drop:",   MT_DROP      },
-          { "pickup:", MT_PICKUP    },
-          { "know:",   MT_KNOW      }
+          { "any:",    menu_type::any       },
+          { "inv:",    menu_type::invlist   },
+          { "drop:",   menu_type::drop      },
+          { "pickup:", menu_type::pickup    },
+          { "know:",   menu_type::know      }
       };
 
     for (const auto &mi : menu_type_map)

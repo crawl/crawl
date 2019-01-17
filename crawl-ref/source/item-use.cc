@@ -477,7 +477,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         {
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
-                            MT_INVLIST, OSEL_WIELD,
+                            menu_type::invlist, OSEL_WIELD,
                             OPER_WIELD, invprompt_flag::no_warning, '-');
         }
         else
@@ -648,7 +648,8 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector, oper);
+        int slot = prompt_invent_item(mesg.c_str(), menu_type::invlist,
+                                      selector, oper);
 
         if (!prompt_failed(slot))
         {
@@ -1027,8 +1028,9 @@ bool wear_armour(int item)
 
     if (item == -1)
     {
-        item = prompt_invent_item("Wear which item?", MT_INVLIST, OBJ_ARMOUR,
-                                  OPER_WEAR, invprompt_flag::no_warning);
+        item = prompt_invent_item("Wear which item?", menu_type::invlist,
+                                  OBJ_ARMOUR, OPER_WEAR,
+                                  invprompt_flag::no_warning);
         if (prompt_failed(item))
             return false;
     }
@@ -1548,7 +1550,7 @@ static bool _swap_rings(int ring_slot)
             // message is visible.
             unwanted = prompt_invent_item(
                     "You're wearing all the rings you can. Remove which one?",
-                    MT_INVLIST, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
+                    menu_type::invlist, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
                     invprompt_flag::no_warning | invprompt_flag::hide_known);
         }
 
@@ -1857,8 +1859,8 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                       MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON,
-                                       invprompt_flag::no_warning);
+                                       menu_type::invlist, OBJ_JEWELLERY,
+                                       OPER_PUTON, invprompt_flag::no_warning);
     }
 
     if (prompt_failed(item_slot))
@@ -1919,7 +1921,7 @@ bool remove_ring(int slot, bool announce)
     {
         const int equipn =
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
-                                             MT_INVLIST,
+                                             menu_type::invlist,
                                              OBJ_JEWELLERY,
                                              OPER_REMOVE,
                                              invprompt_flag::no_warning
@@ -2020,7 +2022,7 @@ void prompt_inscribe_item()
     }
 
     int item_slot = prompt_invent_item("Inscribe which item?",
-                                       MT_INVLIST, OSEL_ANY);
+                                       menu_type::invlist, OSEL_ANY);
 
     if (prompt_failed(item_slot))
         return;

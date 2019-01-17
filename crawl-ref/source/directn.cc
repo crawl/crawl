@@ -627,7 +627,8 @@ void full_describe_view()
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
 
     desc_menu.set_tag("pickup");
-    desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
+    // necessary for sorting of the item submenu
+    desc_menu.set_type(menu_type::pickup);
     desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
     desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
 

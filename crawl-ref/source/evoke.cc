@@ -426,7 +426,7 @@ void zap_wand(int slot)
     else
     {
         item_slot = prompt_invent_item("Zap which item?",
-                                       MT_INVLIST,
+                                       menu_type::invlist,
                                        OBJ_WANDS,
                                        OPER_ZAP);
     }
@@ -1480,7 +1480,7 @@ bool evoke_item(int slot, bool check_range)
     if (slot == -1)
     {
         slot = prompt_invent_item("Evoke which item? (* to show all)",
-                                   MT_INVLIST,
+                                   menu_type::invlist,
                                    OSEL_EVOKABLE, OPER_EVOKE);
 
         if (prompt_failed(slot))

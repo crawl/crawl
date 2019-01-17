@@ -51,7 +51,8 @@ void adjust_item(int from_slot)
 
     if (from_slot == -1)
     {
-        from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
+        from_slot = prompt_invent_item("Adjust which item?",
+                                       menu_type::invlist, -1);
         if (prompt_failed(from_slot))
             return;
 
@@ -59,7 +60,7 @@ void adjust_item(int from_slot)
     }
 
     const int to_slot = prompt_invent_item("Adjust to which letter? ",
-                                           MT_INVLIST,
+                                           menu_type::invlist,
                                            -1, OPER_ANY,
                                            invprompt_flag::unthings_ok
                                             | invprompt_flag::manual_list);
