@@ -370,7 +370,14 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                          int dam)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = max(1, min(4, 1 + tension / 20));
+    int tier;
+
+    if (attacker->is_player())
+        tier = max(1, min(4, 1 + tension / 20));
+    // Don't base the sword on player state when the player isn't wielding it.
+    else
+        tier = 1;
+
     dprf(DIAG_COMBAT, "Singing sword tension: %d, tier: %d", tension, tier);
 
     if (silenced(attacker->pos()))
