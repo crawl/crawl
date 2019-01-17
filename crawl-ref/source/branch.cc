@@ -224,11 +224,11 @@ int ambient_noise(branch_type branch)
 {
     switch (branches[branch].ambient_noise)
     {
-    case BRANCH_NOISE_NORMAL:
+    case branch_noise::normal:
         return 0;
-    case BRANCH_NOISE_QUIET:
+    case branch_noise::quiet:
         return -BRANCH_NOISE_AMOUNT;
-    case BRANCH_NOISE_LOUD:
+    case branch_noise::loud:
         return BRANCH_NOISE_AMOUNT;
     default:
         die("Invalid noise level!");
