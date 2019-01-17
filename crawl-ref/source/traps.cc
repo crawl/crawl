@@ -420,9 +420,11 @@ vector<coord_def> find_golubria_on_level()
     return ret;
 }
 
-enum passage_type
+enum class passage_type
 {
-    PASSAGE_FREE, PASSAGE_BLOCKED, PASSAGE_NONE
+    free,
+    blocked,
+    none,
 };
 
 static passage_type _find_other_passage_side(coord_def& to)
@@ -441,9 +443,9 @@ static passage_type _find_other_passage_side(coord_def& to)
     }
     const int choices = clear_passages.size();
     if (choices < 1)
-        return has_blocks ? PASSAGE_BLOCKED : PASSAGE_NONE;
+        return has_blocks ? passage_type::blocked : passage_type::none;
     to = clear_passages[random2(choices)];
-    return PASSAGE_FREE;
+    return passage_type::free;
 }
 
 void trap_def::trigger(actor& triggerer)
@@ -494,7 +496,7 @@ void trap_def::trigger(actor& triggerer)
     {
         coord_def to = p;
         passage_type search_result = _find_other_passage_side(to);
-        if (search_result == PASSAGE_FREE)
+        if (search_result == passage_type::free)
         {
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
@@ -511,7 +513,7 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (you_trigger)
         {
-            mprf("This passage %s!", search_result == PASSAGE_BLOCKED ?
+            mprf("This passage %s!", search_result == passage_type::blocked ?
                  "seems to be blocked by something" : "doesn't lead anywhere");
         }
         break;
