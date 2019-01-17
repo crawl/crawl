@@ -482,7 +482,7 @@ static item_def* _get_evokable_item(const actor* target)
 
     InvMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                  | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
-    menu.set_type(MT_ANY);
+    menu.set_type(menu_type::any);
     menu.set_title("Wand to zap?");
     menu.load_items(list);
     menu.show();
