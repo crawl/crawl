@@ -1320,7 +1320,7 @@ COLOUR:   ETC_WARP
 #TILE:     urand_rift
 #TILE_EQ:  rift
 BRAND:    SPWPN_DISTORTION
-BOOL:     blink, rmsl
+BOOL:     blink
 
 
 # This entry must always be last.
