@@ -1303,7 +1303,8 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         torment_cell(*ri, attacker, taux);
 }
 
-void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+void setup_cleansing_flame_beam(bolt &beam, int pow,
+                                cleansing_flame_source caster,
                                 coord_def where, actor *attacker)
 {
     beam.flavour      = BEAM_HOLY;
@@ -1312,13 +1313,14 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+    beam.aux_source   = (caster == cleansing_flame_source::tso)
                         ? "the Shining One's cleansing flame"
                         : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    if (caster == cleansing_flame_source::generic
+        || caster == cleansing_flame_source::tso)
     {
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
@@ -1339,7 +1341,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     }
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
+void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
                      actor *attacker)
 {
     bolt beam;
