@@ -2980,7 +2980,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
-        special_damage = defender->apply_ac(base_damage, 0, AC_HALF);
+        special_damage = defender->apply_ac(base_damage, 0, ac_type::half);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
                                               special_damage);

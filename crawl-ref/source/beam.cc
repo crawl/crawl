@@ -4020,11 +4020,11 @@ int bolt::apply_AC(const actor *victim, int hurted)
     switch (flavour)
     {
     case BEAM_DAMNATION:
-        ac_rule = AC_NONE; break;
+        ac_rule = ac_type::none; break;
     case BEAM_ELECTRICITY:
-        ac_rule = AC_HALF; break;
+        ac_rule = ac_type::half; break;
     case BEAM_FRAG:
-        ac_rule = AC_TRIPLE; break;
+        ac_rule = ac_type::triple; break;
     default: ;
     }
 

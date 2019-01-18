@@ -472,7 +472,7 @@ void shock_serpent_discharge_fineff::fire()
 
     int amount = roll_dice(3, 4 + power * 3 / 2);
     amount = oppressor.apply_ac(oppressor.beam_resists(beam, amount, true),
-                                                                0, AC_HALF);
+                                0, ac_type::half);
     oppressor.hurt(serpent, amount, beam.flavour, KILLED_BY_BEAM,
                                         "a shock serpent", "electric aura");
     if (amount)

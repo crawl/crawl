@@ -2306,7 +2306,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
-    beam.ac_rule           = AC_PROPORTIONAL;
+    beam.ac_rule           = ac_type::proportional;
     beam.set_agent(caster);
 #ifdef USE_TILE
     beam.tile_beam = -1;
@@ -2423,7 +2423,7 @@ void forest_damage(const actor *mon)
                             "A root lunges up near @foe@");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
-                                               AC_PROPORTIONAL)))
+                                               ac_type::proportional)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ scraped by a branch",
