@@ -106,7 +106,6 @@ int formatted_scroller::show()
     auto popup = make_shared<ui::Popup>(vbox);
 
     m_contents_dirty = false;
-    m_scroll_dirty = false;
     bool done = false;
     popup->on(Widget::slots.event, [&done, &vbox, &text, this](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
@@ -153,6 +152,12 @@ int formatted_scroller::show()
         m_scroller->set_scroll(numeric_limits<int32_t>::max());
 
     open_scrollers.push_back(this);
+    if (m_scroll_dirty)
+    {
+        m_scroll_dirty = false;
+        m_scroller->set_scroll(m_scroll);
+    }
+
     ui::run_layout(move(popup), done);
     open_scrollers.pop_back();
 
