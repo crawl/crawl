@@ -2068,20 +2068,21 @@ Elementalists
   elemental magic: air, fire, earth or ice.
 
   Fire Magic
-    tends towards destructive conjurations, and begin with the Book of Flames.
+    tends towards destructive conjurations. Earth Elementalists begin with the
+    Book of Flames.
 
   Ice Magic
-    offers a balance between destructive conjurations and protective charms,
-    starting with the Book of Frost.
+    offers a balance between destructive conjurations and protective charms.
+    Ice Elementalitss start with the Book of Frost.
 
   Air Magic
     provides many useful charms in addition to some unique destructive
-    capabilities. They begin with the Book of Air.
+    capabilities. Air Elementalists begin with the Book of Air.
 
   Earth Magic
     is a versatile school, with destructive, debilitating and utility spells
-    available. They start with the Book of Geomancy, and some stones to use
-    for the Sandblast spell.
+    available. Earth Elementalists start with the Book of Geomancy, and some
+    stones to use for the Sandblast spell.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
