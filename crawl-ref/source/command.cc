@@ -85,7 +85,13 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    return string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    if (Version::history_size() > 1)
+    {
+        result += "\n\nVersion history for your current game:\n";
+        result += Version::history();
+    }
+    return result;
 }
 
 static string _get_version_features()
