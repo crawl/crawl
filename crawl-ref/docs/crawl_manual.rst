@@ -1907,69 +1907,52 @@ characters. Although each has its own strengths and weaknesses, some are
 definitely easier than others, at least to begin with. The best backgrounds for
 a beginner are probably Gladiators and Berserkers; if you really want to play a
 magician, try a Conjurer or a Wizard. However, not all species are equally well
-suited for all backgrounds. The lighter coloured choices on the selection screen
-are generally considered to be the more accessible ones.
+suited for all backgrounds. After you have selected a species, the background
+selection menu while show backgrounds generally considered to be more accessible
+for a species in a brighter colour.
 
 Each background starts out with a different set of skills and items, but from
 there you can shape them as you will. Note that due to peculiarities of size or
-body shape, some characters start with a different inventory.
+body shape, some species-background combinations start with a different
+inventory than described here.
+
+Warrior backgrounds
+===================
+
+Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
-  Fighters usually start with a good weapon, a suit of heavy armour, a
-  shield, and a potion of might. They have a good general grounding in the
-  arts of fighting.
+  Fighters usually start with a good weapon of their choice, a suit of heavy
+  armour, a shield, and a potion of might. They have a good general grounding
+  in the arts of fighting.
 
 Gladiators
   The Gladiator has been trained to fight in the ring, and so is versed in the
   arts of fighting, but is not so good at anything else. In fact, Gladiators
   have never learned anything except bashing monsters with heavy things. They
-  start with a nasty weapon, light armour, headgear and some nets.
+  start with a weapon of their choice, light armour, headgear and some nets.
 
 Monks
   The Monk is a member of an ascetic order dedicated to the perfection of one's
   body and soul through the discipline of the martial arts. Monks start with
-  only a simple weapon and a robe. When they choose a god for the first time,
-  their spiritual training gives them a piety boost.
-
-Berserkers
-  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
-  get the power to go berserk (as well as a number of other powers, should they
-  prove worthy), but who forbids the use of spell magic. They enter the dungeon
-  with a weapon of their choice, and dressed in animal skins.
-
-Chaos Knights
-  The Chaos Knight is a plaything of Xom. Xom is a very unpredictable (and
-  possibly psychotic) entity who rewards or punishes according to whim.
-
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return.
-
-Skalds
-  Formidable warriors in their own rights, Skalds practice a form of augmenting
-  battle magic that is either chanted or sung. Unique to the highlands in which
-  they originate, these spells and formulae are second nature: they can either
-  inspire greatness in themselves and their allies, or fear in the hearts of
-  their enemies.
-
-Warpers
-  Warpers specialise in translocation magic, and are experts in traveling long
-  distances and positioning themselves precisely and use this to their advantage
-  in melee or missile combat. They start with a scroll of blinking.
-
-Assassins
-  An Assassin is a stealthy character who is especially good at killing, using
-  daggers or blowguns. They start with some deadly curare needles.
+  only a simple weapon of their choice and a robe. When they choose a god for
+  the first time, their spiritual training gives them a piety boost.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with either some throwing weapons or a ranged weapon and some
-  ammunition, as well as a short sword or club and a set of leathers.
+  starts with either some throwing weapons or a ranged weapon of their choice
+  and some ammunition, as well as a short sword, and a set of leathers.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
+Assassins
+  An Assassin is a stealthy character who is especially good at killing, using
+  daggers or blowguns. They start with a dagger, a robe and cloak, a blowgun,
+  poisoned needles, and a few deadly and rare curare needles.
+
+Adventurer backgrounds
+======================
+
+Adventurers have varied and idiosyncratic skills that they have picked up in
+their travels.
 
 Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
@@ -1980,70 +1963,130 @@ Artificers
 Wanderers
   Wanderers are people who have not learned a specific trade. Instead, they've
   travelled around becoming "jacks-of-all-trades, masters of none". They start
-  the game with a large, random assortment of skills and maybe some small
-  items they picked up along the way, but, other than that, they're pretty much
+  the game with a random assortment of skills and maybe some small items and
+  spells they picked up along the way, but, other than that, they're pretty much
   on their own.
 
-Magicians
-========================================
+Zealot backgrounds
+==================
 
-A magician is not an available character background by itself, but a type of
-background, encompassing Wizards, Conjurers, Enchanters, Summoners,
-Necromancers, Transmuters, various Elementalists and Venom Mages. Magicians are
-the best at using magic. Among other things, they start with a robe and a book
-of spells which should see them through the first several levels.
+Zealots start the game already worshipping a god.
 
-Wizards
-  A Wizard is a magician who does not specialise in any area of magic. Wizards
-  start with a variety of magical skills and with Magic Dart memorised. Their
-  book allows them to progress in many different branches of the arcane arts.
+Berserkers
+  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
+  get the power to go berserk (as well as a number of other powers, should they
+  prove worthy), but who forbids the use of spell magic. They enter the dungeon
+  with a weapon of their choice, and dressed in animal skins.
 
-Conjurers
-  The Conjurer specialises in the violent and destructive magic of conjuration
-  spells. Like Wizards, the Conjurer starts with the Magic Dart spell.
+Abyssal Knights
+  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
+  Abyss. They are granted some power over the Abyss, and must spread death and
+  disorder in return. They are sent from the Abyss into the Dungeon to spread
+  corruption and chaos, starting with a simple weapon of their choice and
+  leather armour.
 
-Enchanters
-  The Enchanter specialises in the subtle art of hexes. Instead of directly
-  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
-  finish the helpless creatures in combat. The Enchanter begins with lightly
-  enchanted weapons and armour, as well as the Corona spell.
+Chaos Knights
+  The Chaos Knight is a plaything of Xom, subject to the god's constantly
+  changing moods. Xom is a very unpredictable (and possibly psychotic) entity
+  who rewards or punishes according to whim. They begin with a lightly enchanted
+  leather armour, and a simple weapon of their choice.
 
-Summoners
-  The Summoner specialises in calling creatures from this and other worlds to
-  give assistance. Although they can at first summon only very wimpy creatures,
-  the more advanced summoning spells allow summoners to call on such powers as
-  elementals and demons.
+Warrior-mage backgrounds
+========================
 
-Necromancers
-  The Necromancer is a magician who specialises in the less pleasant side of
-  magic. Necromantic spells are a varied bunch, but many involve some degree of
-  risk or harm to the caster.
+Warrior mages begin the game with a mix of physical combat and magic skills,
+though usually excel at neither. They start with a book of spells, and usually
+with some way of defending themselves.
+
+Skalds
+  Formidable warriors in their own rights, Skalds practice a form of augmenting
+  battle magic that is either chanted or sung. Unique to the highlands in which
+  they originate, these spells and formulae are second nature: they can either
+  inspire greatness in themselves and their allies, or fear in the hearts of
+  their enemies. They begin the game with a weapon of their choice, some
+  leather armour, and the Book of Battle.
 
 Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
+  They begin the game with the Book of Changes, some arrows to turn into snakes,
+  and a robe.
 
-Venom Mages
-  Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the dungeon where few creatures are immune to it.
+Warpers
+  Warpers specialise in translocation magic, and are experts in traveling long
+  distances and positioning themselves precisely and use this to their advantage
+  in melee or missile combat. They start with a scroll of blinking, the Book of
+  Spatial Translocations, some dispersal tomahawks, a simple weapon of thier
+  choice, and leather armour.
+
+Arcane Marksmen
+  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
+  attacks. They are particularly good at keeping their enemies at a distance.
+  They begin the game with a the Book of Debilitation, a ranged weapon of their
+  choice, and a robe.
+
+Enchanters
+  The Enchanter specialises in the subtle art of hexes. Instead of directly
+  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
+  finish the helpless creatures in combat. The Enchanter begins with lightly
+  enchanted dagger, a robe, and the Book of Maledictions.
+
+Mage backgrounds
+================
+
+A mage is not an available character background by itself, but a type of
+background, encompassing Wizards, Conjurers, Summoners, Necromancers, various
+Elementalists and Venom Mages. Mages are the best at using magic. Among other
+things, they start with a robe and a book of spells which should see them
+through the first several levels.
+
+Wizards
+  A Wizard is a magician who does not specialise in any area of magic. Wizards
+  start with a variety of magical skills and with Magic Dart memorised, from
+  the Book of Minor Magic. Their book allows them to progress in many different
+  branches of the arcane arts. They also get a wizard hat.
+
+Conjurers
+  The Conjurer specialises in the violent and destructive magic of conjuration
+  spells. Like Wizards, the Conjurer starts with the Magic Dart spell, in their
+  case from the Book of Conjurations.
+
+Summoners
+  The Summoner specialises in calling creatures from this and other worlds to
+  give assistance. Although they can at first summon only very wimpy creatures,
+  the more advanced summoning spells allow summoners to call on such powers as
+  elementals and demons. They begin with the Book of Callings.
+
+Necromancers
+  The Necromancer is a magician who specialises in the less pleasant side of
+  magic, drawing initially from the Book of Necromancy. Necromantic spells are
+  a varied bunch, but many involve some degree of risk or harm to the caster.
 
 Elementalists
   Elementalists are magicians who specialise in one of the four types of
   elemental magic: air, fire, earth or ice.
 
   Fire Magic
-    tends towards destructive conjurations.
+    tends towards destructive conjurations, and begin with the Book of Flames.
 
   Ice Magic
-    offers a balance between destructive conjurations and protective charms.
+    offers a balance between destructive conjurations and protective charms,
+    starting with the Book of Frost.
 
   Air Magic
     provides many useful charms in addition to some unique destructive
-    capabilities.
+    capabilities. They begin with the Book of Air.
 
   Earth Magic
-    is a mixed bag, with destructive, debilitating and utility spells available.
+    is a versatile school, with destructive, debilitating and utility spells
+    available. They start with the Book of Geomancy, and some stones to use
+    for the Sandblast spell.
+
+Venom Mages
+  Venom Mages specialise in poison magic, which is extremely useful in the
+  shallower levels of the dungeon where few creatures are immune to it. Their
+  first book is the Young Poisoner's Handbook.
 
 ****************************************
 3. List of skills
