@@ -2288,7 +2288,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
-                        CLEANSING_FLAME_INVOCATION, you.pos(), &you);
+                        cflame_source::invocation, you.pos(), &you);
         break;
     }
 

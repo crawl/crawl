@@ -6811,7 +6811,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CLEANSING_FLAME:
         simple_monster_message(*mons, " channels a blast of cleansing flame!");
         cleansing_flame(5 + (5 * mons->spell_hd(spell_cast) / 12),
-                        CLEANSING_FLAME_SPELL, mons->pos(), mons);
+                        cflame_source::spell, mons->pos(), mons);
         return;
 
     case SPELL_GRAVITAS:
@@ -8086,7 +8086,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         bolt tracer;
         setup_cleansing_flame_beam(tracer,
                                    5 + (7 * mon->spell_hd(monspell)) / 12,
-                                   CLEANSING_FLAME_SPELL, mon->pos(), mon);
+                                   cflame_source::spell, mon->pos(), mon);
         fire_tracer(mon, tracer, true);
         return !mons_should_fire(tracer);
     }
