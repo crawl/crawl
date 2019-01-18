@@ -543,7 +543,7 @@ monster_info::monster_info(const monster* m, int milev)
     mintel = mons_intel(*m);
     hd = m->get_hit_dice();
     ac = m->armour_class(false);
-    ev = m->evasion(EV_IGNORE_UNIDED);
+    ev = m->evasion(ev_ignore::unided);
     base_ev = m->base_evasion();
     mr = m->res_magic(false);
     can_see_invis = m->can_see_invisible(false);

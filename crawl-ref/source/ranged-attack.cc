@@ -105,7 +105,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
+    const int ev = defender->evasion(ev_ignore::none, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -223,7 +223,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
+    const int ev = defender->evasion(ev_ignore::none, attacker);
 
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());

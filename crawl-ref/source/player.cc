@@ -2228,7 +2228,7 @@ static int _player_evasion(ev_ignore_type evit)
     // Size is all that matters when paralysed or at 0 dex.
     if ((you.cannot_move() || you.duration[DUR_CLUMSY]
             || you.form == transformation::tree)
-        && !(evit & EV_IGNORE_HELPLESS))
+        && !(evit & ev_ignore::helpless))
     {
         return max(1, 2 + size_factor / 2);
     }
@@ -6066,8 +6066,8 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int constrict_penalty = is_constricted() ? 3 : 0;
 
     const bool attacker_invis = act && !act->visible_to(this);
-    const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
-                              10 : 0;
+    const int invis_penalty
+        = attacker_invis && !testbits(evit, ev_ignore::helpless) ? 10 : 0;
 
     return base_evasion - constrict_penalty - invis_penalty;
 }

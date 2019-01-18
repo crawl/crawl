@@ -2415,7 +2415,7 @@ void forest_damage(const actor *mon)
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)))
+                if (!apply_chunked_AC(1, foe->evasion(ev_ignore::none, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch",
