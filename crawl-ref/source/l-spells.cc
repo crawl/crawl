@@ -105,15 +105,19 @@ LUAFN(l_spells_min_range)
  * @tparam int y coordinate to aim at, in player coordinates
  * @tparam int x coordinate of spell source, in player coordinates (default=0)
  * @tparam int y coordinate of spell source, in player coordinates (default=0)
- * @treturn table|nil a table of {x,y} of the path the spell will take, in player coordinates
+ * @treturn table|nil a table of {x,y} of the path the spell will take, in player coordinates.
+     Nil is returned if the spell does not follow a path (eg., smite-targeted spells)
+     or if the spell has zero range.
  * @function path
  */
 LUAFN(l_spells_path)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    zap_type zap = spell_to_zap(spell);
     int power = calc_spell_power(spell, true);
     int range = spell_range(spell, power);
-    if (range <= 0)
+    // return nil for non-zap or zero-range spells
+    if (range <= 0 || zap >= NUM_ZAPS)
     {
         lua_pushnil(ls);
         return 1;
@@ -132,7 +136,7 @@ LUAFN(l_spells_path)
     beam.set_agent(&you);
     beam.source = src;
     beam.attitude = ATT_FRIENDLY;
-    zappy(spell_to_zap(spell), power, false, beam);
+    zappy(zap, power, false, beam);
     beam.is_tracer = true;
     beam.is_targeting = true;
     beam.range = range;
