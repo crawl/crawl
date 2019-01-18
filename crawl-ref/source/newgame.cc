@@ -1924,7 +1924,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
             show_help('%', _highlight_pattern(ng));
             return true;
         case M_HELP:
-            show_help('?');
+            show_help('G', "weapons");
             return true;
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
@@ -2361,7 +2361,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             show_help('%', _highlight_pattern(ng));
             return true;
         case M_HELP:
-            show_help('?');
+            show_help('G', "weapons");
             return true;
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);
