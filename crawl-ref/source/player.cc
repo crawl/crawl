@@ -549,7 +549,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
 
 bool is_map_persistent()
 {
-    return !(your_branch().branch_flags & BFLAG_NO_MAP)
+    return !testbits(your_branch().branch_flags, brflag::no_map)
            || env.properties.exists(FORCE_MAPPABLE_KEY);
 }
 

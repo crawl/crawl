@@ -1320,7 +1320,7 @@ void dgn_reset_level(bool enable_random_maps)
 
 static int _num_items_wanted(int absdepth0)
 {
-    if (branches[you.where_are_you].branch_flags & BFLAG_NO_ITEMS)
+    if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
         return 10 + random2avg(90, 2); // rich level!
@@ -1910,7 +1910,7 @@ static bool _add_connecting_escape_hatches()
     // For any regions without a down stone stair case, add an
     // escape hatch. This will always allow (downward) progress.
 
-    if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
+    if (branches[you.where_are_you].branch_flags & brflag::islanded)
         return true;
 
     // Veto D:1 or Pan if there are disconnected areas.
@@ -1993,7 +1993,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 
     // Also check for isolated regions that have no stairs.
     if (player_in_connected_branch()
-        && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
+        && !(branches[you.where_are_you].branch_flags & brflag::islanded)
         && dgn_count_disconnected_zones(true) > 0)
     {
         throw dgn_veto_exception("Isolated areas with no stairs.");
@@ -4222,7 +4222,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty =
-            branches[you.where_are_you].branch_flags & BFLAG_SPOTTY;
+            testbits(branches[you.where_are_you].branch_flags, brflag::spotty);
         if (place.connect(spotty) == 0 && place.exits.size() > 0
             && !player_in_branch(BRANCH_ABYSS))
         {
@@ -6436,7 +6436,7 @@ static bool _fixup_interlevel_connectivity()
 
     if (!player_in_connected_branch() || brdepth[you.where_are_you] == -1)
         return true;
-    if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
+    if (branches[you.where_are_you].branch_flags & brflag::islanded)
         return true;
 
     StairConnectivity prev_con;

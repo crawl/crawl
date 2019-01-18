@@ -1300,7 +1300,7 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (branch.branch_flags & BFLAG_NO_SHAFTS)
+    if (branch.branch_flags & brflag::no_shafts)
         return false;
 
     // Don't allow shafts from the bottom of a branch.
@@ -1320,7 +1320,7 @@ bool is_valid_shaft_effect_level()
     // Don't shaft the player when we can't, and also when it would be into a
     // dangerous end.
     return is_valid_shaft_level()
-           && !(branch.branch_flags & BFLAG_DANGEROUS_END
+           && !(testbits(branch.branch_flags, brflag::dangerous_end)
                 && brdepth[place.branch] - place.depth == 1);
 }
 
@@ -1346,7 +1346,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom.
-    if (branches[lid.branch].branch_flags & BFLAG_DANGEROUS_END
+    if (branches[lid.branch].branch_flags & brflag::dangerous_end
         && lid.depth == max_depth
         && (max_depth - curr_depth) > 1)
     {
@@ -1384,7 +1384,7 @@ void do_trap_effects()
             // Don't shaft the player when we can't, and also when it would be into a
             // dangerous end.
             if (is_valid_shaft_level()
-               && !(branch.branch_flags & BFLAG_DANGEROUS_END
+               && !(branch.branch_flags & brflag::dangerous_end
                     && brdepth[place.branch] - place.depth == 1))
             {
                 dprf("Attempting to shaft player.");

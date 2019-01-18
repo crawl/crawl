@@ -12,18 +12,19 @@
 
 #define BRANCH_NOISE_AMOUNT 6
 
-enum branch_flag_type
+enum class brflag
 {
-    BFLAG_NONE = 0,
+    none                = 0,
 
-    BFLAG_NO_MAP          = (1 << 0), // Can't be magic mapped or remembered.
-    BFLAG_ISLANDED        = (1 << 1), // May have isolated zones with no stairs.
-    BFLAG_NO_XLEV_TRAVEL  = (1 << 2), // Can't cross-level travel to or from it.
-    BFLAG_NO_ITEMS        = (1 << 3), // Branch gets no random items.
-    BFLAG_DANGEROUS_END   = (1 << 4), // bottom level is more dangerous than normal
-    BFLAG_SPOTTY          = (1 << 5), // Connect vaults with more open paths, not hallways.
-    BFLAG_NO_SHAFTS       = (1 << 6), // Don't generate random shafts.
+    no_map              = (1 << 0), // Can't be magic mapped or remembered.
+    islanded            = (1 << 1), // May have isolated zones with no stairs.
+    no_x_level_travel   = (1 << 2), // Can't cross-level travel to or from it.
+    no_items            = (1 << 3), // Branch gets no random items.
+    dangerous_end       = (1 << 4), // bottom level is more dangerous than normal
+    spotty              = (1 << 5), // Connect vaults with more open paths, not hallways.
+    no_shafts           = (1 << 6), // Don't generate random shafts.
 };
+DEF_BITFIELD(branch_flags_t, brflag);
 
 enum class branch_noise
 {
@@ -43,7 +44,7 @@ struct Branch
     int numlevels;              // depth of the branch
     int absdepth;               // base item generation/etc depth
 
-    uint32_t branch_flags;
+    branch_flags_t branch_flags;
 
     dungeon_feature_type entry_stairs;
     dungeon_feature_type exit_stairs;

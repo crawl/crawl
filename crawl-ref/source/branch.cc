@@ -188,7 +188,7 @@ bool is_random_subbranch(branch_type branch)
 
 bool is_connected_branch(const Branch *branch)
 {
-    return !(branch->branch_flags & BFLAG_NO_XLEV_TRAVEL);
+    return !testbits(branch->branch_flags, brflag::no_x_level_travel);
 }
 
 bool is_connected_branch(branch_type branch)
