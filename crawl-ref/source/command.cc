@@ -1268,34 +1268,43 @@ private:
     int prev_page{0};
 };
 
-void show_help(int section, string highlight_string)
+static bool _show_help_special(int key)
 {
-    help_popup help(section);
-    help.highlight = highlight_string;
-    int key = toalower(help.show());
-
     switch (key)
     {
         case ':':
             // If the game has begun, show notes.
             if (crawl_state.need_save)
                 display_notes();
-            break;
+            return true;
         case '#':
             // If the game has begun, show dump.
             if (crawl_state.need_save)
                 display_char_dump();
-            break;
+            return true;
         case '/':
             keyhelp_query_descriptions();
-            break;
+            return true;
         case 'q':
             _handle_FAQ();
-            break;
+            return true;
         case 'v':
             _print_version();
-            break;
+            return true;
         default:
-            break;
+            return false;
     }
+}
+
+void show_help(int section, string highlight_string)
+{
+    // if `section` is a special case, don't instantiate a help popup at all.
+    if (_show_help_special(toalower(section)))
+        return;
+    help_popup help(section);
+    help.highlight = highlight_string;
+    int key = toalower(help.show());
+    // handle the case where one of the special case help sections is triggered
+    // from the help main menu.
+    _show_help_special(key);
 }
