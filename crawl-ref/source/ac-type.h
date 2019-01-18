@@ -1,12 +1,12 @@
 #pragma once
 
-enum ac_type
+enum class ac_type
 {
-    AC_NONE,
+    none,
     // These types block small amounts of damage, hardly affecting big hits.
-    AC_NORMAL,
-    AC_HALF,
-    AC_TRIPLE,
+    normal,
+    half,
+    triple,
     // This one stays fair over arbitrary splits.
-    AC_PROPORTIONAL,
+    proportional,
 };
