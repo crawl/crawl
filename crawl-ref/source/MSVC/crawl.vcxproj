@@ -874,7 +874,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\compflag.h" />
     <ClInclude Include="..\conduct-type.h" />
     <ClInclude Include="..\confirm-butcher-type.h" />
-    <ClInclude Include="..\confirm-level-type.h" />
     <ClInclude Include="..\confirm-prompt-type.h" />
     <ClInclude Include="..\coord-circle.h" />
     <ClInclude Include="..\coord.h" />
@@ -918,6 +917,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\dungeon.h" />
     <ClInclude Include="..\duration-data.h" />
     <ClInclude Include="..\duration-type.h" />
+    <ClInclude Include="..\easy-confirm-type.h" />
     <ClInclude Include="..\enchant-type.h" />
     <ClInclude Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
