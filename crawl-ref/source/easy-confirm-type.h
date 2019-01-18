@@ -1,8 +1,8 @@
 #pragma once
 
-enum confirm_level_type
+enum class easy_confirm_type
 {
-    CONFIRM_NONE_EASY,
-    CONFIRM_SAFE_EASY,
-    CONFIRM_ALL_EASY,
+    none,
+    safe,
+    all,
 };

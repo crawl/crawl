@@ -1043,7 +1043,7 @@ void game_options::reset_options()
 
     confirm_butcher        = CONFIRM_AUTO;
     auto_butcher           = HS_VERY_HUNGRY;
-    easy_confirm           = CONFIRM_SAFE_EASY;
+    easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
 
@@ -2632,11 +2632,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
         if (field == "none")
-            easy_confirm = CONFIRM_NONE_EASY;
+            easy_confirm = easy_confirm_type::none;
         else if (field == "safe")
-            easy_confirm = CONFIRM_SAFE_EASY;
+            easy_confirm = easy_confirm_type::safe;
         else if (field == "all")
-            easy_confirm = CONFIRM_ALL_EASY;
+            easy_confirm = easy_confirm_type::all;
     }
     else if (key == "allow_self_target")
     {

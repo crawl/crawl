@@ -4,8 +4,8 @@
 
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
-#include "confirm-level-type.h"
 #include "confirm-prompt-type.h"
+#include "easy-confirm-type.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
@@ -246,7 +246,7 @@ public:
     bool        note_xom_effects; // take note of all Xom effects
     bool        note_chat_messages; // log chat in Webtiles
     bool        note_dgl_messages; // log chat in DGL
-    confirm_level_type easy_confirm;    // make yesno() confirming easier
+    easy_confirm_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
