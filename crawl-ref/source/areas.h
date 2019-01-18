@@ -1,18 +1,18 @@
 #pragma once
 
-enum area_centre_type
+enum class area_centre_type
 {
-    AREA_NONE,
-    AREA_SANCTUARY,
-    AREA_SILENCE,
-    AREA_HALO,
-    AREA_LIQUID,
-    AREA_ORB,
-    AREA_UMBRA,
-    AREA_QUAD,
-    AREA_DISJUNCTION,
+    none,
+    sanctuary,
+    silence,
+    halo,
+    liquid,
+    orb,
+    umbra,
+    quad,
+    disjunction,
 #if TAG_MAJOR_VERSION == 34
-    AREA_HOT,
+    hot,
 #endif
 };
 
@@ -25,7 +25,8 @@ void create_sanctuary(const coord_def& center, int time);
 bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius();
 
-coord_def find_centre_for (const coord_def& f, area_centre_type at = AREA_NONE);
+coord_def find_centre_for(const coord_def& f,
+                          area_centre_type at = area_centre_type::none);
 
 bool silenced(const coord_def& p);
 
