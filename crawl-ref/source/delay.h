@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "activity-interrupt-type.h"
+#include "activity-interrupt.h"
 #include "command-type.h"
 #include "enum.h"
 #include "item-prop-enum.h"

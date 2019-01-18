@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "activity-interrupt-type.h"
+#include "activity-interrupt.h"
 #include "char-set-type.h"
 #include "confirm-level-type.h"
 #include "confirm-prompt-type.h"
