@@ -3236,7 +3236,7 @@ bool bolt::misses_player()
     }
     else
     {
-        int dodge_more = you.evasion(EV_IGNORE_HELPLESS);
+        int dodge_more = you.evasion(ev_ignore::helpless);
 
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";

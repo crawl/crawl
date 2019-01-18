@@ -3435,7 +3435,7 @@ int monster::base_evasion() const
  **/
 int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 {
-    const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
+    const bool calc_unid = !testbits(evit, ev_ignore::unided);
 
     int ev = base_evasion();
 
@@ -3464,7 +3464,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     if (has_ench(ENCH_AGILE))
         ev += 5;
 
-    if (evit & EV_IGNORE_HELPLESS)
+    if (evit & ev_ignore::helpless)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
