@@ -16,18 +16,18 @@
 class monster;
 struct ait_hp_loss;
 
-enum activity_interrupt_payload_type
+enum class ai_payload // activity interrupt payloads
 {
-    AIP_NONE,
-    AIP_INT,
-    AIP_STRING,
-    AIP_MONSTER,
-    AIP_HP_LOSS,
+    none,
+    int_payload,
+    string_payload,
+    monster,
+    hp_loss,
 };
 
 struct activity_interrupt_data
 {
-    activity_interrupt_payload_type apt;
+    ai_payload apt;
     union
     {
         const char* string_data;
@@ -40,27 +40,28 @@ struct activity_interrupt_data
     seen_context_type context;
 
     activity_interrupt_data()
-        : apt(AIP_NONE), no_data(nullptr), context(SC_NONE)
+        : apt(ai_payload::none), no_data(nullptr), context(SC_NONE)
     {
     }
     activity_interrupt_data(const int *i)
-        : apt(AIP_INT), int_data(i), context(SC_NONE)
+        : apt(ai_payload::int_payload), int_data(i), context(SC_NONE)
     {
     }
     activity_interrupt_data(const char *s)
-        : apt(AIP_STRING), string_data(s), context(SC_NONE)
+        : apt(ai_payload::string_payload), string_data(s), context(SC_NONE)
     {
     }
     activity_interrupt_data(const string &s)
-        : apt(AIP_STRING), string_data(s.c_str()), context(SC_NONE)
+        : apt(ai_payload::string_payload), string_data(s.c_str()),
+          context(SC_NONE)
     {
     }
     activity_interrupt_data(monster* m, seen_context_type ctx = SC_NONE)
-        : apt(AIP_MONSTER), mons_data(m), context(ctx)
+        : apt(ai_payload::monster), mons_data(m), context(ctx)
     {
     }
     activity_interrupt_data(const ait_hp_loss *ahl)
-        : apt(AIP_HP_LOSS), ait_hp_loss_data(ahl), context(SC_NONE)
+        : apt(ai_payload::hp_loss), ait_hp_loss_data(ahl), context(SC_NONE)
     {
     }
 };
