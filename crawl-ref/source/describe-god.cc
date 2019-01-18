@@ -1301,8 +1301,6 @@ bool describe_god_with_join(god_type which_god)
         more_sw->add_child(make_shared<Text>(prompt_fs));
     }
 
-    const int num_panes = 3; // overview, detailed, wrath
-
     join_step_type step = SHOW;
     bool yesno_only = false;
     bool done = false, join = false;
@@ -1318,7 +1316,7 @@ bool describe_god_with_join(god_type which_god)
             return done = true;
         if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         {
-            int n = (desc_sw->current() + 1) % num_panes;
+            int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = n;
 #ifdef USE_TILE_WEB
             tiles.json_open_object();
@@ -1371,7 +1369,7 @@ update_ui:
         tiles.json_write_int("pane", desc_sw->current());
         tiles.ui_state_change("describe-god", 0);
 #endif
-        more_sw->current() = num_panes + step*2 + yesno_only;
+        more_sw->current() = desc_sw->num_children() + step*2 + yesno_only;
         return true;
     });
 
