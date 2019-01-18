@@ -1403,9 +1403,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             args.show_boring_feats = false; // don't show "The floor."
         }
         if (testbits(flags, spflag::not_self))
-            args.self = CONFIRM_CANCEL;
+            args.self = confirm_prompt_type::cancel;
         else
-            args.self = CONFIRM_NONE;
+            args.self = confirm_prompt_type::none;
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
             return spret::abort;

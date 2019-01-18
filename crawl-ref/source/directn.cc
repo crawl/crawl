@@ -899,21 +899,23 @@ bool direction_chooser::move_is_ok() const
         {
             if (!targets_objects() && targets_enemies())
             {
-                if (self == CONFIRM_CANCEL
-                    || self == CONFIRM_PROMPT
-                       && Options.allow_self_target == CONFIRM_CANCEL)
+                if (self == confirm_prompt_type::cancel
+                    || self == confirm_prompt_type::prompt
+                       && Options.allow_self_target
+                              == confirm_prompt_type::cancel)
                 {
                     mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
                 }
-                else if (self != CONFIRM_NONE
-                         && Options.allow_self_target != CONFIRM_NONE)
+                else if (self != confirm_prompt_type::none
+                         && Options.allow_self_target
+                                != confirm_prompt_type::none)
                 {
                     return yesno("Really target yourself?", false, 'n');
                 }
             }
 
-            if (self == CONFIRM_CANCEL)
+            if (self == confirm_prompt_type::cancel)
             {
                 mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
@@ -1075,7 +1077,7 @@ coord_def direction_chooser::find_default_target() const
                                        LS_FLIPVH);
     }
     else if ((mode != TARG_ANY && mode != TARG_FRIEND)
-             || self == CONFIRM_CANCEL)
+             || self == confirm_prompt_type::cancel)
     {
         success = find_default_monster_target(result);
     }

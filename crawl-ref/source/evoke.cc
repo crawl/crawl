@@ -98,7 +98,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     args.mode = TARG_HOSTILE;
     args.range = reach_range;
     args.top_prompt = "Attack whom?";
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
 
     unique_ptr<targeter> hitfunc;
     if (reach_range == REACH_TWO)
@@ -1011,7 +1011,7 @@ static bool _lamp_of_fire()
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the lamp in which direction?";
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     if (spell_direction(target, base_beam, &args))
     {
         if (you.confused())
@@ -1389,7 +1389,7 @@ static spret _phantom_mirror()
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.top_prompt = "Aiming: <white>Phantom Mirror</white>";
     args.hitfunc = &tgt;
     if (!spell_direction(spd, beam, &args))

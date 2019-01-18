@@ -1570,7 +1570,7 @@ bool beogh_gift_item()
     args.mode = TARG_BEOGH_GIFTABLE;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.show_floor_desc = true;
     args.top_prompt = "Select a follower to give a gift to.";
 
@@ -3301,7 +3301,7 @@ spret fedhas_evolve_flora(bool fail)
     args.mode = TARG_EVOLVABLE_PLANTS;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
     args.get_desc_func = _evolution_name;
@@ -4673,7 +4673,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         args.hitfunc = &tgt;
         if (!spell_direction(spd, beam, &args))
             return spret::abort;
@@ -6169,7 +6169,7 @@ bool ru_power_leap()
         args.range = 3;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         const int explosion_size = 1;
         targeter_smite tgt(&you, args.range, explosion_size, explosion_size);
         tgt.obeys_mesmerise = true;
@@ -6675,7 +6675,7 @@ spret uskayaw_grand_finale(bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         targeter_smite tgt(&you);
         args.hitfunc = &tgt;
         direction(beam, args);
@@ -6875,7 +6875,7 @@ static coord_def _get_transference_target()
     args.mode = TARG_MOBILE_MONSTER;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_NONE;
+    args.self = confirm_prompt_type::none;
     args.show_floor_desc = true;
     args.top_prompt = "Select a target.";
 
@@ -7292,7 +7292,7 @@ spret wu_jian_wall_jump_ability()
         args.range = 1;
         args.needs_path = false; // TODO: overridden by hitfunc?
         args.top_prompt = "Aiming: <white>Wall Jump</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         targeter_walljump tgt;
         tgt.obeys_mesmerise = true;
         args.hitfunc = &tgt;

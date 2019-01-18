@@ -1044,7 +1044,7 @@ void game_options::reset_options()
     confirm_butcher        = CONFIRM_AUTO;
     auto_butcher           = HS_VERY_HUNGRY;
     easy_confirm           = CONFIRM_SAFE_EASY;
-    allow_self_target      = CONFIRM_PROMPT;
+    allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
@@ -2641,11 +2641,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "allow_self_target")
     {
         if (field == "yes")
-            allow_self_target = CONFIRM_NONE;
+            allow_self_target = confirm_prompt_type::none;
         else if (field == "no")
-            allow_self_target = CONFIRM_CANCEL;
+            allow_self_target = confirm_prompt_type::cancel;
         else if (field == "prompt")
-            allow_self_target = CONFIRM_PROMPT;
+            allow_self_target = confirm_prompt_type::prompt;
     }
     else if (key == "confirm_butcher")
     {
