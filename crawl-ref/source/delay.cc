@@ -1110,7 +1110,7 @@ static inline bool _monster_warning(activity_interrupt ai,
     if (at.context != SC_NEWLY_SEEN && !delay)
         return false;
 
-    ASSERT(at.apt == AIP_MONSTER);
+    ASSERT(at.apt == ai_payload::monster);
     monster* mon = at.mons_data;
     ASSERT(mon);
     if (!you.can_see(*mon))

@@ -9,22 +9,22 @@ int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {
     switch (t->apt)
     {
-    case AIP_HP_LOSS:
+    case ai_payload::hp_loss:
         {
             lua_pushnumber(ls, t->ait_hp_loss_data->hp);
             lua_pushnumber(ls, t->ait_hp_loss_data->hurt_type);
             return 1;
         }
-    case AIP_INT:
+    case ai_payload::int_payload:
         lua_pushnumber(ls, *t->int_data);
         break;
-    case AIP_STRING:
+    case ai_payload::string_payload:
         lua_pushstring(ls, t->string_data);
         break;
-    case AIP_MONSTER:
+    case ai_payload::monster:
         push_monster(ls, t->mons_data);
         break;
-    case AIP_NONE:
+    case ai_payload::none:
         lua_pushnil(ls);
         break;
     }
