@@ -4,6 +4,7 @@
 
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
+#include "confirm-butcher-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
 #include "feature.h"
@@ -232,7 +233,7 @@ public:
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
-    int         confirm_butcher; // When to prompt for butchery
+    confirm_butcher_type confirm_butcher; // When to prompt for butchery
     hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling

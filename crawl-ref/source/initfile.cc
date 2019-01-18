@@ -1041,7 +1041,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
 
-    confirm_butcher        = CONFIRM_AUTO;
+    confirm_butcher        = confirm_butcher_type::normal;
     auto_butcher           = HS_VERY_HUNGRY;
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
@@ -2650,11 +2650,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "confirm_butcher")
     {
         if (field == "always")
-            confirm_butcher = CONFIRM_ALWAYS;
+            confirm_butcher = confirm_butcher_type::always;
         else if (field == "never")
-            confirm_butcher = CONFIRM_NEVER;
+            confirm_butcher = confirm_butcher_type::never;
         else if (field == "auto")
-            confirm_butcher = CONFIRM_AUTO;
+            confirm_butcher = confirm_butcher_type::normal;
     }
     else if (key == "auto_butcher")
     {
