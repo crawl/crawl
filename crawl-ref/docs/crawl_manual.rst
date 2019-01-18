@@ -2073,7 +2073,7 @@ Elementalists
 
   Ice Magic
     offers a balance between destructive conjurations and protective charms.
-    Ice Elementalitss start with the Book of Frost.
+    Ice Elementalists start with the Book of Frost.
 
   Air Magic
     provides many useful charms in addition to some unique destructive
