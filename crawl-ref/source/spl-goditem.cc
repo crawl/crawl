@@ -327,7 +327,7 @@ spret cast_healing(int pow, bool fail)
     args.restricts = DIR_TARGET;
     args.mode = TARG_INJURED_FRIEND;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.target_prefix = "Heal";
     args.get_desc_func = bind(_desc_pacify_chance, placeholders::_1, pow);
     direction(spd, args);

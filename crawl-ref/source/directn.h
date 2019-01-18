@@ -106,7 +106,7 @@ struct direction_chooser_args
         just_looking(false),
         needs_path(true),
         unrestricted(false),
-        self(CONFIRM_PROMPT),
+        self(confirm_prompt_type::prompt),
         target_prefix(nullptr),
         behaviour(nullptr),
         show_floor_desc(false),
