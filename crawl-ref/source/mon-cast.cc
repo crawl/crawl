@@ -16,7 +16,7 @@
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
-#include "cleansing-flame-source-type.h"
+#include "cflame-source.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"

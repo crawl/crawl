@@ -21,7 +21,7 @@
 #include "branch.h"
 #include "butcher.h"
 #include "chardump.h"
-#include "cleansing-flame-source-type.h"
+#include "cflame-source.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"

@@ -1053,7 +1053,7 @@
     <ClInclude Include="..\cio.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="..\cleansing-flame-source-type.h">
+    <ClInclude Include="..\cflame-source.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\cloud.h">

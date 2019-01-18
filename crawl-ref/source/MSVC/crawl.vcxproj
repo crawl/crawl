@@ -861,7 +861,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\char-set-type.h" />
     <ClInclude Include="..\chardump.h" />
     <ClInclude Include="..\cio.h" />
-    <ClInclude Include="..\cleansing-flame-source-type.h" />
+    <ClInclude Include="..\cflame-source.h" />
     <ClInclude Include="..\cloud-type.h" />
     <ClInclude Include="..\cloud.h" />
     <ClInclude Include="..\clua.h" />

@@ -12,7 +12,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
-#include "cleansing-flame-source-type.h"
+#include "cflame-source.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
