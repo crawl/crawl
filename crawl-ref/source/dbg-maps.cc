@@ -63,7 +63,7 @@ static bool _is_disconnected_level()
 {
     // Don't care about non-Dungeon levels.
     if (!player_in_connected_branch()
-        || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
+        || (branches[you.where_are_you].branch_flags & brflag::islanded))
     {
         return false;
     }
