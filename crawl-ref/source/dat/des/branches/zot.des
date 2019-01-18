@@ -2615,6 +2615,59 @@ xxxxxx@@@xxxxxx
 ENDMAP
 
 ##############################################################################
+# The circus has come to town
+
+# A manic carousel. The carnie operators are in the center, behind the
+# mechanicals surrounded by the ride and riders.
+#
+# The player either comes downstairs and finds themselves on the ride,
+# or needs to fight through the crowd lined up to find the way down.
+NAME:    ebering_klown_carousel
+DEPTH:   Zot, !Zot:$
+ORIENT:  float
+TAGS:    no_monster_gen no_trap_gen
+MONS:    killer klown, ancient lich, death cob
+NSUBST:  - = 2 / 3 = 3.. / *:.
+: if (crawl.coinflip()) then
+NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >
+SUBST:   1 = 1 0:30 .
+: else
+NSUBST:  G = 3={[( / *:G
+NSUBST:  1 = 6 = 1. / *=0...
+NSUBST:  > = >. / *:.
+: end
+NSUBST:  ^ = 4:^ / *=^..
+SUBST:   a = aaax.
+KFEAT:   a = iron_grate
+KFEAT:   ^ = dispersal trap
+: coloured_glass(_G)
+MAP
+         ...........
+       ...............
+      .....vxxrxxo.....
+     ....xvv1r1r1oox....
+    ....bbx...^...xyx....
+    ...gx1.........1xx...
+......xg1^....G....^1gx...
+......yx..G.......G..xb...
+...V.xy......aaa......bb..
+.V...xo.....a---a.....1x..
+.....^.....a-->--a....ix..
+......1^1G.a->---a.G1^1i..
+.....^.....a-->--a....ix..
+.V...xo.....a---a.....1x..
+...V.xr......aaa......vv..
+......rx..G.......G..xv...
+......xv1^....G....^1rx...
+    ...vx1.........1xr...
+    ....iix...^...xoo....
+     ....xbb1g1g1yyx....
+      .....bxxgxxy.....
+       ...............
+         ...........
+ENDMAP
+
+##############################################################################
 ##############################################################################
 #
 # hall_of_Zot_5
