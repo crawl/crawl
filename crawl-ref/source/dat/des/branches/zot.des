@@ -103,7 +103,7 @@ end
 
 {{
 -- Create colourful Zot glass
-function colored_glass(e)
+function coloured_glass(e)
   e.shuffle('roygbiv')
   e.kfeat('roygbiv = m')
   e.tile('r = dngn_transparent_wall_red')
@@ -2547,7 +2547,7 @@ TAGS:   transparent decor no_pool_fixup
 DEPTH:  Zot
 SUBST: W : Wwl
 KMASK:  Wwl = no_monster_gen
-: colored_glass(_G)
+: coloured_glass(_G)
 MAP
   .....    .....
  ..WWW..  ..WWW..
@@ -2575,7 +2575,7 @@ DEPTH:  Zot
 SUBST:  l : Wwl
 KPROP:  l = no_cloud_gen
 KMASK:  Wwl = no_monster_gen
-: colored_glass(_G)
+: coloured_glass(_G)
 MAP
       .....
  ......lll......
@@ -2595,7 +2595,7 @@ SUBST:  l : Wwl
 SUBST:  ( : ([{.
 KMASK:  Wwl = no_monster_gen
 KPROP:  l = no_cloud_gen
-: colored_glass(_G)
+: coloured_glass(_G)
 MAP
 xxxxxx@@@xxxxxx
 xlllll...lllllx
