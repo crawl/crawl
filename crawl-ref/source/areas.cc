@@ -95,7 +95,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->silence_radius()) >= 0)
     {
-        _agrid_centres.emplace_back(AREA_SILENCE, a->pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::silence);
@@ -104,7 +104,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->halo_radius()) >= 0)
     {
-        _agrid_centres.emplace_back(AREA_HALO, a->pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::halo, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::halo);
@@ -113,7 +113,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->liquefying_radius()) >= 0)
     {
-        _agrid_centres.emplace_back(AREA_LIQUID, a->pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::liquid, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_SOLID); ri; ++ri)
         {
@@ -129,7 +129,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->umbra_radius()) >= 0)
     {
-        _agrid_centres.emplace_back(AREA_UMBRA, a->pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::umbra, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::umbra);
@@ -163,7 +163,7 @@ static void _update_agrid()
     if (player_has_orb() && !you.pos().origin())
     {
         const int r = 2;
-        _agrid_centres.emplace_back(AREA_ORB, you.pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::orb, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::orb);
         no_areas = false;
@@ -172,7 +172,7 @@ static void _update_agrid()
     if (you.duration[DUR_QUAD_DAMAGE])
     {
         const int r = 2;
-        _agrid_centres.emplace_back(AREA_QUAD, you.pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::quad, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_SQUARE);
              ri; ++ri)
         {
@@ -185,7 +185,8 @@ static void _update_agrid()
     if (you.duration[DUR_DISJUNCTION])
     {
         const int r = 4;
-        _agrid_centres.emplace_back(AREA_DISJUNCTION, you.pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::disjunction,
+                                    you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_SQUARE);
              ri; ++ri)
         {
@@ -211,22 +212,22 @@ static area_centre_type _get_first_area(const coord_def& f)
 {
     areaprops a = _agrid(f);
     if (a & areaprop::sanctuary_1)
-        return AREA_SANCTUARY;
+        return area_centre_type::sanctuary;
     if (a & areaprop::sanctuary_2)
-        return AREA_SANCTUARY;
+        return area_centre_type::sanctuary;
     if (a & areaprop::silence)
-        return AREA_SILENCE;
+        return area_centre_type::silence;
     if (a & areaprop::halo)
-        return AREA_HALO;
+        return area_centre_type::halo;
     if (a & areaprop::umbra)
-        return AREA_UMBRA;
+        return area_centre_type::umbra;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
     if (a & areaprop::liquid)
-        return AREA_LIQUID;
+        return area_centre_type::liquid;
 
-    return AREA_NONE;
+    return area_centre_type::none;
 }
 
 coord_def find_centre_for(const coord_def& f, area_centre_type at)
@@ -248,11 +249,11 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
 
     // Unspecified area type; settle for the first valid one.
     // We checked for no aprop a bit ago.
-    if (at == AREA_NONE)
+    if (at == area_centre_type::none)
         at = _get_first_area(f);
 
     // on the off chance that there is an error, assert here
-    ASSERT(at != AREA_NONE);
+    ASSERT(at != area_centre_type::none);
 
     for (const area_centre &a : _agrid_centres)
     {
