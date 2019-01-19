@@ -429,30 +429,29 @@ ENDMAP
 
 NAME:     tomb_1
 PLACE:    Tomb:1
-
 ORIENT:   encompass
 TAGS:     no_dump
 SUBVAULT: A : tomb_1_centre
 SUBVAULT: B : tomb_1_hall_stairs
-#
+: tomb_guardian_set(_G, true)
+MONS:     greater mummy / nothing
+MONS:     sphinx / nothing
+MONS:     obsidian statue / orange crystal statue
 SHUFFLE:  ([{
+# Set up decorative statues.
 : if crawl.coinflip() then
 SUBST:    I = I:900 5, N = N:900 5
 SUBST:    J = J:750 5, O = O:750 5
 SUBST:    K = K:550 5, P = P:550 5
 SUBST:    L = L:300 5, Q = Q:300 5
 : end
+SUBST:    FIJKLMNOPQ = G
+# Add greater mummies and traps to the long hall. About 16 greater mummies and
+# 6 traps on-average.
+SUBST:    ' = 2:24 ^ .:210
+COLOUR:   FIJKLMNOPQ = yellow
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 TILE:     MNOPQ = dngn_sarcophagus_pedestal_right
-COLOUR:   FIJKLMNOPQ = yellow
-SUBST:    FIJKLMNOPQ = G
-SUBST:    ' = 2 .:100
-#
-: tomb_guardian_set(_G, true)
-MONS:     greater mummy / nothing
-MONS:     sphinx / nothing
-MONS:     obsidian statue / orange crystal statue
-#
 : set_feature_name("granite_statue", "sarcophagus")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 MAP
