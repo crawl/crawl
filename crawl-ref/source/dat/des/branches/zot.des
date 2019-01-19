@@ -2667,6 +2667,67 @@ MAP
          ...........
 ENDMAP
 
+# The three ring circus, with the player descending in mid show
+NAME:    ebering_greatest_show_in_zot
+DEPTH:   Zot, !Zot:$
+ORIENT:  float
+TAGS:    no_monster_gen no_trap_gen
+SUBST:   x : x b:1
+SUBST:   < = {[(
+KFEAT:   ^ = alarm trap / zot trap / nothing
+# The possible acts:
+MONS:    red draconian scorcher, red draconian, juggernaut
+MONS:    tentacled monstrosity, ancient lich, electric golem, draconian
+SHUFFLE: ABCDEFHI
+# Fire breathers: Red draconians, with some scorchers
+NSUBST:  A = 3 = 112 / 9 = 2. / *:.
+# The strongman (juggernaut) and Contortionists (tentacled mons)
+NSUBST:  B = 3 / 8 = 4. / *:.
+# The Magic act: An Ancient Lich and elec golems
+NSUBST:  C = 5 / 6 / 2 = 6. / *:.
+# The Acrobats: pale draconians, with some monks, and nets
+NSUBST:  D = 3 = qqp / 9 = p. / 9 = - / *:.
+KMONS:   p = grey draconian
+KMONS:   q = grey draconian monk
+KFEAT:   - = net trap
+# The Beasts: moths and Dragons
+NSUBST:  E = 3 = r. / 6 = ss. / *:.
+KMONS:   r = moth of wrath / ghost moth
+KMONS:   s = quicksilver dragon / storm dragon / \
+             shadow dragon / iron dragon / \
+             bone dragon / golden dragon w:5
+# The Freakshow: death cobs and maybe a curse toe
+NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
+KMONS:   y = curse toe
+KMONS:   z = death cob
+# The Jugglers:  draconian shifters and draconians
+NSUBST:  H = 3 = aa7 / 9 = 7. / *:.
+KMONS:   a = draconian shifter
+# Those laffy daffy Klowns
+NSUBST:  I = 8 = k. / *:.
+KMONS:   k = killer klown
+MAP
+               xxx
+             xxxlxxx
+  xxxxx    xxxl...lxxx    xxxxx
+ xxAAAxxxxxxl..BBB..lxxxxxxCCCxx
+xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
++AA...AA.....BB...BB.....CC...CC+
++AA.<.AAG.l..BB.<.BB..l.GCC.<.CC+
++AA...AA.....BB...BB.....CC...CC+
+xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
+ xxAAAxxxxxxl..BBB..lxxxxxxCCCxx
+  xxxxx    xxxl...lxxx    xxxxx
+             xx+++xx
+             Gx...xG
+             .......
+             ...V...
+             .......
+             ..m^m..
+             ..m7m..
+             @@mmm@@
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
