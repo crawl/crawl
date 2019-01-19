@@ -148,16 +148,25 @@ function tomb_3_khufu(e, glyph)
   e.kmons(glyph ..  " = Khufu w:3 / greater mummy, greater mummy")
 end
 
---[[ Setup for Tomb:3 rune vaults. Vaults should place an O glyph for the
-golden rune and can optionally place a K glyph for a nearby guardian that has a
-chance of being Khufu. ]]
+--[[
+Setup for Tomb:3 rune vaults. For monsters, it places a guardian monster set on
+'1', a mummy priest set on '2', and a greater mummy set on '3'. Places about 12
+appropriate traps on-average.
+
+Vaults should place an 'O' glyph for the golden rune and can optionally place a
+'K' glyph for a nearby guardian that has a chance of being Khufu.
+]]
 function tomb_3_rune_setup(e)
   tomb_guardian_set(e)
   tomb_mummy_priest_set(e)
 
   e.kmask("O = no_item_gen")
   e.kitem("O = golden rune of Zot")
+
   tomb_3_khufu(e, "K")
+
+  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
+  e.subst(". = ^ .:490")
 end
 
 }}
@@ -1028,29 +1037,25 @@ ENDMAP
 NAME:     tomb_3
 PLACE:    Tomb:3
 ORIENT:   encompass
-TAGS:     no_rotate no_dump
+TAGS:     no_rotate no_dump no_trap_gen
 SUBVAULT: A : tomb_3_rune
-#
-SUBST:    ' : " $ ':80
-SUBST:    ' = " $
-SUBST:    " = ~:1 .
-SUBST:    $ = *:2 |:1 $:17
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
-#
-: tomb_guardian_set(_G)
-: set_border_fill_type("permarock_wall")
-#
+ITEM:     figurine of a ziggurat no_pickup
 KITEM:    $ = $ no_pickup
 KITEM:    * = * no_pickup
-NSUBST:   | = 1:d / *:|
-ITEM:     figurine of a ziggurat no_pickup
 KITEM:    | = | no_pickup
+: tomb_guardian_set(_G)
+# Randomize some loot placement in the treasure rooms, and add the zig fig in
+# the loot pile. Add traps to treasure rooms and the arrival area.
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+NSUBST:   | = d / |
 MARKER:   D = lua:hatch_dest_name("tomb3_entry_1")
 MARKER:   E = lua:hatch_dest_name("tomb3_entry_2")
 SUBST:    DE = .
 MARKER:   F = lua:hatch_name("tomb3_exit_1")
 MARKER:   H = lua:hatch_name("tomb3_exit_2")
 SUBST:    FH = <
+KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: set_border_fill_type("permarock_wall")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 : set_feature_name("escape_hatch_up", "one-way staircase leading up")
 MAP
@@ -1074,22 +1079,22 @@ cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
-cccccccc""""ccAAAAAAAAAAAAAAAAcc""""ccccccc
-cccccc"""""""cc11111111111111cc"""""'$ccccc
-cccc""""""""""cc............cc"""""""'$cccc
-cccc'"""""""""Fcc..........ccH"""""""'$cccc
-ccc$''""""""""""cc........cc"""""""""'$$ccc
-ccc$$$'""""""""""cc111111cc""""""""''$$$ccc
-ccc|$$$''""""""""cc......cc""""""''$$$$$ccc
-ccc||$$$$'""""""""c......c""""""'$$$$$$$ccc
-ccc|||||$$'"""""""c......c"""""'$$$$$$$$ccc
-cccc|||||$'"""""""+......+""""'$$$$$$$$cccc
-ccccc||||$$'""""""c......c""""'$$$$$$$ccccc
-cccccc||||$'""""""c......c""""'$$$$$$cccccc
-ccccccc|||$$'""""cc......cc""'$$$$$$ccccccc
-cccccccc|||$'""""cc......cc""'$$$$$cccccccc
-ccccccccc||$'"""ccc......ccc'$$$$$ccccccccc
-cccccccccc|$'""cccc.D..E.cccc$$$$cccccccccc
+cccccccc....ccAAAAAAAAAAAAAAAAcc....ccccccc
+cccccc.......cc11111111111111cc.....'$ccccc
+cccc..........cc............cc.......'$cccc
+cccc'.........Fcc..........ccH.......'$cccc
+ccc$''..........cc........cc.........'$$ccc
+ccc$$$'..........cc111111cc........''$$$ccc
+ccc|$$$''........cc......cc......''$$$$$ccc
+ccc||$$$$'........c......c......'$$$$$$$ccc
+ccc|||||$$'.......c......c.....'$$$$$$$$ccc
+cccc|||||$'.......+......+....'$$$$$$$$cccc
+ccccc||||$$'......c......c....'$$$$$$$ccccc
+cccccc||||$'......c......c....'$$$$$$cccccc
+ccccccc|||$$'....cc......cc..'$$$$$$ccccccc
+cccccccc|||$'....cc......cc..'$$$$$cccccccc
+ccccccccc||$'...ccc......ccc'$$$$$ccccccccc
+cccccccccc|$'..cccc.D..E.cccc$$$$cccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -1124,8 +1129,8 @@ cccccccc+ccc..................ccc+ccccccc
              ................
 ENDMAP
 
-NAME:  tomb_3_rune_grunt_curves
-TAGS:  tomb_3_rune unrand
+NAME: tomb_3_rune_grunt_curves
+TAGS: tomb_3_rune unrand
 : tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
@@ -1150,8 +1155,8 @@ cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
 
-NAME:  tomb_3_rune_grunt_snapback
-TAGS:  tomb_3_rune unrand
+NAME: tomb_3_rune_grunt_snapback
+TAGS: tomb_3_rune unrand
 : tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
@@ -1176,8 +1181,8 @@ cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
 
-NAME:  tomb_3_rune_grunt_layered
-TAGS:  tomb_3_rune unrand
+NAME: tomb_3_rune_grunt_layered
+TAGS: tomb_3_rune unrand
 : tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
@@ -1336,26 +1341,23 @@ MAP
 .............................
 .............................
 ENDMAP
+
 NAME:     tomb_3_stone_stairs
 DEPTH:    Tomb:3
 ORIENT:   encompass
-TAGS:     tomb_stone_stairs unrand no_rotate no_dump
+TAGS:     tomb_stone_stairs unrand no_rotate no_dump no_trap_gen
 SUBVAULT: A : tomb_3_rune_stone_stairs
-#
-SUBST:    ' : " $ ':80
-SUBST:    ' = " $
-SUBST:    " = ~:1 .
-SUBST:    $ = *:2 |:1 $:17
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
-#
-: tomb_guardian_set(_G)
-: set_border_fill_type("permarock_wall")
-#
-KITEM:    $ = $ no_pickup
-KITEM:    * = * no_pickup
-NSUBST:   | = 1:d / *:|
 ITEM:     figurine of a ziggurat no_pickup
 KITEM:    | = | no_pickup
+KITEM:    $ = $ no_pickup
+KITEM:    * = * no_pickup
+: tomb_guardian_set(_G)
+# Randomize some loot placement in the treasure rooms, and add the zig fig in
+# the loot pile. Add traps to treasure rooms and the arrival area.
+SUBST:    ' = $., $ = |:1 *:2 $:17, . = ^ .:240
+NSUBST:   | = 1:d / *:|
+KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
+: set_border_fill_type("permarock_wall")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
@@ -1377,22 +1379,22 @@ cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
-cccccccc""""ccAAAAAAAAAAAAAAAAcc""""ccccccc
-cccccc"""""""cc11111111111111cc"""""'$ccccc
-cccc""""""""""cc............cc"""""""'$cccc
-cccc'""""""""""cc..........cc""""""""'$cccc
-ccc$''""""""""""cc........cc"""""""""'$$ccc
-ccc$$$'""""""""""cc111111cc""""""""''$$$ccc
-ccc|$$$''"""""""""c......c"""""""''$$$$$ccc
-ccc||$$$$'""""""""c......c""""""'$$$$$$$ccc
-ccc|||||$$'"""""""c......c"""""'$$$$$$$$ccc
-cccc|||||$'"""""""c......c""""'$$$$$$$$cccc
-ccccc||||$$'""""""c......c""""'$$$$$$$ccccc
-cccccc||||$'""""""c......c""""'$$$$$$cccccc
-ccccccc|||$$'"""""c......c"""'$$$$$$ccccccc
-cccccccc|||$'""""cc..{...cc""'$$$$$cccccccc
-ccccccccc||$'""""cc...(..cc"'$$$$$ccccccccc
-cccccccccc|$'""cccc..[...cccc$$$$cccccccccc
+cccccccc....ccAAAAAAAAAAAAAAAAcc....ccccccc
+cccccc.......cc11111111111111cc.....'$ccccc
+cccc..........cc............cc.......'$cccc
+cccc'..........cc..........cc........'$cccc
+ccc$''..........cc........cc.........'$$ccc
+ccc$$$'..........cc111111cc........''$$$ccc
+ccc|$$$''.........c......c.......''$$$$$ccc
+ccc||$$$$'........c......c......'$$$$$$$ccc
+ccc|||||$$'.......c......c.....'$$$$$$$$ccc
+cccc|||||$'.......c......c....'$$$$$$$$cccc
+ccccc||||$$'......c......c....'$$$$$$$ccccc
+cccccc||||$'......c......c....'$$$$$$cccccc
+ccccccc|||$$'.....c......c...'$$$$$$ccccccc
+cccccccc|||$'....cc..{...cc..'$$$$$cccccccc
+ccccccccc||$'....cc...(..cc.'$$$$$ccccccccc
+cccccccccc|$'..cccc..[...cccc$$$$cccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
