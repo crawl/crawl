@@ -78,10 +78,21 @@ function tomb_guardian_set(e, include_nothing)
   end
 end
 
+--[[
+Setup Tomb:1 central vault. For monsters, define plain mummies on '1', the
+guardian set on '2', priest-level monsters on '3', greater-mummy-level monsters
+on '4', and a statue monster on '5'. Define mostly non-mechanical traps on '^',
+placing around 12 traps on-average on floor '.' squares. Set up the hatches to
+Tomb:2.
+]]
 function tomb_1_centre_setup(e)
   tomb_1_mummy_set(e)
   tomb_guardian_set(e, true)
   tomb_1_mummy_priest_set(e, true)
+
+  e.kfeat("^ = alarm trap w:5 / dispersal trap / net trap / zot trap")
+  e.subst(". = ^ .:490")
+
   e.lua_marker(">", hatch_name("tomb2_entry"))
   e.lua_marker(">", hatch_dest_name("tomb2_exit"))
 end
@@ -534,36 +545,31 @@ ENDMAP
 NAME:    tomb_1_centre_old
 TAGS:    tomb_1_centre unrand
 SHUFFLE: AB>, _-
-SUBST:   A=|*, B=|*
-SUBST:   - = T
-SUBST:   _ = 5 ~:40 .:30
-SUBST:   T = ~ .
-#
+SUBST:   AB = |*, ' = ^-, 5 = 5 ^:40 -:30
+NSUBST:  . = 11=2 / 11=3 / .
 : tomb_1_centre_setup(_G)
-SUBST:   t = ~ .:50
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5
-#
+SUBST:   - = .
 MAP
-..ttttttttttc................ctt>
-..ccccccccctc..3..........2..ct-t
-..cA22c111ctc....3..........4c_tt
-..c2c222ctttc......2.........+ccc
-..ccccccccccc.4........3...3..4..
-.................................
-............3.............3....2.
-ccccccccccccc.......2...2........
-............c....................
-............c.................3..
-..cccccccc..c..........2..2......
-..ctttc1Bc..c....................
-..ctctc11c..c...3.......3........
-..ctct11cc..c..............2.....
-..ctcccccc..c.......2............
-..cttttttt..c.3...............2..
-..ccccccccccc....2.....3.........
+...........'c................c''>
+..ccccccccc.c................c'5'
+..cA22c'11c.c...............4c.''
+..c2c'22c'1'c................+ccc
+..ccccccccccc.................4..
 .......4.........................
 .................................
-             TTTTTTT
+ccccccccccccc....................
+............c....................
+............c....................
+..cccccccc..c....................
+..c'.'c2Bc..c....................
+..c.c.c'2c..c....................
+..c.c'11cc..c....................
+..c.cccccc..c....................
+..c'........c....................
+..ccccccccccc....................
+.......4.........................
+.................................
+             .......
 ENDMAP
 
 NAME:    tomb_1_centre_grunt_parallel
@@ -635,14 +641,14 @@ BBBcccccccccccc...ccccccccccccIII
              .......
 ENDMAP
 
-NAME: tomb_1_centre_nicolae_necropolis
-TAGS: tomb_1_centre unrand
+NAME:    tomb_1_centre_nicolae_necropolis
+TAGS:    tomb_1_centre unrand
 SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
 SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
-SUBST: AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
-SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
+SUBST:   AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
+SUBST:   BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ^--112
 : tomb_1_centre_setup(_G)
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5
+SUBST:   - = .
 MAP
 .................................
 ..cccAccc.....2...2.....cccEccc..
