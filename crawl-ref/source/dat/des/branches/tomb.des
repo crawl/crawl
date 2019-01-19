@@ -121,9 +121,14 @@ function tomb_1_stairs_setup(e)
   e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
 end
 
---[[ Setup Tomb:2 central ambush. Vaults should place an R glyph for the ambush
-entry and a nearby S glyph for an exit back to the Tomb:1 hatch. If more than
-one S glyph exists, one will be chosen at random for the exit hatch.]]
+--[[
+Setup Tomb:2 central ambush. Sets up hatches back to the starting Tomb:1 area
+and to the Tomb:1 hall. Places about 8 traps of appropriate types on-average.
+
+Vaults should place an 'R' glyph for the ambush entry and a nearby 'S' glyph
+for an exit back to the Tomb:1 hatch. If more than one S glyph exists, one will
+be chosen at random for the exit hatch.
+]]
 function tomb_2_ambush_setup(e)
   tomb_guardian_set(e)
   tomb_mummy_priest_set(e)
@@ -134,6 +139,9 @@ function tomb_2_ambush_setup(e)
 
   e.lua_marker("S", hatch_name("tomb2_exit"))
   e.nsubst("S = 1:< / *:.")
+
+  e.subst(". =  ^ .:740")
+  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
 end
 
 function tomb_3_khufu(e, glyph)
@@ -800,8 +808,11 @@ NAME:     tomb_2
 PLACE:    Tomb:2
 # Can be rotated!
 ORIENT:   encompass
-TAGS:     no_dump
+TAGS:     no_dump no_trap_gen
 SUBVAULT: B : tomb_2_ambush
+MONS:     mummy
+: tomb_guardian_set(_G)
+: tomb_mummy_priest_set(_G)
 # Tomb:1 Hall entry hatch
 NSUBST:   A = A / '
 MARKER:   A = lua:hatch_name("tomb1_hall_entry")
@@ -826,13 +837,11 @@ SUBST:    EF = >
 MARKER:   H = lua:hatch_dest_name("tomb3_exit_1")
 MARKER:   I = lua:hatch_dest_name("tomb3_exit_2")
 SUBST:    HI = .
-#
-SUBST:    T = ~ .
-SUBST:    ' = ~ ':100
-SUBST:    ' = 1:5 2:5 3:1 .:89
-SUBST:    " = ~ ":50
-SUBST:    " = 2:3 3:1 .:96
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
+# Add traps near doors and both traps and monsters throughout both groups of
+# rooms.
+SUBST:    T = ^..., ' = ^ ':210, ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ^ ":130, " = 2:3 3:1 .:96
+KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
@@ -843,9 +852,6 @@ KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 # Perhaps to do: use KFEAT to make mummies possibly appear at T spots.
 #                have clustering of 1, 2 in the lower area as before?
 #
-MONS: mummy
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
 : set_border_fill_type("permarock_wall")
 : set_feature_name("escape_hatch_down", "one-way staircase leading down")
 : set_feature_name("escape_hatch_up", "one-way staircase leading up")
@@ -1238,27 +1244,26 @@ ENDMAP
 NAME:     tomb_2_stone_stairs
 DEPTH:    Tomb:2
 ORIENT:   encompass
-TAGS:     tomb_stone_stairs unrand no_dump
+TAGS:     tomb_stone_stairs unrand no_dump no_trap_gen
 SUBVAULT: B : tomb_2_ambush_stone_stairs
-#
+MONS:     mummy
+: tomb_guardian_set(_G)
+: tomb_mummy_priest_set(_G)
+# Tomb:1 Hall entry stairs
 NSUBST:   A = [ / '
+# Tomb:2 Room features
 SHUFFLE:  Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
 SUBST:    W=', w=c, Y=T, y=+, Z=T, z=+
 SUBST:    U=', u=c, V=T, v=+
 SUBST:    Q=', q=c, R=T, r=+, S=T, s=+
-#
+# Tomb:3 entry stairs
 SHUFFLE:  ])}def
 SUBST:    d=", e=", f="
-#
-SUBST:    T = ~ .
-SUBST:    ' = ~ ':100
-SUBST:    ' = 1:5 2:5 3:1 .:89
-SUBST:    " = ~ ":50
-SUBST:    " = 2:3 3:1 .:96
-KFEAT:   ~ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
-MONS: mummy
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+# Add traps near doors and both traps and monsters throughout both groups of
+# rooms.
+SUBST:    T = ^..., ' = ^ ':210, ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ^ ":130, " = 2:3 3:1 .:96
+KFEAT:    ^ = alarm trap / net trap / zot trap w:5 / dispersal trap w:5
 : set_border_fill_type("permarock_wall")
 #
 MAP
