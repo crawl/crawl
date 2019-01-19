@@ -1261,11 +1261,22 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
 
-        if (attacker && attacker->is_player()
-            && taux == TORMENT_SCROLL
-            && item_type_known(OBJ_SCROLLS, SCR_TORMENT))
+        if (attacker && attacker->is_player())
         {
-            set_attack_conducts(conducts, *mons, you.can_see(*mons));
+            bool set_conducts = false;
+            switch (taux)
+            {
+                case TORMENT_SCROLL:
+                    set_conducts = item_type_known(OBJ_SCROLLS, SCR_TORMENT);
+                    break;
+                case TORMENT_SCEPTRE:
+                    set_conducts = true;
+                    break;
+                default: break;
+            }
+
+            if (set_conducts)
+                set_attack_conducts(conducts, *mons, you.can_see(*mons));
         }
     }
 
