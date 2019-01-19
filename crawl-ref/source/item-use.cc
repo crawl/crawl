@@ -2745,13 +2745,19 @@ string cannot_read_item_reason(const item_def &item)
  * @param m             Monster as a potential victim to the scroll
  * @return  true if the provided scroll type is harmful to the monster.
  */
-bool scroll_will_harm(const scroll_type scr, const monster &m) {
+static bool _scroll_will_harm(const scroll_type scr, const monster &m) {
     if (!m.alive()) return false;
 
     switch (scr)
     {
-        case SCR_HOLY_WORD: if (m.undead_or_demonic()) return true; break;
-        case SCR_TORMENT:   if (!m.res_torment())      return true; break;
+        case SCR_HOLY_WORD:
+            if (m.undead_or_demonic())
+                return true;
+            break;
+        case SCR_TORMENT:
+            if (!m.res_torment())
+                return true;
+            break;
         default: break;
     }
 
@@ -2793,6 +2799,7 @@ void read(item_def* scroll)
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
     if (item_type_known(*scroll)) {
+        // need to handle this before we waste time (with e.g. blurryvis)
         bool penance = god_hates_item(*scroll);
         bool friendly_fire = false;
         const coord_def& where = you.pos();
@@ -2802,7 +2809,7 @@ void read(item_def* scroll)
             const monster_info* m = env.map_knowledge(*ri).monsterinfo();
             monster* mons = monster_at(*ri);
 
-            if (!m || !mons || !scroll_will_harm(which_scroll, *mons))
+            if (!m || !mons || !_scroll_will_harm(which_scroll, *mons))
                 continue;
 
             if (!friendly_fire
@@ -2818,7 +2825,8 @@ void read(item_def* scroll)
                 bad_attack(mons, adj, suffix, penance, where);
             }
 
-            if (penance && friendly_fire) break;
+            if (penance && friendly_fire)
+                break;
         }
 
         // We warn about friendly fire first because if that also happens to put
@@ -2841,7 +2849,6 @@ void read(item_def* scroll)
             return;
         }
 
-        // need to handle this before we waste time (with e.g. blurryvis)
         if (scroll->sub_type == SCR_BLINKING
             && orb_limits_translocation()
             && !yesno("Your blink will be uncontrolled - continue anyway?",
@@ -3034,9 +3041,6 @@ void read_scroll(item_def& scroll)
 
     case SCR_TORMENT:
         torment(&you, TORMENT_SCROLL, you.pos());
-        // TODO: If any allies got hurt and we knew what we were doing and our
-        // god does not like friendly fire then the god should express their
-        // opinion here.
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
@@ -3154,9 +3158,6 @@ void read_scroll(item_def& scroll)
     case SCR_HOLY_WORD:
     {
         holy_word(100, HOLY_WORD_SCROLL, you.pos(), false, &you);
-        // TODO: If any allies got hurt and we knew what we were doing and our
-        // god does not like friendly fire then the god should express their
-        // opinion here.
 
         // This is always naughty, even if you didn't affect anyone.
         // Don't speak those foul holy words even in jest!
