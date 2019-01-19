@@ -2674,7 +2674,7 @@ ORIENT:  float
 TAGS:    no_monster_gen no_trap_gen
 SUBST:   x : x b:1
 SUBST:   < = {[(
-KFEAT:   ^ = alarm trap / zot trap / nothing
+KFEAT:   ^ = alarm trap / zot trap
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
 MONS:    tentacled monstrosity, ancient lich, electric golem, draconian
