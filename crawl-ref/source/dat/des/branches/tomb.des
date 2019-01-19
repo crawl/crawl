@@ -1,5 +1,11 @@
 ##############################################################################
 # tomb.des: Maps for the Tomb.
+#
+# <<1>> Tomb entry vaults.
+# <<2>> Tomb:1 Map and subvaults.
+# <<3>> Tomb:2 Map and subvaults.
+# <<4>> Tomb:3 map and subvaults.
+# <<5>> Tomb save compat vaults.
 ##############################################################################
 
 {{
@@ -134,9 +140,9 @@ end
 }}
 
 ##############################################################################
-# Tomb entries
-
+# <<1>> Tomb entry vaults.
 ##############################################################################
+
 # simple entrance
 NAME:   tomb_entry_simple_bobbens
 ORIENT: float
@@ -415,8 +421,12 @@ ENDMAP
 ##############################################################################
 
 ##############################################################################
-# Tomb:1
+# <<2>> Tomb:1 Map and subvaults.
 #
+# <<2.1>> Tomb:1 central subvaults.
+# <<2.2>> Tomb:1 hall stair subvaults.
+##############################################################################
+
 NAME:     tomb_1
 PLACE:    Tomb:1
 
@@ -518,7 +528,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-####
+##############################################################################
+# <<2.1>> Tomb:1 central subvaults.
+##############################################################################
 
 NAME:    tomb_1_centre_old
 TAGS:    tomb_1_centre unrand
@@ -655,7 +667,9 @@ MAP
              .......
 ENDMAP
 
-####
+##############################################################################
+# <<2.2>> Tomb:1 hall stair subvaults.
+##############################################################################
 
 NAME:    tomb_1_hall_stairs_old
 TAGS:    tomb_1_hall_stairs unrand
@@ -762,9 +776,13 @@ CCa'''1''''ccc           ccc''''1'''aCC
 DCaB'qppq''ccc           ccc''qppq'IaCJ
 ENDMAP
 
-###############################################################################
-# Tomb:2
+##############################################################################
+# <<3>> Tomb:2 Map and subvaults.
 #
+# <<3.1>> Tomb:2 central subvaults.
+##############################################################################
+
+# Main map of Tomb:2.
 NAME:     tomb_2
 PLACE:    Tomb:2
 # Can be rotated!
@@ -859,6 +877,10 @@ ccA'''''c''''cA'''''''''''c''''''''c''''Acc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
+
+##############################################################################
+# <<3.1>> Tomb:2 central subvaults.
+##############################################################################
 
 NAME: tomb_2_ambush_old
 TAGS: tomb_2_ambush unrand
@@ -978,9 +1000,12 @@ MAP
 .............................
 ENDMAP
 
-#############################################################################
-# Tomb:3
+##############################################################################
+# <<4>> Tomb:3 map and subvaults.
 #
+# <<4.1>> Tomb:3 central subvaults.
+##############################################################################
+
 NAME:     tomb_3
 PLACE:    Tomb:3
 ORIENT:   encompass
@@ -1050,9 +1075,12 @@ ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
-####
-NAME:  tomb_3_rune_old
-TAGS:  tomb_3_rune unrand
+##############################################################################
+# <<4.1>> Tomb:3 central subvaults.
+##############################################################################
+
+NAME: tomb_3_rune_old
+TAGS: tomb_3_rune unrand
 : tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
@@ -1183,17 +1211,19 @@ cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
 
-##############
+# Remove all below when TAG_MAJOR > 35
+
+##############################################################################
+# <<5>> Tomb save compat vaults.
+##############################################################################
+
 # Save compat vaults for games started before stone stairs were changed to
 # hatches. These do need to be kept in working order for old games to transfer
 # smoothly. The only difference between these vaults and the original versions
 # is that they must place all three stone upstairs/downstairs (only upstairs
 # for Tomb:3)
-
-# Remove these vaults when TAG_MAJOR > 35
 NAME:     tomb_2_stone_stairs
 DEPTH:    Tomb:2
-# Can be rotated!
 ORIENT:   encompass
 TAGS:     tomb_stone_stairs unrand no_dump
 SUBVAULT: B : tomb_2_ambush_stone_stairs
