@@ -97,10 +97,13 @@ function tomb_1_centre_setup(e)
   e.lua_marker(">", hatch_dest_name("tomb2_exit"))
 end
 
---[[ Setup Tomb:1 hall stairs. Vaults should place an P glyph for the hallway
-entry destination, a Q glyph for the first hall exit (near P), and an R glyph
-for the second hall exit (to the second set of rooms on Tomb:2). Any ' glyphs
-have a small chance of placing a 3 guardian.]]
+--[[
+Setup Tomb:1 hall stairs. Vaults should place an P glyph for the hallway entry
+destination, a Q glyph for the first hall exit (near P), and an R glyph for the
+second hall exit (to the second set of rooms on Tomb:2). Any '.' glyphs have a
+small chance of placing a '3' guardian or an appropriate trap type. About 7 '3'
+and about 6 traps on-average.
+]]
 function tomb_1_stairs_setup(e)
   e.lua_marker("P", hatch_dest_name("tomb1_hall_entry"))
   e.subst("P = .")
@@ -114,7 +117,8 @@ function tomb_1_stairs_setup(e)
   tomb_guardian_set(e, true)
   tomb_1_mummy_priest_set(e)
 
-  e.subst("' = 3 .:200")
+  e.subst(". = 3:12 ^ .:230")
+  e.kfeat("^ = alarm trap / dispersal trap / net trap / zot trap")
 end
 
 --[[ Setup Tomb:2 central ambush. Vaults should place an R glyph for the ambush
@@ -679,21 +683,22 @@ ENDMAP
 NAME:    tomb_1_hall_stairs_old
 TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: PQ / RS
-SUBST: S = '
+SUBST:   S = .
 : tomb_1_stairs_setup(_G)
+SUBST:   - = .
 MAP
-''                                   ''
-''c'''''''''''           '''''''''''c''
-''c'''''''''''           '''''''''''c''
-''c''ccccccc''           ''ccccccc''c''
-''c''cc.211c''           ''c11.'cc''c''
-''c''cP'c11c''           ''c11c.Rc''c''
-''c''cccc''c''           ''c2'cccc''c''
-''c''''''''c''           ''c''''''''c''
-''cQ'''''''c''           ''c'''''''Sc''
-''cccccccccc''           ''cccccccccc''
-''''''''''''''           ''''''''''''''
-''''''''''''''           ''''''''''''''
+..                                   ..
+..c...........           ...........c..
+..c...........           ...........c..
+..c..ccccccc..           ..ccccccc..c..
+..c..cc-211c..           ..c11--cc..c..
+..c..cP-c11c..           ..c11c-Rc..c..
+..c..cccc..c..           ..c2.cccc..c..
+..c........c..           ..c........c..
+..cQ.......c..           ..c.......Sc..
+..cccccccccc..           ..cccccccccc..
+..............           ..............
+..............           ..............
 ENDMAP
 
 NAME:    tomb_1_hall_stairs_grunt_patterns
@@ -701,62 +706,65 @@ TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: PR
 SHUFFLE: ABCD / ACBD / ACDB / CABD / CADB / CDAB
 SHUFFLE: EFGH / EGFH / EGHF / GEFH / GEHF / GHEF
-SUBST:   ABEF = c, CDGH = '
+SUBST:   ABEF = c, CDGH = .
 NSUBST:  P = P / Q / ., R = R / .
 : tomb_1_stairs_setup(_G)
+SUBST:   - = .
 MAP
-''                                   ''
-''c'''D''''c.P           R.c''''G'''c''
-''c'''D''''c..           ..c''''G'''c''
-cc+''''''''+cc           cc+''''''''+cc
-''''''A'''''''           '''''''E''''''
-'''''1A1''''''           ''''''1E1'''''
-CC''BB2BB'''CC           HH'''FF2FF''HH
-'''''1A1''''''           ''''''1E1'''''
-''''''A'''''''           '''''''E''''''
-cc+''''''''+cc           cc+''''''''+cc
-..c'''D''''c..           ..c''''G'''c..
-P.c'''D''''c.P           R.c''''G'''c.R
+..                                   ..
+..c...D....c-P           R-c....G...c..
+..c...D....c--           --c....G...c..
+cc+........+cc           cc+........+cc
+......A.......           .......E......
+.....1A1......           ......1E1.....
+CC..BB2BB...CC           HH...FF2FF..HH
+.....1A1......           ......1E1.....
+......A.......           .......E......
+cc+........+cc           cc+........+cc
+--c...D....c--           --c....G...c--
+P-c...D....c-P           R-c....G...c-R
 ENDMAP
 
 NAME:    tomb_1_hall_stairs_grunt_snakey
 TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: PQ / RS
-SUBST: S = '
+SUBST:   S = .
 : tomb_1_stairs_setup(_G)
+SUBST:   - = .
 MAP
-''                                   ''
-''''''''''''''           ''''''''''''''
-''''''''''''''           ''''''''''''''
-cccccccccccc''           '''ccccccccccc
-''''''''''''''           ''''''''''''''
-''''''''''''''           ''''''''''''''
-''cccccccccccc           cccccccccccc''
-''''''''''''''           ''''''''''''''
-''''''''''''''           ''''''''''''''
-cccccccccccc''           ''cccccccccccc
-..211'''''''''           '''''''''112..
-P..11''''''''Q           R''''''''11..S
+..                                   ..
+..............           ..............
+..............           ..............
+cccccccccccc..           ...ccccccccccc
+..............           ..............
+..............           ..............
+..cccccccccccc           cccccccccccc..
+..............           ..............
+..............           ..............
+cccccccccccc..           ..cccccccccccc
+--211.........           .........112--
+P--11........Q           R........11--S
 ENDMAP
 
-NAME: tomb_1_hall_stairs_nicolae_cartouches
-TAGS: tomb_1_hall_stairs unrand
+NAME:    tomb_1_hall_stairs_nicolae_cartouches
+TAGS:    tomb_1_hall_stairs unrand
 SHUFFLE: PQ / RS
-SUBST: S = '
+SUBST:   S = .
 : tomb_1_stairs_setup(_G)
+SUBST:   - = .
 MAP
-''                                   ''
-''cc''''''cccc           cccc''''''cc''
-''c''''''''ccc           ccc''''''''c''
-'''''cccc'''cc           cc'''cccc'''''
-''''cc'''c'''c           c'''c'''cc''''
-'''cc''''1c'''           '''c1''''cc'''
-''ccP'''211c'Q           S'c112'''Rcc''
-'''cc''''1c'''           '''c1''''cc'''
-''''cc'''c'''c           c'''c'''cc''''
-'''''cccc'''cc           cc'''cccc'''''
-''c''''''''ccc           ccc''''''''c''
-''cc''''''cccc           cccc''''''cc''
+..                                   ..
+..cc......cccc           cccc......cc..
+..c........ccc           ccc........c..
+.....cccc...cc           cc...cccc.....
+....cc...c...c           c...c...cc....
+...cc-...1c...           ...c1...-cc...
+..ccP-..211c.Q           S.c112..-Rcc..
+...cc-...1c...           ...c1...-cc...
+....cc...c...c           c...c...cc....
+.....cccc...cc           cc...cccc.....
+..c........ccc           ccc........c..
+..cc......cccc           cccc......cc..
 ENDMAP
 
 NAME: tomb_1_hall_stairs_nicolae_galleries
@@ -764,21 +772,21 @@ TAGS: tomb_1_hall_stairs unrand
 # First shuffle randomizes which side is entry/exit, second two shuffles
 # randomizes gallery configurations shared by both sides.
 SHUFFLE: ABDF / HIJK, ACDHJa / BEFIKb, pq
-SUBST: CJp = ', a = +, EFKbq = c, A = P, D = Q, BI = 2, H = R
+SUBST: CJp = ., a = +, EFKbq = c, A = P, D = Q, BI = 2, H = R
 : tomb_1_stairs_setup(_G)
 MAP
-''                                   ''
-''EEEEEEEEFccc           cccKEEEEEEEE''
-''EEEEEEEEEccc           cccEEEEEEEEE''
+..                                   ..
+..EEEEEEEEFccc           cccKEEEEEEEE..
+..EEEEEEEEEccc           cccEEEEEEEEE..
 CCcccccccbbccc           cccbbcccccccCC
-CCc''qppq'Accc           cccH'qppq''cCC
-CCc''''1'''ccc           ccc'''1''''cCC
-CCcq'p''p'qccc           cccq'p''p'qcCC
-CCcp1'qq''pccc           cccp''qq'1pcCC
-CCcp''qq'1pccc           cccp1'qq''pcCC
-CCcq'p''p'qccc           cccq'p''p'qcCC
-CCa'''1''''ccc           ccc''''1'''aCC
-DCaB'qppq''ccc           ccc''qppq'IaCJ
+CCc..qppq.Accc           cccH.qppq..cCC
+CCc....1...ccc           ccc...1....cCC
+CCcq.p..p.qccc           cccq.p..p.qcCC
+CCcp1.qq..pccc           cccp..qq.1pcCC
+CCcp..qq.1pccc           cccp1.qq..pcCC
+CCcq.p..p.qccc           cccq.p..p.qcCC
+CCa...1....ccc           ccc....1...aCC
+DCaB.qppq..ccc           ccc..qppq.IaCJ
 ENDMAP
 
 ##############################################################################
