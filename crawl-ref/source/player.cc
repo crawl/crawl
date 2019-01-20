@@ -2894,17 +2894,7 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    do
-                    {
-                        you.species = random_starting_species();
-                    }
-                    while (!species_is_draconian(you.species)
-                           || you.species == SP_BASE_DRACONIAN
-#if TAG_MAJOR_VERSION == 34
-                           // Hack to evade mottled draconians.
-                           || you.species == SP_MOTTLED_DRACONIAN
-#endif
-                           );
+                    you.species = random_draconian_colour();
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we

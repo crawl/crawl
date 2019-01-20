@@ -69,3 +69,4 @@ const species_def& get_species_def(species_type species);
 
 species_type random_starting_species();
 bool is_starting_species(species_type species);
+species_type random_draconian_colour();
