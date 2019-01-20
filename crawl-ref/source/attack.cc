@@ -473,14 +473,18 @@ bool attack::distortion_affects_defender()
     switch (choice)
     {
     case SMALL_DMG:
+        special_damage += 1 + random2avg(7, 2);
+        // No need to call attack_strength_punctuation here,
+        // since special damage < 7, so it will always return "."
         special_damage_message = make_stringf("Space bends around %s.",
                                               defender_name(false).c_str());
-        special_damage += 1 + random2avg(7, 2);
         break;
     case BIG_DMG:
-        special_damage_message = make_stringf("Space warps horribly around %s!",
-                                              defender_name(false).c_str());
         special_damage += 3 + random2avg(24, 2);
+        special_damage_message =
+            make_stringf("Space warps horribly around %s%s",
+                         defender_name(false).c_str(),
+                         attack_strength_punctuation(special_damage).c_str());
         break;
     case BLINK:
         if (defender_visible)
@@ -552,9 +556,10 @@ void attack::pain_affects_defender()
         if (special_damage && defender_visible)
         {
             special_damage_message =
-                make_stringf("%s %s in agony.",
+                make_stringf("%s %s in agony%s",
                              defender->name(DESC_THE).c_str(),
-                             defender->conj_verb("writhe").c_str());
+                             defender->conj_verb("writhe").c_str(),
+                           attack_strength_punctuation(special_damage).c_str());
         }
     }
 }
@@ -929,10 +934,11 @@ void attack::drain_defender()
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s %s!",
+                    "%s %s %s%s",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("drain").c_str(),
-                    defender_name(true).c_str());
+                    defender_name(true).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
         }
     }
 }
@@ -1505,21 +1511,25 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ELECTROCUTION:
+    {
         if (defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
         {
-            special_damage_message =
-                defender->is_player()?
-                   "You are electrocuted!"
-                :  make_stringf("Lightning courses through %s!",
-                                defender->name(DESC_THE).c_str());
             special_damage = 8 + random2(13);
+            const char *punctuation =
+                attack_strength_punctuation(special_damage).c_str();
+            special_damage_message =
+                defender->is_player()
+                ? make_stringf("You are electrocuted%s", punctuation)
+                : make_stringf("Lightning courses through %s%s",
+                               defender->name(DESC_THE).c_str(), punctuation);
             special_damage_flavour = BEAM_ELECTRICITY;
             defender->expose_to_element(BEAM_ELECTRICITY, 2);
         }
 
         break;
+    }
 
     case SPWPN_VENOM:
         obvious_effect = apply_poison_damage_brand();
