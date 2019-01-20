@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -4370,7 +4371,10 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
     const int post_res_dam = resist_adjust_damage(this, BEAM_ACID, dam);
 
     if (this->observable())
-         mprf("%s is splashed with acid.", this->name(DESC_THE).c_str());
+    {
+        mprf("%s is splashed with acid%s", this->name(DESC_THE).c_str(),
+             attack_strength_punctuation(post_res_dam).c_str());
+    }
 
     if (!one_chance_in(3))
         corrode_equipment();
