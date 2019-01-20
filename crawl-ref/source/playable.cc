@@ -127,7 +127,7 @@ static JsonNode *_species_metadata_array()
         if (sp == SP_BASE_DRACONIAN)
         {
             for (int drac = 0;
-                 drac <= static_cast<int>(NUM_SPECIES); ++drac)
+                 drac < static_cast<int>(NUM_SPECIES); ++drac)
             {
                 if (species_is_draconian(static_cast<species_type>(drac))
                     && drac != SP_BASE_DRACONIAN)
