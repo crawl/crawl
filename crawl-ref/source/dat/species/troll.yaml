@@ -13,7 +13,7 @@ aptitudes:
   short_blades: -2
   long_blades: -2
   axes: -2
-  maces_and_flails: -2
+  maces_and_flails: -1
   polearms: -2
   staves: -2
   slings: -4

@@ -19,7 +19,7 @@ aptitudes:
   slings: 1
   bows: 3
   crossbows: 1
-  throwing: -1
+  throwing: 1
   armour: -3
   dodging: -3
   stealth: -4

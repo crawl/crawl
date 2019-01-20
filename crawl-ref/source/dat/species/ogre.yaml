@@ -20,7 +20,8 @@ aptitudes:
   dodging: -1
   stealth: -2
   shields: -1
-  spellcasting: -1
+  unarmed_combat: -1
+  spellcasting: 1
   conjurations: -1
   hexes: -1
   charms: -1
@@ -32,6 +33,7 @@ aptitudes:
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
+  poison_magic: -1
   invocations: 1
   evocations: -2
 size: large

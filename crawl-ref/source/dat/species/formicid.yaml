@@ -14,7 +14,7 @@ aptitudes:
   bows: -2
   armour: 1
   dodging: -1
-  stealth: -3
+  stealth: 3
   shields: 2
   conjurations: -1
   hexes: 2

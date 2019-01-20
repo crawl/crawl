@@ -35,12 +35,12 @@ aptitudes:
   air_magic: -1
   earth_magic: -1
   poison_magic: -1
-  evocations: -1
+  evocations: 1
 size: little
 str: 4
 int: 9
 dex: 11
-levelup_stat_frequency: 4
+levelup_stat_frequency: 5
 levelup_stats:
   - int
   - dex
