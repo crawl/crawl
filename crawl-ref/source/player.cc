@@ -6640,12 +6640,11 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
     const int dam = roll_dice(4, acid_strength);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
 
-    mprf("You are splashed with acid%s",
+    mprf("You are splashed with acid%s%s",
+         post_res_dam > 0 ? "" : " but take no damage",
          attack_strength_punctuation(post_res_dam).c_str());
     if (post_res_dam > 0)
     {
-        mpr(hurt_msg ? hurt_msg : "The acid burns!");
-
         if (post_res_dam < dam)
             canned_msg(MSG_YOU_RESIST);
 

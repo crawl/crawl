@@ -1511,7 +1511,6 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ELECTROCUTION:
-    {
         if (defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
@@ -1529,7 +1528,6 @@ bool attack::apply_damage_brand(const char *what)
         }
 
         break;
-    }
 
     case SPWPN_VENOM:
         obvious_effect = apply_poison_damage_brand();
