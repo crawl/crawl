@@ -65,9 +65,8 @@
     {},
     {},
     {},
-    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
-      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
+    {},
+    {},
     nullptr,
     nullptr
 } },
