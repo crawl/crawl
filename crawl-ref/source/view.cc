@@ -1629,7 +1629,8 @@ static void _config_layers_menu()
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
+        mprf(MSGCH_PROMPT, "Press escape to toggle all layers. "
+                           "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
                            command_to_string(CMD_SHOW_TERRAIN).c_str());
 
@@ -1649,6 +1650,19 @@ static void _config_layers_menu()
                       _layers_saved = _layers |= LAYER_MONSTERS;
                   break;
 #endif
+        CASE_ESCAPE if (_layers)
+                      _layers_saved = _layers = LAYERS_NONE;
+                  else
+                  {
+#ifndef USE_TILE_LOCAL
+                      _layers_saved = _layers = LAYERS_ALL
+                                      | LAYER_MONSTER_WEAPONS
+                                      | LAYER_MONSTER_HEALTH;
+#else
+                      _layers_saved = _layers = LAYERS_ALL;
+#endif
+                  }
+                  break;
 
         // Remaining cases fall through to exit.
         case '|':
