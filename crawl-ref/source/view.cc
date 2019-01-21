@@ -1586,10 +1586,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 // Hide view layers. The player can toggle certain layers back on
 // and the resulting configuration will be remembered for the
 // remainder of the game session.
-// Pressing | again will return to normal view. Leaving the prompt
-// by any other means will give back control of the keys, but the
-// view will remain in its altered state until the | key is pressed
-// again or the player performs an action.
 static void _config_layers_menu()
 {
     bool exit = false;
@@ -1630,9 +1626,7 @@ static void _config_layers_menu()
 #endif
         );
         mprf(MSGCH_PROMPT, "Press escape to toggle all layers. "
-                           "Press <w>%s</w> to return to normal view. "
-                           "Press any other key to exit.",
-                           command_to_string(CMD_SHOW_TERRAIN).c_str());
+                           "Press any other key to exit.");
 
         switch (get_ch())
         {
@@ -1663,13 +1657,10 @@ static void _config_layers_menu()
 #endif
                   }
                   break;
-
-        // Remaining cases fall through to exit.
-        case '|':
+        default:
             _layers = LAYERS_ALL;
             crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
             crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
-        default:
             exit = true;
             break;
         }
@@ -1682,12 +1673,6 @@ static void _config_layers_menu()
     msgwin_set_temporary(false);
 
     canned_msg(MSG_OK);
-    if (_layers != LAYERS_ALL)
-    {
-        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
-                          "to restore all view layers.",
-                          command_to_string(CMD_SHOW_TERRAIN).c_str());
-    }
 }
 
 void toggle_show_terrain()
