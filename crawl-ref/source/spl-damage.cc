@@ -531,7 +531,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr,
-               *verb = nullptr;
+               *verb = nullptr, *prompt_verb = nullptr;
     bool (*vulnerable)(const actor *, const actor *) = nullptr;
 
     switch (spell)
@@ -543,6 +543,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                            " environment!";
             mons_invis_msg = "The ambient heat is drained!";
             verb = "frozen";
+            prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act->is_player() || act->res_cold() < 3;
             };
@@ -555,6 +556,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             mons_vis_msg = " draws from the surrounding life force!";
             mons_invis_msg = "The surrounding life force dissipates!";
             verb = "drained of life";
+            prompt_verb = "drain life";
             vulnerable = &_drain_lifeable;
             break;
 
@@ -564,12 +566,14 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             mons_vis_msg = " sends a blast of sound all around you!";
             mons_invis_msg = "Sound blasts the surrounding area!";
             verb = "blasted";
+            // prompt_verb = "sing" The singing sword prompts in melee-attack
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster;
             };
             break;
 
-        default: return spret::abort;
+        default:
+            return spret::abort;
     }
 
     auto vul_hitfunc = [vulnerable](const actor *act) -> bool
@@ -585,7 +589,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         // Singing Sword's spell shouldn't give a prompt at this time.
         if (spell != SPELL_SONIC_WAVE)
         {
-            if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
+            if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc))
                 return spret::abort;
 
             fail_check();
