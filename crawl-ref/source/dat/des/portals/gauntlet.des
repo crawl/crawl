@@ -472,6 +472,38 @@ n.a.a..a.an
  22ddQdd22
 ENDMAP
 
+NAME:  gammafunk_gauntlet_arena_arrow_garden
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST: ~ = ^..
+: gauntlet_arena_setup(_G)
+MAP
+n.333n333.n
+n.33xpx33.n
+n.~xpPpx~.n
+n~np.n.pn~n
+nxp.xpx.pxn
+n..xp^px..n
+ ^xp2n2px^
+ xp2x1x2px
+ ddx2Q2xdd
+ENDMAP
+
+NAME:  gammafunk_gauntlet_arena_spirals
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
+SUBST: q = ^ n:190
+: gauntlet_arena_setup(_G)
+MAP
+nddxx....^n
+ndqx.qxx^.n
+ndx.xq.xx.n
+n.x.x.x.x.n
+n.q.qPq.q.n
+n.x.x.x.x.n
+ .xx.qx.x.
+ .^xxq.xq.
+ ^....xxQx
+ENDMAP
+
 #############################################################################
 # <<1.2>> 7x7 arenas
 #############################################################################
