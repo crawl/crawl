@@ -1280,6 +1280,16 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         }
     }
 
+    // Player torment annoys the monsters it affects
+    // Tolerate unknown scroll, to not annoy ally god users too much.
+    if (attacker != nullptr
+        && attacker->is_player()
+        && (taux != TORMENT_SCROLL
+            || item_type_known(OBJ_SCROLLS, SCR_TORMENT)))
+    {
+        behaviour_event(mons, ME_ANNOY, attacker);
+    }
+
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
 }
 
