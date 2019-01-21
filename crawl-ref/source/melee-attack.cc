@@ -141,51 +141,18 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        else if (weapon
-                 && is_unrandom_artefact(*weapon, UNRAND_TORMENT)
+        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_TORMENT)
                  && you.can_see(*defender))
         {
-            bool penance = false;
-            bool friendly_fire = false;
-            const coord_def& where = attacker->pos();
+            targeter_los hitfunc(&you, LOS_NO_TRANS);
 
-            for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+            if (stop_attack_prompt(hitfunc, "attack",
+                                   [] (const actor *m)
+                                   {
+                                       return !m->res_torment();
+                                   },
+                                   nullptr, defender->as_monster()))
             {
-                const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-                monster* mons = monster_at(*ri);
-
-                if (!m || !mons || mons->res_torment())
-                    continue;
-
-                if (!friendly_fire
-                    && mons_att_wont_attack(m->attitude)
-                    && !mons_is_projectile(m->type))
-                {
-                    friendly_fire = true;
-                }
-
-                if (!penance)
-                {
-                    string adj, suffix;
-                    bad_attack(mons, adj, suffix, penance, where);
-                }
-
-                if (penance && friendly_fire)
-                    break;
-            }
-
-            if (friendly_fire && !yesno("Some of your allies may get hurt"
-                                        " - continue anyway?", true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                cancel_attack = true;
-                return false;
-            }
-
-            if (penance && !yesno("This action could place you under penance"
-                                  " - continue anyway?", false, 'n'))
-            {
-                canned_msg(MSG_OK);
                 cancel_attack = true;
                 return false;
             }

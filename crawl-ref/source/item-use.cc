@@ -2800,52 +2800,31 @@ void read(item_def* scroll)
     }
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
+    // Handle player cancels before we waste time (with e.g. blurryvis)
     if (item_type_known(*scroll)) {
-        // need to handle this before we waste time (with e.g. blurryvis)
         bool penance = god_hates_item(*scroll);
-        bool friendly_fire = false;
-        const coord_def& where = you.pos();
+        string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
-        for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
+
+        if (stop_attack_prompt(hitfunc, verb_object.c_str(),
+                               [which_scroll] (const actor* m)
+                               {
+                                   return _scroll_will_harm(which_scroll, *m);
+                               },
+                               nullptr, nullptr))
         {
-            const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-            monster* mons = monster_at(*ri);
-
-            if (!m || !mons || !_scroll_will_harm(which_scroll, *mons))
-                continue;
-
-            if (!friendly_fire
-                && mons_att_wont_attack(m->attitude)
-                && !mons_is_projectile(m->type))
-            {
-                friendly_fire = true;
-            }
-
-            if (!penance)
-            {
-                string adj, suffix;
-                bad_attack(mons, adj, suffix, penance, where);
-            }
-
-            if (penance && friendly_fire)
-                break;
-        }
-
-        // We warn about friendly fire first because if that also happens to put
-        // us under penance it makes more sense to warn about the penance AFTER
-        // warning about the allies.
-        if (friendly_fire && !yesno("Some of your allies may get hurt"
-                                    " - continue anyway?", true, 'n'))
-        {
-            canned_msg(MSG_OK);
             return;
         }
 
-        // We use the term 'could' rather than 'would' here because by the time
-        // we finish reading the scroll (having blurry vision), it may no longer
-        // anger our god.
-        if (penance && !yesno("This action could place you under penance"
-                              " - continue anyway?", false, 'n'))
+        string penance_prompt = make_stringf("Really %s? This action would"
+                                             " place you under penance!",
+                                             verb_object.c_str());
+        // Having a separate prompt if the player is going to harm allies and
+        // get penance is a bit awkward; but for gods where this will happen
+        // the player is going to get punished both for hurting the allies and
+        // using a bad item so they'd better be sure.
+        if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             return;
