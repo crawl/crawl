@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -91,18 +92,28 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     bool targ_mid = false;
     dist beam;
+    const reach_type reach_range = weapon_reach(wpn);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
-    args.range = 2;
+    args.range = reach_range;
     args.top_prompt = "Attack whom?";
     args.self = CONFIRM_CANCEL;
-    targeter_reach hitfunc(&you, REACH_TWO);
-    args.hitfunc = &hitfunc;
+
+    unique_ptr<targeter> hitfunc;
+    if (reach_range == REACH_TWO)
+        hitfunc = make_unique<targeter_reach>(&you, reach_range);
+    // Assume all longer forms of reach use smite targeting.
+    else
+    {
+        hitfunc = make_unique<targeter_smite>(&you, reach_range, 0, 0, false,
+                                              [](const coord_def& p) -> bool {
+                                              return you.pos() != p; });
+    }
+    args.hitfunc = hitfunc.get();
 
     direction(beam, args);
-
     if (!beam.isValid)
     {
         if (beam.isCancel)
@@ -124,26 +135,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons && mons->submerged())
         mons = nullptr;
 
-    const int x_first_middle = you.pos().x + (delta.x)/2;
-    const int y_first_middle = you.pos().y + (delta.y)/2;
-    const int x_second_middle = beam.target.x - (delta.x)/2;
-    const int y_second_middle = beam.target.y - (delta.y)/2;
-    const coord_def first_middle(x_first_middle, y_first_middle);
-    const coord_def second_middle(x_second_middle, y_second_middle);
-
-    if (x_distance > 2 || y_distance > 2)
+    if (x_distance > reach_range || y_distance > reach_range)
     {
         mpr("Your weapon cannot reach that far!");
-        return false;
-    }
-
-    // Calculate attack delay now in case we have to apply it.
-    const int attack_delay = you.attack_delay().roll();
-
-    if (!feat_is_reachable_past(grd(first_middle))
-        && !feat_is_reachable_past(grd(second_middle)))
-    {
-        canned_msg(MSG_SOMETHING_IN_WAY);
         return false;
     }
 
@@ -153,41 +147,54 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons)
         you.apply_berserk_penalty = false;
 
-    // Choose one of the two middle squares (which might be the same).
-    const coord_def middle =
-        !feat_is_reachable_past(grd(first_middle)) ? second_middle :
-        !feat_is_reachable_past(grd(second_middle)) ? first_middle :
-        random_choose(first_middle, second_middle);
+    // Calculate attack delay now in case we have to apply it.
+    const int attack_delay = you.attack_delay().roll();
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.
-
-    // If we're attacking more than a space away...
-    if (x_distance > 1 || y_distance > 1)
+    if (!is_unrandom_artefact(wpn, UNRAND_RIFT)
+        && (x_distance > 1 || y_distance > 1))
     {
+        const int x_first_middle = you.pos().x + (delta.x) / 2;
+        const int y_first_middle = you.pos().y + (delta.y) / 2;
+        const int x_second_middle = beam.target.x - (delta.x) / 2;
+        const int y_second_middle = beam.target.y - (delta.y) / 2;
+        const coord_def first_middle(x_first_middle, y_first_middle);
+        const coord_def second_middle(x_second_middle, y_second_middle);
+
+        if (!feat_is_reachable_past(grd(first_middle))
+            && !feat_is_reachable_past(grd(second_middle)))
+        {
+            canned_msg(MSG_SOMETHING_IN_WAY);
+            return false;
+        }
+
+        // Choose one of the two middle squares (which might be the same).
+        const coord_def middle =
+            !feat_is_reachable_past(grd(first_middle)) ? second_middle :
+            !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+        random_choose(first_middle, second_middle);
+
         bool success = true;
         monster *midmons;
         if ((midmons = monster_at(middle))
-            && !midmons->submerged())
+            && !midmons->submerged()
+            && coinflip())
         {
-            // This chance should possibly depend on your skill with
-            // the weapon.
-            if (coinflip())
+            success = false;
+            beam.target = middle;
+            mons = midmons;
+            targ_mid = true;
+            if (mons->wont_attack())
             {
-                success = false;
-                beam.target = middle;
-                mons = midmons;
-                targ_mid = true;
-                if (mons->wont_attack())
-                {
-                    // Let's assume friendlies cooperate.
-                    mpr("You could not reach far enough!");
-                    you.time_taken = attack_delay;
-                    make_hungry(3, true);
-                    return true;
-                }
+                // Let's assume friendlies cooperate.
+                mpr("You could not reach far enough!");
+                you.time_taken = attack_delay;
+                make_hungry(3, true);
+                return true;
             }
         }
+
         if (success)
             mpr("You reach to attack!");
         else
