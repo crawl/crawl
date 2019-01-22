@@ -15,7 +15,6 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
-#include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -152,8 +151,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.
-    if (!is_unrandom_artefact(wpn, UNRAND_RIFT)
-        && (x_distance > 1 || y_distance > 1))
+    if (reach_range < REACH_THREE && (x_distance > 1 || y_distance > 1))
     {
         const int x_first_middle = you.pos().x + (delta.x) / 2;
         const int y_first_middle = you.pos().y + (delta.y) / 2;
