@@ -170,7 +170,7 @@ public:
                                 // should be accessible by different people.
     vector<string> additional_macro_files;
 
-    uint32_t    seed;   // Non-random games.
+    uint64_t    seed;   // Non-random games.
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
