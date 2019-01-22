@@ -359,6 +359,7 @@ public:
 
     // Hash seed for deterministic stuff.
     uint32_t game_seed;
+    bool game_is_seeded;
 
     // -------------------
     // Non-saved UI state:

@@ -1656,8 +1656,11 @@ static void tag_construct_you(writer &th)
     for (mid_t recallee : you.recall_list)
         _marshall_as_int(th, recallee);
 
-    marshallUByte(th, 1); // number of seeds: always 1
+    marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
     marshallInt(th, you.game_seed);
+    marshallBoolean(th, you.game_is_seeded);
+    CrawlVector rng_states = generators_to_vector();
+    rng_states.write(th);
 
     CANARY;
 
@@ -3642,7 +3645,26 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUByte(th);
+
     you.game_seed = count > 0 ? unmarshallInt(th) : get_uint32();
+    crawl_state.seed = you.game_seed;
+#if TAG_MAJOR_VERSION == 34
+    ASSERT(th.getMinorVersion() < TAG_MINOR_GAMESEEDS || count == 1);
+    if (th.getMinorVersion() < TAG_MINOR_GAMESEEDS)
+        you.game_is_seeded = false;
+    else
+    {
+#endif
+        you.game_is_seeded = unmarshallBoolean(th);
+        CrawlVector rng_states;
+        rng_states.read(th);
+        load_generators(rng_states);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+
+    // TODO: save / load rng state
+    dprf("Unmarshalling seed %d", you.game_seed);
     for (int i = 1; i < count; i++)
         unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34

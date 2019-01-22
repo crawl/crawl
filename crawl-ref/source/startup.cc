@@ -83,7 +83,7 @@ static void _initialize()
     you.symbol = MONS_PLAYER;
     msg::initialise_mpr_streams();
 
-    seed_rng();
+    reset_rng();
 
     init_char_table(Options.char_set);
     init_show_table();
@@ -151,8 +151,7 @@ static void _initialize()
         loading_screen_close();
 #endif
 
-    if (Options.seed)
-        seed_rng(Options.seed);
+    you.game_seed = crawl_state.seed;
 
 #ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)

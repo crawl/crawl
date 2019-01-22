@@ -4878,7 +4878,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
-            if (!sscanf(next_arg, "%x", &Options.seed))
+            if (!sscanf(next_arg, "%u", &Options.seed))
                 return false;
             nextUsed = true;
             break;
