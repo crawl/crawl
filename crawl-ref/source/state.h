@@ -47,6 +47,8 @@ struct game_state
                              // take action to handle it.
     time_t last_winch;       // Time of last resize, for crash dumps.
 
+    uint32_t seed;
+
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game can be saved, false when the game ends.
     bool game_started;      // Set to true when a game has started.

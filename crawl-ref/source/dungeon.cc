@@ -295,6 +295,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
     temp_unique_items = you.unique_items;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
+    rng_generator levelgen_rng(you.where_are_you);
 
     // N tries to build the level, after which we bail with a capital B.
     int tries = 50;

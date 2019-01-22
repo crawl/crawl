@@ -8,12 +8,29 @@
 #include "hash.h"
 #include "rng-type.h"
 
+class rng_generator
+{
+public:
+    rng_generator(rng_type g);
+    rng_generator(branch_type b);
+    ~rng_generator();
+private:
+    rng_type previous;
+};
+
+class CrawlVector;
+CrawlVector generators_to_vector();
+void load_generators(const CrawlVector &v);
+
 void seed_rng();
 void seed_rng(uint32_t seed);
 void seed_rng(uint64_t[], int);
+void reset_rng();
 
-uint32_t get_uint32(int generator = RNG_GAMEPLAY);
-uint64_t get_uint64(int generator = RNG_GAMEPLAY);
+uint32_t get_uint32(rng_type generator);
+uint64_t get_uint64(rng_type generator);
+uint32_t get_uint32();
+uint64_t get_uint64();
 bool coinflip();
 int div_rand_round(int num, int den);
 int rand_round(double x);

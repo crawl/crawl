@@ -25,7 +25,7 @@ PcgRNG::get_uint32()
 uint64_t
 PcgRNG::get_uint64()
 {
-  return static_cast<uint64_t>(get_uint32()) << 32 | get_uint32();
+    return static_cast<uint64_t>(get_uint32()) << 32 | get_uint32();
 }
 
 PcgRNG::PcgRNG()
@@ -45,4 +45,20 @@ PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
         inc_ = init_key[1];
     else
         inc_ ^= get_uint32();
+}
+
+PcgRNG::PcgRNG(const CrawlVector &v)
+    : PcgRNG()
+{
+    ASSERT(v.size() == 2);
+    state_ = static_cast<uint64_t>(v[0].get_int64());
+    inc_ = static_cast<uint64_t>(v[1].get_int64());
+}
+
+CrawlVector PcgRNG::to_vector()
+{
+    CrawlVector store;
+    store.push_back(static_cast<int64_t>(state_));
+    store.push_back(static_cast<int64_t>(inc_));
+    return store;
 }
