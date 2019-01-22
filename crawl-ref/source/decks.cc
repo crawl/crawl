@@ -1549,7 +1549,7 @@ static void _storm_card(int power)
     //
     // Once the possible targets are drawn, the result is deduplicated into a
     // set of targets.
-    vector<coord_def> target_draws (12, you.pos());
+    vector<coord_def> target_draws (max_explosions, you.pos());
     int valid_targets = 0;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
