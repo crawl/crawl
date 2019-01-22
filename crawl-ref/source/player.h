@@ -358,7 +358,7 @@ public:
     vector<mid_t> recall_list;
 
     // Hash seed for deterministic stuff.
-    uint32_t game_seed;
+    uint64_t game_seed;
     bool game_is_seeded;
 
     // -------------------

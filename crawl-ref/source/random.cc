@@ -91,7 +91,7 @@ static void _seed_rng(uint64_t seed_array[], int seed_len)
     }
 }
 
-void seed_rng(uint32_t seed)
+void seed_rng(uint64_t seed)
 {
     uint64_t sarg[1] = { seed };
     _seed_rng(sarg, ARRAYSZ(sarg));
@@ -111,14 +111,13 @@ void seed_rng()
  */
 void reset_rng()
 {
-    // TODO: bigger seed than 32 bits, especially for random case?
     crawl_state.seed = Options.seed;
-    while (!crawl_state.seed)
+    while (!crawl_state.seed) // 0 = random seed
     {
         seed_rng(); // reset entirely via read_urandom
-        crawl_state.seed = get_uint32();
+        crawl_state.seed = get_uint64();
     }
-    dprf("Setting game seed to %u", crawl_state.seed);
+    dprf("Setting game seed to %llu", crawl_state.seed);
     you.game_seed = crawl_state.seed;
     seed_rng(crawl_state.seed);
 }

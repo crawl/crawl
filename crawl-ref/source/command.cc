@@ -90,7 +90,7 @@ static string _get_version_information()
     {
         if (you.game_is_seeded)
         {
-            result += make_stringf("\nGame seed: %u", crawl_state.seed);
+            result += make_stringf("\nGame seed: %llu", crawl_state.seed);
             if (Version::history_size() > 1)
                 result += " (game has been upgraded, seed may be broken)";
         }

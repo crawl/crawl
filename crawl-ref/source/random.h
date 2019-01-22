@@ -23,7 +23,7 @@ CrawlVector generators_to_vector();
 void load_generators(const CrawlVector &v);
 
 void seed_rng();
-void seed_rng(uint32_t seed);
+void seed_rng(uint64_t seed);
 void seed_rng(uint64_t[], int);
 void reset_rng();
 
