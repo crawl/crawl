@@ -3046,7 +3046,7 @@ static bool _similar_wands(const item_def& pickup_item,
     // Not similar if wand in inventory is empty.
     return !is_known_empty_wand(inv_item);
 #else
-    return true; // XXX: is this correct?
+    return true;
 #endif
 }
 
