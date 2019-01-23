@@ -92,7 +92,11 @@ static string _get_version_information()
 static string _get_version_features()
 {
     string result;
-    if (crawl_state.need_save && you.wizard)
+    if (crawl_state.need_save
+#ifdef DGAMELAUNCH
+        && you.wizard
+#endif
+       )
     {
         if (you.game_is_seeded)
         {
