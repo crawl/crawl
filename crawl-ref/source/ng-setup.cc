@@ -556,9 +556,13 @@ static void _setup_generic(const newgame_def& ng)
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
 
-    initialise_branch_depths();
-    initialise_temples();
-    init_level_connectivity();
+    {
+        rng_generator levelgen_rng(BRANCH_DUNGEON);
+
+        initialise_branch_depths();
+        initialise_temples();
+        init_level_connectivity();
+    }
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
