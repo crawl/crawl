@@ -21,6 +21,10 @@ perl util/gen-apt.pl ../docs/aptitudes.txt ../docs/template/apt-tmpl.txt species
 :: docs/aptitudes-wide.txt
 perl util/gen-apt.pl ../docs/aptitudes-wide.txt ../docs/template/apt-tmpl-wide.txt species-data.h aptitudes.h
 
+:: docs/species-type.h
+:: pip install pyyaml
+python util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
+
 ::Change encoding to UTF-8
 ::which cuts the size in half
 chcp 65001
