@@ -1337,6 +1337,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (!check_annotation_exclusion_warning())
         return false;
 
+    // Prompt for entering excluded transporters.
+    if (ygrd == DNGN_TRANSPORTER && is_exclude_root(you.pos()))
+    {
+        mprf(MSGCH_WARN, "This transporter is marked as excluded!");
+        if (!yesno("Enter transporter anyway?", true, 'n', true, false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Toll portals, eg. troves, ziggurats. (Using vetoes like this is hacky.)
     if (_marker_vetoes_stair())
         return false;
