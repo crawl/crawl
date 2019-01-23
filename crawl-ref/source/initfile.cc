@@ -292,6 +292,9 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+#ifndef DGAMELAUNCH
+        new BoolGameOption(SIMPLE_NAME(pregen_dungeon), false),
+#endif
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -1012,6 +1015,10 @@ void game_options::reset_options()
 #endif
 
     additional_macro_files.clear();
+
+#ifdef DGAMELAUNCH
+    pregen_dungeon = false;
+#endif
 
 #ifdef DGL_SIMPLE_MESSAGING
     messaging = true;

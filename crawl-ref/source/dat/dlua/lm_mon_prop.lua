@@ -25,7 +25,10 @@ function MonPropsMarker:new(props)
   return mp
 end
 
-function MonPropsMarker:activate(marker)
+function MonPropsMarker:init(marker)
+  -- use init, not activate, so that the properties can get transferred to the
+  -- monster immediately on level generation, rather than requiring the player
+  -- to enter the level.
   local mon = dgn.mons_at(marker:pos())
 
   if not mon then
@@ -46,7 +49,7 @@ function MonPropsMarker:activate(marker)
 end
 
 function MonPropsMarker:property(marker, pname)
-  if self.want_remove and pname == "post_activate_remove" then
+  if self.want_remove and pname == "post_init_remove" then
     return "true"
   end
 

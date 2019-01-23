@@ -456,6 +456,11 @@ LUARET1(you_depth_fraction, number,
 // change you.absdepth0 to be 1-based as well.
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
 LUARET1(you_absdepth, number, env.absdepth0 + 1)
+/*** How long has the player been on the current level?
+ * @treturn number
+ * @function turns_on_level
+ */
+LUARET1(you_turns_on_level, number, env.turns_on_level)
 /*** Interrupt the current multi-turn activity or macro sequence.
  * @function stop_activity
  */
@@ -1221,6 +1226,7 @@ static const struct luaL_reg you_clib[] =
     { "depth",        you_depth },
     { "depth_fraction", you_depth_fraction },
     { "absdepth",     you_absdepth },
+    { "turns_on_level", you_turns_on_level },
     { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },

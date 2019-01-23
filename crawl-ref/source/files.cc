@@ -1351,10 +1351,9 @@ static string _get_hatch_name()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
-
     const string level_name = level_id::current().describe();
     const bool make_changes =
-    (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
+        (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
     // Did we get here by popping the level stack?
     bool popped = false;
@@ -1416,7 +1415,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     clear_travel_trail();
 
 #ifdef USE_TILE
-    if (load_mode != LOAD_VISITOR)
+    if (load_mode != LOAD_VISITOR && load_mode != LOAD_GENERATE)
     {
         tiles.clear_minimap();
         crawl_view_buffer empty_vbuf;
@@ -1439,8 +1438,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
-        _redraw_all();
+        if (load_mode != LOAD_GENERATE)
+            _redraw_all(); // TODO why is there a redraw call here?
     }
+
+    if (just_created_level)
+        env.markers.init_all(); // init first, activation happens when entering
+
+    if (load_mode == LOAD_GENERATE)
+    {
+        if (just_created_level)
+            _save_level(level_id::current());
+        return just_created_level;
+    }
+
+    if (env.turns_on_level == 0)
+        just_created_level = true; // in case level was pre-generated
 
     // Clear map knowledge stair emphasis.
     show_update_emphasis();
@@ -2398,7 +2411,8 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
+                   "Do you want to delete it?\n"
+                   "Error: %s", err.what()).c_str(), // TODO linebreak error
                   true, 'n'))
         {
             if (you.save)

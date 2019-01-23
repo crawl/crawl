@@ -812,6 +812,7 @@ public:
 
     bool need_activate() const { return have_inactive_markers; }
     void clear_need_activate();
+    void init_all();
     void activate_all(bool verbose = true);
     void activate_markers_at(coord_def p);
     void add(map_marker *marker);
