@@ -2311,19 +2311,10 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::mp_on_kill))
                 {
+                    mp_heal = 1 + random2(mons.get_experience_level() / 2);
 #if TAG_MAJOR_VERSION == 34
-                    switch (you.religion)
-                    {
-                    case GOD_PAKELLAS:
+                    if (you.religion == GOD_PAKELLAS)
                         mp_heal = random2(2 + mons.get_experience_level() / 6);
-                        break;
-                    case GOD_VEHUMET:
-                    default:
-#endif
-                        mp_heal = 1 + random2(mons.get_experience_level() / 2);
-#if TAG_MAJOR_VERSION == 34
-                        break;
-                    }
 #endif
                 }
 
