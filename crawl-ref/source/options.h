@@ -170,7 +170,10 @@ public:
                                 // should be accessible by different people.
     vector<string> additional_macro_files;
 
-    uint64_t    seed;   // Non-random games.
+    uint64_t    seed;           // Non-random games.
+#ifndef DGAMELAUNCH
+    bool        pregen_dungeon; // Is the dungeon generated at the beginning?
+#endif
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
