@@ -1540,7 +1540,18 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             return true;
     }
 
-    if (dc == dest)
+    // We don't want to follow the transporter at c if it's excluded. We also
+    // don't want to update point_distance for the destination based on
+    // taking this transporter.
+    if (!ignore_danger
+        && is_excluded(c)
+        && env.map_knowledge(c).feat() == DNGN_TRANSPORTER
+        // We have to actually take the transporter to go from c to dc.
+        && !adjacent(c, dc))
+    {
+        return false;
+    }
+    else if (dc == dest)
     {
         // Hallelujah, we're home!
         if (_is_safe_move(c))
