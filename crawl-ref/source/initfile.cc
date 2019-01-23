@@ -3408,6 +3408,14 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             constants.insert(field);
     }
+#ifndef DGAMELAUNCH
+    else if (key == "game_seed") // special handling because of the large type
+    {
+        uint64_t tmp_seed = 0;
+        if (sscanf(field.c_str(), "%llu", &tmp_seed))
+            Options.seed = tmp_seed;
+    }
+#endif
 
     // Catch-all else, copies option into map
     else if (runscript)
