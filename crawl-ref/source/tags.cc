@@ -3664,7 +3664,7 @@ static void tag_read_you(reader &th)
         // and then internal RNG states stored as a vector.
         ASSERT(count == 1);
         you.game_seed = unmarshallUnsigned(th);
-        dprf("Unmarshalling seed %llu", you.game_seed);
+        dprf("Unmarshalling seed %" PRIu64, you.game_seed);
         crawl_state.seed = you.game_seed;
         you.game_is_seeded = unmarshallBoolean(th);
         CrawlVector rng_states;

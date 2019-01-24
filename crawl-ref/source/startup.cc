@@ -294,9 +294,6 @@ static void _pregen_levels(const branch_type branch, progress_popup &progress)
 
 static void _pregen_dungeon()
 {
-    const level_id &pregen_old_level = level_id::current();
-    const coord_def &pregen_old_pos = you.pos();
-
     // bel's original proposal generated D to lair depth, then lair, then D
     // to orc depth, then orc, then the rest of D. I have simplified this to
     // just generate whole branches at a time -- I am not sure how much real

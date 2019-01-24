@@ -254,15 +254,15 @@ void map_lua_marker::write(writer &outf) const
     map_marker::write(outf);
 
     lua_stack_cleaner clean(dlua);
-    bool init = initialised;
+    bool lua_init = initialised;
     if (!get_table())
     {
         mprf(MSGCH_ERROR, "Couldn't find table.");
-        init = false;
+        lua_init = false;
     }
 
-    marshallByte(outf, init);
-    if (!init)
+    marshallByte(outf, lua_init);
+    if (!lua_init)
         return;
 
     // Call dlua_marker_function(table, 'read')

@@ -8,6 +8,7 @@
 #include "command.h"
 
 #include <cctype>
+#include <cinttypes>
 #include <cstdio>
 #include <cstring>
 #include <sstream>
@@ -100,7 +101,7 @@ static string _get_version_features()
     {
         if (you.game_is_seeded)
         {
-            result += make_stringf("Game seed: %llu", crawl_state.seed);
+            result += make_stringf("Game seed: %" PRIu64, crawl_state.seed);
             if (Version::history_size() > 1)
                 result += " (game has been upgraded, seed may be broken)";
         }
