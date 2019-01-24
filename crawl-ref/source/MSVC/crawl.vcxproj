@@ -374,7 +374,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;__STDC_LIMIT_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
