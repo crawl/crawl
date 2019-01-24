@@ -381,7 +381,7 @@ static void _post_init(bool newc)
     if (newc)
     {
 #ifndef DGAMELAUNCH
-        if (Options.pregen_dungeon)
+        if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
             _pregen_dungeon();
 #endif
 
