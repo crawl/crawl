@@ -211,10 +211,15 @@ static void _sdump_header(dump_params &par)
     par.text += " (console)";
 #endif
     par.text += " character file.\n\n";
-#ifndef DGAMELAUNCH
-    if (you.game_is_seeded)
-        par.text += make_stringf("Game seed: %" PRIu64 "\n\n", crawl_state.seed);
+
+    if (you.game_is_seeded
+#ifdef DGAMELAUNCH
+        && par.se // for online games, only show seed for a dead char
 #endif
+        )
+    {
+        par.text += make_stringf("Game seed: %" PRIu64 "\n\n", crawl_state.seed);
+    }
 }
 
 static void _sdump_stats(dump_params &par)
