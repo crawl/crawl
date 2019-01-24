@@ -3076,28 +3076,27 @@ DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, eye of draining, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
-KPROP:  13' = no_tele_into
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
-SUBST:  c = c:4 v:1 b:1, = = +
+SUBST:  c = c:4 v:1 b:1
 : end
 MAP
-     c==cccc
-   ccc..c3'ccc
-  cc'c..c+m''cc
- cc'mm..c.mmm'cc
- c'mm...c...mm'c
-cc'm....c..5.m'cc
-c'mm...mc+...mm'c
-c1m...mm5mm...m'c
+     c++cccc
+   ccc..c3.ccc
+  cc.c..c+m..cc
+ cc.mm..c.mmm.cc
+ c.mm...c...mm.c
+cc.m....c..5.m.cc
+c.mm...mc+...mm.c
+c1m...mm5mm...m.c
 c+m.4.m|m2m.5.m+c
-c'm...mm|mm...m1c
-c'mm...mmm...mm'c
-cc'm.5.....5.m'cc
- c'mm...5...mm'c
- cc'mmm...mmm'cc
-  cc''mmmmm''cc
-   ccc'1+''ccc
+c.m...mm|mm...m1c
+c.mm...mmm...mm.c
+cc.m.5.....5.m.cc
+ c.mm...5...mm.c
+ cc.mmm...mmm.cc
+  cc..mmmmm..cc
+   ccc.1+..ccc
      ccccccc
 ENDMAP
 
