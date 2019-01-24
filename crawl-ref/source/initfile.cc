@@ -1016,10 +1016,6 @@ void game_options::reset_options()
 
     additional_macro_files.clear();
 
-#ifdef DGAMELAUNCH
-    pregen_dungeon = false;
-#endif
-
 #ifdef DGL_SIMPLE_MESSAGING
     messaging = true;
 #endif
