@@ -13,6 +13,7 @@
 #include "state.h"
 #include "tilefont.h"
 #include "tiledef-gui.h"
+#include "unwind.h"
 #include "windowmanager.h"
 #ifdef USE_TILE_LOCAL
 # include "tilesdl.h"
@@ -622,5 +623,22 @@ i4 get_scissor();
 void resize(int w, int h);
 
 bool is_available();
+
+class progress_popup
+{
+public:
+    progress_popup(string title, int width);
+    ~progress_popup();
+    void set_status_text(string status);
+    void advance_progress();
+private:
+    shared_ptr<Popup> contents;
+    shared_ptr<Text> progress_bar;
+    shared_ptr<Text> status_text;
+    unsigned int position;
+    unsigned int bar_width;
+    formatted_string get_progress_string(unsigned int len);
+    unwind_bool no_more;
+};
 
 }

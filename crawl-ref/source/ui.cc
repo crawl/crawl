@@ -1783,6 +1783,8 @@ void pump_events(int wait_event_timeout)
             break;
     }
 #else
+    if (wait_event_timeout <= 0) // resizing probably breaks this case
+        return;
     set_getch_returns_resizes(true);
     int k = macro_key != -1 ? macro_key : getch_ck();
     set_getch_returns_resizes(false);
@@ -1900,6 +1902,68 @@ bool is_available()
 #else
     return crawl_state.io_inited;
 #endif
+}
+
+/**
+ * A basic progress bar popup. This is meant to be invoked in an RAII style;
+ * the caller is responsible for regularly calling `advance_progress` in order
+ * to actually trigger UI redraws.
+ */
+progress_popup::progress_popup(string title, int width)
+    : position(0), bar_width(width), no_more(crawl_state.show_more_prompt, false)
+{
+    auto container = make_shared<Box>(Widget::VERT);
+    container->align_items = Widget::CENTER;
+    progress_bar = make_shared<Text>(get_progress_string(bar_width));
+    auto title_text = make_shared<Text>(title);
+    status_text = make_shared<Text>("");
+    container->add_child(title_text);
+    container->add_child(progress_bar);
+    container->add_child(status_text);
+    contents = make_shared<Popup>(container);
+
+    contents->on(Widget::slots.event, [&](wm_event ev)
+    {
+        // don't wait or react - this kind of popup needs to be controlled by
+        // the caller.
+        return true;
+    });
+    // TODO: webtiles implementation
+    push_layout(move(contents));
+    pump_events(0);
+}
+
+progress_popup::~progress_popup()
+{
+    pop_layout();
+}
+
+void progress_popup::set_status_text(string status)
+{
+    status_text->set_text(status);
+}
+
+void progress_popup::advance_progress()
+{
+    position++;
+    progress_bar->set_text(get_progress_string(bar_width));
+    if (!crawl_state.seen_hups)
+        pump_events(0);
+}
+
+formatted_string progress_popup::get_progress_string(unsigned int len)
+{
+    string bar = string(len, ' ');
+    if (len < 3)
+        return formatted_string(bar);
+    const unsigned int center_pos = position % len;
+    const bool up = center_pos % 2 == 0;
+    const string marker = up ? "/o/" : "\\o\\";
+    bar[(center_pos - 1) % len] = marker[0];
+    bar[center_pos] = marker[1];
+    bar[(center_pos + 1) % len] = marker[2];
+    bar = string("<magenta>") + bar + "</magenta>";
+    return formatted_string::parse_string(bar);
 }
 
 }
