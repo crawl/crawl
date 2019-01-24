@@ -219,8 +219,6 @@ end
 --                       plants with some fungus. If "withered" or "demonic",
 --                       'p' becomes withered or demonic plants, respectively.
 function gauntlet_arena_terrain_setup(e, rock_unchanged, liquid, plant)
-    e.kfeat("= = runed_clear_door")
-
     if not rock_unchanged then
         local glyphs = "xxc"
         if gauntlet_arena_tier == 2 then

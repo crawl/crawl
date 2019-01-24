@@ -2648,7 +2648,6 @@ TAGS:   transparent
 DEPTH:  D:9-
 MONS:   orange crystal statue w:30 / obsidian statue / ice statue w:5
 KFEAT:  ~ = closed_clear_door
-KFEAT:  = = runed_clear_door
 MAP
       .....
     ...b=b...

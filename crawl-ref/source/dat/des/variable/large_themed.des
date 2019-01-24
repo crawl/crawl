@@ -2313,7 +2313,6 @@ MONS:   large abomination / very ugly thing
 KMONS:  _ = tentacled monstrosity
 KITEM:  _ = |
 NSUBST: - = _ / 2=%%* / 3=234 / 2=234... / 5. / 2=6 / 6. / 1
-KFEAT:  = = runed_clear_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx-xxxxxxxxxxxxxxx
