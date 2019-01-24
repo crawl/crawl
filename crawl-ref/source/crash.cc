@@ -418,14 +418,15 @@ void call_gdb(FILE *file)
 
             const char* argv[] =
             {
-                "gdb",
+                "nice",
+                "/usr/bin/gdb",
                 "-batch",
                 "-ex", "show version", // Too bad -iex needs gdb >=7.5 (jessie)
                 "-ex", attach_cmd,
                 "-ex", "bt full",
                 0
             };
-            execv("/usr/bin/gdb", (char* const*)argv);
+            execv("/usr/bin/nice", (char* const*)argv);
             printf("Failed to start gdb: %s\n", strerror(errno));
             fflush(stdout);
             _exit(0);
