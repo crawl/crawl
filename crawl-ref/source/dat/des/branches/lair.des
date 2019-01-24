@@ -2310,10 +2310,9 @@ NAME:   pf_torpor_hydra
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Lair:3-, !Lair:$
 MONS:   torpor snail, hydra
-KFEAT:  = = runed_door
 # A decent item visible from the door, a superb item not visible,
 # and a couple of floor items anywhere
-NSUBST: . = 1:* / *:., - = 1:| / *:., . = 2:% / *:.
+NSUBST: . = * / ., - = | / ., . = 2=% / .
 MAP
 x xx  x
  xxxxxx x
