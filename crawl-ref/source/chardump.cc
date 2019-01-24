@@ -9,6 +9,7 @@
 
 #include <string>
 #include <cctype>
+#include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -212,7 +213,7 @@ static void _sdump_header(dump_params &par)
     par.text += " character file.\n\n";
 #ifndef DGAMELAUNCH
     if (you.game_is_seeded)
-        par.text += make_stringf("Game seed: %llu\n\n", crawl_state.seed);
+        par.text += make_stringf("Game seed: %" PRIu64 "\n\n", crawl_state.seed);
 #endif
 }
 

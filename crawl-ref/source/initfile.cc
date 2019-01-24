@@ -14,6 +14,7 @@
 #include "initfile.h"
 
 #include <algorithm>
+#include <cinttypes>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
@@ -3408,7 +3409,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "game_seed") // special handling because of the large type
     {
         uint64_t tmp_seed = 0;
-        if (sscanf(field.c_str(), "%llu", &tmp_seed))
+        if (sscanf(field.c_str(), "%" SCNu64, &tmp_seed))
             Options.seed = tmp_seed;
     }
 #endif
@@ -4889,7 +4890,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
-            if (!sscanf(next_arg, "%llu", &Options.seed))
+            if (!sscanf(next_arg, "%" SCNu64, &Options.seed))
                 return false;
             nextUsed = true;
             break;

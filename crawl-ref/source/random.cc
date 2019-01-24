@@ -2,6 +2,7 @@
 
 #include "random.h"
 
+#include <cinttypes>
 #include <cmath>
 #ifndef TARGET_COMPILER_VC
 # include <unistd.h>
@@ -39,19 +40,19 @@ void load_generators(const CrawlVector &v)
     }
 }
 
-rng_type get_branch_generator(branch_type b)
-{
-    return static_cast<rng_type>(RNG_LEVELGEN + static_cast<int>(b));
-}
-
 rng_generator::rng_generator(rng_type g) : previous(_generator)
 {
     _generator = g;
 }
 
+static rng_type _get_branch_generator(const branch_type b)
+{
+    return static_cast<rng_type>(RNG_LEVELGEN + static_cast<int>(b));
+}
+
 rng_generator::rng_generator(branch_type b) : previous(_generator)
 {
-    _generator = get_branch_generator(b);
+    _generator = _get_branch_generator(b);
 }
 
 rng_generator::~rng_generator()
@@ -117,7 +118,7 @@ void reset_rng()
         seed_rng(); // reset entirely via read_urandom
         crawl_state.seed = get_uint64();
     }
-    dprf("Setting game seed to %llu", crawl_state.seed);
+    dprf("Setting game seed to %" PRIu64, crawl_state.seed);
     you.game_seed = crawl_state.seed;
     seed_rng(crawl_state.seed);
 }
