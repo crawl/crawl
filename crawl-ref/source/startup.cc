@@ -279,32 +279,23 @@ static bool _ensure_level_generated(const level_pos &pos)
     return load_level(stair_taken, LOAD_GENERATE, old_level);
 }
 
-static void _pregen_levels(const branch_type branch)
+static void _pregen_levels(const branch_type branch, progress_popup &progress)
 {
-    unwind_bool no_more(crawl_state.show_more_prompt, false);
-
     for (int i = 1; i <= branches[branch].numlevels; i++)
     {
         level_id new_level = level_id(branch, i);
         level_pos pos = level_pos(new_level);
         dprf("Pregenerating %s:%d", branches[pos.id.branch].abbrevname,
                                     pos.id.depth);
+        progress.advance_progress();
         _ensure_level_generated(pos);
     }
 }
 
 static void _pregen_dungeon()
 {
-    mpr("Press <space> to pregenerate (most of) the dungeon."
-            " This will take some time.");
-    more();
-
     const level_id &pregen_old_level = level_id::current();
     const coord_def &pregen_old_pos = you.pos();
-    level_pos old_level_pos = level_pos(pregen_old_level, pregen_old_pos);
-    dprf("Before pregen; branch: %d depth: %d Coord: %d, %d.",
-            old_level_pos.id.branch, old_level_pos.id.depth,
-            old_level_pos.pos.x, old_level_pos.pos.y);
 
     // bel's original proposal generated D to lair depth, then lair, then D
     // to orc depth, then orc, then the rest of D. I have simplified this to
@@ -337,11 +328,33 @@ static void _pregen_dungeon()
         BRANCH_GEHENNA,
     };
 
+    progress_popup progress("Generating dungeon...\n\n", 35);
+    progress.advance_progress();
     // TODO: why is dungeon invalid? it's not set up properly in
     // `initialise_branch_depths` for some reason.
     for (auto br : generation_order)
         if (brentry[br].is_valid() || br == BRANCH_DUNGEON)
-            _pregen_levels(br);
+        {
+            string status = "\nbuilding ";
+
+            switch (br)
+            {
+            case BRANCH_SPIDER:
+            case BRANCH_SNAKE:
+                status += "a lair branch";
+                break;
+            case BRANCH_SHOALS:
+            case BRANCH_SWAMP:
+                status += "another lair branch";
+                break;
+            default:
+                status += branches[br].longname;
+                break;
+            }
+            progress.set_status_text(status);
+            _pregen_levels(br, progress);
+            progress.advance_progress();
+        }
 }
 #endif
 
