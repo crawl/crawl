@@ -2270,7 +2270,10 @@ ring of ice
 %%%%
 ring of intelligence
 
-<ring>
+“HOBBES: Did it work?
+CALVIN: I think so.
+        I feel smarter already.”
+    -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
 %%%%
 ring of resist corrosion
 
@@ -2444,7 +2447,16 @@ scroll of remove curse
 %%%%
 scroll of silence
 
-<scroll>
+“And in the naked light I saw
+   Ten thousand people, maybe more.
+ People talking without speaking,
+   People hearing without listening;
+ People writing songs
+   That voices never shared:
+ No one dared
+   Disturb the sound
+   Of silence.”
+    -Simon & Garfunkel, _The Sound of Silence_. 1964.
 %%%%
 scroll of summoning
 
