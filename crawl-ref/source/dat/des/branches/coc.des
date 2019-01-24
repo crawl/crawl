@@ -565,7 +565,7 @@ KFEAT:   8 = w
 SHUFFLE: O1AB / eEFG, {([, !?^~
 SUBST:   AE = 2, B = 2333, F = 339, G = 995, !? = &,  ^~ = 6
 SUBST:   e = |, y : yY, y = xxw, Y = xww
-NSUBST:  = = 1:+ / c, - = 1:+ / c, 6 = 2:6 / 2 = 677 / *:7
+NSUBST:  a = + / c, - = + / c, 6 = 2=6 / 2=677 / 7
 : coc_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -616,12 +616,12 @@ cccccccccccccccccccccccc.2Wccwwwwww.c....c.ccccccccccc.c....c.wwwyxxcc
 ccccccccccccccccccccccc...WcWwwwww.c......cccc||$..Gccc......c.wwyxxcc
 ccxx8w.......xx44........cccWwwww.c........cc||$Gx|.cc........c.wwxxcc
 ccxx8w.......xxx.x......cc~Wwwwww.c...4....cc|$exFx..c....5x..c.wwxxcc
-ccxxww.wxx....xxxwx.....ccWwwwwwww.c..4x5..cc$Gxxx...=...535.c.wwwxxcc
+ccxxww.wxx....xxxwx.....ccWwwwwwww.c..4x5..cc$Gxxx...a...535.c.wwwxxcc
 ccxxx...wxx....xxww.x...ccwwwwwww.c...4.x..cc.xFxE...c...x5...c.wwxxcc
 cccxxx...wxx..xwwww.....ccywwwwww.c........cc.|x..F.cc........c.wwxxcc
 ccccxxx...wxx..xww.wwx..ccywwwwwww.c......cccG.....|ccc......c.wwyxxcc
 cccccxxx...wxx....wwwwx.ccywwwwwwww.c....c.cccc...cccc.c....c.wwwyxxcc
-ccccccxxx...wxx...wwxx.4ccywwwwwwwww.cccc.w.cccc=cccc.w.cccc.wwwwyxxcc
+ccccccxxx...wxx...wwxx.4ccywwwwwwwww.cccc.w.ccccacccc.w.cccc.wwwwyxxcc
 cccccccxxx...wxx..xwxxx4ccywwwwwwwwww....wWw.c.....c.wWw....wwwwwyxxcc
 ccccccccxxx[..wxx..x.xxxccywwwwwwwwwwwwwwww.c.......c.wwwwwwwwwwwyxxcc
 cccccccccxxx.{.wxx....xxccywwwwwwwwwwwwwww.c.........c.wwwwwwwwwwyxxcc

@@ -1570,7 +1570,7 @@ MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
 ITEM:   ration w:5 / nothing
-KFEAT:  = = closed_clear_door
+KFEAT:  ~ = closed_clear_door
 MAP
 cccccc       ccccccc
 cddddcxxxxxxxxcddddc
@@ -1580,7 +1580,7 @@ cccccc..x..x  cccccc
         x2.x
 nnnnnn  x..x  nnnnnn
 n1111nxxx..xxxn1111n
-n1111=..+..+..=1111n
+n1111~..+..+..~1111n
 n1111nxxx..xxxn1111n
 nnnnnn  x..x  nnnnnn
         x.2x

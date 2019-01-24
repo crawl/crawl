@@ -400,15 +400,15 @@ NAME:    hangedman_abyss_shoalhut
 TAGS:    no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
          unseen horror / ynoxinul / snapping turtle skeleton w:15
-NSUBST:  = = 1:+ / 1:xx+ / *:x
+NSUBST:  a = + / xx+ / x
 SUBST:   1 = 1., x = xxxxcccvb, l = wWll
 KMASK:   wWl = no_monster_gen
 MAP
    l l
- lxx=xxl
+ lxxaxxl
  xx.1.xx
 lx.1.1.xl
- =1.*.1=
+ a1.*.1a
 lx.1.1.xl
  xx.1.xx
  lxx+xxl
@@ -509,26 +509,26 @@ KMONS:   Z = nonbase draconian
 ITEM:    randbook numspells:1 w:19 / randbook numspells:2 w:1, any scroll
 KFEAT:   _ = altar_sif_muna
 SHUFFLE: ABCDEF
-NSUBST:  A = 1:0 / 1:d / 1:dee / *:., B = 1:1 / 1:d / 1:dee / *:.
-NSUBST:  C = 1:2 / 1:d / 1:dee / *:., D = 1:3 / 1:d / 1:dee / *:.
-NSUBST:  E = 1:4 / 1:d / 1:dee / *:., F = 1:& / 2:d / 1:e / *:.
-NSUBST:  + = 2:+ / *:x, - = 2:+ / *:x
+NSUBST:  A = 0 / d / dee / ., B = 1 / d / dee / .
+NSUBST:  C = 2 / d / dee / ., D = 3 / d / dee / .
+NSUBST:  E = 4 / d / dee / ., F = & / 2=d / e / .
+NSUBST:  + = 2=+ / x, - = 2=+ / x
 SHUFFLE: 0123456789', '''''''''@, &@Z
-SUBST:   ' = ., = = +wl x:45, _ : _:30 TUVY .:35
+SUBST:   ' = ., a = +wl x:45, _ : _:30 TUVY .:35
 SUBST:   x = x:20 c:4 v:1 b:1 .:4, X = x:20 c:5 v:2 b:2 .:1
 MAP
  . .. .. .. .. .. .
 ..X++XXXXXXXXXXXXX..
  XX. xx xxx xxx xXX
 .+._ xAAAxBBBxCCCxX.
-.+  .xAAA=BBB=CCC X.
+.+  .xAAAaBBBaCCC X.
  XX..xAAAxBBBxCCCxX
 .XX..xx xxx xxx xxX.
 .X .............. X.
 .X .............. X.
 .Xxx xxx xxx xx..XX.
  XxDDDxEEExFFFx..XX
-.X DDD=EEE=FFFx.  -.
+.X DDDaEEEaFFFx.  -.
 .XxDDDxEEExFFFx _.-.
  XXx xxx xxx xx .XX
 ..XXXXXXXXXXXXX--X..

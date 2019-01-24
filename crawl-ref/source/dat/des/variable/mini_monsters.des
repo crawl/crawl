@@ -1683,13 +1683,13 @@ TAGS:   transparent
 DEPTH:  Depths, Elf
 MONS:   spriggan berserker
 : if you.absdepth() < 19 then
-NSUBST: 1 = 2:2 / *:1
+NSUBST: 1 = 2=2 / 1
 : end
 SUBST:  2 = 1'
 KMONS:  _ = spriggan berserker
 KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
-SUBST:  = = ccc+
+SUBST:  F = ccc+
 COLOUR: # = red
 FTILE:  *|_1+'c = floor_hall
 FTILE:  # = floor_rough_lightred
@@ -1707,7 +1707,7 @@ MAP
 .cccctcBcBctcccc.
 ....ccc'C'ccc....
    ..cc'''cc..
-    ..='2'=..
+    ..F'2'F..
    ..cc'''cc..
  ...ccc'c'ccc...
  .ccctcDcDctccc.
