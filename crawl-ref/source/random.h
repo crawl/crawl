@@ -21,6 +21,7 @@ private:
 class CrawlVector;
 CrawlVector generators_to_vector();
 void load_generators(const CrawlVector &v);
+vector<uint64_t> get_rng_states();
 
 void seed_rng();
 void seed_rng(uint64_t seed);

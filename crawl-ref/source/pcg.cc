@@ -13,6 +13,7 @@
 uint32_t
 PcgRNG::get_uint32()
 {
+    count_++;
     uint64_t oldstate = state_;
     // Advance internal state
     state_ = oldstate * static_cast<uint64_t>(6364136223846793005ULL) + (inc_|1);
@@ -31,14 +32,14 @@ PcgRNG::get_uint64()
 PcgRNG::PcgRNG()
       // Choose base state arbitrarily. There's nothing up my sleeve.
     : state_(static_cast<uint64_t>(18446744073709551557ULL)), // Largest 64-bit prime.
-      inc_(static_cast<uint64_t>(2305843009213693951ULL))     // Largest Mersenne prime under 64-bits.
+      inc_(static_cast<uint64_t>(2305843009213693951ULL)),    // Largest Mersenne prime under 64-bits.
+      count_(0)
 
 { }
 
 PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
     : PcgRNG()
 {
-
     if (key_length > 0)
         state_ = init_key[0];
     if (key_length > 1)

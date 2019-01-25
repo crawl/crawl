@@ -18,8 +18,10 @@ class PcgRNG
 
         uint64_t get_state() { return state_; };
         uint64_t get_inc() { return inc_; };
+        uint64_t get_count() { return count_; };
 
     private:
         uint64_t state_;
         uint64_t inc_;
+        uint64_t count_;
 };

@@ -28,6 +28,18 @@ CrawlVector generators_to_vector()
     return store;
 }
 
+vector<uint64_t> get_rng_states()
+{
+    // this doesn't return the internal state per se, but it returns the count
+    // of 32 bit integers that have been drawn, which amounts to the same thing.
+    // This isn't saved, though, so it's mainly useful for debugging within a
+    // session.
+    vector<uint64_t> result;
+    for (PcgRNG& rng : rngs)
+        result.push_back(rng.get_count());
+    return result;
+}
+
 void load_generators(const CrawlVector &v)
 {
     // as-is, decreasing the number of rngs (e.g. by removing a branch) will
