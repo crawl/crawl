@@ -944,17 +944,19 @@ TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  Depths, Crypt
 ORIENT: southeast
 KPROP:  -47 = no_tele_into
+ITEM:   any jewellery randart, scroll of acquirement
+: item(dgn.randart_aux_armour)
 MONS:   human att:neutral, silent spectre, patrolling soul eater
 MONS:   ogre mage / deep elf mage / wizard / necromancer / merfolk aquamancer / \
         spriggan air mage / orc sorcerer / kobold demonologist / deep elf mage
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
 MONS:   patrolling curse skull, ancient lich
-ITEM:   acquire any
+SUBST:  d = def
+NSUBST: D = 6 / *=33., 4 = 1 / 6=4 / 6=5 / 6=45.. / . , 7 = 7 / 75
+MARKER: n = lua:portal_desc {prison="wall"}
 KFEAT:  g = runed_door
 KFEAT:  ^ = known teleport trap
-NSUBST: D = 1:6 / *:33., 4 = 1:1 / 6:4 / 6:5 / 6=45.. / *:. , 7 = 1:7 / 1=75
-MARKER: n = lua:portal_desc {prison="wall"}
 FTILE:  nc-457 = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@+g^d|*$236 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
