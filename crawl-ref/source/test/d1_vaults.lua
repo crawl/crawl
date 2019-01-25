@@ -7,6 +7,13 @@
 
 local eol = string.char(13)
 
+debug.reset_rng(1)
+crawl.stderr("Here are 10 random numbers from seed 1:" .. eol)
+for i = 1,10 do
+    crawl.stderr(crawl.random2(100) .. " ")
+end
+crawl.stderr(eol)
+
 for seed = 1,10 do
     debug.reset_rng(seed)
     -- debug.enter_dungeon() crashes, for some reason
