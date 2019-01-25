@@ -2241,11 +2241,8 @@ static int _player_evasion(ev_ignore_type evit)
 
     const int evasion_bonuses = _player_evasion_bonuses() * scale;
 
-    const int prescaled_evasion =
-        poststepdown_evasion + evasion_bonuses;
-
     const int final_evasion =
-        _player_scale_evasion(prescaled_evasion, scale);
+        _player_scale_evasion(poststepdown_evasion, scale) + evasion_bonuses;
 
     return unscale_round_up(final_evasion, scale);
 }
