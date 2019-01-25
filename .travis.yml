@@ -26,6 +26,10 @@ git:
 matrix:
     exclude:
         - compiler: clang
+          env: UNBRACE=1
+        - compiler: clang
+          env: CHECKWHITE=1
+        - compiler: clang
           env: CROSSCOMPILE=1
 install: perl .travis/deps.pl
 script: perl .travis/build.pl
