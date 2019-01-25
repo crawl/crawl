@@ -32,3 +32,5 @@ string debug_mon_str(const monster* mon);
 
 void wizard_toggle_dprf();
 void debug_list_vacant_keys();
+
+vector<string> level_vault_names();
