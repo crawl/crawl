@@ -407,6 +407,17 @@ LUAFN(debug_reset_rng)
     return 0;
 }
 
+LUAFN(debug_get_rng_state)
+{
+    string r = make_stringf("seed: %" PRIu64 ", generator states: ",
+        Options.seed);
+    vector<uint64_t> states = get_rng_states();
+    for (auto i : states)
+        r += make_stringf("%" PRIu64 " ", i);
+    lua_pushstring(ls, r.c_str());
+    return 1;
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -436,5 +447,6 @@ const struct luaL_reg debug_dlib[] =
 { "disable", debug_disable },
 { "cpp_assert", debug_cpp_assert },
 { "reset_rng", debug_reset_rng },
+{ "get_rng_state", debug_get_rng_state },
 { nullptr, nullptr }
 };
