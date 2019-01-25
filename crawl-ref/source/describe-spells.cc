@@ -476,7 +476,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
                     && in_bounds(mon_owner->pos)
                     && grid_distance(you.pos(), mon_owner->pos) <= range;
     const char *range_col = in_range ? "lightred" : "lightgray";
-    return make_stringf(" (<%s>%d</%s>)", range_col, range, range_col);
+    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
 /**
@@ -540,17 +540,20 @@ static void _describe_book(const spellbook_contents &book,
             && testbits(get_spell_flags(spell), spflag::MR_check))
         {
             if (you.immune_to_hex(spell))
-                hex_str = "(immune) ";
+                hex_str = "(immune)";
             else
-                hex_str = make_stringf("(%d%%) ", hex_chance(spell, hd));
+                hex_str = make_stringf("(%d%%)", hex_chance(spell, hd));
         }
 
-        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 4;
+        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 3;
+        int hex_range_space = hex_len && range_len ? 1 : 0;
 
         description += formatted_string::parse_string(
-                make_stringf("%c - %s%s%s", spell_letter,
-                chop_string(spell_title(spell), 29-hex_len-range_len).c_str(),
+                make_stringf("%c - %s%s%s%s", spell_letter,
+                chop_string(spell_title(spell),
+                            29 - hex_len - range_len - hex_range_space).c_str(),
                 hex_str.c_str(),
+                hex_range_space ? " " : "",
                 range_str.c_str()));
 
         // only display type & level for book spells
