@@ -110,6 +110,7 @@
     Joe Buzzelli
     Policarpo Caballero
     Ian Caltabiano
+    David Candido
     Edgar Carballo
     Cedor
     Cerol
@@ -136,6 +137,7 @@
     elliott
     Micha Elsner
     Carl-Oscar Erneholm
+    Erich Erstu
     Christopher Evenstar
     Floodkiller
     floraline
@@ -202,6 +204,7 @@
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
+    Johannes Maier
     Markus Maier
     MainiacJoe
     Arien Malec
@@ -211,7 +214,7 @@
     Jean Martel
     James 'Eronarn' Meickle
     Jacob Meigs
-    Johannes Maier
+    mgdelmonte
     mikee
     Andrew Minton
     Yer Mivvaggah
