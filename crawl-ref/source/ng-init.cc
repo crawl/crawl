@@ -234,6 +234,8 @@ void initialise_temples()
     mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
+    you.props.erase(TEMPLE_GODS_KEY);      // shouldn't be set normally, but
+    you.props.erase(OVERFLOW_TEMPLES_KEY); // may be in tests
     CrawlVector &temple_gods
         = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
 

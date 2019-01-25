@@ -37,6 +37,28 @@ monster_type debug_prompt_for_monster()
     return MONS_NO_MONSTER;
 }
 
+vector<string> level_vault_names()
+{
+    vector<string> result;
+    for (auto &vault : env.level_vaults)
+    {
+        string vault_name = vault->map.name;
+        if (vault->map.subvault_places.size())
+        {
+            vault_name += " [";
+            for (unsigned int j = 0; j < vault->map.subvault_places.size(); ++j)
+            {
+                vault_name += vault->map.subvault_places[j].subvault->name;
+                if (j < vault->map.subvault_places.size() - 1)
+                    vault_name += ", ";
+            }
+            vault_name += "]";
+        }
+        result.emplace_back(vault_name);
+    }
+    return result;
+}
+
 void debug_dump_levgen()
 {
     if (crawl_state.game_is_arena())
@@ -82,22 +104,9 @@ void debug_dump_levgen()
     if (!env.level_vaults.empty())
     {
         mpr("Level vaults:");
-        for (auto &vault : env.level_vaults)
-        {
-            string vault_name = vault->map.name;
-            if (vault->map.subvault_places.size())
-            {
-                vault_name += " [";
-                for (unsigned int j = 0; j < vault->map.subvault_places.size(); ++j)
-                {
-                    vault_name += vault->map.subvault_places[j].subvault->name;
-                    if (j < vault->map.subvault_places.size() - 1)
-                        vault_name += ", ";
-                }
-                vault_name += "]";
-            }
-            mprf("    %s", vault_name.c_str());
-        }
+        auto vaults = level_vault_names();
+        for (auto &vname : vaults)
+            mprf("    %s", vname.c_str());
     }
     mpr("");
 }

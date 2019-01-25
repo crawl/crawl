@@ -448,6 +448,15 @@ static void _free_up_slot(char letter)
     }
 }
 
+void initial_dungeon_setup()
+{
+    rng_generator levelgen_rng(BRANCH_DUNGEON);
+
+    initialise_branch_depths();
+    initialise_temples();
+    init_level_connectivity();
+}
+
 static void _setup_generic(const newgame_def& ng)
 {
     _init_player();
