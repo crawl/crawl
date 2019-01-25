@@ -187,21 +187,20 @@ TAGS:   extra allow_dup luniq
 WEIGHT: 1
 DEPTH:  Depths, Elf
 MONS:   butterfly
-MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: + = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+KFEAT:  a = runed_door
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX1111XXY
-YXX1111XXY
-YXX1111XXY
-YXX1111XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++1111++a
+a++1111++a
+a++1111++a
+a++1111++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # Anthill origins
@@ -677,21 +676,20 @@ TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  Depths, Elf:$
 MONS:   elephant, dire elephant, hellephant
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX1112XXY
-YXX1321XXY
-YXX1221XXY
-YXX2111XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++1112++a
+a++1321++a
+a++1221++a
+a++2111++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # A plain guardian serpent vault. (nrook)
@@ -7402,10 +7400,9 @@ NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
 DEPTH:  D:$, Depths, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.in_branch("Elf") then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
@@ -7438,39 +7435,38 @@ KITEM:  9 = *
 : end
 KMONS:  9 = 9
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX8888XXY
-YXX8998XXY
-YXX8998XXY
-YXX8888XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++8888++a
+a++8998++a
+a++8998++a
+a++8888++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  Depths
+DEPTH:  Depths, !Depths:1
 WEIGHT: 4
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 MAP
 xxxxxxxxxxxxxx
 x8.*.8..8.9.8x
-x.XXXXXXXXXX.x
-x9XXXXXXXXXX*x
-x.XXYYYYYYXX.x
-x8XXY....YXX8x
-x.XXY.(..YXX.x
-x.XXY....YXX.x
-x8XXY....YXX8x
-x.XXYYYYYYXX.x
-x*XXXXXXXXXX9x
-x.XXXXXXXXXX.x
+x.++++++++++.x
+x9++++++++++*x
+x.++aaaaaa++.x
+x8++a....a++8x
+x.++a.(..a++.x
+x.++a....a++.x
+x8++a....a++8x
+x.++aaaaaa++.x
+x*++++++++++9x
+x.++++++++++.x
 x8.9.8..8.*.8x
 xxxxxxxxxxxxxx
 ENDMAP
