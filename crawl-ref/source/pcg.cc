@@ -15,7 +15,7 @@ PcgRNG::get_uint32()
 {
     uint64_t oldstate = state_;
     // Advance internal state
-    state_ = oldstate * 6364136223846793005ULL + (inc_|1);
+    state_ = oldstate * static_cast<uint64_t>(6364136223846793005ULL) + (inc_|1);
     // Calculate output function (XSH RR), uses old state for max ILP
     uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
     uint32_t rot = oldstate >> 59u;
@@ -30,8 +30,8 @@ PcgRNG::get_uint64()
 
 PcgRNG::PcgRNG()
       // Choose base state arbitrarily. There's nothing up my sleeve.
-    : state_(18446744073709551557ULL), // Largest 64-bit prime.
-      inc_(2305843009213693951ULL)     // Largest Mersenne prime under 64-bits.
+    : state_(static_cast<uint64_t>(18446744073709551557ULL)), // Largest 64-bit prime.
+      inc_(static_cast<uint64_t>(2305843009213693951ULL))     // Largest Mersenne prime under 64-bits.
 
 { }
 
