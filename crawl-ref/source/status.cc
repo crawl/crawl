@@ -526,12 +526,19 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "heavily drained";
             inf.long_text    = "Your life force is heavily drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN])
+        else if (you.attribute[ATTR_XP_DRAIN] > 50)
         {
             inf.light_colour = YELLOW;
             inf.light_text   = "Drain";
             inf.short_text   = "drained";
             inf.long_text    = "Your life force is drained.";
+        }
+        else if (you.attribute[ATTR_XP_DRAIN])
+        {
+            inf.light_colour = LIGHTGREY;
+            inf.light_text   = "Drain";
+            inf.short_text   = "lightly drained";
+            inf.long_text    = "Your life force is lightly drained.";
         }
         break;
 
