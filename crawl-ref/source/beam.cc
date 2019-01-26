@@ -6237,6 +6237,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_SLOW:
         case BEAM_PARALYSIS:
         case BEAM_PETRIFY:
+        case BEAM_POLYMORPH:
         case BEAM_DISPEL_UNDEAD:
         case BEAM_PAIN:
         case BEAM_AGONY:
