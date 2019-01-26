@@ -556,12 +556,14 @@ public:
 
     virtual void set_scroll(int y);
     int get_scroll() const { return m_scroll; };
+    void set_scrollbar_visible(bool vis) { m_scrolbar_visible = vis; };
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
     virtual bool on_event(const wm_event& event) override;
 protected:
     int m_scroll = 0;
+    bool m_scrolbar_visible = true;
 #ifdef USE_TILE_LOCAL
     VertBuffer m_shade_buf = VertBuffer(false, true);
     ShapeBuffer m_scrollbar_buf;

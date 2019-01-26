@@ -291,6 +291,19 @@ static string _exit_type_to_string(game_exit e)
     return "BUGGY EXIT TYPE";
 }
 
+class HiscoreScroller : public Scroller
+{
+public:
+    virtual void _allocate_region();
+    int scroll_target = 0;
+};
+
+void HiscoreScroller::_allocate_region()
+{
+    m_scroll = scroll_target - m_region[3]/2;
+    Scroller::_allocate_region();
+}
+
 NORETURN void end_game(scorefile_entry &se)
 {
     //Update states
@@ -477,26 +490,38 @@ NORETURN void end_game(scorefile_entry &se)
 
     string hiscore = hiscores_format_single_long(se, true);
 
-    const int desc_lines = count_occurrences(hiscore, "\n") + 1;
-
     goodbye_msg += hiscore;
 
     goodbye_msg += make_stringf("\nBest Crawlers - %s\n",
             crawl_state.game_type_name().c_str());
 
-    // "- 5" gives us an extra line in case the description wraps on a line.
-    goodbye_msg += hiscores_print_list(get_number_of_lines() - desc_lines - 5,
-                                       SCORE_TERSE, hiscore_index);
-
-#ifndef DGAMELAUNCH
-    goodbye_msg += make_stringf("\nYou can find your morgue file in the '%s' directory.",
-            morgue_directory().c_str());
+#ifdef USE_TILE_LOCAL
+        const int line_height = tiles.get_crt_font()->char_height();
+#else
+        const int line_height = 1;
 #endif
+
+    int start;
+    int num_lines = 100;
+    string hiscores = hiscores_print_list(num_lines, SCORE_TERSE, hiscore_index, start);
+    auto scroller = make_shared<HiscoreScroller>();
+    auto hiscores_txt = make_shared<Text>(formatted_string::parse_string(hiscores));
+    scroller->set_child(hiscores_txt);
+    scroller->set_scrollbar_visible(false);
+    scroller->scroll_target = (hiscore_index - start)*line_height + (line_height/2);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
     auto goodbye_txt = make_shared<Text>(formatted_string::parse_string(goodbye_msg));
     vbox->add_child(goodbye_txt);
+    vbox->add_child(scroller);
+
+#ifndef DGAMELAUNCH
+    string morgue_dir = make_stringf("\nYou can find your morgue file in the '%s' directory.",
+            morgue_directory().c_str());
+    vbox->add_child(make_shared<Text>(formatted_string::parse_string(morgue_dir)));
+#endif
+
     auto popup = make_shared<ui::Popup>(move(vbox));
     bool done = false;
     popup->on(Widget::slots.event, [&](wm_event ev)  {

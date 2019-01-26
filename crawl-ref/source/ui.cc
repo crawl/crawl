@@ -1343,7 +1343,7 @@ void Scroller::_allocate_region()
         rect.set_col(col_a, col_b);
         m_shade_buf.add_primitive(rect);
     }
-    if (ch_reg[3] > m_region[3]) {
+    if (ch_reg[3] > m_region[3] && m_scrolbar_visible) {
         const int x = m_region[0]+m_region[2];
         const float h_percent = m_region[3] / (float)ch_reg[3];
         const int h = m_region[3]*min(max(0.05f, h_percent), 1.0f);

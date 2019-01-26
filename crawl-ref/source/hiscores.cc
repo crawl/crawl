@@ -284,7 +284,7 @@ void hiscores_print_all(int display_count, int format)
 
 // Displays high scores using curses. For output to the console, use
 // hiscores_print_all.
-string hiscores_print_list(int display_count, int format, int newest_entry)
+string hiscores_print_list(int display_count, int format, int newest_entry, int& start_out)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
     string ret;
@@ -326,6 +326,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry)
             ret += "<lightgrey>";
     }
 
+    start_out = start;
     return ret;
 }
 
