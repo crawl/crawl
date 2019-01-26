@@ -125,7 +125,8 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 {
     if (you.confused())
         return true;
-    const cloud_type ctype = cloud_type_at(p);
+
+    const cloud_type ctype = env.map_knowledge(p).cloud();
     // Don't prompt if already in a cloud of the same type.
     if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
         && ctype != cloud_type_at(you.pos())
@@ -168,6 +169,11 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
+    // Boldly go into the unknown (for shadow step and other ranged move
+    // prompts)
+    if (env.map_knowledge(p).trap() == TRAP_UNASSIGNED)
+        return true;
+
     // If there's no trap, let's go.
     trap_def* trap = trap_at(p);
     if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
@@ -227,6 +233,11 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
+    // Boldly go into the unknown (for shadow step and other ranged move
+    // prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
     if (!_check_moveto_dangerous(p, msg))
         return false;
     if (!need_expiration_warning() && need_expiration_warning(p)
