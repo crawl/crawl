@@ -1454,6 +1454,7 @@ static void _pre_monster_move(monster& mons)
     reset_spectral_weapon(&mons);
 
     fedhas_neutralise(&mons);
+    slime_convert(&mons);
 
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits(mons.flags, MF_JUST_SUMMONED))

@@ -490,5 +490,4 @@ void do_conversions(monster* target)
 {
         beogh_follower_convert(target);
         gozag_check_bribe(target);
-        slime_convert(target);
 }
