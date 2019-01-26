@@ -1717,7 +1717,8 @@ bool mons_class_can_use_stairs(monster_type mc)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
-           && mc != MONS_ROYAL_JELLY;
+           && mc != MONS_ROYAL_JELLY
+           && mc != MONS_BALL_LIGHTNING;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)

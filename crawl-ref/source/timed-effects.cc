@@ -660,6 +660,13 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
+    // Ball lightning dissapates harmlessly out of LOS
+    if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
+    {
+        monster_die(*mon, KILL_RESET, NON_MONSTER);
+        return;
+    }
+
     // Expire friendly summons
     if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
     {
