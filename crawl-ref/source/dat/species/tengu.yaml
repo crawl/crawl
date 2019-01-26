@@ -45,8 +45,6 @@ mutations:
     MUT_TALONS: 3
   5:
     MUT_TENGU_FLIGHT: 1
-  14:
-    MUT_TENGU_FLIGHT: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_WIZARD
