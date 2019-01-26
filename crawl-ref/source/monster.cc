@@ -5321,7 +5321,12 @@ void monster::corrupt()
     malmutate("");
 }
 
-bool monster::polymorph(int pow, bool /*allow_immobile*/)
+bool monster::polymorph(int /* pow */, bool /*allow_immobile*/)
+{
+    return polymorph();
+}
+
+bool monster::polymorph(poly_power_type power)
 {
     if (!can_polymorph())
         return false;
@@ -5337,19 +5342,19 @@ bool monster::polymorph(int pow, bool /*allow_immobile*/)
     // Polymorphing a shapeshifter will make it revert to its original
     // form.
     if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER, power);
     if (has_ench(ENCH_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_SHAPESHIFTER, power);
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(*this);
+        slime_creature_polymorph(*this, power);
         return true;
     }
 
-    return monster_polymorph(this, RANDOM_MONSTER);
+    return monster_polymorph(this, RANDOM_MONSTER, power);
 }
 
 static bool _mons_is_icy(int mc)

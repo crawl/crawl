@@ -1119,8 +1119,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     }
 
     const bool powerup = !(mons.wont_attack() ^ helpful);
-    monster_polymorph(&mons, RANDOM_MONSTER,
-                      powerup ? PPT_MORE : PPT_LESS);
+    mons.polymorph(powerup ? PPT_MORE : PPT_LESS);
 
     const bool see_new = you.can_see(mons);
 

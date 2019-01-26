@@ -639,7 +639,7 @@ static const vector<chaos_effect> chaos_effects = {
             mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                            : ENCH_SHAPESHIFTER);
             // Immediately polymorph monster, just to make the effect obvious.
-            monster_polymorph(mon, RANDOM_MONSTER);
+            mon->polymorph();
 
             // Xom loves it if this happens!
             const int friend_factor = mon->friendly() ? 1 : 2;

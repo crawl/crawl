@@ -6,6 +6,7 @@
 #include "beh-type.h"
 #include "enchant-type.h"
 #include "mon-ench.h"
+#include "mon-poly.h"
 #include "montravel-target-type.h"
 #include "potion-type.h"
 #include "seen-context-type.h"
@@ -357,6 +358,7 @@ public:
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
     bool polymorph(int pow, bool allow_immobile = true) override;
+    bool polymorph(poly_power_type power = PPT_SAME);
     void banish(actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,

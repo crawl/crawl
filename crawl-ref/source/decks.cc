@@ -1640,7 +1640,7 @@ static void _degeneration_card(int power)
 
                if (mons.can_polymorph())
                {
-                   monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
+                   mons.polymorph(PPT_LESS);
                    mons.malmutate("");
                }
                else
