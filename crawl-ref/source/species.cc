@@ -512,18 +512,24 @@ bool is_starting_species(species_type species)
         && !get_species_def(species).recommended_jobs.empty();
 }
 
+// Check that we can give this draconian species to players as a color.
+static bool _is_viable_draconian(species_type species)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (species == SP_MOTTLED_DRACONIAN)
+        return false;
+#endif
+    return true;
+}
+
+// A random non-base draconian colour appropriate for the player.
 species_type random_draconian_colour()
 {
-    vector<species_type> dracs;
-    for (int drac = 0; drac < static_cast<int>(NUM_SPECIES); ++drac)
-        if (species_is_draconian(static_cast<species_type>(drac))
-#if TAG_MAJOR_VERSION == 34
-            && static_cast<species_type>(drac) != SP_MOTTLED_DRACONIAN
-#endif
-            )
-        {
-            dracs.push_back(static_cast<species_type>(drac));
-        }
-    auto choice = random_iterator(dracs);
-    return *choice;
+  species_type species;
+  do {
+      species =
+          static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                 SP_LAST_NONBASE_DRACONIAN));
+  } while (!_is_viable_draconian(species));
+  return species;
 }
