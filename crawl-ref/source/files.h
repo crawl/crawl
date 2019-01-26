@@ -43,6 +43,7 @@ void assert_read_safe_path(const string &path);
 off_t file_size(FILE *handle);
 
 vector<string> get_dir_files(const string &dir);
+vector<string> get_dir_files_sorted(const string &dir);
 vector<string> get_dir_files_ext(const string &dir, const string &ext);
 vector<string> get_dir_files_recursive(const string &dirname,
                                        const string &ext = "",
