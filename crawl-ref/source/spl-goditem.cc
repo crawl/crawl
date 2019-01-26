@@ -1253,7 +1253,10 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     if (hploss)
     {
-        simple_monster_message(*mons, " convulses!");
+        if (mons->observable())
+            simple_monster_message(*mons, " convulses!");
+        else
+            mpr("Something is bathed in an unholy light!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use

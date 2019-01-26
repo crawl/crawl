@@ -5341,18 +5341,31 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_DISPEL_UNDEAD:
-        if (simple_monster_message(*mon, " convulses!"))
+    {
+        const int dam = damage.roll();
+        if (you.see_cell(mon->pos()))
+        {
+            mprf("%s is dispelled%s",
+                 mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
             obvious_effect = true;
-        mon->hurt(agent(), damage.roll());
+        }
+        mon->hurt(agent(), dam);
         return MON_AFFECTED;
+    }
 
     case BEAM_PAIN:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
         if (dam)
         {
-            if (simple_monster_message(*mon, " writhes in agony!"))
+            if (you.see_cell(mon->pos()))
+            {
+                mprf("%s writhes in agony%s",
+                     mon->name(DESC_THE).c_str(),
+                     attack_strength_punctuation(dam).c_str());
                 obvious_effect = true;
+            }
             mon->hurt(agent(), dam, flavour);
             return MON_AFFECTED;
         }
@@ -5361,14 +5374,22 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_AGONY:
         torment_cell(mon->pos(), agent(), TORMENT_AGONY);
-        obvious_effect = you.can_see(*mon);
+        obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_DISINTEGRATION:   // disrupt/disintegrate
-        if (simple_monster_message(*mon, " is blasted."))
+    {
+        const int dam = damage.roll();
+        if (you.see_cell(mon->pos()))
+        {
+            mprf("%s is blasted%s",
+                 mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
             obvious_effect = true;
-        mon->hurt(agent(), damage.roll(), flavour);
+        }
+        mon->hurt(agent(), dam, flavour);
         return MON_AFFECTED;
+    }
 
     case BEAM_HIBERNATION:
         if (mon->can_hibernate())
