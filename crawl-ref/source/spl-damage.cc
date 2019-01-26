@@ -13,6 +13,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "attack.h"
 #include "beam.h"
 #include "butcher.h"
 #include "cloud.h"
@@ -797,14 +798,17 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons);
 
-    mprf("You freeze %s.", mons->name(DESC_THE).c_str());
-
     bolt beam;
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
+    mprf("You freeze %s%s%s",
+         mons->name(DESC_THE).c_str(),
+         hurted ? "" : " but do no damage",
+         attack_strength_punctuation(hurted).c_str());
+
     _player_hurt_monster(*mons, hurted, beam.flavour, false);
 
     if (mons->alive())
@@ -836,10 +840,6 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    mprf("The air twists around and %sstrikes %s!",
-         mons->airborne() ? "violently " : "",
-         mons->name(DESC_THE).c_str());
-
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
     bolt pbeam;
@@ -851,6 +851,12 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 #endif
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
+
+    mprf("The air twists around and %sstrikes %s%s%s",
+         mons->airborne() ? "violently " : "",
+         mons->name(DESC_THE).c_str(),
+         hurted ? "" : " but does no damage",
+         attack_strength_punctuation(hurted).c_str());
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
     return spret::success;
@@ -1068,8 +1074,9 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
 
     if (damage > 0)
     {
-        mpr(damage > 15 ? "You shudder from the earth-shattering force."
-                        : "You shudder.");
+        mprf(damage > 15 ? "You shudder from the earth-shattering force%s"
+                        : "You shudder%s",
+             attack_strength_punctuation(damage).c_str());
         if (devastator)
             ouch(damage, KILLED_BY_MONSTER, wielder->mid);
         else
@@ -1227,16 +1234,13 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (!mons || !mons->alive())
         return 0; // XXX: handle damaging the player for mons casts...?
 
-    if (you.can_see(*mons))
-    {
-        mprf("%s is blasted with magical radiation!",
-             mons->name(DESC_THE).c_str());
-    }
-
     const int dice = 6;
     const int max_dam = 30 + div_rand_round(pow, 2);
     const dice_def dam_dice = calc_dice(dice, max_dam);
     const int dam = dam_dice.roll();
+    mprf("%s is blasted with magical radiation%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(dam).c_str());
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
@@ -1753,11 +1757,12 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     if (victim->is_player())
     {
-        mpr("You are struck by an arc of lightning.");
         damage = 1 + random2(3 + pow / 15);
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
+        mprf("You are struck by an arc of lightning%s",
+             attack_strength_punctuation(damage).c_str());
         ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
              agent.is_player() ? "you" : agent.name(DESC_A).c_str());
         if (damage > 0)
@@ -1777,9 +1782,10 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
-        mprf("%s is struck by an arc of lightning.",
-                mons->name(DESC_THE).c_str());
         damage = mons_adjust_flavoured(mons, beam, damage);
+        mprf("%s is struck by an arc of lightning%s",
+                mons->name(DESC_THE).c_str(),
+                attack_strength_punctuation(damage).c_str());
 
         if (agent.is_player())
             _player_hurt_monster(*mons, damage, beam.flavour, false);
@@ -2143,9 +2149,10 @@ spret cast_fragmentation(int pow, const actor *caster,
     }
     else if (target == you.pos()) // You explode.
     {
-        mpr("You shatter!");
+        const int dam = beam.damage.roll();
+        mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
 
-        ouch(beam.damage.roll(), KILLED_BY_BEAM, caster->mid,
+        ouch(dam, KILLED_BY_BEAM, caster->mid,
              "by Lee's Rapid Deconstruction", true,
              caster->is_player() ? "you"
                                  : caster->name(DESC_A).c_str());
@@ -2157,10 +2164,13 @@ spret cast_fragmentation(int pow, const actor *caster,
         monster* mon = monster_at(target);
         ASSERT(mon);
 
-        if (you.see_cell(target))
-            mprf("%s shatters!", mon->name(DESC_THE).c_str());
-
         const int dam = beam.damage.roll();
+        if (you.see_cell(target))
+        {
+            mprf("%s shatters%s", mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
+        }
+
         if (caster->is_player())
             _player_hurt_monster(*mon, dam, BEAM_DISINTEGRATION);
         else if (dam)
@@ -2364,33 +2374,34 @@ void forest_damage(const actor *mon)
                 if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)))
                 {
                     msg = random_choose(
-                            "@foe@ @is@ waved at by a branch.",
-                            "A tree reaches out but misses @foe@.",
-                            "A root lunges up near @foe@.");
+                            "@foe@ @is@ waved at by a branch",
+                            "A tree reaches out but misses @foe@",
+                            "A root lunges up near @foe@");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                AC_PROPORTIONAL)))
                 {
                     msg = random_choose(
-                            "@foe@ @is@ scraped by a branch!",
-                            "A tree reaches out and scrapes @foe@!",
-                            "A root barely touches @foe@ from below.");
+                            "@foe@ @is@ scraped by a branch",
+                            "A tree reaches out and scrapes @foe@",
+                            "A root barely touches @foe@ from below");
                     if (foe->is_monster())
                         behaviour_event(foe->as_monster(), ME_WHACK);
                 }
                 else
                 {
                     msg = random_choose(
-                        "@foe@ @is@ hit by a branch!",
-                        "A tree reaches out and hits @foe@!",
-                        "A root smacks @foe@ from below.");
+                        "@foe@ @is@ hit by a branch",
+                        "A tree reaches out and hits @foe@",
+                        "A root smacks @foe@ from below");
                     if (foe->is_monster())
                         behaviour_event(foe->as_monster(), ME_WHACK);
                 }
 
                 msg = replace_all(replace_all(msg,
                     "@foe@", foe->name(DESC_THE)),
-                    "@is@", foe->conj_verb("be"));
+                    "@is@", foe->conj_verb("be"))
+                    + attack_strength_punctuation(dmg);
                 if (you.see_cell(foe->pos()))
                     mpr(msg);
 
