@@ -1956,11 +1956,11 @@ formatted_string progress_popup::get_progress_string(unsigned int len)
     string bar = string(len, ' ');
     if (len < 3)
         return formatted_string(bar);
-    const unsigned int center_pos = position % len;
+    const unsigned int center_pos = len + position % len;
     const bool up = center_pos % 2 == 0;
     const string marker = up ? "/o/" : "\\o\\";
     bar[(center_pos - 1) % len] = marker[0];
-    bar[center_pos] = marker[1];
+    bar[center_pos % len] = marker[1];
     bar[(center_pos + 1) % len] = marker[2];
     bar = string("<magenta>") + bar + "</magenta>";
     return formatted_string::parse_string(bar);
