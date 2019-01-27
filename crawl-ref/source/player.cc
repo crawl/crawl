@@ -6747,6 +6747,9 @@ void player::petrify(actor *who, bool force)
 
     duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
+    if (who)
+        props["petrified_by"] = who->name(DESC_A, true);
+
     redraw_evasion = true;
     mprf(MSGCH_WARN, "You are slowing down.");
 }

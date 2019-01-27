@@ -2804,6 +2804,13 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                         desc += " by " + you.props["paralysed_by"].get_string();
                     desc += _hiscore_newline_string();
                 }
+                else if (you.duration[DUR_PETRIFIED])
+                {
+                    desc += "... while petrified";
+                    if (you.props.exists("petrified_by"))
+                        desc += " by " + you.props["petrified_by"].get_string();
+                    desc += _hiscore_newline_string();
+                }
 
             }
         }
