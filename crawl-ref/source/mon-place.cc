@@ -3073,6 +3073,34 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
     }
 }
 
+void replace_boris()
+{
+    // Initial generation is governed by the vault uniq_boris. Once he is killed
+    // a first time, as long as he isn't alive somewhere, he can regenerate when
+    // a new level is entered.
+    if (!you.props["killed_boris_once"]
+        || you.unique_creatures[MONS_BORIS]
+        || !one_chance_in(3))
+    {
+        return;
+    }
+
+    // TODO: kind of ad hoc, maybe read from uniq_boris vault?
+    switch (you.where_are_you)
+    {
+    case BRANCH_DEPTHS:
+    case BRANCH_VAULTS:
+    case BRANCH_TOMB:
+    case BRANCH_CRYPT:
+        break;
+    default:
+        return;
+    }
+
+    mgen_data boris = mgen_data(MONS_BORIS);
+    mons_place(boris);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Random monsters for portal vaults. Used for e.g. shadow creatures.

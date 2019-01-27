@@ -2580,11 +2580,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             // XXX: Actual blood curse effect for Boris? - bwr
 
-            // Now that Boris is dead, he's a valid target for monster
-            // creation again. - bwr
+            // Now that Boris is dead, he can be replaced when new levels
+            // are generated.
             you.unique_creatures.set(mons.type, false);
-            // And his vault can be placed again.
-            you.uniq_map_names.erase("uniq_boris");
+            you.props["killed_boris_once"] = true;
         }
         if (mons.type == MONS_JORY && !in_transit)
             blood_spray(mons.pos(), MONS_JORY, 50);
@@ -2601,7 +2600,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             drop_items = false;
 
-            // Like Boris, but her vault can't come back
+            // Like Boris, but regenerates immediately
             if (mons_is_mons_class(&mons, MONS_NATASHA))
                 you.unique_creatures.set(MONS_NATASHA, false);
             if (!mons_reset && !wizard)

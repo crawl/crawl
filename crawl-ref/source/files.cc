@@ -1504,6 +1504,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode == LOAD_ENTER_LEVEL)
         place_transiting_monsters();
 
+    if (just_created_level && make_changes)
+        replace_boris();
+
     if (make_changes)
     {
         // Tell stash-tracker and travel that we've changed levels.
