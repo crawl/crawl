@@ -1194,53 +1194,10 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
 static string _verbose_info0(const monster_info& mi)
 {
-    if (mi.is(MB_BERSERK))
-        return "berserk";
-    if (mi.is(MB_INSANE))
-        return "insane";
-    if (mi.is(MB_INNER_FLAME))
-        return "inner flame";
-    if (mi.is(MB_DUMB))
-        return "stupefied";
-    if (mi.is(MB_PARALYSED))
-        return "paralysed";
-    if (mi.is(MB_CAUGHT))
-        return "caught";
-    if (mi.is(MB_WEBBED))
-        return "webbed";
-    if (mi.is(MB_PETRIFIED))
-        return "petrified";
-    if (mi.is(MB_PINNED))
-        return "pinned";
-    if (mi.is(MB_PETRIFYING))
-        return "petrifying";
-    if (mi.is(MB_MAD))
-        return "mad";
-    if (mi.is(MB_CONFUSED))
-        return "confused";
-    if (mi.is(MB_FLEEING))
-        return "fleeing";
-    if (mi.is(MB_DORMANT))
-        return "dormant";
-    if (mi.is(MB_SLEEPING))
-        return "sleeping";
-    if (mi.is(MB_UNAWARE))
-        return "unaware";
-    if (mi.is(MB_DAZED))
-        return "dazed";
-    if (mi.is(MB_MUTE))
-        return "mute";
-    if (mi.is(MB_BLIND))
-        return "blind";
-    // avoid jelly (wandering) (fellow slime)
-    if (mi.is(MB_WANDERING) && mi.attitude != ATT_STRICT_NEUTRAL)
-        return "wandering";
-    if (mi.is(MB_BURNING))
-        return "burning";
-    if (mi.is(MB_INVISIBLE))
-        return "invisible";
-
-    return "";
+    string desc=""; vector<monster_info> miv;
+    miv.push_back(mi);
+    mons_conditions_string(desc,miv,0,1,false);
+    return desc;
 }
 
 static string _verbose_info(const monster_info& mi)
@@ -1312,7 +1269,8 @@ void clear_monster_list_colours()
 }
 
 void monster_info::to_string(int count, string& desc, int& desc_colour,
-                             bool fullname, const char *adj) const
+                             bool fullname, const char *adj, 
+                             bool verbose) const
 {
     ostringstream out;
     _monster_list_colour_type colour_type = _NUM_MLC;
@@ -1334,7 +1292,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     out << " av" << mons_avg_hp(type);
 #endif
 
-    if (count == 1)
+    if (count == 1 && verbose)
        out << _verbose_info(*this);
 
     // Friendliness
@@ -1823,6 +1781,502 @@ void get_monster_info(vector<monster_info>& mons)
         }
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
+}
+
+void mons_to_string_pane(string& desc, int& desc_colour, bool fullname, 
+                         const vector<monster_info>& mi, int start, 
+                         int count)
+{
+    mi[start].to_string(count, desc, desc_colour, fullname, nullptr, false);
+    mons_conditions_string(desc, mi, start, count, true);
+}
+
+void mons_conditions_string(string& desc, const vector<monster_info>& mi, 
+                            int start, int count, bool listall)
+{
+    static vector<monster_info_func> monster_info_funcs = 
+    init_monster_info_funcs();
+    
+    ostringstream out;
+    if (listall)
+        out << desc;
+    bool first=true; bool didany = false;
+    for (auto &info: monster_info_funcs) {
+        int num = 0;
+        for (int j = start; j < start+count; j++)
+        {
+            if (info.test(mi[j], listall))
+            {
+                if (!listall)
+                {
+                    out << info.singular;
+                    desc=out.str();
+                    return;
+                }
+                else
+                {
+                    num++;
+                }
+            }
+        }         
+        if (num > 0)
+        {
+            if (first)
+            {
+                first = false; out << " ("; didany = true;
+            }
+            else
+            {
+                out << ", ";
+            }
+            if (num < count)
+                out << num << " ";
+            out << (num > 1 ? info.plural : info.singular);
+        }
+    }
+    if (didany)
+        out << ")";
+    desc = out.str();
+}
+
+vector<monster_info_func> init_monster_info_funcs()
+{
+    vector<monster_info_func> toret; // well, I couldn't think of a good name
+    toret.push_back({"charmed", "charmed", 
+            [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_CHARMED);
+            }
+	});
+// I can't think of a good short word here
+    toret.push_back({"hexed", "hexed", 
+            [](const monster_info &mi, bool newconditions)
+	    {
+                return newconditions && mi.is(MB_HEXED);
+	    }
+	});
+    toret.push_back({"berserk", "berserk", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+		return mi.is(MB_BERSERK) &&
+		(!mi.is(MB_SLOWED) || !newconditions);
+            }
+	});
+    toret.push_back({"berserk+slow", "berserk+slow", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_BERSERK) &&
+                mi.is(MB_SLOWED) && newconditions;
+            }
+	});
+    toret.push_back({"fast", "fast", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_HASTED) &&
+                !mi.is(MB_BERSERK) && !mi.is(MB_SLOWED);
+            }
+	});
+    toret.push_back({"inner flame", "inner flame",
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return mi.is(MB_INNER_FLAME);
+            }
+	});
+    toret.push_back({"strong", "strong", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_STRONG) &&
+                !mi.is(MB_BERSERK);
+            }
+	});
+    toret.push_back({"empowered", "empowered", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_EMPOWERED_SPELLS);
+            }
+	});
+    toret.push_back({"charged", "charged", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_FULLY_CHARGED);
+            }
+	});
+// Confusing word but perhaps OK in context?
+    toret.push_back({"charging", "charging", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_PARTIALLY_CHARGED);
+            }
+	});
+    toret.push_back({"agile", "agile", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_AGILE);
+            }
+	});
+    toret.push_back({"swift", "swift",
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_SWIFT);
+            }
+	});
+    toret.push_back({"can howl", "can howl", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_READY_TO_HOWL);
+            }
+	});
+    toret.push_back({"brilliance aura", "brilliance auras", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_BRILLIANCE_AURA);
+            }
+	});
+    toret.push_back({"insane", "insane", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return mi.is(MB_INSANE);
+            }
+	});
+    toret.push_back({"stupefied", "stupefied",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_DUMB);
+            }
+	});
+    toret.push_back({"paralysed", "paralysed",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_PARALYSED);
+            }
+	});
+    toret.push_back({"caught", "caught",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_CAUGHT);
+            }
+	});
+    toret.push_back({"webbed", "webbed",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_WEBBED); 
+            }
+	});
+    toret.push_back({"petrified", "petrified",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_PETRIFIED); 
+            }
+	});
+    toret.push_back({"pinned", "pinned", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_PINNED); 
+            }
+	});
+    toret.push_back({"polearm","polearms",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+                {
+                    const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+                    if (weapon && weapon_reach(*weapon) == REACH_TWO)
+                        return newconditions;
+                }
+                if (mi.type == MONS_DANCING_WEAPON && 
+                    mi.reach_range() == REACH_TWO) 
+                    return newconditions;
+                return false;
+            }
+	});
+    toret.push_back({"launcher","launcher", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+                {
+                    const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+                    if (weapon && is_ranged_weapon_type(weapon->sub_type))
+                        return newconditions;
+                }
+                return false;
+            }
+	});
+    // We know our own friendly summons are summons, right?
+    toret.push_back({"summoned", "summoned",
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_SUMMONED) &&
+                (mi.attitude != ATT_FRIENDLY); 
+            }
+	});
+    toret.push_back({"scary", "scary", 
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_FEAR_INSPIRING); 
+            }
+	});
+    // Bah, these next four are really too long
+    toret.push_back({"chanting recall", "chanting recall",
+	    [](const monster_info &mi, bool newconditions)
+            { 
+                return newconditions && mi.is(MB_WORD_OF_RECALL); 
+            }
+	});
+    toret.push_back({"repels missiles", "repel missiles", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_REPEL_MSL); 
+            }
+	});
+    toret.push_back({"deflects missiles", "deflect missiles", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_DEFLECT_MSL); 
+            }
+	});
+    toret.push_back({"toxic aura", "toxic auras",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_TOXIC_RADIANCE); 
+            }
+	});
+    toret.push_back({"black mark", "black marks",
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_BLACK_MARK); 
+            }
+	});
+    // bit of a wheeze here but the two can probably be distinguished in context
+    toret.push_back({"icy armour", "icy armour", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && 
+                (mi.is(MB_OZOCUBUS_ARMOUR)|| mi.is(MB_ICEMAIL)); 
+            }
+	});
+    toret.push_back({"shrouded", "shrouded", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_SHROUD); 
+            }
+	});
+    toret.push_back({"resistant", "resistant", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_RESISTANCE); 
+            }
+	});
+    toret.push_back({"petrifying", "petrifying", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_PETRIFYING); 
+            }
+	});
+    toret.push_back({"mad", "mad", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_MAD); 
+            }
+	});
+    toret.push_back({"confused", "confused", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_CONFUSED); 
+            }
+	});
+    toret.push_back({"fleeing", "fleeing", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_FLEEING); 
+            }
+	});
+    toret.push_back({"dormant", "dormant", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_DORMANT); 
+            }
+	});
+    toret.push_back({"asleep", "asleep", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_SLEEPING); 
+            }
+	});
+    toret.push_back({"unaware", "unaware", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_UNAWARE); 
+            }
+	});
+    toret.push_back({"dazed", "dazed", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_DAZED); 
+            }
+	});
+    toret.push_back({"mute", "mute", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_MUTE); 
+            }
+	});
+    toret.push_back({"blind", "blind", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_BLIND); 
+            }
+	});
+    toret.push_back({"frozen", "frozen", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_FROZEN); 
+            }
+	});
+    toret.push_back({"infested", "infested", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_INFESTATION); 
+            }
+	});
+    toret.push_back({"wandering", "wandering", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return (mi.is(MB_WANDERING) 
+                        && mi.attitude != ATT_STRICT_NEUTRAL); 
+            }
+	});
+    toret.push_back({"drowning", "drowning", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_WATER_HOLD_DROWN); 
+            }
+	});
+    toret.push_back({"burning", "burning", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_BURNING); 
+            }
+	});
+    toret.push_back({"poisoned", "poisoned", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_POISONED); 
+            }
+	});
+    toret.push_back({"slow", "slow", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_SLOWED) && 
+                !mi.is(MB_BERSERK) && !mi.is(MB_HASTED); 
+            }
+	});
+    toret.push_back({"catching breath", "catching breath", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_BREATH_WEAPON); 
+            }
+	});
+    // Bit of a vague word but you normally see it after reading a scroll of vuln
+    toret.push_back({"vulnerable", "vulnerable", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_VULN_MAGIC); 
+            }
+	});
+    toret.push_back({"inflammable", "inflammable", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_FIRE_VULN); 
+            }
+	});
+    toret.push_back({"easily poisoned", "easily poisoned", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_POISON_VULN); 
+            }
+	});
+    toret.push_back({"misshapen", "misshapen", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_WRETCHED); 
+            }
+	});
+    toret.push_back({"corroded", "corroded", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_CORROSION); 
+            }
+	});
+    toret.push_back({"flayed", "flayed", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_FLAYED); 
+            }
+	});
+    toret.push_back({"rooted", "rooted", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_GRASPING_ROOTS); 
+            }
+	});
+    toret.push_back({"clutched", "clutched", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_VILE_CLUTCH); 
+            }
+	});
+    toret.push_back({"skewered", "skewered", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_BARBS); 
+            }
+	});
+    toret.push_back({"sick", "sick", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_SICK); 
+            }
+	});
+    toret.push_back({"weak", "weak", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_WEAK); 
+            }
+	});
+    toret.push_back({"drained", "drained", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && 
+                (mi.is(MB_HEAVILY_DRAINED) || 
+                 mi.is(MB_LIGHTLY_DRAINED)); 
+            }
+	});
+    toret.push_back({"sapped magic", "sapped magic", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_SAP_MAGIC); 
+            }
+	});
+    toret.push_back({"corona", "coronas", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_GLOWING); 
+            }
+	});
+    toret.push_back({"invisible", "invisible", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_INVISIBLE); 
+            }
+	});
+    toret.push_back({"engulfed", "engulfed", 
+	    [](const monster_info &mi, bool newconditions)
+            {
+                return newconditions && mi.is(MB_WATER_HOLD) && 
+                !mi.is(MB_WATER_HOLD_DROWN);
+            }
+	});
+    return toret;
 }
 
 monster_type monster_info::draco_or_demonspawn_subspecies() const
