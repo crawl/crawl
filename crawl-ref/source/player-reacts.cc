@@ -219,6 +219,9 @@ static void _decrement_petrification(int delay)
 
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              flesh_equiv.c_str());
+
+        if (you.props.exists("petrified_by"))
+            you.props.erase("petrified_by");
     }
 
     if (you.duration[DUR_PETRIFYING])
