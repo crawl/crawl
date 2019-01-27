@@ -1371,7 +1371,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (feat_is_escape_hatch(stair_taken))
         hatch_name = _get_hatch_name();
 
-    if (load_mode != LOAD_VISITOR)
+    if (load_mode != LOAD_VISITOR && load_mode != LOAD_GENERATE)
         popped = _leave_level(stair_taken, old_level, &return_pos);
 
     unwind_var<dungeon_feature_type> stair(
