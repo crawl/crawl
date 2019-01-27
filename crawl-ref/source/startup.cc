@@ -253,29 +253,14 @@ static bool _ensure_level_generated(const level_pos &pos)
     if (pos.id.depth == brdepth[pos.id.branch])
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
-    if (!player_in_branch(pos.id.branch) && pos.id.depth == 1
-        && pos.id.branch != BRANCH_DUNGEON)
-    {
+    if (pos.id.depth == 1 && pos.id.branch != BRANCH_DUNGEON)
         stair_taken = branches[pos.id.branch].entry_stairs;
-    }
-
-    if (is_connected_branch(pos.id.branch))
-        you.level_stack.clear();
-    else
-    {
-        for (int i = you.level_stack.size() - 1; i >= 0; i--)
-            if (you.level_stack[i].id == pos.id)
-                you.level_stack.resize(i);
-        if (!player_in_branch(pos.id.branch))
-            you.level_stack.push_back(level_pos::current());
-    }
 
     const level_id old_level = level_id::current();
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
 
-    leaving_level_now(stair_taken);
     return load_level(stair_taken, LOAD_GENERATE, old_level);
 }
 
