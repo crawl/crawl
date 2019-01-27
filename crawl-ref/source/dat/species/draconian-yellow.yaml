@@ -31,11 +31,10 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_ACID_RESISTANCE: 1
   14:
     MUT_ACIDIC_BITE: 1
 fake_mutations:
   - long: You can spit globs of acid.
     short: spit acid
-  - long: You are resistant to acid.
-    short: acid resistance
 create_enum: false

@@ -3167,6 +3167,13 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_INHIBITED_REGENERATION] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_YELLOW_DRACONIAN_RACID
+        && you.species == SP_YELLOW_DRACONIAN)
+    {
+        you.mutation[MUT_ACID_RESISTANCE] = 1;
+        you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
+    }
+
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.
     const int xl_remaining = you.get_max_xl() - you.experience_level;
