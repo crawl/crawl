@@ -1488,17 +1488,14 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (have_passive(passive_t::resist_corrosion))
         return true;
 
+    if (get_mutation_level(MUT_ACID_RESISTANCE))
+        return true;
+
     if (get_form()->res_acid())
         return true;
 
     if (you.duration[DUR_RESISTANCE])
         return true;
-
-    if ((form_keeps_mutations() || form == transformation::dragon)
-        && species == SP_YELLOW_DRACONIAN)
-    {
-        return true;
-    }
 
     // TODO: why doesn't this use the usual form suppression mechanism?
     if (form_keeps_mutations()
