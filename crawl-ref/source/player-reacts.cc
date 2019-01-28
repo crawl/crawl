@@ -220,8 +220,8 @@ static void _decrement_petrification(int delay)
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              flesh_equiv.c_str());
 
-        if (you.props.exists("petrified_by"))
-            you.props.erase("petrified_by");
+        if (you.props.exists(PETRIFIED_BY_KEY))
+            you.props.erase(PETRIFIED_BY_KEY);
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -257,8 +257,8 @@ static void _decrement_paralysis(int delay)
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
-            if (you.props.exists("paralysed_by"))
-                you.props.erase("paralysed_by");
+            if (you.props.exists(PARALYSED_BY_KEY))
+                you.props.erase(PARALYSED_BY_KEY);
         }
     }
 }
