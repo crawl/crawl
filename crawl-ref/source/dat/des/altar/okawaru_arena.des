@@ -86,18 +86,14 @@ ORIENT: float
 TAGS:   no_item_gen no_monster_gen generate_awake no_rotate no_hmirror
 KPROP:  cX-EfGKkL = no_tele_into
 SUBST:  c = t-
-# Prizes are formerly "acquire armour" / "acquire weapon".
-# Allies picking these up causes them to be killed and crash the game.
-# The "level:-3" is "superb_item quality" at time of writing.
-KITEM:  Ll = any armour level:-3 no_pickup / any weapon level:-3 no_pickup
+KITEM:  Ll = any armour good_item no_pickup / any weapon good_item no_pickup
 KFEAT:  GR = iron_grate
 KFEAT:  XTv = metal_wall
 KFEAT:  L = floor
 KFEAT:  M = escape_hatch_down
-KFEAT:  E = runed_door
 KFEAT:  Kk = altar_okawaru
 KFEAT:  - = floor
-COLOUR: -EMLlv = cyan
+COLOUR: -Lv = cyan
 
 {{
 local tlos_door = TriggerableFunction:new{
@@ -138,7 +134,7 @@ lua_marker("K", tlos_altar)
 lua_marker("T", tmonsters_death)
 lua_marker("G", portal_desc { cage_doors=1 })
 lua_marker("o", tlos_door)
-lua_marker("E", portal_desc { iron_doors=1,
+lua_marker("=", portal_desc { iron_doors=1,
                               door_open_prompt=
                                 "It reads,\n"
                                 .. "\"Warrior's weapon\n"
@@ -165,6 +161,6 @@ MAP
   Xt-c-c-c-c--tX
 XXX-c-c-c-c-c--XXX
 XMG--c-c-c-c-c-GMX
-XoXXXXXXEEXXXXXXoX
- .......@........
+XoXXXXXX==XXXXXXoX
+ .......@@.......
 ENDMAP
