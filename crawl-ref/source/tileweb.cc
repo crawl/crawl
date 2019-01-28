@@ -660,6 +660,7 @@ void TilesFramework::ui_state_change(const string& type, unsigned state_slot)
     tiles.json_write_string("msg", "ui-state");
     tiles.json_write_string("type", type);
     tiles.json_close_object();
+    ASSERT(state_slot + 1 < top.ui_json.size());
     top.ui_json[state_slot+1] = m_msg_buf;
     tiles.finish_message();
 }
