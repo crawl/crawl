@@ -477,8 +477,8 @@ seeded modes:
 Without dungeon pregeneration ('pregen_dungeon = true')
   If dungeon pregeneration is turned off (the default), every game with the
   same seed will have at least the same initial dungeon level and temple
-  layout. However, the order in which you explore levels after the first level
-  may lead to
+  layout. However, the order in which you explore levels after the first one
+  can lead to multiple possible dungeon layouts, depending on your choices.
 
 With dungeon pregeneration ('pregen_dungeon = false')
   If dungeon pregeneration is turned on, the entire connected dungeon will be
