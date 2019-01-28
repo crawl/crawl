@@ -1420,21 +1420,24 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    vector<text_pattern> &actions = Options.confirm_action;
-    if (!actions.empty())
+    if (!quiet)
     {
-        const char* name = ability_name(abil.ability);
-        for (const text_pattern &action : actions)
+        vector<text_pattern> &actions = Options.confirm_action;
+        if (!actions.empty())
         {
-            if (action.matches(name))
+            const char* name = ability_name(abil.ability);
+            for (const text_pattern &action : actions)
             {
-                string prompt = "Really use " + string(name) + "?";
-                if (!yesno(prompt.c_str(), false, 'n'))
+                if (action.matches(name))
                 {
-                    canned_msg(MSG_OK);
-                    return false;
+                    string prompt = "Really use " + string(name) + "?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return false;
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
