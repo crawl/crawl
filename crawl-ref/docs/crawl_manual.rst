@@ -474,13 +474,13 @@ view your game's seed with '?V' as well as in a character file; in online games
 you normally must finish a game in order to see the game's seed. There are two
 seeded modes:
 
-Without dungeon pregeneration ('pregen_dungeon = true')
+Without dungeon pregeneration ('pregen_dungeon = false')
   If dungeon pregeneration is turned off (the default), every game with the
   same seed will have at least the same initial dungeon level and temple
   layout. However, the order in which you explore levels after the first one
   can lead to multiple possible dungeon layouts, depending on your choices.
 
-With dungeon pregeneration ('pregen_dungeon = false')
+With dungeon pregeneration ('pregen_dungeon = true')
   If dungeon pregeneration is turned on, the entire connected dungeon will be
   determined by the game seed. Portal vaults and chaotic zones such as the
   abyss are not guaranteed to be the same, though.
