@@ -1446,32 +1446,27 @@ ENDMAP
 # This vault was built by evilmike, but the idea is mikee's. Who is really the
 # evil one here?
 NAME:   mikee_hates_you
-TAGS:   no_monster_gen
-DEPTH:  D:13-
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:12-, !D:$
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
                                              trident ego:draining . robe
-KITEM:  1 = superb_item no_pickup
+KITEM:  > = |
+KFEAT:  > = escape_hatch_down
 MARKER: ! = lua:fog_machine { \
                 cloud_type = "foul pestilence", \
                 pow_min = 100, pow_max = 100, delay = 10, \
                 size = 1, walk_dist = 0, start_clouds = 1 \
             }
-MARKER: + = lua:props_marker { \
-                door_open_prompt= "This door is covered in warnings. Open " .. \
-                                  "it anyway?", \
-                door_description_prefix= "warning-scrawled " \
-            }
-KFEAT:  + = runed_door
 SUBST:  ! = .
 MAP
 ccccccccccc
 cccccc=2ccc
-@+!!!!l1=>c
-cccccccnccc
-cccccccnccc
-       @
+@=!!!!l1=>c
+ccccccccncc
+ccccccccncc
+        @.
 ENDMAP
 
 # Inspired by the Jorge Luis Borges story "The Library of Babel".
