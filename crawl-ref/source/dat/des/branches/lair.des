@@ -2228,22 +2228,21 @@ ENDMAP
 # A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
 TAGS:   no_pool_fixup
-DEPTH:  Lair:2-, !Lair:$
+DEPTH:  Lair
 ORIENT: north
 KMONS:  pq = plant / fungus / toadstool
-KMONS:  1 = electric eel / rime drake / elephant / hippogriff w:5
+KMONS:  1 = electric eel / rime drake / elephant / wyvern
 KMONS:  2 = lindwurm / dire elephant / catoblepas
 KITEM:  2 = * / |
 KFEAT:  q = W
 KFEAT:  1 = w
-KFEAT:  h = runed_door
 KFEAT:  T = t
 SUBST:  p = p., q = qW, r = tx, E = tE, * = *|, i : GT, j = GTx-
-NSUBST: . = 2:9 / 3:0 / ., 1 = 3:1 / * = 1ww
-CLEAR:  E
+NSUBST: . = 2=9 / 3=0 / ., 1 = 3=1 / 1ww
 KMASK:  Ww = no_monster_gen
+CLEAR:  E
 COLOUR: -|*2 = brown
-FTILE:  -|*2hGT = floor_pebble_brown
+FTILE:  =-|*2GT = floor_pebble_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
@@ -2251,10 +2250,10 @@ Etci-WWWWW1jxxwWW1xxjww1ctE
 Etc*2-WWxWWxxwWWwWWxxwwwctE
 Etc*2-wxxWWxWWWjjwwWWwWWctE
 Etci-wwjxxWWW1xxxx1wWWWwctE
-EtccccccccccccccccccccWqxtE
-EtxxxxxxxxxxxxxxxxxxxxxhxtE
-EttttxrrrrrrrrrrrrrrttWWttE
-Ettttt.qWWwWttqWtwwwqWWwttE
+EtccnncccccnncccccccccWqxtE
+Etxxx.xxxxxx.xxxxxxxxxx=xtE
+Ettttx.trrrtt.ttrrrrttWWttE
+Etttt.ttWWwWWttWtwwwqWWwttE
 Ettt...qWwWwWwWwWwwwWwwwttE
 Ettp..WWwwwqqWwqqWWWqqqtttE
 Ettp..WqwwwttqqtttqqtttttE
