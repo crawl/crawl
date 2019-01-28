@@ -1914,7 +1914,8 @@ progress_popup::progress_popup(string title, int width)
 {
     auto container = make_shared<Box>(Widget::VERT);
     container->align_items = Widget::CENTER;
-    progress_bar = make_shared<Text>(get_progress_string(bar_width));
+    formatted_string bar_string = get_progress_string(bar_width);
+    progress_bar = make_shared<Text>(bar_string);
     auto title_text = make_shared<Text>(title);
     status_text = make_shared<Text>("");
     container->add_child(title_text);
@@ -1928,7 +1929,15 @@ progress_popup::progress_popup(string title, int width)
         // the caller.
         return true;
     });
-    // TODO: webtiles implementation
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", title);
+    tiles.json_write_string("bar_text", bar_string.to_colour_string());
+    tiles.json_write_string("status", "");
+    tiles.push_ui_layout("progress-bar", 1);
+    tiles.flush_messages();
+#endif
+
     push_layout(move(contents));
     pump_events(0);
 }
@@ -1936,19 +1945,40 @@ progress_popup::progress_popup(string title, int width)
 progress_popup::~progress_popup()
 {
     pop_layout();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+    tiles.flush_messages();
+#endif
+}
+
+void progress_popup::force_redraw()
+{
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("status", status_text->get_text());
+    tiles.json_write_string("bar_text",
+        progress_bar->get_text().to_colour_string());
+    tiles.ui_state_change("progress-bar", 0);
+    // need to manually flush messages in case the caller doesn't pause for
+    // input.
+    tiles.flush_messages();
+#endif
+    pump_events(0);
 }
 
 void progress_popup::set_status_text(string status)
 {
     status_text->set_text(status);
+    force_redraw();
 }
 
 void progress_popup::advance_progress()
 {
     position++;
-    progress_bar->set_text(get_progress_string(bar_width));
-    if (!crawl_state.seen_hups)
-        pump_events(0);
+    formatted_string new_bar = get_progress_string(bar_width);
+    progress_bar->set_text(new_bar);
+    force_redraw();
 }
 
 formatted_string progress_popup::get_progress_string(unsigned int len)
@@ -1962,7 +1992,7 @@ formatted_string progress_popup::get_progress_string(unsigned int len)
     bar[(center_pos - 1) % len] = marker[0];
     bar[center_pos % len] = marker[1];
     bar[(center_pos + 1) % len] = marker[2];
-    bar = string("<magenta>") + bar + "</magenta>";
+    bar = string("<lightmagenta>") + bar + "</lightmagenta>";
     return formatted_string::parse_string(bar);
 }
 
