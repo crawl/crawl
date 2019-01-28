@@ -16,6 +16,11 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "transform.h"
+#include "math.h" // ceil
+#include "spl-zap.h" // calc_spell_power
+#include "evoke.h" // wand_mp_cost
+#include "god-abil.h" // pakellas_effective_hex_power
+#include "describe.h" // describe_info, get_monster_db_desc
 
 #define MONINF_METATABLE "monster.info"
 
@@ -207,6 +212,97 @@ MIRES1(res_shock, MR_RES_ELEC)
  * @function res_corr
  */
 MIRES1(res_corr, MR_RES_ACID)
+
+/*** The monster's max HP given in its description.
+ * @treturn string describing the max HP (usually "about X").
+ * @function max_hp
+ */
+static int moninf_get_max_hp(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushstring(ls, mi->get_max_hp_desc().c_str());
+    return 1;
+}
+
+/*** The monster's MR level, in "pips" (number of +'s shown on its description).
+ * Returns a value ranging from 0 to 125 (immune).
+ * @treturn int MR level
+ * @function mr
+ */
+static int moninf_get_mr(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, ceil(1.0*mi->res_magic()/MR_PIP));
+    return 1;
+}
+
+/*** Your probability of defeating the monster's MR with a given spell or zap.
+ * Returns a value ranging from 0 (no chance) to 100 (guaranteed success).
+ *    Returns nil if MR does not apply or the spell can't be cast.
+ * @tparam string spell name
+ * @tparam[opt] boolean true if this spell is evoked rather than cast;
+ *    defaults to false
+ * @treturn int|string|nil percent chance of success (0-100);
+ *     returns "magic immune" if monster is immune;
+ *     returns nil if MR does not apply.
+ * @function defeat_mr
+ */
+static int moninf_get_defeat_mr(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
+    bool is_evoked = lua_isboolean(ls, 3) ? lua_toboolean(ls, 3) : false;
+    int power = is_evoked ?
+        (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (wand_mp_cost() + 9) / 9 :
+        calc_spell_power(spell, true);
+    spell_flags flags = get_spell_flags(spell);
+    bool mr_check = testbits(flags, spflag::MR_check)
+        && testbits(flags, spflag::dir_or_target)
+        && !testbits(flags, spflag::helpful);
+    if (power <= 0 || !mr_check)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    int mr = mi->res_magic();
+    if (mr == MAG_IMMUNE)
+    {
+        lua_pushstring(ls, "magic immune");
+        return 1;
+    }
+    zap_type zap = spell_to_zap(spell);
+    int eff_power = zap == NUM_ZAPS ? power : zap_ench_power(zap, power, false);
+    int adj_power = is_evoked ? pakellas_effective_hex_power(eff_power) : eff_power;
+    int success = hex_success_chance(mr, adj_power, 100);
+    lua_pushnumber(ls, success);
+    return 1;
+}
+
+/*** The monster's AC value, in "pips" (number of +'s shown on its description).
+ * Returns a value ranging from 0 to 5 (highest).
+ * @treturn int AC level
+ * @function ac
+ */
+static int moninf_get_ac(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, ceil(mi->ac/5.0));
+    return 1;
+}
+/*** The monster's EV value, in "pips" (number of +'s shown on its description).
+ * Returns a value ranging from 0 to 5 (highest).
+ * @treturn int evasion level
+ * @function ev
+ */
+static int moninf_get_ev(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    int value = mi->ev;
+    if (!value && mi->base_ev != INT_MAX)
+        value = mi->base_ev;
+    lua_pushnumber(ls, ceil(value/5.0));
+    return 1;
+}
 
 /*** Get the monster's holiness.
  * If passed a holiness, returns a boolean test of whether the monster has the
@@ -494,16 +590,31 @@ LUAFN(moninf_get_damage_desc)
 }
 
 /*** A description of this monster.
+ * @tparam[opt] boolean set true to get the description information body
+ *     displayed when examining the monster; if false (default) returns
+ *     a short description.
  * @treturn string
  * @function desc
  */
 LUAFN(moninf_get_desc)
 {
     MONINF(ls, 1, mi);
-    string desc;
-    int col;
-    mi->to_string(1, desc, col);
-    lua_pushstring(ls, desc.c_str());
+    if (lua_isboolean(ls, 2) && lua_toboolean(ls, 2))
+    {
+        // full description
+        describe_info inf;
+        bool has_stat_desc;
+        get_monster_db_desc(*mi, inf, has_stat_desc, false);
+        lua_pushstring(ls, inf.body.str().c_str());
+    }
+    else
+    {
+        // short description
+        string desc;
+        int col;
+        mi->to_string(1, desc, col);
+        lua_pushstring(ls, desc.c_str());
+    }
     return 1;
 }
 
@@ -586,6 +697,11 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_draining),
     MIREG(res_shock),
     MIREG(res_corr),
+    MIREG(max_hp),
+    MIREG(mr),
+    MIREG(defeat_mr),
+    MIREG(ac),
+    MIREG(ev),
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
