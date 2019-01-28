@@ -464,6 +464,30 @@ who carries it into the sunlight; many undead creatures seek it in the hope that
 it will restore them to life. But then, some people will believe anything. Good
 luck!
 
+Seeded play
+========================================
+
+Crawl dungeons are determined by a "seed" number used to initialise the game's
+random number generator. If you initialise the game with the same seed, you
+will (within certain parameters) get the same dungeon. In offline games you can
+view your game's seed with '?V' as well as in a character file; in online games
+you normally must finish a game in order to see the game's seed. There are two
+seeded modes:
+
+Without dungeon pregeneration ('pregen_dungeon = true')
+  If dungeon pregeneration is turned off (the default), every game with the
+  same seed will have at least the same initial dungeon level and temple
+  layout. However, the order in which you explore levels after the first level
+  may lead to 
+
+With dungeon pregeneration ('pregen_dungeon = false')
+  If dungeon pregeneration is turned on, the entire connected dungeon will be
+  determined by the game seed. Portal vaults and chaotic zones such as the
+  abyss are not guaranteed to be the same, though.
+
+To set a game seed, use the 'game_seed' option, or the '-seed' command line
+option.
+
 Further Help
 ========================================
 

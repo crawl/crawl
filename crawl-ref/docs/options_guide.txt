@@ -408,14 +408,16 @@ game_seed = none
         to the same dungeon. If set to "none" or 0, the seed will be chosen
         randomly. This can also be set directly via the command line with
         "-seed", which will override any rc file setting. This value is an
-        unsigned 64bit integer.
+        unsigned 64 bit integer.
 
 pregen_dungeon = false
-        When set to true, the game will pregenerate the entire dungeon when
-        starting a new character. This leads to more deterministic dungeon
+        When set to true, the game will pregenerate the entire connected dungeon
+        when starting a new character. This leads to more deterministic dungeon
         generation relative to a particular game seed. If this is false, levels
         will be generated as you enter them, and the order in which you traverse
-        the dungeon will lead to different dungeons for the same game seed.
+        the dungeon will lead to different dungeons for the same game seed. With
+        this set to true, you still may encounter variation in portal vaults,
+        the abyss, pandemonium, and ziggurats.
 
 2-  File System.
 ================
