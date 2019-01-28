@@ -73,6 +73,30 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $panes.eq(next % $panes.length).addClass("current");
     }
 
+    function progress_bar(msg)
+    {
+        var $popup = $(".templates > .progress-bar").clone();
+        if (msg.title === "")
+            $popup.children(".header").remove();
+        else
+            $popup.find(".header > span").html(msg.title);
+        $popup.children(".bar-text > span").html(
+            util.formatted_string_to_html(msg.bar_text));
+        $popup.children(".status > span").html(msg.status);
+        return $popup;
+    }
+
+    function progress_bar_update(msg)
+    {
+        console.log("progress bar update");
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("progress-bar"))
+            return;
+        $popup.children(".bar-text").html("span" +
+                    util.formatted_string_to_html(msg.bar_text) + "</span>");
+        $popup.children(".status")[0].textContent = msg.status;
+    }
+
     function describe_generic(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
@@ -702,6 +726,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "describe-monster" : describe_monster,
         "version" : version,
         "formatted-scroller" : formatted_scroller,
+        "progress-bar" : progress_bar,
         "msgwin-get-line" : msgwin_get_line,
     };
 
@@ -738,6 +763,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
             "msgwin-get-line" : msgwin_get_line_update,
+            "progress-bar" : progress_bar_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

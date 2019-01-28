@@ -512,6 +512,28 @@ body {
     width: 80ch;
 }
 
+.progress-bar {
+    max-width: 80ch;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%; /* for IE11 */
+    max-height: inherit;
+}
+
+.progress-bar > .bar-text {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    white-space: pre;
+}
+
 .describe-generic {
     max-width: 80ch;
     display: -webkit-box;

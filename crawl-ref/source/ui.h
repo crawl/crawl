@@ -20,6 +20,9 @@
 # include "tilebuf.h"
 # include "tiledgnbuf.h"
 #endif
+#ifdef USE_TILE_WEB
+# include "tileweb.h"
+#endif
 
 namespace ui {
 
@@ -631,6 +634,7 @@ public:
     ~progress_popup();
     void set_status_text(string status);
     void advance_progress();
+    void force_redraw();
 private:
     shared_ptr<Popup> contents;
     shared_ptr<Text> progress_bar;
