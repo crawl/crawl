@@ -184,7 +184,7 @@ void dist::confusion_fuzz(int range)
     target   = you.pos();
     target.x += random_range(-range, range);
     target.y += random_range(-range, range);
-    
+
     choseRay = false;
 }
 

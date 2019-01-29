@@ -130,4 +130,3 @@ is a case where the RNG behavior can be fine, but the list order itself could
 lead to divergence. For example, when choosing from a list of files provided
 by the OS, you cannot assume that all OSs and OS versions will give you these
 files in a stable order - sort it yourself.
-
