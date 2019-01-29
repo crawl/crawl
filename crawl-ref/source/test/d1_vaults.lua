@@ -8,6 +8,7 @@
 local eol = string.char(13)
 
 for seed = 1,10 do
+    crawl.stderr("Seed: " .. seed .. eol)
     debug.reset_rng(seed)
     -- debug.enter_dungeon() crashes, for some reason
     -- the following runs through RNG state in the same way that starting a
@@ -18,7 +19,22 @@ for seed = 1,10 do
     debug.generate_level()
     local vault_names = debug.vault_names()
 
-    crawl.stderr("D:1 vaults for seed " .. seed .. " are: " .. vault_names .. eol)
+    crawl.stderr("    D:1 vaults for seed " .. seed .. " are: " .. vault_names .. eol)
+    debug.goto_place("D:2")
+    debug.generate_level()
+    local vault_names = debug.vault_names()
+
+    crawl.stderr("    D:2 vaults for seed " .. seed .. " are: " .. vault_names .. eol)
+    debug.goto_place("D:3")
+    debug.generate_level()
+    local vault_names = debug.vault_names()
+
+    crawl.stderr("    D:3 vaults for seed " .. seed .. " are: " .. vault_names .. eol)
+    debug.goto_place("D:4")
+    debug.generate_level()
+    local vault_names = debug.vault_names()
+
+    crawl.stderr("    D:4 vaults for seed " .. seed .. " are: " .. vault_names .. eol)
 end
 
 debug.reset_rng(1)
