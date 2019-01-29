@@ -87,8 +87,10 @@ static coord_def _place_feature_near(const coord_def &centre,
     coord_def cp = INVALID_COORD;
     for (int i = 0; i < tries; ++i)
     {
-        cp = centre + coord_def(random_range(-radius, radius),
-                                random_range(-radius, radius));
+        coord_def offset;
+        offset.x = random_range(-radius, radius);
+        offset.y = random_range(-radius, radius);
+        cp = centre + offset;
 
         if (cp == centre || !in_bounds(cp))
             continue;
@@ -1242,7 +1244,8 @@ static void _update_abyss_terrain(const coord_def &p,
         if (feat == DNGN_FLOOR && in_los_bounds_g(rp))
         {
             cloud_type cloud = _cloud_from_feat(currfeat);
-            int cloud_life = (_in_wastes(abyssal_state.major_coord) ? 5 : 2) + random2(2);
+            int cloud_life = _in_wastes(abyssal_state.major_coord) ? 5 : 2;
+            cloud_life += random2(2); // force a sequence point, just in case
             if (cloud != CLOUD_NONE)
                 check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
         }
@@ -1772,10 +1775,13 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
     {
-        const int offsetX = random2avg(4, 3) + random2(3);
-        const int offsetY = random2avg(4, 3) + random2(3);
-        const coord_def p(pos.x + random_choose(offsetX, -offsetX),
-                          pos.y + random_choose(offsetY, -offsetY));
+        int offsetX = random2avg(4, 3);
+        offsetX += random2(3); // force a sequence point between random calls
+        int offsetY = random2avg(4, 3);
+        offsetY += random2(3); // ditto
+        coord_def p;
+        p.x = pos.x + random_choose(offsetX, -offsetX);
+        p.y = pos.y + random_choose(offsetY, -offsetY);
         if (!in_bounds(p) || actor_at(p))
             continue;
 

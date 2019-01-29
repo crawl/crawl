@@ -896,8 +896,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // We'll try 1000 times for a good spot.
         for (i = 0; i < 1000; ++i)
         {
-            fpos = mg.pos + coord_def(random_range(-3, 3),
-                                      random_range(-3, 3));
+            fpos = mg.pos;
+            fpos.x += random_range(-3, 3);
+            fpos.y += random_range(-3, 3);
 
             // Place members within LOS_SOLID of their leader.
             // TODO nfm - allow placing around corners but not across walls.
@@ -1211,9 +1212,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
     {
         const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
-        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
-                                  20 + random2(power) + random2(power),
-                                  mon));
+        int rnd_power = random2(power);
+        rnd_power += random2(power);
+        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 20 + rnd_power, mon));
     }
 
     if (mon->has_spell(SPELL_SHROUD_OF_GOLUBRIA))

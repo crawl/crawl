@@ -271,9 +271,10 @@ static armour_type _acquirement_body_armour(bool divine)
 {
     // Using an arbitrary legacy formula, do we think the player doesn't care
     // about armour EVP?
-    const bool warrior = random2(_skill_rdiv(SK_SPELLCASTING, 3)
-                                + _skill_rdiv(SK_DODGING))
-                         < random2(_skill_rdiv(SK_ARMOUR, 2));
+    int light_pref = _skill_rdiv(SK_SPELLCASTING, 3);
+    light_pref += _skill_rdiv(SK_DODGING);
+    light_pref = random2(light_pref);
+    const bool warrior = light_pref < random2(_skill_rdiv(SK_ARMOUR, 2));
 
     vector<pair<armour_type, int>> weights;
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
@@ -1350,11 +1351,12 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             // New gold acquirement formula from dpeg.
             // Min=220, Max=5520, Mean=1218, Std=911
+            int quantity_rnd = roll_dice(1, 8); // ensure rnd sequence points
+            quantity_rnd *= roll_dice(1, 8);
+            quantity_rnd *= roll_dice(1, 8);
             acq_item.quantity = 10 * (20
                                     + roll_dice(1, 20)
-                                    + (roll_dice(1, 8)
-                                       * roll_dice(1, 8)
-                                       * roll_dice(1, 8)));
+                                    + quantity_rnd);
         }
         else if (class_wanted == OBJ_MISSILES && !divine)
             acq_item.quantity *= 5;

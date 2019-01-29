@@ -1153,7 +1153,9 @@ public:
 
     void init_frame(int frame) override
     {
-        offset = coord_def(random2(3) - 1, random2(3) - 1);
+        offset = coord_def();
+        offset.x = random2(3) - 1;
+        offset.y = random2(3) - 1;
     }
 
     coord_def cell_cb(const coord_def &pos, int &colour) override

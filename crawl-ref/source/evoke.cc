@@ -325,7 +325,9 @@ static void _spray_lightning(int range, int power)
     // range has no tracer, so randomness is ok
     beam.range = range;
     beam.source = you.pos();
-    beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    beam.target = you.pos();
+    beam.target.x += random2(13) - 6;
+    beam.target.y += random2(13) - 6;
     // Non-controlleable, so no player tracer.
     zapping(which_zap, power, beam);
 }
@@ -609,10 +611,12 @@ static bool _box_of_beasts(item_def &box)
     mpr("You open the lid...");
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
+    int rnd_factor = random2(7);
+    rnd_factor -= random2(7);
     const int hd_min = min(27,
                            player_adjust_evoc_power(
                                you.skill(SK_EVOCATIONS)
-                               + random2(7) - random2(7), surge));
+                               + rnd_factor, surge));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -660,8 +664,9 @@ static bool _sack_of_spiders(item_def &sack)
     mpr("You reach into the bag...");
 
     const int evo_skill = you.skill(SK_EVOCATIONS);
+    int rnd_factor = 1 + random2(2);
     int count = player_adjust_evoc_power(
-            1 + random2(2) + random2(div_rand_round(evo_skill * 10, 30)), surge);
+            rnd_factor + random2(div_rand_round(evo_skill * 10, 30)), surge);
     const int power = player_adjust_evoc_power(evo_skill, surge);
 
     if (x_chance_in_y(5, 10 + power))
@@ -850,8 +855,10 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
     {
         for (int n = 0; n < NUM_TRIES; ++n)
         {
-            coord_def jitter = clamp_in_bounds(target + coord_def(random_range(-2, 2),
-                                                                  random_range(-2, 2)));
+            coord_def jitter_rnd;
+            jitter_rnd.x = random_range(-2, 2);
+            jitter_rnd.y = random_range(-2, 2);
+            coord_def jitter = clamp_in_bounds(target + jitter_rnd);
             if (jitter == target || jitter == source || cell_is_solid(jitter))
                 continue;
 
@@ -877,8 +884,10 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
 
     for (int n = 0; n < NUM_TRIES; ++n)
     {
-        coord_def jitter = clamp_in_bounds(mid + coord_def(random_range(-3, 3),
-                                                           random_range(-3, 3)));
+        coord_def jitter_rnd;
+        jitter_rnd.x = random_range(-3, 3);
+        jitter_rnd.y = random_range(-3, 3);
+        coord_def jitter = clamp_in_bounds(mid + jitter_rnd);
         if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
             || cell_is_solid(jitter)
             || !cell_see_cell(source, jitter, LOS_NO_TRANS)
@@ -1322,8 +1331,9 @@ static bool _phial_of_floods()
         vector<coord_def> elementals;
         // Flood the endpoint
         coord_def center = beam.path_taken.back();
+        const int rnd_factor = random2(7);
         int num = player_adjust_evoc_power(
-                      5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7),
+                      5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + rnd_factor,
                       surge);
         int dur = player_adjust_evoc_power(
                       40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3),

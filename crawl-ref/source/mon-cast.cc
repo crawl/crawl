@@ -2939,8 +2939,10 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
     {
         // Attempt to find some random spot out of the target's los to place
         // the beast (but not too far away).
-        coord_def area = clamp_in_bounds(target->pos() + coord_def(random_range(-11, 11),
-                                                                   random_range(-11, 11)));
+        coord_def area_rnd;
+        area_rnd.x = random_range(-11, 11);
+        area_rnd.y = random_range(-11, 11);
+        coord_def area = clamp_in_bounds(target->pos() + area_rnd);
         if (cell_see_cell(target->pos(), area, LOS_DEFAULT))
             continue;
 
@@ -4480,7 +4482,8 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
         return;
 
     const int pow = mons_spellpower(mons, slot.spell);
-    int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
+    int hp_cost = 3 + random2avg(9, 2) + 1;
+    hp_cost += random2(pow) / 7; // force a sequence point between random calls
 
     hp_cost = min(hp_cost, target->stat_hp());
     hp_cost = min(hp_cost, mons.max_hit_points - mons.hit_points);
@@ -6164,9 +6167,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     {
         // Invocation; don't use spell_hd
-        const int power = (mons->get_hit_dice() * 20)
-                          + random2(mons->get_hit_dice() * 5)
-                          - random2(mons->get_hit_dice() * 5);
+        int power = (mons->get_hit_dice() * 20)
+                          + random2(mons->get_hit_dice() * 5);
+        power -= random2(mons->get_hit_dice() * 5); // force a sequence point
         monster_type to_summon;
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
@@ -6270,8 +6273,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_SUMMON_HOLIES: // Holy monsters.
-        sumcount2 = 1 + random2(2)
-                      + random2(mons->spell_hd(spell_cast) / 4 + 1);
+        sumcount2 = 1 + random2(2); // sequence point
+        sumcount2 += random2(mons->spell_hd(spell_cast) / 4 + 1);
 
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
@@ -6513,8 +6516,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                  apostrophise(mons->name(DESC_THE)).c_str());
         }
         const int power = (mons->spell_hd(spell_cast) * 15) / 10;
+        const int rnd_power = random2(power); // sequence point
+        const int two_rnd_powers = rnd_power + random2(power);
         mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
-                                   20 + random2(power) + random2(power),
+                                   20 + two_rnd_powers,
                                    mons));
 
         return;

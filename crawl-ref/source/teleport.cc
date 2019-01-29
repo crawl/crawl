@@ -125,7 +125,9 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon)
 
     for (tries = 0; tries < 150; ++tries)
     {
-        const coord_def delta(random2(13) - 6, random2(13) - 6);
+        coord_def delta;
+        delta.x = random2(13) - 6;
+        delta.y = random2(13) - 6;
 
         // Check that we don't get something too close to the
         // starting point.
@@ -455,7 +457,9 @@ bool random_near_space(const actor* victim,
 
     for (int tries = 0; tries < 150; tries++)
     {
-        coord_def p = coord_def(random2(RNS_WIDTH), random2(RNS_WIDTH));
+        coord_def p;
+        p.x = random2(RNS_WIDTH);
+        p.y = random2(RNS_WIDTH);
         if (tried(p))
             continue;
         else

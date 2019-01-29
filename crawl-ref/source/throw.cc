@@ -785,7 +785,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     if (you.confused())
     {
-        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.target = you.pos();
+        thr.target.x += random2(13) - 6;
+        thr.target.y += random2(13) - 6;
         thr.isValid = true;
     }
     else if (target)
