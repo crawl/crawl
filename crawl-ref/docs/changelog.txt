@@ -1,4 +1,4 @@
-Stone Soup 0.23 (up to 0.23-a0-709-gaefc81b7b9)
+Stone Soup 0.23 (up to 0.23-a0-899-gbbae0a335a)
 -----------------------------------------------
 
 Branches, Environment
@@ -15,6 +15,7 @@ Branches, Environment
     is blinked.
   - Mechanical traps save for net traps have been removed from Tomb and the
     Hall of Zot on Zot:5, and traps have been adjusted in many Ossuaries.
+  - Grate traps (triggered by Lua pressure plates) have been removed.
 * A new Gauntlet portal that replaces Labyrinths:
   - Gauntlets have the player choose a path through several combat arenas,
     each of which contains (sometimes exotic) monsters and loot.
@@ -27,13 +28,20 @@ Branches, Environment
   - Concentric octagons is enabled for Lair.
   - Cave pools (with adjusted parameters) is enabled for the Dungeon.
 * Translucent doors that can bee seen through when closed have been added and
-  are now used in Elf layouts and some vaults.
+  are now used in Elf layouts and some vaults, including most runed door
+  vaults.
+* The dungeon RNG has been separated from the gameplay RNG
+* A new option for pregenerating the entire connected dungeon based on a fixed
+  seed has been added. This option is not yet available for online play, but
+  can be used offline. See the manual section "Seeded play" for details.
 
 Character
 ---------
 * Wanderer starting spell libraries are announced along with equipment.
 * Wanderers that start with exactly one level 1 spell start with it memorized.
 * The player can no longer be put to sleep when paralyzed or petrified.
+* Tengu EV bonuses are no longer applied to +EV from equipment.
+* Tengu Permanent Flight becomes immediately available at XL 5.
 
 Gods
 ----
@@ -61,6 +69,8 @@ Gods
     old. The piety cost is the same as old stack five.
   - The Velocity card no longer hastes enemies, instead always slowing them
     with a chance proportional to power.
+  - The Storm card has been revised. It now performs a wind blast followed by
+    one to nine electrical explosions.
 * Ashenzari protects followers from exploration based trap effects.
 * Qazlal's cloud immunity is extended to elementals created with Elemental
   Force.
@@ -74,6 +84,18 @@ Interface
   enabled on most official servers.
 * The new display_chars cloud_weak, cloud_fading, and cloud_terminal indicate
   remaining cloud duration in console.
+* Monster descriptions in 'xv' display spell ranges.
+* The Religion screen '^' gains a fourth pane for gods that need Extra
+  information:
+  - Ashenzari displays information about bondage status.
+  - Beogh displays a list of named followers, with gifts.
+  - Gozag displays bribe information.
+  - Hepliaklqana displays ancestor upgrades.
+  - Nemelex Xobeh displays deck information.
+  - Wu Jian displays information about martial attacks.
+* Spell damage message punctuation has been adjusted to reflect damage done
+  using the same scale as melee damage.
+* Damage brand message punctuation has been similarly adjusted.
 
 Items
 -----
@@ -100,10 +122,14 @@ Items
     storm clouds in place of its old mist.
   - The storm bow no longer occasionally creates rain clouds.
   - The skin of Zhor gains SInv and a passive Metabolic Englaciation effect.
+  - New Unrand: the +8 demon trident "Rift" {distort, reach+}. A distortion
+    demon trident with a reaching range of 3 and smite targeted attack.
 
 Lua
 ---
-* The custom `require` used in clua and dlua has been renamed `crawl_require`
+* The custom `require` used in clua and dlua has been renamed `crawl_require`.
+* A new function `spells.path` has been added to the `spells` module to provide
+  access to the targeter from clua.
 
 Monsters
 --------
