@@ -3632,7 +3632,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Regain hp.
     if (you.hp < you.hp_max)
     {
-        int heal = 2 + random2(damage) + random2(damage);
+        int heal = 2 + random2(damage);
+        heal += random2(damage);
         if (heal > you.experience_level)
             heal = you.experience_level;
 

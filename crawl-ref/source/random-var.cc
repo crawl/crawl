@@ -4,6 +4,10 @@
 
 #include "random.h"
 
+// TODO: the design of this class, together with c++ operator eval order
+// indeterminacy, is more or less a bad idea with the goal of deterministic
+// seeding. It possibly should be removed.
+
 random_var::random_var(int c)
     : start(c), end(c+1)
 {
@@ -131,8 +135,10 @@ double random_var::expected() const
 
 random_var operator+(const random_var& x, const random_var& y)
 {
-    const int start = x.min() + y.min();
-    const int end = x.max() + y.max() + 1;
+    int start = x.min();
+    start += y.min(); // force a sequence point
+    int end = x.max();
+    end += y.max() + 1; // force a sequence point
     vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)
@@ -203,8 +209,12 @@ random_var div_rand_round(const random_var& x, int d)
     ASSERT(d != 0);
 
     // Round start down and end up, not both towards zero.
-    const int start = (x.min() - (x.min() < 0 ? d - 1 : 0)) / d;
-    const int end   = (x.max() + (x.max() > 0 ? d - 1 : 0)) / d + 1;
+    const int x_min1 = x.min(); // force sequence points...
+    const int x_min2 = x.min();
+    const int x_max1 = x.max();
+    const int x_max2 = x.max();
+    const int start = (x_min1 - (x_min2 < 0 ? d - 1 : 0)) / d;
+    const int end   = (x_max1 + (x_max2 > 0 ? d - 1 : 0)) / d + 1;
     vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
@@ -220,8 +230,12 @@ random_var div_rand_round(const random_var& x, int d)
 
 random_var rv::max(const random_var& x, const random_var& y)
 {
-    const int start = ::max(x.min(), y.min());
-    const int end = ::max(x.max(), y.max()) + 1;
+    const int x_min = x.min(); // force sequence points...
+    const int y_min = y.min();
+    const int x_max = x.max();
+    const int y_max = y.max();
+    const int start = ::max(x_min, y_min);
+    const int end = ::max(x_max, y_max) + 1;
     vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)
@@ -233,8 +247,12 @@ random_var rv::max(const random_var& x, const random_var& y)
 
 random_var rv::min(const random_var& x, const random_var& y)
 {
-    const int start = ::min(x.min(), y.min());
-    const int end = ::min(x.max(), y.max()) + 1;
+    const int x_min = x.min(); // force sequence points...
+    const int y_min = y.min();
+    const int x_max = x.max();
+    const int y_max = y.max();
+    const int start = ::min(x_min, y_min);
+    const int end = ::min(x_max, y_max) + 1;
     vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)

@@ -1855,7 +1855,9 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             int i = 0;
             while (i++ < 2000)
             {
-                coord_def rnd(random2(GXM), random2(GYM));
+                coord_def rnd;
+                rnd.x = random2(GXM);
+                rnd.y = random2(GYM);
                 if (grd(rnd) != DNGN_FLOOR)
                     continue;
 
@@ -3314,8 +3316,10 @@ bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
 
 coord_def dgn_random_point_in_margin(int margin)
 {
-    return coord_def(random_range(margin, GXM - margin - 1),
-                     random_range(margin, GYM - margin - 1));
+    coord_def res;
+    res.x = random_range(margin, GXM - margin - 1);
+    res.y = random_range(margin, GYM - margin - 1);
+    return res;
 }
 
 static inline bool _point_matches_feat(coord_def c,
@@ -4239,10 +4243,9 @@ static void _build_postvault_level(vault_placement &place)
             ngb_min = 1, ngb_max = random_range(5, 7);
         if (one_chance_in(20))
             ngb_min = 3, ngb_max = 4;
-        delve(0, ngb_min, ngb_max,
-              random_choose(0, 5, 20, 50, 100),
-              -1,
-              random_choose(1, 20, 125, 500, 999999));
+        const int connchance = random_choose(0, 5, 20, 50, 100);
+        const int top = random_choose(1, 20, 125, 500, 999999);
+        delve(0, ngb_min, ngb_max, connchance, -1, top);
     }
     else
     {
@@ -5417,8 +5420,12 @@ int greed_for_shop_type(shop_type shop, int level_number)
     if (shop == SHOP_FOOD)
         return 10 + random2(5);
     if (_shop_sells_antiques(shop))
-        return 15 + random2avg(19, 2) + random2(level_number);
-    return 10 + random2(5) + random2(level_number / 2);
+    {
+        const int rand = random2avg(19, 2);
+        return 15 + rand + random2(level_number);
+    }
+    const int rand = random2(5);
+    return 10 + rand + random2(level_number / 2);
 }
 
 /**
@@ -6293,16 +6300,26 @@ bool dgn_region::overlaps(const map_mask &mask) const
 
 coord_def dgn_region::random_edge_point() const
 {
-    return x_chance_in_y(size.x, size.x + size.y) ?
-                  coord_def(pos.x + random2(size.x),
-                             random_choose(pos.y, pos.y + size.y - 1))
-                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
-                             pos.y + random2(size.y));
+    coord_def res;
+    if (x_chance_in_y(size.x, size.x + size.y))
+    {
+        res.x = pos.x + random2(size.x);
+        res.y = random_choose(pos.y, pos.y + size.y - 1);
+    }
+    else
+    {
+        res.x = random_choose(pos.x, pos.x + size.x - 1);
+        res.y = pos.y + random2(size.y);
+    }
+    return res;
 }
 
 coord_def dgn_region::random_point() const
 {
-    return coord_def(pos.x + random2(size.x), pos.y + random2(size.y));
+    coord_def res;
+    res.x = pos.x + random2(size.x);
+    res.y = pos.y + random2(size.y);
+    return res;
 }
 
 struct StairConnectivity

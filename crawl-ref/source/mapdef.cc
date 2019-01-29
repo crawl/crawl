@@ -3039,9 +3039,10 @@ coord_def map_def::float_random_place() const
     if (GYM - 2 * minvborder < map.height())
         minvborder = (GYM - map.height()) / 2 - 1;
 
-    return coord_def(
-        random_range(minhborder, GXM - minhborder - map.width()),
-        random_range(minvborder, GYM - minvborder - map.height()));
+    coord_def result;
+    result.x = random_range(minhborder, GXM - minhborder - map.width());
+    result.y = random_range(minvborder, GYM - minvborder - map.height());
+    return result;
 }
 
 point_vector map_def::anchor_points() const
