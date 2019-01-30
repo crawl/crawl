@@ -2745,8 +2745,9 @@ string make_name(uint32_t seed, makename_type name_type)
 
     bool has_space  = false; // Keep track of whether the name contains a space.
 
-    size_t len = 3 + rng.get_uint32() % 5
-                   + ((rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1);
+    size_t len = 3;
+    len += rng.get_uint32() % 5;
+    len += (rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1;
 
     if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;

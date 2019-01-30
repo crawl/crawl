@@ -4288,8 +4288,8 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        int dur = min(200 + random2(100),
-                      300 - get_ench(ENCH_DRAINED).duration - random2(50));
+        int dur = 200 + random2(100);
+        dur = min(dur, 300 - get_ench(ENCH_DRAINED).duration - random2(50));
 
         if (res_negative_energy())
             dur /= (res_negative_energy() * 2);
