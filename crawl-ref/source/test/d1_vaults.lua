@@ -1,4 +1,4 @@
--- this test prints out the D:1 vaults for some test seeds. This can be used
+-- this test prints out the D:1-D:4 vaults for some test seeds. This can be used
 -- to diagnose when seeding changes or isn't working right.
 
 -- this test messes with RNG state! It leaves the RNG with a clean seed 1,

@@ -65,7 +65,7 @@ local tilesets = {
 -- Chooses a bazaar tileset from a list of predefined ones.
 function random_bazaar_tileset()
   local keys = util.keys(tilesets)
-  return tilesets[keys[math.random(#keys)]]
+  return tilesets[keys[crawl.random2(#keys) + 1]]
 end
 
 -- This should be called for every bazaar vault, as it sets some standard map
