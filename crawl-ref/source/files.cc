@@ -2177,6 +2177,8 @@ static vector<ghost_demon> _load_permastore_ghosts(bool backup_on_upgrade=false)
  */
 bool define_ghost_from_bones(monster& mons)
 {
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
+
     bool used_permastore = false;
 
     vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts();
@@ -2206,7 +2208,7 @@ bool define_ghost_from_bones(monster& mons)
 
     if (!used_permastore)
     {
-        loaded_ghosts.erase(loaded_ghosts.begin());
+        loaded_ghosts.erase(loaded_ghosts.begin() + place_i);
 
         if (!loaded_ghosts.empty())
             save_ghosts(loaded_ghosts);
@@ -2758,6 +2760,7 @@ static size_t _ghost_permastore_size()
 
 static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 {
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
     if (ghosts.empty())
         return ghosts;
 
