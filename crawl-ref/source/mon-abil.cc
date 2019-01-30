@@ -1156,7 +1156,9 @@ bool mon_special_ability(monster* mons)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(*mons, " overheats!");
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0,
+            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
+                        mons->summoner;
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
                                        INFINITE_DURATION));
         }
         break;
