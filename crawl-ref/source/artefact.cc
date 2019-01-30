@@ -684,7 +684,7 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
-      []() { return -(3 + random2(5)); }, 3, 2 },
+      []() { return -(2 + random2(5)); }, 3, 2 },
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
