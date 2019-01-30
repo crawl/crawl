@@ -94,6 +94,7 @@ LUAFN(debug_flush_map_memory)
     dgn_flush_map_memory();
     init_level_connectivity();
     you.unique_creatures.reset();
+    you.unique_items.init(UNIQ_NOT_EXISTS);
     return 0;
 }
 
