@@ -167,6 +167,7 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
+        main_temple->tags.clear(); // anything else that needs to be cleared?
         main_temple->load();
         main_temple->reinit();
         err = main_temple->run_lua(true);
@@ -180,7 +181,7 @@ void initialise_temples()
             continue;
         }
 
-              main_temple->fixup();
+        main_temple->fixup();
         err = main_temple->resolve();
 
         if (!err.empty())
