@@ -1939,7 +1939,7 @@ static string _find_ghost_file()
     vector<string> bonefiles = _list_bones();
     if (bonefiles.empty())
         return "";
-    return bonefiles[ui_random(bonefiles.size())];
+    return bonefiles[random2(bonefiles.size())];
 }
 
 static string _old_bones_filename(string ghost_filename, const save_version &v)
