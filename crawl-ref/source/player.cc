@@ -6338,7 +6338,10 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         if (crawl_state.game_is_sprint())
             return "Long-range teleportation is disallowed in Dungeon Sprint.";
         else if (player_in_branch(BRANCH_GAUNTLET))
-            return "Long-range teleportation does not work in a Gauntlet.";
+        {
+            return "A magic seal in the Gauntlet prevents long-range "
+                "teleports.";
+        }
     }
 
     if (stasis())
