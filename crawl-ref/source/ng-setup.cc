@@ -458,6 +458,7 @@ void initial_dungeon_setup()
     initialise_branch_depths();
     initialise_temples();
     init_level_connectivity();
+    initialise_item_descriptions();
 }
 
 static void _setup_generic(const newgame_def& ng)
@@ -522,8 +523,6 @@ static void _setup_generic(const newgame_def& ng)
 
     if (you.char_class == JOB_WANDERER)
         memorise_wanderer_spell();
-
-    initialise_item_descriptions();
 
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
