@@ -155,15 +155,15 @@ geoelf.glyphs.OUTLINE_SUBSTITUTIONS =
 
 -- choosing a random feature
 geoelf.glyphs.FEATURE_OPTIONS =
-  { [geoelf.glyphs.STATUE]   = 2,
-    [geoelf.glyphs.FOUNTAIN] = 1 }
+  { {geoelf.glyphs.STATUE,   2},
+    {geoelf.glyphs.FOUNTAIN, 1} }
 
 -- choosing a random plantlike thing
 geoelf.glyphs.PLANTLIKE_OPTIONS =
-  { [geoelf.glyphs.TREE]   = 3,
-    [geoelf.glyphs.BUSH]   = 1,
-    [geoelf.glyphs.PLANT]  = 2,
-    [geoelf.glyphs.FUNGUS] = 4 }
+  { {geoelf.glyphs.TREE,   3},
+    {geoelf.glyphs.BUSH,   1},
+    {geoelf.glyphs.PLANT,  2},
+    {geoelf.glyphs.FUNGUS, 4} }
 
 -- making things into glass if possible
 geoelf.glyphs.TO_GLASS =

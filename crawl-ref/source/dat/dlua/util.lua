@@ -265,7 +265,7 @@ function util.contains(haystack, needle)
 end
 
 --- Pick a random element from a list (unweighted)
--- @see crawl.random_element
+-- @see util.random_choose_weighted
 function util.random_from(list)
   return list[ crawl.random2(#list) + 1 ]
 end
@@ -326,6 +326,31 @@ function util.random_weighted_keys(weightfn, list, order)
     end
   end
   return chosen
+end
+
+-- Given a list of pairs, where the second element of each pair is an integer
+-- weight, randomly choose from the list. This *cannot* be reimplemented using
+-- just a table, because iteration order through a table is indeterminate and
+-- can mess with the random choice here (and we have found that this matters
+-- in practice). That is, a table like {[a] = 1, [b] = 1}, with the exact same
+-- rng state, could under some circumstances return either value.
+--
+-- the implementation here is very similar to random_choose_weighted in
+-- random.h. Someone clever could probably call that directly instead.
+function util.random_choose_weighted(list)
+  local total = 0
+  for i,k in ipairs(list) do
+    total = total + k[2]
+  end
+  local r = crawl.random2(total)
+  local sum = 0
+  for i,k in ipairs(list) do
+    sum = sum + k[2]
+    if sum > r then
+      return k[1]
+    end
+  end
+  -- not reachable
 end
 
 --- Given a table of elements, choose a subset of size n without replacement.

@@ -1618,19 +1618,19 @@ DEPTH:  D:3-4
 
   -- possible hobgoblin bosses and their weights
   bossw = {hobgoblin = 1, Ijyb = 10, Robin = 10}
-  bosses = {hobgoblin = 1}
+  bosses = { {"hobgoblin", 1}, }
 
   -- Find out which hobgoblin uniques we can use
   if not you.uniques("Ijyb") then
-    bosses["Ijyb"] = bossw["Ijyb"]
+    bosses[#bosses + 1] = {"Ijyb", bossw["Ijyb"]}
   end
   if not you.uniques("Robin") then
-    bosses["Robin"] = bossw["Robin"]
+    bosses[#bosses + 1] = {"Robin", bossw["Robin"]}
   end
 
   -- Choose a boss, and remove the supporting goblins if we select Robin, since
   -- she has her own band.
-  boss = crawl.random_element(bosses)
+  boss = util.random_choose_weighted(bosses)
   if boss == "Robin" then
     subst("B = .")
     boss = "Robin band"

@@ -173,7 +173,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     if you.in_branch("snake") then
         connection = '.'
     else
-        connection = crawl.random_element({['.'] = 1, ['+'] = 2})
+        connection = util.random_choose_weighted({{'.', 1}, {'+', 2}})
     end
 
     add_pools { replace = ".",

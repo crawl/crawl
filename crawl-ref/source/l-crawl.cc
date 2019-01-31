@@ -1187,67 +1187,6 @@ LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_c
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
 
-/*** Choose a random element from a table.
- * If passed an array, a random element is chosen from the array. If passed a
- * table, the values should be numeric or convertible to numeric and give the
- * weights for their corresponding keys. A value with no key will default to a
- * weight of 1. A random key is then returned based on these weights.
- * @tparam table in
- * @return a random element from in.
- * @function random_element
-*/
-static int crawl_random_element(lua_State *ls)
-{
-    const int table_idx = 1;
-    const int value_idx = 2;
-
-    if (lua_gettop(ls) == 0)
-    {
-        lua_pushnil(ls);
-        return 1;
-    }
-
-    // Only the first arg does anything now. Maybe this should
-    // select from a variable number of table args?
-    lua_pop(ls, lua_gettop(ls) - 1);
-
-    // Keep max value on the stack, as it could be any type of value.
-    lua_pushnil(ls);
-    int rollsize = 0;
-
-    lua_pushnil(ls);
-    while (lua_next(ls, table_idx) != 0)
-    {
-        const int weight_idx = -1;
-        const int key_idx = -2;
-
-        int this_weight = lua_isnil(ls, weight_idx) ?
-            1 : (int)lua_tonumber(ls, weight_idx);
-
-        if (rollsize > 0)
-        {
-            rollsize += this_weight;
-            if (x_chance_in_y(this_weight, rollsize))
-            {
-                lua_pushvalue(ls, key_idx);
-                lua_replace(ls, value_idx);
-            }
-        }
-        else
-        {
-            lua_pushvalue(ls, key_idx);
-            lua_replace(ls, value_idx);
-            rollsize = this_weight;
-        }
-
-        lua_pop(ls, 1);
-    }
-
-    lua_pushvalue(ls, value_idx);
-
-    return 1;
-}
-
 /*** Lua error trace a call
  * Attempts to call-trace a lua function that is producing an error.
  * Returns normally if the function runs normally, otherwise sends
@@ -1411,7 +1350,6 @@ static const struct luaL_reg crawl_clib[] =
     { "roll_dice",          crawl_roll_dice },
     { "x_chance_in_y",      crawl_x_chance_in_y },
     { "random_range",       crawl_random_range },
-    { "random_element",     crawl_random_element },
     { "div_rand_round",     crawl_div_rand_round },
     { "random_real",        crawl_random_real },
     { "worley",             crawl_worley },

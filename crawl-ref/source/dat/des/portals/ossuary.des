@@ -656,15 +656,15 @@ flood(flood_x, flood_y, crawl.random_range(6, 16), function(x, y, distance)
     local c = mapgrd[x][y]
 
     local replacements = {
-        ['.'] = { ['.'] = 1, W = 2 },
-        x = { x = 5, w = 5 },
-        c = { c = 5, w = 3, W = 2, x = 1 },
-        ['+'] = { ['+'] = 10, W = 5 },
-        ['1'] = { ['2'] = 1 }
+        ['.'] = { {'.', 1}, {'W', 2} },
+        ['x'] = { {'x', 5}, {'w', 5} },
+        ['c'] = { {'c', 5}, {'w', 3}, {'W', 2}, {'x', 1} },
+        ['+'] = { {'+', 10}, {'W', 5} },
+        ['1'] = { {'2', 1} }
     }
 
     if replacements[c] then
-        mapgrd[x][y] = crawl.random_element(replacements[c])
+        mapgrd[x][y] = util.random_choose_weighted(replacements[c])
     end
 
     if c == '+' or c == 'v' then
