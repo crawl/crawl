@@ -918,6 +918,13 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         return spret::abort;
     }
 
+    if (player_in_branch(BRANCH_GAUNTLET))
+    {
+        mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
+                "opening a passage!");
+        return spret::abort;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
