@@ -637,6 +637,15 @@ void level_clear_vault_memory()
 
 void dgn_flush_map_memory()
 {
+    // it's probably better in general to just reset `you`. But that's not so
+    // convenient for lua tests, who are the only user of this function.
+    // This leaves some state uninitialized, and probably should be immediately
+    // followed by a call to `initial_dungeon_setup` and something that moves
+    // the player to a level or regenerates a level.
+    you.runes.reset();
+    you.obtainable_runes = 15;
+    you.zigs_completed = 0;
+    you.zig_max = 0;
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
     you.unique_creatures.reset();
@@ -645,6 +654,13 @@ void dgn_flush_map_memory()
     you.branches_left.reset();
     you.branch_stairs.init(0);
     you.octopus_king_rings = 0x00;
+    you.item_description.init(255);
+    you.exploration = 0;
+    // would it be safe to just clear you.props?
+    you.props.erase(TEMPLE_SIZE_KEY);
+    you.props.erase(TEMPLE_MAP_KEY);
+    you.props.erase(OVERFLOW_TEMPLES_KEY);
+    you.props.erase(TEMPLE_GODS_KEY);
 }
 
 static void _dgn_load_colour_grid()
