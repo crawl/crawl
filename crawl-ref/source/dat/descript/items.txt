@@ -709,8 +709,10 @@ A potion which confers invisibility on one who consumes it.
 potion of lignification
 
 A potion which transforms the imbiber into an animated tree with branches
-capable of holding weapons. Such a tree is very resilient, although it is
-rooted in place while the transformation lasts, and cannot teleport.
+capable of holding weapons. Such a tree has minimal evasion but increased
+health and natural armour, and is resistant to poison and immune to negative
+energy. However, it is rooted in place while the transformation lasts, and
+cannot teleport.
 %%%%
 potion of magic
 
