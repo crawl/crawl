@@ -204,6 +204,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(use_modifier_prefix_keys), true),
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
+        new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), false),
