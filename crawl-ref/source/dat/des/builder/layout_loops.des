@@ -634,7 +634,7 @@ function loopsInsertRoom (e, center_x, center_y, radius, wall_glyph)
       end
     end
   else
-    local shape  = crawl.random_element { [0] = 3, [1] = 2, [2] = 1 }
+    local shape  = util.random_choose_weighted { {0, 3}, {1, 2}, {2, 1} }
     local center = crawl.random2(6)
     if you.in_branch("Elf") then
       shape  = crawl.random2(4)

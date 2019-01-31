@@ -261,10 +261,10 @@ TAGS:   no_rotate no_hmirror no_vmirror
     local percent_solid = {  0,  10,   40 }
     local in_distance   = {  6,   5,    3 }
 
-    local base_wall_type = crawl.random_element
-    {   ['x'] = 7,
-        ['c'] = 2,
-        ['v'] = 1   }
+    local base_wall_type = util.random_choose_weighted(
+    {   {'x', 7},
+        {'c', 2},
+        {'v', 1}   })
     if you.in_branch("Dis") then
         base_wall_type = 'x'
     end
@@ -314,12 +314,12 @@ TAGS:   no_rotate no_hmirror no_vmirror
         if not blocked then
             local door_count = crawl.random_range(1, max_doors[current_stage])
             local floor = '.'
-            local wall = crawl.random_element
-            {   [base_wall_type] = base_wall_frequency,
-                ['x']            = 50,
-                ['c']            = 30,
-                ['v']            = 20,
-                ['b']            = 1   }
+            local wall = util.random_choose_weighted(
+            {   {base_wall_type, base_wall_frequency},
+                {'x',            50},
+                {'c',            30},
+                {'v',            20},
+                {'b',            1}   })
 
             if you.in_branch("Dis") then
                 wall = 'x'

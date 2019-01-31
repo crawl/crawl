@@ -168,63 +168,63 @@ geoelf.rooms.shape.CONNECTIONS =
 
 geoelf.rooms.shape.MIRRORINGS =
   { [geoelf.rooms.shape.SQUARE] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.Y]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1,
-        [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1,
-        [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 },
+      { {geoelf.rooms.mirror.NONE, 1}, -- why are these set up as weighted?
+        {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.Y,    1},
+        {geoelf.rooms.mirror.XY,   1},
+        {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1},
+        {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} },
     [geoelf.rooms.shape.DIAMOND] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.Y]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1,
-        [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1,
-        [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 },
+      { {geoelf.rooms.mirror.NONE, 1},
+        {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.Y,    1},
+        {geoelf.rooms.mirror.XY,   1},
+        {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1},
+        {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} },
     [geoelf.rooms.shape.CROSS] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.Y]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1,
-        [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1,
-        [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 },
+      { {geoelf.rooms.mirror.NONE, 1},
+        {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.Y,    1},
+        {geoelf.rooms.mirror.XY,   1},
+        {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1},
+        {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} },
     [geoelf.rooms.shape.TRIANGLE_S] =
-      { [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1 },
+      { {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1} },
     [geoelf.rooms.shape.TRIANGLE_N] =
-      { [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 },
+      { {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} },
     [geoelf.rooms.shape.TRIANGLE_E] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.Y]    = 1 },
+      { {geoelf.rooms.mirror.NONE, 1},
+        {geoelf.rooms.mirror.Y,    1} },
     [geoelf.rooms.shape.TRIANGLE_W] =
-      { [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1 },
+      { {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.XY,   1} },
     [geoelf.rooms.shape.HEXAGON_NS] =
-      { [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1,
-        [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 },
+      { {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1},
+        {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} },
     [geoelf.rooms.shape.HEXAGON_EW] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.Y]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1 },
+      { {geoelf.rooms.mirror.NONE, 1},
+        {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.Y,    1},
+        {geoelf.rooms.mirror.XY,   1} },
     [geoelf.rooms.shape.OCTAGON] =
-      { [geoelf.rooms.mirror.NONE] = 1,
-        [geoelf.rooms.mirror.X]    = 1,
-        [geoelf.rooms.mirror.Y]    = 1,
-        [geoelf.rooms.mirror.XY]   = 1,
-        [geoelf.rooms.mirror.D]    = 1,
-        [geoelf.rooms.mirror.DX]   = 1,
-        [geoelf.rooms.mirror.DY]   = 1,
-        [geoelf.rooms.mirror.DXY]  = 1 } }
+      { {geoelf.rooms.mirror.NONE, 1},
+        {geoelf.rooms.mirror.X,    1},
+        {geoelf.rooms.mirror.Y,    1},
+        {geoelf.rooms.mirror.XY,   1},
+        {geoelf.rooms.mirror.D,    1},
+        {geoelf.rooms.mirror.DX,   1},
+        {geoelf.rooms.mirror.DY,   1},
+        {geoelf.rooms.mirror.DXY,  1} } }
 
 
 
@@ -324,9 +324,10 @@ function geoelf.rooms.draw (e, room_data, corridor_data, index,
   end
 
   -- draw the room
-  local mirror    = crawl.random_element(geoelf.rooms.shape.MIRRORINGS[shape])
-  local feature   = crawl.random_element(geoelf.glyphs.FEATURE_OPTIONS)
-  local plantlike = crawl.random_element(geoelf.glyphs.PLANTLIKE_OPTIONS)
+  local mirror    = util.random_choose_weighted(
+                              geoelf.rooms.shape.MIRRORINGS[shape])
+  local feature   = util.random_choose_weighted(geoelf.glyphs.FEATURE_OPTIONS)
+  local plantlike = util.random_choose_weighted(geoelf.glyphs.PLANTLIKE_OPTIONS)
   if (geoelf.debug and fancy) then
     print("  Feature " .. feature .. " plantlike " .. plantlike)
   end

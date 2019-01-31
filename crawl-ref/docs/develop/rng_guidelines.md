@@ -125,11 +125,24 @@ that are sequenced by `;`s.
 ### 3.2 choosing from lists
 
 When you are randomly choosing an item from a list (e.g. by randomly picking
-an index in the list range), be careful about the underlying list order. This
-is a case where the RNG behavior can be fine, but the list order itself could
-lead to divergence. For example, when choosing from a list of files provided
-by the OS, you cannot assume that all OSs and OS versions will give you these
-files in a stable order - sort it yourself.
+an index in the list range), be careful about both the underlying list order,
+and the iteration order.
+
+**Underlying list order**: This is a case where the RNG behavior can be fine,
+but the list order itself could lead to divergence. For example, when choosing
+from a list of files provided by the OS, you cannot assume that all OSs and OS
+versions will give you these files in a stable order - sort it yourself.
+
+**Iteration order**: If you are using some sort of reservoir-sampling style of
+random choice algorithm, you will iterate through the container, stopping the
+iteration at some point determined by one or more random draws. If the
+iteration order is not guaranteed to be defined, this can lead to different
+results from run to run. For example, in lua, iteration via `pairs` or the
+C equivalents over a table is not guaranteed to have a stable order, and we
+have found that in practice it doesn't -- leading to different choices with
+the same random number draws. The `ipairs` iterator is safe, but places some
+obvious constraints on the structure you are using. Sorting the underlying
+container may be a solution as well.
 
 ### 3.3 other sources of randomization
 
