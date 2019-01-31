@@ -518,7 +518,8 @@ static void _describe_book(const spellbook_contents &book,
     {
         description.cprintf(" ");
 
-        description.textcolour(_spell_colour(spell, source_item));
+        if (!mon_owner)
+            description.textcolour(_spell_colour(spell, source_item));
 
         // don't crash if we have more spells than letters.
         auto entry = find_if(spell_map.begin(), spell_map.end(),
