@@ -639,6 +639,12 @@ void dgn_flush_map_memory()
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
+    you.unique_creatures.reset();
+    you.unique_items.init(UNIQ_NOT_EXISTS);
+    you.vault_list.clear();
+    you.branches_left.reset();
+    you.branch_stairs.init(0);
+    you.octopus_king_rings = 0x00;
 }
 
 static void _dgn_load_colour_grid()
@@ -3808,7 +3814,13 @@ static void _randomly_place_item(int item)
         destroy_item(item);
     }
     else
+    {
+        dprf(DIAG_DNGN, "builder placing %s (%s) at %d,%d",
+            mitm[item].name(DESC_PLAIN).c_str(),
+            mitm[item].name(DESC_PLAIN, false, true).c_str(),
+            itempos.x, itempos.y);
         move_item_to_grid(&item, itempos);
+    }
 }
 
 /**
