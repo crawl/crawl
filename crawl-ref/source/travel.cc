@@ -2509,11 +2509,19 @@ static void _start_translevel_travel()
     // Update information for this level.
     travel_cache.get_level_info(level_id::current()).update();
 
-    if (level_id::current() == level_target.id
-        && (level_target.pos.x == -1 || level_target.pos == you.pos()))
+    if (level_id::current() == level_target.id)
     {
-        mpr("You're already here!");
-        return ;
+        if (level_target.pos.x == -1 &&
+            level_target.id.depth == branches[level_target.id.branch].numlevels)
+        {
+            mpr("You're already at the bottom of this branch!");
+            return;
+        }
+        else if (level_target.pos.x == -1 || level_target.pos == you.pos())
+        {
+            mpr("You're already here!");
+            return;
+        }
     }
 
 #ifdef DEBUG_TRAVEL
