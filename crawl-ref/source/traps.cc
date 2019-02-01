@@ -1287,11 +1287,8 @@ bool is_valid_shaft_level()
     // or generated, so should not depend on properties of the level itself,
     // but only on its level_id.
     const level_id place = level_id::current();
-    if (crawl_state.test
-        || crawl_state.game_is_sprint())
-    {
+    if (crawl_state.game_is_sprint())
         return false;
-    }
 
     if (!is_connected_branch(place))
         return false;
