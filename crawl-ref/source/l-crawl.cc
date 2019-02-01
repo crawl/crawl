@@ -466,17 +466,22 @@ static int crawl_do_commands(lua_State *ls)
         luaL_argerror(ls, 1, "Must be an array");
         return 0;
     }
-    vector<string> commands;
+    map<int,string> command_map; // ordered by key
 
     lua_pushnil(ls);
-    while (lua_next(ls, 1))
+    while (lua_next(ls, 1)) // in general, no guaranteed order for this
     {
         if (!lua_isstring(ls, -1))
         {
             luaL_argerror(ls, 1, "Table contains non-string");
             return 0;
         }
-        commands.push_back(lua_tostring(ls, -1));
+        if (!lua_isnumber(ls, -2))
+        {
+            luaL_argerror(ls, 1, "Must be an array");
+            return 0;
+        }
+        command_map[lua_tonumber(ls, -2)] = lua_tostring(ls, -1);
         lua_pop(ls, 1);
     }
 
@@ -484,8 +489,9 @@ static int crawl_do_commands(lua_State *ls)
     command_type firstcmd = CMD_NO_CMD;
     deque<command_type> cmd_seq;
 
-    for (const auto& command : commands)
+    for (const auto& pair : command_map)
     {
+        const auto& command = pair.second;
         command_type cmd = name_to_command(command);
         if (cmd == CMD_NO_CMD)
         {
