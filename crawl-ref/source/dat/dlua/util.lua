@@ -328,6 +328,23 @@ function util.random_weighted_keys(weightfn, list, order)
   return chosen
 end
 
+-- convert a table of key-to-weight mappings into a table of key-weight pairs,
+-- as long as the keys are sortable.
+function util.sorted_weight_table(t, sort)
+  local keys = { }
+  for k, v in pairs(t) do table.insert(keys, k) end
+  if sort == nil then
+    table.sort(keys)
+  else
+    table.sort(keys, sort)
+  end
+  local res = { }
+  for i, k in ipairs(keys) do
+    table.insert(res, { k, t[k] })
+  end
+  return res
+end
+
 -- Given a list of pairs, where the second element of each pair is an integer
 -- weight, randomly choose from the list. This *cannot* be reimplemented using
 -- just a table, because iteration order through a table is indeterminate and
@@ -337,7 +354,7 @@ end
 --
 -- the implementation here is very similar to random_choose_weighted in
 -- random.h. Someone clever could probably call that directly instead.
-function util.random_choose_weighted(list)
+function util.random_choose_weighted_i(list)
   local total = 0
   for i,k in ipairs(list) do
     total = total + k[2]
@@ -347,10 +364,14 @@ function util.random_choose_weighted(list)
   for i,k in ipairs(list) do
     sum = sum + k[2]
     if sum > r then
-      return k[1]
+      return i
     end
   end
   -- not reachable
+end
+
+function util.random_choose_weighted(list)
+  return list[util.random_choose_weighted_i(list)][1]
 end
 
 --- Given a table of elements, choose a subset of size n without replacement.

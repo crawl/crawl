@@ -158,6 +158,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :         end
 :     end
 : end
+: table.sort(kmonsters)
 : kmons("s = " .. table.concat(kmonsters, " / "))
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75

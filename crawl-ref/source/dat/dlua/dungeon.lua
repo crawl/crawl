@@ -250,7 +250,7 @@ function dgn_run_map(...)
       error("No current map?")
     end
     local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
-    for _, map_chunk_function in pairs(map_chunk_functions) do
+    for _, map_chunk_function in ipairs(map_chunk_functions) do
       if map_chunk_function then
         ret = setfenv(map_chunk_function, env)()
       end
@@ -320,7 +320,7 @@ end
 
 function dgn.fnum_map(map)
   local fnmap = { }
-  for k, v in pairs(map) do
+  for k, v in pairs(map) do -- arbitrary iter order should be ok here
     fnmap[dgn.fnum(k)] = dgn.fnum(v)
   end
   return fnmap

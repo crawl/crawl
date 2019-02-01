@@ -82,7 +82,11 @@ function zonify.fill_smallest_zones(zonemap, num_to_keep, fgroup, ffill, min_zon
     largest[n].size = -999999
   end
 
-  for name,group in pairs(zonemap) do
+  local sorted_zones = {}
+  for name,group in pairs(zonemap) do table.insert(sorted_zones, name) end
+  table.sort(sorted_zones)
+  for i, name in ipairs(sorted_zones) do
+    group = zonemap[name]
     if type(fgroup) == "function" and fgroup(group) or name==fgroup then
       for i,zone in ipairs(group) do
         zsize = #(zone.cells)
@@ -115,7 +119,8 @@ function zonify.fill_smallest_zones(zonemap, num_to_keep, fgroup, ffill, min_zon
     return false
   end
 
-  for name,group in pairs(zonemap) do
+  for i,name in ipairs(sorted_zones) do
+    group = zonemap[name]
     if type(fgroup) == "function" and fgroup(group) or name==fgroup then
       for i,zone in ipairs(group) do
         local replace = true
