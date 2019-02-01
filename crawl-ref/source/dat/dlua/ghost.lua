@@ -51,13 +51,19 @@ function random_item_def(items, egos, args, separator)
     args = args ~= nil and " " .. args or ""
     separator = separator ~= nil and separator or '/'
     local item_def
+    items_list = util.sorted_weight_table(items)
 
-    for iname, iweight in pairs(items) do
+    for i, item_pair in ipairs(items_list) do
+        iname = item_pair[1]
+        iweight = item_pair[2]
         -- If we have egos, define an item spec with all item+ego
         -- combinations, each with weight scaled by item rarity and ego
         -- rarity.
         if egos ~= nil then
-            for ename, eweight in pairs(egos) do
+            egos_list = util.sorted_weight_table(egos)
+            for j, ego_pair in ipairs(egos_list) do
+                ename = ego_pair[1]
+                eweight = ego_pair[2]
                 if (not iname:find("demon") or ename ~= "holy_wrath")
                    and (not iname:find("quick blade") or ename ~= "speed") then
                     def = iname .. args .. " ego:" .. ename .. " w:" ..
