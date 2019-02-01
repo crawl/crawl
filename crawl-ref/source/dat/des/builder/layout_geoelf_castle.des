@@ -1001,12 +1001,12 @@ TAGS:   no_rotate no_vmirror no_hmirror
   -- draw the turrets
   local turret_center_weights = {}
   for i,p in ipairs(geoelf.glyphs.PLANTLIKE_OPTIONS) do
-    turrent_center_weights[#turret_center_weights + 1] = p
+    table.insert(turret_center_weights, p)
   end
   for i,p in ipairs(geoelf.glyphs.FEATURE_OPTIONS) do
-    turrent_center_weights[#turret_center_weights + 1] = {p[0], p[1] * 5}
+    table.insert(turret_center_weights, { p[1], p[2] * 5 })
   end
-  turrent_center_weights[#turret_center_weights + 1] = {INSIDE_GLYPH, 15}
+  table.insert(turret_center_weights, { INSIDE_GLYPH, 15 })
 
   local turret_center = util.random_choose_weighted(turret_center_weights)
 
