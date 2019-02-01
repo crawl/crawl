@@ -661,6 +661,7 @@ void dgn_flush_map_memory()
     you.props.erase(TEMPLE_MAP_KEY);
     you.props.erase(OVERFLOW_TEMPLES_KEY);
     you.props.erase(TEMPLE_GODS_KEY);
+    dlua.callfn("dgn_clear_data", "");
 }
 
 static void _dgn_load_colour_grid()
