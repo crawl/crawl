@@ -1460,6 +1460,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 _save_level(old_level);
         }
 
+        // TODO: for staged pregeneration this also needs to happen on
+        // LOAD_GENERATE. However, it's a bit tricky, because player position
+        // does need to be saved for the later LOAD_ENTER_LEVEL call. postpone.
         // The player is now between levels.
         you.position.reset();
 

@@ -90,7 +90,7 @@ function test_seed(seed, iters, order, quiet)
     else
         crawl.stderr("Vault catalog for seed " .. seed .. ":")
     end
-    run1 = catalog_dungeon_vaults(order, quiet)
+    local run1 = catalog_dungeon_vaults(order, quiet)
 
     if not quiet then
         crawl.stderr("....now testing vault generation stability for seed " ..seed.. ".")
@@ -99,14 +99,15 @@ function test_seed(seed, iters, order, quiet)
     for i = 1,iters do
         crawl.stderr(".")
         debug.reset_rng(seed)
-        run2 = catalog_dungeon_vaults(order, true)
+        local run2 = catalog_dungeon_vaults(order, true)
         compare_catalogs(order, run1, run2, seed)
     end
 end
 
 test_seed(starting_seed, per_seed_iters, generation_order, false)
 -- just do a quick check of hell / pan stability
---test_seed(starting_seed, per_seed_iters, generation_order_extended, true)
+crawl.stderr("Checking some extended branches for seed " .. starting_seed .. "...")
+test_seed(starting_seed, per_seed_iters, generation_order_extended, true)
 
 for i=starting_seed + 1, starting_seed + fixed_seeds - 2 do
     crawl.stderr("Testing seed " .. i .. ".")
