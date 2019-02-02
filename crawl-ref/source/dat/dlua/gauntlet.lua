@@ -244,7 +244,7 @@ function gauntlet_arena_terrain_setup(e, rock_unchanged, liquid, plant)
     else
         e.subst("^ : ^...")
     end
-    e.kfeat("^ = dispersal trap")
+    e.kfeat("^ = dispersal trap / net trap")
 
     if not plant then plant = "default" end
     if plant == "demonic" then
