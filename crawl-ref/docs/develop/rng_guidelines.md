@@ -135,14 +135,37 @@ versions will give you these files in a stable order - sort it yourself.
 
 **Iteration order**: If you are using some sort of reservoir-sampling style of
 random choice algorithm, you will iterate through the container, stopping the
-iteration at some point determined by one or more random draws. If the
-iteration order is not guaranteed to be defined, this can lead to different
-results from run to run. For example, in lua, iteration via `pairs` or the
-C equivalents over a table is not guaranteed to have a stable order, and we
-have found that in practice it doesn't -- leading to different choices with
-the same random number draws. The `ipairs` iterator is safe, but places some
-obvious constraints on the structure you are using. Sorting the underlying
-container may be a solution as well.
+iteration at some point determined by one or more random draws. If the iteration
+order is not guaranteed to be defined, this can lead to different results from
+run to run. For C++ code, this generally isn't an issue (or at least, hasn't
+come up so far), but it does show up in lua code and in the lua-C++ interface.
+In Lua, iteration via `pairs` or the C equivalents over a table is not
+guaranteed to have a stable order, and we have found that in practice it doesn't
+-- leading to different choices with the same random number draws. The `ipairs`
+iterator is safe, but places some obvious constraints on the structure you are
+using. Sorting the underlying container may be a solution as well.
+
+Some specific lua tips: rather than rolling your own weighted randomness, if at
+all possible use one of the following functions: `util.random_choose_weighted`,
+`util.random_choose_weighted_i`, and `util.random_weighted_from` (which all
+operator on an array of some strip and use a stable iteration order), or
+`util.random_random_weighted_keys`, which requires sortable keys and will use
+the sort order of the keys in its iteration. If you have an unweighted list,
+you can use `util.random_from`. If the items you are choosing from are
+sortable (e.g, strings), you can still use a weight table as long as you turn
+it into a stably-ordered array with `util.sorted_weight_table`. This takes a
+table mapping values to weights, and produces an array of value-weight pairs
+that then can be used for `util.random_choose_weighted`.
+
+When writing Lua-C++ interface code, be aware that `lua_next` does not guarantee
+order any more than `pairs`, *even if* the table is an array. Bugs from this
+will be fairly indeterminate and hard to spot, but do show up in practice.
+Either use Lua's facilities for `ipairs`-style iteration (which are a bit weak
+in the version of Lua we use), or sort the results on the C side (in a way that
+doesn't rely on runtime information). For example, loading an array of strings
+into a `map<int,string>` will give you a stable sort order. Or, if the order
+in the array is not important, you can use `lua_next` with a vector and
+`push_back`, and then sort the results.
 
 ### 3.3 other sources of randomization
 
