@@ -493,15 +493,15 @@ TAGS:  gauntlet_arena_first gauntlet_arena_second
 SUBST: q = ^ n:190
 : gauntlet_arena_setup(_G)
 MAP
-nddxx....^n
-ndqx.qxx^.n
-ndx.xq.xx.n
-n.x.x.x.x.n
-n.q.qPq.q.n
-n.x.x.x.x.n
- .xx.qx.x.
- .^xxq.xq.
- ^....xxQx
+nddxx..33^n
+ndqx.qxx^3n
+ndx.xq.xx3n
+n1x.x.x.x3n
+n2q.qPq.q2n
+n2x.x.x.x2n
+ 2xx.qx.x2
+ 3^xxq.xq1
+ ^3333xxQx
 ENDMAP
 
 #############################################################################
