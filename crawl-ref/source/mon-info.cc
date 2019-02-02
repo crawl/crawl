@@ -747,7 +747,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
-    if (mons_has_known_ranged_attack(*m))
+    if (mons_has_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
 
     // this must be last because it provides this structure to Lua code
