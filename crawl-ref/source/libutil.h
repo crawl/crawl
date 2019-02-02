@@ -73,6 +73,8 @@ bool strip_tag(string &s, const string &tag, bool nopad = false);
 int strip_number_tag(string &s, const string &tagprefix);
 vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
 string strip_tag_prefix(string &s, const string &tagprefix);
+const string tag_without_prefix(const string &s, const string &tagprefix);
+set<string> parse_tags(const string &tags);
 bool parse_int(const char *s, int &i);
 
 // String 'descriptions'
