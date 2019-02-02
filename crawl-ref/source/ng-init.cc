@@ -142,12 +142,13 @@ void initialise_temples()
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            for (string &tag : main_temple->get_tags())
+            for (auto &tag : main_temple->get_tags())
             {
                 if (starts_with(tag, "temple_altars_"))
                 {
                     sizes.push_back(
-                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
+                        atoi(tag_without_prefix(tag,
+                                                "temple_altars_").c_str()));
                 }
             }
             if (sizes.empty())
@@ -167,7 +168,6 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-        main_temple->tags.clear(); // anything else that needs to be cleared?
         main_temple->load();
         main_temple->reinit();
         err = main_temple->run_lua(true);

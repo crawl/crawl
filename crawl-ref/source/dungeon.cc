@@ -717,15 +717,15 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-static void _dgn_register_vault(const string &name, const string &spaced_tags)
+static void _dgn_register_vault(const string &name, const set<string> &tags)
 {
-    if (spaced_tags.find(" allow_dup ") == string::npos)
+    if (!tags.count("allow_dup"))
         you.uniq_map_names.insert(name);
 
-    if (spaced_tags.find(" luniq ") != string::npos)
+    if (tags.count("luniq"))
         env.level_uniq_maps.insert(name);
 
-    for (const string &tag : split_string(" ", spaced_tags))
+    for (const string &tag : tags)
     {
         if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.insert(tag);
@@ -734,12 +734,22 @@ static void _dgn_register_vault(const string &name, const string &spaced_tags)
     }
 }
 
+static void _dgn_register_vault(const map_def &map)
+{
+    _dgn_register_vault(map.name, map.get_tags());
+}
+
+static void _dgn_register_vault(const string &name, string &spaced_tags)
+{
+    _dgn_register_vault(name, parse_tags(spaced_tags));
+}
+
 static void _dgn_unregister_vault(const map_def &map)
 {
     you.uniq_map_names.erase(map.name);
     env.level_uniq_maps.erase(map.name);
 
-    for (const string &tag : split_string(" ", map.tags))
+    for (const string &tag : map.get_tags())
     {
         if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.erase(tag);
@@ -1048,7 +1058,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (register_vault)
     {
-        _dgn_register_vault(place.map.name, place.map.tags);
+        _dgn_register_vault(place.map);
         for (int i = env.new_subvault_names.size() - 1; i >= 0; i--)
         {
             _dgn_register_vault(env.new_subvault_names[i],
@@ -1076,7 +1086,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     }
 
     // Find tags matching properties.
-    vector<string> tags = place.map.get_tags();
+    set<string> tags = place.map.get_tags();
 
     for (const auto &tag : tags)
     {
@@ -2579,13 +2589,13 @@ static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 
     ASSERT(layout->has_tag_prefix("layout_type_"));
 
-    vector<string> tags = layout->get_tags();
+    const set<string> tags = layout->get_tags();
 
-    for (string &tag : tags)
+    for (auto &tag : tags)
     {
         if (starts_with(tag, "layout_type_"))
         {
-            string type = strip_tag_prefix(tag, "layout_type_");
+            string type = tag_without_prefix(tag, "layout_type_");
             if (vault->has_tag("layout_" + type))
                 return true;
             else if (vault->has_tag("nolayout_" + type))
@@ -4211,13 +4221,12 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
     {
-        vector<string> tag_list = place.map.get_tags();
-        for (string &tag : tag_list)
+        for (auto &tag : place.map.get_tags())
         {
             if (starts_with(tag, "layout_type_"))
             {
                 env.level_layout_types.insert(
-                    strip_tag_prefix(tag, "layout_type_"));
+                    tag_without_prefix(tag, "layout_type_"));
             }
         }
     }
