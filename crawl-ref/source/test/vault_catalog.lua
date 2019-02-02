@@ -12,7 +12,7 @@
 local starting_seed = 1   -- fixed seed to start with
 local fixed_seeds = 2     -- how many fixed seeds to run?
 local per_seed_iters = 1  -- how many stability tests to run per seed
-local rand_seeds = 2      -- how many random seeds to run
+local rand_seeds = 1      -- how many random seeds to run
 
 -- matches pregeneration order
 local generation_order = {
