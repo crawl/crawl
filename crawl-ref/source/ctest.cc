@@ -124,6 +124,7 @@ static void run_test(const string &file)
         return;
 
     ++ntests;
+    fprintf(stderr, "Running test #%d: '%s'.\n", ntests, file.c_str());
     mprf(MSGCH_DIAGNOSTICS, "Running %s %d: %s",
          activity, ntests, file.c_str());
     flush_prev_message();
@@ -152,6 +153,7 @@ static void _run_test(const string &name, void (*func)())
 
     if (!_has_test(name))
         return;
+    fprintf(stderr, "Running test #%d: '%s'.\n", ntests, name.c_str());
 
     ++ntests;
     try
