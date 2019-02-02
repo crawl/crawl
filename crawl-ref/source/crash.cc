@@ -419,7 +419,7 @@ void call_gdb(FILE *file)
             const char* argv[] =
             {
                 "nice",
-                "/usr/bin/gdb",
+                GDB_PATH,
                 "-batch",
                 "-ex", "show version", // Too bad -iex needs gdb >=7.5 (jessie)
                 "-ex", attach_cmd,

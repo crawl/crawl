@@ -68,7 +68,7 @@ game_state::game_state()
 #ifdef TARGET_OS_WINDOWS
     no_gdb = "Non-UNIX Platform -> not running gdb.";
 #else
-    no_gdb = access("/usr/bin/gdb", 1) ? "/usr/bin/gdb not executable." : 0;
+    no_gdb = access(GDB_PATH, 1) ? "gdb not executable." : 0;
 #endif
 }
 
