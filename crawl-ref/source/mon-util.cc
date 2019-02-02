@@ -54,6 +54,7 @@
 #include "notes.h"
 #include "options.h"
 #include "random.h"
+#include "reach-type.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
@@ -3836,22 +3837,6 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
 }
 
-static bool _mons_has_usable_polearm(const monster& mon)
-{
-    const item_def *weapon  = mon.melee_weapon();
-    const item_def *primary = mon.mslot_item(MSLOT_WEAPON);
-
-    // We don't have a usable melee weapon if a different cursed weapon
-    // is presently equipped.
-    if (weapon != primary && primary && primary->cursed())
-        return false;
-
-    if (weapon && item_attack_skill(*weapon) == SK_POLEARMS)
-        return true;
-
-    return false;
-}
-
 static bool _mons_has_attack_wand(const monster& mon)
 {
     const item_def *wand = mon.mslot_item(MSLOT_WAND);
@@ -3863,7 +3848,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
-           || _mons_has_usable_polearm(mon)
+           || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }
 
@@ -3902,42 +3887,6 @@ bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
     }
 
     return false;
-}
-
-static bool _mons_starts_with_ranged_weapon(monster_type mc)
-{
-    switch (mc)
-    {
-    case MONS_JOSEPH:
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-    case MONS_CENTAUR:
-    case MONS_CENTAUR_WARRIOR:
-    case MONS_NESSOS:
-    case MONS_YAKTAUR:
-    case MONS_YAKTAUR_CAPTAIN:
-    case MONS_CHERUB:
-    case MONS_SONJA:
-    case MONS_HAROLD:
-    case MONS_POLYPHEMUS:
-    case MONS_CYCLOPS:
-    case MONS_STONE_GIANT:
-    case MONS_CHUCK:
-    case MONS_MERFOLK_JAVELINEER:
-    case MONS_URUG:
-    case MONS_FAUN:
-    case MONS_SATYR:
-    case MONS_NAGA_SHARPSHOOTER:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool mons_has_known_ranged_attack(const monster& mon)
-{
-    return mon.flags & MF_SEEN_RANGED
-           || _mons_starts_with_ranged_weapon(mon.type)
-              && !(mon.flags & MF_KNOWN_SHIFTER);
 }
 
 bool mons_can_attack(const monster& mon)
