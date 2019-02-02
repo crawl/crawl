@@ -9,8 +9,7 @@
 -- but if you are expecting deterministic test behavior, take that into
 -- account.
 
-local catalog_seed = 1    -- seed to print out
-local starting_seed = 2   -- fixed seed to start with
+local starting_seed = 1   -- fixed seed to start with
 local fixed_seeds = 2     -- how many fixed seeds to run?
 local per_seed_iters = 1  -- how many stability tests to run per seed
 local rand_seeds = 2      -- how many random seeds to run
@@ -105,11 +104,11 @@ function test_seed(seed, iters, order, quiet)
     end
 end
 
-test_seed(catalog_seed, per_seed_iters, generation_order, false)
+test_seed(starting_seed, per_seed_iters, generation_order, false)
 -- just do a quick check of hell / pan stability
-test_seed(catalog_seed, per_seed_iters, generation_order_extended, true)
+--test_seed(starting_seed, per_seed_iters, generation_order_extended, true)
 
-for i=starting_seed, starting_seed + fixed_seeds - 1 do
+for i=starting_seed + 1, starting_seed + fixed_seeds - 2 do
     crawl.stderr("Testing seed " .. i .. ".")
     test_seed(i, per_seed_iters, generation_order, true)
 end
@@ -120,6 +119,7 @@ end
 for i=1,rand_seeds do
     -- intentional use of non-crawl random(). random doesn't seem to accept
     -- anything bigger than 32 bits for the range.
+    math.randomseed(crawl.millis())
     rand_seed = math.random(0x7FFFFFFF)
     crawl.stderr("Testing random seed " .. rand_seed .. ".")
     test_seed(rand_seed, per_seed_iters, generation_order, true)
