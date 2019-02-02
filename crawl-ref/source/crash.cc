@@ -425,7 +425,7 @@ void call_gdb(FILE *file)
                 "-ex", "bt full",
                 0
             };
-            execv("/usr/bin/gdb", (char* const*)argv);
+            execv(GDB_PATH, (char* const*)argv);
             printf("Failed to start gdb: %s\n", strerror(errno));
             fflush(stdout);
             _exit(0);
