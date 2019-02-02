@@ -86,6 +86,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos = false,
                                    bool dont_place = false);
+static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
+                                   level_id place,
+                                   bool force_pos, bool dont_place);
+
 
 /**
  * Is this feature "close enough" to the one we want for monster generation?
@@ -721,8 +725,12 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     else if (!_valid_monster_generation_location(mg) && !dont_place)
         return nullptr;
 
-    monster* mon = _place_monster_aux(mg, nullptr, place, force_pos,
-                                      dont_place);
+    monster* mon;
+    if (mg.cls == MONS_PLAYER_GHOST)
+        mon = _place_pghost_aux(mg, nullptr, place, force_pos, dont_place);
+    else
+        mon = _place_monster_aux(mg, nullptr, place, force_pos, dont_place);
+
     if (!mon)
         return nullptr;
 
@@ -1488,6 +1496,18 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     return mon;
+}
+
+static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
+                                   level_id place,
+                                   bool force_pos, bool dont_place)
+{
+    // we need to isolate the generation of a pghost from the caller's RNG,
+    // since depending on the ghost, the aux call can trigger variation in
+    // things like whether an enchantment (with a random duration) is
+    // triggered.
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
+    return _place_monster_aux(mg, leader, place, force_pos, dont_place);
 }
 
 // Check base monster class against zombie type and position if set.
