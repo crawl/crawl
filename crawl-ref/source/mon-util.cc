@@ -3836,10 +3836,35 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
 }
 
+static bool _mons_has_usable_polearm(const monster& mon)
+{
+    const item_def *weapon  = mon.melee_weapon();
+    const item_def *primary = mon.mslot_item(MSLOT_WEAPON);
+
+    // We don't have a usable melee weapon if a different cursed weapon
+    // is presently equipped.
+    if (weapon != primary && primary && primary->cursed())
+        return false;
+
+    if (weapon && item_attack_skill(*weapon) == SK_POLEARMS)
+        return true;
+
+    return false;
+}
+
+static bool _mons_has_attack_wand(const monster& mon)
+{
+    const item_def *wand = mon.mslot_item(MSLOT_WAND);
+
+    return wand && is_offensive_wand(*wand);
+}
+
 bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
-           || _mons_has_usable_ranged_weapon(&mon);
+           || _mons_has_usable_ranged_weapon(&mon)
+           || _mons_has_usable_polearm(mon)
+           || _mons_has_attack_wand(mon);
 }
 
 bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
