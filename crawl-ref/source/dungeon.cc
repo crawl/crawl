@@ -231,51 +231,6 @@ static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
 
-static void _count_gold()
-{
-    vector<item_def *> gold_piles;
-    vector<coord_def> gold_places;
-    int gold = 0;
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->base_type == OBJ_GOLD)
-            {
-                gold += j->quantity;
-                gold_piles.push_back(&(*j));
-                gold_places.push_back(*ri);
-            }
-        }
-    }
-
-    if (!player_in_branch(BRANCH_ABYSS))
-        you.attribute[ATTR_GOLD_GENERATED] += gold;
-
-    if (have_passive(passive_t::detect_gold))
-    {
-        for (unsigned int i = 0; i < gold_places.size(); i++)
-        {
-            bool detected = false;
-            int dummy = gold_piles[i]->index();
-            coord_def &pos = gold_places[i];
-            unlink_item(dummy);
-            move_item_to_grid(&dummy, pos, true);
-            if (!env.map_knowledge(pos).item()
-                || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
-            {
-                detected = true;
-            }
-            update_item_at(pos, true);
-            if (detected)
-            {
-                ASSERT(env.map_knowledge(pos).item());
-                env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
-            }
-        }
-    }
-}
-
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
@@ -426,7 +381,6 @@ static bool _build_level_vetoable(bool enable_random_maps,
     strip_all_maps();
 
     check_map_validity();
-    _count_gold();
 
     if (!_you_vault_list.empty())
     {
@@ -662,6 +616,7 @@ void dgn_flush_map_memory()
     you.props.erase(OVERFLOW_TEMPLES_KEY);
     you.props.erase(TEMPLE_GODS_KEY);
     dlua.callfn("dgn_clear_data", "");
+    you.attribute[ATTR_GOLD_GENERATED] = 0;
 }
 
 static void _dgn_load_colour_grid()
