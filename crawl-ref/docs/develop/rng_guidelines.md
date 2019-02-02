@@ -56,13 +56,31 @@ specific to a single commit. Similarly, upgrading a game (trunk or otherwise)
 where the dungeon is not pregenerated will lead to divergence from *both* seed
 to dungeon mappings.
 
+## 2.1. Detecting seed divergence
+
+Detecting this can be quite hard, but there are a few built-in tests that run
+in Travis CI and can be run locally. These are `d1_vaults.lua` (which prints
+vaults for a few dungeon levels for 10 seeds), and the deeper but less broad
+`vault_catalog.lua` test, which prints the entire vault catalog for one seed,
+and does a bunch of seed stability tests by comparing that vault catalog across
+multiple runs, for several fixed and randomly chosen seeds. This test is quite
+time and cpu-intensive (a bit like mapstat), and the default settings are quite
+modest, but you can tweek the number of seeds, runs, and use it to hand check
+custom seeds by running it locally. To directly run this test in the most
+useful fashion, the magic invocation is (can be further combined with pipes or
+redirects):
+
+    util/fake_pty ./crawl -test vault_catalog.lua 2>&1
+
+If you haven't already, you may need to run `make util/fake_pty` first.
+
 ## 3. Specific coding guidelines and caveats
 
 The biggest challenge in ensuring stable seed to dungeon mappings involves
 ensuring that random numbers are drawn from the generators in the same order.
 There are two specific areas where care is required.
 
-### 3.1 random call evaluation order
+### 3.1. random call evaluation order
 
 C++, in many cases, does not guarantee stable evaluation order for function
 calls, and this can result in different behaviors across compilers, OSs, and
@@ -122,7 +140,7 @@ is ok (at least in terms of RNG call sequencing):
 For everything else, when in doubt, break it into multiple expressions
 that are sequenced by `;`s.
 
-### 3.2 choosing from lists
+### 3.2. choosing from lists
 
 When you are randomly choosing an item from a list (e.g. by randomly picking
 an index in the list range), be careful about both the underlying list order,
@@ -167,7 +185,66 @@ into a `map<int,string>` will give you a stable sort order. Or, if the order
 in the array is not important, you can use `lua_next` with a vector and
 `push_back`, and then sort the results.
 
-### 3.3 other sources of randomization
+### 3.3. other sources of randomization
 
 Don't use other sources of randomization in crawl besides crawl RNGs. For
 example, don't use lua's `math.rand`, or C stdlib's `rand`.
+
+## 4. Dealing with seed divergence
+
+Seed divergence is when the same seed, with the same generation order, leads to
+distinct dungeons under some circumstance. There are two main ways that seed
+divergence can present:
+
+1. Seed instability on a single device
+2. Seed instability across devices
+
+### 4.1. Seed instability on a single device
+
+This presents itself as extra "randomness" that is not determined by the seed.
+The simplest case to find would be where some system-specific information is
+directly interacting with one or more random draws: e.g. don't multiply a
+random number by the current system time. More subtle instances of this,
+mentioned above in section 3.2, are things like choosing randomly from a list
+of files that might change from run to run. While some effort has been made
+to partition player ghost generation off from levelgen, since player ghosts
+can vary from one time to another, this is one potential source of divergence.
+(For example, early in the implementation of strong seeding, a bug was present
+where whether a ghost was generated with an enchantment would change the number
+of random draws needed to place the ghost, leading to different rng state for
+the next levelgen decision.)
+
+The more subtle kind of problem of this kind is when some sort of undefined
+behavior is not so obviously undefined to the developer, but can lead to
+run-to-run variation in corner cases. *By far* the biggest example so far has
+been iteration order in lua, discussed above in section 3.2. (In general,
+undefined behavior in C++ code is usually defined one way or the other by a
+particular compiler and stdlib, and leads to seed instability across devices
+rather than within devices; I wouldn't take this as a hard rule though.)
+
+This is, believe it or not, the easiest case to debug because it can usually be
+replicated. However, before spending a lot of time trying to replicate a case of
+this, first check the following issue: is the generation behavior different when
+running crawl with a clean .des cache and bones file as later? Many early
+seeding bugs presented themselves this way, and to replicate a bug of this kind
+you will need to clear the caches.
+
+### 4.2. Seed instability across devices
+
+Seed instabilities across devices are often quite hard to replicate and debug,
+so fire up the VM / container. In practice, most of the cases of this that we
+have found involve things where C++ or stdlib behavior is undefined and
+different compilers or build options (or OSs, perhaps) lead to different
+choices. The biggest example is the ordering of random calls in arithmetic
+expressions, discussed in section 4.1, so this is definitely the first thing
+to look for. The ##crawl-dev population in aggregate has pretty detailed
+knowledge of the C++ specs, so if you aren't sure whether somethig in particular
+is defined, this is a good place to ask.
+
+Before opening the VM, however, if what you are seeing is a difference between
+your device and Travis CI results - keep in mind that Travis runs its tests
+from a clean state, and that this may be a case of seed instability within
+a device that is dependent on the cache state. Also, many tests run first
+before the vault catalog test, so double check if there's some game state factor
+that is affected by earlier tests. (E.g. compare running the vault catalog test
+directly with running `make test`).
