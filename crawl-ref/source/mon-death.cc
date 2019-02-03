@@ -1001,64 +1001,6 @@ int mummy_curse_power(monster_type type)
     }
 }
 
-static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
-{
-    if (pow <= 0)
-        return;
-
-    switch (killer)
-    {
-        // Mummy killed by trap or something other than the player or
-        // another monster, so no curse.
-        case KILL_MISC:
-        case KILL_RESET:
-        case KILL_DISMISSED:
-        // Mummy sent to the Abyss wasn't actually killed, so no curse.
-        case KILL_BANISHED:
-            return;
-
-        default:
-            break;
-    }
-
-    actor* target;
-
-    if (YOU_KILL(killer))
-        target = &you;
-    // Killed by a Zot trap, a god, etc, or suicide.
-    else if (invalid_monster_index(index) || index == mons->mindex())
-        return;
-    else
-        target = &menv[index];
-
-    // Mummy was killed by a ballistomycete spore or ball lightning?
-    if (!target->alive())
-        return;
-
-    // Mummies are smart enough not to waste curses on summons or allies.
-    if (target->is_monster() && target->as_monster()->friendly()
-        && !crawl_state.game_is_arena())
-    {
-        target = &you;
-    }
-
-    // Stepped from time?
-    if (!in_bounds(target->pos()))
-        return;
-
-    if (target->is_player())
-        mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
-    else if (you.can_see(*target))
-    {
-        mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
-             target->name(DESC_THE).c_str());
-    }
-    const string cause = make_stringf("%s death curse",
-                            apostrophise(mons->name(DESC_A)).c_str());
-    MiscastEffect(target, mons, {miscast_source::mummy}, spschool::necromancy,
-                  pow, random2avg(88, 3), cause.c_str());
-}
-
 template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
@@ -2676,7 +2618,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         treant_release_fauna(mons);
     }
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
-        _mummy_curse(&mons, mummy_curse_power(mons.type), killer, killer_index);
+    {
+        mummy_death_curse_fineff::schedule(
+                actor_by_mid(killer_index),
+                mons.name(DESC_A),
+                killer,
+                mummy_curse_power(mons.type));
+    }
 
     // Necromancy
     if (!was_banished && !mons_reset)
