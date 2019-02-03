@@ -652,7 +652,10 @@ string SkillMenuSwitch::get_help()
             return "The percentage of incoming experience used"
                    " to train each skill is in <brown>brown</brown>.\n";
     case SKM_VIEW_TARGETS:
-        return "The current training targets, if any.\n";
+        if (skm.is_set(SKMF_SIMPLE))
+            return hints_skill_targets_info();
+        else
+            return "The current training targets, if any.\n";
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
@@ -662,6 +665,9 @@ string SkillMenuSwitch::get_help()
                "knowledge. The donating skill is marked with <cyan>*</cyan>.";
     case SKM_VIEW_COST:
     {
+        if (skm.is_set(SKMF_SIMPLE))
+            return hints_skill_costs_info();
+
         string result =
                "The relative cost of raising each skill is in "
                "<cyan>cyan</cyan>";
