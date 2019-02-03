@@ -2735,8 +2735,9 @@ string hints_skills_info()
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "
         "The number next to the skill is your current level, the higher the "
-        "better. The <brown>brown percent value</brown> shows how much "
-        "experience is allocated to go towards that skill. "
+        "better. <w>Training</w> displays training percentages. "
+        "<w>Costs</w> displays relative training costs. "
+        "<w>Targets</w> displays skill training targets. "
         "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
         "will not be trained and ease the training of others.";
@@ -2756,6 +2757,35 @@ string hints_skill_training_info()
         "used to train each skill. It is automatically set depending on "
         "which skills you have used recently. Disabling a skill sets the "
         "training rate to 0.";
+    text << broken;
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    return text.str();
+}
+
+string hints_skill_costs_info()
+{
+    textcolour(channel_to_colour(MSGCH_TUTORIAL));
+    ostringstream text;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    string broken = "The training cost (in <cyan>cyan</cyan>) "
+        "shows the experience cost to raise the given skill one level, "
+        "relative to the cost of raising an aptitude zero skill from level "
+        "zero to level one.";
+    text << broken;
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    return text.str();
+}
+
+string hints_skill_targets_info()
+{
+    textcolour(channel_to_colour(MSGCH_TUTORIAL));
+    ostringstream text;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    string broken = "Press the letter of a skill to set a training target. "
+        "When the target is reached a message will appear and "
+        "the training of the skill will be disabled.";
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
