@@ -56,7 +56,7 @@ specific to a single commit. Similarly, upgrading a game (trunk or otherwise)
 where the dungeon is not pregenerated will lead to divergence from *both* seed
 to dungeon mappings.
 
-## 2.1. Detecting seed divergence
+## 2.1. Detecting unwanted seed divergence
 
 Detecting this can be quite hard, but there are a few built-in tests that run
 in Travis CI and can be run locally. These are `d1_vaults.lua` (which prints
@@ -189,6 +189,13 @@ in the array is not important, you can use `lua_next` with a vector and
 
 Don't use other sources of randomization in crawl besides crawl RNGs. For
 example, don't use lua's `math.rand`, or C stdlib's `rand`.
+
+### 3.4. Keeping the .des cache stable
+
+Try to avoid vault design elements that will lead to variable .des caches; any
+random choices made here will be outside of levelgen rng, and potentially
+set at the time the player first opens crawl. Especially try to avoid
+determining a set of tags for a map randomly using lua `tags` calls.
 
 ## 4. Dealing with seed divergence
 
