@@ -371,9 +371,10 @@ of the screen. </localtiles>Rereading old messages with
 tutorial3 trap
 
 Traps can have a variety of unpleasant effects, such as alerting monsters or
-teleporting you into danger. They will often be hidden until you discover them
-by stepping on them. If there's no way around, you'll have to trigger the trap
-and deal with the consequences.
+teleporting you into danger. Some traps are permanent and will always be
+revealed as part of the map, but other traps can be triggered by exploring new
+tiles, and won't exist after being triggered. If there's no way around, you'll
+have to trigger the trap and deal with the consequences.
 %%%%
 tutorial3 potion
 
@@ -701,8 +702,8 @@ again.
 %%%%
 tutorial5 hunger
 
-Berserking also causes a large amount of hunger. You cannot berserk while very
-hungry, so you should always carry some food with you.
+Berserking also causes a large amount of hunger. You cannot berserk while near
+starving, so you should always carry some food with you.
 %%%%
 tutorial5 berserk2
 

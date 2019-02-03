@@ -1440,7 +1440,7 @@ void SkillMenu::refresh_button_row()
     const string helpstring = "[<yellow>?</yellow>] ";
     const string azstring = "[<yellow>a</yellow>-<yellow>z</yellow>] ";
 
-    string legend = is_set(SKMF_SIMPLE) ? "Read skill descriptions" : "Help";
+    string legend = is_set(SKMF_SIMPLE) ? "Skill descriptions" : "Help";
     string midlegend = "";
     string clearlegend = "";
     if (is_set(SKMF_HELP))
