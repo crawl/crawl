@@ -27,13 +27,20 @@ Branches, Environment
 * Layouts:
   - Concentric octagons is enabled for Lair.
   - Cave pools (with adjusted parameters) is enabled for the Dungeon.
-* Translucent doors that can bee seen through when closed have been added and
+* Translucent doors that can be seen through when closed have been added and
   are now used in Elf layouts and some vaults, including most runed door
   vaults.
-* The dungeon RNG has been separated from the gameplay RNG
+* The dungeon RNG has been separated from the gameplay RNG, for better
+  "deterministic randomness". Each game seed should now generate a unique
+  dungeon (including layout, monster placement, and item placement), and that
+  seed should always generate the same dungeon, for the same version
+  of crawl, as long as levels are generated in the same order. If you find
+  otherwise, that now counts as a bug!
 * A new option for pregenerating the entire connected dungeon based on a fixed
-  seed has been added. This option is not yet available for online play, but
-  can be used offline. See the manual section "Seeded play" for details.
+  seed has been added. This takes a bit of time, but ensures that any
+  playthroughs of a particular seed will (bugs aside) use the same dungeon.
+  This option is not yet available for online play, but can be used offline.
+  See the manual section "Seeded play" for details.
 
 Character
 ---------
