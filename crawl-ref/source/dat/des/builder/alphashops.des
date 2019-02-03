@@ -214,6 +214,7 @@ WEIGHT: 5
 # items or place itemcount items, whichever is less, where itemcount is
 # the number of item types.
 {{
+if is_validating() then return end
 local letter = pickletter()
 local itemlist = shopcontents(letter)
 local itemcount = #itemlist
