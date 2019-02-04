@@ -1227,67 +1227,70 @@ SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-            ccccccccccccccccccccccccccccccc
-            cG............G<G............Gc
-            c.............................c
-            c..nnnnaaaaaan...nddddddnnnn..c
-          ccc..naaaaaaaaan...ndddddddddn..ccc
-          cG...naaaaaaaaan.A.ndddddddddn...Gc
-          c....naaaaaaaaan...ndddddddddn....c
-          c..nnnaaaaaaaaan...ndddddddddnnn..c
-          c..nEnaaaaaaaaanD.FndddddddddnHn..c
-          c..n.naaaaaaaaan...ndddddddddn.n..c
-          c..n.naaaaaaaaan...ndddddddddn.n..c
-          c..n.naaaaaaaaan...ndddddddddn.n..c
-    ccccccc..n.naaaaaaaaan...ndddddddddn.n..ccccccc
-    cG.......n.nnnnaaaaaan...nddddddnnnn.n.......Gc
-ccccc........n.n.......................n.n........ccccc
-cG.....nnnnnnn.nnnnnnn.....G.....nnnnnnn.nnnnnnn.....Gc
-c......nJ...........Ln...........nN...........Pn......c
-c..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
-c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
-c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
-c..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..c
-c......nK...........Mn...........nO...........Qn......c
-cG.....nnnnnnn.nnnnnnn.....G.....nnnnnnn.nnnnnnn.....Gc
-ccccc........n.n.......................n.n........ccccc
-    cG.......n.niiiiiinnnn...nnnnjjjjjjn.n.......Gc
-    ccccccc..n.niiiiiiiiin...njjjjjjjjjn.n..ccccccc
-          c..n.niiiiiiiiin...njjjjjjjjjn.n..c
-          c..n.niiiiiiiiin...njjjjjjjjjn.n..c
-          c..n.niiiiiiiiin...njjjjjjjjjn.n..c
-          c..nRniiiiiiiiin...njjjjjjjjjnpn..c
-          c..nnniiiiiiiiin...njjjjjjjjjnnn..c
-          c....niiiiiiiiin...njjjjjjjjjn....c
-          cG...niiiiiiiiin...njjjjjjjjjn...Gc
-          ccc..niiiiiiiiin...njjjjjjjjjn..ccc
-            c..niiiiiinnnn...nnnnjjjjjjn..c
-            c........nSn.......nqn........c
-            cG.......n.n..G<G..n.n.......Gc
-            vvvvvvvvvv.vvvvvvvvv.vvvvvvvvvv
-                   v...............v
-                   v...............v
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vyyyyyyyyyyyyyyyv
-                   vvyyyyyyyyyyyyyvv
-                   vvyyyyyyyyyyyyyvv
-                   vvyyyyyyyyyyyyyvv
-                   vvvvvvvvvvvvvvvvv
+               ccc ccc ccccccccccccc ccc ccc
+               cGc cGc cGccccGccccGc cGc cGc
+              ccncccncccnccccnccccncccncccncc
+              cl............l<l............lc
+            ccc.............................ccc
+            cGn..nnnnaaaaaan...nddddddnnnn..nGc
+            cnn..naaaaaaaaan...ndddddddddn..nnc
+            c....naaaaaaaaan.A.ndddddddddn....c
+          ccc....naaaaaaaaan...ndddddddddn....ccc
+          cGn..nnnaaaaaaaaan...ndddddddddnnn..nGc
+          ccc..nEnaaaaaaaaanD.FndddddddddnHn..ccc
+            c..n.naaaaaaaaan...ndddddddddn.n..c
+          ccc..n.naaaaaaaaan...ndddddddddn.n..ccc
+          cGn..n.naaaaaaaaan...ndddddddddn.n..nGc
+    cccccccnn..n.naaaaaaaaan...ndddddddddn.n..nnccccccc
+    cGn........n.nnnnaaaaaan...nddddddnnnn.n........nGc
+  cccnn........n.n...........l...........n.n........nnccc
+cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
+cGn......nJ...........Ln.....l.....nN...........Pn......nGc
+ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
+  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
+ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
+cGn..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..nGc
+ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
+  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
+ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
+cGn..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..nGc
+ccc..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..ccc
+  c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
+ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
+cGn......nK...........Mn.....l.....nO...........Qn......nGc
+cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
+  cccnn........n.n...........l...........n.n........nnccc
+    cGn........n.niiiiiinnnn...nnnnjjjjjjn.n........nGc
+    cccccccnn..n.niiiiiiiiin...njjjjjjjjjn.n..nnccccccc
+          cGn..n.niiiiiiiiin...njjjjjjjjjn.n..nGc
+          ccc..n.niiiiiiiiin...njjjjjjjjjn.n..ccc
+            c..n.niiiiiiiiin...njjjjjjjjjn.n..c
+          ccc..nRniiiiiiiiin...njjjjjjjjjnpn..ccc
+          cGn..nnniiiiiiiiin...njjjjjjjjjnnn..nGc
+          ccc....niiiiiiiiin...njjjjjjjjjn....ccc
+            c....niiiiiiiiin...njjjjjjjjjn....c
+            cnn..niiiiiiiiin...njjjjjjjjjn..nnc
+            cGn..niiiiiinnnn...nnnnjjjjjjn..nGc
+            ccc........nSn.......nqn........ccc
+              cl.......n.n..l<l..n.n.......lc
+              ccnccccccn.nnnnnnnnn.nccccccncc
+               cGc  vl...............lv  cGc
+               ccc  vG.G.G.G.G.G.G.G.Gv  ccc
+                    vl...............lv
+                    vvyyyyyyyyyyyyyyyvv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vyyyyyyyyyyyyyyyv
+                     vvyyyyyyyyyyyyyvv
+                     vvyyyyyyyyyyyyyvv
+                     vvyyyyyyyyyyyyyvv
+                     vvvvvvvvvvvvvvvvv
 ENDMAP
 
 NAME:   gammafunk_gauntlet_hard_choice
@@ -1311,67 +1314,70 @@ SUBVAULT: u : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-ccccccccccccccccccccccccccccccc
-cG............G<G............Gc
-c.......D.............F.......c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c..aaaaaaaaaaa...ppppppppppp..c
-c..aaaaaaaaaaa.A.ppppppppppp..c
-c..aaaaaaaaaaa...ppppppppppp..c
-c..aaaaaaaaaaa...ppppppppppp..c
-c..aaaaaaaaaaa...ppppppppppp..c
-c..aaaaaaaaaaa...ppppppppppp..c
-c..naaaaaaaaan...npppppppppn..c
-c..naaaaaaaaan...npppppppppn..c
-c..naaaaaaaaan...npppppppppn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c.....n.E.n.........n.H.n.....c
-cG....n...n....G....n...n....Gc
-c.....n.J.n.........n.L.n.....c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..qqqqqqqqqqq...rrrrrrrrrrr..c
-c..nqqqqqqqqqn...nrrrrrrrrrn..c
-c..nqqqqqqqqqn...nrrrrrrrrrn..c
-c..nqqqqqqqqqn...nrrrrrrrrrn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c.....n.K.n.........n.M.n.....c
-cG....n...n....G....n...n....Gc
-c.....n.N.n.........n.P.n.....c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..sssssssssss...uuuuuuuuuuu..c
-c..nsssssssssn...nuuuuuuuuun..c
-c..nsssssssssn...nuuuuuuuuun..c
-c..nsssssssssn...nuuuuuuuuun..c
-c..nnnnnnnnnnn...nnnnnnnnnnn..c
-c.............................c
-cG............G<G............Gc
-vvvvvvvnnnvvvvvvvvvvvnnnvvvvvvv
-      v.O.............Q.v
-      v.................v
-      vvyyyyyyyyyyyyyyyvv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vvyyyyyyyyyyyyyvv
-       vvyyyyyyyyyyyyyvv
-       vvyyyyyyyyyyyyyvv
-       vvvvvvvvvvvvvvvvv
+ccccccccccccccccccccccccccccccccccc
+cccccGcccGcccGcccGcccGcccGcccGccccc
+cccccncccncccncccncccncccncccnccccc
+cccl............l<l............lccc
+cGn.......D.............F.......nGc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+ccc..aaaaaaaaaaa...ppppppppppp..ccc
+ccc..aaaaaaaaaaa.A.ppppppppppp..ccc
+cGn..aaaaaaaaaaa...ppppppppppp..nGc
+ccc..aaaaaaaaaaa...ppppppppppp..ccc
+ccc..aaaaaaaaaaa...ppppppppppp..ccc
+ccc..aaaaaaaaaaa...ppppppppppp..ccc
+cGn..naaaaaaaaan...npppppppppn..nGc
+ccc..naaaaaaaaan...npppppppppn..ccc
+ccc..naaaaaaaaan...npppppppppn..ccc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+cGn.....n.E.n....l....n.H.n.....nGc
+ccc...G.n...n...lGl...n...n.G...ccc
+ccc.....n.J.n....l....n.L.n.....ccc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+cGn..qqqqqqqqqqq...rrrrrrrrrrr..nGc
+ccc..qqqqqqqqqqq...rrrrrrrrrrr..ccc
+ccc..qqqqqqqqqqq...rrrrrrrrrrr..ccc
+ccc..qqqqqqqqqqq...rrrrrrrrrrr..ccc
+cGn..qqqqqqqqqqq...rrrrrrrrrrr..nGc
+ccc..qqqqqqqqqqq...rrrrrrrrrrr..ccc
+ccc..nqqqqqqqqqn...nrrrrrrrrrn..ccc
+ccc..nqqqqqqqqqn...nrrrrrrrrrn..ccc
+cGn..nqqqqqqqqqn...nrrrrrrrrrn..nGc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+ccc.....n.K.n....l....n.M.n.....ccc
+ccc...G.n...n...lGl...n...n.G...ccc
+cGn.....n.N.n....l....n.P.n.....nGc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+ccc..sssssssssss...uuuuuuuuuuu..ccc
+ccc..sssssssssss...uuuuuuuuuuu..ccc
+cGn..sssssssssss...uuuuuuuuuuu..nGc
+ccc..sssssssssss...uuuuuuuuuuu..ccc
+ccc..sssssssssss...uuuuuuuuuuu..ccc
+ccc..sssssssssss...uuuuuuuuuuu..ccc
+cGn..nsssssssssn...nuuuuuuuuun..nGc
+ccc..nsssssssssn...nuuuuuuuuun..ccc
+ccc..nsssssssssn...nuuuuuuuuun..ccc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn..ccc
+cGn.............................nGc
+cccl............l<l............lccc
+cccccnccccnnnnnnnnnnnnnnnccccnccccc
+    cGc vl...............lv cGc
+    ccc vG.G.G..O.Q..G.G.Gv ccc
+        vl...............lv
+        vvyyyyyyyyyyyyyyyvv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vvyyyyyyyyyyyyyvv
+         vvyyyyyyyyyyyyyvv
+         vvyyyyyyyyyyyyyvv
+         vvvvvvvvvvvvvvvvv
 ENDMAP
 
 NAME:   gammafunk_gauntlet_shortcut
@@ -1394,53 +1400,56 @@ SUBVAULT: h : gauntlet_arena_first
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-ccccccccccccccccccccccccccccccccccccccccccccc
-cG............G<G............G.............Gc
-c.......D.............J.....................c
-c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
-c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
-c..aaaaaaaaaaa.A.eeeeeeeeeee...nfffffffffn..c
-c..aaaaaaaaaaa...eeeeeeeeeeennnnfffffffffn..c
-c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
-c..aaaaaaaaaaa...eeeeeeeeeeeK.Lnfffffffffn..c
-c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
-c..naaaaaaaaan...neeeeeeeeennnnnfffffffffn..c
-c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
-c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
-c.....n.E.n.......................n.M.n.....c
-cG....n...n....G.............G....n...n....Gc
-c.....n.F.n.......................n.N.n.....c
-c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
-c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
-c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
-c..ddddddddddd...hhhhhhhhhhhnnnggggggggggg..c
-c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
-c..ddddddddddd...hhhhhhhhhhhP.Oggggggggggg..c
-c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
-c..ndddddddddn...nhhhhhhhhhnnnnngggggggggn..c
-c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
-c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
-c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
-c...........................................c
-cG............G<G............G.............Gc
-ccccccvnnnvvvvvvvvvvvnnnvcccccccccccccccccccc
-      v.H.............Q.v
-      v.................v
-      vvyyyyyyyyyyyyyyyvv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vyyyyyyyyyyyyyyyv
-       vvyyyyyyyyyyyyyvv
-       vvyyyyyyyyyyyyyvv
-       vvyyyyyyyyyyyyyvv
-       vvvvvvvvvvvvvvvvv
+ccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccGcccGcccGcccGcccGcccGcccGcccGcccGcccGcccGcccc
+ccccncccncccncccncccncccncccncccncccncccncccncccc
+cccl............l<l..........................lccc
+cGn.......D.............J.....................nGc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..ccc
+ccc..aaaaaaaaaaa...eeeeeeeeeee.G.nfffffffffn..ccc
+ccc..aaaaaaaaaaa.A.eeeeeeeeeee...nfffffffffn..ccc
+cGn..aaaaaaaaaaa...eeeeeeeeeeennnnfffffffffn..nGc
+ccc..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..ccc
+ccc..aaaaaaaaaaa...eeeeeeeeeeeK.Lnfffffffffn..ccc
+ccc..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..ccc
+cGn..naaaaaaaaan...neeeeeeeeennnnnfffffffffn..nGc
+ccc..naaaaaaaaan...neeeeeeeeen...nfffffffffn..ccc
+ccc..naaaaaaaaan...neeeeeeeeen.G.nfffffffffn..ccc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..ccc
+cGn.....n.E.n....l.............l....n.M.n.....nGc
+ccc...G.n...n...lGl...........lGl...n...n.G...ccc
+ccc.....n.F.n....l.............l....n.N.n.....ccc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..ccc
+cGn..ddddddddddd...hhhhhhhhhhh.G.ggggggggggg..nGc
+ccc..ddddddddddd...hhhhhhhhhhh...ggggggggggg..ccc
+ccc..ddddddddddd...hhhhhhhhhhhnnnggggggggggg..ccc
+ccc..ddddddddddd...hhhhhhhhhhh...ggggggggggg..ccc
+cGn..ddddddddddd...hhhhhhhhhhhP.Oggggggggggg..nGc
+ccc..ddddddddddd...hhhhhhhhhhh...ggggggggggg..ccc
+ccc..ndddddddddn...nhhhhhhhhhnnnnngggggggggn..ccc
+ccc..ndddddddddn...nhhhhhhhhhn...ngggggggggn..ccc
+cGn..ndddddddddn...nhhhhhhhhhn.G.ngggggggggn..nGc
+ccc..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..ccc
+  c...........................................c
+  cl............l<l..........................lc
+  ccccncccnnnnnnnnnnnnnnncccncccncccncccncccncc
+     cGcvl...............lvcGcccGcccGcccGcccGc
+     cccvG.G.G..H.Q..G.G.Gvccccccccccccccccccc
+        vl...............lv
+        vvyyyyyyyyyyyyyyyvv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vyyyyyyyyyyyyyyyv
+         vvyyyyyyyyyyyyyvv
+         vvyyyyyyyyyyyyyvv
+         vvyyyyyyyyyyyyyvv
+         vvvvvvvvvvvvvvvvv
 ENDMAP
 
 NAME:   gammafunk_gauntlet_one_two_three
@@ -1460,57 +1469,57 @@ SUBVAULT: k : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-                                    ccccc
-                                    cG<Gc
-                                    c...c
-                  ccccccccccccccccccc.A.ccccccccccccccccccc
-                  cG.....................................Gc
-                  c...................D...................c
-                  c..nnnnddddddn.nnnnnnnnnnn.neeeeeennnn..c
-                ccc..ndddddddddn.aaaaaaaaaaa.neeeeeeeeen..ccc
-                cG...ndddddddddn.aaaaaaaaaaa.neeeeeeeeen...Gc
-                c....ndddddddddn.aaaaaaaaaaa.neeeeeeeeen....c
-                c..nnndddddddddn.aaaaaaaaaaa.neeeeeeeeennn..c
-                c..nHndddddddddn.aaaaaaaaaaa.neeeeeeeeenKn..c
-                c..n.ndddddddddn.aaaaaaaaaaa.neeeeeeeeen.n..c
-                c..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..c
-                c..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..c
-    ccccccccccccc..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..ccccccccccccc
-    cG.............n.nnnnddddddnnnnnnnnnnnnnnneeeeeennnn.n.............Gc
-ccccc..............n.nllGllnF.........E.........JnllGlln.n..............ccccc
-cG.....nnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnn.....Gc
-c......nL...........N...........PnllllGllllnR...........p...........rn......c
-c..nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk..c
-c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
-c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
-c..nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn..c
-c..nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn..c
-c...........................................................................c
-cG...................................G<G...................................Gc
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvnnnnnnnnnnnnnnnvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                             v.................v
-                             v.G.M.O.Q.S.q.s.G.v
-                             v.................v
-                             vvyyyyyyyyyyyyyyyvv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vyyyyyyyyyyyyyyyv
-                              vvyyyyyyyyyyyyyvv
-                              vvyyyyyyyyyyyyyvv
-                              vvyyyyyyyyyyyyyvv
-                              vvvvvvvvvvvvvvvvv
+                                     ccccc
+                    ccc ccc ccc ccc  cl<lc  ccc ccc ccc ccc
+                    cGc cGc cGc cGc  c...c  cGc cGc cGc cGc
+                   ccncccncccncccncccc.A.ccccncccncccncccncc
+                   cl.....................................lc
+                 ccc...................D...................ccc
+                 cGn..nnnnddddddn.nnnnnnnnnnn.neeeeeennnn..nGc
+                 cnn..ndddddddddn.aaaaaaaaaaa.neeeeeeeeen..nnc
+                 c....ndddddddddn.aaaaaaaaaaa.neeeeeeeeen....c
+               ccc....ndddddddddn.aaaaaaaaaaa.neeeeeeeeen....ccc
+               cGn..nnndddddddddn.aaaaaaaaaaa.neeeeeeeeennn..nGc
+               ccc..nHndddddddddn.aaaaaaaaaaa.neeeeeeeeenKn..ccc
+                 c..n.ndddddddddn.aaaaaaaaaaa.neeeeeeeeen.n..c
+       ccc ccc ccc..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..ccc ccc ccc
+       cGc cGc cGn..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..nGc cGc cGc
+   cccccncccncccnn..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..nncccncccnccccc
+   cGn..............n.nnnnddddddnnnnnnnnnnnnnnneeeeeennnn.n..............nGc
+  ccnn..............n.nllGllnF.........E.........JnllGlln.n..............nncc
+cccl....nnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnn....lccc
+cGn.....nL...........N...........PnllllGllllnR...........p...........rn.....nGc
+ccc.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.ccc
+  c.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.c
+ccc.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.ccc
+cGn.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.nGc
+ccc.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.ccc
+  c.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.c
+ccc.fffffffffff.ggggggggggg.hhhhhhhhhhh.iiiiiiiiiii.jjjjjjjjjjj.kkkkkkkkkkk.ccc
+cGn.nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn.nGc
+ccc.nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn.ccc
+  c.nfffffffffn.ngggggggggn.nhhhhhhhhhn.niiiiiiiiin.njjjjjjjjjn.nkkkkkkkkkn.c
+ccc.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.nnnnnnnnnnn.ccc
+cGn.........................................................................nGc
+cccl..................................l<l..................................lccc
+  ccncccncccncccncccncccncccnccccnnnnnnnnnnnnnnnccncccncccncccncccncccncccncc
+   cGc cGc cGc cGc cGc cGc cGcvl...............lvcGc cGc cGc cGc cGc cGc cGc
+   ccc ccc ccc ccc ccc ccc cccvG..M.O.Q.S.q.s..Gvccc ccc ccc ccc ccc ccc ccc
+                              vl...............lv
+                              vvyyyyyyyyyyyyyyyvv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vyyyyyyyyyyyyyyyv
+                               vvyyyyyyyyyyyyyvv
+                               vvyyyyyyyyyyyyyvv
+                               vvyyyyyyyyyyyyyvv
+                               vvvvvvvvvvvvvvvvv
 ENDMAP
 
 ################################################################################
