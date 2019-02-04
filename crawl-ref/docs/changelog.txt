@@ -1,5 +1,13 @@
-Stone Soup 0.23 (up to 0.23-a0-899-gbbae0a335a)
------------------------------------------------
+Stone Soup 0.23 (up to 0.23-b1-56-gfe314ee208)
+----------------------------------------------
+
+Highlights
+----------
+* Trap system rework
+* New Gauntlet portal to replace Labyrinths
+* Nemelex Xobeh rework
+* Nine unrandarts reworked and the new "Rift" unrandart added
+* Supported for seeded dungeon play
 
 Branches, Environment
 ---------------------
@@ -8,60 +16,51 @@ Branches, Environment
   - Exploration has a chance to trigger a "trap effect" independent from
     terrain traps. The possible effects are alarm, shaft, and teleport near
     monsters.
-  - Alarm traps only trigger in LOS, and always Mark the player when
-    triggered.
+  - Monsters only trigger traps in sight of the player.
+  - Alarm traps now always Mark the player whenever they are triggered in LOS.
   - Net traps now try to net the player whenever they are triggered in LOS.
   - New trap: dispersal trap. When triggered, every actor in sight of the trap
     is blinked.
-  - Mechanical traps save for net traps have been removed from Tomb and the
-    Hall of Zot on Zot:5, and traps have been adjusted in many Ossuaries.
-  - Grate traps (triggered by Lua pressure plates) have been removed.
+  - Trap placement in Ossuaries, Zot:5, and Tomb has been overhauled. In Zot:5
+    and Tomb, all mechanical traps save for net traps have been removed.
+  - Grate traps (triggered by pressure plates) have been removed.
 * A new Gauntlet portal that replaces Labyrinths:
   - Gauntlets have the player choose a path through several combat arenas,
     each of which contains (sometimes exotic) monsters and loot.
-  - Arena access is one-way using transporters, and teleports are disabled.
-  - All paths lead to the minotaur who guards the exit and a pile of treasure.
+  - Access to each arena is one-way using transporters. Teleports and Passage
+    of Golubria are disabled.
+  - All paths lead to a minotaur who guards a pile of treasure and the exit.
   - Gauntlets are found where Labyrinths previously generated.
-* New early vaults featuring thematic item shops and monsters guarding
-  manuals, as well as new ghost vaults for many branches.
-* Layouts:
-  - Concentric octagons is enabled for Lair.
-  - Cave pools (with adjusted parameters) is enabled for the Dungeon.
-* Translucent doors that can be seen through when closed have been added and
-  are now used in Elf layouts and some vaults, including most runed door
-  vaults.
-* The dungeon RNG has been separated from the gameplay RNG, for better
-  "deterministic randomness". Each game seed should now generate a unique
-  dungeon (including layout, monster placement, and item placement), and that
-  seed should always generate the same dungeon, for the same version
-  of crawl, as long as levels are generated in the same order. If you find
-  otherwise, that now counts as a bug!
-* A new option for pregenerating the entire connected dungeon based on a fixed
-  seed has been added. This takes a bit of time, but ensures that any
-  playthroughs of a particular seed will (bugs aside) use the same dungeon.
-  This option is not yet available for online play, but can be used offline.
-  See the manual section "Seeded play" for details.
+* Support for seeded play:
+  - A new option for pregenerating the entire connected dungeon based on a fixed
+    seed has been added. This takes a bit of time, but ensures that any
+    playthroughs of a particular seed will use the same dungeon.
+  - This option is not yet available for online play, but can be used offline.
+    See the manual section "Seeded play" for details.
+  - The dungeon RNG has been separated from the gameplay RNG to allow this
+    feature to work.
+  - Each game seed generates a unique dungeon (including layout and
+    monster and item placement) that is always the same for the same version
+    of crawl, as long as levels are generated in the same order.
+  - If you see that two games with the same seed generate a different dungeon,
+    please report this as a bug!
+* New vaults: early thematic item shops and monsters guarding manuals, as well
+  as new ghost vaults for many branches.
+* Translucent doors that can be seen through when closed have been added.
+  These are used in most runed door vaults and in some Elf layouts.
+* Two new dungeon layouts enabled, one for Dungeon and one for Lair.
 
 Character
 ---------
+* The player can no longer be put to sleep when paralyzed or petrified.
+* Tengu Permanent Flight becomes immediately available at XL 5.
+* Tengu EV bonuses are no longer applied to +EV from equipment.
 * Wanderer starting spell libraries are announced along with equipment.
 * Wanderers that start with exactly one level 1 spell start with it memorized.
-* The player can no longer be put to sleep when paralyzed or petrified.
-* Tengu EV bonuses are no longer applied to +EV from equipment.
-* Tengu Permanent Flight becomes immediately available at XL 5.
 
 Gods
 ----
-* Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
-  sight instead of on the turn after the monster enters LOS.
-* The acid damage from Makhleb's Minor Destruction has been reduced.
-* Elyvilon's Heal Other's is adjusted:
-  - The formula depends only on monster type, not specific monster maxhp.
-  - Player Ghosts and Pandemonium Lords are now immune.
-  - The targeter displays the pacification chance.
-* Exploration-based piety is no longer granted for the Temple, deep water, or
-  lava.
-* Nemelex Xobeh's decks are moved into an abstract abilities:
+* Nemelex Xobeh has been reworked:
   - Decks are are accessed through abilities and no longer exist as items.
   - Nemelex offers three abilities: "Draw Escape", "Draw Destruction", and
     "Draw Summoning", which provide card effects.
@@ -78,19 +77,26 @@ Gods
     with a chance proportional to power.
   - The Storm card has been revised. It now performs a wind blast followed by
     one to nine electrical explosions.
-* Ashenzari protects followers from exploration based trap effects.
+* Elyvilon's Heal Other's is adjusted:
+  - The formula depends only on monster type, not specific monster maxhp.
+  - Player Ghosts and Pandemonium Lords are now immune.
+  - The targeter displays the pacification chance.
+* Ashenzari protects followers from exploration-based trap effects.
 * Qazlal's cloud immunity is extended to elementals created with Elemental
   Force.
+* Fedhas' protection of plants from player spells is extended to LOS-wide
+  attack spells.
+* The acid damage from Makhleb's Minor Destruction has been reduced.
+* Exploration-based piety is no longer granted for the Temple, deep water, or
+  lava.
+* Monster conversion for Beogh, Gozag's Bribe, and Jiyva is attempted upon
+  sight instead of on the turn after the monster enters LOS.
 
 Interface
 ---------
-* The Hepliakqana ancestor reaching full health interrupts resting. The exact
-  behavior of this interrupt can be configured by rest_wait_ancestor.
-* WebTiles users can use a "Forgot Password" link to reset their password
-  via a link sent to their registration email address. This feature is not yet
-  enabled on most official servers.
-* The new display_chars cloud_weak, cloud_fading, and cloud_terminal indicate
-  remaining cloud duration in console.
+* Spell damage message punctuation has been adjusted to reflect damage done
+  using the same scale as melee damage.
+* Damage brand message punctuation has been similarly adjusted.
 * Monster descriptions in 'xv' display spell ranges.
 * The Religion screen '^' gains a fourth pane for gods that need Extra
   information:
@@ -100,37 +106,41 @@ Interface
   - Hepliaklqana displays ancestor upgrades.
   - Nemelex Xobeh displays deck information.
   - Wu Jian displays information about martial attacks.
-* Spell damage message punctuation has been adjusted to reflect damage done
-  using the same scale as melee damage.
-* Damage brand message punctuation has been similarly adjusted.
+* The Hepliakqana ancestor reaching full health interrupts resting. The exact
+  behavior of this interrupt can be configured by rest_wait_ancestor.
+* The new display_chars cloud_weak, cloud_fading, and cloud_terminal indicate
+  remaining cloud duration in console.
+* WebTiles users can use a "Forgot Password" link to reset their password
+  via a link sent to their registration email address. This feature is not yet
+  enabled on most official servers.
 
 Items
 -----
-* Stash search can now search by handedness.
-* Butchering a corpse always leaves a skeleton.
-* Wand charges for wands of digging, enslavement, flame, paralysis, polymorph,
-  and random effects have been reduced.
-* The blowgun targeter now displays the chance to affect the target.
-* Unrandarts:
-  - The Singing Sword is now vorpal, and its sonic damage effect is stronger
-    and triggers on-hit instead of while wielded.
-  - The Spriggan's Knife loses Dex+4 and MR+ and converts all stabs to
-    sleep-tier stabs.
-  - The robe of Misfortune is now identified, and is +5 {*Contam *Corrode
-    *Drain Harm *Slow and EV+5}.
-  - The sceptre of Torment is now a +7 eveningstar of pain, and its torment
+* Unrandart changes:
+  - New Unrand: the +8 demon trident "Rift" {distort, reach+}. A distortion
+    demon trident with a reaching range of 3 and smite-targeted attack.
+  - The Singing Sword's sonic damage effect is stronger, can trigger at low
+    tension, and triggers only on-hit. It also gains the vorpal brand.
+  - The Spriggan's Knife converts all stabs to sleep-tier stabs and loses
+    Dex+4 and MR+.
+  - The Robe of Misfortune is +5 {*Contam *Corrode *Drain Harm *Slow EV+5} and
+    is now always identified.
+  - The Sceptre of Torment is now a +7 eveningstar of pain, and its torment
     does not affect the wielder.
-  - The arc blade's effect now casts static discharge only once, but at very
-    high spellpower. The weapon's enchantment is now +8.
-  - Finisher loses Str+3 and gains a chance to instant-explode the target.
+  - The Arc Blade's effect now casts static discharge only once at very high
+    spellpower. The weapon's enchantment is now +8.
+  - Finisher gains a chance to instant-explode the target and loses Str+3.
+  - The Robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
+    storm clouds in place of its old mist.
+  - The Skin of Zhor gains a passive Metabolic Englaciation effect and SInv.
+  - The Storm Bow no longer occasionally creates rain clouds.
   - Unrandarts with melee effects that could anger nearby allies give a proper
     warning.
-  - The robe of Clouds is now +3 {+Thunder rCloud rElec}, providing evocable
-    storm clouds in place of its old mist.
-  - The storm bow no longer occasionally creates rain clouds.
-  - The skin of Zhor gains SInv and a passive Metabolic Englaciation effect.
-  - New Unrand: the +8 demon trident "Rift" {distort, reach+}. A distortion
-    demon trident with a reaching range of 3 and smite targeted attack.
+* Wand charges for wands of digging, enslavement, flame, paralysis, polymorph,
+  and random effects have been reduced.
+* Butchering a corpse always leaves a skeleton.
+* The blowgun targeter now displays the chance to affect the target.
+* Stash search can now search by handedness.
 
 Lua
 ---
@@ -156,7 +166,6 @@ Monsters
   charmed/uncharmed, pacified, or slimified.
 * Confused monsters now get a 1 in 3 chance to move normally, like players do.
 * Giant monsters no longer tear through webs.
-* Monsters only trigger traps in sight of the player.
 
 Spells
 ------
