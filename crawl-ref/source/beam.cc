@@ -3659,6 +3659,10 @@ static const vector<pie_effect> pie_effects = {
                     mpr("An unnatural silence engulfs you.");
 
                 you.increase_duration(DUR_SILENCE, 4 + random2(7), 10);
+                invalidate_agrid(true);
+
+                if (you.beheld())
+                    you.update_beholders();
             }
         },
         10
