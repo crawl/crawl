@@ -353,6 +353,14 @@ string line_reader::get_text() const
     return buffer;
 }
 
+void line_reader::set_text(string text)
+{
+    snprintf(buffer, bufsz, "%s", text.c_str());
+    length = min(text.size(), bufsz);
+    cur = buffer + length;
+    pos = length;
+}
+
 void line_reader::set_input_history(input_history *i)
 {
     history = i;

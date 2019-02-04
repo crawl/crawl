@@ -380,12 +380,21 @@ static void _setup_generic(const newgame_def& ng);
 // Initialise a game based on the choice stored in ng.
 void setup_game(const newgame_def& ng)
 {
-    crawl_state.type = ng.type;
+    if (Options.seed_from_rc && ng.type == GAME_TYPE_NORMAL)
+    {
+        Options.seed = Options.seed_from_rc;
+        crawl_state.type = GAME_TYPE_CUSTOM_SEED;
+    }
+    else if (!Options.seed && ng.type == GAME_TYPE_CUSTOM_SEED)
+        crawl_state.type = GAME_TYPE_NORMAL;
+    else
+        crawl_state.type = ng.type;
     crawl_state.map  = ng.map;
 
     switch (crawl_state.type)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_CUSTOM_SEED:
         _setup_normal_game();
         break;
     case GAME_TYPE_TUTORIAL:
@@ -463,7 +472,7 @@ void initial_dungeon_setup()
 
 static void _setup_generic(const newgame_def& ng)
 {
-    reset_rng();
+    reset_rng(); // initialize rng from Options.seed
     _init_player();
 
 #if TAG_MAJOR_VERSION == 34

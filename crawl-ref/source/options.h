@@ -171,6 +171,7 @@ public:
     vector<string> additional_macro_files;
 
     uint64_t    seed;           // Non-random games.
+    uint64_t    seed_from_rc;
 #ifndef DGAMELAUNCH
     bool        pregen_dungeon; // Is the dungeon generated at the beginning?
 #endif

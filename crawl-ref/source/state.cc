@@ -555,7 +555,8 @@ bool game_state::game_standard_levelgen() const
 bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);
-    return type == GAME_TYPE_NORMAL || type == GAME_TYPE_UNSPECIFIED;
+    return type == GAME_TYPE_NORMAL || type == GAME_TYPE_CUSTOM_SEED
+                                    ||type == GAME_TYPE_UNSPECIFIED;
 }
 
 bool game_state::game_is_tutorial() const
@@ -602,6 +603,8 @@ string game_state::game_type_name_for(game_type _type)
     default:
         // No explicit game type name for default game.
         return "";
+    case GAME_TYPE_CUSTOM_SEED:
+        return "Seeded";
     case GAME_TYPE_TUTORIAL:
         return "Tutorial";
     case GAME_TYPE_ARENA:
@@ -618,6 +621,8 @@ string game_state::game_savedir_path() const
 
 string game_state::game_type_qualifier() const
 {
+    if (type == GAME_TYPE_CUSTOM_SEED)
+        return "-seeded";
     if (crawl_state.game_is_sprint())
         return "-sprint";
     if (crawl_state.game_is_tutorial())
