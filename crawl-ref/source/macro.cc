@@ -1006,12 +1006,7 @@ void macro_add_query()
         input = m_getch();
 
         input = toalower(input);
-        if (input == 'a' || key_is_escape(input))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        else if (input == 'c')
+        if (input == 'c')
         {
             mprf("Cleared %s '%s' => '%s'.",
                  macro_type.c_str(),
@@ -1019,6 +1014,11 @@ void macro_add_query()
                  action_str.c_str());
             macro_del(mapref, key);
             crawl_state.unsaved_macros = true;
+            return;
+        }
+        else if (input != 'r')
+        {
+            canned_msg(MSG_OK);
             return;
         }
     }
