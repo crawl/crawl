@@ -3798,22 +3798,17 @@ void bolt::affect_player()
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
-    int hurted = 0;
+    int pre_ac_dam = 0;
 
     // Roll the damage.
     if (!(origin_spell == SPELL_FLASH_FREEZE && you.duration[DUR_FROZEN]))
-        hurted += damage.roll();
+        pre_ac_dam += damage.roll();
+
+    int pre_res_dam = apply_AC(&you, pre_ac_dam);
 
 #ifdef DEBUG_DIAGNOSTICS
-    const int preac = hurted;
-#endif
-
-    hurted = apply_AC(&you, hurted);
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int postac = hurted;
     dprf(DIAG_BEAM, "Player damage: before AC=%d; after AC=%d",
-                    preac, postac);
+                    pre_ac_dam, pre_res_dam);
 #endif
 
     practise_being_shot();
@@ -3821,7 +3816,7 @@ void bolt::affect_player()
     bool was_affected = false;
     int  old_hp       = you.hp;
 
-    hurted = max(0, hurted);
+    pre_res_dam = max(0, pre_res_dam);
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
     // we might bleed on the floor.
@@ -3829,11 +3824,12 @@ void bolt::affect_player()
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
         // assumes DVORP_PIERCING, factor: 0.5
-        int blood = min(you.hp, hurted / 2);
+        int blood = min(you.hp, pre_res_dam / 2);
         bleed_onto_floor(you.pos(), MONS_PLAYER, blood, true);
     }
 
-    hurted = check_your_resists(hurted, flavour, "", this);
+    // Apply resistances to damage, but don't print "You resist" messages yet
+    int final_dam = check_your_resists(pre_res_dam, flavour, "", this, false);
 
     // Tell the player the beam hit
     if (hit_verb.empty())
@@ -3842,18 +3838,24 @@ void bolt::affect_player()
     if (flavour != BEAM_VISUAL && !is_enchantment())
     {
         mprf("The %s %s you%s%s", name.c_str(), hit_verb.c_str(),
-             hurted ? "" : " but does no damage",
-             attack_strength_punctuation(hurted).c_str());
+             final_dam ? "" : " but does no damage",
+             attack_strength_punctuation(final_dam).c_str());
     }
 
-    if (flavour == BEAM_MIASMA && hurted > 0)
+    // Now print the messages associated with checking resistances, so that
+    // these come after the beam actually hitting.
+    // Note that this must be called with the pre-resistance damage, so that
+    // poison effects etc work properly.
+    check_your_resists(pre_res_dam, flavour, "", this, true);
+
+    if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);
 
     if (flavour == BEAM_DEVASTATION) // DISINTEGRATION already handled
-        blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
+        blood_spray(you.pos(), MONS_PLAYER, final_dam / 5);
 
     // Confusion effect for spore explosions
-    if (flavour == BEAM_SPORE && hurted
+    if (flavour == BEAM_SPORE && final_dam
         && !(you.holiness() & MH_UNDEAD)
         && !you.is_unbreathing())
     {
@@ -3891,7 +3893,7 @@ void bolt::affect_player()
             && coinflip())
         {
             mprf("Your attached jelly eats %s!", item->name(DESC_THE).c_str());
-            inc_hp(random2(hurted / 2));
+            inc_hp(random2(final_dam / 2));
             canned_msg(MSG_GAIN_HEALTH);
             drop_item = false;
         }
@@ -3919,7 +3921,7 @@ void bolt::affect_player()
 
 
     // Manticore spikes
-    if (origin_spell == SPELL_THROW_BARBS && hurted > 0)
+    if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
     {
         mpr("The barbed spikes become lodged in your body.");
         if (!you.duration[DUR_BARBS])
@@ -3942,16 +3944,16 @@ void bolt::affect_player()
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_player();
 
-    if (origin_spell == SPELL_THROW_PIE && hurted > 0)
+    if (origin_spell == SPELL_THROW_PIE && final_dam > 0)
     {
         const pie_effect effect = _random_pie_effect(you);
         mprf("%s!", effect.desc);
         effect.effect(you, *this);
     }
 
-    dprf(DIAG_BEAM, "Damage: %d", hurted);
+    dprf(DIAG_BEAM, "Damage: %d", final_dam);
 
-    if (hurted > 0 || old_hp < you.hp || was_affected)
+    if (final_dam > 0 || old_hp < you.hp || was_affected)
     {
         if (mons_att_wont_attack(attitude))
         {
@@ -3972,7 +3974,7 @@ void bolt::affect_player()
             foe_info.hurt++;
     }
 
-    internal_ouch(hurted);
+    internal_ouch(final_dam);
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
@@ -3980,8 +3982,8 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit();
 
-    knockback_actor(&you, hurted);
-    pull_actor(&you, hurted);
+    knockback_actor(&you, final_dam);
+    pull_actor(&you, final_dam);
 
     if (origin_spell == SPELL_FLASH_FREEZE
         || name == "blast of ice"
