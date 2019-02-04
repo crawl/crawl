@@ -648,6 +648,8 @@ string gametype_to_str(game_type type)
     {
     case GAME_TYPE_NORMAL:
         return "normal";
+    case GAME_TYPE_CUSTOM_SEED:
+        return "seeded";
     case GAME_TYPE_TUTORIAL:
         return "tutorial";
     case GAME_TYPE_ARENA:
@@ -1764,7 +1766,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), no_save(false), language(lang_t::EN), lang_name(nullptr)
+    : seed(0), seed_from_rc(0),
+    no_save(false), language(lang_t::EN), lang_name(nullptr)
 {
     reset_options();
 }
@@ -3407,11 +3410,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             constants.insert(field);
     }
 #ifndef DGAMELAUNCH
-    else if (key == "game_seed") // special handling because of the large type
+    else if (key == "game_seed")
     {
+        // special handling because of the large type.
         uint64_t tmp_seed = 0;
         if (sscanf(field.c_str(), "%" SCNu64, &tmp_seed))
-            Options.seed = tmp_seed;
+        {
+            // seed_from_rc is only ever set here, or by the CLO. The CLO gets
+            // first crack, so don't overwrite it here.
+            // Options.seed can be updated in-game from the custom seed menu,
+            // so also don't overwrite it when the CLO has set it, or the
+            // player has set it in-game.
+            if (!Options.seed_from_rc)
+                Options.seed_from_rc = tmp_seed;
+            if (!Options.seed)
+                Options.seed = tmp_seed;
+        }
     }
 #endif
 
@@ -4891,8 +4905,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
-            if (!sscanf(next_arg, "%" SCNu64, &Options.seed))
+            if (!sscanf(next_arg, "%" SCNu64, &Options.seed_from_rc))
                 return false;
+            Options.seed = Options.seed_from_rc;
             nextUsed = true;
             break;
 

@@ -68,6 +68,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
 
 newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
+      seed(0), pregenerate(false),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN),
       fully_random(false)
@@ -641,6 +642,105 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);
 }
+
+
+static void _choose_seed(newgame_def& ng, newgame_def& choice,
+    const newgame_def& defaults)
+{
+    char buf[20]; // max unsigned 64 bit integer is 19 chars
+    buf[0] = '\0';
+    resumable_line_reader reader(buf, sizeof(buf));
+    if (Options.seed)
+        choice.seed = Options.seed;
+    else if (Options.seed_from_rc)
+        choice.seed = Options.seed_from_rc;
+    reader.set_text(make_stringf("%" PRIu64, choice.seed));
+
+    bool done = false;
+    bool cancel = false;
+    choice.pregenerate = true; // default for this menu
+
+    auto prompt_ui = make_shared<Text>();
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+
+        if (key == CONTROL('I'))
+        {
+            choice.pregenerate = !choice.pregenerate;
+            return done = false;
+        }
+        if (key == 'd' || key == 'D')
+        {
+            time_t now;
+            struct tm * timeinfo;
+
+            time(&now);
+            timeinfo = localtime(&now);
+            char timebuf[9];
+            strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
+            reader.set_text(timebuf);
+            return done = false;
+        }
+        // TODO: digits only
+        key = reader.putkey(key);
+
+        if (key != -1)
+        {
+            if (key_is_escape(key))
+                return done = cancel = true;
+            return done = true;
+        }
+        return true;
+    });
+
+    auto box = make_shared<ui::Box>(ui::Widget::VERT);
+    box->add_child(prompt_ui);
+    auto pregen_choice = make_shared<ui::Text>(
+        "Pregenerate the dungeon ([tab] to switch)? Yes | No");
+    box->add_child(pregen_choice);
+
+    auto popup = make_shared<ui::Popup>(box);
+    ui::push_layout(move(popup));
+    while (!done && !crawl_state.seen_hups)
+    {
+        formatted_string prompt;
+        prompt.textcolour(CYAN);
+        prompt.cprintf("Play a game with a custom seed.\n\n");
+        prompt.textcolour(LIGHTGREY);
+        prompt.cprintf(
+            "Choose 0 for a random seed. Press [d] for today's daily seed.\n"
+            "The seed will determine the dungeon layout, monsters,\n"
+            "and items that you discover.\n\n");
+        prompt.cprintf("Seed:");
+        string seed_text = make_stringf("%-20s", buf);
+        prompt.cprintf("\n%s\n\n", seed_text.c_str());
+        prompt_ui->set_text(prompt);
+        // yes this appalling, some day we will have real buttons and text
+        // input. The seed highlight doesn't do much on console, but makes
+        // tiles look a lot better. N.b. the newline before the seed above
+        // is really so that an empty seed string won't get multiple highlights.
+        prompt_ui->set_highlight_pattern(seed_text, false);
+        if (choice.pregenerate)
+            pregen_choice->set_highlight_pattern("Yes", false);
+        else
+            pregen_choice->set_highlight_pattern("No", false);
+        ui::pump_events();
+    }
+    ui::pop_layout();
+
+    string result = reader.get_text();
+    uint64_t tmp_seed = 0;
+    int found = sscanf(result.c_str(), "%" SCNu64, &tmp_seed);
+
+    if (cancel || crawl_state.seen_hups || !found || result.size() == 0)
+        game_ended(game_exit::abort);
+
+    Options.seed = choice.seed = tmp_seed;
+    Options.pregen_dungeon = choice.pregenerate;
+}
+
 #endif
 
 // Read a choice of game into ng.
@@ -667,12 +767,18 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     {
         _choose_gamemode_map(ng, choice, defaults);
     }
+#ifndef DGAMELAUNCH
+    else if (ng.type == GAME_TYPE_CUSTOM_SEED)
+        _choose_seed(ng, choice, defaults);
+#endif
 
     _choose_char(ng, choice, defaults);
 
     // Set these again, since _mark_fully_random may reset ng.
     ng.name = choice.name;
     ng.type = choice.type;
+    ng.seed = choice.seed;
+    ng.pregenerate = choice.pregenerate;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.

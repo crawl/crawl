@@ -495,6 +495,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp = new TextItem();
 #endif
     text = "Dungeon Crawl";
+    if (Options.seed_from_rc)
+        text += make_stringf(" (custom seed %" PRIu64 ")", Options.seed_from_rc);
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(LIGHTGREY);
@@ -502,8 +504,34 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters, "
-                              "items, gods and danger!");
+    if (Options.seed_from_rc)
+    {
+        tmp->set_description_text(
+            "Dungeon Crawl: The main game. "
+            "(Your options file has selected a custom seed.)");
+    }
+    else
+    {
+        tmp->set_description_text(
+            "Dungeon Crawl: The main game: full of monsters, "
+            "items, gods and danger!");
+    }
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+#else
+    tmp = new TextItem();
+#endif
+    text = "Choose game seed";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
+    tmp->set_id(GAME_TYPE_CUSTOM_SEED);
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("Play with a chosen custom dungeon seed.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1064,6 +1092,7 @@ bool UIStartupMenu::on_event(const wm_event& ev)
                 input_string = "";
                 break;
             case GAME_TYPE_NORMAL:
+            case GAME_TYPE_CUSTOM_SEED:
             case GAME_TYPE_TUTORIAL:
             case GAME_TYPE_SPRINT:
             case GAME_TYPE_HINTS:
@@ -1104,6 +1133,7 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     switch (id)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
     case GAME_TYPE_HINTS:
