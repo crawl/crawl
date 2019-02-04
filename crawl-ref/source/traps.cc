@@ -633,6 +633,9 @@ void trap_def::trigger(actor& triggerer)
 
     case TRAP_NET:
         {
+        // Nets need LOF to hit the player, no netting through glass.
+        if (!you.see_cell_no_trans(pos))
+            break;
         bool triggered = false;
         if (you_trigger)
         {
