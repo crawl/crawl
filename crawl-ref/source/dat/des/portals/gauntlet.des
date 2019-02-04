@@ -1137,6 +1137,8 @@ dgn.delayed_decay_extra(_G, "P", "felid skeleton",
     ", any jewellery good_item w:60 / manual of transmutations" ..
     "    / manual of unarmed combat / manual of fighting" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
+    "    / nothing w:60" ..
+    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
 -- Halfling warper.
