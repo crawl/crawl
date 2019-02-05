@@ -196,7 +196,6 @@ static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
-static vector<string> _you_vault_list;
 #ifdef DEBUG_STATISTICS
 static vector<string> _you_all_vault_list;
 #endif
@@ -390,12 +389,6 @@ static bool _build_level_vetoable(bool enable_random_maps,
     strip_all_maps();
 
     check_map_validity();
-
-    if (!_you_vault_list.empty())
-    {
-        vector<string> &vec(you.vault_list[level_id::current()]);
-        vec.insert(vec.end(), _you_vault_list.begin(), _you_vault_list.end());
-    }
 
 #ifdef DEBUG_STATISTICS
     for (auto vault : _you_all_vault_list)
@@ -1210,7 +1203,6 @@ void dgn_reset_level(bool enable_random_maps)
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
 
-    _you_vault_list.clear();
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
 #endif
@@ -6896,22 +6888,6 @@ static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
 
 static void _remember_vault_placement(const vault_placement &place, bool extra)
 {
-    // Second we setup some info to be saved in the player's properties
-    // hash table, so the information can be included in the character
-    // dump when the player dies/quits/wins.
-    if (!place.map.is_overwritable_layout()
-        && !place.map.has_tag_suffix("dummy")
-        && !place.map.has_tag("no_dump"))
-    {
-        // When generating a level, vaults may be vetoed together with the
-        // whole level after being placed, thus we need to save them in a
-        // temp list.
-        if (crawl_state.generating_level)
-            _you_vault_list.push_back(place.map.name);
-        else
-            you.vault_list[level_id::current()].push_back(place.map.name);
-    }
-
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.push_back(place.map.name);
 #endif
