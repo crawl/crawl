@@ -555,6 +555,7 @@ static void _show_commandline_options_help()
     puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
 #endif
     puts("  -playable-json   list playable species, jobs, and character combos.");
+    puts("  -branches-json   list branch data.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
