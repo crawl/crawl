@@ -110,7 +110,7 @@ void debug_dump_levgen()
     if (!env.level_vaults.empty())
     {
         mpr("Level vaults:");
-        auto vaults = level_vault_names();
+        auto vaults = level_vault_names(true);
         for (auto &vname : vaults)
             mprf("    %s", vname.c_str());
     }
