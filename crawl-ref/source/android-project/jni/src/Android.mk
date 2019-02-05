@@ -34,6 +34,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/behold.cc \
     $(CRAWL_PATH)/bitary.cc \
     $(CRAWL_PATH)/branch.cc \
+    $(CRAWL_PATH)/branch-data-json.cc \
     $(CRAWL_PATH)/butcher.cc \
     $(CRAWL_PATH)/bloodspatter.cc \
     $(CRAWL_PATH)/chardump.cc \

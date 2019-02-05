@@ -15,6 +15,7 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
+branch-data-json.o \
 butcher.o \
 bloodspatter.o \
 chardump.o \

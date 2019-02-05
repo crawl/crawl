@@ -22,6 +22,7 @@
 #include <set>
 #include <string>
 
+#include "branch-data-json.h"
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
@@ -3911,6 +3912,7 @@ enum commandline_option_type
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
+    CLO_BRANCHES_JSON, // JSON metadata for branches.
     CLO_EDIT_BONES,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
@@ -3929,7 +3931,7 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
-    "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
+    "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json", "branches-json",
     "bones",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
@@ -4842,6 +4844,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_PLAYABLE_JSON:
             fprintf(stdout, "%s", playable_metadata_json().c_str());
+            end(0);
+
+        case CLO_BRANCHES_JSON:
+            fprintf(stdout, "%s", branch_data_json().c_str());
             end(0);
 
         case CLO_TEST:

@@ -852,6 +852,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\bloodspatter.h" />
     <ClInclude Include="..\book-data.h" />
     <ClInclude Include="..\book-type.h" />
+    <ClInclude Include="..\branch-data-json.h" />
     <ClInclude Include="..\branch-data.h" />
     <ClInclude Include="..\branch-type.h" />
     <ClInclude Include="..\branch.h" />
