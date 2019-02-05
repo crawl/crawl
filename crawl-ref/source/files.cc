@@ -34,6 +34,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "dactions.h"
+#include "dbg-util.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -1510,7 +1511,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     if (env.turns_on_level == 0)
+    {
         just_created_level = true; // in case level was pre-generated
+        you.vault_list[level_id::current()] = level_vault_names();
+    }
 
     // Clear map knowledge stair emphasis.
     show_update_emphasis();

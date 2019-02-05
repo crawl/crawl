@@ -132,7 +132,7 @@ LUAFN(debug_dump_map)
 
 LUAFN(debug_vault_names)
 {
-    vector<string> vnames = level_vault_names();
+    vector<string> vnames = level_vault_names(true);
     string r;
     r = comma_separated_line(vnames.begin(), vnames.end());
     lua_pushstring(ls, r.c_str());
