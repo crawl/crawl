@@ -297,6 +297,7 @@ const vector<GameOption*> game_options::build_options_list()
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(pregen_dungeon), false),
 #endif
+
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -3812,6 +3813,7 @@ enum commandline_option_type
     CLO_HELP,
     CLO_VERSION,
     CLO_SEED,
+    CLO_PREGEN,
     CLO_SAVE_VERSION,
     CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
@@ -3843,7 +3845,7 @@ static const char *cmd_ops[] =
     "scores", "name", "species", "background", "dir", "rc", "rcdir", "tscores",
     "vscores", "scorefile", "morgue", "macro", "mapstat", "dump-disconnect",
     "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version", "sprint",
+    "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
     "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
@@ -4903,12 +4905,20 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SEED:
             if (!next_is_param)
-                return false;
+            {
+                // show seed choice menu
+                Options.game.type = GAME_TYPE_CUSTOM_SEED;
+                break;
+            }
 
             if (!sscanf(next_arg, "%" SCNu64, &Options.seed_from_rc))
                 return false;
             Options.seed = Options.seed_from_rc;
             nextUsed = true;
+            break;
+
+        case CLO_PREGEN:
+            Options.pregen_dungeon = true;
             break;
 
         case CLO_SPRINT:
