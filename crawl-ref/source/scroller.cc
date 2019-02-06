@@ -60,6 +60,14 @@ protected:
     formatted_scroller &fs;
 };
 
+void formatted_scroller::scroll_to_end()
+{
+    // this needs to match the value in ui-layout.js scroller_scroll_to_line
+    // (TODO: why?)
+    m_scroll = numeric_limits<int32_t>::max();
+    m_scroll_dirty = true;
+}
+
 int formatted_scroller::show()
 {
     auto vbox = make_shared<Box>(Widget::VERT);
@@ -147,9 +155,8 @@ int formatted_scroller::show()
     tiles.push_ui_layout("formatted-scroller", 2);
 #endif
 
-    // this needs to match the value in ui.js
     if (m_flags & FS_START_AT_END)
-        m_scroller->set_scroll(numeric_limits<int32_t>::max());
+        scroll_to_end();
 
     open_scrollers.push_back(this);
     if (m_scroll_dirty)
