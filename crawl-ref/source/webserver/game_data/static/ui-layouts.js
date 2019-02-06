@@ -542,7 +542,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     scroller_scroll_page(scroller, 1);
                     break;
                 case 35: // end
-                    scroller_scroll_to_line(scroller, 2147483647);
+                    scroller_scroll_to_line(scroller, 2147483647); //int32_t max
                     break;
                 case 36: // home
                     scroller_scroll_to_line(scroller, 0);
@@ -609,6 +609,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function scroller_scroll_to_line(scroller, line)
     {
         var $scroller = $(scroller.scrollElement);
+        // TODO: can this work without special-casing int32_t max, where any
+        // pos greater than the max scrolls to end?
         if (line == 2147483647) // FS_START_AT_END
         {
             // special case for webkit: excessively large values don't work
