@@ -92,6 +92,14 @@ static JsonNode *_species_apts(species_type sp)
     return apts;
 }
 
+static JsonNode *_species_recommended_jobs(species_type sp)
+{
+    JsonNode *jobs(json_mkarray());
+    for (const auto job : get_species_def(sp).recommended_jobs)
+        json_append_element(jobs, json_mkstring(get_job_name(job)));
+    return jobs;
+}
+
 static JsonNode *_species_modifiers(species_type sp)
 {
     JsonNode *modifiers(json_mkobject());
@@ -115,6 +123,8 @@ static JsonNode *_species_metadata(species_type sp,
     }
     json_append_member(species, "apts", _species_apts(sp));
     json_append_member(species, "modifiers", _species_modifiers(sp));
+    json_append_member(species, "recommended_jobs",
+                       _species_recommended_jobs(sp));
     return species;
 }
 
@@ -142,11 +152,21 @@ static JsonNode *_species_metadata_array()
     return species;
 }
 
+static JsonNode *_job_recommended_species(job_type job)
+{
+    JsonNode *species(json_mkarray());
+    for (const auto sp : job_recommended_species(job))
+        json_append_element(species, json_mkstring(species_name(sp)));
+    return species;
+}
+
 static JsonNode *_job_metadata(job_type job)
 {
     JsonNode *job_json(json_mkobject());
     json_append_member(job_json, "name", json_mkstring(get_job_name(job)));
     json_append_member(job_json, "abbr", json_mkstring(get_job_abbrev(job)));
+    json_append_member(job_json, "recommended_species",
+                       _job_recommended_species(job));
     return job_json;
 }
 

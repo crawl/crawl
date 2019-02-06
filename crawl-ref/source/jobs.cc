@@ -186,3 +186,8 @@ bool is_starting_job(job_type job)
     return job < NUM_JOBS
         && !_job_def(job).recommended_species.empty();
 }
+
+vector<species_type> job_recommended_species(job_type job)
+{
+    return _job_def(job).recommended_species;
+}
