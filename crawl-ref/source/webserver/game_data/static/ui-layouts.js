@@ -80,19 +80,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $popup.children(".header").remove();
         else
             $popup.find(".header > span").html(msg.title);
-        $popup.children(".bar-text > span").html(
-            util.formatted_string_to_html(msg.bar_text));
+        $popup.children(".bar-text").html("<span>" +
+            util.formatted_string_to_html(msg.bar_text) + "</span>");
         $popup.children(".status > span").html(msg.status);
         return $popup;
     }
 
     function progress_bar_update(msg)
     {
-        console.log("progress bar update");
         var $popup = ui.top_popup();
         if (!$popup.hasClass("progress-bar"))
             return;
-        $popup.children(".bar-text").html("span" +
+        $popup.children(".bar-text").html("<span>" +
                     util.formatted_string_to_html(msg.bar_text) + "</span>");
         $popup.children(".status")[0].textContent = msg.status;
     }
