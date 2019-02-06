@@ -1228,7 +1228,7 @@ SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
             ccccccccccccccccccccccccccccccc
-            cG.............<.............Gc
+            cG............G<G............Gc
             c.............................c
             c..nnnnaaaaaan...nddddddnnnn..c
           ccc..naaaaaaaaan...ndddddddddn..ccc
@@ -1242,7 +1242,7 @@ MAP
     ccccccc..n.naaaaaaaaan...ndddddddddn.n..ccccccc
     cG.......n.nnnnaaaaaan...nddddddnnnn.n.......Gc
 ccccc........n.n.......................n.n........ccccc
-cG.....nnnnnnn.nnnnnnn.....T.....nnnnnnn.nnnnnnn.....Gc
+cG.....nnnnnnn.nnnnnnn.....G.....nnnnnnn.nnnnnnn.....Gc
 c......nJ...........Ln...........nN...........Pn......c
 c..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..c
 c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
@@ -1256,7 +1256,7 @@ c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
 c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
 c..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..c
 c......nK...........Mn...........nO...........Qn......c
-cG.....nnnnnnn.nnnnnnn.....T.....nnnnnnn.nnnnnnn.....Gc
+cG.....nnnnnnn.nnnnnnn.....G.....nnnnnnn.nnnnnnn.....Gc
 ccccc........n.n.......................n.n........ccccc
     cG.......n.niiiiiinnnn...nnnnjjjjjjn.n.......Gc
     ccccccc..n.niiiiiiiiin...njjjjjjjjjn.n..ccccccc
@@ -1270,7 +1270,7 @@ ccccc........n.n.......................n.n........ccccc
           ccc..niiiiiiiiin...njjjjjjjjjn..ccc
             c..niiiiiinnnn...nnnnjjjjjjn..c
             c........nSn.......nqn........c
-            cG.......n.n..GTG..n.n.......Gc
+            cG.......n.n..G<G..n.n.......Gc
             vvvvvvvvvv.vvvvvvvvv.vvvvvvvvvv
                    v...............v
                    v...............v
@@ -1312,21 +1312,21 @@ SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
 ccccccccccccccccccccccccccccccc
-cG.............A.............Gc
+cG............G<G............Gc
 c.......D.............F.......c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c..aaaaaaaaaaa...ppppppppppp..c
+c..aaaaaaaaaaa.A.ppppppppppp..c
 c..aaaaaaaaaaa...ppppppppppp..c
 c..aaaaaaaaaaa...ppppppppppp..c
 c..aaaaaaaaaaa...ppppppppppp..c
-c..aaaaaaaaaaa.<.ppppppppppp..c
 c..aaaaaaaaaaa...ppppppppppp..c
 c..naaaaaaaaan...npppppppppn..c
 c..naaaaaaaaan...npppppppppn..c
 c..naaaaaaaaan...npppppppppn..c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c.....n.E.n.........n.H.n.....c
-cG....n...n....T....n...n....Gc
+cG....n...n....G....n...n....Gc
 c.....n.J.n.........n.L.n.....c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c..qqqqqqqqqqq...rrrrrrrrrrr..c
@@ -1340,7 +1340,7 @@ c..nqqqqqqqqqn...nrrrrrrrrrn..c
 c..nqqqqqqqqqn...nrrrrrrrrrn..c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c.....n.K.n.........n.M.n.....c
-cG....n...n....T....n...n....Gc
+cG....n...n....G....n...n....Gc
 c.....n.N.n.........n.P.n.....c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c..sssssssssss...uuuuuuuuuuu..c
@@ -1354,7 +1354,7 @@ c..nsssssssssn...nuuuuuuuuun..c
 c..nsssssssssn...nuuuuuuuuun..c
 c..nnnnnnnnnnn...nnnnnnnnnnn..c
 c.............................c
-cG............GTG............Gc
+cG............G<G............Gc
 vvvvvvvnnnvvvvvvvvvvvnnnvvvvvvv
       v.O.............Q.v
       v.................v
@@ -1395,21 +1395,21 @@ SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
-cG.............A...........................Gc
+cG............G<G............G.............Gc
 c.......D.............J.....................c
 c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
 c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
-c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
+c..aaaaaaaaaaa.A.eeeeeeeeeee...nfffffffffn..c
 c..aaaaaaaaaaa...eeeeeeeeeeennnnfffffffffn..c
 c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
-c..aaaaaaaaaaa.<.eeeeeeeeeeeK.Lnfffffffffn..c
+c..aaaaaaaaaaa...eeeeeeeeeeeK.Lnfffffffffn..c
 c..aaaaaaaaaaa...eeeeeeeeeee...nfffffffffn..c
 c..naaaaaaaaan...neeeeeeeeennnnnfffffffffn..c
 c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
 c..naaaaaaaaan...neeeeeeeeen...nfffffffffn..c
 c..nnnnnnnnnnn...nnnnnnnnnnn...nffffffnnnn..c
 c.....n.E.n.......................n.M.n.....c
-cT....n...n....G.............G....n...n....Tc
+cG....n...n....G.............G....n...n....Gc
 c.....n.F.n.......................n.N.n.....c
 c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
 c..ddddddddddd...hhhhhhhhhhh...ggggggggggg..c
@@ -1423,7 +1423,7 @@ c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
 c..ndddddddddn...nhhhhhhhhhn...ngggggggggn..c
 c..nnnnnnnnnnn...nnnnnnnnnnn...nnnnnnnnnnn..c
 c...........................................c
-cG............GTG..........................Gc
+cG............G<G............G.............Gc
 ccccccvnnnvvvvvvvvvvvnnnvcccccccccccccccccccc
       v.H.............Q.v
       v.................v
@@ -1460,9 +1460,11 @@ SUBVAULT: k : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
 : gauntlet_appearance(_G)
 MAP
-                                     ccc
-                  cccccccccccccccccccc<cccccccccccccccccccc
-                  cG..................A..................Gc
+                                    ccccc
+                                    cG<Gc
+                                    c...c
+                  ccccccccccccccccccc.A.ccccccccccccccccccc
+                  cG.....................................Gc
                   c...................D...................c
                   c..nnnnddddddn.nnnnnnnnnnn.neeeeeennnn..c
                 ccc..ndddddddddn.aaaaaaaaaaa.neeeeeeeeen..ccc
@@ -1475,7 +1477,7 @@ MAP
                 c..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..c
     ccccccccccccc..n.ndddddddddn.naaaaaaaaan.neeeeeeeeen.n..ccccccccccccc
     cG.............n.nnnnddddddnnnnnnnnnnnnnnneeeeeennnn.n.............Gc
-ccccc..............n.n.....nF.........E.........Jn.....n.n..............ccccc
+ccccc..............n.n--G--nF.........E.........Jn--G--n.n..............ccccc
 cG.....nnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnn.....Gc
 c......nL...........N...........Pn.........nR...........p...........rn......c
 c..nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn..c
