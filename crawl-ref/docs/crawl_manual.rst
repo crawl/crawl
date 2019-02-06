@@ -2098,7 +2098,7 @@ Elementalists
   elemental magic: air, fire, earth or ice.
 
   Fire Magic
-    tends towards destructive conjurations. Earth Elementalists begin with the
+    tends towards destructive conjurations. Fire Elementalists begin with the
     Book of Flames.
 
   Ice Magic
