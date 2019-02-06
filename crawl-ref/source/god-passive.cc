@@ -497,7 +497,7 @@ void jiyva_eat_offlevel_items()
 
         const level_id lid(static_cast<branch_type>(branch), level);
 
-        if (lid == level_id::current() || !is_existing_level(lid))
+        if (lid == level_id::current() || !you.level_visited(lid))
             continue;
 
         dprf("Checking %s", lid.describe().c_str());

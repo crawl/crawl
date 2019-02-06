@@ -6901,17 +6901,44 @@ string dump_vault_maps()
 
     for (const level_id &lid : levels)
     {
-        if (!you.vault_list.count(lid))
+        // n.b. portal vaults get cleared from here, so won't show up.
+        // kind of spammy in wizmode. To test non-wizmode, use &ctrl-y
+        if (!you.wizard && (!you.level_visited(lid)
+                            || !you.vault_list.count(lid))
+            || branch_is_unfinished(lid.branch))
+        {
             continue;
+        }
 
-        out += lid.describe() + ": " + string(max(8 - int(lid.describe().length()), 0), ' ');
-
+        if (you.wizard)
+        {
+            if (!is_existing_level(lid))
+            {
+                out += " (not gen.) " + lid.describe() + "\n";
+                continue;
+            }
+            out += you.level_visited(lid) ? "  (visited) " : "(unvisited) ";
+        }
+        out += lid.describe();
         vector<string> &maps(you.vault_list[lid]);
+        if (maps.size() == 0)
+        {
+            out += "\n";
+            continue;
+        }
+
+        out += ": " + string(max(8 - int(lid.describe().length()), 0), ' ');
+
+        // TODO: some way of showing no_dump maps in wizmode?
 
         string vaults = comma_separated_line(maps.begin(), maps.end(), ", ");
         out += wordwrap_line(vaults, 70) + "\n";
         while (!vaults.empty())
-            out += "          " + wordwrap_line(vaults, 70, false) + "\n";
+        {
+            out += string(you.wizard ? 22 : 10, ' ')
+                    + wordwrap_line(vaults, 70, false) + "\n";
+        }
+
     }
     return out;
 }

@@ -1396,6 +1396,59 @@ static void _count_gold()
     }
 }
 
+static const string VISITED_LEVELS_KEY = "visited_levels";
+
+#if TAG_MAJOR_VERSION == 34
+// n.b. these functions are in files.cc largely because this is where the fixup
+// needs to happen.
+// before pregeneration, whether the level had been visited was synonymous with
+// whether it had been visited, but after, we need to track this information
+// more directly. It is also inferrable from turns_on_level, but you can't get
+// at that very easily without fully loading the level. 
+// no need for a minor version here, though there will be a brief window of
+// offline pregen games that this doesn't handle right -- they will get things
+// like broken runelock. (In principle this fixup could be done by loading
+// each level and checking turns, but it's not worth the trouble for these few
+// games.)
+static void _fixup_visited_from_package()
+{
+    // for games started later than this fixup, this prop is initialized in
+    // player::player
+    CrawlHashTable &visited = you.props[VISITED_LEVELS_KEY].get_table();
+    if (visited.size()) // only 0 for upgrades, or before entering D:1
+        return;
+    vector<level_id> levels = all_dungeon_ids();
+    for (const level_id &lid : levels)
+        if (is_existing_level(lid))
+            visited[lid.describe()] = true;
+}
+#endif
+
+void player::init_level_visited()
+{
+    if (!props.exists(VISITED_LEVELS_KEY))
+        props[VISITED_LEVELS_KEY].new_table();
+}
+
+void player::set_level_visited(const level_id &level)
+{
+    ASSERT(props.exists(VISITED_LEVELS_KEY));
+    auto &visited = props[VISITED_LEVELS_KEY].get_table();
+    visited[level.describe()] = true;
+}
+
+bool player::level_visited(const level_id &level)
+{
+    // this will mean that portal maps that the player is not currently on
+    // return false, since the map gets deleted. A continuation of legacy
+    // behavior...
+    if (!is_existing_level(level))
+        return false;
+    ASSERT(props.exists(VISITED_LEVELS_KEY));
+    const auto &visited = props[VISITED_LEVELS_KEY].get_table();
+    return visited.exists(level.describe());
+}
+
 /**
  * Load the current level.
  *
@@ -1409,6 +1462,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     const string level_name = level_id::current().describe();
     const bool make_changes =
         (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
+
+#if TAG_MAJOR_VERSION == 34
+    // fixup saves that don't have this prop initialized.
+    if (load_mode != LOAD_START_GAME && you.elapsed_time != 0)
+        _fixup_visited_from_package();
+#endif
 
     // Did we get here by popping the level stack?
     bool popped = false;
@@ -1489,6 +1548,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         ASSERT(load_mode != LOAD_VISITOR);
         dprf("Generating new level for '%s'.", level_name.c_str());
         _make_level(stair_taken, old_level);
+        you.vault_list[level_id::current()] = level_vault_names();
         just_created_level = true;
     }
     else
@@ -1519,10 +1579,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     if (env.turns_on_level == 0)
-    {
         just_created_level = true; // in case level was pre-generated
-        you.vault_list[level_id::current()] = level_vault_names();
-    }
+
+    if (load_mode != LOAD_VISITOR)
+        you.set_level_visited(level_id::current());
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or

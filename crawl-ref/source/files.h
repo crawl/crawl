@@ -103,6 +103,7 @@ class level_excursion
 protected:
     level_id original;
     bool ever_changed_levels;
+    bool allow_unvisited;
 
 public:
     level_excursion();

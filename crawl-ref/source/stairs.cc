@@ -543,7 +543,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
         if (how != it->entry_stairs)
             continue;
 
-        if (!is_existing_level(level_id(it->id, 1))
+        if (!you.level_visited(level_id(it->id, 1))
             && runes_for_branch(it->id) > 0)
         {
             _rune_effect(how);

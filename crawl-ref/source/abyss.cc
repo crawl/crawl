@@ -1060,6 +1060,7 @@ static level_id _get_random_level()
         for (int j = 1; j <= brdepth[it->id]; ++j)
         {
             const level_id id(it->id, j);
+            // for pregen, this will use levels the player hasn't seen yet
             if (is_existing_level(id))
                 levels.push_back(id);
         }
