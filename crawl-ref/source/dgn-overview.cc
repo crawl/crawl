@@ -485,7 +485,7 @@ static string _get_shops(bool display)
     {
         if (entry.first.id != last_id)
         {
-            const bool existing = is_existing_level(entry.first.id);
+            const bool existing = you.level_visited(entry.first.id);
             if (column_count > maxcolumn)
             {
                 disp += "\n";

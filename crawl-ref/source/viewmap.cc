@@ -1019,7 +1019,7 @@ bool show_map(level_pos &lpos,
                 }
 
                 if (dest.id.is_valid() && dest.id != level_id::current()
-                    && is_existing_level(dest.id))
+                    && you.level_visited(dest.id))
                 {
                     lpos = dest;
                 }
@@ -1038,7 +1038,7 @@ bool show_map(level_pos &lpos,
 
                 if (pos.id.depth < 1
                     || pos.id.depth > brdepth[pos.id.branch]
-                    || !is_existing_level(pos.id))
+                    || !you.level_visited(pos.id))
                 {
                     canned_msg(MSG_OK);
                     redraw_map = true;
@@ -1188,7 +1188,7 @@ bool show_map(level_pos &lpos,
                             move_y = you.travel_y - lpos.pos.y;
                         }
                         else if (allow_offlevel && you.travel_z.is_valid()
-                                        && is_existing_level(you.travel_z))
+                                        && you.level_visited(you.travel_z))
                         {
                             // previous travel target is offlevel
                             lpos = level_pos(you.travel_z,
