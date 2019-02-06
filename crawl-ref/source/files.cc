@@ -1404,7 +1404,7 @@ static const string VISITED_LEVELS_KEY = "visited_levels";
 // before pregeneration, whether the level had been visited was synonymous with
 // whether it had been visited, but after, we need to track this information
 // more directly. It is also inferrable from turns_on_level, but you can't get
-// at that very easily without fully loading the level. 
+// at that very easily without fully loading the level.
 // no need for a minor version here, though there will be a brief window of
 // offline pregen games that this doesn't handle right -- they will get things
 // like broken runelock. (In principle this fixup could be done by loading
