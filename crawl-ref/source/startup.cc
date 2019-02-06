@@ -237,7 +237,6 @@ static void _zap_los_monsters(bool items_also)
     }
 }
 
-#ifndef DGAMELAUNCH
 /**
  * Ensure that the level given by `pos` is generated. This does not do much in
  * the way of cleanup, and the caller must ensure the player ends up somewhere
@@ -340,7 +339,6 @@ static void _pregen_dungeon()
             progress.advance_progress();
         }
 }
-#endif
 
 static void _post_init(bool newc)
 {
@@ -367,10 +365,8 @@ static void _post_init(bool newc)
 
     if (newc)
     {
-#ifndef DGAMELAUNCH
         if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
             _pregen_dungeon();
-#endif
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;

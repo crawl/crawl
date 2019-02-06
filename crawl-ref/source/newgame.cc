@@ -643,6 +643,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         game_ended(game_exit::abort);
 }
 
+#endif
 
 static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const newgame_def& defaults)
@@ -741,8 +742,6 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     Options.pregen_dungeon = choice.pregenerate;
 }
 
-#endif
-
 // Read a choice of game into ng.
 // Returns false if a game (with name ng.name) should
 // be restored instead of starting a new character.
@@ -767,10 +766,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     {
         _choose_gamemode_map(ng, choice, defaults);
     }
-#ifndef DGAMELAUNCH
     else if (ng.type == GAME_TYPE_CUSTOM_SEED)
         _choose_seed(ng, choice, defaults);
-#endif
 
     _choose_char(ng, choice, defaults);
 
