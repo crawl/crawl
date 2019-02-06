@@ -188,3 +188,8 @@ bool job_is_removed(job_type job)
 {
     return _job_def(job).recommended_species.empty();
 }
+
+vector<species_type> job_recommended_species(job_type job)
+{
+    return _job_def(job).recommended_species;
+}
