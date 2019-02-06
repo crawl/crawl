@@ -313,9 +313,11 @@ static void _pregen_dungeon()
     progress_popup progress("Generating dungeon...\n\n", 35);
     progress.advance_progress();
     // TODO: why is dungeon invalid? it's not set up properly in
-    // `initialise_branch_depths` for some reason.
+    // `initialise_branch_depths` for some reason. The vestibule is invalid
+    // because its depth isn't set until the player actually enters a portal.
     for (auto br : generation_order)
-        if (brentry[br].is_valid() || br == BRANCH_DUNGEON)
+        if (brentry[br].is_valid()
+            || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE)
         {
             string status = "\nbuilding ";
 
