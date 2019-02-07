@@ -1483,15 +1483,27 @@ LUAFN(_dgn_place_map)
         dgn_map_parameters mp(lua_gettop(ls) >= 6
                               ? luaL_checkstring(ls, 6)
                               : "");
-        if (dgn_place_map(map, check_collision, no_exits, where)
-            && !env.level_vaults.empty())
+        try
         {
-            lua_pushlightuserdata(ls, env.level_vaults.back().get());
+            if (dgn_place_map(map, check_collision, no_exits, where)
+                && !env.level_vaults.empty())
+            {
+                lua_pushlightuserdata(ls, env.level_vaults.back().get());
+                return 1;
+            }
         }
-        else
-            lua_pushnil(ls);
+        catch (dgn_veto_exception& e)
+        {
+            // letting this exception go back across lua code can apparently
+            // do very bad things for the lua stack, if it isn't compiled with
+            // c++ mode. (Which we don't do by default.)
+            // Won't necessarily veto the level, but we want to report it still.
+            dprf(DIAG_DNGN, "<white>veto in dgn.place_maps</white>: %s: %s",
+                 level_id::current().describe().c_str(), e.what());
+        }
     }
-    return 1;
+    lua_pushnil(ls);
+    return 0;
 }
 
 LUAFN(_dgn_in_vault)
