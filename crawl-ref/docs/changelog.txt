@@ -1,17 +1,17 @@
-Stone Soup 0.23 (up to 0.23-b1-56-gfe314ee208)
-----------------------------------------------
+Stone Soup 0.23 (20190207)
+--------------------------
 
 Highlights
 ----------
-* Trap system rework
+* Trap system overhaul
 * New Gauntlet portal to replace Labyrinths
 * Nemelex Xobeh rework
 * Nine unrandarts reworked and the new "Rift" unrandart added
-* Supported for seeded dungeon play
+* Support for seeded dungeon play
 
 Branches, Environment
 ---------------------
-* Traps have been reworked:
+* Trap system overhaul:
   - Traps that generate on the ground are always revealed.
   - Exploration has a chance to trigger a "trap effect" independent from
     terrain traps. The possible effects are alarm, shaft, and teleport near
@@ -24,7 +24,7 @@ Branches, Environment
   - Trap placement in Ossuaries, Zot:5, and Tomb has been overhauled. In Zot:5
     and Tomb, all mechanical traps save for net traps have been removed.
   - Grate traps (triggered by pressure plates) have been removed.
-* A new Gauntlet portal that replaces Labyrinths:
+* New Gauntlet portal to replace Labyrinths:
   - Gauntlets have the player choose a path through several combat arenas,
     each of which contains (sometimes exotic) monsters and loot.
   - Access to each arena is one-way using transporters. Teleports and Passage
@@ -60,7 +60,7 @@ Character
 
 Gods
 ----
-* Nemelex Xobeh has been reworked:
+* Nemelex Xobeh rework:
   - Decks are are accessed through abilities and no longer exist as items.
   - Nemelex offers three abilities: "Draw Escape", "Draw Destruction", and
     "Draw Summoning", which provide card effects.
