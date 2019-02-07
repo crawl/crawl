@@ -6912,7 +6912,9 @@ string dump_vault_maps()
 
         if (you.wizard)
         {
-            if (!is_existing_level(lid))
+            // because the save is already gone at the point where we are
+            // printing a morgue, this check isn't reliable. Ignore it.
+            if (!is_existing_level(lid) && you.save)
             {
                 out += " (not gen.) " + lid.describe() + "\n";
                 continue;

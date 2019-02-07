@@ -1442,7 +1442,9 @@ bool player::level_visited(const level_id &level)
     // this will mean that portal maps that the player is not currently on
     // return false, since the map gets deleted. A continuation of legacy
     // behavior...
-    if (!is_existing_level(level))
+    // `is_existing_level` is not reliable after the game end, because the
+    // save no longer exists, so we ignore it for printing morgues
+    if (!is_existing_level(level) && you.save)
         return false;
     ASSERT(props.exists(VISITED_LEVELS_KEY));
     const auto &visited = props[VISITED_LEVELS_KEY].get_table();
@@ -2565,7 +2567,9 @@ static void _load_level(const level_id &level)
 }
 
 // Given a level returns true if the level has been created already
-// in this game.
+// in this game. Warning: after a game has ended, there is a phase where the
+// save has been deleted and this check isn't usable, and this is when a moruge
+// is generated.
 bool is_existing_level(const level_id &level)
 {
     return you.save && you.save->has_chunk(level.describe());
