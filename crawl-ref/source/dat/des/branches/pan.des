@@ -222,8 +222,8 @@ function pan_highlights_setup(e)
      vaulttwo = "_" .. util.random_from(set)
   end
   e.hook('post_place', function ()
-    dgn.place_maps{tag=("pan_fixed_rune" .. vaultone), count=1}
-    dgn.place_maps{tag=("pan_fixed_lure" .. vaulttwo), count=1}
+    dgn.place_maps{tag=("pan_fixed_rune" .. vaultone), count=1, die_on_error=true}
+    dgn.place_maps{tag=("pan_fixed_lure" .. vaulttwo), count=1, die_on_error=true}
     dgn.place_maps{tag=("serial_pan" .. vaultone), count=3}
     dgn.place_maps{tag=("serial_pan" .. vaulttwo), count=3}
   end)
