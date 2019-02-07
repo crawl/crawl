@@ -116,6 +116,7 @@
     Cerol
     Rahul Chandra
     Thom Chiovoloni
+    Anthony Chuah
     Henry Cipolla
     Nicholas Connelly
     Tom Conrad
@@ -145,6 +146,7 @@
     Kyle Fox
     freepotion
     Chris Galardi
+    GenericPseudonym
     Ge0ff
     Benoît Giannangeli
     Ben Goetter
@@ -240,6 +242,7 @@
     Yuuma Oohara
     Julian Ospald
     Malwyn P
+    palyth
     panicbit
     William Parker
     Pedro
@@ -278,6 +281,7 @@
     Robert Shimmin
     Sigurd
     Edgar Simo
+    Skrybe
     Alex Smith
     Keanan Smith
     Richard Soderberg
@@ -285,6 +289,7 @@
     Solf
     Michael Spang
     David Speare
+    Martin Staffa
     John Stahara
     Jan 'heftig' Steffens
     Stenella
