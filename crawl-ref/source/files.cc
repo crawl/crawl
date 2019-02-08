@@ -1414,6 +1414,7 @@ static void _fixup_visited_from_package()
 {
     // for games started later than this fixup, this prop is initialized in
     // player::player
+    init_level_visited(); // is this necessary?
     CrawlHashTable &visited = you.props[VISITED_LEVELS_KEY].get_table();
     if (visited.size()) // only 0 for upgrades, or before entering D:1
         return;
@@ -1467,7 +1468,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
 #if TAG_MAJOR_VERSION == 34
     // fixup saves that don't have this prop initialized.
-    if (load_mode != LOAD_START_GAME && you.elapsed_time != 0)
+    if (load_mode == LOAD_RESTART_GAME)
         _fixup_visited_from_package();
 #endif
 
