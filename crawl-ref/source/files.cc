@@ -1414,7 +1414,7 @@ static void _fixup_visited_from_package()
 {
     // for games started later than this fixup, this prop is initialized in
     // player::player
-    init_level_visited(); // is this necessary?
+    you.init_level_visited(); // is this necessary?
     CrawlHashTable &visited = you.props[VISITED_LEVELS_KEY].get_table();
     if (visited.size()) // only 0 for upgrades, or before entering D:1
         return;
