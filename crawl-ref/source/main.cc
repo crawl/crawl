@@ -345,6 +345,7 @@ static void _reset_game()
     clear_message_store();
     macro_clear_buffers();
     the_lost_ones.clear();
+    shopping_list = ShoppingList();
     you = player();
     reset_hud();
     StashTrack = StashTracker();
