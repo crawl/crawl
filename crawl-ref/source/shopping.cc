@@ -1642,6 +1642,8 @@ void list_shop_types()
 #define SHOPPING_THING_POS_KEY  "pos_key"
 
 ShoppingList::ShoppingList()
+    : list(nullptr), min_unbuyable_cost(0), min_unbuyable_idx(0),
+      max_buyable_cost(0), max_buyable_idx(0)
 {
 }
 
