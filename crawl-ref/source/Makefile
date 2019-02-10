@@ -65,6 +65,14 @@
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
+# Profile Guided Optimisation parameters:
+#
+# To generate a PGO build, you should probably use util/build-pgo.sh.
+# (Note: PGO support has only been tested with OSX built-in Clang.)
+#
+#    PGO_GENERATE  -- set to build PGO instrumentation.
+#    PGO_USE       -- set to build with PGO data.
+#
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
@@ -501,12 +509,7 @@ ifdef HURRY
 NO_AUTO_OPT = YesPlease
 endif
 
-ifdef AUTO_OPT
-ifndef NO_AUTO_OPT
-CFOPTIMIZE += -march=native
-endif
-endif
-
+# Set base compiler optimisation flags
 ifdef USE_ICC
 # If you have a Core 2 processor, this _really_ makes things fly:
 #CFOPTIMIZE := -O2 -parallel -xT
@@ -526,6 +529,21 @@ else
   else
     CFOPTIMIZE := -O2
   endif
+endif
+
+ifdef AUTO_OPT
+ifndef NO_AUTO_OPT
+CFOPTIMIZE += -march=native
+endif
+endif
+
+ifdef PGO_GENERATE
+	CFOPTIMIZE_L += -fprofile-instr-generate
+	LDFLAGS += -fprofile-instr-generate
+endif
+
+ifdef PGO_USE
+	CFOPTIMIZE_L += -fprofile-instr-use=$(PGO_USE)
 endif
 
 ifdef LTO
