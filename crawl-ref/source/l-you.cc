@@ -32,6 +32,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -220,6 +221,16 @@ LUARET1(you_res_draining, number, player_prot_life(false))
  * @function res_shock
  */
 LUARET1(you_res_shock, number, player_res_electricity(false))
+/*** Stealth pips.
+ * @treturn int number of stealth pips
+ * @function stealth_pips
+ */
+LUARET1(you_stealth_pips, number, stealth_breakpoint(player_stealth()))
+/*** Magic resistance (MR).
+ * @treturn int number of MR pips
+ * @function res_magic
+ */
+LUARET1(you_res_magic, number, player_res_magic(false) / MR_PIP)
 /*** Drowning resistance (rDrown).
  * @treturn int resistance level
  * @function res_drowning
@@ -1162,6 +1173,8 @@ static const struct luaL_reg you_clib[] =
     { "res_cold"    , you_res_cold   },
     { "res_draining", you_res_draining },
     { "res_shock"   , you_res_shock },
+    { "stealth_pips", you_stealth_pips },
+    { "res_magic"   , you_res_magic },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },

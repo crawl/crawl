@@ -1913,7 +1913,7 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
-static int _stealth_breakpoint(int stealth)
+int stealth_breakpoint(int stealth)
 {
     if (stealth == 0)
         return 0;
@@ -1931,7 +1931,7 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth    ";
-    const int stealth_num = _stealth_breakpoint(player_stealth());
+    const int stealth_num = stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
     for (int i = 0; i < 10 - stealth_num; i++)
