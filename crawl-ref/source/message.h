@@ -17,6 +17,8 @@
 void display_message_window();
 void clear_message_window();
 
+void set_log_emergency_stderr(bool b);
+
 void scroll_message_window(int n);
 
 void clear_messages(bool force = false);
