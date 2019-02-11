@@ -2530,7 +2530,7 @@ MONS:   pandemonium lord, eye of draining
 MONS:   black sun, lorocyproca, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
-KITEM:  O = acquire any / demonic rune of zot mimic
+KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
 : end
@@ -2619,7 +2619,7 @@ ORIENT:  float
 MONS:    fire bat, hellion, hellephant
 KMONS:   O = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
-KITEM:   O = acquire any / demonic rune of zot mimic
+KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
 : end
@@ -2692,7 +2692,7 @@ ORIENT:  float
 MONS:    pandemonium lord, brimstone fiend
 MONS:    tormentor, smoke demon, any demon
 : if demonic_rune_vault_is_decoy() then
-KITEM:   O = acquire any / demonic rune of zot mimic
+KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
 : end
@@ -2758,7 +2758,7 @@ MONS:   juggernaut simulacrum, ice devil
 KMONS:  56 = ice statue
 KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
-KITEM:  O = acquire any / demonic rune of zot mimic
+KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
 : end
@@ -2847,7 +2847,7 @@ KMONS:   p = demonic plant
 KMONS:   P = pandemonium lord
 ITEM:    any potion
 : if demonic_rune_vault_is_decoy() then
-KITEM:   O = acquire any / demonic rune of zot mimic
+KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
 : end
@@ -3933,7 +3933,7 @@ KITEM:  O = demonic rune of Zot
 : end
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
-ITEM:   acquire any
+ITEM:   any good_item
 ITEM:   potion of cancellation
 ITEM:   potion of might / potion of brilliance / potion of agility
 ITEM:   any

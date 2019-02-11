@@ -590,7 +590,7 @@ KMONS: K = storm dragon
 KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
 KMONS: N = golden dragon
-KITEM: KLMN> = acquire any
+KITEM: KLMN> = any good_item
 KITEM: 12 = any
 MAP
   cc+cc

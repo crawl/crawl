@@ -2567,7 +2567,7 @@ KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
 KITEM:   % = any, any w:1 / nothing w:5, ration q:1
-KITEM:   *| = gold, gold, gold, acquire any
+KITEM:   *| = gold, gold, gold, any good_item
 NSUBST:  2 = 2:22334 / *:3
 SHUFFLE: %'*" / %'"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP.
@@ -2761,7 +2761,7 @@ MONS:   plant, elephant
 KMONS:  S = anaconda
 KFEAT:  S = deep_water
 KITEM:  U = superb_item
-KITEM:  Q = acquire any
+KITEM:  Q = superb_item
 KFEAT:  o = granite_statue
 KFEAT:  i = granite_statue
 SUBST:  X = xxx.., P = 1........., T = tttxxc
@@ -2821,10 +2821,9 @@ MONS:    red devil / ice devil w:15 / orange demon w:15
 MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
 KMONS:   hH = hell hound
 KMONS:   F = fungus
-# XXX: no_pickup is incompatible with acquire any.
-# Should be used here, loot is easily missed.
-KITEM:   A = acquire any, any good_item / no_pickup gold good_item w:15, \
-             % no_pickup / nothing, % no_pickup / nothing
+KITEM:   A = superb_item no_pickup, any good_item no_pickup \
+             / no_pickup gold good_item w:15, % no_pickup \
+             / nothing, % no_pickup / nothing
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
 KFEAT:   L = endless_lava
@@ -2975,7 +2974,7 @@ NAME:   evilmike_catoblepas_cave
 TAGS:   no_monster_gen no_rotate no_item_gen
 PLACE:  Lair:$
 ORIENT: northwest
-ITEM:   acquire any
+ITEM:   any good_item
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 # These are still living plants for all intents and purposes...

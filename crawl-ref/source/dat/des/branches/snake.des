@@ -1300,7 +1300,7 @@ MONS:   nagaraja w:20 / naga warrior w:5 / naga mage w:5 / \
         naga ritualist w:5 / naga sharpshooter w:5
 NSUBST: O = 1:A / 1:B
 KITEM:  A = serpentine rune of Zot
-KITEM:  B = serpentine rune of Zot mimic / w:90 acquire any
+KITEM:  B = serpentine rune of Zot mimic / w:90 any good_item
 MAP
         cccccccc     c.@..c       cccccccc
      cccc..1...ccc   c....c    cccc..2...ccc

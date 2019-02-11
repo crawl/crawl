@@ -167,8 +167,8 @@ TriggerableFunctions.
 C. Examples of usage
 ====================
 
-These vaults have been taken in whole from the current crawl code repository,
-and may have been updated since their original inclusion. Please see the
+These vaults were taken in whole from the crawl code repository, and several
+have been updated or removed since their original inclusion. Please see the
 referenced files for the current version.
 
 Annotations are marked as "** <text of annotation>".
@@ -369,8 +369,8 @@ KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
 KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
-KITEM:  w = acquire weapon
-KITEM:  r = acquire armour
+KITEM:  w = weapon good_item
+KITEM:  r = armour good_item
 NSUBST: $ = 1:w / 1:r / 4:| / *:$
 COLOUR: " = yellow
 KFEAT:  " = .
