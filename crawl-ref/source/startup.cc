@@ -278,6 +278,9 @@ static void _pregen_levels(const branch_type branch, progress_popup &progress)
 
 static void _pregen_dungeon()
 {
+    // be sure that AK start doesn't interfere with the builder
+    unwind_var<game_chapter> chapter(you.chapter, CHAPTER_ORB_HUNTING);
+
     // bel's original proposal generated D to lair depth, then lair, then D
     // to orc depth, then orc, then the rest of D. I have simplified this to
     // just generate whole branches at a time -- I am not sure how much real
