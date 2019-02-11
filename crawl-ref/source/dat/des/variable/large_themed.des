@@ -1026,7 +1026,7 @@ NSUBST: 4 = 2:4 / 1:5
 : end
 MONS:   human att:neutral
 KMONS:  7 = patrolling hell knight
-ITEM:   acquire any
+ITEM:   superb_item
 SUBST:  '" = ., b = v
 MAP
           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1159,8 +1159,8 @@ MONS:    deep elf blademaster, patrolling draconian knight
 : end
 KFEAT:   _ = altar_okawaru
 # Lots of loot in this one. In true Okawaru fashion, most of it is junk!
-ITEM:    any armour, any armour good_item / acquire armour
-ITEM:    any weapon, any weapon good_item / acquire weapon
+ITEM:    any armour, any armour good_item
+ITEM:    any weapon, any weapon good_item
 ITEM:    arrow, bolt, sling bullet, gold
 SHUFFLE: df, hi, jk, eg
 NSUBST:  d = 1:e / *:d, f = 1:g / *:f

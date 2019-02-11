@@ -1408,7 +1408,7 @@ KMONS:   1 = slime creature w:20 / swamp worm w:50 / \
 KMONS:   23 = alligator / swamp dragon / hydra
 KMONS:   45 = tentacled monstrosity / thorn hunter
 KITEM:   3 = any good_item / any potion / gold
-KITEM:   5 = acquire any / gold good_item / any potion q:4 w:20
+KITEM:   5 = superb_item / gold good_item / any potion q:4 w:20
 KMONS:   P = plant
 KFEAT:   1324P = W
 NSUBST:  @ = 1:@ / *:X
@@ -1684,7 +1684,7 @@ WEIGHT:  4
 DEPTH:   Depths
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
-KITEM:   A = w:1 acquire:the_shining_one any / nothing
+KITEM:   A = w:1 any weapon ego:holy_wrath / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
@@ -1729,7 +1729,7 @@ WEIGHT:  4
 DEPTH:   Depths
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
-KITEM:   A = w:1 acquire:the_shining_one any / nothing
+KITEM:   A = w:1 any weapon ego:holy_wrath / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
@@ -2777,7 +2777,7 @@ NAME:   ragdoll_tomb_raider
 TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  D:14-, Depths, Crypt, !Crypt:$
 ORIENT: float
-KITEM:  $ = amulet_of_vitality / acquire any
+KITEM:  $ = amulet_of_vitality / any good_item
 KITEM:  12345d = gold / any / nothing
 KITEM:  67M = superb_item / any
 KFEAT:  ~ = known zot trap
@@ -7946,7 +7946,7 @@ SUBST: def = c, ghi = v, jk = b
 KMONS: 8 = 8 band
 KMONS: 9 = 9 band
 KMONS: 0 = 0 band
-KITEM: J = acquire any
+KITEM: J = any good_item
 NSUBST: | = 1:J / 2:* / *:|
 SUBST: % = %., O = %
 MAP
@@ -8113,7 +8113,7 @@ KMONS: F = 0 patrolling
 KMONS: H = 9 band patrolling
 KMONS: 8 = 8 patrolling
 #loot
-KITEM: 8 = acquire any
+KITEM: 8 = any good_item
 KITEM: 7 = *
 MAP
                     ccc

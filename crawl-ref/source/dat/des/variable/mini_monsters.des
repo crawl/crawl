@@ -3358,7 +3358,7 @@ KITEM: 098 = superb_item
 : else
 SUBST: 9 = 98, 0 = 98
 KITEM: 09 = superb_item
-KITEM: 8 = any acquire
+KITEM: 8 = any good_item
 : end
 MAP
 .......
@@ -3510,7 +3510,7 @@ KMONS:   o = unseen horror
 KMONS:   p = hornet
 KMONS:   q = insubstantial wisp
 KMONS:   r = wolf spider
-KITEM:   e = acquire armour / acquire weapon
+KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
 SHUFFLE: bcdfghjklnopqr
 MAP
 .............

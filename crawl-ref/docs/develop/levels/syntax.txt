@@ -506,11 +506,14 @@ ITEM:     (list of items, separated by comma)
             bonus to depth for the item generation. The "|" item glyph uses
             this quality level (but with a different distribution of item
             classes, see above).
-          * "acquire" requests the use of the acquirement code itself,
-            ensuring that the player gets wearable armour, etc. You can
+          * "acquire" requests the use of the acquirement code
+            itself, ensuring that the player gets wearable armour, etc. You can
             also use acquire:<god> to request that the acquired item be
             treated as a god gift. Examples: "acquire any", "acquire armour",
-            "acquire:sif_muna book", "acquire:trog weapon".
+            "acquire:sif_muna book", "acquire:trog weapon". Use of this outside
+            of specialized portals as part of the builder is *deprecated*,
+            because conditioning level generation on player properties
+            interferes with seeding.
           * "level:N" sets the object's item level (can't be used with
             "good_item"). If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
