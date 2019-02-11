@@ -1248,15 +1248,6 @@ static void _make_level(dungeon_feature_type stair_taken,
 
     env.turns_on_level = -1;
 
-    if (you.chapter == CHAPTER_POCKET_ABYSS
-        && player_in_branch(BRANCH_DUNGEON))
-    {
-        // If we're leaving the Abyss for the first time as a Chaos
-        // Knight of Lugonu (who start out there), enable normal monster
-        // generation.
-        you.chapter = CHAPTER_ORB_HUNTING;
-    }
-
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
@@ -1544,6 +1535,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #endif
 
     bool just_created_level = false;
+
+    if (load_mode != LOAD_GENERATE
+        && you.chapter == CHAPTER_POCKET_ABYSS
+        && player_in_branch(BRANCH_DUNGEON))
+    {
+        // If we're leaving the Abyss for the first time as a Chaos
+        // Knight of Lugonu (who start out there), enable normal monster
+        // generation.
+        you.chapter = CHAPTER_ORB_HUNTING;
+    }
 
     // GENERATE new level when the file can't be opened:
     if (!you.save->has_chunk(level_name))
