@@ -33,6 +33,13 @@
 #include "unwind.h"
 #include "view.h"
 
+static bool _msgs_to_stderr = false;
+
+void set_log_emergency_stderr(bool b)
+{
+    _msgs_to_stderr = b;
+}
+
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
@@ -1363,7 +1370,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 #endif
 
     if (channel == MSGCH_ERROR &&
-        (!crawl_state.io_inited || msgwin_errors_to_stderr()))
+        (!crawl_state.io_inited || msgwin_errors_to_stderr())
+        || _msgs_to_stderr)
     {
         fprintf(stderr, "%s\n", text.c_str());
     }
