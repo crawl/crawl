@@ -2614,7 +2614,7 @@ static bool _pan_level()
     const char *pandemon_level_names[] =
         { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
     int which_demon = -1;
-    PlaceInfo &place_info = you.get_place_info();
+    const PlaceInfo &place_info = you.get_place_info();
     bool all_demons_generated = true;
 
     if (you.props.exists("force_map"))
