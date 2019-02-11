@@ -49,6 +49,7 @@ local generation_order_extended = {
 -- a bit redundant with mapstat? but simpler...
 function catalog_dungeon_vaults(level_order, silent)
     local result = {}
+    dgn.reset_level()
     debug.flush_map_memory()
     debug.dungeon_setup()
     for i,lvl in ipairs(level_order) do
