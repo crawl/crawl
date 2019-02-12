@@ -4191,23 +4191,34 @@ static void tag_read_you_dungeon(reader &th)
     for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
-        if (place_info.is_global()
-            && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
+#if TAG_MAJOR_VERSION == 34
+        if (place_info.is_global())
         {
             // This is to fix some crashing saves that didn't import
-            // correctly, where the desolation slot occasionally gets marked
-            // as global on conversion from pre-0.19 to post-0.19a.   This
-            // assumes that the order in `logical_branch_order` (branch.cc)
-            // hasn't changed since the save version (which is moderately safe).
+            // correctly, where under certain circumstances upgrading
+            // a game to a version with an added branch could fail to
+            // initialize the branch number. This has happened at least three
+            // times now for slightly different reasons, for depths,
+            // desolation, and gauntlet. The depths fixup is old enough that
+            // it is handled differently.
+            //
+            // The basic assumption is that if a place is marked as global, it's
+            // not properly initialized. The fixup assumes that logical branch
+            // order (used by get_all_place_info) has not changed since the
+            // save except at the end.
+
             const branch_type branch_to_fix = places[i].branch;
-            ASSERT(branch_to_fix == BRANCH_DESOLATION);
+            mprf(MSGCH_ERROR,
+                "Save file has uninitialized PlaceInfo for branch %s",
+                branches[places[i].branch].shortname);
+            // these are the known cases where this fix applies. It would
+            // probably be possible to drop this ASSERT...
+            ASSERT(branch_to_fix == BRANCH_DESOLATION || 
+                   branch_to_fix == BRANCH_GAUNTLET);
             place_info.branch = branch_to_fix;
         }
-        else
-        {
-            // These should all be branch-specific, not global
-            ASSERT(!place_info.is_global());
-        }
+#endif
+        ASSERT(!place_info.is_global())
         you.set_place_info(place_info);
     }
 
