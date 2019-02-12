@@ -1068,12 +1068,12 @@ static void _ensure_entry(branch_type br)
 {
     dungeon_feature_type entry = branches[br].entry_stairs;
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == entry)
+        if (orig_terrain(*ri) == entry)
             return;
 
     // Find primary upstairs.
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
+        if (orig_terrain(*ri) == DNGN_STONE_STAIRS_UP_I)
         {
             for (distance_iterator di(*ri); di; ++di)
                 if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
