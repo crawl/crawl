@@ -4213,12 +4213,12 @@ static void tag_read_you_dungeon(reader &th)
                 branches[places[i].branch].shortname);
             // these are the known cases where this fix applies. It would
             // probably be possible to drop this ASSERT...
-            ASSERT(branch_to_fix == BRANCH_DESOLATION || 
+            ASSERT(branch_to_fix == BRANCH_DESOLATION ||
                    branch_to_fix == BRANCH_GAUNTLET);
             place_info.branch = branch_to_fix;
         }
 #endif
-        ASSERT(!place_info.is_global())
+        ASSERT(!place_info.is_global());
         you.set_place_info(place_info);
     }
 
