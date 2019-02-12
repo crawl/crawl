@@ -5025,15 +5025,6 @@ int count_worn_ego(int which_ego)
 
 player::player()
 {
-    // warning: this constructor is called for `you` in an indeterminate order
-    // with respect to other globals, and so anything that depends on a global
-    // you should not do here. This includes things like `branches`, as well as
-    // any const static string prop name -- any object that needs to call a
-    // constructor is risky, and may or may not have called it yet. E.g. strings
-    // could be empty, branches could have every branch set as the dungeon, etc.
-    // One candidate location is startup.cc:_initialize, which is nearly the
-    // first things called in the launch game loop.
-
     chr_god_name.clear();
     chr_species_name.clear();
     chr_class_name.clear();
@@ -5263,7 +5254,7 @@ player::player()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
-    game_seed           = 0;
+    game_seed           = crawl_state.seed;
     game_is_seeded      = true;
 
     old_hunger          = hunger;
