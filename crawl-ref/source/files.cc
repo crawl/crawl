@@ -1405,7 +1405,6 @@ static void _fixup_visited_from_package()
 {
     // for games started later than this fixup, this prop is initialized in
     // player::player
-    you.init_level_visited(); // is this necessary?
     CrawlHashTable &visited = you.props[VISITED_LEVELS_KEY].get_table();
     if (visited.size()) // only 0 for upgrades, or before entering D:1
         return;
@@ -1416,15 +1415,8 @@ static void _fixup_visited_from_package()
 }
 #endif
 
-void player::init_level_visited()
-{
-    if (!props.exists(VISITED_LEVELS_KEY))
-        props[VISITED_LEVELS_KEY].new_table();
-}
-
 void player::set_level_visited(const level_id &level)
 {
-    ASSERT(props.exists(VISITED_LEVELS_KEY));
     auto &visited = props[VISITED_LEVELS_KEY].get_table();
     visited[level.describe()] = true;
 }
@@ -1438,7 +1430,6 @@ bool player::level_visited(const level_id &level)
     // save no longer exists, so we ignore it for printing morgues
     if (!is_existing_level(level) && you.save)
         return false;
-    ASSERT(props.exists(VISITED_LEVELS_KEY));
     const auto &visited = props[VISITED_LEVELS_KEY].get_table();
     return visited.exists(level.describe());
 }
