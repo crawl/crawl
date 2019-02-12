@@ -5216,8 +5216,6 @@ player::player()
     travel_y         = 0;
     travel_z         = level_id();
 
-    init_level_visited();
-
     running.clear();
     travel_ally_pace = false;
     received_weapon_warning = false;

@@ -482,7 +482,6 @@ public:
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false) override;
 
-    void init_level_visited();
     void set_level_visited(const level_id &level);
     bool level_visited(const level_id &level);
 
