@@ -262,7 +262,7 @@ struct monster_info : public monster_info_base
 
     void to_string(int count, string& desc, int& desc_colour,
                    bool fullname = true, const char *adjective = nullptr,
-		   bool verbose = true) const;
+                   bool verbose = true) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
@@ -392,9 +392,9 @@ struct monster_info_func
     string plural;
     std::function<bool(const monster_info &, bool newconditions)> test;
 };
-void mons_to_string_pane(string& desc, int& desc_colour, bool fullname, 
-			   const vector<monster_info>& mi, int start, 
-			   int count);
+void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
+                           const vector<monster_info>& mi, int start,
+                           int count);
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                             int start, int count, bool listall);
 vector<monster_info_func> init_monster_info_funcs();
