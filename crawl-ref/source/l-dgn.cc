@@ -81,14 +81,8 @@ static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
         return 0;
     }
 
-    dr.clear();
     dgn_add_depths(dr, ls, s, lua_gettop(ls));
     return 0;
-}
-
-static int dgn_default_depth(lua_State *ls)
-{
-    return dgn_depth_proc(ls, lc_default_depths, 1);
 }
 
 static int dgn_depth(lua_State *ls)
@@ -1756,7 +1750,6 @@ const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
 
-{ "default_depth", dgn_default_depth },
 { "name", dgn_name },
 { "depth", dgn_depth },
 { "place", dgn_place },
