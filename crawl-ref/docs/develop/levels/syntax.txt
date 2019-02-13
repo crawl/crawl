@@ -208,6 +208,9 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           Lair, for instance (Lair is treated as depth 10 for this purpose.)
           In general, you should avoid using such unconstrained DEPTHs.
 
+          If there are multiple DEPTH: declarations, later ones will be added
+          to previous ones.
+
 CHANCE:   <roll> [ (<depth-ranges>) ]
 
           CHANCE allows you to control the probability that your map is used on
