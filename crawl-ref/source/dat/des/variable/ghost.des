@@ -749,7 +749,7 @@ ENDMAP
 NAME:   gammafunk_ghost_hydra_chop
 DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
-#: setup_hydra_weapon(_G)
+: setup_hydra_weapon(_G)
 KMONS:  O = player ghost
 {{
 -- Set up hydra monster entry with a range of possible extra heads based on
