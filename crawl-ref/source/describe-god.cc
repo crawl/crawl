@@ -587,11 +587,18 @@ static formatted_string _beogh_extra_description()
                 mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
                 MSLOT_WEAPON;
 
-            desc.cprintf(" (");
+            // An orc can still lose its gift, e.g. by being turned into a
+            // shapeshifter via a chaos cloud. TODO: should the gift prop be
+            // deleted at that point?
+            if (mons->inv[slot] != NON_ITEM)
+            {
+                desc.cprintf(" (");
 
-            item_def &gift = mitm[mons->inv[slot]];
-            desc += formatted_string::parse_string(menu_colour_item_name(gift,DESC_PLAIN));
-            desc.cprintf(")");
+                item_def &gift = mitm[mons->inv[slot]];
+                desc += formatted_string::parse_string(
+                                    menu_colour_item_name(gift,DESC_PLAIN));
+                desc.cprintf(")");
+            }
         }
         desc.cprintf("\n");
     }
