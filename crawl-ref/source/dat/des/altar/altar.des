@@ -108,12 +108,10 @@ ENDMAP
 NAME:   lemuel_altar_in_water
 DEPTH:  D:2-, Swamp, Shoals
 WEIGHT: 9
-: local brnd = crawl.random2(13)
-: if brnd > 10 then
 TAGS:   transparent no_monster_gen no_rotate decor
-# this case almost always has altar access
-: else
-TAGS:   transparent no_monster_gen no_pool_fixup no_rotate decor
+: local brnd = crawl.random2(13)
+: if not is_validating() and brnd <= 10 then
+TAGS:   no_pool_fixup
 : end
 KPROP:  C = no_tele_into
 KMASK:  C = opaque
