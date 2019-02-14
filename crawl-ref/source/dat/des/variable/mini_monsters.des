@@ -131,12 +131,14 @@ KITEM:  R = ration tile:food_honeycomb
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
-: if crawl.x_chance_in_y(15, 27) then
+: if not is_validating() then
+:   if crawl.x_chance_in_y(15, 27) then
 TAGS:   uniq_beehive
 NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
-: else
+:   else
 TAGS:   uniq_hornetnest
 SUBST:  1 : 4 5:4
+:   end
 : end
 COLOUR: x = yellow
 TILE:   x = wall_wax
