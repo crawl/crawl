@@ -110,7 +110,7 @@ test_seed(starting_seed, per_seed_iters, generation_order, false)
 crawl.stderr("Checking some extended branches for seed " .. starting_seed .. "...")
 test_seed(starting_seed, per_seed_iters, generation_order_extended, true)
 
-for i=starting_seed + 1, starting_seed + fixed_seeds - 2 do
+for i=starting_seed + 1, starting_seed + fixed_seeds - 1 do
     crawl.stderr("Testing seed " .. i .. ".")
     test_seed(i, per_seed_iters, generation_order, true)
 end
