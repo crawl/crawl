@@ -579,7 +579,12 @@ static formatted_string _beogh_extra_description()
         has_named_followers = true;
 
         desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
-        if (given_gift(mons))
+        if (companion_is_elsewhere(mons->mid))
+        {
+            desc += formatted_string::parse_string(
+                            " (<blue>on another level</blue>)");
+        }
+        else if (given_gift(mons))
         {
             mon_inv_type slot =
                 mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
