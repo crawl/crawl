@@ -1035,6 +1035,29 @@ bool mons_eats_items(const monster& mon)
     return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
 }
 
+/* Is the actor susceptible to vampirism?
+ *
+ * Undead actors and summoned, temporary, or ghostified monsters are all not
+ * susceptible.
+ * @param act The actor.
+ * @returns True if the actor is susceptible to vampirism, false otherwise.
+ */
+bool actor_is_susceptible_to_vampirism(const actor& act)
+{
+    if (!(act.holiness() & MH_NATURAL) || act.is_summoned())
+        return false;
+
+    if (act.is_player())
+        return true;
+
+    const monster *mon = act.as_monster();
+    // Don't allow HP draining from temporary monsters such as those created by
+    // Sticks to Snakes.
+    return !mon->has_ench(ENCH_FAKE_ABJURATION)
+           // Nor from now-ghostly monsters.
+           && !testbits(mon->flags, MF_SPECTRALISED);
+}
+
 bool invalid_monster(const monster* mon)
 {
     return !mon || invalid_monster_type(mon->type);

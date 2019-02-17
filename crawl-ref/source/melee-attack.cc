@@ -2724,11 +2724,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         // deliberate fall-through
     case AF_VAMPIRIC:
-        if (!(defender->holiness() & MH_NATURAL))
-            break;
-
-        // Disallow draining of summoned monsters.
-        if (defender->is_summoned())
+        if (!actor_is_susceptible_to_vampirism(*defender))
             break;
 
         if (defender->stat_hp() < defender->stat_maxhp())
@@ -3659,7 +3655,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.species == SP_VAMPIRE
            && you.hunger_state < HS_SATIATED
-           && !mon->is_summoned()
-           && mons_has_blood(mon->type)
-           && !testbits(mon->flags, MF_SPECTRALISED);
+           && actor_is_susceptible_to_vampirism(*mon)
+           && mons_has_blood(mon->type);
 }

@@ -725,7 +725,10 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
         return spret::abort;
     }
 
-    if (!mons || mons->submerged())
+    const bool observable = mons && mons->observable();
+    if (!mons
+        || mons->submerged()
+        || !observable && !actor_is_susceptible_to_vampirism(*mons))
     {
         fail_check();
 
@@ -736,7 +739,7 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // TODO: check known rN instead of holiness
-    if (mons->observable() && !(mons->holiness() & MH_NATURAL))
+    if (observable && !actor_is_susceptible_to_vampirism(*mons))
     {
         mpr("You can't drain life from that!");
         return spret::abort;
@@ -774,7 +777,7 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
 
     hp_gain = div_rand_round(hp_gain, 2);
 
-    if (hp_gain && !mons->is_summoned() && !you.duration[DUR_DEATHS_DOOR])
+    if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel life coursing into your body.");
         inc_hp(hp_gain);
