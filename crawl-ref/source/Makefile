@@ -109,6 +109,9 @@ include Makefile.obj
 STDFLAG = -std=c++11
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
+# force SSE2 dependency, so as to avoid both x87 indeterminacies, and 
+# to prevent lua from using non-standard rounding methods.
+CFOTHERS += -mfpmath=sse -msse2
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
@@ -492,21 +495,6 @@ WINDRES := $(CROSSHOST)-windres
 
 endif
 
-# Define this to automatically generate code optimized for your machine
-# (GCC only as of now).
-#
-# NOTE: Don't use this with a release build, since the generated code
-# won't work for all machines.
-ifdef HURRY
-NO_AUTO_OPT = YesPlease
-endif
-
-ifdef AUTO_OPT
-ifndef NO_AUTO_OPT
-CFOPTIMIZE += -march=native
-endif
-endif
-
 ifdef USE_ICC
 # If you have a Core 2 processor, this _really_ makes things fly:
 #CFOPTIMIZE := -O2 -parallel -xT
@@ -526,6 +514,21 @@ else
   else
     CFOPTIMIZE := -O2
   endif
+endif
+
+# Define this to automatically generate code optimized for your machine
+# (GCC only as of now).
+#
+# NOTE: Don't use this with a release build, since the generated code
+# won't work for all machines.
+ifdef HURRY
+NO_AUTO_OPT = YesPlease
+endif
+
+ifdef AUTO_OPT
+ifndef NO_AUTO_OPT
+CFOPTIMIZE += -march=native
+endif
 endif
 
 ifdef LTO
