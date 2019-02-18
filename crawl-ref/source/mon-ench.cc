@@ -1916,9 +1916,8 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type, boo
  * aren't temporary.
  *
  * @param[out] duration    The monster's summon duration in aut.
- * @param[out] summon_type The monster's means of summoning. If positive, this
- *                         is a spell_type, if negative, it's a
- *                         mon_summon_type.
+ * @param[out] summon_type The monster's means of summoning. If negative, this
+ *                         is a mon_summon_type, otherwise it's a spell_type.
  * @returns True if the monster is a temporary summon, false otherwise.
  */
 bool monster::is_summoned(int* duration, int* summon_type) const
