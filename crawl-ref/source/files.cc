@@ -1713,7 +1713,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // to a narrow version range (basically 0.23.0) but there's no way to
         // do a sensible minor version check here and the fixup can't happen
         // on load.
-        if (curr_PlaceInfo.levels_seen > brdepth[curr_PlaceInfo.branch])
+        if (is_connected_branch(curr_PlaceInfo.branch)
+            && brdepth[curr_PlaceInfo.branch] > 0
+            && curr_PlaceInfo.levels_seen > brdepth[curr_PlaceInfo.branch])
         {
             mprf(MSGCH_ERROR,
                 "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
