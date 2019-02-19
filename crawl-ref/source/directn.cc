@@ -3297,10 +3297,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         }
     }
 
-    string weap = "";
-
-    if (mi.type != MONS_SPECTRAL_WEAPON)
-        weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
+    string weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
 
     // Print the rest of the equipment only for full descriptions.
     if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
@@ -3342,8 +3339,13 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     vector<string> item_descriptions;
 
-    if (!weap.empty())
+    // Dancing weapons have all their weapon information in their full_name, so
+    // we don't need to add another weapon description here (see Mantis 11887).
+    if (!weap.empty()
+        && mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
+    {
         item_descriptions.push_back(weap.substr(1)); // strip leading space
+    }
 
     if (mon_arm)
     {
