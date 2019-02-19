@@ -1717,7 +1717,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // on load.
         if (is_connected_branch(curr_PlaceInfo.branch)
             && brdepth[curr_PlaceInfo.branch] > 0
-            && curr_PlaceInfo.levels_seen > brdepth[curr_PlaceInfo.branch])
+            && static_cast<int>(curr_PlaceInfo.levels_seen)
+                                        > brdepth[curr_PlaceInfo.branch])
         {
             mprf(MSGCH_ERROR,
                 "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
