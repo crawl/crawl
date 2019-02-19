@@ -1712,7 +1712,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
                 branches[curr_PlaceInfo.branch].shortname,
                 curr_PlaceInfo.levels_seen);
-            curr_PlaceInfo.levels_seen = brdepth[BRANCH_DUNGEON];
+            curr_PlaceInfo.levels_seen = brdepth[curr_PlaceInfo.branch];
         }
 #endif
         curr_PlaceInfo.assert_validity();
