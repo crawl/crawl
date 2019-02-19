@@ -1573,7 +1573,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         return just_created_level;
     }
 
-    if (env.turns_on_level == 0)
+    if (!you.level_visited(level_id::current()))
         just_created_level = true; // in case level was pre-generated
 
     if (load_mode != LOAD_VISITOR)
@@ -1698,6 +1698,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         mprf(MSGCH_DIAGNOSTICS,
              "curr_PlaceInfo:: num_visits: %d, levels_seen: %d",
              curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
+#endif
+#if TAG_MAJOR_VERSION == 34
+        // this fixup is for a bug where turns_on_level==0 was used to set
+        // just_created_level, and there were some obscure ways to have 0
+        // turns on a level that you had entered previously. It only applies
+        // to a narrow version range (basically 0.23.0) but there's no way to
+        // do a sensible minor version check here and the fixup can't happen
+        // on load.
+        if (curr_PlaceInfo.levels_seen > brdepth[curr_PlaceInfo.branch])
+        {
+            mprf(MSGCH_ERROR,
+                "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
+                branches[curr_PlaceInfo.branch].shortname,
+                curr_PlaceInfo.levels_seen);
+            curr_PlaceInfo.levels_seen = brdepth[BRANCH_DUNGEON];
+        }
 #endif
         curr_PlaceInfo.assert_validity();
     }
