@@ -1880,6 +1880,12 @@ vector<monster_info_func> init_monster_info_funcs()
                 return mi.is(MB_INNER_FLAME);
             }
         });
+    toret.push_back({"reflects damage", "reflect damage",
+            [](const monster_info &mi, bool newconditions)
+            {
+                return mi.is(MB_MIRROR_DAMAGE);
+            }
+        });
     toret.push_back({"strong", "strong",
             [](const monster_info &mi, bool newconditions)
             {
