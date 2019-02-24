@@ -115,7 +115,7 @@ CFOTHERS += -mfpmath=sse -msse2
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
-DEFINES := -DTOURNEY='"0.23"' $(EXTERNAL_DEFINES)
+DEFINES := $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
