@@ -62,6 +62,8 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    NOSSE         -- build without SSE support, e.g. on a non-x86 processor.
+#                     Defining this may affect seed stability.
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
@@ -108,10 +110,16 @@ include Makefile.obj
 # Which C++ standard to support
 STDFLAG = -std=c++11
 
+ifdef ANDROID
+NOSSE := Yes
+endif
+
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
+ifndef NOSSE
 # force SSE2 dependency, so as to avoid both x87 indeterminacies, and 
 # to prevent lua from using non-standard rounding methods.
 CFOTHERS += -mfpmath=sse -msse2
+endif
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
