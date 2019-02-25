@@ -3101,7 +3101,7 @@ void replace_boris()
     // a new level is entered.
     if (!you.props["killed_boris_once"]
         || you.unique_creatures[MONS_BORIS]
-        || !one_chance_in(3))
+        || !one_chance_in(6))
     {
         return;
     }
