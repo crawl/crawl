@@ -529,19 +529,26 @@ void Text::_render()
     wrap_text_to_size(m_region[2], m_region[3]);
 
 #ifdef USE_TILE_LOCAL
-    const int line_height = tiles.get_crt_font()->char_height();
-    const unsigned line_min = (region[1]-m_region[1]) / line_height;
-    const unsigned line_max = (region[1]+region[3]-m_region[1]) / line_height;
+    const int dev_line_height = tiles.get_crt_font()->char_height(false);
+    const int line_min_pos = display_density.logical_to_device(
+                                                    region[1] - m_region[1]);
+    const int line_max_pos = display_density.logical_to_device(
+                                        region[1] + region[3] - m_region[1]);
+    const int line_min = line_min_pos / dev_line_height;
+    const int line_max = line_max_pos / dev_line_height;
 
+    // find the earliest and latest ops in the string that could be displayed
+    // in the currently visible region, as well as the line offset of the
+    // earliest.
     int line_off = 0;
     int ops_min = 0, ops_max = m_text_wrapped.ops.size();
     {
         int i = 1;
-        for (; i < (int)m_brkpts.size(); i++)
+        for (; i < (int) m_brkpts.size(); i++)
             if (m_brkpts[i].line >= line_min)
             {
-                ops_min = m_brkpts[i-1].op;
-                line_off = m_brkpts[i-1].line;
+                ops_min = m_brkpts[i - 1].op;
+                line_off = m_brkpts[i - 1].line;
                 break;
             }
         for (; i < (int)m_brkpts.size(); i++)
@@ -552,11 +559,15 @@ void Text::_render()
             }
     }
 
+    // the slice of the contained string that will be displayed
     formatted_string slice;
     slice.ops = vector<formatted_string::fs_op>(
-        m_text_wrapped.ops.begin()+ops_min,
-        m_text_wrapped.ops.begin()+ops_max);
+        m_text_wrapped.ops.begin() + ops_min,
+        m_text_wrapped.ops.begin() + ops_max);
 
+    // TODO: this is really complicated, can it be refactored? Does it
+    // really need to iterate over the formatted_text slices? I'm not sure
+    // the formatting ever matters for highlighting locations.
     if (!hl_pat.empty())
     {
         const auto& full_text = m_text.tostring();
@@ -566,70 +577,115 @@ void Text::_render()
         // only because wordwrapping only replaces ' ' with '\n': in other words,
         // this is fairly brittle
         ASSERT(full_text.size() == m_text_wrapped.tostring().size());
-        int begin_idx = ops_min == 0 ? 0 : m_text_wrapped.tostring(0, ops_min-1).size();
-        int end_idx = begin_idx + m_text_wrapped.tostring(ops_min, ops_max-1).size();
+        // index of the first and last ops that are being displayed
+        int begin_idx = ops_min == 0 ?
+                        0 :
+                        m_text_wrapped.tostring(0, ops_min - 1).size();
+        int end_idx = begin_idx
+                        + m_text_wrapped.tostring(ops_min, ops_max-1).size();
 
-        vector<size_t> highlights = _find_highlights(full_text, hl_pat, begin_idx, end_idx);
+        vector<size_t> highlights = _find_highlights(full_text, hl_pat,
+                                                     begin_idx, end_idx);
 
-        const int ox = m_region[0], oy = m_region[1]+line_height*line_off;
-        size_t lacc = 0, line = 0;
+        int ox = m_region[0];
+        const int oy = display_density.logical_to_device(m_region[1]) +
+                                                dev_line_height * line_off;
+        size_t lacc = 0; // the start char of the current op relative to region
+        size_t line = 0; // the line we are at relative to the region
+
         FontWrapper *font = tiles.get_crt_font();
         bool inside = false;
+        // Iterate over formatted_string op slices, looking for highlight
+        // sequences. Highlight sequences may span multiple op slices, hence
+        // some of the complexity here.
+        // All the y math in this section needs to be done in device pixels,
+        // in order to handle fractional advances.
+        set<size_t> block_lines;
         for (unsigned i = 0; i < slice.ops.size() && !highlights.empty(); i++)
         {
             const auto& op = slice.ops[i];
             if (op.type != FSOP_TEXT)
                 continue;
             size_t oplen = op.text.size();
-            size_t start = highlights[0] - begin_idx - lacc,
-                   end = highlights[0] - begin_idx - lacc + hl_pat.size();
 
+            // dimensions in chars of the pattern relative to current op
+            size_t start = highlights[0] - begin_idx - lacc;
+            size_t end = highlights[0] - begin_idx - lacc + hl_pat.size();
+
+            size_t op_line_start = begin_idx + lacc > 0
+                        ? full_text.rfind('\n', begin_idx + lacc - 1)
+                        : string::npos;
+            op_line_start = op_line_start == string::npos
+                        ? 0
+                        : op_line_start + 1;
+            string line_before_op = full_text.substr(op_line_start,
+                                            begin_idx + lacc - op_line_start);
+            // pixel positions for the current op
+            size_t op_x = font->string_width(line_before_op.c_str());
+            const size_t op_y =
+                            font->string_height(line_before_op.c_str(), false)
+                            - dev_line_height;
+
+            // positions in device pixels to highlight relative to current op
             size_t sx = 0, ex = font->string_width(op.text.c_str());
-            size_t sy = 0, ey = line_height;
-            bool started = false, ended = false;
+            size_t sy = 0, ey = dev_line_height;
+
+            bool started = false; // does the highlight start in the current op?
+            bool ended = false;   // does the highlight end in the current op?
 
             if (start < oplen) // assume start is unsigned and so >=0
             {
-                {
-                    size_t line_start = full_text.rfind('\n', highlights[0]);
-                    line_start = line_start == string::npos ? 0 : line_start+1;
-                    const string before = full_text.substr(line_start, highlights[0]-line_start);
-                    sx = font->string_width(before.c_str());
-                }
-                {
-                    const string before = full_text.substr(lacc+begin_idx, highlights[0]-lacc-begin_idx);
-                    sy = font->string_height(before.c_str()) - line_height;
-                }
+                // hacky: reset op x to 0 if we've hit a linebreak in the op
+                // before start. This is to handle cases where the op starts
+                // midline, but the pattern is after a linebreak in the op.
+                const size_t linebreak_in_op = op.text.find("\n");
+                if (start > linebreak_in_op)
+                    op_x = 0;
+                // start position is somewhere in the current op
+                const string before = full_text.substr(begin_idx + lacc, start);
+                sx = font->string_width(before.c_str());
+                sy = font->string_height(before.c_str(), false)
+                                                            - dev_line_height;
                 started = true;
             }
-            if (end < oplen) // assume end is unsigned and so >=0
+            if (end <= oplen) // assume end is unsigned and so >=0
             {
-                {
-                    size_t line_start = full_text.rfind('\n', highlights[0]+hl_pat.size()-1);
-                    line_start = line_start == string::npos ? 0 : line_start+1;
-                    const string to_end = full_text.substr(line_start, highlights[0]+hl_pat.size()-line_start);
-                    ex = font->string_width(to_end.c_str());
-                }
-                {
-                    const string to_end = full_text.substr(lacc+begin_idx, highlights[0]+hl_pat.size()-1-lacc-begin_idx);
-                    ey = font->string_height(to_end.c_str());
-                }
+                const string to_end = full_text.substr(begin_idx + lacc, end);
+                ex = font->string_width(to_end.c_str());
+                ey = font->string_height(to_end.c_str(), false);
                 ended = true;
             }
 
             if (started || ended || inside)
             {
                 m_hl_buf.clear();
-                for (size_t y = oy+line+sy; y < oy+line+ey; y+=line_height)
+                // TODO: as far as I can tell, the above code never produces
+                // multi-line spans for this to iterate over...
+                for (size_t y = oy + op_y + line + sy;
+                            y < oy + op_y + line + ey;
+                            y += dev_line_height)
                 {
+                    if (block_lines.count(y)) // kind of brittle...
+                        continue;
                     if (hl_line)
                     {
-                        m_hl_buf.add(region[0], y, region[0]+region[2], y + line_height,
+                        block_lines.insert(y);
+                        m_hl_buf.add(region[0],
+                            display_density.device_to_logical(y),
+                            region[0] + region[2],
+                            display_density.device_to_logical(y
+                                                            + dev_line_height),
                             VColour(255, 255, 0, 50));
                     }
                     else
-                        m_hl_buf.add(ox + sx, y, ox + ex, y + line_height,
+                    {
+                        m_hl_buf.add(ox + op_x + sx,
+                            display_density.device_to_logical(y),
+                            ox + op_x + ex,
+                            display_density.device_to_logical(y
+                                                            + dev_line_height),
                             VColour(255, 255, 0, 50));
+                    }
                 }
                 m_hl_buf.draw();
             }
@@ -637,13 +693,14 @@ void Text::_render()
 
             if (ended)
             {
-                highlights.erase(highlights.begin()+0);
+                highlights.erase(highlights.begin() + 0);
                 i--;
             }
             else
             {
                 lacc += oplen;
-                line += font->string_height(op.text.c_str()) - line_height;
+                line += font->string_height(op.text.c_str(), false)
+                                                            - dev_line_height;
             }
         }
     }
@@ -652,7 +709,8 @@ void Text::_render()
     // in FTFontWrapper, that, like render_textblock(), would automatically
     // handle swapping atlas glyphs as necessary.
     FontBuffer m_font_buf(tiles.get_crt_font());
-    m_font_buf.add(slice, m_region[0], m_region[1]+line_height*line_off);
+    m_font_buf.add(slice, m_region[0], m_region[1] +
+            display_density.device_to_logical(dev_line_height * line_off));
     m_font_buf.draw();
 #else
     const auto& lines = m_wrapped_lines;
