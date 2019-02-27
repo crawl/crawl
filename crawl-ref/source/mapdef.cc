@@ -2577,16 +2577,22 @@ bool map_def::run_hook(const string &hook_name, bool die_on_lua_error)
     const dlua_set_map mset(this);
     if (!dlua.callfn("dgn_map_run_hook", "s", hook_name.c_str()))
     {
-        if (die_on_lua_error)
+        const string error = rewrite_chunk_errors(dlua.error);
+        // only show the error message if this isn't a hook map-placement
+        // failure, which should just lead to a silent veto.
+        if (error.find("Failed to place map") == string::npos)
         {
-            end(1, false, "Lua error running hook '%s' on map '%s': %s",
-                hook_name.c_str(), name.c_str(),
-                rewrite_chunk_errors(dlua.error).c_str());
+            if (die_on_lua_error)
+            {
+                end(1, false, "Lua error running hook '%s' on map '%s': %s",
+                    hook_name.c_str(), name.c_str(), error.c_str());
+            }
+            else
+            {
+                mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+                     hook_name.c_str(), name.c_str(), error.c_str());
+            }
         }
-        else
-            mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
-                 hook_name.c_str(), name.c_str(),
-                 rewrite_chunk_errors(dlua.error).c_str());
         return false;
     }
     return true;
