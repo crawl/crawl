@@ -580,6 +580,7 @@ function dgn.place_maps(parameters)
   local n_placed = 0
 
   local function map_error(name)
+    -- this prefix string is used in map_def::run_hook
     error("Failed to place map '" .. name .. "'")
   end
 
