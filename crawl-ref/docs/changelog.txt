@@ -1,3 +1,18 @@
+Stone Soup 0.23.1 (20190228)
+----------------------------
+
+Bugfix Release
+--------------
+* Vampiric attacks by the player against allies created from Sticks to Snakes
+  and the Ratskin Cloak no longer restore HP or give vampires satiation.
+* Damage from Ozocubu's Refrigeration has been increased to the correct
+  amount.
+* Placement for the uniques Aizul, Bai Suzhen, Donald, Jorgrun, and Mara has
+  been fixed so they can place throughout their intended level ranges.
+* The chance of Boris to respawn has been lowered to match previous rates.
+* Yellow draconians now correctly receive their rCorr mutation at XL 7.
+* 45 bugfixes, adjustments, and cleanups in total.
+
 Stone Soup 0.23 (20190207)
 --------------------------
 
