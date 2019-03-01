@@ -545,14 +545,14 @@ void Text::_render()
     {
         int i = 1;
         for (; i < (int) m_brkpts.size(); i++)
-            if (m_brkpts[i].line >= line_min)
+            if (static_cast<int>(m_brkpts[i].line) >= line_min)
             {
                 ops_min = m_brkpts[i - 1].op;
                 line_off = m_brkpts[i - 1].line;
                 break;
             }
         for (; i < (int)m_brkpts.size(); i++)
-            if (m_brkpts[i].line > line_max)
+            if (static_cast<int>(m_brkpts[i].line) > line_max)
             {
                 ops_max = m_brkpts[i].op;
                 break;
