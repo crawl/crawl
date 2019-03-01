@@ -800,7 +800,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     }
     else
     {
-        caster.add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 0, foe,
+        foe->as_monster()->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 0, &caster,
                     turns * BASELINE_DELAY));
     }
 }
