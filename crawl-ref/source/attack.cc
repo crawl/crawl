@@ -1112,7 +1112,7 @@ int attack::player_stat_modify_damage(int damage)
     // Each point of strength over 10 increases this by 0.025 (2.5%),
     // strength below 10 reduces the multiplied by the same amount.
     // Minimum multiplier is 0.01 (1%) (reached at -30 str).
-    damage *= max(1, 75 + 2.5 * you.strength());
+    damage *= max(1.0, 75 + 2.5 * you.strength());
     damage /= 100;
 
     return damage;
