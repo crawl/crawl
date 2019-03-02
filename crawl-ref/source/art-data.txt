@@ -539,6 +539,7 @@ BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
 INSCRIP:  Acc+∞
 
+# TAG_MAJOR_VERSION == 34
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
 PLUS:    +7
@@ -547,6 +548,7 @@ TILE:    urand_piercer
 TILE_EQ: great_bow
 BRAND:   SPWPN_PENETRATION
 EV:      -2
+BOOL:    nogen
 
 # TAG_MAJOR_VERSION == 34
 ENUM:    BLOWGUN_ASSASSIN
@@ -654,6 +656,7 @@ COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
+INSCRIP:  penet
 
 NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
