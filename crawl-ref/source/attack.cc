@@ -1067,15 +1067,12 @@ string attack::defender_name(bool allow_reflexive)
 
 int attack::player_stat_modify_damage(int damage)
 {
-    int dammod = 39;
-
-    if (you.strength() > 10)
-        dammod += (random2(you.strength() - 9) * 2);
-    else if (you.strength() < 10)
-        dammod -= (random2(11 - you.strength()) * 3);
-
-    damage *= dammod;
-    damage /= 39;
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    damage *= max(1.0, 75 + 2.5 * you.strength());
+    damage /= 100;
 
     return damage;
 }
