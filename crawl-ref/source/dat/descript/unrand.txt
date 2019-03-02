@@ -281,12 +281,8 @@ relieve opponents of their weapons, dealing extra damage in the process.
 %%%%
 storm bow
 
-A longbow with the colour of dark rain clouds.
-{{
-    if you.can_smell() then
-        return "It smells like a storm just past, or one about to begin."
-    end
-}}
+A longbow with the colour of dark rain clouds that fires arrows like
+lightning.
 %%%%
 large shield of Ignorance
 

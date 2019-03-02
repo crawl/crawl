@@ -10,6 +10,7 @@
 #include <cmath>
 #include <sstream>
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "chardump.h"
 #include "command.h"
@@ -60,7 +61,8 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
             && get_ammo_brand(projectile) == SPMSL_PENETRATION
            || weapon
               && is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED
-              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+              && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
+                  || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
 }
 
 bool item_is_quivered(const item_def &item)
