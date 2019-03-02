@@ -1108,8 +1108,11 @@ string attack::defender_name(bool allow_reflexive)
 
 int attack::player_stat_modify_damage(int damage)
 {
-    // 11 strength is ~1.0x damage multiplier.
-    damage *= random2(36 + div_rand_round(you.strength() * 57, 10));
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    damage *= max(1, 75 + 2.5 * you.strength());
     damage /= 100;
 
     return damage;
