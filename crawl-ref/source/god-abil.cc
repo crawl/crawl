@@ -6670,7 +6670,7 @@ spret_type uskayaw_grand_finale(bool fail)
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
         args.self = CONFIRM_CANCEL;
-        targeter_smite tgt(&you, 7, 0, 0);
+        targeter_smite tgt(&you);
         args.hitfunc = &tgt;
         direction(beam, args);
         if (crawl_state.seen_hups)
