@@ -4189,6 +4189,20 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         beam_cancelled = true;
         finish_beam();
     }
+    // Handle enslaving monsters when OTR is up: give a prompt for attempting
+    // to enslave monsters that don't have rPois with Toxic status.
+    else if (flavour == BEAM_ENSLAVE && you.duration[DUR_TOXIC_RADIANCE]
+             && mon->res_poison() <= 0)
+    {
+        string verb = make_stringf("enslave %s", mon->name(DESC_THE).c_str());
+        if (otr_stop_summoning_prompt(true, verb,
+                                      mons_genus(mon->type) == MONS_ORC))
+        {
+            beam_cancelled = true;
+            finish_beam();
+            prompted = true;
+        }
+    }
 
     if (prompted)
     {

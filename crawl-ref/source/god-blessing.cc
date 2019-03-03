@@ -581,6 +581,11 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 // you out.
 static void _beogh_blessing_reinforcements()
 {
+    // Don't gift orcs if Toxic radiance is up, to avoid the player being
+    // penanced through no fault of their own.
+    if (you.duration[DUR_TOXIC_RADIANCE])
+        return;
+
     // Possible reinforcement.
     const monster_type followers[] =
     {

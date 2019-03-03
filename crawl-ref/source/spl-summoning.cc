@@ -92,6 +92,9 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
 
 spret cast_summon_butterflies(int pow, god_type god, bool fail)
 {
+    if (otr_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     bool success = false;
 
@@ -114,6 +117,9 @@ spret cast_summon_butterflies(int pow, god_type god, bool fail)
 
 spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
+    if (otr_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     monster_type mon = MONS_PROGRAM_BUG;
@@ -157,6 +163,10 @@ spret cast_sticks_to_snakes(int pow, god_type god, bool fail)
         mpr("You don't have anything to turn into a snake.");
         return spret::abort;
     }
+
+    if (otr_stop_summoning_prompt(false, "create snakes"))
+        return spret::abort;
+
     // Sort by the quantity if the player has no bow skill; this will
     // put arrows with the smallest quantity first in line
     // If the player has bow skill, we will already have plain arrows
@@ -227,6 +237,9 @@ spret cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
+    if (otr_stop_summoning_prompt(false))
+        return spret::abort;
+
     fail_check();
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -266,6 +279,9 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
+    if (otr_stop_summoning_prompt(false))
+        return spret::abort;
+
     fail_check();
     monster_type type = MONS_PROGRAM_BUG;
 
@@ -381,6 +397,9 @@ spret cast_dragon_call(int pow, bool fail)
         mpr("You cannot issue another dragon's call so soon.");
         return spret::abort;
     }
+
+    if (otr_stop_summoning_prompt(false, "call dragons"))
+        return spret::abort;
 
     fail_check();
 
@@ -1148,6 +1167,10 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 
 spret cast_summon_demon(int pow, god_type god, bool fail)
 {
+    // Chaos spawn, orange demons and sixfirhies are not rPois
+    if (otr_stop_summoning_prompt(false))
+        return spret::abort;
+
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
@@ -1159,6 +1182,9 @@ spret cast_summon_demon(int pow, god_type god, bool fail)
 
 spret cast_summon_greater_demon(int pow, god_type god, bool fail)
 {
+    if (otr_stop_summoning_prompt(false)) // Hell beasts are not rPois
+        return spret::abort;
+
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
@@ -1171,6 +1197,13 @@ spret cast_summon_greater_demon(int pow, god_type god, bool fail)
 spret cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
+    bool can_summon_orcs = place.branch == BRANCH_DUNGEON
+                           || place.branch == BRANCH_BAILEY
+                           || place.branch == BRANCH_ORC
+                           || place.branch == BRANCH_VAULTS;
+    if (otr_stop_summoning_prompt(false, "summon", can_summon_orcs))
+        return spret::abort;
+
     fail_check();
     const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
@@ -1409,6 +1442,9 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
     if (success)
     {
+        if (otr_stop_summoning_prompt(true, "summon a forest"))
+            return spret::abort;
+
         fail_check();
         // Replace some rock walls with trees, then scatter a smaller number
         // of trees on unoccupied floor (such that they do not break connectivity)

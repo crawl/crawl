@@ -873,8 +873,6 @@ int mons_usable_missile(monster* mons, item_def **launcher)
     }
 }
 
-
-
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance, coord_def attack_pos)
 {
@@ -1070,6 +1068,42 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 
     if (prompted)
         *prompted = true;
+
+    if (yesno(prompt.c_str(), false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+}
+
+/**
+ * Does the player have Olgreb's Toxic Radiance up that would/could cause
+ * a hostile summon to be created? If so, prompt the player as to whether they
+ * want to continue to create their summon. Note that this prompt is never a
+ * penance prompt, because we don't cause penance when monsters enter line of
+ * sight when OTR is active, regardless of how they entered LOS.
+ *
+ * @param always  True if the spell always creates monsters that do not resist
+ *                poison, false if the spell only creates non-rPois monsters
+ *                sometimes.
+ * @param verb    The verb to be used in the prompt. Defaults to "summon".
+ * @return        True if the player wants to abort.
+ */
+bool otr_stop_summoning_prompt(bool always, string verb)
+{
+    if (!you.duration[DUR_TOXIC_RADIANCE])
+        return false;
+
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return false;
+
+    if (crawl_state.which_god_acting() == GOD_XOM)
+        return false;
+
+    string prompt = make_stringf("Really %s while emitting a toxic aura?",
+                                 verb.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
