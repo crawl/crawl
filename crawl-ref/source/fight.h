@@ -73,3 +73,5 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
+
+bool otr_stop_summoning_prompt(string verb = "summon");
