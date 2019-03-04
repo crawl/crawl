@@ -1070,12 +1070,12 @@ static void _ensure_entry(branch_type br)
 {
     dungeon_feature_type entry = branches[br].entry_stairs;
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == entry)
+        if (orig_terrain(*ri) == entry)
             return;
 
     // Find primary upstairs.
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
+        if (orig_terrain(*ri) == DNGN_STONE_STAIRS_UP_I)
         {
             for (distance_iterator di(*ri); di; ++di)
                 if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
@@ -1658,8 +1658,11 @@ static void tag_construct_you(writer &th)
     for (mid_t recallee : you.recall_list)
         _marshall_as_int(th, recallee);
 
-    marshallUByte(th, 1); // number of seeds: always 1
-    marshallInt(th, you.game_seed);
+    marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
+    marshallUnsigned(th, you.game_seed);
+    marshallBoolean(th, you.game_is_seeded);
+    CrawlVector rng_states = generators_to_vector();
+    rng_states.write(th);
 
     CANARY;
 
@@ -2912,8 +2915,12 @@ static void tag_read_you(reader &th)
         // tags.
         if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
             you.mutation[MUT_TELEPORT_CONTROL] = 0;
-        if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
+        if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0
+            || you.innate_mutation[MUT_TRAMPLE_RESISTANCE] > 0)
+        {
             you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
+            you.innate_mutation[MUT_TRAMPLE_RESISTANCE] = 0;
+        }
         if (you.mutation[MUT_CLING] == 1)
             you.mutation[MUT_CLING] = 0;
         if (you.species == SP_GARGOYLE)
@@ -3166,6 +3173,13 @@ static void tag_read_you(reader &th)
         }
         else if (you.mutation[MUT_INHIBITED_REGENERATION] > 1)
             you.mutation[MUT_INHIBITED_REGENERATION] = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_YELLOW_DRACONIAN_RACID
+        && you.species == SP_YELLOW_DRACONIAN)
+    {
+        you.mutation[MUT_ACID_RESISTANCE] = 1;
+        you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
     }
 
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
@@ -3646,9 +3660,35 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUByte(th);
-    you.game_seed = count > 0 ? unmarshallInt(th) : get_uint32();
-    for (int i = 1; i < count; i++)
-        unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 34
+    ASSERT(th.getMinorVersion() < TAG_MINOR_GAMESEEDS || count == 1);
+    if (th.getMinorVersion() < TAG_MINOR_GAMESEEDS)
+    {
+        you.game_seed = count > 0 ? unmarshallInt(th) : get_uint64();
+        dprf("Upgrading from unseeded game.");
+        crawl_state.seed = you.game_seed;
+        you.game_is_seeded = false;
+        for (int i = 1; i < count; i++)
+            unmarshallInt(th);
+    }
+    else
+    {
+#endif
+        // RNG block: game seed (uint64), whether the game is properly seeded,
+        // and then internal RNG states stored as a vector.
+        ASSERT(count == 1);
+        you.game_seed = unmarshallUnsigned(th);
+        dprf("Unmarshalling seed %" PRIu64, you.game_seed);
+        crawl_state.seed = you.game_seed;
+        you.game_is_seeded = unmarshallBoolean(th);
+        CrawlVector rng_states;
+        rng_states.read(th);
+        load_generators(rng_states);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
@@ -4160,26 +4200,33 @@ static void tag_read_you_dungeon(reader &th)
     {
         place_info = unmarshallPlaceInfo(th);
 #if TAG_MAJOR_VERSION == 34
-        if (place_info.is_global()
-            && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
+        if (place_info.is_global())
         {
             // This is to fix some crashing saves that didn't import
-            // correctly, where the desolation slot occasionally gets marked
-            // as global on conversion from pre-0.19 to post-0.19a.   This
-            // assumes that the order in `logical_branch_order` (branch.cc)
-            // hasn't changed since the save version (which is moderately safe).
+            // correctly, where under certain circumstances upgrading
+            // a game to a version with an added branch could fail to
+            // initialize the branch number. This has happened at least three
+            // times now for slightly different reasons, for depths,
+            // desolation, and gauntlet. The depths fixup is old enough that
+            // it is handled differently.
+            //
+            // The basic assumption is that if a place is marked as global, it's
+            // not properly initialized. The fixup assumes that logical branch
+            // order (used by get_all_place_info) has not changed since the
+            // save except at the end.
+
             const branch_type branch_to_fix = places[i].branch;
-            ASSERT(branch_to_fix == BRANCH_DESOLATION);
+            mprf(MSGCH_ERROR,
+                "Save file has uninitialized PlaceInfo for branch %s",
+                branches[places[i].branch].shortname);
+            // these are the known cases where this fix applies. It would
+            // probably be possible to drop this ASSERT...
+            ASSERT(branch_to_fix == BRANCH_DESOLATION ||
+                   branch_to_fix == BRANCH_GAUNTLET);
             place_info.branch = branch_to_fix;
         }
-        else
-        {
 #endif
-            // These should all be branch-specific, not global
-            ASSERT(!place_info.is_global());
-#if TAG_MAJOR_VERSION == 34
-        }
-#endif
+        ASSERT(!place_info.is_global());
         you.set_place_info(place_info);
     }
 

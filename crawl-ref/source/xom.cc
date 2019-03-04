@@ -1119,8 +1119,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     }
 
     const bool powerup = !(mons.wont_attack() ^ helpful);
-    monster_polymorph(&mons, RANDOM_MONSTER,
-                      powerup ? PPT_MORE : PPT_LESS);
+    mons.polymorph(powerup ? PPT_MORE : PPT_LESS);
 
     const bool see_new = you.can_see(mons);
 
@@ -3600,8 +3599,10 @@ static void _xom_bad_teleport(int sever)
 /// Place a one-tile chaos cloud on the player, with minor spreading.
 static void _xom_chaos_cloud(int /*sever*/)
 {
-    check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
-                      nullptr, random_range(5,15));
+    const int lifetime = 3 + random2(12) * 3;
+    const int spread_rate = random_range(5,15);
+    check_place_cloud(CLOUD_CHAOS, you.pos(), lifetime,
+                      nullptr, spread_rate);
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
               true);
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());

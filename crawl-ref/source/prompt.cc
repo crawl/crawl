@@ -53,7 +53,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
 {
     bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
@@ -131,9 +131,10 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             tmp = default_answer;
         }
 
-        if (Options.easy_confirm == CONFIRM_ALL_EASY
+        if (Options.easy_confirm == easy_confirm_type::all
             || tmp == default_answer
-            || Options.easy_confirm == CONFIRM_SAFE_EASY && allow_lowercase)
+            || Options.easy_confirm == easy_confirm_type::safe
+               && allow_lowercase)
         {
             tmp = toupper(tmp);
         }
@@ -220,7 +221,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
               bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     mouse_control mc(MOUSE_MODE_YESNO);
 
@@ -243,9 +244,10 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && default_answer)
             tmp = default_answer;
 
-        if (Options.easy_confirm == CONFIRM_ALL_EASY
+        if (Options.easy_confirm == easy_confirm_type::all
             || tmp == default_answer
-            || allow_lowercase && Options.easy_confirm == CONFIRM_SAFE_EASY)
+            || allow_lowercase
+               && Options.easy_confirm == easy_confirm_type::safe)
         {
             tmp = toupper(tmp);
         }

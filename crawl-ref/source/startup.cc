@@ -16,6 +16,7 @@
 #include "database.h"
 #include "dbg-maps.h"
 #include "dbg-objstat.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "end.h"
 #include "exclude.h"
@@ -43,6 +44,7 @@
 #include "ng-setup.h"
 #include "notes.h"
 #include "output.h"
+#include "place.h"
 #include "player-save-info.h"
 #include "shopping.h"
 #include "skills.h"
@@ -83,7 +85,7 @@ static void _initialize()
     you.symbol = MONS_PLAYER;
     msg::initialise_mpr_streams();
 
-    seed_rng();
+    seed_rng(); // don't use any chosen seed yet
 
     init_char_table(Options.char_set);
     init_show_table();
@@ -151,8 +153,7 @@ static void _initialize()
         loading_screen_close();
 #endif
 
-    if (Options.seed)
-        seed_rng(Options.seed);
+    you.game_seed = crawl_state.seed;
 
 #ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
@@ -236,6 +237,112 @@ static void _zap_los_monsters(bool items_also)
     }
 }
 
+/**
+ * Ensure that the level given by `pos` is generated. This does not do much in
+ * the way of cleanup, and the caller must ensure the player ends up somewhere
+ * sensible (this will not place the player).
+ */
+static bool _ensure_level_generated(const level_pos &pos)
+{
+    // TODO: how important is it to get stair_taken right? bel just used stone 1
+    dungeon_feature_type stair_taken =
+        absdungeon_depth(pos.id.branch, pos.id.depth) > env.absdepth0 ?
+        DNGN_STONE_STAIRS_DOWN_I : DNGN_STONE_STAIRS_UP_I;
+
+    if (pos.id.depth == brdepth[pos.id.branch])
+        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+
+    if (pos.id.depth == 1 && pos.id.branch != BRANCH_DUNGEON)
+        stair_taken = branches[pos.id.branch].entry_stairs;
+
+    const level_id old_level = level_id::current();
+
+    you.where_are_you = static_cast<branch_type>(pos.id.branch);
+    you.depth         = pos.id.depth;
+
+    return load_level(stair_taken, LOAD_GENERATE, old_level);
+}
+
+static void _pregen_levels(const branch_type branch, progress_popup &progress)
+{
+    for (int i = 1; i <= branches[branch].numlevels; i++)
+    {
+        level_id new_level = level_id(branch, i);
+        level_pos pos = level_pos(new_level);
+        dprf("Pregenerating %s:%d", branches[pos.id.branch].abbrevname,
+                                    pos.id.depth);
+        progress.advance_progress();
+        _ensure_level_generated(pos);
+    }
+}
+
+static void _pregen_dungeon()
+{
+    // be sure that AK start doesn't interfere with the builder
+    unwind_var<game_chapter> chapter(you.chapter, CHAPTER_ORB_HUNTING);
+
+    // bel's original proposal generated D to lair depth, then lair, then D
+    // to orc depth, then orc, then the rest of D. I have simplified this to
+    // just generate whole branches at a time -- I am not sure how much real
+    // impact this has. One idea might be to shuffle this slightly based on
+    // the seed.
+    // TODO: probably need to do portal vaults too?
+    // Should this use something like logical_branch_order?
+    const vector<branch_type> generation_order =
+    {
+        BRANCH_DUNGEON,
+        BRANCH_TEMPLE,
+        BRANCH_LAIR,
+        BRANCH_ORC,
+        BRANCH_SPIDER,
+        BRANCH_SNAKE,
+        BRANCH_SHOALS,
+        BRANCH_SWAMP,
+        BRANCH_VAULTS,
+        BRANCH_CRYPT,
+        BRANCH_DEPTHS,
+        BRANCH_VESTIBULE,
+        BRANCH_ELF,
+        BRANCH_ZOT,
+        BRANCH_SLIME,
+        BRANCH_TOMB,
+        BRANCH_TARTARUS,
+        BRANCH_COCYTUS,
+        BRANCH_DIS,
+        BRANCH_GEHENNA,
+    };
+
+    progress_popup progress("Generating dungeon...\n\n", 35);
+    progress.advance_progress();
+    // TODO: why is dungeon invalid? it's not set up properly in
+    // `initialise_branch_depths` for some reason. The vestibule is invalid
+    // because its depth isn't set until the player actually enters a portal.
+    for (auto br : generation_order)
+        if (brentry[br].is_valid()
+            || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE)
+        {
+            string status = "\nbuilding ";
+
+            switch (br)
+            {
+            case BRANCH_SPIDER:
+            case BRANCH_SNAKE:
+                status += "a lair branch";
+                break;
+            case BRANCH_SHOALS:
+            case BRANCH_SWAMP:
+                status += "another lair branch";
+                break;
+            default:
+                status += branches[br].longname;
+                break;
+            }
+            progress.set_status_text(status);
+            _pregen_levels(br, progress);
+            progress.advance_progress();
+        }
+}
+
 static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
@@ -259,11 +366,20 @@ static void _post_init(bool newc)
 
     run_map_local_preludes();
 
-    // Abyssal Knights start out in the Abyss.
-    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
-        you.where_are_you = BRANCH_ABYSS;
-    else if (newc)
-        you.where_are_you = root_branch;
+    if (newc)
+    {
+        if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
+            _pregen_dungeon();
+
+        you.entering_level = false;
+        you.transit_stair = DNGN_UNSEEN;
+        you.depth = 1;
+        // Abyssal Knights start out in the Abyss.
+        if (you.chapter == CHAPTER_POCKET_ABYSS)
+            you.where_are_you = BRANCH_ABYSS;
+        else
+            you.where_are_you = root_branch;
+    }
 
     // XXX: Any invalid level_id should do.
     level_id old_level;
@@ -380,6 +496,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp = new TextItem();
 #endif
     text = "Dungeon Crawl";
+    if (Options.seed_from_rc)
+        text += make_stringf(" (custom seed %" PRIu64 ")", Options.seed_from_rc);
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(LIGHTGREY);
@@ -387,8 +505,34 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters, "
-                              "items, gods and danger!");
+    if (Options.seed_from_rc)
+    {
+        tmp->set_description_text(
+            "Dungeon Crawl: The main game. "
+            "(Your options file has selected a custom seed.)");
+    }
+    else
+    {
+        tmp->set_description_text(
+            "Dungeon Crawl: The main game: full of monsters, "
+            "items, gods and danger!");
+    }
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+#else
+    tmp = new TextItem();
+#endif
+    text = "Choose game seed";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(LIGHTGREY);
+    tmp->set_id(GAME_TYPE_CUSTOM_SEED);
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("Play with a chosen custom dungeon seed.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -949,6 +1093,7 @@ bool UIStartupMenu::on_event(const wm_event& ev)
                 input_string = "";
                 break;
             case GAME_TYPE_NORMAL:
+            case GAME_TYPE_CUSTOM_SEED:
             case GAME_TYPE_TUTORIAL:
             case GAME_TYPE_SPRINT:
             case GAME_TYPE_HINTS:
@@ -989,6 +1134,7 @@ bool UIStartupMenu::on_event(const wm_event& ev)
     switch (id)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
     case GAME_TYPE_HINTS:

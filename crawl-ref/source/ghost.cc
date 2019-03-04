@@ -278,7 +278,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);
-    ev     = min(you.evasion(EV_IGNORE_HELPLESS), MAX_GHOST_EVASION);
+    ev     = min(you.evasion(ev_ignore::helpless), MAX_GHOST_EVASION);
     ac     = you.armour_class();
     dprf("ghost ac: %d, ev: %d", ac, ev);
 
@@ -740,7 +740,6 @@ static const set<branch_type> ghosts_nosave =
 bool ghost_demon::ghost_eligible()
 {
     return !crawl_state.game_is_tutorial()
-        && !Options.seed
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
         && ghosts_nosave.count(you.where_are_you) == 0;
 }

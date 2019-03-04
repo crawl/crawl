@@ -362,4 +362,24 @@ protected:
     string message;
 };
 
+class mummy_death_curse_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override { return false; }
+    void fire() override;
+
+    static void schedule(const actor * attack, string name, killer_type killer, int pow)
+    {
+        final_effect::schedule(new mummy_death_curse_fineff(attack, name, killer, pow));
+    }
+protected:
+    mummy_death_curse_fineff(const actor * attack, string _name, killer_type _killer, int _pow)
+        : final_effect(attack, 0, coord_def()), name(_name), killer(_killer), pow(_pow)
+    {
+    }
+    string name;
+    killer_type killer;
+    int pow;
+};
+
 void fire_final_effects();

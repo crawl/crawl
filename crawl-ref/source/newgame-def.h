@@ -13,6 +13,8 @@ struct newgame_def
     string name;
     game_type type;
     string filename;
+    uint64_t seed;
+    bool pregenerate;
 
     // map name for sprint (or others in the future)
     // XXX: "random" means a random eligible map

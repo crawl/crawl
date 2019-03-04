@@ -32,6 +32,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -220,6 +221,16 @@ LUARET1(you_res_draining, number, player_prot_life(false))
  * @function res_shock
  */
 LUARET1(you_res_shock, number, player_res_electricity(false))
+/*** Stealth pips.
+ * @treturn int number of stealth pips
+ * @function stealth_pips
+ */
+LUARET1(you_stealth_pips, number, stealth_breakpoint(player_stealth()))
+/*** Magic resistance (MR).
+ * @treturn int number of MR pips
+ * @function res_magic
+ */
+LUARET1(you_res_magic, number, player_res_magic(false) / MR_PIP)
 /*** Drowning resistance (rDrown).
  * @treturn int resistance level
  * @function res_drowning
@@ -456,10 +467,15 @@ LUARET1(you_depth_fraction, number,
 // change you.absdepth0 to be 1-based as well.
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
 LUARET1(you_absdepth, number, env.absdepth0 + 1)
+/*** How long has the player been on the current level?
+ * @treturn number
+ * @function turns_on_level
+ */
+LUARET1(you_turns_on_level, number, env.turns_on_level)
 /*** Interrupt the current multi-turn activity or macro sequence.
  * @function stop_activity
  */
-LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
+LUAWRAP(you_stop_activity, interrupt_activity(activity_interrupt::force))
 /*** Are you taking the stairs?
  * @treturn boolean
  * @function taking_stairs
@@ -1157,6 +1173,8 @@ static const struct luaL_reg you_clib[] =
     { "res_cold"    , you_res_cold   },
     { "res_draining", you_res_draining },
     { "res_shock"   , you_res_shock },
+    { "stealth_pips", you_stealth_pips },
+    { "res_magic"   , you_res_magic },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
@@ -1221,6 +1239,7 @@ static const struct luaL_reg you_clib[] =
     { "depth",        you_depth },
     { "depth_fraction", you_depth_fraction },
     { "absdepth",     you_absdepth },
+    { "turns_on_level", you_turns_on_level },
     { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },

@@ -386,7 +386,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                     {
                         int dmg = victim->apply_ac(
                                     div_rand_round(roll_dice(9, rpow), 15),
-                                    0, AC_PROPORTIONAL);
+                                    0, ac_type::proportional);
                         dprf("damage done: %d", dmg);
                         victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
                                      "", "tornado");

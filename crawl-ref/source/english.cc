@@ -300,7 +300,7 @@ static string _tens_in_words(unsigned num)
     return string(tens[ten]) + (digit ? string("-") + numbers[digit] : "");
 }
 
-static string join_strings(const string &a, const string &b)
+static string _join_strings(const string &a, const string &b)
 {
     if (!a.empty() && !b.empty())
         return a + " " + b;
@@ -313,7 +313,7 @@ static string _hundreds_in_words(unsigned num)
     unsigned dreds = num / 100, tens = num % 100;
     string sdreds = dreds? _tens_in_words(dreds) + " hundred" : "";
     string stens  = tens? _tens_in_words(tens) : "";
-    return join_strings(sdreds, stens);
+    return _join_strings(sdreds, stens);
 }
 
 static string _number_in_words(unsigned num, unsigned period)
@@ -332,7 +332,7 @@ static string _number_in_words(unsigned num, unsigned period)
     if (!rest && !thousands)
         return "zero";
 
-    return join_strings((rest? _number_in_words(rest, period + 1) : ""),
+    return _join_strings((rest? _number_in_words(rest, period + 1) : ""),
                         (thousands? _hundreds_in_words(thousands)
                                     + periods[period]
                                   : ""));

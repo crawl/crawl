@@ -477,7 +477,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         {
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
-                            MT_INVLIST, OSEL_WIELD,
+                            menu_type::invlist, OSEL_WIELD,
                             OPER_WIELD, invprompt_flag::no_warning, '-');
         }
         else
@@ -648,7 +648,8 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector, oper);
+        int slot = prompt_invent_item(mesg.c_str(), menu_type::invlist,
+                                      selector, oper);
 
         if (!prompt_failed(slot))
         {
@@ -1027,8 +1028,9 @@ bool wear_armour(int item)
 
     if (item == -1)
     {
-        item = prompt_invent_item("Wear which item?", MT_INVLIST, OBJ_ARMOUR,
-                                  OPER_WEAR, invprompt_flag::no_warning);
+        item = prompt_invent_item("Wear which item?", menu_type::invlist,
+                                  OBJ_ARMOUR, OPER_WEAR,
+                                  invprompt_flag::no_warning);
         if (prompt_failed(item))
             return false;
     }
@@ -1548,7 +1550,7 @@ static bool _swap_rings(int ring_slot)
             // message is visible.
             unwanted = prompt_invent_item(
                     "You're wearing all the rings you can. Remove which one?",
-                    MT_INVLIST, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
+                    menu_type::invlist, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
                     invprompt_flag::no_warning | invprompt_flag::hide_known);
         }
 
@@ -1857,8 +1859,8 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                       MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON,
-                                       invprompt_flag::no_warning);
+                                       menu_type::invlist, OBJ_JEWELLERY,
+                                       OPER_PUTON, invprompt_flag::no_warning);
     }
 
     if (prompt_failed(item_slot))
@@ -1919,7 +1921,7 @@ bool remove_ring(int slot, bool announce)
     {
         const int equipn =
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
-                                             MT_INVLIST,
+                                             menu_type::invlist,
                                              OBJ_JEWELLERY,
                                              OPER_REMOVE,
                                              invprompt_flag::no_warning
@@ -2020,7 +2022,7 @@ void prompt_inscribe_item()
     }
 
     int item_slot = prompt_invent_item("Inscribe which item?",
-                                       MT_INVLIST, OSEL_ANY);
+                                       menu_type::invlist, OSEL_ANY);
 
     if (prompt_failed(item_slot))
         return;
@@ -2092,6 +2094,16 @@ void drink(item_def* potion)
     if (alreadyknown && is_bad_item(*potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
+        return;
+    }
+
+    string prompt = make_stringf("Really quaff the %s?",
+                                 potion->name(DESC_DBNAME).c_str());
+    if (alreadyknown && is_dangerous_item(*potion, true)
+        && Options.bad_item_prompt
+        && !yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -2805,6 +2817,10 @@ void read(item_def* scroll)
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
+        string penance_prompt = make_stringf("Really %s? This action would"
+                                             " place you under penance!",
+                                             verb_object.c_str());
+
         targeter_los hitfunc(&you, LOS_NO_TRANS);
 
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
@@ -2816,15 +2832,17 @@ void read(item_def* scroll)
         {
             return;
         }
-
-        string penance_prompt = make_stringf("Really %s? This action would"
-                                             " place you under penance!",
-                                             verb_object.c_str());
-        // Having a separate prompt if the player is going to harm allies and
-        // get penance is a bit awkward; but for gods where this will happen
-        // the player is going to get punished both for hurting the allies and
-        // using a bad item so they'd better be sure.
-        if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
+        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        else if ((is_dangerous_item(*scroll, true)
+                  || is_bad_item(*scroll, true))
+                 && Options.bad_item_prompt
+                 && !yesno(make_stringf("Really %s?",
+                                        verb_object.c_str()).c_str(),
+                           false, 'n'))
         {
             canned_msg(MSG_OK);
             return;
@@ -2999,6 +3017,7 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_FOG:
+    {
         if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))
         {
             mpr("The air is too still for clouds to form.");
@@ -3006,8 +3025,10 @@ void read_scroll(item_def& scroll)
             break;
         }
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
+        auto smoke = random_smoke_type();
+        big_cloud(smoke, &you, you.pos(), 50, 8 + random2(8));
         break;
+    }
 
     case SCR_MAGIC_MAPPING:
         if (alreadyknown && !is_map_persistent())

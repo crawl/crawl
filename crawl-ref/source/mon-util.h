@@ -346,7 +346,6 @@ bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
-bool mons_has_known_ranged_attack(const monster& mon);
 bool mons_can_attack(const monster& mon);
 bool mons_has_incapacitating_spell(const monster& mon, const actor& foe);
 bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe);
@@ -381,6 +380,7 @@ bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
 bool mons_is_plant(const monster& mon);
 bool mons_eats_items(const monster& mon);
+bool actor_is_susceptible_to_vampirism(const actor& act);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draco_or_demonspawn_subspecies(const monster& mon);

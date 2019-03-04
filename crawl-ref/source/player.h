@@ -50,6 +50,8 @@
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
+#define PARALYSED_BY_KEY "paralysed_by"
+#define PETRIFIED_BY_KEY "petrified_by"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -358,7 +360,8 @@ public:
     vector<mid_t> recall_list;
 
     // Hash seed for deterministic stuff.
-    uint32_t game_seed;
+    uint64_t game_seed;
+    bool game_is_seeded;
 
     // -------------------
     // Non-saved UI state:
@@ -478,6 +481,9 @@ public:
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false) override;
+
+    void set_level_visited(const level_id &level);
+    bool level_visited(const level_id &level);
 
     int stat(stat_type stat, bool nonneg = true) const;
     int strength(bool nonneg = true) const;
@@ -810,7 +816,7 @@ public:
     int base_ac(int scale) const;
     int armour_class(bool /*calc_unid*/ = true) const override;
     int gdr_perc() const override;
-    int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
+    int evasion(ev_ignore_type evit = ev_ignore::none,
                 const actor *attacker = nullptr) const override;
 
     int stat_hp() const override     { return hp; }

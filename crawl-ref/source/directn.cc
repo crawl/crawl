@@ -181,8 +181,10 @@ bool dist::isMe() const
 
 void dist::confusion_fuzz(int range)
 {
-    target   = you.pos() + coord_def(random_range(-range, range),
-                                     random_range(-range, range));
+    target   = you.pos();
+    target.x += random_range(-range, range);
+    target.y += random_range(-range, range);
+
     choseRay = false;
 }
 
@@ -625,7 +627,8 @@ void full_describe_view()
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
 
     desc_menu.set_tag("pickup");
-    desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
+    // necessary for sorting of the item submenu
+    desc_menu.set_type(menu_type::pickup);
     desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
     desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
 
@@ -896,21 +899,23 @@ bool direction_chooser::move_is_ok() const
         {
             if (!targets_objects() && targets_enemies())
             {
-                if (self == CONFIRM_CANCEL
-                    || self == CONFIRM_PROMPT
-                       && Options.allow_self_target == CONFIRM_CANCEL)
+                if (self == confirm_prompt_type::cancel
+                    || self == confirm_prompt_type::prompt
+                       && Options.allow_self_target
+                              == confirm_prompt_type::cancel)
                 {
                     mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
                 }
-                else if (self != CONFIRM_NONE
-                         && Options.allow_self_target != CONFIRM_NONE)
+                else if (self != confirm_prompt_type::none
+                         && Options.allow_self_target
+                                != confirm_prompt_type::none)
                 {
                     return yesno("Really target yourself?", false, 'n');
                 }
             }
 
-            if (self == CONFIRM_CANCEL)
+            if (self == confirm_prompt_type::cancel)
             {
                 mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
@@ -1072,7 +1077,7 @@ coord_def direction_chooser::find_default_target() const
                                        LS_FLIPVH);
     }
     else if ((mode != TARG_ANY && mode != TARG_FRIEND)
-             || self == CONFIRM_CANCEL)
+             || self == confirm_prompt_type::cancel)
     {
         success = find_default_monster_target(result);
     }
@@ -2045,6 +2050,7 @@ bool direction_chooser::choose_direction()
 
     clear_messages();
     msgwin_set_temporary(true);
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
     show_initial_prompt();
     need_text_redraw = false;
 
@@ -2998,6 +3004,8 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
 
     if (mi.type == MONS_PANDEMONIUM_LORD)
         desc += " armed with ";
+    else if (mi.type == MONS_DANCING_WEAPON)
+        desc += " ";
     else
         desc += " wielding ";
     desc += name1;
@@ -3292,10 +3300,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         }
     }
 
-    string weap = "";
-
-    if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
-        weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
+    string weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
 
     // Print the rest of the equipment only for full descriptions.
     if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
@@ -3337,8 +3342,13 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     vector<string> item_descriptions;
 
-    if (!weap.empty())
+    // Dancing weapons have all their weapon information in their full_name, so
+    // we don't need to add another weapon description here (see Mantis 11887).
+    if (!weap.empty()
+        && mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
+    {
         item_descriptions.push_back(weap.substr(1)); // strip leading space
+    }
 
     if (mon_arm)
     {

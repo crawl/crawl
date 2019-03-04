@@ -225,7 +225,7 @@ int prompt_invent_item(const char *prompt,
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
                         const char *title, bool noselect = false,
-                        menu_type mtype = MT_PICKUP,
+                        menu_type mtype = menu_type::pickup,
                         invtitle_annotator titlefn = nullptr);
 
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);

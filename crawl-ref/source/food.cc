@@ -235,7 +235,7 @@ bool food_change(bool initial)
         you.redraw_status_lights = true;
 
         if (newstate < HS_SATIATED)
-            interrupt_activity(AI_HUNGRY);
+            interrupt_activity(activity_interrupt::hungry);
 
         if (you.species == SP_VAMPIRE)
         {

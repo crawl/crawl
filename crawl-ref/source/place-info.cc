@@ -127,11 +127,14 @@ PlaceInfo& player::get_place_info(branch_type branch) const
 void player::clear_place_info()
 {
     global_xp_info = LevelXPInfo();
-    for (branch_iterator it; it; ++it)
+
+    // can't use branch_iterator here, because it depends on a global that
+    // may not be inited when you is first constructed.
+    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; i++)
     {
-        branch_info[it->id] = PlaceInfo();
-        branch_info[it->id].branch = it->id;
-        branch_info[it->id].assert_validity();
+        branch_info[i] = PlaceInfo();
+        branch_info[i].branch = static_cast<branch_type>(i);
+        branch_info[i].assert_validity();
     }
 }
 

@@ -439,7 +439,7 @@ KMONS:  1 = tarantella
 : if you.in_branch("Zot") then
 KMONS:  2* = jumping spider / orb spider w:5
 KMONS:  3| = ghost moth / moth of wrath
-KITEM:  | = acquire any w:5 / any good_item
+KITEM:  | = any good_item
 KFEAT:  ` = known zot trap
 KFEAT:  ^ = web w:7 / known web trap w:1 / any trap w:1 / . w:7
 :   if you.depth() == dgn.br_depth("Zot") - 1 then

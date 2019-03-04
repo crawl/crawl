@@ -66,6 +66,10 @@ void map_marker::activate(bool)
 {
 }
 
+void map_marker::init()
+{
+}
+
 void map_marker::write(writer &outf) const
 {
     marshallShort(outf, type);
@@ -250,15 +254,15 @@ void map_lua_marker::write(writer &outf) const
     map_marker::write(outf);
 
     lua_stack_cleaner clean(dlua);
-    bool init = initialised;
+    bool lua_init = initialised;
     if (!get_table())
     {
         mprf(MSGCH_ERROR, "Couldn't find table.");
-        init = false;
+        lua_init = false;
     }
 
-    marshallByte(outf, init);
-    if (!init)
+    marshallByte(outf, lua_init);
+    if (!lua_init)
         return;
 
     // Call dlua_marker_function(table, 'read')
@@ -332,6 +336,13 @@ bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
     if (!res && warn_err)
         mprf(MSGCH_ERROR, "mlua error: %s", dlua.error.c_str());
     return res;
+}
+
+void map_lua_marker::init()
+{
+    lua_stack_cleaner clean(dlua);
+    push_fn_args("init");
+    callfn("init", true, 3);
 }
 
 void map_lua_marker::activate(bool verbose)
@@ -988,8 +999,28 @@ void map_markers::clear_need_activate()
     have_inactive_markers = false;
 }
 
+void map_markers::init_all()
+{
+    // called when a level is generated, but not yet entered
+    for (auto i = markers.begin(); i != markers.end();)
+    {
+        map_marker *marker = i->second;
+        ++i;
+        marker->init();
+    }
+
+    for (auto i = markers.begin(); i != markers.end();)
+    {
+        map_marker *marker = i->second;
+        ++i;
+        if (!marker->property("post_init_remove").empty())
+            remove(marker);
+    }
+}
+
 void map_markers::activate_all(bool verbose)
 {
+    // called when a level is entered
     for (auto i = markers.begin(); i != markers.end();)
     {
         map_marker *marker = i->second;

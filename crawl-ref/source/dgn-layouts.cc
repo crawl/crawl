@@ -110,7 +110,8 @@ void dgn_build_basic_level()
 
     // Make some rooms:
     int doorlevel = random2(11);
-    int roomsize  = 4 + random2(5) + random2(6);
+    int roomsize  = 4 + random2(5);
+    roomsize += random2(6); // force a sequence point between random calls
 
     int no_rooms = random_choose_weighted(636, (5 + random2avg(29, 2)),
                                           49, 100,
@@ -182,8 +183,10 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     uint8_t b1x, b1y, b2x, b2y;
     for (int i = 0; i < number_boxes; i++)
     {
-        int room_width = 3 + random2(7) + random2(5);
-        int room_height = 3 + random2(7) + random2(5);
+        int room_width = 3 + random2(7);
+        room_width += random2(5); // force a sequence point between random2s
+        int room_height = 3 + random2(7);
+        room_height += random2(5); // ditto
 
         b1x = 11 + random2(GXM - 21 - room_width);
         b1y = 11 + random2(GYM - 21 - room_height);
@@ -685,8 +688,11 @@ static void _big_room(int level_number)
 
         do
         {
-            region = dgn_region(8 + random2(30), 8 + random2(22),
-                                21 + random2(10), 21 + random2(8));
+            const int left = 8 + random2(30);
+            const int top = 8 + random2(22);
+            const int width = 21 + random2(10);
+            const int height = 21 + random2(8);
+            region = dgn_region(left, top, width, height);
         }
         while (_find_forbidden_in_area(region, MMT_VAULT)
                && overlap_tries-- > 0);
@@ -718,8 +724,13 @@ static void _big_room(int level_number)
     // What now?
     do
     {
-        region = dgn_region(8 + random2(30), 8 + random2(22),
-                            21 + random2(10), 21 + random2(8));
+        // TODO: code duplication with above
+        const int left = 8 + random2(30);
+        const int top = 8 + random2(22);
+        const int width = 21 + random2(10);
+        const int height = 21 + random2(8);
+
+        region = dgn_region(left, top, width, height);
     }
     while (_find_forbidden_in_area(region, MMT_VAULT) && overlap_tries-- > 0);
 
@@ -817,8 +828,11 @@ static void _diamond_rooms(int level_number)
         dgn_region room;
         do
         {
-            room = dgn_region(8 + random2(43), 8 + random2(35),
-                              6 + random2(15), 6 + random2(10));
+            const int left = 8 + random2(43);
+            const int top = 8 + random2(35);
+            const int width = 6 + random2(15);
+            const int height = 6 + random2(10);
+            room = dgn_region(left, top, width, height);
         }
         while (_find_forbidden_in_area(room, MMT_VAULT)
                && overlap_tries-- > 0);

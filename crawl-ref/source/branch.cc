@@ -112,7 +112,7 @@ branch_iterator::branch_iterator(branch_iterator_type type) :
 
 const branch_type* branch_iterator::branch_order() const
 {
-    if (iter_type == BRANCH_ITER_DANGER)
+    if (iter_type == branch_iterator_type::danger)
         return danger_branch_order;
     return logical_branch_order;
 }
@@ -188,7 +188,7 @@ bool is_random_subbranch(branch_type branch)
 
 bool is_connected_branch(const Branch *branch)
 {
-    return !(branch->branch_flags & BFLAG_NO_XLEV_TRAVEL);
+    return !testbits(branch->branch_flags, brflag::no_x_level_travel);
 }
 
 bool is_connected_branch(branch_type branch)
@@ -224,11 +224,11 @@ int ambient_noise(branch_type branch)
 {
     switch (branches[branch].ambient_noise)
     {
-    case BRANCH_NOISE_NORMAL:
+    case branch_noise::normal:
         return 0;
-    case BRANCH_NOISE_QUIET:
+    case branch_noise::quiet:
         return -BRANCH_NOISE_AMOUNT;
-    case BRANCH_NOISE_LOUD:
+    case branch_noise::loud:
         return BRANCH_NOISE_AMOUNT;
     default:
         die("Invalid noise level!");

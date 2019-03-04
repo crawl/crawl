@@ -1092,9 +1092,6 @@
     <ClInclude Include="..\confirm-butcher-type.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="..\confirm-level-type.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="..\confirm-prompt-type.h">
       <Filter>h</Filter>
     </ClInclude>
@@ -1216,6 +1213,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\duration-type.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\confirm-level-type.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\enchant-type.h">

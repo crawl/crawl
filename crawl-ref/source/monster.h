@@ -6,6 +6,7 @@
 #include "beh-type.h"
 #include "enchant-type.h"
 #include "mon-ench.h"
+#include "mon-poly.h"
 #include "montravel-target-type.h"
 #include "potion-type.h"
 #include "seen-context-type.h"
@@ -103,7 +104,7 @@ public:
     unique_ptr<ghost_demon> ghost;     // Ghost information.
 
     seen_context_type seen_context;    // Non-standard context for
-                                       // AI_SEE_MONSTER
+                                       // activity_interrupt::see_monster
 
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;
@@ -357,6 +358,7 @@ public:
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
     bool polymorph(int pow, bool allow_immobile = true) override;
+    bool polymorph(poly_power_type power = PPT_SAME);
     void banish(actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
@@ -459,7 +461,7 @@ public:
     int armour_class(bool calc_unid = true) const override;
     int gdr_perc() const override { return 0; }
     int base_evasion() const;
-    int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
+    int evasion(ev_ignore_type evit = ev_ignore::none,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;

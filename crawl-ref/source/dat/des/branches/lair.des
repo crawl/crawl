@@ -2203,7 +2203,7 @@ ENDMAP
 # A den of bears.
 NAME:   gammafunk_lair_bear_cave
 TAGS:   patrolling no_monster_gen
-DEPTH:  Lair, !Lair:$
+DEPTH:  Lair
 MONS:   black bear / polar bear
 KFEAT:  " = W
 KMONS:  " = electric eel w:40 / nothing
@@ -2228,22 +2228,21 @@ ENDMAP
 # A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
 TAGS:   no_pool_fixup
-DEPTH:  Lair:2-, !Lair:$
+DEPTH:  Lair
 ORIENT: north
 KMONS:  pq = plant / fungus / toadstool
-KMONS:  1 = electric eel / rime drake / elephant / hippogriff w:5
+KMONS:  1 = electric eel / rime drake / elephant / wyvern
 KMONS:  2 = lindwurm / dire elephant / catoblepas
 KITEM:  2 = * / |
 KFEAT:  q = W
 KFEAT:  1 = w
-KFEAT:  h = runed_door
 KFEAT:  T = t
 SUBST:  p = p., q = qW, r = tx, E = tE, * = *|, i : GT, j = GTx-
-NSUBST: . = 2:9 / 3:0 / ., 1 = 3:1 / * = 1ww
-CLEAR:  E
+NSUBST: . = 2=9 / 3=0 / ., 1 = 3=1 / 1ww
 KMASK:  Ww = no_monster_gen
+CLEAR:  E
 COLOUR: -|*2 = brown
-FTILE:  -|*2hGT = floor_pebble_brown
+FTILE:  =-|*2GT = floor_pebble_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
@@ -2251,10 +2250,10 @@ Etci-WWWWW1jxxwWW1xxjww1ctE
 Etc*2-WWxWWxxwWWwWWxxwwwctE
 Etc*2-wxxWWxWWWjjwwWWwWWctE
 Etci-wwjxxWWW1xxxx1wWWWwctE
-EtccccccccccccccccccccWqxtE
-EtxxxxxxxxxxxxxxxxxxxxxhxtE
-EttttxrrrrrrrrrrrrrrttWWttE
-Ettttt.qWWwWttqWtwwwqWWwttE
+EtccnncccccnncccccccccWqxtE
+Etxxx.xxxxxx.xxxxxxxxxx=xtE
+Ettttx.trrrtt.ttrrrrttWWttE
+Etttt.ttWWwWWttWtwwwqWWwttE
 Ettt...qWwWwWwWwWwwwWwwwttE
 Ettp..WWwwwqqWwqqWWWqqqtttE
 Ettp..WqwwwttqqtttqqtttttE
@@ -2310,10 +2309,9 @@ NAME:   pf_torpor_hydra
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Lair:3-, !Lair:$
 MONS:   torpor snail, hydra
-KFEAT:  = = runed_door
 # A decent item visible from the door, a superb item not visible,
 # and a couple of floor items anywhere
-NSUBST: . = 1:* / *:., - = 1:| / *:., . = 2:% / *:.
+NSUBST: . = * / ., - = | / ., . = 2=% / .
 MAP
 x xx  x
  xxxxxx x
@@ -2569,7 +2567,7 @@ KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
 KITEM:   % = any, any w:1 / nothing w:5, ration q:1
-KITEM:   *| = gold, gold, gold, acquire any
+KITEM:   *| = gold, gold, gold, any good_item
 NSUBST:  2 = 2:22334 / *:3
 SHUFFLE: %'*" / %'"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP.
@@ -2763,7 +2761,7 @@ MONS:   plant, elephant
 KMONS:  S = anaconda
 KFEAT:  S = deep_water
 KITEM:  U = superb_item
-KITEM:  Q = acquire any
+KITEM:  Q = superb_item
 KFEAT:  o = granite_statue
 KFEAT:  i = granite_statue
 SUBST:  X = xxx.., P = 1........., T = tttxxc
@@ -2823,10 +2821,9 @@ MONS:    red devil / ice devil w:15 / orange demon w:15
 MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
 KMONS:   hH = hell hound
 KMONS:   F = fungus
-# XXX: no_pickup is incompatible with acquire any.
-# Should be used here, loot is easily missed.
-KITEM:   A = acquire any, any good_item / no_pickup gold good_item w:15, \
-             % no_pickup / nothing, % no_pickup / nothing
+KITEM:   A = superb_item no_pickup, any good_item no_pickup \
+             / no_pickup gold good_item w:15, % no_pickup \
+             / nothing, % no_pickup / nothing
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
 KFEAT:   L = endless_lava
@@ -2977,7 +2974,7 @@ NAME:   evilmike_catoblepas_cave
 TAGS:   no_monster_gen no_rotate no_item_gen
 PLACE:  Lair:$
 ORIENT: northwest
-ITEM:   acquire any
+ITEM:   any good_item
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 # These are still living plants for all intents and purposes...
@@ -3157,19 +3154,17 @@ MONS:    komodo dragon / wyvern w:7 / basilisk w:7 / hydra w:2
 MONS:    lindwurm / fire crab w:3, fire dragon
 KMONS:   Y = lava snake
 KFEAT:   Y = lava
-KFEAT:   E = runed_door
 # Generate one of two paths leading to central chamber
-SHUFFLE: ABCDE / HIJKL
+SHUFFLE: ABCD= / HIJKL
 SUBST:   A = @, BH = x, CI = ., K = ", J = l, L = c
 # Generate one of two perches for dangerous enemies
 SHUFFLE: MN / OP
 SUBST:   M = 6, N = ., OP = l
 # Monster and loot placement
 SHUFFLE: ';`
-NSUBST:  ' = 3:3 / 2 = 3. / 1 = 5 / 2 = 15. / 1 = 2. / *:.
-NSUBST:  ; = 3:5 / 3 = 15. / 1 = 2. / *:., ` = 3:5 / 3 = 15. / 1 = 2. / *:.
-NSUBST:  - = 1:7 / *:", D = 1:|* / 2 = *% / 3 = $% / 2:$ / *:"
-NSUBST:  G = 2:4 / 1 = 4. / *:G, l = 5:Y / *:l
+NSUBST:  ' = 3=3 / 2=3. / 5 / 2=15. / 2. / ., ; = 3=5 / 3=15. / 2. / .
+NSUBST:  ` = 3=5 / 3=15. / 2. / ., - = 7 / ", D = |* / 2=*% / 3=$% / 2=$ / "
+NSUBST:  G = 2=4 / 4. / G, l = 5=Y / l
 KMASK:   "$%*|7 = no_trap_gen
 MAP
                 xxxxxxx
@@ -3196,7 +3191,7 @@ xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
  xxxxxx..;.;.;xln"----"nlN.`.`.`xxxx
    xxxxx;.;.;.xlcKK--KKcNl`.`.`.xxxx
    xxxxG...;.xxlccKKKKccNlx`.`.`xxxxx
-    xxxx..;.BBlllccEEccMllx.`.`..xxxxx
+    xxxx..;.BBlllcc==ccMllx.`.`..xxxxx
     xxxGxG.xxBBllllCCllllx.`.`.....xHx
      xxxxx;llBBxxllCCll.`.`.`.`.....x
      xxxxxlllxBx;.lCCl.`.`.`.`...xxxH

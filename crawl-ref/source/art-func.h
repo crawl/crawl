@@ -154,8 +154,9 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
     {
+        const int pow = random2(9);
         MiscastEffect(&you, nullptr, {miscast_source::wield},
-                      spschool::necromancy, random2(9), random2(70),
+                      spschool::necromancy, pow, random2(70),
                       "the scythe of Curses", nothing_happens::NEVER);
     }
 }
@@ -174,8 +175,9 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
         did_god_conduct(DID_EVIL, 3);
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
+        const int pow = random2(9);
         MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::necromancy, random2(9), random2(70),
+                      spschool::necromancy, pow, random2(70),
                       "the scythe of Curses", nothing_happens::NEVER);
     }
 }
@@ -502,7 +504,8 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 
     mpr("Magical energy flows into your mind!");
 
-    inc_mp(3 + random2(5) + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
+    const int mp_inc_base = 3 + random2(5);
+    inc_mp(mp_inc_base + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
     make_hungry(50, false, true);
 
     *did_work = true;
@@ -851,8 +854,9 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
              || !mons_immune_magic(*defender->as_monster())))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
+        const int pow = random2(9);
         MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::transmutation, random2(9), random2(70),
+                      spschool::transmutation, pow, random2(70),
                       "the plutonium sword", nothing_happens::NEVER);
 
         if (attacker->is_player())
@@ -1040,8 +1044,9 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     if (defender->antimagic_susceptible()
         && !mondied)
     {
+        const int pow = random2(9);
         MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::random, random2(9), random2(70),
+                      spschool::random, pow, random2(70),
                       "the demon whip \"Spellbinder\"", nothing_happens::NEVER);
     }
 }

@@ -34,6 +34,7 @@
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"
+#include "files.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -128,7 +129,8 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 {
     if (you.confused())
         return true;
-    const cloud_type ctype = cloud_type_at(p);
+
+    const cloud_type ctype = env.map_knowledge(p).cloud();
     // Don't prompt if already in a cloud of the same type.
     if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
         && ctype != cloud_type_at(you.pos())
@@ -171,6 +173,11 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
+    // Boldly go into the unknown (for shadow step and other ranged move
+    // prompts)
+    if (env.map_knowledge(p).trap() == TRAP_UNASSIGNED)
+        return true;
+
     // If there's no trap, let's go.
     trap_def* trap = trap_at(p);
     if (!trap)
@@ -230,6 +237,11 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
+    // Boldly go into the unknown (for shadow step and other ranged move
+    // prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
     if (!_check_moveto_dangerous(p, msg))
         return false;
     if (!need_expiration_warning() && need_expiration_warning(p)
@@ -395,8 +407,8 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? - bwr
         simple_monster_message(*mons, " cannot make way for you.");
-        // FIXME: AI_HIT_MONSTER isn't ideal.
-        interrupt_activity(AI_HIT_MONSTER, mons);
+        // FIXME: activity_interrupt::hit_monster isn't ideal.
+        interrupt_activity(activity_interrupt::hit_monster, mons);
     }
 
     return swap;
@@ -537,7 +549,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
 
 bool is_map_persistent()
 {
-    return !(your_branch().branch_flags & BFLAG_NO_MAP)
+    return !testbits(your_branch().branch_flags, brflag::no_map)
            || env.properties.exists(FORCE_MAPPABLE_KEY);
 }
 
@@ -1488,17 +1500,14 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (have_passive(passive_t::resist_corrosion))
         return true;
 
+    if (get_mutation_level(MUT_ACID_RESISTANCE))
+        return true;
+
     if (get_form()->res_acid())
         return true;
 
     if (you.duration[DUR_RESISTANCE])
         return true;
-
-    if ((form_keeps_mutations() || form == transformation::dragon)
-        && species == SP_YELLOW_DRACONIAN)
-    {
-        return true;
-    }
 
     // TODO: why doesn't this use the usual form suppression mechanism?
     if (form_keeps_mutations()
@@ -2219,7 +2228,7 @@ static int _player_evasion(ev_ignore_type evit)
     // Size is all that matters when paralysed or at 0 dex.
     if ((you.cannot_move() || you.duration[DUR_CLUMSY]
             || you.form == transformation::tree)
-        && !(evit & EV_IGNORE_HELPLESS))
+        && !(evit & ev_ignore::helpless))
     {
         return max(1, 2 + size_factor / 2);
     }
@@ -2241,11 +2250,8 @@ static int _player_evasion(ev_ignore_type evit)
 
     const int evasion_bonuses = _player_evasion_bonuses() * scale;
 
-    const int prescaled_evasion =
-        poststepdown_evasion + evasion_bonuses;
-
     const int final_evasion =
-        _player_scale_evasion(prescaled_evasion, scale);
+        _player_scale_evasion(poststepdown_evasion, scale) + evasion_bonuses;
 
     return unscale_round_up(final_evasion, scale);
 }
@@ -3776,7 +3782,7 @@ void inc_mp(int mp_gain, bool silent)
     if (!silent)
     {
         if (_should_stop_resting(you.magic_points, you.max_magic_points))
-            interrupt_activity(AI_FULL_MP);
+            interrupt_activity(activity_interrupt::full_mp);
         you.redraw_magic_points = true;
     }
 }
@@ -3797,7 +3803,7 @@ void inc_hp(int hp_gain)
         you.hp = you.hp_max;
 
     if (_should_stop_resting(you.hp, you.hp_max))
-        interrupt_activity(AI_FULL_HP);
+        interrupt_activity(activity_interrupt::full_hp);
 
     you.redraw_hit_points = true;
 }
@@ -5021,6 +5027,15 @@ int count_worn_ego(int which_ego)
 
 player::player()
 {
+    // warning: this constructor is called for `you` in an indeterminate order
+    // with respect to other globals, and so anything that depends on a global
+    // you should not do here. This includes things like `branches`, as well as
+    // any const static string prop name -- any object that needs to call a
+    // constructor is risky, and may or may not have called it yet. E.g. strings
+    // could be empty, branches could have every branch set as the dungeon, etc.
+    // One candidate location is startup.cc:_initialize, which is nearly the
+    // first things called in the launch game loop.
+
     chr_god_name.clear();
     chr_species_name.clear();
     chr_class_name.clear();
@@ -5250,7 +5265,8 @@ player::player()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
-    game_seed = get_uint32();
+    game_seed           = 0;
+    game_is_seeded      = true;
 
     old_hunger          = hunger;
 
@@ -6052,8 +6068,8 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int constrict_penalty = is_constricted() ? 3 : 0;
 
     const bool attacker_invis = act && !act->visible_to(this);
-    const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
-                              10 : 0;
+    const int invis_penalty
+        = attacker_invis && !testbits(evit, ev_ignore::helpless) ? 10 : 0;
 
     return base_evasion - constrict_penalty - invis_penalty;
 }
@@ -6334,7 +6350,10 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         if (crawl_state.game_is_sprint())
             return "Long-range teleportation is disallowed in Dungeon Sprint.";
         else if (player_in_branch(BRANCH_GAUNTLET))
-            return "Long-range teleportation does not work in a Gauntlet.";
+        {
+            return "A magic seal in the Gauntlet prevents long-range "
+                "teleports.";
+        }
     }
 
     if (stasis())
@@ -6442,7 +6461,7 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
+    return get_mutation_level(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS);
 }
 
@@ -6702,7 +6721,7 @@ void player::paralyse(actor *who, int str, string source)
     {
         take_note(Note(NOTE_PARALYSIS, str, 0, source));
         // use the real name here even for invisible monsters
-        props["paralysed_by"] = use_actor_name ? who->name(DESC_A, true)
+        props[PARALYSED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)
                                                : source;
     }
 
@@ -6748,6 +6767,9 @@ void player::petrify(actor *who, bool force)
         return;
 
     duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
+
+    if (who)
+        props[PETRIFIED_BY_KEY] = who->name(DESC_A, true);
 
     redraw_evasion = true;
     mprf(MSGCH_WARN, "You are slowing down.");
@@ -7439,7 +7461,8 @@ bool player::attempt_escape(int attempts)
     const string object = direct ? themonst->name(DESC_ITS, true)
                                  : "the roots'";
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
-    if (roll_dice(4 + escape_attempts, 13)
+    const int escape_score = roll_dice(4 + escape_attempts, 13);
+    if (escape_score
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
         mprf("You escape %s grasp.", object.c_str());
@@ -7760,7 +7783,7 @@ void player_open_door(coord_def doorpos)
                         set_exclude(doorpos, 0);
                     }
                 }
-                interrupt_activity(AI_FORCE_INTERRUPT);
+                interrupt_activity(activity_interrupt::force);
                 return;
             }
             ignore_exclude = true;
@@ -7774,7 +7797,7 @@ void player_open_door(coord_def doorpos)
             if (!yesno(prompt.c_str(), true, 'n', true, false))
             {
                 canned_msg(MSG_OK);
-                interrupt_activity(AI_FORCE_INTERRUPT);
+                interrupt_activity(activity_interrupt::force);
                 return;
             }
         }

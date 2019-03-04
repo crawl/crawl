@@ -225,7 +225,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             return false;
 
         // Mean enchantment +6.
-        item.plus = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
+        item.plus = 12 - biased_random2(7,2);
+        item.plus -= biased_random2(7,2);
+        item.plus -= biased_random2(7,2);
 
         bool cursed = false;
         if (one_chance_in(5))
@@ -687,7 +689,10 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1 + random2(7) + random2(10) + random2(12) + random2(10);
+        item.quantity = 1 + random2(7); // sequence points for random2
+        item.quantity += random2(10);
+        item.quantity += random2(12);
+        item.quantity += random2(10);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -709,10 +714,15 @@ static void _generate_missile_item(item_def& item, int force_type,
     {
         item.quantity = random_range(2, 8);
     }
-    else if (get_ammo_brand(item) != SPMSL_NORMAL)
-        item.quantity = 1 + random2(7) + random2(10) + random2(10);
     else
-        item.quantity = 1 + random2(7) + random2(10) + random2(10) + random2(12);
+    {
+        item.quantity = 1 + random2(7); // sequence points for random2
+        item.quantity += random2(10);
+        item.quantity += random2(10);
+        if (get_ammo_brand(item) == SPMSL_NORMAL)
+            item.quantity += random2(12);
+
+    }
 }
 
 static bool _armour_disallows_randart(int sub_type)
@@ -1966,7 +1976,10 @@ int items(bool allow_uniques,
         if (force_good)
             item.quantity = 100 + random2(400);
         else
-            item.quantity = 1 + random2avg(19, 2) + random2(item_level);
+        {
+            item.quantity = 1 + random2avg(19, 2);
+            item.quantity += random2(item_level);
+        }
         break;
     }
 
@@ -2169,9 +2182,10 @@ void makeitem_tests()
             item.brand = SPWPN_FORBID_BRAND;
         }
 #endif
+        auto weap_type = coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS);
         _generate_weapon_item(item,
                               coinflip(),
-                              coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),
+                              weap_type,
                               level);
     }
 

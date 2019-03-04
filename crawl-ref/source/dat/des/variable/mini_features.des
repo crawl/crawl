@@ -1810,11 +1810,11 @@ DEPTH: D, Depths
 -- Kind of a complicated version of init_hm_decor_walldepth to make sure that
 -- the glass matches the wall feature.
 local a = you.absdepth() * 5
-local weights = {["x"] = 50, ["c"] = a}
+local weights = { {"x", 50}, {"c", a} }
 if a - 75 > 0 then
-    weights["b"] = a - 75
+    weights[#weights + 1] = {"b", a - 75}
 end
-local wall = crawl.random_element(weights)
+local wall = util.random_choose_weighted(weights)
 local glass = 'm'
 if wall == 'c' then
   glass = 'n'

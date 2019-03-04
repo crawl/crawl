@@ -1814,7 +1814,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
 
     // damage is 2d(pow), *3/2 for undead and demonspawn
     cleansing_flame(5 + (you.experience_level * 7) / 12,
-                    CLEANSING_FLAME_TSO, you.pos());
+                    cleansing_flame_source::tso, you.pos());
 }
 
 static void _god_smites_you(god_type god, const char *message,

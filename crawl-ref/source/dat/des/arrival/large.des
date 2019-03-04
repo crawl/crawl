@@ -365,30 +365,30 @@ NAME:   dpeg_arrival_circle_labyrinth_a
 TAGS:   arrival no_monster_gen no_rotate
 WEIGHT: 3
 ORIENT: float
-NSUBST: . = 1:d / *:.
-NSUBST: = = 3:+ / *:x
+NSUBST: . = d / .
+NSUBST: + = 3=+ / x
 ITEM:   stone
 MAP
           xxxxxxxx.@.xx
-       xxxx......=....xxxx
-    xxxx.........=.......xxxx
-   xx.......xxxx.x=xx.......xx
-  xx.....xxxx....x..xx=x.....xx
+       xxxx......+....xxxx
+    xxxx.........+.......xxxx
+   xx.......xxxx.x+xx.......xx
+  xx.....xxxx....x..xx+x.....xx
  xx....xxx.......x.....xxx....xx
- x....xx.....xxx=x.x.....xx....x
-xx...xx....x=x...x.x=x....xx...xx
-x....=....xx.....=...xx....=....x
+ x....xx.....xxx+x.x.....xx....x
+xx...xx....x+x...x.x+x....xx...xx
+x....+....xx.....+...xx....+....x
 x...xx...xx...xx.xx...xx...xx...x
 x...x....x...xx...xx...x....x...x
-x...=....=...xx.{.xx...=....=...x
+x...+....+...xx.{.xx...+....+...x
 x...x....x...xx...xx...x....x...x
-x...xx...xx...xx=xx...xx...xx...x
-x....=....xx.........xx....=....x
-xx...xx....x=x.....x=x....xx...xx
- x....xx.....xxx=xxx.....xx....x
- xx....xxx.............x=x....xx
-  xx.....x=xx.......x=xx.....xx
-   xx.......xx=xxx=xx.......xx
+x...xx...xx...xx+xx...xx...xx...x
+x....+....xx.........xx....+....x
+xx...xx....x+x.....x+x....xx...xx
+ x....xx.....xxx+xxx.....xx....x
+ xx....xxx.............x+x....xx
+  xx.....x+xx.......x+xx.....xx
+   xx.......xx+xxx+xx.......xx
     xxxx.................xxxx
        xxxx...........xxxx
           xxxxxxxxxxxxx

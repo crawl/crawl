@@ -316,14 +316,14 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_DEPTHS:
         return TILE_DNGN_ENTER_DEPTHS;
     case DNGN_ENTER_VAULTS:
-        return is_existing_level(level_id(BRANCH_VAULTS, 1)) ? TILE_DNGN_ENTER_VAULTS_OPEN
+        return you.level_visited(level_id(BRANCH_VAULTS, 1)) ? TILE_DNGN_ENTER_VAULTS_OPEN
                               : TILE_DNGN_ENTER_VAULTS_CLOSED;
     case DNGN_ENTER_CRYPT:
         return TILE_DNGN_ENTER_CRYPT;
     case DNGN_ENTER_TOMB:
         return TILE_DNGN_ENTER_TOMB;
     case DNGN_ENTER_ZOT:
-        return is_existing_level(level_id(BRANCH_ZOT, 1)) ? TILE_DNGN_ENTER_ZOT_OPEN
+        return you.level_visited(level_id(BRANCH_ZOT, 1)) ? TILE_DNGN_ENTER_ZOT_OPEN
                               : TILE_DNGN_ENTER_ZOT_CLOSED;
     case DNGN_ENTER_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
@@ -3278,6 +3278,7 @@ tileidx_t tileidx_gametype(const game_type gtype)
     switch (gtype)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_CUSTOM_SEED:
         return TILEG_STARTUP_STONESOUP;
     case GAME_TYPE_TUTORIAL:
         return TILEG_STARTUP_TUTORIAL;

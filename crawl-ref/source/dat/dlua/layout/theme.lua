@@ -74,11 +74,11 @@ function theme.room_material(wall_type)
         return 'b'
     end
 
-    return crawl.random_element {
-        [wall_type] = 216,
-        ['c'] = 9,
-        ['x'] = 9,
-        ['v'] = 5
+    return util.random_choose_weighted {
+        {wall_type, 216},
+        {'c', 9},
+        {'x', 9},
+        {'v', 5}
     }
 
 end

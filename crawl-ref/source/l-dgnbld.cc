@@ -298,6 +298,7 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
     // We might have not got anything, if so, use floor
     if (fill_glyphs.size() == 0)
         fill_glyphs.push_back('.');
+    sort(fill_glyphs.begin(), fill_glyphs.end());
 
     return fill_glyphs;
 }

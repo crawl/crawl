@@ -151,11 +151,10 @@ ENDMAP
 NAME:    shiori_arrival_whats_in_store_for_you
 TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
-SHUFFLE: =@/AB ,  AB/CD
+SHUFFLE: +@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
-SUBST:   = = +
 KPROP:   M = no_tele_into
-NSUBST:  M = 2=E / *=M E:2
+NSUBST:  M = 2=E / * = M E:2
 KFEAT:   E = permanent known teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
@@ -194,7 +193,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxcccccccxxxxxcccccccccxx
 xxxxxxccMcMcMcccccccMcMcMcMcxx
 xxxxxcccncncncMcMcMcncncncncccc@c
-xxxxxcc......cncncnc.......nMcc=cc
+xxxxxcc......cncncnc.......nMcc+cc
 xxxxxc{..............cncnc.cnc...ccc
 xxxxxcc..........cncncMcMn.....>.nMc
 xxxxxcccncncncncncMcMcccccncnc...ccc

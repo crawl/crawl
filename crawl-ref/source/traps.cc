@@ -420,9 +420,11 @@ vector<coord_def> find_golubria_on_level()
     return ret;
 }
 
-enum passage_type
+enum class passage_type
 {
-    PASSAGE_FREE, PASSAGE_BLOCKED, PASSAGE_NONE
+    free,
+    blocked,
+    none,
 };
 
 static passage_type _find_other_passage_side(coord_def& to)
@@ -441,9 +443,9 @@ static passage_type _find_other_passage_side(coord_def& to)
     }
     const int choices = clear_passages.size();
     if (choices < 1)
-        return has_blocks ? PASSAGE_BLOCKED : PASSAGE_NONE;
+        return has_blocks ? passage_type::blocked : passage_type::none;
     to = clear_passages[random2(choices)];
-    return PASSAGE_FREE;
+    return passage_type::free;
 }
 
 void trap_def::trigger(actor& triggerer)
@@ -494,7 +496,7 @@ void trap_def::trigger(actor& triggerer)
     {
         coord_def to = p;
         passage_type search_result = _find_other_passage_side(to);
-        if (search_result == PASSAGE_FREE)
+        if (search_result == passage_type::free)
         {
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
@@ -511,7 +513,7 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (you_trigger)
         {
-            mprf("This passage %s!", search_result == PASSAGE_BLOCKED ?
+            mprf("This passage %s!", search_result == passage_type::blocked ?
                  "seems to be blocked by something" : "doesn't lead anywhere");
         }
         break;
@@ -578,13 +580,11 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_BLADE:
         if (you_trigger)
         {
+            const int narrow_miss_rnd = random2(6) + 3;
             if (one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
-            else if (random2limit(you.evasion(), 40)
-                     + random2(6) + 3 > 8)
-            {
+            else if (random2limit(you.evasion(), 40) + narrow_miss_rnd > 8)
                 mpr("A huge blade swings just past you!");
-            }
             else
             {
                 mpr("A huge blade swings out and slices into you!");
@@ -635,6 +635,9 @@ void trap_def::trigger(actor& triggerer)
 
     case TRAP_NET:
         {
+        // Nets need LOF to hit the player, no netting through glass.
+        if (!you.see_cell_no_trans(pos))
+            break;
         bool triggered = false;
         if (you_trigger)
         {
@@ -668,11 +671,8 @@ void trap_def::trigger(actor& triggerer)
             item_def item = generate_trap_item();
             copy_item_to_grid(item, you.pos());
 
-            if (random2limit(you.evasion(), 40)
-                + random2(4) + 3 > 12)
-            {
+            if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
                 mpr("A net drops to the ground!");
-            }
             else
             {
                 mpr("A large net falls onto you!");
@@ -1156,7 +1156,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (to_hit_bonus()*2)) * random2(200) / 100;
+    int trap_hit = 20 + (to_hit_bonus()*2);
+    trap_hit *= random2(200);
+    trap_hit /= 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 
@@ -1290,18 +1292,15 @@ bool is_valid_shaft_level()
     // or generated, so should not depend on properties of the level itself,
     // but only on its level_id.
     const level_id place = level_id::current();
-    if (crawl_state.test
-        || crawl_state.game_is_sprint())
-    {
+    if (crawl_state.game_is_sprint())
         return false;
-    }
 
     if (!is_connected_branch(place))
         return false;
 
     const Branch &branch = branches[place.branch];
 
-    if (branch.branch_flags & BFLAG_NO_SHAFTS)
+    if (branch.branch_flags & brflag::no_shafts)
         return false;
 
     // Don't allow shafts from the bottom of a branch.
@@ -1321,7 +1320,7 @@ bool is_valid_shaft_effect_level()
     // Don't shaft the player when we can't, and also when it would be into a
     // dangerous end.
     return is_valid_shaft_level()
-           && !(branch.branch_flags & BFLAG_DANGEROUS_END
+           && !(testbits(branch.branch_flags, brflag::dangerous_end)
                 && brdepth[place.branch] - place.depth == 1);
 }
 
@@ -1347,7 +1346,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom.
-    if (branches[lid.branch].branch_flags & BFLAG_DANGEROUS_END
+    if (branches[lid.branch].branch_flags & brflag::dangerous_end
         && lid.depth == max_depth
         && (max_depth - curr_depth) > 1)
     {
@@ -1385,7 +1384,7 @@ void do_trap_effects()
             // Don't shaft the player when we can't, and also when it would be into a
             // dangerous end.
             if (is_valid_shaft_level()
-               && !(branch.branch_flags & BFLAG_DANGEROUS_END
+               && !(branch.branch_flags & brflag::dangerous_end
                     && brdepth[place.branch] - place.depth == 1))
             {
                 dprf("Attempting to shaft player.");

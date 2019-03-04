@@ -202,11 +202,11 @@ TAGS:   no_rotate no_vmirror no_hmirror uniq_layout_twisted_delve
             local arm_thickness = crawl.random_range(1, 2)
 
 
-            local room_func = crawl.random_element(
-              { [make_circle]         = 3,
-                [make_diamond]        = 3,
-                [make_square]         = 2,
-                [make_rounded_square] = 1 } )
+            local room_func = util.random_choose_weighted(
+              { {make_circle,         3},
+                {make_diamond,        3},
+                {make_square,         2},
+                {make_rounded_square, 1} } )
             local room_radius = crawl.random_range(4, 7)
 
             if (i == 1) then
@@ -434,10 +434,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
       ngb_min = 3
       ngb_max = 4
     end
-    local connchance = crawl.random_element
-        { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
-    local top = crawl.random_element
-        { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] =1 }
+    local connchance = util.random_choose_weighted
+        { {0, 2}, {5, 1}, {20, 1}, {50, 1}, {100, 1} }
+    local top = util.random_choose_weighted
+        { {1, 1}, {20, 1}, {125, 1}, {500, 1}, {999999, 1} }
     crawl.dpr("<lightmagenta>delve(" .. ngb_min .. ", " .. ngb_max .. ", " ..
               connchance .. ", -1, " .. top .. ")</lightmagenta>")
     delve(ngb_min, ngb_max, connchance, -1, top)
@@ -535,13 +535,13 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
     -- Delve some smaller paths
     for i = 1, crawl.random_range(1, 3) do
-        ngb_min = crawl.random_element { [1] = 3, [2] = 1 }
+        ngb_min = util.random_choose_weighted { {1, 3}, {2, 1} }
         ngb_max = crawl.random_range(2, 5)
-        connchance = crawl.random_element
-            { [0] = 1, [2] = 2, [5] = 1, [20] = 1 }
+        connchance = util.random_choose_weighted
+            { {0, 1}, {2, 2}, {5, 1}, {20, 1} }
         total_count = crawl.random_range(50, 150)
-        top = crawl.random_element
-            { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] = 1 }
+        top = util.random_choose_weighted
+            { {1, 1}, {20, 1}, {125, 1}, {500, 1}, {999999, 1} }
 
         delve(2, 3, 3, 150, 100)
     end
@@ -564,8 +564,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
     for i = 1, crawl.random_range(15, 25) do
         local x = crawl.random_range(8, gxm-9)
         local y = crawl.random_range(8, gym-9)
-        local radius = crawl.random_element
-            { [1] = 30, [2] = 50, [3] = 15, [4] = 4, [5] = 1 }
+        local radius = util.random_choose_weighted
+            { {1, 30}, {2, 50}, {3, 15}, {4, 4}, {5, 1} }
 
         octa_room { x1 = x - radius, y1 = y - radius,
                     x2 = x + radius, y2 = y + radius,

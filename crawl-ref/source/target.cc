@@ -1181,15 +1181,15 @@ bool targeter_shadow_step::valid_aim(coord_def a)
     {
         switch (no_landing_reason)
         {
-        case BLOCKED_MOVE:
-        case BLOCKED_OCCUPIED:
+        case shadow_step_blocked::move:
+        case shadow_step_blocked::occupied:
             return notify_fail("There is no safe place near that"
                                " location.");
-        case BLOCKED_PATH:
+        case shadow_step_blocked::path:
             return notify_fail("There's something in the way.");
-        case BLOCKED_NO_TARGET:
+        case shadow_step_blocked::no_target:
             return notify_fail("There isn't a shadow there.");
-        case BLOCKED_NONE:
+        case shadow_step_blocked::none:
             die("buggy no_landing_reason");
         }
     }
@@ -1203,7 +1203,7 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
 
     if (!agent->is_habitable(a))
     {
-        blocked_landing_reason = BLOCKED_MOVE;
+        blocked_landing_reason = shadow_step_blocked::move;
         return false;
     }
     if (agent->is_player())
@@ -1211,20 +1211,20 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
         monster* beholder = you.get_beholder(a);
         if (beholder)
         {
-            blocked_landing_reason = BLOCKED_MOVE;
+            blocked_landing_reason = shadow_step_blocked::move;
             return false;
         }
 
         monster* fearmonger = you.get_fearmonger(a);
         if (fearmonger)
         {
-            blocked_landing_reason = BLOCKED_MOVE;
+            blocked_landing_reason = shadow_step_blocked::move;
             return false;
         }
     }
     if (!find_ray(agent->pos(), a, ray, opc_solid_see))
     {
-        blocked_landing_reason = BLOCKED_PATH;
+        blocked_landing_reason = shadow_step_blocked::path;
         return false;
     }
 
@@ -1238,7 +1238,7 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
         {
             if (act && (!check_invis || agent->can_see(*act)))
             {
-                blocked_landing_reason = BLOCKED_OCCUPIED;
+                blocked_landing_reason = shadow_step_blocked::occupied;
                 return false;
             }
             break;
@@ -1309,11 +1309,11 @@ void targeter_shadow_step::get_additional_sites(coord_def a)
         || !agent->can_see(*victim)
         || !victim->umbraed())
     {
-        no_landing_reason = BLOCKED_NO_TARGET;
+        no_landing_reason = shadow_step_blocked::no_target;
         return;
     }
 
-    no_landing_reason = BLOCKED_NONE;
+    no_landing_reason = shadow_step_blocked::none;
     for (adjacent_iterator ai(a, false); ai; ++ai)
     {
         // See if site is valid, record a putative reason for why no sites were
@@ -1323,7 +1323,7 @@ void targeter_shadow_step::get_additional_sites(coord_def a)
             if (valid_landing(*ai))
             {
                 temp_sites.insert(*ai);
-                no_landing_reason = BLOCKED_NONE;
+                no_landing_reason = shadow_step_blocked::none;
             }
             else
                 no_landing_reason = blocked_landing_reason;

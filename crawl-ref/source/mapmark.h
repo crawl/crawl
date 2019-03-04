@@ -56,6 +56,7 @@ public:
     map_marker_type get_type() const { return type; }
 
     virtual map_marker *clone() const = 0;
+    virtual void init();
     virtual void activate(bool verbose = true);
     virtual void write(writer &) const;
     virtual void read(reader &);
@@ -268,6 +269,7 @@ public:
                    bool mapdef_marker = true);
     ~map_lua_marker();
 
+    void init() override;
     void activate(bool verbose) override;
 
     void write(writer &) const override;

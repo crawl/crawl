@@ -73,6 +73,29 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $panes.eq(next % $panes.length).addClass("current");
     }
 
+    function progress_bar(msg)
+    {
+        var $popup = $(".templates > .progress-bar").clone();
+        if (msg.title === "")
+            $popup.children(".header").remove();
+        else
+            $popup.find(".header > span").html(msg.title);
+        $popup.children(".bar-text").html("<span>" +
+            util.formatted_string_to_html(msg.bar_text) + "</span>");
+        $popup.children(".status > span").html(msg.status);
+        return $popup;
+    }
+
+    function progress_bar_update(msg)
+    {
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("progress-bar"))
+            return;
+        $popup.children(".bar-text").html("<span>" +
+                    util.formatted_string_to_html(msg.bar_text) + "</span>");
+        $popup.children(".status")[0].textContent = msg.status;
+    }
+
     function describe_generic(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
@@ -518,7 +541,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     scroller_scroll_page(scroller, 1);
                     break;
                 case 35: // end
-                    scroller_scroll_to_line(scroller, 2147483647);
+                    scroller_scroll_to_line(scroller, 2147483647); //int32_t max
                     break;
                 case 36: // home
                     scroller_scroll_to_line(scroller, 0);
@@ -585,6 +608,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function scroller_scroll_to_line(scroller, line)
     {
         var $scroller = $(scroller.scrollElement);
+        // TODO: can this work without special-casing int32_t max, where any
+        // pos greater than the max scrolls to end?
         if (line == 2147483647) // FS_START_AT_END
         {
             // special case for webkit: excessively large values don't work
@@ -702,6 +727,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "describe-monster" : describe_monster,
         "version" : version,
         "formatted-scroller" : formatted_scroller,
+        "progress-bar" : progress_bar,
         "msgwin-get-line" : msgwin_get_line,
     };
 
@@ -738,6 +764,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
             "msgwin-get-line" : msgwin_get_line_update,
+            "progress-bar" : progress_bar_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

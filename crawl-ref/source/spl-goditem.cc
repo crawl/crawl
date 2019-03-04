@@ -327,7 +327,7 @@ spret cast_healing(int pow, bool fail)
     args.restricts = DIR_TARGET;
     args.mode = TARG_INJURED_FRIEND;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.target_prefix = "Heal";
     args.get_desc_func = bind(_desc_pacify_chance, placeholders::_1, pow);
     direction(spd, args);
@@ -660,7 +660,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
             return used;
         }
 
-        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
+        int item_slot = prompt_invent_item("Uncurse which item?",
+                                           menu_type::invlist,
                                            OSEL_CURSED_WORN, OPER_ANY,
                                            invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
@@ -738,7 +739,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
     {
-        int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
+        int item_slot = prompt_invent_item("Curse which item?", menu_type::invlist,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
                                            OPER_ANY, invprompt_flag::escape_only);
@@ -1253,7 +1254,10 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     if (hploss)
     {
-        simple_monster_message(*mons, " convulses!");
+        if (mons->observable())
+            simple_monster_message(*mons, " convulses!");
+        else
+            mpr("Something is bathed in an unholy light!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
@@ -1299,7 +1303,8 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         torment_cell(*ri, attacker, taux);
 }
 
-void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+void setup_cleansing_flame_beam(bolt &beam, int pow,
+                                cleansing_flame_source caster,
                                 coord_def where, actor *attacker)
 {
     beam.flavour      = BEAM_HOLY;
@@ -1308,13 +1313,14 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+    beam.aux_source   = (caster == cleansing_flame_source::tso)
                         ? "the Shining One's cleansing flame"
                         : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    if (caster == cleansing_flame_source::generic
+        || caster == cleansing_flame_source::tso)
     {
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
@@ -1335,7 +1341,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     }
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
+void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
                      actor *attacker)
 {
     bolt beam;

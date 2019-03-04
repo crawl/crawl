@@ -242,10 +242,6 @@ protected:
     friend class CrawlVector;
 };
 
-// By default a hash table's value data types are heterogeneous. To
-// make it homogeneous (which causes dynamic type checking) you have
-// to give a type to the hash table constructor; once it's been
-// created its type (or lack of type) is immutable.
 class CrawlHashTable : public map<string, CrawlStoreValue>
 {
 public:

@@ -271,6 +271,7 @@ public:
     int read_line(const string &prefill);
 
     string get_text() const;
+    void set_text(string s);
 
     void set_input_history(input_history *ih);
     void set_keyproc(keyproc fn);

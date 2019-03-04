@@ -30,7 +30,9 @@
 game_state::game_state()
     : game_crashed(false), crash_debug_scans_safe(true),
       mouse_enabled(false), waiting_for_command(false),
-      terminal_resized(false), last_winch(0), io_inited(false),
+      terminal_resized(false), last_winch(0),
+      seed(0),
+      io_inited(false),
       need_save(false), game_started(false), saving_game(false),
       updating_scores(false),
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
@@ -190,7 +192,7 @@ void game_state::zero_turns_taken()
     cancel_cmd_repeat();
 }
 
-bool interrupt_cmd_repeat(activity_interrupt_type ai,
+bool interrupt_cmd_repeat(activity_interrupt ai,
                            const activity_interrupt_data &at)
 {
     if (crawl_state.cmd_repeat_start)
@@ -201,12 +203,12 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     switch (ai)
     {
-    case AI_HUNGRY:
-    case AI_TELEPORT:
-    case AI_FORCE_INTERRUPT:
-    case AI_HP_LOSS:
-    case AI_MONSTER_ATTACKS:
-    case AI_MIMIC:
+    case activity_interrupt::hungry:
+    case activity_interrupt::teleport:
+    case activity_interrupt::force:
+    case activity_interrupt::hp_loss:
+    case activity_interrupt::monster_attacks:
+    case activity_interrupt::mimic:
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
         return true;
 
@@ -214,7 +216,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         break;
     }
 
-    if (ai == AI_SEE_MONSTER)
+    if (ai == activity_interrupt::see_monster)
     {
         const monster* mon = at.mons_data;
         ASSERT(mon);
@@ -259,9 +261,9 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     // then everything interrupts it.
     if (crawl_state.repeat_cmd == CMD_WAIT)
     {
-        if (ai == AI_FULL_MP)
+        if (ai == activity_interrupt::full_mp)
             crawl_state.cancel_cmd_repeat("Magic restored.");
-        else if (ai == AI_FULL_HP)
+        else if (ai == activity_interrupt::full_hp)
             crawl_state.cancel_cmd_repeat("HP restored");
         else
             crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
@@ -272,7 +274,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     if (crawl_state.cmd_repeat_started_unsafe)
         return false;
 
-    if (ai == AI_HIT_MONSTER)
+    if (ai == activity_interrupt::hit_monster)
     {
         // This check is for when command repetition is used to
         // whack away at a 0xp monster, since the player feels safe
@@ -553,7 +555,8 @@ bool game_state::game_standard_levelgen() const
 bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);
-    return type == GAME_TYPE_NORMAL || type == GAME_TYPE_UNSPECIFIED;
+    return type == GAME_TYPE_NORMAL || type == GAME_TYPE_CUSTOM_SEED
+                                    ||type == GAME_TYPE_UNSPECIFIED;
 }
 
 bool game_state::game_is_tutorial() const
@@ -600,6 +603,8 @@ string game_state::game_type_name_for(game_type _type)
     default:
         // No explicit game type name for default game.
         return "";
+    case GAME_TYPE_CUSTOM_SEED:
+        return "Seeded";
     case GAME_TYPE_TUTORIAL:
         return "Tutorial";
     case GAME_TYPE_ARENA:
@@ -616,6 +621,8 @@ string game_state::game_savedir_path() const
 
 string game_state::game_type_qualifier() const
 {
+    if (type == GAME_TYPE_CUSTOM_SEED)
+        return "-seeded";
     if (crawl_state.game_is_sprint())
         return "-sprint";
     if (crawl_state.game_is_tutorial())

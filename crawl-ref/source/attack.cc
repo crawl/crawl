@@ -440,7 +440,10 @@ void attack::alert_defender()
         && !attacker->as_monster()->wont_attack())
     {
         if (defender->is_player())
-            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+        {
+            interrupt_activity(activity_interrupt::monster_attacks,
+                               attacker->as_monster());
+        }
         if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = attacker->mindex();
     }
@@ -639,7 +642,7 @@ static const vector<chaos_effect> chaos_effects = {
             mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                            : ENCH_SHAPESHIFTER);
             // Immediately polymorph monster, just to make the effect obvious.
-            monster_polymorph(mon, RANDOM_MONSTER);
+            mon->polymorph();
 
             // Xom loves it if this happens!
             const int friend_factor = mon->friendly() ? 1 : 2;
@@ -1348,7 +1351,7 @@ int attack::apply_defender_ac(int damage, int damage_max) const
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
     int after_ac = defender->apply_ac(damage, damage_max,
-                                      AC_NORMAL, stab_bypass);
+                                      ac_type::normal, stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
@@ -1516,13 +1519,14 @@ bool attack::apply_damage_brand(const char *what)
         else if (one_chance_in(3))
         {
             special_damage = 8 + random2(13);
-            const char *punctuation =
-                attack_strength_punctuation(special_damage).c_str();
+            const string punctuation =
+                    attack_strength_punctuation(special_damage);
             special_damage_message =
                 defender->is_player()
-                ? make_stringf("You are electrocuted%s", punctuation)
+                ? make_stringf("You are electrocuted%s", punctuation.c_str())
                 : make_stringf("Lightning courses through %s%s",
-                               defender->name(DESC_THE).c_str(), punctuation);
+                               defender->name(DESC_THE).c_str(),
+                               punctuation.c_str());
             special_damage_flavour = BEAM_ELECTRICITY;
             defender->expose_to_element(BEAM_ELECTRICITY, 2);
         }
@@ -1546,11 +1550,11 @@ bool attack::apply_damage_brand(const char *what)
     {
         if (!weapon
             || damage_done < 1
-            || defender->is_summoned()
-            || !(defender->holiness() & MH_NATURAL)
+            || !actor_is_susceptible_to_vampirism(*defender)
             || attacker->stat_hp() == attacker->stat_maxhp()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
-            || x_chance_in_y(2, 5) && !is_unrandom_artefact(*weapon, UNRAND_LEECH))
+            || x_chance_in_y(2, 5)
+               && !is_unrandom_artefact(*weapon, UNRAND_LEECH))
         {
             break;
         }

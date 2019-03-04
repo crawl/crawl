@@ -648,7 +648,6 @@ MONS:    orc knight / orc sorcerer / orc high priest
 MONS:    orc warrior / orc wizard / orc priest
 MONS:    orc
 ITEM:    q:120 gold / q:60 gold / q:30 gold
-KFEAT:   = = runed_clear_door
 # being able to blink and become invisible, the deep elves do not need a
 # hidden exit in back of their audience chamber.
 MAP

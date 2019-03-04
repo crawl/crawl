@@ -19,6 +19,7 @@ enum load_mode_type
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level normally
     LOAD_VISITOR,               // Visitor pattern to see all levels
+    LOAD_GENERATE,              // Generating the level only
 };
 
 /// Exception indicating that a dangerous path was supplied.
@@ -42,6 +43,7 @@ void assert_read_safe_path(const string &path);
 off_t file_size(FILE *handle);
 
 vector<string> get_dir_files(const string &dir);
+vector<string> get_dir_files_sorted(const string &dir);
 vector<string> get_dir_files_ext(const string &dir, const string &ext);
 vector<string> get_dir_files_recursive(const string &dirname,
                                        const string &ext = "",
@@ -101,6 +103,7 @@ class level_excursion
 protected:
     level_id original;
     bool ever_changed_levels;
+    bool allow_unvisited;
 
 public:
     level_excursion();

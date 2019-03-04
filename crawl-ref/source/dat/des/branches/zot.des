@@ -1731,7 +1731,7 @@ KMONS:   O = acid blob / nonbase yellow draconian w:6
 KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
-KITEM:   Z = acquire any
+KITEM:   Z = superb_item
 # Rotates out loot, upstairs, downstairs,
 # both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \

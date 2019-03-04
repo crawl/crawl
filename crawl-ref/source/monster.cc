@@ -3436,7 +3436,7 @@ int monster::base_evasion() const
  **/
 int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 {
-    const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
+    const bool calc_unid = !testbits(evit, ev_ignore::unided);
 
     int ev = base_evasion();
 
@@ -3465,7 +3465,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     if (has_ench(ENCH_AGILE))
         ev += 5;
 
-    if (evit & EV_IGNORE_HELPLESS)
+    if (evit & ev_ignore::helpless)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
@@ -4288,8 +4288,8 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        int dur = min(200 + random2(100),
-                      300 - get_ench(ENCH_DRAINED).duration - random2(50));
+        int dur = 200 + random2(100);
+        dur = min(dur, 300 - get_ench(ENCH_DRAINED).duration - random2(50));
 
         if (res_negative_energy())
             dur /= (res_negative_energy() * 2);
@@ -5321,7 +5321,12 @@ void monster::corrupt()
     malmutate("");
 }
 
-bool monster::polymorph(int pow, bool /*allow_immobile*/)
+bool monster::polymorph(int /* pow */, bool /*allow_immobile*/)
+{
+    return polymorph();
+}
+
+bool monster::polymorph(poly_power_type power)
 {
     if (!can_polymorph())
         return false;
@@ -5337,19 +5342,19 @@ bool monster::polymorph(int pow, bool /*allow_immobile*/)
     // Polymorphing a shapeshifter will make it revert to its original
     // form.
     if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER, power);
     if (has_ench(ENCH_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_SHAPESHIFTER, power);
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(*this);
+        slime_creature_polymorph(*this, power);
         return true;
     }
 
-    return monster_polymorph(this, RANDOM_MONSTER);
+    return monster_polymorph(this, RANDOM_MONSTER, power);
 }
 
 static bool _mons_is_icy(int mc)

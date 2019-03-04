@@ -34,6 +34,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "dactions.h"
+#include "dbg-util.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -169,6 +170,13 @@ static player_save_info _read_character_info(package *save)
     return fromfile;
 }
 
+vector<string> get_dir_files_sorted(const string &dirname)
+{
+    auto result = get_dir_files(dirname);
+    sort(result.begin(), result.end());
+    return result;
+}
+
 // Returns a vector of files (including directories if requested) in
 // the given directory, recursively. All filenames returned are
 // relative to the start directory. If an extension is supplied, all
@@ -190,7 +198,7 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
-    for (const string &filename : get_dir_files(dirname))
+    for (const string &filename : get_dir_files_sorted(dirname))
     {
         if (dir_exists(catpath(dirname, filename)))
         {
@@ -733,7 +741,7 @@ static vector<player_save_info> _find_saved_characters()
     if (searchpath.empty())
         searchpath = ".";
 
-    for (const string &filename : get_dir_files(searchpath))
+    for (const string &filename : get_dir_files_sorted(searchpath))
     {
         if (is_save_file_name(filename))
         {
@@ -1240,15 +1248,6 @@ static void _make_level(dungeon_feature_type stair_taken,
 
     env.turns_on_level = -1;
 
-    if (you.chapter == CHAPTER_POCKET_ABYSS
-        && player_in_branch(BRANCH_DUNGEON))
-    {
-        // If we're leaving the Abyss for the first time as a Chaos
-        // Knight of Lugonu (who start out there), enable normal monster
-        // generation.
-        you.chapter = CHAPTER_ORB_HUNTING;
-    }
-
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
@@ -1341,6 +1340,100 @@ static string _get_hatch_name()
     return "";
 }
 
+
+static void _count_gold()
+{
+    vector<item_def *> gold_piles;
+    vector<coord_def> gold_places;
+    int gold = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        for (stack_iterator j(*ri); j; ++j)
+        {
+            if (j->base_type == OBJ_GOLD)
+            {
+                gold += j->quantity;
+                gold_piles.push_back(&(*j));
+                gold_places.push_back(*ri);
+            }
+        }
+    }
+
+    if (!player_in_branch(BRANCH_ABYSS))
+        you.attribute[ATTR_GOLD_GENERATED] += gold;
+
+    // TODO: this probably should fire when you join gozag, too?
+    if (have_passive(passive_t::detect_gold))
+    {
+        for (unsigned int i = 0; i < gold_places.size(); i++)
+        {
+            bool detected = false;
+            int dummy = gold_piles[i]->index();
+            coord_def &pos = gold_places[i];
+            unlink_item(dummy);
+            move_item_to_grid(&dummy, pos, true);
+            if (!env.map_knowledge(pos).item()
+                || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
+            {
+                detected = true;
+            }
+            update_item_at(pos, true);
+            if (detected)
+            {
+                ASSERT(env.map_knowledge(pos).item());
+                env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
+            }
+        }
+    }
+}
+
+static const string VISITED_LEVELS_KEY = "visited_levels";
+
+#if TAG_MAJOR_VERSION == 34
+// n.b. these functions are in files.cc largely because this is where the fixup
+// needs to happen.
+// before pregeneration, whether the level had been visited was synonymous with
+// whether it had been visited, but after, we need to track this information
+// more directly. It is also inferrable from turns_on_level, but you can't get
+// at that very easily without fully loading the level.
+// no need for a minor version here, though there will be a brief window of
+// offline pregen games that this doesn't handle right -- they will get things
+// like broken runelock. (In principle this fixup could be done by loading
+// each level and checking turns, but it's not worth the trouble for these few
+// games.)
+static void _fixup_visited_from_package()
+{
+    // for games started later than this fixup, this prop is initialized in
+    // player::player
+    CrawlHashTable &visited = you.props[VISITED_LEVELS_KEY].get_table();
+    if (visited.size()) // only 0 for upgrades, or before entering D:1
+        return;
+    vector<level_id> levels = all_dungeon_ids();
+    for (const level_id &lid : levels)
+        if (is_existing_level(lid))
+            visited[lid.describe()] = true;
+}
+#endif
+
+void player::set_level_visited(const level_id &level)
+{
+    auto &visited = props[VISITED_LEVELS_KEY].get_table();
+    visited[level.describe()] = true;
+}
+
+bool player::level_visited(const level_id &level)
+{
+    // this will mean that portal maps that the player is not currently on
+    // return false, since the map gets deleted. A continuation of legacy
+    // behavior...
+    // `is_existing_level` is not reliable after the game end, because the
+    // save no longer exists, so we ignore it for printing morgues
+    if (!is_existing_level(level) && you.save)
+        return false;
+    const auto &visited = props[VISITED_LEVELS_KEY].get_table();
+    return visited.exists(level.describe());
+}
+
 /**
  * Load the current level.
  *
@@ -1351,10 +1444,15 @@ static string _get_hatch_name()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
-
     const string level_name = level_id::current().describe();
     const bool make_changes =
-    (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
+        (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
+
+#if TAG_MAJOR_VERSION == 34
+    // fixup saves that don't have this prop initialized.
+    if (load_mode == LOAD_RESTART_GAME)
+        _fixup_visited_from_package();
+#endif
 
     // Did we get here by popping the level stack?
     bool popped = false;
@@ -1365,7 +1463,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (feat_is_escape_hatch(stair_taken))
         hatch_name = _get_hatch_name();
 
-    if (load_mode != LOAD_VISITOR)
+    if (load_mode != LOAD_VISITOR && load_mode != LOAD_GENERATE)
         popped = _leave_level(stair_taken, old_level, &return_pos);
 
     unwind_var<dungeon_feature_type> stair(
@@ -1407,6 +1505,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 _save_level(old_level);
         }
 
+        // TODO: for staged pregeneration this also needs to happen on
+        // LOAD_GENERATE. However, it's a bit tricky, because player position
+        // does need to be saved for the later LOAD_ENTER_LEVEL call. postpone.
         // The player is now between levels.
         you.position.reset();
 
@@ -1416,7 +1517,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     clear_travel_trail();
 
 #ifdef USE_TILE
-    if (load_mode != LOAD_VISITOR)
+    if (load_mode != LOAD_VISITOR && load_mode != LOAD_GENERATE)
     {
         tiles.clear_minimap();
         crawl_view_buffer empty_vbuf;
@@ -1426,12 +1527,23 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
+    if (load_mode != LOAD_GENERATE
+        && you.chapter == CHAPTER_POCKET_ABYSS
+        && player_in_branch(BRANCH_DUNGEON))
+    {
+        // If we're leaving the Abyss for the first time as a Chaos
+        // Knight of Lugonu (who start out there), enable normal monster
+        // generation.
+        you.chapter = CHAPTER_ORB_HUNTING;
+    }
+
     // GENERATE new level when the file can't be opened:
     if (!you.save->has_chunk(level_name))
     {
         ASSERT(load_mode != LOAD_VISITOR);
         dprf("Generating new level for '%s'.", level_name.c_str());
         _make_level(stair_taken, old_level);
+        you.vault_list[level_id::current()] = level_vault_names();
         just_created_level = true;
     }
     else
@@ -1439,8 +1551,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
-        _redraw_all();
+        if (load_mode != LOAD_GENERATE)
+            _redraw_all(); // TODO why is there a redraw call here?
     }
+
+    if (just_created_level)
+        env.markers.init_all(); // init first, activation happens when entering
 
     // Clear map knowledge stair emphasis.
     show_update_emphasis();
@@ -1449,6 +1565,19 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     deleteAll(env.final_effects);
 
     los_changed();
+
+    if (load_mode == LOAD_GENERATE)
+    {
+        if (just_created_level)
+            _save_level(level_id::current());
+        return just_created_level;
+    }
+
+    if (!you.level_visited(level_id::current()))
+        just_created_level = true; // in case level was pre-generated
+
+    if (load_mode != LOAD_VISITOR)
+        you.set_level_visited(level_id::current());
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or
@@ -1483,6 +1612,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
         place_transiting_monsters();
+
+    if (just_created_level && make_changes)
+        replace_boris();
 
     if (make_changes)
     {
@@ -1567,11 +1699,34 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
              "curr_PlaceInfo:: num_visits: %d, levels_seen: %d",
              curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
 #endif
+#if TAG_MAJOR_VERSION == 34
+        // this fixup is for a bug where turns_on_level==0 was used to set
+        // just_created_level, and there were some obscure ways to have 0
+        // turns on a level that you had entered previously. It only applies
+        // to a narrow version range (basically 0.23.0) but there's no way to
+        // do a sensible minor version check here and the fixup can't happen
+        // on load.
+        if (is_connected_branch(curr_PlaceInfo.branch)
+            && brdepth[curr_PlaceInfo.branch] > 0
+            && static_cast<int>(curr_PlaceInfo.levels_seen)
+                                        > brdepth[curr_PlaceInfo.branch])
+        {
+            mprf(MSGCH_ERROR,
+                "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
+                branches[curr_PlaceInfo.branch].shortname,
+                curr_PlaceInfo.levels_seen);
+            curr_PlaceInfo.levels_seen = brdepth[curr_PlaceInfo.branch];
+        }
+#endif
         curr_PlaceInfo.assert_validity();
     }
 
     if (just_created_level)
+    {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
+        _count_gold();
+    }
+
 
     if (load_mode != LOAD_VISITOR)
         dungeon_events.fire_event(DET_ENTERED_LEVEL);
@@ -1886,7 +2041,7 @@ static vector<string> _list_bones()
     string base_filename = _make_ghost_filename();
     string underscored_filename = base_filename + "_";
 
-    vector<string> filenames = get_dir_files(bonefile_dir);
+    vector<string> filenames = get_dir_files_sorted(bonefile_dir);
     vector<string> bonefiles;
     for (const auto &filename : filenames)
         if (starts_with(filename, underscored_filename)
@@ -1916,7 +2071,7 @@ static string _find_ghost_file()
     vector<string> bonefiles = _list_bones();
     if (bonefiles.empty())
         return "";
-    return bonefiles[ui_random(bonefiles.size())];
+    return bonefiles[random2(bonefiles.size())];
 }
 
 static string _old_bones_filename(string ghost_filename, const save_version &v)
@@ -2154,6 +2309,8 @@ static vector<ghost_demon> _load_permastore_ghosts(bool backup_on_upgrade=false)
  */
 bool define_ghost_from_bones(monster& mons)
 {
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
+
     bool used_permastore = false;
 
     vector<ghost_demon> loaded_ghosts = _load_ephemeral_ghosts();
@@ -2183,7 +2340,7 @@ bool define_ghost_from_bones(monster& mons)
 
     if (!used_permastore)
     {
-        loaded_ghosts.erase(loaded_ghosts.begin());
+        loaded_ghosts.erase(loaded_ghosts.begin() + place_i);
 
         if (!loaded_ghosts.empty())
             save_ghosts(loaded_ghosts);
@@ -2398,7 +2555,8 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
+                   "Do you want to delete it?\n"
+                   "Error: %s", err.what()).c_str(), // TODO linebreak error
                   true, 'n'))
         {
             if (you.save)
@@ -2421,7 +2579,9 @@ static void _load_level(const level_id &level)
 }
 
 // Given a level returns true if the level has been created already
-// in this game.
+// in this game. Warning: after a game has ended, there is a phase where the
+// save has been deleted and this check isn't usable, and this is when a moruge
+// is generated.
 bool is_existing_level(const level_id &level)
 {
     return you.save && you.save->has_chunk(level.describe());
@@ -2734,6 +2894,7 @@ static size_t _ghost_permastore_size()
 
 static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
 {
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
     if (ghosts.empty())
         return ghosts;
 
@@ -2999,7 +3160,7 @@ vector<string> get_title_files()
 {
     vector<string> titles;
     for (const string &dir : _get_base_dirs())
-        for (const string &file : get_dir_files(dir))
+        for (const string &file : get_dir_files_sorted(dir))
             if (file.substr(0, 6) == "title_")
                 titles.push_back(file);
     return titles;

@@ -128,7 +128,7 @@ struct deck_type_data
     string name;
     string flavour;
     /// The list of cards this deck contains.
-    const deck_archetype cards;
+    deck_archetype cards;
     int deck_max;
 };
 
@@ -1640,7 +1640,7 @@ static void _degeneration_card(int power)
 
                if (mons.can_polymorph())
                {
-                   monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
+                   mons.polymorph(PPT_LESS);
                    mons.malmutate("");
                }
                else

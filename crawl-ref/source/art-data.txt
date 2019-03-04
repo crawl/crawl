@@ -1310,6 +1310,16 @@ TILE:     urand_thermic_engine
 TILE_EQ:  thermic_engine
 BRAND:    SPWPN_FLAMING
 
+ENUM:     RIFT
+NAME:     demon trident "Rift"
+OBJ:      OBJ_WEAPONS/WPN_DEMON_TRIDENT
+INSCRIP:  reach+
+PLUS:     +8
+COLOUR:   ETC_WARP
+TILE:     urand_rift
+TILE_EQ:  rift
+BRAND:    SPWPN_DISTORTION
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

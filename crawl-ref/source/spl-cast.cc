@@ -1269,12 +1269,23 @@ int hex_success_chance(const int mr, int powc, int scale, bool round_up)
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc)
 {
+    targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     vector<string> descs;
     const int mr = mi.res_magic();
     if (mr == MAG_IMMUNE)
         descs.push_back("magic immune");
     else if (hitfunc && !hitfunc->affects_monster(mi))
         descs.push_back("not susceptible");
+    // Polymorph has a special effect on ugly things and shapeshifters that
+    // does not require passing an MR check.
+    else if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH
+             && (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING
+                 || mi.is(MB_SHAPESHIFTER)))
+    {
+        descs.push_back(make_stringf("will change %s",
+                                     mi.is(MB_SHAPESHIFTER) ? "shape"
+                                     /* ugly things */      : "colour"));
+    }
     else
     {
 #if TAG_MAJOR_VERSION == 34
@@ -1398,9 +1409,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             args.show_boring_feats = false; // don't show "The floor."
         }
         if (testbits(flags, spflag::not_self))
-            args.self = CONFIRM_CANCEL;
+            args.self = confirm_prompt_type::cancel;
         else
-            args.self = CONFIRM_NONE;
+            args.self = confirm_prompt_type::none;
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
             return spret::abort;

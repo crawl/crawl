@@ -131,12 +131,14 @@ KITEM:  R = ration tile:food_honeycomb
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
-: if crawl.x_chance_in_y(15, 27) then
+: if not is_validating() then
+:   if crawl.x_chance_in_y(15, 27) then
 TAGS:   uniq_beehive
 NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
-: else
+:   else
 TAGS:   uniq_hornetnest
 SUBST:  1 : 4 5:4
+:   end
 : end
 COLOUR: x = yellow
 TILE:   x = wall_wax
@@ -187,21 +189,20 @@ TAGS:   extra allow_dup luniq
 WEIGHT: 1
 DEPTH:  Depths, Elf
 MONS:   butterfly
-MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: + = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+KFEAT:  a = runed_door
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX1111XXY
-YXX1111XXY
-YXX1111XXY
-YXX1111XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++1111++a
+a++1111++a
+a++1111++a
+a++1111++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # Anthill origins
@@ -677,21 +678,20 @@ TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  Depths, Elf:$
 MONS:   elephant, dire elephant, hellephant
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX1112XXY
-YXX1321XXY
-YXX1221XXY
-YXX2111XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++1112++a
+a++1321++a
+a++1221++a
+a++2111++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # A plain guardian serpent vault. (nrook)
@@ -1448,32 +1448,27 @@ ENDMAP
 # This vault was built by evilmike, but the idea is mikee's. Who is really the
 # evil one here?
 NAME:   mikee_hates_you
-TAGS:   no_monster_gen
-DEPTH:  D:13-
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:12-, !D:$
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
                                              trident ego:draining . robe
-KITEM:  1 = superb_item no_pickup
+KITEM:  > = |
+KFEAT:  > = escape_hatch_down
 MARKER: ! = lua:fog_machine { \
                 cloud_type = "foul pestilence", \
                 pow_min = 100, pow_max = 100, delay = 10, \
                 size = 1, walk_dist = 0, start_clouds = 1 \
             }
-MARKER: + = lua:props_marker { \
-                door_open_prompt= "This door is covered in warnings. Open " .. \
-                                  "it anyway?", \
-                door_description_prefix= "warning-scrawled " \
-            }
-KFEAT:  + = runed_door
 SUBST:  ! = .
 MAP
 ccccccccccc
 cccccc=2ccc
-@+!!!!l1=>c
-cccccccnccc
-cccccccnccc
-       @
+@=!!!!l1=>c
+ccccccccncc
+ccccccccncc
+        @.
 ENDMAP
 
 # Inspired by the Jorge Luis Borges story "The Library of Babel".
@@ -1685,13 +1680,13 @@ TAGS:   transparent
 DEPTH:  Depths, Elf
 MONS:   spriggan berserker
 : if you.absdepth() < 19 then
-NSUBST: 1 = 2:2 / *:1
+NSUBST: 1 = 2=2 / 1
 : end
 SUBST:  2 = 1'
 KMONS:  _ = spriggan berserker
 KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
-SUBST:  = = ccc+
+SUBST:  F = ccc+
 COLOUR: # = red
 FTILE:  *|_1+'c = floor_hall
 FTILE:  # = floor_rough_lightred
@@ -1709,7 +1704,7 @@ MAP
 .cccctcBcBctcccc.
 ....ccc'C'ccc....
    ..cc'''cc..
-    ..='2'=..
+    ..F'2'F..
    ..cc'''cc..
  ...ccc'c'ccc...
  .ccctcDcDctccc.
@@ -2648,7 +2643,6 @@ TAGS:   transparent
 DEPTH:  D:9-
 MONS:   orange crystal statue w:30 / obsidian statue / ice statue w:5
 KFEAT:  ~ = closed_clear_door
-KFEAT:  = = runed_clear_door
 MAP
       .....
     ...b=b...
@@ -3077,28 +3071,27 @@ DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, eye of draining, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
-KPROP:  13' = no_tele_into
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
-SUBST:  c = c:4 v:1 b:1, = = +
+SUBST:  c = c:4 v:1 b:1
 : end
 MAP
-     c==cccc
-   ccc..c3'ccc
-  cc'c..c+m''cc
- cc'mm..c.mmm'cc
- c'mm...c...mm'c
-cc'm....c..5.m'cc
-c'mm...mc+...mm'c
-c1m...mm5mm...m'c
+     c++cccc
+   ccc..c3.ccc
+  cc.c..c+m..cc
+ cc.mm..c.mmm.cc
+ c.mm...c...mm.c
+cc.m....c..5.m.cc
+c.mm...mc+...mm.c
+c1m...mm5mm...m.c
 c+m.4.m|m2m.5.m+c
-c'm...mm|mm...m1c
-c'mm...mmm...mm'c
-cc'm.5.....5.m'cc
- c'mm...5...mm'c
- cc'mmm...mmm'cc
-  cc''mmmmm''cc
-   ccc'1+''ccc
+c.m...mm|mm...m1c
+c.mm...mmm...mm.c
+cc.m.5.....5.m.cc
+ c.mm...5...mm.c
+ cc.mmm...mmm.cc
+  cc..mmmmm..cc
+   ccc.1+..ccc
      ccccccc
 ENDMAP
 
@@ -3367,7 +3360,7 @@ KITEM: 098 = superb_item
 : else
 SUBST: 9 = 98, 0 = 98
 KITEM: 09 = superb_item
-KITEM: 8 = any acquire
+KITEM: 8 = any good_item
 : end
 MAP
 .......
@@ -3519,7 +3512,7 @@ KMONS:   o = unseen horror
 KMONS:   p = hornet
 KMONS:   q = insubstantial wisp
 KMONS:   r = wolf spider
-KITEM:   e = acquire armour / acquire weapon
+KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
 SHUFFLE: bcdfghjklnopqr
 MAP
 .............
@@ -4932,7 +4925,6 @@ ENDMAP
 NAME:   kennysheep_treasure_room
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:12-, Depths
-KFEAT:  = = runed_door
 MAP
 ccccc
 c|||c
@@ -7405,10 +7397,9 @@ NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
 DEPTH:  D:$, Depths, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.in_branch("Elf") then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
@@ -7441,39 +7432,38 @@ KITEM:  9 = *
 : end
 KMONS:  9 = 9
 MAP
-YYYYYYYYYY
-YXXXXXXXXY
-YXXXXXXXXY
-YXX8888XXY
-YXX8998XXY
-YXX8998XXY
-YXX8888XXY
-YXXXXXXXXY
-YXXXXXXXXY
-YYYYYYYYYY
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++8888++a
+a++8998++a
+a++8998++a
+a++8888++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  Depths
+DEPTH:  Depths, !Depths:1
 WEIGHT: 4
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
+KFEAT:  a = runed_door
 MAP
 xxxxxxxxxxxxxx
 x8.*.8..8.9.8x
-x.XXXXXXXXXX.x
-x9XXXXXXXXXX*x
-x.XXYYYYYYXX.x
-x8XXY....YXX8x
-x.XXY.(..YXX.x
-x.XXY....YXX.x
-x8XXY....YXX8x
-x.XXYYYYYYXX.x
-x*XXXXXXXXXX9x
-x.XXXXXXXXXX.x
+x.++++++++++.x
+x9++++++++++*x
+x.++aaaaaa++.x
+x8++a....a++8x
+x.++a.(..a++.x
+x.++a....a++.x
+x8++a....a++8x
+x.++aaaaaa++.x
+x*++++++++++9x
+x.++++++++++.x
 x8.9.8..8.*.8x
 xxxxxxxxxxxxxx
 ENDMAP

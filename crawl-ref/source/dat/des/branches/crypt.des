@@ -1526,17 +1526,17 @@ KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
 KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 # red metal walls
-COLOUR: = = red
-SUBST:  = = +
+COLOUR: a = red
+SUBST:  a = +
 COLOUR: r = red
 TILE:   r = wall_hell
 SUBST:  r = c
 # emergency exits; most are closed
-NSUBST: ? = 3:+ / *:v
+NSUBST: ? = 3=+ / v
 # Tomb entrance
 : if crawl.x_chance_in_y(5, 7) then
 SUBST:  O = *
-NSUBST: P = 1:> / *:|**
+NSUBST: P = > / |**
 : else
 NSUBST: O = 1:>
 SUBST:  P = |**
@@ -1544,7 +1544,7 @@ SUBST:  P = |**
 KFEAT:  > = enter_tomb
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
-NSUBST: *| = 1:d / 1:h
+NSUBST: *| = d / 1=h
 : crypt_loot_plus(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1555,7 +1555,7 @@ vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
-vwwwwwwvvvv?vvvv......rr=rr*/O*rr=rr......v?v?v?v?vwwwwwwv
+vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
 vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
 vwwwwwwv....H..+........rrr$$$$rrr........+.Q..H..vwwwwwwv

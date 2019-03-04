@@ -67,7 +67,15 @@ end
 
 local function have_reaching()
   local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range == 2 and not wp.is_melded
+  return wp and wp.reach_range >= 2 and not wp.is_melded
+end
+
+local function reach_range()
+  local wp = items.equipped_at("weapon")
+  if wp and not wp.is_melded then
+      return wp.reach_range
+  end
+  return 1
 end
 
 local function have_ranged()
@@ -162,8 +170,8 @@ local function move_towards(dx, dy)
 end
 
 local function will_tab(ax, ay, bx, by)
-  if abs(bx-ax) <= 1 and abs(by-ay) <= 1 or
-     abs(bx-ax) <= 2 and abs(by-ay) <= 2 and have_reaching() then
+  local range = reach_range()
+  if abs(bx-ax) <= range and abs(by-ay) <= range then
     return true
   end
   local move = choose_move_towards(ax, ay, bx, by, can_move_maybe)
@@ -186,12 +194,15 @@ local function get_monster_info(dx,dy,no_move)
   elseif not have_reaching() then
     info.attack_type = (-info.distance < 2) and 2 or 0
   else
-    if -info.distance > 2 then
+    local range = reach_range()
+    -- Assume extended reach (i.e. Rift) gets smite targeting.
+    local can_reach = range > 2 and you.see_cell_no_trans or view.can_reach
+    if -info.distance > range then
       info.attack_type = 0
     elseif -info.distance < 2 then
       info.attack_type = 2
     else
-      info.attack_type = view.can_reach(dx, dy) and 1 or 0
+      info.attack_type = can_reach(dx, dy) and 1 or 0
     end
   end
   if info.attack_type == 0 and have_throwing(no_move) and you.see_cell_no_trans(dx, dy) then

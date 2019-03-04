@@ -485,7 +485,7 @@ static string _get_shops(bool display)
     {
         if (entry.first.id != last_id)
         {
-            const bool existing = is_existing_level(entry.first.id);
+            const bool existing = you.level_visited(entry.first.id);
             if (column_count > maxcolumn)
             {
                 disp += "\n";
@@ -823,6 +823,7 @@ void set_unique_annotation(monster* mons, const level_id level)
     if (!mons_is_or_was_unique(*mons)
         && mons->type != MONS_PLAYER_GHOST
         || testbits(mons->flags, MF_SPECTRALISED)
+        || mons->is_illusion()
         || mons->props.exists("no_annotate")
             && mons->props["no_annotate"].get_bool())
 

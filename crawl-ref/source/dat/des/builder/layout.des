@@ -114,10 +114,10 @@ TAGS:   overwritable layout no_primary_vault unrand layout_type_open
                 obl = 5 + crawl.random2(20)
             end
 
-            local fill = crawl.random_element({
-                ["."] = 10,
-                ["w"] = 5,
-                ["l"] = 1,
+            local fill = util.random_choose_weighted({
+                {'.', 10},
+                {'w', 5},
+                {'l', 1},
             })
             octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25,
                       oblique=obl, replace='x', inside=fill}
@@ -281,15 +281,15 @@ TAGS:   uniq_open_layout
 
     -- pillar types and relative weights
     local pillar_fill = {
-        ["x"] = 15,
-        ["b"] = 5,
-        ["v"] = 4,
-        ["m"] = 3,
-        ["w"] = 2,
-        ["l"] = 1,
+        {'x', 15},
+        {'b', 5},
+        {'v', 4},
+        {'m', 3},
+        {'w', 2},
+        {'l', 1}
     }
     if (you.in_branch("lair")) then
-        pillar_fill["t"] = 15
+        pillar_fill[#pillar_fill + 1] = {'t', 15}
     end
 
     -- Potential pillar drawing routines
@@ -314,7 +314,7 @@ TAGS:   uniq_open_layout
             1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
         circle_radius = circle_radius + pillar_radius * 2 + num / 2
         if circle_radius >= (gym-oblique)/2 then break end
-        local fill = crawl.random_element(pillar_fill)
+        local fill = util.random_choose_weighted(pillar_fill)
 
         -- Finally, make the pillars
         local make_pillar = function(x, y)
@@ -591,7 +591,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local rooms = {}
     local i, j
 
-    local wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
+    local wall_type = util.random_choose_weighted(
+        { {'x', 3}, {'c', 3}, {'v', 2} } )
     local percent_thickness_2 =   crawl.random_range(0, 8)
                                 * crawl.random_range(0, 8)
     local percent_thickness_3 =   crawl.random_range(0, 7)
@@ -728,14 +729,14 @@ TAGS:   no_rotate no_vmirror no_hmirror
         local outer_door = '+'
         local inner_door = '+'
         if thickness == 2 then
-            outer_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
-            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 3 }
+            outer_door = util.random_choose_weighted { {'+', 1}, {'.', 2} }
+            inner_door = util.random_choose_weighted { {'+', 1}, {'.', 3} }
         elseif thickness == 3 then
-            outer_door = crawl.random_element { ['+'] = 2, ['.'] = 1 }
-            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+            outer_door = util.random_choose_weighted { {'+', 2}, {'.', 1} }
+            inner_door = util.random_choose_weighted { {'+', 1}, {'.', 2} }
         elseif thickness == 4 then
-            outer_door = crawl.random_element { ['+'] = 4, ['.'] = 1 }
-            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 1 }
+            outer_door = util.random_choose_weighted { {'+', 4}, {'.', 1} }
+            inner_door = util.random_choose_weighted { {'+', 1}, {'.', 1} }
         end
 
         if outer_door == '.' and crawl.coinflip() then
@@ -1062,8 +1063,8 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    local rows = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
-    local cols = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
+    local rows = util.random_choose_weighted({ {5, 10}, {4, 5}, {3, 1} })
+    local cols = util.random_choose_weighted({ {5, 10}, {4, 5}, {3, 1} })
     local xspace = 13 + 2*(5-cols)
     local yspace = 11 + 2*(5-rows)
     local xsize  = 6 + 2*(5-cols)
@@ -1144,9 +1145,9 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
                and (you.in_branch("D") or you.in_branch("Lair"))
                and crawl.x_chance_in_y(you.absdepth() - 9, 450)
             then
-                local feat = crawl.random_element { ['v'] = 2,
-                                                    ['c'] = 3,
-                                                    ['x'] = 3 }
+                local feat = util.random_choose_weighted({ {'v', 2},
+                                                           {'c', 3},
+                                                           {'x', 3} })
                 make_inner_room(room, feat)
             end
         end

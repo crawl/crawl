@@ -492,10 +492,18 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         //  -> the box may stick out past these
         //
 
-        coord_def in_tl(random2(in_x), random2(in_y));
-        coord_def in_tr(random2(in_x), random2(in_y));
-        coord_def in_bl(random2(in_x), random2(in_y));
-        coord_def in_br(random2(in_x), random2(in_y));
+        coord_def in_tl;
+        in_tl.x = random2(in_x);
+        in_tl.y = random2(in_y);
+        coord_def in_tr;
+        in_tr.x = random2(in_x);
+        in_tr.y = random2(in_y);
+        coord_def in_bl;
+        in_bl.x = random2(in_x);
+        in_bl.y = random2(in_y);
+        coord_def in_br;
+        in_br.x = random2(in_x);
+        in_br.y = random2(in_y);
         _randomly_force_sum_below(in_tl.x, in_tr.x, size_x - MIN_IRREGULAR_SIZE);
         _randomly_force_sum_below(in_bl.x, in_br.x, size_x - MIN_IRREGULAR_SIZE);
         _randomly_force_sum_below(in_tl.y, in_bl.y, size_y - MIN_IRREGULAR_SIZE);

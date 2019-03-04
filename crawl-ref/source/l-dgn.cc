@@ -81,14 +81,8 @@ static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
         return 0;
     }
 
-    dr.clear();
     dgn_add_depths(dr, ls, s, lua_gettop(ls));
     return 0;
-}
-
-static int dgn_default_depth(lua_State *ls)
-{
-    return dgn_depth_proc(ls, lc_default_depths, 1);
 }
 
 static int dgn_depth(lua_State *ls)
@@ -145,14 +139,14 @@ static int dgn_tags(lua_State *ls)
     if (lua_gettop(ls) > 1)
     {
         if (lua_isnil(ls, 2))
-            map->tags.clear();
+            map->clear_tags();
         else
         {
             const char *s = luaL_checkstring(ls, 2);
-            map->tags += " " + trimmed_string(s) + " ";
+            map->add_tags(s);
         }
     }
-    PLUARET(string, map->tags.c_str());
+    PLUARET(string, map->tags_string().c_str());
 }
 
 static int dgn_has_tag(lua_State *ls)
@@ -169,9 +163,9 @@ static int dgn_tags_remove(lua_State *ls)
     for (int i = 2; i <= top; ++i)
     {
         const string axee = luaL_checkstring(ls, i);
-        while (strip_tag(map->tags, axee));
+        map->remove_tags(axee);
     }
-    PLUARET(string, map->tags.c_str());
+    PLUARET(string, map->tags_string().c_str());
 }
 
 static void _chance_magnitude_check(lua_State *ls, int which_par, int chance)
@@ -1483,15 +1477,27 @@ LUAFN(_dgn_place_map)
         dgn_map_parameters mp(lua_gettop(ls) >= 6
                               ? luaL_checkstring(ls, 6)
                               : "");
-        if (dgn_place_map(map, check_collision, no_exits, where)
-            && !env.level_vaults.empty())
+        try
         {
-            lua_pushlightuserdata(ls, env.level_vaults.back().get());
+            if (dgn_place_map(map, check_collision, no_exits, where)
+                && !env.level_vaults.empty())
+            {
+                lua_pushlightuserdata(ls, env.level_vaults.back().get());
+                return 1;
+            }
         }
-        else
-            lua_pushnil(ls);
+        catch (dgn_veto_exception& e)
+        {
+            // letting this exception go back across lua code can apparently
+            // do very bad things for the lua stack, if it isn't compiled with
+            // c++ mode. (Which we don't do by default.)
+            // Won't necessarily veto the level, but we want to report it still.
+            dprf(DIAG_DNGN, "<white>veto in dgn.place_maps</white>: %s: %s",
+                 level_id::current().describe().c_str(), e.what());
+        }
     }
-    return 1;
+    lua_pushnil(ls);
+    return 0;
 }
 
 LUAFN(_dgn_in_vault)
@@ -1744,7 +1750,6 @@ const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
 
-{ "default_depth", dgn_default_depth },
 { "name", dgn_name },
 { "depth", dgn_depth },
 { "place", dgn_place },

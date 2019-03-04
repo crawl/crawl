@@ -581,7 +581,12 @@ static formatted_string _beogh_extra_description()
         has_named_followers = true;
 
         desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
-        if (given_gift(mons))
+        if (companion_is_elsewhere(mons->mid))
+        {
+            desc += formatted_string::parse_string(
+                            " (<blue>on another level</blue>)");
+        }
+        else if (given_gift(mons))
         {
             mon_inv_type slot =
                 mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
@@ -589,11 +594,18 @@ static formatted_string _beogh_extra_description()
                 mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
                 MSLOT_WEAPON;
 
-            desc.cprintf(" (");
+            // An orc can still lose its gift, e.g. by being turned into a
+            // shapeshifter via a chaos cloud. TODO: should the gift prop be
+            // deleted at that point?
+            if (mons->inv[slot] != NON_ITEM)
+            {
+                desc.cprintf(" (");
 
-            item_def &gift = mitm[mons->inv[slot]];
-            desc += formatted_string::parse_string(menu_colour_item_name(gift,DESC_PLAIN));
-            desc.cprintf(")");
+                item_def &gift = mitm[mons->inv[slot]];
+                desc += formatted_string::parse_string(
+                                    menu_colour_item_name(gift,DESC_PLAIN));
+                desc.cprintf(")");
+            }
         }
         desc.cprintf("\n");
     }

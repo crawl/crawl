@@ -306,7 +306,7 @@ void InvEntry::set_show_glyph(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory"), type(MT_INVLIST), pre_select(nullptr),
+    : Menu(mflags, "inventory"), type(menu_type::invlist), pre_select(nullptr),
       title_annotate(nullptr)
 {
 #ifdef USE_TILE_LOCAL
@@ -573,7 +573,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
 
 bool InvMenu::is_selectable(int index) const
 {
-    if (type == MT_DROP)
+    if (type == menu_type::drop)
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
         if (item->is_cursed() && item->is_equipped())
@@ -885,13 +885,14 @@ vector<SelItem> InvMenu::get_selitems() const
 
 string InvMenu::help_key() const
 {
-    return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
+    return type == menu_type::drop || type == menu_type::pickup ? "pick-up"
+                                                                : "";
 }
 
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-    if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER))
+    if (type == menu_type::know && (mkey == 0 || mkey == CK_ENTER))
         return mkey;
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
@@ -973,14 +974,14 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
         InvMenu menu;
         menu.set_type(mtype);
         menu.set_title(title);
-        if (mtype == MT_PICKUP)
+        if (mtype == menu_type::pickup)
             menu.set_tag("pickup");
 
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
                                  : MF_MULTISELECT | MF_ALLOW_FILTER;
 
-        if (mtype == MT_SELONE)
+        if (mtype == menu_type::sel_one)
         {
             new_flags |= MF_SINGLESELECT;
             new_flags &= ~MF_MULTISELECT;
@@ -1138,9 +1139,9 @@ bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 }
 
 // Use title = nullptr for stock Inventory title
-// type = MT_DROP allows the multidrop toggle
+// type = menu_type::drop allows the multidrop toggle
 static unsigned char _invent_select(const char *title = nullptr,
-                                    menu_type type = MT_INVLIST,
+                                    menu_type type = menu_type::invlist,
                                     int item_selector = OSEL_ANY,
                                     int excluded_slot = -1,
                                     int flags = MF_NOSELECT,
@@ -1176,7 +1177,7 @@ void display_inventory()
 {
     InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
-    menu.set_type(MT_INVLIST);
+    menu.set_type(menu_type::invlist);
 
     menu.on_single_selection = [](const MenuEntry& item)
     {
@@ -1295,7 +1296,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
         {
             // The "view inventory listing" mode.
             const int ch = _invent_select(prompt.c_str(),
-                                          MT_DROP,
+                                          menu_type::drop,
                                           OSEL_ANY,
                                           -1,
                                           MF_MULTISELECT | MF_ALLOW_FILTER,
@@ -1809,7 +1810,7 @@ int prompt_invent_item(const char *prompt,
     if (!any_items_of_type(type_expect)
         && type_expect == OSEL_THROWABLE
         && (oper == OPER_FIRE || oper == OPER_QUIVER)
-        && mtype == MT_INVLIST)
+        && mtype == menu_type::invlist)
     {
         type_expect = OSEL_ANY;
     }

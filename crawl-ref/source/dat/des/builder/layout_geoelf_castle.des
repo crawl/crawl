@@ -999,15 +999,16 @@ TAGS:   no_rotate no_vmirror no_hmirror
   end
 
   -- draw the turrets
-  local turret_center = crawl.random_element {
-    [geoelf.glyphs.TREE]     = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.TREE],
-    [geoelf.glyphs.BUSH]     = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.BUSH],
-    [geoelf.glyphs.PLANT]    = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.PLANT],
-    [geoelf.glyphs.FUNGUS]   = geoelf.glyphs.PLANTLIKE_OPTIONS[geoelf.glyphs.FUNGUS],
-    [geoelf.glyphs.STATUE]   = geoelf.glyphs.FEATURE_OPTIONS[geoelf.glyphs.STATUE]   * 5,
-    [geoelf.glyphs.FOUNTAIN] = geoelf.glyphs.FEATURE_OPTIONS[geoelf.glyphs.FOUNTAIN] * 5,
-    [INSIDE_GLYPH]           = 15,
-  }
+  local turret_center_weights = {}
+  for i,p in ipairs(geoelf.glyphs.PLANTLIKE_OPTIONS) do
+    table.insert(turret_center_weights, p)
+  end
+  for i,p in ipairs(geoelf.glyphs.FEATURE_OPTIONS) do
+    table.insert(turret_center_weights, { p[1], p[2] * 5 })
+  end
+  table.insert(turret_center_weights, { INSIDE_GLYPH, 15 })
+
+  local turret_center = util.random_choose_weighted(turret_center_weights)
 
   for i = geoelf.directions.COUNT_STRAIGHT, geoelf.directions.COUNT - 1 do
     if (castle.turret[i].is_placed) then

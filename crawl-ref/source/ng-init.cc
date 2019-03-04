@@ -84,11 +84,9 @@ void initialise_branch_depths()
 
     // You will get one of Shoals/Swamp and one of Spider/Snake.
     // This way you get one "water" branch and one "poison" branch.
-    branch_type disabled_branch[] =
-    {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS),
-        random_choose(BRANCH_SNAKE, BRANCH_SPIDER),
-    };
+    vector<branch_type> disabled_branch;
+    disabled_branch.push_back(random_choose(BRANCH_SWAMP, BRANCH_SHOALS));
+    disabled_branch.push_back(random_choose(BRANCH_SNAKE, BRANCH_SPIDER));
 
     for (branch_type disabled : disabled_branch)
     {
@@ -144,12 +142,13 @@ void initialise_temples()
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            for (string &tag : main_temple->get_tags())
+            for (auto &tag : main_temple->get_tags())
             {
                 if (starts_with(tag, "temple_altars_"))
                 {
                     sizes.push_back(
-                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
+                        atoi(tag_without_prefix(tag,
+                                                "temple_altars_").c_str()));
                 }
             }
             if (sizes.empty())
@@ -182,7 +181,7 @@ void initialise_temples()
             continue;
         }
 
-              main_temple->fixup();
+        main_temple->fixup();
         err = main_temple->resolve();
 
         if (!err.empty())
@@ -234,6 +233,8 @@ void initialise_temples()
     mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
+    you.props.erase(TEMPLE_GODS_KEY);      // shouldn't be set normally, but
+    you.props.erase(OVERFLOW_TEMPLES_KEY); // may be in tests
     CrawlVector &temple_gods
         = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
 

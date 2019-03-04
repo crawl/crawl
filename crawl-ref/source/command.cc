@@ -8,6 +8,7 @@
 #include "command.h"
 
 #include <cctype>
+#include <cinttypes>
 #include <cstdio>
 #include <cstring>
 #include <sstream>
@@ -86,18 +87,37 @@ static const char *features[] =
 static string _get_version_information()
 {
     string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
-    if (Version::history_size() > 1)
-    {
-        result += "\n\nVersion history for your current game:\n";
-        result += Version::history();
-    }
     return result;
 }
 
 static string _get_version_features()
 {
-    string result = "<w>Features</w>\n"
-                    "--------\n";
+    string result;
+    if (crawl_state.need_save
+#ifdef DGAMELAUNCH
+        && you.wizard
+#endif
+       )
+    {
+        if (you.game_is_seeded)
+        {
+            result += make_stringf("Game seed: %" PRIu64, crawl_state.seed);
+            if (Version::history_size() > 1)
+                result += " (game has been upgraded, seed may be broken)";
+        }
+        else
+            result += "Game is not seeded.";
+        result += "\n\n";
+    }
+    if (Version::history_size() > 1)
+    {
+        result += "Version history for your current game:\n";
+        result += Version::history();
+        result += "\n\n";
+    }
+
+    result += "<w>Features</w>\n"
+                 "--------\n";
 
     for (const char *feature : features)
     {
