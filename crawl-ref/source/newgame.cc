@@ -643,7 +643,8 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const newgame_def& defaults)
 {
-    char buf[20]; // max unsigned 64 bit integer is 19 chars
+    char buf[21]; // max unsigned 64 bit integer is 20 chars in decimal,
+                  // specifically 18446744073709551615
     buf[0] = '\0';
     resumable_line_reader reader(buf, sizeof(buf));
     if (Options.seed)
@@ -728,6 +729,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     string result = reader.get_text();
     uint64_t tmp_seed = 0;
+    // TODO: if the user types in a number that exceeds the max value, sscanf
+    // will give back the max value. Probably better to print an error?
     int found = sscanf(result.c_str(), "%" SCNu64, &tmp_seed);
 
     if (cancel || crawl_state.seen_hups || !found || result.size() == 0)
