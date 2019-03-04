@@ -399,11 +399,24 @@ LUAFN(debug_reset_rng)
 {
     // call this with care...
 
-    // quick and dirty - use only 32 bit seeds
-    unsigned int seed = (unsigned int) luaL_checkint(ls, 1);
-    Options.seed = (uint64_t) seed;
+    if (lua_type(ls, 1) == LUA_TSTRING)
+    {
+        const char *seed_string = lua_tostring(ls, 1);
+        uint64_t tmp_seed = 0;
+        if (!sscanf(seed_string, "%" SCNu64, &tmp_seed))
+            tmp_seed = 0;
+        Options.seed = tmp_seed;
+    }
+    else
+    {
+        // quick and dirty - use only 32 bit seeds
+        unsigned int seed = (unsigned int) luaL_checkint(ls, 1);
+        Options.seed = (uint64_t) seed;
+    }
     reset_rng();
-    return 0;
+    const string ret = make_stringf("%" PRIu64, Options.seed);
+    lua_pushstring(ls, ret.c_str());
+    return 1;
 }
 
 LUAFN(debug_get_rng_state)
