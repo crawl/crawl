@@ -85,7 +85,7 @@ function compare_catalogs(order, run1, run2, seed)
 end
 
 function test_seed(seed, iters, order, quiet)
-    debug.reset_rng(seed)
+    seed_used = debug.reset_rng(seed)
     if quiet then
         crawl.stderr(".")
     else
@@ -110,9 +110,11 @@ test_seed(starting_seed, per_seed_iters, generation_order, false)
 crawl.stderr("Checking some extended branches for seed " .. starting_seed .. "...")
 test_seed(starting_seed, per_seed_iters, generation_order_extended, true)
 
-for i=starting_seed + 1, starting_seed + fixed_seeds - 1 do
-    crawl.stderr("Testing seed " .. i .. ".")
-    test_seed(i, per_seed_iters, generation_order, true)
+if (type(starting_seed) ~= "string") then
+    for i=starting_seed + 1, starting_seed + fixed_seeds - 1 do
+        crawl.stderr("Testing seed " .. i .. ".")
+        test_seed(i, per_seed_iters, generation_order, true)
+    end
 end
 
 if rand_seeds > 0 then
