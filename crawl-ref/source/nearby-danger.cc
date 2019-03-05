@@ -275,6 +275,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
             return false;
         }
+
+        if (you.props[EMERGENCY_FLIGHT_KEY])
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are being drained by your emergency flight!");
+
+            return false;
+        }
     }
 
     // Monster check.
