@@ -85,6 +85,7 @@
 static int _spell_enhancement(spell_type spell);
 static string _spell_failure_rate_description(spell_type spell);
 
+#if TAG_MAJOR_VERSION == 34
 void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
@@ -112,6 +113,7 @@ void surge_power_wand(const int mp_cost)
              slight ? "."      : "!");
     }
 }
+#endif
 
 static string _spell_base_description(spell_type spell, bool viewing)
 {
@@ -1286,8 +1288,12 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
     }
     else
     {
+#if TAG_MAJOR_VERSION == 34
         const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
                                    : pow;
+#else
+        const int adj_pow = pow;
+#endif
         const int success = hex_success_chance(mr, adj_pow, 100);
         descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
     }
@@ -1428,14 +1434,22 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     if (evoked_item)
     {
+#if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
+#else
+        const int surge = 0;
+#endif
         powc = player_adjust_evoc_power(powc, surge);
+#if TAG_MAJOR_VERSION == 34
         int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
                               ? wand_mp_cost() : 0;
         surge_power_wand(mp_cost_of_wand + surge * 3);
+#endif
     }
+#if TAG_MAJOR_VERSION == 34
     else if (allow_fail)
         surge_power(_spell_enhancement(spell));
+#endif
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
 

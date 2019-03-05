@@ -2100,7 +2100,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (!invis_allowed())
             return spret::abort;
         fail_check();
+#if TAG_MAJOR_VERSION == 34
         surge_power(you.spec_evoke());
+#endif
         potionlike_effect(POT_INVISIBILITY,
                           player_adjust_evoc_power(
                               you.skill(SK_EVOCATIONS, 2) + 5));
@@ -2130,7 +2132,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         else
         {
+#if TAG_MAJOR_VERSION == 34
             surge_power(you.spec_evoke());
+#endif
             fly_player(
                 player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
         }

@@ -47,9 +47,11 @@ static const char *daction_names[] =
 #else
     "slimes allow another conversion attempt",
 #endif
+#if TAG_MAJOR_VERSION == 34
     "holy beings go neutral",
     "Trog's gifts go hostile",
     "reclaim decks",
+#endif
     "reapply passive mapping",
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
@@ -66,8 +68,8 @@ static const char *daction_names[] =
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
-    "Makhleb's servants go hostile",
 #if TAG_MAJOR_VERSION == 34
+    "Makhleb's servants go hostile",
     "make all monsters hate you",
 #endif
     "ancestor vanishes",
@@ -293,9 +295,11 @@ static void _apply_daction(daction_type act)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case DACT_RECLAIM_DECKS:
         reclaim_decks_on_level();
         break;
+#endif
     case DACT_REAUTOMAP:
         reautomap_level();
         break;

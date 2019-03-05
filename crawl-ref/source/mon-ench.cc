@@ -2069,7 +2069,11 @@ static const char *enchant_names[] =
     "control_winds", "wind_aided",
 #endif
     "summon_capped",
-    "toxic_radiance", "grasping_roots_source", "grasping_roots",
+    "toxic_radiance",
+#if TAG_MAJOR_VERSION == 34
+    "grasping_roots_source",
+#endif
+    "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34

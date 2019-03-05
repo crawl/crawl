@@ -3045,6 +3045,8 @@ static bool _similar_wands(const item_def& pickup_item,
 #if TAG_MAJOR_VERSION == 34
     // Not similar if wand in inventory is empty.
     return !is_known_empty_wand(inv_item);
+#else
+    return true;
 #endif
 }
 

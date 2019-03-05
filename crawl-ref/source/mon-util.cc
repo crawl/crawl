@@ -3079,7 +3079,11 @@ void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
 
 static const char *drac_colour_names[] =
 {
-    "black", "", "yellow", "green", "purple", "red", "white", "grey", "pale"
+    "black",
+#if TAG_MAJOR_VERSION == 34
+    "",
+#endif
+    "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
 string draconian_colour_name(monster_type mon_type)
@@ -3110,7 +3114,11 @@ monster_type draconian_colour_by_name(const string &name)
 // TODO: Remove "putrid" when TAG_MAJOR_VERSION > 34
 static const char *demonspawn_base_names[] =
 {
-    "monstrous", "gelid", "infernal", "putrid", "torturous",
+    "monstrous", "gelid", "infernal",
+#if TAG_MAJOR_VERSION == 34
+    "putrid",
+#endif
+    "torturous",
 };
 
 string demonspawn_base_name(monster_type mon_type)

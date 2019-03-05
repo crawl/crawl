@@ -225,9 +225,11 @@ static const char *divine_title[][8] =
     {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
         "@Walker@ of the Path","Lifter of the Veil",     "Transcendent",     "Drop of Water"},
 
+#if TAG_MAJOR_VERSION == 34
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
+#endif
 
     // Uskayaw -- reveler theme
     {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
@@ -966,6 +968,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case GOD_PAKELLAS:
     {
         have_any = true;
@@ -986,6 +989,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         break;
     }
+#endif
 
     case GOD_LUGONU:
         have_any = true;

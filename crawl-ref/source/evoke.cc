@@ -240,8 +240,12 @@ static bool _evoke_horn_of_geryon()
         return false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     did_god_conduct(DID_EVIL, 3);
     int num = 1;
@@ -346,8 +350,12 @@ static bool _lightning_rod()
         return false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
 
@@ -411,12 +419,14 @@ void zap_wand(int slot)
         return;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (player_under_penance(GOD_PAKELLAS))
     {
         simple_god_message("'s wrath prevents you from evoking devices!",
                            GOD_PAKELLAS);
         return;
     }
+#endif
 
     const int mp_cost = wand_mp_cost();
 
@@ -606,8 +616,12 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
-    const int surge = pakellas_surge_devices() + you.spec_evoke();
-    surge_power(surge);
+#if TAG_MAJOR_VERSION == 34
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
     mpr("You open the lid...");
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
@@ -659,8 +673,12 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
-    const int surge = pakellas_surge_devices() + you.spec_evoke();
-    surge_power(surge);
+#if TAG_MAJOR_VERSION == 34
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
     mpr("You reach into the bag...");
 
     const int evo_skill = you.skill(SK_EVOCATIONS);
@@ -775,8 +793,12 @@ static bool _ball_of_energy()
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
+#if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
 
     int use = player_adjust_evoc_power(random2(you.skill(SK_EVOCATIONS, 6)),
                                        surge);
@@ -1017,8 +1039,12 @@ static bool _lamp_of_fire()
         if (you.confused())
             target.confusion_fuzz();
 
+#if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);
+#else
+        const int surge = 0;
+#endif
 
         mpr("The flames dance!");
 
@@ -1320,8 +1346,12 @@ static bool _phial_of_floods()
             beam.set_target(target);
         }
 
+#if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);
+#else
+        const int surge = 0;
+#endif
         const int power = player_adjust_evoc_power(base_pow, surge);
         // use real power to recalc hit/dam
         zappy(ZAP_PRIMAL_WAVE, power, false, beam);
@@ -1422,8 +1452,12 @@ static spret _phantom_mirror()
         return spret::abort;
     }
 
+#if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
 
     monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);
     if (!mon)
@@ -1588,18 +1622,21 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if ((you.get_mutation_level(MUT_NO_ARTIFICE)
-             || player_under_penance(GOD_PAKELLAS))
-            && item.sub_type != MISC_ZIGGURAT)
+        if (item.sub_type != MISC_ZIGGURAT)
         {
             if (you.get_mutation_level(MUT_NO_ARTIFICE))
+            {
                 mpr("You cannot evoke magical items.");
-            else
+                return false;
+            }
+#if TAG_MAJOR_VERSION == 34
+            if (player_under_penance(GOD_PAKELLAS))
             {
                 simple_god_message("'s wrath prevents you from evoking "
                                    "devices!", GOD_PAKELLAS);
+                return false;
             }
-            return false;
+#endif
         }
 
         switch (item.sub_type)
@@ -1618,8 +1655,12 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
 
+#if TAG_MAJOR_VERSION == 34
             const int surge = pakellas_surge_devices();
             surge_power(you.spec_evoke() + surge);
+#else
+            const int surge = 0;
+#endif
             wind_blast(&you,
                        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15),
                                                 surge),

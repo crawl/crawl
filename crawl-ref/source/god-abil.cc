@@ -6381,6 +6381,7 @@ bool ru_apocalypse()
     return true;
 }
 
+#if TAG_MAJOR_VERSION == 34
 /**
  * Calculate the effective power of a surged hex wand.
  * Works by iterating over the possible rolls from random2avg().
@@ -6465,6 +6466,7 @@ int pakellas_surge_devices()
     }
     return severity;
 }
+#endif
 
 static bool _mons_stompable(const monster &mons)
 {

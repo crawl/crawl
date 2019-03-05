@@ -397,6 +397,7 @@ static const vector<god_passive> god_passives[] =
         },
     },
 
+#if TAG_MAJOR_VERSION == 34
     // Pakellas
     {
         { -1, passive_t::no_mp_regen,
@@ -407,6 +408,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW collects and distills excess magic from your kills"
         },
     },
+#endif
 
     // Uskayaw
     { },

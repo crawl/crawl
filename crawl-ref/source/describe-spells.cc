@@ -570,8 +570,11 @@ static void _describe_book(const spellbook_contents &book,
         }
 
         string schools =
+#if TAG_MAJOR_VERSION == 34
             source_item->base_type == OBJ_RODS ? "Evocations"
-                                               : _spell_schools(spell);
+                                               :
+#endif
+                         _spell_schools(spell);
         description.cprintf("%s%d\n",
                             chop_string(schools, 30).c_str(),
                             spell_difficulty(spell));
