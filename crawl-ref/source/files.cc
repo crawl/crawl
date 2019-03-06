@@ -1528,6 +1528,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     bool just_created_level = false;
 
     if (load_mode != LOAD_GENERATE
+        && load_mode != LOAD_VISITOR
         && you.chapter == CHAPTER_POCKET_ABYSS
         && player_in_branch(BRANCH_DUNGEON))
     {
