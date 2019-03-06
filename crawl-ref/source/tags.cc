@@ -2238,7 +2238,12 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 #endif
 
     crawl_state.type = (game_type) unmarshallUByte(th);
-    if (crawl_state.game_is_tutorial())
+    // normalize invalid game types so they can be treated uniformly elsewhere
+    if (crawl_state.type > NUM_GAME_TYPE)
+        crawl_state.type = NUM_GAME_TYPE;
+
+    // prevent an ASSERT in game_is_tutorial on game types from the future
+    if (crawl_state.game_is_valid_type() && crawl_state.game_is_tutorial())
         crawl_state.map = unmarshallString2(th);
     else
         crawl_state.map = "";

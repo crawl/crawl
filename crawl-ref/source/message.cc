@@ -1361,7 +1361,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (crawl_state.game_crashed)
         return;
 
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_valid_type() && crawl_state.game_is_arena())
         _debug_channel_arena(channel);
 
 #ifdef DEBUG_FATAL
