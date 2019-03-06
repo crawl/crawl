@@ -58,6 +58,7 @@
 #include "viewchar.h"
 #include "view.h"
 #include "viewmap.h"
+#include "unwind.h"
 #include "wiz-dgn.h"
 #include "wiz-mon.h"
 
