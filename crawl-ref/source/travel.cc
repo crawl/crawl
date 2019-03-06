@@ -1211,8 +1211,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     unexplored_place = greedy_place = coord_def(0, 0);
     unexplored_dist  = greedy_dist  = UNFOUND_DIST;
 
-    refdist = (Options.explore_item_greed > 0) ? &unexplored_dist
-                                               : &greedy_dist;
+    refdist = (runmode == RMODE_CONNECTIVITY || Options.explore_item_greed > 0)
+                ? &unexplored_dist : &greedy_dist;
 
     // Zap out previous distances array: this must happen before the
     // early exit checks below, since callers may want to inspect
@@ -1286,8 +1286,11 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
             {
                 if (runmode == RMODE_TRAVEL)
                     return travel_move();
-                else if (!Options.explore_wall_bias)
+                else if (runmode == RMODE_CONNECTIVITY
+                         || !Options.explore_wall_bias)
+                {
                     return explore_target();
+                }
                 else
                     found_target = true;
             }
