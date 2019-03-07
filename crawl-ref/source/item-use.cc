@@ -424,8 +424,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
 }
 
 /**
- * @param auto_wield true if this was initiated by the wield weapon command (w)
- *      false otherwise (e.g. switching between ranged and melee with the
+ * @param auto_wield false if this was initiated by the wield weapon command (w)
+ *      true otherwise (e.g. switching between ranged and melee with the
  *      auto_switch option)
  * @param slot Index into inventory of item to equip. Or one of following
  *     special values:
