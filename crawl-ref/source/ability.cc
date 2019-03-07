@@ -3220,9 +3220,9 @@ int choose_ability_menu(const vector<talent>& talents)
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("Ability - do what?                  "
-                                    "Cost                          Failure",
+                                    "Cost                            Failure",
                                     "Ability - describe what?            "
-                                    "Cost                          Failure",
+                                    "Cost                            Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
         abil_menu.set_title(me, true, true);
@@ -3230,9 +3230,9 @@ int choose_ability_menu(const vector<talent>& talents)
 #else
     abil_menu.set_title(
         new ToggleableMenuEntry("Ability - do what?                  "
-                                "Cost                          Failure",
+                                "Cost                            Failure",
                                 "Ability - describe what?            "
-                                "Cost                          Failure",
+                                "Cost                            Failure",
                                 MEL_TITLE), true, true);
 #endif
     abil_menu.set_tag("ability");
@@ -3355,7 +3355,7 @@ string describe_talent(const talent& tal)
     ostringstream desc;
     desc << left
          << chop_string(ability_name(tal.which), 32)
-         << chop_string(make_cost_description(tal.which), 30)
+         << chop_string(make_cost_description(tal.which), 32)
          << chop_string(failure, 12);
     return trimmed_string(desc.str());
 }
