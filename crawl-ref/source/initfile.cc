@@ -3410,9 +3410,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             constants.insert(field);
     }
-#ifndef DGAMELAUNCH
     else if (key == "game_seed")
     {
+#ifdef DGAMELAUNCH
+        // try to avoid confusing online players who put this in their rc
+        // file. N.b. it is still possible to use the -seed CLO.
+        report_error("Your rc file specifies a game seed, but this build of "
+                     "crawl does not support seed selection. I will "
+                     "choose a seed randomly.");
+#else
         // special handling because of the large type.
         uint64_t tmp_seed = 0;
         if (sscanf(field.c_str(), "%" SCNu64, &tmp_seed))
@@ -3427,8 +3433,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (!Options.seed)
                 Options.seed = tmp_seed;
         }
-    }
 #endif
+    }
 
     // Catch-all else, copies option into map
     else if (runscript)
